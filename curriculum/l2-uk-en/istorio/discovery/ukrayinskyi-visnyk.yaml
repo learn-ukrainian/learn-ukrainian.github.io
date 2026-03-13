@@ -1,0 +1,234 @@
+discovered_at: '2026-03-13T10:12:04.052032+00:00'
+query_keywords:
+- «Український вісник» Чорновола
+- В'ячеслав Чорновіл
+- Історія видання
+- Структура і зміст
+- Фрагмент
+- Значення для руху
+- Analyze the causes and consequences of «український вісник» чорновола
+- Evaluate the historical significance of хроніка опору
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=9wdph_Lsvcw
+  channel: Реальна Історія
+  title: Реальна історія українського прапору
+  relevance_score: 0.3
+  relevance_note: The video discusses the history of the Ukrainian flag and the 'Spring
+    of Nations,' which is a general Ukrainian historical topic, but it does not directly
+    cover 'Український вісник' Чорновола, the dissident movement, or related events,
+    which is the specific focus of this module.
+  transcript_excerpt: Мене звати акім галімов І це реальна історія прапори незалежних
+    держав світу в сучасному розумінні з'явилися протягом останніх 200 років. синьо-жовтий
+    прапор також з'явився відносно нещодавно всередині X століття.
+  embed_suggestion: Not suitable for embedding within this module due to unrelated
+    topic.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0203
+  text: "§ 14. Дисидентський рух\n111\nУ січні 1970 р. у Львові почали видавати «сам-\n\
+    видавський» журнал «Український вісник». Його \nзасновником і першим редактором\
+    \ став В. Чорновіл \n(у 1969  р. звільнений за амністією). До березня \n1972 \
+    \ р. вийшли шість номерів журналу. У  підго-\nтовці журналу брали участь В. Мороз,\
+    \ В. Стус, \nН. Світлична, Я. Кендзьор, М. Косів, Ю. Шухевич \nта інші. Його примірники\
+    \ передавали на Захід, де \nїх друкували видавництва української діаспори \nв США,\
+    \ Німеччині, Великій Британії, "
+  section_title: Сторінка 113
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0340
+  text: "185 \nОбкладинка журналу \n«Український вісник»,  \nяку оформив художник-\n\
+    політв’язень  \nОпанас Заливаха \nЗа допомогою інтернет-дже-\nрел дайте відповіді\
+    \ на запи-\nтання. 1. У яких роках видавали жур-\nнал «Український вісник»? 2.\
+    \ Хто був його редактором? 3. Чому журнал друкували са-\nме в Києві та Львові?\
+    \ організації Спілка незалежної української молоді (СНУМ), Студент-\nське братство.\
+    \ Подією в суспільному житті України стало створення в \n1989 \nроці \nісторико-просвітницького\
+    \ \nправозахисного \nтовариства"
+  section_title: Сторінка 186
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0341
+  text: "В 1987 році В’ячеслав Чорновіл від-\nновив друк «Українського вісника». Ство-\n\
+    рена в 1987 році Українська асоціація \nнезалежної творчої інтелігенції (УАНТІ)\
+    \ \nчерез «самвидавські» журнали «Кафедра» \nта «Євшан-зілля» популяризувала «неви-\n\
+    знаних в Україні прозаїків і поетів». 1. Що вплинуло на активізацію українського\n\
+    національного руху? 2. Коли і де в УРСР виникли перші неформальні\nорганізації?\
+    \ 3. Яку пресу видавали в мережі «самвидаву»? Мовою джерела. Уривок із мемуарів\
+    \ \nВасиля Овсієнка, українсь"
+  section_title: Сторінка 186
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0002
+  text: '3
+
+    Зміст
+
+    ЗМІСТ
+
+    Любі п’ятикласники та  п’ятикласниці! . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 6
+
+    Навігатор до  підручника . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 7
+
+    ВСТУП. УКРАЇНСЬКА  МОВА  В  ЖИТТІ  УКРАЇНЦІВ . . . . . . . . . . . 8
+
+    Мова в  житті людей . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 9
+
+    Мова як засіб спілкування. Значення мови . . . . . . . . . . . . . . . . . . .
+    .'
+  section_title: Сторінка 3
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5568245053291321
+  chunk_id: fc2291b5_c1053
+  text: "Тв.: Сочинения. М. — Л., 1955; Твори. К., 1959; Твори. К., 1986.\n\nЛіт.:\
+    \ Франко І. Іван\r\nВишенський і його твори. В кн.: Франко 1. Зібрання творів,\
+    \ т. 30. М., 1981;\r\nЖитецкий И. П. Литературная деятельность Иоанна Вишенского.\
+    \ «Киевская старина»,\r\n1890, № 6; Єрьомін І. П. Іван Вишенський і його громадсько-літературна\r\
+    \nдіяльність. В кн.: Вишенський І. Твори. К., 1959; Кримський А. Иоанн Вишенский,\r\
+    \nего жизнь и сочинения. В кн.: Кримський А. Твори, т. 2. К., 1972; Сумцов Н.\
+    \ Ф.\r\nИоанн Вышенский (Южно"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.556793749332428
+  chunk_id: 09eb908b_c0188
+  text: "З ПЕРШИМ ЧИСЛОМ УКРАЇНСЬКОГО ЩОДЕННИКА. Надруковано\r\nв газеті \"Нова Свобода\"\
+    . — 1838. — 15 червня. — Річник І (XXXIX). —\r\nЧ. 1.\n\nПодається за першодруком.\n\
+    \n\"Нова Свобода\" \r\n— \"український незалежний щоденник\", згодом \"орґан\r\
+    \nУкраїнського національного об’єднання\", що виходили з 15 червня 1938 р. до\r\
+    \n15 березня 1939 р. Є продовженням газет \"Наука\" (1897— 1921) і\r\n\"Свобода\"\
+    \ (1921 — 1938). Редакторами \"Нової Свободи\" були\r\nВасиль Гренджа-Донський\
+    \ і Свирид Довгаль. Газета була офіційним орґаном уряд"
+  work: Волошин — Вибрані твори
+  author: Волошин А.
+  year: 2002
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/volosh/volosh.htm
+- score: 0.5489773750305176
+  chunk_id: 479cf43d_c0197
+  text: "Власне, таке «подвоєння» адресата,\r\nякий охоплює як тих, хто задовольняє\
+    \ свої просвітницькі потреби, так і тих, хто\r\nналаштований на наукове дослідження\
+    \ історії української філософії, зумовило\r\nструктурні особливості статей Словника.\
+    \ Попри лапідарність викладу, зумовлену\r\nобмеженим обсягом пропонованої праці,\
+    \ кожна стаття містить найважливіші\r\nвідомості про життєвий шлях і головні етапи\
+    \ творчої еволюції мислителя,\r\nреферативну характеристику сутності його світогляду,\
+    \ особливостей\r\nзагальнофілосо"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

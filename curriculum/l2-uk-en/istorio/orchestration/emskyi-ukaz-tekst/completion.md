@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 32
+PASS: pipeline istorio 32
 
   Module:   emskyi-ukaz-tekst
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 32
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:09:36Z
+  Verdict:  PASS
+  Date:     2026-03-13T09:53:20Z

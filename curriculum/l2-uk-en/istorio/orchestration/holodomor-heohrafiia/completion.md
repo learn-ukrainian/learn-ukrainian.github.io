@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 48
+PASS: pipeline istorio 48
 
   Module:   holodomor-heohrafiia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 48
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:03Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:25:18Z

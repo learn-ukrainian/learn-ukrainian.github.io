@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 75
+PASS: pipeline istorio 75
 
   Module:   syntez-zakhidni-rehiony
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 75
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:16:24Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:24:34Z

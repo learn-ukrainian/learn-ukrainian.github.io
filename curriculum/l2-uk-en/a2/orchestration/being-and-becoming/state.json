@@ -6,28 +6,50 @@
     "discover": {
       "status": "complete",
       "ts": "2026-03-12T19:44:51Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     },
     "research": {
       "status": "complete",
       "ts": "2026-03-12T19:44:51Z",
       "task_id": "v5-being-and-becoming-pA",
-      "mode": "full"
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-12T19:47:48Z"
+      "ts": "2026-03-12T19:47:48Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     },
     "activities": {
       "status": "complete",
       "ts": "2026-03-12T19:47:48Z",
-      "note": "extracted-from-full-build"
+      "note": "extracted-from-full-build",
+      "executor": {
+        "type": "script",
+        "name": "extracted_from_full_build"
+      }
     },
     "validate": {
       "status": "failed",
       "ts": "2026-03-12T20:16:37Z",
       "attempts": 6,
-      "note": "exhausted"
+      "note": "exhausted",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
     }
   },
   "last_updated": "2026-03-12T19:42:32Z"

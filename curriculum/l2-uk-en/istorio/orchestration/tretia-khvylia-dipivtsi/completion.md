@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 66
+PASS: pipeline istorio 66
 
   Module:   tretia-khvylia-dipivtsi
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 66
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:14:59Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:04:15Z

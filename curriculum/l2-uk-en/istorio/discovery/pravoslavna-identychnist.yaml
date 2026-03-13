@@ -1,0 +1,220 @@
+discovered_at: '2026-03-13T10:51:11.707055+00:00'
+query_keywords:
+- Православна ідентичність XVII-XVIII ст.
+- Петро Могила
+- Києво-Могилянська академія
+- Українське православне бароко
+- Проблема Москви
+- Православ'я і козацтво
+- Analyze the causes and consequences of православна ідентичність xvii-xviii ст.
+- Evaluate the historical significance of відповідь на унію
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0372
+  text: "Працюємо з  хронологією\n1701  р. Надання Києво-\nМогилянському \nколегіуму\
+    \ статусу \nакадемії\nrnk.com.ua/109917\nПрактичне заняття  \nза розділом ІV\n\
+    rnk.com.ua/109918\nУзагальнення знань  \nза розділом ІV\nrnk.com.ua/109919\nТестові\
+    \ завдання  \nза  розділом  ІV"
+  section_title: Сторінка 228
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0446
+  text: ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 91\n\t\
+    \ § 14. Козацтво і  православна церква. Реформи Петра Могили. Києво-Могилянський\
+    \ колегіум  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 99\n\t § 15. Козацькі повстання 20—30‑х  рр. XVII  ст. . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . 103\n\t § 16. Передумови, причини та початок\
+    \  \nНаціонально-визвольної війни середини XVII  ст. . . . . . . . . . . . . .\
+    \ . . . . 110\n\t § 17. Перебіг боротьби в  16"
+  section_title: Сторінка 270
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0086
+  text: "8. Закінчіть складання \nтаблиці «Розвиток культури України в  XVI  — першій\
+    \ половині \nXVII  ст.» (с. 39). \x90\n\x90 9. Колективне обговорення. Які здобутки\
+    \ культури України \nпершої половини XVII  ст. ви вважаєте найважливішими \nй \
+    \ чому? 10. Відвідайте місцевий художній музей або здійсніть \nвіртуальну екскурсію.\
+    \ На основі знайомства з  історико-культур­\nними пам’ятками України XVI — першої\
+    \ половини XVII ст. сфор­\nмулюйте судження про цінності та норми життя, які утверджу­\n\
+    вали автори цих творів мистецт"
+  section_title: Сторінка 45
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0296
+  text: "Охарактеризуйте жанрове різноманіття української літератури \nдругої половини\
+    \ XVII — першої половини XVIII ст. Відповідь по­\nдайте у  вигляді схеми. 6. Використовуючи\
+    \ додаткові джерела, \nскладіть опис однієї з  археологічних пам’яток цієї доби.\
+    \ \x90\n\x90 7. Колективне обговорення. Чому Московський патріарх праг­\nнув отримати\
+    \ у  своє підпорядкування Київську митропо­\nлію? 8. Робота в  ­парах. Обговоріть\
+    \ і дайте відповіді на за­\nпитання. Наприкінці XVII  — на початку XVIII  ст.\
+    \ територія \nЛівобережної Ге"
+  section_title: Сторінка 152
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0058
+  text: "прийняв чернецтво. Спочатку він був архімандритом Києво-Печерської лаври,\
+    \ а  потім  — \n­митрополитом Київським і  Галицьким. Чимало зусиль Петро Могила\
+    \ до­\nклав для легалізації православної церкви, домігся повернення захоплених\
+    \ \nунійцями монастирів і  церков (Софійського собору й  Ви­дубицького \n­монастиря\
+    \ в  Києві тощо). Його зусиллями й  коштами вперше капітально \nвідреставрували\
+    \ Софійський собор і багато споруд ­Києво-Печерської лав­\nри. Петро Могила став\
+    \ ініціатором створення Києво-Могилянсь"
+  section_title: Сторінка 31
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6040078997612
+  chunk_id: 479cf43d_c0116
+  text: "Про нього див.: Голубев С. Т. \r\nКиев. митрополит Петр Могила и его сподвижники\
+    \ (Опыт ист.\r\nисследования). — Т. 1. — К., 1883, Т. 2. — К., 1898; Голубев С.\
+    \ Лифос\r\n— полемическое соч., вышедшее из Киево-Печерской типографии в 1644\
+    \ году // АЮЗР.\r\n— 1893. — Ч. 1. — Т. 9; Житецький П. Петр Могила // Энц. словарь\
+    \ Ф.\r\nА. Брокгауза и И. А. Эфрона, — СПб., 1898. — Полутом 46; Галант И. В.\
+    \ Киев.\r\nмитрополит Петр Могила и его отношение к євреям // КС. — 1905. — Ч.\
+    \ 24. — Т.\r\n89; Липинський В. Релігія і церк"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.6031512022018433
+  chunk_id: fc2291b5_c3325
+  text: "Літ.: Голубев С. Киевский\r\nмитрополит Петр Могила и его сподвижники, т.\
+    \ 1. К., 1883; Голубев С. История\r\nКиевской духовной академии, в. 1. Период\
+    \ до-могилянский. К., 1886; Тітов Хв.\r\nМатеріяли для історії книжної справи\
+    \ на Вкраїні в XVI — XVIII вв. Всезбірка\r\nпередмов до українських стародруків.\
+    \ К., 1924.\n\nВ. О. Шевчук."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5911478400230408
+  chunk_id: 68ba0555_c0324
+  text: 'Жолтовський П. М. Монументальний живопис на Україні XVII — XVIII ст. — К.,
+    1988.
+
+
+    Жолтовський П. М. Художнє життя на Україні в XVI — XVIII ст. — К., 1983.
+
+
+    Жуковський А. Петро Могила і питання єдности церков. — Париж, 1969.
+
+
+    Лихачев Д. С., Панченко А. М., Понырко Н. В. Смех в древней Руси. — Л., 1984.
+
+
+    Логвин Г. Н. По Україні. — К., 1968.
+
+
+    Матейко К. І. Український народний одяг. — К., 1977.
+
+
+    Микитась В. Давньоукраїнські студенти і професори. — К., 1994.
+
+
+    Ничик В. М. Из истории отечественной фил'
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm

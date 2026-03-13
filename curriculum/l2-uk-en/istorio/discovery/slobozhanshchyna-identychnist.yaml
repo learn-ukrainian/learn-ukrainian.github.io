@@ -1,0 +1,239 @@
+discovered_at: '2026-03-13T11:27:37.739192+00:00'
+query_keywords:
+- 'Слобожанщина: Формування ідентичності'
+- Заселення
+- XVII ст.
+- Слобідське козацтво
+- Харків
+- Русифікація
+- Сучасна Слобожанщина
+- 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
+- Evaluate the historical significance of вільні землі
+- history
+- історія
+- подія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=nWr_ZkHxFS8
+  channel: Комік Історик
+  title: 'Аміл Насіров: історія українського селянства @selyuky'
+  relevance_score: 0.9
+  relevance_note: The video directly mentions "Слобожанщина" and "Харківської області"
+    while discussing the historical role of Ukrainian peasantry in forming and preserving
+    national identity, making it highly relevant to the module's focus on the formation
+    of identity in Slobozhanshchyna.
+  transcript_excerpt: оскільки аміль з села близнюки Харківської області Селище...
+    селище Харківської області це ж Слобожанщина тому ми нарешті можемо... сьогодні
+    ми будемо говорити про історію українського селянства... тому що село це взагалі
+    фундамент Нації
+  embed_suggestion: After section Заселення (XVII ст.) (Settlement, 17th Century)
+    -- The video provides historical context on how the peasantry, particularly in
+    regions like Slobozhanshchyna, contributed to identity formation, which aligns
+    with the period of settlement.
+- url: https://www.youtube.com/watch?v=ifv1QyEji-8
+  channel: Комік Історик
+  title: Хто такі українці? Історична лекція Євгена Мурзи
+  relevance_score: 0.8
+  relevance_note: The video discusses Ukrainian identity and regional identities,
+    specifically mentioning "харківці" (people from Kharkiv, located in Slobozhanshchyna),
+    which directly relates to the module's topic of identity formation within Slobozhanshchyna.
+  transcript_excerpt: у вас є регіональна ідентичність городянська міська ідентична
+    там не знаю ви харківці може там з Галичини наприклад Кияни корінні але за кордоном
+    ви всі українці
+  embed_suggestion: After section Сучасна Слобожанщина (Modern Slobozhanshchyna) --
+    The video provides a broader context of Ukrainian identity and how regional identities
+    (like those from Kharkiv) contribute to it, which is relevant for understanding
+    the contemporary identity of Slobozhanshchyna.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0278
+  text: "Розділ IV. Козацька Україна наприкінці 50‑х рр. XVII — на початку XVIII ст.\
+    \ 172\n1. Виникнення та розвиток \nСлобідської України\n\e\n\e Чому на Слобожанщині\
+    \ сформувався козацький \nустрій? Із другої половини XVI  ст. на землях, \nде \
+    \ сходилися кордони Речі Посполитої, Мос-\nковського царства і Кримського ханату,\
+    \ актив-\nно розгортався процес колонізації. У  XVII  ст. він набув значних масштабів.\
+    \ Основну роль \nу  ньому відігравали українські селяни й  ко-\nзаки з Лівобережної\
+    \ і Правобережної Гетьман-\nщини."
+  section_title: Сторінка 172
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0363
+  text: "186  Узагальнення до курсу. Історія України в контексті епохи Раннього Нового\
+    \ часу\nПочинаючи із другої половини XVI ст. на Слобожан­\nщині існували два потоки\
+    \ колонізації. Із півночі йшла \n­московська колонізація, пов’язана зі зведенням\
+    \ військово-­\nоборонних ліній для охорони Московської держави, а із \nзаходу\
+    \ — українська, викликана, за одними версіями, \nпольсько-шляхетською неволею\
+    \ й визиском, за іншими — \nпошуком родючих земель і густих лісів для заняття\
+    \ госпо-\nдарством та промислами. Із цією м"
+  section_title: Сторінка 186
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0237
+  text: "Схожу історію \nзаснування мали Салтів, Мерефа, Охтирка, Балаклія, Ізюм \n\
+    та багато інших міст. Разом із містами виникали й нові села. Засновані на нових\
+    \ землях поселення звільнялися від \nподатків і тому називалися слободами (звідси\
+    \ й назва Сло-\nбідська Україна). Права українських поселенців закріплю-\nвалися\
+    \ царськими жалуваними грамотами. Свідченням \n­визнання влади царя була присяга,\
+    \ яку складали ­поселенці. Одночасно Слобожанщину заселяли московські служилі\
+    \ \nлюди, якими управляли царські воєвод"
+  section_title: Сторінка 122
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0229
+  text: "176 \nсприяли колонізації та захисту краю від нападів османів та \nкримських\
+    \ татар. 1. Які сучасні території називалися Слобідською Україною? 2. Назвіть\
+    \ фактори, що зумовили зростання чисельності мешканців \nСлобожанщини. 3. Хто\
+    \ й коли здійснював колонізацію краю в XVII столітті? Острів цікавинок \nЧи знаєте\
+    \ ви, що в 1652 році \nчернігівські \nкозаки \nна \nчолі \nз \nполковником Іваном\
+    \ Дзиковським \nзаклали місто Острогозьк на річці \nТихій Сосні. До середини 50-х\
+    \ років XVII століт-\nтя виникли, зокрема, Су"
+  section_title: Сторінка 89
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0230
+  text: "Українцям дозволяли користуватися правом займанщини (обирати \nдля володіння\
+    \ будь-які вільні землі) і жити там за козацьким зви-\nчаєм: створювати полки\
+    \ і сотні, користуватися власним судочинст-\nвом, не сплачувати податки. Поселенці\
+    \ мали визнати зверхність \nмосковського царя і захищати край від набігів з півдня\
+    \ османів та \nкримських татар. Права переселенців закріплювалися царськими \n\
+    грамотами. Оскільки вільні поселення називали слободами, то і \nновий край стали\
+    \ називати Слобожанщиною. 177 \nПересе"
+  section_title: Сторінка 89
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6309558749198914
+  chunk_id: 0988b006_c0141
+  text: "З другої половини XVII віку знову розпочалися сильні\r\nколонізаційні рухи\
+    \ в Україні. Життя під Польщею ставало нестерпним, і\r\nукраїнська людність знову\
+    \ стала розбігатися на всі сторони. На схід від\r\nПолтавщини, за московською\
+    \ границею, лежало багато порожніх московських земель,\r\nі тепер московський\
+    \ уряд, щоб мати оборонну лінію проти татар, почав ці землі\r\nзаселювати. І тут\
+    \ незабаром постало велике число слобід, цебто малих осель без\r\nцерков, від\
+    \ чого й край цей був названий Слобожанщиною. Постал"
+  work: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ohukr/ohu.htm
+- score: 0.6120461225509644
+  chunk_id: 3d7a3a6b_c0219
+  text: "36 Слюсарский А.\r\nГ. Социально-экономическое развитие Слобожанщини XVII-XVIII\
+    \ вв. — Харьков,\r\n1964. — С. 59.\n\n37 Баранович О. І.\r\nЗалюднений України\
+    \ перед Хмельниччиною.— К., 1930; Крикун M. Г. Подимні\r\nреєстри XVII ст. як\
+    \ джерело // Матеріали III респ. наук. конф. з архівознавства\r\nта ін. спеціальних\
+    \ історичних дисциплін.— К., 1968.— С. 69—83; Яковенко\r\nH. M. Склад шляхти-землевласників\
+    \ Київського воєводства напередодні\r\nВизвольної війни українського народу 1648\
+    \ —1654 рр. //Феодалізм на Україні"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.5967332720756531
+  chunk_id: feaa5fa7_c0019
+  text: "ЗАПОРІЖЖЯ XVII — XVIII СТ. . . . . . . . . . . . . .\r\n. . . . . . 462\n\
+    \nЗадунайська Січ (463) Б. Крупницький\n\nСЛОБІДСЬКА УКРАЇНА XVII — XVIII СТ.\
+    \ Б.\r\nКрупницький . . . . . . . . . . . . . . . . . . . 464\n\nЛІТЕРАТУРА .\
+    \ . . . . . . . . . . . . . . . . . . 465\n\n7. УКРАЇНА В СКЛАДІ РОСІЙСЬКОЇ ІМПЕРІЇ\
+    \ XIX — ПОЧ. XX СТ.\n\nУКРАЇНА В ПЕРШІЙ ПОЛОВИНІ XIX СТ. . . . . . . . . . .\r\
+    \n. . . . . . . . . 466\n\nЗасвоєння південних територій (466). Боротьба за\r\n\
+    автономію і початки національного відродження (467). Вій"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

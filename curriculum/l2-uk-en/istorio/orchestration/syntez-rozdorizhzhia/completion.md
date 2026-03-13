@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 94
+PASS: pipeline istorio 94
 
   Module:   syntez-rozdorizhzhia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 94
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:19:24Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:01:26Z

@@ -1,0 +1,204 @@
+discovered_at: '2026-03-13T10:45:36.017905+00:00'
+query_keywords:
+- 'Синтез: Культурний геноцид'
+- Паттерн знищення
+- Що втрачено
+- Культурний геноцид
+- Пам'ять і відновлення
+- Уроки для сьогодні
+- 'Analyze the causes and consequences of синтез: культурний геноцид'
+- Evaluate the historical significance of що ми дізналися
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0125
+  text: "121\nЗАПИТАННЯ І ЗАВДАННЯ\nI.\nЗнаю й систематизую нову інформацію\n1. С\
+    \ а м о о ц і н ю в а н н я\nОцініть свої успіхи в опануванні теми «Культурні\
+    \ надбання Старо-\nдавнього Сходу». Дайте відповіді на запитання.\n?\nПрекрасно\n\
+    Добре\nНічого \nне зрозуміло\nЯку роль відіграла писемність \nу розвитку давніх\
+    \ цивілізацій Сходу?\nЯкими науковими відкриттями\nнародів Сходу ми послуговуємось\n\
+    і нині?\nЧим цінні для дослідників пам’ятки \nмистецтва Стародавнього Сходу?\n\
+    Що свідчить про високий рівень \nрозвитку культури С"
+  section_title: Сторінка 123
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0111
+  text: "Історична наука та історична пам’ять\n111\nПроте про постаті в історії, про\
+    \ історичні події різні \nлюди згадують по-різному, по-різному ставляться до дея-\n\
+    ких із них. Ми бачимо, що у різних спільнот є різна історична \nпам’ять. Вона\
+    \ багато в чому залежить від того, кого вважають \n«своїм» або «чужим». При цьому\
+    \ «свої» герої можуть ідеа-\nлізуватися, набувати міфологічних рис досконалості\
+    \ та кра-\nщих людських чеснот. Натомість уявлення про їхніх супро-\nтивників,\
+    \ «чужих» є негативним. Тому не дивно, що"
+  section_title: Сторінка 111
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 5-klas-istoriya-schupak-2022_s0023
+  text: "Науки, що вивчають минуле\n25\nЯк бачимо, іноді сенсаційні знахідки виявляються\
+    \ май-\nстерними підробками.\nКультура містифікацій (вигадок) і фальсифікацій\
+    \ (підро-\nбок) отримала нове життя сьогодні. Часто в соціальних мере-\nжах активно\
+    \ поширюються фейкові (неправдиві) новини, що \nспотворюють факти, маніпулюють\
+    \ читачем.\nПротягом історії людства було створено багато підробок \n«під старовину».\
+    \ Мотиви їх створення були різні. Хтось та-\nким чином заробляв гроші або просто\
+    \ розважався. Хтось ки-\nдав виклик"
+  section_title: Сторінка 25
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0088
+  text: "9. Використовуючи знання зі всесвітньої історії, обговоріть явище про-\n\
+    дажу захоплених у полон людей на невільницьких ринках. Висловіть \nвласне ставлення\
+    \ до цього явища. 10. Працюємо разом. Метод «Дискусія». Як у  заняттях населення\
+    \ Крим-\nського півострова цієї доби відображалася взаємодія людини і довкілля?\
+    \ rnk.com.ua/109908\nПрактичне заняття  \nза розділом І\nrnk.com.ua/109909\nУзагальнення\
+    \ знань  \nза розділом I\nrnk.com.ua/109910\nТестові завдання  \nза  розділом \
+    \ I"
+  section_title: Сторінка 56
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5321781635284424
+  chunk_id: fbed5860_c0001
+  text: Слово "культура", так часто надуживане, часом зовсім стерте, походить від
+    латинського слова, зв'язаного з поняттям обряду ("культ"). Існує і друге слово,
+    що у деяких народів заміняє слово "культура" — це слово "цивілізація", зв'язане
+    з латинський словом "цівітас" — місто. Ці два слова, властиво, окреслюють те саме.
+    Під прийнятим у нас словом "культура" розуміємо все те, що створене людиною. Підкреслюємо
+    створене, а не зроблене механічно, бо справжні культурні факти, є наслідком творчого'акту.
+    Оч
+  work: Євген Маланюк. Нариси з історії нашої культури
+  author: Маланюк Є.
+  year: 1897
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=13778
+- score: 0.5317280888557434
+  chunk_id: c846b4d3_c0735
+  text: "Оглядаючи історію всіх культурних народів, ми мусимо\r\nприйти до виводу,\
+    \ що система примусової національності є такою ж\r\nвсесвітньою проявою в громадському\
+    \ життю, як і система примусової релігії. Першою\r\nпідставою обох систем служить\
+    \ дикий суб’єктивізм, котрий пхає людей дивуватись\r\nтому, що не подібне до їхнього,\
+    \ сміятись з нього, ворогувати, нищити. З певною\r\nкультурою цей дикий суб’єктивізм\
+    \ може то систематизуватись і розростатись, то\r\nослаблятись і щезати. В життю\
+    \ релігійному нетолерантність "
+  work: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+  year: 1880
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag.htm
+- score: 0.5264261960983276
+  chunk_id: b11039d7_c0026
+  text: '"Оце! І!" — помітка на берегах, випале з валізи забуте покотьольце — вперше
+    розвернуло до мене бінокль іншим боком. На мить, як у спалаху блискавки серед
+    глупої тьми, я вгледіла живу людину — дивно, що це був той самий мій батько, якого
+    я, відай, потай від себе й далі трохи соромилась. Персонаж, що надавався б на
+    якийсь-то портрет хіба лиш у ролі статистичної одиниці: цебто, якби була змога
+    облічити, скільки їх, таких, у тім поколінні було — не арештованих, не посаджених,
+    не внесених у списки Am'
+  work: Оксана Забужко. Музей покинутих секретів
+  author: Забужко О.
+  year: 1960
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=2745

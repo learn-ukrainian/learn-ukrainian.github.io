@@ -1,4 +1,4 @@
-FAIL: pipeline hist 60
+PASS: pipeline hist 60
 
   Module:   andrusivske-peremyrya
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 60
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:11:52Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:09:23Z

@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 41
+PASS: pipeline istorio 41
 
   Module:   ukrayinskyi-visnyk
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 41
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:10:59Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:12:43Z

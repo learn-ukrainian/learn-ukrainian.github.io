@@ -1,0 +1,109 @@
+discovered_at: '2026-03-13T09:48:33.303875+00:00'
+query_keywords:
+- 'Віра Холодна: Королева німого кіно'
+- Дитинство та юність
+- Шлях до екрану
+- Королева екрану
+- Мистецтво німого кіно
+- Трагічний фінал
+- Дискусія
+- 'Analyze the life and legacy of віра холодна: королева німого кіно'
+- Evaluate the contributions of зірка, яка згасла зарано
+- Trace the career and influence of легенда та реальність
+- biography
+- німе
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0191
+  text: "Середньовічна мініатюра \n(фрагмент)\nАвстрійська герцогиня Гертруда. Середньовічна\
+    \ мініатюра \n(фрагмент)\nrnk.com.ua/108272\nДля вас, допитливі"
+  section_title: Сторінка 131
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0273
+  text: "Чи сподобалася вам гра молодих акторів, художнє оформлення \nвистави? Напишіть\
+    \ відгук на виставу, презентуйте його однокласникам та од-\nнокласницям;\n\x03\
+    \n\x83 перегляньте художній фільм «Зачарована Десна» (1964 р .), знятий вдовою\
+    \ \nписьменника ю . Солнцевою . яке враження справив на вас фільм? які запи-\n\
+    тання у вас виникли? У який спосіб ви можете задовольнити свою цікавість? Напишіть\
+    \ рецензію на фільм, презентуйте її однокласникам та однокласницям ."
+  section_title: Сторінка 141
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0001
+  text: "«Українська мова. Буквар»  \nпідручник для 1 класу закладів  \nзагальної\
+    \ середньої освіти\n(у 2-х частинах)\nЧастина  друга\nМар’яна  Захарійчук\nВидавництво\
+    \ «Грамота»\n2025\nPidruchnyk.com.ua"
+  section_title: Сторінка 2
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrlit-avramenko-2022_s0265
+  text: 'Куліша «Чорна рада». Розвиваємо компетентності
+
+    Теорія літератури
+
+    Я
+
+    Аля'
+  section_title: Сторінка 245
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.4703730046749115
+  chunk_id: fc2291b5_c1003
+  text: "Літ.: Костюченко В.\r\nУкраїнська радянська література для дітей. К., 1984;\
+    \ «Веселка» — дітям.\r\nБібліографічний покажчик дитячої літератури. 1934 — 1984.\
+    \ К., 1985.\n\nВ. А. Костюченко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.4667469263076782
+  chunk_id: fc2291b5_c1019
+  text: 'О. В. Шпильова.
+
+
+    [Українська Літературна Енциклопедія. — К., 1988. — Т. 1: А-Г. — С. 302-317.]'
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.4591517150402069
+  chunk_id: e65c8b4f_c0351
+  text: "J. W. Bardili, Des Weyland Durchl. Printzens\r\nMaximilian Emanttels...,\
+    \ pp. 420—424:"
+  work: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах
+  author: Мацьків Т.
+  year: 1995
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss4/mazk.htm

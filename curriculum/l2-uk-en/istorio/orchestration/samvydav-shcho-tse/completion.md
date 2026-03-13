@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 39
+PASS: pipeline istorio 39
 
   Module:   samvydav-shcho-tse
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 39
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:10:40Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:08:07Z

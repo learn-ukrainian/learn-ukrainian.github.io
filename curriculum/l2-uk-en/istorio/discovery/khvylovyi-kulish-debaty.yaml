@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T10:39:02.180822+00:00'
+query_keywords:
+- 'Хвильовий: «Геть від Москви!»'
+- Біографічний контекст
+- «Камо грядеши»
+- '1925'
+- «Думки проти течії»
+- '1926'
+- Трагічний фінал
+- Спадщина Хвильового
+- 'Analyze the causes and consequences of хвильовий: «геть від москви!»'
+- Evaluate the historical significance of найсміливіший голос
+- history
+- історія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0149
+  text: "Після \nнищівної критики він мусив написати покаянного листа. Створену 1929\
+    \ року \nза його участю літературну організацію «Пролітфронт» просто заборонили.\
+    \ Голодомор 1932—1933 років та репресії справили гнітюче враження \nна письменника.\
+    \ На знак протесту проти арештів української інтелігенції \nМ. Хвильовий прийняв\
+    \ фатальне для себе рішення — 13 травня 1933 року \nвчинив самогубство. Õвиëьовиé\
+    \ і éоãо коëо бóëи оïтимістами в томó сенсі, ùо вони беçóмно ëþбиëи \nсëово, æиття\
+    \ é ëþäинó. Âони бóëи ïесиміста"
+  section_title: Сторінка 81
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0021
+  text: "Хвильового серйозну загрозу. Під жорстким моральним тиском він мусив пу-\n\
+    блічно зректися своїх поглядів, а за кілька років покінчив життя самогубством.\
+    \ На початку 1930-х років вільний розвиток мистецтва було штучно при-\nпинено.\
+    \ Свобода творчості відійшла в минуле. Розпочалась багаторічна доба \nÕоча äоба\
+    \ роçквітó óкра¿нсько¿ раäянсько¿ ëітератóри бóëа короткоþ, \nвона наäçвичаéно\
+    \ ваæëива в історі¿ öіº¿ ëітератóри. Ó öеé час óкра¿н-\nська мова в ïресі, ïóбëікаöіяõ\
+    \ і в ëітератóрі маëа øироке ïобóтóва"
+  section_title: Сторінка 10
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0150
+  text: "82  Прозове розмаїття 1920‑х років . Микола Хвильовий . Між фанатизмом і\
+    \ людяністю («я (Романтика)»)\nопрацьовуємо прочитане\n1. які факти життєвого\
+    \ та творчого шляху Миколи Хвильового вас зацікавили? Про які факти ви хотіли\
+    \ б дізнатися більше? У який спосіб ви могли б задо-\nвольнити свою цікавість?\
+    \ 2. як юрій шерех характеризує М . Хвильового та його сучасників? яку головну\
+    \ \nдумку ви б виділили в наведеному коментарі? 3. У зручній для вас формі (текст,\
+    \ план, таблиця, схема) складіть опорний кон-"
+  section_title: Сторінка 82
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0148
+  text: "Прозове розмаїття 1920‑х років . Микола Хвильовий  81\nмикола хВиЛьоВий\n\
+    (1893—1933)\nМикола Григорович Хвильовий (справжнє прізвище Фітільов) народився\
+    \ \n13 грудня 1893 року в селищі Тростянці на Харківщині (нині місто Сумської\
+    \ \nобласті). Здобувши початкову освіту, вступив до Богодухівської гімназії, з\
+    \ якої \nбув виключений у п’ятому класі. 1916 року екстерном склав гімназійні\
+    \ іспити \nй отримав диплом, що підтверджував середню освіту. Тоді ж потрапив\
+    \ до вій-\nська, брав участь у бойових діях під час"
+  section_title: Сторінка 81
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0154
+  text: "84  Прозове розмаїття 1920‑х років . Микола Хвильовий . Між фанатизмом і\
+    \ людяністю («я (Романтика)»)\nУ трибуналі ще двоє: бездушний фанатик \nдоктор\
+    \ Тагабат («з холодним розумом і з каме­\nнем замість серця») та безвольний хлопчина\
+    \ \nАндрюша з «розгубленим обличчям». А за всім \nцим наглядає вартовий-дегенерат\
+    \ — садист, \nзав жди готовий убивати. Вони привласнили \nправо позбавляти життя.\
+    \ Тагабат робить це рі-\nшуче й без жодних вагань, натомість Андрюша \nлише покірно\
+    \ схвалює рішення трибуналу. Герой "
+  section_title: Сторінка 84
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.60582435131073
+  chunk_id: a5f3ae7f_c0288
+  text: "Цей міф має першопочаток у легендарній «літдискусії»,\r\nрозпочатій М. Хвильовим\
+    \ 1926 року, в ході якої він, власне, й здобув широку й\r\nдоволі контроверсійну\
+    \ популярність, а за дальшими наслідками її змушений був\r\nзастрелитись. Ту дискусію\
+    \ часто називають кульмінацією в культурному житті\r\n20-х. Якоюсь мірою вона\
+    \ моделює і сюжет того трагічного десятиліття: в\r\nінтродукції — слово-вчинок\
+    \ героя «проти течії», посередині — змагання творчих\r\nсил, яке часто нагадує\
+    \ війну, поки що безкровну; у фіналі — о"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm
+- score: 0.6023786067962646
+  chunk_id: 479cf43d_c0178
+  text: "Твори X.: Твори: В 5 т. —\r\nНью-Йорк (та ін.), 1978 — 1986; Твори: У 2 т.\
+    \ — К., 1990; Україна чи\r\nМалоросія?: Памфлети. — К., 1993.\n\nПро нього див.:\
+    \ Скрипник M. \r\nХвильовизм чи шумськизм? // Більшовик України. — 1927. — №2;\
+    \ Ган\r\nО. Трагедія Миколи Хвильового. — [Б. д.]; Гірчак Є. Ф. Хвильовизм.\r\n\
+    — X., 1930; Кривонос В. Микола Хвильовий. — Львів, 1930; ДонцовД. Микола\r\nХвильовий\
+    \ // Вістник. — 1933. — Ч. 7 — 8; Руоницький М. Від Мирного\r\nдо Хвильового.\
+    \ — (Львів), 1936; Плющ В. Правда про хвильовизм"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5935887098312378
+  chunk_id: 479cf43d_c0176
+  text: "Бібліогр.: Павлик М. Спис\r\nтворів І. Франка на перше 25-літє єго літ. діяльності.\
+    \ 1874 — 1898. — Львів,\r\n1898; Спис творів І. Франка з додатком статей про нього\
+    \ і рецензій на його писання.\r\nВип. 1. — Львів, 1918, Вип. 2. — Львів, 1930;\
+    \ Іван Франко: Бібліогр. творів.\r\n1874 — 1964. — К., 1966; Іван Франко: Бібліогр.\
+    \ покажч. 1956 — 1984, — К.,\r\n1987.\n\nІ. Лисий\n\n[Філософська думка в Україні:\
+    \ Біобібліографічний словник. — К., 2002. — С. 206-207.]\n\nХВИЛЬОВИЙ (Фітільов)\r\
+    \nМикола Григорович (01/13.12.189"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

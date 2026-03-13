@@ -1,0 +1,208 @@
+discovered_at: '2026-03-13T12:21:00.372029+00:00'
+query_keywords:
+- Голодомор як економічна зброя
+- Експорт під час голоду
+- Конфіскація як механізм
+- Економічна логіка Сталіна
+- Довгострокові наслідки
+- Analyze the causes and consequences of голодомор як економічна зброя
+- Evaluate the historical significance of голод як інструмент
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0050
+  text: "§ 3. Внутрішньополітична та економічна ситуація в УРСР\n27\nCформулюйте судження\
+    \ про:\n\x84\n\x84\nнегативний характер впливу то­\nталітарного імперського гноблення\
+    \ \nна соціально-економічну ситуацію \nв тогочасній Україні. Працюємо з  хронологією\n\
+    1946—1947 рр. — масовий штучний \nголод в УРСР. 11. Визначте соціально-економічні,\
+    \ демографічні, \nполітичні умови, у  яких розпочалася повоєнна від­\nбудова.\
+    \ Результати роботи подайте у  вигляді ментальної \nкарти. 12. Доведіть, що економіку\
+    \ УРСР відбудовували \nне як с"
+  section_title: Сторінка 29
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0048
+  text: "— голод в Україні;\n– лютий 1948 р. — прийнято Указ Президії Верховної Ради\
+    \ СРСР «Про виселення з\nУкраїнської РСР осіб, які злісно ухиляються від трудової\
+    \ діяльності у сільському\nгосподарстві та ведуть антигромадський паразитичний\
+    \ спосіб життя». 2. Поясніть значення понять: відбудова, штучний голод. 3. Використовуючи\
+    \ спогади очевидців, напишіть есей на тему: «Післявоєнне село». 4. Заповніть порівняльну\
+    \ таблицю «Масовий штучний голод в Україні». Причини \nТериторія поширення \n\
+    Наслідки \nГолодомор 19"
+  section_title: Сторінка 30
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0272
+  text: '— на пленумі ЦК КПРС оприлюднено Продовольчу програму. 2. Поясніть значення
+    понять: дефіцит, командно-адміністративне управління. 3. Підготуйте історичну
+    довідку на тему: «Суперечності Косигінської економічної реформи». 4. Доведіть
+    або спростуйте думку: «Економіка Української РСР у 1970–1980-х роках
+
+    входила в смугу системної кризи».'
+  section_title: Сторінка 150
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0268
+  text: "141\n§ 24—25. Насильницька колективізація та опір їй населення. Голодомор\
+    \ 1932—1933 рр. Причини Голодомору в Україні:\n \n\x17 необхідність знищення українського\
+    \ селянства як свідомої наці-\nональної верстви, яка своїм опором загрожувала\
+    \ імперським інтересам \nМоскви; \n \n\x17 непомірні для селян хлібозаготівлі.\
+    \ У 1932—1933 рр. вони сягали \nполовини або двох третин зібраного врожаю; \n\
+    \ \n\x17 хлібний експорт в умовах нестачі продовольчих ресурсів. Припи-\nнення\
+    \ такого експорту в 1932—1933 рр. могло б запобігти ви"
+  section_title: Сторінка 141
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0045
+  text: "обмін грошових \nзнаків здійснювали у співвідношенні 1 : 1, \nЧинники, які\
+    \ впливали на демографічну ситуацію в  УРСР у  повоєнні роки\nЛюдські втрати \n\
+    під час війни\nЗміна кордонів \nта «обмін \nнаселенням»\nПовернення полонених,\
+    \ \nостарбайтерів, \nевакуйованих тощо\nМасовий \nштучний голод \n1946—1947  рр.\
+    \ Депортації, \nрепресії\nРадянізація \nзахідних \nобластей УРСР\nДемобілізація\
+    \ \nвійськово­\nслужбовців\nПродовження бойових \nдій на території західних \n\
+    областей України\nПереміщення \nробочої сили \nв  процесі відб"
+  section_title: Сторінка 27
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5345604419708252
+  chunk_id: 68ba0555_c0913
+  text: "Голодомор мав політичне підґрунтя. Свідомо йдучи на\r\nгеноцид, сталінське\
+    \ керівництво партії й держави прагнуло зламати та знекровити\r\nі селянство як\
+    \ клас, і найнебезпечніші для диктатури, найзаможніші регіони\r\nкраїни, можливу\
+    \ базу для селянського опору — Дон, Кубань, Сибір і особливо\r\nУкраїну.\n\nДеякі\
+    \ комуністичні керівники здійснили спроби якщо не\r\nпротесту, то критики «перегинів\
+    \ у заготівельній політиці». Так, листа до ЦК\r\nВКП(б) з засудженням таких «перегинів»\
+    \ написав шерег українських партійн"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.5169898271560669
+  chunk_id: 68ba0555_c0912
+  text: "Розпочавши ще 1929 р. політику «розкуркулювання», а\r\n1930 р. взявши курс\
+    \ на повну колективізацію села, сталінське керівництво не\r\nрозраховувало на\
+    \ негайні економічні успіхи. Мільйони селян, не тільки\r\nбільш-менш заможних,\
+    \ а й середнього достатку, і просто біднота, за спущеними\r\n«зверху» рознарядками\
+    \ були вислані у віддалені області неозорого Союзу без\r\nбудь-якого майна. Скільки\
+    \ з них померло в дорозі — ніхто сьогодні визначити не\r\nможе. Майно «розкуркулених»\
+    \ було передане колгоспам, але з безпри"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.5165724754333496
+  chunk_id: 68ba0555_c1063
+  text: "Ледве прихований антисемітизм у політиці Сталіна був\r\nспробою мобілізувати\
+    \ найнижчі соціальні інстинкти, щоб заглушити народжувану\r\nнекеровану культуру\
+    \ і, зокрема /646/ українську національну самосвідомість,\r\nнадати останній примітивної\
+    \ антиєврейської спрямованості. Тоталітарний режим\r\nкультивував ворожість до\
+    \ гуманізму, інтелігентності та інтелігенції,\r\nрозраховуючи на ненависть малоосвічених\
+    \ кар’єристів, піднятих режимом з\r\nсоціальних низів, до незрозумілих та ворожих\
+    \ їм здобутків культури.\r\nА"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm

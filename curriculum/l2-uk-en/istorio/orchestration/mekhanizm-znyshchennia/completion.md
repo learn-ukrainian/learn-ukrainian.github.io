@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 56
+PASS: pipeline istorio 56
 
   Module:   mekhanizm-znyshchennia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 56
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:13:20Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:43:41Z

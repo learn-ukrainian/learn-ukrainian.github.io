@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 36
+PASS: pipeline istorio 36
 
   Module:   svidchennia-holodomoru-i
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 36
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:10:13Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:03:13Z

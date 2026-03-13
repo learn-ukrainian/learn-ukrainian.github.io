@@ -1,0 +1,208 @@
+discovered_at: '2026-03-13T12:16:27.409693+00:00'
+query_keywords:
+- 'Синтез: 2022 — Зміна парадигми?'
+- Порівняння з минулим
+- Що змінилося у 2022
+- Що не змінилося
+- Чому 2022 інший
+- Чи тривкі зміни
+- 'Analyze the causes and consequences of синтез: 2022 — зміна парадигми?'
+- Evaluate the historical significance of щось змінилося?
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0451
+  text: "§ 32. Україна у 2019—2021 рр.\n247\nЗапитання і завдання\nЗнаємо і  розуміємо\n\
+    1.\t Хто був суперником В.  Зеленського \nна виборах Президента України?\n2.\t\
+    \ Які політичні партії утворили фракції \nв  ново­обраній Верховній Раді?\n3.\t\
+    \ Коли відбулася остання зустріч ліде-\nрів держав у «нормандському форма-\nті»?\n\
+    Застосовуємо і  аналізуємо\n4.\t Покажіть на карті атласу території, \nщодо яких\
+    \ вели переговори в  «нор-\nмандському форматі».\n5.\t Завдання з хронології.\
+    \ Складіть хро-\nнологію наростання агресивних дій"
+  section_title: Сторінка 249
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0091
+  text: "86\nЛексикологія.  Підсумовуємо й узагальнюємо\nПІДСУМОВУЄМО Й  УЗАГАЛЬНЮЄМО\n\
+    Запитання для самоперевірки\n1.\t Чим різняться однозначні й  багатозначні слова?\n\
+    2.\t Як виникають переносні значення слова?\n3.\t Що таке синоніми? Для чого вони\
+    \ потрібні в  мові?\n4.\t У чому особливість антонімів?\n5.\t Чим омоніми відрізняються\
+    \ від багатозначних слів? А  від паронімів?\n6.\t Які слова називають запозиченими?\
+    \ За якими правилами їх треба ­писати?\n7.\t Розкажіть про активну й  пасивну\
+    \ лексику.\n8.\t Які є  групи слів"
+  section_title: Сторінка 86
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0447
+  text: "§ 32. Україна у 2019—2021 рр. 245\n3. Пандемія COVID-19\n\e\n\e Якими були\
+    \ наслідки пандемії COVID-19  для України? У  2020—2021  рр. одним з  головних\
+    \ чинників \nвпливу на всі процеси в  Україні та світі стала \nпандемія гострої\
+    \ респіраторної хвороби COVID-19, \nспричиненої коронавірусом SARS-CoV-2. Щоб\
+    \ за-\nпобігти масовій захворюваності та смертності \nв  Україні, у  ­березні\
+    \ 2020  р. було запроваджено \nсанітарно-епідеміологічні заходи: карантинні зони,\
+    \ \nперевірка температури, скасування масових захо-\n"
+  section_title: Сторінка 247
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0485
+  text: "§ 32. Україна у 2019—2021 рр. 277\n3\t\nПандемія COVID-19. У  2020—2021 \
+    \ рр. одним \nз  головних чинників впливу на всі процеси \nв Україні та світі\
+    \ стала пандемія гострої респіратор-\nної хвороби COVID-19, спричиненої коронавірусом\
+    \ \nSARS-CoV-2. Щоб запобігти масовій захворюваності \nта смертності в  Україні,\
+    \ у  ­березні 2020  р. було \n­запроваджено санітарно-епідеміологічні заходи:\
+    \ ка-\nрантинні зони, перевірка температури, скасування \nмасових заходів, закриття\
+    \ навчальних і  культурно-\nрозважальних зак"
+  section_title: Сторінка 279
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0274
+  text: "269\nПовторення.  Синтаксис.  Пунктуація\n\t Ми щасливі, якщо наш підручник\
+    \ став тобі другом.\n\t Сподіваємося, за  цей час тобі вдалося дізнатися \nбагато\
+    \ нового й  цікавого.\n\t Вдалого літа й  до  зустрічі в  шостому класі!\n\t Любий\
+    \ друже, люба подруго! Ось і  закінчився ще \nодин навчальний рік.\n1.\t Зміст\
+    \ початкового тексту буде відновлено, якщо речення розмістити \nв  ­такій послідовності:\n\
+    А\t\n \n \n \nБ\t\n \n \n \nВ\t\n \n \n \nГ\t\n \n \n \n2.\t Однорідні члени є \
+    \ в  реченні, позначеному\nА\t\nБ\t\nВ\t\nГ\t\n3.\t Окличним є  ре"
+  section_title: Сторінка 269
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.48237472772598267
+  chunk_id: fad0e4cd_c0011
+  text: "Хід розвитку філософічної думки є тому ніби перехід від однієї\r\nчасткової\
+    \ правди до другої, від однієї «однобічносте» до другої і може бути —\r\nбезплідним\
+    \ хитанням між цими однобічними, обмеженими правдами, а іноді —\r\nпідняттям над\
+    \ тими однобічностями, що в даний історичний момент репрезентовані\r\nу даного\
+    \ народу, в даній культурі, злиттям цих «однобічностей» у єдність, до\r\n«синтези»\
+    \ їх. І ця синтеза залишається все ж обмеженою, однобічною, але вона,\r\nпоскільки\
+    \ вона зливає два однобічні означення "
+  work: Чижевський — Нариси з історії філософії на Україні
+  author: Чижевський Д.
+  year: 1992
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyph/chyph.htm
+- score: 0.48057910799980164
+  chunk_id: 1af78606_c0136
+  text: "Аналітично-синтетичною є парадигма нак. сп., в якій\r\n2-а ос. одн. (будь,\
+    \ дай, роби), 1-а ос. мн. (будьмо, даймо, робімо) і 2-а ос.\r\nмн. (будьте, дайте,\
+    \ робіть) виражаються з допомогою закінчень (синтетично), а\r\nформи 3-ї ос. одн.\
+    \ й мн. — аналітично (хай/нехай буде, хай/нехай дасть,\r\nхай/нехай зробить; хай/нехай\
+    \ будуть, хай/нехай дадуть, хай/нехай зроблять). У\r\nкатегорії стану аналіт.\
+    \ й синтет. форми розподіляються відповідно до їхніх\r\nвидових значень: синтетичними\
+    \ є форми недок. в. (будинок буду"
+  work: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+  year: 2004
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/ukrmova/um01.htm
+- score: 0.47653380036354065
+  chunk_id: b11039d7_c0031
+  text: 'Що, розуміється, не значить, ніби треба припинити зусилля.
+
+
+    Іншого методу в мене немає, — звісно, якщо це взагалі метод. Точніше, в інші методи
+    я не вірю — всі вони, по-моєму, давним-давно себе виснажили. Так що по-іншому
+    мені просто нецікаво.'
+  work: Оксана Забужко. Музей покинутих секретів
+  author: Забужко О.
+  year: 1960
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=2745

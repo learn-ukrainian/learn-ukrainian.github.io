@@ -1,0 +1,155 @@
+discovered_at: '2026-03-13T12:18:24.284175+00:00'
+query_keywords:
+- Українські січові стрільці
+- Патріоти, воїни, просвітники
+- Створення легіону
+- Бойовий шлях
+- Первинні джерела
+- Деколонізаційний погляд
+- Культурна спадщина
+- створення та бойовий шлях УСС
+- роль УСС в українському національному відродженні
+- культурну спадщину січових стрільців
+- значення УСС для майбутньої боротьби за незалежність
+- Минулий час у воєнному наративі
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=XQYnlLIVLcc
+  channel: ІМТГШ
+  title: ЧОМУ ЇХ СТВОРИЛИ? І до чого тут СІЧ? Січові Стрільці | Історія України від
+    імені Т.Г. Шевченка
+  relevance_score: 0.9
+  relevance_note: Directly about the Ukrainian Sich Riflemen, covering their formation,
+    key figures, and the meaning behind their name.
+  transcript_excerpt: Січові стрільці - феномен української історії, який нам іще
+    належить гідно оцінити. Усі вони були січовими стрільцями.
+  embed_suggestion: 'After Вступ: Патріоти, воїни, просвітники -- provides an excellent
+    introductory overview and context for the topic, introducing key figures and the
+    origin of the name.'
+- url: https://www.youtube.com/watch?v=fsccUcwpddo
+  channel: Комік Історик
+  title: 'Євген Коновалець: історія засновника ОУН'
+  relevance_score: 0.8
+  relevance_note: Focuses on Yevhen Konovalets, a central figure in the Ukrainian
+    Sich Riflemen and later the OUN, providing relevant historical context.
+  transcript_excerpt: 'Євген Коновалець: історія засновника ОУН... це перший голова
+    організації українських націоналістів і та людина яка всіма своїми силами долучилася
+    і по факту являється одним із основних творців ОУН.'
+  embed_suggestion: 'After Підсумок: Культурна спадщина -- discusses Konovalets''s
+    legacy and role in later Ukrainian nationalist movements, which stems from the
+    Sich Riflemen era.'
+- url: https://www.youtube.com/watch?v=EvenB0znkeE
+  channel: Комік Історик
+  title: 'історія Запорізької Січі: найкращі воїни Європи'
+  relevance_score: 0.4
+  relevance_note: Discusses the history of Zaporizhian Sich and Cossacks, which is
+    a different historical period and formation than the Ukrainian Sich Riflemen.
+  transcript_excerpt: Ну, сьогодні ми будемо говорити про козацтво і безпосередньо
+    про військо запорозьке низове або ж Запорозьку Січ.
+  embed_suggestion: Not suitable for direct embed as the topic is distinct.
+- url: https://www.youtube.com/watch?v=2NNDtZtll2c
+  channel: ІМТГШ
+  title: ДЕ ЗУПИНИТЬСЯ УКРАЇНА? ТАЄМНИЦЯ КОРДОНІВ. | Історія України від імені Т.Г.
+    Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0206
+  text: "Для вас, допитливі\nrnk.com.ua/110316\nПрацюємо з джерелом\nrnk.com.ua/110317\n\
+    З Універсалу \nБ. Хмельницького  \nдо української спільноти \nіз закликом підтримати\
+    \ \nрозпочату козацтвом \nборотьбу\nПолковник реєстрового лівобережного \nполку.\
+    \ Художник С. Васильківський. 1900  р. \e\n\e Порівняйте вбрання та спорядження\
+    \ \nстаршини та пересічного козака (с. 124)."
+  section_title: Сторінка 127
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0081
+  text: "?? Як ви вважаєте, чим була зумов­\nлена поява таких клятв? Про що \nвони\
+    \ свідчать? Знать\nЖерці та писарі\nВоїни\nРемісники\nФараон\nСеляни\nrnk.com.ua/104214\n\
+    Підручник  \nВидавництво «Ранок»"
+  section_title: Сторінка 62
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0018
+  text: "\x17\n\x17 В умовах початку війни українські політичні діячі виробили свою\
+    \ \nпозицію до неї і  заявляли про інтереси українства. \x17\n\x17 У  складі австро-угорської\
+    \ армії в  роки війни були сформовані до-\nбровольчі українські підрозділи в Галичині\
+    \ та Буковині. Найвідомішим \nіз них став легіон Українських січових стрельців.\
+    \ ? Запитання та завдання\n\x8A\x8A\n1. Що таке геополітика? 2. Коли утворився\
+    \ Союз визволення України? 3. Хто став \nголовою Головної української ради? 4.\
+    \ Коли виникла Загальна українська рада? \x8E\n\x8E\n"
+  section_title: Сторінка 13
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5885726809501648
+  chunk_id: feaa5fa7_c3127
+  text: "Українські Січові Стрільці (УСС). Єдиною укр. нац. формацією на початку першої\
+    \ світової війни в складі австроугорської\r\nармії був зформований із студентської\
+    \ та нац.-свідомої сел. й робітничої молоді\r\nГаличини добровольчий леґіон Січових\
+    \ Стрільців (УСС, див. стор. 494)."
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5397756099700928
+  chunk_id: feaa5fa7_c1166
+  text: "Українські Січові Стрільці були, як вони себе\r\nвизначали, »політичним«\
+    \ військом і складалися з молодих добровольців, переважно\r\nстудентів, свідомих\
+    \ селян і робітників. Свідомі свого призначення, вони\r\nвславилися в боях з головним\
+    \ ворогом українства (на горі Маківці в травні 1915\r\np., під Галичем, над Стрипою\
+    \ 1915 — 16 pp., під Бережанами — Потуторами, на\r\nгорі Лисоні 1916 p., під Конюхами,\
+    \ в часи наступу Брусілова 1917 p.). Після\r\n140-річної перерви вони перші за\
+    \ нових часів відродили й перейнял"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5269246101379395
+  chunk_id: ffcfbeb9_c0042
+  text: "21 Залізняк Л. Від\r\nсклавинів до української нації. — С. 101.\n\n22 Там\
+    \ же. — С. 66."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm

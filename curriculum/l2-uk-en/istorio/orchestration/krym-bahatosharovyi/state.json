@@ -4,8 +4,24 @@
   "mode": "v5",
   "phases": {
     "research": {
-      "status": "failed",
-      "ts": "2026-03-13T01:16:52Z"
+      "status": "complete",
+      "ts": "2026-03-13T11:32:12Z",
+      "task_id": "v5-krym-bahatosharovyi-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T11:32:12Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
     }
   }
 }

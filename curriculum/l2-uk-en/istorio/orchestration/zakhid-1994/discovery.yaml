@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T12:09:41.179716+00:00'
+query_keywords:
+- 'Будапештський меморандум: Гарантії без гарантій'
+- Контекст
+- Переговори
+- Текст меморандуму
+- '2014'
+- Чи могла Україна інакше
+- 'Analyze the causes and consequences of будапештський меморандум: гарантії без гарантій'
+- Evaluate the historical significance of угода без зубів
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0470
+  text: "Мовою джерела. Витяг із Будапешт-\nського меморандуму від 5 грудня \n1994\
+    \ року: \n«Поважати незалежність і суверенітет та \nіснуючі кордони України (стаття\
+    \ 1); утримуватися \nвід загрози силою чи її використання проти \nтериторіальної\
+    \ \nцілісності \nчи \nполітичної \nнеза-\nлежності України, і що ніяка їхня зброя\
+    \ ніколи не \nбуде використовуватися проти України, крім цілей \nсамооборони або\
+    \ будь-яким іншим чином згідно зі \nСтатутом \nООН \n(стаття 2); \nутримуватися\
+    \ \nвід \nекономічного тиску, спрямованого на те,"
+  section_title: Сторінка 257
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0355
+  text: "§ 27. Зовнішня політика та міжнародні зв’язки України в 1992—2013 рр. 195\n\
+    § 27. Зовнішня політика та міжнародні \nзв’язки України в 1992—2013 рр. 1. Міжнародне\
+    \ визнання незалежності \nУкраїни. Набуття без’ядерного статусу\n\e\n\e Коли було\
+    \ підписано Будапештський меморандум? Після проголошення незалежності Україна\
+    \ впер-\nше стала рівноправним суб’єктом міжнародних \nвідносин. Однією з перших\
+    \ міждержавних угод став \nДоговір про основи добросусідства і  співробітни-\n\
+    цтва між Україною та Угорською Республі"
+  section_title: Сторінка 197
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0469
+  text: "256 \nПідписання Будапештського \nмеморандуму. Зліва направо сидять: Президенти\
+    \ \nБорис Єльцин (РФ), Білл Клінтон \n(США), Леонід Кучма (Україна), \nПрем’єр-міністр\
+    \ Джон Мейджор \n(Велика Британія),  \n5 грудня 1994 року. Світлина \nОфіцер ЗСУ\
+    \ спостерігає  \nза витягненням з шахти на \nвійськовій базі пускової установки\
+    \ \nракети СС-24, \n29 вересня 1998 року. Світлина \nполітики, спрямованої на\
+    \ повне зни-\nщення ядерної зброї та компонентів \nїї базування. Але, відмовляючись\
+    \ від \nвеличезного \nядерного \nпотенці"
+  section_title: Сторінка 257
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0401
+  text: "§ 27. Зовнішня політика та міжнародні зв’язки України в 1992—2013 рр. 227\n\
+    Запитання і  завдання\n1. Яка країна першою визнала Україну як незалежну \nдержаву?\
+    \ 2. У якому році Україна офіційно відмо­\nвилася від ядерної зброї? Коли Україна\
+    \ реально набула \nбез’ядерного статусу? 3. Які держави підписали Буда­\nпештський\
+    \ меморандум, що надавав гарантії безпеки \nУкраїні? 4. Який документ складав\
+    \ політико-правову \nоснову багатовекторності зовнішньої політики України? Коли\
+    \ він був ухвалений? 5. Із яким През"
+  section_title: Сторінка 229
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0414
+  text: "Зверніть увагу\nПлан П. Порошенка щодо відновлення \nмиру передбачав такі\
+    \ заходи:\nyy гарантії безпеки для всіх учасників \nпереговорів;\nyy звільнення\
+    \ від кримінальної \nвідповідальності тих, хто склав \nзброю і  не здійснив тяжких\
+    \ \nзлочинів;\nyy звільнення заручників;\nyy створення 10-кілометрової буферної\
+    \ \nзони на українсько-російському \nкордоні;\nyy виведення незаконних збройних\
+    \ \nформувань з  території України;\nyy гарантований коридор для виходу \nросійських\
+    \ найманців;\nyy роззброєння;\nyy створення у  с"
+  section_title: Сторінка 229
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.510515034198761
+  chunk_id: 53691244_c0198
+  text: "Симптоматичною є орієнтація Будапешта на те, що в міру\r\nзміцнення Української\
+    \ держави вона стане активним союзником Угорщини в захисті\r\nінтересів угорської\
+    \ національної меншини, в розвитку інтеґраційних процесів у\r\nЄвропі. Міцна й\
+    \ стабільна Україна в союзі з європейськими державами зможе\r\nсильніше впливати\
+    \ на подолання несправедливостей, пов’язаних із розділом\r\nугорської нації: на\
+    \ цьому шляху співробітництво України й Угорщини має\r\nперспективу і стане ефективним.\n\
+    \nОстаннім часом Угорщина також д"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5102869868278503
+  chunk_id: 53691244_c0257
+  text: "Однак без\r\nпротекторату неросійської сили незалежна Україна не в змозі\
+    \ протистояти Росії\r\nабо мала б тенденцію перетворитися на радикально-соціалістичну\
+    \ республіку, що\r\nнавряд чи було б приємним сусідством для Відня, — твердить\
+    \ Урбас. Україна з\r\nотриманою внаслідок мирного договору автономією була б фікцією\
+    \ за умов\r\nросійського панування; Росія знову зросійщувала б її або розв’язала\
+    \ б нову\r\nвійну. Залишаються лише такі можливості: а) Україна під протекторатом\r\
+    \nНімеччини; б) Україна під спільним "
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.49212217330932617
+  chunk_id: 53691244_c0281
+  text: "Разом з тим і Україна не відчула дискримінаційного\r\nпідходу з боку Бонна.\
+    \ Поступово в зовнішньополітичній концепції ФРН формується\r\nмодель рівноцінного\
+    \ підходу до України і Росії. Загалом саме об’єднана Німеччина\r\nстимулює в ЄС\
+    \ визначення політики щодо СНД. «Підписання Договору про\r\nпартнерство і співробітництво\
+    \ з Росією, Україною і іншими державами СНД, —\r\nпідкреслив К.Кінкель,— має для\
+    \ нас велике значення» 57. Залучення до\r\nасоційованого членства в ЄС, реалістична\
+    \ економічна допомога, поступов"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

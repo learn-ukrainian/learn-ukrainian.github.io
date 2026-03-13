@@ -1,4 +1,4 @@
-FAIL: pipeline hist 95
+PASS: pipeline hist 95
 
   Module:   bilshovytsko-ukrainska-viyna
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 95
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:17:21Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:34:12Z

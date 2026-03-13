@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 105
+PASS: pipeline istorio 105
 
   Module:   holodomor-ekonomika
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 105
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:03Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:21:19Z

@@ -1,0 +1,294 @@
+discovered_at: '2026-03-13T11:33:33.440064+00:00'
+query_keywords:
+- 'Південь: Колонізація та міфи «Новоросії»'
+- До «Новоросії»
+- Російська колонізація
+- Одеса
+- Херсон, Миколаїв, Маріуполь
+- «Новоросія» 2014
+- 'Analyze the causes and consequences of південь: колонізація та міфи «новоросії»'
+- Evaluate the historical significance of що це?
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0291
+  text: "2. Покажіть територію, межі та столицю незалежного Кримського ханства в \n\
+    1774–1783 роках, яке в 1783 році було приєднане до володінь Російської імперії.\
+    \ 3. Порівняйте кордони Російської імперії до 1774 року та кордони в 1791 році.\
+    \ 4. Покажіть річки, які відмежовували приєднані до Російської імперії території\
+    \ в \n1774 і в 1791 роках. 5. Назвіть нові міста, засновані в колишніх володіннях\
+    \ запорозьких козаків, \nКримського ханства та Османської імперії. 225 \nНаслідки\
+    \ війн між Російською та Османською"
+  section_title: Сторінка 113
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0054
+  text: "§ 4. Політика радянізації («совєтізації») та репресії західних областей УРСР\n\
+    29\nДЕМОГРАФІЧНІ ЗМІНИ В  УКРАЇНІ В  ПЕРШІ ПоВОЄННІ РОКИ. РЕПРЕСІЇ ТА ДЕПОРТАЦІЇ\n\
+    800\n500\nС\nЛ\nО\nВ\nА\nЧ\nЧ\nИ\nН\nА\nЧ\nЕ\nХ\nО\n-\nП О Л Ь Щ А\nБ і л о р\
+    \ у с ь к а  Р С Р\nМ\nо\nл\nд а\nв с\nь к\nа  \nР\nС\nР\nЗакарпатська\nобл. Кримська\n\
+    обл. Волинська\nобл. Р\nУ\nМ\nУ\nН\nІ\nЯ\nУГ\nО\nР\nЩ\nИ\nН\nА\nКа\nм’\nян\nец\n\
+    ь-\nПо\nділ\nьс\nька\nоб\nла\nст\nь\nР о с і й с ь к а  Р Ф С Р\nдо Сілезії та\
+    \ Померанії\nдо Сибіру та Казахстану\nВ\nі\nс\nл\nа\nСя\nн\nПрип\n’\nя\nть\nГо\n\
+    ри\nнь\nД\nн\nіпр\nо\nД"
+  section_title: Сторінка 31
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0455
+  text: '§ 30. Початок війни Росії проти України
+
+    259
+
+    Луганськ
+
+    Харкiв
+
+    Днiпропетровськ
+
+    Донецьк
+
+    Запорiжжя
+
+    Петропавлiвка
+
+    Троїцьке
+
+    Мiлове
+
+    Маркiвка
+
+    Бiловодськ
+
+    Станиця
+
+    Луганська
+
+    Бiлокуракине
+
+    Новоайдар
+
+    Великий Бурлук
+
+    Золочiв
+
+    Дворiчна
+
+    Шевченкове
+
+    Борова
+
+    Печенiги
+
+    Близнюки
+
+    Юр’ївка
+
+    Нова Водолага
+
+    Сахновщина
+
+    Кегичiвка
+
+    Зачепилiвка
+
+    Старобешеве
+
+    Тельманове
+
+    Велика Новосiлка
+
+    Василькiвка
+
+    Покровське
+
+    Межова
+
+    Мангуш
+
+    Володарське
+
+    Розiвка
+
+    Чернiгiвка
+
+    Куйбишеве
+
+    Михайлiвка
+
+    Новомиколаївка
+
+    Краснодон
+
+    Новопсков
+
+    Старобiльськ
+
+    Кремiнна
+
+    Сватов'
+  section_title: Сторінка 261
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0007
+  text: "7\n§ 1. Вступ\nвлада продовжувала здійснювати політику русифікації, що охоплювала\
+    \ \nвсі сфери економічного, політичного та культурного життя краю. Над-\nзвичайно\
+    \ високий рівень русифікації населення спостерігався у великих \nмістах і  промислових\
+    \ центрах. За переписом 1897  р., у  Києві 54,4  % \nжителів становило російське\
+    \ населення і  лише 22,1  %  — українське, \nв  Одесі українці у  складі населення\
+    \ міста не перевищували 16  %. \nТака сама тенденція простежувалася щодо частки\
+    \ українського населен-\nн"
+  section_title: Сторінка 7
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0328
+  text: "Робота в парах. Обговоріть і наведіть факти, які свідчать про \nпоступове\
+    \ обмеження російським урядом «вольностей» Запо­\nрожжя. 9. Колективне обговорення.\
+    \ Запорозька Січ не раз \nзазнавала руйнувань. Чому після подій 1775  р. вона\
+    \ вже не \n­змогла відновитися в  попередньому вигляді? 10. Чи можна \nстверджувати,\
+    \ що, беручи участь у  російсько-турецьких війнах \nдругої ­половини XVIII ст.\
+    \ на боці Росії, козацтво власноруч готу­\nвало передумови для своєї ліквідації?\
+    \ На узбережжі Чорного й  Азовсько­\nго"
+  section_title: Сторінка 168
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6082387566566467
+  chunk_id: 68ba0555_c0373
+  text: "Так звана Новоросія була відкрита для всеросійської\r\nколонізації. Каркас\
+    \ для цієї нової землі мали створити нові міста, водночас\r\nвійськові та військово-морські\
+    \ поселення та промислові центри. Будуються\r\nпристані Херсонська, Гола й Глибока,\
+    \ 1775 р. укріплення в Херсоні (бо нижче по\r\nтечії, на виході з лиману, знаходилась\
+    \ турецька фортеця Очаків), наступного\r\nроку тут будується головний порт і база\
+    \ Чорноморського флоту, 1783 р. із\r\nстапелів сходять перші кораблі. А ще за\
+    \ рік постають біля гирла І"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.5749652981758118
+  chunk_id: feaa5fa7_c0852
+  text: "Є й назви чужого походження, здебільшого\r\nколонізаторського характеру.\
+    \ Найстаріші між ними іранські назви: Дін, Дніпро,\r\nДністер, з місцевостей Ясси\
+    \ (старе: Яський Торг). По грецьких колоніях лишилися\r\nтакі назви, як: Ольбія\
+    \ (’Ολβίη) Феодосія\r\n(Θεοδοσίη), Пантікапея (Παντικάπαιον);\r\nяк на вислід\
+    \ модної в XVIII ст. грекоманії треба дивитися на такі штучно\r\nстворені тоді\
+    \ назви, як: Одеса, Херсон, Севастопіль, Ольвіопіль та ін. Південь\r\nУкраїни\
+    \ особливо багатий на назви турецько-татарського походже"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5631706714630127
+  chunk_id: 89ab7c69_c0053
+  text: "«Україна» й\r\n«українці» був, зрештою, не чим іншим, як протидією асиміляційним\
+    \ процесам,\r\nполітиці денаціоналізації, розчинення його в «общерусском море»,\
+    \ котра\r\nневідступно проводилася правлячими колами Російської імперії. І характерно,\
+    \ що\r\nцей перехід активніше проходив і раніше завершився в реґіонах України,\
+    \ ближчих\r\nдо Росії, тоді як у західних реґіонах, суміжних із польським етносом,\
+    \ довше\r\nзберігалися етнічні самовизначення «Русь» і «руський» (\"русинський\"\
+    ).\n\nОскільки ж терміни\r\n«Русь» і «"
+  work: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+  year: 2008
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ochyma/ochrus.htm

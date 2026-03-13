@@ -1,0 +1,203 @@
+discovered_at: '2026-03-13T09:48:16.966105+00:00'
+query_keywords:
+- «Заповіт» і листи Шевченка
+- «Заповіт»
+- Контекст написання
+- Листи Шевченка
+- Фрагмент
+- Шевченко в історичній пам'яті
+- Analyze the causes and consequences of «заповіт» і листи шевченка
+- Evaluate the historical significance of шевченко як джерело
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=t2puE7iROa0
+  channel: ІМТГШ
+  title: КАЗАХСТАН - друга батьківщина Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0372
+  text: "– \nК., 1990. 7. Шевченківський словник: У 2 т. – К., 1976–1977. 8. Світова\
+    \ велич Шевченка: У 3 т. – К., 1964."
+  section_title: Сторінка 217
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0202
+  text: "А. Уявіть, що вам доручили розмістити цей текст на шкільному сайті. Підготуйте\
+    \ до тексту \nкілька вступних речень, щоб зацікавити учнів вашої школи дочитати\
+    \ його до кінця. Т. Пата. Птахи"
+  section_title: Сторінка 130
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0313
+  text: "Про Шевченка написали таке: «Він набув серед \nсвоїх друзів славу знаменитого\
+    \ українського письменника, а тому \nвірші його подвійно шкідливі й небезпечні...\
+    \ З огляду на бунтівни-\nчий дух і зухвальство, що виходять за всякі межі, треба\
+    \ визнати \nйого за одного з найважливіших злочинців». Зважаючи на те, що \nШевченко\
+    \ мав міцну будову тіла, цареві запропонували віддати пое-\nта на службу у війську\
+    \ в далекому Оренбурзі. Микола І власноручно \nдописав: «Під найсуворіший нагляд,\
+    \ із забороною писати й малю"
+  section_title: Сторінка 203
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0074
+  text: "Шевченко). Будову складносурядного речення можна зобразити за допомогою схеми:\
+    \ для позна-\nчення частин використовують квадратні дужки, а між ними ставлять\
+    \ розділовий знак \nі записують сполучник, наприклад: Ходить сон край вікон, і\
+    \ дрімає казка (Народна твор-\nчість). [   ], і [   ]. § 14. Складносурядне  речення"
+  section_title: Сторінка 52
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0315
+  text: "203\nСИЛА ПОЕТИЧНОГО РЯДКА\nÏÅÐÅÂ²ÐßªÌÎ\n1. Розгадайте зашифровані слова.\
+    \ Як ці слова пов’язані з Тарасом Шевченком \nі його творчістю? \n     \n2. За\
+    \ жанром «Заповіт» Т. Шевченка – це \n \nА балада             Б дума         \
+    \        В поема           Г ліричний вірш\nÀÍÀË²ÇÓªÌÎ\n3. Що ви відчуваєте, читаючи\
+    \ вірш «Заповіт»? Які емоції він у вас викликав? \n4. Поділіть вірш на три умовні\
+    \ частини за змістом. Визначте основну думку кож-\nної з них. \n5. Яка панорама\
+    \ України розкривається перед вами? Повторення "
+  section_title: Сторінка 205
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6101371645927429
+  chunk_id: fc2291b5_c1420
+  text: "Літ.: Кононенко Г.\r\nШевченко французькою мовою. «Всесвіт», 1964, № 10;\
+    \ Гресько М. Французи про\r\nШевченка. «Всесвіт», 1965, № 3; Кухтенко В. А.. Миронов\
+    \ О. О. З історії\r\nперекладу творів Шевченка у Франції. «Вісник Харківського\
+    \ університету», 1975, №\r\n128; Коптілов В. Поезія Ежена Гільвіка. «Всесвіт»,\
+    \ 1976, № 5; Кухтенко В. А.\r\n«Заповіт» Т. Г. Шевченко в переводе Э. Гильвика.\
+    \ «Вестник Харьковского\r\nуниверситета», 1984, № 258.\n\nВ. А. Кухтенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.6010496616363525
+  chunk_id: 4298bcca_c0050
+  text: "У фондах відділу зберігаються також\r\nспогади сучасників поета, статті та\
+    \ розвідки різних авторів про його життя і\r\nтворчість. Частково ці матеріали\
+    \ вже були використані Д. М. Іофановим у книзі\r\n«Матеріали про життя і творчість\
+    \ Тараса Шевченка» (К., 1957) і в огляді\r\nшевченківських матеріалів, вміщеному\
+    \ в «Збірнику оглядів фондів відділу\r\nрукописів» (К., 1962).\n\nПроте вивчаючи\
+    \ матеріали відділу,\r\nпрацівники звернули увагу на те, що в багатьох листах\
+    \ різних осіб часто\r\nговориться про Шевченка. Вир"
+  work: Шевченко в епістолярії (1966)
+  author: Колектив
+  year: 1966
+  genre: letters
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/epis.htm
+- score: 0.5911886096000671
+  chunk_id: d77902e2_c1043
+  text: "ЛИСТУВАННЯ Т. Г. ШЕВЧЕНКА. Листи Т. Г. Шевченка — важлива частина його літ.\
+    \ спадщини, цінне\r\nджерело для вивчення життя поета, його творчості, суспільно-політ.,\
+    \ естетичних\r\nпоглядів та оточення. В листуванні Шевченка відобразилась ідейна\
+    \ боротьба тих\r\nчасів. Розшукано 259 листів Шевченка до різних осіб та офіційних\
+    \ установ і 249\r\nлистів до поета. Зберігаються вони переважно в Ін-ті л-ри ім.\
+    \ Т. Г. Шевченка АН\r\nУРСР (147 листів), а також у Центр. наук. б-ці АН УРСР,\
+    \ у ДМШ, в Центр. архіві-музеї\r\nл"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm

@@ -1,0 +1,205 @@
+discovered_at: '2026-03-13T12:26:39.440139+00:00'
+query_keywords:
+- '«Малоросія»: Як створювався міф'
+- Витоки терміна
+- XVIII століття
+- XIX століття
+- Протидія
+- XX-XXI століття
+- 'Analyze the causes and consequences of «малоросія»: як створювався міф'
+- Evaluate the historical significance of назви мають силу
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0064
+  text: "Але завдяки релігійній полеміці викристалізува­\nлася ідея «руського народу»\
+    \ як третього учасника федеративної Речі По­\nсполитої. УКРАЇНСЬКІ ЗЕМЛІ У СКЛАДІ\
+    \ РЕЧІ ПОСПОЛИТОЇ\nРОЗДІЛ 1 \nу XVI -  першій половині XVII ст."
+  section_title: Сторінка 48
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0005
+  text: 'е. Середньовічна історія
+
+    V  ст. н. е. — кінець XV  ст. Нова історія
+
+    XVI  — початок XX  ст. Новітня історія
+
+    1914  р. — початок XXI  ст.'
+  section_title: Сторінка 5
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0311
+  text: '0
+
+    10
+
+    20
+
+    30
+
+    40
+
+    50
+
+    1907‐1915 рр. Правобережжя
+
+    Південь
+
+    Лівобережжя'
+  section_title: Сторінка 214
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0119
+  text: "Маланюк? що, на думку письменника, \nє чинниками формування «малоросійства»?\
+    \ Запрошуємо до дискусії\n7. Чи властиве «маëоросіéство» нашим сучасникам? В електронному\
+    \ додатку до підручника ви знайдете повний текст твору \nª. Маланþка «Малоросійство»\
+    \ . Прочитайте його . Дайте відповіді на запи-\nтання, виконайте завдання . читацький\
+    \ практикум"
+  section_title: Сторінка 65
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0190
+  text: "Розпочніть складати таблицю «Видатні діячі історії краю» (кінець \nXVIII \
+    \ — перша половина XIX  ст.). Прізвище, роки життя\nЧим уславився\nЗначення діяльності\n\
+    Наш край наприкінці XVIII  — у  першій половині XIX  ст."
+  section_title: Сторінка 105
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5137587189674377
+  chunk_id: f648356f_c0037
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 21-44.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm
+- score: 0.5079355239868164
+  chunk_id: 94271a53_c0014
+  text: "Тепер кілька слів про термінологію. Впродовж\r\nбагатовікової історії Україну\
+    \ називали по-різному: «Русь», «Мала Русь» («Мала\r\nРосія», «Малоросія»), «Україна».\
+    \ У XVIII ст. територія Гетьманщини була відома\r\nяк «Малоросія», але цей термін\
+    \ не точний, оскільки в інші періоди «Малоросією»\r\nназивали також території\
+    \ поза межами Гетьманщини. Більше того, сьогодні багато\r\nукраїнців вважають\
+    \ цю назву принизливою. У XIX ст. історики називали Україну\r\n«Гетьманщиною»,\
+    \ а в XX ст. радянські історики почали вжив"
+  work: Когут — Російський централізм і українська автономія
+  author: Когут З.
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss5/koh.htm
+- score: 0.5073111057281494
+  chunk_id: 6cadb199_c0319
+  text: "160 Источники по\r\nистории новгородско-московской ереси конца XV — начала\
+    \ XVI в. // Казакова\r\nН. А., Лурье Я. С. Антифеодальные еретические движения\
+    \ на Руси XIV —\r\nначала XVI века. — М.-Л., 1955. — С. 438 — 485.\n\n161 Там\
+    \ же. — С.\r\n211 — 215.\n\n162 Зимин А. А. Россия\r\nна рубеже XV — XVI столетий\
+    \ (очерки социально-политической истории). — М.,\r\n1982. — С. 83.\n\n163 Лурье\
+    \ Я. С. Идеологическая\r\nборьба в русской публицистике конца XV — начала XVI\
+    \ века. — М.-Л., 1960. —\r\nС. 129 — 135; Сборник РИО. — СПб.,"
+  work: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ivakin/ivak.htm

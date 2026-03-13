@@ -1,4 +1,4 @@
-FAIL: pipeline hist 46
+PASS: pipeline hist 46
 
   Module:   khotynska-viyna
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 46
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:09:42Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:32:45Z

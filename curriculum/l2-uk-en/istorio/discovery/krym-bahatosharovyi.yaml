@@ -1,0 +1,299 @@
+discovered_at: '2026-03-13T11:31:51.786580+00:00'
+query_keywords:
+- 'Крим: Багатошарова історія'
+- Античний Крим
+- Кримське ханство
+- 1441-1783
+- Російський Крим
+- 1783-1991
+- Депортація 1944
+- 1954 і 2014
+- 'Analyze the causes and consequences of крим: багатошарова історія'
+- Evaluate the historical significance of шари історії
+- history
+- історія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0306
+  text: "Яка \nінформація вас \nздивувала? СФОРМУЛЮЙТЕ СУДЖЕННЯ ПРО:\n\x84\n\x84\n\
+    існування генуезьких володінь \nу  Криму;\n\x84\n\x84\nрозвиток князівства Феодоро;\n\
+    \x84\n\x84\nвиникнення Кримського ханату;\n\x84\n\x84\nполітику перших ханів щодо\
+    \ \nукраїнських земель. rnk.com.ua/108342\nДля вас, допитливі\n  Працюємо з  хронологією\n\
+    Кінець \nXII  ст. — \n1475  р. Існування князівства \nФеодоро\n1261—\n1475  рр.\
+    \ Існування генуезьких \nволодінь у  Криму\n1441  р. Утворення Кримського \nханату\n\
+    1474  р. Перший великий напад \nкримських татар на \nукраїнські "
+  section_title: Сторінка 206
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0080
+  text: "Навчальний фільм\nrnk.com.ua/110344\nСправжня історія  \nКриму \n \nДля вас,\
+    \ допитливі\nrnk.com.ua/110763\n \n  Зверніть увагу\nЗа державним устроєм Кримський\
+    \ ханат був децентра-\nлізованою унітарною державою. Її територія поділялася \n\
+    на бейліки  — адміністративні округи, якими керували \nглави кримських родів —\
+    \ беї (особи, подібні до князів \nу  європейських країнах). Гаптування на весільному\
+    \ одязі \nкримськотатарських жінок"
+  section_title: Сторінка 52
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0407
+  text: 'КРИМ у  1991—2021  рр. Херсонська обл. РОСІЯ
+
+    Перекоп
+
+    Чонгар
+
+    Стрілкове
+
+    Перевальне
+
+    Гончарне
+
+    Балаклава
+
+    Бельбек
+
+    Чушка
+
+    Каланчак
+
+    Лазурне
+
+    Краснокам’янка
+
+    Чорноморське
+
+    Новоозерне
+
+    Мирний
+
+    Первомайське
+
+    Роздольне
+
+    Октябрське
+
+    Гвардійське
+
+    Зуя
+
+    Красногвардійське
+
+    Кача
+
+    Миколаївка
+
+    Гресівський
+
+    Комсомольське
+
+    Аерофлотський
+
+    Аграрне
+
+    Куйбишеве
+
+    Гаспра
+
+    Форос
+
+    Партеніт
+
+    Масандра
+
+    Нижньогірський
+
+    Коктебель
+
+    Багерове
+
+    Леніне
+
+    Приморський
+
+    Кіровське
+
+    Совєтський
+
+    Новофедорівка
+
+    Сімферополь
+
+    Армянськ
+
+    Красноперекопськ
+
+    Алупка
+
+    Ялта
+
+    Алушта
+
+    Бахчи'
+  section_title: Сторінка 226
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0288
+  text: "222 \nВірменки та вірменин \n(греки та вірмени \nскладали найбільші \nхристиянські\
+    \ громади \nКриму) \n§ 45. ПІДКОРЕННЯ РОСІЙСЬКОЮ ІМПЕРІЄЮ                    \n\
+    КРИМСЬКОГО ХАНСТВА  \nТА ЙОГО ЛІКВІДАЦІЯ \n \n \nРазом із Кліо проаналізуйте лінію\
+    \ часу. З якою державою \nпов’язані історичні події, відображені на лінії часу?\
+    \ На основі \nінформації, вміщеної на лінії часу, складіть коротеньку розповідь\
+    \ з  \n3-4 речень про цю державу. 1. Кримське ханство поміж двох імперій \nУ другій\
+    \ половині XVIII століття загострила"
+  section_title: Сторінка 112
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0289
+  text: "Які події відбувалися в Криму в 1778—1779 роках? Відлуння минулого \nЗі звернення\
+    \ християнського населення до кримського хана        \nШагін Ґерая (1778 рік)\
+    \ \n«Ми … ханом і вітчизною своєю задоволені; від предків своїх \nплатимо данину\
+    \ … (ханові), і хоч шаблями нас рубати будуть, то ми все-\nтаки нікуди не підемо.\
+    \ …Ми слуги ваші й піддані триста років, … і ніколи від вас \nобраз не бачили.\
+    \ Нині ж нас хочуть звідси вивести. … просимо (нас) від такої \nнапасті позбавити,\
+    \ за що за вас Бога молити будемо»"
+  section_title: Сторінка 112
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6656754016876221
+  chunk_id: c9051c0b_c0004
+  text: 'Історія Криму дуже-дуже давня… Ще як Каїн Авеля вхекав за жертву господню,
+    так і тоді вже Крим був. Взагалі, як переказують тут старі люди, Крим постав у
+    той самий день, як господь створив "твердь та видиме небо"… Старенький, як бачите,
+    є Крим.
+
+
+    Передісторична Кримова доля була така. (За точність не ручусь!).
+
+
+    Колись-колись-колись Крим, як відомо, звався Таврія. Це його найстарша назва.
+    А постала вона від народу "таврів" (таври), найдавніших, що їх історія застукує
+    на цім півострові, пожильців. '
+  work: Остап Вишня. Вишневі усмішки кримські
+  author: Вишня О.
+  year: 1889
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=3030
+- score: 0.5942202210426331
+  chunk_id: 68ba0555_c0216
+  text: "Окремі татарські групи проникали в Крим, кочували в\r\nйого степовій частині\
+    \ й осідали на землю. Центром татарського населення Криму\r\nспочатку було м.\
+    \ Крим (нині Старий Крим), звідки починалися татарські шляхи на\r\nпівніч. У середині\
+    \ XV ст. Крим повністю підпадає під владу татарської держави, очолюваної\r\nдинастією\
+    \ Ґіреїв. Столиця, Бахчисарай, розбудовується біля центру колишнього\r\nМанґупського\
+    \ князівства. Перший хан, Хаджі-Ґірей, принаймні певний час жив у\r\nЛитві у Вітовта;\
+    \ в кінці XIV ст. він захо"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.5780086517333984
+  chunk_id: 484d0ffb_c0324
+  text: "Кримські татари стали оселятися в містах з XIV ст. З\r\nних найстарішим містом\
+    \ з переважно татарським населенням був Солхат (Старий\r\nКрим). Населення Бахчисарая,\
+    \ Карасубазара (Білогорська), Гезлева (Євпаторії), Кирк-Ера\r\n(Чуфут-Кале), Перекопа\
+    \ та інших татарських міст залишалося поліетнічним. У цих\r\nмістах поруч з татарами\
+    \ жили греки, українці, караїми, вірмени, євреї, нащадки\r\nготів та інші народи.\
+    \ В ряді міст були ремісницькі цехи. Так, у Бахчисараї було\r\n32 ремісничі цехи.\
+    \ Цех очолював уста-баш"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

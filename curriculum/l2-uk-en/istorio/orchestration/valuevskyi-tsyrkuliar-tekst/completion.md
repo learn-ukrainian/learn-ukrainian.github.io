@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 31
+PASS: pipeline istorio 31
 
   Module:   valuevskyi-tsyrkuliar-tekst
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 31
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:09:27Z
+  Verdict:  PASS
+  Date:     2026-03-13T09:50:24Z

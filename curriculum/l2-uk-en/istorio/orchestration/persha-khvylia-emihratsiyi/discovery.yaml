@@ -1,0 +1,206 @@
+discovered_at: '2026-03-13T10:59:46.280274+00:00'
+query_keywords:
+- 'Перша хвиля еміграції: Трудова (1880-1914)'
+- Галицькі селяни в дорозі
+- Канада
+- США
+- Південна Америка
+- Формування громад
+- 'Analyze the causes and consequences of перша хвиля еміграції: трудова (1880-1914)'
+- Evaluate the historical significance of чому виїжджали?
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0313
+  text: "174\nРозділ V\nПротягом другої половини XIX ст. зі Східної Галичини й Північної\
+    \ \nБуковини в пошуках кращої долі до Америки виїхало близько 250 тис. осіб. Закарпаття\
+    \ упродовж 1871—1900 рр. залишили 170 тис. переселенців. Перша хвиля трудової\
+    \ еміграції із західноукраїнських земель тривала до початку \nПершої світової\
+    \ війни. У  цілому вона була частиною світового міграційного про­\nцесу, що особливо\
+    \ активізувався на межі XIX—XX  ст. за масштабами вона пере­\nважала всі наступні\
+    \ хвилі української еміграц"
+  section_title: Сторінка 174
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0430
+  text: "Проте незважаючи на позитивні тенденції, у краї й надалі не ви-\nстачало\
+    \ свого хліба, його доводилося завозити з Угорщини. Значно кра-\nще було розвинене\
+    \ тваринництво, яким більше займалися селяни (91 % \nпоголів’я). Експорт худоби\
+    \ став одним із головних джерел прибутку на-\nселення краю. У Закарпатті традиційно\
+    \ розвивалося виноградарство. Малоземелля та інші соціальні проблеми продовжували\
+    \ відігравати провідну роль \nу  збільшенні трудової еміграції українців до Північної\
+    \ Америки. тільки протягом \n1"
+  section_title: Сторінка 238
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0409
+  text: "Щоправда, із часом майже чверть із них повернулися додому. У той самий час\
+    \ на \nПівдень і  Схід, де на промислових підприємствах виникла потреба в  робочих\n\
+    руках, переселялися російські селяни, що ставали тут робітниками. П. Столипін\
+    \ агітує селян за вихід із  громади\nПетро Столипін. Художник І. Рєпін"
+  section_title: Сторінка 227
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0337
+  text: "вона складала 11,52 % населення Галичини. Основ-\nна частка євреїв жила в\
+    \ містах і містечках, проте наприкінці XIX — на \nпочатку XX ст. характерною особливістю\
+    \ Галичини стало зростання єв-\nрейської громади на селі. У селах євреї були в\
+    \ основному корчмарями, \nлихварями, управителями маєтків тощо. Така станова структура\
+    \ єврей-\nської громади небезпідставно сприймалась українськими селянами як \n\
+    недружня, проте єврейських погромів, як у Російській імперії, тут не \nвідбувалося.\
+    \ у другій половині XIX ст"
+  section_title: Сторінка 186
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0429
+  text: "238\nРОЗДІЛ VII\nОтже, на початку XX ст. для здійснення індустріалізації\
+    \ краю \nіснували об’єктивні причини: значні природні багатства, надлишок \nробочої\
+    \ сили, кваліфіковані спеціалісти, розвинена мережа комуніка-\nцій — залізниці\
+    \ (понад 4 тис. км), зв’язок, місткий внутрішній ринок. Бракувало тільки капіталовкладень\
+    \ у промисловість. Нарешті Галичиною, а особливо найприбутковішими галузями \n\
+    промисловості краю — нафтодобувною та лісообробною — зацікавився \nіноземний капітал.\
+    \ Із кінця XIX ст. поступов"
+  section_title: Сторінка 238
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5575465559959412
+  chunk_id: feaa5fa7_c1150
+  text: "Між селянами ширилися соціяльні рухи, викликані\r\nінтенсивною пролетаризацією\
+    \ галицького селянства, що, втративши земельні\r\nнаділи, потрапляло в залежність\
+    \ від дідичів, у маєтках яких тільки й можна було\r\nзаробити. В 1902 р. в усій\
+    \ Сх. Галичині вибух хліборобський страйк проти надто\r\nнизької заробітної платні\
+    \ на панських ланах і проти перешкод у заробітчанській\r\nеміґрації селян до Америки\
+    \ й до Пруссії з боку поль. адміністрації. Цей страйк,\r\nодин з найбільших в\
+    \ історії хліборобських страйків взаг"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5551457405090332
+  chunk_id: feaa5fa7_c0331
+  text: "В заморській еміґрації з Галичини українці брали\r\nдалеко більшу участь,\
+    \ ніж поляки. Через важкі економічні умови, зокрема аґрарне\r\nперенаселення,\
+    \ а також труднощі з знаходженням праці в місті, опанованому\r\nчужонаціональним\
+    \ елементом, укр. селянин мусів шукати долі за океаном, тим\r\nчасом як на його\
+    \ територію, на розпарцельовану землю дідичів і до міст\r\nнапливали польські\
+    \ колоністи. До того ж, як і на Центральних та Східніх землях,\r\nтрала свою ролю\
+    \ деяка нехіть укр. селянина селитися в місті. У ви"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5536293983459473
+  chunk_id: feaa5fa7_c1402
+  text: "Еміґраційні хвилі прийшли в різні періоди часу з\r\nЦентр. та Сх. Земель\
+    \ і з Галичини, вони прямували до різних країн, частина\r\nеміґрантів поверталася\
+    \ на батьківщину, частина переходила з однієї країни до\r\nдругої. Це залежало\
+    \ від політ. стану на батьківщині, від ситуації в країнах, де\r\nеміґрація тимчасово\
+    \ перебувала, і від внутр. та екон. відносин серед самої\r\nеміґрації. Плинність\
+    \ еміґрації була дуже інтенсивна, особливо в перші роки;\r\nвідносини стали стабілізуватися\
+    \ від 1923 p., а ще більше після"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

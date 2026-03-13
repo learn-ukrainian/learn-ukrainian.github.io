@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 83
+PASS: pipeline istorio 83
 
   Module:   mazepa-tsykl
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 83
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:17:39Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:41:36Z

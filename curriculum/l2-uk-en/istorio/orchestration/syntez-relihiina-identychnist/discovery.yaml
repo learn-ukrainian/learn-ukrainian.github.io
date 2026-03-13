@@ -1,0 +1,204 @@
+discovered_at: '2026-03-13T10:56:57.068472+00:00'
+query_keywords:
+- 'Синтез: Релігія і національна ідентичність'
+- Релігійний ландшафт України
+- Церковні розколи і нація
+- '2022'
+- Секуляризація vs. відродження
+- Уроки для розуміння України
+- 'Analyze the causes and consequences of синтез: релігія і національна ідентичність'
+- Evaluate the historical significance of релігія і нація
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0389
+  text: "CФОРМУЛЮЙТЕ СУДЖЕННЯ ПРО:\n\x84\n\x84 здобутки і втрати української культури\
+    \ за \nроки незалежності;\n\x84\n\x84 релігійну ситуацію, що склалася в 1990 —\
+    \ \nна початку 2000-х рр. rnk.com.ua/107019\nПрактичні заняття  \nза розділом\
+    \ V\nrnk.com.ua/107020\nУзагальнення знань  \nза розділом V\nrnk.com.ua/107021\n\
+    Тестові завдання  \nдля підготовки  \nдо  тематичного контролю  \nза  розділом V\n\
+    \t\nЗверніть увагу\nВідносини з  релігійними громадами, \nособами, які належать\
+    \ до різних конфесій, \nу  країні регулюють Конституція України \n("
+  section_title: Сторінка 215
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0057
+  text: "П ош уки православ­\nним и інт елект уалами свого місця у конкурент ному\
+    \ світі привели \nдо позит ивних зруш ень в українській культ урі. Пом.іркуйм.0!\
+    \ Обговоріть у класі результати проведеного мінідослідження (за завдан­\nням на\
+    \ с. 39). Визначте, що спільного було в способах подолання кризових \nявищу католиків\
+    \ і православних на теренах Речі Посполитої."
+  section_title: Сторінка 43
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0058
+  text: "УКРАЇНСЬКІ ЗЕМЛІ У СКЛАДІ РЕЧІ ПОСПОЛИТОЇ\nРОЗДІЛ 1 \nу XVI -  першій половині\
+    \ XVII ст.\nЗНАЮ МИНУЛЕ » ОСМИСЛЮЮ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \n•» ЗАПИТАННЯ\
+    \ І ЗАВДАННЯ (<•\n•» ЗНАЮ І СИСТЕМАТИЗУЮ НОВУ ІНФОРМАЦІЮ\n1. \nС а м о о ц і н\
+    \ ю в а н н я\nОцініть свої успіхи в опануванні теми «Церковні та релігійні проблеми\
+    \ в \nУкраїні XVI ст.».\nМожу назвати прояви Реформації та Контррефор­\nмації\
+    \ на українських землях.\nМожу визначити причини, ознаки та шляхи подо­\nлання\
+    \ кризових явищ в українському православ’ї."
+  section_title: Сторінка 44
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5603300333023071
+  chunk_id: 2971c499_c0324
+  text: "Крім загального безвідрадного становища церкви на\r\nукраїнських землях під\
+    \ всіма державами, які поділили український народ, все ж\r\nзростає небезпека,\
+    \ що може знову загостритися роз’єднання в українськім народі\r\nі взаємне поборювання\
+    \ на грунті релігійному. Вже нині ми спостерігаємо, що\r\nрелігія ділить і стоїть\
+    \ на перешкоді об’єднанню українського народу під\r\nПольщею. Коли ж взяти на\
+    \ увагу, що, з одного боку, релігійний індиферентизм\r\nуступає місце релігійному\
+    \ піднесенню, а, з другого боку, проявля"
+  work: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+  year: 1993
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/cultur/cult.htm
+- score: 0.5436331629753113
+  chunk_id: f4f6fb3d_c0142
+  text: "Наулко В. І. Український\r\nетнос в часі і просторі // Берегиня. 1992. №\
+    \ 1.\n\nНаулко В. И. Украинцы.\r\nК., 1980.\n\nПівторак Г. Українці:\r\nзвідки\
+    \ ми і наша мова. К., 1993.\n\nПолесье: Материальная культура. К., 1988.\n\nТокарев\
+    \ С. А. Религиозные\r\nверования восточнославянских народов XIX — XX вв. М.; Л.,\
+    \ 1957.\n\nУкраїнська минувшина: ілюстр. етногр. довідник. К.,\r\n1993.\n\nУкраїнці:\
+    \ Іст.-етногр. дослідження. К., 1959.\n\nУкраїнці: Народні вірування, повір’я,\
+    \ демонологія.\r\nК., 1991.\n\nШухевич В. Гуцульщина.\r\nЛьві"
+  work: Антонович — Вибрані праці
+  author: Антонович В.
+  year: 1900
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/anton/ant.htm
+- score: 0.5328165292739868
+  chunk_id: 479cf43d_c0235
+  text: 'В. Білодід
+
+
+    Див. також:
+
+
+    Ігор Гирич. В. Вернадський. Між російським і українським берегами.
+
+
+    [Філософська думка в Україні: Біобібліографічний словник. — К., 2002. — С. 33-36.]'
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

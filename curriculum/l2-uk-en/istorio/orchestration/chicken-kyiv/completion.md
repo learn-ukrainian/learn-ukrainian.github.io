@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 97
+PASS: pipeline istorio 97
 
   Module:   chicken-kyiv
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 97
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:19:50Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:08:14Z

@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T09:42:44.404354+00:00'
+query_keywords:
+- 'Синтез: Голоси козацької доби'
+- Типологія козацьких джерел
+- Голоси епохи
+- Що джерела кажуть vs. що замовчують
+- Методологічні уроки
+- Практикум
+- 'Analyze the causes and consequences of синтез: голоси козацької доби'
+- Evaluate the historical significance of що ми вивчили
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0006
+  text: "6\n§ 1. Повторення. Вступ \uFEFF\uFEFF\n3.\tІсторичні джерела з Ранньомодерної\
+    \ \nдоби історії України\n\e\n\e Які типи історичних джерел з історії Ранньомодерної\
+    \ \nдоби України набули для істориків найбільшого \nзначення? Поясніть чому.\n\
+    Вивчення минулого відбувається за історич-\nними джерелами. Саме їх аналізують\
+    \ дослід-\nники й  дослідниці для отримання інформації \nпро той або інший історичний\
+    \ період. Як ви \nвже знаєте, історичні джерела поділяють на \nтакі типи:\nyy\
+    \ речові: знаряддя праці, побутові речі, зброя, \nреч"
+  section_title: Сторінка 6
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0009
+  text: "6\n§ 1. Вступ \uFEFF\nІСТОРИЧНІ ДЖЕРЕЛА\nТип\nПриклади\nРечові джерела\n\
+    Залишки будівель, поховання, \nзнаряддя праці, побутові речі, \nзброя, прикраси\
+    \ тощо\nУсні (фольклорні) \nджерела\nЛегенди, билини, перекази, казки, \nнародні\
+    \ пісні тощо\nПисемні джерела\nЛітописи, документи, спогади \nсвідків подій тощо\n\
+    Мовні джерела\nВідомості з  історії розвитку мови\nЕтнографічні \nджерела\nНародні\
+    \ повір’я, обряди\nФото-, фоно- та \nкінодокументи, \n3D-моделі, \nреконструкції\n\
+    Зображення подій, діячів і  діячок, \nпам’яток, записи пр"
+  section_title: Сторінка 7
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0015
+  text: "Вступ\nієм.0: практичні завдання\nПригадайте за допомогою хмаринки слів (с.\
+    \ 12) види \nісторичних джерел. Розгляньте колекцію зображень і ви­\nзначте, які\
+    \ види джерел історії Ранньомодерної доби у ній \nпредставлені. \nВизначте, які\
+    \ сторони життя українського \nсуспільства Ранньомодерної доби ілюструє кожне\
+    \ з них. \nЗ’ясуйте, яка з пам’яток не є первинним історичним джере­\nлом. У чому\
+    \ її цінність для вивчення історії?\nв\nКарта Г. Л. де Боплана \nИНрз://5игІ.дсІ/гІ5Іде\n\
+    Грамота Берестейської унії \n(«Артикул"
+  section_title: Сторінка 13
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0486
+  text: '. . . . . . . . . . . . . . . . .61
+
+    § 21 Вимова звукосполучень приголосних  . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . .63
+
+    § 22 Соціолінгвістичні фактори, що впливають на вимову людини. Основні джерела
+    нормативного мовлення. Мова масмедіа. Сценічна мова  . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 269
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0156
+  text: "Пропуск членів речення може \nробити спілкування зручним, жвавим, невимушеним.\
+    \ Особливості речень\nПропущені члени речення\nРоль у мовленні"
+  section_title: Сторінка 138
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5265300273895264
+  chunk_id: 3d7a3a6b_c0022
+  text: "Генези українського козацтва стосуються також праці\r\nМ. П. Василенка 52,\
+    \ Д. І. Дорошенка 53, польських\r\nісториків Владислава Томкевича 54, Збігнєва\
+    \ Вуйцика 55,\r\nВладислава Серчика 56, американського дослідника Френка Сисина 57.\n\
+    \nУ плані постановки проблеми позитивну роль відіграли\r\nположення та висновки,\
+    \ які містяться в роботах сучасних російських вчених —\r\nМ. О. Мінінкова, М.\
+    \ І. Нікітіна, О. О. Преображенського, О. П. Пронштейна, О.\r\nЛ. Станіславського,\
+    \ Б. М. Флорі 58.\n\nЗавершуючи передмову, ав"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.5156612396240234
+  chunk_id: feaa5fa7_c0805
+  text: "Говори на захід від Карпат аналогічні говорам\r\nгалицьких верховинців (лемків,\
+    \ бойків та гуцулів), але мають свої окремішності\r\nй явища, невідомі говорам\
+    \ галицьким. Тут більше архаїзмів; крім різниці між ы\r\nй и, рефлекс о в нових\
+    \ закритих складах дає — і, у, ю, ü,\r\nы (кінь, кунь, кьунь, кüнь, кынь), відп.\
+    \ рефлекс е — ю,\r\nü (приньус, мüд). Звукова система визначається ще й подвійністю\r\
+    \nзвуків е, о, и, що можуть бути нормальні й вузкі: береза — на\r\nбêрêзі (=биризі),\
+    \ болото — в бôлôті (=в булуті); с"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5141267776489258
+  chunk_id: 484d0ffb_c0364
+  text: "1 Див.про це: Русанівський\r\nВ.М. Давньоруська мова: міф чи реальність //\
+    \ Мовознавство. — 1993. — № 2.\r\n— С. 4; Успенский Б.А. Языковая ситуация Киевской\
+    \ Руси и ее значение\r\nдля истории русского литературного языка. — Москва, 1983.\
+    \ — С. 55 — 56.\n\n2 Півторак Г. П. Діалектна\r\nситуація в Київській Русі //\
+    \ Мовознавство. — 1993. — № 2. — С. 9 — 13; Тараненко\r\nО. О. Мова Київської\
+    \ Русі: вузол історико-лінгвістичних та\r\nполітико-ідеологічних проблем // Там\
+    \ само. — С. 38.\n\n3 Булаховський А. Питання\r\nпохо"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

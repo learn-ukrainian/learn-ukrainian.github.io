@@ -1,0 +1,194 @@
+discovered_at: '2026-03-13T10:24:48.901599+00:00'
+query_keywords:
+- Козацькі повстання XVI століття
+- Повстання Криштофа Косинського
+- 1591–1593
+- Повстання Северина Наливайка
+- 1594–1596
+- Читання
+- Соціальний та Релігійний Вимір боротьби
+- Первинні джерела та свідчення очевидців
+- Деколонізаційний погляд на історію повстань
+- the causes and consequences of the Kosynskyi and Nalyvaiko uprisings
+- the social and religious motivations behind the first cossack wars
+- the significance of these uprisings for the formation of national identity
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+  channel: ІМТГШ
+  title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+  relevance_score: 0.9
+  relevance_note: Directly discusses the phenomenon of Zaporozhian Cossacks and their
+    early history, with mentions in the 15th and 16th centuries, providing fundamental
+    background for the module topic.
+  transcript_excerpt: Згадки про козаків зустрічається ще у 15 столітті але перші
+    більш-менш повноцінний опис це вже 16 століття і там є ціла окремо оповідь о казаках.
+  embed_suggestion: 'After section: Вступ'
+- url: https://www.youtube.com/watch?v=a6BbDWIinSM
+  channel: Реальна Історія
+  title: Ким козаки були насправді? Вражаюча і найлогічніша версія. Реальна історія
+    з Акімом Галімовим
+  relevance_score: 0.8
+  relevance_note: Provides crucial context on the origins and myths surrounding Cossacks,
+    aligning with the decolonization perspective, essential for understanding 16th-century
+    uprisings.
+  transcript_excerpt: Сьогодні ми детально Розберемося що правда А що ні в історії
+    козаків і дізнаємось ким вони були насправді. Найбільший міф стосується походження
+    козаків, який був народжений у Радянському Союзі.
+  embed_suggestion: 'After section: Вступ'
+- url: https://www.youtube.com/watch?v=_Gv4ex7bt9Q
+  channel: Комік Історик
+  title: історія Речі Посполитої
+  relevance_score: 0.7
+  relevance_note: Offers important historical context about the Polish-Lithuanian
+    Commonwealth (Rzeczpospolita) and its formation in the 16th century, against which
+    the uprisings occurred, and addresses decolonization.
+  transcript_excerpt: Власне цей період особливо 17 століття та й 16 коли воно утворилася
+    дає нам можливість зрозуміти А хто ж таі ми українці... Річ Посполита приподносилась
+    для нас як ворожа держава.
+  embed_suggestion: 'After section: Вступ'
+- url: https://www.youtube.com/watch?v=uKJBW36MDr0
+  channel: Реальна Історія
+  title: 'Найсильніша Україна в історії: що з нею сталося?'
+  relevance_score: 0.5
+  relevance_note: Focuses on the mid-17th century Bohdan Khmelnytsky uprising and
+    the Hetmanate, a later period than the module's 16th-century scope, making it
+    tangentially related.
+  transcript_excerpt: 1648 року тут, на Софійській площі, зібрався практично весь
+    Київ. До міста урочисто в оточенні своїх полковників і козацької старшини в'їжджав
+    Богдан Хмельницький.
+  embed_suggestion: 'After section: Деколонізаційний погляд на історію повстань (as
+    a forward-looking historical context, not directly about 16th-century uprisings)'
+- url: https://www.youtube.com/watch?v=I7k7I9xfUdo
+  channel: Комік Історик
+  title: 'Богдан Хмельницький: головний козак в історії'
+  relevance_score: 0.4
+  relevance_note: Explicitly focuses on Bohdan Khmelnytsky and the National Liberation
+    Struggle of the mid-17th century, which is outside the module's 16th-century focus.
+  transcript_excerpt: Ми будемо говорити про цей період це середина XVII століття
+    умовно з 1648 там і кажуть до 57 коли помер Хмельницький.
+  embed_suggestion: Not suitable for this module due to differing historical period.
+- url: https://www.youtube.com/watch?v=a5yrHx9A6zs
+  channel: Harvard Ukrainian Research Institute
+  title: Походи козаків  першої чверті ХVІІ ст. Петро Конашевич-Сагайдачний. Хотинська
+    війна
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0142
+  text: "§ 12. Козацтво наприкінці XVI ст.\n89\nК\nР\nИ\nМ\nС\nЬ\nК И\nЙ  \nХ\nА\n\
+    Н\nА\nТ\nКорона Польська в 1569 р.\nКорони Польської\nУКРАЇНСЬКІ ЗЕМЛІ в  другій\
+    \ половині XVI  ст. \nКозацькі повстання (війни) кінця XVI ст. стали першим на\
+    \ українських \nземлях великим виступом, очолюваним козацтвом. Вони сприяли по­\n\
+    козаченню представників різних станів, їхньому переселенню на південь \nукраїнських\
+    \ земель. \nКозацтво демонструвало українському суспільству, як можна відсто-\n\
+    ювати свої інтереси. Безперечно, такі дії порушували"
+  section_title: Сторінка 89
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0109
+  text: "Розділ 2\nСТАНОВЛЕННЯ КОЗАЦТВА \n(XVI — перша половина XVII ст.)\nЗНАЮ МИНУЛЕ\
+    \ » ОСМИСЛЮЮ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \nЗАПИТАННЯ І ЗАВДАННЯ «•\n•» ЗНАЮ\
+    \ І СИСТЕМАТИЗУЮ НОВУ ІНФОРМАЦІЮ\n1. С а м о о ц і н ю в а н н я\nОцініть свої\
+    \ успіхи в опануванні теми «Козацькі повстання кінця XVI ст.».\nМожу назвати час\
+    \ та провідників козацьких по­\nвстань кінця XVI ст.\nМожу визначити причини,\
+    \ приводи до повстань, їх \nрезультати й наслідки.\nМожу пояснити причини поразки\
+    \ козацьких по­\nвстань кінця XVI ст.\nМожу схар"
+  section_title: Сторінка 84
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0104
+  text: "Затвердження королем реєстрового війська закріпило права лише \nза малою\
+    \ частиною козацької спільноти, проте такі ж привілеї вимагали \nвсі, хто вважав\
+    \ себе козаком.\n2. Козацьке повстання на чолі з Криштофом Косинським\nДіємо:\
+    \ практи чні 3а ддання\nСистематизуйте інформацію §12 в таблиці. Визначте в історії\
+    \ повстань \nособистісні причини їх початку та причини, які представляли інтереси\
+    \ козацтва \nяк окремого стану.\nКозацькі повстання кінця XVI ст.\nСТАНОВЛЕННЯ\
+    \ КОЗАЦТВА\n(XVI — перша половина XVII ст.) \n"
+  section_title: Сторінка 81
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0164
+  text: "§ 15. Козацькі повстання  20—30‑х рр. XVII ст. 103\n§ 15. Козацькі повстання\
+    \  \n20—30‑х рр. XVII ст. 1. Зростання соціального напруження на \nукраїнських\
+    \ землях у 20-х рр. XVII ст. \e\n\e Які події та явища на українських землях у \
+    \ цей \nперіод спричинили виникнення козацьких повстань? Після Хотинської війни\
+    \ козацьке військо \nповернулося на українські землі. Однак обі-\nцянки польської\
+    \ влади не були виконані. Не \nминуло й місяця, як уряд наказав залишити \nв \
+    \ реєстрі лише 3  тис. козаків. Значна частина "
+  section_title: Сторінка 103
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0176
+  text: "XVII ст.». Зазначте дати повстань, їхні \nпричини, керівників, основні події,\
+    \ результати й наслідки. Зробіть \nвисновок про спільне та відмінне козацьких\
+    \ повстань."
+  section_title: Сторінка 109
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6640915870666504
+  chunk_id: 89ab7c69_c0332
+  text: "В історіографії досить поширена думка, що повстання\r\n1594-1595 рр. під\
+    \ проводом Северина Наливайка ще не мало антиуніатського\r\nспрямування, оскільки\
+    \ відсутні документи, які б засвідчували, що боротьбу проти\r\nунії козаки ставили\
+    \ за свою свідому мету. Справді, як непохитна програма дій ця\r\nборотьба починає\
+    \ усвідомлюватися козаками дещо пізніше, на початку XVII ст.,\r\nале незаперечним\
+    \ є і той факт, що під час повстання 1594-1595 рр. козаки\r\nвиступали рішучими\
+    \ ворогами унії, хоч ці їхні виступи й мал"
+  work: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+  year: 2008
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ochyma/ochrus.htm
+- score: 0.6522437334060669
+  chunk_id: feaa5fa7_c1023
+  text: "Перше козацьке повстання під проводом шляхтича Криштофа Косинського \r\n\
+    вибухло в 1591 р. на Київщині; до Косинського приєднувалися\r\nселяни, і повстання\
+    \ охопило Київщину та Волинь. Довгий час шляхта не могла\r\nприборкати повстання,\
+    \ і лише 1593 р. повстанці були розбиті під П’яткою коло\r\nЖитомира. Це повстання\
+    \ було першою пересторогою поль. урядові, свідченням того,\r\nнаскільки небезпечні\
+    \ для нього могли стати козаки, коли вони об’єднуються з\r\nселянами.\n\nЩе більше\
+    \ значення мало повстання під проводом"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.626041829586029
+  chunk_id: 004505f2_c0110
+  text: "9. Козацькі повстання 20 — 30-х років XVII ст. після\r\nС. Наливайка стають\
+    \ другим етапом збройної боротьби за національне визволення і\r\nза становлення\
+    \ Козацької держави.\n\nПродовження тексту...\n\n...початок тексту [Валерій Шевчук.\
+    \ Суспільно-політична думка в Україні в XVI — першій половині XVII ст.]\n\nIV.\
+    \ МІЖКОНФЕСІЙНІ ЗМАГАННЯ УКРАЇНЦІВ. ІДЕЯ\r\nРУСЬКОГО, ЧИ КИЇВСЬКОГО СІОНУ\n\n\
+    Ця тема обіймає величезний масив пам’яток, які можуть\r\nскласти окремий кількатомовий\
+    \ корпус. При тому варто зазначити, що дале"
+  work: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+  year: 1600
+  genre: polemic
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/suspil/sus.htm

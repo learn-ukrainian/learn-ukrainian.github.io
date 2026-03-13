@@ -1,4 +1,4 @@
-FAIL: pipeline hist 79
+PASS: pipeline hist 79
 
   Module:   krypatsvo-selo
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 79
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:14:48Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:54:18Z

@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 49
+PASS: pipeline istorio 49
 
   Module:   holodomor-svidky
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 49
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:12Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:27:23Z

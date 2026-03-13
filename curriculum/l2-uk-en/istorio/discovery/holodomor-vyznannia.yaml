@@ -1,0 +1,217 @@
+discovered_at: '2026-03-13T10:29:31.095428+00:00'
+query_keywords:
+- 'Визнання геноцидом: Правовий аспект'
+- Конвенція ООН про геноцид
+- '1948'
+- Чи Голодомор відповідає критеріям?
+- Визнання Україною
+- Міжнародне визнання
+- Російське заперечення
+- 'Analyze the causes and consequences of визнання геноцидом: правовий аспект'
+- Evaluate the historical significance of від історії до права
+- history
+- історія
+- подія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0270
+  text: "142\nРозділ IV\nухвалювала Конвенцію 1948 р. про запобігання \nгеноциду та\
+    \ ратифікувала її в  1951 р. Злочин \nгеноциду та покарання за нього зафіксовані\
+    \ у \nКримінальному кодексі України (стаття 442). 22 травня 2009  р. Головне слідче\
+    \ управління \nСлужби безпеки України порушило Криміналь-\nну справу № 475 за\
+    \ фактом вчинення геноци-\nду в  Україні в  1932—1933 pp., спираючись \nна міжнародне\
+    \ і  національне ­законодавство, \nа  ­також здійснивши системне розслідування,\
+    \ \nвивчення сотень томів справ, опитав"
+  section_title: Сторінка 142
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0553
+  text: "Зайдіть за покликанням https://cutt.ly/TwJ86zPg або за QR-кодом. Ознайомтеся\
+    \ зі змістом Заяви Верховної Ради України «Про вчинення \nРосійською Федерацією\
+    \ геноциду в Україні» та дайте обґрунтовані \nвідповіді на запитання:  \n1) які\
+    \ дії Російської Федерації слід розглядати як акт геноциду? 2) до кого звернулася\
+    \ ВРУ із цією Заявою? 3) чи визнала світова громадськість дії РФ в Україні актом\
+    \ геноциду? 4. Об’єднайтеся в групи і проведіть дослідження за одним із запропонованих\
+    \ напрямків (на\nвибір): «Зда"
+  section_title: Сторінка 303
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0269
+  text: "сімей. Вимерлі \nукраїнські села були заселені переважно росіянами, білорусами,\
+    \ а також \nєвреями і німцями, хоча в СРСР за межами України проживало кілька\
+    \ \nмільйонів українців. 28 листопада 2006 р. Верховна Рада України ухвалила Закон\
+    \ \nУкраїни «Про Голодомор 1932—1933 років в Україні», перша стаття \nякого констатувала\
+    \ факт геноциду українського народу. Така політична \nта правова оцінка Голодомору\
+    \ 1932—1933 рр. виявилася цілком логіч-\nною й послідовною з огляду на те, що\
+    \ УРСР як член ООН із 1945 p"
+  section_title: Сторінка 141
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0145
+  text: "РОЗДІЛ 4\n144\nв Україні. Голодомор 1932–1933 рр. — страшний злочин проти\
+    \ укра-\nїнського народу. Його вчинила комуністична влада на чолі з Йосипом \n\
+    Сталіним для того, щоб залякати і підкорити українців. У селян вилучали \nне лише\
+    \ зерно, а й їстівні припаси. Якщо хтось намагався чинити спро-\nтив чи збирав\
+    \ колоски на полях, щоб прогодувати дітей, то він підлягав \nжорсткому покаранню\
+    \ згідно із «законом про п’ять колосків». Страшною \nсмертю загинули мільйони\
+    \ людей. У 2006 р. Верховною Радою України \nпо"
+  section_title: Сторінка 144
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0453
+  text: "Геополітика — політологічна концеп-\nція, за якою зовнішня політика держав\
+    \ \nвизначається географічними чинниками \n(місцеположенням країни, природними\
+    \ \nресурсами, кліматом тощо). Термін «гео-\nполітика» використовується для харак-\n\
+    теристики певного виливу географічних \nчинників на зовнішню політику. Голодомор \
+    \ — акт геноциду україн-\nського народу, ініційований і здійснений \nке­рівництвом\
+    \ ВКП(б) способом штучно \nствореного голоду та репресій. Охопив \nтериторію України\
+    \ й Кубані. 28 листопада \n2006  р"
+  section_title: Сторінка 235
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5066152811050415
+  chunk_id: feaa5fa7_c1703
+  text: "Доба Гетьманщини: Слабченко М. Судівництво\r\nна Україні XVII — XVIII ст.\
+    \ Х. 1919; Мірза-Авак’янц Н. Нариси з історії\r\nсуду на Лівобережжі до пол. XVII\
+    \ ст. Записки Харківської Дослідчої Катедри, II\r\n— III, VI; Падох Я. Ґрунтовий\
+    \ процес Гетьманщини. Л. 1938.\n\nДо звичаєвого процесу: Черкаський І.\r\nПоволання\
+    \ над трупом забитого. Праці Комісії історії укр. права УАН, І. К.\r\n1925; Лащенко\
+    \ Р. Копні суди на Україні. Збірник Правничої Комісії НТШ, I\r\n— II. Л. 1926\
+    \ — 27; Черкаський І. Громадський (копний) "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.49050039052963257
+  chunk_id: 53691244_c0285
+  text: "45 ЦДАГОУ: Ф.1.—Оп. 23.—Спр. 1063.—Арк. 61.\n\n46 ЦДАГОУ: Ф.62.— Оп. 1.—\
+    \ Спр. 253.— Арк. 1.\n\n47 Приблизні дані—10342 окупантів, про що виголошено на\r\
+    \nміжнародній науковій конференції в Івано-Франківську в квітні 1995 р.\n\n48\
+    \ ЦДАВОВУ: Ф. 3833.— Оп. 1.— Спр. 164. — Арк. 2-2ф, 15—17.\n\n49 ЦДАГОУ: Ф. 62.—\
+    \ Оп. 1.— Спр. 227.— Арк. 22.\n\n50 ЦДАГОУ: Ф. 1. — Оп. 22. — Спр. 78. — Арк.\
+    \ 16-18.\n\n51 ЦДАГОУ: Ф. 62. — Оп. 1. — Спр. 227. Арк. 31-32.\n\n52 Ще одне звинувачення\
+    \ українських націоналістів у\r\nколабораціоніз"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.4893147349357605
+  chunk_id: ae67fc89_c0005
+  text: 'Вогонь по ворогу культури Радянської України, по вбивцях і душителях російського,
+    українського, білоруського, єврейського народів, по обманщиках, по зрадниках і
+    продажних душах, що торгують народом України!
+
+
+    Небачений вогонь за Україну, за Радянську Україну! За Радянський великий Союз
+    і за все слов''янство!
+
+
+    Вогонь за урожай на землі нашій, политій кров''ю нашою і славних прадідів наших
+    — запорожців!
+
+
+    За чистосортне насіння, за племінних корів і коней, за кращі в світі, прекрасні
+    колгоспні сади, з'
+  work: Олександр Довженко. Україна у вогнях (нарис)
+  author: Довженко О.
+  year: 1894
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=10300

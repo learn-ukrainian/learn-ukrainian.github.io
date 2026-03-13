@@ -1,4 +1,4 @@
-FAIL: pipeline hist 94
+PASS: pipeline hist 94
 
   Module:   symon-petliura-revolution
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 94
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:17:11Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:29:52Z

@@ -1,0 +1,206 @@
+discovered_at: '2026-03-13T12:14:52.946042+00:00'
+query_keywords:
+- '2014: Анексія без відповіді'
+- Анексія
+- Західна реакція
+- Мінськ
+- Чому слабка відповідь
+- Наслідки
+- 'Analyze the causes and consequences of 2014: анексія без відповіді'
+- Evaluate the historical significance of безкарність
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0466
+  text: "§ 30. Початок війни Росії проти України\n265\nукраїнських територій. 6. Сформулюйте\
+    \ зміст Мінських \nдомовленостей. Поясніть, чому, крім представників укра­\nїнської\
+    \ і  російської сторін, їх підписали представники \nокупаційних адміністрацій.\
+    \ 7. Складіть перелік ключових \nслів, що пояснюють зміст понять «гібридна війна»,\
+    \ «росій­\nсько-українська війна», «злочин агресії». Проілюструйте ці \nпоняття\
+    \ історичними фактами. 8. У чому полягає героїзм \nдобробатів і «кіборгів»? 9.\
+    \ Покажіть на карті (с. 259) тим"
+  section_title: Сторінка 267
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0490
+  text: "Широкомасштабне \nвторгнення Росії в  Україну. 24  лютого  — \n20  травня\
+    \ \n2022  р. Оборона міста Маріуполь. Червень \n2022  р. Надання Україні статусу\
+    \ \nкандидата на  членство \nв  ЄС. 6  вересня  — \n2  жовтня \n2022  р. Балаклійсько-Куп’янська\
+    \ \nнаступальна операція \nукраїнських військ. 11  листопада \n2022  р. Звільнення\
+    \ Херсону. Грудень \n2023  р. Початок переговорів щодо \nвступу України до ЄС.\
+    \ rnk.com.ua/107022\nПрактичні заняття  \nза розділом VІ\nrnk.com.ua/107023\n\
+    Узагальнення знань  \nза розділом VI\n"
+  section_title: Сторінка 270
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0425
+  text: "Зрештою бойові дії набули позиційного характеру. Також чинником стримування\
+    \ була спеціальна \nмоніторингова місія Організації з безпеки та спів-\nробітництва\
+    \ в Європі, що діяла на лінії розмежуван-\nня відповідно до Мінських домовленостей.\
+    \ Словник\nТимчасово окупована територія \nУкраїни  — територія України \n(сухопутна\
+    \ територія, внутрішні \nморські води й  територіальне море \nУкраїни, повітряний\
+    \ простір над \nтериторіями), захоплена збройними \nсилами Російської Федерації\
+    \ та \nкерованими нею незаконним"
+  section_title: Сторінка 235
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0459
+  text: "відбулися \nросійсько-українські переговори \nв  Білорусі й  Туреччині. Проте\
+    \ Москва \nсхиляла Київ до капітуляції та не \nпогоджувалася на жодні умови, щоб\
+    \ \nзнайти компроміс. Тому ці зустрічі не \nмали результатів. © ТОВ Видавництво\
+    \ «Ранок». Всі права захищено."
+  section_title: Сторінка 253
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0528
+  text: "а \n289 \n15 лютого вогню в окремих районах Донецької та Луганської областей,\
+    \ \nвиведення іноземних збройних формувань із території України, моні-\nторинг\
+    \ ОБСЄ режиму припинення вогню та відведення важкого озбро-\nєння із застосуванням\
+    \ усіх засобів, зокрема супутників, радіолокації. Провідні держави світу позитивно\
+    \ оцінили Мінські угоди. США \nвідзначили, що угода є важливим кроком до мирного\
+    \ врегулювання \nситуації. Водночас у західних країнах існували певні побоювання\
+    \ \nщодо дотримання ухвалених рішен"
+  section_title: Сторінка 290
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5525678396224976
+  chunk_id: f79fbc43_c0098
+  text: "Однак, знову ж таки, такий обмін характерний для Заходу та його\r\nколоній.\
+    \ Землі, підкорені росіянами, ще не породили голосів, які б дали\r\nвідповідь\
+    \ Імперії: справді, політичні умови ще не сприяють тому, щоб зазвучав\r\nхор таких\
+    \ голосів. Те, чи розвиватиметься постколоніальний дискурс у Російській\r\nФедерації\
+    \ і чи розвиватиметься він найближчим часом взагалі залежить від\r\nбажання чоловіків\
+    \ і жінок у колишніх чи теперішніх колоніях (включаючи громади\r\nбілих поселенців\
+    \ у межах Федерації) артикулювати"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5222337245941162
+  chunk_id: c44f1207_c4395
+  text: "68) Acta Tomiciana XI ч. 303 i 314.\n\n69) Acta Tomiciana XII ч. 312 i 331.\n\
+    \n70) Див т. VI c. 243.\n\nТОМ VII     \r\nРозділ I\n\n[М. Грушевський. Історія\
+    \ України-Руси. Том VII. Розділ I. Стор. 5.]\n\n[М. Грушевський. Історія України-Руси.\
+    \ Том VII. Розділ I. Стор. 6.]\n\nТОМ VII     \r\nРозділ I\n\nТАТАРСЬКІ НАПАДИ\
+    \ І ВОЄННА ОБОРОНА XVI В.: РЕЗУЛЬТАТИ ТАТАРСЬКИХ ПУСТОШЕНЬ. ОРҐАНЇЗАЦІЯ ОБОРОНИ\
+    \ — ЗАМКИ, ЇХ УСТРІЙ І \r\nОБОРОННІ ЗАСОБИ, ХИБИ КОНСТРУКЦІЙНІ І ИНЬШІ ПРИЧИНИ\
+    \ МАЛОЇ ЗДАТНОСТИ ДЛЯ \r\nЛЮДНОСТИ, БРАК ВОЄННИХ З"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5200982093811035
+  chunk_id: 53691244_c0303
+  text: "Так само спрацьовує тенденція скорочення Вашинґтоном\r\nбюджетних витрат\
+    \ на міжнародну допомогу та слабка зацікавленість американського\r\nприватного\
+    \ бізнесу у співпраці з Україною як наслідок названих проблем, а також\r\nнедостатніх\
+    \ законодавчих ґарантій діяльності зарубіжних інвесторів.\n\nТаким чином, головні\
+    \ проблеми подальшого розвитку українсько-американських\r\nвзаємин сьогодні концентруються\
+    \ всередині України. Разом з тим, реальність\r\nтака, що американська політика\
+    \ в Європі неминуче розвиватиметьс"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

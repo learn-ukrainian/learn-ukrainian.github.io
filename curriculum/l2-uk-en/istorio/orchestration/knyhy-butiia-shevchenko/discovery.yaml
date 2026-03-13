@@ -1,0 +1,195 @@
+discovered_at: '2026-03-13T09:46:29.450658+00:00'
+query_keywords:
+- 'Книги Буття: Шевченко та Кирило-Мефодіївці'
+- Історичний контекст
+- Братство і його члени
+- «Книги буття»
+- Фрагмент
+- Доля братства
+- 'Analyze the causes and consequences of книги буття: шевченко та кирило-мефодіївці'
+- Evaluate the historical significance of перша політична програма
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0119
+  text: "Маланюк? що, на думку письменника, \nє чинниками формування «малоросійства»?\
+    \ Запрошуємо до дискусії\n7. Чи властиве «маëоросіéство» нашим сучасникам? В електронному\
+    \ додатку до підручника ви знайдете повний текст твору \nª. Маланþка «Малоросійство»\
+    \ . Прочитайте його . Дайте відповіді на запи-\nтання, виконайте завдання . читацький\
+    \ практикум"
+  section_title: Сторінка 65
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0243
+  text: "Коцюбинський? Яку мету визначили члени організації? 2. Запишіть відомості\
+    \ про життя письменника в зручній для вас формі (тексту, \nплану, таблиці, схеми).\
+    \ Виявляємо літературну, інформаційно-цифрову компетентності,  \nобізнаність у сфері\
+    \ культури\n3. Знайдіть в Інтернеті інформацію про «Братство тарасівців». Поділіться\
+    \ цією \nінформацією з  однокласниками в  зручній для вас формі (повідомлення\
+    \ \nна уроці або в соціальних мережах, плакату, листівки). \x03\n\x84 Михайло\
+    \ Коцюбинський . (Михайло Жук, 1925)\n\x03\n\x84 "
+  section_title: Сторінка 131
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0351
+  text: "У розділі \n«Віртуальна бібліотека» електронного додатка до підручника ви\
+    \ знайдете \nповний текст твору . читаємо взірці української художньої літератури"
+  section_title: Сторінка 185
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0001
+  text: "«Українська мова. Буквар»  \nпідручник для 1 класу закладів  \nзагальної\
+    \ середньої освіти\n(у 2-х частинах)\nЧастина  друга\nМар’яна  Захарійчук\nВидавництво\
+    \ «Грамота»\n2025\nPidruchnyk.com.ua"
+  section_title: Сторінка 2
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0339
+  text: "1210  р. rnk.com.ua/107326\nМетоди інтерактивного  \nнавчання та розвитку\
+    \  \nкритичного мислення\nrnk.com.ua/107325\nПлани-схеми та \nхарактеристики \n\
+    різних форм роботи \nз  підручником\nСвятослав Ярославич \nіз родиною. Мініатюра\
+    \ \nз  «Ізборника» Святослава. 1076  р."
+  section_title: Сторінка 224
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5667853951454163
+  chunk_id: 6890007d_c0010
+  text: "Ідеологія діячів Кирило-Мефодіївського братства, що генетично була\r\nзв’язана\
+    \ з програмою декабристського «Товариства з’єднаних слов’ян» та з\r\n«Книгами\
+    \ польського народу і польського пілігримства» А. Міцкевича, виражала\r\nпозицію\
+    \ масової свідомості, що здобувала зерна соціального досвіду в\r\nлегендарній\
+    \ історії християнства і виходила з просвітительських уявлень про\r\nприродну\
+    \ рівність людей. Вона передбачала мирний шлях поліпшення суспільного\r\nжиття:\
+    \ усунення самодержавства як першопричини неволі н"
+  work: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+  year: 1847
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/kostomar/kos.htm
+- score: 0.5613734126091003
+  chunk_id: d77902e2_c0861
+  text: "К.-М. т. відіграло помітну роль у розвитку й\r\nстановленні громадської думки\
+    \ та в розвитку сусп.-політ. життя на Україні.\r\nБільшовицька газета «Правда»,\
+    \ відзначаючи ювілей Шевченка, 25.II (10.III) 1914\r\nписала, що поет належав\
+    \ до таємного політ. т-ва, «одним з пунктів статуту якого\r\nбуло визволенні селян\
+    \ і освіта народу».\n\nЛіт.: Кирилюк Є. П. Шевченко і Кирило-Мефодіївське братство.\
+    \ «Вісті АН УРСР» 1944. №\r\n3 — 4; Зайончковский П. А. Кирилло-Мефодиевское общество.\
+    \ М., 1959; Денисенко\r\nМ. С. Кирил"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.5566272735595703
+  chunk_id: 9976239a_c0034
+  text: "У всьому цьому — корінна особливість його позиції у слов’янській\r\nта українській\
+    \ справі, що відрізняла його і від західних слов’янських будителів\r\nта відроджувачів,\
+    \ і від російських слов’янофілів, і від українофілів та навіть\r\nкирило-мефодіївських\
+    \ братчиків. А тема слов’янства з’явилася в його творчості\r\nще до знайомства\
+    \ з майбутніми організаторами братства.\n\nЯк відомо, головний програмовий документ\
+    \ Кирило-Мефодіївського\r\nбратства — «Книга буття українського народу». Нагадуючи\
+    \ «Книги народу\r\nпол"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm

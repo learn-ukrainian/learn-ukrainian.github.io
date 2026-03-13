@@ -1,0 +1,206 @@
+discovered_at: '2026-03-13T11:24:15.140441+00:00'
+query_keywords:
+- 'Синтез: Західні землі'
+- Порівняння регіонів
+- Чому зберегли ідентичність
+- Західні землі в XX столітті
+- Західна Україна в СРСР
+- Роль після 1991
+- 'Analyze the causes and consequences of синтез: західні землі'
+- Evaluate the historical significance of чому «більш українські»?
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0322
+  text: "Західноукраїнські  \nземлі у складі  \nАвстро-Угорської імперії  \nна початку\
+    \ ХХ ст.\nПід час дослідження теми розділу ми будемо:\n  \n– учитися показувати\
+    \ на карті території західноукраїнських \nземель початку  ХХ ст.;\n \n– характеризувати\
+    \ й аналізувати особливості економічного \nрозвитку західноукраїнських земель\
+    \ у складі Австро-Угорщини; \nдіяльність політичних партій, національних і спортивно-фізкуль-\n\
+    турних організацій;\n \n– робити аргументовані висновки щодо розвитку кооперативного\
+    \ \nруху на західноук"
+  section_title: Сторінка 223
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0306
+  text: "УКРАЇНСЬКІ ЗЕМЛІ у 20-90-х роках XVIII ст. \nРОЗДІЛ 5\nЗНАЮ МИНУЛЕ » ОСМИСЛЮЮ\
+    \ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \n•» ЗАПИТАННЯ І ЗАВДАННЯ <<•\n•» ЗНАЮ І СИСТЕМАТИЗУЮ\
+    \ НОВУ ІНФОРМАЦІЮ\n1. \nС а м о о ц і н ю в а н н я\nОцініть свої успіхи в опануванні\
+    \ теми «Поділи Речі Посполитої. Зміни \nу становищі ПравобережноїУкраїни та західноукраїнських\
+    \ земель».\nМожу показати на карті територіальний розподіл \nукраїнських земель\
+    \ унаслідок поділів Речі Поспо­\nлитої.\nМожу визначити наслідки поділів Речі\
+    \ Посполитої \nдля у"
+  section_title: Сторінка 227
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0455
+  text: "252\nРозділ VII\nУзагальнення знань за розділом VІІ\n\t 1.\t Складіть перелік\
+    \ подій з  історії західноукраїнських земель по-\nчатку XX  ст., які ви вважаєте\
+    \ найважливішими. Обґрунтуйте \nсвій вибір.\n\t 2.\t Поясніть значення понять\
+    \ і  термінів: селянський страйк, на-\nродні віча, монополія, кооператив, сепаратизм,\
+    \ «український \nП’ємонт».\n\t 3.\t Виконайте завдання за історичною картою: 1)\
+    \ визначте держав-\nну належність українських земель на початку XX ст.; покажіть,\
+    \ \nякі українські регіони у  складі яких де"
+  section_title: Сторінка 252
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0097
+  text: "4 \nБоротьба населення західноукраїнських земель проти соціального \nгноб­лення.\
+    \ На західноукраїнських землях у  цей період постійно \nвідбувалися виступи селянства,\
+    \ спричинені посиленням гноблення зем-\nлевласниками. Наприкінці XVIII  ст. у \
+    \ зв’язку зі здійсненням аграрних \nреформ Йосифа  II селяни активізувалися, оскільки\
+    \ зрозуміли зміни як \nзвільнення від влади панів. Опір селян Східної Галичини\
+    \ був настільки \nсильним, що влада змушена була застосувати війська для його\
+    \ прибор-\nкання. ­Боротьба сп"
+  section_title: Сторінка 57
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5456299185752869
+  chunk_id: 53691244_c0431
+  text: "Полишивши осторонь розбіжності з приводу меж, можна\r\nсказати, що ніхто\
+    \ не має сумніву в існуванні землі, яка віддавна зветься\r\nУкраїною. Як, утім,\
+    \ і в існуванні значної сукупності індивідів, організованих у\r\nгрупи, страти,\
+    \ категорії, які окремо й разом діють згідно чи всупереч\r\nструктурам, відповідальним\
+    \ за соціальний порядок, — тобто в існуванні\r\nсуспільства, яке заповнює собою\
+    \ названу територію. Адже ми сьогодні так і\r\nговоримо: українське суспільство.\
+    \ Саме його, мабуть, і стосуються всі коліз"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5434778928756714
+  chunk_id: feaa5fa7_c2781
+  text: "На півн.-зах. землях, зокрема на Волині, аґрарне\r\nперенаселення було менше,\
+    \ ніж у Галичині, а врожайність проти довоєнних часів\r\nпіднеслася. Чимало впливала\
+    \ на це ліквідація сервітутів та інтенсивна\r\nкомасація, якої в Галичині майже\
+    \ не було (в 1920 — 36 pp. на півн.-зах. землях\r\nскомасовано 406 000 га, а в\
+    \ Галичині ледве 26 000 га). Натомість, через\r\nперешкоди з боку поль. влади\
+    \ (див. стор. 559), слабшою, ніж у Галичині,\r\nбула праця укр. організацій для\
+    \ піднесення с.-г. культури.\n\nМалого поступу"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5416623950004578
+  chunk_id: c44f1207_c0933
+  text: "В оглядах внутрішнїх відносин поодиноких \r\n українсько-руських земель я,\
+    \ як сказав, підносив спеціальні, індівідуальні \r\n прикмети відносин і житя\
+    \ кождої землї. В дальшім оглядї противно збератиму \r\n найбільш загальне, спільне,\
+    \ що може служити для характеризовання \r\n українсько-руських земель взагалї.\
+    \ Такого спільного, загального було в них \r\n безперечно дуже богато — хоч подекуди\
+    \ ми можемо тільки з більшою або з меньшою \r\n правдоподібністю догадувати ся\
+    \ про сю загальність з пізнїйших подібносте"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm

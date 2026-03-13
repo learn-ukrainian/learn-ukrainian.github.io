@@ -1,0 +1,216 @@
+discovered_at: '2026-03-13T11:10:30.952057+00:00'
+query_keywords:
+- 'Синтез: Ковчег нації'
+- Порівняння трьох хвиль
+- Функції діаспори
+- Діаспора і незалежність
+- '2022'
+- Виклики і майбутнє
+- 'Analyze the causes and consequences of синтез: ковчег нації'
+- Evaluate the historical significance of три хвилі, одна місія
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0084
+  text: "«Поняття про культуру мовлення» (перша група);\n2. «Функції мови, спілкування»\
+    \ (друга група);\n3. «Поняття про українську літературну мову» (третя група).\
+    \ II. Прослухайте представників кожної групи із підготовленим матеріалом. Дайте\
+    \ оцінку виступам однокласників. III. Поміркуйте, який вид тематичних виписок\
+    \ є доречним при опрацюванні \nнаукової літератури, а який краще застосовувати\
+    \ під час роботи з публі­\nцистичними статтями. 67"
+  section_title: Сторінка 67
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0284
+  text: '3. Сформулюйте тези статті на тему: «Національна та соціальна структура населення
+
+    УРСР». 4. Підготуйте презентацію на тему: «Життєвий рівень населення в період
+    системної кризи
+
+    радянського ладу».'
+  section_title: Сторінка 156
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5138616561889648
+  chunk_id: 53691244_c0447
+  text: "Фактичність громадянства як належності до «п’ятого світу»\r\nвикликає до\
+    \ життя особливі форми механічної та соціальної солідарності чи\r\nконкуренції,\
+    \ особливі способи виробництва культурних зразків, леґітимізує\r\nмульти- і транскультурні\
+    \ знаки й смисли. Але соціальна структура й культура —\r\nтема спеціальної розмови,\
+    \ яка, мабуть, не забариться, тому що Україна упевнено\r\nживе теперішнім.\n\n\
+    1\r\n Борхес\r\nХорхе Луїс. Тлін, Укбар, Orbis Tertius. У кн.: Хорхе Луис Борхес.\
+    \ Проза разных лет.—М., 1984.—С.50.\n\n2"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5058132410049438
+  chunk_id: c44f1207_c4340
+  text: "Третїй круг, що мусить містити теж не меньше трьох \r\n або чотирьох томів\
+    \ (від семого до девятого або десятого включно), буде \r\n присвячений історії\
+    \ національного відродження за помічю нового \r\n соціально-національного чинника\
+    \ (фактора) — козачини. Буде се історія самої \r\n сеї нової національної сили\
+    \ перед усїм, далї її боротьби з ворожим польським \r\n режімом, відродження культурних\
+    \ і національних сил, проб відбудовання \r\n соціальних і національних відносин\
+    \ за помічю і під охороною козацької сили"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5023622512817383
+  chunk_id: 3d51722e_c0314
+  text: "На цьому грунті може формуватися нове почуття\r\nспільності і патріотизму,\
+    \ ширше за суто національне, — відчуття України як\r\nвітчизни всіх людей, які\
+    \ пов’язали з нею свою долю і відповідальні за неї,\r\nтворячи її економічний,\
+    \ інтелектуальний, культурний потенціал, продовжуючи її\r\nісторію.\n\n13 січня\
+    \ 1990 року\n\nВИСТУП НА I ВСЕСВІТНЬОМУ ФОРУМІ УКРАЇНЦІВ\n\n(серпень 1992 p.)\n\
+    \nДовгождане товариство, високошановні пані і панове,\r\nдорогі гості з усіх континентів\
+    \ земної кулі; всі, хто зміг потрапити до\r\nцієї"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm

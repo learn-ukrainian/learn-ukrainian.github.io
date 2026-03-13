@@ -1,0 +1,202 @@
+discovered_at: '2026-03-13T12:11:07.650081+00:00'
+query_keywords:
+- 'Чорноморський флот: Фіаско 1992-2017'
+- 1992-1997
+- Севастополь
+- '2010'
+- Як флот став загрозою
+- Уроки
+- 'Analyze the causes and consequences of чорноморський флот: фіаско 1992-2017'
+- Evaluate the historical significance of база ворога на своїй території
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0318
+  text: "Після розподілу кораблів Чорноморського флоту СрСр \nу 1992 р. корабель СКр­112 увійшов\
+    \ до складу ВМС україни \nяк U­132\nЗВеРніть уВаГу\nЧорноморський флот російської\
+    \ \nФедерації перетворився на головний \nдестабілізуючий чинник ситуації \nв Севастополі\
+    \ й Криму та українсько­\nросійських відносин загалом."
+  section_title: Сторінка 178
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0297
+  text: "1990-ті  рр. Навчальний фільм\nrnk.com.ua/109562\nПерегляньте відеоролик\
+    \ \n«Ось чому в  нас немає \nЧорноморського флоту» \nі  виконайте завдання \n\
+    до  нього. © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 165
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0446
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 255
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0408
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 226
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0429
+  text: "233 \nУ зовнішній політиці пріоритетним напрямком стала орієнтація \nна Російську\
+    \ Федерацію. Її керівництво схиляло Віктора Януковича \nвступити в Митний союз,\
+    \ що означало приєднання України до євра-\nзійського політико-економічного простору\
+    \ і кінець двадцятирічним \nпотугам увійти в ЄС. Додатковим чинником тиску на\
+    \ українське \nкерівництво з боку РФ була проблема російського Чорноморського\
+    \ \nфлоту. Саме через свої збройні сили вона намагалася зберегти \nдомінуюче становище\
+    \ на півострові. Україні не вда"
+  section_title: Сторінка 234
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5044810771942139
+  chunk_id: feaa5fa7_c0035
+  text: "Рос. окупація Центр. і Сх. Укр. Земель (934). Початки\r\nбольшевицької освіти\
+    \ (935). Позашкільна освіта (935). Система шкільництва в\r\n20-их pp. (936). Організація\
+    \ шкільного процесу і методи навчання (937).\r\nОрганізація шкільництва (938).\
+    \ Шкільна мережа (938). Другий період у розвитку\r\nшкільництва (від початку 1930-их\
+    \ pp.) (939). Система освіти (940). Організація\r\nнавчання в школі (941). Мережа\
+    \ навчальних закладів (942) Л. Білецький, Г.\r\nВащенко, Д. Дорошенко, І. Розгін,\
+    \ Ю. Шерех\n\nКубань і півд. Во"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5044810771942139
+  chunk_id: feaa5fa7_c3230
+  text: "Рос. окупація Центр. і Сх. Укр. Земель (934). Початки\r\nбольшевицької освіти\
+    \ (935). Позашкільна освіта (935). Система шкільництва в\r\n20-их pp. (936). Організація\
+    \ шкільного процесу і методи навчання (937).\r\nОрганізація шкільництва (938).\
+    \ Шкільна мережа (938). Другий період у розвитку\r\nшкільництва (від початку 1930-их\
+    \ pp.) (939). Система освіти (940). Організація\r\nнавчання в школі (941). Мережа\
+    \ навчальних закладів (942) Л. Білецький, Г.\r\nВащенко, Д. Дорошенко, І. Розгін,\
+    \ Ю. Шерех\n\nКубань і півд. Во"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5002428293228149
+  chunk_id: feaa5fa7_c2900
+  text: "Загальна характеристика.\r\nЧорне й Озівське моря, до яких прилягає на широкій\
+    \ лінії Україна на півдні,\r\nлегко доступні для всієї України, бо вона пов’язана\
+    \ з ними ріками, що течуть\r\nконцентрично, а також залізницями. Обидва моря мають\
+    \ велике комунікаційне\r\nзначення і для тих країн Сх. Европи, які з ними безпосередньо\
+    \ не зв’язані\r\n(Росія, Білорусь). Деякими несприятливими моментами для плавби\
+    \ на укр. морях є\r\nплиткість при берегах, зокрема Озівського моря, мала розчленованість\
+    \ побережжя,\r\nзамерзан"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

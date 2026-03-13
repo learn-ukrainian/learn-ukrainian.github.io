@@ -1,0 +1,193 @@
+discovered_at: '2026-03-13T10:44:51.186530+00:00'
+query_keywords:
+- 'Хмельниччина I: причини та початок'
+- На порозі великих змін
+- 'Соціально-економічні причини: Земля і воля'
+- Релігійні та національне гноблення
+- Політична криза Речі Посполитої
+- 'Первинні джерела: Скарги та універсали'
+- 'Деколонізаційний погляд: Не бунт, а революція'
+- Читання
+- соціальні та релігійні причини повстання
+- особисту трагедію Хмельницького як каталізатор подій
+- перші перемоги 1648 року (Жовті Води, Корсунь)
+- 'Historical narrative: cause and effect'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+  channel: ІМТГШ
+  title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+  relevance_score: 0.9
+  relevance_note: This video provides essential historical context about the Zaporizhian
+    Cossacks, who were central to the Khmelnytsky Uprising, directly reinforcing the
+    module's topic.
+  transcript_excerpt: у вас ми дивують нахабні які раптом з'явилася на землі і стали
+    провідниками... лише тоді коли йдеться про козацтво запорозьке.
+  embed_suggestion: 'After ''Соціально-економічні причини: Земля і воля'' – provides
+    crucial background on the main actors of the uprising and their social standing.'
+- url: https://www.youtube.com/watch?v=njXBZSjXV84
+  channel: Реальна Історія
+  title: Походження України. Як все було насправді? Реальна історія з Акімом Галімовим
+  relevance_score: 0.5
+  relevance_note: The video discusses the origins of Ukraine and Kyiv Rus', which
+    is historically related but focuses on a much earlier period than the Khmelnytsky
+    Uprising.
+  transcript_excerpt: зі школи ми чули про заснування Русі про заснування Києва знаємо
+    такі імена як кийщек хориф і сестра їхня либить але насправді всі ці імена не
+    мають жодного стосунку до реальної історії.
+  embed_suggestion: Not suitable for this specific module, but could be used in a
+    module on early Ukrainian history.
+- url: https://www.youtube.com/watch?v=nQguCZL8fUc
+  channel: Реальна Історія
+  title: Anti-Terrorist Operation (ATO) in Donbass. Full chronology from 2014 to 2022
+    (ENG SUBS)
+  relevance_score: 0.1
+  relevance_note: The video discusses the Anti-Terrorist Operation (ATO) in Donbas
+    from 2014-2022, which is unrelated to the 17th-century Khmelnytsky Uprising.
+  transcript_excerpt: Антитерористична операція або АТО- події, що були на початку
+    війни з Росією. Відлік цієї історії починається у 2014 році.
+  embed_suggestion: Not relevant to this module.
+- url: https://www.youtube.com/watch?v=62RxxoAvw3w
+  channel: Суспільне Док
+  title: Став на захист Батьківщини нареченої — історія реабілітації воїна інтернаціонального
+    легіону
+  relevance_score: 0.1
+  relevance_note: The video tells a personal story of a modern soldier in the international
+    legion, which is unrelated to the historical context of the Khmelnytsky Uprising.
+  transcript_excerpt: За кілька днів до того, як це все сталося, він наче це відчув.
+    Спартак мені сказав, що хоче їхати на війну.
+  embed_suggestion: Not relevant to this module.
+- url: https://www.youtube.com/watch?v=z-GrhRpwGg4
+  channel: Суспільне Док
+  title: '«Зерновий коридор». Як продовольчий шантаж РФ впливає на світ | «Ціна українського
+    хліба» #4'
+  relevance_score: 0.1
+  relevance_note: The video discusses the modern 'grain corridor' and its economic
+    impact, which is completely unrelated to the historical Khmelnytsky Uprising despite
+    a mention of a place name.
+  transcript_excerpt: Ціна українського хліба Зерновий коридор Продовольча безпека
+    є ключовим питанням світового порядку денного.
+  embed_suggestion: Not relevant to this module.
+- url: https://www.youtube.com/watch?v=aJaaBWBdZcA
+  channel: ІМТГШ
+  title: Чому ніхто не знає походження козаків? | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0005
+  text: "Національно-визвольна війна українського народу середини \nХVІІ ст. (Хмельниччина).\
+    \ Створення Української козацької \nдержави. Боротьба за збереження державності.\
+    \ Ліквідація \nКозацької держави\nЧетвертий\n1764  р. — кінець XVIII ст. Перехід\
+    \ українських земель під імперську владу\n\e\n\e Працюємо в  парах. Перегляньте\
+    \ зміст підручника. З’ясуйте, які теми  \nви розглянете, вивчаючи періоди історії\
+    \ України Ранньомодерної доби. Працюємо з джерелом\nrnk.com.ua/110281\nЗі статті\
+    \ «Історія України: \nРанній Новий ч"
+  section_title: Сторінка 5
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0020
+  text: "Чому ви так вважаєте? Слов’яни\nСуспільний \nустрій\nРодова  \nгромада\n\
+    Воєнна \nдемократія\nСусідська \nгромада\nРанні державні \nутворення\nПолітичний\
+    \ \nустрій\nВірування \n(язичництво)\nyy Культ предків\nyy Обожнення \nявищ природи\n\
+    yy Землеробські \nкульти\nЗаняття\nХАРАКТЕРНІ ОЗНАКИ РОЗВИТКУ СЛОВ’ЯНСТВА\nyy\
+    \ Землеробство\nyy Городництво\nyy Скотарство (присадибне, \nвідгінне)\nyy Промисли\
+    \ (полювання, \nрибальство, бортництво тощо)\nyy Ремесла\nyy Торгівля та обмін\n\
+    \e\n\e Працюємо в  парах. Використовуючи текст параграфа, \n"
+  section_title: Сторінка 14
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0256
+  text: "Виговського;\n\x84\n\x84\nчинники, що зумовили вибух \nгромадянської війни\
+    \ \nв  Гетьманщині;\n\x84\n\x84\nГадяцьку угоду та реакцію на неї \nукраїнського\
+    \ суспільства \nй  сусідніх держав;\n\x84\n\x84\nспроби Ю. Хмельницького \nврятувати\
+    \ Гетьманщину від Руїни;\n\x84\n\x84\nрозкол Гетьманщини на \nПравобережну і \
+    \ Лівобережну;\n\x84\n\x84\nпочаток правління гетьмана \nП. Дорошенка;\n\x84\n\
+    \x84\nАндрусівське перемир’я між \nРіччю Посполитою і  Московією."
+  section_title: Сторінка 158
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0138
+  text: "72  Розділ III. Національно-визвольна війна українського народу середини\
+    \ XVII ст. § 14. Передумови, причини і  початок \nНаціонально-визвольної війни\n\
+    Опрацювавши цей параграф, ви дізнаєтесь: яки­\nми були передумови та причини Національно-\n\
+    визвольної війни; про Б. Хмельницького та його \nсоратників; якими були події\
+    \ початку війни; що \nтаке «Національно-визвольна війна українського \nнароду\
+    \ середини XVII ст.», «Українська революція \nXVII  ст.», «Микитинська Січ». Пригадайте: \
+    \ 1. Наведіть факти, що св"
+  section_title: Сторінка 72
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5839152932167053
+  chunk_id: 5794da94_c2280
+  text: "Особливо се треба сказати про \r\nостанні роки Хмельниччини, дуже поверхово\
+    \ оброблені в дотеперішній науковій \r\nлітературі.\n\nФактичний зміст Хмельниччини\
+    \ \r\nзбогатився дуже, і загальний образ її представляється значно яснішим — хоча\
+    \ \r\nновий матеріял не упростив, а ускладнив його; я з свого боку старався не\
+    \ \r\nсхематизувати, не спрощувати його штучно, щоб не нагинати під свої суб'єктивні\
+    \ \r\nсприймання, хоча й даю подекуди загальні уваги — особливо при кінці тому.\n\
+    \nВ фокусі панорами стоїть великий \r\nпо"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5732710957527161
+  chunk_id: 5794da94_c1715
+  text: "Останніми часами так богато \r\nписали про Хмельниччину, так чаcто посилались\
+    \ на неї, на потвердженнє своїх \r\nпоглядів, теорій, провіщувань, обвинувачувань,\
+    \ так часто прикладались її подїї \r\nта ситуації до нинїшнїх, що не тільки спеціалїстови,\
+    \ а й просто інтелїґентній \r\nлюдинї варто зазнайомитись з науковим станом річи:\
+    \ з тим що ми дїйсно знаємо про \r\nтодїшні подїї та ситуації. І се спонукує мене\
+    \ передрукувати сю мою книгу, котрої \r\n- не знаю, чи не єдиний примірник маю\
+    \ в руках. Вона представляє в"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5711310505867004
+  chunk_id: 5739d24f_c0942
+  text: "Сюжет про Визвольну війну займає в книжці, по суті,\r\nсамостійне місце (зрозуміло,\
+    \ що у випадку необхідності автор робить необхідні\r\nекскурси у минуле). Вчений\
+    \ аналізує комплекс причин, які обумовили цей могутній\r\nнародний вибух (М. С.\
+    \ Грушевський називає Хмельниччину також «народною\r\nвійною»), показує джерела\
+    \ формування та соціальний склад повстанського табору,\r\nописує військові битви,\
+    \ прагне оцінити найважливіші переговори різних політичних\r\nсил та зміст укладених\
+    \ відповідних договорів та угод "
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm

@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 113
+PASS: pipeline istorio 113
 
   Module:   syntez-informatsiina-viina
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 113
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:22:15Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:37:46Z

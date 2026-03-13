@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 40
+PASS: pipeline istorio 40
 
   Module:   lysty-stusa
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 40
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:10:49Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:10:19Z

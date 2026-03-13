@@ -4,8 +4,24 @@
   "mode": "v5",
   "phases": {
     "research": {
-      "status": "failed",
-      "ts": "2026-03-13T01:22:34Z"
+      "status": "complete",
+      "ts": "2026-03-13T12:41:54Z",
+      "task_id": "v5-1918-1920-viina-i-soiuz-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T12:41:54Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
     }
   }
 }

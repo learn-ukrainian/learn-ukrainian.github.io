@@ -1,0 +1,147 @@
+module: c2-071
+level: C2
+sequence: 71
+slug: media-i-dezinformatsiya
+version: '2.0'
+title: Медіа і дезінформація
+subtitle: Media and Disinformation
+focus: culture
+pedagogy: TTT
+phase: C2.4 [Thematic Discourse]
+word_target: 5000
+objectives:
+- Аналізувати українське медіасередовище (преса, радіо, телебачення, інтернет) з використанням фахової термінології медіаграмотності
+  та журналістикознавства
+- Learner can critically evaluate propaganda techniques, fake news, and information warfare tactics using evidence-based
+  analytical frameworks in Ukrainian
+- Конструювати аргументований текст про загрози свободі слова, незалежності ЗМІ та вплив соціальних мереж на суспільну
+  думку
+- Learner can identify manipulation strategies in media texts and compose a media literacy analysis brief in formal
+  academic Ukrainian
+sources:
+- name: Інститут масової інформації (ІМІ)
+  url: https://imi.org.ua/
+  type: primary
+  notes: Leading Ukrainian media watchdog — press freedom monitoring, media literacy research, propaganda analysis
+- name: StopFake
+  url: https://www.stopfake.org/
+  type: primary
+  notes: Fact-checking organization specializing in debunking Russian disinformation about Ukraine
+- name: 'Почепцов Г. Інформаційні війни'
+  url: https://www.nas.gov.ua/
+  type: reference
+  notes: Academic analysis of information warfare theory and practice in the post-Soviet context
+content_outline:
+- section: 'Вступ: Медіадискурс на рівні С2 (Introduction: Media Discourse at C2 Level)'
+  words: 600
+  points:
+  - 'From media consumption vocabulary (B1-B2) to critical media analysis: the C2 learner engages with media ecosystems
+    through the lens of institutional critique, propaganda detection, and information security.'
+  - 'State Standard theme 3.20: full coverage of ЗМІ та соціальні мережі including media independence, press freedom,
+    information warfare, and the role of media in democratic societies.'
+  - 'Register expectations: navigating between науковий (academic media studies), публіцистичний (journalistic), and
+    розмовний (everyday media discussion) registers when analyzing media phenomena.'
+- section: Медіаландшафт України (Ukraine's Media Landscape)
+  words: 750
+  points:
+  - 'Traditional media ecosystem: print media (друковані ЗМІ), broadcasting (телерадіомовлення), and their transformation
+    in the digital age; major media groups, ownership structures (олігархічний вплив), and editorial independence.'
+  - 'Digital media and online journalism: інтернет-видання, блогосфера, подкасти, Telegram-канали as new information channels;
+    the decline of traditional gatekeeping and rise of citizen journalism (громадянська журналістика).'
+  - 'Media regulation and self-regulation: Національна рада з питань телебачення і радіомовлення, journalistic ethics codes,
+    the balance between regulation and censorship (цензура) in wartime.'
+- section: Свобода слова та незалежність медіа (Freedom of Speech and Media Independence)
+  words: 750
+  points:
+  - 'Legal frameworks: constitutional guarantees of freedom of speech (стаття 34 Конституції), media legislation, and
+    international standards (Європейська конвенція з прав людини, стаття 10).'
+  - 'Threats to media independence: oligarchic media ownership (олігархізація медіа), political pressure on journalists,
+    physical safety of reporters in conflict zones, and the chilling effect (ефект залякування) on investigative journalism.'
+  - 'Wartime media policies: martial law restrictions (обмеження воєнного стану), the telemarathon "Єдині новини" (United
+    News), debates around information security versus press freedom, and international press freedom indices.'
+- section: Пропаганда та інформаційна війна (Propaganda and Information Warfare)
+  words: 800
+  points:
+  - 'Propaganda techniques: маніпулятивні прийоми (manipulative techniques) including framing (фреймінг), agenda-setting,
+    cherry-picking, emotional appeals, and the creation of false equivalences; Russian propaganda narratives about Ukraine.'
+  - 'Information warfare (інформаційна війна): hybrid warfare doctrine, bot farms (бот-ферми), troll factories, coordinated
+    inauthentic behavior on social media; analysis of specific disinformation campaigns targeting Ukraine.'
+  - 'Counter-propaganda strategies: fact-checking (верифікація фактів), source triangulation, OSINT (розвідка з відкритих
+    джерел), and Ukraine''s institutional responses including the Center for Strategic Communication (ЦСК).'
+- section: Фейки та дезінформація (Fakes and Disinformation)
+  words: 750
+  points:
+  - 'Taxonomy of false information: дезінформація (deliberate falsehood), місінформація (unintentional spread), мальінформація
+    (deliberately harmful truth); distinguishing intent, content, and distribution mechanisms.'
+  - 'Anatomy of a fake: how fabricated stories are created, amplified, and weaponized; case studies from the Russo-Ukrainian
+    war including deepfakes (діпфейки), doctored images, and fabricated eyewitness accounts.'
+  - 'Social media algorithms and filter bubbles (фільтрові бульбашки): how algorithmic content curation (алгоритмічна
+    курація) amplifies polarizing content, creates echo chambers (ехо-камери), and enables viral spread of disinformation.'
+- section: Медіаграмотність та критичне мислення (Media Literacy and Critical Thinking)
+  words: 700
+  points:
+  - 'Media literacy as a civic competence: the IREX model of media literacy education in Ukraine, integration into school
+    curricula, and the role of NGOs (Internews, ІМІ, StopFake) in promoting critical media consumption.'
+  - 'Critical analysis toolkit: evaluating source credibility (достовірність джерела), detecting bias (упередженість),
+    verifying images and videos, cross-referencing claims with primary sources and databases.'
+  - 'Digital hygiene (цифрова гігієна): recognizing clickbait (клікбейт), identifying bot accounts, understanding data
+    privacy (захист персональних даних), and responsible sharing practices in social media.'
+- section: 'Практикум: Аналіз медіатексту (Workshop: Media Text Analysis)'
+  words: 650
+  points:
+  - 'Applied analysis: deconstructing a real media text (news article, social media post, or TV segment) to identify
+    manipulative techniques, bias, and information gaps using analytical frameworks from media studies.'
+  - 'Fact-checking exercise: verifying claims from a selected media text using primary sources, OSINT techniques, and
+    cross-referencing with fact-checking databases (StopFake, VoxCheck).'
+  - 'Essay production: writing a media literacy analysis brief (аналітична записка з медіаграмотності) on a chosen
+    disinformation case, integrating evidence from multiple source types and registers.'
+vocabulary_hints:
+  required:
+  - незалежність медіа (media independence) — незалежність ЗМІ, забезпечення незалежності медіа; core press freedom concept
+  - свобода слова (freedom of speech) — гарантія свободи слова, обмеження свободи слова; constitutional rights register
+  - пропаганда (propaganda) — російська пропаганда, пропагандистський наратив; information warfare terminology
+  - фейковий (fake) — фейкова новина, фейковий акаунт; digital media literacy term
+  - дезінформація (disinformation) — поширення дезінформації, протидія дезінформації; key concept in information security
+  - маніпуляція (manipulation) — маніпуляція свідомістю, медійна маніпуляція; propaganda analysis register
+  - інформаційний простір (information space) — український інформаційний простір, захист інформаційного простору; geopolitical
+    media concept
+  - медіаграмотність (media literacy) — розвиток медіаграмотності, рівень медіаграмотності; educational policy term
+  - цензура (censorship) — політична цензура, самоцензура; press freedom analysis register
+  - наратив (narrative) — пропагандистський наратив, домінантний наратив; discourse analysis terminology
+  recommended:
+  - верифікація (verification) — верифікація фактів, процедура верифікації; fact-checking methodology term
+  - інфопростір (info-space) — colloquial shortening of інформаційний простір; frequent in journalistic register
+  - таргетований (targeted) — таргетована реклама, таргетоване поширення; digital marketing and propaganda term
+  - алгоритмічний (algorithmic) — алгоритмічна видача, алгоритмічна курація; tech-media analysis register
+  - саморегуляція (self-regulation) — медійна саморегуляція, органи саморегуляції; media governance terminology
+activity_hints:
+- type: quiz
+  focus: Ідентифікація медійних термінів та пропагандистських прийомів
+  items: 15
+- type: essay-response
+  focus: Аналітична записка з медіаграмотності на основі реального кейсу дезінформації
+- type: critical-analysis
+  focus: Аналіз медіатекстів на предмет маніпулятивних технік та упередженості
+  items: 8
+- type: discussion
+  focus: Дебати щодо балансу між свободою слова та інформаційною безпекою
+  items: 1
+- type: fill-in
+  focus: Заповнення пропусків медійною та інформаційною лексикою в контексті
+  items: 12
+connects_to:
+- c2-065 (Society & Citizenship — political discourse and media's role in democracy)
+- c2-022 (Practical Rhetoric — propaganda analysis and argumentation techniques)
+- c2-066 (Foreign Policy & Diaspora — information warfare in international context)
+prerequisites:
+- c2-065 (Society & Citizenship)
+persona:
+  voice: Senior Specialist
+  role: Media Analyst
+grammar:
+- Медіаландшафт України
+- Свобода слова та незалежність медіа
+- Пропаганда та інформаційна війна
+- Фейки та дезінформація
+- Медіаграмотність та критичне мислення
+register: академічний

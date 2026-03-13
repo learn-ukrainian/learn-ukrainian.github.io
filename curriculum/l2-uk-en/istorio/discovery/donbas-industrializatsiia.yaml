@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T11:30:13.534723+00:00'
+query_keywords:
+- 'Донбас: Індустріалізація та ідентичність'
+- Створення промислового центру
+- «Робітнича» ідентичність
+- Українці Донбасу
+- Після 1991
+- 2014-2022
+- 'Analyze the causes and consequences of донбас: індустріалізація та ідентичність'
+- Evaluate the historical significance of регіон, якого не було
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0343
+  text: "УНДП –… \nУСДП — … \n \nПолітичні  \nпартії (їх цілі  \nта імена лідерів)\
+    \ \n«Просвіти» — … \n Народні доми — … \n «Рóсьêе Педаãоãічне \nТовариство» —\
+    \ … \n«Соêіл» — … \n«Січ» — … \n«Пласт» — … \n«Січові стрільці» — … \nМолодіжно-спортивні\
+    \ \nорãанізації (ріê створення, \nнапрями діяльності, лідери) \nНаціонально-êóльтóрні\
+    \ \nорãанізації (описати \nдіяльність) \n«Рóсьêа рада» — …,  \n \nУНДП і УНП \n\
+    ? «Уêраїнсьêа шêола» — … \n «Уêраїнсьêа хата» — … \n «Жіноча ãромада» — … \n?\
+    \ «Союз січей» —… \n \n?"
+  section_title: Сторінка 236
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0433
+  text: "2015  р. ДЕКОМУНІЗАЦІЯ\nЗаходи\nУвічнення перемоги над нацизмом \nу  Другій\
+    \ світовій війні (1939—\n1945  рр.)\nДоступ до архівів спецслужб\nПравовий статус\
+    \ учасників \nборотьби за незалежність України\nЗасудження комуністичного \nта \
+    \ нацистського режимів\nЗміна назв населених пунктів, \nвулиць, об’єктів топоніміки,\
+    \ що \nмають імена компартійних діячів; \nзнесення пам’ятників на честь \nкомуністичних\
+    \ лідерів і  подій\n© ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 239
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0256
+  text: "\x17\n\x17 У результаті індустріалізації в  Україні відбулося зростання під-\n\
+    приємств важкої промисловості (майже в  11  разів); Україна за рівнем \nрозвитку\
+    \ стала індустріально-аграрною країною. \x17\n\x17 У той же час форсована індустріалізація\
+    \ підірвала розвиток сільсько­\nго господарства, легкої і харчової промисловості;\
+    \ призвела до нераціональ-\nі\nМолоді кадри Донбасу. Художниця П. Депутатова"
+  section_title: Сторінка 134
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5217387676239014
+  chunk_id: 53691244_c0076
+  text: "Уніфікацію, як засіб створення національної держави,\r\nздійснювали там,\
+    \ де вже існував високий ступінь стандартизованої культури, і\r\nзавдання полягало\
+    \ у тому, щоб цій культурі надати єдиного політичного статусу.\r\nЦе передбачало\
+    \ об’єднання дрібних або середніх держав у результаті війни чи\r\nдипломатичної\
+    \ боротьби. Лідерами у цьому процесі виступали дипломати і солдати,\r\nа не мислителі\
+    \ і поети. Як бачимо, справді відкривалася можливість для появи\r\nтакого типу\
+    \ особистості, що його Липинський назвав «"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5203428864479065
+  chunk_id: 479cf43d_c0041
+  text: "Про нього див.: Ленкавський С. \r\nФілософічні підстави \"Націоналізму\"\
+    \ Донцова // Розбудова\r\nНації. — 1928. — Ч. 7, 8; Левинський В. Ідеолог фашизму.\
+    \ — Л., 1936; Єндик\r\nР. Донцов — ідеолог укр. націоналізму. — Мюнхен, 1955;\
+    \ Сосновський М. Дмитро\r\nДонцов: політ. портрет: з історії розвитку укр. націоналізму.\
+    \ — Нью-Йорк; Торонто,\r\n1974; Лісовий В. Драгоманов і Донцов // Філос. і соціол.\
+    \ думка. — \r\n 1991. — №9; Липинський В. Донцов і\r\nЛипинський // Сучасність.\
+    \ — 1992. — №6; Лосев І. Естетичні погляди"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5090256333351135
+  chunk_id: 3d51722e_c0172
+  text: "Чому ці прямі й чіткі постанови не здійснені і чи\r\nбуде хтось за це відповідати\
+    \ — не нам судити. Ми лише констатуємо факт.\n\nАле треба додати, що в Україні\
+    \ була чесна й енергійна\r\nспроба Здійснити ці постанови — вона відома під назвою\
+    \ українізації. Про неї\r\nтепер соромляться згадувати, і саме це слово зробили\
+    \ одіозним.\n\nА насправді це була спроба істинно\r\nінтернаціоналістської політики\
+    \ накресленої прямими вказівками Леніна та\r\nпостановами з’їздів РКП(б) та КП(б)У,\
+    \ підтримана і схвалена Комінтерно"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm

@@ -1,13 +1,13 @@
-module: c2-075
+module: c2-089
 level: C2
-sequence: 75
+sequence: 89
 slug: teaching-ukrainian-iii
 version: '2.0'
 title: Викладання української мови III — Розробка матеріалів
 subtitle: Introduction — The Role of Materials in Language Learning
 focus: practice
 pedagogy: TTT
-phase: C2.4 [Meta-Skills & Capstone]
+phase: C2.5 [Meta-Skills & Capstone]
 word_target: 5000
 objectives:
 - Аналізувати та класифікувати явища Адаптація та стильова трансформація у автентичних текстах
@@ -135,8 +135,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-76 (Теорія перекладу II — Поглиблений курс)
-- c2-80 (Дипломний проєкт — Вибір теми)
+- c2-90 (Теорія перекладу II — Поглиблений курс)
+- c2-94 (Дипломний проєкт — Вибір теми)
 persona:
   voice: Senior Specialist
   role: Curriculum Architect

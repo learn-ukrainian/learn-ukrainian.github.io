@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T10:15:32.091765+00:00'
+query_keywords:
+- 'Акт проголошення незалежності: Текст і контекст'
+- Контекст серпня 1991
+- Текст Акту
+- Хто голосував і чому
+- Референдум 1 грудня
+- Міжнародне визнання
+- 'Analyze the causes and consequences of акт проголошення незалежності: текст і контекст'
+- Evaluate the historical significance of найважливіший документ
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0013
+  text: "Газета «Голос України» від 27  серпня \n1991  р. з  текстом Постанови та \
+    \ Акта \nпроголошення незалежності України\n\e\n\e За допомогою методу усної історії\
+    \ \nпроведіть опитування осіб, що були \nсучасниками зображеної події. З’ясуйте,\
+    \ \nяке враження вона на них справила і  які \nсподівання на майбутнє спричинила.\
+    \ © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 10
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0289
+  text: "По-\nясніть чому. Працюємо з  хронологією\n24  серпня \n1991  р. Акт проголошення\
+    \ \nнезалежності України. 1  грудня \n1991  р. Всеукраїнський \nреферендум і \
+    \ вибори \nПрезидента України. Обрання Л. Кравчука \nПрезидентом України. CФОРМУЛЮЙТЕ\
+    \ СУДЖЕННЯ ПРО:\n\x84\n\x84 спроби зберегти СРСР і  протидія цьому \nвлади УРСР;\n\
+    \x84\n\x84 процеси, які сприяли проголошенню \nнезалежності України. rnk.com.ua/107016\n\
+    Практичні заняття \nза  розділом IV\nrnk.com.ua/107017\nУзагальнення знань \n\
+    за  розділом IV\nrnk.com.ua/107018\nТестові за"
+  section_title: Сторінка 160
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0389
+  text: "— прийнято Верховною Радою УРСР Акт проголошення\nнезалежності України; \n\
+    – 1 грудня 1991 р. — відбувся Всеукраїнський референдум з питання підтвердження\n\
+    Акта проголошення незалежності України; обрано першого Президента України Леоніда\
+    \ \nКравчука; \n– 7–8 грудня 1991 р. — прийнято рішення про припинення існування\
+    \ СРСР;\n– 21 грудня 1991 р. — підписано Декларацію про утворення СНД. 2. Поясніть\
+    \ значення понять: багатопартійність, мітингова демократія, незалежність,\nсуверенітет.\
+    \ 3. Перегляньте відео за "
+  section_title: Сторінка 211
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0385
+  text: "21 серпня стало очевидним, що заколот провалився. 22 серпня \nПрезидія Верховної\
+    \ Ради погодилася на скликання позачергової сесії. 24 серпня 1991 року Верховна\
+    \ Рада прийняла історичний доку-\nмент – Акт проголошення незалежності України,\
+    \ в якому йшлося \nпро створення самостійної України, територія якої є неподільною\
+    \ і \nнедоторканною. Тим самим було покладено край юридичному існу-\nванню УРСР.\
+    \ На геополітичній карті світу з’явилася нова суверенна \nдержава – Україна. 1\
+    \ грудня 1991 року відбувся Всеукр"
+  section_title: Сторінка 209
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0064
+  text: "65\nЗлякавшись людського обурення, комуністич-\nна більшість Верховної Ради\
+    \ погодилася ухвалити \nпостанову, яка задовольняла всі вимоги револю-\nціонерів.\
+    \ Союзний договір провалився.\nПроте Радянська імперія оскаженіло боролася за\
+    \ \nсвоє збереження. У серпні 1991 року в Москві став-\nся збройний заколот з\
+    \ метою повернення до тоталі-\nтарного ладу. Однак в Україні комуністична партія\
+    \ вже \nвтратила авторитет і владу.\nТому, скориставшись розколом і послабленням\
+    \ \nрадянських колонізаторів, 24 серпня Верховн"
+  section_title: Сторінка 65
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.48208150267601013
+  chunk_id: 53691244_c0446
+  text: "Однак визнання незалежності й суверенності нової держави\r\nзалишається проблематичним\
+    \ для значної частини населення, незалежно від реґіону\r\nпроживання. Інша річ,\
+    \ що досить критичні оцінки досягнутого ступеня\r\nнезалежності супроводжуються,\
+    \ проте, впевненою ідентифікацією на заході і в\r\nстолиці й практично масовим\
+    \ запереченням на півдні та сході. Розмитість\r\nпозначень простору, що обирається\
+    \ й присвоюється, неминуче дається взнаки у\r\nпроцесі поширеня ситуативних ідентичностей,\
+    \ на що вказує очевидне"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.4778023064136505
+  chunk_id: 3d51722e_c0315
+  text: "І тут треба наголосити, що сама ця Держава виникла як\r\nрезультат зусиль\
+    \ багатьох поколінь українців усього світу. При всій їхній роз’єднаності,\r\n\
+    взаємному незнанню і подеколи ворогуванні їхня енергія найрізноманітнішими,\r\n\
+    часом парадоксальними шляхами спрямовувалася на національне виживання — й або\r\
+    \nна розбудову самої України, або на підтримання вогню української ідеї.\n\nІнколи\
+    \ кажуть, що незалежна Україна постала в серпні\r\n1991 року навдивовижу легко\
+    \ і завдяки щасливому збігові обставин; мовляв "
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.4723830223083496
+  chunk_id: 53691244_c0300
+  text: "Президент США наголошував на тому, що «американці... не\r\nдопомогатимуть\
+    \ тим, хто заохочує самовбивчий націоналізм, який породжується на\r\nміжнаціональній\
+    \ ненависті». Очевидно, що це було спрямовано проти президента\r\nГрузії Звіада\
+    \ Гамсахурдії, «але Буш також знав, що такі етнічні почуття є і в\r\nУкраїни,\
+    \ і його попередження було призначене й для слухачів у Києві» 26.\r\nЦе свідчило\
+    \ про нерозуміння політики українського руху щодо національних\r\nменшин.\n\n\
+    Та вже через місяць після путчу у Москві ставленн"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

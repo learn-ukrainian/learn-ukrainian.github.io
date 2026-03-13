@@ -1,0 +1,253 @@
+discovered_at: '2026-03-13T11:47:29.973343+00:00'
+query_keywords:
+- Хрущов — Шелест — Щербицький
+- Фаза 1
+- 1953-1964
+- Фаза 2
+- 1963-1972
+- Фаза 3
+- Фаза 4
+- Порівняння з 1920-ми
+- Analyze the causes and consequences of хрущов — шелест — щербицький
+- Evaluate the historical significance of ще один цикл
+- history
+- історія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0180
+  text: "Сучасний канадський іс­\nторик українського походження Орест Субтельний писав:\
+    \ \n«Не підлягає сумніву, що як Шелест, так і  Щербицький \nбачили майбутнє у світлі\
+    \ комуністичної ідеології та в кон­\nтексті радянської системи... і кожен являв\
+    \ собою яскравий \nприклад того жорсткого контролю, що його здійснювала \nМосква\
+    \ під керівництвом КПУ...». Складіть усний або пись­\nмовий перелік фактів, що\
+    \ підтверджують цю характерис­\nтику. 14. Висловіть думку щодо чинників, які ­вплинули\
+    \ \nна формування політики П. "
+  section_title: Сторінка 99
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0107
+  text: "Очевидно, це \nпояснюється тривалим проживанням Микити Хрущова в Україні\
+    \ та його \nмайже 11-річним керуванням КП(б)У. Та й своєму підвищенні він \nвеликою\
+    \ мірою завдячував підтримці українських партійних діячів. Політична підтримка\
+    \ з боку українського керівництва не раз допомагала \nМикиті Хрущову в критичні\
+    \ моменти, особливо в період боротьби за \nвладу 1954 року, а також у 1957 році,\
+    \ коли частина партійного \nкерівництва намагалась усунути його від влади. Прихід\
+    \ до влади Микити Хрущова ознаменувався"
+  section_title: Сторінка 62
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0175
+  text: "Розділ III. Україна в період системної кризи Союзу Радянських Соціалістичних\
+    \ Республік\n94\nполітиці, опирався політиці російщення. За спри-\nяння П. Шелеста\
+    \ з’яви­лися нові українськомовні \nгазети, збільшилася кількість телевізійних\
+    \ про-\nграм українською мовою, нею почали дублювати \nфільми та дозволили видавати\
+    \ наукову літературу. П. Шелест виступав за переведення діловодства \nв УРСР на\
+    \ українську мову та українізацію управ-\nлінського апарату. Так, у  період перебування\
+    \ \nП. Шелеста три чверті поса"
+  section_title: Сторінка 96
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0243
+  text: "УКРАЇНА в  1985—1991  рр. БОРОТЬБА ЗА НЕЗАЛЕЖНІСТЬ\nС\nЛ\nО\nВ\nА\nЧ\nЧ\n\
+    И\nН\nА\nЧ\nЕ\nХ\nО\n-\nУ\nГ\nО\nР\nЩ\nИ\nН\nА\nП О Л Ь Щ А\nБ і л о р у с ь к\
+    \ а  Р С Р\nМ\nо\nл\nд а\nв с\nь к\nа  \nР\nС\nР\nЗакарпатська\nобл. Кримська\n\
+    АРСР\nВолинська\nобл. Р\nо\nс\nі\nй\nс\nь\nк\nа\nР\nФ\nС\nР\nР\nУ\nМ\nУ\nН\nІ\n\
+    Я\nВ\nі\nс\nла\nСя\nн\nЗ\nа\nх\n. Буг\nПрип\n’\nя\nть\nГо\nри\nнь\nД\nн\nіпр\n\
+    о\nД\nес\nна\nД\nо\nн\nД\nо\nн\nС\nл\nу\nч\nС\nей\nм\nД\nністер\nТиса\nД\nон\n\
+    ець\nСі\nв\nер\n. Р\nо\nс\nь\n \nВ\nорс\nк\nл\nа\nПрут\nП\nівд. Б\nу\nг\nДніпро\n\
+    К\nу\nбань\nА З О В С Ь К Е\nМ О Р Е\nЧ О Р Н Е        М О Р Е\nД\nун\nа\nй\n\
+    о.Зміїний\n"
+  section_title: Сторінка 135
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0098
+  text: "53\n?? 1. Покажіть на карті зміни \nадміністративно-територіального \nподілу\
+    \ УРСР у цей період. 2. Покажіть на карті території \nадміністративних економічних\
+    \ \nрайонів у 1957—1962 рр. 3. Які \nобласні центри та області \nперейменували\
+    \ в 1954—1962 рр.? призначений колишній член репресованої за часів \nсталінщини\
+    \ Комуністичної партії Західної України \nВ. Дудикевич, а  першим заступником\
+    \ голови Ради \nміністрів УРСР  — драматург О. Корнійчук. Також \nзросла частка\
+    \ українців у  республіканських партій-\nних ст"
+  section_title: Сторінка 55
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5551358461380005
+  chunk_id: b129e02f_c0913
+  text: '1505-1533 Василій III
+
+
+    1533-1584 Іван IV Грозний (з 1547 р. — цар)
+
+
+    Царі Московські
+
+
+    1533 (1547)- 584 Іван IV Грозний
+
+
+    1584-1598 Федір I
+
+
+    1598-1605 Борис Годунов
+
+
+    1605 Федір II Годунов
+
+
+    1605-1606 Лжедмитрій I
+
+
+    1606-1610 Василій IV Шуйський
+
+
+    1610-1613 Владислав Польський (виборний цар)
+
+
+    1613-1645 Михайло Романов
+
+
+    1645-1676 Олексій
+
+
+    1676-1682 Федір III
+
+
+    1682 Петро I (номінально)
+
+
+    1682-1696 Петро I та Іван V, співправителі (1682-1689 правителька Софія)
+
+
+    1696-1725 Петро I (самостійно)
+
+
+    Імператори Ро'
+  work: Дворнік — Слов'яни в Європейській історії та цивілізації
+  author: Дворнік Ф.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/dvornik/dv.htm
+- score: 0.5432209968566895
+  chunk_id: 4298bcca_c0000
+  text: "[Т. Г. Шевченко в епістолярії відділу рукописів. — К., 1966. — 492 с.]\n\n\
+    Т. Г. ШЕВЧЕНКО В ЕПІСТОЛЯРІЇ ВІДДІЛУ РУКОПИСІВ\n\n„НАУКОВА ДУМКА“\nКИЇВ — 1966\n\
+    \nЗМІСТ\n\nСтор.\n\nПередмова — у боротьбі за Шевченка . . . . . . . . . 3\n\n\
+    Від упорядників . . . . . . . . . 12\n\n1842-1879         1880-1889         1890-1897\
+    \         1898-1903         \n1904-1907         1908-1910         1911-1912  \
+    \       1913         1914-1917\n\n1842\n\n1. К. В. Маркович до Г. П. Галагана.\
+    \ 13 лютого . . . . . . . . . 15\n\n1847\n\n2 М. А. Ріг"
+  work: Шевченко в епістолярії (1966)
+  author: Колектив
+  year: 1966
+  genre: letters
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/epis.htm
+- score: 0.5285632610321045
+  chunk_id: ac24b59d_c0032
+  text: "25/66. Ґодуновський II і І: Успенський: (Д. Істор.\r\nМузей); Кормча, півустав,\
+    \ кінець XVI-го ст.\n\n27. Фроловський-Браіловський (Бібл.\r\nСалтикова-Щедріна);\
+    \ Кормча, півустав, початок XVII-го ст.\n\n30. Толстого І (Бібл. Салтикова-Щедріна);\
+    \ Кормча,\r\nпівустав, перша половина XV-го ст.\n\n31. Чудівський І (Д. Істор.\
+    \ Музей); Кормча, півустав,\r\n1480-і рр.\n\n32. Соловецький І (Бібл. Салтикова-Щедріна);\
+    \ Кормча,\r\nпівустав, 1493 р.\n\n36. Чудівський II (Д. Істор. Музей); Кормча,\r\
+    \nпівустав, 1499 р.\n\n38. Бібліотеки "
+  work: Білецький — Руська Правда й історія її тексту
+  author: Білецький О.
+  year: 1993
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/bilets/bil.htm

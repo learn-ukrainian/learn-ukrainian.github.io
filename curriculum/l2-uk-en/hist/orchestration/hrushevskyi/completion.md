@@ -1,4 +1,4 @@
-FAIL: pipeline hist 87
+PASS: pipeline hist 87
 
   Module:   hrushevskyi
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 87
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:16:07Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:14:48Z

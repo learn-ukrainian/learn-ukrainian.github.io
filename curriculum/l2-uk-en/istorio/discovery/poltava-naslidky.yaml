@@ -1,0 +1,206 @@
+discovered_at: '2026-03-13T11:54:22.810942+00:00'
+query_keywords:
+- 'Полтава 1709: Якби Мазепа переміг?'
+- План Мазепи-Карла
+- Чому програли
+- Сценарій перемоги
+- Наслідки для України
+- Наслідки для Європи
+- 'Analyze the causes and consequences of полтава 1709: якби мазепа переміг?'
+- Evaluate the historical significance of доля європи на одному полі
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0267
+  text: "138  Розділ IV. Козацька Україна наприкінці 50‑х рр. XVII — на початку XVIII ст.\
+    \ 4. Полтавська битва та її наслідки. Навесні 1709  р. основні шведські сили й козаки\
+    \ І. Мазепи підійшли до Пол-\nтави. Залога міста, що складалася з  козаків і \
+    \ московських \nвоїнів, відмовилася здатися. Облога міста тривала три мі-\nсяці.\
+    \ Тим часом до Полтави підійшли основні московські \nсили. Тут 27  червня 1709 \
+    \ р. відбулася ключова битва Пів-\nнічної війни. Шведський король, який мав удвічі\
+    \ менше сил, на-\nважився дат"
+  section_title: Сторінка 138
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0243
+  text: "КОЗАЦЬКА УКРАЇНА наприкінці 50-х років XVII —\nна початку XVIII ст. РОЗДІЛ\
+    \ 4\nРізня в Батурині {фрагменткартини \nхудожника Андрія Івахненка, 2000 р.)\n\
+    1. Розгляньте картину, визначте ді­\nйових осіб трагедії в Батурині. 2. Висловіть\
+    \ припущення, як впли­\nнула каральна акція на настрої в \nукраїнському суспільстві\
+    \ до по­\nстаті І. Мазепи. За допомогою \nінформації з додаткових джерел \nпідтвердіть\
+    \ або спростуйте свої \nприпущення. 8 липня 1709 р. у Полтавській битві шведське\
+    \ військо Карла XII за­\nзнало пор"
+  section_title: Сторінка 181
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0037
+  text: "Поміркуйте, як мала відбуватися \nвідбудова згідно з таким курсом. Загальний\
+    \ вигляд відбудованої шахти Дзержинська \n(зараз Торецьк). 1946 р. Відбудова центральної\
+    \ частини Полтави. 1946 р. ?? Яку інформацію про здійснення відбудови \nПолтави\
+    \ можна отримати за ілюстрацією?"
+  section_title: Сторінка 21
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0274
+  text: "Із якою метою \nП. Орлик запропонував козацтву «Пакти й  Конституції…»? 6.\
+    \ Чому походи П. Орлика в  Україну зазнали поразки? \x8F\n\x8F 7. Спираючись на\
+    \ додаткові джерела, складіть історичний пор­\nтрет І. Мазепи, П. Орлика (на вибір).\
+    \ Скористайтеся відповідним \nпланом-схемою в електронному додатку. 8. Простежте\
+    \ за кар­\nтою (с. 135) події Північної війни на землях тогочасної України. Визначте\
+    \ території, охоплені повстанням С. Палія 1702—1704 рр., \nнапрямки походів П.\
+    \ Орлика на Правобережжя. \x90\n\x90 9. Чому н"
+  section_title: Сторінка 141
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0245
+  text: "КОЗАЦЬКА УКРАЇНА наприкінці 50-х років XVII —\nРОЗДІЛ 4  \nна початку XVIII\
+    \ ст.\nЗНАЮ МИНУЛЕ » ОСМИСЛЮЮ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \n•Я ЗАПИТАННЯ І\
+    \ ЗАВДАННЯ «•\n•» ЗНАЮ І СИСТЕМАТИЗУЮ НОВУ ІНФОРМАЦІЮ\n1. С а м о о ц і н ю в\
+    \ а н н я\nОцініть свої успіхи в опануванні теми «Гетьманщина за часів Івана \n\
+    Мазепи».\nМожу назвати важливі події гетьманування І. Ма­\nзепи.\nМожу визначити\
+    \ етапи політичної діяльності \nІ. Мазепи.\nМожу пояснити, які чинники впливали\
+    \ на зовніш­\nню політику гетьмана.\nМожу схарактери"
+  section_title: Сторінка 182
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.61150062084198
+  chunk_id: eef657d3_c0668
+  text: "* * *\n\n1960\n\n1. * Василенко П. З\r\nнагоди 250 роковин смерті гетьмана\
+    \ Івана Мазепи // Вільна Україна (Нью-Йорк).\r\n1960. № 25. С. 67-69.\n\n2. 250\
+    \ років перемоги під Полтавою: Нариси. Харків:\r\nХарківське книжкове вид-во,\
+    \ 1960. 116 с.\n\nІз змісту:\n\n3. Заїка А., Литвиненко Є. 250 років Полтавської\
+    \ битви С. 3-28.\n\n4. Каганов М., Марініч В. Дополтавський період Північної війни\
+    \ С. 29-49.\n\n5. Химерик В., Перцевий П. Воєнні операції у Прибалтиці в 1710-1720\
+    \ рр. і кінець Північної війни\r\nС. 50-68.\n\n6. Єрісов"
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.6052199006080627
+  chunk_id: eef657d3_c0676
+  text: "140. Північна війна та її наслідки для України: Зб.\r\nісторико-культурного\
+    \ заповідника «Поле Полтавської битви». Полтава: Державний\r\nісторико-культурний\
+    \ заповідник «Поле Полтавської битви», 1992. 46 с.\n\nІз змісту:\n\n141. Лобурець\
+    \ В. Роздуми\r\nпро Полтавську битву С. 3-4.\n\n142. Бочарова С. Північна\r\n\
+    війна та її наслідки в долі України С. 5-12.\n\n143. Демченко К. І.Мазепа\r\n\
+    — гетьман України С. 13—14.\n\n144. Шендрик Л. П.Орлик і\r\nперша хвиля української\
+    \ політичної еміґрації С. 15-18.\n\n145. Горбенко С. Д"
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.6027302742004395
+  chunk_id: 6515b2b6_c0017
+  text: "Особливо\r\nісторично цінними є понад десять сторінок Полтавської битви 1709\
+    \ р.,\r\nпідкріплені двома фронтовими мапами. «Перед вирішальною битвою, — пише\
+    \ Крман,\r\n— обидва табори були навпроти себе майже на чверть милі, розділені\
+    \ рікою\r\nВорсклою». Вельми цікаво теж пояснює Крман причину поразки Карла XII\
+    \ й Мазепи.\r\nПершою хибою був, мовляв, прискорений наказ Карла XII до наступу\
+    \ проти\r\n«москалів» (так він називав росіян. — М.Н.), зумовлений тим, що ворог\
+    \ у своїй\r\nкраїні має досить провіянту, в той ч"
+  work: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+  year: 1709
+  genre: diary
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/krman/krm.htm

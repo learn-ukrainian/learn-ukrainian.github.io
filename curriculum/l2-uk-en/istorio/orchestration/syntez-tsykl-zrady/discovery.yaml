@@ -1,0 +1,218 @@
+discovered_at: '2026-03-13T11:51:03.096874+00:00'
+query_keywords:
+- 'Синтез: Чому цикл повторюється?'
+- Порівняльна таблиця циклів
+- Чому цикл працює
+- Чому цикл ламається
+- 2014, 2022
+- Чи зламався цикл назавжди?
+- Уроки для майбутнього
+- 'Analyze the causes and consequences of синтез: чому цикл повторюється?'
+- Evaluate the historical significance of паттерн через віки
+- history
+- історія
+- подія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0142
+  text: '124
+
+    § 21. Типи текстів.........................................................................................128
+
+    § 22. Повторення вивченого за рік...........................................................
+    142
+
+    143'
+  section_title: Сторінка 143
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0158
+  text: '. . . . . . . . . . . . . 147
+
+    Текст та його ознаки. Повторення вивченного . . . . . . . . . . . . . . . . .
+    . . . . . . . . 147
+
+    Поділ тексту на частини. План тексту. . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 148
+
+    Засоби зв’язку речень у тексті . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 150
+
+    Текст-розповідь. Художній та науково-популярний тексти-описи. Тема і мета. . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 159
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0095
+  text: "71\nСинтаксична норма\nситуація\n158. Пригадаɣте\x0F якиɣ цікавиɣ ɮільм \n\
+    ви дивилися нещодавно. Про що в \nньому ɣдеться\" Яку проɛлематику по\x10\nруɲуɽ\
+    \ автор\" Чи хотіли ɛ ви цеɣ ɮільм пе\x10\nреглянути ще раз\" Поділіться з другом\
+    \ \vпо\x10\nдругоɸ\f своїми враɠеннями від перегляду \nɮільму \v\x16±\x17 реɱення\f\
+    . Використаɣте кілька \nподаних словосполуɱень. \nвраження від ôільму\nвикликає\
+    \ захоплення\nзаслуговує на увагу\nнасолоджуватися \nпереглядом\nгарно провести\
+    \ час\nзнатися на мистецтві\n159. І. Переɛудуɣте реɱення\x0F додаɸɱи до ді"
+  section_title: Сторінка 71
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0448
+  text: '. . . . . 324
+
+    Повторення  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 326
+
+    Літературознавчий словник  . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 330
+
+    335
+
+    Зміст'
+  section_title: Сторінка 335
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0111
+  text: "110\nПовторюємо разом\nТекст\n \nЯк­що два й біль­ше ре­чень поєдна­ні \n\
+    за зміс­том, — це текст. Текст має \nзаголовок.\n\t Розглянь схему тексту. З виділених\
+    \ слів тек-\nсту створи речення, які б відповідали схемам. \nДобери заголовок\
+    \ до створеного тексту.\n.\n.\n.\n.\n.\n\t Розкажи, що ти знаєш про персонажів\
+    \ про-\nчитаних казок. \n\t Назви свого улюбленого персонажа. \nPidruchnyk.com.ua"
+  section_title: Сторінка 112
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5372726917266846
+  chunk_id: c6aa97a6_c0222
+  text: "1. Повторення — це вживання того самого слова на\r\nпочатку багатьох частин\
+    \ періоду, або його членів, /323/ або [кількох]\r\nперіодів. Як наприклад: «Така\
+    \ велика хлоп’яча легковажність, така велика\r\nбайдужість хлоп’ячої душі, така\
+    \ велика любов їх до ненависної бездіяльності,\r\nтака велика ненависть до улюблених\
+    \ занять, що їх не можна переконати ані\r\nпорадами, ані з’єднати їх любов’ю,\
+    \ ані примусити їх страхом, ані виправити їх\r\nсловом, ані палицею».\n\nТакож\
+    \ [приклад] з «Енеїди», I, Вергілія: |130|\n\n«Ти"
+  work: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+  year: 1973
+  genre: rhetoric
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/dovg/dovg.htm
+- score: 0.5113388299942017
+  chunk_id: 4800ab33_c0927
+  text: "Неперервне стосується нашого питання тому, що\r\nскладається з пропорційних\
+    \ частин. Бо хто заперечить ствердну відповідь, коли\r\nзапитає, чи неперервне\
+    \ складається з нескінченних найближчих половинок, або з\r\nнескінченних третіх,\
+    \ чи сьомих частин. Бо це значить суперечити на словах.\r\nОтже, питається: чи\
+    \ неперервне складається з частин пропорційних до нескінченності?\r\nЧи дійсно\
+    \ можна дійти до рівних, які, коли самі не зможуть ділитися, вже не\r\nматимуть\
+    \ собі інших пропорційних, а матимуть рівні, якщо "
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5094123482704163
+  chunk_id: 4800ab33_c1101
+  text: "7. Одне і те саме затемнення Сонця не всім людям і не\r\nскрізь здається\
+    \ подібним або однаковим, одним здається великим і довготривалим,\r\nіншим — малим\
+    \ і моментальним, декому здається, що ця частина Сонця\r\nзатемнюється, іншим\
+    \ — друга, деяким — жодна. Причина цього явища є та, що\r\nМісяць менший і від\
+    \ Землі, і від Сонця, внаслідок цього він не може однаково\r\nвідбивати світло\
+    \ Сонця для всіх людей, що населяють різні частини Землі, проте\r\nце краще видно\
+    \ на поданому далі малюнку. На ньому A — Сонце, B "
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

@@ -1,0 +1,124 @@
+discovered_at: '2026-03-13T12:29:13.257268+00:00'
+query_keywords:
+- 'Симон Петлюра: Головний отаман'
+- Символ боротьби
+- Шлях до влади
+- Війна за незалежність
+- Первинні джерела
+- Деколонізаційний погляд
+- Париж, 1926
+- життя та діяльність Симона Петлюри
+- роль Петлюри в Українській революції
+- контроверсійні питання навколо Петлюри
+- значення Петлюри для української державності
+- Минулий час у біографічному наративі
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=kW2WAZqOeMg
+  channel: Комік Історик
+  title: 'Павло Скоропадський: останній гетьман України'
+  relevance_score: 0.5
+  relevance_note: The video discusses Pavlo Skoropadskyi and the Hetmanate, mentioning
+    the Directorate (which Petliura led) as the successor. While not directly about
+    Petliura, it provides crucial historical context for the period of the Ukrainian
+    Revolution.
+  transcript_excerpt: не пам'ятає Павла Скоропадського і його Гетьмана не пам'ятає
+    цих 7 місяців з половиною де Україна отримала справжні державні форми те що навіть
+    не могла створити Українська Народна Республіка на чолі з Центральною Радою А
+    тим паче директорія яка прийшла після Павла Скоропадського
+  embed_suggestion: After section 'Шлях до влади' - to provide context on the preceding
+    political landscape and the transition of power during the Ukrainian Revolution.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0081
+  text: "?? Як ви вважаєте, чим була зумов­\nлена поява таких клятв? Про що \nвони\
+    \ свідчать? Знать\nЖерці та писарі\nВоїни\nРемісники\nФараон\nСеляни\nrnk.com.ua/104214\n\
+    Підручник  \nВидавництво «Ранок»"
+  section_title: Сторінка 62
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0206
+  text: "Для вас, допитливі\nrnk.com.ua/110316\nПрацюємо з джерелом\nrnk.com.ua/110317\n\
+    З Універсалу \nБ. Хмельницького  \nдо української спільноти \nіз закликом підтримати\
+    \ \nрозпочату козацтвом \nборотьбу\nПолковник реєстрового лівобережного \nполку.\
+    \ Художник С. Васильківський. 1900  р. \e\n\e Порівняйте вбрання та спорядження\
+    \ \nстаршини та пересічного козака (с. 124)."
+  section_title: Сторінка 127
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5066107511520386
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5040218830108643
+  chunk_id: fc2291b5_c3674
+  text: "Літ.: Кашуба М. В. З\r\nісторії боротьби проти унії XVII — XVIII ст. К.,\
+    \ 1976; Кашуба М. В. Георгий\r\nКонисский. М., 1979.\n\nО. В. Мишанич."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5024584531784058
+  chunk_id: 479cf43d_c0045
+  text: "Про нього див.: Стешенко І. \r\nДрагоманов і його значення в історії розвитку\
+    \ укр. народу. — К., 1905;\r\nФранко І. Суспільно-політ. погляди М. Драгоманова\
+    \ // ЛНВ. — 1906. — Т.\r\nXXXV. — Кн. 8; Хатченко А. (Кистяковский Б.) М. П. Драгоманов\
+    \ и вопрос\r\nо самостоятельной укр. культуре // Укр. жизнь. — 1912. — №6; Лозинський\
+    \ М.\r\nУкр. нац. питання у творах М. Драгоманова. — [Львів], 1915; Пам’яті М.\r\
+    \nДрагоманова. — X., 1920; Ефремов С. Памяти М. Драгоманова // Укр.\r\nжизнь.\
+    \ — 1915. — №7; Овсянико-Куликовск"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

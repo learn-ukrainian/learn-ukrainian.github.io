@@ -4,8 +4,24 @@
   "mode": "v5",
   "phases": {
     "research": {
-      "status": "failed",
-      "ts": "2026-03-13T01:12:21Z"
+      "status": "complete",
+      "ts": "2026-03-13T10:29:56Z",
+      "task_id": "v5-holodomor-vyznannia-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T10:29:56Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
     }
   }
 }

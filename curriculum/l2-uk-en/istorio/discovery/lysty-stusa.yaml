@@ -1,0 +1,194 @@
+discovered_at: '2026-03-13T10:09:57.348503+00:00'
+query_keywords:
+- Листи Василя Стуса з таборів
+- Біографічний контекст
+- Табір як контекст
+- Листи до родини
+- Філософські роздуми
+- Критика джерела
+- Analyze the causes and consequences of листи василя стуса з таборів
+- Evaluate the historical significance of голос із гулагу
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0373
+  text: "196  Літературне «шістдесятництво» . Василь Стус\nопрацьовуємо прочитане\n\
+    1. Чим зацікавила вас особистість Василя Стуса? які запитання у вас виникли? У\
+    \ який спосіб ви могли б знайти відповіді на ці запитання? які запитання ви б\
+    \ \nхотіли обговорити з однокласниками, однокласницями й учителями? 2. У зручній\
+    \ для вас формі (текст, план, таблиця, схема тощо) складіть за мате-\nріалом підручника\
+    \ опорний конспект для розповіді про письменника . 3. Перегляньте відеофільм «Василь\
+    \ Стус . Феномен доби» (авто"
+  section_title: Сторінка 196
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0040
+  text: 'дім «Києво-Могилянська академія», 2014. Пахаренко В. Основи теорії літератури.
+    — К. : Генеза, 2007. — 296 с. Стус В. Феномен доби (Сходження на Голгофу слави)
+    —  К. : Кліо, 2015. — 104 с. Домашнє завдання'
+  section_title: Сторінка 28
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0209
+  text: "§ 29–31. ПРОЗА ХІХ ст.: ВІД РОМАНТИЗМУ ДО РЕАЛІЗМУ\nОбкладинка до повісті\
+    \ \nМ. Гоголя \n«Тарас Бульба»\nОЗНАКИ РОМАНТИЧНОГО СТИЛЮ \nВ ПОВІСТІ МИКОЛИ ГОГОЛЯ\
+    \ \n«СОРОЧИНСЬКИЙ ЯРМАРОК»"
+  section_title: Сторінка 123
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5437161922454834
+  chunk_id: 479cf43d_c0235
+  text: 'В. Білодід
+
+
+    Див. також:
+
+
+    Ігор Гирич. В. Вернадський. Між російським і українським берегами.
+
+
+    [Філософська думка в Україні: Біобібліографічний словник. — К., 2002. — С. 33-36.]'
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5357165336608887
+  chunk_id: a5f3ae7f_c0319
+  text: "Навіть у досить вузьких рамках нашої специфічної\r\nтеми, умовно окресленої\
+    \ як «стусіана», можна назвати низку текстів, цілком або\r\nмайже цілком позбавлених\
+    \ міфізації, і навіть — принаймні три публікації, в\r\nяких «міф Стуса» рішуче\
+    \ деконструюється. За цієї нагоди нагадаємо ще раз, що\r\nаналіз і деконструкція\
+    \ міфа про того чи того культурного героя зовсім не\r\nозначає його «розвінчання»\
+    \ чи, тим більше, «приниження». Втім, це цілком\r\nочевидно для наукової свідомості\
+    \ й навряд чи збагненно для свідомост"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm
+- score: 0.5268000364303589
+  chunk_id: a5f3ae7f_c0337
+  text: "Івашко В. Міф про Василя Стуса як дзеркало\r\nшістдесятників. // Світо-вид,\
+    \ ч. 3, 1994.\n\nКасьянов Г. Незгодні: українська інтелігенція в русі\r\nопору\
+    \ 1960-80-х років. — Київ: Либідь, 1995.\n\nМороз В. Есеї, листи й документи.\
+    \ — Сучасність,\r\n1975.\n\nМоскалець К. Страсті по Вітчизні. // Критика, ч. 6,\r\
+    \n1999.\n\nОрач О. (ред.). Не відлюбив свою тривогу ранню... Василь\r\nСтус —\
+    \ поет і людина. Спогади, статті, листи, поезії. — К.: Український\r\nписьменник,\
+    \ 1993.\n\nОсадчий М. Василь Стус на тлі епохи. — У кн.: О"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm

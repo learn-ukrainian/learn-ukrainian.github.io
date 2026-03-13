@@ -1,0 +1,162 @@
+discovered_at: '2026-03-13T12:07:03.184049+00:00'
+query_keywords:
+- Михайло Драгоманов
+- Голос української політичної думки
+- Біографія та становлення
+- Політичні ідеї
+- Первинні джерела
+- Деколонізаційний погляд
+- Спадщина Драгоманова
+- політичні ідеї Михайла Драгоманова
+- вплив Драгоманова на український національний рух
+- його концепцію федералізму та громадівства
+- наслідки еміграції для розвитку політичної думки
+- Минулий час в біографічному наративі
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+  channel: Комік Історик
+  title: 'Михайло Драгоманов: геній і вигнанець'
+  relevance_score: 1.0
+  relevance_note: This video is directly about Mykhailo Drahomanov, covering his political
+    ideas, biography, and impact, aligning perfectly with the module's content and
+    vocabulary.
+  transcript_excerpt: Михайло Драгоманов один з найвеличніших українських вчених померще
+    в XIX столітті перший український вчений який звернув уваги на утиски українсько
+    мови дядя Лесі Українки і брат Олени Пчілки.
+  embed_suggestion: 'After section ''Вступ: Голос української політичної думки'' because
+    it provides an excellent introductory overview of Drahomanov''s significance and
+    core ideas.'
+- url: https://www.youtube.com/watch?v=hy9XioYExE0
+  channel: Комік Історик
+  title: чому Редька пішов на могилу Драгоманова?
+  relevance_score: 0.9
+  relevance_note: This video is also directly about Mykhailo Drahomanov, focusing
+    on his exile, emigration, and the location of his grave, which is highly relevant
+    to his biography and legacy. It complements the broader overview of the other
+    video.
+  transcript_excerpt: ми відновили могилу Михайла Драгоманова на нашому YouTube каналі
+    комік просторик є цілий подкаст про Михайла дрогоманова це великий український
+    вчений X століття дядько Лесі Українки брат Олени Пчілки людина яка була вислана
+    з російської імперії за захист українсько мови.
+  embed_suggestion: 'After section ''Біографія та становлення'' or ''Підсумок: Спадщина
+    Драгоманова'' as it details significant events in his life and aspects of his
+    enduring legacy.'
+- url: https://www.youtube.com/watch?v=8DChjQAVy_s
+  channel: Реальна Історія
+  title: Яким Грушевський був насправді? Реальна історія з Акімом Галімовим
+  relevance_score: 0.2
+  relevance_note: The video is about Mykhailo Hrushevskyi, not Mykhailo Drahomanov.
+    While it's from a reputable Ukrainian history channel, the topic is completely
+    unrelated to the module's subject.
+  transcript_excerpt: Сьогодні я розповім про людину яку можна вважати батьком нашої
+    нації Михайла Грушевського.
+  embed_suggestion: Not relevant for this module.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0001
+  text: "«Українська мова. Буквар»  \nпідручник для 1 класу закладів  \nзагальної\
+    \ середньої освіти\n(у 2-х частинах)\nЧастина  друга\nМар’яна  Захарійчук\nВидавництво\
+    \ «Грамота»\n2025\nPidruchnyk.com.ua"
+  section_title: Сторінка 2
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0243
+  text: "Коцюбинський? Яку мету визначили члени організації? 2. Запишіть відомості\
+    \ про життя письменника в зручній для вас формі (тексту, \nплану, таблиці, схеми).\
+    \ Виявляємо літературну, інформаційно-цифрову компетентності,  \nобізнаність у сфері\
+    \ культури\n3. Знайдіть в Інтернеті інформацію про «Братство тарасівців». Поділіться\
+    \ цією \nінформацією з  однокласниками в  зручній для вас формі (повідомлення\
+    \ \nна уроці або в соціальних мережах, плакату, листівки). \x03\n\x84 Михайло\
+    \ Коцюбинський . (Михайло Жук, 1925)\n\x03\n\x84 "
+  section_title: Сторінка 131
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0143
+  text: '6. Луценко Ю. Григорій Граб’янка та його літопис // Літопис гадяцького пол-
+
+    ковника Григорія Граб’янки. – К., 1992.'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0489
+  text: 'Основні ознаки фразеологізмів . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . 110
+
+    § 42 Джерела української фразеології. Національна специфіка української фразеології
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . 112
+
+    § 43 Прислів’я і приказки, крилаті вислови. Стійкі народні порівняння. Побажання,
+    приповідки, каламбури . . . . . . . 113
+
+    § 44 Багатозначність, синонімія та антонімія фразеологізмів . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 270
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6449118852615356
+  chunk_id: 479cf43d_c0045
+  text: "Про нього див.: Стешенко І. \r\nДрагоманов і його значення в історії розвитку\
+    \ укр. народу. — К., 1905;\r\nФранко І. Суспільно-політ. погляди М. Драгоманова\
+    \ // ЛНВ. — 1906. — Т.\r\nXXXV. — Кн. 8; Хатченко А. (Кистяковский Б.) М. П. Драгоманов\
+    \ и вопрос\r\nо самостоятельной укр. культуре // Укр. жизнь. — 1912. — №6; Лозинський\
+    \ М.\r\nУкр. нац. питання у творах М. Драгоманова. — [Львів], 1915; Пам’яті М.\r\
+    \nДрагоманова. — X., 1920; Ефремов С. Памяти М. Драгоманова // Укр.\r\nжизнь.\
+    \ — 1915. — №7; Овсянико-Куликовск"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5937110185623169
+  chunk_id: 5554668f_c0003
+  text: "Михайло Драгоманов — визначний український мислитель\r\nі активний культурно-освітній\
+    \ діяч 2-ої половини XIX ст. Він надзвичайно багато\r\nзробив для національно-культурного,\
+    \ політичного і соціального пробудження свого\r\nнароду. Продовжуючи справу своїх\
+    \ попередників, фундаторів ідей українського\r\nвідродження кирило-мефодіївців\
+    \ (активними діячами якого були геніальний\r\nвиразник народного духу Тарас Шевченко,\
+    \ історик Микола Костомаров та їхні\r\nсоратники), М. П. Драгоманов, без перебільшення,\
+    \ став перши"
+  work: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+  year: 1894
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag2.htm
+- score: 0.5650097131729126
+  chunk_id: c846b4d3_c0927
+  text: "Дорогий читачу, хочеться сподіватися, що цей\r\nоднотомник вибраних праць\
+    \ Михайла Петровича Драгоманова допоможе Тобі почати\r\nсходження ще на одну з\
+    \ прекрасних вершин людського розуму, що він допоможе Тобі\r\nу виборі своєї життєвої\
+    \ позиції у цей непростий час.\n\nПРИМІТКИ"
+  work: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+  year: 1880
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag.htm

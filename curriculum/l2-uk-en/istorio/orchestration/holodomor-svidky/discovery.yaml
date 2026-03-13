@@ -1,0 +1,205 @@
+discovered_at: '2026-03-13T10:26:55.522395+00:00'
+query_keywords:
+- 'Свідки і свідчення: Усна історія'
+- Теми свідчень
+- Фрагменти свідчень
+- Дитячі спогади
+- Травма і пам'ять
+- Методологічні питання
+- 'Analyze the causes and consequences of свідки і свідчення: усна історія'
+- Evaluate the historical significance of голоси тих, хто пережив
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0360
+  text: "231   \nТема 3. Усне повідомлення про різноманітність \n\t \t \t\n\t флори\
+    \ і фауни ........................................................... 233  \n\
+    Тема 4. Есе про раціональний розподіл часу ............................ 234 \n\
+    Тема 5. Інформація та її види. Надійність і ненадійність \n\t \t \t\n\t джерел\
+    \ інформації  .................................................... 236  \nТема\
+    \ 6. Опис пам’ятки історії та культури. Вибірковий усний \n\t\n\t\nпереказ розповідного\
+    \ тексту з елементами опису \n\t\n\t\nпам’ятки історії та "
+  section_title: Сторінка 290
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0108
+  text: "РОЗДІЛ 3\n108\nІсторична пам’ять. \nФормування історичної пам’яті. \nКультура\
+    \ пам’яті\n§ 19\nВи знаєте, що історики дізнаються про минуле з різних історичних\
+    \ \nджерел. Наведіть приклади історичних джерел різних видів. У чому \nполягає\
+    \ особливість усних історичних джерел?\n1.\t УСНА ІСТОРІЯ\nЧимало цікавих відомостей\
+    \ можна отримати і з усних істо-\nричних джерел. До них належать міфи, народні\
+    \ пісні, думи, \nперекази, легенди, спогади тощо. Вони доповнюють наукові \nдослідження\
+    \ цікавими, а іноді несподіваними д"
+  section_title: Сторінка 108
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0239
+  text: ". . . . . . . . . . . . 154\n§ 73. Розвиток мовлення. Письмова  казка  (з\
+    \  використанням   \nприслівників)  . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . 158"
+  section_title: Сторінка 217
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-istoriya-schupak-2022_s0109
+  text: "Історична наука та історична пам’ять\n109\nДесятиліття тому спогади людей\
+    \ записували на папері, потім — за \nдопомогою диктофонів. Зараз здебільшого використовується\
+    \ відеоза-\nпис інтерв’ю. \nІсторичні подробиці\nСвідчення про певні події, інтерв’ю\
+    \ записуються та вивча-\nються дослідниками усної історії. Збережені інтерв’ю\
+    \ стають \nісторичними документами, доступними для дослідження.\nУсна історія\
+    \ — спосіб дослідження минулого через запис і вивчен-\nня спогадів його свідків.\n\
+    \ Варто запам’ятати!\nПід час до"
+  section_title: Сторінка 109
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5437321066856384
+  chunk_id: 4800ab33_c0482
+  text: "V. Про докази, що стосуються дорадчого роду справи і,\r\nпередусім, про почесне\
+    \ та ганебне.\n\nVI. Про корисне та шкідливе. /160/\n\nVII. Про необхідне, легке,\
+    \ приємне та їхні протилежності.\n\nVIII. Приклади, які ілюструють вміння дораджувати.\r\
+    \n\\368\\\n\nРозділ перший\n\nПРО СУДОВУ ПРОМОВУ, А САМЕ, З ЯКИХ МІСЦЬ ПОВИНЕН\r\
+    \nБРАТИ ДОКАЗИ ЯК ЗВИНУВАЧ, ТАК І ЗАХИСНИК ПРИ ВСТАНОВЛЕННІ ЗЛОЧИНУ НА ПІДСТАВІ\r\
+    \nЗДОГАДІВ. ВЛАСТИВО Є ТРИ ЇХНІ ДЖЕРЕЛА: ПРИЧИНА, ОСОБА І ВЧИНОК. СПОЧАТКУ ПРО\r\
+    \nПРИЧИНУ\n\nЄ два види судових промо"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5432228446006775
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5388660430908203
+  chunk_id: c8772648_c0086
+  text: "Описана або згадується І. Срезневським у «Др. п. р. п. и яз.»,\r\n1882, стовп.\
+    \ 254; Я. Голембйовським у «Dzieje», стор. 13; Ф. Леонтовичем в\r\n«Источниках»,\
+    \ стор. 8; Є. Карським у «Белоруссах», стор. 16; у «Протоколах»,\r\nстор. 343.\n\
+    \nПодається за виданням О. Соболевського, С. Пташицького."
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm

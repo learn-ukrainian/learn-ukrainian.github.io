@@ -217,38 +217,57 @@ Expected requirements include:
 
 ## C2 Compliance
 
-**Status:** ✅ Good - Plan Aligned (Meta-skills Strategy)
+**Status:** ✅ FULLY COMPLIANT (Restructured 2026-03-13, #834)
 
-### State Standard Requirements (Каталог В for C2)
+### State Standard Requirements
 
-Expected requirements include:
+C2 requires mastery across ALL 21 thematic areas (Каталог Б), all grammar (Каталог В), and all 7 functional styles (Каталог В — Стилістика).
 
-1. **Native-like proficiency**:
-   - All grammatical structures without limitation
-   - Stylistic flexibility across all registers
-   - Error-free production
+### Coverage (105 modules in 5 phases)
 
-2. **Specialized domains**:
-   - Legal language
-   - Medical terminology
-   - Technical writing
-   - Literary analysis
+| Phase | Modules | Focus |
+|-------|---------|-------|
+| C2.1 | 1-26 | Stylistics & Rhetoric (7 functional styles) |
+| C2.2 | 27-43 | Literature & Creative Writing |
+| C2.3 | 44-64 | Professional Language |
+| **C2.4** | **65-78** | **Thematic Discourse (21/21 State Standard themes)** |
+| C2.5 | 79-105 | Meta-Skills & Capstone |
 
-3. **Cultural mastery**:
-   - Idioms, proverbs, sayings
-   - Literary references
-   - Historical context
+### Thematic Coverage (Каталог Б — 21/21)
 
-### Action Required
+All 21 themes have dedicated primary modules in C2.4:
+- 3.1 Людина → identychnist-tradytsiyi-simya
+- 3.2 Дім → misto-selo-prostir
+- 3.3 Щоденне життя → identychnist-tradytsiyi-simya
+- 3.4 Культурне дозвілля → podoroz-dozvillya-kultura
+- 3.5 Спорт → sport-i-liudskyi-potentsial
+- 3.6 Подорожі → podoroz-dozvillya-kultura
+- 3.7 Суспільні відносини → suspilstvo-i-hromadyanstvo
+- 3.8 Внутрішня політика → suspilstvo-i-hromadyanstvo
+- 3.9 Зовнішня політика → zovnishnia-polityka-i-diaspora
+- 3.10 Економіка → ekonomika-i-dobrobut
+- 3.11 Здоров'я → zdorovya-i-medytsyna
+- 3.12 Освіта → osvita-nauka-innovatsiyi
+- 3.13 Робота → ekonomika-i-dobrobut
+- 3.14 Купівля → spozhyvannya-i-posluhy
+- 3.15 Харчування → spozhyvannya-i-posluhy
+- 3.16 Послуги → spozhyvannya-i-posluhy
+- 3.17 Місця → misto-selo-prostir
+- 3.18 Природне середовище → ekolohiya-i-klimat
+- 3.19 Наука й техніка → osvita-nauka-innovatsiyi
+- 3.20 Медіа → media-i-dezinformatsiya
+- 3.21 Традиції → identychnist-tradytsiyi-simya
 
-1. ~~**Read C2-CURRICULUM-PLAN.md**~~ ✅ Done
-2. ~~**Create C2 pedagogical assessment**~~ ✅ Done
-3. ~~**Map State Standard requirements to plan**~~ ✅ Verified (Meta-skills approach for domains accepted)
-4. ~~**Identify specific gaps**~~ ✅ None found (Plan allows for unlimited specialization)
+### Adversarial Review History
+
+1. Initial review (Gemini): 2/10 — 10/21 themes missing
+2. Proposal review (Gemini): 9.5/10 — approved with 2 minor fixes
+3. Implementation review (Gemini): 9/10 — cross-reference fix applied
+4. Full details: `docs/l2-uk-en/C2-CURRICULUM-RESTRUCTURE-PROPOSAL.md`
 
 ### Priority
 
-**Low** - Plan is robust and aligned.
+**Resolved** — curriculum restructured, plans built, VESUM-verified (99/100 vocab terms).
 
 ---
 

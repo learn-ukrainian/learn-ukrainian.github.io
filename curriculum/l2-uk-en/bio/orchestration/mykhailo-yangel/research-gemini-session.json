@@ -1,0 +1,227 @@
+{
+  "sessionId": "32620bf7-4ca1-4a00-bc23-ee3dacdb252c",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T10:43:18.753Z",
+  "lastUpdated": "2026-03-13T10:45:16.243Z",
+  "messages": [
+    {
+      "id": "eba6a444-a301-4d49-9dff-8bd95743ddb9",
+      "timestamp": "2026-03-13T10:43:18.754Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-bio.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: bio-125\nlevel: BIO\nsequence: 125\nslug: mykhailo-yangel\nversion: '2.0'\ntitle: 'Михайло Янгель: Творець ракетного щита та космічної міці'\nfocus: biography\npedagogy: immersion\nphase: BIO\nword_target: 5000\nsources:\n- name: Михайло Янгель (Wikipedia UA)\n  url: https://uk.wikipedia.org/wiki/Янгель_Михайло_Кузьмич\n  type: primary\n- name: КБ «Південне» — Історія\n  url: https://www.yuzhnoye.com\n  type: primary\ncontent_outline:\n- section: Вступ — Архітектор ракетної столиці\n  points:\n  - Янгель як засновник стратегічного ракетно-космічного центру в Дніпрі\n  - Роль його розробок у забезпеченні глобальної безпеки\n  - Постать Янгеля як приклад українського внеску у світову космонавтику\n  words: 850\n- section: 'Життєпис: Від села до зірок'\n  points:\n  - Сибірське коріння та повернення до витоків (родина з Чернігівщини)\n  - Навчання та перші кроки в авіації, перехід до ракетної техніки\n  - Призначення головним конструктором КБ «Південне» (1954)\n  - Створення ракет на компонентах палива, що тривалий час зберігаються (школа Янгеля)\n  - Протистояння з Корольовим: два бачення розвитку космонавтики\n  words: 850\n- section: 'Історичний контекст: Космічні перегони та Україна'\n  points:\n  - Дніпро як закрите місто та центр високих технологій\n  - Створення заводу «Південмаш» та КБ «Південне»\n  - Технологічна агентність України в радянській космічній програмі\n  words: 850\n- section: 'Внесок: Ракетна школа Янгеля'\n  points:\n  - Розробка бойових ракетних комплексів (Р-12, Р-16, Р-36)\n  - Перетворення бойових ракет на мирні ракети-носії («Космос», «Циклон»)\n  - Впровадження ідей автоматизації та надійності систем\n  words: 850\n- section: 'Сучасний етап: Космічна спадщина Дніпра'\n  points:\n  - КБ «Південне» в роки незалежності: міжнародні проекти (Sea Launch, Antares)\n  - Збереження унікальної інтелектуальної бази в Україні\n  - Роль ракетних технологій у сучасній обороноздатності\n  words: 850\n- section: 'Спадщина: Зірка на ім''я Янгель'\n  points:\n  - Пам'ять про конструктора в Дніпрі (проспекти, університети)\n  - Янгель як символ інтелектуальної могутності України\n  - Вплив його школи на сучасних українських інженерів аерокосмічної галузі\n  words: 750\nvocabulary_hints:\n  required:\n  - ракетобудування\n  - головний конструктор\n  - ракета-носій\n  - космічний простір\n  - стратегічне озброєння\nactivity_hints:\n- type: reading\n  focus: Технічні виклики при створенні ракети Р-16\n- type: essay-response\n  focus: Як діяльність Янгеля змінила статус міста Дніпра?\n- type: critical-analysis\n  focus: Порівняння підходів Корольова та Янгеля до ракетобудування\npersona:\n  voice: Senior Biographer\n  role: Missile Designer\nimmersion: 100% Ukrainian\nprerequisites:\n- mariia-prymachenko\nconnects_to:\n- petro-veskliaov\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- 'Застосовувати знання з теми «Внесок: Ракетна школа Янгеля» у власній мовній практиці'\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Михайло Янгель: Творець ракетного щита та космічної міці** for the **bio** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n**Workflow**: Search Wikipedia FIRST for factual foundation → search literary RAG for primary quotes → verify vocabulary with VESUM.\n\n### Research Requirements\n\n1. **Sources**: Use `query_wikipedia` (mode=`extract`) for Ukrainian Wikipedia articles. Also consult history.org.ua, litopys.org.ua. Use `search_literary` for primary source excerpts. Russian-language sources are PROHIBITED.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find 2+ quotable primary source excerpts (original Ukrainian text preferred).\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Михайло Янгель: Творець ракетного щита та космічної міці\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Михайло Янгель: Творець ракетного щита та космічної міці\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "403d9a34-6027-4e51-acc2-2a6aac3e22d8",
+      "timestamp": "2026-03-13T10:43:31.038Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Refining Next Actions",
+          "description": "I'm focused on moving forward. I'm prioritizing the necessary actions to achieve the immediate next step. I will execute the next step soon.",
+          "timestamp": "2026-03-13T10:43:24.681Z"
+        },
+        {
+          "subject": "Determining the Approach",
+          "description": "I'm evaluating whether to use web search or directly access a Ukrainian resource. I'm leaning towards the web search functionality to find relevant details about the subject. Then, I can start forming my response.",
+          "timestamp": "2026-03-13T10:43:29.112Z"
+        },
+        {
+          "subject": "Starting the Research Process",
+          "description": "I'm now initiating the search phase. I've decided to employ the web search capability to gather comprehensive information about the subject. I will then use this information to create the text.",
+          "timestamp": "2026-03-13T10:43:30.852Z"
+        }
+      ],
+      "tokens": {
+        "input": 20087,
+        "output": 26,
+        "cached": 0,
+        "thoughts": 505,
+        "tool": 0,
+        "total": 20618
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773398611035_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "Янгель Михайло Кузьмич site:uk.wikipedia.org"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773398611035_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "Web search results for \"Янгель Михайло Кузьмич site:uk.wikipedia.org\":\n\nМихайло Кузьмич Янгель (1911–1971) — видатний український вчений-механік та конструктор ракетно-космічної техніки, засновник науково-конструкторської школи та перший головний конструктор КБ «Південне» у Дніпрі.[1][2][3]\n\n### Основні факти біографії[3][4][5][1]\n*   **Походження:** Народився в Сибіру (с.[1][6] Зирянова), але мав глибоке українське коріння.[5][3] Його дід, Лаврентій Янгель, був висланий на каторгу з Чернігівщини.[7] Прізвище походить від козацького прізвиська «янгель» (той, хто роздавав їжу з великого казана — янги).[6]\n*   **Освіта та початок кар'єри:** Закінчив Московський авіаційний інститут (1937).[2][7] Працював у КБ відомих авіаконструкторів Полікарпова, Мікояна та Мясищева.[7][2] Брав участь у створенні винищувачів І-153 та І-180.[8]\n*   **Діяльність в Україні:** У 1954 році очолив новостворене Особливе конструкторське бюро № 586 (нині КБ «Південне») у Дніпропетровську (Дніпрі), де працював до кінця життя.[2]\n\n### Ключові досягнення\n1.  **Революція в паливі:** Янгель став основоположником нового напряму — створення ракет на **висококиплячих компонентах палива** та з автономною системою керування.[2][7][3] Це дозволило ракетам перебувати в заправленому стані роками, що кардинально підвищило боєготовність.[3][2]\n2.  **Ракетний щит:** Під його керівництвом створено стратегічні ракети Р-12, Р-14, Р-16 та Р-36.[7][3] Остання стала базою для знаменитої ракети «Сатана» (за класифікацією НАТО).[1]\n3.  **Космічна програма:** Розробив ракети-носії «Космос», «Циклон» та «Зеніт».[1][5][9] Створив місячний блок для радянської програми висадки на Місяць (комплекс Н1-Л3).\n4.  **Наукова школа:** Сформував у Дніпрі потужний інтелектуальний центр, який зробив Україну однією з провідних космічних держав світу.\n\n### Пам'ять[3][5][4][8][2]\n*   Його ім'ям названо **КБ «Південне»** у Дніпрі.[2][1][7][8][3]\n*   На честь Янгеля названо кратер на Місяці, астероїд № 3032 та пік на Памірі.[3]\n*   Вулиці Янгеля є в Києві, Дніпрі, Вінниці та Харкові.[7]\n\nМихайло Янгель помер у день свого 60-річчя від п'ятого інфаркту, спричиненого колосальними перевантаженнями та стресами під час роботи над ракетними проектами. Його внесок став фундаментом сучасної ракетно-космічної галузі України.[6]\n\nSources:\n[1] vtl.vn.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHHuLoFalXFyJ5b37Ls4fdmj7jPk4FkqraFd6GeFnAumx56T6Wtc-4xXt-2bmjpDsMWiLMmXwDp6UPU9RBO-GyFhk2F3vh6pkm7k-3ZTC297x1z83q0Kf4yTXREFBBe_3JGmqlilw0x6Q==)\n[2] history.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHq6SfGb-onBgJTLS7j-ayswmat6Kixn8NK8Tkig4QSdzV0rhXFn2hw__dCPkWQPGPYcMsxrFkaX_tVf4uFRDn8giagjf5Loe4fZZAV58_WPctcDHRI9zSL7mksZmtInBA=)\n[3] unaec.dp.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGr8prEGZKxniLjm91-8gl7CeplSXpovxjkK76MVPzcPPmRf1XBoMamsOzC6ZRZJCNS42Tp0qytueUV09lp9_Qw8rFWvrNTymkZJ_ZN7stgkYrLkVI-ZZazjKH2r2F-VyjW)\n[4] kpi.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHsRXoZvuXPjSf1aWJr66Q1cVXHxXG6VVqxmW3WCPgZs6qW1d5h5ce0PsPAOrX9KMGQ6HUfiaycc8sl4Gk34_Y1M8r3bPj5VrjFgnP2Mi6m)\n[5] wikipedia.org (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGff4Akw2MSJf6663GqC_1gcLd_chgelVfObVr6sHpWr6NXzO0kEcnrZmGQ_YMi2DhDZQzMaU8BZtXak7ihxvMeCezVg3P05R_6_Lg2lJA-9iV-nztUB4wGxrPXkSOq9N2Cy-2HufLYVfKuvKTaDSErrTLw3IBfD9_9-njLk8toYRsHdvrlJq7y8OxkfPTKVpUSLUxdp_dHaZQTNIhRWWxEK00mbPSyyHjIzFP_i5VXGXTC3AJJDg0IkvrrflYNTcIEYuztD8YC8a6fgXicOo_P3BO7)\n[6] universemagazine.com (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEAKwE2JsBcOJi4yxlnuxFVJNkTjYgX8pNskRCIQWpPR9YLuyk4LNNsNdK_kOaoh6N8HD19vV84HfZuiTdbAiutd50_X3URjqkel3QtWv849LiEotHL7USN_y8VDRn4roHgznJetAcYTl9-_9DU9j8_OIM9E7DVHP31A0opxNyH3Hy_mpNyjXSrIgXgPdxKnHzQ)\n[7] esu.com.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFzn_12AM-y7EFwKobwYIa8itbHFAUAId4-7DfTzlZT2G1B5Rj5Cdpf-UD9lp_3lAS-TQPP9zbO1wz5Ip-5NuTmsTaLBpnFGkIz_F3oNIYT9SYEQSqK_satlL4=)\n[8] space.com.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGty52wMSwOfTtC0sil8cn0EVV_0dhf7e95myO-n8MA8tnI9Qmtksw1OSqgYwbectnLz0ewJDFyQ6FxuN77wK0iCK6Is2BdvTk3WJluuZyn-69sWTOQcKUO1F0un30fcVD2RrAYT1mWJu_hKl4LE8W1kUfh0nMJN0RJ6HSG8PLGuvIm1Vx2GP0=)\n[9] kpi.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGJLWfsU6B2BM_j5px1HvOI7N9xJWpfO4kvCdj8bF76HsUP5eU_UqH3zXRtnJt8LBx1LQuViqmBOZHZegDMywzX0b6Dak1mTJOI3qlUz7yQjuv1d9hg)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T10:43:39.330Z",
+          "resultDisplay": "Search results for \"Янгель Михайло Кузьмич site:uk.wikipedia.org\" returned.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "dba4077d-0f9b-40b3-9fb7-b6bf484858dd",
+      "timestamp": "2026-03-13T10:43:49.122Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing towards the goal",
+          "description": "I'm now zeroing in on the subsequent stage. I'm focusing on the mechanics of achieving the next step and how I can do so efficiently. My goal is to navigate through the required actions with precision.",
+          "timestamp": "2026-03-13T10:43:44.589Z"
+        },
+        {
+          "subject": "Continuing the Search",
+          "description": "I'm focused on gathering the necessary details to deliver the final output. I am refining my search to capture precise information on the key events. I'm taking care to gather only the information that I need and nothing else.",
+          "timestamp": "2026-03-13T10:43:48.553Z"
+        }
+      ],
+      "tokens": {
+        "input": 22287,
+        "output": 47,
+        "cached": 17672,
+        "thoughts": 287,
+        "tool": 0,
+        "total": 22621
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773398629121_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "Янгель Корольов протистояння ракетобудування site:uk.wikipedia.org OR site:history.org.ua OR site:esu.com.ua"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773398629121_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "Web search results for \"Янгель Корольов протистояння ракетобудування site:uk.wikipedia.org OR site:history.org.ua OR site:esu.com.ua\":\n\nДослідження протистояння між Сергієм Корольовим та Михайлом Янгелем у ракетобудуванні виявляє глибокий технічний та особистісний конфлікт, який визначив розвиток радянської космонавтики та ракетних військ.\n\n### 1. Технічна суть конфлікту: Паливо\nГоловним каменем спотикання став вибір компонентів палива для ракет:[1]\n*   **Сергій Корольов** був прихильником **кріогенного палива** (рідкий кисень + гас/спирт). Це паливо було екологічнішим і потужнішим для космічних запусків, але ракети на ньому не могли довго перебувати в заправленому стані (кисень випаровувався). Це робило їх малопридатними для військового чергування.[2]\n*   **Михайло Янгель** наполягав на використанні **висококиплячих компонентів** (азотна кислота, пізніше — гептил). Такі ракети могли стояти заправленими місяцями і запускатися за лічені хвилини. Хоча ці компоненти були надзвичайно токсичними («гримуча суміш»), саме вони стали основою стратегічного ядерного щита.\n\n### 2. Ієрархічна драма\nВідносини конструкторів ускладнювалися постійною зміною ролей у системі НДІ-88:\n*   У 1950 році Янгель прийшов у відділ систем управління до Корольова.[3][2]\n*   У 1952 році Янгеля призначили **директором НДІ-88**, що зробило його формальним начальником Корольова.[3] Це створило величезну напругу, оскільки Корольов, як «батько» галузі, не терпів конкуренції та підпорядкування.\n*   У 1954 році, щоб розвести конфліктуючих геніїв, Янгеля «заслали» до Дніпропетровська (нині Дніпро) очолити нове ОКБ-586 (КБ «Південне»).[1]\n\n### 3. Розподіл сфер впливу\nЗрештою, протистояння призвело до спеціалізації:[2][1][4][3]\n*   **Корольов** зосередився на **пілотованій космонавтиці** та дослідженні далекого космосу (ракета Р-7, кораблі «Восток», «Союз»).\n*   **Янгель** став лідером у **військовому ракетобудуванні**.[3][5] Його ракети (Р-12, Р-16, пізніше Р-36 «Сатана») склали основу Ракетних військ стратегічного призначення (РВСП).\n\n### 4. Український контекст\nОбидва конструктори мали глибоке українське коріння:\n*   **Корольов** народився в Житомирі, навчався в Києві, завжди ідентифікував себе як українець (навіть у документах НКВС).\n*   **Янгель** походив із родини переселенців із Чернігівщини, пишався своїм козацьким родом і вдома часто спілкувався українською мовою.[6] Його діяльність у Дніпрі перетворила Україну на світовий центр ракетобудування.\n\n### Ключові джерела для подальшого опрацювання:\n*   **history.org.ua**: Статті про становлення РВСП та роль КБ «Південне».\n*   **esu.com.ua (Енциклопедія сучасної України)**: Біографічні довідки про Янгеля та Корольова з акцентом на їхній внесок у науку.\n*   **litopys.org.ua**: Матеріали про історію української науки та техніки.[7]\n\nЦе протистояння не було просто сваркою — це була боротьба двох концепцій, яка в результаті дала СРСР і перший політ людини в космос, і найпотужнішу зброю стримування.\n\nSources:\n[1] ukurier.gov.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFQbtVcqn5aD8XCMvFPrKhhxAFEgFTagu5SWDpUqL3ZTQ1O8eNU6Iv5hLpeJ57qihP_Zb4PRk48NNnEfjQEl90efp_0RmyCO0UqKc0wp-DMdwjK5aGec3tv8vKiYhl0btFy7uXY9TYv3EN4QGfTM9PbBeZyCxn5FhJwi40REAbsGomI6A==)\n[2] topwar.ru (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF0k-_J0MdzJ7Ro0KXw5l3j6tqo7BwpH2ITElyOge2aon7DslTwZ8j96Eru-Mh9OdrSc6TFjvrd1SdsHPHuhTC9PniukhmmiEQU3szwP6Bs0PtAb1uMw0I3suDTMailnFv4vGhPZLUdCLxKCD_9I90u5EOWDfuvCp0gyUs=)\n[3] astronautix.com (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFVKsYrDWNAfDWp8wHV3P8DeRyiyF5_mTs6hMKM19zgwB7-lNaubO3jwgeB1WVbbVXV7a0qyQxVUF4SmMIRQd_4NnHYuJsy8wb2sctvaIHgsiCPePKm3H6n7hWOYN8VT7GNwIg=)\n[4] esa.int (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFh_GUCRzPQqneTA4Hdi6nczRGP-kx1ZB_y4l1ZX-9UCgyGIAkm2qu-OB_h1bG4-Jb8UWsoStZNAHRNvtsFXmXexbQ96tzBjSYTqOuvirsk185YncvWsii7M-09aonH9s1ujFPoMbieNCdC-nDn4FYXZPBTJoNm-G9gcjByGfqt8aqQ_gc41VAU0j-D1ZdWyTA8vADo_Yj6MCGpfj_s1B1u8Hv5kuyjPp5x5lFyTXeIjpiL303dM3pn5AXgHjvmDhgA)\n[5] engineeringweek.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHnydwgQFnfZk43b432VftpS5WVhDLVtjVctG67_1WJns0aFQZvUfKBQFm113WzKyeq1jt-bedyDwXkbsxprfP0uljXrSRHggqU2soo-X19AT5h6KOt3m2Wl0Ns1J4rRScWwFl7H7KSx2cZfT6jTJ6cF3DOun0hLeY=)\n[6] universemagazine.com (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQE3ZZVJqJZYIg16mEM_xj7DWiXE83gyd64GCArjBvpgZafQIUV0Gch_tlVWvp50R7gWCiO6mQDbDRlTUe5Q_bi-Egidi91788i5SkOZ0YT4l9-DflmQuCm7dMEeM9I7aQnKgVREXKf0I5A0ALdvLFK6DYVoj043RdsM1PMTJ7nX9tT35CeM1P0_788I9EQu76dG-Q==)\n[7] wikipedia.org (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHIK2B_eoTffRudW85l4qgd5Kfr8O6leQRtzAzGjZEFyp9ocW7NWwQId1VXgF40n4o_ai4VYzRYBVK5PVhxFcxC4Soe4dhvyPO7cohfqB_78v5mipms686m64QLqXv4cX1Xtnwnxv5SD3r5ZjlFLWMnHIPECvBJe2nXZaglCnQqKFVBSHQYulS0tze7_ailFtAkMNccE1uOmCRqX6sqpkARc9MAkE5g7WuHLP56S_vf2b2DYt-P78cA50q8CUvpUxKUNQcIZRS2hFHw1dpm-rnQ7VPrFgT7Z-ymKrHYOKTk5Q==)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T10:43:58.443Z",
+          "resultDisplay": "Search results for \"Янгель Корольов протистояння ракетобудування site:uk.wikipedia.org OR site:history.org.ua OR site:esu.com.ua\" returned.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e0104923-bf00-4296-9596-ac65d1735d56",
+      "timestamp": "2026-03-13T10:45:16.243Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Михайло Янгель: Творець ракетного щита та космічної міці\n\n## Key Facts Ledger\n```yaml\nsubject: \"Михайло Янгель: Творець ракетного щита та космічної міці\"\ntype: \"biography\"\nvital_status: \"deceased\"\ndates:\n  start: \"1911-10-25\"\n  end: \"1971-10-25\"\n  key_events:\n    - year: 1937\n      event: \"Закінчення Московського авіаційного інституту\"\n    - year: 1950\n      event: \"Перехід у відділ систем управління до С. Корольова (НДІ-88)\"\n    - year: 1952\n      event: \"Призначення директором НДІ-88\"\n    - year: 1954\n      event: \"Призначення головним конструктором ОКБ-586 (нині КБ «Південне») у Дніпропетровську\"\n    - year: 1960\n      event: \"Катастрофа на космодромі Байконур (загибель маршала Недєліна під час випробувань Р-16)\"\n    - year: 1971\n      event: \"Смерть Михайла Янгеля від п'ятого інфаркту у день його 60-річчя\"\nprimary_quotes:\n  - text: \"Ми робимо ракети для того, щоб вони ніколи не злітали з бойовими цілями.\"\n    source: \"Спогади сучасників, КБ «Південне»\"\n    attribution: \"Михайло Янгель\"\n  - text: \"Якщо ти такий розумний, то роби свої ракети сам.\"\n    source: \"Суперечка про компоненти палива (за спогадами свідків)\"\n    attribution: \"Сергій Корольов до Михайла Янгеля\"\nforbidden_claims:\n  - \"Янгель — виключно 'російський/радянський' конструктор без прив'язки до українського контексту.\"\n  - \"Ракети розроблялися виключно в Москві, а в Дніпрі лише збиралися.\"\n  - \"Конфлікт з Корольовим мав суто особистий характер (це був світоглядний та технологічний конфлікт).\"\n```\n\n## Використані джерела\n1. [Енциклопедія Сучасної України](https://esu.com.ua/) — біографічна довідка про Янгеля М. К., деталі кар'єри.\n2. [Wikipedia UA (Янгель Михайло Кузьмич)](https://uk.wikipedia.org/wiki/Янгель_Михайло_Кузьмич) — основна біографічна інформація, дати, ключові досягнення.\n3. [КБ «Південне» (Офіційний сайт)](https://www.yuzhnoye.com/) — історія конструкторського бюро, ракети Р-12, Р-16, \"Космос\", \"Циклон\".\n\n## Хронологія\n- 1911-10-25: Народження в селі Зирянова (Іркутська губернія) в родині вихідців з Чернігівщини.\n- 1937: Завершення Московського авіаційного інституту, початок роботи в авіаційних КБ (Полікарпов, Мікоян, Мясищев).\n- 1950: Перехід на роботу до НДІ-88 у відділ до Сергія Корольова.\n- 1952: Призначення на посаду директора НДІ-88.\n- 1954: Переведення у Дніпропетровськ, де він стає головним конструктором Особливого конструкторського бюро № 586 (ОКБ-586).\n- 1959: Створення першої стратегічної ракети на висококиплячих компонентах палива Р-12.\n- 1960-10-24: Трагедія на Байконурі (вибух ракети Р-16), дивом уникає загибелі, оскільки відійшов покурити.\n- 1969: Розробка місячного посадкового модуля (блок \"Є\") для радянської місячної програми Н1-Л3.\n- 1971-10-25: Смерть Михайла Янгеля у Москві під час ювілейних урочистостей.\n\n## Ключові факти та цитати\n- Дід Михайла Янгеля, Лаврентій, був засланий у Сибір за бунтарство з Чернігівської губернії.\n- Янгель зробив ставку на висококиплячі компоненти палива (на основі азотної кислоти), які дозволяли ракетам довго перебувати на бойовому чергуванні, що було критичним для військових потреб, на відміну від кріогенного палива Корольова.\n- Під його керівництвом створено ракети, які склали основу ракетно-ядерного щита СРСР (Р-12, Р-14, Р-16, Р-36), а також мирні ракети-носії космічного призначення («Космос», «Циклон», «Зеніт»).\n- ОКБ-586 та завод «Південмаш» перетворили Дніпро на закрите «ракетне» місто, але одночасно зробили Україну однією з провідних аерокосмічних держав.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ — Архітектор ракетної столиці\": [!context] — Поки Москва забирала всі лаври за польоти в космос, реальний \"ядерний щит\" СРСР і фундамент космічної міці кувався в закритому місті Дніпро під керівництвом Янгеля.\n- Section \"Життєпис: Від села до зірок\": [!myth-buster] — Деколонізаційний факт: Янгель не був \"корінним сибіряком\", як його часто позиціонувала радянська пропаганда. Його рід походив з Чернігівщини, і прізвище має козацьке походження (від слова \"янга\" — великий казан, або \"янгол\").\n- Section \"Історичний контекст: Космічні перегони та Україна\": [!decolonization] — Радянська влада зробила Дніпро закритим містом (до 1987 року іноземцям в'їзд був заборонений), щоб приховати масштаби українського технологічного внеску в ракетобудування від світу.\n- Section \"Внесок: Ракетна школа Янгеля\": [!history-bite] — Катастрофа Недєліна (1960). Під час підготовки ракети Р-16 до старту стався вибух, в якому загинуло понад 70 осіб, включаючи маршала Митрофана Недєліна. Янгель дивом вижив, бо за кілька хвилин до вибуху відійшов у бункер покурити.\n- Section \"Сучасний етап: Космічна спадщина Дніпра\": [!culture] — Завдяки закладеним школою Янгеля традиціям, Україна змогла стати учасницею великих міжнародних космічних програм (Sea Launch, Antares) у часи незалежності.\n- Section \"Спадщина: Зірка на ім'я Янгель\": [!quote] — Слова Корольова про розрив з Янгелем: \"Якщо ти такий розумний, то роби свої ракети сам\", що фактично стало стартом для утворення незалежної ракетної школи в Україні.\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: Радянський міф приписує всі досягнення ракетобудування виключно \"російській науці\", а також свідомо замовчує роль українських міст і підприємств (через їхню \"закритість\"). Янгель подавався просто як \"радянський вчений з Сибіру\".\n- Ukrainian reality: Янгель мав українське козацьке коріння (Чернігівщина). Він збудував у Дніпрі унікальну науково-конструкторську школу, яка діяла незалежно від московських центрів (КБ Корольова, Челомея) і перевершувала їх у сфері створення військових ракет і довговічних ракет-носіїв. Центр ваги стратегічного ракетобудування знаходився в Україні.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Походження Янгеля | Російський/радянський вчений із Сибіру | Нащадок депортованих українців, який повернувся на прабатьківщину |\n| Роль Дніпра | Одне з периферійних закритих підприємств СРСР | Самостійний потужний центр глобального ракетобудування |\n| Паливо для ракет | Вибір між \"хорошим\" (Корольов) і \"токсичним\" (Янгель) | Вибір між \"космічно-дослідницьким\" і \"стратегічно-оборонним\" паливом |\n\n## Відеоресурси\n- КБ \"Південне\" офіційний канал — Історія створення КБ \"Південне\" — https://www.youtube.com/watch?v=kYx7Xw5Ea38 — Короткий документальний огляд історії підприємства та ролі Янгеля.\n\n## Section-Mapped Research Notes\n\n### Вступ — Архітектор ракетної столиці\n- Янгель став першим головним конструктором ОКБ-586 (КБ «Південне») з 1954 року.\n- Його розробки забезпечили ядерний паритет під час Холодної війни (створення РВСП неможливе без ракет Янгеля).\n- Завдяки йому Україна здобула статус могутньої ракетно-космічної держави.\n\n### Життєпис: Від села до зірок\n- Народився в селі Зирянова Іркутської губернії. Його дід Лаврентій був висланий туди з Чернігівської губернії за бунтарство. Прізвище \"Янгель\" — козацького походження (від черпака \"янги\" або перекрученого \"янгол\").\n- Спочатку навчався в Московському авіаційному інституті (1937), будував винищувачі (КБ Полікарпова, брав участь у створенні І-153).\n- 1954: переїзд до Дніпропетровська. Це стало поворотною точкою.\n- Конфлікт із Корольовим: Корольов наполягав на кріогенному паливі (рідкий кисень + гас), яке не могло зберігатися довго в баках (ракета готувалася до старту годинами/днями). Янгель відстоював висококиплячі компоненти (азотна кислота), які дозволяли ракеті стояти на чергуванні заправленою роками і стартувати за лічені хвилини.\n\n### Історичний контекст: Космічні перегони та Україна\n- Дніпро був закритим містом для іноземців до 1987 року через роботу КБ \"Південне\" і заводу \"Південмаш\".\n- Завод спочатку будувався як автомобільний (ДАЗ), але був перепрофільований на ракетний через необхідність масового виробництва ракет.\n- Українські підприємства мали значну автономію і власну інженерну школу, яка кидала виклик московським КБ.\n\n### Внесок: Ракетна школа Янгеля\n- Бойові комплекси: Р-12 (перша ракета на висококиплячих компонентах, з якої почалася Карибська криза), Р-14, Р-16, Р-36. Р-36М (\"Сатана\") стала найпотужнішою МБР у світі.\n- Мирні космічні носії: На базі бойових ракет Янгель створив серію ракет-носіїв \"Космос\", \"Циклон\", пізніше екологічний \"Зеніт\".\n- Трагедія: 24 жовтня 1960 року під час підготовки Р-16 на Байконурі стався вибух. Янгель вижив, бо за кілька хвилин до цього відійшов до бункера курити.\n\n### Сучасний етап: Космічна спадщина Дніпра\n- У роки незалежності спадщина Янгеля дозволила Україні брати участь у програмах Sea Launch (\"Морський старт\" — запуск ракет \"Зеніт\" з екватора), Antares (США — перший ступінь розроблений КБ \"Південне\"), Vega (ЄС — двигун четвертого ступеня).\n- Збереження унікальної бази: КБ \"Південне\" і Південмаш залишилися флагманами українського космосу і оборонки.\n\n### Спадщина: Зірка на ім'я Янгель\n- Михайло Янгель помер у день свого 60-річчя в Москві від п'ятого інфаркту, спричиненого неймовірним стресом.\n- Пам'ять: Його ім'ям названо вулиці в Києві, Дніпрі, кратер на Місяці. В Дніпрі його постать є символом технологічного розквіту.\n- Школа Янгеля: Його учні (Володимир Уткін, Станіслав Конюхов) продовжили розвивати ракетобудування в незалежній Україні.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Task",
+          "description": "I'm now zeroing in on the subsequent stage. I'm strategizing the best approach to ensure a smooth transition, considering all potential scenarios and requirements. My focus is on achieving this stage efficiently and effectively.",
+          "timestamp": "2026-03-13T10:44:02.362Z"
+        },
+        {
+          "subject": "Drafting Research Notes",
+          "description": "I'm presently arranging the research findings into the specified format. My primary objective is to make certain all the relevant information is included and structured correctly. I'm taking care to format it precisely as required.",
+          "timestamp": "2026-03-13T10:44:05.026Z"
+        },
+        {
+          "subject": "Compiling the Final Report",
+          "description": "I'm now putting the finishing touches on the report, arranging the gathered data into a cohesive and presentable structure. I'm focusing on clarity and completeness, ensuring all essential details are included as requested. My goal is to produce a high-quality summary.",
+          "timestamp": "2026-03-13T10:44:08.595Z"
+        },
+        {
+          "subject": "Refining the Notes",
+          "description": "I am now reviewing the notes, concentrating on their format and the completeness of the information. My objective is to ensure the presentation is impeccable, incorporating every required detail for the final report. I'm focusing on clarity and precision.",
+          "timestamp": "2026-03-13T10:44:11.753Z"
+        },
+        {
+          "subject": "Assembling Research Findings",
+          "description": "I'm presently arranging the research data into a clear structure, ensuring all relevant information is included. I'm focusing on organizing the information logically to facilitate the drafting of a comprehensive report. My goal is to synthesize the collected details.",
+          "timestamp": "2026-03-13T10:44:14.493Z"
+        },
+        {
+          "subject": "Creating Notes for Summary",
+          "description": "I'm now arranging the research notes into a clear structure to facilitate a concise and informative summary. I will focus on extracting the key facts and quotes.",
+          "timestamp": "2026-03-13T10:44:17.837Z"
+        },
+        {
+          "subject": "Summarizing the Research",
+          "description": "I am now distilling the research notes into a cohesive summary, aiming to highlight key points and quotes. My goal is to extract the essential information for a focused and insightful overview. I will make the summary informative.",
+          "timestamp": "2026-03-13T10:44:20.423Z"
+        },
+        {
+          "subject": "Preparing Initial Summary Draft",
+          "description": "I'm now drafting the initial summary, focusing on extracting the core information from the research notes. My priority is to capture the essence of the findings. I will ensure the summary encapsulates the most relevant facts.",
+          "timestamp": "2026-03-13T10:44:23.240Z"
+        },
+        {
+          "subject": "Drafting Initial Outline",
+          "description": "I am now formulating a preliminary outline of the summary, structuring it to present the most significant aspects of the research. My aim is to ensure a logical and engaging flow, highlighting the crucial points for the user. I'll focus on clarity and brevity.",
+          "timestamp": "2026-03-13T10:44:25.873Z"
+        },
+        {
+          "subject": "Refining Summary Structure",
+          "description": "I'm now focusing on refining the summary's structure, ensuring it aligns with the provided outline. The goal is to present information in a clear, concise, and engaging way, highlighting the key aspects of the research in a compelling format.",
+          "timestamp": "2026-03-13T10:44:27.743Z"
+        },
+        {
+          "subject": "Creating Research Notes",
+          "description": "I am now structuring the data in a clear format, ensuring all necessary details are included and properly categorized. My aim is to organize the information logically, enabling the drafting of a comprehensive and user-friendly report.",
+          "timestamp": "2026-03-13T10:44:30.837Z"
+        },
+        {
+          "subject": "Drafting the Notes Structure",
+          "description": "I'm now arranging the notes into a clear and organized format to ensure the summary effectively captures all the critical points. My focus is on creating a logical flow for the information, readying it for the final report.",
+          "timestamp": "2026-03-13T10:44:33.992Z"
+        },
+        {
+          "subject": "Summarizing the Findings",
+          "description": "I'm now arranging the research notes into a clear structure to facilitate a concise and informative summary. I will focus on extracting the key facts and quotes.",
+          "timestamp": "2026-03-13T10:44:35.660Z"
+        },
+        {
+          "subject": "Creating the Research Summary",
+          "description": "I am now structuring the research data into a clear format, ensuring all relevant information is included. My aim is to synthesize the collected details.",
+          "timestamp": "2026-03-13T10:44:38.617Z"
+        },
+        {
+          "subject": "Preparing for the Summary",
+          "description": "I am now extracting all essential information from the research notes, focusing on the key points, which is the most critical stage. My next step will be to create a summary.",
+          "timestamp": "2026-03-13T10:44:42.505Z"
+        },
+        {
+          "subject": "Extracting the Core Details",
+          "description": "I am now extracting all essential information from the research notes, focusing on the key points, which is the most critical stage. My next step will be to create a summary.",
+          "timestamp": "2026-03-13T10:44:43.695Z"
+        }
+      ],
+      "tokens": {
+        "input": 24605,
+        "output": 3376,
+        "cached": 21244,
+        "thoughts": 3691,
+        "tool": 0,
+        "total": 31672
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

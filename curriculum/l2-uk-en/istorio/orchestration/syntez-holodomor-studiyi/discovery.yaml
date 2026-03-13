@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T10:31:19.977500+00:00'
+query_keywords:
+- 'Синтез: Голодомор як об''єкт дослідження'
+- Інтеграція
+- Ключові дебати
+- Стан поля дослідження
+- Голодомор і сучасність
+- Методологічні уроки
+- 'Analyze the causes and consequences of синтез: голодомор як об''єкт дослідження'
+- Evaluate the historical significance of що ми дізналися
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0463
+  text: "Голодомор мовою документів, свідчень, чисел \n2. Пропагандистський ідеал\
+    \ радянської людини та її повсякденне життя  . . . . . . . . . 160\n\t\nЗавдання\
+    \ для узагальнення знань і підготовки до тематичного оцінювання \nза  розділом\
+    \ IV «Встановлення й  утвердження комуністичного тоталітарного \nрежиму в  Україні»\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 160\nРозділ V.\
+    \ Західноукраїнські землі в  міжвоєнний періо"
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0307
+  text: "Голодомор мовою документів, свідчень, чисел\n2. Пропагандистський ідеал радянської\
+    \ людини та її повсяк-\nденне життя\nЗавдання для узагальнення знань і підготовки\
+    \  \nдо тематичного оцінювання за розділом IV \n«Встановлення й  утвердження комуністичного\
+    \  \nтоталітарного режиму в  Україні»"
+  section_title: Сторінка 160
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0088
+  text: "9. Використовуючи знання зі всесвітньої історії, обговоріть явище про-\n\
+    дажу захоплених у полон людей на невільницьких ринках. Висловіть \nвласне ставлення\
+    \ до цього явища. 10. Працюємо разом. Метод «Дискусія». Як у  заняттях населення\
+    \ Крим-\nського півострова цієї доби відображалася взаємодія людини і довкілля?\
+    \ rnk.com.ua/109908\nПрактичне заняття  \nза розділом І\nrnk.com.ua/109909\nУзагальнення\
+    \ знань  \nза розділом I\nrnk.com.ua/109910\nТестові завдання  \nза  розділом \
+    \ I"
+  section_title: Сторінка 56
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0058
+  text: "Попрацюйте в групах. Використавши мережу Skype, організуйте та прове-\nдіть\
+    \ інтернет-дискусію на тему «Інтернет у житті сучасного школяра». Обговоріть \n\
+    питання: «Інтернет зближує людей чи поглиблює самотність?» Уживайте лексичні \n\
+    й  фразеологічні синоніми та антоніми."
+  section_title: Сторінка 43
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.511568009853363
+  chunk_id: 4800ab33_c0647
+  text: "Диспут, як показує сама назва, є нічим іншим, як\r\nрозв’язанням питання\
+    \ про те, яка з двох суперечливих думок є істинною, коли\r\nфілософи або інші\
+    \ спеціалісти розглядають міцність основи кожної з них і\r\nпринципи, на які вони\
+    \ спираються, вступивши у розмову. Один з них бере до уваги\r\nзасади іншого,\
+    \ а той, у свою чергу, заперечує протилежну для нього тезу, або ту\r\nсаму тезу\
+    \ (тут немає різниці) розглядає перший, а заперечує інший. Звідси хоч\r\nкожну\
+    \ з сторін підтримують численні прихильники, що ворогу"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5031628608703613
+  chunk_id: 4800ab33_c0318
+  text: "6. Можна поставити питання, як саме спростування, що\r\nскладається з одного\
+    \ чи більше моментів, треба розміщувати з обгрунтуванням. Чи\r\nобгрунтування,\
+    \ чи спростування має займати перше місце. Я відповідаю, що на це\r\nє трояка\
+    \ причина: по-перше, якщо ти бачиш, що слухачі здібні й готові слухати,\r\nто\
+    \ ти повинен передусім обгрунтувати поставлену тему, потім спростувати\r\nпротилежне.\
+    \ По-друге, якщо ти зрозумієш, що вони мають протилежну думку\r\n(внаслідок певних\
+    \ причин, які їх переконали), то також і ті"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5022634267807007
+  chunk_id: 2bf33f78_c0045
+  text: "У зв’язку з усім вищевикладеним мусимо висловити один\r\nздогад, який, проте,\
+    \ вважаємо на сьогодні недостатньо обґрунтованим для\r\nзведення навіть у ранг\
+    \ теорії. Майже повна відсутність друкованих творів о.\r\nЙосифа дає нам певну\
+    \ підставу припустити, що саме він міг бути анонімним\r\nавтором зазначених вище\
+    \ видань, а, отже, і самого \"Синопсиса\".\n\nПримітки до тексту\n\nПримітки до\
+    \ тексту\n\nЧастина 2\n\nПроблеми дослідження джерельної бази \"Синопсиса\"\n\n\
+    Як ми уже неодноразово відзначали, більшість дослідників"
+  work: Синопсис. Київ, 1674
+  author: Невідомий
+  year: 1674
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/synopsis/syn.htm

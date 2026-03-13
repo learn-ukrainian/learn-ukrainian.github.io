@@ -1,13 +1,13 @@
-module: c2-079
+module: c2-093
 level: C2
-sequence: 79
+sequence: 93
 slug: interpretation-advanced
 version: '2.0'
 title: Поглиблений усний переклад
 subtitle: Introduction — Interpretation as a Profession
 focus: practice
 pedagogy: TTT
-phase: C2.4 [Meta-Skills & Capstone]
+phase: C2.5 [Meta-Skills & Capstone]
 word_target: 5000
 objectives:
 - Застосовувати перекладацькі стратегії для передачі стилістичних нюансів
@@ -135,8 +135,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-80 (Дипломний проєкт — Вибір теми)
-- c2-85 (Дипломний проєкт — Захист)
+- c2-94 (Дипломний проєкт — Вибір теми)
+- c2-99 (Дипломний проєкт — Захист)
 persona:
   voice: Senior Specialist
   role: Interpreter

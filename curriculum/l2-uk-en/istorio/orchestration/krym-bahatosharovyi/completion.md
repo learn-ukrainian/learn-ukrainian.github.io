@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 78
+PASS: pipeline istorio 78
 
   Module:   krym-bahatosharovyi
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 78
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:16:52Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:32:12Z

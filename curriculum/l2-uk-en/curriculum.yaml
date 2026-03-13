@@ -1339,34 +1339,50 @@ levels:
       - professional-identity         # 62 — Professional identity
       - c2-3-review                  # 63 — Phase review
       - c2-3-checkpoint              # 64 — Phase checkpoint
-      # ── C2.4 Meta-Skills & Capstone (27 modules) ────────────────────
-      - complete-grammar-review       # 65 — Complete grammar review
-      - rare-archaic-forms            # 66 — Rare & archaic forms
-      - regional-varieties            # 67 — Regional varieties
-      - sociolinguistic-mastery       # 68 — Sociolinguistic mastery
-      - language-policy-decolonization # 69 — Language policy & decolonization (NEW)
-      - corpus-linguistics            # 70 — Corpus linguistics & digital tools (NEW)
-      - error-analysis                # 71 — Error analysis & self-correction
-      - native-like-fluency           # 72 — Native-like fluency strategies
-      - teaching-ukrainian-i          # 73 — Teaching Ukrainian I
-      - teaching-ukrainian-ii         # 74 — Teaching Ukrainian II
-      - teaching-ukrainian-iii        # 75 — Teaching Ukrainian III
-      - translation-theory-ii         # 76 — Translation theory: advanced
-      - translation-practice-i        # 77 — Translation practice I
-      - translation-practice-ii       # 78 — Translation practice II
-      - interpretation-advanced       # 79 — Advanced interpretation
-      - capstone-topic-selection      # 80 — Capstone: topic selection
-      - capstone-research-project     # 81 — Capstone: research
-      - capstone-drafting             # 82 — Capstone: drafting
-      - capstone-revision             # 83 — Capstone: revision
-      - capstone-polish               # 84 — Capstone: polish
-      - capstone-defense              # 85 — Capstone: defense
-      - final-review-i               # 86 — Final review I
-      - final-review-ii              # 87 — Final review II
-      - final-review-iii             # 88 — Final review III
-      - final-exam-integrated-skills  # 89 — Final exam
-      - c2-certification-preparation  # 90 — Certification preparation
-      - c2-riven-zaversheno          # 91 — Level completion
+      # ── C2.4 Thematic Discourse (14 modules) ─────────────────────
+      # State Standard 2024 Каталог Б: all 21 themes covered (#834)
+      - suspilstvo-i-hromadyanstvo    # 65 — Society & Citizenship (themes 3.7, 3.8)
+      - zovnishnia-polityka-i-diaspora # 66 — Foreign Policy & Diaspora (theme 3.9)
+      - ekonomika-i-dobrobut          # 67 — Economy & Welfare (themes 3.10, 3.13)
+      - zdorovya-i-medytsyna          # 68 — Health & Medicine (theme 3.11)
+      - osvita-nauka-innovatsiyi      # 69 — Education, Science & Innovation (themes 3.12, 3.19)
+      - ekolohiya-i-klimat            # 70 — Ecology & Climate (theme 3.18)
+      - media-i-dezinformatsiya       # 71 — Media & Disinformation (theme 3.20)
+      - sport-i-liudskyi-potentsial   # 72 — Sport & Human Potential (theme 3.5)
+      - spozhyvannya-i-posluhy        # 73 — Consumer Culture & Services (themes 3.14, 3.15, 3.16)
+      - misto-selo-prostir            # 74 — Urban & Rural Space (themes 3.2, 3.17)
+      - podoroz-dozvillya-kultura     # 75 — Travel, Leisure & Culture (themes 3.4, 3.6)
+      - identychnist-tradytsiyi-simya # 76 — Identity, Traditions & Family (themes 3.1, 3.3, 3.21)
+      - c2-4-practice                 # 77 — Thematic Discourse Practice
+      - c2-4-checkpoint               # 78 — Thematic Discourse Assessment
+      # ── C2.5 Meta-Skills & Capstone (27 modules) ────────────────────
+      - complete-grammar-review       # 79  — Complete grammar review
+      - rare-archaic-forms            # 80  — Rare & archaic forms
+      - regional-varieties            # 81  — Regional varieties
+      - sociolinguistic-mastery       # 82  — Sociolinguistic mastery
+      - language-policy-decolonization # 83  — Language policy & decolonization
+      - corpus-linguistics            # 84  — Corpus linguistics & digital tools
+      - error-analysis                # 85  — Error analysis & self-correction
+      - native-like-fluency           # 86  — Native-like fluency strategies
+      - teaching-ukrainian-i          # 87  — Teaching Ukrainian I
+      - teaching-ukrainian-ii         # 88  — Teaching Ukrainian II
+      - teaching-ukrainian-iii        # 89  — Teaching Ukrainian III
+      - translation-theory-ii         # 90  — Translation theory: advanced
+      - translation-practice-i        # 91  — Translation practice I
+      - translation-practice-ii       # 92  — Translation practice II
+      - interpretation-advanced       # 93  — Advanced interpretation
+      - capstone-topic-selection      # 94  — Capstone: topic selection
+      - capstone-research-project     # 95  — Capstone: research
+      - capstone-drafting             # 96  — Capstone: drafting
+      - capstone-revision             # 97  — Capstone: revision
+      - capstone-polish               # 98  — Capstone: polish
+      - capstone-defense              # 99  — Capstone: defense
+      - final-review-i               # 100 — Final review I
+      - final-review-ii              # 101 — Final review II
+      - final-review-iii             # 102 — Final review III
+      - final-exam-integrated-skills  # 103 — Final exam
+      - c2-certification-preparation  # 104 — Certification preparation
+      - c2-riven-zaversheno          # 105 — Level completion
   oes:
     type: track
     modules:

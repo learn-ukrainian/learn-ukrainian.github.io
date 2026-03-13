@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 28
+PASS: pipeline istorio 28
 
   Module:   syntez-kozatski-dzherela
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 28
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:09:00Z
+  Verdict:  PASS
+  Date:     2026-03-13T09:43:05Z

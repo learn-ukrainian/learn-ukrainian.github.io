@@ -1,4 +1,4 @@
-FAIL: pipeline hist 48
+PASS: pipeline hist 48
 
   Module:   kozatske-viisko
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 48
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:10:01Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:38:15Z

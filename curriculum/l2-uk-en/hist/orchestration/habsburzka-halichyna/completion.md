@@ -1,4 +1,4 @@
-FAIL: pipeline hist 76
+PASS: pipeline hist 76
 
   Module:   habsburzka-halichyna
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 76
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:14:21Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:47:37Z

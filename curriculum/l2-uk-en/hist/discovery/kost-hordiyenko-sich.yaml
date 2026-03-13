@@ -1,0 +1,214 @@
+discovered_at: '2026-03-13T11:20:04.842970+00:00'
+query_keywords:
+- Кость Гордієнко та Січ
+- Непримиренний кошовий
+- 'Запорозька Січ: Острів свободи в морі імперій'
+- 'Великий союз: Гордієнко, Мазепа та Карл XII'
+- 'Трагедія 1709: Зруйнування Чортомлицької Січі'
+- 'Читання: Козацький дух у документах'
+- 'Первинні джерела: Свідчення очевидців'
+- 'Деколонізаційний погляд: Січ як анти-імперський проект'
+- Analyze the causes and consequences of кость гордієнко та січ
+- Evaluate the historical significance of непримиренний кошовий
+- 'Trace the development of деколонізаційний погляд: січ як анти-імперський проект'
+- history
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=xaKBtMJ3G4E
+  channel: ІМТГШ
+  title: Конституція Пилипа Орлика. Перша?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrlit-zabolotnyi-2022_s0167
+  text: "133\nІСТОРИЧНЕ МИНУЛЕ В ХУДОЖНІХ ТВОРАХ\n10. Що дізнався Карпо про Запорозьку\
+    \ Січ? Зачитайте опис Січі. \n11. Як змальовано у творі гетьмана? Чому автор не\
+    \ називає його імені? \n12. Роздивіться репродукції картин Олени Кульчицької «Дніпрові\
+    \ хвилі» та «Козаки \nна чайках» (с.  129, 131). Чи можуть вони бути ілюстраціями\
+    \ до казки Івана \nНечуя-Левицького «Запорожці»? У чому вони допомагають уявити\
+    \ події та геро-\nїв казки, а чим відрізняються?\n13. Про що саме гетьман розмовляв\
+    \ із Карпом? Що під час цієї "
+  section_title: Сторінка 133
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0143
+  text: "Зупинка 1. Поріг Кодацький                                              \
+    \    https://cutt.ly/sefsD9TK \nПопрацюйте з логічними ланцюжками. З’ясуйте, яке\
+    \ із понять \nзайве і чому. А Уходники, католицизм, Дике Поле, промисли. Б 1556\
+    \ рік, Мала Хортиця, Криштоф Косинський, Запорозька Січ. В Кошовий отаман, військовий\
+    \ суддя, військовий осавул, коронний гетьман. Г 1572 рік, 1578 рік, 1618 рік,\
+    \ 1619 рік. Д Стефан Баторій, 300 козаків, реєстрове козацтво, Трахтемирів. Ж\
+    \ Іван Підкова, 1577 рік, Молдова, «до"
+  section_title: Сторінка 54
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0097
+  text: "73 \n§ 14. ЗАПОРОЗЬКА СІЧ —  \nКОЗАЦЬКА РЕСПУБЛІКА \n \n \nРозгляньте картини\
+    \ Віктора Ковальова «Остання рада на Січі» \nта Іллі Рєпіна «Козаки пишуть листа\
+    \ турецькому султанові». Які \nсторони козацького життя вони відображають? 1.\
+    \ Права й обов’язки козаків \nУпродовж другої половини XVI століття Запорозька\
+    \ Січ набула \nознак адміністративно-політичного центру. Тут постійно перебувала\
+    \ \nкозацька залога чисельністю від кількох сотень до кількох тисяч осіб. Більша\
+    \ частина козаків та їхні сім’ї мешкали в зи"
+  section_title: Сторінка 37
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-2_s0111
+  text: "Прочитай слова, написані великими і малими буквами.\nВ о В к  п Е с И к \
+    \ К о Т и К  п О р О с Я т К о\nПластиліновий, слухняним, вередливим, припасовано,\
+    \ \nприплюснула, зачудувався.\nПрочитай правильно\nЗа Оксаною Кротюк\nПЛАСТИЛІНОВИЙ\
+    \  ПЕСИК\nОлесі тато подарував пластилін. Відкрила вона \nкоробочку — а в ній\
+    \ кольорові брусочки лежать. Ви-\nрішила Олеся песика зліпити. Але чи пластилін\
+    \ був \nне дуже слухняним, чи песик мав бути вередливим, \nбо з-під Олесиних пальчиків\
+    \ він ніяк не з’являвся. \nУже і тулуб "
+  section_title: Сторінка 113
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-2_s0138
+  text: "\aЩо нового ти дізнався (дізналася) з тексту?\n \n\t \aПрочитай опис зовнішності\
+    \ морського коника. У якому \nабзаці він міститься?\n \n\t \aДе живе і чим харчується\
+    \ морський коник?\n \n\t \aЩо допомагає морському конику рятуватися від небезпеки?\n\
+     \n\t \aЯка інформація про морського коника зацікавила тебе \nнайбільше?\nАле\
+    \ він не бігає, а плаває. Не опускаючи голови. Від \nводи відштовхується своїм\
+    \ одним-єдиним плавником.\nКоник може «вдягатися» під колір рослин. Вони \nзелені\
+    \ — і він зеленіє. Вони бурі — і він буріє."
+  section_title: Сторінка 140
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.49751538038253784
+  chunk_id: a71a32ec_c0015
+  text: Сад наш на історичному місці. За даними всіх переказів і легенд колись тут,
+    на нашому острові, стояла деякий час Запорозька Січ, вирувало хоробре веселе козацтво.
+    Дуже вдало обрали наші предки собі місце для табору, вже й тоді вони розумілися
+    на тактиці та стратегії!.. Острів, бачите; височіє, мов фортеця, обернута плечима
+    до непрохідних плавнів, а лицем — на південь, до степу. Найдрібнішу кінноту, дику
+    татарву звідси можна було помітити за десятки кілометрів. Мій приятель Роман Романович,
+    викла
+  work: Олесь Гончар. Микита Братусь
+  author: Гончар О.
+  year: 1918
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=548
+- score: 0.48653143644332886
+  chunk_id: 9a2443f5_c0062
+  text: "168 Цит. за кн.:\r\nМарченко М. І. Українська історіографія. С. 154. (Переклад\
+    \ українською мовою\r\nзроблений Марченком М. І.).\n\n* Скальковский А. История\
+    \ Новой Сечи или последнего\r\nКоша Запорожского (далі — «История Новой Сечи...»).\
+    \ Ч. I, II, III. (Видана в\r\nОдесі тричі — у 1840, 1846, 1885 рр.).\n\n169 Скальковский\
+    \ А.\r\nИстория Новой Сечи... 1885. Ч. І. С. 76.\n\n170 Там само. С. 81."
+  work: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+  year: 1994
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/holob/hol.htm
+- score: 0.48205816745758057
+  chunk_id: 68ba0555_c0260
+  text: "Але надто вже не схоже запорізьке, а з ним і\r\nгородове, козацтво на середньовічне\
+    \ рицарство. Тому частина істориків,\r\nвідчуваючи тут певну натяжку, підкреслювала\
+    \ необґрунтованість рицарських\r\nпретензій по суті селянського іррегулярного\
+    \ війська, натомість більш романтично\r\nнастроєні автори однозначно характеризують\
+    \ Січ як продовжувача традицій\r\nєвропейського рицарського стану. В світлі теорії\
+    \ сміхової культури стає\r\nзрозумілим поєднання «горнього» з «низьким», відчайдушно-веселого\
+    \ з жорстоким і\r\n"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm

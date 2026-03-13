@@ -1,0 +1,208 @@
+discovered_at: '2026-03-13T12:22:43.856347+00:00'
+query_keywords:
+- 'Газова зброя: Економічна війна 1991-2022'
+- 1990-ті
+- 2006 і 2009
+- Nord Stream
+- Ціна газу як тиск
+- Після 2022
+- 'Analyze the causes and consequences of газова зброя: економічна війна 1991-2022'
+- Evaluate the historical significance of газ як зброя
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode77/
+  title: Ukrainian History Course Part 7 Second World War in Ukraine
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 77
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0370
+  text: "§ 27. Зовнішня політика та міжнародні зв’язки України в 1992—2013 рр. 203\n\
+    її в  сумнівні інтеграційні проєкти. Частиною цих заходів \nбула інформаційна\
+    \ політика (контроль над засобами масо-\nвої інформації, нав’язування російської\
+    \ масової культури \nтощо). Російська православна церква активно просувала \n\
+    ідеї «русского міра» (детальніше про це ви прочитаєте \nв  § 29). Для ослаблення\
+    \ української економіки Росія спро-\nвокувала газові конфлікти у  2005—2006 і \
+    \ 2008—2009  рр. та торговельні війни. Серйо"
+  section_title: Сторінка 205
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0400
+  text: "Розділ V. Розвиток України як незалежної держави\n226\n?? Коли Росія почала\
+    \ використовувати природний газ як зброю проти України? Ціни на російський природний\
+    \ газ для України,  \nдол. США за 1 тис. м3\n50 $\n95 $\n179,5 $\n260,7 $\n309 $\n\
+    426 $\n252 $\n130 $\nЛ. Кравчук\nЛ. Кучма\nВ. Ющенко \n(уряд Ю. Тимошенко \nз 2007 до\
+    \ 2010 р.)\nП. Порошенко\nВ. Янукович\n500\nдол. США\n400\n300\n200\n100\n0\n\
+    360 $\n485 $\nУкраїна не купує російський природний газ\n212 $\n413 $\nГазові\
+    \ конфлікти між Росією та Україною\nМета \n­Росії\n\x83\x83 Піді"
+  section_title: Сторінка 228
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0371
+  text: "за 1  м3\n•\t Січень 2009  р. — «Газпром» припинив постачання \nприродного\
+    \ газу в  Україну. Головна вимога  — сплата боргів \nза листопад-грудень 2008 \
+    \ р. •\t Робота газотранспортної системи України в  реверсному \n(зворотному)\
+    \ режимі, щоб забезпечити природним газом \nнаселення сходу й  півдня. •\t Підписання\
+    \ нового договору з  Росією на 2009—2019  рр. •\t Ліквідація компанії-посередника\
+    \ «РосУкрЕнерго». •\t Середньорічна ціна природного газу для України становила\
+    \ \n228,8  дол. за 1  м3\nРезультат\n•\t Похитн"
+  section_title: Сторінка 205
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0006
+  text: "ЄВРОПЕЙСЬКИЙ ВИБІР УКРАЇНИ. РОСІЙСЬКО-УКРАЇНСЬКА ВІЙНА \n§ 46. Геополітичний\
+    \ вибір України.............................................278 \n§ 47. Розгортання\
+    \ Російською Федерацією гібридної війни  \nпроти України ....................................................................284\
+    \ \n§ 48. Суспільно-політичне та соціально-економічне становище \nУкраїни в 2014—2022\
+    \ роках .................................................290 \n§ 49. Широкомасштабне\
+    \ вторгнення російських військ  \nна територію України.."
+  section_title: Сторінка 5
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0330
+  text: "Майже всі галузі важкої промисловості \nохопила криза. Найбільше падіння\
+    \ від-\nбулося в  транспортному й  сільськогос-\nподарському машинобудуванні,\
+    \ хімічній \nпромисловості через нестачу матеріалів, \nщо надходили з  колишніх\
+    \ радянських \nреспублік. Стрімко знижувався видобу-\nток вугілля, нафти та природного\
+    \ газу. Здійснена в 1992 р. лібералізація цін за \nвідсутності конкуренції призвела\
+    \ до їх \nзростання у  20  разів (рівень інфляції \nстановив 2000 %). Гіперінфляція:\
+    \ ціни зростали щодня. 1990-ті рр. "
+  section_title: Сторінка 183
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5061267018318176
+  chunk_id: f79fbc43_c0121
+  text: "32. Phyllis Penn Kohler, ред. і переклад, Journey for Our Time:\r\nThe Russian\
+    \ Journals of the Marquis de Custine (Washington, DC: Gateway,\r\n1987). /93/\n\
+    \n33. Diana Brydon and Helen Tiffin, Decolonizing Cultures (Sydney,\r\nAustrlia:\
+    \ Dangaroo Press, 1993), 127.\n\n34. New Haven, CT: Yale Univ. Press, 1967.\n\n\
+    35. Pipes (1974), 120. Про те, що військові справи є для Росії\r\nпріоритетними,\
+    \ свідчить і той факт, що в її державному бюджеті на 1999 p.,\r\nнезважаючи на\
+    \ різке зменшення асигнувань практично за всім"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5059036612510681
+  chunk_id: feaa5fa7_c0041
+  text: "ІНШІ КОРИСНІ КОПАЛИНИ . . . . . . . . . . . . . . . .\r\n. . . 1081\n\nІнші\
+    \ сировини хемічної промисловости (1081). Глини й\r\nкаолін (1081). Будівельні\
+    \ матеріяли й ін. (1081) Р. Димінський\n\n6. ПРОМИСЛОВІСТЬ\n\nОГЛЯД УКРАЇНСЬКОЇ\
+    \ ПРОМИСЛОВОСТИ . . . . . . . . . . .\r\n. . . . . . . . 1082\n\nЗагальні умови\
+    \ розвитку промисловости (1082). Період\r\nдо 1870-их pp. (1083). Роки 1870 —\
+    \ 1917 (1083). Роки 1917 — 50 (1084). Зах.\r\nУкр. Землі (1084). Загальний огляд\
+    \ (1085). Організаційна структура укр.\r\nпромисловости (1"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5059036612510681
+  chunk_id: feaa5fa7_c3236
+  text: "ІНШІ КОРИСНІ КОПАЛИНИ . . . . . . . . . . . . . . . .\r\n. . . 1081\n\nІнші\
+    \ сировини хемічної промисловости (1081). Глини й\r\nкаолін (1081). Будівельні\
+    \ матеріяли й ін. (1081) Р. Димінський\n\n6. ПРОМИСЛОВІСТЬ\n\nОГЛЯД УКРАЇНСЬКОЇ\
+    \ ПРОМИСЛОВОСТИ . . . . . . . . . . .\r\n. . . . . . . . 1082\n\nЗагальні умови\
+    \ розвитку промисловости (1082). Період\r\nдо 1870-их pp. (1083). Роки 1870 —\
+    \ 1917 (1083). Роки 1917 — 50 (1084). Зах.\r\nУкр. Землі (1084). Загальний огляд\
+    \ (1085). Організаційна структура укр.\r\nпромисловости (1"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

@@ -1,0 +1,203 @@
+discovered_at: '2026-03-13T12:35:40.019584+00:00'
+query_keywords:
+- Українські контрнаративи
+- Державні інструменти
+- Громадянське суспільство
+- NAFO і соцмережі
+- Культурна дипломатія
+- Виклики і межі
+- Analyze the causes and consequences of українські контрнаративи
+- Evaluate the historical significance of боротьба за наратив
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  text: "Використана  література\nІванюк С. Міфи про Миколу Куліша / Сергій Іванюк\
+    \ // Наукові записки Національного \nуніверситету «Києво-Могилянська академія».\
+    \ — 1998. — Т. 4. — С. 75–83. — (Серія \n«Філологія»). Кузякіна Н. Траєкторія\
+    \ доль / Наталя Кузякіна. — К. : Темпора, 2010. Куліш А. Спогади про Миколу Куліша\
+    \ // Куліш М. Твори: В 2 т. — К., 1990. — Т. 2. — \nС. 695–753. Наєнко М. Художня\
+    \ література України / М. Наєнко. — К., 2007. — С. 845–857. Панченко В. Арки і\
+    \ шибениці (драматургія Миколи Куліша) /"
+  section_title: Сторінка 126
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0002
+  text: Тож запрошуємо до творчої співпраці! Успіхів вам в опануванні української
+    мови! Автори
+  section_title: Сторінка 3
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0187
+  text: "1. За допомогою інтернет-ресурсів з’ясуйте: 1) чи й надалі працює конструкторське\n\
+    бюро «Південний»; 2) як розформували Ракетні війська стратегічного призначення\
+    \ після \nрозпаду СРСР. 3. Література і мистецтво\nЛібералізація суспільно-політичного\
+    \ життя створила сприятливі \nумови для розвитку української культури. Було припинене\
+    \ цькування \nмитців, яких у повоєнний період звинувачували в «космополітизмі»\
+    \ й \n«буржуазному націоналізмі». Реабілітували письменників, зокрема \nпосмертно:\
+    \ Миколу Вороного, Г"
+  section_title: Сторінка 105
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0013
+  text: 'Зверніться з електронним або звичай-
+
+    ним листом до будь-кого з письменників, які мешкають у вашому місті, районно-
+
+    му центрі, селі, думка якого вам цікава. Якщо можна організувати особисту зустріч,
+
+    проведіть її у формі інтерв’ю і поставте підготовлені запитання. 1. Ковалів Ю.І.
+    Літературознавча енциклопедія. – К., 2007. 2. Фролова К.П. Цікаве літературознавство.
+    – К., 1991. 3. Словник літературознавчих термінів: https://onlyart.org.ua/dictionary-literary-
+
+    terms/.'
+  section_title: Сторінка 10
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5216643810272217
+  chunk_id: 53691244_c0447
+  text: "Фактичність громадянства як належності до «п’ятого світу»\r\nвикликає до\
+    \ життя особливі форми механічної та соціальної солідарності чи\r\nконкуренції,\
+    \ особливі способи виробництва культурних зразків, леґітимізує\r\nмульти- і транскультурні\
+    \ знаки й смисли. Але соціальна структура й культура —\r\nтема спеціальної розмови,\
+    \ яка, мабуть, не забариться, тому що Україна упевнено\r\nживе теперішнім.\n\n\
+    1\r\n Борхес\r\nХорхе Луїс. Тлін, Укбар, Orbis Tertius. У кн.: Хорхе Луис Борхес.\
+    \ Проза разных лет.—М., 1984.—С.50.\n\n2"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5137935876846313
+  chunk_id: a5f3ae7f_c0497
+  text: "Кравченко Б. Соціальні зміни і національна свідомість\r\nв Україні XX століття.\
+    \ — К.: Основи, 1997, 424 с.\n\nЛитвин В. Політична арена України. Дійові особи\
+    \ та\r\nвиконавці. — К.: Абрис, 1994, 496 с.\n\nМацевич А. Микола Скрипник. —\
+    \ К.: Молодь, 1990, 216\r\nс.\n\nСобчак А. Хождение во власть. Рассказ о рождении\r\
+    \nпарламента. — Москва: Новости, 1991,272 с. /339/\n\nСтріха М. Мова. — У кн.:\
+    \ Нариси української\r\nпопулярної культури. — К.:УЦКД, 1998, с. 397-426.\n\n\
+    Ткаченко О. Держава сильна підтримкою народу. Допов"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm
+- score: 0.5118885040283203
+  chunk_id: 3d51722e_c0197
+  text: "Але й те, що не попало ні під офіційне, ні під\r\nсамодіяльне табу, що нібито\
+    \ ж допущене в актив української культури, — і те\r\nпопуляризується і доводиться\
+    \ до масового глядача й читача дуже й дуже\r\nнедостатньо. Внаслідок цього чималі\
+    \ шари населення дуже мало знають про\r\nвеличезні багатства української культури,\
+    \ не цікавляться нею і вважають її\r\nчимось не вартим уваги. Пригадаймо, як серйозно\
+    \ ставила КП(б)У в двадцяті роки\r\nсправу опанування української культури найширшими\
+    \ масами трудящих України,\r"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm

@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 58
+PASS: pipeline istorio 58
 
   Module:   khreshchennia-spadshchyna
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 58
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:13:39Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:47:38Z

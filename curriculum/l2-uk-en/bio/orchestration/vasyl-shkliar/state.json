@@ -4,8 +4,24 @@
   "mode": "v5",
   "phases": {
     "research": {
-      "status": "failed",
-      "ts": "2026-03-13T01:15:07Z"
+      "status": "complete",
+      "ts": "2026-03-13T11:44:24Z",
+      "task_id": "v5-vasyl-shkliar-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T11:44:24Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
     }
   }
 }

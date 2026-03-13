@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T10:07:48.564543+00:00'
+query_keywords:
+- 'Самвидав: Що це було?'
+- Історія самвидаву
+- Як працював самвидав
+- Типи текстів
+- Український самвидав
+- Фрагмент
+- 'Analyze the causes and consequences of самвидав: що це було?'
+- Evaluate the historical significance of підпільна література
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0309
+  text: "169 \nПРАКТИЧНА РОБОТА № 3 \nТЕМА. УКРАЇНСЬКИЙ «САМВИДАВ»:  \nТЕМИ, ІДЕЇ,\
+    \ АВТОРИ. Об’єднайтеся у 5 груп і виконайте завдання 1—5. Завдання 6 виконайте\
+    \ у спільному колі. Група № 1. Завдання 1. Опрацюйте матеріали рубрики «З Україною\
+    \ в серці», довідку та документи № 1, \n№ 2, № 3 практичної роботи. Визначте,\
+    \ ким за професіями були дисиденти, до якої соціальної \nгрупи радянського суспільства\
+    \ належали. Які теми висвітлювали в «сам видавничих» працях? Результати досліджень\
+    \ запишіть у зошит. Довідка. «Сам"
+  section_title: Сторінка 170
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0024
+  text: "19\nВступ. Українська мова в житті українців. Види інформації . Робота з підручником\n\
+    Види інформації. Робота з  підручником\nВправа 15\n1. Ви вже попрацювали з підручником\
+    \ і можете його описати . Дайте відпо-\nвіді на  запитання .\nz\nz З  яких частин\
+    \ складається підручник? Як про це можна дізнатися?\nz\nz Що написано на  обкладинці?\n\
+    z\nz Які умовні позначки має підручник? Що вони означають? Звідки про \nних можна\
+    \ дізнатися?\nz\nz Як ви вирізняєте в підручнику інформацію, яку потрібно запам’ятати?\n\
+    z\nz Як до"
+  section_title: Сторінка 19
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0036
+  text: "§ 3. Інформація. Види та джерела інформації  \n29\n§ 3. Інформація. Види\
+    \ та джерела інформації\nВправа 36\n1. Пригадайте, які види інформації ви знаєте.\
+    \ За потреби використайте \nпідказку.\nтекстова\nукраїнська \nмова\nсторінка \
+    \ 18, \nвправа 12\nграфічна\nчислова\nаудіо\nвідео\nВИДИ ІНФОРМАЦІЇ\n2. Погортайте\
+    \ підручник і  дослідіть, які види інформації є  в  ньому.\nВправа 37\n1. Об’єднайтесь\
+    \ у  групи, виконайте завдання на вибір: \n• Пригадайте, як правильно сприймати\
+    \ текстову ін-\nформацію. Складіть і  запишіть п’"
+  section_title: Сторінка 29
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0025
+  text: "20\nВступ. Українська мова в житті українців.  Види інформації.  Робота з підручником\n\
+    Вправа 16\n1.\t Користуючись умовними позначеннями з навігатора на початку підруч-\n\
+    ника, знайдіть у вже розглянутих темах: \nz\nz теоретичні відомості,\nz\nz вправи,\n\
+    z\nz завдання для групової роботи,\nz\nz ілюстрації,\nz\nz схеми,\nz\nz завдання\
+    \ з QR-кодами.\n2.\t Поміркуйте та  назвіть вид читання, до  якого ви вдалися,\
+    \ виконуючи \nзавдання.\nВправа 17\n1.\t Прочитайте рекомендації для навчального\
+    \ читання.\nПРАВИЛА НАВЧАЛЬНОГО ЧИ"
+  section_title: Сторінка 20
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5433076024055481
+  chunk_id: b715df49_c0700
+  text: "Тих письменників, науковців,\r\nжурналістів, які намагалися захищати українську\
+    \ культуру, хоча б навіть з\r\nпозицій тодішньої конституції і засад, декларованих\
+    \ свого часу Леніним,\r\nпроголошували \"антирадянщиками\" і переслідували не\
+    \ менш жорстоко, ніж\r\nвідвертих критиків тодішньої системи.\n\n38\r\n Про сміховинно\
+    \ примітивні звинувачення автора\r\n\"внутрішньої\" рецензії, написаної за дорученням\
+    \ Держкомвидаву, див.:\r\nІсаєвич Я.Д. Україна давня і нова.., 1996, с. 12. /419/\n\
+    \nСуворість цензурного\r\nконтролю, н"
+  work: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/isaevych/is.htm
+- score: 0.5406860113143921
+  chunk_id: feaa5fa7_c0834
+  text: "Укр. мова в Сов. Україні: Смаль-Стоцький\r\nР. Укр. мова в Совєтській Україні.\
+    \ В. 1936; Рудницький Я. Die Lage der\r\nukrainischen Sprache in der Sowjetunion.\
+    \ Wörter und Sachen. XIX.\r\nГейдельберг 1938; Шерех Ю. Принципи й етапи большевицької\
+    \ політики щодо\r\nслов’янських мов в СССР. Свобода, листопад 1947.\n\n[Енциклопедія\
+    \ українознавства. Загальна частина (ЕУ-I). — Мюнхен, Нью-Йорк, 1949. — Т. 1.\
+    \ — С. 359-366.]\n\n5. Українське письмо і правопис\n\nІсторія українського письма\
+    \ (палеографія)"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5398828387260437
+  chunk_id: fc2291b5_c4524
+  text: "Тв.: Летопись Самовидца о\r\nвойнах Богдана Хмельницкого и о междоусобиях,\
+    \ бывших в Малой России по его\r\nсмерти. М., 1846; Летопись Самовидца по новооткрытым\
+    \ спискам с приложением трех\r\nмалороссийских хроник: Хмельницкой, «Краткого\
+    \ описання Малороссии» и «Собрания\r\nисторического». К., 1878; Літопис Самовидця.\
+    \ К., 1971.\n\nЛіт.: Багалій Д. Нарис\r\nукраїнської історіографії, т. 1, в. 2.\
+    \ К., 1925; Петровський М. Нариси історії\r\nУкраїни XVII — початку XVIII століть.\
+    \ І. (Досліди над літописом Самовидця).\r"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

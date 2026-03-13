@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T11:49:24.803926+00:00'
+query_keywords:
+- 'Янукович: Сучасна версія циклу'
+- Фаза 1
+- 2010-2013
+- Фаза 2
+- Фаза 3
+- Фаза 4
+- Чому цикл зламався
+- 'Analyze the causes and consequences of янукович: сучасна версія циклу'
+- Evaluate the historical significance of цикл у xxi столітті
+- history
+- історія
+- подія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0346
+  text: "Розділ V. Розвиток України як незалежної держави\n190\nЗапитання і  завдання\n\
+    Знаємо і  розуміємо\n1. Які реформи передбачала передви-\nборча програма Президента\
+    \ В. Ющен-\nка? Чи були вони втілені в  життя? 2. Якими були підсумки виборів\
+    \ до Вер-\nховної Ради 2006, 2007  рр.? 3. Із якого виду спорту в Україні та Поль-\n\
+    щі відбувся чемпіонат «Євро-2012»? Застосовуємо і  аналізуємо\n4. Завдання з хронології.\
+    \ Скільки років \nпроіснував режим В. Януковича? 5. Наведіть приклади, як В. Янукович\
+    \ \nпоступався інтер"
+  section_title: Сторінка 192
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0321
+  text: "Збройний конфлікт 1991—1992 рр. Віктора Ющенка\nВіктора Януковича\nЮ\nЯ\n\
+    Початок безстрокового мітингу в Києві на Майдані \nНезалежності на знак протесту\
+    \ проти фальсифікації \nрезультатів другого туру виборів Президента України\n\
+    на користь В. Януковича (22 листопада 2004 р.)\nОбласні та міські ради, що визнали\
+    \ переможцем \nвиборів В. Ющенка\nСамбір\nОбласні ради, що підтримали В. Януковича\n\
+    Донецьк\nНаметові містечка на підтримку В. Януковича\nОрганізована доставка донецьких\
+    \ шахтарів до Києва,\nщоб мітингувати"
+  section_title: Сторінка 178
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0377
+  text: "Створіть інфо­\nграфіку, що демонструє її рівень у 2004—2013 рр. Cформулюйте\
+    \ судження про:\n\x84\n\x84\nпричини поразки «помаранче­\nвих» сил і вплив цих\
+    \ подій на розви­\nток України;\n\x84\n\x84\nантидемократичні \nпроцеси \nв  Україні\
+    \ за часів президентства \nВ. Януковича та опір населення. Працюємо з  хронологією\n\
+    2008 р. — вступ України до Світової \nорганізації торгівлі. Лютий 2010 р. — обрання\
+    \ В. Януко­\nвича Президентом України. 22 листопада — 3 грудня 2010 р. — \nПодатковий\
+    \ Майдан. 2011—2012 рр. — ув’язнення ліде­\n"
+  section_title: Сторінка 212
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0341
+  text: "§ 25. Суспільно-політичне та економічне життя України у 2005—2009 рр. 187\n\
+    секторах економіки, крім сільського господарства \n(завдяки рекордному врожаю\
+    \ 2008  р.). Загальний \nспад виробництва у 2009 р. становив 27 %, а ВВП — \n\
+    14,5 %. Це було найбільше зниження показників \nсеред країн Європи. Падіння української\
+    \ економіки у  2009  р. пока-\nзало її залежність від світового ринку. 4. Президентські\
+    \ вибори 2010 р. Початок президентства В. Януковича\n\e\n\e Як можна охарактеризувати\
+    \ економічний розвиток \nУк"
+  section_title: Сторінка 189
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0517
+  text: "Поясніть значення понять: Євромайдан, Небесна сотня, Революція гідності.\
+    \ 3. Порівняйте президентство Віктора Ющенка, Віктора Януковича та Петра Порошенка.\
+    \ Які\nпідсумки їхньої діяльності? 4. Об’єднайтеся в групи і проведіть дослідження\
+    \ за одним із запропонованих напрямків (на\nвибір): «Історія Майдану у світлинах»,\
+    \ «Майдан від першої особи: спогади учасників», \n«Вечір. Зима. Дві тисячі чотирнадцятий\
+    \ рік: поезія Майдану», «Мистецтво на барикадах \nМайдану». Результатами роботи\
+    \ поділіться у класі."
+  section_title: Сторінка 284
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5094640851020813
+  chunk_id: 53691244_c0004
+  text: "§2. Етнополітична\r\nреальність України\n\nГлава 4. \r\nУ пошуках моделі\
+    \ економічного розвитку (Ігор БУРАКОВСЬКИЙ)\n\n§1. Стратегії\r\nекономічних перетворень\n\
+    \n§2. Стартові умови\r\nтрансформаційного процесу\n\n§3. Формування\r\nпосткомуністичної\
+    \ економічної системи\n\nГлава 5.\r\nПострадянські форми суспільних змін (Андрій\
+    \ ФЕДОРОВ)\n\n§1. Людина\r\nкорпоративна\n\n§2. Радянський цех\n\n§3. Пострадянська\r\
+    \nфратрія\n\nГлава 6. \r\nНевигаданий «п’ятий світ» (Сергій МАКЕЄВ, Наталія КОСТЕНКО)\n\
+    \n§1. Про\r\nнепроблематичність «п’ятого с"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5092769265174866
+  chunk_id: 53691244_c0413
+  text: "2 \r\nОсновні компоненти кожного виду\r\nекономічної політики досить чітко,\
+    \ на мою думку, сформульовані в статті Tibor Vasco. A Global View: Types of\r\n\
+    Transformation Models // Research Report. The Vienna Institute for Comparative\r\
+    \nEconomic Studies.—№. 206.—May 1994.\n\n3 \r\nUkraine. EIU Country Report.—1st\r\
+    \nquarter 1995.—Р.31.\n\n4 \r\nUkraine. The Real Economy and Its\r\nSectors. A\
+    \ Quarterly Statistical Abstract. The World Bank: Kyiv, Ukraine.—Vol.\r\nII.—Issue\
+    \ 2.—Table 1.1.—May 1996.\n\n5 Урядовий кур’єр. — 19"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5079627633094788
+  chunk_id: 3588aaff_c0051
+  text: "Питання це, по суті, має дві окремі, хоч і\r\nвзаємопов’язані, іпостасі,\
+    \ що звучать так: як їй бути вільною? І, по-друге, як\r\nїй бути модерною? Криза,\
+    \ про яку тут говоримо, перетинає обидва виміри, і в\r\nобох вимірах тут видніє\
+    \ перелом. У контрасті з попередніми періодами навряд чи\r\nможна розпізнати твори\
+    \ або письменників, які могли б стати парадигмами\r\nцілого явища, адже воно надто\
+    \ масивне. Але зате можна впізнати певні окреслені\r\nетапи, що служать мірилом,\
+    \ барометром і дороговказом для цілого про"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

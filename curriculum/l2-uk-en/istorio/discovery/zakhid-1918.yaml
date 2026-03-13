@@ -1,0 +1,211 @@
+discovered_at: '2026-03-13T12:03:57.931371+00:00'
+query_keywords:
+- '1918-1921: Чому Антанта не допомогла УНР?'
+- Контекст
+- Чому Україну ігнорували
+- Паризька конференція
+- Франція і Одеса
+- Наслідки
+- 'Analyze the causes and consequences of 1918-1921: чому антанта не допомогла унр?'
+- Evaluate the historical significance of забуті союзники
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0120
+  text: "66\nРозділ III\n­Федеративної Радянської Республіки (РСФРР) на Україні немає.\
+    \ Вій-\nськова акція на українській території на цей момент проводиться по-\n\
+    між військом Директорії та військами Українського Радянського Уряду, \nякий є \
+    \ цілком незалежним». Розуміючи, хто діє разом з  українськими більшовиками, Директо-\n\
+    рія УНР 16 січня 1919 р. оголосила війну більшовицькій Росії. Однак сил \nзупинити\
+    \ більшовицький наступ у неї не було. На Київ стрімко рухалися \nвійська українських\
+    \ більшовиків, дії яких під"
+  section_title: Сторінка 66
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0394
+  text: "Саркозі)\nПричини, чому Україні не було  \nнадано ПДЧ у 2008 р. Протидія\
+    \ з боку Росії\nРозбіжності серед країн НАТО \n(особливо виступали проти \nНімеччина\
+    \ та Франція)\nНеобхідність проведення \nУкраїною низки реформ для \nвідповідності\
+    \ стандартам НАТО"
+  section_title: Сторінка 222
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0184
+  text: "98\nРозділ III\n­єдність уже не піддавали сумніву. Однак держави-переможниці\
+    \ в  Пер-\nшій світовій війні не бажали виникнення самостійної України. Етнічні\
+    \ \nукраїнські землі було поділено між чотирма державами  — Польщею, \nЧехо­словаччиною,\
+    \ Румунією та майбутнім СРСР. Поразка Української революції була обумовлена різними\
+    \ причина-\nми. На жаль, на цей час переважна частина населення була не готова\
+    \ \nдо вирішальної боротьби за Україну через низький рівень національної \nсвідомості.\
+    \ Досить негативно вплин"
+  section_title: Сторінка 98
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0185
+  text: "Проте \nУЦР зовсім відмовилася від створення власного регулярного війська,\
+    \ \nУкраїнська Держава П. Скоропадського спиралася на допомогу інозем-\nної армії,\
+    \ і  лише Директорія УНР розпочала створення українського \nвійська. Найважливішим\
+    \ в  історичному значенні Української революції \n1917—1921  рр. було те, що вона\
+    \ активізувала процеси формування мо-\nдерної української політичної нації та \
+    \ відновила традиції української \nдержавності. ! Висновки. Завдяки Варшавській\
+    \ угоді, яка була неоднозначно \nсприй"
+  section_title: Сторінка 98
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0460
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . 71
+
+    § 14. Україна в  другій половині 1919  р. . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78
+
+    § 15. Україна наприкінці 1919  — на початку 1920  р. . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . 84
+
+    § 16. Україна навесні 1920  — у  1921  р. . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 91
+
+    § 17. Розвиток '
+  section_title: Сторінка 238
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.538207471370697
+  chunk_id: feaa5fa7_c1182
+  text: "[Енциклопедія українознавства. Загальна частина (ЕУ-I). — Мюнхен, Нью-Йорк,\
+    \ 1949. — Т. 2. — С. 498-527.]\n\n9. Відновлення Української Держави 1917 — 1920\
+    \ pp.\n\nДОБА ЦЕНТРАЛЬНОЇ РАДИ\n\nУкраїна і рос. революція. Держ. відродження\
+    \ України 1917 р. має свої глибокі внутр. причини, але\r\nв’яжеться також із світовими\
+    \ подіями часу, зокрема з історією Рос. і\r\nАвстро-Угорської імперій, до складу\
+    \ яких належала укр. територія.\n\n1917 р. був третім роком світової війни. Війна\r\
+    \nвиявила стійкість нац. держав, як Фр"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5369300842285156
+  chunk_id: 53691244_c0303
+  text: "Так само спрацьовує тенденція скорочення Вашинґтоном\r\nбюджетних витрат\
+    \ на міжнародну допомогу та слабка зацікавленість американського\r\nприватного\
+    \ бізнесу у співпраці з Україною як наслідок названих проблем, а також\r\nнедостатніх\
+    \ законодавчих ґарантій діяльності зарубіжних інвесторів.\n\nТаким чином, головні\
+    \ проблеми подальшого розвитку українсько-американських\r\nвзаємин сьогодні концентруються\
+    \ всередині України. Разом з тим, реальність\r\nтака, що американська політика\
+    \ в Європі неминуче розвиватиметьс"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5292114019393921
+  chunk_id: 53691244_c0187
+  text: "Угорщина повела активний пошук міжнародної підтримки для\r\nперегляду Тріанонської\
+    \ угоди, звертаючи увагу лише на впливові держави й сили,\r\nа українське питання,\
+    \ що не обіцяло віддачі, іґнорувалося. Хорті швидко знехтував\r\nнаціонально-визвольною\
+    \ боротьбою України у 1919–1921 рр., і вже 1923–1924 рр.\r\nнамітилося таємне\
+    \ зближення Угорщини з Росією задля спільного натиску проти\r\nРумунії. Це призвело\
+    \ до автоматичного припинення визнання де-факто місії УНР у\r\nБудапешті, яка\
+    \ тут діяла з 1918 до 1924 р. "
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

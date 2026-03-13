@@ -6,13 +6,22 @@
     "discover": {
       "status": "complete",
       "ts": "2026-03-13T00:55:15Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     },
     "research": {
       "status": "complete",
       "ts": "2026-03-13T00:55:15Z",
       "task_id": "v5-slobozhanshchyna-pA",
-      "mode": "full"
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     }
   }
 }

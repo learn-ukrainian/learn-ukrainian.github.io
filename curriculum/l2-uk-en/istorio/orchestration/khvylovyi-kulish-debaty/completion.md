@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 54
+PASS: pipeline istorio 54
 
   Module:   khvylovyi-kulish-debaty
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 54
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:57Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:39:22Z

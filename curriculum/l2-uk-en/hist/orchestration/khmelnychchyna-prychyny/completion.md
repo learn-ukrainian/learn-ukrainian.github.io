@@ -1,4 +1,4 @@
-FAIL: pipeline hist 51
+PASS: pipeline hist 51
 
   Module:   khmelnychchyna-prychyny
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 51
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:10:29Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:45:57Z

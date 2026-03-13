@@ -1,0 +1,178 @@
+discovered_at: '2026-03-13T12:40:46.079756+00:00'
+query_keywords:
+- 'Розстріляне відродження: Постаті'
+- Покоління мрійників
+- Ключові постаті
+- Будинок «Слово»
+- Первинні джерела
+- Деколонізаційний погляд
+- Сандармох і пам'ять
+- ключові постаті Розстріляного відродження
+- концепцію «Геть від Москви» та «психологічної Європи»
+- культурне значення будинку «Слово»
+- трагічну долю покоління 1920-х років
+- Минулий час у біографічному наративі
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=4_zEP5AQQys
+  channel: Реальна Історія
+  title: РЕАЛЬНА ІСТОРІЯ РОЗСТРІЛЯНОГО ВІДРОДЖЕННЯ
+  relevance_score: 1.0
+  relevance_note: The video directly addresses the core topic of 'Розстріляне Відродження,'
+    discussing its historical context, the destruction of Ukrainian artists, and mentioning
+    key figures and the 'Будинок «Слово»' in alignment with the module's sections
+    and vocabulary.
+  transcript_excerpt: Ми знаємо цих людей як розстріляне відродження і саме це словосполучення
+    Розстріляне Відродження дуже добре передає суть того що відбулося. Сьогодні я
+    знаходжуся в унікальному місці це архів СБУ де зберігаються усі секрети спецоперацій
+    советських спецслужб.
+  embed_suggestion: 'After Вступ: Покоління мрійників -- It provides a comprehensive
+    introduction to the topic, setting the stage for the figures and themes discussed
+    in the module.'
+- url: https://www.youtube.com/watch?v=I6UX19WgMhg
+  channel: Комік Історик
+  title: 'історія Розстріляного відродження: Хвильовий, Тичина, Курбас, Вишня, Підмогильний'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses the 'Розстріляне Відродження,' specifically
+    focusing on 'Будинок Слова' and mentioning several key figures like Khvylovy,
+    Tychyna, Kurbas, Vyshnia, and Pidmohylny, with personal stories that enhance the
+    module's content.
+  transcript_excerpt: Надзвичайно легендарне місце для всіх, хто цікавиться літературою
+    і взагалі вивчає трішечки історію. Це максимальна концентрація письменників, які
+    проживали десь на рубежі 20-х-30-х років.
+  embed_suggestion: After Будинок «Слово» -- It provides detailed insights into the
+    lives and work of the writers associated with 'Будинок «Слово»,' enriching this
+    specific section.
+- url: https://www.youtube.com/watch?v=AW-UBnE2jGA
+  channel: Реальна Історія
+  title: Як нас русифікували через російські пам'ятники? «Реальна історія» з Акімом
+    Галімовим
+  relevance_score: 0.6
+  relevance_note: While the video discusses decolonization, which is a module section,
+    its primary focus is on contemporary de-russification efforts through monuments,
+    rather than the historical period or specific figures of the 'Розстріляне Відродження.'
+    It offers tangential, broader contextual relevance.
+  transcript_excerpt: Ну, ось так, друзі. Я думаю, ви зрозуміли, що сьогодні ми будемо
+    говорити про деколонізацію і те, чому так багато українців і досі хочуть зустрічатися
+    біля пам'ятників Пушкіу чи в парку Суваро.
+  embed_suggestion: After Деколонізаційний погляд -- It offers a contemporary perspective
+    on decolonization that can complement the historical analysis of 'Розстріляне
+    Відродження' by showing ongoing relevance.
+- url: https://www.youtube.com/watch?v=5SgKLSTZv-s
+  channel: Суспільне Док
+  title: Як звучала українська мова в різні часи | «Як українці українською заговорили»
+    | Освітній фільм
+  relevance_score: 0.2
+  relevance_note: The video focuses on the history of the Ukrainian language and its
+    dialects, which, while a Ukrainian topic, is not directly related to the specific
+    historical period, literary movement, or individuals of the 'Розстріляне Відродження'
+    module.
+  transcript_excerpt: Мовознавці висувають теорію, що гуцульський діалект зберіг в
+    собі риси розмовної мови 11 століття, якою ще говорили за часів Ярослава Мудрого.
+  embed_suggestion: 'Not applicable -- The video''s topic on Ukrainian language history
+    and dialects is too broad and not directly relevant to any specific section of
+    this module on ''Розстріляне Відродження: Постаті.'''
+- url: https://www.youtube.com/watch?v=8_j40KYG2vg
+  channel: ІМТГШ
+  title: Розстріляне Відродження. Як таке могло статись? Хвильовий, Бойчук, Курбас.
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Lp39nENKTP8
+  channel: ІМТГШ
+  title: Люди, що зруйнували СРСР. Дуже важливий випуск | Дисиденти
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0021
+  text: "— 2007. — № 2–4. — С. 32–35. Романенко О. В. Людина і світ в українській\
+    \ літературі доби «розстріляного відро-\nдження» / О. Романенко. — К. : Компанія\
+    \ «ВАІТЕ», 2006. — 98 с. Хархун В. Соцреалістичний канон в українській літературі:\
+    \ генеза, розвиток, модифікації / \nВ. Хархун. — Ніжин : ТОВ «Гідромакс», 2009.\
+    \ — 508 с. Домашнє завдання"
+  section_title: Сторінка 15
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0015
+  text: "Вступ\nієм.0: практичні завдання\nПригадайте за допомогою хмаринки слів (с.\
+    \ 12) види \nісторичних джерел. Розгляньте колекцію зображень і ви­\nзначте, які\
+    \ види джерел історії Ранньомодерної доби у ній \nпредставлені. \nВизначте, які\
+    \ сторони життя українського \nсуспільства Ранньомодерної доби ілюструє кожне\
+    \ з них. \nЗ’ясуйте, яка з пам’яток не є первинним історичним джере­\nлом. У чому\
+    \ її цінність для вивчення історії?\nв\nКарта Г. Л. де Боплана \nИНрз://5игІ.дсІ/гІ5Іде\n\
+    Грамота Берестейської унії \n(«Артикул"
+  section_title: Сторінка 13
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5030485391616821
+  chunk_id: ffcfbeb9_c0042
+  text: "21 Залізняк Л. Від\r\nсклавинів до української нації. — С. 101.\n\n22 Там\
+    \ же. — С. 66."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm
+- score: 0.49761641025543213
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.49579039216041565
+  chunk_id: 41d0facc_c0546
+  text: "10 Див. видання В.\r\nМ. Істріна. Книгы временьныя... Георгія Мниха. Петроград,\
+    \ 1920, де згадані\r\nімена легко знайти за індексом."
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm

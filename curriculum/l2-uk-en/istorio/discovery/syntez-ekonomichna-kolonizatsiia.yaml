@@ -1,0 +1,211 @@
+discovered_at: '2026-03-13T12:24:51.430682+00:00'
+query_keywords:
+- 'Синтез: Економічна деколонізація'
+- Еволюція експлуатації
+- Механізми залежності
+- Розрив зв'язків
+- ЄС
+- 'Analyze the causes and consequences of синтез: економічна деколонізація'
+- Evaluate the historical significance of від колонії до суб'єкта
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0088
+  text: "9. Використовуючи знання зі всесвітньої історії, обговоріть явище про-\n\
+    дажу захоплених у полон людей на невільницьких ринках. Висловіть \nвласне ставлення\
+    \ до цього явища. 10. Працюємо разом. Метод «Дискусія». Як у  заняттях населення\
+    \ Крим-\nського півострова цієї доби відображалася взаємодія людини і довкілля?\
+    \ rnk.com.ua/109908\nПрактичне заняття  \nза розділом І\nrnk.com.ua/109909\nУзагальнення\
+    \ знань  \nза розділом I\nrnk.com.ua/109910\nТестові завдання  \nза  розділом \
+    \ I"
+  section_title: Сторінка 56
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0330
+  text: ". . . . . . . . . . . . . . . . . . . . . . 193\n§ 45 \nВимоги до вживання\
+    \ синтаксичних одиниць у різних стилях  . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . 202\n \nЗапитання і завдання для самоконтролю . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 205"
+  section_title: Сторінка 222
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0511
+  text: "Експорт  — вивезення за межі країни товарів, цінних паперів, капіталу. Емансипація —\
+    \ звільнення від залежності, гніту; скасування обмежень, упе-\nредженого ставлення\
+    \ тощо. Емансипація жінок насамперед передбачала надан-\nня їм рівних прав із\
+    \ чоловіками в суспільному, трудовому й сімейному житті. Етнос — об’єднання людей,\
+    \ що мають спільне походження, культуру, мову, \nісторію, традиції та звичаї;\
+    \ має власну самосвідомість і  назву. Імперія  — велика держава, що складається\
+    \ з  метрополії та підпорядк"
+  section_title: Сторінка 282
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0010
+  text: '. . . . 261
+
+    Орфографія. Графіка . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 263
+
+    Синтаксис. Пунктуація . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 266
+
+    СЛОВНИК ТЕРМІНІВ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 270
+
+    СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . 276
+
+    ПІДКАЗКИ  . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 5
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5320053100585938
+  chunk_id: 53691244_c0401
+  text: "3. Модель системних перетворень. \r\n Її можна розглядати\r\nяк певну комбінацію\
+    \ елементів першої та другої стратегій. Але, на відміну від\r\nцих стратегій,\
+    \ системні зміни передбачають перехід від\r\nадміністративно-командної економіки\
+    \ (що будується на державній власності та вертикальних\r\nієрархічних зв’язках)\
+    \ до ринкової господарської системи (в основі якої лежить\r\nприватна власність\
+    \ у різних формах і поєднання вертикальних та горизонтальних\r\nвзаємовідносин).\
+    \ Слід відзначити, що в колишніх соціалістичн"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5204873085021973
+  chunk_id: 53691244_c0413
+  text: "2 \r\nОсновні компоненти кожного виду\r\nекономічної політики досить чітко,\
+    \ на мою думку, сформульовані в статті Tibor Vasco. A Global View: Types of\r\n\
+    Transformation Models // Research Report. The Vienna Institute for Comparative\r\
+    \nEconomic Studies.—№. 206.—May 1994.\n\n3 \r\nUkraine. EIU Country Report.—1st\r\
+    \nquarter 1995.—Р.31.\n\n4 \r\nUkraine. The Real Economy and Its\r\nSectors. A\
+    \ Quarterly Statistical Abstract. The World Bank: Kyiv, Ukraine.—Vol.\r\nII.—Issue\
+    \ 2.—Table 1.1.—May 1996.\n\n5 Урядовий кур’єр. — 19"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5077909827232361
+  chunk_id: fc2291b5_c5003
+  text: "Літ.: Стендаль Ф.\r\nЖизнеописание Гайдна, Моцарта и Метастазио. В кн.: Стендаль\
+    \ Ф. Собрание\r\nсочинений, т. 8. М., 1959; Реизов Б. Г. Итальянская литература\
+    \ XVIII в. Л.,\r\n1966.\n\nТ. Т. Духовний.\n\nМЕТАТЕЗА (від. грец.\r\nμετάυεσις\
+    \ — переміщення,\r\nперестановка) — переставляння звуків, рідше складів у словах\
+    \ (напр., бгати з\r\nгъбати, ведмідь з медвЂдь, капость з пакость). Частіше буває\
+    \ в словах іншомов.\r\nпоходження [напр., друшляк з нім. Durchschlag (дуршлаг),\
+    \ Нимидора з грец.\r\nΜυνοδωρα (Минодора) ]. Зум"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

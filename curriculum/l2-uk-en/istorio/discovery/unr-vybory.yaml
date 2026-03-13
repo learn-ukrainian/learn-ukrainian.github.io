@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T11:56:19.421919+00:00'
+query_keywords:
+- 'УНР 1917-1921: Стратегічні помилки'
+- Помилка 1
+- Помилка 2
+- Помилка 3
+- Помилка 4
+- Що могли зробити інакше
+- 'Analyze the causes and consequences of унр 1917-1921: стратегічні помилки'
+- Evaluate the historical significance of втрачена незалежність
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0460
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . 71
+
+    § 14. Україна в  другій половині 1919  р. . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78
+
+    § 15. Україна наприкінці 1919  — на початку 1920  р. . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . 84
+
+    § 16. Україна навесні 1920  — у  1921  р. . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 91
+
+    § 17. Розвиток '
+  section_title: Сторінка 238
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0217
+  text: "Також, як ви вже знаєте, невдало завершився \nДругий зимовий похід Армії\
+    \ УНР. Проте головну роль у  придушенні \nселянського руху відіграв голод 1921—1923 \
+    \ рр. і  зміна політики біль-\nшовиків. Збройний опір селянства сприяв певним\
+    \ змінам у  поглядах біль-\nшовицького керівництва. Воно дедалі більше усвідомлювало,\
+    \ що заходи \nполітики «воєнного комунізму» руйнують економіку, стають загрозою\
+    \ \nдля їхньої влади. і"
+  section_title: Сторінка 114
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-istoriya-schupak-2022_s0119
+  text: "Історична наука та історична пам’ять\n119\nУрок узагальнення «Історична \n\
+    наука та історична пам’ять»\n§ 21\n1.\t ЛОГІЧНІ ПАРИ\nУтворіть логічні пари: доберіть\
+    \ до текстових карток відпо-\nвідні зображення. Свій вибір обґрунтуйте.\nУсна\
+    \ історія\nКультура пам’яті\nІсторична пам’ять\nУ наш час...\nМамо,\nрозкажи,\
+    \ якими іграшками\nви гралися в дитинстві.\n2.\t ЗАКОДОВАНИЙ ЛИСТ\nМи отримали\
+    \ закодованого листа, у якому всі імена, на-\nзви та числа переплуталися. Розгадайте\
+    \ анаграми і ребуси — \nвстановіть закодовані імен"
+  section_title: Сторінка 119
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0084
+  text: "14. Проведіть дискусію за проблемним питанням: чому УНР програла в  Першій\
+    \ \nвійні з  більшовицькою Росією. і\n«Червоний терор»  — масове насильство, \n\
+    яке здійснювали більшовики проти соціаль-\nних груп, оголошених «класовими ворогами»\
+    \ \nабо звинувачених у  контрреволюційній \n­діяльності. і"
+  section_title: Сторінка 47
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5085684061050415
+  chunk_id: 3d51722e_c0050
+  text: "\"Нигилизм и оппортунистические заблуждения в\r\nнациональном вопросе, которыми\
+    \ до сих пор отличается целый ряд\r\nкоммунистическихпартий, является самым слабым\
+    \ пунктом этих партий, которые никогда\r\nне смогут выполнить своей исторической\
+    \ задачи, если они не отделаются от этой\r\nслабости... Нигилизм и беззаботность\
+    \ в национальном вопросе (а тем более\r\nуступка \"великодержавной\" точке зрения\
+    \ господствующей национальной\r\nгруппы) принесли немало вреда...\" 17\r\n.\n\n\
+    17 \"Коммунистический\r\nИнтернационал в докуме"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.5026378035545349
+  chunk_id: feaa5fa7_c3216
+  text: "Влада Директорії УНР. Внутрішня політика Директорії\r\n(517). Трудовий Конґрес\
+    \ (518). Зовнішня політика Директорії УНР (518).\r\nУкр.-больш. війна (518). Бої\
+    \ на Правобережжі (519). Уряд С. Остапенка і спроби\r\nпорозумітися з державами\
+    \ Антанти (520). Новий уряд на чолі з соціялістами\r\n(520). Кам’янецька доба\
+    \ (521). Взаємини урядів — УНР і ЗОУНР (522). Війна з\r\nвійськами ген. Денікіна\
+    \ (523). Упадок фронту (523). УНР І Польща (524). Зимовий\r\nпохід і доля УГА\
+    \ (524). Варшавський договір (525). Поль.-укр. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5026378035545349
+  chunk_id: feaa5fa7_c0021
+  text: "Влада Директорії УНР. Внутрішня політика Директорії\r\n(517). Трудовий Конґрес\
+    \ (518). Зовнішня політика Директорії УНР (518).\r\nУкр.-больш. війна (518). Бої\
+    \ на Правобережжі (519). Уряд С. Остапенка і спроби\r\nпорозумітися з державами\
+    \ Антанти (520). Новий уряд на чолі з соціялістами\r\n(520). Кам’янецька доба\
+    \ (521). Взаємини урядів — УНР і ЗОУНР (522). Війна з\r\nвійськами ген. Денікіна\
+    \ (523). Упадок фронту (523). УНР І Польща (524). Зимовий\r\nпохід і доля УГА\
+    \ (524). Варшавський договір (525). Поль.-укр. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

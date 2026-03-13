@@ -1,0 +1,210 @@
+discovered_at: '2026-03-13T12:32:29.510366+00:00'
+query_keywords:
+- Ілля Чернілевський
+- Вступ та контекст
+- Голос розстріляного покоління Z
+- Музика та поезія спротиву
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Дослідити життя та внесок Ілля Чернілевський у сучасну українську культуру
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+- history
+- суб'єктність
+- тяглість
+- геноцид
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0413
+  text: "253\nЗміст\nВід автора . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3\nВСТУП. «РОЗСТРІЛЯНЕ\
+    \ ВІДРОДЖЕННЯ». . . . . . . . . . . . . . . . . . . . 4\nУкраїнська література\
+    \ ХХ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . 4\nТ. Л. «Розстріляне відродження» . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . 5   \nЛІТЕРАТУРНИЙ АВАНГАРД . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 253
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0195
+  text: "139\nДвокрапка в складному реченні\n6.\t Напишіть вільне есе на тему «Ця\
+    \ музика спонукає до \nдумок». \nКУЛЬТУРА СЛОВА\nА.\t Переглянувши експрес-урок\
+    \ «Що таке кшталт?», пе­\nрекажіть його зміст. Доберіть синоніми до сполуки на\
+    \ \nкшталт, складіть з ними речення. \nБ.\t Розглянувши ілюстрацію, скажіть, у\
+    \ чому полягає відмінність між словами білет і квиток. \nСкладіть з ними речення.\
+    \ \n7.\t Прочитайте речення й виконайте завдання (розділові знаки пропущено).\n\
+    1. Ні хліва ні повітки не ставили не бачили в тому по"
+  section_title: Сторінка 139
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0273
+  text: "220\n45. УЗАГАЛЬНЕННЯ ВИВЧЕНОГО З ТЕМИ \n«РЕЧЕННЯ З ВІДОКРЕМЛЕНИМИ ЧЛЕНАМИ»\n\
+    501\t І. Прочитайте текст. Доберіть заголовок. Яку музику, на вашу думку, можна\
+    \ по-\nчути в лісі? Попереду, за річкою, тàнули лі­си, що тяглися звідси і вгору,\
+    \ понад \nВорсклою, і вниз, до Дніпра. Рѕчки, схованої в берегах, ще не видно\
+    \ було, але вона вже відчутна \nпо свіжості й прохолоді, якою потягло від неї.\
+    \ Ліс, наблизившись, \nперетворивсь із синього в зелений. Його соковиті хащі по\
+    \ той бік річ­\nки, прокидаючись, повнилися"
+  section_title: Сторінка 224
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0439
+  text: "286\nЗМІСТ\nЗМІСТ\nДорогі семикласниці та семикласники! \n \n \n \n \n  3\n\
+    ВСТУП   \n \n \n \n \n \n \n \n \n  4 \nФункції художньої літератури   \n \n \n\
+    \ \n \n \n  4\nРозділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ   \n \n \n \n \n  8\nНАРОДНА\
+    \ ТВОРЧІСТЬ   \n \n \n \n \n \n \n  8\n \nНародні соціально-побутові пісні   \n\
+    \ \n \n \n \n  9\n \nКозацькі пісні   \n \n \n \n \n \n \n \n 10\n \nОй на г;орі\
+    \ та женці жнуть   \n \n \n \n \n \n 12\n \nЧумацькі пісні   \n \n \n \n \n \n\
+    \ \n \n 14\n \nЧум;аче, чумаче, чого зажурився?   \n \n \n \n \n 15\n \nСтрілецькі\
+    \ пісні    \n \n \n \n \n \n \n 17\n \nТам, пі"
+  section_title: Сторінка 288
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5258861780166626
+  chunk_id: fc2291b5_c4732
+  text: "Тв.: Поезії. Нью-Йорк,\r\n1958; Земна мадонна. «Україна», 1989, № 47; [Вірші].\
+    \ «Дніпро», 1990, № 3;\r\nСтепова Еллада. «Дзвін», 1990, № 5; [Вірші]. «Українська\
+    \ мова і література в\r\nшколі», 1991, № 1; Книга спостережень. «Київ», 1991,\
+    \ № 6 — 7: Гоголь — Г’ог’оль.\r\n«Слово і час», 1991, № 8; Нариси з історії нашої\
+    \ культури. К., 1992; Крути,\r\n«Київ», 1992 № 6; Поезії Львів, 1992.\n\nЛіт.:\
+    \ Неврлий М. Євген\r\nМаланюк. Воскресіння. «Україна», 1989, № 47; Неврлий М.\
+    \ Муза болю, сумління і\r\nгніву. В кн.: Літерату"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5223598480224609
+  chunk_id: 3588aaff_c0445
+  text: "Отож, хоча в цій книжці йдеться про вищою мірою санкціоновані\r\nтеми, —\
+    \ індустріалізація, революційне завзяття, перебудова суспільства, сам\r\nЛенін,\
+    \ — й інтерпретуються вони з /360/ показною правовірністю, вона\r\nвсе-таки зазнала\
+    \ тієї самої долі, що й «ідеологічно хистка» й «абстрактно\r\nгуманістична» збірка\
+    \ «Замість сонетів і октав». Незважаючи на кілька перших\r\nпозитивних відгуків,\
+    \ зокрема прихильні рецензії поета Миколи Асєєва й критика\r\nА. Лейтеса 4, негативні\
+    \ оцінки почали переважати. Причини д"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5222034454345703
+  chunk_id: fc2291b5_c0233
+  text: "Тв.: Перстені молодості.\r\nБратіслава, 1966; Пісня про незнищенність матерії.-\
+    \ К., 1967.\n\nЛіт.: Павличко Д. Пісня\r\nпро незнищенність матерії. В кн.: Антонич\
+    \ Б. І. Пісня про незнищенність\r\nматерії. К., 1967; Жулинський М. Малий хрущ\
+    \ на Шевченкових вишнях. «Літературна\r\nУкраїна», 1987, 30 липня.\n\nД. В. Павличко.\n\
+    \nАНТОНІМИ (від грец.\r\n’αντί — проти і ’όνυμα — ім’я) —\r\nслова з протилежним\
+    \ значенням. Іноді слова вступають в антонімічні зв’язки лише\r\nв певному контексті\
+    \ («І од глибокої тюрми // Та до в"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

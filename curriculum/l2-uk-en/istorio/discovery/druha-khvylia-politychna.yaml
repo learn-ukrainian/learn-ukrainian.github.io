@@ -1,0 +1,200 @@
+discovered_at: '2026-03-13T11:02:15.388125+00:00'
+query_keywords:
+- 'Друга хвиля: Політична (1920-1923)'
+- Табори інтернованих
+- Прага
+- Уряд в екзилі
+- Інші центри
+- Політичні течії
+- 'Analyze the causes and consequences of друга хвиля: політична (1920-1923)'
+- Evaluate the historical significance of поразка і відступ
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode77/
+  title: Ukrainian History Course Part 7 Second World War in Ukraine
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 77
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0033
+  text: "осіб, що ті-\nкали із Західної України. Масштаби переселен-\nських процесів\
+    \ змусили австрійських урядовців \n­організувати спеціальні табори для українських\
+    \ \nБіженці в очікуванні роздачі \nїжі. Полтавська губернія\n?? Яку інформацію\
+    \ про \nстановище біженців у  Ро-\nсійській імперії в  роки \nвійни можна отримати\
+    \ \nза  ілюстрацією? Інтернування  — затримання до закінчення \nвійни громадян,\
+    \ військ, суден тощо іншої \nдержави, що перебуває в  стані війні, посе-\nлення\
+    \ їх у певному місці в умовах обмеженої \nсво"
+  section_title: Сторінка 21
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0354
+  text: "Вимоãи: ….. Резóльтати радиêалізації óêраїнсьêоãо політичноãо життя: … \n\
+    Народні віча. Вимоãи: ….. Робітничі страйêи. Вимоãи: ….. Уêраїнсьêі політичні\
+    \ партії \nГреêо-êатолицьêа церêва"
+  section_title: Сторінка 242
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0032
+  text: "21\n§ 4. Воєнні дії на території України в  1916  — на початку 1917  р. Пошук\
+    \ винних у  воєнних пораз-\nках спричинив восени 1916  р. другу \nхвилю переслідувань\
+    \ австро-угорською \nвладою українського населення. Від-\nбувалися нові масові\
+    \ інтернування до \nконцентраційних таборів звинувачених \nу «москвофільстві»\
+    \ українців. Така си-\nтуація тривала до 7  травня 1917  р., коли за рішенням\
+    \ імператора кон-\nцентраційні табори було закрито, а  заарештованих звільнено.\
+    \ 4 \nЖиття на фронті та в  тилу в  роки ві"
+  section_title: Сторінка 21
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0049
+  text: "Біженці  — особи, які залишили країни \nсвого попереднього місця проживання\
+    \ \nчерез дії нацистського або інших \nрежимів. DP-табори  — тимчасові табори\
+    \ для \nпереміщених осіб. Репатріація  — повернення \nна  батьківщину з  поновленням\
+    \ гро­\nмадянських прав військовополо­нених \nі  цивільних осіб, які під час війни\
+    \ \nопинилися в  інших державах \nта  перебували там тривалий час. Радянські репатріанти\
+    \ в  очікуванні \nповернення до СРСР. 1940-ві рр. Зверніть увагу\nБіженці та переміщені\
+    \ особи  — саме \nтак у  "
+  section_title: Сторінка 29
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5317833423614502
+  chunk_id: feaa5fa7_c1403
+  text: "Початок політ. еміґрації дали відділи УГА (т. зв.\r\nГірська Бриґада), які\
+    \ в наслідок прориву поляками фронту під Хировом були\r\nвідірвані від решти армії\
+    \ й у травні 1919 р. перейшли через Карпати на\r\nтериторію Чехо-Словаччини, де\
+    \ були роззброєні й приміщені в таборах півн. Чехії\r\n(Нім. Яблонне й Ліберець\
+    \ згодом Йозефов), як військ. частини дружньої, хоч\r\nневтральної до ЧСР ЗУНР,\
+    \ на засаді екстериторіяльности з власною адміністрацією\r\nй власним судівництвом.\
+    \ Друга хвиля галицької політ. еміґрації —"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5213924646377563
+  chunk_id: 53691244_c0222
+  text: "5 Masaryk T. Novб Evropa (Stanovisko\r\nslovanskй).—Praha, 1920.—S.219-220.\n\
+    \n6 Sladek Zdenek, Jaroslav Valenta. Sprawy\r\nukrainskie w czechoslowackiej polityce\
+    \ wschodniej w latach 1918-1912// Z\r\ndziejуw stosunkуw polsko-radzieckich. Stud.\
+    \ i mater.—1968.—№3.—S.147-148.\n\n7 Бенеш Эдвард. Речь о Подкарпаторусской\r\n\
+    проблеме.—Ужгород, 1934.—С.23.\n\n8 ЦДАВОВ України.—Ф.3696.—оп. 2.—спр.—576.—Арк.6.\n\
+    \n9 «Нова Україна».—1922.—Ч.13-15.—С.6.\n\n10 Necas J.\r\nUprimnй slovo o stycich\
+    \ cesko- ukrajinskэch.—Kyjiv—Praha"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5066794157028198
+  chunk_id: feaa5fa7_c1402
+  text: "Еміґраційні хвилі прийшли в різні періоди часу з\r\nЦентр. та Сх. Земель\
+    \ і з Галичини, вони прямували до різних країн, частина\r\nеміґрантів поверталася\
+    \ на батьківщину, частина переходила з однієї країни до\r\nдругої. Це залежало\
+    \ від політ. стану на батьківщині, від ситуації в країнах, де\r\nеміґрація тимчасово\
+    \ перебувала, і від внутр. та екон. відносин серед самої\r\nеміґрації. Плинність\
+    \ еміґрації була дуже інтенсивна, особливо в перші роки;\r\nвідносини стали стабілізуватися\
+    \ від 1923 p., а ще більше після"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

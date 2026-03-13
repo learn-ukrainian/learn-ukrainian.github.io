@@ -1,0 +1,116 @@
+discovered_at: '2026-03-13T12:01:15.432023+00:00'
+query_keywords:
+- 'Ярослав Грицак: Публічний історик'
+- Львівське дитинство та освіта
+- Академічна кариєра
+- Подолання минулого
+- Публічна історія
+- Війна та сучасність
+- Дискусія
+- 'Analyze the life and legacy of ярослав грицак: публічний історик'
+- Evaluate the contributions of історик, який говорить з людьми
+- Trace the career and influence of обов'язок історика
+- biography
+- публічна
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrlit-zabolotnyi-2022_s0148
+  text: "У \nцьому творі можна, наприклад, ука-\nзати: \nперіод \nбудівництва, \n\
+    дату \nвідкриття, важливі події в розвитку \nзакладу та їхні дати, колишніх і\
+    \ \nнинішніх директорів, відомих випускників і вчителів, цікаві спогади тощо.\
+    \ Також \nможна помістити фото."
+  section_title: Сторінка 119
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0339
+  text: "1210  р. rnk.com.ua/107326\nМетоди інтерактивного  \nнавчання та розвитку\
+    \  \nкритичного мислення\nrnk.com.ua/107325\nПлани-схеми та \nхарактеристики \n\
+    різних форм роботи \nз  підручником\nСвятослав Ярославич \nіз родиною. Мініатюра\
+    \ \nз  «Ізборника» Святослава. 1076  р."
+  section_title: Сторінка 224
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0575
+  text: "319 \nРекомендована література \n \n Баран В. Україна в 1950–1960-х рр.\
+    \ Еволюція тоталітарної системи. Львів: \nІнститут українознавства імені Івана\
+    \ Крип’якевича НАН України, 1996. \n Баран В., Даниленко В. Україна в умовах\
+    \ системної кризи. Київ: Либідь, 1999. \n Гирич І. Через ідентичність до держави.\
+    \ Київ: Українські пропілеї, 2021. \n Грицак Я. Нариси історії України: формування\
+    \ модерної української нації  \nXIX–XX ст. Київ: Генеза, 2000. \n Грицак Я. Подолати\
+    \ минуле: глобальна історія України. К"
+  section_title: Сторінка 320
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0143
+  text: '6. Луценко Ю. Григорій Граб’янка та його літопис // Літопис гадяцького пол-
+
+    ковника Григорія Граб’янки. – К., 1992.'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5938572883605957
+  chunk_id: f4f6fb3d_c0139
+  text: "1 Dubiecki M. Młodzież\r\npolska w uniwersytecie Kijowskim przed rokiem 1863.\
+    \ Kraków, 1909;\r\nPamiętniki Tadeusza Bobrowskiego, z przedmowa W. Spasowicza.\
+    \ Lwów,\r\n1900. T. 2; Wspomnienia Marcina Zaleskiego 1830 — 1873. Lwów, 1893;\
+    \ Wasilewski\r\nL. Ukraina i sprawa ukraińska. Kraków, б/р; Rawita-Gawroński\r\
+    \nFr. Wł. Antonowicz, zarys jego działalności\r\nspoteczno-politycznej i historycznej.\
+    \ Lwów, 1912.\n\n2 Мельник-Антонович\r\nК.М. До видання 1 тому... С. XXXVII. /755/"
+  work: Антонович — Вибрані праці
+  author: Антонович В.
+  year: 1900
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/anton/ant.htm
+- score: 0.5654017329216003
+  chunk_id: fc2291b5_c1210
+  text: "Літ.: Неділько Г. Я. Іван\r\nВороньківський. «Наукові записки Ніжинського\
+    \ державного педінституту ім. М. В.\r\nГоголя», 1960, т. 11, в. 1; Дудко В. По\
+    \ сторінках «Земского сборника...».\r\n«Вітчизна», 1986, № 5.\n\nП. П. Ротач."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5594786405563354
+  chunk_id: fc2291b5_c0362
+  text: "Літ.: Эйнгорн В. Очерки\r\nиз истории Малороссии в XVIII в. М., 1899; Тітов\
+    \ Хв. Стара вища освіта в\r\nКиївській Україні XVI — поч. XIX в. К., 1924; Запаско\
+    \ Я., Ісаєвич Я. Пам’ятки\r\nкнижкового мистецтва. Каталог стародруків, виданих\
+    \ на Україні, кн. 1. Львів, 1981.\n\nВ. О. Шевчук."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

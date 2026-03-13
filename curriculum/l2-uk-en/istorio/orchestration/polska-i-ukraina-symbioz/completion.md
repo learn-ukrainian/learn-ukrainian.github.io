@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 114
+PASS: pipeline istorio 114
 
   Module:   polska-i-ukraina-symbioz
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 114
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:22:25Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:39:39Z

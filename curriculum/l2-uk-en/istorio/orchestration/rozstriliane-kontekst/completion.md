@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 52
+PASS: pipeline istorio 52
 
   Module:   rozstriliane-kontekst
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 52
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:39Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:33:46Z

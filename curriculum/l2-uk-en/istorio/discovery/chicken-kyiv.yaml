@@ -1,0 +1,211 @@
+discovered_at: '2026-03-13T12:07:51.754330+00:00'
+query_keywords:
+- '1991: Промова «Курча по-київськи»'
+- Контекст
+- Текст промови
+- Реакція в Україні
+- Чому Буш помилився
+- «Chicken Kyiv»
+- 'Analyze the causes and consequences of 1991: промова «курча по-київськи»'
+- Evaluate the historical significance of «суїцидальний націоналізм»
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0243
+  text: "УКРАЇНА в  1985—1991  рр. БОРОТЬБА ЗА НЕЗАЛЕЖНІСТЬ\nС\nЛ\nО\nВ\nА\nЧ\nЧ\n\
+    И\nН\nА\nЧ\nЕ\nХ\nО\n-\nУ\nГ\nО\nР\nЩ\nИ\nН\nА\nП О Л Ь Щ А\nБ і л о р у с ь к\
+    \ а  Р С Р\nМ\nо\nл\nд а\nв с\nь к\nа  \nР\nС\nР\nЗакарпатська\nобл. Кримська\n\
+    АРСР\nВолинська\nобл. Р\nо\nс\nі\nй\nс\nь\nк\nа\nР\nФ\nС\nР\nР\nУ\nМ\nУ\nН\nІ\n\
+    Я\nВ\nі\nс\nла\nСя\nн\nЗ\nа\nх\n. Буг\nПрип\n’\nя\nть\nГо\nри\nнь\nД\nн\nіпр\n\
+    о\nД\nес\nна\nД\nо\nн\nД\nо\nн\nС\nл\nу\nч\nС\nей\nм\nД\nністер\nТиса\nД\nон\n\
+    ець\nСі\nв\nер\n. Р\nо\nс\nь\n \nВ\nорс\nк\nл\nа\nПрут\nП\nівд. Б\nу\nг\nДніпро\n\
+    К\nу\nбань\nА З О В С Ь К Е\nМ О Р Е\nЧ О Р Н Е        М О Р Е\nД\nун\nа\nй\n\
+    о.Зміїний\n"
+  section_title: Сторінка 135
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0395
+  text: "§ 27. Зовнішня політика та міжнародні зв’язки України в 1992—2013 рр.\n221\n\
+    Цікаві факти\nУ квітні 2005 р. Президент України \nВ. Ющенко відвідав США. Він\
+    \ став \nдругим східноєвропейським політиком \n(після президента Чехії Вацлава\
+    \ \nГавела), який виступив перед двома \nпалатами Конгресу. У своїй промові \n\
+    В. Ющенко наголошував, що вступ \nУкраїни до ЄС і НАТО «зміцнить \nстабільність\
+    \ у всьому стратегічно \nважливому для США регіоні — від \nВаршави до Тбілісі\
+    \ й Баку». Промову, \nщо тривала близько 35 хвилин, "
+  section_title: Сторінка 223
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0321
+  text: "Збройний конфлікт 1991—1992 рр. Віктора Ющенка\nВіктора Януковича\nЮ\nЯ\n\
+    Початок безстрокового мітингу в Києві на Майдані \nНезалежності на знак протесту\
+    \ проти фальсифікації \nрезультатів другого туру виборів Президента України\n\
+    на користь В. Януковича (22 листопада 2004 р.)\nОбласні та міські ради, що визнали\
+    \ переможцем \nвиборів В. Ющенка\nСамбір\nОбласні ради, що підтримали В. Януковича\n\
+    Донецьк\nНаметові містечка на підтримку В. Януковича\nОрганізована доставка донецьких\
+    \ шахтарів до Києва,\nщоб мітингувати"
+  section_title: Сторінка 178
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0289
+  text: "По-\nясніть чому. Працюємо з  хронологією\n24  серпня \n1991  р. Акт проголошення\
+    \ \nнезалежності України. 1  грудня \n1991  р. Всеукраїнський \nреферендум і \
+    \ вибори \nПрезидента України. Обрання Л. Кравчука \nПрезидентом України. CФОРМУЛЮЙТЕ\
+    \ СУДЖЕННЯ ПРО:\n\x84\n\x84 спроби зберегти СРСР і  протидія цьому \nвлади УРСР;\n\
+    \x84\n\x84 процеси, які сприяли проголошенню \nнезалежності України. rnk.com.ua/107016\n\
+    Практичні заняття \nза  розділом IV\nrnk.com.ua/107017\nУзагальнення знань \n\
+    за  розділом IV\nrnk.com.ua/107018\nТестові за"
+  section_title: Сторінка 160
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0214
+  text: "1)  Після участі у  виступі \nв  кінотеатрі «Україна» В. Стуса ви-\nключили\
+    \ з аспірантури Інституту літе-\nратури Академії наук УРСР за «систе-\nматичне\
+    \ порушення норм поведінки \nаспірантів і  працівників наукового \nзакладу». 2) \
+    \ Київського письменника \nВ. Некрасова за підпис під колектив-\nним листом на\
+    \ захист В. Чорновола \nй  виступ у  день 25-річчя розстрілу \nєвреїв у  Бабиному\
+    \ Яру виключили \nз  КПРС, записавши в  рішенні: «…за \nте, що дозволив собі мати\
+    \ власну дум-\nку, яка не збігалася з  лінією "
+  section_title: Сторінка 118
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5660991668701172
+  chunk_id: 53691244_c0299
+  text: "Відтак конґрес ухвалив цілу низку документів, присвячених\r\nУкраїні, серед\
+    \ них: лист Сенату від 15 листопада 1989 р. до президента Буша,\r\nаби той вимагав\
+    \ від Горбачова леґалізації заборонених українських церков;\r\nрезолюція двох\
+    \ палат про тиждень пам’яті жертв голоду 1932–1933 рр. Велике\r\nзначення мали\
+    \ також візити лідерів націонал-демократів до США. Вони допомагали\r\nподолати\
+    \ наслідки радянської пропаґанди, що зображувала\r\n  цю організацію як націоналістичну\
+    \ та\r\nнебезпечну.\n\nПід час зустрічі з Буш"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5257324576377869
+  chunk_id: b8c5834c_c0016
+  text: 'Еге ж, exactly — чи, коли хто волiє, "вот iмєнно". От чим ще, до речi, паршива
+    чужа країна — набиваються, натрушуються, як пух у нiздрi, напохватнi чужинецькi
+    слiвця й звороти, залiплюють пори в мозковi, нахабно тиснуться попiдруч, навiть
+    коли ти наодинцi з собою, — i незчуваєшся, як починаєш балакати "хеф-напiв", тобто
+    повторюється те саме, що вдома (вдома? схаменися, кобiто, — де вiн, твiй дiм?),
+    ну гаразд, у Києвi, в Украї-нi — з росiйською: всякає ззовнi накрапами, зсихається-цементується,
+    i'
+  work: Оксана Забужко. Польові дослідження з українського сексу
+  author: Забужко О.
+  year: 1960
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=2744
+- score: 0.5208622813224792
+  chunk_id: 53691244_c0300
+  text: "Президент США наголошував на тому, що «американці... не\r\nдопомогатимуть\
+    \ тим, хто заохочує самовбивчий націоналізм, який породжується на\r\nміжнаціональній\
+    \ ненависті». Очевидно, що це було спрямовано проти президента\r\nГрузії Звіада\
+    \ Гамсахурдії, «але Буш також знав, що такі етнічні почуття є і в\r\nУкраїни,\
+    \ і його попередження було призначене й для слухачів у Києві» 26.\r\nЦе свідчило\
+    \ про нерозуміння політики українського руху щодо національних\r\nменшин.\n\n\
+    Та вже через місяць після путчу у Москві ставленн"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

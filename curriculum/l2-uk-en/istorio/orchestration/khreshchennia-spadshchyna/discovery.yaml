@@ -1,0 +1,204 @@
+discovered_at: '2026-03-13T10:47:17.730140+00:00'
+query_keywords:
+- 'Спадщина Хрещення: Візантійська традиція'
+- Хрещення Русі
+- Візантійська спадщина
+- Церква і держава
+- Дебати про спадщину
+- Спадщина для ідентичності
+- 'Analyze the causes and consequences of спадщина хрещення: візантійська традиція'
+- Evaluate the historical significance of релігія і нація
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0112
+  text: "Працюємо з  джерелами\nrnk.com.ua/110764\n1. Із твору Мелетія \nСмотрицького\
+    \ \n«Виправдання невинності» \n(1621 р.). 2. Із виступу \nволинського шляхтича\
+    \ \nЛаврентія Деревинського \nна  Вальному сеймі (1620  р.)\nГрамота Берестейської\
+    \ церковної унії. Центральний державний історичний \nархів України у Львові. Фотокопія"
+  section_title: Сторінка 70
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0064
+  text: "Але завдяки релігійній полеміці викристалізува­\nлася ідея «руського народу»\
+    \ як третього учасника федеративної Речі По­\nсполитої. УКРАЇНСЬКІ ЗЕМЛІ У СКЛАДІ\
+    \ РЕЧІ ПОСПОЛИТОЇ\nРОЗДІЛ 1 \nу XVI -  першій половині XVII ст."
+  section_title: Сторінка 48
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0041
+  text: '(Переклад В. Близнеця)
+
+    3. Ознайомтеся з інформацією про літописи як історико-художні
+
+    твори й виконайте завдання. Література Русі-України, пройшовши період використання
+    й
+
+    перекладу релігійних книг, збагачувалася й оригінальними творами,
+
+    стаючи на самостійний шлях розвитку. Найдавнішими пам’ятками
+
+    оригінальної світської літератури Київської держави є літописи. ДАВНЯ ЛІТЕРАТУРА
+
+    38'
+  section_title: Сторінка 38
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0100
+  text: "До практичного заняття за розділом ви-\nконайте одне із зав­дань (на вибір).\
+    \ 1)\t Підготуйте повідомлення за темою «Печенізькі й  половецькі за-\nгрози для\
+    \ Русі». 2)\t Створіть порівняльне мінідослідження «Русь від Володимира Ве-\n\
+    ликого до Мсти­слава Великого: етапи розвитку». 3)\t Підготуйте добірку експонатів\
+    \ для експозиції віртуального музею \n«Русь християнська»."
+  section_title: Сторінка 70
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5538249015808105
+  chunk_id: daf03296_c0037
+  text: "1 Докладнішу\r\nлітературу читач знайде в згаданих працях, особливо у М.\
+    \ Грушевського.\n\nОце найголовніша література 1\r\nдля того питання, про яке\
+    \ я хочу розказати в цій своїй статті. Хрещення\r\nукраїнського народу — це така\
+    \ важлива подія в українській історії, що про неї\r\nмусить трохи ширше знати\
+    \ наше громадянство, яке я й хочу коротко познайомити з\r\nголовними питаннями\
+    \ цієї події, як їх освітлює сучасна наука.\n\n2. Стара українська віра\n\nМи\
+    \ дуже мало знаємо про\r\nстару українську віру, ту віру, якої "
+  work: Огієнко — Українська церква
+  author: Огієнко І.
+  year: 1993
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ohienko/oh.htm
+- score: 0.5520572662353516
+  chunk_id: 479cf43d_c0171
+  text: "Про нього див.: Макарий, еп. \r\nПреподобный Феодосий Печерский как писатель\
+    \ // Ист. чтения о языке и\r\nсловесности II отд. имп. АН. — 1854 — 56; Шахматов\
+    \ А. А. Киево-Печерский\r\nпатерик и Печерская летопись // Известия Отд. русск.\
+    \ языка и словесности имп.\r\nАН. — СПБ., 1897. — Т. 2. — Кн. 3; Гудзий H. K.\
+    \ O соч. Феодосия\r\nПечерского // Проблемы общественнополит. истории России и\
+    \ славянских стран. Сб.\r\nстатей к 70-летию акад. M. H. Тихомирова. — М., 1963;\
+    \ Замалеев А. Ф., Зоц\r\nВ. А. Мыслители Киевской "
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5516375303268433
+  chunk_id: 484d0ffb_c1452
+  text: "Українські книжники виявляли велике зацікавлення\r\nпитанням хрещення Русі,\
+    \ адже саме в цьому вбачалася духовна першооснова,\r\n\"свята старовина\", до\
+    \ якої постійно апелювали. Систематизована версія\r\nзапровадження на Русі християнства\
+    \ постала у так званій Володимировій легенді,\r\nрозробленій наприкінці XI — на\
+    \ початку XII ст. у \"Повісті временних\r\nліт\". У цій літописній пам’ятці концепція\
+    \ хрещення Русі відбиває, зокрема,\r\nНесторову інтерпретацію відомостей Початкового\
+    \ літопису й зумовлена появою\r\nвста"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

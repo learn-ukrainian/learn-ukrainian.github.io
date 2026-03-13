@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T10:18:40.493343+00:00'
+query_keywords:
+- 'Голодомор: Історіографія теми'
+- Радянське замовчування
+- 1933-1991
+- Діаспорні дослідження
+- 1950-1980-ті
+- Конквест і Мейс
+- 1980-ті
+- Пострадянські дослідження
+- Денаєрство та контр-наративи
+- 'Analyze the causes and consequences of голодомор: історіографія теми'
+- Evaluate the historical significance of як вивчають голодомор
+- history
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0463
+  text: "Голодомор мовою документів, свідчень, чисел \n2. Пропагандистський ідеал\
+    \ радянської людини та її повсякденне життя  . . . . . . . . . 160\n\t\nЗавдання\
+    \ для узагальнення знань і підготовки до тематичного оцінювання \nза  розділом\
+    \ IV «Встановлення й  утвердження комуністичного тоталітарного \nрежиму в  Україні»\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 160\nРозділ V.\
+    \ Західноукраїнські землі в  міжвоєнний періо"
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0307
+  text: "Голодомор мовою документів, свідчень, чисел\n2. Пропагандистський ідеал радянської\
+    \ людини та її повсяк-\nденне життя\nЗавдання для узагальнення знань і підготовки\
+    \  \nдо тематичного оцінювання за розділом IV \n«Встановлення й  утвердження комуністичного\
+    \  \nтоталітарного режиму в  Україні»"
+  section_title: Сторінка 160
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0354
+  text: "192 \nСоціальна реклама  \nдо 86-х роковин Голодомору.  \nСвітлина \nголоду\
+    \ започаткувало пошук джерел, документів, свідчень, велику \nкількість нових публікацій.\
+    \ У 1990 році побачив світ збірник статей і \nдокументів «Голод 1932—1933 років\
+    \ на Україні: очима істориків, \nмовою документів». Того ж року товариство «Меморіал»\
+    \ провело між-\nнародний симпозіум «Голодомор 1932—1933 років в Україні». Отже,\
+    \ \nкультурно-інформаційний простір в Україні набував нового змісту. \n1. Які\
+    \ питання підняв Олесь Гончар на "
+  section_title: Сторінка 193
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0464
+  text: ". 188\n\t\nЗавдання для узагальнення знань і  підготовки до тематичного оцінювання\
+    \ \nза  розділом V «Західноукраїнські землі в  міжвоєнний період» . . . . . .\
+    \ . . . . . . . . . . . . . . . . 188\nРозділ VI. Україна в  роки Другої світової\
+    \ війни \n§ 33—34. Україна на початку Другої світової війни (1939—1941  рр.) \
+    \ . . . . . . . . . . . . . . . . . . . . . 189\n§ 35—36. Україна на початку німецько-радянської\
+    \ війни . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ 197\n§ 37. Україна в  "
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5581160187721252
+  chunk_id: feaa5fa7_c3217
+  text: "Дві перші совєтські окупації (543). Третя окупація\r\nУкраїни большевиками\
+    \ і політика »воєнного комунізму« (1919 — 21 pp.) (544).\r\n»Нова економічна політика«\
+    \ (1922 — 30) (546). »Українізація« (547). Ухили в\r\nком. партії (549). Криза\
+    \ большевізму й зріст бюрократії (550). Ліквідація\r\nприватного господарства.\
+    \ Колективізація (550). Голод 1933 р. (551). Боротьба\r\nпроти укр. культури (552).\
+    \ Сталінська конституція (553). Господарство України\r\nперед війною (554). »Єжовщина«\
+    \ (554). Після »єжовщини« (554) Д"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5581160187721252
+  chunk_id: feaa5fa7_c0022
+  text: "Дві перші совєтські окупації (543). Третя окупація\r\nУкраїни большевиками\
+    \ і політика »воєнного комунізму« (1919 — 21 pp.) (544).\r\n»Нова економічна політика«\
+    \ (1922 — 30) (546). »Українізація« (547). Ухили в\r\nком. партії (549). Криза\
+    \ большевізму й зріст бюрократії (550). Ліквідація\r\nприватного господарства.\
+    \ Колективізація (550). Голод 1933 р. (551). Боротьба\r\nпроти укр. культури (552).\
+    \ Сталінська конституція (553). Господарство України\r\nперед війною (554). »Єжовщина«\
+    \ (554). Після »єжовщини« (554) Д"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5531432032585144
+  chunk_id: ffcfbeb9_c0068
+  text: "34 Інформаційний\r\nзвіт про цю конференцію був надрукований у журналі «Вопросы\
+    \ истории», — 1951. -\r\n№ 5. — С. 137-139."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm

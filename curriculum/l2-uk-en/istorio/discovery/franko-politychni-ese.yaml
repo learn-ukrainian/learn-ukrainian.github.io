@@ -1,0 +1,212 @@
+discovered_at: '2026-03-13T09:54:52.898387+00:00'
+query_keywords:
+- 'Франко: Політичні есе'
+- Контекст
+- «Поза межами можливого»
+- '1900'
+- Аналіз аргументації
+- Інші політичні есе
+- Франко vs. Драгоманов
+- 'Analyze the causes and consequences of франко: політичні есе'
+- Evaluate the historical significance of франко як мислитель
+- history
+- історія
+- подія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0162
+  text: 'Відповідь аргументуйте. Напишіть есе на тему: «Риторика XXI століття: між
+    популізмом і  людяністю». Ефективність мовлення. Комунікативний намір. Стратегія
+    і  тактика мовленнєвої поведінки'
+  section_title: Сторінка 115
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0189
+  text: "99\nІван  Франко\n\t\n\tПрочитайте уривки з поеми І. Франка «Мойсей».\n\t\
+    \n\t\n\t\n        МОЙСЕЙ (1905)\n\t\n\t\n\t\n\t\n\t\n\t\n\t\t\n   Поема\n\t\n\t\
+    \n\t\n\t\n\t\n\t\n\t              (Уривки)\n\t\n\t\n\t\n\t\n\t\n\t\n\t      Пролог\
+    \ до поеми\nНа­ро­де мій, за­му­че­ний, роз­би­тий,\nМов па­ра­лі­тик той на роз­до­рож­жу,\n\
+    Люд­сь­ким пре­зи­р­ством, ні­би стру­пом, вкри­тий!\nТво­їм бу­ду­чим ду­шу я\
+    \ три­во­жу,\nВід со­ро­му, який на­щад­ків піз­них\nПа­ли­ти­ме, зас­ну­ти я\
+    \ не мо­жу.\nНев­же то­бі на таб­ли­цях за­ліз­них\nЗа­пи­са­но в су­сі­дів бу­ти\
+    \ гно"
+  section_title: Сторінка 99
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0185
+  text: "97\nІван  Франко\nПро­лог прой­ня­тий та­ким же ви­со­ким гро­ма­дян­ським\
+    \ па­фо­сом, по­лум’яним \nпат­рі­о­тиз­мом, як і «Бо­жес­твен­на ко­ме­дія»,\
+    \ зок­ре­ма піс­ня VІ «Чис­ти­ли­ща», де \nміс­тить­ся ві­до­ме звер­нен­ня Дан­те\
+    \ до Іта­лії. Про­лог І. Франка — це стис­лий ху­дож­ній лі­то­пис іс­то­рії ук­ра­їн­сько­го\
+    \ на­ро­ду, \nду­хов­но­фі­ло­соф­ське її ос­мис­лен­ня. Ог­ля­да­ю­чи ми­ну­ле\
+    \ Ук­ра­ї­ни, по­ет ба­чить у \nньо­му не тіль­ки «об­луд­ли­ву по­кір­ність уся­ко­му,\
+    \ хто зра­дою і роз"
+  section_title: Сторінка 97
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0419
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 142
+
+    Поза межами болю (Уривок). . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 145
+
+    «ПІД  ЧУЖИМ НЕБОМ» . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . 151
+
+    Література письменників-емігрантів. «Празька школа» української поезії . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . 151
+
+    Євген Маланюк. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . '
+  section_title: Сторінка 254
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0221
+  text: "Художній засіб\nПриклад\nПорівняння (не менше двох прикладів)\nЕпітети (не\
+    \ менше двох прикладів)\nУособлення (не менше двох прикладів)\n \n Чи вплинули\
+    \ ці художні засоби на твоє сприйняття оповідання? \nЯк?\n 22. Які прислів’я,\
+    \ наведені на початку розділу, відповідають твору \nІ. Франка?\nДомашнє завдання\
+    \ (на вибір)\n \n1. Склади і запиши в робочий зошит план оповідання.\n \n2. Склади\
+    \ по два запитання кожного виду та усно дай на них \nвідповіді.\n \n3. Напиши\
+    \ твір-роздум на тему «Чи можна виправити свої по-\nмилк"
+  section_title: Сторінка 217
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6138708591461182
+  chunk_id: 68ba0555_c0794
+  text: "На зламі століть, коли в суспільній атмосфері\r\nзагострилося чуття суб’єктивності,\
+    \ Франко здійснює перегляд певних філософських\r\nнастанов, що зв’язували його\
+    \ з позитивізмом і Драгомановим. «Особливо останнє\r\nдесятиліття XIX в. можна\
+    \ назвати епохою реакції проти одностороннього\r\nМарксівського економічного матеріалізму\
+    \ чи фаталізму», — пише він в статті\r\n«Поза межами можливого». Повернення до\
+    \ ідеалу як головного рушія суспільного\r\nпрогресу, навіть виробництва, змушує\
+    \ Франка зробити радикальні висно"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.6028884649276733
+  chunk_id: 3588aaff_c0323
+  text: "25 Бажання Кудрявцева\r\n(Зазнач. твір. — С. 62-63 та 79-81), а ще раніше,\
+    \ безперечно, Єфремова (пор.\r\nйого \"Іван Франко\". — К., 1926) сприймати \"\
+    серйозно\"\r\nВагмана та його позицію, тобто повністю поділяти Франкове ставлення\
+    \ до\r\nєврейської проблеми, виокремлюючи соціологічну суть твору, демонструє\
+    \ таке саме\r\nредуктивне та наївне прочитання тексту.\n\n26 Пор.: Франко І.\r\
+    \nПерехресні стежки // Зібрання творів: У 50 т. — Т. 20. — С. 288, 312-314,\r\n\
+    а також у різних місцях.\n\nОдне слово, навіть якщо Вагман"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5855438709259033
+  chunk_id: 479cf43d_c0045
+  text: "Про нього див.: Стешенко І. \r\nДрагоманов і його значення в історії розвитку\
+    \ укр. народу. — К., 1905;\r\nФранко І. Суспільно-політ. погляди М. Драгоманова\
+    \ // ЛНВ. — 1906. — Т.\r\nXXXV. — Кн. 8; Хатченко А. (Кистяковский Б.) М. П. Драгоманов\
+    \ и вопрос\r\nо самостоятельной укр. культуре // Укр. жизнь. — 1912. — №6; Лозинський\
+    \ М.\r\nУкр. нац. питання у творах М. Драгоманова. — [Львів], 1915; Пам’яті М.\r\
+    \nДрагоманова. — X., 1920; Ефремов С. Памяти М. Драгоманова // Укр.\r\nжизнь.\
+    \ — 1915. — №7; Овсянико-Куликовск"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

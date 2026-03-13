@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 76
+PASS: pipeline istorio 76
 
   Module:   slobozhanshchyna-identychnist
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 76
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:16:34Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:28:22Z

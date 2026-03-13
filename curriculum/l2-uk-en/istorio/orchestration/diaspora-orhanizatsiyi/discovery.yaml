@@ -1,0 +1,206 @@
+discovered_at: '2026-03-13T11:05:53.424866+00:00'
+query_keywords:
+- 'Діаспорні організації: UCC, UCCA, OUN'
+- Конгрес українців Канади
+- UCC
+- UCCA
+- Світовий конгрес українців
+- Політичні організації
+- Церковні структури
+- 'Analyze the causes and consequences of діаспорні організації: ucc, ucca, oun'
+- Evaluate the historical significance of держава в еміграції
+- history
+- історія
+- подія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0343
+  text: "УНДП –… \nУСДП — … \n \nПолітичні  \nпартії (їх цілі  \nта імена лідерів)\
+    \ \n«Просвіти» — … \n Народні доми — … \n «Рóсьêе Педаãоãічне \nТовариство» —\
+    \ … \n«Соêіл» — … \n«Січ» — … \n«Пласт» — … \n«Січові стрільці» — … \nМолодіжно-спортивні\
+    \ \nорãанізації (ріê створення, \nнапрями діяльності, лідери) \nНаціонально-êóльтóрні\
+    \ \nорãанізації (описати \nдіяльність) \n«Рóсьêа рада» — …,  \n \nУНДП і УНП \n\
+    ? «Уêраїнсьêа шêола» — … \n «Уêраїнсьêа хата» — … \n «Жіноча ãромада» — … \n?\
+    \ «Союз січей» —… \n \n?"
+  section_title: Сторінка 236
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0275
+  text: "§ 18—19. Зростання громадської активності українського суспільства\n151\n\
+    8. Внесок української діаспори у відновлення \nдержавної незалежності України\n\
+    \e\n\e Яку допомогу та підтримку надала українська діаспора \nв  боротьбі за \
+    \ незалежність України? Розгортання боротьби за державну незалежність \nактивізувала\
+    \ діяльність української діаспори. Най-\nактивнішими були діаспори в  США й  Канаді.\
+    \ Її \nпредставники в  1980-ті рр. продовжували тради-\nційні демонстрації біля\
+    \ будівель посольства СРСР \nіз вимогою з"
+  section_title: Сторінка 153
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0243
+  text: "Було прийнято рішен­\nня про створення Світового конгресу вільних українців,\
+    \ який \nпісля проголошення незалежності України був перейменований \nна Світовий\
+    \ конгрес українців. На сьогодні він об’єднує україн­\nців у  57  країнах. У \
+    \ 2018  р. Конгрес набув статусу учасника \nміжнародної неурядової організації\
+    \ в Раді Європи. Наталія Полонська-\nВасиленко. 1960-ті рр. Історики Р. Конквест\
+    \ і Дж. Мейс \nпорушили тему Голодомору в Україні \nй донесли до світової громадськості\
+    \ \nфакт геноциду українського народ"
+  section_title: Сторінка 134
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0233
+  text: "Зверніть увагу\n12  листопада 1967  р. в  Нью-Йорку \nвідбувся Конгрес Свободи \
+    \ — перша \nмасова маніфестація української \nєдності в  церковній, громадській\
+    \ \nі  політичній сферах життя. Участь \nу  цих зборах взяли понад 1  тис. осіб\
+    \ \nіз  17  країн світу. Було прийнято \nрішення про створення Світового \nконгресу\
+    \ вільних українців, який після \nпроголошення незалежності України \nбув перейменований\
+    \ на Світовий \nконгрес українців. На сьогодні він \nоб’єднує українців у  57 \
+    \ країнах. У  2018  р. Конгрес на"
+  section_title: Сторінка 129
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0358
+  text: "Однак їхній вплив \nна еміграцію був незначним, хоча вони й  намагалися створити\
+    \ мережі \nсвоїх організацій в  українській діаспорі США та Канади; 3)  це мережа\
+    \ \nорганізацій, які перебували під впливом ОУН. Саме вони в той час мали \nнайбільшу\
+    \ підтримку. ! Висновки. Національна українська культура на західноукраїнських\
+    \ \nземлях у  міжвоєнний період розвивалась як відповідно до загаль-\nноєвропейських\
+    \ мистецьких тенденцій, так і  в напрямку проти-\nстояння асиміляційним процесам,\
+    \ які проводили уряди По"
+  section_title: Сторінка 187
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5571195483207703
+  chunk_id: feaa5fa7_c3061
+  text: "Паралельно працює в Канаді Організація Українок\r\nКанади з більш націоналістичним\
+    \ забарвленням, Ліґа Укр. Кат. Жінок (ЛУКЖ) і\r\nСекція при Союзі Гетьманців-Державників.\
+    \ В 1936 — 37 р. постає Укр. Жіноча\r\nРада як спілка укр. жіночих т-в Канади\
+    \ для дружнього контакту між ними, для\r\nпідтримання зв’язку з рідними землями\
+    \ й співпраці з канадійськими (англ.)\r\nжіночими організаціями. За її рекомендацією\
+    \ Союз Українок Канади, а згодом і\r\nОрганізація Українок Канади були прийняті\
+    \ як домініяльні т-ва до Кан"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5254367589950562
+  chunk_id: feaa5fa7_c1479
+  text: "Як і до війни, на еміґрації існують чотири головні\r\nполіт. табори: центрово-демократичний,\
+    \ націоналістичний, соціялістичний і\r\nмонархічний. До центроводем. груп належать:\
+    \ давня галицька група Укр. Нац. — Демократичне\r\nОб’єднання (УНДО) і дві новопосталі:\
+    \ в 1946 р. — Український Нац.-Держ. Союз\r\n(УНДС), в 1948 р. — Союз Укр. Соборних\
+    \ Земель. В соц. таборі є дві укр. іст.\r\nпартії, які з 20-их pp. діяли на еміґрації,\
+    \ а саме: Укр. Соціял — Демократична\r\nРобітнича Партія (УСДРП) і Укр. Партія\
+    \ Соц-Рев"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5004510879516602
+  chunk_id: fc2291b5_c4695
+  text: "Тв.: Укр. перекл. — Промова канадського поета Вільсона Макдональда. В кн.:\
+    \ Всенародна\r\nшана. К., 1967; Рос. перекл. — Избранные стихи. М., 1964.\n\n\
+    Літ.: Уоллес Дж. Заметки\r\nо канадской поэзии. «Иностранная литература», 1959,\
+    \ № 10; Голышева А. И.\r\nАнглоязычная литература Канады. М., 1979.\n\nР. П. Зорівчак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

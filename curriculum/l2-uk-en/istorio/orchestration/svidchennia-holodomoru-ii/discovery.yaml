@@ -1,0 +1,221 @@
+discovered_at: '2026-03-13T10:04:19.665263+00:00'
+query_keywords:
+- 'Свідчення Голодомору II: Документи'
+- Типи документів
+- Закон про п'ять колосків
+- 7.08.1932
+- Чорні дошки
+- Фрагмент
+- Критика джерела
+- 'Analyze the causes and consequences of свідчення голодомору ii: документи'
+- Evaluate the historical significance of документальні докази
+- history
+- історія
+- подія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=yc-D5CFnwmI
+  channel: Реальна Історія
+  title: ГОЛОДОМОР. Реальна історія з Акімом Галімовим
+  relevance_score: 0.95
+  relevance_note: The video directly addresses the Holodomor and explicitly mentions
+    accessing historical documents and archives from the Ministry of Internal Affairs,
+    which aligns perfectly with the module's focus on 'Документальні докази' and 'Типи
+    документів' related to the Holodomor.
+  transcript_excerpt: Я хочу розповісти про найбільший і найжорстокіший злочин що
+    коли-небудь був скоєний проти українців це голодомор... сьогодні Міністерство
+    внутрішніх справ спеціально для реальної історії відкриє свої архіви і покаже
+    справи які зберігалися там майже 100 років.
+  embed_suggestion: After section 'Вступ — Документальні докази' -- The video provides
+    concrete examples of the documentary evidence discussed in the module's introduction,
+    immediately showing the practical application of reviewing historical documents.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0264
+  text: "139\n§ 24—25. Насильницька колективізація та опір їй населення. Голодомор\
+    \ 1932—1933 рр. ­прийняли постанову «Про охорону майна державних підприємств,\
+    \ колгоспів \nі  кооперативів та про зміцнення суспільної (соціалістичної) власності».\
+    \ Згід-\nно з  нею розкрадання майна колгоспів прирівнювалося до розкрадання \n\
+    державного майна й  каралося розстрілом, а  за «пом’якшуючих обста-\nвин» — позбавленням\
+    \ волі на строк щонайменше десять років. За жменю \nзерна, принесеного з  поля,\
+    \ селянин отримував повний ст"
+  section_title: Сторінка 139
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0307
+  text: "Голодомор мовою документів, свідчень, чисел\n2. Пропагандистський ідеал радянської\
+    \ людини та її повсяк-\nденне життя\nЗавдання для узагальнення знань і підготовки\
+    \  \nдо тематичного оцінювання за розділом IV \n«Встановлення й  утвердження комуністичного\
+    \  \nтоталітарного режиму в  Україні»"
+  section_title: Сторінка 160
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0463
+  text: "Голодомор мовою документів, свідчень, чисел \n2. Пропагандистський ідеал\
+    \ радянської людини та її повсякденне життя  . . . . . . . . . 160\n\t\nЗавдання\
+    \ для узагальнення знань і підготовки до тематичного оцінювання \nза  розділом\
+    \ IV «Встановлення й  утвердження комуністичного тоталітарного \nрежиму в  Україні»\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 160\nРозділ V.\
+    \ Західноукраїнські землі в  міжвоєнний періо"
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0145
+  text: "РОЗДІЛ 4\n144\nв Україні. Голодомор 1932–1933 рр. — страшний злочин проти\
+    \ укра-\nїнського народу. Його вчинила комуністична влада на чолі з Йосипом \n\
+    Сталіним для того, щоб залякати і підкорити українців. У селян вилучали \nне лише\
+    \ зерно, а й їстівні припаси. Якщо хтось намагався чинити спро-\nтив чи збирав\
+    \ колоски на полях, щоб прогодувати дітей, то він підлягав \nжорсткому покаранню\
+    \ згідно із «законом про п’ять колосків». Страшною \nсмертю загинули мільйони\
+    \ людей. У 2006 р. Верховною Радою України \nпо"
+  section_title: Сторінка 144
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0265
+  text: "Комнезами й  від-\nряджені на хлібозаготівлі робітники \nз міст, яких запевняли,\
+    \ що їхні сім’ї \nголодують через «куркульський сабо-\nтаж» хлібозаготівель, забирали\
+    \ в  лю-\nдей запаси будь-яких продуктів і  все \nпродовольство, яким селяни мали\
+    \ хар-\nчуватися до нового врожаю. Конфіска-\nція продовольства оголошувалася\
+    \ по-\nкаранням за «куркульський саботаж». «Чорна дошка» в експозиції Лебединського\
+    \ \nісторико-краєзнавчого музею\n«Чорна дошка» — статус села або району на \n\
+    території УСРР, який передбачав за"
+  section_title: Сторінка 139
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5132641792297363
+  chunk_id: c44f1207_c3834
+  text: "2) Ibid. c. 608.\n\n3) Див. т. III с. 438-9, 445 й ин.\n\n4) Іпат. с. 609-10.\n\
+    \n5) Срезневскій Др. памятники с. 147 і 149.\n\n6) Іпат. с. 577.\n\n7) Про Любартову\
+    \ запись (видану в Архиві Югозап. \r\n Рос. І т. VI ч. 1) розвідка Щербаковського\
+    \ в київських Чтеніях т. XVI і моя \r\n замітка (Коли сфальшовано грамоту Любарта\
+    \ Луцькій катедрі) в Записках т. LXX. \r\n Про грамоту Юрия Даниловича (видана\
+    \ в Памятн. рус. письма и языка \r\n Срезневского) див. в т. III 2 с. 109-110\
+    \ і IV 2 с. 446.\n\n8) Суджу з того, що род І"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5079531669616699
+  chunk_id: 5794da94_c0939
+  text: "11) Вельяминовъ-Зерновъ Матеріялы \r\nдля исторыи Крымскаго ханства Nr. 13,\
+    \ 21, у Смірнова op. c. с. 497. також листи \r\nсултана й каймакама в Ukr. spr.\
+    \ с. 73 і 76 (тут перебільшені поголоски, що \r\nкозаки навіть здоули Перекоп\
+    \ і инші замки й тримають їх, і що день їх \r\nприбуває).\n\n12) Collectanea 1\
+    \ c. \r\n187-8.\n\nТОМ VIII     \r\nРозділ II\n\n[М. Грушевський. Історія України-Руси.\
+    \ Том VIII. Розділ II. Стор. 1.]\n\n[М. Грушевський. Історія України-Руси. Том\
+    \ VIII. Розділ II. Стор. 2.]\n\nТОМ VIII     \r\nРозділ "
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5036411285400391
+  chunk_id: c8772648_c0305
+  text: "*Холмьская земля: Холмьскую землю 14 — М. Стрийковський, «Kronika»,\r\nстор.\
+    \ 15, 20; М. Волков, «Стат. св.», стор. 31; «Собр. др. гр.», стор. LX;\r\n«Акты\
+    \ ЗР», т. I, стор. 33, 247, 266, 288, 370; ЗНТШ, 1897, т. XVIII, стор. 16;\r\n\
+    1898, т. XXII, стор. 24, т. XXXI — XXXII, стор. 26, 29; 1909, т. LXXIV, стор.\r\
+    \n167, 168; 1910, т. XCV, стор. 183; КС, 1882, V, стор. 209; 1883, III, стор.\
+    \ 653\r\n— 657; VII, стор. 418; 1884, X, стор. 390; 1898, II, стор. 257, III,\
+    \ стор.\r\n400, V, стор. 207; 1900, IX, ч. II, сто"
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm

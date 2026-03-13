@@ -1,4 +1,4 @@
-FAIL: pipeline hist 90
+PASS: pipeline hist 90
 
   Module:   tsentralna-rada
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 90
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:16:35Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:21:19Z

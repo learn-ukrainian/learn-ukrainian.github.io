@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 77
+PASS: pipeline istorio 77
 
   Module:   donbas-industrializatsiia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 77
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:16:43Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:30:32Z

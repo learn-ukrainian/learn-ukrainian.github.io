@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T10:06:15.401861+00:00'
+query_keywords:
+- 'Синтез: Джерела нової доби'
+- Типологія джерел XIX-XX ст.
+- Особливості модерних джерел
+- Джерела репресій
+- Методологічні уроки
+- Практикум
+- 'Analyze the causes and consequences of синтез: джерела нової доби'
+- Evaluate the historical significance of від козаків до xx століття
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0330
+  text: ". . . . . . . . . . . . . . . . . . . . . . 193\n§ 45 \nВимоги до вживання\
+    \ синтаксичних одиниць у різних стилях  . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . 202\n \nЗапитання і завдання для самоконтролю . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 205"
+  section_title: Сторінка 222
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0365
+  text: "Якщо слідувати за цими зв’язками, \nможна читати матеріал у будь-якому порядку,\
+    \ утворюючи різні лінійні тек-\nсти. Прикладом гіпертексту може бути будь-який\
+    \ словник чи енциклопедія, \nде кожна стаття має посилання до інших статей цього\
+    \ ж словника. \aПрочитайте текст. Підготуйте розповідь про особливості гіпертексту.\
+    \ У ХХ столітті людство накопичило стільки інформації, що почали \nвиникати серйозні\
+    \ проблеми з її пошуками і переробкою, у тому \n319\n320\n321"
+  section_title: Сторінка 237
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5451527237892151
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5356901288032532
+  chunk_id: fbf8bdff_c0020
+  text: "Досліджуючи „ідейний зміст“ творів, мусимо часто\r\nзвертатися до джерел\
+    \ поза межами даного літературного твору, передусім до інших\r\nтворів того самого\
+    \ автора, або авторів того самого часу, а часто і до\r\nбіографічних дат про автора,\
+    \ до нелітературних проявів (листування, спогади)\r\nавтора або сучасників; до\
+    \ судів сучасників про твір (критика, пародії тощо); до\r\nісторичних дат про\
+    \ добу, коли постав твір, нарешті, до дат про освіту автора, його\r\nчитання (каталоги\
+    \ бібліотек письменників), його літерат"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5324937105178833
+  chunk_id: 2bf33f78_c0045
+  text: "У зв’язку з усім вищевикладеним мусимо висловити один\r\nздогад, який, проте,\
+    \ вважаємо на сьогодні недостатньо обґрунтованим для\r\nзведення навіть у ранг\
+    \ теорії. Майже повна відсутність друкованих творів о.\r\nЙосифа дає нам певну\
+    \ підставу припустити, що саме він міг бути анонімним\r\nавтором зазначених вище\
+    \ видань, а, отже, і самого \"Синопсиса\".\n\nПримітки до тексту\n\nПримітки до\
+    \ тексту\n\nЧастина 2\n\nПроблеми дослідження джерельної бази \"Синопсиса\"\n\n\
+    Як ми уже неодноразово відзначали, більшість дослідників"
+  work: Синопсис. Київ, 1674
+  author: Невідомий
+  year: 1674
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/synopsis/syn.htm

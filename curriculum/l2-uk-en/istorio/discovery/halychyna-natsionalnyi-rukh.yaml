@@ -1,0 +1,211 @@
+discovered_at: '2026-03-13T11:14:46.879152+00:00'
+query_keywords:
+- Галицький національний рух
+- Москвофіли
+- Народовці
+- «Просвіта»
+- Січовий рух
+- Політичні партії
+- Analyze the causes and consequences of галицький національний рух
+- Evaluate the historical significance of боротьба за душу галичини
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=zk-_zLtOhyo
+  channel: Реальна Історія
+  title: The Real History of Halychyna
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=KJPpXeocRjA
+  channel: ІМТГШ
+  title: ХТО ТАКИЙ СТЕПАН БАНДЕРА?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0343
+  text: "УНДП –… \nУСДП — … \n \nПолітичні  \nпартії (їх цілі  \nта імена лідерів)\
+    \ \n«Просвіти» — … \n Народні доми — … \n «Рóсьêе Педаãоãічне \nТовариство» —\
+    \ … \n«Соêіл» — … \n«Січ» — … \n«Пласт» — … \n«Січові стрільці» — … \nМолодіжно-спортивні\
+    \ \nорãанізації (ріê створення, \nнапрями діяльності, лідери) \nНаціонально-êóльтóрні\
+    \ \nорãанізації (описати \nдіяльність) \n«Рóсьêа рада» — …,  \n \nУНДП і УНП \n\
+    ? «Уêраїнсьêа шêола» — … \n «Уêраїнсьêа хата» — … \n «Жіноча ãромада» — … \n?\
+    \ «Союз січей» —… \n \n?"
+  section_title: Сторінка 236
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0354
+  text: "Вимоãи: ….. Резóльтати радиêалізації óêраїнсьêоãо політичноãо життя: … \n\
+    Народні віча. Вимоãи: ….. Робітничі страйêи. Вимоãи: ….. Уêраїнсьêі політичні\
+    \ партії \nГреêо-êатолицьêа церêва"
+  section_title: Сторінка 242
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0340
+  text: "188\nРозділ V\n­Москвофіли в  цій боротьбі покладалися на Росію, народовці\
+    \ та радика-\nли  — на народ, інтелігенцію Наддніпрянщини та суперечності у  прав-\n\
+    лячих колах Австро-Угорщини. \x17\n\x17 На кінець ХІХ ст. народовська течія стала\
+    \ домінуючою в україн-\nському русі в  Галичині. Вона розбудувала цілу мережу\
+    \ національного \nжиття, яка включала культурно-просвітні, наукові, кооперативні\
+    \ та по-\nлітичні організації. ? Запитання та завдання\n\x8A\x8A\n1. Які конституційні\
+    \ реформи було проведено в Австрійській імпер"
+  section_title: Сторінка 188
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0433
+  text: "\e\n\e\n1. Якими були основні течії суспільно-політичного руху на західноукраїнських\
+    \ зем­\nлях у  другій половині XIX  ст.? 2. Як розгортався український національний\
+    \ рух \nна західноукраїнських землях у цей період? 3. Як утворилися українські\
+    \ політичні \nпартії в  Галичині?"
+  section_title: Сторінка 240
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.565227210521698
+  chunk_id: 5554668f_c0277
+  text: "Так-то з різних боків виставляють точки можливої\r\nсолідарності поступовців\
+    \ українських навіть з австро-руськими москвофілами —\r\nточки, котрі в сумі своїй\
+    \ зовсім рівноважать солідарність тих поступовців з\r\nнародовцями-українофілами\
+    \ в справі національній. При теперішнім стані партій в\r\nГаличині поступовці-радикали\
+    \ найліпше зроблять, коли найменше будуть бавитись в\r\nіграшки парламентарної\
+    \ \"тактики\" зі всякими другими партіями, а\r\nзвернуть найбільше уваги на те,\
+    \ щоб прихилити до своїх основних принц"
+  work: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+  year: 1894
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag2.htm
+- score: 0.5327350497245789
+  chunk_id: 5554668f_c0115
+  text: "Одна з характеристичних властивостей сієї групи є її\r\nстрашенна боязкість,\
+    \ скоро доводиться їй виявляти своє українофільство. Часом\r\nся боязкість буває\
+    \ просто аж кумедна, бо сі добродії іноді бояться сказати в\r\nгромаді по-вкраїнському\
+    \ слово, щоб не вважено їх за державних зрадників! На\r\nпревеликий жаль, загал\
+    \ російської інтелігенції не відрізняє сих «українофілів»\r\nод справжніх українських\
+    \ націоналів і всі їх негарні властивості накидає і\r\nсправжнім путящим українським\
+    \ діячам. Громадянству тим в"
+  work: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+  year: 1894
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag2.htm
+- score: 0.5234006643295288
+  chunk_id: 5554668f_c0271
+  text: "Правда, тепер ся згода дуже втрачена. Д. Вартовий\r\nсправедливо показує\
+    \ на реакційність галицьких москвофілів, на їх дружбу (або\r\nліпше сказати: службу)\
+    \ з побєдоносцевським елементом у Росії. Тільки ж для\r\nправдивого суду в сій\
+    \ точці треба згадати і те, що значна частина українофілів\r\nгалицьких — теж\
+    \ реакціонери і слуги свого роду побєдоносцевщини. Тут, значить,\r\nсуть діла\
+    \ не в тих чи инших національних фільствах, а в реакційних\r\nдумках. Так треба\
+    \ й поставити справу!\n\nДо реакційності галицьких мо"
+  work: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+  year: 1894
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag2.htm

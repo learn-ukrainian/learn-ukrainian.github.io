@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T11:20:04.757192+00:00'
+query_keywords:
+- 'Закарпаття: Тисячоліття на перехресті'
+- Під Угорщиною
+- 896-1918
+- Чехословацький період
+- 1919-1938
+- Карпатська Україна 1939
+- Радянський період
+- Русинське питання
+- 'Analyze the causes and consequences of закарпаття: тисячоліття на перехресті'
+- Evaluate the historical significance of найзахідніший схід
+- history
+- історія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0051
+  text: "2. Знайдіть на карті атласу наведені в  літописі назви \nкраїн, міст тощо\
+    \ та простежте напрямки воєнних походів Святослава в  964—966  рр. Зверніть увагу\n\
+    У VІІІ—ІХ  ст. низинну частину Закарпаття \nзаселяла хліборобська слов’янська\
+    \ спіль-\nнота. Спочатку, на думку вчених, серед неї \nпереважали південнослов’янські\
+    \ племена \nхорватів. Згодом до них приєдналися пере-\nселенці з  другого боку\
+    \ Карпат, і населення \nкраю поступово почало ототожнювати себе \nзі слов’янством.\
+    \ У VІ—VІІІ  ст. слов’яни, що жили в"
+  section_title: Сторінка 35
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0361
+  text: "189\nРозділ VI. Україна в  роки Другої світової війни \n§ 33—34. Україна\
+    \ на початку Другої світової війни (1939—1941 рр.)\n\e\n\e\n1. Коли було проголошено\
+    \ незалежність Карпатської України? Агресії з  боку якої \nдержави вона зазнала?\
+    \ 2. Якими були причини зближення Німеччини та СРСР \nнапередодні Другої світової\
+    \ війни? 1 \nУкраїна в  міжнародній політиці напередодні Другої світової війни.\
+    \ На-\nзрівання Другої світової війни загострило всі ті проблемні питання, \n\
+    що лишилися невирішеними після Першої світов"
+  section_title: Сторінка 189
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0035
+  text: "Правом вибору між громадянством СРСР та ЧССР \nскористалися близько 10 тисяч\
+    \ осіб з обох сторін. Окрім того, Чехо-\nсловаччина погодилася передати Радянському\
+    \ Союзу місто Чоп і тери-\nторію площею 250 квадратних кілометрів із шістьма селами,\
+    \ які не вхо-\nдили до складу Підкарпатської Русі. Натомість до Словаччини в 1946\
+    \ \nроці відійшло село Лекарівці. На території Закарпаття в січні 1946 року \n\
+    утворили Закарпатську область із центром у місті Ужгород. Не-\nзважаючи на те,\
+    \ що нова угода, як й у випадку "
+  section_title: Сторінка 23
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0010
+  text: "8 \nЗахідноукраїнська \nНародна \nРеспубліка \n(1918 \nрік). \nБоротьба \n\
+    кримськотатарського народу завершилася проголошенням Кримської \nНародної Республіки\
+    \ (1917 рік). Однак у той час зберегти державність \nта відстояти незалежність\
+    \ не вдалося. Більшість території УНР була \nприєднана до СРСР, на ній утворена\
+    \ УCРР (з 1937 року – УРСР). \nЧастина \nправобережної \nУкраїни \nй \nзахідноукраїнські\
+    \ \nземлі \nу \nміжвоєнний період входили до Польщі, Румунії, Чехословаччини.\
+    \ На \nтериторії Криму було створено Кримськ"
+  section_title: Сторінка 9
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0340
+  text: "177\n§ 31. Українські землі у  складі Чехословаччини. Карпатська Україна\
+    \ \nПісля переговорів та консультацій між різними політичними сила-\nми краю був\
+    \ сформований перший автономний уряд на чолі з А. ­Бродієм, \nякий 11  жовтня\
+    \ 1938  р. був затверджений у  Празі. До нового уряду уві-\nйшли представники\
+    \ як русинського, так і  народовського блоків. Після \nзатвердження уряду А. Бродій\
+    \ виступив перед населенням і виклав таку \nпрограму дій:\n\x17\n\x17 ЧСР надалі\
+    \ називалася Чесько-Словацько-Карпатська Республіка;"
+  section_title: Сторінка 177
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.62590491771698
+  chunk_id: 53691244_c0212
+  text: "Всебічно й виважено оцінюючи все позитивне й неґативне у\r\nрозвитку Закарпаття\
+    \ за часи його перебування в складі ЧСР (1919–1939 рр.), слід\r\nвизнати: незважаючи\
+    \ на те, що практично до останніх днів існування\r\nЧехословацької республіки\
+    \ автономія Закарпаття залишалася на папері (з ряду\r\nсуб’єктивних та об’єктивних\
+    \ причин деякі зрушення відбувалися тільки з жовтня\r\n1938 р. до 15 березня 1939\
+    \ р.), а політика чехословацького уряду в краї мала\r\nнепослідовний, багато в\
+    \ чому суперечливий характер, все ж н"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5948374271392822
+  chunk_id: feaa5fa7_c1384
+  text: "На відміну від ін. укр. земель, які силою підпали під\r\nчужу окупацію, Закарпаття\
+    \ добровільно увійшло в зв’язок із Чехо-Словаччиною\r\n(див. вище). Автоматично\
+    \ спинилося угорщення, а приналежність до\r\nвисококультурної Чехо-Словаччини\
+    \ з демократичним ладом дозволяла Закарпаттю\r\nмайже в кожній ділянці вчитися\
+    \ й підноситися. Головною перешкодою для розвитку\r\nкраю були несприятливий госп.\
+    \ стан населення, своєрідний консерватизм, слаба\r\nнац. свідомість і політ. рівень,\
+    \ зокрема майже цілковитий брак свід"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5841864943504333
+  chunk_id: 484d0ffb_c0055
+  text: "Суцільна смуга українського населення в\r\nпівденно-східній частині Краківського\
+    \ воєводства органічно пов’язується з\r\nукраїнцями на півночі Східної Словаччини.\
+    \ Найдавніші згадки про українських\r\nселян-хліборобів і суцільно українські\
+    \ села у північній смузі східнословацьких\r\nкомітатів (Шарищина, Спиш) є в актових\
+    \ матеріалах середини XIV ст. (1337 і 1340\r\nрр.). У південно-східній Словаччині\
+    \ й північній Угорщині окремі\r\n\"руські\" села відомі раніше, вже з XI — XII\
+    \ ст. Очевидно,\r\nсхіднослов’янське насе"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

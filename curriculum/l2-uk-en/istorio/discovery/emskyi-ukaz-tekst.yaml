@@ -1,0 +1,194 @@
+discovered_at: '2026-03-13T09:52:58.615979+00:00'
+query_keywords:
+- 'Емський указ: Повний текст'
+- Історичний контекст
+- Текст указу
+- Порівняння з Валуєвським циркуляром
+- Фрагмент
+- Наслідки і опір
+- 'Analyze the causes and consequences of емський указ: повний текст'
+- Evaluate the historical significance of суворіший за валуєва
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0351
+  text: "У розділі \n«Віртуальна бібліотека» електронного додатка до підручника ви\
+    \ знайдете \nповний текст твору . читаємо взірці української художньої літератури"
+  section_title: Сторінка 185
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0211
+  text: Перегляньте експрес-урок «Спочатку ім’я чи прізвище?». Перекажіть його. Ділові
+    папери
+  section_title: Сторінка 137
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0372
+  text: "Працюємо з  хронологією\n1701  р. Надання Києво-\nМогилянському \nколегіуму\
+    \ статусу \nакадемії\nrnk.com.ua/109917\nПрактичне заняття  \nза розділом ІV\n\
+    rnk.com.ua/109918\nУзагальнення знань  \nза розділом ІV\nrnk.com.ua/109919\nТестові\
+    \ завдання  \nза  розділом  ІV"
+  section_title: Сторінка 228
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5360252857208252
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5210371017456055
+  chunk_id: 94271a53_c0297
+  text: "4 Крім указу від 27\r\nберезня 1785 р., див. наступні укази і постанови:\
+    \ ПСП. Царствование ...\r\nЕкатерины Второй. — № 1213. — 31 марта 1785 г. — Т.\
+    \ 3. — С. 15 — 16; № 1215.\r\n— 10 апреля 1785 г. — Т. 3. — С. 17; № 1223. — 16\
+    \ мая 1785 г. — Т. 3. — С.\r\n26-27.\n\n5 Покровский И. Русские\r\nепархии...\
+    \ — Т. 2. — С. 719.\n\n6 Русские епархии... —\r\nТам само. — С. 719 — 722.\n\n\
+    7 ПСП.\r\nЦарствование... Екатерины Второй. — № 1213. — 31 марта 1785 г. — Т.\
+    \ 3. — С. 15-16."
+  work: Когут — Російський централізм і українська автономія
+  author: Когут З.
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss5/koh.htm
+- score: 0.5195013880729675
+  chunk_id: 5794da94_c2063
+  text: "16) Акты Ю. З. Р. III c. 413. \r\nМосковський переклад дневника лихий, місцями\
+    \ не можна навіть його розуміти — \r\nподекуди я попросту пропускаю такі місця.\n\
+    \n17) Про сї пункти зараз низше, с. \r\n210.\n\n18) Лист сей друкований в Ojcz.\
+    \ \r\nSpom. II c. 119. Копія кор. канц. доповняє прогалину в тім місцї, де говорить\
+    \ ся \r\nпро предложені пункти: Przy tym wielce a unizenie prosze w. kr. mci pana\
+    \ mego \r\nmłciwego o te puncta, ktore teraz (pоdаіеmу — пропущено) z woli y ządania\
+    \ \r\nwojskowego. Иньші відміни меньш"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm

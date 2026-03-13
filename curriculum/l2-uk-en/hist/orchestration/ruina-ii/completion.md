@@ -1,4 +1,4 @@
-FAIL: pipeline hist 59
+PASS: pipeline hist 59
 
   Module:   ruina-ii
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 59
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:11:42Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:06:43Z

@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 93
+PASS: pipeline istorio 93
 
   Module:   2004-vs-2014
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 93
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:19:15Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:00:02Z

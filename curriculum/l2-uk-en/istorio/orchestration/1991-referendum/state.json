@@ -4,8 +4,24 @@
   "mode": "v5",
   "phases": {
     "research": {
-      "status": "failed",
-      "ts": "2026-03-13T01:19:07Z"
+      "status": "complete",
+      "ts": "2026-03-13T11:58:27Z",
+      "task_id": "v5-1991-referendum-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T11:58:27Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
     }
   }
 }

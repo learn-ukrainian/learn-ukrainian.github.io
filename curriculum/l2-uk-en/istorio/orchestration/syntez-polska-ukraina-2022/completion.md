@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 117
+PASS: pipeline istorio 117
 
   Module:   syntez-polska-ukraina-2022
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 117
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:22:51Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:45:11Z

@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T11:03:55.442389+00:00'
+query_keywords:
+- 'Третя хвиля: ДіПі (1945-1950)'
+- Як опинилися на Заході
+- Табори ДіПі
+- Загроза репатріації
+- Еміграція до «третіх країн»
+- Спадщина третьої хвилі
+- 'Analyze the causes and consequences of третя хвиля: діпі (1945-1950)'
+- Evaluate the historical significance of хто такі діпі?
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0049
+  text: "Біженці  — особи, які залишили країни \nсвого попереднього місця проживання\
+    \ \nчерез дії нацистського або інших \nрежимів. DP-табори  — тимчасові табори\
+    \ для \nпереміщених осіб. Репатріація  — повернення \nна  батьківщину з  поновленням\
+    \ гро­\nмадянських прав військовополо­нених \nі  цивільних осіб, які під час війни\
+    \ \nопинилися в  інших державах \nта  перебували там тривалий час. Радянські репатріанти\
+    \ в  очікуванні \nповернення до СРСР. 1940-ві рр. Зверніть увагу\nБіженці та переміщені\
+    \ особи  — саме \nтак у  "
+  section_title: Сторінка 29
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0046
+  text: "Однак фак-\nтично все контролювали окупаційні адміністрації. Радянська влада\
+    \ намагалася вплинути на своїх \nгромадян, що опинилися в  західних DP-таборах,\
+    \ \nбажаючи повернути якнайбільше людей. Уже з жов-\nтня 1944 р. в СРСР запрацювала\
+    \ спеціальна репатріа­\nційна комісія. Переміщені особи — особи, які \nзаходами\
+    \ нацистського режиму були \nвислані з країн свого попереднього \nмісця проживання\
+    \ через расові, \nрелігійні й політичні причини або \nвивезені з метою використання\
+    \ їх як \nдешевої робочої сили. Біж"
+  section_title: Сторінка 26
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0051
+  text: "Цікаві факти\nУ 1946—1947 рр. в американській зоні \nокупації в таборах активно\
+    \ проводили \nперевірки з метою позбавлення \nдопомоги осіб, які співпрацювали\
+    \ \nз нацистами. «Люди хвилювалися за \nнайменшого натяку на перевірку. Позбутися\
+    \ такого статусу [переміщеної \nособи] означало втратити й те \nмаленьке право\
+    \ на життя, отримане \nзавдяки сильним світу цього», — писав \nу своїх спогадах\
+    \ «Планета Ді-Пі» \nукраїнський письменник Улас Самчук, \nякий пройшов через такий\
+    \ табір. Урешті-решт він опинився в Канад"
+  section_title: Сторінка 29
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0045
+  text: "Розділ І. Україна в повоєнний період\n24\n5\t \nПереміщені особи з  України.\
+    \ Репатріація. ­Неповерненці. 1940-ві рр. стали «ерою перемі-\nщених осіб». Друга\
+    \ світова війна дала поштовх \nмасштабній міграції. Її центром стали землі Німеч-\n\
+    чини, на яких опинилося до 10  млн осіб, що зали-\nшили свої домівки через різні\
+    \ обставини (із них \n5  млн осіб  — вихідці із СРСР). Це були біженці, \nвійськовополонені,\
+    \ остарбайтери (вивезені на при-\nмусові роботи), в’язні нацистських таборів.\
+    \ Одну \nз  найбільших етніч"
+  section_title: Сторінка 26
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0046
+  text: "Розділ І. Україна в повоєнний період\n26\nза вкладами від 3  до 10  тис.\
+    \ руб. заощадження \nзменшувалися на третину, а понад 10 тис. руб. — на \nдві\
+    \ третини. Особливо боляче реформа вдарила по селянству, \nяке знову було ошукане\
+    \ режимом. За  відсутно­сті \nощадних кас у  селах обмін готівкових грошей, які\
+    \ \nнаселення зберігало вдома, здійснювали у співвідно-\nшенні 1 : 10. Отже, заходи\
+    \ влади лише відклали ви-\nрішення складних соціальних проблем. \e\n\e Працюємо\
+    \ разом. За допомогою методу «Плакат \nдумок» гр"
+  section_title: Сторінка 28
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5286256074905396
+  chunk_id: feaa5fa7_c1402
+  text: "Еміґраційні хвилі прийшли в різні періоди часу з\r\nЦентр. та Сх. Земель\
+    \ і з Галичини, вони прямували до різних країн, частина\r\nеміґрантів поверталася\
+    \ на батьківщину, частина переходила з однієї країни до\r\nдругої. Це залежало\
+    \ від політ. стану на батьківщині, від ситуації в країнах, де\r\nеміґрація тимчасово\
+    \ перебувала, і від внутр. та екон. відносин серед самої\r\nеміґрації. Плинність\
+    \ еміґрації була дуже інтенсивна, особливо в перші роки;\r\nвідносини стали стабілізуватися\
+    \ від 1923 p., а ще більше після"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5075321197509766
+  chunk_id: 6d58e5fd_c0009
+  text: 'Перебіг воєнних подій, що закінчився розгромом фашизму і короткою передишкою
+    перед новим, вирішальним туром цієї світової війни, призвів до того, що значна
+    частина українського політичного активу з підрадянської України опинилася на еміграції,
+    поза засягом всеподавляючого терору. І ось тут вони, нарешті, мають змогу і повинні
+    здійснити те, чого не давалося зробити за всі роки радянського режиму і за роки
+    війни. Ці умови, яких той актив ніколи не мав, мають бути спішно і максимально
+    використані. '
+  work: Іван Багряний. На новий шлях
+  author: Багряний І.
+  year: 1906
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=3061
+- score: 0.5007141828536987
+  chunk_id: 3588aaff_c0482
+  text: "Подальша еміграція, зокрема до Сполучених Штатів\r\nАмерики й Канади, але\
+    \ також і до таких віддалених аванпостів, як Бразилія й\r\nАвстралія, спричинила\
+    \ фізичне розпорошення і зникнення багатьох, хай і\r\nнедовговічних, періодичних\
+    \ видань, груп та інститутів, що зародилися у таборах\r\nДіПі. Але така фрагментація\
+    \ була зумовлена не фізичною відстанню, а\r\nсектантським світобаченням, глибокою\
+    \ відцентровою тенденцією, що врешті-решт\r\nпризвела до появи відносно самодостатніх\
+    \ й більш-менш герметичних «партій»"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

@@ -1,0 +1,208 @@
+discovered_at: '2026-03-13T11:43:03.530185+00:00'
+query_keywords:
+- 'Розумовський цикл: Останній гетьман'
+- Фаза 1
+- Фаза 2
+- Фаза 3
+- Фаза 4
+- '?'
+- Аналіз
+- 'Analyze the causes and consequences of розумовський цикл: останній гетьман'
+- Evaluate the historical significance of фаворит, що скасував себе
+- history
+- історія
+- подія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0383
+  text: "§ 32. Спроби збереження автономії та реформування Гетьманщини\n235\nСФОРМУЛЮЙТЕ\
+    \ СУДЖЕННЯ ПРО:\n\x84\n\x84\nвідновлення гетьманства, \nправління Д. Апостола;\n\
+    \x84\n\x84\nімперську політику 30—40-х рр. XVIII  ст., діяльність «Правління \n\
+    гетьманського уряду»;\n\x84\n\x84\nгетьманування К. Розумовського. Для вас, допитливі\n\
+    rnk.com.ua/110335 \n \nЗапитання і завдання \nЗнаємо і  розуміємо\n1. Назвіть\
+    \ основні досягнення гетьманування \nД. Апостола та К. Розумовського. 2. Чому\
+    \ реформаторська діяльність К. Розумов-\nського була не до впо"
+  section_title: Сторінка 235
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0307
+  text: "158  Розділ V. Українські землі у 20—90‑х рр. XVIII ст. § 28. Лівобережна\
+    \ та Слобідська Україна. Ліквідація Гетьманщини\nОпрацювавши цей параграф, ви\
+    \ дізнаєтесь: про \nдіяльність останнього гетьмана К. Розумовсько­\nго та його\
+    \ політику; про причини та перебіг про­\nцесу ліквідації гетьманства й залишків\
+    \ автономії \nГетьманщини та Слобідської України. Пригадайте: \n1. Яку політику\
+    \ проводила Росія \nщодо Лівобережної Гетьманщини в  першій по­\nловині XVIII \
+    \ ст.? 2. Назвіть найбільші виступи \nпроти російсь"
+  section_title: Сторінка 158
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0323
+  text: "210\nРозділ 4. БУТИ САМИМ СОБОЮ\n7. Прочитайте уривок, у якому автор показує\
+    \ жахливі наслідки війни. Як у цьому \nуривку розкрито потворну суть російського\
+    \ самодержавства в особі царя \n Миколи І? 8. Чи вдалось авторові, на вашу думку,\
+    \ показати справжнє обличчя самодержав-\nства? Наведіть приклади з тексту твору.\
+    \ 9. Об’єднайтеся в групи й виберіть одну-дві з поданих морально-етичних проблем.\
+    \ Розкажіть, як цю проблему розкрито в поемі «Кавказ». підступність\n  \nлицемірство\n\
+    \  \nаморальність\n  \nубивство\nн"
+  section_title: Сторінка 212
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0192
+  text: "Розділ З \nКОЗАЦЬКА РЕВОЛЮЦІЯ середини XVII ст.\n2. Хронологічна розминка\n\
+    Деякі сучасні історики в історії Козацької революції під проводом \nБ. Хмельницького\
+    \ виокремлюють три періоди. Запропонуйте хроноло­\nгічні межі та характерні ознаки\
+    \ кожного з цих періодів революції.\nПеріодизація Козацької революції\n3. Історичний\
+    \ репортаж\nНа основі фотоколажу створіть матеріал для історичної телепередачі.\
+    \ \nУ ролі ведучого /  ведучої спробуйте відтворити сюжет у класі.\nБогдан\nХмельницький\n\
+    Битва під Берестечком\n"
+  section_title: Сторінка 144
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0004
+  text: "4 \n§ 26. Українська козацька держава – Військо Запорозьке ............................................131\
+    \ \n§ 27. Зовнішня політика Війська Запорозького. У пошуку союзників............................136\
+    \ \n§ 28. Воєнно-політичні події 1654–1657 років. Наслідки козацької революції\
+    \ .............141 \n§ 29. Практична робота № 3. Богдан Хмельницький — Адам Кисіль:\
+    \  \nпорівняльна характеристика ...................................................................................146\
+    \ \n§ 30. Узагальнення за р"
+  section_title: Сторінка 3
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5207982659339905
+  chunk_id: 3588aaff_c0171
+  text: "По-друге, романтичний період, що вбирає й\r\nпередромантичну фазу і припадає\
+    \ приблизно на першу половину XIX ст. Третій\r\nперіод — постромантичний, і сягає\
+    \ він, хоч як це, на перший погляд, і не\r\nдивно, аж другої світової війни. Четвертий,\
+    \ і останній, — післявоєнний період.\n\nБільш ніж очевидно, що ці періоди цілком\
+    \ різнорідні.\r\nРомантичний (і передромантичний) період, незважаючи на певну\
+    \ внутрішню\r\nдиференціацію переважно завдяки \"спільній платформі\", що її\r\
+    \nзабезпечували поетика, літературні посту"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.49244576692581177
+  chunk_id: 2468994c_c0003
+  text: "Глава 21. О следовании царском противу поляк войною\r\nпод Смоленск и о взятии\
+    \ оного со всеми его городами, и всей Белоруссии, Северии\r\nи Литвы со многими\
+    \ городами ж. О повоевании Хмельницким в Украйне поляк и о\r\nразорении им много\
+    \ в Польше. О смерти Хмельницкого и о избрании на место его сына,\r\nЮрия Хмельницкого,\
+    \ в гетманы\n\nЧАСТЬ II\n\nКнига четвертая\n\nГлава 22. О изобравшемся собою вместо\
+    \ Юрия\r\nХмельницкого в гетманы войсковом писаре Иване Виговском и о действительном,\r\
+    \nчрез лесть его, подтвержден"
+  work: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+  year: 1785
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/rigel/rig.htm
+- score: 0.4858914315700531
+  chunk_id: 3588aaff_c0111
+  text: "Тих \"передісторичних\" етапів я бачу три.\r\nПоступово і в своєму історичному\
+    \ контексті зовсім непомітно (неусвідомлено, як\r\nя зазначав вище) вони переходять\
+    \ у рецепцію літератури як такої. Цих власне\r\nрецепційних етапів, — тобто до\
+    \ того фундаментального перелому, яким стануть\r\nофіційні гоніння української\
+    \ літератури 1863 і 1876 років, — гадаю, є два.\r\nМежі між усіма тими періодами\
+    \ не завжди чіткі, а подекуди затерті — передусім\r\nтому, що відбувається постійна\
+    \ тематизація, тобто текстуалізація цьог"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

@@ -1,0 +1,208 @@
+discovered_at: '2026-03-13T11:08:54.037441+00:00'
+query_keywords:
+- 'Діаспорні науковці: Збереження спадщини'
+- Гарвардський український інститут
+- HURI
+- УВАН
+- НТШ в діаспорі
+- Ключові постаті
+- Спадщина для України
+- 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
+- Evaluate the historical significance of наука в еміграції
+- history
+- історія
+- подія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0241
+  text: "при Гарвардському університеті в  США \nпрацював Український науковий інститут.\
+    \ Вирішаль-\nна роль у розвитку цього наукового закладу належа-\nла його директору,\
+    \ вченому, історику-енциклопедис-\nту Омеляну Пріцаку. Важливим здобутком української\
+    \ діаспори цієї \nдоби залишалася діяльність відродженого Наукового \nтовариства\
+    \ імені Т. Шевченка. У  цей час воно ви-\nдавало десятитомну «Енциклопедію українознавства»\
+    \ \n(до 1989  р.). У  1979  р. виник один із наймолодших"
+  section_title: Сторінка 133
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0483
+  text: "Неоціненну функцію \nоберігача і примножувача традицій української незалежності\
+    \ в \nкультурній і духовній сфері виконала для України українська \nдіаспора,\
+    \ саме в той час, коли в Україні таку діяльність \nприрівнювали до державного\
+    \ злочину. В державах поселення \nполітична еміграція створила сотні українських\
+    \ інституцій, які \nрозвивали і вивчали національну інтелектуальну думку, нагадували\
+    \ \nсвіту про свою державну традицію. Серед її представників визначні \nінтелектуали-гуманітарії\
+    \ – професори Юрій Ше"
+  section_title: Сторінка 264
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0346
+  text: "Закордонні університети визнали Український \nуніверситет у  Львові рівноправним\
+    \ із західноєвропей-\nськими вищими школами та зараховували студентам \nроки навчання\
+    \ в  ньому. Головним осередком української науки та загалом \nкультури залишалося\
+    \ Наукове товариство ім. Т. Шев-\nченка (НТШ). У  1920—1930-х рр. тут працювало\
+    \ понад \n200  науковців. Завдяки підтримці української громади \nНТШ вдалося\
+    \ утримувати велику бібліотеку, три музеї \nі  два науково-дослідні інститути.\
+    \ У 1920-х рр. певні кошти на утри"
+  section_title: Сторінка 180
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0275
+  text: "§ 18—19. Зростання громадської активності українського суспільства\n151\n\
+    8. Внесок української діаспори у відновлення \nдержавної незалежності України\n\
+    \e\n\e Яку допомогу та підтримку надала українська діаспора \nв  боротьбі за \
+    \ незалежність України? Розгортання боротьби за державну незалежність \nактивізувала\
+    \ діяльність української діаспори. Най-\nактивнішими були діаспори в  США й  Канаді.\
+    \ Її \nпредставники в  1980-ті рр. продовжували тради-\nційні демонстрації біля\
+    \ будівель посольства СРСР \nіз вимогою з"
+  section_title: Сторінка 153
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0093
+  text: "Розділ І. Україна в повоєнний період\n50\nв середовищі інтелігенції. Сталінський\
+    \ режим оста-\nточно протиставив себе народу, принизив патріо-\nтичне піднесення\
+    \ років війни, придушив перші \nсміливі паростки відродження української націо-\n\
+    нальної культури. Крім того, «ждановщина» по-\nсилила відірваність радянських\
+    \ митців від до­\nсягнень світової культури, конфронтаційність \nзовнішньої політики\
+    \ СРСР. 6. Культурні здобутки української діаспори\n\e\n\e Якими були досягнення\
+    \ культури тогочасної української \nд"
+  section_title: Сторінка 52
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5221475958824158
+  chunk_id: fc2291b5_c5453
+  text: "Літ.: Дорошенко В.\r\nНаукове Товариство імені Шевченка у Львові (1873 —\
+    \ 1892 — 1912 pp.). К. —\r\nЛьвів, 1913; Гнатюк В. Наукове товариство імені Шевченка.\
+    \ З нагоди 50-ліття\r\nйого заснування (1873 — 1923). Львів, 1923; Дорошенко В.\
+    \ Огнище української\r\nнауки — Наукове товариство імені Т. Шевченка. Нью-Йорк\
+    \ — Філадельфія, 1951;\r\nНаукове товариство ім. Шевченка в ЗДА, Нью-Йорк, 1963;\
+    \ Радіон С. Нарис Історії Наукового\r\nтовариства ім. Т. Шевченка в Австралії\
+    \ (1950 — 1975). Мельбурн, 1976;\r\nЮвілейний збі"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5177645683288574
+  chunk_id: fc2291b5_c5452
+  text: "У Сарселі виходять наук.-інформ. видання «Вісті\r\nНаукового товариства ім.\
+    \ Шевченка в Європі», «Вісті із Сарселю», пам’ятки укр.\r\nписемності («Требник\
+    \ Петра Могили 1646 p.», 1988, та ін.). НТШ у США в кін.\r\n40-х pp. продовжило\
+    \ розпочатий у Галичині випуск журн. «Сьогочасне і минуле»\r\n(1948, № 1; 1949,\
+    \ № 1 — 2), видає з 1958 серію «Доповіді» («Papers», майже 50\r\nвипусків), з\
+    \ 1951 — резюме («Proceedings») прочитаних доповідей у різних\r\nсекціях т-ва,\
+    \ бібліогр. покажчики, бюлетені, вісники, словники,"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5166563987731934
+  chunk_id: feaa5fa7_c2667
+  text: "Українознавчий матеріял у чужинних бібліотеках. Багато україніки зберігають\
+    \ чужинні бібліотеки в Ленінграді, Москві,\r\nВаршаві, Кракові, Бильні, Празі,\
+    \ Берліні, Мюнхені, Парижі, Римі і т. д. Зокрема\r\nукраїнознавчі видання мають\
+    \ бібліотеки на рос. і поль. території, а також на\r\nпограничних землях із мішаною\
+    \ людністю. Із цих бібліотек велику вартість для\r\nукраїнознавства мають краківські\
+    \ бібліотеки (Університетська, Чарторийських,\r\nАкадемії Наук і Нац. Музею) і\
+    \ Університетська Публічна Бібліотека у"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

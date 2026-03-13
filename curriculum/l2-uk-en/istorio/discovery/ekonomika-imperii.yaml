@@ -1,0 +1,204 @@
+discovered_at: '2026-03-13T12:17:57.769781+00:00'
+query_keywords:
+- 'Економіка імперії: Україна як житниця'
+- Зерновий експорт XVIII-XIX ст.
+- Кріпацтво як економічна система
+- Цукрова промисловість
+- Залізниці і порти
+- 'Analyze the causes and consequences of економіка імперії: україна як житниця'
+- Evaluate the historical significance of колонія ресурсів
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0071
+  text: "58\nРозділ 2. Київська держава (Русь-Україна) \nНАПРИКІНЦІ Х — В ПЕРШІЙ ПОЛОВИНІ\
+    \ ХІ ст.\n\aЯк розвивалися сільське господарство,  \nремесла й торгівля\nПоміркуйте\n\
+    Складіть план «Розвиток сільського господарства, ремесел і торгівлі в Русі \n\
+    в Х–ХІ ст.». \nНаприкінці Х — у першій половині ХІ ст. в сільському госпо-\nдарстві\
+    \ та ремісництві відбулися зміни, які сприяли підвищенню \nпродуктивності праці.\
+    \  \nДослідіть\nНа основі інфографіки опишіть: 1) які нові  явища спостерігаємо\
+    \ в сільському \nгосподарстві в іх"
+  section_title: Сторінка 61
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0045
+  text: "Опишіть особливості соціально- \nекономічного життя українських \nземель\
+    \ у першій половині XVI ст. ОПРАЦЮВАВШИ ПАРАГРАФ, \nВИ  ДІЗНАЄТЕСЬ:\n\x84\n\x84\
+    \nяк поширювалося магнатське \nземлеволодіння;\n\x84\n\x84\nпро подальше поширення\
+    \ \nфільваркового господарства;\n\x84\n\x84\nпро зміни, що відбулися в  цей \n\
+    час у  розвитку міст, становищі \nселянства й  міщанства. Тестові завдання\nrnk.com.ua/109583"
+  section_title: Сторінка 31
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0033
+  text: "2. Що бóло перешêодою на шляхó звільнення селян від êріпацтва? 3. Коли й\
+    \ чомó в Уêраїні бóли створені війсьêові поселення? §3\nУпродовж уроку доберіть\
+    \ факти, що свідчать про суттєві зміни  \nв економічному житті України у 1-й половині\
+    \ ХІХ ст."
+  section_title: Сторінка 22
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0156
+  text: "Під час дослідження теми розділу ми будемо:\n  \n– учитися показувати на\
+    \ карті адміністративно-територіальний \nподіл українських земель у складі Російської\
+    \ імперії, основні  \nцентри діяльності суспільно-політичних організацій;\n– характеризувати\
+    \ особливості соціально-економічних \nзрушень на українських землях у пореформений\
+    \ період, погляди \nта діяльність громадівців 1860-х–1890-х років;  \n– визначати\
+    \ причини й результати селянської реформи 1861 р., \nзначення громадівського руху;\n\
+    – пояснювати роль т"
+  section_title: Сторінка 108
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0204
+  text: "114\nРозділ IV\n1 \nЕкономічний розвиток Наддніпрянщини в середині XIX ст.\
+    \ Наприкін-\nці 50-х рр. XIX ст. Наддніпрянська Україна була найбільш розви-\n\
+    неним в  економічному відношенні регіоном Російської імперії. Проте \nподальшому\
+    \ економічному зростанню краю заважало існування кріпос-\nного права. Розвиток\
+    \ промисловості стримували відсутність ринку віль-\nнонайманої робочої сили та\
+    \ вузький попит на промислову продукцію. Залишки кріпосницьких відносин перешкоджали\
+    \ також процесу роз-\nшарування селянства "
+  section_title: Сторінка 114
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6197869777679443
+  chunk_id: c44f1207_c4290
+  text: "1. Економічне житє українських земель XIV-XVII вв. — джерела і лїтература.\
+    \ \r\n2. Чорноморська торговельна дорога XIV-XV в. Замки Каравул, Чорний город\
+    \ і Качибей \r\n3. Національний склад і відносини людности України. \r\n4. Гербові\
+    \ ґрупи західно-української шляхти. \r\n5. Шкільництво. \r\n6. Книжність і письменство\
+    \ XIV-XVII в. \r\n7. До питання про українські думи. \r\n8. Артистична творчість\
+    \ в українських землях XIV-XVI вв. \r\n9. Лїтература культурно-побутова. \r\n\
+    10. Протестантські громади на Українї. \r\n11. Р"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5985990762710571
+  chunk_id: feaa5fa7_c2739
+  text: "Література: Войнаровський\r\nТ. Вплив Польщі на екон. розвій України-Руси.\
+    \ Л. 1910; Bujak F. Galicya.\r\nI — II. Л. 1910; Rudnyćkyj S. Ukraina. Land und\
+    \ Volk. Відень 1916;\r\nСухов О. Екон. географія України. К. 1923; Івасюк. Кубань.\
+    \ Екон.\r\nнарис. Прага 1925; Воблий К. Екон. географія України. К. 1927; Шимонович\r\
+    \nЙ. Галичина. Екон. статистична розвідка. К. 1928; Tymoschenko W. Ukraine\r\n\
+    und Rußland in ihren gegenseitigen wirtschaftlichen Bezlehungen. Mitteilungen\r\
+    \ndes Ukr. Wissenschaftlichen Institutes"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5949641466140747
+  chunk_id: 484d0ffb_c0396
+  text: "2 Див.: Котляр М.\r\nФ. Як і чому настала удільна роздрібленість на Русі.\
+    \ — Київ, 1998. — С.19.\n\nВиникають численні нові міста як адміністративні та\r\
+    \nекономічні центри земель і волостей. Значно вищого, ніж перед тим, рівня\r\n\
+    досягло ремісниче виробництво, внаслідок вузької спеціалізації у багатьох\r\n\
+    галузях зросла кількість ремісничих професій. Мало місце у цілому значне — попри\r\
+    \nперіоди занепаду — збільшення населення, в тому числі торговельно-ремісничого\r\
+    \nпрошарку в містах. Хоч господарство в свої"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

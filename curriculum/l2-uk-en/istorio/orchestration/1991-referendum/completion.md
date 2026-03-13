@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 92
+PASS: pipeline istorio 92
 
   Module:   1991-referendum
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 92
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:19:07Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:58:27Z

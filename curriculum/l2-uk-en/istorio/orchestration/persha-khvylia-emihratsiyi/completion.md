@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 64
+PASS: pipeline istorio 64
 
   Module:   persha-khvylia-emihratsiyi
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 64
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:14:41Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:00:05Z

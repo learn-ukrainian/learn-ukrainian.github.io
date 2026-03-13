@@ -1,0 +1,205 @@
+discovered_at: '2026-03-13T10:24:58.102017+00:00'
+query_keywords:
+- 'Географія Голодомору: Регіональні відмінності'
+- Найбільш постраждалі регіони
+- Менш постраждалі регіони
+- Кубань і етнічні українці
+- Чому саме ці регіони
+- Демографічні наслідки
+- 'Analyze the causes and consequences of географія голодомору: регіональні відмінності'
+- Evaluate the historical significance of голодомор на карті
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-istoriya-schupak-2022_s0179
+  text: "РОЗДІЛ 4\n178\nНароди, які живуть \nна теренах України\n§ 31\nЯкі ви знаєте\
+    \ історичні назви українських земель?\n1.\t ІСТОРИКО-ГЕОГРАФІЧНІ РЕГІОНИ УКРАЇНИ\n\
+    Протягом історії на українських землях сформувалися \nісторико-географічні регіони\
+    \ — території країни, що виріз-\nняються особливостями географічного розташування,\
+    \ істо-\nричного розвитку, звичаїв і традицій жителів. Історико-гео-\nграфічні\
+    \ регіони не мають чітко визначених меж, а у їхніх \nназв найчастіше давня історія.\
+    \ Наприклад, назва Буковини \nпоходит"
+  section_title: Сторінка 178
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0049
+  text: "Біженці  — особи, які залишили країни \nсвого попереднього місця проживання\
+    \ \nчерез дії нацистського або інших \nрежимів. DP-табори  — тимчасові табори\
+    \ для \nпереміщених осіб. Репатріація  — повернення \nна  батьківщину з  поновленням\
+    \ гро­\nмадянських прав військовополо­нених \nі  цивільних осіб, які під час війни\
+    \ \nопинилися в  інших державах \nта  перебували там тривалий час. Радянські репатріанти\
+    \ в  очікуванні \nповернення до СРСР. 1940-ві рр. Зверніть увагу\nБіженці та переміщені\
+    \ особи  — саме \nтак у  "
+  section_title: Сторінка 29
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0229
+  text: "12. Охарактеризуйте голод 1921—1923  рр. в  Україні за планом: \n1) причини;\
+    \ 2) політика влади; 3) територія, охоплена голодом; 4) кількість голо-\nдуючих;\
+    \ 5) міжнародні організації, що надавали допомогу голодуючим; 6) наслідки \nта\
+    \ результати. 13. Складіть таблицю «Розвиток УСРР у  період непу». Сфера розвитку\n\
+    Особливості розвитку\nЕкономічне життя\nСуспільно-політичне життя"
+  section_title: Сторінка 120
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0009
+  text: "\x8F\n\x8F\n9. Покажіть на карті атласу основні регіони українських земель\
+    \ та їхню адміністра-\nтивно-територіальну належність напередодні Першої світової\
+    \ війни. 10. Визначте, \nу  складі якого регіону та адміністративно-територіального\
+    \ утворення перебував \nнаселений пункт, де ви живете. і\nДенаціоналізація  —\
+    \ втрата національних \nособливостей культури, звичаїв, побуту, мови \nтощо."
+  section_title: Сторінка 8
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0048
+  text: "— голод в Україні;\n– лютий 1948 р. — прийнято Указ Президії Верховної Ради\
+    \ СРСР «Про виселення з\nУкраїнської РСР осіб, які злісно ухиляються від трудової\
+    \ діяльності у сільському\nгосподарстві та ведуть антигромадський паразитичний\
+    \ спосіб життя». 2. Поясніть значення понять: відбудова, штучний голод. 3. Використовуючи\
+    \ спогади очевидців, напишіть есей на тему: «Післявоєнне село». 4. Заповніть порівняльну\
+    \ таблицю «Масовий штучний голод в Україні». Причини \nТериторія поширення \n\
+    Наслідки \nГолодомор 19"
+  section_title: Сторінка 30
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5069447755813599
+  chunk_id: 3d51722e_c0304
+  text: "Не криюся: мене особливо дивують і сприкрюють дедалі\r\nчастіші поклики,\
+    \ що, мовляв, \"Россия больше всех пострадала\". Коли\r\nвже на те пішлося, то\
+    \ хіба Україна, яка пережила три голоди, у тому числі\r\nбезприкладний геноцид\
+    \ 1932 — 1933 років, знищення всієї інтелігенції,\r\nфашистську окупацію і цілковите\
+    \ розорення, загибель міст і сіл у вогні війни, а\r\nвже в наш час дістала смертельні\
+    \ екологічні урази й апокаліптичний Чорнобиль,\r\n— хіба вона постраждала менше?\
+    \ А Білорусія, яка втратила у війну кожного"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.4820399880409241
+  chunk_id: feaa5fa7_c0336
+  text: "Голод почався восени 1932 p., але особливої гостроти\r\nдійшов на весні 1933\
+    \ р. Він охопив головне УССР, менше — Півн. Кавказ, Курщину\r\nй Вороніжчину,\
+    \ Нижню Волгу, Крим і Казахстан, себто землі, частково заселені\r\nукраїнцями.\
+    \ Не було голоду на суторосійських землях, які харчувалися укр.\r\nхлібом, не\
+    \ було його й на Білорусі. Населення промислових осередків і міст\r\nУкраїни відчувало\
+    \ недостачу харчів, але не таку, щоб вона спричиняла голодну\r\nсмерть. Частина\
+    \ сільської людности вимерла на місці, частин"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.4644729495048523
+  chunk_id: feaa5fa7_c0271
+  text: "Економічна районізація\r\nспирається і на природні дані, бо вони є підставою\
+    \ господарства, але, з другого\r\nбоку, вона залежить від стану продукційних сил,\
+    \ які за проґресивного розвитку\r\nгосподарства швидко міняються. Взагалі ж економічна\
+    \ районізація мусить, крім\r\nприродних факторів, до яких належать і сировина\
+    \ та енерґетичні ресурси, взяти\r\nдо уваги такі мінливі фактори, як кількість\
+    \ населення, його розподіл, ступінь\r\nгосподарського опанування території, розвиток\
+    \ шляхів, галузі виробництва, стан\r\n"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

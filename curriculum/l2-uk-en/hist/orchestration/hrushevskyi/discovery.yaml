@@ -1,0 +1,202 @@
+discovered_at: '2026-03-13T12:14:08.661564+00:00'
+query_keywords:
+- Михайло Грушевський
+- Людина-епоха
+- Біографія та наукова кар'єра
+- Політична діяльність
+- Первинні джерела
+- Деколонізаційний погляд
+- Незнищенна спадщина
+- життя та діяльність Михайла Грушевського
+- його концепцію «Історії України-Руси»
+- його роль як голови Центральної Ради
+- значення Грушевського для української історіографії
+- Минулий час в біографічному наративі
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=8DChjQAVy_s
+  channel: Реальна Історія
+  title: Яким Грушевський був насправді? Реальна історія з Акімом Галімовим
+  relevance_score: 1.0
+  relevance_note: This video directly and comprehensively introduces Mykhailo Hrushevskyi,
+    covering his biography, historical significance, and political role, perfectly
+    aligning with the module's core topic and initial sections.
+  transcript_excerpt: Сьогодні я розповім про людину яку можна вважати батьком нашої
+    нації Михайла Грушевського. Михайло Грушевський народився 29 вересня 1866 року
+    в місті Холм нині Хелм на території Польщі.
+  embed_suggestion: 'After Вступ: Людина-епоха -- This video provides an excellent
+    and comprehensive introduction to Hrushevskyi, setting the stage for the rest
+    of the module.'
+- url: https://www.youtube.com/watch?v=aZohRL1mMA4
+  channel: Комік Історик
+  title: 'Михайло Грушевський: батя української історії'
+  relevance_score: 0.9
+  relevance_note: This video focuses on Hrushevskyi's political activities and the
+    common misconceptions surrounding his historical title, directly addressing aspects
+    of his political role and legacy.
+  transcript_excerpt: Шановні слухачі ми його знаємо як першого президента України
+    але це брехня. І постать ця достатньо така відома в широких масах.
+  embed_suggestion: After Політична діяльність -- The video discusses his political
+    stance against the Hetman and clarifies his role as 'first president,' which fits
+    well after detailing his political career.
+- url: https://www.youtube.com/watch?v=gnsrG7x1Wso
+  channel: Комік Історик
+  title: українські прізвища
+  relevance_score: 0.5
+  relevance_note: While Mykhailo Hrushevskyi is briefly mentioned as an authority,
+    the video's primary focus is on Ukrainian surnames and their historical distortion,
+    making it tangentially related rather than directly about Hrushevskyi himself.
+  transcript_excerpt: і Михайло Грушевський казав що якраз українські прізвища були
+    покалічені московським зви.
+  embed_suggestion: After Деколонізаційний погляд -- Although not primarily about
+    Hrushevskyi, his quote regarding the 'mutilation' of Ukrainian surnames by Moscow
+    aligns with the theme of decolonization and historical influence.
+- url: https://www.youtube.com/watch?v=JtqknwpBbzQ
+  channel: Реальна Історія
+  title: Як російська імперія 300 років окуповувала Сакартвело
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=MWsX0G3lZlQ
+  channel: Harvard Ukrainian Research Institute
+  title: 'The Frontline: A Conversation on Ukraine''s Past and Present'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=nAdcHZHWAlU
+  channel: Harvard Ukrainian Research Institute
+  title: 'Dec1,07. Sym: Breaking the Great Silence on Ukraine''s Terror-Famine. RoundTable1'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode237/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics:
+  - culture
+  - history
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 237
+- url: https://www.ukrainianlessons.com/season6/ULP-6-237-mykhailo-hrushevskyi-velykyi-istoryk-ukrainy/
+  title: ULP 6-237 Михайло Грушевський — великий історик України
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics:
+  - ULP
+  - Season 6
+  content_type: podcast_episode
+  series: 6
+  season: 6
+  episode: 237
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0199
+  text: '7. Шевчук В. Дорога в тисячу років. – К., 1990. 8. Драч І., Кримський С.,
+    Попович М. Григорій Сковорода. Біографічна по-
+
+    вість. – К., 1984.'
+  section_title: Сторінка 118
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0115
+  text: "українська історія та література. Після закінчення гімназії Михайло \nСергійович\
+    \ вступив на історико-філологічний факультет Київського \nуніверситету. У студентські\
+    \ роки Грушевський глибоко вивчає історію Середньої \nНаддніпрянщини доби Давньої\
+    \ Русі, а також середньовічну історію \nУкраїни загалом. По закінченні університету\
+    \ він захистив канди­\nдатську дисертацію «Нарис історії Київської землі від смерті\
+    \ \nЯрослава до кінця XIV століття». З 1894 року, очоливши кафедру історії Львівського\
+    \ університету"
+  section_title: Сторінка 91
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0103
+  text: "Історична наука та історична пам’ять\n105\nшого президента незалежної України.\
+    \ Варто зазначити, що слі-\nди цього міфу можна знайти навіть на сайтах наукових\
+    \ установ. Факт чи фейк? Чи був Михайло Грушевський президентом? Коло інтересів\
+    \ Михайла Грушевського було широким. У юні роки Ми-\nхайло Сергійович пробував\
+    \ себе як письменник. Відомо, що свого часу він \nнадрукував оповідання «Бех-аль-Джугур»\
+    \ та «Бідна дівчина». Протягом життя він написав близько двох тисяч праць з історії,\
+    \ соціо-\nлогії, літерату"
+  section_title: Сторінка 105
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0008
+  text: "\e\n\e За допомогою додаткових джерел \nвизначте внесок М. Грушевського \
+    \ \nу  вивчення історії України. ПЕРІОДИЗАЦІЯ СЕРЕДНЬОВІЧЧЯ  \nУ  ВСЕСВІТНІЙ ІСТОРІЇ\n\
+    Назва періоду\nХронологічні межі\nРаннє середньовіччя \nКінець V  — середина ХІ\
+    \ ст. Зріле (Високе)  \nсередньовіччя \nСередина ХІ  — середина \nХІV  ст. Пізнє\
+    \ середньовіччя \nСередина ХІV  — ХV ст."
+  section_title: Сторінка 6
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6774424314498901
+  chunk_id: 5739d24f_c0895
+  text: "1 Грушевський М.\r\nС. Автобіографія. Друкується як рукопис. — К., 1926.\
+    \ —\r\nС.4.\n\n2 Грушевський М. Спомини // Київ. — 1988. — № 12. — С. 117.\n\n\
+    3 Там же. — С. 121.\n\n4 Грушевський М.\r\nС. Автобіографія. — С. 6."
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.6494275331497192
+  chunk_id: 479cf43d_c0031
+  text: "Бібліогр.:Левицький І. Е. \r\nРеєстр наукових і літ. праць проф. Михайла\
+    \ Грушевського // Наук. зб.,\r\nприсвячений проф. М. Грушевському учениками й\
+    \ прихильниками з нагоди його\r\nдесятилітньої наукової праці в Галичині (1894\
+    \ — 1904). — Львів, 1906; Ювілейний\r\nзб. на пошану Михайла Сергійовича Грушевського.\
+    \ З нагоди шістдесятої річниці\r\nжиття та сорокових роковин наукової діяльності.\
+    \ Ч. III. Матеріали до\r\nбібліографії друк. праць акад. Грушевського за 1905\
+    \ — 1928 рр. / Упор. Балика\r\nД. А. таін. — К., "
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.6055703163146973
+  chunk_id: 479cf43d_c0030
+  text: "Про нього див.: Франко І. \r\nПричинки до історії України-Руси. Ч. І // Писання\
+    \ Івана Франка. — Т.\r\nVI. — Львів, 1912; Герасимчук В. Михайло Грушевський як\
+    \ історіограф\r\nУкраїни // ЗНТШ. — 1922. — Т. 133; Багалій Д. І. Акад. M. C.\r\
+    \nГрушевський і його місце в укр. історіографії (історично-критичний нарис) //\r\
+    \nЧервоний Шлях. — 1927. — №1; Ювілей акад. M. C. Грушевського. 1866 — 1926,\r\
+    \n— К., 1927; Крип’якевич І. Михайло Грушевський. Життя і діяльність. — Львів,\r\
+    \n1935; Стебун І. Проти ворожих теорій в "
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

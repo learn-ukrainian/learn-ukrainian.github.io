@@ -7,12 +7,21 @@
       "status": "complete",
       "ts": "2026-03-13T00:48:08Z",
       "task_id": "v5-pavlo-fylypovych-pA",
-      "mode": "full"
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     },
     "discover": {
       "status": "complete",
       "ts": "2026-03-13T00:48:08Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     }
   }
 }

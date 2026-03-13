@@ -1,0 +1,163 @@
+discovered_at: '2026-03-13T12:22:31.590650+00:00'
+query_keywords:
+- 'Олександра Матвійчук: Право на справедливість та Нобелівський голос'
+- 'Життєпис: Від юридичного факультету до Нобелівської трибуни'
+- 'Історичний контекст: Революція Гідності та народження «Євромайдан SOS»'
+- 'Правозахисна архітектура: Центр громадянських свобод та документування злочинів'
+- 'Сучасний етап: «Трибунал для Путіна» та адвокація Спеціального трибуналу'
+- 'Вплив: Переосмислення глобальної безпеки через права людини'
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- 'Застосовувати знання з теми «Правозахисна архітектура: Центр громадянських свобод
+  та документування злочинів» у власній мовній практиці'
+- biography
+- правозахисниця
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=e0Tz3hMt7l4
+  channel: Реальна Історія
+  title: Олександра Матвійчук про справедливість і перемогу
+  relevance_score: 1.0
+  relevance_note: The video features Oleksandra Matviychuk discussing her role as
+    head of the Center for Civil Liberties, her Nobel Prize, her human rights work
+    since 2014, and her definition of victory, directly aligning with the module's
+    core themes.
+  transcript_excerpt: Олександру Матвійчук керівницю центру громадянських свобод українського
+    Нобелівську лауреатку людина яка займається правозахисною діяльністю давно точно
+    з початку російсько-української війни в сенсі 14-го року... перемога це не просто
+    витіснити російські війська за межі української території.
+  embed_suggestion: 'After section Сучасний етап: «Трибунал для Путіна» та адвокація
+    Спеціального трибуналу, as it details her current work and vision for justice
+    and victory.'
+- url: https://www.youtube.com/watch?v=Nr7tICV-Uj0
+  channel: Реальна Історія
+  title: МАТВІЙЧУК – Нобелівська премія, боротьба за права людей та демократію | Тихий
+    вечір з Оленою Кравець
+  relevance_score: 1.0
+  relevance_note: This interview explicitly covers Oleksandra Matviychuk's Nobel Prize
+    speech, the founding of Euromaidan SOS in 2013, the Center for Civil Liberties,
+    and their early work documenting war crimes in Crimea and Donbas, directly addressing
+    key historical and architectural sections of the module.
+  transcript_excerpt: людина яка першою в історії читала Нобелівську промову українською
+    очільниця центру громадянських свобод що торік отримав Нобелівську премію Миру
+    Олександр Матвійчук... організація створена 2007 році але найбільший напевно прорив
+    стався в 2013 році коли ми створили ініціативу Євромайдан SOS.
+  embed_suggestion: 'After section Історичний контекст: Революція Гідності та народження
+    «Євромайдан SOS», as it provides direct context on the founding of Euromaidan
+    SOS and the transition to documenting war crimes.'
+- url: https://www.youtube.com/watch?v=xRA89ygn2_o
+  channel: Harvard Ukrainian Research Institute
+  title: Чому в нас не буде нового Нюрнберга – лауреатка Нобеля Олександра Матвійчук
+  relevance_score: 0.9
+  relevance_note: The video features Oleksandra Matviychuk discussing her early life
+    in the Soviet Union and then delves into the complex topic of establishing a tribunal
+    for Putin's crimes, directly relevant to both her biography and her current advocacy
+    work mentioned in the module.
+  transcript_excerpt: Е, це Нобелівська премія миру. Е, Олександре Матвійчук, вітаю
+    вас. ... А-а тому хотів розпочати з того, ви теж народилися в 80-х роках. Е, трошки
+    застали імперію зла Радянський Союз. Як ви його пам'ятаєте?
+  embed_suggestion: 'After section Сучасний етап: «Трибунал для Путіна» та адвокація
+    Спеціального трибуналу, as it directly addresses the challenges of accountability
+    for international crimes.'
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0020
+  text: '12
+
+    Марися Рудська. Сила слова'
+  section_title: Сторінка 16
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0170
+  text: "ä така \nблагодать чути мамину мову \v\x8C\x11 Коляновськи±\f\x11 4. Розпізнати\
+    \ талант \nозначає відкрити в собі Áось важливе \vО\x11 \x8Dосак\f\x11 5. Душа\
+    \ єдина на землі \nдержава де є свобода чиста як озон \vЛ\x11 Костенко\f\x11 6.\
+    \ Упертість у супе-"
+  section_title: Сторінка 119
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0323
+  text: "257\nвживання їжі. 2. Бабусю, я планую відвідати річку та реалізувати \n\
+    купальний процес. 559\t ПОСПІЛКУЙТЕСЯ. Поясніть, як ви розумієте таке твердження:\
+    \ «Перед офіцій-\nно-діловим стилем рівні всі – як геніальний поет, так і фізик-теоретик».\
+    \ 560\t І. Прочитайте тексти А і Б. До якого стилю мовлення вони належать? Який\
+    \ із \nтекстів є зразком писемної форми, а який – усної? Текст А \nРЕЄСТРАЦІЯ\
+    \ НА ОЛІМПІАДУ З РОБОТОТЕХНІКИ\n– Добридень, Світлано Миколаївно. – Вітаю, Максиме.\
+    \ – Я хочу взяти участь в олімп"
+  section_title: Сторінка 261
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0362
+  text: "235\nДодатки\nДодаток \x18\nПО£ИРЕНä ПОÌИЛКИ СЛОВОВ\x93ИВАНН¨ \nПравильно\n\
+    Н\x92¸равильно\nвважати за потрібне\x1E вважаю правильним\x1E \nвважати своїм\
+    \ обов’язком\x1E я вважаю, Áо\nрахувати за потрібне \nставиться з повагою\nвідноситься\
+    \ з повагою\nставлення до людей, ставлення до навчання, \nтвоє ставлення до справи,\
+    \ недбало ставитися \nдо справи\nвідношення до людей\nвиробничі відносини, суспільні\
+    \ відносини, \nдипломатичні відносини\nвиробничі відношення\nвзаêµини в колективі,\
+    \ стосунки між коле-\nгами\nвідношення в колективі\nскасо"
+  section_title: Сторінка 235
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0106
+  text: "75\nНаголос. Нормативний наголос. Основні правила наголошування слів § 18\
+    \ \x1F\nнову редакцію твору, яку автор зробив спеціаль-\nно для нашого видання.\
+    \ Поетична казка настіль-\nки вразила талановиту львівську художницю Олю \nКвашу,\
+    \ що вона на кілька місяців утекла в Кар-\nпатські гори, щоб бродити стежками\
+    \ Золоторого-\nго Оленя, надихаючись на створення непересічних \nілюстрацій (За\
+    \ І. Малковичем).\n \n Чи впливає на комфортність і  ефективність спілку-\nвання\
+    \ правильність або помилковість наголошування \nслів"
+  section_title: Сторінка 75
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5262665748596191
+  chunk_id: c846b4d3_c0270
+  text: "Милостивый государь, в 31 № «Молвы», в статье «Чистое\r\nдело требует чистых\
+    \ средств», я между прочим разобрал часть из тех статей,\r\nкоторые помещались\
+    \ в вашей газете по «славянскому вопросу». Статья эта\r\nпослужила поводом к нападкам\
+    \ на вашу газету со стороны других газет, между\r\nпрочим «Голоса», который придал\
+    \ ей смысл обличения «нечистых средств,\r\nупотребляемых гг. Лихачевым и Сувориным»,\
+    \ между тем как мне не было никакого\r\nдела до счетов «Голоса» с гг. Лихачевым\
+    \ и Сувориным, а только до тех\r\nпс"
+  work: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+  year: 1880
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag.htm
+- score: 0.5140937566757202
+  chunk_id: 1af78606_c0146
+  text: О. Б. Ткаченко.
+  work: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+  year: 2004
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/ukrmova/um01.htm
+- score: 0.5086151361465454
+  chunk_id: 3b9d3966_c0344
+  text: Примітки.
+  work: Патерик Києво-Печерський
+  author: Невідомий
+  year: 1462
+  genre: religious
+  language_period: old_east_slavic
+  source_url: http://izbornyk.org.ua/paterikon/pat01.htm

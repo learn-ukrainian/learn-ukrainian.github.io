@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 100
+PASS: pipeline istorio 100
 
   Module:   zakhid-2008
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 100
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:20:17Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:13:22Z

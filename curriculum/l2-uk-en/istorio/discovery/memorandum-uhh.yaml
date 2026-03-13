@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T10:13:46.185734+00:00'
+query_keywords:
+- Меморандум Української Гельсінської групи
+- Гельсінські угоди
+- Створення УГГ
+- Меморандум
+- Діяльність групи
+- Спадщина УГГ
+- Analyze the causes and consequences of меморандум української гельсінської групи
+- Evaluate the historical significance of права людини як зброя
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0215
+  text: "3) Домагатися, щоб на всіх міжнародних нарадах, де \nмають обговорюватися\
+    \ підсумки виконання Гельсін­\nських угод, Україна як суверенна європейська дер­\n\
+    жава і член ООН була представлена окремою деле­\nгацією. 4) З  метою вільного\
+    \ обміну інформацією та ідеями \nдомагатися акредитування в Україні представників\
+    \ \nзакордонної преси, створення незалежних прес­\nагентств тощо. Своїм головним\
+    \ завданням Група вважає ознайом­\nлення урядів країн-учасників і світової громадськос­\n\
+    ті з фактами порушень на терена"
+  section_title: Сторінка 119
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0213
+  text: "розпочалося повноцінне \nспівробітництво. Колишній член Української громад­\n\
+    ської групи сприяння виконанню Гельсінських угод \nЙосиф Зісельс згадував, що\
+    \ в  єврейській спільноті \nз’являлося «дедалі більше розуміння того, що в умо­\n\
+    вах імперії національні рухи мають спільного воро­\nга — комуністичну імперію».\
+    \ Наприкінці 1960  — на початку 1970-х рр. у  єврей­\nському, як і  інших антиімперських\
+    \ національних \nрухах СРСР, була вибудована ідеологічна структура. Виокремилися\
+    \ дисиденти, які зосередилися "
+  section_title: Сторінка 118
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0240
+  text: "1. Підберіть факти з біографії Миколи Руденка, які свідчать про його вірність\
+    \ і \nпослідовність у дисидентському русі. 2. Програмні засади та діяльність \
+    \ \nУкраїнської Гельсінської групи \nУ програмних документах УГГ зазначалося,\
+    \ що організація \nставить за мету виконання кількох завдань: ознайомити українську\
+    \ \nгромадськість із Загальною декларацією прав людини; сприяти \nвиконанню Гельсінських\
+    \ угод; домагатися присутності окремої \nделегації України як члена ООН на всіх\
+    \ міжнародних нарадах, де \nобгов"
+  section_title: Сторінка 134
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0212
+  text: "Розділ III. Україна в період системної кризи Союзу Радянських Соціалістичних\
+    \ Республік\n116\n1972 рр. загальна кількість учасників диси­дентського \nй правозахисного\
+    \ рухів в Україні становила близько \n1  тис. осіб. Репресії 1970-х рр. завдали\
+    \ удару українському \nопозиційному руху, але не змогли його зупинити. 3\t\nУтворення\
+    \ Української громадської групи \nсприяння виконанню Гельсінських угод. У  1975 \
+    \ р. СРСР підписав Гельсінський Заключний \nакт Наради з  безпеки та співробітництва\
+    \ в  Європі, \nта зобо"
+  section_title: Сторінка 118
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0246
+  text: "Поясніть, чому. У той час, коли…  на теренах України \nбуло створено Українську\
+    \ Гельсінську групу (1976 рік), \n Тоді… у світі \nу Канаді заборонили смертну\
+    \ кару (14.07.1976 року). Підсумуйте свої знання \n \n1. Запам’ятайте дату і подію,\
+    \ пов’язані з ними: \n– 9 листопада 1976 р. — створено Українську Гельсінську\
+    \ групу (УГГ). 2. За допомогою інтернет-ресурсів дізнайтесь, як реагували українці\
+    \ — представники \nрізних соціальних груп на те, що Генеральний секретар ЦК КПРС\
+    \ Леонід Брежнєв підписав \n1 серпн"
+  section_title: Сторінка 137
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.48634886741638184
+  chunk_id: 53691244_c0127
+  text: "Програмові документи української Гельсінгської Групи\r\nписані різними людьми\
+    \ в різний час, а тому на початку досить розмиті. Чогось\r\nособливо нового в\
+    \ суспільну думку вони не привнесли, а лише підтвердили ідею\r\n«єдності загальнолюдських\
+    \ і національних прав українських громадян». Група\r\nеволюціонувала від загальнодемократичних,\
+    \ правових завдань, де серед інших був\r\nі захист національних прав у досить\
+    \ поміркованих тонах, до осуду тоталітарної\r\nсистеми й усвідомлення першорядних\
+    \ завдань українського"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.4696173667907715
+  chunk_id: 53691244_c0126
+  text: "Репресії початку 1970-х призвели до перегляду тактики й\r\nдеяких ідей руху.\
+    \ Василь Овсієнко, осмислюючи причини виникнення\r\nшістдесятництва як суспільного\
+    \ явища, простежує його еволюцію (неопублікована\r\nстаття). Один із висновків:\
+    \ у майбутньому життя буде вимагати організації руху,\r\nа то й переходу його\
+    \ в підпілля 31.\r\nВищезгадані ідеї здобули розвиток насамперед на сторінках\
+    \ самвидавського\r\n«Українського вісника» за редаґуванням В.Чорновіла.\n\nВажливим\
+    \ документом історії непідцензурної\r\nсуспільно"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.4558365046977997
+  chunk_id: 53691244_c0342
+  text: "60\r\n ЦГАООУ.—Ф.43.—Оп.I.—Д.23.— Л.1.\n\n61\r\n Ленін В.I.\r\nПовне зібр.\
+    \ творів.— Т.40.— С.154.\n\n62\r\n Там само.— С.40.\n\n63\r\n Там само.— С.42.\n\
+    \n64\r\n Центральный государственный архив высших органов власти\r\nи управления\
+    \ Украины.— Ф.3809.— Оп.2.— Д.9.— Л.10.\n\n65\r\n ЦГАООУ.— Ф.1.— Оп.6.— Д.5.—\
+    \ Л.4.\n\n66\r\n Там само.— Л.31.\n\n67\r\n Резолюція IV Всеукраїнського з`їзду\
+    \ Рад про державні\r\nвзаємини між УССР і РСФРР.— У зб.: Національні відносини\
+    \ в Україні у XX ст.—\r\nС.96.\n\n68\r\n См.: Ленін В.I.\r\nПовне зібр. творів.— "
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

@@ -1,0 +1,208 @@
+discovered_at: '2026-03-13T12:41:34.564152+00:00'
+query_keywords:
+- '1918-1920: Війна і союз одночасно'
+- Війна за Львів 1918-1919
+- Варшавський договір 1920
+- Київська операція
+- Ризький мир 1921
+- 'Analyze the causes and consequences of 1918-1920: війна і союз одночасно'
+- Evaluate the historical significance of парадокс 1918-1920
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode77/
+  title: Ukrainian History Course Part 7 Second World War in Ukraine
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 77
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0171
+  text: "Якими \nбули особливості Першого зимового походу? 1 \nПередумови війни союзницьких\
+    \ українсько-польських військ проти \nбільшовиків у  1920  р. Варшавська угода.\
+    \ У  польському керівництві \nв  цей час переважала ідея експансії на Схід. При\
+    \ цьому представники \nпоміркованого табору виступали за виведення зі сфери російського\
+    \ впли-\nву Литви, Білорусі та України й  створення з  ними федерації. Прибіч-\n\
+    ники більш рішучих дій прагнули включити території литовського,"
+  section_title: Сторінка 91
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0174
+  text: "93\n§ 16. Україна навесні 1920  — у  1921  р. Згідно з  військовою конвенцією,\
+    \ бойові дії обох сторін могли вес-\nтися тільки під польським командуванням.\
+    \ Економічне життя України \nпереходило під контроль Польщі. Валюта мала бути\
+    \ спільною. Польсько-\nму управлінню підпорядковувалися залізниці. Україна зобов’язувалася\
+    \ \nзабеспечувати польське військо продуктами, а  також кіньми, волами, \nпідводами\
+    \ тощо. Поляки зобов’язалися брати участь у  цих операціях \nлише до Дніпра, у \
+    \ межах Правобережної України"
+  section_title: Сторінка 93
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0186
+  text: "99\n§ 17. Розвиток культури в роки Першої світової війни та на початку Української\
+    \ революції \n\x17\n\x17 Результати війни союзницьких українсько-польських військ\
+    \ \nіз  більшовицькими силами в  1920  р. були закріплені Ризькою угодою. \x17\
+    \n\x17 Після розгрому Збройних сил Півдня Росії та махновців більшо-\nвики перемогли\
+    \ своїх противників на території України. \x17\n\x17 Другий зимовий похід став\
+    \ подією, якою завершилася Українська \nреволюція 1917—1921  рр. \x17\n\x17 За\
+    \ своїм історичним значенням Українська революція 1917—19"
+  section_title: Сторінка 99
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0133
+  text: "У боях за Львів \nпольська сторона втратила загиблими 277 осіб, українська\
+    \ — 250. Після \nвзяття Львова польськими військами \nв місті відбувся триденний\
+    \ погром єв-\nрейського населення. Стався він за мов-\nчазної згоди польського\
+    \ командування \nі був своєрідною помстою єврейському \nнаселенню за його невтручання\
+    \ до поль-\nсько-українського протистояння в місті. Уряд ЗУНР отримав назву Тимчасовий\
+    \ Державний Секретаріат, а  пізніше  — Рада\nДержавних Секретарів ЗУНР. Його першим\
+    \ головою був К. Левицький. 9"
+  section_title: Сторінка 72
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0577
+  text: "Хронологічна таблиця \nДата \nПодія \n1944 р., вересень \nпідписано Люблінську\
+    \ угоду, згідно з якою частина \nукраїнських земель (Холмщина, Лемківщина, Посяння,\
+    \ \nчастина Підляшшя) передавалася Польщі \n1945 р.,  \nквітень–червень \nучасть\
+    \ української делегації в установчій конференції зі \nстворення ООН у місті Сан-Франциско\
+    \ (США) \n1945 р., червень \nукладено радянсько-чехословацький договір, відповідно\
+    \ \nдо якого Закарпаття офіційно включено до УРСР \n1945 р., серпень \nпідписано\
+    \ радянсько-польський договір"
+  section_title: Сторінка 322
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6688478589057922
+  chunk_id: feaa5fa7_c1298
+  text: "Бої за Львів. На час від\r\n22. XI. до кінця XII. 1918 р. припадає низка\
+    \ місцевих операцій з обох сторін:\r\nпід Львовом та активніших на півн. відтинку\
+    \ укр.-поль. фронту (Рава Руська,\r\nЛюбачів, Чесанів, Ярослав), як і на півдні\
+    \ (Хирів, Перемишль). Ініціятива в цих\r\nдіях, ведених здебільша за здобуття\
+    \ опанованих поляками міст та прикордонних\r\nсмуг, була в укр. руках, але укр.\
+    \ операціям не вистачало систематичности й\r\nнаполегливости; їх здебільша вели\
+    \ окремі групи без тісного оперативного пов’язання."
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.61471027135849
+  chunk_id: feaa5fa7_c0021
+  text: "Влада Директорії УНР. Внутрішня політика Директорії\r\n(517). Трудовий Конґрес\
+    \ (518). Зовнішня політика Директорії УНР (518).\r\nУкр.-больш. війна (518). Бої\
+    \ на Правобережжі (519). Уряд С. Остапенка і спроби\r\nпорозумітися з державами\
+    \ Антанти (520). Новий уряд на чолі з соціялістами\r\n(520). Кам’янецька доба\
+    \ (521). Взаємини урядів — УНР і ЗОУНР (522). Війна з\r\nвійськами ген. Денікіна\
+    \ (523). Упадок фронту (523). УНР І Польща (524). Зимовий\r\nпохід і доля УГА\
+    \ (524). Варшавський договір (525). Поль.-укр. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.61471027135849
+  chunk_id: feaa5fa7_c3216
+  text: "Влада Директорії УНР. Внутрішня політика Директорії\r\n(517). Трудовий Конґрес\
+    \ (518). Зовнішня політика Директорії УНР (518).\r\nУкр.-больш. війна (518). Бої\
+    \ на Правобережжі (519). Уряд С. Остапенка і спроби\r\nпорозумітися з державами\
+    \ Антанти (520). Новий уряд на чолі з соціялістами\r\n(520). Кам’янецька доба\
+    \ (521). Взаємини урядів — УНР і ЗОУНР (522). Війна з\r\nвійськами ген. Денікіна\
+    \ (523). Упадок фронту (523). УНР І Польща (524). Зимовий\r\nпохід і доля УГА\
+    \ (524). Варшавський договір (525). Поль.-укр. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

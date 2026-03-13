@@ -6,13 +6,22 @@
     "discover": {
       "status": "complete",
       "ts": "2026-03-12T18:38:27Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     },
     "research": {
       "status": "complete",
       "ts": "2026-03-12T18:38:27Z",
       "task_id": "v5-word-formation-person-suffixes-pA",
-      "mode": "full"
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     }
   }
 }

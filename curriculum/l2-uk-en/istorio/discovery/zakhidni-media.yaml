@@ -1,0 +1,201 @@
+discovered_at: '2026-03-13T12:32:59.149071+00:00'
+query_keywords:
+- 'Західні медіа: Сліпі плями'
+- «Обидві сторони»
+- Кремлівські тези в мейнстримі
+- Незнання контексту
+- «Реалізм» і «втомленість»
+- Зміни після 2022
+- 'Analyze the causes and consequences of західні медіа: сліпі плями'
+- Evaluate the historical significance of ненавмисна допомога
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0243
+  text: "який? Зміст\nподії і вчинки \nперсонажів\nпричини ознак \nі дій\nознаки особи,\
+    \ \nпредмета\nБудова\nзав’язка — роз-\nвиток подій — \nкульмінація — \nрозв’язка\n\
+    теза — аргумен-\nти — висновок\nзагальне уяв-\nлення про пред-\nмет — окремі \n\
+    його ознаки — \nвисновок\nСТИЛІ МОВЛЕННЯ\nОзнаки\nстилю\nОфіційно-\nділовий\n\
+    Науковий\nПубліци-\nстичний\nРозмовно-\nпобутовий\nХудожній\nСфера \nвикори-\n\
+    стання\nділові \nстосунки\nосвіта, \nнаука, \nтехніка\nпобут\nхудожня \nлітература\n\
+    Призна-\nчення \nурегу-\nлювання \nслужбових \nстосунків\nповідом-\nлен"
+  section_title: Сторінка 226
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0243
+  text: "ГРУПИ ЛЕКСИКИ (ЛЕКСИКОЛОГІЯ)\nГрупи\nЗначення\nПриклади\nОднозначні слова\n\
+    Антоніми\nНеологізми\nВласне\nукраїнська \nлексика (питома)\nНейтральна \nлексика\n\
+    Багатозначні \nслова\nЗагальновжива-\nна лексика\nОмоніми\nПрофесійна \nлексика\
+    \ й терміни\nСиноніми\nДіалектизми\nПароніми\nІсторизми\nАрхаїзми\nЗапозичена\n\
+    лексика\nЕмоційно \nзабарвлена\nлексика\nслова, що мають одне лексичне \nзначення\n\
+    слова з протилежним лексичним \nзначенням\nслова, які є новими назвами пред-\n\
+    метів та явищ, а також слова, \nстворені письменниками\nслов"
+  section_title: Сторінка 220
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0172
+  text: "3. Як ви розумієте вислів «кризові \nявища в суспільно-політичному житті»?\
+    \ 4. Наведіть декілька прикладів прояву \nкризових явищ у суспільно-політичному\
+    \ \nжитті. Додаткові матеріали\nrnk.com.ua/109518\n© ТОВ Видавництво «Ранок».\
+    \ Всі права захищено."
+  section_title: Сторінка 94
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0220
+  text: "Інколи увагу читача на багатозначність слова звертають навмисне. Існують\
+    \ \nтакі способи стилістичного використання багатозначності слова:\n \n уживання\
+    \ того самого слова в  одному реченні (тексті) в  різних значеннях: \nМалі (недорослі)\
+    \ діти — малий (незначний) клопіт, великі (дорослі) діти — \nвеликий (значний,\
+    \ обтяжливий) клопіт;\n \n використання слова в  одному реченні (тексті) в  його\
+    \ вужчому й  ширшому \nзначенні: Пахне хвоєю в  лісі, а  злежаний почорнілий сніг\
+    \ уже пахне весною;"
+  section_title: Сторінка 156
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5626112222671509
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5569109916687012
+  chunk_id: f79fbc43_c0062
+  text: "Народи, над якими було встановлено гегемонію, структурували свій\r\nдискурс\
+    \ радше навколо питань іноземного гноблення та боротьби за визволення від\r\n\
+    нього, ніж навколо досягнення менш явної, але більш певної перемоги, яку могли\r\
+    \nдати постколоніальні дискурс і перспектива. Не до кінця зрозуміло, чи\r\nпостколоніальний\
+    \ дискурс був вбитий у зародку цензурою та погрозами (що було,\r\nбезперечно,\
+    \ потужним чинником у культурній політиці Росії), чи ж перегляд\r\nпроблем колоніалізму\
+    \ був неможливий через бідніс"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5512540936470032
+  chunk_id: 3d51722e_c0305
+  text: "По-перше, Росія зовсім не залишалася і не залишається\r\nнаодинці зі своїми\
+    \ бідами і проблемами. Хіба у відродженні Нечорнозем’я не\r\nдопомагають їй інші\
+    \ республіки, зокрема Україна? Я вже не кажу про освоєння сибірської\r\nнафти,\
+    \ про БАМ та інше. По-друге, якщо є в деяких регіонах вияви русофобії з\r\nбоку\
+    \ частини населення, то треба до Цього явища поставитися серйозно, тобто\r\nвизнати,\
+    \ що воно потребує не лише емоційної оцінки, а й соціологічного,\r\nісторичного,\
+    \ психологічного аналізу. Зокрема, на мій "
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm

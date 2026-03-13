@@ -5,7 +5,12 @@
   "phases": {
     "research": {
       "status": "failed",
-      "ts": "2026-03-13T01:24:03Z"
+      "ts": "2026-03-13T01:24:03Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     }
   }
 }

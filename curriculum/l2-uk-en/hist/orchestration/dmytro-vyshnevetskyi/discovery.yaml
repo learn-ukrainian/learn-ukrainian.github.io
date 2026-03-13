@@ -1,0 +1,166 @@
+discovered_at: '2026-03-13T10:21:23.256681+00:00'
+query_keywords:
+- 'Дмитро Вишневецький: Перший кошовий'
+- 'Шлях князя: Від Волині до Степу'
+- Заснування Малої Хортиці
+- Читання
+- Геополітика і Дипломатія
+- Первинні джерела
+- Деколонізаційний погляд
+- the role of Dmytro Vyshnevetskyi in the founding of the first Sich
+- the geopolitical significance of the Khortytsia fortress
+- the legendary status of Baida in Ukrainian folklore
+- 'Historical narrative: past perfective'
+- Passive voice in historical descriptions
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=a6BbDWIinSM
+  channel: Реальна Історія
+  title: Ким козаки були насправді? Вражаюча і найлогічніша версія. Реальна історія
+    з Акімом Галімовим
+  relevance_score: 0.9
+  relevance_note: The video directly discusses Dmytro Vyshnevetskyi, his role in the
+    founding of the Sich, and debunks common myths surrounding the Cossacks from a
+    decolonization perspective, aligning perfectly with the module's core topic and
+    pedagogical approach.
+  transcript_excerpt: щоб розгадати таємницю їхнього походження Давайте розглянемо
+    діяльність перших відомих в історії козацьких ваташків давайте пригадаємо першого
+    отамана або Гетьмана Хто це в голову одразу приходить Дмитро Байда Вишневецький
+    пам'ятаєте зі шкільної програми Це був засновник перш Січі але це ще один міф
+    діяльність Вишневецького припадає на с
+  embed_suggestion: After section Деколонізаційний погляд – This video directly addresses
+    Vyshnevetskyi's role and applies a decolonizing lens to Cossack history.
+- url: https://www.youtube.com/watch?v=m_XN30APU1s
+  channel: Комік Історик
+  title: 'Петро Сагайдачний: гетьман чи пірат?'
+  relevance_score: 0.7
+  relevance_note: While the primary focus is Petro Sagaidachny, the video directly
+    references Dmytro Vyshnevetskyi and his historical context in relation to the
+    founding of the Zaporozhian Sich, providing valuable comparative information for
+    the module.
+  transcript_excerpt: якщо ще в 16 столітті там Дмитро якогось назвали Байда Вишневецький
+    кажуть що він засновник Запорозької Січі то Дмитро Байди вишневецьким гетьманом
+    не був він був Просто ватажком козацькою такого Ну там скажемо загону
+  embed_suggestion: After section Заснування Малої Хортиці – This provides a contrasting
+    perspective on Vyshnevetskyi's role as a Cossack leader in comparison to later
+    figures like Sagaidachny.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0060
+  text: "§ 6. Поява українського козацтва\n41\nКнязь Дмитро Вишневецький. Невідомий\
+    \ \nхудожник. XVIII ст. Національний музей \nісторії України в  Києві\n  Словник\n\
+    Покозачення  — процес переходу \nв  козацтво представників інших \nверств суспільства.\
+    \ Низове козацтво  — козаки-\nзапорожці, які селилися в  нижній \nтечії Дніпра\
+    \ на землях, \nпідконтрольних Січі. У складі населення України кількість коза-\n\
+    цтва поступово збільшувалася. Як побутове \nявище козакування ставало звичним\
+    \ для різних \nверств суспільства. Поширю"
+  section_title: Сторінка 41
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0093
+  text: "СТАНОВЛЕННЯ КОЗАЦТВА\n(XVI — перша половина XVII ст.) \nРОЗДІЛ 2\nЧерез рік\
+    \ кримському хану вдалося зруйнувати фортецю на Малій \nХортиці. Проте через кілька\
+    \ років козацтво самостійно заснувало новий \nукріплений центр — Томаківську Січ.\n\
+    Варто запам'ятати!\nЗапорозька \nСіч \n— \nназва укріпленого \nкозацького \nпоселення\
+    \ \nна \nДніпровському острові.\nКіш у козаків — укріплена стоянка. Із часом кошем\
+    \ почали називати орга­\nни управління Запорозької Січі й полків.\nДіємо: практи\
+    \ чні 3а вдання\nОпрацюйте відео пр"
+  section_title: Сторінка 71
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0096
+  text: "СТАНОВЛЕННЯ КОЗАЦТВА\nРОЗДІЛ 2  \n(XVI — перша половина XVII ст.)\nЗНАЮ МИНУЛЕ\
+    \ » ОСМИСЛЮЮ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \nЗАПИТАННЯ І ЗАВДАННЯ «•\n•» ЗНАЮ\
+    \ І СИСТЕМАТИЗУЮ НОВУ ІНФОРМАЦІЮ\n1. С а м о о ц і н ю в а н н я\nОцініть свої\
+    \ успіхи в опануванні теми «Походження українського козацтва. \nДмитро Вишневецький.\
+    \ Запорозька Січ».\nМожу пояснити значення понять «козак», «Запо­\nрозька Січ»,\
+    \ «кіш», «кошовий отаман», «козацька \nрада».\n^^П рекРасН°\nМожу визначити передумови\
+    \ і джерела форму­\nвання козацтва.\n"
+  section_title: Сторінка 74
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0091
+  text: "СТАНОВЛЕННЯ КОЗАЦТВА\n(XVI — перша половина XVII ст.) \nРОЗДІЛ 2\n.0 :. \n\
+    Походження українського козацтва. \n§ ю Дмитро Вишневецький. \nЗапорозька Січ\n\
+    Пригадайте, що вам відомо про козаків. Коли з ’явилася перша письмова \nзгадка\
+    \ про козаків?\nЧитаємо й розуміємо\nДізнайтеся історію виникнення українського\
+    \ козацтва з навчальних мате­\nріалів с. 69-71. Структуруйте інформацію в карту\
+    \ пам’яті. Доберіть факти, що \nхарактеризують козацтво як фронтирну спільноту.\n\
+    1. Походження українського козацтва\nСпоконвіку"
+  section_title: Сторінка 69
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0109
+  text: "Розділ 2\nСТАНОВЛЕННЯ КОЗАЦТВА \n(XVI — перша половина XVII ст.)\nЗНАЮ МИНУЛЕ\
+    \ » ОСМИСЛЮЮ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \nЗАПИТАННЯ І ЗАВДАННЯ «•\n•» ЗНАЮ\
+    \ І СИСТЕМАТИЗУЮ НОВУ ІНФОРМАЦІЮ\n1. С а м о о ц і н ю в а н н я\nОцініть свої\
+    \ успіхи в опануванні теми «Козацькі повстання кінця XVI ст.».\nМожу назвати час\
+    \ та провідників козацьких по­\nвстань кінця XVI ст.\nМожу визначити причини,\
+    \ приводи до повстань, їх \nрезультати й наслідки.\nМожу пояснити причини поразки\
+    \ козацьких по­\nвстань кінця XVI ст.\nМожу схар"
+  section_title: Сторінка 84
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5646870136260986
+  chunk_id: 3d7a3a6b_c0024
+  text: "20 Szajnocha K. Dwa\r\nlata dziejów naczych. 1646, 1648. Opowiadania i źródła.\r\
+    \n— Lwów, 1865. — T. 1. — S. 29.\n\n21 Gawroński R.\r\nFr. Obszar, zalundnienie\
+    \ i tworzenie się kozaczyzny.—\r\nKraków, 1914; ibidem. Geneza i rozwój idei kozactwa\
+    \ i kozaczyzny\r\nw XVI wieku.— Warszawa, 1924.\n\n22 Jabłonowski\r\nA. Historia\
+    \ Rusi PoBudniowej do upadku Rzeczy Pospolitej Polskiej. —\r\nKraków, 1912.— S.\
+    \ 121-122.\n\n23 Соловйов С. М. Малороссийское козачество до Богдана Хмельницкого\
+    \ // Русский вестник, 1859.— Т. 23.— Кн. "
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.5497928857803345
+  chunk_id: 3d7a3a6b_c0082
+  text: "73 Акты ЗР.— Спб.,\r\n1847.— Т. 2.— С. 75.\n\n74 Жерела до історії\r\nУкраїни-Руси.—\
+    \ Т. 8.— С. 21.\n\n75 Архив ЮЗР.— Ч. 7.\r\n— Т. 1. — С. 87-89.\n\n76 Там само.—\
+    \ С. 89.\n\n77 Там само.— С.\r\n105.\n\n78 Там само.— С. 82.\n\n79 Наливайко Д.\r\
+    \nКозацька християнська республіка.— К., 1992.— С. 45.\n\n80 Крип’якевич І.\r\n\
+    П. Богдан Хмельницький.— С. 44.\n\n81 Любавскіш М. К. Областное деление...— С.\
+    \ 541.\n\n82 Архив ЮЗР. — Ч.\r\n7.— Т. 3.— С. 22.\n\n83 Там само. — С. 6.\n\n\
+    84 Там само. — С. 7.\n\n85 Śtiwiński\r\nA. Stefan Batory.— Warsza"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.5459736585617065
+  chunk_id: 5794da94_c0804
+  text: "Віщунами новійшої лїтератури являють ся раннї \r\n працї Костомарова О причинахъ\
+    \ и характерЂ уніи 1840 (він багато удїляє місця \r\n козачинї й її історичній\
+    \ ролї) і Мысли объ исторіи Малороссіи (Библіотека для \r\n чтенія 1846). Далї\
+    \ Соловйова Очеркъ исторіи Малороссіи до подчиненія ея царю \r\n АлексЂю Михайловичу\
+    \ (Отеч. Записки 1848) і о десять лїт пізнїйше: „О \r\n нЂкоторыхъ рукописяхъ\
+    \ и рЂдкихъ печатныхъ сочиненіяхь XVI и XVII ст. \r\n относящихся къ исторіи Малороссіи\
+    \ (Библ. Зап. 1858), і Малороссійс"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm

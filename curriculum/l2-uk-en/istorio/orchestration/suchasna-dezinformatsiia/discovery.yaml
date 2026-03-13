@@ -1,0 +1,223 @@
+discovered_at: '2026-03-13T12:29:44.986785+00:00'
+query_keywords:
+- Сучасна російська дезінформація
+- Інфраструктура
+- Методологія
+- Наративи про Україну
+- Цільові аудиторії
+- Після 24.02.2022
+- Analyze the causes and consequences of сучасна російська дезінформація
+- Evaluate the historical significance of війна без зброї
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=_XG6RU2vYsg
+  channel: Реальна Історія
+  title: The largest historical investigation about eastern Ukraine
+  relevance_score: 0.9
+  relevance_note: The video directly addresses Russian propaganda narratives concerning
+    Donbas and their use in justifying the war against Ukraine, which is highly relevant
+    to the module's topic of 'Сучасна російська дезінформація' and its sections on
+    'Війна без зброї' and 'Наративи про Україну'.
+  transcript_excerpt: ісконно-руський російськомовний розбудований Сталіним та радянським
+    союзом таким зазвичай представляє Донбас російська пропаганда. І цим росіяни намагаються
+    виправдати та пояснити 10 років війни проти України.
+  embed_suggestion: After section 'Наративи про Україну' – The video provides a specific,
+    in-depth example of Russian propaganda narratives, directly complementing the
+    module's discussion of these narratives.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0527
+  text: "15. Проаналізуйте зміст пісень \nпро російсько-українську війну. Поясніть,\
+    \ чи можуть вони \nв  майбутньому бути історичним джерелом. 16. Візьміть \nінтерв’ю\
+    \ у своїх близьких або знайомих і дослідіть, як для \nних почалося широкомасштабне\
+    \ вторгнення, якими були \nїхні стратегії виживання під час бойових дій. 17. Колек-\n\
+    тивна робота в  класі. За допомогою методу «Прес» об­\nговоріть і визначте, що\
+    \ заважає Україні стати повноправним \nчленом ЄС і НАТО. Cформулюйте судження\
+    \ про:\n\x84\n\x84\nключові події широкомас"
+  section_title: Сторінка 304
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0490
+  text: "Широкомасштабне \nвторгнення Росії в  Україну. 24  лютого  — \n20  травня\
+    \ \n2022  р. Оборона міста Маріуполь. Червень \n2022  р. Надання Україні статусу\
+    \ \nкандидата на  членство \nв  ЄС. 6  вересня  — \n2  жовтня \n2022  р. Балаклійсько-Куп’янська\
+    \ \nнаступальна операція \nукраїнських військ. 11  листопада \n2022  р. Звільнення\
+    \ Херсону. Грудень \n2023  р. Початок переговорів щодо \nвступу України до ЄС.\
+    \ rnk.com.ua/107022\nПрактичні заняття  \nза розділом VІ\nrnk.com.ua/107023\n\
+    Узагальнення знань  \nза розділом VI\n"
+  section_title: Сторінка 270
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0489
+  text: "Розділ VI. Європейський вибір України. Російсько-українська війна\n268\n\
+    Запитання і  завдання\nЗнаємо і  розуміємо\n1. Коли почалося широкомасштабне \n\
+    вторгнення Росії в  Україну? 2. Які області України намагалася анек-\nсувати Росія\
+    \ у  2022  р.? 3. Кандидатом на членство в  якій орга-\nнізації стала Україна\
+    \ в червні 2022 р.? Застосовуємо і  аналізуємо\n4. Покажіть на карті атласу: 1) напрям-\n\
+    ки просування російських військ під \nчас широкомасштабного вторгнення \nв  Україну;\
+    \ 2)  територію, яка була \nзахо"
+  section_title: Сторінка 270
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0451
+  text: "§ 32. Україна у 2019—2021 рр.\n247\nЗапитання і завдання\nЗнаємо і  розуміємо\n\
+    1.\t Хто був суперником В.  Зеленського \nна виборах Президента України?\n2.\t\
+    \ Які політичні партії утворили фракції \nв  ново­обраній Верховній Раді?\n3.\t\
+    \ Коли відбулася остання зустріч ліде-\nрів держав у «нормандському форма-\nті»?\n\
+    Застосовуємо і  аналізуємо\n4.\t Покажіть на карті атласу території, \nщодо яких\
+    \ вели переговори в  «нор-\nмандському форматі».\n5.\t Завдання з хронології.\
+    \ Складіть хро-\nнологію наростання агресивних дій"
+  section_title: Сторінка 249
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0549
+  text: "Російська Федерація вороже відноситься до прагнення \nУкраїни \nбути \nчленом\
+    \ \nЄвропейського \nСоюзу, \nорієнтуватися \nна \nєвропейські цінності. Для виправдання\
+    \ своєї злочинної діяльності Росія \nпроводить активну інформаційну кампанію.\
+    \ Попри боротьбу державних \nустанов з ворожою пропагандою, ефективність протистояння\
+    \ їй \nзалежить від кожного з нас. Є кілька простих правил, яких варто \nдотримувати.\
+    \ Зокрема – не публікувати і не поширювати не-\nперевірену \nінформацію, \nрозпізнавати\
+    \ \nфейки \n(подання \nсві"
+  section_title: Сторінка 301
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5325485467910767
+  chunk_id: 3588aaff_c0708
+  text: "44 Нарис вимірів цієї\r\nросійськомовної літератури міститься у ґрунтовній\
+    \ розвідці В.Сиповського\r\n\"Україна в російському письменстві\" (К., 1928).\
+    \ Незважаючи на його\r\nобсяг, дослідження обмежується одним періодом (18011850).\
+    \ Звичайно, не всі ті\r\nтвори, про які говорить Сиповський, мають бути зараховані\
+    \ до української\r\nлітератури: нові критерії, історіографічна формула — завдання\
+    \ майбутнього.\n\n45 Див. у цьому\r\nвиданні розділ \"До історії української літератури\"\
+    .\n\n46 Лисяк-Рудницький\r\nІван. Зазнач. п"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5268981456756592
+  chunk_id: 3588aaff_c0094
+  text: "Окрім цього загального, поверхневого моменту\r\nнаціонального протистояння,\
+    \ дану настанову характеризує ще й глибша, хоч,\r\nмабуть, зовсім не усвідомлена\
+    \ парадигма. Йдеться про момент телеології (що й\r\nнаближує цей підхід до совєтської\
+    \ критики), де дані зв’язки, весь літературний\r\nпроцес, національна \"справа\"\
+    \ бачаться як речі, що немовби прямують до\r\nсвоєї наміченої \"цілі\". Те, що\
+    \ процес може бути стохастичний, що\r\nрізні явища, зокрема рецепція, можуть мати\
+    \ основну багатозначність, — мало\r\nусвідомл"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5197746753692627
+  chunk_id: 3588aaff_c0138
+  text: "З усього, що сказано дотепер, мусить бути ясно, що\r\nні. Правильне, тобто\
+    \ цілісне, історично й культурологічно тонке розуміння\r\nросійської рецепції\
+    \ широкого комплексу України мусить враховувати як еволюцію цього\r\nявища (де\
+    \ фокус іде від землі, природи й звичаїв, до історії і, врешті, до\r\nкультури\
+    \ як такої, що завершується чи радше повинно завершуватися її існуванням\r\nяк\
+    \ суб’єкта, з власним голосом, а не лише німим об’єктом), так і те, що гама\r\n\
+    настанов, почуттів, стратегій відчитання тощо ніяк не"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

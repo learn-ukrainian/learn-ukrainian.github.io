@@ -1,0 +1,232 @@
+discovered_at: '2026-03-13T11:17:27.321214+00:00'
+query_keywords:
+- Буковина між імперіями
+- Під Австрією
+- 1775-1918
+- Під Румунією
+- 1918-1940
+- Радянський період
+- Буковинська ідентичність
+- Сучасність
+- Analyze the causes and consequences of буковина між імперіями
+- Evaluate the historical significance of багатонаціональний край
+- history
+- історія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=-8HtoNLr2Og
+  channel: ІМТГШ
+  title: Історія Карпатської України | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.6
+  relevance_note: The video discusses the history of Carpathian Ukraine and its struggle
+    'on the border of empires', which aligns thematically with the module's topic
+    of Ukrainian regions under imperial influence. However, its specific geographical
+    focus is not Bukovyna.
+  transcript_excerpt: Карпатська Україна маленька держава що постала у 1939 році на
+    межі імперії стала символом незламності та боротьби у безнадійній ситуації...
+  embed_suggestion: After section 'Вступ — Багатонаціональний край' -- as a comparative
+    example of another Ukrainian region's experience with imperial shifts.
+- url: https://www.youtube.com/watch?v=y3gVlV_FFFU
+  channel: ІМТГШ
+  title: ЧИМ ОСОБЛИВА ГАЛИЧИНА? | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.5
+  relevance_note: The video explores the unique historical and cultural identity of
+    Galicia, another distinct Ukrainian region that experienced complex interactions
+    with foreign powers. While related to Ukrainian regional history under external
+    influence, it does not specifically cover Bukovyna.
+  transcript_excerpt: Галичина особливий український регіон хоча Правду кажуть що
+    в нас Кожен регіону особливий і Одещина або море і Полтавщина бо колицька література
+    і Чернігівщина або історія і Закарпаття був гори...
+  embed_suggestion: After section 'Вступ — Багатонаціональний край' -- as a comparative
+    example showcasing the diverse historical experiences and identities of Ukrainian
+    regions.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0024
+  text: "Буковина із XIV ст. входила до Молдовського князівства. Проте в \nпершій\
+    \ половині XVI ст. Молдова також визнала васальну залежність \nвід османів. Під\
+    \ контролем Османської імперії перебували також землі Буджа- \nку (територія на\
+    \ півдні Бесарабії між Дністром і Дунаєм) та Північного \nПричорномор’ я. У степовому\
+    \ Буджаку проживали ногайські татари, які виконували \nроль васалів імперії та\
+    \ здійснювали напади на Річ Посполиту й Москов­\nське царство. Водночас османи\
+    \ зміцнювали фортеці Аккерман (сучас­\nний"
+  section_title: Сторінка 19
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0132
+  text: "1  листопада 1848  р. з ініціативи се-\nлян-депутатів рейхстагу відбулися\
+    \ збори представників усіх селянських \nгромад краю, які висловилися за те, щоб\
+    \ Буковина була разом із Гали-\nчиною. Проте влада не врахувала бажання народу\
+    \ й  за конституцією \n1849 р. зробила Буковину окремим коронним краєм, унаслідок\
+    \ чого тут \nпосилилася влада румунських бояр-землевласників. Упродовж 1848—1849 \
+    \ рр. революційні події охопили Закарпаття. Спочатку закарпатські русини вітали\
+    \ угорську революцію, сподіваючись \nотри"
+  section_title: Сторінка 75
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0306
+  text: "УКРАЇНСЬКІ ЗЕМЛІ у 20-90-х роках XVIII ст. \nРОЗДІЛ 5\nЗНАЮ МИНУЛЕ » ОСМИСЛЮЮ\
+    \ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \n•» ЗАПИТАННЯ І ЗАВДАННЯ <<•\n•» ЗНАЮ І СИСТЕМАТИЗУЮ\
+    \ НОВУ ІНФОРМАЦІЮ\n1. \nС а м о о ц і н ю в а н н я\nОцініть свої успіхи в опануванні\
+    \ теми «Поділи Речі Посполитої. Зміни \nу становищі ПравобережноїУкраїни та західноукраїнських\
+    \ земель».\nМожу показати на карті територіальний розподіл \nукраїнських земель\
+    \ унаслідок поділів Речі Поспо­\nлитої.\nМожу визначити наслідки поділів Речі\
+    \ Посполитої \nдля у"
+  section_title: Сторінка 227
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0005
+  text: "Національно-визвольна війна українського народу середини \nХVІІ ст. (Хмельниччина).\
+    \ Створення Української козацької \nдержави. Боротьба за збереження державності.\
+    \ Ліквідація \nКозацької держави\nЧетвертий\n1764  р. — кінець XVIII ст. Перехід\
+    \ українських земель під імперську владу\n\e\n\e Працюємо в  парах. Перегляньте\
+    \ зміст підручника. З’ясуйте, які теми  \nви розглянете, вивчаючи періоди історії\
+    \ України Ранньомодерної доби. Працюємо з джерелом\nrnk.com.ua/110281\nЗі статті\
+    \ «Історія України: \nРанній Новий ч"
+  section_title: Сторінка 5
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5953660011291504
+  chunk_id: 53691244_c0238
+  text: "15\r\n Див.: Лебедев Н.И.\r\nКрах фашизма в Румынии.—М.; 1976.—\r\nС.208.\n\
+    \n16\r\n Там само.—С. 265.\n\n17\r\n Очерки политической истории Румынии (1859–1944).\
+    \ —\r\nКишинев, 1985.—С. 384-386. Оскільки передачі північної частини Буковини\
+    \ не\r\nпередував однобічний акт з боку Радянського Союзу, а відбувся двосторонній\r\
+    \nобмін нотами, радянська сторона «давала\r\nрумунським державним діячам можливість\
+    \ вільного волевиявлення», то\r\nрозмови про «можливу анексію зайві», підкреслює\
+    \ західнонімецький фахівець у\r\nгалузі міжна"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5926010012626648
+  chunk_id: feaa5fa7_c1153
+  text: "Але спільний визвольний рух, зміцнюваний в Галичині,\r\nставав причиною дедалі\
+    \ більших переслідувань українства в Росії. Загроза з її\r\nбоку Австрії була\
+    \ загрозою і тим досягненням українців, що їх вони, як-не-як, у\r\nконституційних\
+    \ умовах Австрії здобули. Ця обставина диктувала політ. позицію\r\nукраїнців під\
+    \ час світової війни 1914 — 18 pp. Представники укр. політ. партій\r\nв Галичині\
+    \ 7. XII. 1912 на таємній нараді одноголосно вирішують: »З огляду на\r\nдобро\
+    \ й будуччину укр. нації по обох боках кордон"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5911479592323303
+  chunk_id: feaa5fa7_c0020
+  text: "Галичина в 1772 — 1849 pp. (484). Революція 1848 р.\r\n(484). Галичина в\
+    \ 1860-их pp. (485). Народовці (486). Нові партії (487).\r\nГаличина в XX ст.\
+    \ (488) І. Витанович\n\nБУКОВИНА . . . . . . . . . . . . . . . . . . . 489\n\n\
+    До пол. XIX ст. (489). Буковинське відродження (490) за\r\nМ. Кордубою і Т. Галіпом\n\
+    \nЗАКАРПАТТЯ І. Витанович . . . . . . . . . . .\r\n. . . . . . . . 491\n\nЗАХ.\
+    \ УКРАЇНА В ЧАСИ ПЕРШОЇ СВІТОВОЇ ВІЙНИ . . . . . .\r\n. . . . . . . . . . . .\
+    \ . 492\n\nУкр. Січові Стрільці (494) І. Витанович\n\nУСТРІ"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

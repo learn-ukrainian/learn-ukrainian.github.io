@@ -1,0 +1,118 @@
+discovered_at: '2026-03-13T12:10:33.503076+00:00'
+query_keywords:
+- 'Кузьма Скрябін: Голос народу'
+- Ранні роки та "Скрябін"
+- Телебачення і гумор
+- Літературна творчість
+- Громадянська позиція та війна
+- Загибель і пам'ять
+- Дискусія
+- Analyze the cultural impact of Kuzma Skryabin
+- Evaluate his use of language and humor
+- Discuss the civic responsibility of artists
+- biography
+- шоу-бізнес
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0030
+  text: '2. Закувала зозуленька. Антологія української народної поетичної творчос-
+
+    ті. – К., 1998. 3. Королюк Н. Маленькі історії про українських композиторів XVIII–ХХ
+    ст. – К.,
+
+    1998. 4. Мишанич О. Система жанрів в українському фольклорі // Українознавство:
+
+    Посібник. – К., 1994. 5. Нудьга Г. Слово і пісня. – К., 1994. Г
+
+    6. Погребенник Ф. Наша дума, наша пісня... Нариси-дослідження. – К., 1991. 7.
+    Руснак І. Український фольклор у школі // Українська мова й література в
+
+    середніх школах, гімназіях, ліцеях т'
+  section_title: Сторінка 21
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0239
+  text: ". . . . . . . . . . . . 154\n§ 73. Розвиток мовлення. Письмова  казка  (з\
+    \  використанням   \nприслівників)  . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . 158"
+  section_title: Сторінка 217
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0143
+  text: '6. Луценко Ю. Григорій Граб’янка та його літопис // Літопис гадяцького пол-
+
+    ковника Григорія Граб’янки. – К., 1992.'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0195
+  text: 'Підготуйте запитання за творчістю Григорія Сковороди. По
+
+    черзі ставте їх іншим групам, які мають дати вичерпну відповідь на них, користу-
+
+    ючись цитатами з творів, філософських трактатів, знаннями з біографії видатного
+
+    мислителя.'
+  section_title: Сторінка 115
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0372
+  text: "– \nК., 1990. 7. Шевченківський словник: У 2 т. – К., 1976–1977. 8. Світова\
+    \ велич Шевченка: У 3 т. – К., 1964."
+  section_title: Сторінка 217
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5636352300643921
+  chunk_id: fc2291b5_c0327
+  text: "Тв.: Древо жизни.\r\nИзбранные статьи. М., 1982; Народные русские сказки,\
+    \ т. 1 — 3. М., 1984 — 85;\r\nНарод — художник. Миф. Фольклор. Литература, М.\
+    \ 1936.\n\nВ. А. Юзвенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5516616106033325
+  chunk_id: fc2291b5_c2542
+  text: "Тв.: Полное собрание\r\nсочинений, т. 1 — 10. СПБ — М., 1898; Сочинения,\
+    \ т. 1 — 2. М., 1988.\n\nЛіт.: Савинов М. М. Н.\r\nЗагоскин. «Мирный труд», 1902,\
+    \ № 3; Аксаков С. Т. Биография Михаила Николаевича\r\nЗагоскина. В кн.: Аксаков\
+    \ С. Т. Собрание сочинений, т. 4. М., 1966.\n\nМ. Л. Ковсан."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5504825115203857
+  chunk_id: d77902e2_c1718
+  text: "Літ.: Бурачек М. Великий народний художник. Х., 1939; Раєвський С. Життя\
+    \ і\r\nтворчість художника Тараса Шевченка. К., 1939; Говдя П. Т. Г.\r\nШевченко-художник.\
+    \ К., 1955; Шевченко Т. Мистецька спадщина, т. 1—4.\r\nК., 1961-64.\n\nВ. І. Касіян."
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm

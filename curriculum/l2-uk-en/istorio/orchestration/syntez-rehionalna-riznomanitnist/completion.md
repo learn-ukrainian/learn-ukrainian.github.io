@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 80
+PASS: pipeline istorio 80
 
   Module:   syntez-rehionalna-riznomanitnist
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 80
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:17:11Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:35:39Z

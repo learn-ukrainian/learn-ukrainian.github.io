@@ -1,0 +1,204 @@
+discovered_at: '2026-03-13T10:41:15.433342+00:00'
+query_keywords:
+- 'Театр Курбаса: Реформа і знищення'
+- Шлях до "Березоля"
+- Театральна реформа Курбаса
+- Найважливіші постановки
+- Конфлікт із владою
+- Загибель і пам'ять
+- 'Analyze the causes and consequences of театр курбаса: реформа і знищення'
+- Evaluate the historical significance of революціонер сцени
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0223
+  text: "Розкажіть про два провідні театральні колективи того часу . 3. Розкажіть\
+    \ про співпрацю Л . Курбаса і М . Куліша . досліджуємо самостійно\n4. Пригадайте\
+    \ з попередніх класів про періоди розквіту українського театру \nта драматургії\
+    \ . які спільні та відмінні риси вони мають із періодом 1920-х рр .? 5. У групах\
+    \ підготуйте короткі довідки про українських драматургів та театраль-\nних діячів\
+    \ 1920-х рр . готуємо проект \n6. Під час опрацювання теми «Модерна драматургія»\
+    \ пропонуємо підготувати \nпроекти:\n\x03\n\x83"
+  section_title: Сторінка 117
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0205
+  text: "драматичний театр, а в березні 1922 року — студію «Березіль», до \nякої почали\
+    \ збиратися колишні молодотеатрівці. Невдовзі мистець­\nке об’єднання «Березіль»\
+    \ уже налічувало 250 осіб. Для молоді тут \nіснували підготовчі курси, була майстерня\
+    \ для театральних худож­\nників. Режисерську лабораторію очолив сам Лесь Курбас.\n\
+    1925 року Лесь Курбас був удостоєний звання народного артиста \nУкраїни, а в 1926\
+    \ році «Березіль» було переведено із Києва до \nХаркова — тодішньої столиці. За\
+    \ одинадцять років «Березіл"
+  section_title: Сторінка 158
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0425
+  text: 'Ста-
+
+    рицького театром. «Наталку Полтавку», «Москаля-чарівника»,
+
+    Михайло Старицький
+
+    321'
+  section_title: Сторінка 321
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0231
+  text: "Драма мала великий сце-\nнічний успіх у  Галичині, а  в 1904 році ввійшла\
+    \ \nдо репертуару «театру корифеїв» та була вистав-\nлена в  Києві за  участю\
+    \ Івана Карпенка-Карого \n(режисура й  роль Миколи) та  Миколи Садов-\nського\
+    \ (роль Михайла). Опрацьовуємо прочитане\n1. Яку пісню автор поклав в основу драми?\
+    \ 2. У якій статті він проаналізував цю пісню? 3. Коли письменник завершив роботу\
+    \ над драмою? 4. Коли й де відбулася перша вистава? Коли п’єсу вперше виставили\
+    \ в Києві? Прочитайте драму Івана Франка «"
+  section_title: Сторінка 124
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.551834762096405
+  chunk_id: feaa5fa7_c2206
+  text: "У цих виставах »Березіль« рішуче відходить від літ.\r\nтеатру до театрального.\
+    \ Вистави стають синтетичними: слово, рух, жест, музика,\r\nсвітло, фарба мають\
+    \ творити єдиний ритм вистави. Але театральність і ритм\r\nКурбас розуміє не як\
+    \ самоціль, а як театральну мову, якою театр виявляє і\r\nвідтворює думку і почуття.\
+    \ Кожний деталь у його виставах стає значущим: театр\r\nне відтворює життя, а\
+    \ своїми, властивими йому засобами впливає на життя. Звідси\r\nу Курбаса гасло\
+    \ активного, думаючого театру. В цьому ґрун"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.536425769329071
+  chunk_id: feaa5fa7_c2208
+  text: "Переведений 1926 р. до Харкова, »Березіль« виступає завершеним\r\nмист. організмом\
+    \ із власною системою виховання актора й режисера, з\r\nблискучим колективом майстрів\
+    \ сцени: М. Крушельницький, Й. Гірняк, В.\r\nЧистякова, Н. Титаренко, Н. Ужвій,\
+    \ А. Бучма, С. Шагайда, Л. Сердюк, Д.\r\nАнтонович, О. Долінін, Г. Бабіївна, І.\
+    \ Мар’яненко, Б. Балабан, О.\r\nДобровольська, Р. Івицький, О. Романенко, О. Хвиля\
+    \ та ін. Постави Курбаса як\r\n»Золоте черево« Ф. Кроммелінка, »Пролог« С. Бондарчука\
+    \ й Курбаса та ін. уже не\r"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5039265155792236
+  chunk_id: d77902e2_c2323
+  text: "Літ.: Комаров М. Українська драматургія. Одеса, 1906; Комаров М. До\r\n«Української\
+    \ драматургії». Одеса, 1912; Рулін П. І. До сценічної історії\r\n«Назара Стодолі».\
+    \ «Україна», 1925, № 1 — 2; Борщаговський О., Йосипенко\r\nМ. Шевченко і театр.\
+    \ К., 1941; Бойко І. З. [та ін.]. Т. г. Шевченко. Бібліографія\r\nлітератури про\
+    \ життя і творчість. 1839 — 1959, т. 1 — 2. К., 1963; Всенародна\r\nшана. Відзначення\
+    \ сторіччя з дня смерті та 150-річчя з дня народження Т. Г.\r\nШевченка. К., 1967;\
+    \ Український драматичний т"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm

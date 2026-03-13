@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 111
+PASS: pipeline istorio 111
 
   Module:   zakhidni-media
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 111
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:57Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:33:19Z

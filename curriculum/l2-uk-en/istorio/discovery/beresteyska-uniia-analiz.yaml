@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T10:49:31.163617+00:00'
+query_keywords:
+- 'Берестейська унія: Глибокий аналіз'
+- Контекст
+- Що підписали в Бересті
+- Хто підтримав, хто відкинув
+- Наслідки розколу
+- Унія в історичній пам'яті
+- 'Analyze the causes and consequences of берестейська унія: глибокий аналіз'
+- Evaluate the historical significance of розкол, що визначив історію
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0102
+  text: "ОПРАЦЮВАВШИ ПАРАГРАФ, \nВИ  ДІЗНАЄТЕСЬ:\n\x84\n\x84\nпро причини та передумови\
+    \ \nукладення, сутність і наслідки \nБерестейської церковної унії;\n\x84\n\x84\
+    \nяк розвивалася полемічна \nлітература;\n\x84\n\x84\nу чому полягав вплив унії\
+    \ \nна  церковне життя українських \nземель. Тестові завдання\nrnk.com.ua/109588\n\
+    Працюємо з  джерелом\nrnk.com.ua/110301\nІз меморандуму \nправославних єпископів\
+    \ \nдо польського короля \nЖигмунта (Сигізмунда) III\nДля вас, допитливі\nrnk.com.ua/110300"
+  section_title: Сторінка 65
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0101
+  text: "§ 10. Укладення Берестейської церковної унії\n65\n§ 10. Укладення Берестейської\
+    \ \nцерковної унії\n1. Причини й передумови укладення \nБерестейської церковної\
+    \ унії\n\e\n\e Оберіть ключові слова, що пояснюють причини та \nпередумови укладення\
+    \ Берестейської церковної унії. У другій половині XVI ст. у складі католиць-\n\
+    кої і православної церков збільшилася кількість \nприбічників міжцерковної унії.\
+    \ Поштовхом до \nцього стало прагнення усунути вплив проголо-\nшеного в 1589 р.\
+    \ Московського патріархату на \nправослав"
+  section_title: Сторінка 65
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0065
+  text: "УКРАЇНСЬКІ ЗЕМЛІ У СКЛАДІ РЕЧІ ПОСПОЛИТОЇ\nу XVI -  першій половині XVII\
+    \ ст. \nРОЗДІЛ 1\nДум.ки істориків\nНаталя Я к о в є н к о , українська історикиня,\
+    \ \nпро ставлення до Берестейської унії\nПочиналося велике протистояння..., що\
+    \ перетворило Берестейську унію, \nзадуману як інструмент порозуміння, на символ\
+    \ розбрату, ворожнечі і на­\nсильства... Розмірковуючи над витоками цього феномена,\
+    \ мусимо визнати, \nщо православний загал Русі-України на унії нічого не втрачав,...\
+    \ логіка вла- \nдик-уніатів, які... "
+  section_title: Сторінка 49
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0113
+  text: "§ 10. Укладення Берестейської церковної унії\n71\nДля вас, допитливі\nrnk.com.ua/110303\n\
+      Працюємо з  хронологією\n  1596  р. Укладення \nБерестейської \nцерковної унії\n\
+    СФОРМУЛЮЙТЕ СУДЖЕННЯ ПРО:\n\x84\n\x84\nісторичне значення \nБерестейської церковної\
+    \ унії;\n\x84\n\x84\nрозвиток полемічної літератури;\n\x84\n\x84\nстановище православної\
+    \ церкви \nна українських землях унаслідок \nукладення Берестейської \nцерковної\
+    \ унії. Однак проти православних, як і  раніше, \nчинили свавілля та примус. Монастирі\
+    \ й церк-\nви передавали унійцям (гре"
+  section_title: Сторінка 71
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0059
+  text: "УКРАЇНСЬКІ ЗЕМЛІ У СКЛАДІ РЕЧІ ПОСПОЛИТОЇ\nу XVI -  першій половині XVII\
+    \ ст. \nРОЗДІЛ 1\nБерестейська церковна унія 1596 року \nта її наслідки\n9\n \n\
+    Пригадайте, яким було становище православної церкви наукраїнськихзем­\nлях в умовах\
+    \ Реформації та Контрреформації? Чому, на вашу думку, право­\nславні братства\
+    \ прагнули досягти ставропігії?\nЧитаємо й р о ^м іє м о  ^ -------------------------------------------------------------\n\
+    Дослідіть за параграфом історію укладення Берестейської церковної унії, \nза ходо"
+  section_title: Сторінка 45
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5203307867050171
+  chunk_id: 004505f2_c0155
+  text: "Таким чином, ідея з’єднання уніатів та православних у\r\nжиття втілена не\
+    \ була. Щоправда, треба зазначити, що православні посильно\r\nзаймалися агітацією\
+    \ між уніатським духовенством і мали тут певні успіхи.\r\nВиникла навіть потреба\
+    \ у спеціальній формулі відречення священика від унії\r\nпісля повернення до православ’я,\
+    \ а також формула єпископської грамоти\r\nсвященикам та дияконам, що навертаються\
+    \ з унії. Їх склав відомий Сильвестр\r\nКосов, єпископ і майбутній київський митрополит,\
+    \ що замістив П. Могилу.\r\n"
+  work: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+  year: 1600
+  genre: polemic
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/suspil/sus.htm
+- score: 0.5090334415435791
+  chunk_id: 89ab7c69_c0327
+  text: "Брестська унія 1596 р. була передусім подією\r\nцерковного життя, церковної\
+    \ історії. До того ж її ініціаторам довелося\r\nвідмовитися від попередніх планів\
+    \ покатоличення України та Білорусі й\r\nзадовольнитися визнанням ієрархами українсько-білоруської\
+    \ церкви верховенства\r\nримського папи. В усьому іншому, починаючи від догматики\
+    \ й кінчаючи деталями\r\nобряду, уніатська церква, власне, лишалася православною.\
+    \ Все це, зрозуміла річ,\r\nне означало, що ті сили, які стояли за унією, відмовилися\
+    \ від своїх\r\nдале"
+  work: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+  year: 2008
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ochyma/ochrus.htm
+- score: 0.4978758692741394
+  chunk_id: c44f1207_c4206
+  text: "Історію берестейського собору Філялет лишає на боцї,\r\nвідсилаючи читача\
+    \ по неї до Ектезіса, і тільки на доповненнє його подає\r\nсоборний унїверсал\
+    \ православних. Далї, розвиваючи гадки сього унїверсалу, подає\r\nпреінтересну\
+    \ й високо пікантну для сучасників збірку листів митрополита й Потїя,\r\nз яких\
+    \ виходить, що вони до останньої хвилї таїли ся й вирікали ся всякої\r\nсолїдарности\
+    \ з унїєю, а переведеннє її не вважали можливим инакше, як соборним\r\nспособом,\
+    \ з участю вірних 1). Королівськими листами, да"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm

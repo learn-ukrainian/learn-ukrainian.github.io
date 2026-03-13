@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 109
+PASS: pipeline istorio 109
 
   Module:   radianska-propaganda
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 109
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:39Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:28:39Z

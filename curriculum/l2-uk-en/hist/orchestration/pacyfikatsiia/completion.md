@@ -1,4 +1,4 @@
-FAIL: pipeline hist 99
+PASS: pipeline hist 99
 
   Module:   pacyfikatsiia
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 99
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:17:58Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:44:48Z

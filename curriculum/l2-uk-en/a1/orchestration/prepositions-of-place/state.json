@@ -6,12 +6,21 @@
     "research": {
       "status": "complete",
       "ts": "2026-03-12T09:11:32Z",
-      "note": "rebuild-kept"
+      "note": "rebuild-kept",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     },
     "discover": {
       "status": "complete",
       "ts": "2026-03-12T09:16:23Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     }
   }
 }

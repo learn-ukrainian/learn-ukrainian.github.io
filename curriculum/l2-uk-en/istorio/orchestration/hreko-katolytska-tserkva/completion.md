@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 61
+PASS: pipeline istorio 61
 
   Module:   hreko-katolytska-tserkva
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 61
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:14:07Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:53:33Z

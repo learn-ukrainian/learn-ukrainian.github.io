@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T12:33:11.768520+00:00'
+query_keywords:
+- Більшовицько-українська війна
+- Боротьба за незалежність
+- Перша більшовицька агресія
+- 1917-1918
+- 'Друга хвиля: Війна з білогвардійцями і червоними'
+- Первинні джерела
+- Деколонізаційний погляд
+- Уроки поразки
+- основні події більшовицько-української війни 1917-1921 років
+- причини поразки УНР та Директорії
+- військове протистояння з деколонізаційної перспективи
+- первинні джерела цього періоду
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=1KseaqaH7js
+  channel: Комік Історик
+  title: Берест-Литовський мирний договір
+  relevance_score: 0.9
+  relevance_note: Directly addresses the Brest-Litovsk Peace Treaty, a pivotal event
+    during the First Bolshevik Aggression (1917-1918) against Ukraine, and its implications
+    for Ukrainian territories, including Crimea.
+  transcript_excerpt: за брест-литовським мирним договором Українська Народна Республіка
+    проголошувала свої території але не включала в них Крим... за брест-литовським
+    мирним договором флот який знаходиться там не повинен виходити з партів він повинен
+    стаяти на місці
+  embed_suggestion: After section Перша більшовицька агресія (1917-1918) -- as it
+    explains a key diplomatic and territorial outcome of this initial aggression.
+- url: https://www.youtube.com/watch?v=OTFuvJf3lqI
+  channel: Суспільне Док
+  title: '«Більшовики на Донбасі: "Не можеш протистояти – треба очолити"» | Плавильний
+    котел #shorts'
+  relevance_score: 0.9
+  relevance_note: Directly relevant as it covers the Bolshevik strategy in Donbas
+    during the First Bolshevik Aggression, specifically mentioning the proclamation
+    of the Donetsk-Kryvyi Rih Soviet Republic in February 1918.
+  transcript_excerpt: у лютому 1918 року на міжобласному з'їзді Рад у Харкові було
+    проголошено донецько-криворізьку республіку
+  embed_suggestion: After section Перша більшовицька агресія (1917-1918) -- to elaborate
+    on the Bolshevik tactics and territorial formations in Eastern Ukraine during
+    the initial phase of the war.
+- url: https://www.youtube.com/watch?v=RgTgKGyKygk
+  channel: Комік Історик
+  title: 'Володимир Ленін: як він створив Україну?'
+  relevance_score: 0.8
+  relevance_note: Focuses on Vladimir Lenin and the establishment of the Bolshevik
+    regime, which directly led to the Bolshevik-Ukrainian War. It provides crucial
+    historical and ideological context, aligning with a decolonization perspective.
+  transcript_excerpt: Ленін - це очільник, це вождь цього процесу... Мільйони людей
+    стали жертвами цього політичного, тоталітарного, людоненависного режиму...
+  embed_suggestion: After section Деколонізаційний погляд -- to provide background
+    on the leader and ideology of the aggressor, explaining the nature of the conflict
+    from a decolonized perspective.
+- url: https://www.youtube.com/watch?v=KVY7K0d0uek
+  channel: Реальна Історія
+  title: Українсько-польська війна 1918-1919 років. Реальна історія.
+  relevance_score: 0.6
+  relevance_note: The video discusses the Ukrainian-Polish War (1918-1919), which
+    was part of the broader Ukrainian War of Independence but not directly focused
+    on the Bolshevik-Ukrainian War itself. It provides context on the multi-front
+    nature of the struggle.
+  transcript_excerpt: Сьогодні ми говоримо про українсько-польську війну, а саме один
+    з найдраматичніших її епізодів, битву за Львів. Ці події увійдуть в історію, як
+    польсько-українська війна 1918-19 років.
+  embed_suggestion: 'After section Вступ: Боротьба за незалежність -- to illustrate
+    the complex, multi-front nature of the Ukrainian War of Independence, with this
+    being a secondary conflict.'
+- url: https://www.youtube.com/watch?v=f88SXG6nQbE
+  channel: Суспільне Док
+  title: '«Таким був результат більшовицької селекції "нової людини"» | Плавильний
+    котел #shorts'
+  relevance_score: 0.5
+  relevance_note: Discusses the consequences of Bolshevik ideology on society ('new
+    man,' destruction of churches) rather than the war itself. It is tangentially
+    related to the broader impact of Bolshevism but not the military conflict.
+  transcript_excerpt: це теж результат більшовицької селекції нової людини у столиці
+    шахтарського краю руйнують свято Преображенський собор
+  embed_suggestion: After section Деколонізаційний погляд -- as a supplementary example
+    of the ideological and cultural impact of Bolshevism, though not directly about
+    the war.
+- url: https://www.youtube.com/watch?v=KUD3QfgkBSo
+  channel: ІМТГШ
+  title: НАЙЗАГАДКОВІШИЙ "Бій під Крутами"
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0111
+  text: "§ 12. Україна наприкінці 1918  — у  першій половині 1919  р. \e\n\e\n1. Яким\
+    \ був політичний курс, здійснюваний УЦР за доби УНР? 2. Коли відбула-\nся Перша\
+    \ війна більшовицької Росії проти УНР? Якими були її причини, перебіг \nі  результати?\
+    \ 3. Яку політику здійснювали більшовики після першого приходу \nдо влади в  Україні?\
+    \ 1 \nАнтигетьманське повстання і  відновлення УНР. В умовах кризи геть-\nманського\
+    \ режиму П. Скоропадського в  Україні активізувалися \nсили, які виступали за\
+    \ відновлення УНР. У серпні 19"
+  section_title: Сторінка 61
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0072
+  text: "Перша війна більшовицької Росії з УНР та проголошення \nнезалежності УНР\n\
+    \e\n\e\n1. Коли і  як була встановлена більшовицька влада в  Росії? 2. Якими були\
+    \ від-\nносини УНР та більшовиків? 3. Про що йшлося в  I, II та III Універсалах\
+    \ УЦР? 1 \nПочаток агресії більшовицької Росії проти УНР. Проголошення III Уні-\n\
+    версалу й  подальші державотворчі заходи УЦР призвели до роз-\nгортання конфлікту\
+    \ з  РНК Росії, який УЦР не визнавала урядом усієї"
+  section_title: Сторінка 41
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0079
+  text: "45\n§ 8. Перша війна більшовицької Росії з  УНР та проголошення незалежності\
+    \ УНР\n1918 р. вступили в нерівний бій із набагато \nчисленнішими більшовиць­кими\
+    \ загонами \n(6  тис. осіб). Бій тривав 5 годин. Оборон-\nцям вдалося затримати\
+    \ на­ступ більшови-\nків на чотири дні й завдати їм відчутних \nвтрат (понад 300\
+    \ осіб лише вбитими). За-\nгальні втрати українських сил у бою (уби-\nті й  поранені)\
+    \ сягали близько 250 осіб. У  складі студентської сотні, якою коман-\nдував сотник\
+    \ Анд­рій Омельченко (був важ-\nко"
+  section_title: Сторінка 45
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0141
+  text: "2. Наведіть \nприклади боротьби українців \nза православну віру в  першій\
+    \ \nполовині XVII  ст. Періодизація Національно-визвольної війни  \nукраїнського\
+    \ народу середини XVII ст. Період\nОсновний зміст\n1648—1649  рр. Наростання боротьби.\
+    \ Визнання Річчю Посполитою \n­обмеженої автономії козацької України\n1650—1653 \
+    \ рр. Тривала й  виснажлива боротьба повстанців \nз  урядовими силами\n1654—1655 \
+    \ рр. Зміни в  перебігу війни, спричинені отриманням \nкозацькою Україною військової\
+    \ допомоги від \nМосковської держа"
+  section_title: Сторінка 73
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0006
+  text: "4\n§ 1. Повторення. Вступ\n§ 1. повторення. Вступ\nнаВчальна мета:\nактуалізувати\
+    \ знання про події \nпершого періоду Новітньої історії \nукраїни та визначити\
+    \ основні події \nі тенденції розвитку україни й світу \nв 1945 р. — на початку\
+    \ ХХІ ст. пРиГадайте\n1. Назвіть хронологічні межі першого\nперіоду Новітньої\
+    \ історії україни. 2. Які\nісторичні події відбулися впродовж\n1914—1945 рр.?\
+    \ Складіть перелік\nдоленосних для світу та україни подій. Поясніть, чому ви вибрали\
+    \ саме\nїх. 3. Поясніть, у чому полягала сутн"
+  section_title: Сторінка 6
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5673155784606934
+  chunk_id: feaa5fa7_c1238
+  text: "На Україні після досвіду з німцями інтервенція не\r\nбула популярною, і тому\
+    \ тут досить легко знайшла податливий ґрунт больш.\r\nаґітація. Спроба уряду Чехівського\
+    \ порозумітися з Москвою не вдалася (січень\r\n1919 p.). Нарешті, й серед членів\
+    \ уряду, і політ. партій існували дві\r\nконцепції: з большевиками проти інтервенції\
+    \ Антанти, чи з Антантою проти\r\nбольшевиків; речником першої був В. Винниченко,\
+    \ другої — Петлюра. Прийнявши\r\nостаточно протибольш. орієнтацію, Директорія\
+    \ пробувала досягти порозуміння "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5558487176895142
+  chunk_id: feaa5fa7_c2015
+  text: "[Енциклопедія українознавства. Загальна частина (ЕУ-I). — Мюнхен, Нью-Йорк,\
+    \ 1949. — Т. 2. — С. 775-796.]\n\n8. Найновіша доба\n\nЦЕНТРАЛЬНА І СХІДНЯ УКРАЇНА\n\
+    \nВступ. Літ. процес на\r\nпідсовєтській Україні характеризується боротьбою пробуджених\
+    \ революцією 1917 р.\r\nукр. сил за збереження і розвиток нац. обличчя проти намагань\
+    \ окупанта знищити\r\nсамостійний літ. рух або повернути його в річище »малоросіянства«.\
+    \ На різних\r\nетапах розвитку ця боротьба набирала різних форм залежно від обставин\
+    \ і\r\nвзаємовідно"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5523644685745239
+  chunk_id: 555d4b6a_c0013
+  text: "* М. Грушевський, Початки Хмельниччини (1638\r\n— 1648), «Історія України-Русі»,\
+    \ т. VIII, ч. II, вид. 2, Київ — Відень, 1922,\r\nстор. 189.\n\n** К. І. Cтецюк,\
+    \ Початок визвольної війни\r\nукраїнського народу і переговорів про возз’єднання\
+    \ України з Росією в 1648 р.,\r\nу книзі: «Визвольна війна 1648 — 1654 рр. і возз’єднання\
+    \ України з Росією»,\r\nпід редакцією В. А. Дядиченка, О. К. Касименка і Ф. П.\
+    \ Шевченка, К., 1954,\r\nстор. 95-96; В. А. Голобуцкий, Освободительная война\
+    \ украинского народа\r\nпод руководств"
+  work: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+  year: 1663
+  genre: travelogue
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/chevalier/shevl.htm

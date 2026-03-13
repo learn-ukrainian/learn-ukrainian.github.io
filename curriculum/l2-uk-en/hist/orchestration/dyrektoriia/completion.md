@@ -1,4 +1,4 @@
-FAIL: pipeline hist 93
+PASS: pipeline hist 93
 
   Module:   dyrektoriia
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 93
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:17:02Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:27:55Z

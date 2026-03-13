@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 71
+PASS: pipeline istorio 71
 
   Module:   halychyna-natsionalnyi-rukh
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 71
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:15:46Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:15:29Z

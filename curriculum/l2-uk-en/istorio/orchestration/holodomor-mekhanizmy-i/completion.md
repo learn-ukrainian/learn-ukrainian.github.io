@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 46
+PASS: pipeline istorio 46
 
   Module:   holodomor-mekhanizmy-i
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 46
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:11:45Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:21:09Z

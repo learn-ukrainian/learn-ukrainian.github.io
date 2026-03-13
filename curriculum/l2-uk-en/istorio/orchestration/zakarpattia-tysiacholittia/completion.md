@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 73
+PASS: pipeline istorio 73
 
   Module:   zakarpattia-tysiacholittia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 73
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:16:05Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:20:25Z

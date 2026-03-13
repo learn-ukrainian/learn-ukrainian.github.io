@@ -1,0 +1,223 @@
+discovered_at: '2026-03-13T10:53:07.688496+00:00'
+query_keywords:
+- 'Греко-католицька церква: Між Сходом і Заходом'
+- Від Берестя до Галичини
+- Церква і національний рух
+- Андрей Шептицький
+- Знищення і підпілля
+- Відродження
+- 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
+- Evaluate the historical significance of унікальна церква
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+  channel: ІМТГШ
+  title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=2xn53z7TAdg
+  channel: ІМТГШ
+  title: 15 ПРИЧИН ПИШАТИСЬ УКРАЇНЦЯМИ
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0451
+  text: "250\nРозділ VII\nНа початку XX ст. греко-католицька церква, як і в попередньому\
+    \ \nстолітті, відігравала важливу роль у житті українців Галичини й Закар-\nпаття.\
+    \ Багато зробила вона для українського національного відродження, \nзахисту прав\
+    \ та інтересів українців. Проте наприкінці XIX ст., коли \nукраїнський рух став\
+    \ набувати переважно світського характеру, відно-\nсини між греко-католицькою\
+    \ церквою та його провідниками загостри-\nлися. Ситуація змінилася, коли Галицьку\
+    \ греко-католицьку митрополію \nочоли"
+  section_title: Сторінка 250
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0453
+  text: "251\nПрактичне заняття\nНовий митрополит поставив участь греко-католицького\
+    \ духовен-\nства в українському русі в залежність від дотримання ним норм христи-\n\
+    янської моралі. Замість старої ролі національного провідника церква ма-\nла виступати\
+    \ духовним і моральним авторитетом українства в краї. Нова \nроль не відразу знайшла\
+    \ розуміння в лідерів українського руху. Сама \nпостать А. Шептицького, що походив\
+    \ із полонізованого роду, викликала \nв них сумніви. Проте наполегливість, із\
+    \ якою митрополит реалізову"
+  section_title: Сторінка 251
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0454
+  text: "Він також став ініціатором створення учительської семінарії для дівчат \n\
+    в Ужгороді (1902 р.). Однак загалом греко-католицька церква в Закар-\nпатті відійшла\
+    \ від участі в національній боротьбі русинів й дедалі біль-\nше перетворювалася\
+    \ на провідника мадяризації. Реакцією на це стало \nзбільшення серед віруючих\
+    \ прибічників православ’я. ? Запитання та завдання\n1. Чому греко-католицька церква\
+    \ наприкінці XIX ст. втратила свій вплив на україн-\nський рух? 2. Яку нову роль\
+    \ церкви визначив А. Шептицький в у"
+  section_title: Сторінка 251
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0353
+  text: "242\nЛьвівсьêої обл.) під ім’ям Андрей. Пройшов шлях від ченця до ãалицьêоãо\
+    \ \nãреêо-êатолицьêоãо \nмитрополита \n(1900 \nр.). Виêладав \nтеолоãію \nв \n\
+    Кристинополі (нині — м. Червоноãрад Львівсьêої обл.). Відстоював інтереси \nóêраїнсьêоãо\
+    \ населення Галичини яê депóтат Галицьêоãо сеймó і член \nПалати панів (верхньої\
+    \ палати) Рейхсратó. Бóв меценатом. Надавав \nфінансовó допомоãó хóдожниêам, придбав\
+    \ бóдиноê для хóдожньої шêоли, \nвиділяв молодим óêраїнсьêим хóдожниêам стипендії\
+    \ для здобóття освіти в \nнавча"
+  section_title: Сторінка 242
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0452
+  text: "Шептицький порушував питання про запровадження \nзагального виборчого права,\
+    \ реформування системи виборів до Галицького кра­\nйового сейму, створення українського\
+    \ університету у  львові. Андрій Шептицький (1865—1944)  — просвітитель, громадсько­політичний\
+    \ діяч, \nдоктор теології, архієпископ, що відіграв важливу роль в українському\
+    \ національ­\nному русі. 17  грудня 1900  р. він був призначений митрополитом\
+    \ греко­католиць­\nкої церкви (1900—1944). діяч доклав чимало зусиль для того,\
+    \ щоб греко­католиць"
+  section_title: Сторінка 250
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5353661775588989
+  chunk_id: fc2291b5_c2135
+  text: "Літ.: Марковський Є.\r\nУкраїнський вертеп. Розвідки й тексти. К., 1929;\
+    \ История западноевропейского\r\nтеатра, т. 1. М., 1956; Всеволодский-Гернгросс\
+    \ В. Н. Русская устная народная\r\nдрама. М., 1959; Волошин І. О. Джерела народного\
+    \ театру на Україні. К., 1960;\r\nБілецький О. Зародження драматичної літератури\
+    \ на Україні. В кн.: Білецький О.\r\nЗібрання праць, т. 1. К., 1965; Савушкина\
+    \ Н. И. Русский народный театр. М.,\r\n1976; Гусев В. Е. Русский фольклорний те.\
+    \ атр XVIII — начала XX века. Л.,\r\n1980; Франк"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5294336080551147
+  chunk_id: feaa5fa7_c1533
+  text: "Митр. Андрей Шептицький відновив чин Студитів,\r\nзв’язав його з староукр.\
+    \ чернечим життям Печерської Лаври, заклав чин Студиток,\r\nзаснував той конґреґації\
+    \ Сестер Служебниць, Мироносиць та св. Йосифа. Він\r\nзаснував Укр. Католицький\
+    \ Союз як організацію укр. інтеліґенції й забезпечив\r\nйому видавничі можливості.\
+    \ Митр. Шептицикий двічі відвідував греко-католиків в\r\nСША, а також у Канаді,\
+    \ Арґентіні, Бразілії. Його заходами засновано єпископство\r\nв США.\n\nГоловною\
+    \ метою життя митр. Андрея Шептицького вул"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5260267853736877
+  chunk_id: feaa5fa7_c0024
+  text: "УКРАЇНСЬКА ЦЕРКВА ВІД КІНЦЯ XVIII СТ. . . . . . . . .\r\n. . . . . . . .\
+    \ . . . 615\n\nЦерква на Україні під російською владою (615) Церква\r\nв Галичині\
+    \ під владою Австрії (615). Церква на Закарпатській Україні (616).\r\nЦерква в\
+    \ Буковині (617). Сектантський рух на Україні (617). Українська\r\nАвтокефальна\
+    \ Церква (617). Православна Автокефальна Церква в Польщі (618).\r\nПравос. Церква\
+    \ після 1939 р. (618). Греко-Кат. Церква в Галичині після першої\r\nсвітової війни\
+    \ (619). Українська Греко-Католицька Церква в А"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

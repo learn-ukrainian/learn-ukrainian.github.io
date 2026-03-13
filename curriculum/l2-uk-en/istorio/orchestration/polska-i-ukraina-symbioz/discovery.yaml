@@ -1,0 +1,206 @@
+discovered_at: '2026-03-13T12:39:18.223402+00:00'
+query_keywords:
+- 'Польща і Україна: Симбіоз і конфлікт'
+- Люблінська унія 1569
+- Козацькі повстання
+- Під розділами
+- Спільна культура
+- 'Analyze the causes and consequences of польща і україна: симбіоз і конфлікт'
+- Evaluate the historical significance of 600 років разом
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0037
+  text: "Люблінська унія створила суперечливі умови для розвит ку укра­\nїнських земель.\
+    \ Українські землі у складі Королівства Польського стали \nзначно ближчими до\
+    \ західноєвропейських впливів. Входження більшос­\nті українських земель до складу\
+    \ однієї держави — Речі Посполитої — \nсприяло формуванню у їх мешканців спільної\
+    \ української ідентичності. УКРАЇНСЬКІ ЗЕМЛІ У СКЛАДІ РЕЧІ ПОСПОЛИТОЇ\nРОЗДІЛ\
+    \ 1 \nу XVI -  першій половині XVII ст. 28"
+  section_title: Сторінка 28
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0370
+  text: "190  Зміст\nЗміст\n\t\nПередмова . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . 3\n\t\nРозділ I. Українські землі\
+    \ у  складі Речі Посполитої  \n(XVI  — перша половина XVII  ст.)\n§ 1. Українські\
+    \ землі в  першій половині XVI  ст. Люблінська унія 1569  р.. . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . 4\n§ 2. Соціальна структура суспільства\
+    \ та економічне життя  \nна українських землях у  XVI  ст.. . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 9\n§ 3. Соціаль"
+  section_title: Сторінка 190
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0031
+  text: "24 \n§ 4. ЛЮБЛІНСЬКА УНІЯ 1569 РОКУ ТА ЇЇ ВПЛИВ  \nНА УКРАЇНСЬКЕ СУСПІЛЬСТВО\
+    \ \n \n \nРазом із Кліо розгляньте ілюстрації. Що на них зображено? Висловте припущення,\
+    \ \nяк вони пов’язані з темою уроку. Наприкінці \nуроку перевірте правильність\
+    \ свого припущення. Гравюра. «Битва між поляками й \nтатарами». Титульна сторінка\
+    \ «Опис \nСарматії Азійської та Європейської». 1521 рік \n \nФрагмент картини\
+    \  \n«Битва під Оршею» невідомого \nавтора XVI сторіччя \n1. Передумови та причини\
+    \ Люблінської унії \nНаявність спільних"
+  section_title: Сторінка 13
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0002
+  text: "13 \n§ 3. Соціальна структура суспільства ............................................................................\
+    \ 19 \n§ 4. Люблінська унія 1569 року та її вплив на українське суспільство.........................\
+    \ 24 \n§ 5. Економічний розвиток українських земель у XVI столітті ......................................\
+    \ 30 \n§ 6. Церковні та релігійні проблеми в Україні XVI століття...........................................\
+    \ 35 \n§ 7. Берестейська церковна унія ......................................."
+  section_title: Сторінка 2
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0033
+  text: "З такими зацікавленнями і проти-\nрічями обидві країни вступили у 1569 рік.\
+    \ 1. Назвіть передумови, які склалися в XIV—XV століттях, для \nоб’єднання Великого\
+    \ князівства Литовського і Королівства Польського. 2. Які зовнішні загрози постали\
+    \ перед Королівством Польським і \nВеликим князівством Литовським у першій половині\
+    \ XVI століття? 3. Що очікували від об’єднання польські, литовські та українські\
+    \ \nшляхтичі? 2. Люблінський сейм 1569 року \nУ січні 1569 року представники знаті\
+    \ обох держав зібралися на"
+  section_title: Сторінка 13
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6111505031585693
+  chunk_id: 484d0ffb_c0900
+  text: "Загалом час від Люблінської унії до середини XVII ст.\r\nхарактеризується\
+    \ пожвавленням господарської і політичної активності старих еліт\r\nі появою на\
+    \ арені нової суспільної сили — козацтва. Стосовно політичного\r\nстатусу українських\
+    \ земель, Люблінська унія була переломною подією, натомість,\r\nякщо йдеться про\
+    \ культурне відродження, то істотні його вияви спостерігаються\r\nще до Люблінської\
+    \ унії, а найінтенсивніший культурний рух починається не одразу\r\nпісля унії,\
+    \ а наприкінці 70-х — 80-х рр. XVI ст.\n\n"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm
+- score: 0.6075514554977417
+  chunk_id: e86cf6ca_c0489
+  text: "Подібні процеси відбувались\r\nі в Україні. Після Люблінської унії 1569 року\
+    \ (коли майже всі українські землі\r\nввійшли до складу однієї держави — Польщі),\
+    \ з одного боку, жвавішими стали\r\nторгово-економічні зв’язки між українськими\
+    \ землями, а з другого — загострилися\r\nнаціональні антагонізми. Це зумовило\
+    \ не тільки піднесення етнічної\r\nсамосвідомості (про що вже говорилось, але\
+    \ й вело до консолідації народу і\r\nперетворення його на політичну націю з її\
+    \ національною самосвідомістю. З’являється\r\nне тіл"
+  work: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/lytv/lyt.htm
+- score: 0.6071171164512634
+  chunk_id: 3d7a3a6b_c0346
+  text: "61 Relacye\r\nnuncyuszów apostolskich i innych osób o Polsce od roku 1584\
+    \ do\r\n1690.— T. 2.— S. 150.\n\n62 Документы,\r\nобъясняющие историю Западнорусского\
+    \ края и ею отношения к России и к Польше.—\r\nСпб., 1865.— С. 244.\n\n63 Археографический\r\
+    \nсборник...— Т. 7.— С. 81.\n\n64 РДАДА — Ф. 124, оп. 1, спр. 1625 р. № 2, арк.\
+    \ 2—4.\n\n65 Воссоединение\r\nУкраины с Россией.— Т. 1.— С. 52.\n\n66 Археографический\r\
+    \nсборник...— Т. 7.— С. 84—85.\n\n67 Жуковчч П. Указ,\r\nсоч.— Вып. 6.— С. 6—7.\n\
+    \n68 Голубев С. Т. Указ,\r\nсоч.— Т. "
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm

@@ -1,0 +1,246 @@
+discovered_at: '2026-03-13T11:25:02.161347+00:00'
+query_keywords:
+- Пилип Орлик і перша Конституція
+- Гетьман у вигнанні
+- Бендерська Конституція 1710 року
+- 'Демократичні ідеї: Україна vs Європа'
+- Дипломатична боротьба Орлика
+- 'Читання: Текст Конституції'
+- 'Первинні джерела: Листи та діаріуш'
+- 'Деколонізаційний погляд: Правова культура'
+- Analyze the causes and consequences of пилип орлик і перша конституція
+- Evaluate the historical significance of гетьман у вигнанні
+- 'Trace the development of деколонізаційний погляд: правова культура'
+- history
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=_8w0QOO9h8M
+  channel: Комік Історик
+  title: 'Пилип Орлик: гетьман на фрілансі'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses Pylyp Orlyk, the historical context
+    leading to the creation of his Constitution in Bender, and clarifies misconceptions
+    about its nature as a 'first constitution'.
+  transcript_excerpt: ми зараз називаємо це конституцією Пилипа Орлика раніше це були
+    права і постановлення якраз Війська Запорозького є такий міф нам так в школі розказували
+    що це от перша в світі Конституція взагалі є існує і я б хотів би в нього вірити
+    але будемо про людьми чесними конституція Пилипа Орлика - Це не перша конституція
+    в історії людства
+  embed_suggestion: After the section 'Бендерська Конституція 1710 року' – The video
+    provides excellent context for Orlyk becoming Hetman and the historical circumstances
+    surrounding the creation of the Constitution in Bender.
+- url: https://www.youtube.com/watch?v=_JquqMy3Wu8
+  channel: ІМТГШ
+  title: УКРАЇНЕЦЬ, ЯКИЙ НАГОДУВАВ СВІТ / Історія Антона Турчановича
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but its topic (feeding soldiers, Anton
+    Turchanovych) is completely unrelated to Pylyp Orlyk and his Constitution.
+  transcript_excerpt: Проблемі харчування московських солдатів, які стояли в українських
+    селах, Степан Руданський присвятив не один вірш. Бо голодний солдат – поганий
+    солдат.
+  embed_suggestion: N/A - completely irrelevant to the module topic.
+- url: https://www.youtube.com/watch?v=kA57x7jNT0w
+  channel: Реальна Історія
+  title: Козацька звитяга - 3. Випуск №39 (122). Історія. Пилип Орлик.
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=xaKBtMJ3G4E
+  channel: ІМТГШ
+  title: Конституція Пилипа Орлика. Перша?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0261
+  text: "Обговоріть результати роботи в загальному колі. На \nоснові опрацьованих\
+    \ джерел доведіть або спростуйте думку Дмитра \nПавличка: «Пилип Орлик створив\
+    \ першу в Європі демократичну \nконституцію, затверджену козацькою радою 5 квітня\
+    \ 1710 року в \nБендерах. Засади громадянських прав, що лягли в основу цієї \n\
+    конституції, \nвипередили \nна \nчотири \nдесятиліття \nфранцузьких \nенциклопедистів\
+    \ \nта \nна \nвісім \nдесятиліть \nукладачів \nпольської \nантифеодальної хартії\
+    \ з 1794 року». Остання сторінка \nукраїномовного "
+  section_title: Сторінка 101
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0245
+  text: "Складіть \n6–7 \nзапитань, \nякі \nви \nзадали \nб \nсвоєму \nспіврозмовнику.\
+    \ Спрогнозуйте, як би відповів на них ваш поважний \nспіврозмовник. 2. Створіть\
+    \ історичний комікс на тему: «Гетьмани і козацькі лідери другої \nполовини XVII\
+    \ століття». Перевірте \nсебе, \nзайшовши \nза \nпокликанням  \nhttps://cutt.ly/ueT84JNy\
+    \ або за QR-кодом. 189 \n§ 38. ГЕТЬМАН ПИЛИП ОРЛИК. ЛІКВІДАЦІЯ КОЗАЦТВА  \nНА\
+    \ ПРАВОБЕРЕЖНІЙ УКРАЇНІ \n \n \nРазом із Кліо розгляньте титульну та останню сторінку\
+    \ \nКонституції Пилипа Орлика, написані ст"
+  section_title: Сторінка 95
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0246
+  text: "КОЗАЦЬКА УКРАЇНА наприкінці 50-х років XVII —\nна початку XVIII ст. \nРОЗДІЛ\
+    \ 4\n€\n \nПилип Орлик і його Конституція, \nзз Ліквідація козацтва\nна Правобережній\
+    \ Україні\n9\n Назвіть ознаки наступу царизму на автономію Гетьманщини на початку\
+    \ XVIII \nст.\nЛ  ІЄМ .О : прлкти чні ^  ддання\nПрихильників І. Мазепи, які покинули\
+    \ разом із ним Україну називають пер­\nшою українською політичною еміграцією.\
+    \ Дізнайтесь ознаки політичної емігра­\nції та доберіть з тексту параграфа аргументи\
+    \ на користь запропонованої тези"
+  section_title: Сторінка 183
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0327
+  text: "§ 28. Гетьманщина в Північній війні. Повстання І. Мазепи. Конституція П. Орлика\n\
+    203\nКарл XII та І. Мазепа на Дніпрі після Полтавської битви. \nХудожник Г. У.\
+    \ Цедерстрем. До 1933 р.\n\e\n\e Висловіть припущення, про що говорили І. Мазепа\
+    \ \nта  Карл ХІІ. Чому ви так вважаєте?\n  Цікаві факти\nКарлу XII заважало керувати\
+    \ боєм під Полтавою по-\nранення в  ногу, яке він дістав напередодні. Під час\
+    \ \nбитви він упав і  знепритомнів. Шведи вирішили, що \nкороль загинув, тому\
+    \ кинулися тікати. \nПам’ятник П.  Орлику "
+  section_title: Сторінка 203
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6865593194961548
+  chunk_id: eef657d3_c0595
+  text: "Бендерська конституція 1710 р., ця за виразом В.\r\nЛипинського, «конституційна\
+    \ хартія України» 24, як сталася, так і\r\nзосталася «на вЂкопомную Войска Запорожского\
+    \ и всего Народу Руського\r\n(Українського) славу и пам’ятку» 25.\n\nПРИМІТКИ\n\
+    \n1 «Мазепа». Збірник.\r\nТом І. — «Праці Українського Наукового Інституту», том\
+    \ XLVI, Варшава, 1938, с.\r\n115.\n\n2 Про це — див. нашу\r\nпрацю «Українсько-московська\
+    \ угода 1654». Вид. ООЧСУ-ЛВУ, Ню Йорк-Торонто,\r\n1954, с. 71 і далі.\n\n3 І.\
+    \ Борщак, «Вивід\r\nправ України». — "
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.6582682728767395
+  chunk_id: eef657d3_c0597
+  text: "19 Як це не дивно,\r\nБендерська конституція ще майже не досліджена. Єдина\
+    \ спеціальна розвідка\r\nвідомого українського історика-правника М.П. Василенка\
+    \ «Конституція Пилипа\r\nОрлика». — «Ученые записки Института Истории РАНИИОН»,\
+    \ т. IV, Москва, 1929, с. 153-171. Англійський\r\nпереклад її («The Constitution\
+    \ of Pylyp Orlyk» вміщено в «The Annals of the\r\nUkrainian Academy of Arts and\
+    \ Sciences in the U.S., Vol. VI, №3, 4 (21-22,\r\n1958, pp. 1260-1295).\n\n20\
+    \ І. Борщак, «Orlikiana». — «Хліборобська Україна», "
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.6150926351547241
+  chunk_id: eef657d3_c0539
+  text: "Бендерська конституція Української козацької держави,\r\nцей вікопомний пам’ятник\
+    \ української державно-політичної думки XVII-XVIII ст.,\r\nбула наслідком компромісу\
+    \ трьох основних українських політичних сил, що довгі\r\nдесятиліття змагалися\
+    \ між собою на батьківщині й тепер, після поразки у війні з\r\nМосквою, опинилися\
+    \ в нових умовах на еміґрації: гетьманат, як зверхня влада\r\nУкраїнської держави;\
+    \ старшина, як її провідна верства; Запоріжжя, як її — на той\r\nчас єдина — військова\
+    \ сила. Суперечливі інтере"
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm

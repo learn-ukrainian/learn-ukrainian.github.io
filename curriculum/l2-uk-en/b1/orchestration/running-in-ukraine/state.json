@@ -6,13 +6,22 @@
     "discover": {
       "status": "complete",
       "ts": "2026-03-12T18:40:59Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     },
     "research": {
       "status": "complete",
       "ts": "2026-03-12T18:40:59Z",
       "task_id": "v5-running-in-ukraine-pA",
-      "mode": "full"
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     }
   }
 }

@@ -1,0 +1,208 @@
+discovered_at: '2026-03-13T12:44:45.300637+00:00'
+query_keywords:
+- 'Синтез: 2022 — Історичний перелом'
+- Що змінилось
+- Роль пам'яті
+- Структурні зміни
+- Виклики і ризики
+- 'Analyze the causes and consequences of синтез: 2022 — історичний перелом'
+- Evaluate the historical significance of неочікуване братерство
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0260
+  text: "Які політичні зміни відбулися в  СРСР \nі  УРСР у  цей період? НАВЧАЛЬНА\
+    \ МЕТА: охарактеризувати \nвплив «перебудови» на зростання гро-\nмадської активності\
+    \ українського су­\nспільства; визначити особливості націо-\nнально-визвольного\
+    \ руху напередодні \nпроголошення незалежності України. § 18—19. Зростання громадської\
+    \ активності \nукраїнського суспільства. Проголошення \nДекларації про державний\
+    \ суверенітет України\nДодаткові матеріали\nrnk.com.ua/109525\n© ТОВ Видавництво\
+    \ «Ранок». Всі права захищено."
+  section_title: Сторінка 144
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0265
+  text: "Чому? Цитадель Батуринської фортеці  — \nполітичного центру Батурина XVII \
+    \ ст. Реконструкція. Національний \nісторико-культурний заповідник \n«Гетьманська\
+    \ столиця» в  Батурині \n(Чернігівська область)\n\e\n\e Яку роль для розвитку\
+    \ історичної \nпам’яті про події минулого \nвідіграють реконструкції? Дайте \n\
+    відповідь на прикладі зображеної \nреконструкції. Висловіть думку, \nчому важливо\
+    \ зберігати історичну \nспадщину."
+  section_title: Сторінка 164
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0451
+  text: "§ 32. Україна у 2019—2021 рр.\n247\nЗапитання і завдання\nЗнаємо і  розуміємо\n\
+    1.\t Хто був суперником В.  Зеленського \nна виборах Президента України?\n2.\t\
+    \ Які політичні партії утворили фракції \nв  ново­обраній Верховній Раді?\n3.\t\
+    \ Коли відбулася остання зустріч ліде-\nрів держав у «нормандському форма-\nті»?\n\
+    Застосовуємо і  аналізуємо\n4.\t Покажіть на карті атласу території, \nщодо яких\
+    \ вели переговори в  «нор-\nмандському форматі».\n5.\t Завдання з хронології.\
+    \ Складіть хро-\nнологію наростання агресивних дій"
+  section_title: Сторінка 249
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0527
+  text: "15. Проаналізуйте зміст пісень \nпро російсько-українську війну. Поясніть,\
+    \ чи можуть вони \nв  майбутньому бути історичним джерелом. 16. Візьміть \nінтерв’ю\
+    \ у своїх близьких або знайомих і дослідіть, як для \nних почалося широкомасштабне\
+    \ вторгнення, якими були \nїхні стратегії виживання під час бойових дій. 17. Колек-\n\
+    тивна робота в  класі. За допомогою методу «Прес» об­\nговоріть і визначте, що\
+    \ заважає Україні стати повноправним \nчленом ЄС і НАТО. Cформулюйте судження\
+    \ про:\n\x84\n\x84\nключові події широкомас"
+  section_title: Сторінка 304
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-istoriya-schupak-2022_s0004
+  text: "6\n§ 20. Історія України в пам’ятках і пам’ятниках. \n           Пам’ятники\
+    \ рідного краю. .  .  .  .  .  .  .  .  .  . . . . . . . . . . . . 114\n§ 21.\
+    \ Урок узагальнення. «Історична наука та історична            \n           пам’ять».\
+    \ .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . . . . . . . . . . . . . .\
+    \ . . . . . 119\nРОЗДІЛ 4. РОЗВИТОК ЛЮДСТВА \nУПРОДОВЖ ІСТОРІЇ\n§ 22. Поява і\
+    \ розселення людини на Землі. .  .  .  .  .  . . . . . . . 121\n§ 23. Що пам’ятає\
+    \ древній Сфінкс . .  .  .  .  .  .  .  .  "
+  section_title: Сторінка 6
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5316284894943237
+  chunk_id: b715df49_c0067
+  text: "Важко переоцінити значення /40/ \r\nрозпочатого процесу поновлення процесів\
+    \ інтеґрації української науки у світову.\r\nУкраїнські вчені починають, врешті,\
+    \ враховувати появу новочасних методик\r\nдосліду, залучають порівняльний матеріал\
+    \ із досліджень явищ в інших країнах,\r\nякі типологічно можна зблизити з тим,\
+    \ що було в Україні. З іншого боку,\r\nкнигознавці з України докладають зусиль,\
+    \ щоб український матеріал увійшов до\r\nзагальних оглядів європейського та світового\
+    \ книговидання. Принципово новим\r\nявище"
+  work: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/isaevych/is.htm
+- score: 0.5075617432594299
+  chunk_id: c846b4d3_c0076
+  text: "Мы употребили эту систему, считая ее, с одной\r\nстороны, более удобною в\
+    \ типографском отношении и избавляющею читателя от\r\nчтения одного и того же\
+    \ несколько раз; в то же время думаем, что она дает\r\nисследователю полную возможность\
+    \ восстановить каждый сокращенный нами вариант\r\nво всей его целости.\n\nПримітки\n\
+    \nПримітки\n\nМихаил ДРАГОМАНОВ\n\nПОЛОЖЕНИЕ И ЗАДАЧИ НАУКИ ДРЕВНЕЙ ИСТОРИИ\n\n\
+    Последние годы — один из наиболее критических моментов\r\nнауки древней истории:\
+    \ она удвоила, если не утроила, свой материа"
+  work: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+  year: 1880
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag.htm
+- score: 0.49199485778808594
+  chunk_id: ea8ba17c_c0026
+  text: "Взагалі в тім, що зветься \"русскою\r\nісторією\", я бачу комбінацію, чи,\
+    \ властиво, — конкуренцію кількох понять:\r\nісторія Російської держави (сформування\
+    \ й розвою державної організації й її\r\nтериторії), історія Росії, себто того,\
+    \ що було на її території, історія\r\n\"руських народностей\", і, нарешті, — історія\
+    \ великоруського народу\r\n(його державного й культурного життя). Кожде з сих\
+    \ понять, в консеквентнім\r\nпереведенні, може бути вповні оправданим предметом\
+    \ наукового представлення, але\r\nпри такім комб"
+  work: Грушевський — Вибрані статті
+  author: Грушевський М.
+  year: 1920
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrs/hrs.htm

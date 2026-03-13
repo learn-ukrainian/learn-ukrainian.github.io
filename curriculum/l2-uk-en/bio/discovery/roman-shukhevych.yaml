@@ -1,0 +1,172 @@
+discovered_at: '2026-03-13T10:32:59.618930+00:00'
+query_keywords:
+- 'Роман Шухевич: Головний командир УПА'
+- Молодість і формування
+- Друга світова війна
+- Головний командир УПА
+- Післявоєнний опір
+- Спадщина та визнання
+- 'Analyze the life and legacy of роман шухевич: головний командир упа'
+- Evaluate the contributions of легенда упа
+- Trace the career and influence of спадщина та визнання
+- biography
+- головнокомандувач
+- повстанець
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=H1qSvD2y5iE
+  channel: Реальна Історія
+  title: Феномен УПА. Реальна історія з Акімом Галімовим
+  relevance_score: 0.9
+  relevance_note: The video directly teaches about the Ukrainian Insurgent Army (UPA),
+    its historical context, formation, and struggle against occupiers, which is essential
+    background for understanding Roman Shukhevych's role as its commander.
+  transcript_excerpt: Офіційна історія УПА починається у 1942 році але щоб все було
+    зрозуміло звідки ця армія взялася давайте подивимось що взагалі тоді відбувалося
+    в Україні. ОУН організація українських націоналістів яка ставить собі за мету
+    подальшу боротьбу за самостійну Україну.
+  embed_suggestion: After section Вступ — Легенда УПА -- to provide a comprehensive
+    historical overview of UPA before delving into Shukhevych's personal history.
+- url: https://www.youtube.com/watch?v=qDVZpBUvuys
+  channel: ІМТГШ
+  title: ГОЛОВНА ТАЄМНИЦЯ УПА! | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.8
+  relevance_note: The video clarifies the complex history of UPA and related organizations
+    (OUN, Bandera followers), addressing common misconceptions. This nuanced historical
+    context is crucial for a deep understanding of Shukhevych's leadership.
+  transcript_excerpt: українська історія початку XX століття має купу заплутаних назв
+    та абревіатур упа аун бандерівці мельниківці...упаце не бандерівці хоч би тому
+    що насправді українських повстанських армій було дві.
+  embed_suggestion: After section Друга світова війна -- to provide a deeper, more
+    critical understanding of the various factions and internal dynamics within the
+    Ukrainian liberation movement during the period Shukhevych became a prominent
+    figure.
+blogs:
+- url: https://www.ukrainianlessons.com/episode77/
+  title: Ukrainian History Course Part 7 Second World War in Ukraine
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 77
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0070
+  text: "Розділ І. Україна в повоєнний період\n38\nкаральних органів (створювали спеціальні\
+    \ загони, які чинили \nнасильство над місцевим населенням під виглядом УПА), а також\
+    \ \nзміни, пов’язані з  розгортанням насильницької колективізації, \nунеможливили\
+    \ продов­ження широкого опору УПА та ОУН тота-\nлітарному імперському режиму.\
+    \ У березні 1950  р. на конспіративній квартирі під Львовом \nу бою з підрозділом\
+    \ радянських спецслужб загинув командир УПА \nі  Голова проводу ОУН Р. Шухевич.\
+    \ Його наступник Василь Кук \nу"
+  section_title: Сторінка 40
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0067
+  text: "Вдалося прорвати ста-\nлінську інформаційну блокаду щодо подій в  Україні.\
+    \ Загони УПА, що залишилися в  Україні, розділилися \nна невеликі групи та здійснювали\
+    \ напади на активістів \nрадянської влади, знищували колгоспне майно, МТС \nта\
+    \ інші об’єкти. Головною метою цих нападів було за-\nвадити утвердженню радянської\
+    \ влади. Пропаганда, \nжорстокість і підступність каральних органів (створю-\n\
+    вали спеціальні загони, які чинили насильство над \nмісцевим населенням під виглядом\
+    \ УПА), а  також \nзміни, пов’яз"
+  section_title: Сторінка 37
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0069
+  text: "УПА-Північ\nНаселені пункти, атаковані загонами УПА після\nвстановлення там\
+    \ радянської влади\nОсередки українсько-польського протистояння\nв 1944—1947 рр.\
+    \ Області, де силами радянської армії було\nздійснено операцію «Велика блокада»,\
+    \ \nспрямовану на придушення УПА\nКількість радянських збройних формувань,\nзадіяних\
+    \ у «Великій блокаді» (за областями), \nД. дивізії, Бр. бригади, П. полки, Б.\
+    \ батальйони\n1Бр. 1П. 6Б. 1 Д.1 Б. Історичні українські землі на території Польщі\n\
+    ХОЛМЩИНА\nНапрямок відступу частин УП"
+  section_title: Сторінка 38
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0074
+  text: "Розділ І. Україна в повоєнний період\n40\nПідготовлені українцями-в’язнями\
+    \ \nповстання відбулися в  містах Печора \n(1948  р.), Салехард (1950  р.) та\
+    \ Екібас-\nтуз (1951 р.). Радянська влада жорстоко \nпридушила повстання, але\
+    \ вони сприяли \nзанепаду системи ГУЛАГу та послабленню \nсталінського режиму.\
+    \ Запитання і завдання\nЗнаємо і  розуміємо\n1. Хто після загибелі Р. Шухевича\
+    \ став \nкомандувачем УПА? А\t М. Лебідь\nБ\t В. Кук\nВ\t К. Осьмак\nГ\t Ю. Липа\n\
+    2. Коли й  чому радянська влада лікві-\nдувала УГКЦ? 3. Пер"
+  section_title: Сторінка 42
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5768598318099976
+  chunk_id: feaa5fa7_c3176
+  text: "Українці в сов. армії: Національная политика\r\nВКП(б) в цифрах. М. 1930;\
+    \ Golovine N. The Russian Army in the World War.\r\nНью Гевн 1931; Wallenberg\
+    \ E. The Red Army — a study in the growth of\r\nSoviet imperialism. Лондон 1940;\
+    \ Berchin M.-Ben-Horin E. The Red Army.\r\nНью-Йорк 1942; Cole D. The Red Army.\
+    \ Лондон 1943; White D. The\r\ngrowth of the Red Army. Прінстон 1944; Kalinow\
+    \ D. Sowjetmarschälle\r\nhaben das Wort. Гамбург 1950; Кисіль В. Охорона кордонів\
+    \ СССР. Перемога,\r\nІ. Мюнхен 1951.\n\nОНОКС: Карпатсь"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5671286582946777
+  chunk_id: feaa5fa7_c1473
+  text: "Масовий терор серед населення, вивози цілих сіл на\r\nзаслання, брутальні\
+    \ жорстокості (прилюдні тортури), система провокацій,\r\nтворення, під тиском\
+    \ терору, винищувальних протипартизанських загонів з\r\nмісцевого населення (т.\
+    \ зв. »стрибки«) дали окупаційній владі часткові успіхи.\r\nВ 1947 — 48 pp. на\
+    \ підставі умови з 12. V. 1947 p., укладеної після загибелі в\r\nбою з УПА поль.\
+    \ військ. віцеміністра В. Свєрщевського, проведено в Карпатах\r\nвелику союзну\
+    \ рос.-поль.-чеську акцію проти УПА, в наслідок якої "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5619320869445801
+  chunk_id: feaa5fa7_c1472
+  text: "Спротив укр. людности.\r\nНац. пригнічення, неможливість політ. і культурного\
+    \ розвитку, екон.\r\nпоневолення, визиск і нестерпно-низький матеріяльно-побутовий\
+    \ рівень жиnтя\r\nпороджують на Україні широкий пасивний і активний опір людности.\
+    \ Активний опір переростає\r\nв рев.-визвольну політ. боротьбу, що найяскравіше\
+    \ виявляється в діях УПА\r\n(Української Повстанської Армії) і підпілля укр. політ.\
+    \ організацій.\n\nПостала 1942 р. УПА (див. стор. 586), в 1943 р., незадовго перед\
+    \ больш. окупацією Зах. Укр. Земе"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

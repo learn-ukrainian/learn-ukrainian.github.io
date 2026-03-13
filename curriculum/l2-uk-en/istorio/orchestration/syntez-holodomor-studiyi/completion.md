@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 51
+PASS: pipeline istorio 51
 
   Module:   syntez-holodomor-studiyi
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 51
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:30Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:31:39Z

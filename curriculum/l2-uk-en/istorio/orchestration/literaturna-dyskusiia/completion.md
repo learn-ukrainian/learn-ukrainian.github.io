@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 53
+PASS: pipeline istorio 53
 
   Module:   literaturna-dyskusiia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 53
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:48Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:37:07Z

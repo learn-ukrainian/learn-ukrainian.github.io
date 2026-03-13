@@ -1,0 +1,206 @@
+discovered_at: '2026-03-13T12:16:57.163427+00:00'
+query_keywords:
+- Володимир Вакуленко
+- Вступ та контекст
+- Життя та мучеництво в Ізюмі
+- 'Щоденник окупації: Голос з-під землі'
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Дослідити життя та внесок Володимир Вакуленко у сучасну українську культуру
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+- history
+- суб'єктність
+- тяглість
+- геноцид
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=F6ORKlJTbIg
+  channel: Суспільне Док
+  title: 'Розкриття вбивства Володимира Вакуленка #shorts'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses Volodymyr Vakulenko, the investigation
+    into his murder during the Russian occupation, and the discovery of his diary
+    by Victoria Amelina, which are core themes of the module.
+  transcript_excerpt: Розкриття вбивства Володимира Вакуленка. Володимир Вакуленко
+    український письменник, поет, перекладач був убитий під час російської окупації.
+    Вікторія знайшла цей щоденник Вакуленка під вишною.
+  embed_suggestion: 'After section ''Щоденник окупації: Голос з-під землі'' -- The
+    video provides a direct, emotional context to the diary''s discovery and Vakulenko''s
+    fate.'
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0143
+  text: '6. Луценко Ю. Григорій Граб’янка та його літопис // Літопис гадяцького пол-
+
+    ковника Григорія Граб’янки. – К., 1992.'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0253
+  text: "Не радянський, а переду-\nсім український. Це важливо для розуміння по-\n\
+    зиції автора: хоч і трапляються в нього неминучі \nрадянські ідеологічні штампи,\
+    \ однак вони по-\nступаються національним переживанням, адже \nнайперше вболіває\
+    \ автор за свою, рідну землю: \n«На українських ланах і селах в огні і полум’ї\
+    \ ви­\nрішується велетенська проблема світової геге­\nмонії, вирішується доля\
+    \ людства на нашій недо­\nлі. Така нещаслива земля наша. Така наша доля \nнещаслива».\
+    \ Національне в письменника — щось дуже \nз"
+  section_title: Сторінка 132
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.542913556098938
+  chunk_id: fc2291b5_c1210
+  text: "Літ.: Неділько Г. Я. Іван\r\nВороньківський. «Наукові записки Ніжинського\
+    \ державного педінституту ім. М. В.\r\nГоголя», 1960, т. 11, в. 1; Дудко В. По\
+    \ сторінках «Земского сборника...».\r\n«Вітчизна», 1986, № 5.\n\nП. П. Ротач."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5317004919052124
+  chunk_id: 7808b51b_c0496
+  text: "Єфр. — Єфремов С. Націоналістичне\r\nліквідаторство // Вісник Академії наук\
+    \ України. — К., 1991. — Ч. 2.\n\nЖХ — Житье и хожденье Данила Русьскыя земли\
+    \ игумена\r\n(1106-1108). Текст воспроизведен по древнейшему списку XV века, изданному\r\
+    \nПравославный палестинским обществом. — СПб, 1896.\n\nЗаточн. — Моление Даниила\
+    \ Заточника // Повести\r\nДревней Руси XI—XII века. — Л., 1983. /380/\n\nЗін.\
+    \ — Зіновіїв Климентій. Вірші. Приповісті посполиті. Передмова й упорядкування\
+    \ І.П. Чепіги. — К., 1971.\n\nИПМН — Драгомано"
+  work: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/rusaniv/ru.htm
+- score: 0.5253283977508545
+  chunk_id: 1af78606_c0015
+  text: "Літ.: Заїкін В.\r\nПрофесор Іван Огієнко як церк. та громад. діяч і як учений.\
+    \ Варшава, 1925; Тези\r\nдоповідей наук.-теор. конференції «Духовна і наук.-пед.\
+    \ діяльність І. І.\r\nОгієнка в контексті укр. над. відродження». Кам’янець-Подільський,\
+    \ 1992; Тези\r\nдоповідей Всеукр. наук. конференції, присвяченої 110-річчю від\
+    \ дня народження\r\nІвана Огієнка, 26 — 27 травня 1992 p., ч. 1 — 2. Л., 1992;\
+    \ Іван Огієнко й\r\nутвердження гуманіт. науки та освіти в Україні. Мат-ли доповідей\
+    \ і повідомлень\r\nна Всеукр. наук"
+  work: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+  year: 2004
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/ukrmova/um01.htm

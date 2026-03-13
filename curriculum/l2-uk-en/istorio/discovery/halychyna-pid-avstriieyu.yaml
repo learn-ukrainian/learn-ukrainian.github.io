@@ -1,0 +1,203 @@
+discovered_at: '2026-03-13T11:12:26.514650+00:00'
+query_keywords:
+- 'Галичина під Австрією: Особлива доля'
+- Правовий статус
+- Освіта і церква
+- «Весна народів» 1848
+- Польсько-український конфлікт
+- Порівняння з Росією
+- 'Analyze the causes and consequences of галичина під австрією: особлива доля'
+- Evaluate the historical significance of інший шлях
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0199
+  text: "161\n§ 24. Влада та суспільний устрій в українських \nземлях у складі Великого\
+    \ князівства Литовського...\nа ще ти можеш\nПідготуй короткі повідомлення з тем:\
+    \ «Битва на річці Сині Води», «Грюнвальд-\nська битва», «Кревська унія», «Городельська\
+    \ унія» (на вибір). Презентуй їх у ви-\nгляді постера, скориставшись інструментом\
+    \ дослідження. https://vse.ee/cfwx \nВідкрий цифровий додаток і виконай завдання\
+    \ до § 22–23.\nhttps://vse.ee/cfwx\n§ 24. ВЛАДА ТА СУСПІЛЬНИЙ УСТРІЙ В УКРАЇНСЬКИХ\
+    \ \nЗЕМЛЯХ У СКЛАДІ ВЕЛИКОГО "
+  section_title: Сторінка 164
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0199
+  text: "• Києво-Могилянська академія визнавалася вищим навчальним закладом \nна рівні\
+    \ з іншими польськими університетами. • Митрополит і четверо єпископів отримували\
+    \ місця в сенаті триєдиної дер­\nжави. • Відкриття ще одного вищого православного\
+    \ навчального закладу, шкіл і \nдрукарень. • Шляхті надавався дозвіл повернутися\
+    \ до своїх колишніх володінь в Україні. ' \n'\nГАДЯЦЬКАУГОДА 1658 р.: основні\
+    \ положення\n148"
+  section_title: Сторінка 148
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0254
+  text: "174\nПольщó на непольсьêих землях, а станóть таê само, яê і ми, \nна становищі\
+    \ Польщі чисто етноãрафічної». 1. У чомó І. Франêо вбачав можливий êомпроміс із\
+    \ поляêами? Історія в цифрах \n \n \n \n \n \n \n \n1. Із представниêами яêих\
+    \ національностей ви можете пов’язати зãадані реліãійні ãрóпи? 3. Єврейсьêий рóх.\
+    \ Єврейсьêа ãромада бóла однією з найчисленніших ó Галичині. Переважна \nбільшість\
+    \ євреїв проживала в містах і містечêах, проте наприêінці ХІХ ст. зросла êільêість\
+    \ єврейсьêоãо населення на селі, де єв"
+  section_title: Сторінка 174
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5969425439834595
+  chunk_id: feaa5fa7_c3215
+  text: "8. УКРАЇНСЬКІ ЗЕМЛІ ПІД АВСТРІЄЮ Й УГОРЩИНОЮ В PP. 1772 — 1918\n\nГАЛИЧИНА\
+    \ . . . . . . . . . . . . . . . . . . . 484\n\nГаличина в 1772 — 1849 pp. (484).\
+    \ Революція 1848 р.\r\n(484). Галичина в 1860-их pp. (485). Народовці (486). Нові\
+    \ партії (487).\r\nГаличина в XX ст. (488) І. Витанович\n\nБУКОВИНА . . . . .\
+    \ . . . . . . . . . . . . . . 489\n\nДо пол. XIX ст. (489). Буковинське відродження\
+    \ (490) за\r\nМ. Кордубою і Т. Галіпом\n\nЗАКАРПАТТЯ І. Витанович . . . . . .\
+    \ . . . . .\r\n. . . . . . . . 491\n\nЗАХ. УКРАЇНА В Ч"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5812380313873291
+  chunk_id: feaa5fa7_c3219
+  text: "УКРАЇНСЬКА ЦЕРКВА ВІД КІНЦЯ XVIII СТ. . . . . . . . .\r\n. . . . . . . .\
+    \ . . . 615\n\nЦерква на Україні під російською владою (615) Церква\r\nв Галичині\
+    \ під владою Австрії (615). Церква на Закарпатській Україні (616).\r\nЦерква в\
+    \ Буковині (617). Сектантський рух на Україні (617). Українська\r\nАвтокефальна\
+    \ Церква (617). Православна Автокефальна Церква в Польщі (618).\r\nПравос. Церква\
+    \ після 1939 р. (618). Греко-Кат. Церква в Галичині після першої\r\nсвітової війни\
+    \ (619). Українська Греко-Католицька Церква в А"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5812380313873291
+  chunk_id: feaa5fa7_c0024
+  text: "УКРАЇНСЬКА ЦЕРКВА ВІД КІНЦЯ XVIII СТ. . . . . . . . .\r\n. . . . . . . .\
+    \ . . . 615\n\nЦерква на Україні під російською владою (615) Церква\r\nв Галичині\
+    \ під владою Австрії (615). Церква на Закарпатській Україні (616).\r\nЦерква в\
+    \ Буковині (617). Сектантський рух на Україні (617). Українська\r\nАвтокефальна\
+    \ Церква (617). Православна Автокефальна Церква в Польщі (618).\r\nПравос. Церква\
+    \ після 1939 р. (618). Греко-Кат. Церква в Галичині після першої\r\nсвітової війни\
+    \ (619). Українська Греко-Католицька Церква в А"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

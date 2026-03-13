@@ -1,0 +1,159 @@
+module: c2-069
+level: C2
+sequence: 69
+slug: osvita-nauka-innovatsiyi
+version: '2.0'
+title: Освіта, наука й інновації
+subtitle: Education, Science and Innovation
+focus: culture
+pedagogy: TTT
+phase: C2.4 [Thematic Discourse]
+word_target: 5000
+objectives:
+- Аналізувати систему освіти України та реформаційні процеси з використанням фахової педагогічної та
+  наукової термінології
+- Learner can critically evaluate higher education policy, academic career structures, and research ethics
+  using evidence-based argumentation in academic Ukrainian
+- Порівнювати моделі фінансування науки та обґрунтовувати позиції щодо етичних дилем науково-технічного
+  прогресу
+- Learner can compose an analytical essay on education reform, scientific policy, or technology ethics
+  integrating data from Ukrainian academic and policy sources
+sources:
+- name: МОН України — Офіційний сайт
+  url: https://mon.gov.ua/
+  type: primary
+  notes: Official education policy documents, reform updates, higher education standards, scientific policy
+- name: 'Закон України «Про вищу освіту»'
+  url: https://zakon.rada.gov.ua/laws/show/1556-18
+  type: primary
+  notes: Legal framework for higher education — degrees, accreditation, academic autonomy, student rights
+- name: НАН України — Національна академія наук
+  url: https://www.nas.gov.ua/
+  type: reference
+  notes: Scientific research landscape, academic publications, science policy and priority directions
+content_outline:
+- section: 'Вступ: Освітньо-науковий дискурс на рівні С2 (Introduction: Educational-Scientific Discourse at C2 Level)'
+  words: 600
+  points:
+  - 'From basic education vocabulary (B1-B2 school, university) to policy-level analysis: the C2 learner
+    engages with education reform, scientific career structures, and innovation policy through specialized
+    academic and administrative registers.'
+  - 'Overview of thematic territory: connecting State Standard themes 3.12 (Освіта) and 3.19 (Наука й
+    техніка) to real-world Ukrainian policy debates on education financing, academic integrity, and
+    technological development.'
+  - 'Register expectations: mastering науковий (academic publications), офіційно-діловий (education policy
+    documents), and публіцистичний (science journalism) registers.'
+- section: Система освіти та освітня реформа (Education System and Education Reform)
+  words: 800
+  points:
+  - 'Structure of Ukrainian education: дошкільна, загальна середня, професійно-технічна, вища освіта;
+    the НУШ (New Ukrainian School) reform and its implementation challenges.'
+  - 'Higher education reform: Болонський процес (Bologna Process), ЄКТС (ECTS), акредитація, автономія
+    університетів; debates around платна vs безкоштовна вища освіта (paid vs free higher education).'
+  - 'Student support: стипендія (scholarship/stipend) types — академічна, соціальна, іменна; студентське
+    самоврядування (student self-governance) and the role of students in university reform.'
+- section: Наукові ступені та академічна кар'єра (Scientific Degrees and Academic Career)
+  words: 750
+  points:
+  - 'Degree system: бакалавр, магістр, доктор філософії (PhD), доктор наук; the distinction between
+    науковий ступінь (scientific degree) and вчене звання (academic title — доцент, професор).'
+  - 'Academic career path: аспірантура (doctoral studies), дисертація, захист дисертації, спеціалізована
+    вчена рада; navigating the institutional landscape of Ukrainian academia.'
+  - 'Academic integrity: плагіат, антиплагіатні системи, етика наукових публікацій; analyzing reform
+    discourse around academic honesty and research reproducibility.'
+- section: Роль освіти на ринку послуг (Role of Education in the Service Market)
+  words: 650
+  points:
+  - 'Education as a market: галузь знань (field of knowledge), спеціальність, освітня програма; the tension
+    between академічна свобода and ринкові вимоги (market demands).'
+  - 'Lifelong learning: неперервна освіта, підвищення кваліфікації, перепідготовка; the role of online
+    education, MOOC platforms, and non-formal education certification.'
+  - 'Education export and academic mobility: академічна мобільність, програма Erasmus+, іноземні студенти
+    в Україні; analyzing the internationalization of Ukrainian higher education.'
+- section: Наукові відкриття та технологічний прогрес (Scientific Discoveries and Technological Progress)
+  words: 750
+  points:
+  - 'Ukrainian contributions to science: from historical achievements (Кондратюк, Патон, Глушков) to
+    contemporary research strengths in mathematics, materials science, and IT.'
+  - 'Frontier technologies: нанотехнологія, телекомунікації, комп''ютеризація, штучний інтелект; analyzing
+    Ukrainian discourse on technological development and digital transformation.'
+  - 'Space exploration: космічні дослідження, ракетобудування (КБ «Південне», «Південмаш»); Ukraine''s
+    legacy and current role in the international space industry.'
+- section: Наука й етика (Science and Ethics)
+  words: 750
+  points:
+  - 'Research ethics: етичний комітет, інформована згода у дослідженнях, захист персональних даних;
+    institutional frameworks for ethical oversight in Ukrainian science.'
+  - 'Science and society: генетично модифіковані організми (ГМО), клонування, досліди на тваринах;
+    analyzing public discourse around controversial scientific practices.'
+  - 'Science funding and priorities: грантове фінансування, фундаментальні vs прикладні дослідження,
+    наукометрія (h-індекс, імпакт-фактор); the politics of research funding allocation.'
+- section: 'Практикум: Аналіз освітньо-наукового дискурсу (Workshop: Educational-Scientific Discourse Analysis)'
+  words: 700
+  points:
+  - 'Applied analysis: reading and deconstructing an МОН policy document or НАН scientific report using
+    analytical frameworks from education policy and science studies.'
+  - 'Argumentative writing: composing an analytical essay on a chosen topic (e.g., university autonomy,
+    science funding models, ethics of AI development) with evidence from policy and academic sources.'
+  - 'Debate exercise: constructing arguments for and against a specific education or science policy (e.g.,
+    mandatory STEM quotas, open access mandates) using specialized terminology.'
+vocabulary_hints:
+  required:
+  - науковий ступінь (scientific degree) — здобуття наукового ступеня, присудження наукового ступеня;
+    academic career terminology essential for understanding Ukrainian academia
+  - вчене звання (academic title) — присвоєння вченого звання, вчене звання професора; institutional
+    academic hierarchy term
+  - стипендія (scholarship/stipend) — академічна стипендія, іменна стипендія; student support and higher
+    education policy term
+  - галузь знань (field of knowledge) — перелік галузей знань, міжгалузеві дослідження; education
+    classification and curriculum design register
+  - нанотехнологія (nanotechnology) — розвиток нанотехнологій, нанотехнологічні матеріали; frontier
+    technology discourse
+  - телекомунікація (telecommunication) — телекомунікаційні мережі, розвиток телекомунікацій; technology
+    infrastructure term
+  - дослідження (research/study) — наукове дослідження, фундаментальне дослідження; core academic register term
+  - відкриття (discovery) — наукове відкриття, технологічне відкриття; science and innovation discourse
+  - комп'ютеризація (computerization) — комп'ютеризація освіти, процес комп'ютеризації; digital transformation term
+  - етичний (ethical) — етичний комітет, етичні засади, етичний кодекс; research ethics and professional
+    standards register
+  recommended:
+  - наукометрія (scientometrics) — наукометричні показники, наукометричні бази; research evaluation and
+    academic publishing term
+  - академічна мобільність (academic mobility) — програми академічної мобільності, міжнародна мобільність;
+    internationalization of education discourse
+  - STEM — STEM-освіта, STEM-напрями; modern education policy borrowing with established usage
+  - грантовий (grant-based) — грантове фінансування, грантові програми; research funding and science
+    management register
+  - фундаментальний (fundamental) — фундаментальні дослідження, фундаментальна наука; science classification
+    and funding priority term
+activity_hints:
+- type: quiz
+  focus: Ідентифікація освітніх та наукових понять і термінів
+  items: 15
+- type: essay-response
+  focus: Аналітичне есе на тему освітньої реформи або наукової етики
+- type: critical-analysis
+  focus: Аналіз документів МОН та наукових звітів НАН
+  items: 8
+- type: discussion
+  focus: Дебати щодо фінансування науки та етичних дилем технологій
+  items: 1
+- type: fill-in
+  focus: Заповнення пропусків освітньо-науковою лексикою в контексті
+  items: 12
+connects_to:
+- c2-065 (Society & Citizenship — education as social policy)
+- c2-067 (Economy & Welfare — education and labor market intersection)
+- c2-022 (Practical Rhetoric — argumentation for education policy debates)
+- c2-003 (Scientific Style — academic register applied to science topics)
+prerequisites:
+- c2-064 (C2.3 Checkpoint)
+persona:
+  voice: Senior Specialist
+  role: Education Policy Analyst
+grammar:
+- Система освіти та освітня реформа
+- Наукові ступені та академічна кар'єра
+- Наукові відкриття та технологічний прогрес
+- Наука й етика
+register: академічний

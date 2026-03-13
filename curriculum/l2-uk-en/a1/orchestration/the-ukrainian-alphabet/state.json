@@ -6,33 +6,60 @@
     "research": {
       "status": "complete",
       "ts": "2026-03-12T20:16:10Z",
-      "note": "file-exists"
+      "note": "file-exists",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     },
     "discover": {
       "status": "complete",
       "ts": "2026-03-12T20:16:10Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-12T21:49:06Z"
+      "ts": "2026-03-12T21:49:06Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     },
     "activities": {
       "status": "complete",
       "ts": "2026-03-12T21:49:06Z",
-      "note": "extracted-from-full-build"
+      "note": "extracted-from-full-build",
+      "executor": {
+        "type": "script",
+        "name": "extracted_from_full_build"
+      }
     },
     "validate": {
       "status": "complete",
       "ts": "2026-03-12T21:50:50Z",
-      "attempts": 1
+      "attempts": 1,
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
     },
     "review": {
       "status": "complete",
       "ts": "2026-03-12T21:59:40Z",
       "attempts": 2,
-      "note": "fix-iter1"
+      "note": "fix-iter1",
+      "executor": {
+        "type": "llm",
+        "agent": "unknown",
+        "model": "unknown"
+      }
     }
   },
-  "last_updated": "2026-03-13T08:47:17Z"
+  "last_updated": "2026-03-13T09:37:15Z"
 }

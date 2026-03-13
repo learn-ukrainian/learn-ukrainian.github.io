@@ -1,0 +1,133 @@
+discovered_at: '2026-03-13T10:01:34.939859+00:00'
+query_keywords:
+- 'Василь Вишиваний: Князь-українець'
+- Імперське дитинство
+- Становлення українського патріота
+- Військова кариєра та УНР
+- Еміграція та таємна діяльність
+- Радянський полон та загибель
+- Дискусія
+- 'Analyze the life and legacy of василь вишиваний: князь-українець'
+- Evaluate the contributions of ерцгерцог, що обрав україну
+- Trace the career and influence of національний вибір проти крові
+- biography
+- ерцгерцог
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qaoB5rDjvW0
+  channel: Комік Історик
+  title: 'Владлен Мараєв: історія гетьмана Тетері @IstoriyaBezMifiv'
+  relevance_score: 0.2
+  relevance_note: The video is in Ukrainian and discusses Ukrainian history, but it
+    focuses on Hetman Pavlo Teteria, a different historical figure from a different
+    period, making it unrelated to the module's topic of Vasyl Vyshyvany.
+  transcript_excerpt: ви сказали що дуже недооцінений персонаж це гетьман Павло Тетеря...
+  embed_suggestion: Not suitable for embedding within this module due to unrelated
+    topic.
+- url: https://www.youtube.com/watch?v=m_XN30APU1s
+  channel: Комік Історик
+  title: 'Петро Сагайдачний: гетьман чи пірат?'
+  relevance_score: 0.2
+  relevance_note: The video is in Ukrainian and discusses Ukrainian history, but it
+    focuses on Hetman Petro Sahaidachnyi, a different historical figure from a different
+    period, making it unrelated to the module's topic of Vasyl Vyshyvany.
+  transcript_excerpt: про гетьмана Петра конашевича-сагайдачного...
+  embed_suggestion: Not suitable for embedding within this module due to unrelated
+    topic.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0206
+  text: "Для вас, допитливі\nrnk.com.ua/110316\nПрацюємо з джерелом\nrnk.com.ua/110317\n\
+    З Універсалу \nБ. Хмельницького  \nдо української спільноти \nіз закликом підтримати\
+    \ \nрозпочату козацтвом \nборотьбу\nПолковник реєстрового лівобережного \nполку.\
+    \ Художник С. Васильківський. 1900  р. \e\n\e Порівняйте вбрання та спорядження\
+    \ \nстаршини та пересічного козака (с. 124)."
+  section_title: Сторінка 127
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0005
+  text: "Національно-визвольна війна українського народу середини \nХVІІ ст. (Хмельниччина).\
+    \ Створення Української козацької \nдержави. Боротьба за збереження державності.\
+    \ Ліквідація \nКозацької держави\nЧетвертий\n1764  р. — кінець XVIII ст. Перехід\
+    \ українських земель під імперську владу\n\e\n\e Працюємо в  парах. Перегляньте\
+    \ зміст підручника. З’ясуйте, які теми  \nви розглянете, вивчаючи періоди історії\
+    \ України Ранньомодерної доби. Працюємо з джерелом\nrnk.com.ua/110281\nЗі статті\
+    \ «Історія України: \nРанній Новий ч"
+  section_title: Сторінка 5
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0305
+  text: "Чу-\nбинського з  незначними змінами. Навчальний фільм\nrnk.com.ua/109563\n\
+    Перегляньте відеоролик \n«Реальна історія українського \nпрапора» і  виконайте\
+    \ завдання \nдо нього. © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 169
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0076
+  text: "Що для тебе \nозначає бути \nпатріотом \nУкраїни?\nРозділ  4\nНавчальний\
+    \ маршрут розділу"
+  section_title: Сторінка 77
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5415109395980835
+  chunk_id: ffcfbeb9_c0042
+  text: "21 Залізняк Л. Від\r\nсклавинів до української нації. — С. 101.\n\n22 Там\
+    \ же. — С. 66."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm
+- score: 0.5352456569671631
+  chunk_id: 5739d24f_c0949
+  text: "Зрозуміло, що характеристика наукової концепції М. С.\r\nГрушевського не\
+    \ вичерпується лише фундаментальною працею «Історія\r\nУкраїни-Руси». Свої погляди\
+    \ на наступний період української історії (60-ті pp.\r\nXVII — початок XX ст.)\
+    \ він виклав на сторінках таких широковідомих популярних\r\nпраць як, «Очерк истории\
+    \ украинского народа», «Ілюстрована історія України», у\r\nбагатьох наукових статтях\
+    \ та публіцистичних працях. Звичайно, вони далеко не\r\nрівноцінні за своїм науковим\
+    \ змістом та ідейним спрямуванням."
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.5332034826278687
+  chunk_id: fc2291b5_c1003
+  text: "Літ.: Костюченко В.\r\nУкраїнська радянська література для дітей. К., 1984;\
+    \ «Веселка» — дітям.\r\nБібліографічний покажчик дитячої літератури. 1934 — 1984.\
+    \ К., 1985.\n\nВ. А. Костюченко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

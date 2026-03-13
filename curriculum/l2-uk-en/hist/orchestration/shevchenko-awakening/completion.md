@@ -1,4 +1,4 @@
-FAIL: pipeline hist 81
+PASS: pipeline hist 81
 
   Module:   shevchenko-awakening
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 81
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:15:07Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:00:01Z

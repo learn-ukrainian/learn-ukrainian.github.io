@@ -1,0 +1,201 @@
+discovered_at: '2026-03-13T10:22:35.113552+00:00'
+query_keywords:
+- 'Механізми Голодомору II: Чорні дошки'
+- Система чорних дошок
+- Натуральні штрафи
+- Блокада сіл і паспортизація
+- Документальні свідчення
+- Чому це геноцид
+- 'Analyze the causes and consequences of механізми голодомору ii: чорні дошки'
+- Evaluate the historical significance of механізм знищення
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0271
+  text: "Суд встановив, що Голодомор-геноцид здійснювався через такі ре-\nпресивні\
+    \ механізми та способи: \n\x17\n\x17 встановлення для України завищеного плану\
+    \ хлібозаготівель, який \nнеможливо було виконати; \n\x17\n\x17 занесення за рішенням\
+    \ ЦК КП(б)У обкомів та райкомів партії ці-\nлих районів, населених пунктів, колгоспів,\
+    \ сільських рад на так звані \n«чорні дошки», що означало блокування їх спецзагонами\
+    \ та військами, \nнедопущення виїзду населення за межі цих територій, вилучення\
+    \ всіх \nпродуктів харчування, заборону тор"
+  section_title: Сторінка 142
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0265
+  text: "Комнезами й  від-\nряджені на хлібозаготівлі робітники \nз міст, яких запевняли,\
+    \ що їхні сім’ї \nголодують через «куркульський сабо-\nтаж» хлібозаготівель, забирали\
+    \ в  лю-\nдей запаси будь-яких продуктів і  все \nпродовольство, яким селяни мали\
+    \ хар-\nчуватися до нового врожаю. Конфіска-\nція продовольства оголошувалася\
+    \ по-\nкаранням за «куркульський саботаж». «Чорна дошка» в експозиції Лебединського\
+    \ \nісторико-краєзнавчого музею\n«Чорна дошка» — статус села або району на \n\
+    території УСРР, який передбачав за"
+  section_title: Сторінка 139
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0307
+  text: "Голодомор мовою документів, свідчень, чисел\n2. Пропагандистський ідеал радянської\
+    \ людини та її повсяк-\nденне життя\nЗавдання для узагальнення знань і підготовки\
+    \  \nдо тематичного оцінювання за розділом IV \n«Встановлення й  утвердження комуністичного\
+    \  \nтоталітарного режиму в  Україні»"
+  section_title: Сторінка 160
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0048
+  text: "— голод в Україні;\n– лютий 1948 р. — прийнято Указ Президії Верховної Ради\
+    \ СРСР «Про виселення з\nУкраїнської РСР осіб, які злісно ухиляються від трудової\
+    \ діяльності у сільському\nгосподарстві та ведуть антигромадський паразитичний\
+    \ спосіб життя». 2. Поясніть значення понять: відбудова, штучний голод. 3. Використовуючи\
+    \ спогади очевидців, напишіть есей на тему: «Післявоєнне село». 4. Заповніть порівняльну\
+    \ таблицю «Масовий штучний голод в Україні». Причини \nТериторія поширення \n\
+    Наслідки \nГолодомор 19"
+  section_title: Сторінка 30
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.46688365936279297
+  chunk_id: c44f1207_c3503
+  text: "22) Як вище c. 88, нотка 3.\n\n23) Starowolski Dyskurs o monecie — витяги\
+    \ у \r\n Шельонґовского с. 230.\n\n24) Volum. legum II с. 188, III c. 8-9 і 409.\n\
+    \n25) Volum. legum II c. 200.\n\n26) Ibid.\n\n27) Volum. legum III c. 417.\n\n\
+    ТОМ VI     \r\nРозділ I\n\n[М. Грушевський. Історія України-Руси. Том VI. Розділ\
+    \ I. Стор. 5.]\n\n[М. Грушевський. Історія України-Руси. Том VI. Розділ I. Стор.\
+    \ 6.]\n\nТОМ VI     \r\nРозділ I\n\nОРҐАНЇЗАЦІЯ ТОРГОВЛЇ: ЯРМАРКИ — \r\nПРАВИТЕЛЬСТВЕННІ\
+    \ НАДАННЯ, РЕҐЛЯМЕНТАЦІЯ, ВИГОДИ І НЕВИГОДИ ВІД ЯРМ"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.46018436551094055
+  chunk_id: c8772648_c0306
+  text: "Цуцнево село на р. Буг 25 — «Болеслав», стор. 108;\r\n«Акты ВК», т. XIX,\
+    \ 1892, стор. 52, т. XXIII, 1896, стор. 144; П. Іванов, ЗНТШ, стор.\r\n120\n\n\
+    Чєрєменскии?: доловъ Чєрєменского 5\n\n*Черемошна: до Черемошнои село 5 — AGZ,\
+    \ т. X, 1884, №\r\n513\n\nЧеремхово присілок 64\n\nЧерепыне село 36\n\nЧирвоныи\
+    \ потокъ 1\n\nЧолница, Чолницею річка 6 — «Архив ЮЗР», ч. VIII, т.\r\nIII, 1909,\
+    \ стор. 218\n\nЧорный лесокъ 6 — «Акты ЗР», т. I, стор. 43\n\n*Чорный пѣсокъ:\
+    \ ω(т) Чорного Пѣска 58\n\n*Чорторыская дорога: дороги Чорторыское "
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm
+- score: 0.45882147550582886
+  chunk_id: 5794da94_c0939
+  text: "11) Вельяминовъ-Зерновъ Матеріялы \r\nдля исторыи Крымскаго ханства Nr. 13,\
+    \ 21, у Смірнова op. c. с. 497. також листи \r\nсултана й каймакама в Ukr. spr.\
+    \ с. 73 і 76 (тут перебільшені поголоски, що \r\nкозаки навіть здоули Перекоп\
+    \ і инші замки й тримають їх, і що день їх \r\nприбуває).\n\n12) Collectanea 1\
+    \ c. \r\n187-8.\n\nТОМ VIII     \r\nРозділ II\n\n[М. Грушевський. Історія України-Руси.\
+    \ Том VIII. Розділ II. Стор. 1.]\n\n[М. Грушевський. Історія України-Руси. Том\
+    \ VIII. Розділ II. Стор. 2.]\n\nТОМ VIII     \r\nРозділ "
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm

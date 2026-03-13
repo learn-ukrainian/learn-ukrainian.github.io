@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T11:58:07.406653+00:00'
+query_keywords:
+- '1991: Чому 90% сказали «так»?'
+- Що означала незалежність
+- Економічний аргумент
+- Демократичний аргумент
+- Регіональний аналіз
+- Що пішло не так після
+- 'Analyze the causes and consequences of 1991: чому 90% сказали «так»?'
+- Evaluate the historical significance of неймовірний результат
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0289
+  text: "По-\nясніть чому. Працюємо з  хронологією\n24  серпня \n1991  р. Акт проголошення\
+    \ \nнезалежності України. 1  грудня \n1991  р. Всеукраїнський \nреферендум і \
+    \ вибори \nПрезидента України. Обрання Л. Кравчука \nПрезидентом України. CФОРМУЛЮЙТЕ\
+    \ СУДЖЕННЯ ПРО:\n\x84\n\x84 спроби зберегти СРСР і  протидія цьому \nвлади УРСР;\n\
+    \x84\n\x84 процеси, які сприяли проголошенню \nнезалежності України. rnk.com.ua/107016\n\
+    Практичні заняття \nза  розділом IV\nrnk.com.ua/107017\nУзагальнення знань \n\
+    за  розділом IV\nrnk.com.ua/107018\nТестові за"
+  section_title: Сторінка 160
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0302
+  text: "§ 20. Проголошення Україною незалежності\n167\nПричини розпаду СРСР\nПричини\n\
+    Криза тоталітарного режиму \nв СРСР\nІдеологічна криза КПРС\nПоразка СРСР у «холодній\
+    \ війні»\nУнітарний імперський характер \nСРСР, що обмежував права \nсоюзних республік\n\
+    Ігнорування національних \nособливостей і проб­лем; \nросійщення, курс на «злиття\
+    \ \nнацій» і формування типу \n«радянської людини»\nНездатність влади подолати\
+    \ \nекономічну кризу та соціальні \nпроблеми\nЗростання національної \nсамосвідомості\
+    \ й активізація \nнаціонально-"
+  section_title: Сторінка 169
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0295
+  text: "У  липні 1987  р. в  Москві було проведено мирну де-\nмонстрацію з вимогами\
+    \ відновлення прав кримських \n§ 20. проголошення україною незалежності\nнаВчальна\
+    \ мета:\nохарактеризувати передумови та \nзначення проголошення незалежності \n\
+    україни. пРиГадайте\n1. Які політичні та економічні \nпроблеми були в урСр на\
+    \ початку \n1990­х рр.? 2. Що таке «перебудова» \nта «гласність»? Як вони вплинули\
+    \ на \nукраїнське суспільство? 3. Якими були \nособливості українського \nдисидентського\
+    \ руху? 4. Яких успіхів \nдосяг укра"
+  section_title: Сторінка 164
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0064
+  text: "65\nЗлякавшись людського обурення, комуністич-\nна більшість Верховної Ради\
+    \ погодилася ухвалити \nпостанову, яка задовольняла всі вимоги револю-\nціонерів.\
+    \ Союзний договір провалився.\nПроте Радянська імперія оскаженіло боролася за\
+    \ \nсвоє збереження. У серпні 1991 року в Москві став-\nся збройний заколот з\
+    \ метою повернення до тоталі-\nтарного ладу. Однак в Україні комуністична партія\
+    \ вже \nвтратила авторитет і владу.\nТому, скориставшись розколом і послабленням\
+    \ \nрадянських колонізаторів, 24 серпня Верховн"
+  section_title: Сторінка 65
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0389
+  text: "— прийнято Верховною Радою УРСР Акт проголошення\nнезалежності України; \n\
+    – 1 грудня 1991 р. — відбувся Всеукраїнський референдум з питання підтвердження\n\
+    Акта проголошення незалежності України; обрано першого Президента України Леоніда\
+    \ \nКравчука; \n– 7–8 грудня 1991 р. — прийнято рішення про припинення існування\
+    \ СРСР;\n– 21 грудня 1991 р. — підписано Декларацію про утворення СНД. 2. Поясніть\
+    \ значення понять: багатопартійність, мітингова демократія, незалежність,\nсуверенітет.\
+    \ 3. Перегляньте відео за "
+  section_title: Сторінка 211
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5396657586097717
+  chunk_id: 3d51722e_c0273
+  text: "По-третє, чи справжні, чи не уявні ті економічні\r\nпереваги, які дає надцентралізація,\
+    \ фактичне позбавлення республік економічної\r\nсуверенності і пов’язана з цим\
+    \ політика інтенсивної русифікації? Чи не більший\r\nекономічний ефект дала б,\
+    \ чи не краще сприяла б рішучій перевазі в економічному\r\nзмаганні з капіталізмом\
+    \ політика широкої економічно-господарської ініціативи та\r\nсамодіяльності республік\
+    \ політика найактивнішої мобілізації місцевих резервів,\r\nполітика здорового\
+    \ соціально-економічного змаган"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.5341012477874756
+  chunk_id: feaa5fa7_c0271
+  text: "Економічна районізація\r\nспирається і на природні дані, бо вони є підставою\
+    \ господарства, але, з другого\r\nбоку, вона залежить від стану продукційних сил,\
+    \ які за проґресивного розвитку\r\nгосподарства швидко міняються. Взагалі ж економічна\
+    \ районізація мусить, крім\r\nприродних факторів, до яких належать і сировина\
+    \ та енерґетичні ресурси, взяти\r\nдо уваги такі мінливі фактори, як кількість\
+    \ населення, його розподіл, ступінь\r\nгосподарського опанування території, розвиток\
+    \ шляхів, галузі виробництва, стан\r\n"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.532404899597168
+  chunk_id: 53691244_c0024
+  text: "Проте найголовніше — в Україні не знайшлося на той час\r\nжодної впливової\
+    \ соціалістичної політичної сили (тільки відносно слабенька\r\nУкраїнська партія\
+    \ соціалістів-самостійників), яка б вчасно зійшла із\r\nсоціалістичного потягу\
+    \ і проголосила створення української держави головною\r\nсвоєю метою. Політичні\
+    \ баталії розгорталися, як ми вже відзначали, навколо\r\nшляхів і методів соціалістичної\
+    \ трансформації суспільства, а не будування\r\nукраїнської держави. Заглядаючи\
+    \ далеко вперед, можемо вказати, що ця т"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

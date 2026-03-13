@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T09:50:05.070608+00:00'
+query_keywords:
+- 'Валуєвський циркуляр: Повний текст'
+- Історичний контекст
+- Текст циркуляра
+- Логіка заборони
+- Наслідки
+- Критика джерела
+- 'Analyze the causes and consequences of валуєвський циркуляр: повний текст'
+- Evaluate the historical significance of заборона мови
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0448
+  text: '. . . . . 324
+
+    Повторення  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 326
+
+    Літературознавчий словник  . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 330
+
+    335
+
+    Зміст'
+  section_title: Сторінка 335
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0330
+  text: ". . . . . . . . . . . . . . . . . . . . . . 193\n§ 45 \nВимоги до вживання\
+    \ синтаксичних одиниць у різних стилях  . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . 202\n \nЗапитання і завдання для самоконтролю . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 205"
+  section_title: Сторінка 222
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0365
+  text: "Якщо слідувати за цими зв’язками, \nможна читати матеріал у будь-якому порядку,\
+    \ утворюючи різні лінійні тек-\nсти. Прикладом гіпертексту може бути будь-який\
+    \ словник чи енциклопедія, \nде кожна стаття має посилання до інших статей цього\
+    \ ж словника. \aПрочитайте текст. Підготуйте розповідь про особливості гіпертексту.\
+    \ У ХХ столітті людство накопичило стільки інформації, що почали \nвиникати серйозні\
+    \ проблеми з її пошуками і переробкою, у тому \n319\n320\n321"
+  section_title: Сторінка 237
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5454200506210327
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5395979285240173
+  chunk_id: feaa5fa7_c1549
+  text: "Джерела: Turgenev A. Historica\r\nRussiae Monumenta. П. 1841; Акты, относящиеся\
+    \ к истории Западной России, І —\r\nIV. П. 1846 і наступні; Полное собрание русских\
+    \ летописей. Ипатьевская. П. 1843\r\nі 1908, Лаврентиевская. П. 1846, 4 Новгородские\
+    \ летописи. П. 1841 — 48; Turgenev\r\nA. Supplementum ad Historica Russiae Monumenta.\
+    \ П. 1848; Harasiewicz M.\r\nAnnales Ecclesiae Ruthenae. Л. 1863; Rykaczewski\
+    \ E. Relacje\r\nNuncjuszów w Polsce 1548 — 1690. Берлін 1864; Theiner A. Vetera\r\
+    \nMonumenta Poloniae et Lithua"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5321202874183655
+  chunk_id: ac24b59d_c0212
+  text: "27. 3, 8, 73: додано но ωже не боудеть\r\nсвободнаго то по ноужи\n\n28. 3,\
+    \ 8, 73: товароу.\n\n29. 3, 8: додано а за жеравь 30 коунъ.\n\n30. 3, 8, 73: потокъ.\n\
+    \n31. Додано із списка 73.\n\n32. 3, 8: виноватъ.\n\n33. 3, 8, 73: на самого.\n\
+    \n34. Цього уступу нема в тексті списка 72. Подаю його\r\nіз тексту списка 73.\n\
+    \n35. 3, 8, 73: аще же/и/.\n\n36. Уступ в дужках пропущений в списку 72. Тут подаю\r\
+    \nтекст із списка 73.\n\n37. 3, 8, 73: бωртьнои.\n\n38. Текст списка 72 пропустив\
+    \ цю статтю. Наводжу її\r\nза текстом списка 73."
+  work: Білецький — Руська Правда й історія її тексту
+  author: Білецький О.
+  year: 1993
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/bilets/bil.htm

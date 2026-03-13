@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 85
+PASS: pipeline istorio 85
 
   Module:   radianska-ukrainizatsiia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 85
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:17:58Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:45:17Z

@@ -1,4 +1,4 @@
-FAIL: pipeline hist 45
+PASS: pipeline hist 45
 
   Module:   petro-sahaidachnyi
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 45
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:09:33Z
+  Verdict:  PASS
+  Date:     2026-03-13T10:28:12Z

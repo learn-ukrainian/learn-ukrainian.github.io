@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 110
+PASS: pipeline istorio 110
 
   Module:   suchasna-dezinformatsiia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 110
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:48Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:30:24Z

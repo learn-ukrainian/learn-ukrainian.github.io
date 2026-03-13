@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 116
+PASS: pipeline istorio 116
 
   Module:   volyn-i-pamiat
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 116
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:22:43Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:43:30Z

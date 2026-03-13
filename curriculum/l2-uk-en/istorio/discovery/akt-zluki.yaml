@@ -1,0 +1,205 @@
+discovered_at: '2026-03-13T10:00:53.870244+00:00'
+query_keywords:
+- 'Акт Злуки 1919: Символ єдності'
+- Історичний контекст
+- Текст Акту Злуки
+- Церемонія на Софійській площі
+- Реальність vs. символ
+- Акт Злуки в історичній пам'яті
+- 'Analyze the causes and consequences of акт злуки 1919: символ єдності'
+- Evaluate the historical significance of найважливіший день
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0117
+  text: "Дипломатичні відносини було встановлено з  Угорщиною, Че-\nхословаччиною,\
+    \ Нідерландами, Італією, Ватиканом. Однак їй не вдалося \nналагодити необхідний\
+    \ рівень зв’язків із тими країнами, від яких знач­\nною мірою залежала доля України,\
+    \ тобто країнами Антанти, Польщею \nта радянською Росією. і\nПроголошення Акта\
+    \ злуки українських \n­земель на Софійській площі в Києві. 22  січня 1919 р. ??\
+    \ Як українська громадськість сприйняла \nАкт злуки?"
+  section_title: Сторінка 64
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0401
+  text: "218 \nУчасники акції на площі Ринок у Львові,  \n1990 рік. Світлина \nУчасники\
+    \ акції на \nтрасі в  Києві,  \n1990 рік. Світлина \nДонецька делегація, яка прибула\
+    \  \nдо Києва, щоб долучитися до акції,  \n1990 рік. Світлина \nУЗАГАЛЬНЕННЯ ЗА\
+    \ РОЗДІЛОМ:  \nВІДНОВЛЕННЯ ДЕРЖАВНОЇ НЕЗАЛЕЖНОСТІ \nУКРАЇНИ, ЇЇ РОЛЬ У РОЗПАДІ\
+    \ СОЮЗУ \nРАДЯНСЬКИХ СОЦІАЛІСТИЧНИХ РЕСПУБЛІК \n1. Прочитайте уривок з історичного\
+    \ джерела. Як називають період, про який\nйдеться? З ім’ям якого радянського лідера\
+    \ він пов’язаний? Назвіть його \nвизн"
+  section_title: Сторінка 219
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0295
+  text: "У  липні 1987  р. в  Москві було проведено мирну де-\nмонстрацію з вимогами\
+    \ відновлення прав кримських \n§ 20. проголошення україною незалежності\nнаВчальна\
+    \ мета:\nохарактеризувати передумови та \nзначення проголошення незалежності \n\
+    україни. пРиГадайте\n1. Які політичні та економічні \nпроблеми були в урСр на\
+    \ початку \n1990­х рр.? 2. Що таке «перебудова» \nта «гласність»? Як вони вплинули\
+    \ на \nукраїнське суспільство? 3. Якими були \nособливості українського \nдисидентського\
+    \ руху? 4. Яких успіхів \nдосяг укра"
+  section_title: Сторінка 164
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0264
+  text: "Вересень 1989 р. Словник\n«Мітингова демократія» — 1)  назва \nперіоду в \
+    \ історії боротьби \nза  незалежність України; 2)  явище, яке \nстало виявом активності\
+    \ суспільства, \nреакцією на складне соціально-\nекономічне становище, політичну\
+    \ \nнестабільність. Громадсько-політичне віче у  Львові 13  червня 1988  р. Навчальний\
+    \ фільм\nrnk.com.ua/109557\nПерегляньте відеоролик \n«Реальна історія ЗУНР» \n\
+    і  виконайте завдання \nдо  нього. © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 146
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0028
+  text: "Проаналізуйте участь УРСР \nу  діяльності міжнародних організацій та сформулюйте\
+    \ \nтвердження щодо її ролі в  цьому. Американські кадети піднімають прапор \n\
+    Української РСР над резиденцією ООН. Сан-Франциско. 1945  р. Пам’ятний камінь,\
+    \ закладений з  нагоди \nвідкриття Алеї ООН у  Києві до 60-річчя \nзаснування\
+    \ ООН. 2005  р. © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 18
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5587092638015747
+  chunk_id: 91e59aff_c0031
+  text: 'Отже, то діялось на цій площі під цим пам''ятником. І чи то тільки 2 квітня?
+    17-21 квітня тут маніфестував свою волю Перший Український Національний конгрес,
+    8-21 травня Перший Український Військовий З''їзд, на початку червня Перший Всеукраїнський
+    Селянський З''їзд, з цілим рядом інших з''їздів аж до вікопомної дати 22 січня
+    1918 року, коли на цій площі, під дзвони древньої Софії було проголошено: "Від
+    нині земля Українського народу, стає самостійною суверенною державою Українського
+    народу". А рік п'
+  work: Улас Самчук. На коні вороному
+  author: Самчук У.
+  year: 1905
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=3653
+- score: 0.522011935710907
+  chunk_id: c44f1207_c3240
+  text: "При тім конспіративнім характері, який мала далї \r\n унїятська акція, при\
+    \ тій таємничости, якою її окружали її дїячі, і тих \r\n запереченнях і фальшивих\
+    \ чутках, які вони так щедро розсипали, нелегко слїдити \r\n за її дальшим розвоєм.\
+    \ Навіть акти унїї — офіціальні протоколи й заяви \r\n владиків служать досить\
+    \ непевними підставами, бо дуже часто не мають дат і \r\n місць видання, або мають\
+    \ дати нереальні, які значно розминали ся з часом, коли \r\n певний документ був\
+    \ дїйсно підписаний і війшов в житє, або"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5208994746208191
+  chunk_id: c44f1207_c3355
+  text: "Історія унїї руської церкви з Римом має дуже \r\n показну лїтературу й належить\
+    \ до найлїпше розроблених сторін історії \r\n України-Руси, хоч не у всїх частях\
+    \ однаково. Найбільше звертало на себе увагу \r\n довершеннє унїї, меньше — її\
+    \ попередня історія, тому тут лишаєть ся чимало \r\n невиясненого докладнїйше,\
+    \ тим більше, що прихильники унїї не в однім натягали, \r\n стараючи ся представити\
+    \ жизненність і силу ідеї унїї в тих часах перед її \r\n довершеннєм. Взагалї\
+    \ історія її й досї трактуєть ся занадто cu"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm

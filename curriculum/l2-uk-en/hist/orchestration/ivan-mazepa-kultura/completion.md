@@ -1,4 +1,4 @@
-FAIL: pipeline hist 64
+PASS: pipeline hist 64
 
   Module:   ivan-mazepa-kultura
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 64
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:28Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:18:05Z

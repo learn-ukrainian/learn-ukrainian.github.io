@@ -6,17 +6,31 @@
     "discover": {
       "status": "complete",
       "ts": "2026-03-13T07:53:41Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     },
     "research": {
       "status": "complete",
       "ts": "2026-03-13T07:53:41Z",
       "task_id": "v5-babyn-yar-pA",
-      "mode": "full"
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     },
     "content": {
       "status": "failed",
-      "ts": "2026-03-13T07:53:43Z"
+      "ts": "2026-03-13T07:53:43Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     }
   },
   "last_updated": "2026-03-13T07:51:27Z"

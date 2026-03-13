@@ -1,0 +1,239 @@
+discovered_at: '2026-03-13T12:30:22.597481+00:00'
+query_keywords:
+- Максим Кривцов
+- Вступ та контекст
+- 'Поет у камуфляжі: Творчий шлях'
+- 'Вірші з передньої лінії: Спадщина «Далі»'
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Дослідити життя та внесок Максим Кривцов у сучасну українську культуру
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+- history
+- суб'єктність
+- тяглість
+- геноцид
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Jmpra3gtWck
+  channel: Суспільне Док
+  title: How Russia is destroying Ukrainian figures and rewriting history | The Last
+    War. Episode 3 Part 2
+  relevance_score: 0.8
+  relevance_note: The video provides crucial historical context for Russian repression
+    and genocide against Ukrainian culture and intellectuals, directly reinforcing
+    the 'Деколонізаційна перспектива' section and the module's thematic focus on historical
+    continuity of Russian repression. While it doesn't mention Maksym Kryvtsov specifically,
+    it frames the broader struggle within which his work exists.
+  transcript_excerpt: чому світ не помічав того як ця велика Російська культура роками
+    і десятиліттями була димовою завісою прикриттям для завойовництва а геноцидальних
+    воїн і ось таких руїн я журналістка і телеведуча Мирослава Барчук говоритиму про
+    це з українськими і західними інтелектуалами нинішня російська Війна на знищення
+    України не перша катастрофа яка відбувається на очах усього світу
+  embed_suggestion: After section 'Деколонізаційна перспектива' -- provides essential
+    historical and geopolitical context for understanding the need and scope of decolonization
+    efforts in Ukrainian culture.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  text: "Використана  література\nІванюк С. Міфи про Миколу Куліша / Сергій Іванюк\
+    \ // Наукові записки Національного \nуніверситету «Києво-Могилянська академія».\
+    \ — 1998. — Т. 4. — С. 75–83. — (Серія \n«Філологія»). Кузякіна Н. Траєкторія\
+    \ доль / Наталя Кузякіна. — К. : Темпора, 2010. Куліш А. Спогади про Миколу Куліша\
+    \ // Куліш М. Твори: В 2 т. — К., 1990. — Т. 2. — \nС. 695–753. Наєнко М. Художня\
+    \ література України / М. Наєнко. — К., 2007. — С. 845–857. Панченко В. Арки і\
+    \ шибениці (драматургія Миколи Куліша) /"
+  section_title: Сторінка 126
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0383
+  text: "Показовою в цьому плані є медитація «Крізь сотні сумнівів я \nйду до тебе…»\
+    \ зі збірки «Палімпсести». Ліричний герой цього вірша прямує до світла, добра\
+    \ й краси. Переборюючи \n«сотні сумнівів» і «сто зневір», він наближається до\
+    \ своєї мрії — до Бога, беручи \nна себе відповідальність бути «предтечею», який\
+    \ прокладає «шлях правдивий». Вірш належить до філософської лірики. Провідний\
+    \ мотив — віра особистості в \nсебе, у подолання всіх життєвих перешкод. \n3"
+  section_title: Сторінка 236
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 3-klas-ukrainska-mova-kravtsova-2020-1_s0108
+  text: "110\n307.\t 1.\t Прочитай уривки з віршів про весну. Як ти гадаєш, чи радіють\
+    \ \nпоети приходу весни? Обґрунтуй свою думку.\n308. 1.\t Прочитай та спиши речення.\n\
+    Крізь прозоре скло \nсонечко зійшло \nі поклало теплу руку \nна моє чоло. \n\t\
+    \n\t   Дмитро Павличко\n2.\t Що ти можеш сказати про виділені слова? Визнач серед\
+    \ них \nта підкресли підмет і присудок.\nУрок розвитку зв’язного мовлення. \n\
+    Складання казки за малюнковим планом та кінцівкою\n309.\t 1.\t Розшифруй слова.\
+    \ \nа\nб\nв\n1\nк\nч\nб\n2\nа\nі\nі\n3\nу\nр\nш\nКод 1. 1а, 2б,"
+  section_title: Сторінка 110
+  grade: 3
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0307
+  text: "Літературне «шістдесятництво» . Дмитро Павличко  161\nВиявляємо літературну\
+    \ компетентність\n1. які емоції ви переживали під час читання цієї поезії? Поділіться\
+    \ своїми вра-\nженнями з однокласниками, однокласницями й учителями, батьками\
+    \ .\n2. які образи поезії вас здивували, зацікавили?\n3. Об’єднайтеся в малі групи,\
+    \ наведіть гіпотези, обґрунтуйте їх і презентуйте од-\nнокласникам та однокласницям\
+    \ .\n\x03\n\x83 Прочитайте уважно перші два рядки поезії . які образи створює\
+    \ у них поет? \nяке символічне значення "
+  section_title: Сторінка 161
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5844714641571045
+  chunk_id: fc2291b5_c2280
+  text: "Літ.: Франко І. Із\r\nсекретів поетичної творчості В кн.: Франко І. Зібрання\
+    \ творів, т. 31. К., 1981;\r\nТеория литературы. Основные проблемы в историческом\
+    \ освещенни, кн. 3. М., 1965;\r\nЛихачев Д. Нестилизационные подражания. В кн.:\
+    \ Лихачев Д. Поэтика древнерусской\r\nлитературы. М., 1979; Храпченко М. Б. Творческая\
+    \ индивидуальность писателя и\r\nразвитие литературы. В кн.: Храпченко М. Б. Собрание\
+    \ сочинений, т. 3. М., 1981.\n\nМ. П. Бондар."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5660237073898315
+  chunk_id: ce21b6f1_c0071
+  text: Тенденційна поезія виходить з іншої основи і доходить до іншої цілі. Тенденційний
+    поет виходить від якоїсь чи то соціальної, чи політичної, чи загалом теоретичної
+    тези, котру йому хочеться висловити, розширити між людьми. Замість розумових аргументів,
+    він підбирає для неї якісь поетичні образи, немов ілюстрації до друкованого тексту.
+    Ілюстрації можуть собі бути дуже гарні, але вони є в книжці не самі для себе,
+    а тільки для пояснення тексту. Тенденційний поет може бути знаменитим віртуозом
+    поетич
+  work: Іван Франко. Літературно-критичні статті
+  author: Франко І.
+  year: 1856
+  genre: letters
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=648
+- score: 0.5418878197669983
+  chunk_id: 3588aaff_c0580
+  text: "Уважаючи я, иж многіи народове, звлаща в науках\r\nобфитуючіє, много мают\
+    \ не тылко ораторских, але и поетицких, чудне а мистерне,\r\nприродным их языком,\
+    \ от высоких разумов составленных трудолюбій, которыми и\r\nсами ся тЂшат, и потомков\
+    \ своих довцЂпы острят, я, яко истиный сын\r\nМалороссійскои отчизны нашеи, болЂючи\
+    \ на то сердцем, иж в Малой нашой Россіи до\r\nсих час таковых нЂ от кого тыпом\
+    \ виданых не оглядаю трудов, з горливости моєи\r\nку милой отчизнЂ, призвавши\
+    \ Бога и Божію матку и (святых), умыслил"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

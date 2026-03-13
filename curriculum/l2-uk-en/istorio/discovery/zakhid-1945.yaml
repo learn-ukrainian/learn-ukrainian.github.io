@@ -1,0 +1,200 @@
+discovered_at: '2026-03-13T12:05:17.891981+00:00'
+query_keywords:
+- '1945: Ялта і зрада'
+- Ялтинська конференція
+- Західна Україна
+- Примусова репатріація
+- Чому погодились
+- Наслідки для України
+- 'Analyze the causes and consequences of 1945: ялта і зрада'
+- Evaluate the historical significance of друга зрада
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0030
+  text: "Розпоч­\nніть підготовку навчальних проєктів \nдо уроку узагальнення за темами\
+    \ (на \nвибір): 1)  «Україна для ООН. ООН \nдля України»; 2)  «Стадії боротьби\
+    \ за \nнезалежність від УНР до УПА (про-\nдовження кейсу “Як трансформу-\nвався\
+    \ український визвольний рух \nу  ХХ  ст.?”)»; 3)  «Примусове трудове \nвикористання\
+    \ військовополонених та \n“інтернованих і  мобілізованих нім-\nців” на теренах\
+    \ України»; 4)  «Доля \nрепатріантів у  повоєнній Україні»; \n5)  «Історія рідного\
+    \ краю в  контексті \nзагальноукраїнських"
+  section_title: Сторінка 19
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0256
+  text: "Виговського;\n\x84\n\x84\nчинники, що зумовили вибух \nгромадянської війни\
+    \ \nв  Гетьманщині;\n\x84\n\x84\nГадяцьку угоду та реакцію на неї \nукраїнського\
+    \ суспільства \nй  сусідніх держав;\n\x84\n\x84\nспроби Ю. Хмельницького \nврятувати\
+    \ Гетьманщину від Руїни;\n\x84\n\x84\nрозкол Гетьманщини на \nПравобережну і \
+    \ Лівобережну;\n\x84\n\x84\nпочаток правління гетьмана \nП. Дорошенка;\n\x84\n\
+    \x84\nАндрусівське перемир’я між \nРіччю Посполитою і  Московією."
+  section_title: Сторінка 158
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0016
+  text: "УКРАЇНА В ПОВОЄННИЙ \nПЕРІОД\n\t\nЗверніть увагу\nВирішення територіальних\
+    \ питань \nрадянською владою мало для України \nпевне значення: було юридично\
+    \ закріп­\nлено повоєнні кордони респуб­ліки; \nзбільшилася територія УРСР; відбулися\
+    \ \nдемографічні зміни у  складі її населення; \nдо республіки приєднали деякі\
+    \ \nукраїнські етнічні землі. НАВЧАЛЬНА МЕТА: з’ясувати особливості \nвизначення\
+    \ кордонів, території і зовніш-\nньополітичної діяльності УРСР у  складі \nтоталітарної\
+    \ радянської імперії. ПРИГАДАЙТЕ: \n1. Як"
+  section_title: Сторінка 12
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0054
+  text: "1949  р. НАВЧАЛЬНА МЕТА: охарактеризувати \nполітику тоталітарної комуністичної\
+    \ імпе-\nрії в західних областях України в цей час. ПРИГАДАЙТЕ:  1. За курсами\
+    \ економіч-\nної і  соціальної географії України та іс-\nторії України визначте,\
+    \ які історико-етно-\nграфічні землі західної частини України \nй коли увійшли\
+    \ до складу УРСР. 2. На-\nзвіть дату й  основні заходи першого \nетапу радянізації\
+    \ в  західних областях \nУкраїни. 3. Якими були характерні \nриси сталінської\
+    \ індустріалізації та ко-\nлективізації в р"
+  section_title: Сторінка 32
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5600408911705017
+  chunk_id: 09eb908b_c0021
+  text: "Не можна докоряти ні А. Волошину, ні його уряду за\r\nте, що сталося в березні\
+    \ 1939 р. Карпатська Україна займала не останнє місце в\r\nміжнародних відносинах,\
+    \ опинилася у сфері інтересів багатьох країн — Німеччини,\r\nРадянського Союзу,\
+    \ Польщі, Угорщини, Чехословаччини. її долю вирішували на\r\nМюнхенській конференції\
+    \ і Віденському арбітражі Німеччина, Англія, Італія і\r\nФранція. Здавалося, що\
+    \ Німеччина була найприхильнішою до цього краю, послала до\r\nХуста свого консула\
+    \ і обіцяла вберегти від угорської "
+  work: Волошин — Вибрані твори
+  author: Волошин А.
+  year: 2002
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/volosh/volosh.htm
+- score: 0.5592326521873474
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5581190586090088
+  chunk_id: 53691244_c0342
+  text: "60\r\n ЦГАООУ.—Ф.43.—Оп.I.—Д.23.— Л.1.\n\n61\r\n Ленін В.I.\r\nПовне зібр.\
+    \ творів.— Т.40.— С.154.\n\n62\r\n Там само.— С.40.\n\n63\r\n Там само.— С.42.\n\
+    \n64\r\n Центральный государственный архив высших органов власти\r\nи управления\
+    \ Украины.— Ф.3809.— Оп.2.— Д.9.— Л.10.\n\n65\r\n ЦГАООУ.— Ф.1.— Оп.6.— Д.5.—\
+    \ Л.4.\n\n66\r\n Там само.— Л.31.\n\n67\r\n Резолюція IV Всеукраїнського з`їзду\
+    \ Рад про державні\r\nвзаємини між УССР і РСФРР.— У зб.: Національні відносини\
+    \ в Україні у XX ст.—\r\nС.96.\n\n68\r\n См.: Ленін В.I.\r\nПовне зібр. творів.— "
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

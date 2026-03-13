@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T12:19:34.681710+00:00'
+query_keywords:
+- 'Радянська індустріалізація: Хто платив?'
+- П'ятирічки в Україні
+- Ціна
+- Потоки ресурсів
+- Робоча сила
+- Після війни
+- 'Analyze the causes and consequences of радянська індустріалізація: хто платив?'
+- Evaluate the historical significance of для кого будували
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0279
+  text: "вона \nстановила 30  % від його загальної кількості. Для радянської влади\
+    \ декларована \nрівноправність жінок дозволяла залучити додатковий ресурс робочої\
+    \ сили для \nреалізації завдань індустріалізації. Для самих жінок ця праця була\
+    \ необхідністю, \nоскільки рівень заробітної платні пересічного чоловіка-робітника\
+    \ не дозволяв \nйому самому утримувати сім’ю. Основним джерелом поповнення робітників\
+    \ у період реалізації пер-\nшого п’ятирічного плану стало селянство. Знелюднення\
+    \ українського села \nУ складі ро"
+  section_title: Сторінка 146
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0050
+  text: "§ 3. Внутрішньополітична та економічна ситуація в УРСР\n27\nCформулюйте судження\
+    \ про:\n\x84\n\x84\nнегативний характер впливу то­\nталітарного імперського гноблення\
+    \ \nна соціально-економічну ситуацію \nв тогочасній Україні. Працюємо з  хронологією\n\
+    1946—1947 рр. — масовий штучний \nголод в УРСР. 11. Визначте соціально-економічні,\
+    \ демографічні, \nполітичні умови, у  яких розпочалася повоєнна від­\nбудова.\
+    \ Результати роботи подайте у  вигляді ментальної \nкарти. 12. Доведіть, що економіку\
+    \ УРСР відбудовували \nне як с"
+  section_title: Сторінка 29
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0257
+  text: "135\n§ 24—25. Насильницька колективізація та опір їй населення. Голодомор\
+    \ 1932—1933 рр. ного й нерівномірного розміщення продуктивних сил, посилення центра-\n\
+    лізації управління промисловістю та ігнорування економічних механізмів \nрозвитку\
+    \ економіки, а  також зниження життєвого рівня населення. ? Запитання та завдання\n\
+    \x8A\x8A\n1. Що таке індустріалізація? Коли було схвалено рішення про її здійснення?\
+    \ 2. Які \nтемпи розвитку були передбачені першим п’ятирічним планом? 3. Скільки\
+    \ про-\nмислових підприємств п"
+  section_title: Сторінка 135
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0046
+  text: "Розділ І. Україна в повоєнний період\n26\nза вкладами від 3  до 10  тис.\
+    \ руб. заощадження \nзменшувалися на третину, а понад 10 тис. руб. — на \nдві\
+    \ третини. Особливо боляче реформа вдарила по селянству, \nяке знову було ошукане\
+    \ режимом. За  відсутно­сті \nощадних кас у  селах обмін готівкових грошей, які\
+    \ \nнаселення зберігало вдома, здійснювали у співвідно-\nшенні 1 : 10. Отже, заходи\
+    \ влади лише відклали ви-\nрішення складних соціальних проблем. \e\n\e Працюємо\
+    \ разом. За допомогою методу «Плакат \nдумок» гр"
+  section_title: Сторінка 28
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0033
+  text: "Також \nбуло залучено частину ресурсів, \nнаграбованих і  вивезених до СРСР\
+    \ \nіз  держав Центрально-Східної Європи \n(за оцінками експертів, загалом на\
+    \ суму \nприблизно 12  млрд дол.). Крім того, \nдля відбудови використовували\
+    \ працю \nвійськовополонених німців, угорців, \nрумунів. Також СРСР активно залучав\
+    \ \nвивезених із Німеччини та  інших держав \nЦентрально-Східної Європи інженерно-\n\
+    технічних працівників. Загалом ці \nресурси перевищували масштаби \nдопомоги державам\
+    \ Європи за «планом \nМаршалла». © ТОВ"
+  section_title: Сторінка 21
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5695435404777527
+  chunk_id: 53691244_c0413
+  text: "2 \r\nОсновні компоненти кожного виду\r\nекономічної політики досить чітко,\
+    \ на мою думку, сформульовані в статті Tibor Vasco. A Global View: Types of\r\n\
+    Transformation Models // Research Report. The Vienna Institute for Comparative\r\
+    \nEconomic Studies.—№. 206.—May 1994.\n\n3 \r\nUkraine. EIU Country Report.—1st\r\
+    \nquarter 1995.—Р.31.\n\n4 \r\nUkraine. The Real Economy and Its\r\nSectors. A\
+    \ Quarterly Statistical Abstract. The World Bank: Kyiv, Ukraine.—Vol.\r\nII.—Issue\
+    \ 2.—Table 1.1.—May 1996.\n\n5 Урядовий кур’єр. — 19"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5580110549926758
+  chunk_id: feaa5fa7_c2885
+  text: "Література: Рыбников.\r\nКустарная промышленность и сбыт кустарных изделий.\
+    \ 1913; Фещенко-Чопівський\r\nІ. Природні багатства України, I — II. К. 1919;\
+    \ Флоринський М. Кустарні\r\nпромисли на Україні. Х.-К. 1923; Фомин П. Горная\
+    \ и горно-заводская\r\nпромышленность Юга России, I — II. Х. 1915 — 24; Промышленность,\
+    \ торговля и\r\nтранспорт. Сборник. Х. 1924; Оппоков Е. Водные богатства Украины.\
+    \ Х.\r\n1925; Оглоблин А. Очерки истории украинской фабрики. К. 1925; Крамаров\r\
+    \nБ. Гірнича промисловість Правобережжя Ук"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5549287796020508
+  chunk_id: feaa5fa7_c0737
+  text: "Низький рівень заробітної платні робітників і\r\nінтеліґенції, який не забезпечує\
+    \ повного задоволення потреб в харчуванні, одязі\r\nі т. д., примушує їх шукати\
+    \ додаткових заробітків не тільки коштом збільшення\r\nсвого робочого часу (сумісництво,\
+    \ надурочна праця), а й коштом втягнення в\r\nпрацю членів своєї родини, головне\
+    \ жінок. Цим, між іншим, пояснюється велика\r\nпитома вага жінок в СССР, втягнених\
+    \ в працю. В 1940 р. відсоток їх у всьому\r\nгосподарстві дорівнював 38, а в промисловості\
+    \ вони становили н"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

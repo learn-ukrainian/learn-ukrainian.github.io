@@ -1,13 +1,13 @@
-module: c2-073
+module: c2-087
 level: C2
-sequence: 73
+sequence: 87
 slug: teaching-ukrainian-i
 version: '2.0'
 title: Викладання української мови I — Педагогічні основи
 subtitle: 'Introduction: Pedagogical Consciousness at C2 Level'
 focus: practice
 pedagogy: TTT
-phase: C2.4 [Meta-Skills & Capstone]
+phase: C2.5 [Meta-Skills & Capstone]
 word_target: 5000
 objectives:
 - Аналізувати та класифікувати явища Історико-культурний контекст та сучасні виклики у автентичних текстах
@@ -142,8 +142,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-75 (Викладання української мови III — Розробка матеріалів)
-- c2-84 (Teaching Ukrainian III — Materials Development)
+- c2-089 (Викладання української мови III — Розробка матеріалів)
 persona:
   voice: Senior Specialist
   role: Lecturer

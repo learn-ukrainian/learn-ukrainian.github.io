@@ -1,0 +1,203 @@
+discovered_at: '2026-03-13T12:12:58.617093+00:00'
+query_keywords:
+- 'Бухарест 2008: NATO каже «ні»'
+- Контекст
+- Хто за, хто проти
+- Компроміс
+- Серпень 2008
+- Наслідки для України
+- 'Analyze the causes and consequences of бухарест 2008: nato каже «ні»'
+- Evaluate the historical significance of вето на безпеку
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0394
+  text: "Саркозі)\nПричини, чому Україні не було  \nнадано ПДЧ у 2008 р. Протидія\
+    \ з боку Росії\nРозбіжності серед країн НАТО \n(особливо виступали проти \nНімеччина\
+    \ та Франція)\nНеобхідність проведення \nУкраїною низки реформ для \nвідповідності\
+    \ стандартам НАТО"
+  section_title: Сторінка 222
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0473
+  text: "Зверніть увагу\nЗа результатами Вільнюського саміту \nНАТО 11—12  липня 2023 \
+    \ р. було \nприйнято декларацію, яка \nпроголошувала, що «майбутнє \nУкраїни \
+    \ — у  НАТО», «ми [НАТО] \nпідтверджуємо зобов’язання, яке ми \nвзяли на саміті\
+    \ 2008  р. в  Бухаресті, що \nУкраїна стане членом НАТО, і  сьогодні \nми визнаємо,\
+    \ що шлях України до \nповної інтеграції вийшов за межі \nпотреби Плану дій щодо\
+    \ членства». У  той самий час було зазначено, що \n«ми [НАТО] будемо в  змозі\
+    \ надати \nУкраїні запрошення приєднатися до \n"
+  section_title: Сторінка 260
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0192
+  text: "А  з  іншого  — \nтуристам зручніше відвідати одне місце, де зібрано \nбагато\
+    \ різних пам’яток. ?? Дискусія. Чи варто повертати ці пам’ятки на батьків­\nщину?\
+    \ Обговоріть усі «за» і  «проти». Під час підготовки \nдо дискусії скористайтеся\
+    \ додатковими джерелами. Підручник  \nВидавництво «Ранок»"
+  section_title: Сторінка 143
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0402
+  text: "та охарактеризуйте їхній вплив на загальну \n­національну стратегію із цього\
+    \ питання. Яким чином ­питання \nщодо членства в  НАТО впливали на внутрішньополітичні\
+    \ \nпроцеси в  Україні? 17. Дослідіть, як глобальні та регіо­\nнальні події впливали\
+    \ на формування зовнішньо­політичного \nкурсу України в контексті співпраці з ЄС.\
+    \ 18. За допомогою \nметоду «Діаграма Венна» визнач­те спільне й відмінне в зо­\n\
+    внішній політиці Л. Кравчука, Л. Кучми та В. Ющенка. 19. Ко-\nлективна робота\
+    \ в класі. Проведіть дискусі"
+  section_title: Сторінка 229
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0484
+  text: "українські війська зробили \nдекілька спроб перейти в  контрнаступ на півдні,\
+    \ \nале це не мало вагомих результатів. Зверніть увагу\nДо колабораційної діяльності\
+    \ \nналежать:\nyy публічна підтримка або заперечення \nагресії, заклик до проведення\
+    \ \nнезаконних заходів на окупованих \nтериторіях тощо;\nyy допомога державі-агресору\
+    \ \nреалізувати свою політику на \nокупованих територіях;\nyy обіймання посад\
+    \ або виконання \nроботи в  окупаційних адміністраціях;\nyy економічна співпраця\
+    \ з  державою-\nагресором. Президе"
+  section_title: Сторінка 267
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5180168151855469
+  chunk_id: 53691244_c0252
+  text: "17\r\n Україна та Туреччина // Східний світ.—1929.—№1-2.—С.8-9.\n\n18\r\n\
+    \ Детальніше див.: Черников\r\nИ. «...Решили укрепить между собой навсегда самые\
+    \ лучшие и сердечные\r\nотношения...» // Политика и время.—1992.—№4.—С.39; Подорож\
+    \ делегації членів\r\nВУНАС до Туреччини // Східний світ.—1929.—№1-2.—С.375-385.\n\
+    \n19\r\n Голос України.—1992.—21 жовтня.\n\n20\r\n Milliyet.—1992—26 Haziran.\n\
+    \n21 Eurasia Todey // Eurasian Studies.—1994. vol. I, № 3, Fall-p. 102.\n\n22\r\
+    \n Sayin Cumhurlar kanimizin Ukrayna Parlamentosunda\r\n"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5152544379234314
+  chunk_id: 53691244_c0198
+  text: "Симптоматичною є орієнтація Будапешта на те, що в міру\r\nзміцнення Української\
+    \ держави вона стане активним союзником Угорщини в захисті\r\nінтересів угорської\
+    \ національної меншини, в розвитку інтеґраційних процесів у\r\nЄвропі. Міцна й\
+    \ стабільна Україна в союзі з європейськими державами зможе\r\nсильніше впливати\
+    \ на подолання несправедливостей, пов’язаних із розділом\r\nугорської нації: на\
+    \ цьому шляху співробітництво України й Угорщини має\r\nперспективу і стане ефективним.\n\
+    \nОстаннім часом Угорщина також д"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5089337825775146
+  chunk_id: 09eb908b_c0021
+  text: "Не можна докоряти ні А. Волошину, ні його уряду за\r\nте, що сталося в березні\
+    \ 1939 р. Карпатська Україна займала не останнє місце в\r\nміжнародних відносинах,\
+    \ опинилася у сфері інтересів багатьох країн — Німеччини,\r\nРадянського Союзу,\
+    \ Польщі, Угорщини, Чехословаччини. її долю вирішували на\r\nМюнхенській конференції\
+    \ і Віденському арбітражі Німеччина, Англія, Італія і\r\nФранція. Здавалося, що\
+    \ Німеччина була найприхильнішою до цього краю, послала до\r\nХуста свого консула\
+    \ і обіцяла вберегти від угорської "
+  work: Волошин — Вибрані твори
+  author: Волошин А.
+  year: 2002
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/volosh/volosh.htm

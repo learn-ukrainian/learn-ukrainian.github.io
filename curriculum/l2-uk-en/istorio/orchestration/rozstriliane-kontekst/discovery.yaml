@@ -1,0 +1,213 @@
+discovered_at: '2026-03-13T10:33:08.693957+00:00'
+query_keywords:
+- 'Розстріляне відродження: Контекст 1920-х'
+- Політика українізації
+- Культурний вибух
+- Хто вони були
+- Чому Москва дозволила
+- Тіні над 1920-ми
+- 'Analyze the causes and consequences of розстріляне відродження: контекст 1920-х'
+- Evaluate the historical significance of парадокс 1920-х
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Xc05YtqxGqE
+  channel: Реальна Історія
+  title: Коли ми себе усвідомили як українці і як це сталося? (Napisy PL)
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0076
+  text: "розділ І. україна в повоєнний період\n40\n§ 5. культура україни в повоєнний\
+    \ період\nнаВчальна мета:\nвизначити особливості розвитку \nкультури, науки, освіти\
+    \ в повоєнній \nукраїні. пРиГадайте\n1. Що означає поняття «розстріляне \nвідродження»?\
+    \ Назвіть його відомих \nпредставників. 2. Як відбувався \nрозвиток освіти україни\
+    \ в довоєнний \nперіод? 3. Назвіть здобутки \nтогочасної української науки та\
+    \ її \nпредставників. 4. опишіть українське \nповсякдення в 1920—1930 ­х рр. 5.\
+    \ Що вам відомо за іншими \nнавчальним"
+  section_title: Сторінка 42
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0332
+  text: "181 \nляного відродження» – Миколи Хвильового, Миколи Зерова, Миколи \nКуліша,\
+    \ репресованих у брежнєвський період Василя Стуса, Євгена \nСверстюка, Ігоря та\
+    \ Ірини Калинців, заборонені твори Івана Дзюби \n«Інтернаціоналізм чи русифікація?»,\
+    \ Михайла Брайчевського «Приєд-\nнання чи возз’єднання?». Були надруковані праці\
+    \ істориків Михайла \nГрушевського, Дмитра Яворницького, Івана Лисяка-Рудницького.\
+    \ Видавалися історичні джерела з різних періодів української історії: \n«Хроніка\
+    \ із літописців стародавніх» Ф"
+  section_title: Сторінка 182
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0413
+  text: "253\nЗміст\nВід автора . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3\nВСТУП. «РОЗСТРІЛЯНЕ\
+    \ ВІДРОДЖЕННЯ». . . . . . . . . . . . . . . . . . . . 4\nУкраїнська література\
+    \ ХХ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . 4\nТ. Л. «Розстріляне відродження» . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . 5   \nЛІТЕРАТУРНИЙ АВАНГАРД . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 253
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0291
+  text: "2. Якими \nбули основні досягнення тогочасних освіти, науки, літератури й мистецтва?\
+    \ 3. Які \nриси були притаманні діяльності більшовиків у сфері культури? 4. Що\
+    \ таке укра-\nїнізація? Коли розпочалося її здійснення в  республіці? 5. Що нового\
+    \ з’явилося \nв  релігійному житті в  цей час?"
+  section_title: Сторінка 152
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0300
+  text: "157\n§ 27. Національно-культурне життя радянської України\nним став віце-президент\
+    \ ВУАН С. Єфремов. За справою «Українського \nнаціонального центру» були заарештовані\
+    \ академіки М. Грушевський та \nМ. Яворський (останнього в 1937 р. було розстріляно).\
+    \ Усього внаслідок \nмасових репресій 1930-х рр. постраждали тисячі вчених і \
+    \ працівників \nакадемічних установ. 4 \nЛітература. 1920-ті рр. стали періодом\
+    \ відродження української лі-\nтератури й  мистецтва. Позитивний вплив на їхній\
+    \ розвиток мала \nполітика у"
+  section_title: Сторінка 157
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5852844715118408
+  chunk_id: 9a2443f5_c0087
+  text: "Наприкінці 20-х — на початку 30-х років в Україну\r\nприйшла лиха година,\
+    \ коли було брутально зупинено процес\r\nнаціонально-культурного ренесансу, що\
+    \ влучно названо «розстріляним\r\nвідродженням». У галузі історичних дисциплін\
+    \ замість об’єктивних досліджень і\r\nсвободи творчості вимагалася «єдність думок».\
+    \ Досягалося це розгромом наукових\r\nустанов і забороною цілих наукових галузей,\
+    \ ліквідацією українознавчої преси,\r\nнасамперед журналу «Україна» та інших наукових\
+    \ видань. Українські історики,\r\nяких на "
+  work: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+  year: 1994
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/holob/hol.htm
+- score: 0.5778522491455078
+  chunk_id: 3d51722e_c0174
+  text: "1) у приниженні значення України як частини СРСР,\r\nв намаганні трактувати\
+    \ утворення СРСР як фактичну ліквідацію національних\r\nреспублік;\n\n2) у проповідуванні\
+    \ нейтрального ставлення партії\r\nдо розвитку української культури, у трактуванні\
+    \ її як відсталої,\r\n\"селянської\" у противагу руській, \"пролетарській\";\n\
+    \n3) у спробах за всяку ціну зберегти перевагу\r\nруської мови у внутрішньому\
+    \ державному, громадському й культурному житті\r\nУкраїни;\n\n4) у формальному\
+    \ ставленні до проведення\r\nукраїнізації, що її в"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.574264645576477
+  chunk_id: 3d51722e_c0172
+  text: "Чому ці прямі й чіткі постанови не здійснені і чи\r\nбуде хтось за це відповідати\
+    \ — не нам судити. Ми лише констатуємо факт.\n\nАле треба додати, що в Україні\
+    \ була чесна й енергійна\r\nспроба Здійснити ці постанови — вона відома під назвою\
+    \ українізації. Про неї\r\nтепер соромляться згадувати, і саме це слово зробили\
+    \ одіозним.\n\nА насправді це була спроба істинно\r\nінтернаціоналістської політики\
+    \ накресленої прямими вказівками Леніна та\r\nпостановами з’їздів РКП(б) та КП(б)У,\
+    \ підтримана і схвалена Комінтерно"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm

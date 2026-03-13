@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 65
+PASS: pipeline istorio 65
 
   Module:   druha-khvylia-politychna
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 65
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:14:50Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:02:34Z

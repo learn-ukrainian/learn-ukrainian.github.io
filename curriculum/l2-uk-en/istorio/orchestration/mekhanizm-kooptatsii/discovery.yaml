@@ -1,0 +1,177 @@
+discovered_at: '2026-03-13T11:36:55.608946+00:00'
+query_keywords:
+- 'Механізм кооптації: Теоретична рамка'
+- Теоретична модель
+- Порівняння з іншими імперіями
+- Механізми кооптації
+- Механізми знищення
+- Чому цикл повторюється
+- 'Analyze the causes and consequences of механізм кооптації: теоретична рамка'
+- Evaluate the historical significance of цикл, що повторюється
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0442
+  text: 'Розділ V. Розподіл українських земель між імперіями
+
+    268
+
+    ІСТОРИЧНА СКАРБНИЧКА'
+  section_title: Сторінка 268
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0156
+  text: "Пропуск членів речення може \nробити спілкування зручним, жвавим, невимушеним.\
+    \ Особливості речень\nПропущені члени речення\nРоль у мовленні"
+  section_title: Сторінка 138
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0132
+  text: '83
+
+    Історична скарбничка
+
+    ІСТОРИЧНА СКАРБНИЧКА'
+  section_title: Сторінка 83
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0222
+  text: "Словник\nІнкорпорація земель  — \nприєднання, включення земель \nоднієї держави\
+    \ до іншої зі \nзбереженням (переважно тимчасово) \nсоціально-еко­но­мічних відносин.\
+    \ Експансія  — розширення сфери \nвпливу, що здійснюється шляхом \nзбройного захоплення\
+    \ території, \nдипломатичного або економічного \nтиску тощо."
+  section_title: Сторінка 151
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.493763267993927
+  chunk_id: fc2291b5_c4985
+  text: "Літ.: Помяловський И.\r\nМарк Теренций Варрон Реатинский и Мениппова сатура.\
+    \ СПБ, 1869; Тройський І. М.\r\nІсторія античної літератури. К., 1959; История\
+    \ греческой литературы, т. 3. М., 1960.\n\nВ. П. Маслюк."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.48955127596855164
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.4773067235946655
+  chunk_id: 3bd1f572_c0982
+  text: O czaru Kvrdasie zavolskim. \л.275.\ O vielkim czaru Kurdasie zavolskymtatarskim
+  work: Литовсько-білоруські літописи та хроніки
+  author: ПСРЛ
+  year: 1980
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/psrl3235/lytov.htm

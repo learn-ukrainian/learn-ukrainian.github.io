@@ -1,0 +1,244 @@
+discovered_at: '2026-03-13T11:41:21.104028+00:00'
+query_keywords:
+- Кінець Гетьманщини
+- Читання
+- Деколонізаційний погляд
+- Первинні джерела
+- Потрібно більше практики?
+- процес ліквідації Гетьманщини
+- наслідки знищення Січі
+- причини запровадження кріпацтва
+- роль Катерини II в українській історії
+- Пасивні конструкції
+- Історична термінологія
+- history
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uKJBW36MDr0
+  channel: Реальна Історія
+  title: 'Найсильніша Україна в історії: що з нею сталося?'
+  relevance_score: 1.0
+  relevance_note: Video directly discusses the history of the Hetmanate, providing
+    essential context for its eventual end, and is from a highly credible source.
+  transcript_excerpt: Сьогодні я хотів би розповісти вам про Гетьманщину, розповісти
+    про те, як там жили люди. Уявіть собі, в Гетьманщині народилося щонайменше п'ять
+    поколінь українців.
+  embed_suggestion: After section 'Вступ' or 'Деколонізаційний погляд' to provide
+    an overview of the Hetmanate's historical significance before its decline.
+- url: https://www.youtube.com/watch?v=rCbXqw8PSjQ
+  channel: Реальна Історія
+  title: 'Реальна Гетьманщина: чи змінилося щось в Україні за 300 років?'
+  relevance_score: 0.9
+  relevance_note: Video is about the period of greatest prosperity of the Hetmanate
+    and the role of Ivan Mazepa, offering crucial background for understanding the
+    factors leading to its end.
+  transcript_excerpt: Друзі, ми продовжуємо розповідати про козацьку Україну. А сьогодні
+    ми розкажемо про період найбільшого розквіту козацької держави.
+  embed_suggestion: After section 'Вступ' or 'Деколонізаційний погляд' to establish
+    the historical peak of the Hetmanate, contrasting with its subsequent end.
+- url: https://www.youtube.com/watch?v=TVGQf7vOwg8
+  channel: Комік Історик
+  title: 'Іван Мазепа: історія "проклятого" гетьмана'
+  relevance_score: 0.9
+  relevance_note: Video focuses on Ivan Mazepa, a key historical figure whose actions
+    are inextricably linked to the trajectory and eventual end of the Hetmanate's
+    autonomy.
+  transcript_excerpt: ми поговоримо про ясновельможного Пана гетьмана Івана Степановича
+    Мазепу я зразу відкрию це дуже позитивний персонаж нашої історії
+  embed_suggestion: After section 'Деколонізаційний погляд' or 'Первинні джерела'
+    if discussing key figures and their impact on the Hetmanate's end.
+- url: https://www.youtube.com/watch?v=5SgKLSTZv-s
+  channel: Суспільне Док
+  title: Як звучала українська мова в різні часи | «Як українці українською заговорили»
+    | Освітній фільм
+  relevance_score: 0.5
+  relevance_note: Video focuses on the history and evolution of the Ukrainian language,
+    touching upon the Hetmanate era but not directly on its political or historical
+    conclusion.
+  transcript_excerpt: Мовознавці припускають, що східні слов'яни у V-8 столітті до
+    хрещення Київської Русі спілкувалися праслов'янською говіркою.
+  embed_suggestion: After section 'Читання' or 'Історична термінологія' if the module
+    includes linguistic analysis related to the period.
+- url: https://www.youtube.com/watch?v=q5lWi8j2p_E
+  channel: ІМТГШ
+  title: Як БНР Захистить Українські Кордони? Чому Бєлгород? | Історія України від
+    імені Т.Г. Шевченка
+  relevance_score: 0.1
+  relevance_note: Video discusses modern Ukrainian geopolitical issues and borders,
+    which is unrelated to the historical topic of the Hetmanate's end.
+  transcript_excerpt: Сьогодні ми часто з іронією згадуємо про білгородську чи воронезьку
+    народні республіки мовляв до майбутнього треба звикати вже зараз
+  embed_suggestion: N/A
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0433
+  text: "2015  р. ДЕКОМУНІЗАЦІЯ\nЗаходи\nУвічнення перемоги над нацизмом \nу  Другій\
+    \ світовій війні (1939—\n1945  рр.)\nДоступ до архівів спецслужб\nПравовий статус\
+    \ учасників \nборотьби за незалежність України\nЗасудження комуністичного \nта \
+    \ нацистського режимів\nЗміна назв населених пунктів, \nвулиць, об’єктів топоніміки,\
+    \ що \nмають імена компартійних діячів; \nзнесення пам’ятників на честь \nкомуністичних\
+    \ лідерів і  подій\n© ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 239
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0275
+  text: "2. Поміркуйте, які обставини робили становище відродженого гетьманства\n\
+    Діємо: практичні завдання\nДумки істориків\nНаталя Я к о в є н к о , українська\
+    \ історикиня, \nпро обставини відновлення гетьманства\nхитким. 206\nЇЖ І"
+  section_title: Сторінка 206
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5544481873512268
+  chunk_id: d77902e2_c1661
+  text: "«П. Д.» поклали початок досить широкому, особливо в\r\nостанній період творчості\
+    \ Шевченка, використанню біблійних текстів у його\r\nреволюц. поезії.\n\nЛіт.:\
+    \ Владимирський Г. Т. Г. Шевченко в духовній цензурі. «Літературний журнал», 1938,\
+    \ №\r\n12; Івакін Ю. О. Коментар до «Кобзаря» Шевченка. Поезії до заслання. К.,\r\
+    \n1964.\n\nЮ. О. Івакін."
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.5397331118583679
+  chunk_id: fad0e4cd_c0038
+  text: "Розуміється, коли ми беремо відомості зі згаданих джерел, ми\r\nповинні мати\
+    \ на увазі, що книжки, що були по бібліотеках, могли не читатись,\r\nабо читатись\
+    \ неуважно, окремі згадки про чужих письменників, або навіть цитати\r\nіз них,\
+    \ могли братися із других рук. З другого боку, багатьох відомостей про\r\nте,\
+    \ що дійсно читалося на старій Україні, нам бракує, — бо в полемічних\r\nтворах,\
+    \ або в курсах лекцій не було нагоди та й потреби згадати про усе прочитане;\r\
+    \nточних списків книжок, що були в усіх бібліот"
+  work: Чижевський — Нариси з історії філософії на Україні
+  author: Чижевський Д.
+  year: 1992
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyph/chyph.htm
+- score: 0.5365657210350037
+  chunk_id: 5739d24f_c0136
+  text: "Примітки\n\n1) Се повинно бутя \r\n найважнїйішим завданнєм східно-словянської\
+    \ археольоґії, яка навпаки хапаєть ся \r\n за показнїйші памятки античної та т.зв.\
+    \ скитської культури.\n\nТОМ I     \r\nРозділ II\n\n[М. Грушевський. Історія України-Руси.\
+    \ Том I. Розділ II. Стор. 9.]\n\n[М. Грушевський. Історія України-Руси. Том I.\
+    \ Розділ III. Стор. 1.]\n\nТОМ I     \r\nРозділ III\n\nIII. Історичні дані з часів\
+    \ перед словянським розселеннєм.\n\nЧОРНОМОРСЬКІ ТОРГОВЕЛЬНІ ФАКТОРІЇ Й ГРЕЦЬКА\
+    \ \r\nКОЛЬОНЇЗАЦІЯ; МІЛЄТ І ИНЬШІ МЕТРОПО"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm

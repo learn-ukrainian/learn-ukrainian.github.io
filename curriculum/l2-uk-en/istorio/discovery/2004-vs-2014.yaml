@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T11:59:43.292309+00:00'
+query_keywords:
+- 'Помаранчева vs Гідності: Чому різні результати?'
+- Помаранчева 2004
+- Гідності 2014
+- Ключові відмінності
+- Уроки 2004 для 2014
+- Чому 2014 тривалий
+- 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
+- Evaluate the historical significance of дві революції, різні наслідки
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0517
+  text: "Поясніть значення понять: Євромайдан, Небесна сотня, Революція гідності.\
+    \ 3. Порівняйте президентство Віктора Ющенка, Віктора Януковича та Петра Порошенка.\
+    \ Які\nпідсумки їхньої діяльності? 4. Об’єднайтеся в групи і проведіть дослідження\
+    \ за одним із запропонованих напрямків (на\nвибір): «Історія Майдану у світлинах»,\
+    \ «Майдан від першої особи: спогади учасників», \n«Вечір. Зима. Дві тисячі чотирнадцятий\
+    \ рік: поезія Майдану», «Мистецтво на барикадах \nМайдану». Результатами роботи\
+    \ поділіться у класі."
+  section_title: Сторінка 284
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-golub-2023_s0195
+  text: "192\n483   Прочитайте значення слова «суперечність». За аналогією до його\
+    \ \nзмісту дайте визначення суперечливої інформації. Наведіть при-\nклади інформації,\
+    \ що містить суперечності. Доберіть 5–7 слів, що у \nвашій уяві асоціюються із\
+    \ цим словом. Якби вам довелося створити \nобраз цього слова, що для цього ви\
+    \ обрали б?\nСуперåчність — 1. Становище, у якому що-небудь одне \nвиключає інше,\
+    \ несумісне з ним або протилежне йому. \n2. Невідповідність чого-небудь чомусь;\
+    \ протиріччя. \n484   Прочитайте подану ін"
+  section_title: Сторінка 192
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0419
+  text: "228 \nПомаранчева революція. Київ, майдан Незалежності,  \n22 листопада 2004\
+    \ року. Світлина \n \n1. Висловте припущення, чому події \n2004 року на майдані\
+    \ Незалежності в \nКиєві назвали Помаранчевою рево-\nлюцією. СУСПІЛЬНО-ПОЛІТИЧНЕ\
+    \ ЖИТТЯ  \nВ 2004–2013 РОКАХ \n Коли в Україні вперше почали досліджувати «білі\
+    \ плями» в історії?  Коли відбулася Революція на граніті? Які її результати?\
+    \  Що означають поняття «зросійщення», «партія влади»? 1. Помаранчева революція\
+    \  \nЧергове загострення внутрішньополітично"
+  section_title: Сторінка 229
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0003
+  text: "4\n4.\n1.\t З яким настроєм ви йдете до школи? \n2.\t Для чого потрібна школа?\n\
+    2.\t Напиши каліграфічно. Обведи слово-відгадку.\n’’\n’’’\n6.\t\n1.\t Розгадай\
+    \ ребус.\n3.\t Виконай завдання на вибір.\n\t Знайди й підкресли найдовше слово.\n\
+    \t Знайди й підкресли найкоротше слово.\n5.\n1.\t Прочитай прислів’я.\n7.\t\n\
+    1.\t Прочитай.\nЗ і пухнаста і прудка, з у — рум’яна і пухка.\nЗ м на городі росте,\
+    \ а з р — у воді живе. \nДо школи\nТак сонячно-ясно довкола,\nі тануть хмаринки\
+    \ вгорі. \nДо школи, до школи, до школи \nсьогодні ідуть "
+  section_title: Сторінка 4
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0337
+  text: "224\nРозділ 4. ПІДНЯТИСЯ НАД БУДЕННІСТЮ \n8. Знайдіть і зачитайте вголос\
+    \ рядки вірша, які можна вважати мотивом \n(основною думкою) цього твору.\n9.\
+    \ Попрацюйте в парах. Хтось із вас має знайти й виписати епітети, а хтось – \n\
+    зменшувально-пестливі слова. Поясніть їхню роль у тексті.\n10. Поясніть, як ви\
+    \ розумієте подані уривки з поезії.\nМетафора\n«ляже на нашу совість\nза нашу\
+    \ байдужість гріх»\n     \nПорівняння\n«як грудочки, \nпташенята»\nÌ²ÐÊÓªÌÎ\n\
+    11. Поміркуйте, чи складно в житті бути уважним до всього, щ"
+  section_title: Сторінка 226
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.540783166885376
+  chunk_id: 4800ab33_c0231
+  text: "11. Подібність — це відповідність двох або\r\nбільше речей, що випливає з\
+    \ неодинакової речі. Наприклад, хто погано бачить,\r\nбуде бачити речі інакше,\
+    \ ніж вони є в дійсності. Так само не може правильно\r\nдумати той, кого засліпило\
+    \ якесь погане почуття. Тут бачиш, що між поглядом\r\nочей і судженням розуму,\
+    \ а саме, з неоднакових речей — встановлено певну\r\nвідповідність у тому, що\
+    \ ні перший, ні другий не може правильно виконувати своє\r\nзавдання.\n\n12. Неподібність,\
+    \ навпаки, — це протилежність\r\nдвох або бі"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5002297163009644
+  chunk_id: c6aa97a6_c0206
+  text: "Зверни увагу, по-друге: є чотири вади метафори. Перша\r\n[вада], коли видно\
+    \ більшу відмінність, ніж подібність якоїсь речі. Як\r\nнаприклад: «дійшов до\
+    \ хвоста промови», або «обдаровую клієнта добродійствами»,\r\nабо «судна розгулюють\
+    \ по морю», або «тіло — сховище душі», або «камінь горя\r\nвражає моє серце».\
+    \ Друга [вада], коли подібність грунтується на маловідомих і\r\nмаловживаних речах.\
+    \ Як наприклад: «чудовисько людини», «черево батьківщини»,\r\n«нелюдська тварина»,\
+    \ «харибда благ», «черево лиха», «прірва "
+  work: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+  year: 1973
+  genre: rhetoric
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/dovg/dovg.htm
+- score: 0.49832749366760254
+  chunk_id: 34aba42b_c0957
+  text: "Варіанты: 1 Х.\r\nП. тѣм же. 2 Х. П. молвяше. 3\r\nХ. П. поганыа. 4 Х. П.\
+    \ поганыи ес всѣм.\r\n5 Х. П. обчіи. 6 Х. коуда. 7 Х. П.\r\nмогь переехати. 8\
+    \ Х. П. приб. и. 9 Х. П.\r\nптахом. 10 Х. П. пріехал. 11 Х. П.\r\nчетверток. 12\
+    \ Х. П. иде. 13 Х. П. нед. 14\r\nХ. П. кіева. 15 Х. П. можеши. 16 Х. П. опущено.\
+    \ \r\n17 Х. П. бяше. 18 Х. П. иже. 19\r\nХ. П. хотя. 20 П. приб. ти. 21 Х. П.\r\
+    \nвъзлѣ. 22 Х. П. яко ж. 23 Х.\r\nП. можаху (съ б. юс.) видячи. 24 Х. П. не може.\r\
+    \n25 Х. П. събѣ налѣзти ехати. 26 Х. П.\r\nТоя ж весны. 27 "
+  work: Повість временних літ (Іпатський список)
+  author: Нестор
+  year: 1113
+  genre: chronicle
+  language_period: old_east_slavic
+  source_url: http://litopys.org.ua/ipatlet/ipat01.htm

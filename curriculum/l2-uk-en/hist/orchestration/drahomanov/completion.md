@@ -1,4 +1,4 @@
-FAIL: pipeline hist 84
+PASS: pipeline hist 84
 
   Module:   drahomanov
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 84
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:15:36Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:07:42Z

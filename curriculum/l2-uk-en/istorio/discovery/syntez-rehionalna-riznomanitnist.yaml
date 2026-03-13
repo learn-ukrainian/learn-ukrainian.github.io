@@ -1,0 +1,204 @@
+discovered_at: '2026-03-13T11:35:16.722684+00:00'
+query_keywords:
+- 'Синтез: Регіональна різноманітність'
+- Порівняльна таблиця регіонів
+- Чому різні траєкторії?
+- Чи є «справжні українці»?
+- 2014 і 2022
+- Майбутнє регіонів
+- 'Analyze the causes and consequences of синтез: регіональна різноманітність'
+- Evaluate the historical significance of єдність у різноманітності
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0003
+  text: "3. Що таке «історична \nперіодизація», «хронологічні \nмежі», «історичні\
+    \ джерела»? 4. На які періоди поділяють історію \nУкраїни? 5. Працюємо в  парах.\
+    \ Метод \n«Удвох». Обговоріть і  назвіть \nособливості суспільно-\nполітичного\
+    \ розвитку \nукраїнських земель \nу  Середньовіччі. 6. Працюємо разом. Метод \n\
+    «Мозковий штурм». Назвіть \nосновні здобутки в  різних \nсферах розвитку середньовічного\
+    \ \nукраїнського населення. Тестові завдання\nrnk.com.ua/109579"
+  section_title: Сторінка 4
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0451
+  text: "245 \nЕтнічний склад населення України станом на 2001 рік \n(джерело: Вікіпедія)\
+    \ \n1. З’ясуйте, в яких областях України проживало найбільше українців, у яких\
+    \ — найменше\n(порівняно із загальною кількістю населення в області). \n2. Назвіть\
+    \ 3 найчисленніших національні меншини в Україні станом на 2001 рік.\n3. Дізнайтеся,\
+    \ які території заселяли кримські татари.\n4. Обговоріть, які історичні процеси\
+    \ впливали на зміни в етнічному складі.\nМовою джерела. Конституція України (витяг):\
+    \ \nСтаття 11. Держава сприя"
+  section_title: Сторінка 246
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0364
+  text: "201\n\t\n\t Завдання\n\t 1.\t Продовжте складати таблицю «Наш край в історії\
+    \ України та Єв-\nропи» (с. 105) (друга половина XIX ст.).\n\t 2.\t Продовжте\
+    \ складати таблицю «Видатні діячі історії краю» (с. 105) \n(друга половина XIX\
+    \ ст.).\nУзагальнення знань за розділом V\n\t 1.\t Складіть перелік подій, що\
+    \ відбулися на західноукраїнських зем-\nлях у другій половині XIX ст., які ви\
+    \ вважаєте найважливішими. \nОбґрунтуйте свій вибір.\n\t 2.\t Поясніть значення\
+    \ понять і  термінів: трудова еміграція, «рутен-\nська акція», к"
+  section_title: Сторінка 201
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0192
+  text: "187\nФонетика. Графіка. Орфоепія. Орфографія.  Підсумовуємо й узагальнюємо\n\
+    ПІДСУМОВУЄМО Й  УЗАГАЛЬНЮЄМО\nЗапитання для самоперевірки\n1.\t Чим звук відрізняється\
+    \ від букви? \n2.\t Які особливості вимови українських звуків?\n3.\t Що таке орфографічна\
+    \ помилка?\n4.\t Які основні орфограми ви розглядали в цьому розділі?\n5.\t Навіщо\
+    \ потрібно знати алфавіт? \n6.\t У чому полягає милозвучність української мови?\
+    \ \n7.\t Для чого потрібні орфоепічний і орфографічний словники?\nСаморефлексія\n\
+    1.\t Що нового ви дізналися під"
+  section_title: Сторінка 187
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0305
+  text: "Чу-\nбинського з  незначними змінами. Навчальний фільм\nrnk.com.ua/109563\n\
+    Перегляньте відеоролик \n«Реальна історія українського \nпрапора» і  виконайте\
+    \ завдання \nдо нього. © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 169
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.576947033405304
+  chunk_id: 53691244_c0399
+  text: "За\r\nхарактером розселення найчисельніших етнічних спільнот Україна поєднує\r\
+    \nдисперсність одних та компактність других, високу урбанізованість з домінуванням\r\
+    \nаґрарного населення, близькість розташування до своїх історичних батьківщин\
+    \ з\r\nїх віддаленістю.\n\nДалеко не\r\nвсі етнічні групи представлені в цих таблицях.\
+    \ Не ввійшли до них так звані\r\nмалочисельні (переважно по кілька сот, а то й\
+    \ десятків осіб) етнічні групи,\r\nвивчення яких — завдання етнології та політичної\
+    \ етнології. Доводиться\r\nконстатув"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5665157437324524
+  chunk_id: 53691244_c0431
+  text: "Полишивши осторонь розбіжності з приводу меж, можна\r\nсказати, що ніхто\
+    \ не має сумніву в існуванні землі, яка віддавна зветься\r\nУкраїною. Як, утім,\
+    \ і в існуванні значної сукупності індивідів, організованих у\r\nгрупи, страти,\
+    \ категорії, які окремо й разом діють згідно чи всупереч\r\nструктурам, відповідальним\
+    \ за соціальний порядок, — тобто в існуванні\r\nсуспільства, яке заповнює собою\
+    \ названу територію. Адже ми сьогодні так і\r\nговоримо: українське суспільство.\
+    \ Саме його, мабуть, і стосуються всі коліз"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.549579381942749
+  chunk_id: feaa5fa7_c0280
+  text: "Інші поділи й проблема реґіоналізму. Трудніше поділити Україну з погляду\
+    \ етнографії. Мала відмінність у\r\nприроді з одного боку, інтенсивні виміни населення,\
+    \ — з другого і пересування\r\nполітичних кордонів не сприяли витворенню тривких\
+    \ реґіональних різниць серед\r\nукр. населення. Тим то виразно виявлені племінні\
+    \ території залишилися тільки в\r\nКарпатах (Лемківщина, Бойківщина, Гуцульщина),\
+    \ /123/ слабше — на Поліссі\r\n(докладніше у відділі »Етнографія«),\n\nВиразну\
+    \ реґіональну окремішність відчувають ті"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

@@ -1,4 +1,4 @@
-FAIL: pipeline hist 86
+PASS: pipeline hist 86
 
   Module:   syntez-imperska-doba
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 86
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:15:58Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:12:45Z

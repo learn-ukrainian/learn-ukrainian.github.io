@@ -1,4 +1,4 @@
-FAIL: pipeline hist 56
+PASS: pipeline hist 56
 
   Module:   pereyaslavska-uhoda
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 56
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:11:15Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:01:10Z

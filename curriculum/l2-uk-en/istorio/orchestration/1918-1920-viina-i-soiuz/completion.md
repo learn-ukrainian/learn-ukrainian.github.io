@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 115
+PASS: pipeline istorio 115
 
   Module:   1918-1920-viina-i-soiuz
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 115
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:22:34Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:41:54Z

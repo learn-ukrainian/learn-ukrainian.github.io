@@ -6,13 +6,22 @@
     "discover": {
       "status": "complete",
       "ts": "2026-03-12T21:21:04Z",
-      "note": "merged-into-research"
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
     },
     "research": {
       "status": "complete",
       "ts": "2026-03-12T21:21:04Z",
       "task_id": "v5-motion-patterns-other-verbs-pA",
-      "mode": "full"
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "unknown"
+      }
     }
   }
 }

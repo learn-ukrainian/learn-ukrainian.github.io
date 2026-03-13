@@ -1,0 +1,202 @@
+discovered_at: '2026-03-13T11:22:19.493323+00:00'
+query_keywords:
+- 'Волинь: Пам''ять і травма'
+- Історична Волинь
+- Міжвоєнний період
+- 1921-1939
+- Війна і трагедія
+- 1939-1944
+- Контекст і причини
+- Пам'ять і примирення
+- 'Analyze the causes and consequences of волинь: пам''ять і травма'
+- Evaluate the historical significance of більше ніж 1943
+- history
+- історія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0451
+  text: "Практичні заняття\n1. Дослідження документів та матеріалів усної історії\
+    \ \nпро Другу світову війну\n2. Війна в  пам’ятниках рідного краю\nЗавдання для\
+    \ узагальнення знань і підготовки  \nдо тематичного оцінювання за розділом VI\
+    \  \n«Україна в  роки Другої світової війни (1939—1945  рр.)»\nі"
+  section_title: Сторінка 234
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0464
+  text: ". 188\n\t\nЗавдання для узагальнення знань і  підготовки до тематичного оцінювання\
+    \ \nза  розділом V «Західноукраїнські землі в  міжвоєнний період» . . . . . .\
+    \ . . . . . . . . . . . . . . . . 188\nРозділ VI. Україна в  роки Другої світової\
+    \ війни \n§ 33—34. Україна на початку Другої світової війни (1939—1941  рр.) \
+    \ . . . . . . . . . . . . . . . . . . . . . 189\n§ 35—36. Україна на початку німецько-радянської\
+    \ війни . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ 197\n§ 37. Україна в  "
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0415
+  text: "288\nДобірêа джерел ціêавої інформації \nПóбліêації  \n \nАрêóша О. Г.,\
+    \ Кондратюê К. К., Мóдрий М. М., Сóхий О. М. Час народів. Історія Уêраїни \nХІХ\
+    \ століття: навчальний посібниê. — Львів: ЛНУ імені Івана Франêа, 2016 р. — 408\
+    \ с.: іл.  \nБовóа Д. Шляхтич, êріпаê і ревізор: польсьêа шляхта між царизмом\
+    \ і óêраїнсьêими \nмасами (1831–1863) /Д. Бовóа; пер. з франц. З. Борисюê; наóê.\
+    \ ред. В. Шандра,  \nН. Яêовенêо. — К.: ІНТЕЛ, 1996. — 421 с.  \nБовóа Д. Битва\
+    \ за землю в Уêраїні: 1863–1914: Поляêи в соціо"
+  section_title: Сторінка 288
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0004
+  text: "— на початку \nXXI  ст. Періоди історії України\nДавня історія\nСередньо-\n\
+    вічна історія\nНова історія\nНовітня історія\nI період\nII період\nI період\n\
+    II період\nБлизько \n1  млн ро-\nків тому  — \nV  ст. н. е. V  — кінець \nXV \
+    \ ст. XVI—\nXVIII  ст. Кінець \nXVIII  — \nпочаток \nXX  ст. 1914—\n1945  рр.\
+    \ 1945  р. — \nпочаток \nXXI  ст. ?? Який період історії України ви вивчатимете\
+    \ цього року?"
+  section_title: Сторінка 5
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.549278974533081
+  chunk_id: feaa5fa7_c3175
+  text: "Укр. збройні сили доби Визвольних Змагань. Borschak\r\nE. L’armée ukrainienne.\
+    \ Une histoire de trois ans. Париж 1920; Юртик\r\nГ. Звенигородський Кіш Вільного\
+    \ Козацтва. ЛНВ, II. 1922; Тютюнник Ю.\r\nЗимовий похід. Коломия-Київ 1923; Какурин\
+    \ А. Белопольская война. П.\r\n1923; Как воевала революция. М. 1925; Скоропадський\
+    \ П. Спомини.\r\nХліборобська Україна, IV — V. 1924 — 23; Золоті ворота, історія\
+    \ Січових\r\nСтрільців 1917 — 19. Л. 1926; Тютюнник Ю. З поляками проти Вкраїни.\
+    \ Х.\r\n1928; Кедровський В. Повстан"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5468649864196777
+  chunk_id: 7fb6b684_c0001
+  text: "Галицько-Волинський літопис (розшифровка за Іпатським списком).\n\nГалицько-Волинський\
+    \ літопис (розшифровка за Острозьким списком).\n\nЛитовсько-білоруські літописи\
+    \ та хроніки (ПСРЛ, Т. XXXII, 1975; Т.XXXV, 1980).\n\n«Літописи». З енциклопедії\
+    \ «Українська мова».\n\n«Літописи». З Енциклопедії Українознавства.\n\nЛітература\n\
+    \nПЕРЕДМОВА\n\nІСТОРІОГРАФІЧНИЙ ОГЛЯД\n\n«Кройніка» Феодосія Софоновича — одне\
+    \ з визначних\r\nджерел та пам'яток української історіогра фії другої половини\
+    \ XVII ст.\r\nІсторичні умови, в яких ств"
+  work: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+  year: 1673
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/sofon/sof.htm
+- score: 0.5413082838058472
+  chunk_id: feaa5fa7_c1459
+  text: "Література: Chubatyj\r\nN, The Ukrainian Underground. The Ukrainian Quarterly,\
+    \ II, 2. 1946; Марко\r\nВіра. Сім літ визвольних змагань. Буенос-Айрес 1946; Лебідь\
+    \ М. УПА.\r\n1946; Volodymyrovytsch В. L’Ukraine sous l’occupation allemande.\
+    \ Париж\r\n1947; A Citizen of Kharkiw. Lest we forget. The Ukrainian Quarterly,\
+    \ IV,\r\n1. 1948; Radchenko R. The Nationalities Policy of Bolsheviks. Там же,\r\
+    \nIV, 3. 1948; Prychodko N. Germany’s Disastrous Eastern Policy and the\r\nRole\
+    \ of General Vlasov. Там же, VI, 1. 1950; K"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

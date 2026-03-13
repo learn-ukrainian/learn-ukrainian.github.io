@@ -1,4 +1,4 @@
-FAIL: pipeline hist 66
+PASS: pipeline hist 66
 
   Module:   ivan-mazepa-poltava
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 66
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:12:47Z
+  Verdict:  PASS
+  Date:     2026-03-13T11:23:41Z
