@@ -584,6 +584,86 @@ for m in d['recent_messages'][:5]:
 
 ---
 
+## Consultation Endpoints — `/api/consultation/`
+
+Self-improving template loop: review proposals, approve/reject, track history and patterns.
+
+### `GET /api/consultation/queue`
+
+List all pending consultation proposals.
+
+```bash
+curl -s http://localhost:8765/api/consultation/queue | python3 -m json.tool
+```
+
+Response:
+```json
+{
+  "pending": [
+    {
+      "filename": "20260313T184951744734-being-and-becoming.yaml",
+      "source_module": "a2/being-and-becoming",
+      "track": "a2",
+      "slug": "being-and-becoming",
+      "confidence": "high",
+      "root_cause_summary": "The content template produces insufficient Ukrainian...",
+      "change_count": 3,
+      "queued_at": "2026-03-13T18:49:51.749342+00:00",
+      "target_files": ["claude_extensions/phases/gemini/content.md"]
+    }
+  ],
+  "count": 1
+}
+```
+
+### `GET /api/consultation/queue/{filename}`
+
+Full proposal detail including all FIND/REPLACE changes.
+
+### `POST /api/consultation/queue/{filename}/approve?confirm=true`
+
+Validate FIND strings exist in templates, apply patches, move YAML to `applied/`. Returns 409 if FIND strings don't match.
+
+### `POST /api/consultation/queue/{filename}/reject?confirm=true&reason=...`
+
+Move YAML to `rejected/`, optionally record reason.
+
+### `GET /api/consultation/history`
+
+All consultations across all modules. Params: `?track=`, `?outcome=`, `?limit=50`, `?offset=0`.
+
+```bash
+# All consultations for track a2
+curl -s "http://localhost:8765/api/consultation/history?track=a2" | python3 -m json.tool
+```
+
+### `GET /api/consultation/history/{track}/{slug}`
+
+Consultation timeline for one module.
+
+### `GET /api/consultation/metrics`
+
+Aggregate stats: total, by outcome/confidence/scope/track, top root cause keywords.
+
+```bash
+curl -s http://localhost:8765/api/consultation/metrics | python3 -m json.tool
+```
+
+Response:
+```json
+{
+  "total": 4,
+  "pending_queue": 2,
+  "by_outcome": {"queued": 2, "applied": 1, "no_action": 1},
+  "by_confidence": {"high": 3, "medium": 1},
+  "by_scope": {"all_modules": 3, "this_module": 1},
+  "by_track": {"a2": 4},
+  "top_root_causes": [["template", 3], ["ukrainian", 2]]
+}
+```
+
+---
+
 ## UI Pages
 
 | Page | URL | Data source |
@@ -595,4 +675,5 @@ for m in d['recent_messages'][:5]:
 | Quality | `/quality.html` | `/api/state/research-coverage`, `/api/state/review-coverage`, `/api/state/issues`, `/api/state/weak-points` |
 | Track Health | `/track-health.html` | `/api/state/track-health/{track}`, `/api/state/build-status`, `/api/state/enrichment-status` |
 | Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |
+| Consultation | `/consultation.html` | `/api/consultation/queue`, `/api/consultation/history`, `/api/consultation/metrics` |
 | API Docs | `/docs` | FastAPI auto-generated |

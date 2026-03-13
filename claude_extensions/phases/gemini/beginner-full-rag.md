@@ -144,12 +144,12 @@ You're writing for someone seeing Ukrainian for the first time. English explains
 
 Follow the structural containment rules above. In each section:
 1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
-2. **Show** the pattern in a Ukrainian structural container (table, example list, dialogue, or pattern box)
+2. **Show** the pattern in EXTENSIVE Ukrainian structural containers (long example lists, multiple dialogues, or pattern boxes). To hit word count targets and maintain high immersion, generate many varied Ukrainian examples rather than writing long English essays.
 3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
 
-Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний) — students don't know these yet. Do NOT write IPA or Latin transliteration.
+Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний, відмінок, орудний тощо) anywhere in the content, activities, or summary questions — students don't know these yet. Use English for grammar terms. Do NOT write IPA or Latin transliteration.
 
 **Deliberate errors (showing common mistakes):**
 When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
@@ -292,8 +292,8 @@ If a verb's imperative isn't in your content, don't use it in activities.
 - type: unjumble
   title: "Put the Words in Order"
   items:  # minItems: 8
-    - words: ["книга", "Це", "нова"]        # array of strings
-      answer: "Це нова книга"               # single string
+- words: ["Ця", "нова", "книга", "дуже", "цікава"] # array of strings, 5-10 words
+  answer: "Ця нова книга дуже цікава"   # single string
 ```
 Do NOT use `sentence`, `jumbled`, or `scrambled` — only `words` + `answer`.
 

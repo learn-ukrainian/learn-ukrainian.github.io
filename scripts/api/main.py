@@ -31,6 +31,7 @@ from .config import (
     PLAYGROUNDS_DIR,
     PROJECT_ROOT,
 )
+from .consultation_router import router as consultation_router
 from .dashboard_router import router as dashboard_router
 from .gold_router import router as gold_router
 from .images_router import router as images_router
@@ -69,6 +70,7 @@ app.include_router(comms_router, prefix="/api/comms")
 app.include_router(rag_router, prefix="/api/rag")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(admin_router, prefix="/api/admin")
+app.include_router(consultation_router, prefix="/api/consultation")
 
 
 # Server start time for uptime calculation
@@ -95,7 +97,7 @@ async def health_check():
 async def get_config():
     # Import pipeline phase config — single source of truth
     try:
-        from pipeline_v5 import PHASES, PHASE_LABELS
+        from pipeline_v5 import PHASE_LABELS, PHASES
         pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
     except ImportError:
         pipeline_info = {}

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consultation Loop - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--border); }
+.topbar h1 { font-size: 20px; font-weight: 700; }
+.topbar a { color: var(--text2); text-decoration: none; font-size: 13px; }
+.topbar a:hover { color: var(--blue); }
+.topbar .spacer { flex: 1; }
+.topbar .refresh-info { font-size: 11px; color: var(--text3); }
+
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); padding: 0 24px; background: var(--bg2); }
+.tab { padding: 12px 20px; color: var(--text2); cursor: pointer; font-size: 14px; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--purple); border-bottom-color: var(--purple); }
+
+.main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+.section { display: none; }
+.section.active { display: block; }
+
+/* Stats row */
+.stats-row { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; min-width: 140px; text-align: center; }
+.stat-card .value { font-size: 28px; font-weight: 700; }
+.stat-card .label { font-size: 11px; color: var(--text2); text-transform: uppercase; margin-top: 4px; }
+
+/* Proposal cards */
+.proposal-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.15s;
+}
+.proposal-card:hover { border-color: var(--purple); transform: translateY(-1px); }
+.proposal-card .header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.proposal-card .module { font-weight: 600; font-size: 15px; }
+.proposal-card .meta { font-size: 12px; color: var(--text2); }
+.proposal-card .root-cause { font-size: 13px; color: var(--text2); line-height: 1.4; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.badge.high { background: rgba(63,185,80,0.15); color: var(--green); }
+.badge.medium { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.badge.low { background: rgba(248,81,73,0.15); color: var(--red); }
+
+/* Detail modal */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; }
+.modal-overlay.visible { display: flex; align-items: center; justify-content: center; }
+.modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; max-width: 900px; width: 90%; max-height: 85vh; overflow-y: auto; padding: 24px; }
+.modal h2 { font-size: 18px; margin-bottom: 16px; }
+.modal .close-btn { float: right; background: none; border: none; color: var(--text2); cursor: pointer; font-size: 20px; }
+.modal .close-btn:hover { color: var(--text); }
+
+/* Diff blocks */
+.diff-block { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.diff-header { background: var(--bg3); padding: 8px 12px; font-size: 12px; color: var(--text2); display: flex; justify-content: space-between; }
+.diff-find { background: rgba(248,81,73,0.1); padding: 12px; font-family: 'SF Mono', Monaco, monospace; font-size: 12px; white-space: pre-wrap; border-bottom: 1px solid var(--border); color: var(--red); }
+.diff-replace { background: rgba(63,185,80,0.1); padding: 12px; font-family: 'SF Mono', Monaco, monospace; font-size: 12px; white-space: pre-wrap; color: var(--green); }
+.diff-rationale { padding: 8px 12px; font-size: 12px; color: var(--text3); font-style: italic; }
+
+/* Action buttons */
+.actions { display: flex; gap: 12px; margin-top: 20px; }
+button.action-btn {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;
+  transition: all 0.15s;
+}
+button.action-btn:hover { border-color: var(--blue); color: var(--blue); }
+button.action-btn.approve { border-color: var(--green); color: var(--green); }
+button.action-btn.approve:hover { background: rgba(63,185,80,0.1); }
+button.action-btn.reject { border-color: var(--red); color: var(--red); }
+button.action-btn.reject:hover { background: rgba(248,81,73,0.1); }
+button.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Confirm modal */
+.confirm-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; }
+.confirm-overlay.visible { display: flex; align-items: center; justify-content: center; }
+.confirm-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 24px; max-width: 400px; text-align: center; }
+.confirm-box p { margin-bottom: 16px; }
+
+/* History table */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12px; color: var(--text3); text-transform: uppercase; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+tr:hover td { background: var(--bg2); }
+
+.outcome-badge { font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+.outcome-badge.applied { background: rgba(63,185,80,0.15); color: var(--green); }
+.outcome-badge.queued { background: rgba(188,140,255,0.15); color: var(--purple); }
+.outcome-badge.no_action { background: rgba(139,148,158,0.15); color: var(--text2); }
+.outcome-badge.parse_failed { background: rgba(248,81,73,0.15); color: var(--red); }
+.outcome-badge.no_match { background: rgba(210,153,34,0.15); color: var(--yellow); }
+
+/* Filters */
+.filters { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.filters select { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 13px; }
+
+/* Metrics bar chart */
+.bar-chart { margin-top: 16px; }
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.bar-label { min-width: 100px; font-size: 13px; color: var(--text2); text-align: right; }
+.bar-track { flex: 1; background: var(--bg3); border-radius: 4px; height: 24px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--purple); border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; min-width: fit-content; }
+
+.keywords-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.keyword { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 4px 12px; font-size: 12px; color: var(--text2); }
+
+.empty-state { text-align: center; padding: 60px 24px; color: var(--text3); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.6s linear infinite; margin-left: 8px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Consultation Loop</h1>
+  <div class="spacer"></div>
+  <a href="/">Back to Hub</a>
+  <span class="refresh-info" id="refresh-info"></span>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="queue">Queue</div>
+  <div class="tab" data-tab="history">History</div>
+  <div class="tab" data-tab="metrics">Metrics</div>
+</div>
+
+<div class="main">
+  <!-- QUEUE TAB -->
+  <div class="section active" id="tab-queue">
+    <div class="stats-row" id="queue-stats"></div>
+    <div id="queue-list"></div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div class="section" id="tab-history">
+    <div class="filters">
+      <select id="filter-track"><option value="">All tracks</option></select>
+      <select id="filter-outcome">
+        <option value="">All outcomes</option>
+        <option value="applied">Applied</option>
+        <option value="queued">Queued</option>
+        <option value="no_action">No action</option>
+        <option value="no_match">No match</option>
+        <option value="parse_failed">Parse failed</option>
+      </select>
+    </div>
+    <div id="history-table"></div>
+  </div>
+
+  <!-- METRICS TAB -->
+  <div class="section" id="tab-metrics">
+    <div class="stats-row" id="metrics-stats"></div>
+    <div id="metrics-charts"></div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal()">&times;</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="confirm-overlay" id="confirm-modal">
+  <div class="confirm-box">
+    <p id="confirm-text"></p>
+    <div class="actions" style="justify-content:center">
+      <button class="action-btn" onclick="closeConfirm()">Cancel</button>
+      <button class="action-btn" id="confirm-action-btn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '/api/consultation';
+let currentDetail = null;
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ==================== QUEUE ====================
+
+async function loadQueue() {
+  try {
+    const data = await fetch(`${API}/queue`).then(r => r.json());
+    const items = data.pending || [];
+
+    document.getElementById('queue-stats').innerHTML = `
+      <div class="stat-card"><div class="value" style="color:var(--purple)">${items.length}</div><div class="label">Pending</div></div>
+    `;
+
+    if (items.length === 0) {
+      document.getElementById('queue-list').innerHTML = `
+        <div class="empty-state"><div class="icon">&#10003;</div><p>No pending consultation proposals</p></div>
+      `;
+      return;
+    }
+
+    document.getElementById('queue-list').innerHTML = items.map(item => `
+      <div class="proposal-card" onclick="loadDetail('${item.filename}')">
+        <div class="header">
+          <span class="module">${item.source_module}${item.consultation_num ? ` #${item.consultation_num}` : ''}</span>
+          <span class="badge ${item.confidence}">${item.confidence}</span>
+          <span class="meta">${item.change_count} change${item.change_count !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="root-cause">${escHtml(item.root_cause_summary)}</div>
+        <div class="meta" style="margin-top:6px">
+          ${item.target_files.map(f => `<code style="font-size:11px;color:var(--text3)">${f}</code>`).join(' ')}
+          &middot; ${timeAgo(item.queued_at)}
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    document.getElementById('queue-list').innerHTML = `<div class="empty-state"><p>Failed to load queue: ${e.message}</p></div>`;
+  }
+}
+
+async function loadDetail(filename) {
+  try {
+    const data = await fetch(`${API}/queue/${filename}`).then(r => r.json());
+    currentDetail = { filename, data };
+
+    const changes = data.proposed_changes || [];
+    const isPending = data.status === 'pending';
+
+    const numLabel = data.consultation_num ? ` — Consultation #${data.consultation_num}` : '';
+    document.getElementById('modal-content').innerHTML = `
+      <h2>${data.source_module || filename}${numLabel}</h2>
+      <p style="margin-bottom:4px"><span class="badge ${data.confidence}">${data.confidence}</span> &middot; ${data.status}</p>
+      <h3 style="margin-top:16px;font-size:14px;color:var(--text2)">Root Cause</h3>
+      <p style="font-size:13px;line-height:1.5;margin:8px 0 16px;white-space:pre-wrap">${escHtml(data.root_cause || '')}</p>
+      <h3 style="font-size:14px;color:var(--text2)">Proposed Changes (${changes.length})</h3>
+      ${changes.map((c, i) => `
+        <div class="diff-block">
+          <div class="diff-header"><span>Change ${i + 1}</span><span>${escHtml(c.file || 'unknown')}</span></div>
+          <div class="diff-find">${escHtml(c.find || '')}</div>
+          <div class="diff-replace">${escHtml(c.replace || '')}</div>
+          ${c.rationale ? `<div class="diff-rationale">${escHtml(c.rationale)}</div>` : ''}
+        </div>
+      `).join('')}
+      ${data.additional_notes ? `<p style="font-size:12px;color:var(--text3);margin-top:12px"><em>${escHtml(data.additional_notes)}</em></p>` : ''}
+      ${isPending ? `
+        <div class="actions">
+          <button class="action-btn approve" onclick="confirmAction('approve', '${filename}')">Approve & Apply</button>
+          <button class="action-btn reject" onclick="confirmAction('reject', '${filename}')">Reject</button>
+        </div>
+      ` : ''}
+    `;
+    document.getElementById('detail-modal').classList.add('visible');
+  } catch (e) {
+    alert('Failed to load detail: ' + e.message);
+  }
+}
+
+function closeModal() {
+  document.getElementById('detail-modal').classList.remove('visible');
+  currentDetail = null;
+}
+
+// ==================== APPROVE / REJECT ====================
+
+let pendingAction = null;
+
+function confirmAction(action, filename) {
+  pendingAction = { action, filename };
+  const text = action === 'approve'
+    ? 'Apply template changes and approve this proposal?'
+    : 'Reject this proposal?';
+  document.getElementById('confirm-text').textContent = text;
+  const btn = document.getElementById('confirm-action-btn');
+  btn.className = `action-btn ${action}`;
+  btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
+  btn.onclick = executeAction;
+  document.getElementById('confirm-modal').classList.add('visible');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-modal').classList.remove('visible');
+  pendingAction = null;
+}
+
+async function executeAction() {
+  if (!pendingAction) return;
+  const { action, filename } = pendingAction;
+  const btn = document.getElementById('confirm-action-btn');
+  btn.disabled = true;
+  btn.innerHTML = action === 'approve' ? 'Applying...' : 'Rejecting...';
+
+  try {
+    const resp = await fetch(`${API}/queue/${filename}/${action}?confirm=true`, { method: 'POST' });
+    const data = await resp.json();
+    if (!resp.ok) {
+      alert(`Error: ${data.error || 'Unknown error'}\n${JSON.stringify(data.mismatches || [], null, 2)}`);
+      return;
+    }
+    closeConfirm();
+    closeModal();
+    loadQueue();
+  } catch (e) {
+    alert('Request failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ==================== HISTORY ====================
+
+async function loadHistory() {
+  const track = document.getElementById('filter-track').value;
+  const outcome = document.getElementById('filter-outcome').value;
+  let url = `${API}/history?limit=200`;
+  if (track) url += `&track=${track}`;
+  if (outcome) url += `&outcome=${outcome}`;
+
+  try {
+    const data = await fetch(url).then(r => r.json());
+    const items = data.consultations || [];
+
+    if (items.length === 0) {
+      document.getElementById('history-table').innerHTML = `<div class="empty-state"><p>No consultation history found</p></div>`;
+      return;
+    }
+
+    document.getElementById('history-table').innerHTML = `
+      <table>
+        <thead><tr><th>Module</th><th>Track</th><th>Outcome</th><th>Confidence</th><th>Scope</th><th>Changes</th><th>Date</th></tr></thead>
+        <tbody>
+          ${items.map(c => `<tr>
+            <td><strong>${escHtml(c.slug || '')}</strong></td>
+            <td>${c.track || ''}</td>
+            <td><span class="outcome-badge ${c.outcome || ''}">${c.outcome || 'unknown'}</span></td>
+            <td><span class="badge ${c.confidence || ''}">${c.confidence || '?'}</span></td>
+            <td style="font-size:12px;color:var(--text3)">${c.scope || '?'}</td>
+            <td>${c.changes_count || 0}</td>
+            <td style="font-size:12px;color:var(--text3)">${timeAgo(c.ts)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <div style="margin-top:12px;font-size:12px;color:var(--text3)">Showing ${items.length} of ${data.total}</div>
+    `;
+  } catch (e) {
+    document.getElementById('history-table').innerHTML = `<div class="empty-state"><p>Failed to load history: ${e.message}</p></div>`;
+  }
+}
+
+// Populate track filter
+async function loadTrackFilter() {
+  try {
+    const config = await fetch('/api/config').then(r => r.json());
+    const select = document.getElementById('filter-track');
+    (config.levels || []).forEach(l => {
+      const opt = document.createElement('option');
+      opt.value = l.id;
+      opt.textContent = l.id;
+      select.appendChild(opt);
+    });
+  } catch (e) {}
+}
+
+document.getElementById('filter-track').addEventListener('change', loadHistory);
+document.getElementById('filter-outcome').addEventListener('change', loadHistory);
+
+// ==================== METRICS ====================
+
+async function loadMetrics() {
+  try {
+    const data = await fetch(`${API}/metrics`).then(r => r.json());
+
+    const outcomes = data.by_outcome || {};
+    document.getElementById('metrics-stats').innerHTML = `
+      <div class="stat-card"><div class="value">${data.total}</div><div class="label">Total</div></div>
+      <div class="stat-card"><div class="value" style="color:var(--green)">${outcomes.applied || 0}</div><div class="label">Applied</div></div>
+      <div class="stat-card"><div class="value" style="color:var(--purple)">${outcomes.queued || 0}</div><div class="label">Queued</div></div>
+      <div class="stat-card"><div class="value" style="color:var(--red)">${outcomes.parse_failed || 0}</div><div class="label">Parse Failed</div></div>
+      <div class="stat-card"><div class="value" style="color:var(--yellow)">${data.pending_queue}</div><div class="label">Pending</div></div>
+    `;
+
+    // Track bar chart
+    const byTrack = data.by_track || {};
+    const trackEntries = Object.entries(byTrack).sort((a, b) => b[1] - a[1]);
+    const maxVal = trackEntries.length > 0 ? trackEntries[0][1] : 1;
+
+    let chartsHtml = '<h3 style="font-size:14px;color:var(--text2);margin-bottom:12px">Consultations by Track</h3>';
+    if (trackEntries.length === 0) {
+      chartsHtml += '<p style="color:var(--text3)">No data yet</p>';
+    } else {
+      chartsHtml += '<div class="bar-chart">';
+      trackEntries.forEach(([track, count]) => {
+        const pct = Math.max(5, (count / maxVal) * 100);
+        chartsHtml += `
+          <div class="bar-row">
+            <div class="bar-label">${track}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%">${count}</div></div>
+          </div>
+        `;
+      });
+      chartsHtml += '</div>';
+    }
+
+    // Top root causes
+    const rootCauses = data.top_root_causes || [];
+    if (rootCauses.length > 0) {
+      chartsHtml += '<h3 style="font-size:14px;color:var(--text2);margin-top:24px;margin-bottom:8px">Top Root Cause Keywords</h3>';
+      chartsHtml += '<div class="keywords-list">';
+      rootCauses.forEach(([word, count]) => {
+        chartsHtml += `<span class="keyword">${escHtml(word)} (${count})</span>`;
+      });
+      chartsHtml += '</div>';
+    }
+
+    // Confidence & scope breakdown
+    const byConf = data.by_confidence || {};
+    const byScope = data.by_scope || {};
+    chartsHtml += `
+      <div style="display:flex;gap:24px;margin-top:24px;flex-wrap:wrap">
+        <div>
+          <h3 style="font-size:14px;color:var(--text2);margin-bottom:8px">By Confidence</h3>
+          ${Object.entries(byConf).map(([k, v]) => `<div style="font-size:13px"><span class="badge ${k}">${k}</span> ${v}</div>`).join('')}
+        </div>
+        <div>
+          <h3 style="font-size:14px;color:var(--text2);margin-bottom:8px">By Scope</h3>
+          ${Object.entries(byScope).map(([k, v]) => `<div style="font-size:13px;margin-bottom:4px"><code style="color:var(--text2)">${k}</code> ${v}</div>`).join('')}
+        </div>
+      </div>
+    `;
+
+    document.getElementById('metrics-charts').innerHTML = chartsHtml;
+  } catch (e) {
+    document.getElementById('metrics-charts').innerHTML = `<div class="empty-state"><p>Failed to load metrics: ${e.message}</p></div>`;
+  }
+}
+
+// ==================== UTILS ====================
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const sec = Math.floor((now - d) / 1000);
+  if (sec < 60) return 'just now';
+  if (sec < 3600) return Math.floor(sec / 60) + 'm ago';
+  if (sec < 86400) return Math.floor(sec / 3600) + 'h ago';
+  return Math.floor(sec / 86400) + 'd ago';
+}
+
+// Close modals on escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+});
+// Close modal on overlay click
+document.getElementById('detail-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.getElementById('confirm-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeConfirm();
+});
+
+// ==================== INIT ====================
+
+async function init() {
+  await loadTrackFilter();
+  loadQueue();
+  loadHistory();
+  loadMetrics();
+  document.getElementById('refresh-info').textContent = 'Loaded at ' + new Date().toLocaleTimeString();
+}
+
+init();
+</script>
+</body>
+</html>

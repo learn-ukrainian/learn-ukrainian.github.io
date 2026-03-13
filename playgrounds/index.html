@@ -63,7 +63,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
   <a class="card progress" href="/progress.html">
     <div class="icon">&#9654;</div>
     <h2>Progress</h2>
-    <p>Pipeline state across all tracks. V4 migration progress. Research → Content → Audit → Review.</p>
+    <p>Pipeline state across all tracks. Research → Content → Validate → Review → MDX.</p>
     <div class="card-stat" id="progress-stat"></div>
   </a>
   <a class="card curriculum" href="/curriculum-dashboard.html">
@@ -102,32 +102,43 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Qdrant backups, health checks, disk usage, broker vacuum, log cleanup, collection verification.</p>
     <div class="card-stat" id="admin-stat"></div>
   </a>
+  <a class="card" href="/consultation.html" style="border-left: 3px solid var(--purple);">
+    <div class="icon">&#128260;</div>
+    <h2>Consultation Loop</h2>
+    <p>Self-improving template proposals. Review, approve/reject queue, history, metrics.</p>
+    <div class="card-stat" id="consultation-stat"></div>
+  </a>
 </div>
 
 <div class="footer">Serving from localhost:8765</div>
 
 <script>
 async function loadStats() {
-  let v4Count = 0, v4Pct = 0;
+  let v5Count = 0, v5Pct = 0, pendingConsultations = 0;
   try {
-    const [data, pv] = await Promise.all([
+    const [data, pv, cMetrics] = await Promise.all([
       fetch('/api/dashboard/overview').then(r => r.json()),
       fetch('/api/state/pipeline-versions').then(r => r.json()).catch(() => ({})),
+      fetch('/api/consultation/metrics').then(r => r.json()).catch(() => ({})),
     ]);
     const t = data.totals;
-    v4Count = pv.counts?.v4 || 0;
-    v4Pct = pv.pct_v4 || 0;
+    v5Count = pv.counts?.v5 || 0;
+    v5Pct = pv.pct_v5 || 0;
+    pendingConsultations = cMetrics.pending_queue || 0;
 
     document.getElementById('stats-row').innerHTML = `
       <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
       <div class="stat"><div class="value" style="color:var(--green)">${t.pass}</div><div class="label">Passing</div></div>
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
-      <div class="stat"><div class="value" style="color:var(--cyan)">${v4Count} (${v4Pct}%)</div><div class="label">V4 Pipeline</div></div>
+      <div class="stat"><div class="value" style="color:var(--cyan)">${v5Count} (${v5Pct}%)</div><div class="label">V5 Pipeline</div></div>
       <div class="stat"><div class="value" style="color:var(--purple)">${t.total > 0 ? Math.round(t.pass / t.total * 100) : 0}%</div><div class="label">Complete</div></div>
     `;
 
     document.getElementById('audit-stat').textContent = `${t.pass} passing / ${t.total} total`;
     document.getElementById('curriculum-stat').textContent = `${data.tracks.length} tracks`;
+    if (pendingConsultations > 0) {
+      document.getElementById('consultation-stat').textContent = `${pendingConsultations} pending proposals`;
+    }
   } catch(e) {
     console.error('Failed to load stats:', e);
   }
@@ -137,7 +148,7 @@ async function loadStats() {
     const data = await res.json();
     const t = data.totals;
     document.getElementById('progress-stat').textContent =
-      `${v4Count} v4 · ${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
+      `${v5Count} v5 · ${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
   } catch(e) {}
 
   try {

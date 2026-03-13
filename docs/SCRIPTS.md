@@ -2139,6 +2139,66 @@ npm run status:all             # Generate all levels
 
 ---
 
+## Consultation Approval Workflow
+
+The consultation loop proposes template changes to improve content generation. Proposals queue for human review.
+
+### CLI Tool (`scripts/consultation_cli.py`)
+
+```bash
+# List pending proposals
+.venv/bin/python scripts/consultation_cli.py list
+
+# Show full detail for a proposal
+.venv/bin/python scripts/consultation_cli.py show FILENAME.yaml
+
+# Approve (validates FIND strings, applies patches to templates)
+.venv/bin/python scripts/consultation_cli.py approve FILENAME.yaml
+
+# Approve with dry-run (validate only, don't apply)
+.venv/bin/python scripts/consultation_cli.py approve FILENAME.yaml --dry-run
+
+# Reject with reason
+.venv/bin/python scripts/consultation_cli.py reject FILENAME.yaml --reason "Superseded by #2"
+
+# Batch approve all high-confidence proposals
+.venv/bin/python scripts/consultation_cli.py approve-all --confidence high
+
+# Batch approve dry-run (validate only)
+.venv/bin/python scripts/consultation_cli.py approve-all --confidence high --dry-run
+```
+
+### Web UI
+
+Open `http://localhost:8765/consultation.html` (requires API server running).
+
+### API Endpoints
+
+```bash
+# List pending (API)
+curl -s http://localhost:8765/api/consultation/queue | python3 -m json.tool
+
+# Approve via API
+curl -s -X POST "http://localhost:8765/api/consultation/queue/FILENAME.yaml/approve?confirm=true"
+
+# History and metrics
+curl -s http://localhost:8765/api/consultation/history | python3 -m json.tool
+curl -s http://localhost:8765/api/consultation/metrics | python3 -m json.tool
+```
+
+### Files
+
+| Path | Purpose |
+|------|---------|
+| `claude_extensions/consultation-queue/*.yaml` | Pending proposals |
+| `claude_extensions/consultation-queue/applied/` | Approved and applied |
+| `claude_extensions/consultation-queue/rejected/` | Rejected proposals |
+| `scripts/pipeline/consultation.py` | Parser, patcher, queue logic |
+| `scripts/api/consultation_router.py` | API endpoints |
+| `playgrounds/consultation.html` | Web UI dashboard |
+
+---
+
 ## Playgrounds (Interactive Visualizations)
 
 Interactive HTML playgrounds for exploring and prototyping curriculum architecture.
