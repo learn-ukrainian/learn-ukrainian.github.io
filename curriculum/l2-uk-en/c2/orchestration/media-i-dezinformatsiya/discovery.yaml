@@ -1,0 +1,128 @@
+discovered_at: '2026-03-13T20:53:08.321234+00:00'
+query_keywords:
+- Медіа і дезінформація
+- Медіадискурс на рівні С2
+- Media Discourse at C2 Level
+- Медіаландшафт України
+- Ukraine's Media Landscape
+- Свобода слова та незалежність медіа
+- Freedom of Speech and Media Independence
+- Пропаганда та інформаційна війна
+- Propaganda and Information Warfare
+- Фейки та дезінформація
+- Fakes and Disinformation
+- Медіаграмотність та критичне мислення
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=j1ZeGQZAlaY
+  channel: Radio Khartia
+  title: Добрі новини з Дикого Поля. Вечір
+  relevance_score: 0.6
+  relevance_note: 'The video presents a Ukrainian news program, providing a relevant
+    example of the country''s media landscape and content for analysis within the
+    module''s scope, especially for the ''Практикум: Аналіз медіатексту'' section.
+    While not directly discussing disinformation, it serves as an authentic media
+    artifact.'
+  transcript_excerpt: Добрі новини з Дикого Поля. Добрий вечір, шановні слухачі і
+    слухачки. В ефірі добрі новини з Дикого Поля Вечір на радіо Хартії.
+  embed_suggestion: 'After Практикум: Аналіз медіатексту -- as a sample media text
+    for practical analysis.'
+- url: https://www.youtube.com/watch?v=VqQN23DX9-8
+  channel: Radio Khartia
+  title: Радіо Хартія. Ми поруч, коли це потрібно
+  relevance_score: 0.5
+  relevance_note: This video is a patriotic and motivational piece from a Ukrainian
+    radio station during wartime. It relates to how media shapes public sentiment
+    and narratives during conflict, which can be connected to information warfare
+    and propaganda, making it tangentially relevant to the 'Пропаганда та інформаційна
+    війна' section as an example of media's role in a conflict context.
+  transcript_excerpt: Триває війна, розв'язана Росією проти України. Ще не вмерла
+    України ні слава, ні воля. Ще нам, браття українці, усміхнеться доля.
+  embed_suggestion: After Пропаганда та інформаційна війна -- as an example of media
+    messaging during conflict that relates to information environment.
+- url: https://www.youtube.com/watch?v=2yIlOjx3uZI
+  channel: Суспільне Культура
+  title: «Для частини журналістів війна стала викликом, для частини можливістю» –
+    Оля Мирович
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=8YI8FGBf_Yc
+  channel: Суспільне Культура
+  title: 'How does the Kremlin LIMITS the media? | BIG RUSSIAN LIES #5'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0001
+  text: "«Українська мова. Буквар»  \nпідручник для 1 класу закладів  \nзагальної\
+    \ середньої освіти\n(у 2-х частинах)\nЧастина  друга\nМар’яна  Захарійчук\nВидавництво\
+    \ «Грамота»\n2025\nPidruchnyk.com.ua"
+  section_title: Сторінка 2
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0048
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n42\nУ час стрімкого розвитку масмедійних джерел інформації\
+    \ (телеканалів, радіо, \nютуб-трансляцій тощо) і соціальних мереж актуальною проблемою\
+    \ стало поширен-\nня неправдивої (фейкової) інформації. Для пошуку достовірної\
+    \ інформації нагаль-\nною є потреба критичного осмислення інформаційного потоку,\
+    \ тобто набуття нави-\nчок медіаграмотності.\nМедіаграмотність — уміння аналізувати,\
+    \ оцінювати, створювати інформаційні \nповідомлення в різноманітних контекстах\
+    \ і їх поширювати.\nМедіатекст —"
+  section_title: Сторінка 43
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0035
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n28\n1.\tРозгляньте зображення та виконайте завдання.\
+    \ \nА.\t Яку інформацію люди сприймають цими органами чуття? \nБ.\t За допомогою\
+    \ яких органів чуття можна дістати якнайбільше інформації? \n2.\t Прочитайте та\
+    \ перекажіть відомості про медіатекст (усно). \nЗасоби масової інформації (ЗМІ),\
+    \ або масмедіа, — це засоби переда-\nвання, зберігання та відтворення інформації\
+    \ для великої кількості людей, \nа саме: радіо, телебачення, кіно, вебсайти; газети,\
+    \ журнали, книжки, бук­\nлети; рекламні щити "
+  section_title: Сторінка 31
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0234
+  text: "169\nРізновиди суперечки: публічний діалог, дебати \x1F\nДиспут\nпублічна,\
+    \ заздалегідь підго товлена суперечка на наукову, суспіль-\nну, літературну, моральну\
+    \ тему; проводиться на наукових конфе-\nренціях, у  навчальних закладах, на сторінках\
+    \ періодичних видань. Учасники заздалегідь ознайомлюються з  темою, опрацьовують\
+    \ \nлітературу, щоб аргументовано відстоювати свої погляди, оцінки \nподій, проблем,\
+    \ явищ\nДебати\nсуперечка з  приводу висловлених у  доповіді, програмі дій, заяві\
+    \ \nпропозицій щодо розв’язанн"
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0005
+  text: "УМОВНІ ПОЗНАЧЕННЯ:\n– теоретичні відомості\n– завдання з елементами дослідження\n\
+    – завдання з розвитку мовлення\n– завдання конкурсного характеру\n– завдання підвищеної\
+    \ складності\n– завдання для роботи з додатковими джерелами\nВідповідає модельній\
+    \ навчальній програмі \n«Українська мова. 7–9 класи» \nдля закладів загальної\
+    \ середньої освіти\n (авт.: Çàáîëîòíèé Î. Â., Çàáîëîòíèé Â. Â., Ëàâðèí÷óê Â. Ï.,\
+    \  \nПлівачук К. В., Попова Т. Д.)\nУДК\t811.161.2(075.3)\t\n \nЗ-12\nРекомендовано\
+    \ Міністерством освіти і науки Ук"
+  section_title: Сторінка 6
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

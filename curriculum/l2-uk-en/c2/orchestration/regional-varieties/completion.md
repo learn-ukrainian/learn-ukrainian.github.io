@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 78 — E2E
+PASS: pipeline c2 81
 
   Module:   regional-varieties
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T08:51:42Z
+  Date:     2026-03-13T21:28:35Z

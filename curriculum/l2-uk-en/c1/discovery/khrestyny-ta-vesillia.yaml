@@ -1,0 +1,82 @@
+discovered_at: '2026-03-13T21:35:13.500330+00:00'
+query_keywords:
+- Хрестини та весілля
+- Introduction — Anthropology of Rites of Passage
+- Родильні обряди та таїнство хрещення
+- Birth Rituals and the Sacrament of Baptism
+- Весілля
+- Wedding — From Matchmaking to Betrothal
+- Вінчання та весільне гуляння
+- Wedding Sacrament and Celebration
+- Practice — Analysis and Transformation of Traditions
+- the stages of traditional Ukrainian wedding and christening rituals
+- the social and legal functions of folk rituals in the past
+- the symbolism of ritual objects like the korovay and rushnyk
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0169
+  text: 'А староста й крикнув:
+
+    — За таку навуку цiлуйте, дiти, батька в руку! (...)
+
+    Далі описано обряд сватання з піснями й приказками. НОВА УКРАЇНСЬКА ЛІТЕРАТУРА
+
+    134'
+  section_title: Сторінка 134
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0010
+  text: "Яê виãлядало тоãочасне \nвбрання? На яêих сімейних цінностях виховóвали дітей?\
+    \ Яêою бóла роль жінêи ó \nсім’ї та сóспільстві? 2. Підãотóйте віртóальнó еêсêóрсію\
+    \ «Уêраїнсьêа родина». Джерела інформації: бібліотеêа, Інтернет-ресóрси, місцевий\
+    \ êраєзнавчий мóзей, \nвóлиці вашоãо села/міста (зверніть óваãó на назви вóлиць.\
+    \ Чи пов’язані вони з \nдіячами або подіями тоãо часó? Спостереження запишіть),\
+    \ ваші óчителі історії. Завдання 3. Виêонайте презентацію своїх проеêтів перед\
+    \ óчнями êласó. Бажаємо óспіхó!"
+  section_title: Сторінка 7
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0502
+  text: "277\n§ 33. Українське образотворче мистецтво та архітектура\nта вінчання\
+    \ в  церкві. Весілля було не лише сімейним святом. У  ньому \nбрали участь не\
+    \ тільки родичі наречених, а  й більшість односельців. Численними звичаями та\
+    \ обрядами супроводжувалося й  таке сі-\nмейне торжество, як народження дитини.\
+    \ У  сім’ї відзначали родини \nвідразу ж  після народження дитини, і  хрестини \
+    \ — після її хрещення \nв  церкві. На родинах велику роль відігравала бабка-повитуха \
+    \ — розпо-\nрядниця пологовими обрядами, які"
+  section_title: Сторінка 277
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0224
+  text: Рання весна, початок весни. проща, -і, ж. 1. Богомілля, паломництво. 2. Відпущення
+    гріхів. З тлумачного словника
+  section_title: Сторінка 146
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0202
+  text: "А. Уявіть, що вам доручили розмістити цей текст на шкільному сайті. Підготуйте\
+    \ до тексту \nкілька вступних речень, щоб зацікавити учнів вашої школи дочитати\
+    \ його до кінця. Т. Пата. Птахи"
+  section_title: Сторінка 130
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

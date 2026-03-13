@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1 39 — E2E
+PASS: pipeline c1 51
 
   Module:   euphemism-taboo
   Track:    c1
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T18:01:41Z
+  Date:     2026-03-13T19:57:18Z

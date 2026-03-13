@@ -1,0 +1,105 @@
+discovered_at: '2026-03-13T19:48:12.764641+00:00'
+query_keywords:
+- 'Метафора та порівняння: Образна мова'
+- Introduction — Figurative Language and Word Magic
+- 'Порівняння: Граматика та Стилістика'
+- 'Simile: Grammar & Stylistics'
+- Глибина метафори
+- Depth of Metaphor — From Word to Image
+- Персоніфікація та Уособлення
+- Personification and Embodiment
+- Творча практика та аналіз
+- Creative Practice and Analysis
+- stylistic features of Граматика та Стилістика
+- text applying Вступ — Образність та магія слова principles
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode108/
+  title: Kyiv tour + Participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode95/
+  title: My life in Kyiv (Voice message №3)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode80/
+  title: Ukrainian History Test – Review 71-79
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrlit-zabolotnyi-2022_s0286
+  text: "ФОЛЬКЛОР\n(УСНА НАРОДНА ТВОРЧІСТЬ)\nХУДОЖНІ ЗАСОБИ\nНазва засобу\nПояснення\n\
+    Приклад\nЕпітет\nХудожнє означення, що під-\nкреслює \nхарактерну \nрису, \nвизначальну\
+    \ \nякість \nявища, \n предмета, поняття, дії\nЯсні зорі\nПорівняння\nСлово чи\
+    \ словосполучення, у \nякому названо певну рису предме-\nта через зіставлення\
+    \ з іншим \nпредметом, де ця риса виявляєть-\nся різко, яскраво\nВуса, наче пух\n\
+    Метафора\nСлово чи словосполучення, яке \nрозкриває ознаки та властивості \nодного\
+    \ явища або предмета через \nперенесення на них о"
+  section_title: Сторінка 209
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0020
+  text: "Уживайте метафори: світло розуму, високодумне чоло, \nглибина думки, словесна\
+    \ боротьба, розкіш спілкування \n(на вибір). Доберіть для музи відповідне нашому\
+    \ часові \nпромовисте ім’я. Виголосьте розповідь у класі."
+  section_title: Сторінка 16
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0442
+  text: "ХУДОЖНІ ЗАСОБИ\nНазва засобу\nПояснення\nПриклад\nЕпітет\nОбразне означення,\
+    \ що під-\nкреслює \nхарактерну \nрису, \nвизначальну якість предмета, \nпоняття,\
+    \ дії, яку важливо \nвисунути на передній план, \nпривернути до неї увагу та \n\
+    надати в певному контексті \nдодаткових відтінків основно-\nго значення. \nЯсні\
+    \ зорі\nПорівняння\nСлово чи словосполучення, \nу якому названо певну рису \n\
+    предмета через зіставлення з \nіншим предметом, де ця риса \nвиявляється різко,\
+    \ яскраво\nВуса, наче пух\nМетафора\nСлово чи словосполуче"
+  section_title: Сторінка 291
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0256
+  text: "Розгляньте ілюстрації. Підготуйте усний коментар (5–6 речень) до од-\nнієї\
+    \ з них, використовуючи відокремлені означення та обставини. Варіант Б. Розгляньте\
+    \ ілюстрації. Складіть і запишіть за кожною з них одне ре­\nчення з відокремленою\
+    \ обставиною та одне речення зі вставним словом (сполученням \nслів). незважаючи\
+    \ на\nзгідно з\nвідповідно до\nСполучення іменника з прийменником"
+  section_title: Сторінка 212
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0009
+  text: "8\nмова І мовЛЕння \nмова — це засіб спілкування людей (система звуків \n\
+    і букв, слова, речення, тексти, правила). \nМова потрібна, щоб:\nКоли ти розповідаєш\
+    \ про щось, то користуєшся мо-\nвою. Це мовлення. \nМОВЛЕННЯ\nУСНЕ           \
+    \                    ПИСЕМНЕ\nЯ читаю. Я пишу.\nЯ говорю. Я слухаю. \nПривіт!\n\
+    Прочитай речення. Спочатку назви ті, у яких ідеться про усне \nмовлення, потім\
+    \ ті, у яких ідеться про писемне. Спиши ре-\nчення. Зміни речення так, щоб у них\
+    \ про щось запитувалося.\n  Я oлухаЬ gагадку. Я "
+  section_title: Сторінка 8
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

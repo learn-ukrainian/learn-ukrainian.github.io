@@ -1,0 +1,27 @@
+{
+  "track": "lit",
+  "slug": "bu-ba-bu-the-end-of-soviet",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T22:21:41Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T22:21:41Z",
+      "task_id": "v5-bu-ba-bu-the-end-of-soviet-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

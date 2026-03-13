@@ -1,0 +1,85 @@
+discovered_at: '2026-03-13T21:11:56.929063+00:00'
+query_keywords:
+- 'Вишиванка: Зашифрована доля'
+- Сакральний код та оберіг
+- Sacred Code and Amulet
+- 'Регіональний калейдоскоп: Від Полтави до Борщева'
+- 'Regional Kaleidoscope: From Poltava to Borshchiv'
+- Мова символів та розмаїття технік
+- Language of Symbols and Variety of Techniques
+- 'Еволюція вишиванки: Від магії до світового флешмобу'
+- 'Evolution of Vyshyvanka: From Magic to Global Flashmob'
+- 'Практикум: Мистецтво дешифрування та стилістики'
+- 'Workshop: The Art of Decoding and Stylistics'
+- Analyze the spiritual and social functions of the Ukrainian embroidered shirt
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0127
+  text: "123\n4. КРОСВОРД Н АВПАКИ\nСкладіть \nдо \nрозгаданого \nкросворда запитання,\
+    \ викорис-\nтовуючи здобуті під час навчан-\nня знання. Працюючи в гру-\nпах,\
+    \ створіть власний кросворд \nдо теми «Цивілізації Стародав-\nнього Сходу».\n\
+    5. СЕНКАН ІЗ СЕКРЕТОМ\nКрок 1. Знайдіть слова.\nУ магічному колі закодовано \n\
+    п’ять слів. Щоб дізнатися, які \nсаме, і знайти додаткові слова, \nвам потрібно\
+    \ передусім «пере-\nтворити» цифри на літери. Це \nможуть бути імена правителів,\
+    \ \nназви визначних пам’яток ста-\nродавніх цивілізацій "
+  section_title: Сторінка 125
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0132
+  text: '83
+
+    Історична скарбничка
+
+    ІСТОРИЧНА СКАРБНИЧКА'
+  section_title: Сторінка 83
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0220
+  text: 'Історична скарбниця
+
+    149
+
+    ІСТОРИЧНА СКАРБНИЦЯ'
+  section_title: Сторінка 150
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0373
+  text: '229
+
+    Історична скарбничка
+
+    ІСТОРИЧНА СКАРБНИЧКА'
+  section_title: Сторінка 229
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 1-klas-bukvar-bolshakova-2018-2_s0048
+  text: "49\nОдин — багато\nЗнайди слово — підпис до малюнка.  \nВідшукай слово до\
+    \ схеми.\n\t валіза – валізи\t\nвазон – вазони\n\t вінок – вінки\t\nновина – новини\n\
+    \b\nТекст і малюнок\nУ валізу склали різні речі. Назви їх. Яку річ краще не \n\
+    зберігати у валізі? Чому? \n1\n2\nВ в\n\t ва\t\nво\t\nву\t\nви\n\t ві\t\nве\t\n\
+    ав\t\nов\n\t ув\t\nив\t\nів\t\nев\nВеликий, виши-\nтий, ворсистий. \nНим я витираю\
+    \ \nобличчя після \nвмивання.\nВолошка, в’юнок, \nбарвінок. На \nсвята дівчата\
+    \ \nприкрашають \nним голову.\nВона рожева  \nі зручна. Її одя-\nгають улітку."
+  section_title: Сторінка 49
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

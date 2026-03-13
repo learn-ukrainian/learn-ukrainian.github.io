@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 49 — E2E
+PASS: pipeline c2 47
 
   Module:   reading-professional-texts-i
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T07:51:19Z
+  Date:     2026-03-13T19:36:25Z

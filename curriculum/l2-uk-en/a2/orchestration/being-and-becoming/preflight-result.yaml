@@ -1,0 +1,38 @@
+status: ISSUES_FOUND
+issue_count: 4
+high_count: 3
+issues:
+- type: CONTRADICTION
+  location: 'Section 2, Structural Containment, bullet 2: ''Tables — paradigms, vocabulary
+    groups, gender sorting (highest immersion density)'''
+  problem: The prompt claims tables provide the 'highest immersion density', contradicting
+    the preceding paragraph and the Audit Gates which explicitly state that tables
+    are stripped and contribute ZERO to immersion.
+  suggested_fix: Remove the phrase '(highest immersion density)' from the Tables instruction
+    to avoid misleading the generator.
+  severity: HIGH
+- type: MISSING_INSTRUCTION
+  location: Section 3, Writing Style
+  problem: The Audit Gates explicitly score Emotional Safety based on '≥15 direct
+    address, encouragement, quick wins'. While the prompt defines the persona as an
+    'Encouraging Cultural Guide', it fails to mention this strict numerical requirement.
+  suggested_fix: Add an explicit instruction requiring at least 15 instances of direct
+    address, encouragement, or quick wins, and add this metric to the Self-Audit checklist.
+  severity: HIGH
+- type: CONTRADICTION
+  location: Section 4, Create Activities, Targets
+  problem: 'The prompt lists ''Required types: fill-in, fill-in, quiz, match-up, fill-in''.
+    This provides only 3 unique activity types, but the Audit Gates require ''Min
+    activity types: 4''.'
+  suggested_fix: Update the 'Required types' list to include at least 4 distinct activity
+    types (e.g., replace one 'fill-in' with 'true-false' or 'group-sort').
+  severity: HIGH
+- type: CONTRADICTION
+  location: Section 4, Item Minimums table vs. Activity Schemas examples
+  problem: 'The Item Minimums table sets strict minimums (e.g., quiz ≥8 items, match-up
+    ≥8 pairs, fill-in ≥8 items), but the comments in the YAML schema examples contradict
+    these targets (e.g., ''# minItems: 6'').'
+  suggested_fix: 'Update the comments in all YAML schema examples to match the strict
+    minimums defined in the Item Minimums table (e.g., change ''# minItems: 6'' to
+    ''# minItems: 8'').'
+  severity: MEDIUM

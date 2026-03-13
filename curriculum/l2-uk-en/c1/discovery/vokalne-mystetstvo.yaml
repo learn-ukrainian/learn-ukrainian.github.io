@@ -1,0 +1,121 @@
+discovered_at: '2026-03-13T22:24:58.473520+00:00'
+query_keywords:
+- Вокальне мистецтво
+- Голос як дзеркало душі
+- Voice as a Mirror of the Soul
+- Хорова спадщина та «Золотий вік»
+- Choral Heritage and the 'Golden Age'
+- 'Камерно-вокальний жанр: Романс'
+- 'Chamber Vocal Genre: Art Song/Romance'
+- Етно-хаос та фольк-ф’южн
+- Ethno-Chaos and Folk Fusion
+- Аналіз та вокальна школа
+- Analysis and Vocal School
+- Learner explores the rich tradition of Ukrainian choral music.
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=7GULSam22-I
+  channel: Суспільне Культура
+  title: 'Альберт Цукренко про пісню «Море», яку записав з дружиною Валентиною #shorts'
+  relevance_score: 0.9
+  relevance_note: Directly relates to the creation and emotional impact of a vocal
+    piece ('пісня море') by a musician, aligning with the 'Voice as a Mirror of the
+    Soul' and 'Art Song/Romance' themes.
+  transcript_excerpt: Я хотів би поділитися власним досвідом кохання поставити пісню
+    море яку ми написали з моєю дружиною валентиною цукаренко і записали просто на
+    телефон.
+  embed_suggestion: 'After section Камерно-вокальний жанр: Романс, as a contemporary
+    example of an art song and its emotional depth.'
+- url: https://www.youtube.com/watch?v=_pBfXRg-MPc
+  channel: Radio Khartia
+  title: «Діти» та «Капелан» наживо. Радіо Хартія у Дніпрі!
+  relevance_score: 0.9
+  relevance_note: Live performance of deeply emotional songs by Serhiy Zhadan and
+    band, directly demonstrating vocal art as a powerful medium for expression, fitting
+    'Voice as a Mirror of the Soul'.
+  transcript_excerpt: Ті, що повернуться і ті, що прийдуть. Кого згадають, кого тут
+    приймуть, кому віддячили, кого не забули, хто ловить як прави ламане минуле.
+  embed_suggestion: 'After section Вступ: Голос як дзеркало душі, as a powerful example
+    of vocal art in a contemporary context.'
+- url: https://www.youtube.com/watch?v=NvxQrMkB6Nw
+  channel: Radio Khartia
+  title: “We just went on stage and never came back” – Schmalgauzen and Serhiy Zhadan
+  relevance_score: 0.7
+  relevance_note: Interview with a band and poet Serhiy Zhadan discussing their music's
+    emotional impact and connection with the audience, reinforcing the 'Voice as a
+    Mirror of the Soul' concept.
+  transcript_excerpt: Часто от спілкування з військовими чуєш, що ну їм не потрібні
+    пісні про війну, про героїзм, тому що вони все вони цим живуть. Та відповідно
+    хочеться навпаки якоїсь пісні про любов, про криваву, трагічну, нещасливу любов,
+    яка разом з тим викликає якісь емоції, щось дає.
+  embed_suggestion: 'After section Вступ: Голос як дзеркало душі, to provide a modern
+    perspective on the emotional power of vocal music.'
+- url: https://www.youtube.com/watch?v=G93QsFYqbY4
+  channel: Суспільне Культура
+  title: 'What songs by Nadia Dorofeeva do people listen to? #shorts'
+  relevance_score: 0.2
+  relevance_note: Focuses on listener preferences for a pop artist, not on vocal art
+    technique, genres, or history discussed in the module. Tangential at best.
+  transcript_excerpt: яка ваша улюблена пісня Надя Дорофєєвої напевно думи хартбіт
+    а ваша така сама
+  embed_suggestion: Not suitable for embedding.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0215
+  text: "Словники, у яких узагальнено \nжиттєвий досвід, думки, почут-\nтя, передано\
+    \ духовний космос \nлюдей, називають скарбницею \nмовного багатства народу. Отримуючи\
+    \ словники як \nнеоціненний скарб від своїх \nпопередників, кожне наступне \n\
+    покоління збагачує їх і передає \nнащадкам."
+  section_title: Сторінка 120
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0196
+  text: 1. Öя музика спонукає до думок. 2. Ìузика, Áо звучатиме вічно. 3. Ìузика говорить
+    мовою нашого часу. 4. Допоки звучить музика.
+  section_title: Сторінка 135
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0020
+  text: "Уживайте метафори: світло розуму, високодумне чоло, \nглибина думки, словесна\
+    \ боротьба, розкіш спілкування \n(на вибір). Доберіть для музи відповідне нашому\
+    \ часові \nпромовисте ім’я. Виголосьте розповідь у класі."
+  section_title: Сторінка 16
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0233
+  text: "РІЗНО5ВИДИ СУПЕРЕЧКИ\nДіалог \n(публічний)\nспосіб побудови переконувальної\
+    \ промови як співбесіди з  ауди-\nторією: кожен може і виступати, і  слухати.\
+    \ Основні ознаки: вираз-\nна цілеспрямованість, двосторонність, експресивність,\
+    \ емоційність"
+  section_title: Сторінка 168
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0133
+  text: "ДІЄСЛОВО\nГ \nД ієслово як частина мови. Повторення\nвивченого\n302. Прочитайте\
+    \ текст Перекажіть.\nКовані золоті листочки тонко шум­\nлять, дзвонять, шелестять:\
+    \ осінь, \nосінь... Хмари гасають вороними \nкіньми, дикимитабунами... зпорва-\
+    \ \nними уздами... Бліднуть мрії, в’я­\nнуть квіти, димом ідуть примарні но­\n\
+    чі, туманом сиплеться лист...\nІ виднішими стануть крізь обшарпане гілля зорі,\
+    \ що не \nгасли, не осипалися... (За Степаном Васильченком).\n•  Випишіть дієслова,\
+    \ поставте до них питання. Підкресліть \nд"
+  section_title: Сторінка 134
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

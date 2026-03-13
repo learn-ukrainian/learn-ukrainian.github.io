@@ -1,0 +1,172 @@
+discovered_at: '2026-03-13T22:42:54.115083+00:00'
+query_keywords:
+- Театральне мистецтво II
+- Introduction — Contemporary Theater Landscape
+- Культурний феномен
+- Cultural Phenomenon — 'The Witch of Konotop'
+- Експериментальна сцена
+- Experimental Stage — Dakh Daughters and Freak Cabaret
+- Театральне закулісся та професійна етика
+- Behind the Scenes and Professional Ethics
+- Practice — The Art of Theater Criticism
+- Learner explores the contemporary Ukrainian theater scene (Franko, Left Bank).
+- the phenomenon of Dakh Daughters and experimental theater.
+- Learner analyzes the role of theater during the war.
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=R6FVesmStn4
+  channel: Суспільне Культура
+  title: У чому особливість документального театру і як створюються вистави на основі
+    реальних подій
+  relevance_score: 0.95
+  relevance_note: Video directly discusses the emergence and significance of documentary
+    theater in Ukraine, especially its role post-Maidan and during the war, aligning
+    perfectly with 'Сучасний театральний ландшафт' and the analysis of theater during
+    the war.
+  transcript_excerpt: документальний театр - це зовсім юний такий формат для України...
+    дуже потужний він почав розвиватись вже після Майдану після 14-го року коли політичні
+    збурення війна і це надзвичайно змінило Скажімо так бачення мистецтва для багатьох
+    митців документальний театр дозволяє ось зараз взяти монолог взяти якісь документи
+    не знаю вибірку з телеграма тощо тощо тощо і створити виставу...
+  embed_suggestion: After section Сучасний театральний ландшафт
+- url: https://www.youtube.com/watch?v=41Qp_Qle1Q0
+  channel: Radio Khartia
+  title: 'Харків театральний: кому потрібні вистави під час війни / Сергій Жадан'
+  relevance_score: 0.9
+  relevance_note: Serhiy Zhadan discusses the relevance of theater in Kharkiv during
+    wartime, directly addressing the module's thematic element 'Learner analyzes the
+    role of theater during the war' and fitting into 'Сучасний театральний ландшафт'.
+  transcript_excerpt: власне що в нас із театром І чому ми говоримо про театр Я хотів
+    би почати цю нашу розмову цю нашу сьогоднішню зустріч а лише не дивуйтеся хотів
+    почати із із Бертольда Брехта... війна вже стояла на порозі Європи і європейським
+    політикам європейським елітам не вдалося її Тоді зупинити...
+  embed_suggestion: After section Сучасний театральний ландшафт
+- url: https://www.youtube.com/watch?v=NvxQrMkB6Nw
+  channel: Radio Khartia
+  title: “We just went on stage and never came back” – Schmalgauzen and Serhiy Zhadan
+  relevance_score: 0.8
+  relevance_note: This video, featuring Serhiy Zhadan, explores how contemporary Ukrainian
+    artists create art that helps people cope with war, reinforcing the module's theme
+    of theater's role during the war and modern theatrical landscape.
+  transcript_excerpt: А наш театр в тому, що наш глядач може прийти і на дві години
+    забути про все. >> Ось про це і хочеться поговорити. Тільки сідаємо в машину,
+    їдемо, вмикаємо вас. Ми відволікаємося. Все.
+  embed_suggestion: After section Сучасний театральний ландшафт (to provide a complementary
+    perspective to Candidate 5)
+- url: https://www.youtube.com/watch?v=IerT_PcEnvU
+  channel: Суспільне Культура
+  title: 'From puppet theater to dubbing: a conversation with Oleksandr Zavalsky'
+  relevance_score: 0.75
+  relevance_note: Video covers the professional life and ethics of a contemporary
+    Ukrainian actor, director, and pedagogue, directly reinforcing the module's section
+    on 'Театральне закулісся та професійна етика'.
+  transcript_excerpt: Як ви чуєтеся в тому, що ви робите в своїй професії і в тому,
+    як вам зараз взагалі працюється зокрема? >> Ви знаєте, я мабуть не скажу, що я
+    якось в напрузі. Тож професія вимагає того, що постійно періодично, коли потрібно,
+    я був емоційно збуджений, в залежити від того, яка роль у мене, чи я біля мікрофона,
+    чи я на знімальному майданчику, чи я викладаю...
+  embed_suggestion: After section Театральне закулісся та професійна етика
+- url: https://www.youtube.com/watch?v=UZeTKBrSLyI
+  channel: Суспільне Док
+  title: '"It awakens the genetic code of the nation" - what is special about the
+    Gerdan Theater'
+  relevance_score: 0.65
+  relevance_note: Similar to Candidate 3, this video focuses on the 'Gerdan' folk
+    theater, emphasizing its role in national identity. It reinforces the cultural
+    aspect of Ukrainian theater, making it tangentially relevant to 'Культурний феномен'
+    and 'Сучасний театральний ландшафт'.
+  transcript_excerpt: І тут 92-й рік театр студія Голос, а 94-й рік- Гердан. І вони
+    дуже легко вписалися в цей контекст всього українського. Тобто вони були логічним
+    продовженням.
+  embed_suggestion: After section Культурний феномен — «Конотопська відьма» (to complement
+    Candidate 3's cultural perspective)
+- url: https://www.youtube.com/watch?v=ELs8G6v5Hjg
+  channel: Суспільне Док
+  title: 'Традиційні пісні та обряди: як театр з Чернівців просуває українську культуру
+    | «Ґердан»'
+  relevance_score: 0.6
+  relevance_note: Video is about 'Gerdan' folk theater, focusing on traditional songs
+    and rituals. While it is theater and promotes Ukrainian culture, it's a specific
+    subgenre not explicitly highlighted in the module sections, making it tangentially
+    related to 'Культурний феномен' or 'Сучасний театральний ландшафт'.
+  transcript_excerpt: 30 років тому тут, у цьому приміщенні у Чернівцях, режисер Петро
+    Колісник та актор Андрій Циганок заснували фольклорний театр студію 'Гердан'.
+    За два роки до цього створили приватний театр 'Голос'. Він став джерелом фінансування
+    Гердану.
+  embed_suggestion: After section Культурний феномен — «Конотопська відьма» (as an
+    example of traditional cultural phenomenon)
+- url: https://www.youtube.com/watch?v=tP-WXm9hEYc
+  channel: Repainted Fox
+  title: '#16 Інститутка. Марко Вовчок'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0373
+  text: "Що позитивно або неãативно впливало на розвитоê óêраїнсьêої êóльтóри? 2.\
+    \ Що стало ваãомим здобóтêом óêраїнсьêоãо народó ó ХІХ столітті? 3. Яêі світові\
+    \ êóльтóрно-мистецьêі течії відображені в óêраїнсьêій êóльтóрі? § 38\n \nУпродовж\
+    \ уроку доберіть факти, що підтверджують зв’язок  \nміж літературою, театром і\
+    \ музикою."
+  section_title: Сторінка 256
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0419
+  text: "На позначення найновіших мистецьких явищ деякі вчені пропонують поняття \n\
+    постпостмодернізм. Воно охоплює складні і ще майже не досліджені літературні \n\
+    процеси, котрі постали під впливом сучасних світоглядних і технологічних змін."
+  section_title: Сторінка 220
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0014
+  text: "Текст ІІ потужніше, ніж перший, активізує увагу слухачів, бо в ньому використано:\n\
+    •\t риторичні запитання (Ви хочете мати успіх у престижній фірмі? Готові слухати?);\
+    \ \n•\t пряме звернення на ви, яке «приміряє» на себе кожен учасник заходу (на\
+    \ противагу \nбезособовим конструкціям потрібно влаштуватися, варто пам’ятати,\
+    \ треба підготу-\nватися); \n•\t тропи (провалити співбесіду, виграти у двобої,\
+    \ людина в дорогому костюмі)."
+  section_title: Сторінка 10
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0014
+  text: "У цьому навчанні вам стане у пригоді підручник, який містить низку корис-\n\
+    них порад щодо сприймання й засвоєння багатьох складних художніх явищ. Він пропонує\
+    \ інформацію для роздумів, питання й  завдання ­дискусійного \nхарактеру, що заохочують\
+    \ до  самостійного пошуку та  вироблення власної \nдумки. Для ефективного вивчення\
+    \ класичної літератури завжди важливий кон-\nтекст — сукупність явищ, пов’язаних\
+    \ із текстом твору (історичні й соціальні \nумови, біографічні деталі, мистецькі\
+    \ впливи). Це своєрідне"
+  section_title: Сторінка 7
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0008
+  text: "Отже, виникли різні види мистецтва, кожний із яких своєрідно \nвідображав\
+    \ життя та забезпечував різноманітні естетичні потреби людей. Окрім декоративно-ужиткового\
+    \ мистецтва (художнього оздоблення предме­\nтів повсякденного користування) та\
+    \ архітектури, розвинулися художня лі­\nтература, живопис і графіка, скульптура,\
+    \ музика й хореографія, театр і кіно. Які ж функції відіграє мистецтво в житті\
+    \ людини? По-перше, під час читання художнього твору ви дістаєте позитивні емо-\n\
+    ції. Мистецький твір прищеплю"
+  section_title: Сторінка 8
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

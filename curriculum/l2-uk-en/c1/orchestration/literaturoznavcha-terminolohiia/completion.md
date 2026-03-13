@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1 103 — E2E
+PASS: pipeline c1 64
 
   Module:   literaturoznavcha-terminolohiia
   Track:    c1
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T19:35:45Z
+  Date:     2026-03-13T20:40:26Z

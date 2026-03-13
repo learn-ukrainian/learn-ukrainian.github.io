@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 90 — E2E
+PASS: pipeline c2 95
 
   Module:   capstone-research-project
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T19:22:02Z
+  Date:     2026-03-13T22:15:48Z

@@ -3,24 +3,24 @@
   "slug": "syntez-rozdorizhzhia",
   "mode": "v5",
   "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T20:36:31Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T12:01:26Z",
+      "ts": "2026-03-13T20:36:31Z",
       "task_id": "v5-syntez-rozdorizhzhia-pA",
       "mode": "full",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
-      }
-    },
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-13T12:01:26Z",
-      "note": "merged-into-research",
-      "executor": {
-        "type": "script",
-        "name": "discovery_search"
       }
     }
   }

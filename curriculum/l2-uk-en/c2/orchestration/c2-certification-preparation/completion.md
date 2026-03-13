@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 99 — E2E
+PASS: pipeline c2 104
 
   Module:   c2-certification-preparation
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T09:37:37Z
+  Date:     2026-03-13T22:42:51Z

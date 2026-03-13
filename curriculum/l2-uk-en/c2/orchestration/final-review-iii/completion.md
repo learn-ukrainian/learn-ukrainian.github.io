@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 97 — E2E
+PASS: pipeline c2 102
 
   Module:   final-review-iii
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T09:24:30Z
+  Date:     2026-03-13T22:36:50Z

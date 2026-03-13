@@ -1,0 +1,239 @@
+discovered_at: '2026-03-13T19:35:56.998245+00:00'
+query_keywords:
+- Sosiura Love Ukraine
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Sosiura Love Ukraine у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video discusses the Ukrainian literary canon, the importance
+    of poets from the 20th century (relevant to Sosiura's era), and the continuity
+    of Ukrainian literature, which strongly reinforces the cultural and historical
+    context of Sosiura's work.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. ... Себто так чи інакше ми будемо говорити про тяглість української
+    літератури, про проблему пам'яті...
+  embed_suggestion: After section Вступ та культурний контекст — provides essential
+    background on the Ukrainian literary canon and its historical development.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.4
+  relevance_note: The video discusses contemporary Ukrainian poetry, language, and
+    cultural interest, which is tangentially related to the module's themes of Ukrainian
+    language and literary context but does not specifically address Sosiura or his
+    work.
+  transcript_excerpt: це поезія про мову ... Сергій Жадан досліджує мову як стверджує
+    сам автор цитую здатність мови повертатися і самовідтворюватись про її вразливість
+    про її здатність до опору кінець цитати
+  embed_suggestion: After section Мова, стиль та поетика — provides a contemporary
+    perspective on Ukrainian language evolution and resilience.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/love-in-ukrainian/
+  title: Love in Ukrainian — Words and Expressions
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - love
+  - relationships
+  - vocabulary
+- url: https://www.verba.school/post/how-to-help-ukraine
+  title: How to Help Ukraine
+  source: verba.school
+  relevance_score: 0.35
+  topics:
+  - charity
+  - ukraine
+  - support
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0329
+  text: '214
+
+    Розділ 4. БУТИ САМИМ СОБОЮ
+
+    в огні канонад1, що на захід женуть
+
+    чужинців в зелених мундирах2,
+
+    в багнетах3, що в тьмі пробивають нам путь
+
+    до весен, і світлих, і щирих...
+
+    Юначе! Хай буде для неї твій сміх,
+
+    і сльози, і все до загину...
+
+    Не можна любити народів других,
+
+    коли ти не любиш Вкраїну.
+
+    Дівчино! Як небо її голубе,
+
+    люби її кожну хвилину...
+
+    Коханий любить не захоче тебе,
+
+    коли ти не любиш Вкраїну.
+
+    Любіть у труді, у коханні, в бою,
+
+    в цей час, як гудуть батареї4...
+
+    Всім серцем любіть Україну св'
+  section_title: Сторінка 216
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0471
+  text: "303\nЗМІСТ\nЮні читачі та читачки!   \n \n \n \n \n \n \n  3\nВСТУП\nЛітература\
+    \ і художній образ  \n \n \n \n \n \n \n  4\nРозділ 1. ПРОЧИТАЙТЕ ЗНОВУ ТУЮ СЛАВУ\n\
+    НА СТРУНАХ КОБЗИ, ЛІРИ І БАНДУРИ\nНародні історичні пісні  \n \n \n \n \n \n \n\
+      6\n \n \nЗажурилась Україна  \n \n \n \n \n \n \n  8\n \n \nТа, ой, як крикнув\
+    \ же козак Сірко  \n \n \n \n \n 10\n \n \nОй Морозе, Морозенку   \n \n \n \n\
+    \ \n \n 12\n \n \nЧи не той то хміль  \n \n \n \n \n \n \n 14\nПісні Марусі Чурай\
+    \ \n \n \n \n \n \n \n \n 16\n \n \nЗасвіт встали козаченьки  \n \n \n \n \n \n\
+     17\n \n \nОй не ходи, Грицю... "
+  section_title: Сторінка 305
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0330
+  text: "215\nСИЛА ПОЕТИЧНОГО РЯДКА\n6. Дослідіть на основі тексту, у яких о́бразах\
+    \ постає Україна в уяві ліричного героя, \nде її можна побачити, почути. Доповніть\
+    \ цей перелік кількома о́бразами на \nоснові свого життєвого досвіду. \n7. Хтось\
+    \ із вас має виписати зорові образи, використані в поезії, а хтось – слухові.\
+    \ \nПеревірте одне в одного правильність виконання. Поясніть, для чого автор \n\
+    використав таке розмаїття художніх образів.\n \nНаприклад: темна ніч – зоровий\
+    \ образ; регоче вітер – слуховий образ.\n8. П"
+  section_title: Сторінка 217
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5458796620368958
+  chunk_id: 3588aaff_c0464
+  text: "До певної міри «Стару Україну» можна розглядати як\r\nкаталог злободенних\
+    \ марксистсько-ленінських формул. /376/ Зазначалося\r\nнавіть, що тут Тичина прагне\
+    \ втілити у поетичну форму марксистську «філософію»,\r\nяку він, подібно до інших\
+    \ письменників («інженерів людських душ»), студіював на\r\n«спеціальних семінарах» 31.\
+    \ Таке совєтське тлумачення мотивації (а\r\nвідтак поетики) твору, безперечно,\
+    \ банальне. Навпаки, не поет підпорядковується\r\nцій філософії, а, радше, остання\
+    \ поглинається й перетворюється на "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.534956157207489
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5315762758255005
+  chunk_id: fc2291b5_c5005
+  text: "Літ.: Потебня А. А. Из\r\nзаписок по теории словесности. Х., 1905; Мейлах\
+    \ Б. С. Метафора как элемент\r\nхудожественной системы. В кн.: Мейлах Б. С. Вопросы\
+    \ литературы и эстетики. Л.,\r\n1958; Коцюбинська М. Х. Відтворення чи перетворення.\
+    \ «Радянське\r\nлітературознавство», 1967, № 1; Соловей Е. С. «Метафора-прийом»\
+    \ і\r\n«метафора-відкриття». «Радянське літературознавство», 1970, № 1; Соловей\
+    \ Е. С.\r\nНові дослідження про метафору. «Радянське літературознавство», 1973,\
+    \ № 2: Жоль\r\nК. К. Мысль. Слово. Метафора"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

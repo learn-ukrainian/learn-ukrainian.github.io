@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 48 — E2E
+PASS: pipeline c2 46
 
   Module:   terminology-acquisition-ii
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T07:50:18Z
+  Date:     2026-03-13T19:33:19Z

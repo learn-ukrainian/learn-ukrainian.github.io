@@ -1,10 +1,10 @@
-PASS: pipeline c2 69
+PASS: pipeline c2 83
 
   Module:   language-policy-decolonization
   Track:    c2
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T21:04:00Z
+  Date:     2026-03-13T21:36:24Z

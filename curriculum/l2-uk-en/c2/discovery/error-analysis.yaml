@@ -1,0 +1,137 @@
+discovered_at: '2026-03-13T21:42:48.786905+00:00'
+query_keywords:
+- Аналіз помилок
+- Помилка як інструмент навчання
+- Error as a Learning Tool
+- 'Орфографія та історія: Кейс літери «Ґ»'
+- 'Orthography and History: The Case of the Letter ''G'''
+- 'Граматичні пастки: Канцелярит та інтерференція'
+- 'Grammatical Traps: Officialese and Interference'
+- 'Лексична чистота: Пуризм та подолання калькованих форм'
+- 'Lexical Purity: Purism and Overcoming Calques'
+- 'Стилістичні помилки: Тавтологія та плеоназм'
+- 'Stylistic Errors: Tautology and Pleonasm'
+- 'Стратегії самокорекції: Голос Senior Proofreader'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=H5PglowR0Jo
+  channel: Суспільне Культура
+  title: 'A uniting flash mob: why are we writing a Radio Dictation of National Unity?'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses orthography, punctuation, and the concept
+    of errors in the context of the Ukrainian language, using the national dictation
+    as a real-world example of encountering and addressing linguistic rules.
+  transcript_excerpt: Як ви сидите з ручкою у спіднілих руках, одночасно намагаєтесь
+    слухати голос вчительки і пригадати всі правила орфографії, пунктуації, які ви,
+    чесно кажучи, не вчили...
+  embed_suggestion: 'After section Вступ: Помилка як інструмент навчання -- The video
+    provides a compelling real-world example of error analysis and the importance
+    of orthography and punctuation in Ukrainian, serving as an excellent introduction
+    to the module''s themes.'
+- url: https://www.youtube.com/watch?v=aysrSl2RiKo
+  channel: Суспільне Культура
+  title: Як пісні на поезію стали мейнстримом | МУР, Пиріг і Батіг, DakhTrio | Artилерія
+  relevance_score: 0.1
+  relevance_note: The video focuses on Ukrainian poetry and its adaptation into songs,
+    which is unrelated to the module's topic of error analysis, orthography, grammar,
+    or lexical purity.
+  transcript_excerpt: Пісень на основі віршів класиків настільки багато, що я не зможу
+    їх всіх перелічити, навіть якщо буду це робити до кінця цього відео. Від одних
+    пісень у нас сироти по тілу, інші ж набивають оскоменну від крінжі.
+  embed_suggestion: Not suitable for this module.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0139
+  text: '134
+
+    Фонетика. Графіка. Орфоепія. Орфографія. Вимова звуків [г] і [ґ] та позначення
+    їх на письмі
+
+    Зверніть увагу! У запозичених словах переважає звук [г] та  літе-
+
+    ра  Г: гаджет, баг, графік.
+
+    Звук [ґ] та відповідна літера часто вживані в іншомовних влас-
+
+    них назвах: Хоґвортс, Магатма Ґанді.
+
+    Вправа 217
+
+    1. Уважно перечитайте у правилі слова, у  яких потрібно писати літеру ґ .
+
+    2. Випишіть невідомі слова у  словничок незнайомих слів .
+
+    3. Із  трьома незнайомими раніше словами складіть речення, запишіть'
+  section_title: Сторінка 134
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0216
+  text: "Склад. Основні  правила  переносу . . . . . . . . . . . . . . . . . . . 84\n\
+    § 38–39. Наголос. Орфоепічна  помилка . . . . . . . . . . . . . . . . . . . .\
+    \ . . 88\n§ 40. Розвиток мовлення. Твір-розповідь  на  основі  власного   \nдосвіду\
+    \ в  художньому  стилі  (за  планом) . . . . . . . . . . . . . . . . . . . . .\
+    \ 92\nФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ\nВимова  голосних  і  приголосних\
+    \  звуків. Чергування  звуків. Правопис  префіксів  з-  (зі-,  с-),  роз-  (розі-),\
+    \  без-\n§ 41. Вимова голосних звук"
+  section_title: Сторінка 205
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0141
+  text: "136\nФонетика. Графіка. Орфоепія. Орфографія. Вимова звуків [г] і [ґ] та позначення\
+    \ їх на письмі\n \nУ текстах використайте від двох слів, правопис яких можна пояснити\
+    \ \nвивченим правилом .\n4. Презентуйте свої повідомлення перед класом . Назвіть\
+    \ ті слова у  ваших \nтекстах, які ілюструють розглянуте правило . Поясніть, як\
+    \ саме .\nВправа 222\nНапишіть текст (кілька зв’язних речень) на  будь-яку тему,\
+    \ використавши \nякомога більше слів з  літерою ґ .\nПро що говорять слова\nЛовити\
+    \ ґави (ґав) — марно ви-\nтра"
+  section_title: Сторінка 136
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0127
+  text: "89\n \n небуквені: апостроф (м’ята, комп’ютер); перенос слів із рядка в \
+    \ рядок \n(від-да-ність); написання слів окремо (у книжці), разом чи окремо (у\
+    \ день \nнародження, удень зустрілися), окремо чи через дефіс (по нашому класу;\
+    \ \nзробити по-нашому).\nНаслідком неправильного вибору орфограми і, відповідно,\
+    \ порушення нор-\nми літературної мови є  орфографічна помилка.\nПравопис слова\
+    \ з’ясовують за допомогою орфографічного словника.\n162. Прочитайте. Визначте\
+    \ у  словах буквені та небуквені орфо грами.\n1. Гр"
+  section_title: Сторінка 89
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0010
+  text: '. . . . 261
+
+    Орфографія. Графіка . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 263
+
+    Синтаксис. Пунктуація . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 266
+
+    СЛОВНИК ТЕРМІНІВ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 270
+
+    СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . 276
+
+    ПІДКАЗКИ  . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 5
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

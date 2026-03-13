@@ -1,0 +1,122 @@
+discovered_at: '2026-03-13T22:36:12.497212+00:00'
+query_keywords:
+- Балет і танець
+- Тріумф українства
+- The Triumph of Ukrainianness
+- Від традиції до сцени
+- From Tradition to Stage
+- Нова мова
+- New Language
+- Лінгвістична майстерня
+- Linguistic Workshop
+- Learner explores the legacy of Serge Lifar and his impact on world ballet.
+- the distinction between folk dance (Hopak) and academic ballet.
+- contemporary dance trends in Ukraine.
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=QZdlh1rNzsk
+  channel: Суспільне Культура
+  title: Чим живе Національний театр опери й балету і чому співпрацює з організатором
+    гастролів росіян
+  relevance_score: 0.85
+  relevance_note: The video discusses contemporary issues and scandals within the
+    Ukrainian National Opera and Ballet regarding Russian repertoire and dancers,
+    directly relating to the theme of 'Тріумф українства' and the struggle for Ukrainian
+    identity in ballet.
+  transcript_excerpt: за останній рік навколо теми балету спалахувала низка скандалів
+    спочатку піднімалися питання навколо репертуару таких одіозних творів як Лебедине
+    озеро Лускунчик та чи доречно їх виконувати
+  embed_suggestion: After section 'Тріумф українства (The Triumph of Ukrainianness)
+    — Серж Лифар' to provide a modern context to the historical figure and the ongoing
+    efforts to assert Ukrainian cultural identity in ballet.
+- url: https://www.youtube.com/watch?v=97XVuRkuSvw
+  channel: Суспільне Док
+  title: '«Сказали, треба ще папірчик, який підтвердить три попередні» – Олександр
+    «Терен» про ВЛК #shorts'
+  relevance_score: 0.1
+  relevance_note: The video discusses the Military Medical Commission (ВЛК) and bureaucracy,
+    which is completely unrelated to the module topic of ballet and dance.
+  transcript_excerpt: щодо ВЛК чи у вас були проблеми з цією системою не знаю чи назвати
+    ця проблема але почуваєш в себе трохи жалюгідно проводяться процедуру
+  embed_suggestion: None - completely irrelevant to the module's topic.
+- url: https://www.youtube.com/watch?v=16mjs5zgp6o
+  channel: Суспільне Культура
+  title: 'Zelyonka Fest 2019: Балет катамаранів'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0007
+  text: "6\nя вивчаЮ УкраїнськУ мовУ \nУкраїнська мова — державна мова України.\n\
+    У кожного народу своя мова. \nУкраїнська мова — скарб українського \nнароду, запорука\
+    \ його незалежності. \nЯ спілкуюсь українською мовою, тому що:\nми — \nукраїнці\n\
+    я живу \nв Україні\nмої рідні \nговорять укра-\nїнською\nмої друзі \nспілкуються\
+    \ \nукраїнською\nце \nмило звучна \nмова\nПрочитай «чарівні» слова. Подумай, які\
+    \ з них ти скажеш \nдрузям, рідним, незнайомим дорослим людям. Розіграй різні\
+    \ \nситуації в парі. Які ролі ти можеш виконати? \n"
+  section_title: Сторінка 6
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0314
+  text: "Назва цієї модерної новели промовиста: мотив вальсу наскрізний у ній. Він\
+    \ \nстає лейтмотивом, щоб на його тлі вималювати три типи жінок, споріднених по-\n\
+    шуками краси й глибоко індивідуалізованих — майбутньої вчительки Марти, \nхудожниці\
+    \ Ганни й піаністки Софії. Оповідачем є Марта, тому читачі про неї \n5. 6. 7.\
+    \ МОДЕРНА  УКРАЇНСЬКА  ПРОЗА\nСhopin. «Phantaіsie impromptu», Алім Бейсенбаєв.\
+    \ Б. Лінч. Фортепіано\n"
+  section_title: Сторінка 166
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-2_s0000
+  text: "УМОВНІ  ПОЗНАЧЕННЯ\n — працюємо в парі або групі\n — розвиваємо творчі здібності\n\
+    \ — знайомлюся з літературними секретами\n — досліджую світ медіа\n — вчуся слухати\
+    \ і розуміти текст\n — розігруємо сценку, виставу\n© Вашуленко О. В., 2020\n©\
+    \ Видавничий дiм «Освiта», 2020\n \nВашуленко О. В.\nВ23\t \t\nУкраїнська мова\
+    \ та читання : підруч. для 3 класу \nзакладів загальної середньої освіти (у 2-х\
+    \ частинах). \nЧ. 2 / О. В. Вашуленко. — К. : Видавничий дім «Освіта», \n2020.\
+    \ — 160 с. : іл.\n\t\n\t ISBN 978-966-983-120-0.\nУ"
+  section_title: Сторінка 2
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0014
+  text: "УКРАЇНСЬКІ НАРОДНІ БАЛАДИ\n1.\nРозгляньте гравюри й виконайте завдання. \n\
+    А.\nКого зображено на ілюстраціях? Пригадайте, у якому творі\nТ. Шевченка й через\
+    \ що дівчина перетворилася на тополю.\nЯк називається прийом перетворення людини\
+    \ на рослину чи\nптаха? \nБ. Який настрій цього твору? Чи щасливий його фінал?\
+    \ \nВ. Що ви знаєте про баладу як літературний жанр? \n2.   Прочитайте відомості\
+    \ з теорії літератури й розкажіть, що нового\nви дізналися про баладу. \nТеорiя\
+    \ лiтератури\nТерміном «балàда» (з фр. танцюва"
+  section_title: Сторінка 14
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0458
+  text: "Танці наших верховинців і пристрасна музика до них \nчимось нагадували мені\
+    \ танці грузинів і осетинів. Якісь \nледве вловимі спільні риси людської вдачі\
+    \ споріднюють ві-\nкову мистецьку культуру всіх горян, синів різних народів. (Т.\
+    \ Масенко)\n \n \nПрочитайте текст удруге. Перекажіть усно за планом, доповнивши\
+    \ \nтекст своїми роздумами про роль мистецтва танцю у  відродженні \nнаціональної\
+    \ культури й свідомості. Домашнє завдання\n716 Підготуйте повідомлення на одну\
+    \ з тем: «Походження назв танців», \n«Бойови"
+  section_title: Сторінка 256
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,139 @@
+discovered_at: '2026-03-13T20:41:54.241240+00:00'
+query_keywords:
+- Здоров'я і медицина
+- Медичний дискурс на рівні С2
+- Medical Discourse at C2 Level
+- Система охорони здоров'я та медична реформа
+- Healthcare System and Medical Reform
+- Діагностика та невідкладна допомога
+- Diagnostics and Emergency Care
+- Залежності та їх подолання
+- Addictions and Their Overcoming
+- Народна медицина та доказова медицина
+- Folk Medicine and Evidence-Based Medicine
+- Біоетика та медична деонтологія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=a9SnAZdq9BM
+  channel: Суспільне Культура
+  title: Where does our FEAR of doctors come from? What Soviet and post-Soviet medicine
+    REALLY was like
+  relevance_score: 0.9
+  relevance_note: Video discusses the historical context and public perception of
+    the healthcare system in post-Soviet Ukraine, directly addressing fears and experiences
+    within the medical field. This is highly relevant to understanding medical discourse
+    and healthcare reform.
+  transcript_excerpt: Усе це синоніми радянської та пострадянської медицини. Тож чому
+    ми боїмося лікарень? Чому наших батьків так важко затягнути до лікаря?
+  embed_suggestion: After section Система охорони здоров'я та медична реформа
+- url: https://www.youtube.com/watch?v=6e-oY3Jc8pU
+  channel: Суспільне Культура
+  title: '"Peoples, and everything will pass" - what''s wrong with Soviet medicine?
+    #shorts'
+  relevance_score: 0.9
+  relevance_note: Video critically analyzes patriarchal attitudes and ethical issues
+    within Soviet medicine, where patient blame was common. This directly relates
+    to bioethics, medical deontology, and the historical aspects of the healthcare
+    system.
+  transcript_excerpt: В патріархальній системі жінка завжди винувата в усьому. Е,
+    лікар не може визнавати, що в людина погано почувається того, що в неї є якесь
+    захворювання, яке треба взяти і лікувати.
+  embed_suggestion: After section Біоетика та медична деонтологія
+- url: https://www.youtube.com/watch?v=phpl3tZ7RpM
+  channel: Radio Khartia
+  title: 'РЕЙН: Бойовий медик не завжди може бути поруч — міняється тактика війни,
+    міняється медицина | Вишкіл'
+  relevance_score: 0.5
+  relevance_note: Video focuses on tactical and combat medicine training, which is
+    a specialized area of diagnostics and emergency care. While related to medicine,
+    its military-specific context makes it tangentially relevant to a general C2 medical
+    discourse module.
+  transcript_excerpt: інструктор з медичної підготовки всі проходять в мене базовий
+    рівень підготовки з тактичної медицини так само займаюся підготовкою бійців рятувальників
+    і бойових медиків
+  embed_suggestion: After section Діагностика та невідкладна допомога
+- url: https://www.youtube.com/watch?v=OESdYbjqt8Y
+  channel: Radio Khartia
+  title: 'Генерал Марсель: СЗЧ треба пробачити. Харків не взяти. Реформа ВЛК / Сценарій
+    параду, Сергій Жадан'
+  relevance_score: 0.4
+  relevance_note: Video discusses the reform of the Military Medical Commission (ВЛК).
+    This is a specific medical reform within the military context, making it tangentially
+    related to the broader 'Healthcare System and Medical Reform' section but not
+    central to general medical discourse.
+  transcript_excerpt: до реформи ВЛК залучена дуже професійна і велика команда перш
+    за все це громадянське суспільство яке є найвищим ідеологом цієї реформи
+  embed_suggestion: After section Система охорони здоров'я та медична реформа
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0010
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n8\n§ 2\nДискусія — це обговорення певного суперечливого\
+    \ питання з метою дійти згоди. \nВ основі словесного змагання — відстоювання власної\
+    \ позиції. \nВисловлення на дискусійну тему має своєрідну будову.\nБудова дискусійного\
+    \ висловлення\n1. Теза (позиція): «Вважаю, що ...»\n2. Аргумент (доведення позиції):\
+    \  … бо; … тому, що.\n3. Приклади (підтвердження думки): «Яскравим прикладом цього\
+    \ є …» \n4. Висновок (правильність позиції): «Отже, …»\nЗауважте!\nТреба пам’ятати,\
+    \ що суть дискусії поляга"
+  section_title: Сторінка 9
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0290
+  text: "ІІ. Напишіть текст-розповідь у розмовному або художньому стилі (5–6 речень)\
+    \ на тему \n«Мої вподобання» або «Світ моїх захоплень». Продумайте послідовність\
+    \ викладу ду-\nмок (можна скласти план), інтригуючий зачин і цікаву кінцівку.\
+    \ Поміркуйте, про що \nсаме ви будете писати. 530\t Розгляньте таблицю «Вимоги\
+    \ до мовлення». Складіть і запишіть на основі цієї \nінформації текст-висловлення\
+    \ в науковому стилі (4–6 речень). У тексті: а) укажіть на-\nзви всіх вимог; б)\
+    \ поясніть суть двох із них, найважливіших,"
+  section_title: Сторінка 236
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0233
+  text: ". . . . . . . 26\n§ 14–15. Написання  іншомовних  слів . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 28\n§ 16. Розвиток мовлення. Обмін  думками  на\
+    \ тему,  пов’язану   \nіз  ціннісними орієнтирами  . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . 31\n§ 17. Активна  і  пасивна  лексика .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . 32\n§ 18. Загальновживані\
+    \  та  стилістично  забарвлені  слова . . . . . . . . 34\n§ 19–20. Діалектні \
+    \ й  просторічні слова . . . . . . . . . . . . . . "
+  section_title: Сторінка 220
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0367
+  text: "Дискурс як комунікативний процес  \nі як текст. Професійний дискурс\n§ 44\n\
+    У чому полягає відмінність між текстом і дискурсом? Дискурс — це логічно зумовлена\
+    \ думка, тобто суворий перехід від одного \nтвердження до іншого, що простежується\
+    \ в мисленні за допомогою логічних \nправил і має за мету послідовне й систематичне\
+    \ розгортання думки."
+  section_title: Сторінка 238
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0234
+  text: "169\nРізновиди суперечки: публічний діалог, дебати \x1F\nДиспут\nпублічна,\
+    \ заздалегідь підго товлена суперечка на наукову, суспіль-\nну, літературну, моральну\
+    \ тему; проводиться на наукових конфе-\nренціях, у  навчальних закладах, на сторінках\
+    \ періодичних видань. Учасники заздалегідь ознайомлюються з  темою, опрацьовують\
+    \ \nлітературу, щоб аргументовано відстоювати свої погляди, оцінки \nподій, проблем,\
+    \ явищ\nДебати\nсуперечка з  приводу висловлених у  доповіді, програмі дій, заяві\
+    \ \nпропозицій щодо розв’язанн"
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T21:29:57.544038+00:00'
+query_keywords:
+- Malyshko Songs
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Malyshko Songs у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.7
+  relevance_note: The video discusses the restoration of the Ukrainian literary canon
+    and cultural memory, referencing poets like Bazhan and Tychyna. This provides
+    valuable context for understanding the cultural significance of any major Ukrainian
+    literary figure, including Malyshko, and aligns with the module's 'канон', 'Вступ
+    та культурний контекст', and 'Деколонізаційний вимір' topics.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. Ну, хто не грав його і хто не слухав на чиїх устах, не виникала усмішка
+    примхлива, напівкохання чи напівжурби. >> А хто в нас сьогодні головний поет XX
+    століття? для мене X століття от, ну, скажемо так, за алфавітом, якщо за алфавітом,
+    то Бажан Рильський істус є, що називається от крапля довбає камінь. Бажан має
+    бути повернутий в шкільну програму.
+  embed_suggestion: After section Вступ та культурний контекст -- Directly contributes
+    to understanding the broader literary landscape and the concept of the Ukrainian
+    literary canon, relevant to positioning Malyshko's work.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.4
+  relevance_note: The video discusses contemporary Ukrainian poetry by Serhiy Zhadan
+    and its connection to language resilience, which is broadly related to Ukrainian
+    literature and decolonization themes. However, it does not mention Malyshko or
+    his songs directly.
+  transcript_excerpt: це поезія про мову А вже у кінці серпня поетична збірка вийде
+    друком нині на сайті видавництва Меридіан черновіц відкритий передпродаж назва
+    збірки походить від назви українського правопису в ній Сергій Жадан досліджує
+    мову як стверджує сам автор цитую здатність мови повертатися і самовідтворюватись
+    про її вразливість про її здатність до опору кінець цитати
+  embed_suggestion: After section Деколонізаційний вимір -- Could serve as a contemporary
+    example of how Ukrainian language and literature contribute to national resilience,
+    paralleling the module's decolonization theme.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0439
+  text: "286\nЗМІСТ\nЗМІСТ\nДорогі семикласниці та семикласники! \n \n \n \n \n  3\n\
+    ВСТУП   \n \n \n \n \n \n \n \n \n  4 \nФункції художньої літератури   \n \n \n\
+    \ \n \n \n  4\nРозділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ   \n \n \n \n \n  8\nНАРОДНА\
+    \ ТВОРЧІСТЬ   \n \n \n \n \n \n \n  8\n \nНародні соціально-побутові пісні   \n\
+    \ \n \n \n \n  9\n \nКозацькі пісні   \n \n \n \n \n \n \n \n 10\n \nОй на г;орі\
+    \ та женці жнуть   \n \n \n \n \n \n 12\n \nЧумацькі пісні   \n \n \n \n \n \n\
+    \ \n \n 14\n \nЧум;аче, чумаче, чого зажурився?   \n \n \n \n \n 15\n \nСтрілецькі\
+    \ пісні    \n \n \n \n \n \n \n 17\n \nТам, пі"
+  section_title: Сторінка 288
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0191
+  text: "183\nРОЗВИТОК МОВЛЕННЯ\n3. Людські цінності, родина, мріяти, досягати, толерантність,\
+    \ любов.\n4. Відповідальність, затишок, психологічна травма, любов, турбота.\n\
+    Б.\tПрочитайте одне одному написаний чернетковий варіант, обміркуйте \nдеталі.\n\
+    6.\tПроаналізуйте написаний твір за планом. Використовуючи мотиваційні \nсмайли,\
+    \ простежте свій шлях створення цієї роботи.\nПлан аналізу твору\n1. Дотримання\
+    \ вимог стилю. \n2. Відповідність типам мовлення. \n3. Розкриття теми твору. \n\
+    4. Чіткість авторської позиції. \n5. "
+  section_title: Сторінка 183
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0323
+  text: "3. Виконайте завдання. \n1.  Прочитайте рядки: Німим отверзуться уста; /\
+    \ Прорветься слово,\nяк вода... \nВ уривку використано\nА антоніми\nБ синоніми\n\
+    В архаїзми\nГ неологізми\n2.  Переспів «Ісаія. Глава 35» — твір \nА епічний\n\
+    Б ліричний\nВ ліро-епічний\nГ драматичний\n3. Синонімом до  слова псалом є\nА\n\
+    послання\nБ гімн\nВ елегія\nГ\nпісня\n4.\nЧи складно було сприймати вірш «Ісаія.\
+    \ Глава 35» під час пер-\nвинного читання? Якщо так, то в чому полягала складність?\n\
+    5.\nХто такий Ісаія? Які його пророцтва стали джерело"
+  section_title: Сторінка 248
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5649127960205078
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5586309432983398
+  chunk_id: 5e7696fa_c0035
+  text: "Досить ознайомитися з розділами глав: поезія і слово,\r\nпоетичний образ\
+    \ у слові, багатство синонімів у примітивних мовах, поезія і\r\nритм, забава й\
+    \ праця, просторовий і часовий ритм у творчості, початки пластики\r\nй тоніки,\
+    \ «настроєве» значення хору й танцю, магічне значення ритму, а далі — пісня\r\n\
+    індивідуальна й колективна, головні прикмети родоплемінного ладу, диференціація\r\
+    \nпоезії у зв’язку з її розвоєм і диференціацією суспільною, соціальна й\r\nкультурна\
+    \ обстановка української творчості, головні"
+  work: Грушевський — Історія української літератури
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush1.htm
+- score: 0.5574991703033447
+  chunk_id: 3588aaff_c0016
+  text: "І ще одне в цьому контексті: хоча питання системних\r\nзмін — одне з найосновніших\
+    \ у теоретичному осмисленні української літератури,\r\nпитання періодизації, якому\
+    \ аж надто часто присвячувалось багато уваги, нерідко\r\nлишається необгрунтованим,\
+    \ схематичним. Треба рішуче і ясно сконстатувати, що\r\nперіодизація — це, по\
+    \ суті, допоміжне, педагогічне, а не теоретичне\r\nосмислення. Функція періодизації\
+    \ є похідна саме від системних змін і завжди\r\nчимось умовна; надто наголошувати\
+    \ на ній — означає займатися б"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

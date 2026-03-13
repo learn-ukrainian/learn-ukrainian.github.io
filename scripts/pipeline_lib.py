@@ -2320,6 +2320,9 @@ def build_placeholders(ctx: ModuleContext) -> None:
     # required/recommended items without needing to read the plan file from disk.
     vocab_hints = ctx.plan.get("vocabulary_hints", {})
     if vocab_hints:
+        # Normalize: some plans use a bare list instead of {required: [], recommended: []}
+        if isinstance(vocab_hints, list):
+            vocab_hints = {"required": vocab_hints, "recommended": []}
         vh_lines = ["### Vocabulary from Plan (MANDATORY — include ALL required items)\n"]
         required = vocab_hints.get("required", [])
         recommended = vocab_hints.get("recommended", [])

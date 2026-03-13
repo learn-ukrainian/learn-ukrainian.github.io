@@ -1,0 +1,145 @@
+discovered_at: '2026-03-13T22:06:25.061858+00:00'
+query_keywords:
+- Український авангард
+- Поняття та контекст
+- Concept and Context
+- Київське коріння світового авангарду
+- Kyiv Roots of the World Avant-Garde
+- 'Напрямки та школи: Бурлюк, Архипенко, Бойчук'
+- 'Movements and Schools: Burlyuk, Archipenko, Boychuk'
+- Трагедія «Спецфонду» та Розстріляне відродження
+- The Tragedy of the 'Special Fund' and Executed Renaissance
+- Мистецтвознавчий аналіз
+- Art History Analysis
+- the Ukrainian Avant-Garde movement and its key figures
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=xBPNbwvq2oE
+  channel: Суспільне Культура
+  title: 'Малевич: унікальний український аванґард | Український культ'
+  relevance_score: 1.0
+  relevance_note: Directly discusses Kazymyr Malevich as a key figure of the Ukrainian
+    avant-garde, highlighting his Kyiv roots and connection to Ukrainian culture,
+    and touching upon the repression he faced.
+  transcript_excerpt: Сьогодні ми говоримо про Казимира Малевича всесвітньо відомого
+    українського художника автора чорного квадрата. Водночас його творчість має глибокі
+    зв'язки з українською культурою.
+  embed_suggestion: 'After section Київське коріння світового авангарду: This video
+    directly connects Malevich, a prominent avant-garde artist, to Kyiv and Ukrainian
+    culture, perfectly illustrating the ''Kyiv Roots'' section.'
+- url: https://www.youtube.com/watch?v=_KMdZ7A01UA
+  channel: Repainted Fox
+  title: '#59 Поезія Михайля Семенка'
+  relevance_score: 0.9
+  relevance_note: Focuses on Mykhailo Semenko and Ukrainian Futurism, a significant
+    part of the avant-garde movement, and explicitly links it to the Executed Renaissance.
+  transcript_excerpt: сьогодні ми будемо говорити про Михайла семенка і про його вірші.
+    Ти знаєш взагалі оцей українській футуризм кілька років тому в мистецькому арсеналі
+    була ціла виставка присвячена цьому.
+  embed_suggestion: 'After section Трагедія «Спецфонду» та Розстріляне відродження:
+    This video directly addresses a key literary figure of the Ukrainian avant-garde
+    and his connection to the Executed Renaissance.'
+- url: https://www.youtube.com/watch?v=Ot8xaNoTNdM
+  channel: Radio Khartia
+  title: 'Мирослав Шкандрій: Українці краще розуміють російську історію, ніж росіяни
+    | Кругова оборона'
+  relevance_score: 0.6
+  relevance_note: Features Myroslav Shkandrii, an academic who wrote a book on avant-garde
+    art in Ukraine, providing broader academic context and discussion around the period,
+    but not directly teaching the art itself.
+  transcript_excerpt: сьогодні з нами літературознавець славіст почесний професор
+    манітопського університету пан Мирослав Шкандрій, автор книги «авангардне мистецтво
+    в Україні 10-х-30-х».
+  embed_suggestion: 'After section Вступ: Поняття та контекст: This video offers an
+    academic perspective on avant-garde art in Ukraine and the surrounding literary
+    discussions, fitting well into an introductory context.'
+- url: https://www.youtube.com/watch?v=ZU7e0xWlexk
+  channel: Radio Khartia
+  title: Крим. Репресії. Історія, яка не закінчилась | Сергій Жадан
+  relevance_score: 0.1
+  relevance_note: Discusses political repression and history related to Crimea and
+    the Crimean Tatar people, which is not directly related to the artistic movement
+    of the Ukrainian avant-garde.
+  transcript_excerpt: Сьогодні в нас буде доволі складна історія, тому що вона буде
+    стосуватися речей болючих, які стосуються нашої пам'яті, власне нашого минулого.
+  embed_suggestion: Not applicable due to low relevance to the module's core topic.
+- url: https://www.youtube.com/watch?v=1MrB2qFqgCI
+  channel: Суспільне Культура
+  title: What was the Ukrainian theatrical avant-garde like in the 20th century? |
+    Podcast OUR ART
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0053
+  text: "Український напрямок об’єд­нував прихильників ідеї боротьби про-\nти імперського\
+    \ панування за права українського народу. На його розви-\nток впливали тогочасні\
+    \ європейські суспільно-політичні ідеї, діяльність \nпредставників польських та\
+    \ російських \nопозиційних організацій у Наддніпрян-\nщині, а також історична\
+    \ пам’ять народу. Поступово в  середовищі українських \nпатріотів формувалися\
+    \ основи націо-\nнальної ідеї українців. Упродовж кінця XVIII — першої \nполовини\
+    \ XIX  ст. українська ідея ево-\nлюціонув"
+  section_title: Сторінка 33
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0264
+  text: "Історія України \nВсесвітня історія\n•  Підручник допоможе сформувати уявлення\
+    \ \nпро події історії людства від найдавніших часів.\n•  Різноманітні завдання\
+    \ сприятимуть засвоєнню \nголовних історичних фактів.\n•  Цікаві додаткові відомості,\
+    \ уривки з історичних \nджерел та ілюстрації зроблять навчання \nзахопливим.\n\
+    •  Електронний інтерактивний додаток до підручника \nстане надійним помічником\
+    \ в опануванні нового \nпредмета.\nЕлектронний інтерактивний \nдодаток до підручника\
+    \ \nдоступний за QR-кодом \nабо посилан"
+  section_title: Сторінка 194
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0026
+  text: "Літературний і мистецький авангард  13\nÄебþтóþчи, óкра¿нськиé аванãарä\
+    \ ïраãнóв ïривëаснити роëь істинноãо \nмоäерніçмó, сïравäі сóчасноãо мистеöтва\
+    \ сьоãоäніøньоãо äня. Ãоëовним \nоб’ºктом éоãо çаïеречення бóëа ïоïереäня траäиöія\
+    \ нароäниöькоãо \nвірøа, а такоæ не менøоþ міроþ é вірøа «моäерніçмó» в äóсі Âоро-\n\
+    ноãо — Îëеся — ×óïринки — Ôіëянськоãо ç éоãо сóміøøþ ïатріотиçмó \né естетиçмó.\
+    \ Çавäання аванãарäó ïоëяãаëо в äестрóкöі¿ обоõ траäиöіé, \nó çниùенні «красиво¿»\
+    \ ïоеçі¿ вçаãаëі, ó витворенні ново¿"
+  section_title: Сторінка 13
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0005
+  text: "Початок ХХ ст. Київ. Фото. Початок ХХ ст. 1 Угруповання — група осіб, об’єднаних\
+    \ на основі спільних поглядів, діяльності, творчих \nінтересів тощо. Слово має\
+    \ інше значення: воно позначає не саму групу людей чи предметів, \nа дію, процес\
+    \ об’єднання їх у групу."
+  section_title: Сторінка 5
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

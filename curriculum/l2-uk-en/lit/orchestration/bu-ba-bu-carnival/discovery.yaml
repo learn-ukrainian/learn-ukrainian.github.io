@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T22:16:54.768280+00:00'
+query_keywords:
+- Bu Ba Bu Carnival
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Bu Ba Bu Carnival у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This discussion featuring Serhiy Zhadan directly addresses the restoration
+    of Ukrainian literary canon and culture, touching upon concepts like 'канон' (from
+    module vocabulary) and overcoming cultural amnesia. This strongly aligns with
+    the cultural context and decolonization aspects pertinent to the Bu Ba Bu Carnival
+    movement.
+  transcript_excerpt: Ми будемо говорити про тяглість української літератури, про
+    проблему пам'яті, власне, про те, що в є в назві книжки Віри Павліної про амнезію,
+    про її подолання.
+  embed_suggestion: After section Вступ та культурний контекст -- as it provides a
+    broader discussion on the Ukrainian literary canon and cultural memory, which
+    frames the context for movements like Bu Ba Bu.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: The video discusses Serhiy Zhadan's new poetry collection focusing
+    on the Ukrainian language, its resilience, and the cultural landscape post-invasion.
+    While relevant to broader themes of Ukrainian language and cultural decolonization,
+    it does not directly address Bu Ba Bu Carnival or its specific works.
+  transcript_excerpt: Сергій Жадан досліджує мову як стверджує сам автор цитую здатність
+    мови повертатися і самовідтворюватись про її вразливість про її здатність до опору
+    кінець цитати
+  embed_suggestion: After section Деколонізаційний вимір -- because it discusses contemporary
+    Ukrainian language and literary resistance, which aligns with the decolonization
+    theme.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0301
+  text: "4. Об’єднайтеся в малі групи, наведіть гіпотези, обґрунтуйте їх і презентуйте\
+    \ од-\nнокласникам та однокласницям . \x03\n\x83 Чому поет назвав свій твір казкою?\
+    \ \x03\n\x83 Чому головним героєм він зробив Дурила? \x03\n\x83 які образи доводять,\
+    \ що «Казка про Дурила» — це твір для дорослих? 5. Оберіть рівень складності й\
+    \ доведіть або спростуйте тезу . \x03\n\x11 У «Казці про Дурила» автор застосовує\
+    \ алегорію . \x03\n\x11 У «Казці про Дурила» автор застосовує гротеск . \x03\n\
+    ; У «Казці про Дурила» автор спирається на українські фольклорні"
+  section_title: Сторінка 157
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0474
+  text: "ХУДОЖНІ ТВОРИ\nЕпічні\n(прозові)\nЛіричні\n(віршовані)\nДраматичні\n(призначені\
+    \ для \nпостановки на сцені)\nміф\nлегенда\nпереказ\nказка\nбайка\nоповідання\n\
+    повість\nроман\nвірш\nпісня\nгімн\nдрама\nкомедія\nтрагедія\nтрагікомедія\nЛіро-епічні\n\
+    поема\nбалада\nбайка\nспівомовка\nвіршована гумореска\nісторична пісня\nдума\n\
+    КОМПОЗИЦІЯ (БУДОВА) ТВОРУ\nХУДОЖНІ ЗАСОБИ\nопис природи\nроздуми\nспогади\nмонологи\n\
+    опис тварини\nзаголовок\nС Ю Ж Е Т\n(послідовність подій)\nекспозиція – зав’язка\
+    \ – розвиток дії – кульмінація – розв’язка\nопис предме"
+  section_title: Сторінка 307
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0034
+  text: "35\nЗнайди слово — підпис до малюнка.\nВідшукай слово до схеми. \n \nбанан\
+    \ \nбук \nба-клан\n \nбаран \nбик \nбор-сук\n \nбарабан \nкраб \nбал-кон\n \n\
+    Текст і малюнок\nПокажи на малюнку Миколу, Марину, Руслану, Бориса.\nУ Миколи\
+    \ — барабан. У Руслани — кубики.  \nУ Марини — бубон. У Бориса — собака.\n \n\
+    Послідовність подій \nЩо відбувається? Як краще розв’язати цю ситуацію?  \n1\n\
+    2\n3\nБ б\nаб об уб иб \nАб Об Уб Иб\nба бо бу би \nБа Бо Бу Би\n1\n2\n3"
+  section_title: Сторінка 35
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0229
+  text: "3. як визначив автор жанр твору «Мина Мазайло»? яке ще жанрове визначення\
+    \ \nможна дати твору? 4. які проблеми розкриваються у творі? 5. Чи згодні ви з\
+    \ тим, що мовна проблема не головна в комедії «Мина Мазайло»? Аргументуйте свою\
+    \ думку . ділимося читацьким досвідом\n6. З яким твором української літератури\
+    \ можна порівняти комедію «Мина Ма-\nзайло»? Пригадайте також відомий твір зарубіжної\
+    \ літератури на подібну те-\nматику . Визначте спільні й відмінні риси трьох творів,\
+    \ складіть порівняльну \nхарактери"
+  section_title: Сторінка 120
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5577447414398193
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5412901043891907
+  chunk_id: 3588aaff_c0600
+  text: "Тут, як і в інших частинах книжки, позірно формальні\r\nта об’єктивні судження\
+    \ стають вкрай емоційними оціночними присудами, основні ж\r\nцінності (норми)\
+    \ залишаються зовсім не дослідженими. Немає розуміння того, що\r\n\"Енеїда\" Котляревського\
+    \ виражає характер, культурну перспективу, в\r\nяких грубий гумор (\"вульгарність\"\
+    ) відіграє центральну, структурну\r\nроль, і що ця перспектива є адекватним відображенням,\
+    \ історично\r\n\"необхідним\" вираженням національного — не народного чи класового\
+    \ —\r\nдосвіду. Не врахо"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5396922826766968
+  chunk_id: 3588aaff_c0016
+  text: "І ще одне в цьому контексті: хоча питання системних\r\nзмін — одне з найосновніших\
+    \ у теоретичному осмисленні української літератури,\r\nпитання періодизації, якому\
+    \ аж надто часто присвячувалось багато уваги, нерідко\r\nлишається необгрунтованим,\
+    \ схематичним. Треба рішуче і ясно сконстатувати, що\r\nперіодизація — це, по\
+    \ суті, допоміжне, педагогічне, а не теоретичне\r\nосмислення. Функція періодизації\
+    \ є похідна саме від системних змін і завжди\r\nчимось умовна; надто наголошувати\
+    \ на ній — означає займатися б"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

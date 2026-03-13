@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 140 — E2E
+PASS: pipeline lit 138
 
   Module:   stus-vertical-of-spirit
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T09:34:56Z
+  Date:     2026-03-13T23:36:57Z

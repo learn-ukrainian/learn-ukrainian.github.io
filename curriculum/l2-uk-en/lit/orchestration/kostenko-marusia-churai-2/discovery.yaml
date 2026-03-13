@@ -1,0 +1,197 @@
+discovered_at: '2026-03-13T21:06:41.073964+00:00'
+query_keywords:
+- Kostenko Marusia Churai 2
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Kostenko Marusia Churai 2 у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video discusses the Ukrainian literary canon, the continuity
+    of Ukrainian literature, and the problem of historical memory, explicitly using
+    the term 'канон' which is in the module's vocabulary. These themes are highly
+    relevant to understanding the cultural context and decolonization dimension of
+    a significant work like 'Marusia Churai'.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають... Ми будемо говорити про тяглість української літератури, про проблему
+    пам'яті...
+  embed_suggestion: After the 'Вступ та культурний контекст' section, to provide broader
+    context on the Ukrainian literary canon and its continuity.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.4
+  relevance_note: The video discusses contemporary Ukrainian literature and language,
+    specifically Serhiy Zhadan's work and the 'Skrypnykivka' orthography. While it
+    touches on general literary concepts like 'metaphor' and 'language', it does not
+    directly discuss Lina Kostenko's 'Marusia Churai' or its specific themes.
+  transcript_excerpt: Сергій Жадан досліджує мову як стверджує сам автор цитую здатність
+    мови повертатися і самовідтворюватись про її вразливість про її здатність до опору...
+  embed_suggestion: After the 'Мова, стиль та поетика' section, for a broader discussion
+    on the evolution of Ukrainian language and its resistance, as a contrasting modern
+    perspective.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0367
+  text: "222\nМИТЕЦЬ  І  СУСПІЛЬСТВО\n8.\t У чому полягає драма любові Марусі Чурай?\
+    \ Що означають її слова про «нерівню \nдуш» — власної та Грицевої?\n9.\t Визначте\
+    \ сюжетні лінії роману у віршах Л. Костенко «Маруся Чурай». \n10.\t Який розділ\
+    \ якнайкраще розкриває образ головної героїні? Прокоментуйте ком-\nпозицію твору.\n\
+    11.\t Напишіть формальне есе на тему «Чи винна Маруся Чурай у смерті Грицька \n\
+    Бобренка?».\n12.\t Якби Маруся Чурай з однойменного роману Л. Костенко сказала\
+    \ про себе, що \nвона щаслива людина, чи пог"
+  section_title: Сторінка 222
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0369
+  text: "194  Літературне «шістдесятництво» . Ліна Костенко . «Маруся Чурай»\n5.\
+    \ Роман складається з дев’яти різних за обсягом розділів . Прослідкуйте, хто \n\
+    є оповідачем кожного розділу, про які події в ньому розповідається, які пер-\n\
+    сонажі діють . Свої спостереження занотовуйте в таблиці . Зробіть висновок, \n\
+    з якою метою авторка змінює форму оповіді . Назва розділу\nМісце дії \nОповідач\n\
+    Події, про які йдеться\nПерсонажі\nВисновок:\nЗапрошуємо до дискусії\n6. Майже\
+    \ всі дослідники сходяться на думці, що в роман"
+  section_title: Сторінка 194
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-ukrlit-avramenko-2023_s0291
+  text: '222
+
+    Зміст
+
+    Розділ 2. ПОЕТИЧНИЙ  ДИВОСВІТ
+
+    Тема 2. ЧУТТЯ  ГАРМОНІЇ  У  СЛОВІ . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . 35
+
+    § 12–13. Козацька тематика у творах Тараса Шевченка . . . . . . . . . . . . .
+    . . . 35
+
+    Теорія літератури. Ліричний герой  . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . 36
+
+    Думка («Тече вода в синє море... ») . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . 37
+
+    Іван Підкова. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . .'
+  section_title: Сторінка 222
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0014
+  text: "Текст ІІ потужніше, ніж перший, активізує увагу слухачів, бо в ньому використано:\n\
+    •\t риторичні запитання (Ви хочете мати успіх у престижній фірмі? Готові слухати?);\
+    \ \n•\t пряме звернення на ви, яке «приміряє» на себе кожен учасник заходу (на\
+    \ противагу \nбезособовим конструкціям потрібно влаштуватися, варто пам’ятати,\
+    \ треба підготу-\nватися); \n•\t тропи (провалити співбесіду, виграти у двобої,\
+    \ людина в дорогому костюмі)."
+  section_title: Сторінка 10
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5620751976966858
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5421394109725952
+  chunk_id: 3588aaff_c0551
+  text: "4. У тому-таки вступному розділі, де подається\r\nкороткий огляд попередньої\
+    \ української науки про літературу, Чижевський також\r\nвважає за потрібне спробувати\
+    \ десь на шести сторінках викласти ази поетики. Для\r\nангломовних читачів це\
+    \ може видатися ексцентричним або вищою мірою недоречним.\r\nОдначе така спроба\
+    \ цілком відповідає тим настановам, про які йшлося вище.\r\nПочавши з двох параграфів,\
+    \ присвячених мові (де він згадує, приміром, архаїзми,\r\nнеологізми, жаргон тощо),\
+    \ продовживши короткими визначен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5372361540794373
+  chunk_id: fc2291b5_c3692
+  text: "КОНТЕКСТ (лат. contextus\r\n— з’єднання, зв’язок, зчеплення) — відносно завершена\
+    \ (змістом і формою)\r\nчастина тексту, в межах якої оптимально виявляються сенс,\
+    \ значення\r\nокремого слова, фрази, образного вислову. Відомо, напр., що поза\
+    \ К. (його\r\nстилістичними та смисловими зв’язками) цитата може втратити первісне\
+    \ значення,\r\nнабути іншого, не властивого їй змісту. В худож. л-рі К. визначає\
+    \ конкретний\r\nзміст, стиліст. забарвлення, міру виразності не лише окр. слів,\
+    \ фраз, а й\r\nхудож. засобів (тропів, "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

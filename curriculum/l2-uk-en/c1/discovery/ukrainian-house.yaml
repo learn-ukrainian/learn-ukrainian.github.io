@@ -1,0 +1,116 @@
+discovered_at: '2026-03-13T21:52:13.221986+00:00'
+query_keywords:
+- Українська хата - архітектура та побут
+- Хата як мікрокосм
+- The House as a Microcosm
+- Архітектура та конструктивні елементи
+- Architecture and Structural Elements
+- Інтер’єр та сакральна геометрія
+- Interior and Sacred Geometry
+- Ритуали та мовна динаміка побуту
+- Rituals and the Linguistic Dynamics of Daily Life
+- Практика та лексична точність
+- Practice and Lexical Accuracy
+- the structure and layout of a traditional Ukrainian house
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=9YtRFRuBqLM
+  channel: Суспільне Культура
+  title: 'Музей-садиба Коцюбинського у Чернігові #shorts'
+  relevance_score: 0.5
+  relevance_note: The video showcases the interior of a historical Ukrainian house
+    (Kotsiubynsky's estate), which is tangentially related to the module's theme of
+    Ukrainian house architecture and interior. However, its primary focus is on the
+    specific historical figure and museum rather than the general traditional 'хата'.
+  transcript_excerpt: у меморіальному будинку Михайла Коцюбинського інтер'єр збережено
+    таким яким він був за життя письменника тут зберігається і особиста бібліотека
+    письменника і речі родини коцюбинських
+  embed_suggestion: After section Інтер’єр та сакральна геометрія -- it shows an example
+    of a preserved historical interior, offering a glimpse into a Ukrainian house,
+    albeit a writer's estate rather than a typical 'хата'.
+- url: https://www.youtube.com/watch?v=cs6q8ZInzbk
+  channel: Суспільне Культура
+  title: «Музеї. Як це працює». Випуск 9. Музей видатних діячів української культури
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0250
+  text: "199\n \nУзагальнюємо знання й уміння за розділом 5\nликих рік, над невеликими\
+    \ річками чи острівцями, затоками, озер-\nцями. У XII–XIV ст. як у містах, так\
+    \ і в селах основним будівельним \nматеріалом було дерево. У XV ст. і наступних\
+    \ періодах в Україні бу-\nдувалися також житла і господарські споруди, плетені\
+    \ з лози й об-\nмазані глиною. \n...Переважна більшість жител — наземні, у плані\
+    \ — прямо-\nкутні чи квадратні, орієнтовані за сторонами світу. Площа в се-\n\
+    редньому 20–30 м2. Печі були глинобитні, але і"
+  section_title: Сторінка 202
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0523
+  text: ". . . . . . . . . . . . . . . . . 253\n§ 32. Українська література, театр,\
+    \ музика  \nв  другій половині XIX  — на початку XX  ст. . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 263\n§ 33. Українське образотворче\
+    \ мистецтво та архітектура  \nв  другій половині XIX  — на початку XX  ст. . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 269\n\t\n\
+    Практичне заняття. Традиції та побут української сім’ї  . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . 274\n\t\nНаш кр"
+  section_title: Сторінка 287
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0351
+  text: "У розділі \n«Віртуальна бібліотека» електронного додатка до підручника ви\
+    \ знайдете \nповний текст твору . читаємо взірці української художньої літератури"
+  section_title: Сторінка 185
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

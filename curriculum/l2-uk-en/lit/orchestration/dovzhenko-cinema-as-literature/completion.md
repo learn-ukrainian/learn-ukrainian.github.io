@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 131 — E2E
+PASS: pipeline lit 129
 
   Module:   dovzhenko-cinema-as-literature
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T09:17:57Z
+  Date:     2026-03-13T23:36:50Z

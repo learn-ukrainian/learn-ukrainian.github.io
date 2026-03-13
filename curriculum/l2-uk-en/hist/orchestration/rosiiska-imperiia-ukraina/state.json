@@ -2,5 +2,26 @@
   "track": "hist",
   "slug": "rosiiska-imperiia-ukraina",
   "mode": "v5",
-  "phases": {}
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T19:37:56Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T19:37:56Z",
+      "task_id": "v5-rosiiska-imperiia-ukraina-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
 }

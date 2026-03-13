@@ -1,179 +1,234 @@
 <!-- SCOPE
-Covers: Professions and Instrumental Case with verbs of being/becoming
+Covers: Using the Instrumental case with verbs бути, стати, ставати, and працювати to express professions and roles. Introduction of modern femininitives for professions.
 Not covered:
   - Spatial Prepositions → a2-07
+  - All Cases Practice → a2-11
 -->
 
 # Being and Becoming
 
 > **Чому це важливо?**
 >
-> Talking about our jobs, past experiences, and future dreams is a fundamental part of daily conversation. In Ukrainian, expressing your profession requires a specific grammatical shift when you talk about roles and processes rather than basic identity.
+> Talking about what you do, what you did, and what you want to become is a fundamental part of everyday conversation. By learning how to use the Instrumental case with specific verbs, you can clearly separate your present identity from your dynamic roles and future aspirations.
 
 ## Вступ
 
-<!-- Source: Grade 4, p.25 -->
-- **Я — лі́кар.** — I am a doctor.
-- **Я працю́ю лі́карем.** — I work as a doctor.
-- **Він — студе́нт.** — He is a student.
-- **Він бу́де студе́нтом.** — He will be a student.
-- **Він — ме́неджер.** — He is a manager.
-- **Він став ме́неджером.** — He became a manager.
-- **Ти — вчи́тель.** — You are a teacher.
-- **Ти бу́деш вчи́телем.** — You will be a teacher.
-- **Він — програмі́ст.** — He is a programmer.
-- **Він працю́є програмі́стом.** — He works as a programmer.
-- **Вона́ — юри́стка.** — She is a lawyer.
-- **Вона́ працю́є юри́сткою.** — She works as a lawyer.
+<!-- adapted from: Заболотний Grade 5, вправа 221 -->
 
-When we state our current, fundamental identity in the present tense, we use the Nominative case. There is no active verb linking the subject and the profession. However, when we describe our role, function, or a temporary state, we must use the Instrumental case. This happens when we introduce a verb of action, state, or change. 
+> **(На співбесіді / At a job interview)**
+> — Добрий день! Хто ви за професією?
+> — Добрий день! Я економіст.
+> — А ким ви хочете стати в нашій компанії?
+> — Я хочу стати хорошим спеціалістом.
+> — Ви працювали менеджером?
+> — Так, я працював менеджером.
 
-The most common mistake English speakers make is translating their native sentence structure directly. In English, you say that someone wants to be a doctor using the base form of the noun. If you translate this directly into Ukrainian, you might say ~~Він хо́че бу́ти лі́кар~~. This is a grammatical error. The presence of the verb completely changes the required case. The correct sentence must use the Instrumental case because the profession is now a role being occupied, not just a static identity. We say **Він хо́че бу́ти лі́карем**. 
+Welcome to a fascinating aspect of Ukrainian grammar! Have you ever wondered how to talk about your career, your past roles, or your future dreams? In Ukrainian, we draw a clear and logical line between your core identity in the present moment and the roles or professions you take on over time. This distinction is at the heart of how we discuss professions and status.
 
-We must shift our perspective from static identity to dynamic function. When you say **Я лі́кар**, you are establishing a fundamental fact about who you are at this very moment. There is a direct equals sign between you and the profession. However, the moment you introduce a timeline—talking about what you were in the past or what you will be in the future—you introduce a verb of being. This verb acts as a bridge, and the profession becomes a temporary role that you occupy. This is why the structure must change. The Instrumental case is specifically designed to handle these temporary states and functions. It tells the listener that the noun is not just an identity, but a capacity in which someone is acting or existing for a certain period.
+When we talk about who we are right now, we use a very simple structure. We use the Nominative case, which is the basic dictionary form of the word, and we drop the verb "to be" completely in the present tense. This states a permanent or current fact about our identity. 
 
-Understanding this shift is the key to speaking natural, confident Ukrainian. The State Standard emphasizes this exact structure for describing a person by their profession or status without using a preposition. Mastering this structure allows you to build accurate functional descriptions and avoid the common traps that give away non-native speakers.
+Look at these present tense examples of identity (Наприклад / For example):
+
+- **Я економіст.** — I am an economist.
+- **Він спеціаліст.** — He is a specialist.
+- **Вона лікарка.** — She is a doctor.
+- **Ми студенти.** — We are students.
+
+However, the magic happens when we shift our perspective. When we talk about a role we played in the past, a profession we will have in the future, or the process of changing into a new profession, we can no longer use the simple dictionary form. Instead, the word must change to reflect that it is a function, a status, or a role. This is where the Instrumental case steps in. 
+
+The Instrumental case, by its very nature, suggests something that is used or applied to achieve a goal. In the context of professions, your job is the "instrument" through which you interact with society and earn a living. This philosophical approach makes the grammatical rule much more intuitive. When you say you work as a doctor, you function in the capacity of a doctor, using that role as your professional instrument. Understanding this State Standard rule for describing a person by profession or status without a preposition is a major milestone in your language journey.
 
 > [!warning] The Nominative Trap
-> Do not use the Nominative case after verbs of being and becoming. If there is a verb describing the role, you must change the ending of the noun. Always look for the verb before the profession.
+> English speakers often fall into a common trap. Because we say "He wants to be a doctor" in English using the standard noun, learners naturally try to say ~~Він хоче бути лікар~~ in Ukrainian. This is incorrect! The verb "to be" in the infinitive (бути) demands that the following profession takes the Instrumental case. You must say **Він хоче бути лікарем**. Remembering this will instantly make your Ukrainian sound much more natural and advanced.
+
+By mastering this difference between present identity and a dynamic role, you unlock the ability to discuss your life path, your career history, and your future aspirations accurately. Let us explore the specific verbs that trigger this transformation and see how they govern the words that follow them.
 
 ## Презентація: Дієслова та відмінювання
 
-<!-- Source: State Standard §4.2.2.5.1 -->
-- **Оле́г бу́де програмі́стом.** — Oleh will be a programmer.
-- **Мико́ла хо́че ста́ти вчи́телем.** — Mykola wants to become a teacher.
-- **Він працюва́в ме́неджером.** — He worked as a manager.
-- **Вона́ мрі́є ста́ти громадя́нкою Украї́ни.** — She dreams of becoming a citizen of Ukraine.
-- **Вони́ хо́чуть ста́ти журналі́стами.** — They want to become journalists.
+<!-- adapted from: Вашуленко Grade 3, сторінка 152 -->
 
-The verbs **бу́ти** (to be), **ста́ти** (to become), and **працюва́ти** (to work) govern the Instrumental case when describing professions or roles.
+- **Я лікар.** — I am a doctor. (Present, Nominative)
+- **Я був лікарем.** — I was a doctor. (Past, Instrumental)
+- **Я буду лікарем.** — I will be a doctor. (Future, Instrumental)
+- **Я хочу стати лікарем.** — I want to become a doctor. (Change of state, Instrumental)
+- **Я працюю лікарем.** — I work as a doctor. (Current role, Instrumental)
 
-For the verb **бу́ти**, we use the Instrumental case in the past and future tenses. When you say someone was a student or will be a doctor, they are occupying that role for a specific period. When using **бу́ти** in the present tense, we drop the verb entirely and use the Nominative case. But the moment we move to the past or future, the verb reappears, and the noun must change. This is why we have the pairing **був студе́нтом** but simply **він студе́нт**.
+To describe your profession, status, or role accurately, you need to know which verbs act as "triggers" for the Instrumental case. When you use these specific verbs, the profession noun that follows them must change its ending. Let us look at the most important verbs you will use to talk about your career.
 
-The verb **ста́ти** is perfective, meaning it focuses on the completed result of becoming something. If you want to emphasize the ongoing process of changing or improving, you use the imperfective verb **става́ти**. For example, **става́ти кра́щим** means to be becoming better over time.
+The first crucial verb is **бути** (to be). While we omit it in the present tense, we must use it for the past and the future. Whenever you use a past or future form of **бути**, the profession that follows takes the Instrumental case. 
 
-For the verb **працюва́ти**, the action of performing a job is expressed with the Instrumental case. Another major trap for English speakers is translating the word "as". In English, we say someone works "as" a manager. It is incorrect to use the word **як** in this context in Ukrainian. The structure ~~працю́є як ме́неджер~~ is a direct, unnatural translation. The Instrumental case itself carries the meaning of "as a". You simply say **працю́є ме́неджером**.
+- **Він був студентом.** — He was a student.
+- **Ми були студентами.** — We were students.
+- **Я буду інженером.** — I will be an engineer.
+- **Вони будуть лікарями.** — They will be doctors.
 
-| Nominative | Instrumental | English |
-|---|---|---|
-| **лі́кар** | **лі́карем** | doctor |
-| **студе́нт** | **студе́нтом** | student |
-| **програмі́ст** | **програмі́стом** | programmer |
-| **інжене́р** | **інжене́ром** | engineer |
-| **журналі́ст** | **журналі́стом** | journalist |
-| **юри́ст** | **юри́стом** | lawyer |
-| **дире́ктор** | **дире́ктором** | director |
-| **економі́ст** | **економі́стом** | economist |
+The next important verbs are **стати** (to become, perfective aspect) and **ставати** (to be becoming, imperfective aspect). These verbs describe a change of state, the transition from one role to another. Just like **бути**, they demand the Instrumental case for the new role. The perfective **стати** is used very frequently when talking about goals and completed changes.
 
-The mechanism for changing these nouns is consistent. For masculine professions ending in a hard consonant, like **студе́нт** or **журналі́ст**, you simply add **-ом** to the end, resulting in **студе́нтом** and **журналі́стом**. For words ending in a soft consonant, like **вчи́тель**, you add **-ем**, making it **вчи́телем**. Feminine professions ending in **-а**, such as **лі́карка** and **юри́стка**, change their ending to **-ою**, becoming **лі́каркою** and **юри́сткою**. It is crucial to memorize these patterns because they apply to almost every profession you will learn.
+- **Я хочу стати хорошим спеціалістом.** — I want to become a good specialist.
+- **Він став журналістом.** — He became a journalist.
+- **Вона мріє стати програмісткою.** — She dreams of becoming a programmer.
 
-- **Я бу́ду лі́карем.** — I will be a doctor.
-- **Він був студе́нтом.** — He was a student.
-- **Ми хо́чемо ста́ти журналі́стами.** — We want to become journalists.
-- **Вона́ працюва́ла інжене́ркою.** — She worked as an engineer.
-- **Ти працю́єш програмі́стом?** — Do you work as a programmer?
+The imperfective verb **ставати** is used to emphasize the ongoing process of development. If you are currently studying and gradually gaining skills, you are in the process of becoming.
 
-> [!tip] Formal vs Everyday
-> The word **програмі́ст** is used universally. However, in highly formal or official documents, you might encounter the term **програмува́льник**. Both are correct and widely understood, but **програмі́ст** is preferred in daily conversation.
+- **Він щодня стає кращим студентом.** — Every day he is becoming a better student.
+- **Ми стаємо кращими спеціалістами.** — We are becoming better specialists.
+
+Finally, we have the highly frequent verb **працювати** (to work). When you want to say what your job is, you use **працювати** followed directly by the profession in the Instrumental case. 
+
+> [!myth-buster] The "Як" Calque
+> A very frequent mistake English speakers make is translating "I work as a manager" word-for-word into Ukrainian. Learners often say ~~Я працюю як менеджер~~. This is a direct translation calque from English and sounds very unnatural in Ukrainian. The verb **працювати** already contains the idea of "working in the capacity of." Therefore, you must drop the word "як" and simply use the Instrumental case: **Я працюю менеджером**.
+
+Let us review our core profession vocabulary in both Nominative and Instrumental forms to help you practice these transformations. 
+
+| Nominative (Present Identity) | Instrumental (Role / Function) | English Translation |
+| :--- | :--- | :--- |
+| лікар | лікарем | doctor |
+| вчитель | вчителем | teacher |
+| програміст | програмістом | programmer |
+| інженер | інженером | engineer |
+| журналіст | журналістом | journalist |
+| юрист | юристом | lawyer |
+
+Notice how the masculine nouns typically add **-ом** or **-ем** in the Instrumental case. This small grammatical shift is the key to expressing roles fluently. By consistently pairing these endings with verbs like **бути**, **стати**, and **працювати**, you will build a solid foundation for professional conversations.
 
 ## Соціокультурний контекст: Фемінітиви та IT
 
-<!-- Source: Grade 6, p.101 -->
-> **(На співбесі́ді / At a job interview)**
-> — Ким ви працюва́ли рані́ше?
-> — Я працюва́ла ме́неджеркою.
-> — А ким ви хо́чете ста́ти тепе́р?
-> — Я хочу ста́ти айті́вкою. Я вчи́лася на програмі́стку.
-> — Чудо́во. Ми шука́ємо хоро́шу спеціалі́стку.
+<!-- adapted from: Кравцова Grade 3, сторінка 64 -->
 
-The Ukrainian language has always possessed the ability to create feminine forms of professions, known as femininitives. In 2020, the official grammar reform formally codified and encouraged their use in all spheres of life, including official documents. This reflects modern societal shifts towards gender equality.
+- **Ця жінка — наша нова директорка.** — This woman is our new director.
+- **Вона працювала менеджеркою.** — She worked as a manager.
+- **Потім вона працювала директоркою.** — Then she became a director.
 
-If a woman is a director, she is not a **дире́ктор**, but a **дире́кторка**. If she is a lawyer, she is a **юри́стка**. Using these forms is a marker of educated, contemporary Ukrainian. You should consistently use masculine forms for men and feminine forms for women. The use of femininitives is not just a grammatical rule; it is a cultural statement. Historically, many professions were grammatically masculine by default, regardless of who held the position. The push to popularize words like **ме́неджерка** and **інжене́рка** ensures that the language accurately reflects the diverse reality of the modern workforce. 
+Language is a living reflection of society, and Ukrainian has seen exciting developments in recent years that directly affect how we talk about professions. One of the most significant changes is the official codification of femininitives in the 2020 Grammar Reform. 
 
-When you use these terms correctly, native speakers will appreciate your attention to contemporary usage. It shows that you are not just learning textbook rules from decades ago, but are actively engaging with the living, evolving language of today. The shift towards using words like **лі́карка**, **інжене́рка**, and **ме́неджерка** makes communication more precise. When you read a text, you immediately know the gender of the professional being discussed. This natural feature of the language prevents ambiguity and ensures that women are visible in all professional fields. When practicing, always drill both forms together so that reaching for the feminine form becomes an automatic reflex rather than a conscious effort.
+Historically, using masculine terms for women was a legacy of an era when many professional fields were male-dominated. Today, the vibrant and evolving nature of the Ukrainian language actively corrects this historical imbalance. Femininitives are not just a grammatical option; they are a sign of respect and contemporary fluency. Now, almost every profession has a recognized feminine counterpart. When speaking about a woman, it is standard and highly encouraged to use the feminine form of the profession. For example, if you are reading the news or watching Ukrainian media, you will consistently hear forms like **журналістка**, **менеджерка**, and **директорка**.
 
-Ukraine has one of the largest and most dynamic developer communities in Europe. The IT industry carries immense prestige. Because of this, the colloquial word **айтіве́ць** (and its feminine counterpart **айті́вка**) is extremely common in modern speech. Young Ukrainians often joke that everyone wants to become an IT professional because it represents stability and modernity.
+Let us look at some pairs in the Nominative case (Наприклад):
 
-- **Він працю́є дире́ктором.** — He works as a director.
-- **Він став дире́ктором.** — He became a director.
-- **Мій брат — айтіве́ць.** — My brother is an IT professional.
-- **Моя́ сестра́ працю́є айті́вкою.** — My sister works as an IT professional.
-- **Він — хоро́ший спеціалі́ст.** — He is a good specialist.
-- **Вона́ — хоро́ша спеціалі́стка.** — She is a good specialist.
-- **Він бу́де вчи́телем.** — He will be a teacher.
-- **Вона́ бу́де вчи́телькою.** — She will be a teacher.
+- **лікар** (male doctor) → **лікарка** (female doctor)
+- **вчитель** (male teacher) → **вчителька** (female teacher)
+- **менеджер** (male manager) → **менеджерка** (female manager)
+- **директор** (male director) → **директорка** (female director)
 
-> [!culture] The IT Boom
-> The word **айтіве́ць** comes directly from the English abbreviation "IT". It is used casually to describe anyone working in the tech sector, from developers and testers to designers. It is universally understood across all generations.
+When these feminine nouns take the Instrumental case, their **-а** ending changes to **-ою**. 
+
+- **Вона працює лікаркою.** — She works as a doctor.
+- **Вона буде чудовою вчителькою.** — She will be a wonderful teacher.
+- **Вона хоче стати менеджеркою.** — She wants to become a manager.
+
+> [!cultural] Ukraine as a European IT Hub
+> Did you know that Ukraine has one of the largest and most dynamic IT sectors in Europe? The technology industry is extremely prestigious, and working in IT is a common aspiration. Young people often joke that every second person wants to join this field! 
+
+Because the IT sector is so prominent, you will hear several words for a tech professional. The formal, highly prestigious term is **програміст** (or the female **програмістка**). There is also an even more formal variant, **програмувальник**, though it is used less frequently in casual speech. 
+
+However, in everyday conversation, Ukrainians affectionately use the colloquial term **айтівець** (for a man) and **айтівка** (for a woman). These terms are incredibly high-frequency in modern speech and instantly make you sound like an insider.
+
+- **Мій брат працює програмістом.** — My brother works as a programmer.
+- **Він став успішним айтівцем.** — He became a successful IT professional.
+- **Моя сестра працює айтівкою.** — My sister works as an IT professional.
+
+By using both masculine and feminine forms correctly and understanding the cultural weight of words like **айтівець**, your Ukrainian will sound remarkably current, respectful, and culturally attuned to modern life in Ukraine.
 
 ## Практика та запобігання помилкам
 
-<!-- Source: Grade 8, p.61 -->
-| Помилка | Правильно |
-|---|---|
-| ~~Вона́ працю́є як юри́стка.~~ | **Вона́ працю́є юри́сткою.** |
-| ~~Він хо́че ста́ти економі́ст.~~ | **Він хо́че ста́ти економі́стом.** |
-| ~~Вона́ хоро́ший лі́кар.~~ | **Вона́ хоро́ша лі́карка.** |
-| ~~Він був програмі́ст.~~ | **Він був програмі́стом.** |
+<!-- adapted from: Вашуленко Grade 3, сторінка 110 -->
 
-We must actively work to eliminate translation habits from our native language. The most persistent error is using the word "as" when stating a profession. You must remember that the Instrumental case ending completely replaces the need for any preposition. Saying ~~працю́є як~~ sounds very unnatural and immediately marks the speaker as a beginner who is translating word-for-word in their head.
+- **Він економіст** → **Він був економістом.**
+- **Вона юристка** → **Вона працює юристкою.**
+- **Він інженер** → **Він хоче стати інженером.**
+- **Вона журналістка** → **Вона буде журналісткою.**
 
-Another frequent issue is gender mismatch. Because English does not alter adjectives or nouns based on the gender of the professional, learners sometimes use the default masculine form for everyone. If you are describing a female doctor, both the adjective and the noun must be feminine. You cannot mix them. The phrase ~~хоро́ший лі́карка~~ is grammatically incompatible. Both words must align: **хоро́ша лі́карка**.
+To truly master discussing professions, we must actively prevent common errors. The best way to build accuracy is through transformation patterns. When you move a statement from a simple present identity to a role governed by a verb, you must remember two crucial steps: changing the case to Instrumental and ensuring the gender matches the subject.
 
-Understanding the difference between **ста́ти** and **става́ти** adds another layer of precision to your speech. When a student graduates and gets their first job, they have achieved the result: they have become a specialist. This is the perfective **ста́ти спеціалі́стом**. But the process of learning, growing, and gaining experience is continuous. For this, we use the imperfective **става́ти кра́щим** (to be becoming better). The Instrumental case is used with both aspects, so the noun endings remain exactly the same. The only thing that changes is the verb, which shifts the focus from the journey to the destination.
+Let us practice the transition from Nominative to Instrumental. Observe how the endings shift depending on whether the noun is masculine or feminine. When you are practicing, try saying the sentences aloud. Feel the difference between the sharp Nominative ending and the softer, extended Instrumental ending.
 
-When you practice these sentences, do not just read them silently. Read them aloud and pay close attention to the endings. The Instrumental case for masculine nouns usually ends in **-ом** or **-ем**, while feminine nouns end in **-ою** or **-ею**. Notice how smoothly the words connect when the case is applied correctly. Mastering this single grammar point will drastically improve how natural your Ukrainian sounds, especially in professional environments where discussing careers is the most common icebreaker.
+**Pattern Box: Present to Past Role**
+`Він студент.` (Nominative) → `Він був студентом.` (Instrumental, masculine **-ом**)
+`Вона студентка.` (Nominative) → `Вона буде студенткою.` (Instrumental, feminine **-ою**)
+`Він вчитель.` (Nominative) → `Він був вчителем.` (Instrumental, masculine **-ем**)
+`Вона вчителька.` (Nominative) → `Вона працювала вчителькою.` (Instrumental, feminine **-ою**)
 
-- **Він — журналі́ст. → Він працю́є журналі́стом.** — He is a journalist. → He works as a journalist.
-- **Вона́ — економі́стка. → Вона́ працю́є економі́сткою.** — She is an economist. → She works as an economist.
-- **Ти — інжене́р. → Ти був інжене́ром.** — You are an engineer. → You were an engineer.
-- **Я — спеціалі́стка. → Я ста́ну спеціалі́сткою.** — I am a specialist. → I will become a specialist.
-- **Ти — юри́ст. → Ти був юри́стом.** — You are a lawyer. → You were a lawyer.
-- **Він — вчи́тель. → Він був вчи́телем.** — He is a teacher. → He was a teacher.
+Here are more transformation examples to reinforce your learning (Порівняйте):
+- **Він айтівець.** → **Він працював айтівцем.**
+- **Вона айтівка.** → **Вона працювала айтівкою.**
+- **Він економіст.** → **Він буде економістом.**
+- **Вона економістка.** → **Вона буде економісткою.**
 
-> [!tip] Perfective vs Imperfective
-> The verb **ста́ти** (to become) is perfective. We use it for the final result: **ста́ти спеціалі́стом** (to become a specialist). The imperfective verb **става́ти** emphasizes the ongoing process: **става́ти кра́щим** (to be becoming better).
+Another critical area for error prevention is gender agreement. Because English uses a single word for most professions (like "lawyer" or "engineer"), learners often default to the masculine form in Ukrainian, even when talking about a woman. You must actively train your brain to select the feminine form when the subject is female.
+
+Look at these corrections to avoid the Gender Mismatch error (Порівняйте):
+- ~~Вона хороший юрист.~~ → **Вона хороша юристка.**
+- ~~Вона працює інженер.~~ → **Вона працює інженеркою.**
+- ~~Марія хоче стати журналіст.~~ → **Марія хоче стати журналісткою.**
+
+> [!tip] Check Your Endings
+> Always ask yourself two questions before stating a profession: First, am I describing a temporary role, a past job, or a future goal using verbs like **бути**, **стати**, or **працювати**? If yes, use the Instrumental case. Second, is the person I am talking about male or female? Make sure to choose the matching gendered noun.
+
+Let us revisit the translation calque with the verb **працювати**. It is vital to eliminate the word "як" from your sentences. The preposition is simply not needed, as the case ending does all the heavy lifting.
+
+- ~~Мій друг працює як лікар.~~ → **Мій друг працює лікарем.**
+- ~~Вона працює як директорка.~~ → **Вона працює директоркою.**
+- ~~Я хочу працювати як менеджер.~~ → **Я хочу працювати менеджером.**
+
+By consciously practicing these transformations, matching the gender, and avoiding English calques, you will communicate your professional background and future plans with clarity and grammatical precision. Your sentences will flow naturally, demonstrating a deep understanding of how Ukrainian structures thoughts about identity and occupation.
 
 ## Діалоги та кар'єрні плани
 
-<!-- Source: State Standard §4.2.2.5.1 -->
-> **(В офі́сі / At the office)**
-> — Приві́т! Ти тут працю́єш програмі́стом?
-> — Ні, я тепе́р працю́ю ме́неджером.
-> — О, віта́ю! Ти хоті́в ста́ти ме́неджером.
-> — Так, дя́кую. А ти ким працю́єш?
-> — Я працю́ю інжене́ркою. Але́ я мрі́ю ста́ти дире́кторкою.
-> — Бажа́ю у́спіху! Ти бу́деш хоро́шою дире́кторкою.
+<!-- adapted from: Grade 8, сторінка 61 -->
 
-Discussing career plans involves combining past experiences, current roles, and future aspirations. This requires a comfortable command of the verb tenses combined with the Instrumental case.
+> **(У кафе / In a cafe)**
+> — Привіт, Олено! Давно не бачилися. Ким ти зараз працюєш?
+> — Привіт! Я працюю журналісткою. А ти?
+> — А я зараз менеджер. Але я хочу стати айтівцем.
+> — Це цікаво! Ти вже вивчаєш програмування?
+> — Так, я хочу працювати програмістом у великій компанії.
+> — Бажаю успіху! Ти будеш хорошим програмістом.
 
-When people ask "What do you do?", they often use the phrase "Ким ти працю́єш?" which literally translates to "By whom do you work?". The question word **ким** is already in the Instrumental case, which signals exactly how you should format your answer.
+Now that we have explored the grammatical mechanics, let us bring these concepts to life in real-world scenarios (життєві ситуації). Conversations about what you do for a living, where you have worked, and what you hope to achieve are universally common. They are excellent icebreakers and allow you to share your personal narrative.
 
-In the State Standard, an important example of expressing aspirations is the phrase **мрі́є ста́ти громадя́нкою Украї́ни** (dreams of becoming a citizen of Ukraine). This structure is powerful because it applies not just to jobs, but to any status or identity you wish to achieve. Using the verb **мрі́яти** (to dream) followed by **ста́ти** is a very natural way to express long-term goals. Whether you are talking about becoming a citizen, a director, or an IT professional, the grammatical formula remains exactly the same. You have the main verb, the infinitive of the change of state, and the noun showing the role.
+When you meet someone new, or catch up with an old friend, asking about their career is a natural step. Imagine you are at a networking event in Kyiv. Being able to confidently articulate your professional background and listen to others will open many doors. You can ask "Ким ви працюєте?" (Who do you work as?) or "Ким ти хочеш стати?" (Who do you want to become?).
 
-By practicing these complete phrases, you build fluency. You stop thinking about cases and start thinking about meaning. When you meet someone new, you will confidently navigate questions about your past jobs and your future dreams. Now it is your turn to put all of these pieces together. Think about your own life. What were you studying in the past? What do you work as right now? What do you dream of becoming in the future? 
+- **Я працюю юристом, а мій чоловік працює інженером.** — I work as a lawyer, and my husband works as an engineer.
+- **Ти будеш чудовим лікарем!** — You became a wonderful doctor!
 
-By answering these three questions, you will naturally use the verbs **бу́ти**, **працюва́ти**, and **ста́ти**. You will shift smoothly from the past tense, to the present, and into the future, applying the correct Instrumental case endings every step of the way. This is the ultimate test of your understanding. Once you can accurately describe your own career path, you are ready to have deep, meaningful conversations with colleagues and friends in Ukrainian.
+Let us look at another conversation, this time focusing on past experiences and significant life changes.
 
-- **Ким ти працю́єш?** — What do you work as?
-- **Рані́ше він був студе́нтом, а тепе́р він працю́є юри́стом.** — Before he was a student, and now he works as a lawyer.
-- **Моя́ ма́ма працюва́ла вчи́телькою.** — My mom worked as a teacher.
-- **Він ста́не лі́карем.** — He will become a doctor.
-- **Я мрі́ю ста́ти громадя́нкою Украї́ни.** — I dream of becoming a citizen of Ukraine.
-- **Він мрі́є ста́ти громадя́нином Украї́ни.** — He dreams of becoming a citizen of Ukraine.
-- **Ти ста́неш хоро́шим спеціалі́стом.** — You will become a good specialist.
+> **(На курсах мови / At a language course)**
+> — Розкажіть про себе. Ким ви працювали раніше?
+> — Раніше я працював інженером.
+> — Чому ви змінили професію?
+> — Це довга історія. Потім я став вчителем. 
+> — А ким працює ваша дружина?
+> — Вона працює юристкою. Вона була студенткою, а зараз дуже хороша спеціалістка.
 
-> [!note] Asking the Question
-> To ask someone about their profession, use **Ким ти працю́єш?** (informal) or **Ким ви працю́єте?** (formal/plural). The question word **ким** forces the answer to be in the Instrumental case.
+In addition to professions, we use this same grammatical structure to discuss broader life goals and civic status. A perfect example from the Ukrainian State Standard describes an aspiration related to citizenship. This sentence beautifully demonstrates the verb **стати** with the Instrumental case.
+
+- **Вона мріє стати громадянкою України.** — She dreams of becoming a citizen of Ukraine.
+- **Він хоче стати громадянином України.** — He wants to become a citizen of Ukraine.
+
+> [!note] The Power of "Мріяти"
+> The verb **мріяти** (to dream) is often paired with **стати** to express deep, long-term aspirations. While you might use **хотіти** (to want) for near-term plans, **мріяти стати** carries an emotional weight, showing a profound personal goal or a cherished dream for the future.
+
+You now possess the tools to construct a complete career history. You can describe what you were in the past, what you are now, what your immediate work involves, and what you dream of becoming. 
+
+- **Я був студентом.** 
+- **Зараз я економіст.** 
+- **Я працюю менеджером.** 
+- **Але я мрію стати директором.** 
+
+This ability to narrate your professional journey adds immense depth to your conversational skills. Practice building your own narrative using these verbs and the Instrumental case, ensuring that you accurately reflect your own path of being and becoming.
 
 ---
 
 # Підсумок
 
-In this module, you learned how to express professions, roles, and future aspirations using the Instrumental case. You discovered that verbs of state and change—like **бу́ти** (to be), **ста́ти** (to become), and **працюва́ти** (to work)—require the following noun to adopt an Instrumental ending. Furthermore, you explored the modern usage of femininitives, allowing you to correctly match the gender of the professional to the noun and adjective. By avoiding the Nominative Trap and the direct translation of the English word "as", you have taken a major step toward natural, native-sounding Ukrainian.
+You have successfully learned how to navigate the linguistic shift between who you are and what you do. We established that present tense identity uses the Nominative case (**Я лікар**). However, when discussing roles governed by verbs like **бути** (in the past or future), **стати**, or **працювати**, you must transform the noun into the Instrumental case (**Я працюю лікарем**). We also emphasized the importance of matching gender forms, especially utilizing modern femininitives like **менеджерка** or **директорка**, and eliminating the English "як" translation calque. By applying these rules, you can accurately discuss your past roles, current jobs, and future aspirations.
 
-- **Як сказа́ти "I work as a manager" українською?** — How do you say "I work as a manager" in Ukrainian? (Я працю́ю ме́неджером.)
-- **Який відмінок ми використовуємо після дієслова "стати"?** — Which case do we use after the verb "to become"? (Орудний відмінок / Instrumental case.)
-- **Чому фраза "Вона працює як лікарка" є неправильною?** — Why is the phrase "She works as a doctor" (using 'як') incorrect? (Because the Instrumental case already implies the role; 'як' is an unnatural English translation.)
+**Check your knowledge:**
+
+1. How do you translate "I work as a programmer (female)" into Ukrainian? (Translate: Я працюю програмісткою.)
+2. What case follows the verb **стати** when talking about a new profession? (Translate: Який відмінок іде після дієслова "стати", коли ми говоримо про нову професію?)
+3. Translate the phrase "He was a student" into Ukrainian. (Translate: Перекладіть українською мовою фразу "He was a student".)
+4. Why is the sentence ~~Я працюю як вчитель~~ incorrect? (Translate: Чому речення "Я працюю як вчитель" є неправильним?)
 
 ---

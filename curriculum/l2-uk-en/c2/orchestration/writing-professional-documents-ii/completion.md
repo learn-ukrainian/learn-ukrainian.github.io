@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 53 — E2E
+PASS: pipeline c2 51
 
   Module:   writing-professional-documents-ii
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T08:00:44Z
+  Date:     2026-03-13T19:49:01Z

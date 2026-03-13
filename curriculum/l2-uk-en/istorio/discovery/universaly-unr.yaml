@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T09:58:12.517913+00:00'
+discovered_at: '2026-03-13T20:28:41.546608+00:00'
 query_keywords:
 - Універсали УНР
 - Історичний контекст
@@ -19,78 +19,75 @@ videos:
   channel: ІМТГШ
   title: Навіщо Були Потрібні Універсали? | Історія України від імені Т.Г. Шевченка
   relevance_score: 1.0
-  relevance_note: The video's title and content directly address the purpose and context
-    of the Universals of the UPR, making it extremely relevant to the module's core
-    topic.
-  transcript_excerpt: у 1917 українці обрали в Києві Центральну Раду вона видала чотири
-    універсали і проголосила про створення Української Народної Республіки.
-  embed_suggestion: After section Вступ — Чотири кроки до незалежності -- directly
-    addresses the reasons and context for the creation of the Universals of the UPR,
-    which is central to the module.
+  relevance_note: Directly and explicitly discusses the purpose and context of the
+    Universals (Універсали) issued by the Central Rada during the Ukrainian Revolution,
+    perfectly aligning with the module's core topic.
+  transcript_excerpt: Українці обрали в Києві Центральну Раду вона видала чотири універсали
+    і проголосила про створення Української Народної Республіки. Навіщо Були Потрібні
+    Універсали?
+  embed_suggestion: After section Вступ — Чотири кроки до незалежності -- as it directly
+    poses and answers the question about the necessity of the Universals.
 - url: https://www.youtube.com/watch?v=Y4eeDhSYGt4
   channel: Комік Історик
   title: 'Володимир Винниченко: найгірший український політик'
   relevance_score: 0.9
-  relevance_note: Volodymyr Vynnychenko was a key figure in the UPR and the Central
-    Rada, directly involved in the creation of the Universals. The transcript explicitly
-    mentions 'чотири універсала' in connection to him, making it highly relevant.
-  transcript_excerpt: Вінниченка зацініть в кулуарах УНР ходили чутки що якщо вінниченку
-    відрізати голову він ще 20 хвилин буде пробувати домовитись з палачом класичне
-    замовлення Вінниченка в борделі це чотири молодики іншими словамичотири універсала.
-  embed_suggestion: After section Вступ — Чотири кроки до незалежності -- directly
-    links Volodymyr Vynnychenko, a key figure in the UPR, to the creation of the four
-    Universals.
+  relevance_note: Directly mentions the 'four universals' and Volodymyr Vynnychenko's
+    critical role in the Central Rada and the Ukrainian People's Republic (УНР), providing
+    direct insight into the political context and key actors.
+  transcript_excerpt: В кулуарах УНР ходили чутки що якщо Вінниченку відрізати голову
+    він ще 20 хвилин буде пробувати домовитись з палачом. Класичне замовлення Вінниченка
+    в борделі це чотири молодики іншими словами чотири універсала.
+  embed_suggestion: After section Історичний контекст -- as it directly addresses
+    Vynnychenko's involvement with the Universals and the UPR.
 - url: https://www.youtube.com/watch?v=aZohRL1mMA4
   channel: Комік Історик
   title: 'Михайло Грушевський: батя української історії'
   relevance_score: 0.8
-  relevance_note: The video discusses Mykhailo Hrushevsky, a central figure of the
-    Central Rada, which was responsible for issuing the Universals. This provides
-    important biographical context for a key player in the module's topic.
-  transcript_excerpt: Грушевський все ж таки також залишається як і інші персоналі
-    як і Симон Петлюра як і Павло скоропатський як і Володимир Винниченко людьми неоднозначними.
-  embed_suggestion: After section Історичний контекст -- introduces Mykhailo Hrushevsky,
-    a central figure of the UPR and the Central Rada, which issued the Universals.
+  relevance_note: Discusses Mykhailo Hrushevsky, a central figure in the Central Rada
+    during the period when the Universals were issued, offering insight into the political
+    landscape.
+  transcript_excerpt: Будь-яка історична постать в нашій українській історії особливо
+    яка була 100 років тому в такий драматичний період побудові Української держави
+    між особицях всередині української еліти. Грушевський все ж таки також залишається
+    як і інші персонажі...
+  embed_suggestion: After section Вступ — Чотири кроки до незалежності -- to introduce
+    a key historical figure deeply involved in the UPR's formation.
 - url: https://www.youtube.com/watch?v=jHfkWVxiN50
   channel: Реальна Історія
   title: Яким був Скоропадський НАСПРАВДІ?
   relevance_score: 0.6
-  relevance_note: This video focuses on Pavlo Skoropadskyi, a key figure in the Ukrainian
-    Revolution whose Hetmanate followed the initial UPR period. While relevant to
-    the broader historical era, it's not directly about the UPR's Universals.
-  transcript_excerpt: Герой нашого випуску сьогодні одна з найзагадковіших постатей
-    в історії України, роль якої викликає палкі дискусії і досі. Ясновильможний гетьман
-    всієї України Павло Скоропацький.
-  embed_suggestion: After section Підсумок -- provides context on a key figure and
-    subsequent events of the Ukrainian Revolution, following the UPR's Universals.
-- url: https://www.youtube.com/watch?v=WKyY8VDUAnA
-  channel: ІМТГШ
-  title: Любовні Пригоди Батька Махна | Історія України від імені Т.Г. Шевченка
-  relevance_score: 0.5
-  relevance_note: This video focuses on Nestor Makhno, a significant figure in the
-    Ukrainian Revolution, but his actions and movement were often in opposition to
-    the UPR, making it less directly relevant to the Universals themselves, though
-    part of the same historical period.
-  transcript_excerpt: Нестор Махно без сумнівів найсуперечливіша постать української
-    історії з одного боку народний улюбленець українців з іншого борець проти УНР
-    та гетьманату.
-  embed_suggestion: After section Підсумок -- provides a broader context of other
-    significant figures and movements during the Ukrainian Revolution, including those
-    in opposition to the UPR.
+  relevance_note: Focuses on Pavlo Skoropadsky and his Hetmanate, which followed the
+    UPR and its Universals, providing post-Universal historical context within the
+    broader Ukrainian Revolution.
+  transcript_excerpt: Ясновильможний гетьман всієї України Павло Скоропацький. Звідки
+    він взявся і як зміг стати лідером української держави у 1918 році?
+  embed_suggestion: After section Четвертий універсал (22 січня 1918) -- to introduce
+    the subsequent period after the Universals and the UPR.
 - url: https://www.youtube.com/watch?v=2PrthVAZRro
   channel: Реальна Історія
   title: The entire history of Ukraine in 30 minutes. «The real history» with Akim
     Galimov
   relevance_score: 0.4
-  relevance_note: The video provides a general overview of early Ukrainian history,
-    which is tangentially related to the 'Історичний контекст' section but does not
-    specifically cover the Ukrainian People's Republic or its Universals.
-  transcript_excerpt: Історію будь-якої країни починають від найстаріших археологічних
-    знахідок. На Закарпатті у стоянці Королево знайдено найдавніше людське поселення
-    всієї Центральної і Східної Європи зі знаряддями праці первісної людини з каменю
-    і кісток.
-  embed_suggestion: After section Історичний контекст -- it provides a very broad
-    historical overview, setting a wider stage for the specific events of UPR.
+  relevance_note: Provides a very broad overview of Ukrainian history from ancient
+    times, offering general historical context rather than focusing on the UPR Universals.
+  transcript_excerpt: За 30 хвилин, дуже просто і доступно я розповім про те, як з'явилася
+    Україна та українці. Звідки з'явилися князі Русі, звідки пішли козаки і зрештою,
+    чому ми так завзяту боремося за свою свободу?
+  embed_suggestion: After section Історичний контекст -- to provide a very broad historical
+    backdrop.
+- url: https://www.youtube.com/watch?v=WKyY8VDUAnA
+  channel: ІМТГШ
+  title: Любовні Пригоди Батька Махна | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.3
+  relevance_note: Focuses on Nestor Makhno, an anarchist leader who, while active
+    during the Ukrainian Revolution, was generally opposed to the UPR and its government,
+    making it tangentially related at best.
+  transcript_excerpt: Нестор Махно без сумнівів найсуперечливіша постать української
+    історії з одного боку народний улюбленець українців з іншого боку борець проти
+    УНР та гетьманату.
+  embed_suggestion: After section Підсумок -- as a contrasting perspective or a look
+    at other factions during the period, if discussing the broader context of the
+    revolution.
 blogs:
 - url: https://www.ukrainianlessons.com/episode71/
   title: Ukrainian History Course Part 1

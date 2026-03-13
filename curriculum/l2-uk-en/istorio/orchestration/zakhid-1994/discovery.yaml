@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T12:09:41.179716+00:00'
+discovered_at: '2026-03-13T20:40:49.705111+00:00'
 query_keywords:
 - 'Будапештський меморандум: Гарантії без гарантій'
 - Контекст
@@ -19,76 +19,28 @@ blogs:
 - url: https://www.ukrainianlessons.com/episode71/
   title: Ukrainian History Course Part 1
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - phrases
-  - introductions
-  - culture
-  - history
-  - kyiv
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 71
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode72/
   title: Ukrainian History Course Part 2
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - phrases
-  - introductions
-  - culture
-  - history
-  - review
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 72
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode73/
   title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - phrases
-  - introductions
-  - culture
-  - history
-  - review
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 73
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode74/
   title: History of Ukraine Course Part 4
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - phrases
-  - introductions
-  - culture
-  - history
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 74
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode75/
   title: Ukrainian History Course Part 5
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - phrases
-  - introductions
-  - culture
-  - history
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 75
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0470

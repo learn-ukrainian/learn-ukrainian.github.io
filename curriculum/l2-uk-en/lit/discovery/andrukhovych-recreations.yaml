@@ -1,0 +1,236 @@
+discovered_at: '2026-03-13T22:24:06.412573+00:00'
+query_keywords:
+- 'Юрій Андрухович: «Рекреації»'
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- 'Проаналізувати твір Юрій Андрухович: «Рекреації» у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+- literature
+- канон
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=eDHktabePkc
+  channel: Суспільне Культура
+  title: Прямий етер з Юрієм Андруховичем. Презентація книги «Радіо Ніч»
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Gqet7PMuEgs
+  channel: Суспільне Культура
+  title: Юрій Андрухович та гурт Karbido. «Літографії»
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0433
+  text: "Су÷асна українська література . юрій Андрухович  229\nопрацьовуємо прочитане\n\
+    1. як у статті підручника схарактеризовано есеїстику? як це налаштовує нас \n\
+    на сприймання есею ю . Андруховича про т . шевченка? 2. Схарактеризуйте своє уявлення\
+    \ про твір ю . Андруховича, яке склалося у вас \nпісля прочитання статті підручника,\
+    \ через асоціації (три слова або слово-\nсполучення) . що вас зацікавило в цій\
+    \ розповіді, що спонукає до прочитання \nесею? Чого ви очікуєте від есею ю . Андруховича\
+    \ «Shevchenko is OK"
+  section_title: Сторінка 229
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0284
+  text: '3. Сформулюйте тези статті на тему: «Національна та соціальна структура населення
+
+    УРСР». 4. Підготуйте презентацію на тему: «Життєвий рівень населення в період
+    системної кризи
+
+    радянського ладу».'
+  section_title: Сторінка 156
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5339949131011963
+  chunk_id: c44f1207_c0932
+  text: "Вступні замітки. Державна система — Володимирова \r\nдинастия й її становище,\
+    \ рівноправність князїв, патріархальні відносини, княже \r\nстаршинство; родова\
+    \ теорія і її корективи; ріжні чинники в княжих відносинах: \r\nчинник родовий,\
+    \ брацтво князїв, дїдичність, княжі умови, впливи землї; ріжні \r\nтипи межикнязївських\
+    \ відносин. Старшинство: права старійшини і функції, титул; \r\nвідносини старших\
+    \ і молодших князїв в поодиноких землях. Княжі з'їзди. Загальний \r\nхарактер\
+    \ полїтичної системи.\n\nПереглянувши іс"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.525883674621582
+  chunk_id: 6890007d_c0521
+  text: 'І. Детство и отрочество
+
+
+    II. Студенчество и юность. Первая литературная деятельность
+
+
+    III. Учительство и профессура в Киеве
+
+
+    IV. Арест, заключение, ссылка
+
+
+    V. Жизнь в Саратове
+
+
+    VI. Освобождение. Поездка за границу. Возвращение. Участие в трудах по крестьянскому
+    делу
+
+
+    VII. Избрание на петербургскую кафедру. Переезд в Петербург.
+
+
+    VIII. Студенческие смуты. Закрытие университета.
+
+
+    IX. Петербургский университет начала 1860-х годов
+
+
+    X. Поездки с ученою целью.
+
+
+    XI. Занятия Смутным временем.
+
+
+    XII. Поезд'
+  work: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+  year: 1847
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/kostomar/kos.htm
+- score: 0.5239593386650085
+  chunk_id: feaa5fa7_c3202
+  text: "Проблема районізації (119). Природна районізація\r\n(120). Економічна районізація\
+    \ (121). Адміністративний поділ до 1914 р. (121).\r\nІнші поділи й проблема реґіоналізму\
+    \ (122). Термінологія (123).\r\nІсторично-географічні краї (124) В. Кубійович\n\
+    \nЛІТЕРАТУРА . . . . . . . . . . . . . . . . . . . 124\n\nIII. ЛЮДНІСТЬ\n\n1.\
+    \ АНТРОПОЛОГІЧНА БУДОВА УКРАЇНИ\n\nАнтропологічні дослідження України (125) Р.\
+    \ Єндик\r\n. . . . . . . . . . . . . . . . . . . 125\n\nАНТРОПОЛОГІЧНА БУДОВА\
+    \ УКРАЇНИ В МИНУЛОМУ . . . . . .\r\n. . . . ."
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

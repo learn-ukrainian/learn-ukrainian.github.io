@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 128 — E2E
+PASS: pipeline lit 126
 
   Module:   bahrianyi-man-runs
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T09:11:59Z
+  Date:     2026-03-13T23:36:48Z

@@ -1,0 +1,151 @@
+discovered_at: '2026-03-13T21:28:12.565391+00:00'
+query_keywords:
+- Регіональні різновиди
+- Діалектна мапа України
+- Dialect Map of Ukraine
+- Північне наріччя та архаїка
+- Northern Dialect Group and Archaism
+- 'Південно-західне наріччя: Від Гуцульщини до Галичини'
+- 'South-Western Group: From Hutsulshchyna to Galicia'
+- Південно-східне наріччя та основа літературної мови
+- South-Eastern Group and Standard Basis
+- 'Культура мовлення: Діалект vs Суржик'
+- 'Speech Culture: Dialect vs Surzhyk'
+- Мовна норма та стилізація
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode108/
+  title: Kyiv tour + Participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode95/
+  title: My life in Kyiv (Voice message №3)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode80/
+  title: Ukrainian History Test – Review 71-79
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0063
+  text: "§ 11 Діалекти як історична база літературних мов. Територіальні і соціальні\
+    \ діалекти\n35\nБуду я  навчатись мови золотої\nТериторіальний діалект — різновид\
+    \ національної мови, який \nє засобом спілкування людей, об’єднаних спільністю\
+    \ території. Соціальний діалект — різновид загальнонародної мови, ужи-\nване в \
+    \ середовищі окремих соціальних, професійних, вікових та \nінших груп населення.\
+    \ Наріччя — найбільша одиниця територіальної диференціації \nдіалектної мови,\
+    \ що становить сукупність близьких за визна"
+  section_title: Сторінка 35
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0066
+  text: 'Використовуючи їх, розкрийте взаємозв’язок літератур-
+
+    ної мови й діалектів. марець — березень
+
+    бадіка — старший віком чоло-
+
+    вік, дядько, сестрин чоловік
+
+    корзаки — чоботи
+
+    засколобина — ущелина
+
+    маржина — худоба
+
+    колешня — хлів, стайня
+
+    бутина — ділянка лісу, призна-
+
+    чена на зруб
+
+    ґазда — хазяїн
+
+    смерека — ялина
+
+    клен — головень (вид риби)
+
+    леда — тільки-но
+
+    бистрень — бистрінь
+
+    Діалект, а ми його надпишем
+
+    Міццю духу і огнем любови
+
+    І нестерпний слід його запишем
+
+    Самостійно між культурні мови. (І. Франко)
+
+    Пі'
+  section_title: Сторінка 36
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0064
+  text: "іменників II відміни;\nнаявність застарілих займенників при дієсловах;\n\
+    залишки давньої форми дієслів минулого та майбутнього \nчасу\nбратови, коневи;\n\
+    зроби мі, узяв тя, питав го;\nпішла-м, пішли-сьмо; му робити, меш \nробити\nдіалектні\
+    \ слова\nненьо (батько), вуйко (дядько), сарака \n(бідний)\nДля південно-східних\
+    \ діалектів характерні:\nпом’якшення шиплячих;\nпом’якшення звука [л]\n[курч’ати],\
+    \ [ч’ай];\n[бул′и], [кал′ина]\nуживання дієслів II дієвідміни із закінченням -е\
+    \ замість -ть;\nстягнені форми дієслів ІІІ "
+  section_title: Сторінка 35
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-golub-2022_s0253
+  text: 'Джерела українських фразеологізмів ....................................61
+
+    § 22. Фразеологізми в мовленні людини і в літературних творах ......63
+
+    РОЗДІЛ ІІІ. Фонетика. Графіка. Орфоепія. Орфографія
+
+    § 23. Поглиблене повторення вивченого з фонетики в 1–4 класах. Голосні та приголосні
+    звуки .................................................66
+
+    § 24. Наголос в українській мові. Особливості вимови й написання ненаголошених
+    голосних ......69
+
+    § 25. Приголосні тверді й м’які, дзвінкі й глухі. Вимова пригол'
+  section_title: Сторінка 253
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

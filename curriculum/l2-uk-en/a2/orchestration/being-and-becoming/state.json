@@ -5,7 +5,7 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T14:29:51Z",
+      "ts": "2026-03-13T21:31:58Z",
       "note": "file-exists",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-13T14:29:51Z",
+      "ts": "2026-03-13T21:31:58Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -23,18 +23,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-13T14:34:51Z",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    "validate": {
-      "status": "failed",
-      "ts": "2026-03-13T14:51:23Z",
-      "attempts": 3,
-      "note": "dedup-prompt-bug:constraint-conflict-dative",
+      "ts": "2026-03-13T23:22:39Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -43,8 +32,8 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-13T17:26:48Z",
-      "task_id": "v5-being-and-becoming-pC",
+      "ts": "2026-03-13T23:22:39Z",
+      "note": "extracted-from-full-build",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -52,25 +41,6 @@
       }
     }
   },
-  "last_updated": "2026-03-13T17:22:29Z",
-  "consultations": [
-    {
-      "num": 1,
-      "outcome": "queued",
-      "ts": "2026-03-13T18:49:51.749342+00:00",
-      "scope": "all_modules",
-      "action": "rebuild",
-      "confidence": "high",
-      "changes_count": 3
-    },
-    {
-      "num": 2,
-      "outcome": "queued",
-      "ts": "2026-03-13T18:57:04.318928+00:00",
-      "scope": "all_modules",
-      "action": "rebuild",
-      "confidence": "high",
-      "changes_count": 3
-    }
-  ]
+  "_immersion_regenerated": true,
+  "last_updated": "2026-03-13T23:17:56Z"
 }

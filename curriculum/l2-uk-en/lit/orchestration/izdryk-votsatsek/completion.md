@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 185 — E2E
+PASS: pipeline lit 183
 
   Module:   izdryk-votsatsek
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T11:20:40Z
+  Date:     2026-03-13T23:37:32Z

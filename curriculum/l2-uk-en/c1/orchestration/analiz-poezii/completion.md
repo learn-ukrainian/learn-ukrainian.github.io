@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1 104 — E2E
+PASS: pipeline c1 65
 
   Module:   analiz-poezii
   Track:    c1
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T19:35:45Z
+  Date:     2026-03-13T20:43:59Z

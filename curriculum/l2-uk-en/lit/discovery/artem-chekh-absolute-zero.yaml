@@ -1,0 +1,205 @@
+discovered_at: '2026-03-13T23:39:10.893910+00:00'
+query_keywords:
+- Artem Chekh Absolute Zero
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Artem Chekh Absolute Zero у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.6
+  relevance_note: The video discusses the Ukrainian literary canon and the need to
+    restore Ukrainian literary ground, explicitly mentioning 'канон' which is a vocabulary
+    term in the module. While it focuses on other literary figures (Bazhan, Tychyna),
+    the themes of literary continuity and cultural restoration are relevant to the
+    decolonization aspect and cultural context of the module.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають.
+  embed_suggestion: After section Деколонізаційний вимір – Deepens the discussion
+    on forming and reforming the Ukrainian literary canon and its implications.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: The video discusses contemporary Ukrainian literature and the increased
+    interest in Ukrainian books and language in a post-invasion context, which broadly
+    relates to the cultural context and decolonization themes of the module. However,
+    it does not specifically mention Artem Chekh or 'Absolute Zero'.
+  transcript_excerpt: Мені здається та збільшився більше людей цікавляться і українською
+    музикою українською літературою українським кіно. Очевидно це пов'язано з одного
+    боку фактором війни а з іншого боку тим що ринок так чи інакше змінюється формат
+    так чи інакше змінюється культурний ландшафт змінюється.
+  embed_suggestion: After section Вступ та культурний контекст – Provides broader
+    context on the current state and perception of Ukrainian literature and language.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0096
+  text: "Прочитайте або поновіть у пам’яті твір Îсипа Òурянського «Поза меæами \n\
+    áолþ» . Порівняйте власні враження від твору з матеріалом, запропонованим \nу\
+    \ статтях підручника . У розділі «Віртуальна бібліотека» електронного додатка\
+    \ \nдо підручника ви знайдете повний текст твору, а в розділі «Читацький прак-\n\
+    тикум» — завдання для аналізу тексту . читаємо взірці української художньої літератури\n\
+    Àнтивоºнне, ãóманістичне çвóчання романó, іäея ïеретворення світó сиëоþ ëþä-\n\
+    ськоãо äóõó é ëþбові, ексïресіоністи"
+  section_title: Сторінка 51
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0433
+  text: "Су÷асна українська література . юрій Андрухович  229\nопрацьовуємо прочитане\n\
+    1. як у статті підручника схарактеризовано есеїстику? як це налаштовує нас \n\
+    на сприймання есею ю . Андруховича про т . шевченка? 2. Схарактеризуйте своє уявлення\
+    \ про твір ю . Андруховича, яке склалося у вас \nпісля прочитання статті підручника,\
+    \ через асоціації (три слова або слово-\nсполучення) . що вас зацікавило в цій\
+    \ розповіді, що спонукає до прочитання \nесею? Чого ви очікуєте від есею ю . Андруховича\
+    \ «Shevchenko is OK"
+  section_title: Сторінка 229
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0182
+  text: "120\nСинтаксис. Пунктуація\n§ 34. Будова  тексту. Мікротема  й  абзац. Ключові\
+    \  слова  в  тексті  й  абзаці\nПОВТОРЕННЯ \n•\t Прочитайте текст і виконайте\
+    \ завдання. Шумить, нуртує й піниться Черемош. Як оскаженілий, як навіжений, розпорошує\
+    \ свої \nдрібні бризки, б’ючись об каміння, нестримним плином перекочує через\
+    \ холодні брили. Не-\nсамовито він виривається потужною течією з тісних скелястих\
+    \ лещат і повільно заповнює \nнизовини, обрамлені ошатною габою густої калини\
+    \ (І. Пільгук). А. Визначте тему й ст"
+  section_title: Сторінка 120
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5685320496559143
+  chunk_id: 172f2637_c0088
+  text: '8. Подаючи поза планом своєї технічної роботи ці тези ана­лізи змісту, я
+    сподіваюся розворушити ініціятиву створення наукових засад критики змісту і припинити
+    той натхнен­ний матчиш морали, ситуаційних висновків, аналізи автор­ського світогляду
+    і історичних висновків, що панує в нашій критиці. Я хочу прислужитись точній марксівській
+    критиці. В мене є тиха певність, що мене лаятимуть... і використову­ватимуть ті,
+    що їдять хліб з чистісінької критики.
+
+
+    "НОВЕЛА З НІЧОГО"
+
+
+    Ти єси!
+
+
+    (Оповідання Е. По'
+  work: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+  year: 1895
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=25044
+- score: 0.5396623015403748
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5377700328826904
+  chunk_id: 3588aaff_c0651
+  text: "1. Чи не найголовніша настанова \"Історії\"\r\nЧижевського визначається вірою\
+    \ в те, що література є унікальним феноменом,\r\nкотрий існує незалежно від інших\
+    \ сфер людської діяльності (соціальної,\r\nполітичної тощо), а відтак — для історії\
+    \ літератури важить лише\r\n\"внутрішньолітературний\" критерій, вона може осмислюватися,\
+    \ як Ding\r\nan sich. Якщо на першу частину цієї тези й можна було б пристати,\
+    \ — звичайно,\r\nостільки, оскільки йдеться про онтологію та структуру літературного\
+    \ твору, —\r\nто на другу аж нія"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

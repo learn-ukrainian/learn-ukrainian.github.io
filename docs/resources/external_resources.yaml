@@ -3147,6 +3147,19 @@ resources:
       url: https://www.ukrainianlessons.com/episode93/
       relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: 'Сучасна рок-сцена: хто формує нову хвилю? Turnstile, Title Fight, IDLES, Fontaines d.c., Wet Leg'
+      url: https://www.youtube.com/watch?v=TRT5W4iqdD8
+      source: Суспільне Культура
+    - title: Історія покоління, що зруйнувало радянську музику – Юрій Рибчинський та Сергій Жадан
+      url: https://www.youtube.com/watch?v=bLu8aBQaHe0
+      source: Radio Khartia
+    - title: «Наша пісня всіх чіпає за душу» — в чому особливість фольклорного театру «Ґердан»
+      url: https://www.youtube.com/watch?v=zBBl9pnA5ic
+      source: Суспільне Док
+    - title: Радіо Хартія у Дніпрі. Трамп, міжнародні заяви і музика наживо. Жадан і Собаки, Kurs Valüt та Вертеп
+      url: https://www.youtube.com/watch?v=vjbBFo7q14E
+      source: Radio Khartia
   c2-translation-theory:
     articles:
     - title: Ukrainian Lessons Podcast Season 6
@@ -3763,9 +3776,27 @@ resources:
     - title: Яким був Скоропадський НАСПРАВДІ?
       url: https://www.youtube.com/watch?v=jHfkWVxiN50
       source: Реальна Історія
-    - title: Любовні Пригоди Батька Махна | Історія України від імені Т.Г. Шевченка
-      url: https://www.youtube.com/watch?v=WKyY8VDUAnA
-      source: ІМТГШ
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
   istorio-svidchennia-holodomoru-ii:
     youtube:
     - title: ГОЛОДОМОР. Реальна історія з Акімом Галімовим
@@ -5308,6 +5339,956 @@ resources:
       url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
       source: Radio Khartia
   lit-antonych-mythology:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-sosiura-love-ukraine:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-sosiura-red-winter:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-sosiura-internal-conflict:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c2-writing-professional-documents-ii:
+    youtube:
+    - title: Як БЕЗКОШТОВНО створити презентацію за 5 хвилин за допомогою нейромережі
+      url: https://www.youtube.com/watch?v=R8cb0BSD2vk
+      source: Суспільне Культура
+  lit-pluzhnyk-galileo:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-pluzhnyk-poetry:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-bazhan-idols:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  c2-professional-discussions:
+    youtube:
+    - title: Дискусія — обговорення «Про стійкість у літературному каноні України» | КНИЖКОВИЙ АРСЕНАЛ
+      url: https://www.youtube.com/watch?v=zm1yR7hg4V8
+      source: Суспільне Культура
+  lit-bazhan-quiet-step:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-antonenko-davydovych-smert:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-antonenko-davydovych-prose:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-kosynka-short-fiction:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-lukash-translation-as-resistance:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-translation-as-cultural-weapon:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-bahrianyi-tiger-trappers:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-bahrianyi-garden-gethsemane:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-bahrianyi-man-runs:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  istorio-mekhanizm-kooptatsii:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: high
+      source: ukrainianlessons.com
+  lit-dovzhenko-ukraine-flames:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  c2-suspilstvo-i-hromadyanstvo:
+    youtube:
+    - title: 'Масі Наєм про активних громадян і «споглядачів» #shorts'
+      url: https://www.youtube.com/watch?v=CffxFuM3Hnc
+      source: Суспільне Культура
+    - title: 'Portnikov: "Freedom of speech is citizens'' access to verified information" #shorts'
+      url: https://www.youtube.com/watch?v=mRyq3A4auYg
+      source: Суспільне Культура
+    - title: 'ГУР про обмін полоненими, сексуальне насильство під час війни та мовні скандали: що варто знати'
+      url: https://www.youtube.com/watch?v=LSTV0O7P8CQ
+      source: Radio Khartia
+    - title: Сергій Притула, «Пінкі», Шевченко — про війну, допомогу і союзників
+      url: https://www.youtube.com/watch?v=Jrm8PE-ZDf0
+      source: Radio Khartia
+  lit-dovzhenko-cinema-as-literature:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c2-zovnishnia-polityka-i-diaspora:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 5
+      url: https://www.ukrainianlessons.com/episode193/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 5
+      url: https://www.ukrainianlessons.com/episode194/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 5
+      url: https://www.ukrainianlessons.com/episode195/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 5
+      url: https://www.ukrainianlessons.com/episode197/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 5
+      url: https://www.ukrainianlessons.com/episode198/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-syntez-rozdorizhzhia:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  c1-istoriia-ukrainskoi-literatury:
+    youtube:
+    - title: '#77 Жовтий князь. Василь Барка'
+      url: https://www.youtube.com/watch?v=XOiP4xlTkm4
+      source: Repainted Fox
+    - title: Як виникла українська мова? | «Як українці українською заговорили» | Документальний фільм
+      url: https://www.youtube.com/watch?v=2TqtNB5XSUM
+      source: Суспільне Культура
+    - title: '«Російська література зовсім не давня, вона виникла з появою Петербурга у XVIII сторіччі» #shorts'
+      url: https://www.youtube.com/watch?v=6ArrdjxC2GE
+      source: Суспільне Культура
+    - title: Чому світ повірив у ФЕЙК про «вєлікую рускую літературу» | ВЕЛИКА РОСІЙСЬКА БРЕХНЯ
+      url: https://www.youtube.com/watch?v=MfnFhf6wR5s
+      source: Суспільне Док
+  istorio-zakhid-1994:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: high
+      source: ukrainianlessons.com
+  lit-barka-yellow-prince:
+    youtube:
+    - title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком Анатолієм Подольським
+      url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+      source: Суспільне Культура
+  c2-zdorovya-i-medytsyna:
+    youtube:
+    - title: Where does our FEAR of doctors come from? What Soviet and post-Soviet medicine REALLY was like
+      url: https://www.youtube.com/watch?v=a9SnAZdq9BM
+      source: Суспільне Культура
+    - title: '"Peoples, and everything will pass" - what''s wrong with Soviet medicine? #shorts'
+      url: https://www.youtube.com/watch?v=6e-oY3Jc8pU
+      source: Суспільне Культура
+    - title: 'РЕЙН: Бойовий медик не завжди може бути поруч — міняється тактика війни, міняється медицина | Вишкіл'
+      url: https://www.youtube.com/watch?v=phpl3tZ7RpM
+      source: Radio Khartia
+  c1-analiz-poezii:
+    youtube:
+    - title: ULP 6-225 | Українська поезія. Павло Тичина «Гаї шумлять» | Ukrainian Lessons Podcast Season 6
+      url: https://www.youtube.com/watch?v=G3NgOZmfVzc
+      source: Ukrainian Lessons
+    - title: Як пісні на поезію стали мейнстримом | МУР, Пиріг і Батіг, DakhTrio | Artилерія
+      url: https://www.youtube.com/watch?v=aysrSl2RiKo
+      source: Суспільне Культура
+  lit-symonenko-knights:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-symonenko-truth:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c2-ekolohiya-i-klimat:
+    youtube:
+    - title: ULP 4-136 | Екологічні тренди та екологічні традиції в Україні | Ukrainian Lessons Podcast Season 4
+      url: https://www.youtube.com/watch?v=f7OFIoNUlNo
+      source: Ukrainian Lessons
+  lit-stus-palimpsests:
+    youtube:
+    - title: Палімпсест. Радіодрама  за творами Василя Стуса | Аудіокниги українською | Подкаст «НАША КЛАСИКА»
+      url: https://www.youtube.com/watch?v=bMEWRH-8CWo
+      source: Суспільне Культура
+  c2-media-i-dezinformatsiya:
+    youtube:
+    - title: Добрі новини з Дикого Поля. Вечір
+      url: https://www.youtube.com/watch?v=j1ZeGQZAlaY
+      source: Radio Khartia
+    - title: Радіо Хартія. Ми поруч, коли це потрібно
+      url: https://www.youtube.com/watch?v=VqQN23DX9-8
+      source: Radio Khartia
+  lit-stus-moral-imperative:
+    articles:
+    - title: Birthday presents + Imperative mood in Ukrainian
+      url: https://www.ukrainianlessons.com/episode111/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: How to cook varenyky + Imperative mood of the second person plural
+      url: https://www.ukrainianlessons.com/episode112/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian traditional embroidery masterclass + More about the Imperative mood in Ukrainian
+      url: https://www.ukrainianlessons.com/episode113/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: How to make pysanky + Imperative mood of the verbs in the first person plural (Let’s…)
+      url: https://www.ukrainianlessons.com/episode114/
+      relevance: medium
+      source: ukrainianlessons.com
+  lit-stus-letters-to-son:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-kolyskovi-ta-dumy:
+    youtube:
+    - title: WebSIS - Колискова (Original Version) [Official Audio]
+      url: https://www.youtube.com/watch?v=HMW9rHHgze0
+      source: Суспільне Культура
+  lit-stus-vertical-of-spirit:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c2-misto-selo-prostir:
+    youtube:
+    - title: Smoldering. To be a formalist / Documentary
+      url: https://www.youtube.com/watch?v=Wj8YywWd-bk
+      source: Суспільне Культура
+  lit-kostenko-marusia-churai-2:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-kostenko-garden-of-unthawed-sculptures:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c2-identychnist-tradytsiyi-simya:
+    articles:
+    - title: Ukrainian Customs and Traditions
+      url: https://www.ukrainianlessons.com/ukrainian-customs/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Nina Kuryata on the novel "The Call. A Ukrainian Woman Born in the USSR" and the nomination for t...
+      url: https://www.youtube.com/watch?v=5m9W6oT12Vk
+      source: Суспільне Культура
+    - title: Як ЛГБТК+ родини впливають на демографію? Що таке сімʼя в сучасній Україні? | «Зі своїми по суті»
+      url: https://www.youtube.com/watch?v=x8wiAXA0jKM
+      source: Суспільне Культура
+  lit-kostenko-poetry:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-tiutiunnyk-three-cuckoos:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-tiutiunnyk-novella-mastery:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-honchar-cathedral:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-honchar-banners:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-malyshko-poetry:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-zymovi-obriady:
+    youtube:
+    - title: Why do we dress up as a goat, a devil, and a bear? The history of Ukrainian nativity scenes and M...
+      url: https://www.youtube.com/watch?v=wZ8nzXSZ4lM
+      source: Суспільне Культура
+  lit-malyshko-songs:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  c2-sociolinguistic-mastery:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode204/
+      relevance: medium
+      source: ukrainianlessons.com
+  lit-malaniuk-poetry:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком Анатолієм Подольським
+      url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+      source: Суспільне Культура
+  c2-language-policy-decolonization:
+    youtube:
+    - title: 'Why We Are Angry Not Only at Russians, But Also at Each Other | Decolonizers #2'
+      url: https://www.youtube.com/watch?v=EBeVx8hVYPg
+      source: Суспільне Культура
+    - title: 'Чому ми РОЗГУБЛЕНІ? Як імперії навʼязують ким нам бути та що з цим робити | Деколонізаторки #4'
+      url: https://www.youtube.com/watch?v=GqdocmUxHu4
+      source: Суспільне Культура
+  lit-teliha-poetry:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком Анатолієм Подольським
+      url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+      source: Суспільне Культура
+  lit-olzhych-poetry:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  c1-halychyna:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: high
+      source: ukrainianlessons.com
+    youtube:
+    - title: 'Khrystyna Soloviy: "I feel good being a Galician in Kyiv"'
+      url: https://www.youtube.com/watch?v=rBNuEINZHFI
+      source: Суспільне Культура
+    - title: 'Від однієї з найбільших німецьких колоній Галичини до вулиці-пустки: історія Августдорфа'
+      url: https://www.youtube.com/watch?v=Qr4TXdw-Ie4
+      source: Суспільне Док
+    - title: Як на Івано-Франківщині зʼявилась колонія «Августдорф», заселена німцями
+      url: https://www.youtube.com/watch?v=4pYvyrHEa9A
+      source: Суспільне Док
+  c2-error-analysis:
+    youtube:
+    - title: 'A uniting flash mob: why are we writing a Radio Dictation of National Unity?'
+      url: https://www.youtube.com/watch?v=H5PglowR0Jo
+      source: Суспільне Культура
+  c1-traditional-clothing:
+    youtube:
+    - title: Що насправді носили українці в давнину і як стилізувати цей одяг сьогодні? | Куль.Tour
+      url: https://www.youtube.com/watch?v=NxjR5TuwrJo
+      source: Суспільне Культура
+    - title: How Ukrainian embroidery became part of modern fashion | Kul.Tour
+      url: https://www.youtube.com/watch?v=2-PS5RBigl8
+      source: Суспільне Культура
+  lit-vinhranovskyi-prose:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-drach-knife-sun:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-ukrainian-cuisine-traditions:
+    youtube:
+    - title: The Bread We Share | Psatyr by North Azovian Greeks
+      url: https://www.youtube.com/watch?v=LB3yXTJdoxg
+      source: Суспільне Док
+    - title: Рецепти з кабачків, сезонне FOMO, прозорі вареники | фуд-блогерка Анастасія Середа
+      url: https://www.youtube.com/watch?v=LzkHtrlsdnM
+      source: Суспільне Культура
+    - title: Шашлик — не грузинська страва? Як традиція пекти м’ясо змінила людство | історикиня Софія Грачова
+      url: https://www.youtube.com/watch?v=2bP4yG-zchA
+      source: Суспільне Культура
+  lit-drach-ballads:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-ukrainian-house:
+    youtube:
+    - title: 'Музей-садиба Коцюбинського у Чернігові #shorts'
+      url: https://www.youtube.com/watch?v=9YtRFRuBqLM
+      source: Суспільне Культура
+  lit-sverstiuk-prodigal-sons-lit:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-sverstiuk-moral-resistance:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  c1-podillia-ta-volyn:
+    youtube:
+    - title: 'Книги про історію Поділля: що це за регіон і в чому його унікальність? | Подкаст «Книгосховище» #48'
+      url: https://www.youtube.com/watch?v=pMbGLvzSOCE
+      source: Суспільне Культура
+  lit-dziuba-internationalism:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-dziuba-literature:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c2-translation-practice-i:
+    youtube:
+    - title: 'Ярослава Стріха про мистецтво перекладу: де перекладач, а де автор? | Осінь 2025'
+      url: https://www.youtube.com/watch?v=6wNeRYg0Nj8
+      source: Суспільне Культура
+  lit-holoborodko-flying-window:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-ukrainian-avant-garde:
+    youtube:
+    - title: 'Малевич: унікальний український аванґард | Український культ'
+      url: https://www.youtube.com/watch?v=xBPNbwvq2oE
+      source: Суспільне Культура
+    - title: '#59 Поезія Михайля Семенка'
+      url: https://www.youtube.com/watch?v=_KMdZ7A01UA
+      source: Repainted Fox
+    - title: 'Мирослав Шкандрій: Українці краще розуміють російську історію, ніж росіяни | Кругова оборона'
+      url: https://www.youtube.com/watch?v=Ot8xaNoTNdM
+      source: Radio Khartia
+  lit-samvydav-underground-publishing:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-women-writers-resistance:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-shestydesiatnyky-as-phenomenon:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-bu-ba-bu-carnival:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-bu-ba-bu-the-end-of-soviet:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  c1-operne-mystetstvo:
+    youtube:
+    - title: 'Опера GENESIS у Музеї Ханенків: як пройшов перформанс у 13 музейних залах'
+      url: https://www.youtube.com/watch?v=DnsO5O470rM
+      source: Суспільне Культура
+    - title: 'Музична кантата, в якій драматичні актори заважають: Maidan Story Євгена Лавренчука  #shortsviral'
+      url: https://www.youtube.com/watch?v=q5deYa34z9U
+      source: Radio Khartia
+  c1-vokalne-mystetstvo:
+    youtube:
+    - title: 'Альберт Цукренко про пісню «Море», яку записав з дружиною Валентиною #shorts'
+      url: https://www.youtube.com/watch?v=7GULSam22-I
+      source: Суспільне Культура
+    - title: «Діти» та «Капелан» наживо. Радіо Хартія у Дніпрі!
+      url: https://www.youtube.com/watch?v=_pBfXRg-MPc
+      source: Radio Khartia
+    - title: “We just went on stage and never came back” – Schmalgauzen and Serhiy Zhadan
+      url: https://www.youtube.com/watch?v=NvxQrMkB6Nw
+      source: Radio Khartia
+  lit-andrukhovych-moscoviad:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-andrukhovych-perverzion:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-andrukhovych-essays:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-obrazotvorche-mystetstvo-2:
+    youtube:
+    - title: How Ukrainian embroidery became part of modern fashion | Kul.Tour
+      url: https://www.youtube.com/watch?v=2-PS5RBigl8
+      source: Суспільне Культура
+  c1-balet-i-tanets:
+    youtube:
+    - title: Чим живе Національний театр опери й балету і чому співпрацює з організатором гастролів росіян
+      url: https://www.youtube.com/watch?v=QZdlh1rNzsk
+      source: Суспільне Культура
+  lit-zabuzhko-museum:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-zabuzhko-notre-dame-lit:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-teatralne-mystetstvo-1:
+    youtube:
+    - title: 'Харків театральний: кому потрібні вистави під час війни / Сергій Жадан'
+      url: https://www.youtube.com/watch?v=41Qp_Qle1Q0
+      source: Radio Khartia
+    - title: Theater in Kharkiv as my personal beginning of the great war — Yuriy Gurzhy
+      url: https://www.youtube.com/watch?v=1X5N6uv665E
+      source: Radio Khartia
+    - title: '"It awakens the genetic code of the nation" - what is special about the Gerdan Theater'
+      url: https://www.youtube.com/watch?v=UZeTKBrSLyI
+      source: Суспільне Док
+    - title: У чому особливість документального театру і як створюються вистави на основі реальних подій
+      url: https://www.youtube.com/watch?v=R6FVesmStn4
+      source: Суспільне Культура
+    - title: 'From puppet theater to dubbing: a conversation with Oleksandr Zavalsky'
+      url: https://www.youtube.com/watch?v=IerT_PcEnvU
+      source: Суспільне Культура
+  lit-zabuzhko-longest-journey:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-teatralne-mystetstvo-2:
+    youtube:
+    - title: У чому особливість документального театру і як створюються вистави на основі реальних подій
+      url: https://www.youtube.com/watch?v=R6FVesmStn4
+      source: Суспільне Культура
+    - title: 'Харків театральний: кому потрібні вистави під час війни / Сергій Жадан'
+      url: https://www.youtube.com/watch?v=41Qp_Qle1Q0
+      source: Radio Khartia
+    - title: “We just went on stage and never came back” – Schmalgauzen and Serhiy Zhadan
+      url: https://www.youtube.com/watch?v=NvxQrMkB6Nw
+      source: Radio Khartia
+    - title: 'From puppet theater to dubbing: a conversation with Oleksandr Zavalsky'
+      url: https://www.youtube.com/watch?v=IerT_PcEnvU
+      source: Суспільне Культура
+    - title: '"It awakens the genetic code of the nation" - what is special about the Gerdan Theater'
+      url: https://www.youtube.com/watch?v=UZeTKBrSLyI
+      source: Суспільне Док
+    - title: 'Традиційні пісні та обряди: як театр з Чернівців просуває українську культуру | «Ґердан»'
+      url: https://www.youtube.com/watch?v=ELs8G6v5Hjg
+      source: Суспільне Док
+  lit-zhadan-depeche-mode:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-zhadan-voroshilovgrad:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  c1-ukrainska-arkhitektura:
+    youtube:
+    - title: Відбудова і дослідження архітектури українських сіл — що таке ініціатива «Батьківська хата»
+      url: https://www.youtube.com/watch?v=XsfNCfuPsUM
+      source: Суспільне Культура
+    - title: '«Школи Сластіона: загублене минуле» — що сталося з архітектурними пам''ятками українського модерну?'
+      url: https://www.youtube.com/watch?v=ByhXgKx-JwA
+      source: Суспільне Док
+    - title: What do schools and courtyards designed by architect Opanas Slastion look like?
+      url: https://www.youtube.com/watch?v=ajz8XN_vEeU
+      source: Суспільне Док
+  lit-zhadan-poetry:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-decolonization-theory-literature:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  c1-ukrainske-kino:
+    articles:
+    - title: ULP 4-159 Олександр Довженко ― новатор кіно
+      url: https://www.ukrainianlessons.com/lesson-159/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Ukrainian Lessons Podcast Season 4
+      url: https://www.ukrainianlessons.com/episode159/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Oscar-winning Mstislav Chernov on Ukrainian cinema and war
+      url: https://www.youtube.com/watch?v=gnN3nGmNzjg
+      source: Radio Khartia
+    - title: 'Oleg Sentsov and Serhiy Zhadan: While there is bleeding, there can only be documentary film!'
+      url: https://www.youtube.com/watch?v=HgHwWTZBzQQ
+      source: Radio Khartia
+    - title: 'Муратова: нові виміри українського кіно | Український культ'
+      url: https://www.youtube.com/watch?v=zlabBK-yDI8
+      source: Суспільне Культура
+    - title: '"You are Space": A UKRAINIAN film about space WITHOUT THE PATHOS of Hollywood science fiction | r...'
+      url: https://www.youtube.com/watch?v=dluBsicAaws
+      source: Суспільне Культура
+  lit-hundorova-post-chornobyl-library:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-izdryk-votsatsek:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-izdryk-poetry:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-andijewska-magic-realism:
+    youtube:
+    - title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком Анатолієм Подольським
+      url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-koval-storinky:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-koval-prose-renaissance:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-prokhasko-unsimple:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-prokhasko-magical-carpathians:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-matios-sweet-darusia:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-matios-bukovina-trauma:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+  lit-tanja-maljartschuk-biography:
+    youtube:
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-tanja-maljartschuk-prose:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+  lit-artem-chekh-absolute-zero:
     youtube:
     - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
       url: https://www.youtube.com/watch?v=uFsAk8Fg3yI

@@ -1,0 +1,192 @@
+discovered_at: '2026-03-13T20:31:10.226520+00:00'
+query_keywords:
+- Dovzhenko Ukraine Flames
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Dovzhenko Ukraine Flames у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: The video discusses the Ukrainian literary canon ('канон' is a module
+    keyword), the importance of restoring Ukrainian literary heritage (mentioning
+    Bazhan and Tychyna), and overcoming cultural amnesia. These themes are highly
+    relevant to understanding the broader cultural and decolonization context of Dovzhenko's
+    'Ukraine in Flames' and how it fits into the Ukrainian canon.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. Бажан має бути повернутий в шкільну програму.
+  embed_suggestion: After Вступ та культурний контекст -- This video provides excellent
+    reinforcement for the module's introductory section by discussing the concept
+    of the Ukrainian literary canon and cultural restoration, which directly relates
+    to the historical and decolonization dimensions of Dovzhenko's work.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.4
+  relevance_note: The video discusses modern Ukrainian poetry, language, and cultural
+    resilience through the work of Serhiy Zhadan. While broadly related to Ukrainian
+    culture and language, its specific focus is not Dovzhenko's film or its historical
+    context. The keyword 'метафора' is present in both, but in different contexts.
+  transcript_excerpt: це поезія про мову... здатність мови повертатися і самовідтворюватись
+    про її вразливість про її здатність до опору.
+  embed_suggestion: After Вступ та культурний контекст -- As a general example of
+    modern Ukrainian cultural figures discussing language, which could lead into the
+    module's focus on the language and poetics of Dovzhenko's work.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.verba.school/post/how-to-help-ukraine
+  title: How to Help Ukraine
+  source: verba.school
+  relevance_score: 0.35
+  topics:
+  - charity
+  - ukraine
+  - support
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0185
+  text: "97\nІван  Франко\nПро­лог прой­ня­тий та­ким же ви­со­ким гро­ма­дян­ським\
+    \ па­фо­сом, по­лум’яним \nпат­рі­о­тиз­мом, як і «Бо­жес­твен­на ко­ме­дія»,\
+    \ зок­ре­ма піс­ня VІ «Чис­ти­ли­ща», де \nміс­тить­ся ві­до­ме звер­нен­ня Дан­те\
+    \ до Іта­лії. Про­лог І. Франка — це стис­лий ху­дож­ній лі­то­пис іс­то­рії ук­ра­їн­сько­го\
+    \ на­ро­ду, \nду­хов­но­фі­ло­соф­ське її ос­мис­лен­ня. Ог­ля­да­ю­чи ми­ну­ле\
+    \ Ук­ра­ї­ни, по­ет ба­чить у \nньо­му не тіль­ки «об­луд­ли­ву по­кір­ність уся­ко­му,\
+    \ хто зра­дою і роз"
+  section_title: Сторінка 97
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0235
+  text: "Для надання виразності своїй оповіді О. Турянський використовує також \n\
+    мовно-стилістичні та графічні засоби: численні оксюморони, інверсії, ритм, три\
+    \ \nкрапки, тире тощо. Сам сюжет деформується, розпадається на численну кіль-\n\
+    кість епізодів, сповнених ліричних відступів, які, немов у калейдоскопі, у різ-\n\
+    них ракурсах розкривають глибинну сутність події, слугують вираженню емо-\nцій\
+    \ (А. Землянська). Герої твору. Вчинками героїв твору, яким постійно загрожує\
+    \ смерть, керує \nволя до життя. Єдиним поря"
+  section_title: Сторінка 142
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0206
+  text: "133\nКрасне письменство\n5.\t Розгляньте ілюстрацію й виконайте завдання.\
+    \ \nОпорні слова: бідолаха, мотузка, балкон, гачок, служба порятунку, пожежники.\
+    \ \nА.\t Складіть у парах діалог за ілюстрацією, використавши неповні речення\
+    \ й опорні слова (по \nшість-сім реплік на кожного учасника діалогу). \nБ.\t Озвучте\
+    \ діалог за ролями. \nКУЛЬТУРА СЛОВА \n1.\t Розтлумачте значення фразеологізмів\
+    \ і запам’ятайте їх. \nне вартий і дірки від бублика\nне бачити смаленого вовка\n\
+    співати дифірамби\nзнімати стружку\nстарий лис\n2"
+  section_title: Сторінка 133
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0098
+  text: "Письменник послідовно реалі-\nзує свій задум: прагне «виразити» відчуття\
+    \ ката-\nстрофи — показати пекельну «безодню» війни. Іде з життя знесилений Бояні,\
+    \ а його товари-\nші нарешті розпалюють вогонь. Вогнище визна-\nчає простір, навколо\
+    \ якого все й відбувається \nв наступних трьох частинах. Немов у калей-\nдоскопі,\
+    \ змінюються різні фрагменти: моноло-\nги й діалоги героїв, їхні спогади, думки,\
+    \ пере-\nживання, марення. Лиш остання, п’ята частина, \nорганізована дещо інакше:\
+    \ Оглядівського зна-\nходять серед "
+  section_title: Сторінка 52
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0021
+  text: "— 2007. — № 2–4. — С. 32–35. Романенко О. В. Людина і світ в українській\
+    \ літературі доби «розстріляного відро-\nдження» / О. Романенко. — К. : Компанія\
+    \ «ВАІТЕ», 2006. — 98 с. Хархун В. Соцреалістичний канон в українській літературі:\
+    \ генеза, розвиток, модифікації / \nВ. Хархун. — Ніжин : ТОВ «Гідромакс», 2009.\
+    \ — 508 с. Домашнє завдання"
+  section_title: Сторінка 15
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5475988388061523
+  chunk_id: f46c62dc_c0005
+  text: "Кількома розрізненими відомостями про них ми\r\nзобов’язані лише заворушенням\
+    \ у Польщі та війнам у Росії. У цьому творі самі\r\nзгадані народи виходять на\
+    \ сцену, вони самі розповідають нам про свій спосіб\r\nжиття, релігію та про вчинки,\
+    \ завдяки яким вони прославилися.\n\nІсторія переворотів, які вони пережили, та\
+    \ список\r\nїхніх гетьманів доповнять відомості, що їх ми вже маємо, і таким чином\
+    \ уперше\r\nбуде заповнено порожнечу в новій історії.\n\nЯкщо картина зусиль цих\
+    \ народів, спрямованих на\r\nзахист їхньої"
+  work: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+  year: 1788
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/scherer/sher.htm
+- score: 0.541835606098175
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.539776623249054
+  chunk_id: fc2291b5_c1085
+  text: "Основу твору становить історія родини провінціального\r\nсвященика, доля\
+    \ його дочок, які різними шляхами шукають своє місце в житті. Ця\r\nісторія розглядається\
+    \ на широкому соціально-істор. тлі. В. змальовує\r\nзахідноукр. суспільство 30-х\
+    \ pp. 20 ст. з ретроспективним охопленням подій і\r\nпроцесів усього періоду між\
+    \ 1-ю та 2-ю світовими війнами: загострення класових\r\nсуперечностей, зростання\
+    \ свідомості мас, піднесення робітн. руху, звивисті\r\nшляхи західноукр. інтелігенції,\
+    \ зрадництво нац. буржуазії, ре"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

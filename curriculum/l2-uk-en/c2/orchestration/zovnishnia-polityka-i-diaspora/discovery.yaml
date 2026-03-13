@@ -1,0 +1,148 @@
+discovered_at: '2026-03-13T20:34:54.205121+00:00'
+query_keywords:
+- Зовнішня політика і діаспора
+- Зовнішня політика як тематичний дискурс
+- Foreign Policy as Thematic Discourse
+- Напрями зовнішньої політики України
+- Directions of Ukraine's Foreign Policy
+- Українці за кордоном
+- Ukrainians Abroad
+- Іноземці в Україні
+- Foreigners in Ukraine
+- Міграційні процеси
+- Migration Processes
+- Дипломатичний регістр і аналітичне письмо
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode193/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 193
+- url: https://www.ukrainianlessons.com/episode194/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - vocabulary
+  - family
+  - conversation
+  - interview
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 194
+- url: https://www.ukrainianlessons.com/episode195/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - vocabulary
+  - emotions
+  - conversation
+  - interview
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 195
+- url: https://www.ukrainianlessons.com/episode197/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - vocabulary
+  - food
+  - travel
+  - conversation
+  - interview
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 197
+- url: https://www.ukrainianlessons.com/episode198/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 198
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0234
+  text: "169\nРізновиди суперечки: публічний діалог, дебати \x1F\nДиспут\nпублічна,\
+    \ заздалегідь підго товлена суперечка на наукову, суспіль-\nну, літературну, моральну\
+    \ тему; проводиться на наукових конфе-\nренціях, у  навчальних закладах, на сторінках\
+    \ періодичних видань. Учасники заздалегідь ознайомлюються з  темою, опрацьовують\
+    \ \nлітературу, щоб аргументовано відстоювати свої погляди, оцінки \nподій, проблем,\
+    \ явищ\nДебати\nсуперечка з  приводу висловлених у  доповіді, програмі дій, заяві\
+    \ \nпропозицій щодо розв’язанн"
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0368
+  text: "239\nУ сучасній лінгвістиці дискурс сприймається і як динамічний процес \n\
+    мовленнєвої діяльності, що включений у її соціальний контекст, і як її \nрезультат —\
+    \ зв’язне висловлювання. Дискурсом можна вважати і стисле \nСМС-повідомлення,\
+    \ і великий роман. Дискурс може бути оформлений і письмово, і усно. Як будь-який\
+    \ кому-\nнікативний акт, він передбачає дві ролі  — адресанта (того, хто створює\
+    \ \nвисловлювання) і адресата (того, для кого це висловлювання створюється). В усному\
+    \ мовленні ролі адресанта й адр"
+  section_title: Сторінка 239
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0268
+  text: "За допомогою стилістично забарвлених слів творимо пев-\nний колорит мовлення,\
+    \ досягаємо експресивності висловлення. Види стилістично забарвленої лексики\n\
+    Вид лексики\nСтилі\x0F у яких ¸ереважно \nвживаêµо слова\nПриклади\nКнижна \n\
+    Суспільно-\nполітична\nПубліцистичний,\nоôіційно-діловий \n·арламентар\x0F демокра\x10\
+    \nтія\x0F загальнодер®авни±\nОôіційно-\nділова\nОôіційно-діловий,\nпубліцистичний\n\
+    інструкція\x0F ініціювати\nНаукова \nНауковий \nдоданок\x0F молекула\x0F ·ри\x10\
+    \nслівник\nРозмовна \nРозмовний, художній\nдітлахи\x0F ¿кандибати\nÀ\n\x8E"
+  section_title: Сторінка 177
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0233
+  text: "РІЗНО5ВИДИ СУПЕРЕЧКИ\nДіалог \n(публічний)\nспосіб побудови переконувальної\
+    \ промови як співбесіди з  ауди-\nторією: кожен може і виступати, і  слухати.\
+    \ Основні ознаки: вираз-\nна цілеспрямованість, двосторонність, експресивність,\
+    \ емоційність"
+  section_title: Сторінка 168
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0473
+  text: "264\n \nМовленнєве спілкування. Стилістика і культура мовлення\nТЕМА 23.\
+    \ ДИСКУСІЙНЕ МОВЛЕННЯ. ДЕБАТИ ЯК ФОРМА ДИСКУСІЙ\nДискусія — це не обов’язково\
+    \ су-\nперечка, це можливість кожній \nстороні висловити свою точку зору. О. Ірванець\n\
+    Буду я  навчатись мови золотої\nДискусія — 1) широке, публічне обговорення якогось\
+    \ диску-\nсійного питання на зборах, у пресі тощо; 2) перен. спір, суперечка \n\
+    окремих осіб, співрозмовників. Дискусія відбувається не хаотично, а  за певними\
+    \ правилами \nі  згодою її учасників (о"
+  section_title: Сторінка 264
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

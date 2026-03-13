@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 159 — E2E
+PASS: pipeline lit 157
 
   Module:   sverstiuk-moral-resistance
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T14:46:12Z
+  Date:     2026-03-13T23:37:12Z

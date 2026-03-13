@@ -5,22 +5,22 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T22:02:26Z",
+      "ts": "2026-03-13T23:16:41Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
-        "name": "discover_passthrough"
+        "name": "discovery_search"
       }
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T22:02:26Z",
+      "ts": "2026-03-13T23:16:41Z",
       "task_id": "v5-capstone-research-pA",
       "mode": "full",
       "executor": {
         "type": "llm",
-        "agent": "gemini",
-        "model": "unknown"
+        "agent": "claude",
+        "model": "claude-sonnet-4-6"
       }
     }
   }

@@ -3,24 +3,24 @@
   "slug": "berta-rapoport",
   "mode": "v5",
   "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T20:08:35Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T10:04:45Z",
+      "ts": "2026-03-13T20:08:35Z",
       "task_id": "v5-berta-rapoport-pA",
       "mode": "full",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
-      }
-    },
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-13T10:04:45Z",
-      "note": "merged-into-research",
-      "executor": {
-        "type": "script",
-        "name": "discovery_search"
       }
     }
   }

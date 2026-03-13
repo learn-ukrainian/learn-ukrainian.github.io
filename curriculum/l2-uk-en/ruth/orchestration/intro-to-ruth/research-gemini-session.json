@@ -1,0 +1,541 @@
+{
+  "sessionId": "b4e02d87-8e7b-4eff-ba9e-457ec7290a04",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T23:38:20.466Z",
+  "lastUpdated": "2026-03-13T23:39:48.264Z",
+  "messages": [
+    {
+      "id": "f0e27a17-a539-4987-bd26-109d4b66799e",
+      "timestamp": "2026-03-13T23:38:20.466Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-001\nlevel: RUTH\nsequence: 1\nslug: intro-to-ruth\nversion: '2.0'\ntitle: Вступ до руської мови\nsubtitle: Intro to RUTH\nfocus: Transition from OES to Ruthenian — Diglossia\nphase: 1\nword_target: 5000\ncontent_outline:\n- section: Передмова\n  points:\n  - Hook and introduction to the course\n  words: 500\n- section: 'Від давньоруської до руської: Великий перехід'\n  points:\n  - Що змінилося після XIII століття\n  - Три регістри руської мови\n  - Як ці регістри співіснували\n  words: 500\n- section: 'Первинний текст: Преамбула Литовського статуту (1529)'\n  points:\n  - Оригінальний текст\n  - Транскрипція сучасною українською\n  - Аналіз тексту\n  words: 500\n- section: 'Фонетичні зміни: Від давньоруської до руської'\n  points:\n  - Повноголосся залишається\n  - Ікавізм набирає сили\n  - Занепад єрів\n  words: 500\n- section: Морфологічні зміни\n  points:\n  - Спрощення системи відмін\n  - Занепад двоїни\n  - Розвиток майбутнього часу\n  words: 500\n- section: Польські запозичення\n  points:\n  - Polish loanwords in legal and administrative terminology\n  words: 500\n- section: Латинські запозичення\n  points:\n  - Latin loanwords via Polish\n  words: 500\n- section: 'Структура курсу: Чотири фази'\n  points:\n  - Overview of the four phases of RUTH track\n  words: 500\n- section: Практичні вправи\n  points:\n  - Exercises and activities\n  words: 500\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 500\nvocabulary_hints:\n- диглосія\n- регістр\n- канцелярський стиль\n- проста мова\n- господар\n- шляхта\n- статут\n- ікавізм\n- повноголосся\n- привілей\n- воєводство\n- головщина\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Ruthenian Philologist\nconnects_to:\n- sovereign-state\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Польські запозичення» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Вступ до руської мови** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Вступ до руської мови\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Вступ до руської мови\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "7c017c1e-5673-4f4d-b3bf-5d573fd43456",
+      "timestamp": "2026-03-13T23:38:27.771Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the Next Step",
+          "description": "I'm now focused on the next stage. It involves figuring out what comes after the current action. I'll need to figure out how to make progress toward the final objective.",
+          "timestamp": "2026-03-13T23:38:24.764Z"
+        },
+        {
+          "subject": "Beginning the Research Process",
+          "description": "I'm starting the research process now, focusing on the initial sections. I will query the available research tools and evaluate the outputs to get the information I need.",
+          "timestamp": "2026-03-13T23:38:26.771Z"
+        },
+        {
+          "subject": "Initiating the First Query",
+          "description": "I am about to begin the research phase. The initial step involves querying Wikipedia for pertinent information on the topic. The goal is to establish a solid foundation for the subsequent investigation.",
+          "timestamp": "2026-03-13T23:38:27.644Z"
+        }
+      ],
+      "tokens": {
+        "input": 20828,
+        "output": 21,
+        "cached": 16926,
+        "thoughts": 388,
+        "tool": 0,
+        "total": 21237
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445107769_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Староукраїнська мова",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445107769_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Староукраїнська мова' — 5 results\n\n1. **Староукраїнська мова** — мовознавстві. Староукраїнська мова — поширена назва в українській історіографії та мовознавстві. Після появи УНР, стали вживати назву «староукраї́нська». Західноруська\n2. **Словник староукраїнської мови XIV—XV ст.** — «Словни́к староукраї́нської мо́ви XIV—XV ст.» — 2-томний історичний словник староукраїнської (руської) мови пізнього середньовіччя й раннього нового часу\n3. **Проста мова** — Проста мова (самоназва «про́стая мова», «про́сты̏ εзы&#039;къ», «рꙋськаꙗ мова») іноді також згадується як староукраїнська мова, старобілоруська мова та канцелярська\n4. **Руська мова** — «рутенська мова». Праіндоєвропейська мова Прабалтослов&#039;янська мова Праслов&#039;янська мова Давньоруська мова Руська (староукраїнська/старобілоруська) мова Значення\n5. **Рутенська мова** — позначення: Руська мова або Староукраїнська мова (рутенська‚ офіційна мова Великого князівства Литовського) Українська мова Білоруська мова Карпато-русинський"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:28.048Z",
+          "resultDisplay": "Wikipedia search: 'Староукраїнська мова' — 5 results\n\n1. **Староукраїнська мова** — мовознавстві. Староукраїнська мова — поширена назва в українській історіографії та мовознавстві. Після появи УНР, стали вживати назву «староукраї́нська». Західноруська\n2. **Словник староукраїнської мови XIV—XV ст.** — «Словни́к староукраї́нської мо́ви XIV—XV ст.» — 2-томний історичний словник староукраїнської (руської) мови пізнього середньовіччя й раннього нового часу\n3. **Проста мова** — Проста мова (самоназва «про́стая мова», «про́сты̏ εзы&#039;къ», «рꙋськаꙗ мова») іноді також згадується як староукраїнська мова, старобілоруська мова та канцелярська\n4. **Руська мова** — «рутенська мова». Праіндоєвропейська мова Прабалтослов&#039;янська мова Праслов&#039;янська мова Давньоруська мова Руська (староукраїнська/старобілоруська) мова Значення\n5. **Рутенська мова** — позначення: Руська мова або Староукраїнська мова (рутенська‚ офіційна мова Великого князівства Литовського) Українська мова Білоруська мова Карпато-русинський",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9a7bf944-05ca-409f-ac48-9065a2b3dfbb",
+      "timestamp": "2026-03-13T23:38:32.002Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing the Article Content",
+          "description": "I am now reading the content of the article. My next action is to assess the information. I'll focus on grasping the essential details of the subject.",
+          "timestamp": "2026-03-13T23:38:31.959Z"
+        }
+      ],
+      "tokens": {
+        "input": 21227,
+        "output": 21,
+        "cached": 19790,
+        "thoughts": 83,
+        "tool": 0,
+        "total": 21331
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445112001_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "sections",
+            "query": "Староукраїнська мова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445112001_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Староукраїнська мова':\n\n1 Походження (index=1)\n2 Назва (index=2)\n3 Історія (index=3)\n  3.1 XIV—XVI ст. (index=4)\n  3.2 XVII ст. (index=5)\n  3.3 XVIII ст. (index=6)\n4 Приклад (index=7)\n5 Див. також (index=8)\n6 Примітки (index=9)\n7 Бібліографія (index=10)\n  7.1 Джерела (index=11)\n  7.2 Словники (index=12)\n  7.3 Монографії (index=13)\n  7.4 Статті (index=14)\n  7.5 Довідники (index=15)\n8 Посилання (index=16)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:33.637Z",
+          "resultDisplay": "Sections of 'Староукраїнська мова':\n\n1 Походження (index=1)\n2 Назва (index=2)\n3 Історія (index=3)\n  3.1 XIV—XVI ст. (index=4)\n  3.2 XVII ст. (index=5)\n  3.3 XVIII ст. (index=6)\n4 Приклад (index=7)\n5 Див. також (index=8)\n6 Примітки (index=9)\n7 Бібліографія (index=10)\n  7.1 Джерела (index=11)\n  7.2 Словники (index=12)\n  7.3 Монографії (index=13)\n  7.4 Статті (index=14)\n  7.5 Довідники (index=15)\n8 Посилання (index=16)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "09ee4a17-70ca-4740-84af-bdc6f63a1439",
+      "timestamp": "2026-03-13T23:38:38.345Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Commencing Extraction and Analysis",
+          "description": "I'm now zeroing in on the specific sections for close examination. I'll need to sift through the extracted data to identify and distill the key information pertaining to my ultimate goal, focusing on the selected sections.",
+          "timestamp": "2026-03-13T23:38:37.794Z"
+        },
+        {
+          "subject": "Refining Information Retrieval",
+          "description": "I'm currently focused on the targeted retrieval of data, narrowing the scope to the specific portions that require in-depth assessment. The goal is to obtain relevant data for the sections indicated.",
+          "timestamp": "2026-03-13T23:38:38.206Z"
+        }
+      ],
+      "tokens": {
+        "input": 21457,
+        "output": 21,
+        "cached": 19744,
+        "thoughts": 66,
+        "tool": 0,
+        "total": 21544
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445118344_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Староукраїнська мова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445118344_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Староукраїнська мова\n**Description**: мова, що була поширена в XIV–XVIII ст. на територіях сучасної України, Білорусі і частини Польщі\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0\n\nСтароукраї́нська мо́ва — українська мова XIV—XVIII століть. Тогочасна назва — руська мова. Побутувала на українських теренах Литви, Польщі, Молдови та Війська Запорозького. Використовувалася як літературна мова у дипломатії, юриспруденції, конфесійній, художній, науковій літературі тощо. До XVI століття була однією з офіційних мов канцелярій Литви та Молдови, де згодом витіснена польською, латиною та молдовською. У XVIII столітті, в Центральній Україні, під впливом заборон указами Найсвятішого Синоду РПЦ, вийшла з ужитку. Відтоді церковну літературу видавали лише церковнослов'янською мовою. На Заході України староукраїнська мова зберігалася до початку ХІХ століття, а на Сході України трималася лише в усній та рукописній формі."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:41.213Z",
+          "resultDisplay": "# Староукраїнська мова\n**Description**: мова, що була поширена в XIV–XVIII ст. на територіях сучасної України, Білорусі і частини Польщі\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0\n\nСтароукраї́нська мо́ва — українська мова XIV—XVIII століть. Тогочасна назва — руська мова. Побутувала на українських теренах Литви, Польщі, Молдови та Війська Запорозького. Використовувалася як літературна мова у дипломатії, юриспруденції, конфесійній, художній, науковій літературі тощо. До XVI століття була однією з офіційних мов канцелярій Литви та Молдови, де згодом витіснена польською, латиною та молдовською. У XVIII столітті, в Центральній Україні, під впливом заборон указами Найсвятішого Синоду РПЦ, вийшла з ужитку. Відтоді церковну літературу видавали лише церковнослов'янською мовою. На Заході України староукраїнська мова зберігалася до початку ХІХ століття, а на Сході України трималася лише в усній та рукописній формі.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "dc6a2958-234f-41f9-bb0d-fa036577555d",
+      "timestamp": "2026-03-13T23:38:45.140Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to section 3",
+          "description": "I am now delving into the historical section. My focus is on the relevant information that will help me accomplish the next step. I will extract the key data, and then move on.",
+          "timestamp": "2026-03-13T23:38:45.016Z"
+        }
+      ],
+      "tokens": {
+        "input": 21889,
+        "output": 23,
+        "cached": 16457,
+        "thoughts": 66,
+        "tool": 0,
+        "total": 21978
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445125140_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Староукраїнська мова",
+            "section": 3,
+            "mode": "section"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445125140_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Староукраїнська мова — Section 3\n\nІсторія\n\nXIV—XVI&nbsp;ст.\nУкраїнська і білоруська писемні мови XIV&nbsp;— 1-ї пол. XVI&nbsp;ст. представлені головним чином юридичними документами: дарчими і купчими грамотами, заповітами тощо, їхня мова (яка мала у різні часи назви західноруська писемна мова; південноруська, українсько-білоруська)&nbsp;— це колишній діловий стиль літератури Київської Русі (див. Давньоукраїнська мова), збагачений місцевими словами й формами, а також запозиченнями з інших мов. Фонетична і морфологічна системи української мови у грамотах повністю утвердилися, хоч і розходилися часто з традиційною системою письма. Поширювані в Україні й Білорусі в XVI&nbsp;ст. «єресі» (социніанство, реформація) зумовили проникнення елементів простої мови&nbsp;— в основі своїй мови юридичних документів&nbsp;— у конфесійну літературу, а також у полемічну і художню.\n\nУ XV—XVI століттях на українських землях з'являються переклади українською мовою творів церковно-релігійного змісту, зокрема «Четьї» (1489). До цієї традиції належать і перекладні конфесійні пам'ятки, з-поміж яких найвідоміші&nbsp;— «Пересопницьке Євангеліє» (1556—1561) та «Крехівський Апостол» (1560), а також інші тексти цього кола.\n\nЗ розвитком багатостильової літератури пробуджувалась національна свідомість. В Україні в останній чверті XVI&nbsp;ст. розвивається панегірична література, в якій прославляються подвиги світських і духовних осіб у їхній боротьбі проти іноземних завойовників. Поширенню староукраїнської літературної мови сприяла діяльність православних церковних братств, в які організовувалось міщанство. Вони виникають у Львові, Рогатині, Городку, Бересті (Бресті), Перемишлі, Комарні, Сатанові, Галичі, Красноставі, Більську, Києві, Луцьку та ін. містах. Українська поезія кінця XVI&nbsp;століття ще бідна на тропи, проте для неї вже характерні ті ключові слова, які згодом визначатимуть особливості барокових творів та ін. І. Некрашевича&nbsp;— попередника І. Котляревського, який започаткував українську літературну мову на народній основі).\n\nXVIII&nbsp;ст.\nКазимира Делямара, 1868 рік ]]\nУ 1720, коли російський цар Петро І затвердив указ Синоду про те, що в Києві і Чернігові книжки мають друкуватися тільки такою мовою, яка нічим не відрізняється від московської, над староукраїнською літературною мовою нависла серйозна загроза. Наступні синодальні укази з вересня 1721, січня й грудня 1727, березня 1728 щораз більше обмежували діяльність Києво-Печерської друкарні. Церковна література відтоді видавалася лише церковнослов'янською мовою. Загальмувався й розвиток українською мовою навчальної та художньої літератури. Залишалася тільки рукописна українська література, представлена колядками, різдвяними віршами, виголошувана спудеями й мандрованими дяками, а також традиційні ділові документи, діаріуші, різноманітні господарські й лікарські довідники та порадники. Друкована ж література писалася слов'яноруською мовою.\n\nСлов'яноруська мова, що витіснила староукраїнську, була штучним витвором, що спирався передусім на церковнослов'янську мову. Українські автори XVIII&nbsp;ст., пишучи свої твори, свідомо чи несвідомо, хотіли влитися в загальноросійський культурний контекст. Навіть більше&nbsp;— вони творили його, бо російська література з їхньою участю тільки-но починала розвиватися. У мові філософських творів Г. Сковороди наявні і церковнослов'янські елементи, і українізми, і русизми. Слугуючи культурним потребам українців, слов'яноруська мова витискала з ужитку вже освячену кількома століттями староукраїнську літературну мову. Таким чином, слов'яноруська літературна мова об'єктивно відігравала деструктивну роль щодо староукраїнської мови. Але, руйнуючи староукраїнську мову і відкриваючи тим самим простір для поширення в Україні російської літературної, ця штучна мова відкривала місце і для творення нової української літературної мови&nbsp;— уже на суто народній основі."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:45.456Z",
+          "resultDisplay": "# Староукраїнська мова — Section 3\n\nІсторія\n\nXIV—XVI&nbsp;ст.\nУкраїнська і білоруська писемні мови XIV&nbsp;— 1-ї пол. XVI&nbsp;ст. представлені головним чином юридичними документами: дарчими і купчими грамотами, заповітами тощо, їхня мова (яка мала у різні часи назви західноруська писемна мова; південноруська, українсько-білоруська)&nbsp;— це колишній діловий стиль літератури Київської Русі (див. Давньоукраїнська мова), збагачений місцевими словами й формами, а також запозиченнями з інших мов. Фонетична і морфологічна системи української мови у грамотах повністю утвердилися, хоч і розходилися часто з традиційною системою письма. Поширювані в Україні й Білорусі в XVI&nbsp;ст. «єресі» (социніанство, реформація) зумовили проникнення елементів простої мови&nbsp;— в основі своїй мови юридичних документів&nbsp;— у конфесійну літературу, а також у полемічну і художню.\n\nУ XV—XVI століттях на українських землях з'являються переклади українською мовою творів церковно-релігійного змісту, зокрема «Четьї» (1489). До цієї традиції належать і перекладні конфесійні пам'ятки, з-поміж яких найвідоміші&nbsp;— «Пересопницьке Євангеліє» (1556—1561) та «Крехівський Апостол» (1560), а також інші тексти цього кола.\n\nЗ розвитком багатостильової літератури пробуджувалась національна свідомість. В Україні в останній чверті XVI&nbsp;ст. розвивається панегірична література, в якій прославляються подвиги світських і духовних осіб у їхній боротьбі проти іноземних завойовників. Поширенню староукраїнської літературної мови сприяла діяльність православних церковних братств, в які організовувалось міщанство. Вони виникають у Львові, Рогатині, Городку, Бересті (Бресті), Перемишлі, Комарні, Сатанові, Галичі, Красноставі, Більську, Києві, Луцьку та ін. містах. Українська поезія кінця XVI&nbsp;століття ще бідна на тропи, проте для неї вже характерні ті ключові слова, які згодом визначатимуть особливості барокових творів та ін. І. Некрашевича&nbsp;— попередника І. Котляревського, який започаткував українську літературну мову на народній основі).\n\nXVIII&nbsp;ст.\nКазимира Делямара, 1868 рік ]]\nУ 1720, коли російський цар Петро І затвердив указ Синоду про те, що в Києві і Чернігові книжки мають друкуватися тільки такою мовою, яка нічим не відрізняється від московської, над староукраїнською літературною мовою нависла серйозна загроза. Наступні синодальні укази з вересня 1721, січня й грудня 1727, березня 1728 щораз більше обмежували діяльність Києво-Печерської друкарні. Церковна література відтоді видавалася лише церковнослов'янською мовою. Загальмувався й розвиток українською мовою навчальної та художньої літератури. Залишалася тільки рукописна українська література, представлена колядками, різдвяними віршами, виголошувана спудеями й мандрованими дяками, а також традиційні ділові документи, діаріуші, різноманітні господарські й лікарські довідники та порадники. Друкована ж література писалася слов'яноруською мовою.\n\nСлов'яноруська мова, що витіснила староукраїнську, була штучним витвором, що спирався передусім на церковнослов'янську мову. Українські автори XVIII&nbsp;ст., пишучи свої твори, свідомо чи несвідомо, хотіли влитися в загальноросійський культурний контекст. Навіть більше&nbsp;— вони творили його, бо російська література з їхньою участю тільки-но починала розвиватися. У мові філософських творів Г. Сковороди наявні і церковнослов'янські елементи, і українізми, і русизми. Слугуючи культурним потребам українців, слов'яноруська мова витискала з ужитку вже освячену кількома століттями староукраїнську літературну мову. Таким чином, слов'яноруська літературна мова об'єктивно відігравала деструктивну роль щодо староукраїнської мови. Але, руйнуючи староукраїнську мову і відкриваючи тим самим простір для поширення в Україні російської літературної, ця штучна мова відкривала місце і для творення нової української літературної мови&nbsp;— уже на суто народній основі.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "369d1942-971a-4087-aa50-4101361f7697",
+      "timestamp": "2026-03-13T23:38:50.270Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Seeking Literary Sources",
+          "description": "I'm now focused on locating primary sources relevant to the current task. I'm employing my search capabilities to pinpoint specific literary texts that align with the subject. I'm confident that this approach will yield valuable insights.",
+          "timestamp": "2026-03-13T23:38:48.752Z"
+        },
+        {
+          "subject": "Querying for Relevant Texts",
+          "description": "I've initiated the literary search, working through the specific queries. My current activity involves running these search requests to gather the materials required. I anticipate a successful retrieval of source data, which will guide my next steps.",
+          "timestamp": "2026-03-13T23:38:50.082Z"
+        }
+      ],
+      "tokens": {
+        "input": 23175,
+        "output": 68,
+        "cached": 19895,
+        "thoughts": 128,
+        "tool": 0,
+        "total": 23371
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445130182_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Литовський статут преамбула"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445130182_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Литовський статут преамбула\"\n\n### Result 1 (score: 0.5798)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0014`\n- **Text**:\nАртыкулы поправъ статуту\r\nЛитовскаго на соймЂ валномъ въ ВаршавЂ 1578\n\nО поправахъ артикула 27 въ роздЂлЂ 4\n\nПоправа артикула 23 въ роздЂлЂ 4\n\nАртыкулъ поправы Статуту\r\nЛитовскаго на сойму Варшавскомъ, о земскихъ рокахъ\n\nА что ижъ описано въ артикулЂ первомъ\n\nПоправа артыкулу 9 въ роздЂлЂ 12 о подданныхъ\r\nотчизныхъ и невольникахъ и слугахъ приказныхъ, которые отъ пановъ своихъ\r\nвтекаютъ\n\nШкрутеніумъ\n\nКОНСТИТУЦІИ СЕЙМУ ВАРШАВСКАГО РОКУ 1578\n\nАртыкулъ 1. порядокъ до\r\nобираня судей\n\nАртыкулъ 2. О в\n\n### Result 2 (score: 0.5601)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0000`\n- **Text**:\nДРУГИЙ (ВОЛИНСЬКИЙ) СТАТУТ \nВЕЛИКОГО КНЯЗІВСТВА ЛИТОВСЬКОГО 1566 РОКУ\n\n[Статут Вялікага княства Літоўскага 1566 года. — Мінск, 2003. — С.35-263. За виданням 1855 року.]\n\nРЕЕСТРЪ\n\nПРИВІЛЕЇ\n\nПривилей Року 63\n\nПривилей БЂльской. принятье унеи рокъ 64\n\nПривелей Виленскій рокъ 65\n\nЛЂта Божьего нароженія 1566 мЂсяца Іюля 1 дня,\r\nартикулы Поправы статутовая\n\nСТАТУТЪ ВЕЛИКОГО КНЯЗСТВА ЛИТОВСКОГО\n\nРЕСТРЪ РОЗДЂЛУ 1-ГО\nО персонЂ господарской.\n\nАртыкулъ І. Вси обыватели\r\nВеликого Князства Литовского однымъ \n\n### Result 3 (score: 0.5500)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0024`\n- **Text**:\nРОЗДЂЛЪ ПЕРВЫЙ О ПЕРСОНЂ ГОСПОДАРСКОЙ\n\nАРТЫКУЛЪ 1.\n\nВси обыватели Великого Князства Литовского оунымъ правомъ\r\nписанымъ и отъ насъ данымъ сужоны быти маютъ.\n\nНапередъ мы Господаръ обЂцуемъ и шлюбуемъ подъ тоюжъ\r\nпрысегою, которую учинили есьмо всимъ обывателем всихъ земль того панства\r\nнашого Великого Князства Литовского, ижъ всихъ княжатъ, пановъ радъ духовныхъ и\r\nсвЂцкихъ, панов хоруговныхъ, шляхту, мЂста и всихъ подданыхъ нашихъ и всихъ\r\nстановъ въ томъ панствЂ нашомъ Великомъ КнязствЂ Литовс\n\n### Result 4 (score: 0.5480)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1595`\n- **Text**:\nЗ огляду на те, що актом Люблинської унії держ.\r\nстановище Литви було змінене й з’явилися нові держ. адміністративні й судові\r\nоргани, постала конечність знов переглянути, виправити та доповнити текст\r\nдругої редакції Статуту й пристосувати його до нових обставин. Цю працю\r\nвиконала нова комісія, організована підканцлером литовським Левом Сапігою.\r\nНовий текст, чимало збільшений проти першої редакції й краще впорядкований, ухвалено\r\nна соймі 1588 р. Того ж року він був надрукований у друкарні бр\n\n### Result 5 (score: 0.5467)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0243`\n- **Text**:\nПОПРАВЫ СТАТУТОВЫЯ\n\nНА СОМЂ ВАРАШАВСКОМЪ УХВАЛЕНАЯ И ПОСТАНОВЛЕНАЯ.\n\nАРТЫКУЛЫ ПОПРАВЪ СТАТУТУ ЛИТОВСКОГО НА СЕЙМЂ. ВАЛНОМЪ ВЪ ВАРШАВЂ 1587.\n\nСей статутъ для лЂпшой вЂры и певности есть\r\nкорикгованъ за статутомъ, который на первей за волею и вЂдомостью Господаря\r\nКраля его милости Жыкгимонта Августа, подъ печатію господарскою, на соймЂ\r\nВыленскомъ всимъ станомъ есть выданъ, при которомъ ухвала сейму Городенского\r\nдвЂ привыля соймовъ Выленскыхъ, третый привылей сейму Белзкого, коньституціи\r\nсейму \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:52.205Z",
+          "resultDisplay": "Found 5 results for: \"Литовський статут преамбула\"\n\n### Result 1 (score: 0.5798)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0014`\n- **Text**:\nАртыкулы поправъ статуту\r\nЛитовскаго на соймЂ валномъ въ ВаршавЂ 1578\n\nО поправахъ артикула 27 въ роздЂлЂ 4\n\nПоправа артикула 23 въ роздЂлЂ 4\n\nАртыкулъ поправы Статуту\r\nЛитовскаго на сойму Варшавскомъ, о земскихъ рокахъ\n\nА что ижъ описано въ артикулЂ первомъ\n\nПоправа артыкулу 9 въ роздЂлЂ 12 о подданныхъ\r\nотчизныхъ и невольникахъ и слугахъ приказныхъ, которые отъ пановъ своихъ\r\nвтекаютъ\n\nШкрутеніумъ\n\nКОНСТИТУЦІИ СЕЙМУ ВАРШАВСКАГО РОКУ 1578\n\nАртыкулъ 1. порядокъ до\r\nобираня судей\n\nАртыкулъ 2. О в\n\n### Result 2 (score: 0.5601)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0000`\n- **Text**:\nДРУГИЙ (ВОЛИНСЬКИЙ) СТАТУТ \nВЕЛИКОГО КНЯЗІВСТВА ЛИТОВСЬКОГО 1566 РОКУ\n\n[Статут Вялікага княства Літоўскага 1566 года. — Мінск, 2003. — С.35-263. За виданням 1855 року.]\n\nРЕЕСТРЪ\n\nПРИВІЛЕЇ\n\nПривилей Року 63\n\nПривилей БЂльской. принятье унеи рокъ 64\n\nПривелей Виленскій рокъ 65\n\nЛЂта Божьего нароженія 1566 мЂсяца Іюля 1 дня,\r\nартикулы Поправы статутовая\n\nСТАТУТЪ ВЕЛИКОГО КНЯЗСТВА ЛИТОВСКОГО\n\nРЕСТРЪ РОЗДЂЛУ 1-ГО\nО персонЂ господарской.\n\nАртыкулъ І. Вси обыватели\r\nВеликого Князства Литовского однымъ \n\n### Result 3 (score: 0.5500)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0024`\n- **Text**:\nРОЗДЂЛЪ ПЕРВЫЙ О ПЕРСОНЂ ГОСПОДАРСКОЙ\n\nАРТЫКУЛЪ 1.\n\nВси обыватели Великого Князства Литовского оунымъ правомъ\r\nписанымъ и отъ насъ данымъ сужоны быти маютъ.\n\nНапередъ мы Господаръ обЂцуемъ и шлюбуемъ подъ тоюжъ\r\nпрысегою, которую учинили есьмо всимъ обывателем всихъ земль того панства\r\nнашого Великого Князства Литовского, ижъ всихъ княжатъ, пановъ радъ духовныхъ и\r\nсвЂцкихъ, панов хоруговныхъ, шляхту, мЂста и всихъ подданыхъ нашихъ и всихъ\r\nстановъ въ томъ панствЂ нашомъ Великомъ КнязствЂ Литовс\n\n### Result 4 (score: 0.5480)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1595`\n- **Text**:\nЗ огляду на те, що актом Люблинської унії держ.\r\nстановище Литви було змінене й з’явилися нові держ. адміністративні й судові\r\nоргани, постала конечність знов переглянути, виправити та доповнити текст\r\nдругої редакції Статуту й пристосувати його до нових обставин. Цю працю\r\nвиконала нова комісія, організована підканцлером литовським Левом Сапігою.\r\nНовий текст, чимало збільшений проти першої редакції й краще впорядкований, ухвалено\r\nна соймі 1588 р. Того ж року він був надрукований у друкарні бр\n\n### Result 5 (score: 0.5467)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0243`\n- **Text**:\nПОПРАВЫ СТАТУТОВЫЯ\n\nНА СОМЂ ВАРАШАВСКОМЪ УХВАЛЕНАЯ И ПОСТАНОВЛЕНАЯ.\n\nАРТЫКУЛЫ ПОПРАВЪ СТАТУТУ ЛИТОВСКОГО НА СЕЙМЂ. ВАЛНОМЪ ВЪ ВАРШАВЂ 1587.\n\nСей статутъ для лЂпшой вЂры и певности есть\r\nкорикгованъ за статутомъ, который на первей за волею и вЂдомостью Господаря\r\nКраля его милости Жыкгимонта Августа, подъ печатію господарскою, на соймЂ\r\nВыленскомъ всимъ станомъ есть выданъ, при которомъ ухвала сейму Городенского\r\nдвЂ привыля соймовъ Выленскыхъ, третый привылей сейму Белзкого, коньституціи\r\nсейму \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773445130226_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "руська мова проста мова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445130226_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"руська мова проста мова\"\n\n### Result 1 (score: 0.5732)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0646`\n- **Text**:\nУ стародруках України і\r\nБілорусії, як неодноразово вказувалося, поряд з церковнослов’янською, набула\r\nпевного поширення писемна канцелярійно-книжна руська мова. \"Руська\"\r\n(\"західноруська\", за термінологією, яка нині вже сприймається як\r\nзастаріла) актова мова і \"проста руська\" книжна — це різновиди\r\nбілорусько-української писемної мови. Деномінант \"руський\"\r\n(\"руский\" у багатьох текстах, переважно пізніших) в українській мові\r\nцілком ясний, означаючи для раннього періоду їхньої історії всіх схі\n\n### Result 2 (score: 0.5566)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0266`\n- **Text**:\nЦя традиція мала в основному усний характер. Хоча\r\nпісні та сатиричні твори часто записувалися чи навіть друкувалися, існували\r\nвони передовсім усе-таки в усних переказах. З-поміж наявних публікацій\r\nбільшість здійснено за межами України (наприклад, у збірках пісень,\r\nвидрукуваних у Москві та Санкт-Петербурзі впереміш із тогочасними російськими\r\nпіснями та в непевному з мовознавчого погляду відтворенні).\n\nУ цілому, простую мову, якщо дотримуватися\r\nцього окреслення, збережено як принцип, згідно \n\n### Result 3 (score: 0.5426)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0094`\n- **Text**:\nНа цей час, власне, припадає\r\nпевна фактична нормалізація писемної \"мови простої\", щоправда,\r\nнезафіксованої в граматиках і словниках, а точніше зафіксованої з великим\r\nзапізненням, у XVII ст. — у ненадрукованій граматиці Івана Ужевича 1643 і 1645\r\nрр., а щодо лексики — у \"руській\" частині словника Памва Беринди\r\n1627 р. Сформувалася ця мова в двох основних варіантах \"літературному\"\r\n(вживаному і в приватному листуванні, навіть в листах церковної адміністрації\r\nтощо) і в специфічно актовому, хар\n\n### Result 4 (score: 0.5298)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0269`\n- **Text**:\nросіянка \r\n§ 38, п. 1, прим. 6\n\nРоссіні \r\n§ 90, п. 5, а, 3; \r\n§ 100, п. 2\n\nрости \r\n§ 8, п. 1, а, 7; ріс\r\n§ 8, п. 1, а, 7; росла \r\n§ 8, п. 1, а, 7\n\nРостов-на-Дону \r\n§ 112, п. 6; \r\n§ 114, п. 3, ґ; Ростова-на-Дону, у Ростові-на-Дону \r\n§ 112, п. 6\n\nростовський-на-Дону \r\n§ 114, п. 3, ґ\n\nРось \r\n§ 108\n\nрот, рота \r\n§ 8, п. 2, а, прим. 1\n\nРощино \r\n§ 109, п. 7, б\n\nрояль \r\n§ 90, п. 4\n\nрр. — роки \r\n§ 40\n\nРтищево \r\n§ 109, п. 4, б, 6\n\nРудольфштадт \r\n§ 114, п. 2, ґ\n\nрудольфштадтський \r\n§ 114, п. 2, ґ\n\nРуж’є \r\n\n\n### Result 5 (score: 0.5285)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0177`\n- **Text**:\nОце і вся наукова література, що виучувала й\r\nрозробляла мову Руської Правди. ЕЕ 3 цього огляду роблю той висновок,\r\nщо ця література є дуже обмежена числом і неповна обсягом; властиво це тільки\r\nпочаток студіювання мови Руської Правди і не скоро воно буде в такім стані, щоб\r\nможна було сказати, що мова Руської Правди є досліджена. А без такого\r\nдокладного дослідження мови пам’ятки неможливо вести дальші студії Руської\r\nПравди, щодо інтерпретації окремих статтей її, сенсу їх та правного розумінн\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:52.205Z",
+          "resultDisplay": "Found 5 results for: \"руська мова проста мова\"\n\n### Result 1 (score: 0.5732)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0646`\n- **Text**:\nУ стародруках України і\r\nБілорусії, як неодноразово вказувалося, поряд з церковнослов’янською, набула\r\nпевного поширення писемна канцелярійно-книжна руська мова. \"Руська\"\r\n(\"західноруська\", за термінологією, яка нині вже сприймається як\r\nзастаріла) актова мова і \"проста руська\" книжна — це різновиди\r\nбілорусько-української писемної мови. Деномінант \"руський\"\r\n(\"руский\" у багатьох текстах, переважно пізніших) в українській мові\r\nцілком ясний, означаючи для раннього періоду їхньої історії всіх схі\n\n### Result 2 (score: 0.5566)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0266`\n- **Text**:\nЦя традиція мала в основному усний характер. Хоча\r\nпісні та сатиричні твори часто записувалися чи навіть друкувалися, існували\r\nвони передовсім усе-таки в усних переказах. З-поміж наявних публікацій\r\nбільшість здійснено за межами України (наприклад, у збірках пісень,\r\nвидрукуваних у Москві та Санкт-Петербурзі впереміш із тогочасними російськими\r\nпіснями та в непевному з мовознавчого погляду відтворенні).\n\nУ цілому, простую мову, якщо дотримуватися\r\nцього окреслення, збережено як принцип, згідно \n\n### Result 3 (score: 0.5426)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0094`\n- **Text**:\nНа цей час, власне, припадає\r\nпевна фактична нормалізація писемної \"мови простої\", щоправда,\r\nнезафіксованої в граматиках і словниках, а точніше зафіксованої з великим\r\nзапізненням, у XVII ст. — у ненадрукованій граматиці Івана Ужевича 1643 і 1645\r\nрр., а щодо лексики — у \"руській\" частині словника Памва Беринди\r\n1627 р. Сформувалася ця мова в двох основних варіантах \"літературному\"\r\n(вживаному і в приватному листуванні, навіть в листах церковної адміністрації\r\nтощо) і в специфічно актовому, хар\n\n### Result 4 (score: 0.5298)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0269`\n- **Text**:\nросіянка \r\n§ 38, п. 1, прим. 6\n\nРоссіні \r\n§ 90, п. 5, а, 3; \r\n§ 100, п. 2\n\nрости \r\n§ 8, п. 1, а, 7; ріс\r\n§ 8, п. 1, а, 7; росла \r\n§ 8, п. 1, а, 7\n\nРостов-на-Дону \r\n§ 112, п. 6; \r\n§ 114, п. 3, ґ; Ростова-на-Дону, у Ростові-на-Дону \r\n§ 112, п. 6\n\nростовський-на-Дону \r\n§ 114, п. 3, ґ\n\nРось \r\n§ 108\n\nрот, рота \r\n§ 8, п. 2, а, прим. 1\n\nРощино \r\n§ 109, п. 7, б\n\nрояль \r\n§ 90, п. 4\n\nрр. — роки \r\n§ 40\n\nРтищево \r\n§ 109, п. 4, б, 6\n\nРудольфштадт \r\n§ 114, п. 2, ґ\n\nрудольфштадтський \r\n§ 114, п. 2, ґ\n\nРуж’є \r\n\n\n### Result 5 (score: 0.5285)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0177`\n- **Text**:\nОце і вся наукова література, що виучувала й\r\nрозробляла мову Руської Правди. ЕЕ 3 цього огляду роблю той висновок,\r\nщо ця література є дуже обмежена числом і неповна обсягом; властиво це тільки\r\nпочаток студіювання мови Руської Правди і не скоро воно буде в такім стані, щоб\r\nможна було сказати, що мова Руської Правди є досліджена. А без такого\r\nдокладного дослідження мови пам’ятки неможливо вести дальші студії Руської\r\nПравди, щодо інтерпретації окремих статтей її, сенсу їх та правного розумінн\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773445130268_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "канцелярський стиль шляхта господар"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445130268_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"канцелярський стиль шляхта господар\"\n\n### Result 1 (score: 0.5221)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0367`\n- **Text**:\nЯк вже зазначалося, збереглися грамоти польського\r\nкороля Казимира III для населення Галичини як латиномовні, так і написані\r\nукраїнською мовою. Цілком ймовірно, що для укладання цих актів він мав\r\nспеціальну канцелярію. І ось у латиномовних грамотах Казимир титулує себе\r\n\"dominus et haeres\", a в грамотах українських — \"господар і\r\nдідич\", що є докладним перекладом латинського варіанту титулу. Водночас\r\nвідомі грамоти галицько-волинських князів початку XIV ст. латинською мовою, в\r\nяких вони тако\n\n### Result 2 (score: 0.5204)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0187`\n- **Text**:\nОфіційно-діловий стиль, природно, не може оминути\r\nназв осіб, які займають ті чи інші посади в сотні, місті, селі. Це, скажімо, атаманъ\r\nгородовий, воитъ, бурмистръ, сотникъ, старшина енералная, урадникъ, розищикъ,\r\nасавулъ, бунчужний енералний войсковий, ωбозный, хоружий полковий, писар\r\nгородовий. Цю низову урядову піраміду увінчує гетман. Адміністративна\r\nлексика переплітається з юридично-судовою: скарга, протекція, жалоба,\r\nзълочинца, розискъ, допрос, свЂдителство, отвЂтчикъ, допрошуванний, \n\n### Result 3 (score: 0.5027)\n- **Work**: Войтович — Князівські династії Східної Європи (2000)\n- **Author**: Войтович Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `6573f12d_c1000`\n- **Text**:\nПри дворах продовжували функціонувати князівські\r\nканцелярії. Розвиток державного документу в Галичині та на Волині у XIII-XIV\r\nст. випереджав аналогічні процеси в інших землях, що було зумовлено широкими\r\nконтактами не тільки з сусідніми угорськими та польськими землями,\r\nпівденнослов'янськими державами і Візантією, але й зв'язками з австрійськими,\r\nсаксонськими та іншими більш віддаленими землями, де правова культура мала\r\nбільш глибокі писемні традиції (932, с.44-108). Починаючи з часів Юрія\r\n\n### Result 4 (score: 0.5001)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c0993`\n- **Text**:\nНа чолї двора стояв „дворський”, або \r\n „дворецький”. Сим словом галицька лїтопись толкує західнїй уряд palatinus, \r\n comes palatii 14), і досить можливо, що сформованнє сього уряду у \r\n нас на Українї стало ся не без впливу того західнього уряду. З XII в. маємо \r\n про нього тільки одну голу згадку 15). Близше знайомимо ся з сим \r\n урядом на дворі Данила: тут дворський грає першу ролю між боярами, звичайно \r\n виступає на чолї княжого війська і в неприсутности князя має головний провід в \r\n містї\n\n### Result 5 (score: 0.4842)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0199`\n- **Text**:\n«Шляхта живе розкішно, любить тримати багато слуг і\r\nконей, маючи їх сто і більше; в дорозі слуги їдуть за ними верхи, в місті ідуть\r\nза ними пішки. Сенаторів попереджують дворяни, за ними юрба слуг».\n\nКожний магнат тримав на своїм дворі по кількадесять\r\nрізних «дворян» і слуг. Були там маршалки, секретарі, капеллани, резиденти,\r\nкомірники, пивничні, шафарі, конюші, машталіри, музиканти, співаки,\r\nкамердинери, лакеї, гайдуки, швейцари, стрільці, пажі — різнорідна служба для\r\nрізних доручень, що \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:52.205Z",
+          "resultDisplay": "Found 5 results for: \"канцелярський стиль шляхта господар\"\n\n### Result 1 (score: 0.5221)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0367`\n- **Text**:\nЯк вже зазначалося, збереглися грамоти польського\r\nкороля Казимира III для населення Галичини як латиномовні, так і написані\r\nукраїнською мовою. Цілком ймовірно, що для укладання цих актів він мав\r\nспеціальну канцелярію. І ось у латиномовних грамотах Казимир титулує себе\r\n\"dominus et haeres\", a в грамотах українських — \"господар і\r\nдідич\", що є докладним перекладом латинського варіанту титулу. Водночас\r\nвідомі грамоти галицько-волинських князів початку XIV ст. латинською мовою, в\r\nяких вони тако\n\n### Result 2 (score: 0.5204)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0187`\n- **Text**:\nОфіційно-діловий стиль, природно, не може оминути\r\nназв осіб, які займають ті чи інші посади в сотні, місті, селі. Це, скажімо, атаманъ\r\nгородовий, воитъ, бурмистръ, сотникъ, старшина енералная, урадникъ, розищикъ,\r\nасавулъ, бунчужний енералний войсковий, ωбозный, хоружий полковий, писар\r\nгородовий. Цю низову урядову піраміду увінчує гетман. Адміністративна\r\nлексика переплітається з юридично-судовою: скарга, протекція, жалоба,\r\nзълочинца, розискъ, допрос, свЂдителство, отвЂтчикъ, допрошуванний, \n\n### Result 3 (score: 0.5027)\n- **Work**: Войтович — Князівські династії Східної Європи (2000)\n- **Author**: Войтович Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `6573f12d_c1000`\n- **Text**:\nПри дворах продовжували функціонувати князівські\r\nканцелярії. Розвиток державного документу в Галичині та на Волині у XIII-XIV\r\nст. випереджав аналогічні процеси в інших землях, що було зумовлено широкими\r\nконтактами не тільки з сусідніми угорськими та польськими землями,\r\nпівденнослов'янськими державами і Візантією, але й зв'язками з австрійськими,\r\nсаксонськими та іншими більш віддаленими землями, де правова культура мала\r\nбільш глибокі писемні традиції (932, с.44-108). Починаючи з часів Юрія\r\n\n### Result 4 (score: 0.5001)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c0993`\n- **Text**:\nНа чолї двора стояв „дворський”, або \r\n „дворецький”. Сим словом галицька лїтопись толкує західнїй уряд palatinus, \r\n comes palatii 14), і досить можливо, що сформованнє сього уряду у \r\n нас на Українї стало ся не без впливу того західнього уряду. З XII в. маємо \r\n про нього тільки одну голу згадку 15). Близше знайомимо ся з сим \r\n урядом на дворі Данила: тут дворський грає першу ролю між боярами, звичайно \r\n виступає на чолї княжого війська і в неприсутности князя має головний провід в \r\n містї\n\n### Result 5 (score: 0.4842)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0199`\n- **Text**:\n«Шляхта живе розкішно, любить тримати багато слуг і\r\nконей, маючи їх сто і більше; в дорозі слуги їдуть за ними верхи, в місті ідуть\r\nза ними пішки. Сенаторів попереджують дворяни, за ними юрба слуг».\n\nКожний магнат тримав на своїм дворі по кількадесять\r\nрізних «дворян» і слуг. Були там маршалки, секретарі, капеллани, резиденти,\r\nкомірники, пивничні, шафарі, конюші, машталіри, музиканти, співаки,\r\nкамердинери, лакеї, гайдуки, швейцари, стрільці, пажі — різнорідна служба для\r\nрізних доручень, що \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "10eead05-33a0-44a2-a531-afdaed9aa09f",
+      "timestamp": "2026-03-13T23:38:58.770Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing Data Analysis",
+          "description": "I'm now focused on the next phase. I'm building on the preliminary findings to flesh out more details, focusing on refining my understanding with secondary resources and cross-referencing information. I am confident in my ability to achieve this.",
+          "timestamp": "2026-03-13T23:38:56.558Z"
+        },
+        {
+          "subject": "Validating Key Terms",
+          "description": "I'm presently confirming the accuracy of the vocabulary list. Then, I plan to analyze the frequency of the terms to gain further insight into their significance within the context. The collected data is expected to advance the overall objective.",
+          "timestamp": "2026-03-13T23:38:58.556Z"
+        }
+      ],
+      "tokens": {
+        "input": 27783,
+        "output": 48,
+        "cached": 0,
+        "thoughts": 307,
+        "tool": 0,
+        "total": 28138
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773445138769_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "диглосія",
+              "регістр",
+              "канцелярський",
+              "господар",
+              "шляхта",
+              "статут",
+              "ікавізм",
+              "повноголосся",
+              "привілей",
+              "воєводство",
+              "головщина"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773445138769_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 11 words\n\nFound: 10/11\n\n- **диглосія** — FOUND (1 match): диглосія(noun)\n- **регістр** — FOUND (4 match): регістр(noun), регістр(noun), регістр(noun)\n- **канцелярський** — FOUND (3 match): канцелярський(adj), канцелярський(adj), канцелярський(adj)\n- **господар** — FOUND (1 match): господар(noun)\n- **шляхта** — FOUND (1 match): шляхта(noun)\n- **статут** — FOUND (2 match): статут(noun), статут(noun)\n- **ікавізм** — FOUND (2 match): ікавізм(noun), ікавізм(noun)\n- **повноголосся** — FOUND (4 match): повноголосся(noun), повноголосся(noun), повноголосся(noun)\n- **привілей** — FOUND (2 match): привілей(noun), привілей(noun)\n- **воєводство** — FOUND (3 match): воєводство(noun), воєводство(noun), воєводство(noun)\n- **головщина** — NOT FOUND"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:38:58.780Z",
+          "resultDisplay": "Batch verification: 11 words\n\nFound: 10/11\n\n- **диглосія** — FOUND (1 match): диглосія(noun)\n- **регістр** — FOUND (4 match): регістр(noun), регістр(noun), регістр(noun)\n- **канцелярський** — FOUND (3 match): канцелярський(adj), канцелярський(adj), канцелярський(adj)\n- **господар** — FOUND (1 match): господар(noun)\n- **шляхта** — FOUND (1 match): шляхта(noun)\n- **статут** — FOUND (2 match): статут(noun), статут(noun)\n- **ікавізм** — FOUND (2 match): ікавізм(noun), ікавізм(noun)\n- **повноголосся** — FOUND (4 match): повноголосся(noun), повноголосся(noun), повноголосся(noun)\n- **привілей** — FOUND (2 match): привілей(noun), привілей(noun)\n- **воєводство** — FOUND (3 match): воєводство(noun), воєводство(noun), воєводство(noun)\n- **головщина** — NOT FOUND",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9ba9731d-7108-4cb5-bd70-c7c80e849575",
+      "timestamp": "2026-03-13T23:39:04.420Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Checking for Definitions",
+          "description": "I'm now focusing on determining the meaning of this term, and checking for related definitions. It seems it might be a specialized term. I am trying various methods to get the meaning of the word.",
+          "timestamp": "2026-03-13T23:39:03.701Z"
+        },
+        {
+          "subject": "Analyzing Term Frequency",
+          "description": "I'm now moving on to the next step, evaluating how often this word is used. Based on the previous outcome, I am going to see how frequently the other word appears and if there's any relation.",
+          "timestamp": "2026-03-13T23:39:04.282Z"
+        }
+      ],
+      "tokens": {
+        "input": 28118,
+        "output": 19,
+        "cached": 0,
+        "thoughts": 143,
+        "tool": 0,
+        "total": 28280
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773445144418_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "mode": "frequency",
+            "query": "диглосія"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773445144418_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**диглосія**: frequency = 24, relative = 0.01 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:39:07.455Z",
+          "resultDisplay": "**диглосія**: frequency = 24, relative = 0.01 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e156364d-a9c9-41ba-ad94-b736a4956372",
+      "timestamp": "2026-03-13T23:39:12.667Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward now, aiming to achieve the next step. I will execute the next command and assess its outcomes to refine my approach for further advancements, ensuring each action brings me closer to the final objective.",
+          "timestamp": "2026-03-13T23:39:11.656Z"
+        },
+        {
+          "subject": "Filling in the Gaps",
+          "description": "I am now focusing on filling the gaps. I'll utilize the literary search to explore \"ікавізм повноголосся занепад єрів,\" aiming to extract specific details needed to bridge the knowledge gaps. The goal is to gather more concrete data to advance towards the objective.",
+          "timestamp": "2026-03-13T23:39:12.546Z"
+        }
+      ],
+      "tokens": {
+        "input": 28163,
+        "output": 27,
+        "cached": 26930,
+        "thoughts": 179,
+        "tool": 0,
+        "total": 28369
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445152665_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "ікавізм повноголосся занепад єрів"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445152665_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"ікавізм повноголосся занепад єрів\"\n\n### Result 1 (score: 0.5397)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0299`\n- **Text**:\nБільшу вагу, ніж ці часткові відхилення, мала наявність\r\nтаких звукозмін, що суперечили правилам та тенденціям пізнього етапу розвитку\r\nпраслов’янської мови самою своєю природою. Сюди належать (коротко повторюючи\r\nвже сказане) унедійснення опозиції за тоном і втрата самостійного статусу\r\nтривалості голосних (сполученої з наголосом), через що значно зменшився набір\r\nголосних фонем (див. 7.1); ця тенденція продовжилася зникненням носових\r\nголосних і була вивершена занепадом єрів у 1050-1150 рр. (д\n\n### Result 2 (score: 0.5176)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0307`\n- **Text**:\nУтім, ці посутні розбіжності не були перешкодою на\r\nшляху спільних розвоєвих процесів, що до них належать, приміром, зміна\r\nзвукосполук типу губний +j на звукосполуки типу губний + l’\r\n(див. 3.9), спрощення звукосполук tl i dl\r\nдо самого лише приголосного / (див. 4.1), однаковий перебіг постання\r\nповноголосу (див. 6.1), втрата j перед и та о\r\nна початку слова (див. 10.4), пом’якшення приголосних перед ě\r\nта слабким ь, а також ствердіння праслов’янських l’\r\nі п’ перед голосними переднього ряду (д\n\n### Result 3 (score: 0.5123)\n- **Work**: Українська мова — Енциклопедія (2004)\n- **Author**: Русанівський В.М. та ін.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `1af78606_c0158`\n- **Text**:\nІ. вживається також у значенні назви межі певного\r\nмовного явища, яка може бути представлена на карті різними картогр. засобами.\r\nІ. можуть синтезувати певні межі явищ. Так, у кінці кожного тому «Атласу\r\nукраїнської мови» вміщуються ізоглосні карти, на яких лініями окреслюються\r\nтериторії поширення явищ, зображених на попередніх знакових картах. І. цих\r\nявищ, як правило, не збігаються, але в ряді діал. зон вони проходять близько\r\nодна від одної, загущуються або пересікають одна одну, утворюючи п\n\n### Result 4 (score: 0.5012)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0030`\n- **Text**:\n— дзвінкість приголосних наприкінці слова та перед\r\nглухим приголосним утрачено майже в усіх південно-західних говірках;\n\n— довгота приголосних у словах на кшталт питáння\r\nє втраченою практично геть на всій тій самій великій території;\n\n— замість ry, ly, що заступили\r\nдавньоукраїнські rъ ~ rь, lъ ~ lь, у лемківських,\r\nзакарпатських, гуцульських і бойківських говірках (а в поодиноких словах — і\r\nдалі на схід) виступають сполуки уr, уl, тимчасом як у\r\nчернігівських говірках може траплятися rо, lo;\n\n### Result 5 (score: 0.4976)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0300`\n- **Text**:\nІз занепадом єрів постала сила нових скупчень\r\nприголосних і набули поширення нові чергування голосних (о : Ø,\r\nе : Ø, у : Ø, і : Ø, o· : о та\r\nе· : e), звідки в мові згодом з’явилося й потрійне чергування\r\nі : j : Ø. Таким чином,\r\nперіодові, що розпочався в VI-VII ст., було притаманне співіснування\r\nпротилежних тенденцій: частина з них — то продовження праслов’янських процесів\r\n(вони поступово втрачали на силі, застосовуючися в дедалі вужчій сфері), інші\r\n— то зовсім невідомі праслов’янській мо\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:39:13.179Z",
+          "resultDisplay": "Found 5 results for: \"ікавізм повноголосся занепад єрів\"\n\n### Result 1 (score: 0.5397)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0299`\n- **Text**:\nБільшу вагу, ніж ці часткові відхилення, мала наявність\r\nтаких звукозмін, що суперечили правилам та тенденціям пізнього етапу розвитку\r\nпраслов’янської мови самою своєю природою. Сюди належать (коротко повторюючи\r\nвже сказане) унедійснення опозиції за тоном і втрата самостійного статусу\r\nтривалості голосних (сполученої з наголосом), через що значно зменшився набір\r\nголосних фонем (див. 7.1); ця тенденція продовжилася зникненням носових\r\nголосних і була вивершена занепадом єрів у 1050-1150 рр. (д\n\n### Result 2 (score: 0.5176)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0307`\n- **Text**:\nУтім, ці посутні розбіжності не були перешкодою на\r\nшляху спільних розвоєвих процесів, що до них належать, приміром, зміна\r\nзвукосполук типу губний +j на звукосполуки типу губний + l’\r\n(див. 3.9), спрощення звукосполук tl i dl\r\nдо самого лише приголосного / (див. 4.1), однаковий перебіг постання\r\nповноголосу (див. 6.1), втрата j перед и та о\r\nна початку слова (див. 10.4), пом’якшення приголосних перед ě\r\nта слабким ь, а також ствердіння праслов’янських l’\r\nі п’ перед голосними переднього ряду (д\n\n### Result 3 (score: 0.5123)\n- **Work**: Українська мова — Енциклопедія (2004)\n- **Author**: Русанівський В.М. та ін.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `1af78606_c0158`\n- **Text**:\nІ. вживається також у значенні назви межі певного\r\nмовного явища, яка може бути представлена на карті різними картогр. засобами.\r\nІ. можуть синтезувати певні межі явищ. Так, у кінці кожного тому «Атласу\r\nукраїнської мови» вміщуються ізоглосні карти, на яких лініями окреслюються\r\nтериторії поширення явищ, зображених на попередніх знакових картах. І. цих\r\nявищ, як правило, не збігаються, але в ряді діал. зон вони проходять близько\r\nодна від одної, загущуються або пересікають одна одну, утворюючи п\n\n### Result 4 (score: 0.5012)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0030`\n- **Text**:\n— дзвінкість приголосних наприкінці слова та перед\r\nглухим приголосним утрачено майже в усіх південно-західних говірках;\n\n— довгота приголосних у словах на кшталт питáння\r\nє втраченою практично геть на всій тій самій великій території;\n\n— замість ry, ly, що заступили\r\nдавньоукраїнські rъ ~ rь, lъ ~ lь, у лемківських,\r\nзакарпатських, гуцульських і бойківських говірках (а в поодиноких словах — і\r\nдалі на схід) виступають сполуки уr, уl, тимчасом як у\r\nчернігівських говірках може траплятися rо, lo;\n\n### Result 5 (score: 0.4976)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0300`\n- **Text**:\nІз занепадом єрів постала сила нових скупчень\r\nприголосних і набули поширення нові чергування голосних (о : Ø,\r\nе : Ø, у : Ø, і : Ø, o· : о та\r\nе· : e), звідки в мові згодом з’явилося й потрійне чергування\r\nі : j : Ø. Таким чином,\r\nперіодові, що розпочався в VI-VII ст., було притаманне співіснування\r\nпротилежних тенденцій: частина з них — то продовження праслов’янських процесів\r\n(вони поступово втрачали на силі, застосовуючися в дедалі вужчій сфері), інші\r\n— то зовсім невідомі праслов’янській мо\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "7347bce2-7295-43cd-b717-205f5def19e9",
+      "timestamp": "2026-03-13T23:39:48.264Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Вступ до руської мови\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Вступ до руської мови\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1300\"\n  end: \"~1799\"\n  key_events:\n    - year: 1398\n      event: \"Початок формування західноруської (староукраїнської) писемної традиції у ВКЛ.\"\n    - year: 1529\n      event: \"Видання Першого Литовського статуту руською мовою.\"\n    - year: 1556\n      event: \"Початок роботи над Пересопницьким Євангелієм (до 1561) з використанням простої мови.\"\n    - year: 1566\n      event: \"Видання Другого (Волинського) Литовського статуту.\"\n    - year: 1588\n      event: \"Видання Третього Литовського статуту.\"\nprimary_quotes:\n  - text: \"Вси обыватели Великого Князства Литовского оунымъ правомъ писанымъ и отъ насъ данымъ сужоны быти маютъ.\"\n    source: \"Другий (Волинський) статут ВКЛ, 1566\"\n    attribution: \"Законодавець ВКЛ\"\n  - text: \"Напередъ мы Господаръ обЂцуемъ и шлюбуемъ подъ тоюжъ прысегою...\"\n    source: \"Другий (Волинський) статут ВКЛ, 1566\"\n    attribution: \"Законодавець ВКЛ (Преамбула)\"\n  - text: \"Руська актова мова і проста руська книжна — це різновиди білорусько-української писемної мови.\"\n    source: \"Ярослав Ісаєвич, Українське книговидання, 2002\"\n    attribution: \"Ярослав Ісаєвич\"\nforbidden_claims:\n  - \"Руська мова Великого князівства Литовського була діалектом московської або 'загальноросійської' мови.\"\n  - \"У ВКЛ не існувало розвиненої державної мови місцевого населення.\"\n  - \"Називати цю мову 'западнорусский язык' у контексті підпорядкування Росії.\"\n```\n\n## Використані джерела\n1. [Староукраїнська мова (Wikipedia)](https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0) — базовий огляд історії староукраїнської мови XIV-XVIII ст.\n2. Другий (Волинський) статут ВКЛ 1566 року (litopys.org.ua) — первинне джерело юридичної руської мови, текст преамбули та артикулів.\n3. Ярослав Ісаєвич \"Українське книговидання\" (2002) — аналіз співіснування руської актової мови та \"простої мови\".\n4. Юрій Шевельов \"Історична фонологія української мови\" (2002) — фонетичні зміни, зокрема занепад єрів, повноголосся та ікавізм.\n5. VESUM & GRAC Corpus — верифікація лексики (диглосія, ікавізм, воєводство).\n\n## Хронологія\n- **~1300–1400-ті**: Поступовий перехід від давньоруської до староукраїнської (руської) мови. Занепад єрів завершується, формуються нові фонетичні риси.\n- **1489**: Поява перекладів церковно-релігійного змісту українською мовою («Четьї»).\n- **1529**: Перший Литовський статут фіксує руську мову як офіційну державну мову ВКЛ.\n- **1566**: Другий (Волинський) статут ВКЛ розширює юридичну термінологію та закріплює права шляхти.\n- **1556–1561**: Створення Пересопницького Євангелія, де церковнослов'янська мова поєднується з елементами живої народної «простої мови».\n- **Кінець XVI ст.**: Посилення полонізації після Люблінської унії (1569), проникнення польських та латинських запозичень.\n\n## Ключові факти та цитати\n- Термін «руська мова» у XIV–XVII ст. позначав староукраїнську/старобілоруську писемну мову, яка функціонувала у ВКЛ і Речі Посполитій.\n- Мовна ситуація характеризувалася **диглосією** (а згодом поліглосією): співіснували церковнослов'янська (високий стиль), канцелярська руська мова (офіційно-діловий стиль) та «проста мова» (ближча до розмовної, використовувалася у полемічній та художній літературі).\n- Преамбула Литовського статуту чітко артикулює використання «руської» мови як інструменту права: *«Вси обыватели... оунымъ правомъ писанымъ... сужоны быти маютъ»*.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Від давньоруської до руської: Великий перехід\": [!myth-buster] — Спростування імперського міфу про те, що руська мова ВКЛ була «западнорусским» діалектом Москви. Це була повноцінна державна мова з власними канцелярськими нормами.\n- Section \"Від давньоруської до руської: Великий перехід\": [!context] — Пояснення явища **диглосії** у Середньовіччі (розмежування високої сакральної мови та повсякденної/ділової).\n- Section \"Первинний текст: Преамбула Литовського статуту (1529)\": [!quote] — Цитата зі Статуту 1566 року про те, що всі обивателі мають бути суджені писаним правом.\n- Section \"Фонетичні зміни: Від давньоруської до руської\": [!history-bite] — Занепад єрів (ъ, ь) як «великий землетрус» у слов'янських мовах, що призвів до появи нових закритих складів та розвитку **ікавізму** (перехід [о], [е] в [і]).\n- Section \"Польські запозичення\": [!culture] — Як зміна політичного устрою (шляхетська демократія) принесла нову лексику (шляхта, воєводство, привілей, господар).\n- Section \"Латинські запозичення\": [!history-bite] — Латина проникала в руську мову не прямо, а часто як калька або запозичення через польську юридичну практику.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Російська історіографія використовувала термін «западнорусский письменный язык», щоб штучно прив'язати староукраїнську мову ВКЛ до історії становлення російської (московської) держави та применшити її самостійність.\n- **Ukrainian reality**: Це була **староукраїнська** (або українсько-білоруська руська) літературна мова. Вона була офіційною державною мовою Великого князівства Литовського, мала розвинений юридичний (Литовські статути) та релігійний (Пересопницьке Євангеліє) стилі, глибоко вкорінені у місцевій фонетиці та морфології.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Назва мови | Западнорусский язык, юго-западное наречие | Староукраїнська мова, руська мова (історична назва), проста мова |\n| Статус | Діалект, що відхилився від \"общерусского\" стандарту | Державна офіційна мова європейської держави (ВКЛ) |\n\n## Відеоресурси\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Передмова\n- Вступ до епохи Великого князівства Литовського та Речі Посполитої (XIV-XVIII ст.).\n- Зміна політичного центру з Києва на Вільно.\n- Статус руської мови як державної мови величезної європейської імперії (ВКЛ).\n\n### Від давньоруської до руської: Великий перехід\n- Після падіння Києва (1240) та включення українських земель до ВКЛ мова адміністрації збереглася, але почала еволюціонувати.\n- **Три регістри:**\n  1. Церковнослов'янська (Slaveno-Rusian) — сакральні тексти.\n  2. Канцелярська руська — державні акти, грамоти, статути.\n  3. «Проста мова» — наближена до розмовної, використовувалася у полеміці, перекладах (Євангелія), приватних листах.\n- **Диглосія**: чітке функціональне розділення цих регістрів у суспільстві.\n\n### Первинний текст: Преамбула Литовського статуту (1529)\n- Литовські статути (1529, 1566, 1588) — вершина правової думки тогочасної Європи, написані руською мовою.\n- Ключова цитата з Волинського статуту 1566: *«Вси обыватели Великого Князства Литовского оунымъ правомъ писанымъ и отъ насъ данымъ сужоны быти маютъ»*.\n- Аналіз тексту показує поєднання старої київської юридичної традиції («Руська Правда») з новими правовими концепціями.\n\n### Фонетичні зміни: Від давньоруської до руської\n- **Занепад єрів (ъ, ь)** у 11-12 ст. остаточно сформував нове обличчя мови у 14 ст. З'явилися нові закриті склади та збіги приголосних.\n- **Ікавізм**: У нових закритих складах етимологічні [о] та [е] почали подовжуватися і поступово переходити в [і] (через стадію дифтонгів). Це одна з найяскравіших рис, що відрізняє українську від інших східнослов'янських мов.\n- **Повноголосся**: Збереження старої риси (-оро-, -оло-, -ере-), що відрізняло руську мову від церковнослов'янської (де використовувалося неповноголосся: -ра-, -ла-).\n\n### Морфологічні зміни\n- Спрощення системи відмін іменників (занепад деяких давніх типів відмінювання, уніфікація за родами).\n- **Занепад двоїни**: форми двоїни поступово зникають або зливаються з множиною (залишаючи сліди у словах типу *очі, плечі* та після числівників *два, три, чотири*).\n- Розвиток нових аналітичних та синтетичних форм **майбутнього часу** дієслів.\n\n### Польські запозичення\n- Після Кревської (1385) та Люблінської (1569) уній вплив Польщі стрімко зростає.\n- Запозичується термінологія суспільно-політичного устрою: *шляхта* (з нім. через пол.), *воєводство*, *привілей*, *статут*, *господар*, *урядник*.\n- З'являється концепція \"шляхетських вольностей\", що відображається у словнику.\n\n### Латинські запозичення\n- Латина була мовою міжнародної дипломатії та католицької церкви у Польщі.\n- До руської мови латинізми потрапляли переважно опосередковано (через польську), часто стосувалися юриспруденції, освіти та абстрактних понять (наприклад, титулатура: *dominus et haeres* перекладалося як *господар і дідич*).\n\n### Структура курсу: Чотири фази\n- Огляд 4 фаз треку RUTH:\n  1. Юридична мова та Статути.\n  2. Конфесійна література та Пересопницьке Євангеліє.\n  3. Полемічна література (епоха Берестейської унії).\n  4. Козацькі літописи та бароко.\n\n### Практичні вправи\n- (Для етапу генерації контенту — завдання на транскрипцію, ідентифікацію граматики та етимологічний аналіз запозичень).\n\n### Підсумок\n- Зв'язок модуля з наступними темами (суверенна держава, формування ранньомодерної української ідентичності).\n- Підкреслення того, що руська мова ВКЛ стала міцним мостом між Давньою Руссю та модерною Україною.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Continuing the Search Process",
+          "description": "I'm now zeroing in on the next action. My focus is on finding the most relevant information and refining the approach for the next query. I will begin by making a new query.",
+          "timestamp": "2026-03-13T23:39:17.656Z"
+        },
+        {
+          "subject": "Focusing on Presentation and Synthesis",
+          "description": "I am preparing to assemble the results, putting the pieces together for a coherent output. My objective is to create a well-organized presentation of the information, synthesizing findings for the next stage.",
+          "timestamp": "2026-03-13T23:39:19.757Z"
+        },
+        {
+          "subject": "Constructing a Final Draft",
+          "description": "I am now beginning to build the output, focusing on each section's content. I'm taking the synthesis outline and converting it to the requested form. I am writing out the required blocks.",
+          "timestamp": "2026-03-13T23:39:22.110Z"
+        },
+        {
+          "subject": "Drafting the Conclusion",
+          "description": "I'm now structuring the conclusion. I'm focusing on synthesizing the key findings and incorporating the decolonization perspective. I'll make sure to create a cohesive and insightful summary, and will add the timeline and the key quotes.",
+          "timestamp": "2026-03-13T23:39:23.374Z"
+        }
+      ],
+      "tokens": {
+        "input": 29607,
+        "output": 3382,
+        "cached": 27034,
+        "thoughts": 748,
+        "tool": 0,
+        "total": 33737
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

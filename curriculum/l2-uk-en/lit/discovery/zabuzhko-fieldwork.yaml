@@ -1,0 +1,219 @@
+discovered_at: '2026-03-13T22:34:54.958135+00:00'
+query_keywords:
+- 'Оксана Забужко: «Польові дослідження з українського сексу»'
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- 'Проаналізувати твір Оксана Забужко: «Польові дослідження з українського сексу»
+  у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+- literature
+- канон
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=B7bs9prZ9V4
+  channel: Суспільне Культура
+  title: 'Оксана Забужко: «Прийняти біженців у Європі — це найменше, що нам винні
+    ці країни» #shorts'
+  relevance_score: 0.3
+  relevance_note: The video features Oksana Zabuzhko, the author of the module's subject
+    book. However, the video's content is focused on geopolitical and social commentary
+    regarding Ukrainian refugees and international agreements, not literary analysis
+    or discussion of her novel 'Польові дослідження з українського сексу'. It is in
+    Ukrainian but unrelated to the module's specific literary topic.
+  transcript_excerpt: це є найменше те що прийняли наших біженців в Європі це є найменше
+    даруйте що нам винні от ці країни за результатами 94-го року тобто Будапештського
+    меморандуму
+  embed_suggestion: Not suitable for direct embedding within the provided module sections
+    due to topic mismatch with the literary work being analyzed. It could be used
+    in a general 'Author's broader public commentary' section if the module expanded
+    to cover that.
+- url: https://www.youtube.com/watch?v=lnYRw7hph9M
+  channel: Суспільне Культура
+  title: Поезія. Оксана Забужко | Читають Галина Стефанова, Сестри Тельнюк, Юлія Федів
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0139
+  text: "Матеріал цього розділу відкриває перед вами широкі можливості для усві-\n\
+    домлення гуманізму як основи світоглядних переконань розвиненої особистості, \n\
+    оптимізму й  життєствердження як важливих духовних цінностей буття; розумін-\n\
+    ня благотворного впливу на людину краси природи; усвідомлення рівності жінок \n\
+    і чоловіків у всіх сферах суспільного життя як необхідної умови розв’язання ак-\n\
+    туальних політичних, соціально-культурних та психологічних проблем.\nОпрацьовуючи\
+    \ матеріал розділу, ви маєте змогу н"
+  section_title: Сторінка 75
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0465
+  text: "246  Су÷асна українська література . Оксана Забужко\nопрацьовуємо прочитане\n\
+    1. яке враження справив на вас твір О . Забужко? які літературні асоціації викли-\n\
+    кав? які запитання виникли? Обговоріть їх з однокласниками, однокласницями, \n\
+    вчителями, батьками . 2. Поміркуйте, чому письменниця винесла в заголовок свого\
+    \ твору слово каçка. які казкові елементи наявні у творі? 3. які реалії життя\
+    \ селян XVIII — першої половини ХіХ століття відтворила авторка? 4. На вашу думку,\
+    \ із якою метою у творі поєдна"
+  section_title: Сторінка 246
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0021
+  text: "— 2007. — № 2–4. — С. 32–35. Романенко О. В. Людина і світ в українській\
+    \ літературі доби «розстріляного відро-\nдження» / О. Романенко. — К. : Компанія\
+    \ «ВАІТЕ», 2006. — 98 с. Хархун В. Соцреалістичний канон в українській літературі:\
+    \ генеза, розвиток, модифікації / \nВ. Хархун. — Ніжин : ТОВ «Гідромакс», 2009.\
+    \ — 508 с. Домашнє завдання"
+  section_title: Сторінка 15
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0102
+  text: "Літературне æиття Західної Óкраїни  55\n7. жанр твору «Поза межами болю»\n\
+    À роман\nÁ повість\nВ поема в прозі\nÃ драма в прозі\n8. Установіть відповідність\
+    \ між персонажем і його національністю .\n1 Пшилуський\n2 Сабо\n3 Оглядівський\n\
+    4 штранцінгер\nÀ австрієць\nÁ українець\nВ угорець\nÃ поляк\nÄ серб\n9. Установіть\
+    \ відповідність між характеристикою та героєм твору О . турянського \n«Поза межами\
+    \ болю» .\n1 організатор \nтанцювальних вечорів\n2 скрипаль\n3 помер першим, з\
+    \ його одягу \nзапалили багаття\nÀ штранцінгер\nÁ "
+  section_title: Сторінка 55
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6140936613082886
+  chunk_id: fa6ac6ac_c0001
+  text: В Україні від 1996-го року (від часу першої публікації роману "Польові дослідження
+    з українського сексу") загальний наклад проданих книжок О. Забужко станом на 1
+    січня 2003 р. склав понад 65 тис. примірників. Твори О. Забужко здобули також
+    міжнародне визнання, особливо широке — в Центральній та Східній Європі. Її вірші
+    перекладалися шістнадцятьма мовами світу і 1997р. удостоєні Поетичної Премії Global
+    Commitment Foundation. Серед інших її літературних нагород — премії Фонду ім.
+    Щербань-Лапіка (1
+  work: Оксана Забужко. Життя та творчість Оксани Забужко
+  author: Забужко О.
+  year: 1960
+  genre: biography
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/bio/printit.php?tid=13548
+- score: 0.6064113974571228
+  chunk_id: a5f3ae7f_c0360
+  text: "Сьогодні жінки активно входять у суспільне життя,\r\nсвіт поступово стає\
+    \ біархальним, тож і українки заявляють про себе достатньо\r\nгучно, а то й галасливо.\
+    \ Їм уже не треба долати такого опору чоловіків, як у\r\nдавніші часи (так і хочеться\
+    \ сказати, пародіюючи певний дискурс: а проклали їм\r\nдорогу до рівноправного\
+    \ майбутнього пісні Марусі Чурай і вірші Лесі Українки!).\r\nСтворилися об’єктивні\
+    \ передумови для з’яви значно більшого числа героїнь на\r\nвкраїнських культурних\
+    \ обширах. Якими ж будуть ті герої"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm
+- score: 0.5989001393318176
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

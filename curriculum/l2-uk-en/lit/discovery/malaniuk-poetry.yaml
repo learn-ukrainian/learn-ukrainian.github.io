@@ -1,0 +1,268 @@
+discovered_at: '2026-03-13T21:32:18.741433+00:00'
+query_keywords:
+- Malaniuk Poetry
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Malaniuk Poetry у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.7
+  relevance_note: The video discusses the decolonization of historical narratives
+    in Ukraine, linking past genocides (Holocaust, Holodomor) and Stalinist crimes
+    to current Russian aggression. This provides valuable context for understanding
+    the 'Деколонізаційна перспектива' in Malaniuk's poetry, as his work is deeply
+    rooted in Ukrainian historical trauma and resistance to imperial narratives. It
+    also touches on historiography, a module vocabulary term.
+  transcript_excerpt: Ми кажемо про Голодомор, про злочини Сталіна, про російські
+    злочини... йдеться про зміну парадигми дослідження говоріння і осмислення Другої
+    Світової, ми вже приречені порівнювати злочинами путінського режиму.
+  embed_suggestion: After Деколонізаційна перспектива, to provide a modern, explicit
+    framework for historical decolonization that resonates with Malaniuk's themes.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.4
+  relevance_note: The video is about the Terechenko family and how their legacy was
+    suppressed by Soviet historiography. While it mentions 'історіографія' (historiography),
+    a module vocabulary term, and touches upon Ukrainian history, its specific focus
+    on a pre-Soviet elite family's business and social impact is tangentially related
+    at best to the direct analysis of Malaniuk's poetry or the 'Executed Renaissance'
+    period.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване... радянська історія,
+    історіографія їх, ну, викидувала і зневажали.
+  embed_suggestion: Not ideal for direct embedding in a module focused on Malaniuk's
+    poetry, but could be used in a broader historical context if discussing different
+    facets of Soviet suppression.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: This video focuses on the business innovations and wealth of the
+    Terechenko family. While it is Ukrainian historical content, its subject matter
+    is entirely unrelated to Malaniuk's poetry, literary analysis, or the broader
+    themes of the module. It's a general historical documentary without direct connection
+    to the module's core topic.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару.
+  embed_suggestion: Not suitable for this module.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/taras-shevchenko/
+  title: Taras Shevchenko — Ukraine's National Poet
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - shevchenko
+  - literature
+  - history
+  - poetry
+- url: https://www.ukrainianlessons.com/episode223/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 223
+- url: https://www.ukrainianlessons.com/episode224/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - vocabulary
+  - housing
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 224
+- url: https://www.ukrainianlessons.com/episode225/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 225
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0004
+  text: ". . . . . . . . 51\nЖанр, художня організація, персонажі. . . . . 52\nЕміграційна\
+    \ література. . . . . . . . . . . . 56\nЄвген Маланюк. . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 58\nОсвідчення («Один вечір») . . . . . . . . . . . .\
+    \ . . 59\nЧитацький практикум. Один вечір. . . . . . . . . 60\nПро творче покликання\
+    \  \n(«Напис на книзі віршів»). . . . . . . . . . . . . . . 61\nЧитацький практикум.\
+    \ Напис на книзі  \nвіршів. . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 61\nНостальгія  \n(«Під чужим не"
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0119
+  text: "Маланюк? що, на думку письменника, \nє чинниками формування «малоросійства»?\
+    \ Запрошуємо до дискусії\n7. Чи властиве «маëоросіéство» нашим сучасникам? В електронному\
+    \ додатку до підручника ви знайдете повний текст твору \nª. Маланþка «Малоросійство»\
+    \ . Прочитайте його . Дайте відповіді на запи-\nтання, виконайте завдання . читацький\
+    \ практикум"
+  section_title: Сторінка 65
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0116
+  text: "64  Еміграційна література . Євген Маланюк\nВиявляємо літературну компетентність\n\
+    1. яке враження справила на вас поезія? які емоції викликала? 2. Визначте провідний\
+    \ мотив вірша . Схарактеризуйте композицію твору . 3. Уважно прочитайте першу\
+    \ частину поезії . Дайте відповіді на запитання . \x03\n\x83 які образи створює\
+    \ поет у першій строфі? \x03\n\x83 які мотиви набувають звучання завдяки цим образам?\
+    \ \x03\n\x83 яка картина зринає у вашій уяві під впливом цих образів? Опишіть\
+    \ її . \x03\n\x83 яким у першій строфі постає лірич"
+  section_title: Сторінка 64
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0007
+  text: "Зміст    5 \nХудожня організація. . . . . . . . . . . . . . . . . 135\n\
+    Читацький практикум. Intermezzo . . . . . . . . . . . . . . . . . . . . 136\n\
+    Повість «Тіні забутих предків» . . . . . . . . . 141\nІсторія створення. . . .\
+    \ . . . . . . . . . . . . . . . 141\nНеоромантична основа. . . . . . . . . . .\
+    \ . . . . 141\nАвторський погляд. . . . . . . . . . . . . . . . . . 142\nТема\
+    \ кохання . . . . . . . . . . . . . . . . . . . . . . 142\nЛюдина, природа, магія.\
+    \ . . . . . . . . . . . . . 142\nІван Палійчук та"
+  section_title: Сторінка 5
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6148439049720764
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5924926996231079
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5871485471725464
+  chunk_id: 0988b006_c0348
+  text: "* Див. про це мою статтю \"Письменник і рідна\r\nмова\" // \"Рідна Мова\"\
+    , 1937 р., ч. 6, с. 241-248.\n\nТа читати треба не тільки ловлячи сам зміст, але\r\
+    \nконче звертаючи увагу й на саму мову й виписуючи собі кращі вирази. Крім цього,\r\
+    \nвелику вагу має читання етнографічних матеріялів: пісень, казок, дум і т. ін.,\
+    \ —\r\nвоно завжди допомагає глибшому вивченню мови. З цього матеріялу зазначу\
+    \ хоча б\r\nтаке: П. Куліш. Записки о Южной Руси, СПб., 1856-1857 р., два томи;\
+    \ М.\r\nДрагоманов та Вол. Антонович. Историче"
+  work: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ohukr/ohu.htm

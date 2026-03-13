@@ -3,24 +3,24 @@
   "slug": "dmytro-pavlychko",
   "mode": "v5",
   "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T20:13:32Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T11:12:59Z",
+      "ts": "2026-03-13T20:13:32Z",
       "task_id": "v5-dmytro-pavlychko-pA",
       "mode": "full",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
-      }
-    },
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-13T11:12:59Z",
-      "note": "merged-into-research",
-      "executor": {
-        "type": "script",
-        "name": "discovery_search"
       }
     }
   }

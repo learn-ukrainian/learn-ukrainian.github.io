@@ -255,8 +255,11 @@ def _score_source_verification(text: str, tier: str = "advanced",
 
     if total_sources == 0:
         return {"score": 0, "max": 2, "detail": "no sources found"}
-    # RAG chunks count as known-good sources (verified textbook content)
-    known_count = len(known) + (1 if rag_chunk_count > 0 else 0)
+    # RAG chunks count as known-good sources (verified textbook content).
+    # Multiple RAG chunks from different grades/subjects count as distinct sources
+    # (capped at 2 to avoid inflating the score from a single search).
+    rag_source_credit = min(rag_chunk_count, 2) if rag_chunk_count > 0 else 0
+    known_count = len(known) + rag_source_credit
     if known_count >= thresholds["source_domains_full"]:
         return {"score": 2, "max": 2, "detail": f"{known_count} known-good sources, {source_detail}"}
     if known_count >= thresholds["source_domains_partial"]:

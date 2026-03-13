@@ -1,0 +1,27 @@
+{
+  "track": "lit",
+  "slug": "sverstiuk-prodigal-sons-lit",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T21:53:33Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T21:53:33Z",
+      "task_id": "v5-sverstiuk-prodigal-sons-lit-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

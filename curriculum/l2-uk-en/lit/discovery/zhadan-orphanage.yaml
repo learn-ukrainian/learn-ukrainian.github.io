@@ -1,0 +1,211 @@
+discovered_at: '2026-03-13T22:47:38.845686+00:00'
+query_keywords:
+- 'Сергій Жадан: «Інтернат» — література війни'
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- 'Проаналізувати твір Сергій Жадан: «Інтернат» — література війни у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+- literature
+- канон
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qJPcj2RHGMw
+  channel: Суспільне Культура
+  title: '«Коли вам телефонує Сергій Жадан — ви погодитесь на що завгодно» — Антоніо
+    Лукіч #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=i2v_HoOmFeM
+  channel: Суспільне Культура
+  title: Подкаст «Наразі без назви» та читання під час війни – Анастасія Євдокимова
+    та Богдана Неборак
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0453
+  text: "240  Су÷асна українська література . Сергій жадан\nмайно. А тут не лише\
+    \ про заправку й майстер-\nню — і про занедбаний аеродром треба по-\nдбати, щоб\
+    \ і його не загарбали підприємливі \nділки. А Герман весь у спогадах про підліткову\
+    \ \nфутбольну команду — коли були всі молоді \nй сильні і здавалося, що попереду\
+    \ лише щастя. Над усе йому хочеться відродити втраче-\nне відчуття чоловічого\
+    \ футбольного братер-\nства — з давно минулих часів. І таки вдаєть-\nся щось подібне\
+    \ у фіналі: усі разом, немов \nкоманда, н"
+  section_title: Сторінка 240
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0249
+  text: "130  Воєнне лихоліття\nУкраїнській літературі часів війни властиві такі\
+    \ риси:\n\x03\n\x83 переважання патріотичної тематики;\n\x03\n\x83 уславлення\
+    \ захисників рідного краю й засудження ворогів;\n\x03\n\x83 зображення народного\
+    \ горя;\n\x03\n\x83 посилена увага до теми родини й родинних цінностей;\n\x03\n\
+    \x83 звернення до української історії, змалювання героїчних постатей минулого;\n\
+    \x03\n\x83 віра в перемогу та в нове, краще майбутнє України після війни.\nопрацьовуємо\
+    \ прочитане\n1. У зручній для вас формі визначте особливості розвитку українсько"
+  section_title: Сторінка 130
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-istoriya-schupak-2022_s0009
+  text: "ВСТУП\n11\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    Самооцінювання. Оцініть свої успіхи в опануванні теми «Що вивчає \nнаука історія»\
+    \ — уявно поєднайте кожне із запитань для самоконтролю \nз відповідним смайликом\
+    \ успіху. Дайте відповіді на запитання.\nЯк люди зберігали пам’ять\nпро минуле?\n\
+    Чому важливо зберігати \nпам’ять про минуле?\nЧому історія родини вважаєть-\n\
+    ся частиною історії країни?\nНавіщо потрібно досліджувати \nминуле людства?\n\
+    ?\nПрекрасно\nДобре\nпопрацювати\nТреба \nНічого не\nз"
+  section_title: Сторінка 11
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.523178219795227
+  chunk_id: ce21b6f1_c0000
+  text: 'ЛІТЕРАТУРА, ЇЇ ЗАВДАННЯ І НАЙВАЖНІШІ ЦІХИ
+
+
+    ("Правда", часть літературно-наукова. Книжка друга. "Сьогочасне літературне прямування")'
+  work: Іван Франко. Літературно-критичні статті
+  author: Франко І.
+  year: 1856
+  genre: letters
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=648
+- score: 0.5230361819267273
+  chunk_id: ed325924_c0169
+  text: "Інтермедії до драми Якуба Гаватовича «Tragaedia, albo\r\nwizerunk smierći\
+    \ przeświętego Iana Chrzciciela, przesłanca bozego»\n\nІнтермедії з Дернівського\
+    \ збірника\n\nИграние свадбы — сцена з драми «Алексій человЂк божій»\n\nІнтермедия\
+    \ на три персонЂ: баба, дЂд и чорт\n\nУривок інтермедійної сцени з великодньої\
+    \ драми\n\nІнтерлюдії до драми Митрофана Довгалевського «Комическое дЂйствіе»\n\
+    \nІнтерлюдії до драми Митрофана Довгалевського «Властотворній образ»\n\nІз інтерлюдій\
+    \ до драми «Стефанотокос»\n\nІз інтерлюдій до "
+  work: Українські інтермедії XVII-XVIII ст.
+  author: Різні
+  year: 1700
+  genre: interlude
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/ukrinter/int01.htm
+- score: 0.5202598571777344
+  chunk_id: 3588aaff_c0158
+  text: "1. Перше і, мабуть, найосновніше — це питання\r\nспільних структур, спільної\
+    \ культурної бази, що уможливлює спільну, так би\r\nмовити, онтологію, можливість\
+    \ взаємозрозумілого дискурсу, діалогу. З одного\r\nбоку, — це власне те, про що\
+    \ вже говорилося — питання однієї чи двох\r\nлітератур. Як я уже згадував, ця\
+    \ єдність (слово це, очевидно, має прикрі\r\nконотації із совєтської псевдонауки)\
+    \ існувала й неіснувала: українська\r\nлітература, зокрема на самих початках,\
+    \ але в деяких структурах (знову-таки:\r\nінститу"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

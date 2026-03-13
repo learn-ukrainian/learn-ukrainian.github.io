@@ -1,0 +1,138 @@
+discovered_at: '2026-03-13T21:48:23.140519+00:00'
+query_keywords:
+- Українська кухня - традиції та символи
+- Кухня як гастрономічний код нації
+- Cuisine as a Nation's Gastronomic Code
+- 'Хлібна культура: Сакральність та символізм'
+- 'Bread Culture: Sacredness and Symbolism'
+- 'Повсякденна трапеза: Борщ, вареники та голубці'
+- 'Daily Feast: Borscht, Varenyky, and Holubtsi'
+- 'Духовність через їжу: Обрядові традиції'
+- 'Spirituality through Food: Ritual Traditions'
+- Кулінарний практикум та мовна точність
+- Culinary Practicum and Linguistic Accuracy
+- the symbolic meaning of ritual foods (kutia, korovai)
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=LB3yXTJdoxg
+  channel: Суспільне Док
+  title: The Bread We Share | Psatyr by North Azovian Greeks
+  relevance_score: 0.9
+  relevance_note: 'This video directly addresses ''Bread Culture: Sacredness and Symbolism''
+    by exploring bread traditions and their sacred meaning among ethnic groups in
+    Ukraine.'
+  transcript_excerpt: Ми дослідили хлібні традиції різних народів, що проживають на
+    території України, і дізналися, яке сакральне значення для них має хліб...
+  embed_suggestion: 'After Хлібна культура: Сакральність та символізм -- directly
+    explores bread culture and its sacred meaning.'
+- url: https://www.youtube.com/watch?v=LzkHtrlsdnM
+  channel: Суспільне Культура
+  title: Рецепти з кабачків, сезонне FOMO, прозорі вареники | фуд-блогерка Анастасія
+    Середа
+  relevance_score: 0.8
+  relevance_note: The video directly mentions 'вареники', a core vocabulary item and
+    part of the 'Daily Feast' section. It also generally discusses Ukrainian cuisine
+    traditions and their cultural significance.
+  transcript_excerpt: Коложі подкаст про традиційне і нове в українській кухні...
+    Розповідаємо про таємничі прозорі вареники...
+  embed_suggestion: 'After Повсякденна трапеза: Борщ, вареники та голубці -- specifically
+    discusses varenyky and everyday cuisine.'
+- url: https://www.youtube.com/watch?v=2bP4yG-zchA
+  channel: Суспільне Культура
+  title: Шашлик — не грузинська страва? Як традиція пекти м’ясо змінила людство |
+    історикиня Софія Грачова
+  relevance_score: 0.6
+  relevance_note: The video discusses Ukrainian cuisine generally and the historical/social
+    aspects of food, aligning with 'Cuisine as a Nation's Gastronomic Code', but its
+    specific focus on shashlyk is tangential to the module's listed core topics.
+  transcript_excerpt: Коложі подкаст про традиційне і нове в українській кухні. Їжа
+    - це концентрація дуже великої кількості кулінарних практик, також соціальних
+    практик, також економічних стосунків.
+  embed_suggestion: 'After Вступ: Кухня як гастрономічний код нації -- broadly discusses
+    cultural and historical aspects of food.'
+blogs:
+- url: https://www.ukrainianlessons.com/lesson-181/
+  title: ULP 5-181 Українська кухня в радянські часи
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - ULP
+  - Season 5
+  content_type: podcast_episode
+  series: 5
+  season: 5
+  episode: 181
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0185
+  text: "3. Визначте спільне \nй  відмінне в  харчовому раціоні українців у  XIX \
+    \ ст. й  тепер. 4. Складіть меню \nповсякденного і  святкового обіду тогочасних\
+    \ українців. 6 \nШлюб і  сім’я. Становище жінки. У  цей період сім’я зберігала\
+    \ важ-\nливе значення для українців. Вона разом із сільськими й  міськи-\nми громадами,\
+    \ православною й  греко-католицькою вірами була тією \nосновою, де  захищалися\
+    \ етнічна свідомість, мова й  інші складові тра-\nдиційної народної культури.\
+    \ Сімейні відносини, як і раніше, регулюва"
+  section_title: Сторінка 102
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0253
+  text: "201\n \nУзагальнюємо знання й уміння за розділом 5\n1 — вбрання литовського\
+    \ князя і бояр; 2 — вбрання київських міщанок; \n3 — вбрання селян; 4 — типи взуття\
+    \ різних верств населення XIV–XV ст. \n(реконструкція З. Васіної)\n1\n2\n3\n4\n\
+    завдання для групи 3\nПрочитайте текст і розгляньте наведені ілюстрації. Обміркуйте\
+    \ назву та план \nсвоєї презентації. Опишіть, яким було харчування мешканців тогочасної\
+    \ Укра­\nїни. Під час презентації залучіть до розповіді 3–4 особи та проілюструйте\
+    \ розпо-\nвідь достовірними зо"
+  section_title: Сторінка 204
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0483
+  text: "ЗМІСТ\nМОВА ЯК СУСПІЛЬНЕ ЯВИЩЕ. УКРАЇНСЬКА МОВА В УКРАЇНІ\n§ 1 \nМова як\
+    \ знакова система і суспільне явище. Мова і держава . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . .4\n§ 2 \nПроблема екології української мови. «Мовний суржик». Українська\
+    \ мова як одна з індоєвропейських \nмов. Ознаки самобутності української мови\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 269
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0299
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . . 197
+
+    § 59–60. Етикетні жанри . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 201
+
+    Короткий словник наголосів . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . 203
+
+    Короткий словник колоритної української лексики. . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 205'
+  section_title: Сторінка 207
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

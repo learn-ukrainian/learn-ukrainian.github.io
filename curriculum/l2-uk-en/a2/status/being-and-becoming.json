@@ -2,13 +2,13 @@
   "module": "being-and-becoming",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-03-13T18:26:54.013582Z",
+  "last_audit": "2026-03-14T00:29:47.048354Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-13T15:51:10.567357Z",
+    "md": "2026-03-14T00:29:29.821360Z",
     "meta": "2026-03-13T15:47:31.859275Z",
-    "activities": "2026-03-13T18:26:48.554316Z",
-    "vocabulary": "2026-03-13T18:26:48.662092Z",
+    "activities": "2026-03-14T00:27:37.925857Z",
+    "vocabulary": "2026-03-14T00:22:39.255974Z",
     "research": "2026-03-12T20:44:51.525765Z",
     "plan": "2026-03-05T15:41:10.430730Z"
   },
@@ -20,18 +20,18 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "2584/2000 (raw: 2773) | pedagogy: 1 violations | immersion: 16.3% LOW (target 45-65% (A2.1))"
+      "violations": 1,
+      "message": "2699/2000 (raw: 2875) | immersion: 20.8% LOW (target 45-65% (A2.1))"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/10"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "25/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -52,8 +52,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 2,
     "fail_count": 1,
-    "deferred_count": 1
+    "deferred_count": 3
   }
 }

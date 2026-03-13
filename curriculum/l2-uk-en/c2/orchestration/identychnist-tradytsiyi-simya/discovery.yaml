@@ -1,0 +1,123 @@
+discovered_at: '2026-03-13T21:10:52.510719+00:00'
+query_keywords:
+- Ідентичність, традиції, сім'я
+- Ідентичність як тематичний дискурс
+- Identity as Thematic Discourse
+- Особиста ідентичність та родовід
+- Personal Identity and Lineage
+- Покоління та ґендерні відносини
+- Generations and Gender Relations
+- Українські звичаї та традиції
+- Ukrainian Customs and Traditions
+- Поховальні традиції та вираження співчуття
+- Funeral Traditions and Expressing Condolences
+- Забобони та культурний код
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=5m9W6oT12Vk
+  channel: Суспільне Культура
+  title: Nina Kuryata on the novel "The Call. A Ukrainian Woman Born in the USSR"
+    and the nomination for t...
+  relevance_score: 0.9
+  relevance_note: The video directly discusses personal identity and the role of family
+    in shaping it, which are core themes of the module. It also touches on cultural
+    and historical context of Ukrainian identity.
+  transcript_excerpt: Роман дзвінка про те як це народитися українкою в СРСР ... втримати
+    власну ідентичність дзвінці допомагає сім'я родинні історії та сімейне виховання...
+  embed_suggestion: After section Особиста ідентичність та родовід (Personal Identity
+    and Lineage)
+- url: https://www.youtube.com/watch?v=x8wiAXA0jKM
+  channel: Суспільне Культура
+  title: Як ЛГБТК+ родини впливають на демографію? Що таке сімʼя в сучасній Україні?
+    | «Зі своїми по суті»
+  relevance_score: 0.8
+  relevance_note: The video explores the contemporary understanding of family and
+    traditional values in Ukraine, offering a modern perspective on themes directly
+    relevant to the module, particularly regarding 'сім'я' and 'традиції'.
+  transcript_excerpt: питання прав ЛГБТК спільноти і питання або ж тема традиційних
+    цінностей - це те, що породжує, власне дуже багато суперечок і розмов на цю тему.
+  embed_suggestion: After section Покоління та ґендерні відносини (Generations and
+    Gender Relations)
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-customs/
+  title: Ukrainian Customs and Traditions
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - customs
+  - culture
+  - traditions
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0287
+  text: "230\nУРОКИ РОЗВИТКУ МОВЛЕННЯ\nТЕМА 1. ВИСЛОВЛЕННЯ НА ДИСКУСІЙНУ ТЕМУ\nСтворюючи\
+    \ висловлення на дискусійну тему, потрібно дотриму­\nватися таких загальних вимог:\
+    \ \n•• сформулювати тезу (свою думку, твердження щодо теми); \n•• навести аргументи,\
+    \ приклади, що найкраще підтвердять вашу \nдумку; \n•• зробити висновок.\nГотуючи\
+    \ висловлення на дискусійну тему, спробуйте відповісти на \nзапитання: «Чому я\
+    \ вважаю, що моя думка (теза) правильна?». \n525\t Прочитайте текст і розгляньте\
+    \ інфографіку. Підготуйте на основ"
+  section_title: Сторінка 234
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0234
+  text: "169\nРізновиди суперечки: публічний діалог, дебати \x1F\nДиспут\nпублічна,\
+    \ заздалегідь підго товлена суперечка на наукову, суспіль-\nну, літературну, моральну\
+    \ тему; проводиться на наукових конфе-\nренціях, у  навчальних закладах, на сторінках\
+    \ періодичних видань. Учасники заздалегідь ознайомлюються з  темою, опрацьовують\
+    \ \nлітературу, щоб аргументовано відстоювати свої погляди, оцінки \nподій, проблем,\
+    \ явищ\nДебати\nсуперечка з  приводу висловлених у  доповіді, програмі дій, заяві\
+    \ \nпропозицій щодо розв’язанн"
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0368
+  text: "239\nУ сучасній лінгвістиці дискурс сприймається і як динамічний процес \n\
+    мовленнєвої діяльності, що включений у її соціальний контекст, і як її \nрезультат —\
+    \ зв’язне висловлювання. Дискурсом можна вважати і стисле \nСМС-повідомлення,\
+    \ і великий роман. Дискурс може бути оформлений і письмово, і усно. Як будь-який\
+    \ кому-\nнікативний акт, він передбачає дві ролі  — адресанта (того, хто створює\
+    \ \nвисловлювання) і адресата (того, для кого це висловлювання створюється). В усному\
+    \ мовленні ролі адресанта й адр"
+  section_title: Сторінка 239
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0473
+  text: "264\n \nМовленнєве спілкування. Стилістика і культура мовлення\nТЕМА 23.\
+    \ ДИСКУСІЙНЕ МОВЛЕННЯ. ДЕБАТИ ЯК ФОРМА ДИСКУСІЙ\nДискусія — це не обов’язково\
+    \ су-\nперечка, це можливість кожній \nстороні висловити свою точку зору. О. Ірванець\n\
+    Буду я  навчатись мови золотої\nДискусія — 1) широке, публічне обговорення якогось\
+    \ диску-\nсійного питання на зборах, у пресі тощо; 2) перен. спір, суперечка \n\
+    окремих осіб, співрозмовників. Дискусія відбувається не хаотично, а  за певними\
+    \ правилами \nі  згодою її учасників (о"
+  section_title: Сторінка 264
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0007
+  text: "Домашнє завдання\n7 Створіть мультимедійну презентацію на одну з тем: «Мовний\
+    \ портрет \nсучасного старшокласника», «Мовне обличчя мого міста (села)». Перевірте\
+    \ себе\n \n Дайте відповіді на запитання. — Як законодавчо закріплено статус укра-\n\
+    їнської мови як державної? — Чому державну мову треба знати до-\nсконало? — Назвіть\
+    \ основні мовні обов’язки грома-\nдян. — Доведіть залежність розвитку й функ-\n\
+    ціо нування мови від стану розвитку й функціо-\nнування суспільства. Ідентифікація\
+    \ (лат. identiﬁcare — \nот"
+  section_title: Сторінка 6
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1 51 — E2E
+PASS: pipeline c1 71
 
   Module:   hopak-i-kozachok
   Track:    c1
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T18:07:27Z
+  Date:     2026-03-13T21:03:40Z

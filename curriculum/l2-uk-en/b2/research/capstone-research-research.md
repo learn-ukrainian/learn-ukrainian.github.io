@@ -2,80 +2,107 @@
 
 ## State Standard Reference
 
-**§3.10 (lines 2969–2978):** «Освіта: галузі знань, напрями і спеціальності; наукові ступені, вчені звання; посади наукових і науково-педагогічних працівників; організація освітнього процесу (лекція, семінар, консультація, курс, семестр, залік, іспит); освітні реформи.»
+**§3.10 «Освіта»** (lines 2969–2978):
+> "канцелярські товари; навчальні дисципліни; заклади освіти; галузі знань, напрями і спеціальності; **наукові ступені, вчені звання; посади наукових і науково-педагогічних працівників; організація освітнього процесу (лекція, семінар, консультація, курс, семестр, залік, іспит); освітні реформи.**"
 
-**§3.17 (lines 3047–3050):** «Наука і техніка: розвиток науки і техніки (комп'ютеризація, телекомунікація); наукові відкриття; винаходи, що змінили світ.»
+**§3.17 «Наука і техніка»** (lines 3047–3050):
+> "розвиток науки і техніки (комп'ютеризація, телекомунікація); **наукові відкриття**; винаходи, що змінили світ."
 
-**§4.4.1.3 (lines 3470–3479):** «Стилістичні засоби синтаксису: звертання; еліпсис; повтор; порівняння; уточнення; елементи структурування тексту (вставні слова): по-перше, по-друге, по-третє, отже та ін.»
+**§4.3.4 «Складне речення»** (lines 3420–3445) — integration grammar target:
+> Складнопідрядні речення з'ясувальні, означальні, часові, причинові, умовні, допустові — all types consolidated in this capstone module.
 
-**Alignment:** This capstone module addresses §3.10 (academic organisation, degrees, process) and §3.17 (science and discovery) through the research project frame, and §4.4.1.3 through the explicit teaching of discourse structuring markers (вставні слова, uточнення) essential to academic writing. The module consolidates all B2 grammar (§4.1.3, §4.3) by requiring learners to deploy passive voice, participles, and complex subordinate clauses in a real research prospectus.
+**§4.3.5 «Пряма і непряма мова»** (lines 3446–3449):
+> "Студент відповів: «Я пропустив заняття через хворобу». – Студент відповів, що пропустив заняття через хворобу."
+
+**Alignment**: This capstone integration module directly addresses §3.10 (academic/research institution vocabulary, scientific process), §3.17 (science and discovery), and consolidates §4.3.4–4.3.5 (complex sentences and reported speech as core tools of academic writing). The plan's grammar focus "Формальний стиль наукового звіту" maps to the stylistics requirement (§4.4.1.2–4.4.1.3).
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Freq (GRAC) | IPM | VESUM | Key collocations |
-|------|-------------|-----|-------|-----------------|
+| Word | Frequency (GRAC) | IPM | VESUM | Key collocations |
+|------|-----------------|-----|-------|-----------------|
 | дослідження | 248,468 | 122.77 | ✅ noun | проводити дослідження, результати дослідження, наукове дослідження |
-| джерело | 72,249 | 35.70 | ✅ noun | надійне джерело, першоджерело, покликання на джерело |
+| джерело | 72,249 | 35.70 | ✅ noun | надійне джерело, покликання на джерело, першоджерело |
 | висновок | 69,105 | 34.14 | ✅ noun | робити висновки, дійти висновку, загальний висновок |
-| аналіз | 68,692 | 33.94 | ✅ noun | критичний аналіз, аналіз джерел, проводити аналіз |
-| обґрунтування | 17,503 | 8.65 | ✅ noun | обґрунтування вибору, наукове обґрунтування |
+| аналіз | 68,692 | 33.94 | ✅ noun | детальний аналіз, критичний аналіз, проводити аналіз |
+| обґрунтування | 17,503 | 8.65 | ✅ noun | теоретичне обґрунтування, обґрунтування вибору теми |
 | аргумент | 13,871 | 6.85 | ✅ noun | вагомий аргумент, наводити аргументи, контраргумент |
-| теза | 7,960 | 3.93 | ✅ noun | висувати тезу, головна теза, захист тез |
-| покликання | 6,759 | 3.34 | ✅ noun | покликання на джерело, список покликань |
-| парафраз | ~2,900 | ~1.43 | ✅ noun | парафраз думки, парафраз цитати |
-| плагіат | 2,868 | 1.42 | ✅ noun | уникати плагіату, академічний плагіат |
-| доброчесність | 2,441 | 1.21 | ✅ noun | академічна доброчесність, наукова доброчесність |
-| синтез | ~15,000 | ~7.4 | ✅ noun | синтез інформації, аналіз і синтез |
-| першоджерело | ~3,000 | ~1.48 | ✅ noun | звернення до першоджерел, опрацювання першоджерел |
-| план-проспект | — | — | ❌ NOT FOUND | — |
+| теза | 7,960 | 3.93 | ✅ noun | висувати тезу, головна теза, тезовий план |
+| покликання | 6,759 | 3.34 | ✅ noun | покликання на джерело, оформлення покликань (NOTE: also means "vocation/calling") |
+| синтез | — | — | ✅ noun | синтез інформації, теоретичний синтез |
+| парафраз | — | — | ✅ noun (also: парафраза) | парафраз думки, парафраз джерела |
+| плагіат | 2,868 | 1.42 | ✅ noun | уникати плагіату, академічна доброчесність, виявити плагіат |
 
-**Note on план-проспект:** VESUM does not list this compound as a single lexeme. In Ukrainian academic practice the term **проспект дослідження** or **план дослідження** is more standard. Content writing should favour **план дослідження / дослідницький план** and introduce **проспект** as a borrowed academic term with an explanation.
+**Note on покликання**: VESUM confirms both meanings — "citation/reference" (academic) and "calling/vocation" (spiritual). Content must contextualise clearly as academic term; learners from English-language academic writing may expect посилання — flag both terms.
 
 ---
 
 ## Cultural Hooks
 
-1. **Мала академія наук України (МАН)** — Founded through a 1947 Kyiv student science society, formalised as a national institution in 2000, received UNESCO Category II Science Education Centre status in 2018 — the first and only such Ukrainian educational body. Has 37-country Copernicus Academy status (2018). Members (grades 6–11) progress from слухачі → кандидати → дійсні члени by producing original research. Source: uk.wikipedia.org/wiki/Мала_академія_наук_України
+1. **Мала академія наук України (МАН)** — verified via Ukrainian Wikipedia:
+   > "Мала академія наук України — освітня система, яка забезпечує організацію і координацію науково-дослідної діяльності учнів, створює умови для їх інтелектуального, духовного, творчого розвитку та професійного самовизначення, сприяє нарощуванню наукового потенціалу країни."
+   Ukrainian teens actively compete in MAN (national research competition for school-age students). This is the real-world framework within which a B2 learner might engage with academic Ukrainian research — a direct, non-hypothetical hook.
 
-2. **Володимир Вернадський** (1863–1945) — Ukrainian scientist and philosopher, founder of geochemistry, biogeochemistry, and the concept of the noosphere; **first president of the Ukrainian Academy of Sciences** (1918). His systematising approach to knowledge — treating the biosphere as an integrated whole — is the ideal anchor for discussing how research questions are framed within a larger system of knowledge. Source: uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович
+2. **Вернадський Володимир Іванович** — verified via Ukrainian Wikipedia:
+   > "Природознавець, засновник геохімії, біогеохімії та радіогеології, вчення про біосферу, ноосферу, космізм. **Перший президент Української академії наук** (1918)."
+   Vернадський's systematic, integrative approach to knowledge — connecting disparate fields into unified theories — directly models the intellectual skill the capstone module teaches: finding the research thread that unifies sources. Crucially, he is framed as a Ukrainian scientist (first president of the Ukrainian Academy of Sciences, founded independently in 1918), not a Soviet/Russian figure.
 
 ---
 
 ## Common Learner Errors
 
-1. **"Я вірю, що..." (calque from "I believe")** → correct: **На нашу думку, ...** / **Як свідчать факти, ...** / **Можна стверджувати, що...** — English academic hedging maps onto Ukrainian impersonal or collective constructions; direct first-person "I believe" reads as informal assertion in Ukrainian academic register.
+1. **Калька «Я вірю»** → Correct: «На нашу думку» / «Як свідчать факти» / «Можна стверджувати, що…»
+   *Why*: English-speaking learners directly translate "I believe/think" — the Ukrainian academic register avoids first-person singular assertion; impersonal and collective forms are standard.
 
-2. **дослід vs. дослідження** — **дослід** = a single laboratory *experiment* (hands-on, bounded); **дослідження** = a *study / research project* (extended intellectual inquiry). Learners routinely use дослід where дослідження is required (calque confusion with "study / experiment").
+2. **«дослід» vs «дослідження»** — false-friend pair:
+   - «дослід» = experiment (controlled laboratory procedure)
+   - «дослідження» = research/study (broader investigation)
+   *Why*: Both stem from «досліджувати»; B2 learners unfamiliar with the register distinction conflate them. Plan section 5 specifically flags this — it needs concrete example contrasts in the content.
 
-3. **Англійські лапки "" замість українських «»** — Ukrainian typography requires guillemets «» for quotation; using " " is an orthographic error in formal writing. Compound error: learners also sometimes omit lапки entirely when paraphrasing, blurring the boundary between citation and original text (→ inadvertent plagiarism).
+3. **Лапки: «» vs ""** — Ukrainian guillemet quotation marks vs English double-quotes.
+   - Correct: «Дослідження показують, що…»
+   - Error: "Дослідження показують, що…"
+   *Why*: English-language muscle memory; many word processors default to English typographic quotes. This must be taught explicitly with keyboard input guidance.
+
+4. **«посилання» vs «покликання»** — both mean citation/reference:
+   - «покликання» = standard in formal academic Ukrainian
+   - «посилання» = more colloquial/digital usage (hyperlink connotation)
+   *Why*: Style manuals for Ukrainian academic writing prescribe «покликання»; learners comfortable with web-based Ukrainian may default to «посилання». Neither is wrong, but register awareness matters at B2.
 
 ---
 
 ## Cross-References
 
-- **Builds on:** `religion-in-ukraine` (predecessor per plan); all B2 grammar modules covering passive voice (`passive-voice-system`, `reflexive-passive`), participles (`active-participles-present`, `active-participles-past`, `past-passive-participles`), complex sentences (`multi-clause-sentences`, `advanced-conjunctions-i`, `advanced-conjunctions-ii`), register (`register-formal-informal`, `register-official-legal`, `register-business-ukrainian`), academic writing tools (`professional-reports-basics`, `professional-reports-advanced`, `academic-writing`).
-- **Prepares for:** `capstone-prezentatsiya` (M83) — the presentation phase of the same capstone project.
+- **Builds on**: `religion-in-ukraine` (M81, direct prerequisite) — academic register and argumentative writing; all B2 grammar modules M01–M40 (passive voice, complex sentences, participles); phraseology/integration modules M41–M81 (CBI content exposure, academic vocabulary accumulation)
+- **Prepares for**: `capstone-prezentatsiya` (M83 per plan `connects_to`) — the oral defence and visual presentation component of the same capstone
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered during research)
+- (none encountered during research — discover phase handles media)
 
 ---
 
 ## Notes for Content Writing
 
-- **план-проспект** is not in VESUM as a single entry; introduce it as a borrowed academic term and use **план дослідження** as the primary equivalent. Never use it without explanation.
-- **Impersonal constructions** are the stylistic backbone of this module: Вважається, Варто зазначити, Дослідження показують, Можна стверджувати — these should be presented in a clearly labelled table with contrastive informal equivalents so learners can actively switch register.
-- **Ukrainian quotation typography** (guillemets «») must be explicitly taught — this is a concrete, testable B2 writing skill. Contrast with English "" practice that learners carry over.
-- **МАН** provides an authentic, Ukrainian-only institutional context — use it as the implied audience/submission context for the prospectus task rather than a generic "teacher" audience. This raises authenticity and integrates cultural content without forcing it.
-- **Вернадський** framing: his concept of knowledge as an interconnected system (noosphere) maps elegantly onto research methodology — knowing *where your question fits* in the broader field. Use this as the opener for the "Topic Selection" section without making it a history lesson.
-- Word target 4000 requires all six sections to be fully elaborated. The largest sections (900 and 800 words) are "Робота з джерелами" and "Написання чернетки" — these naturally accommodate extended example-heavy content (citation tables, model sentences, error-correction pairs). Budget 6–8 full worked examples per major section.
-- **Academic vocabulary B2 register markers** to thread throughout: таким чином, як зазначалося вище, на підставі аналізу, варто звернути увагу, беручи до уваги, з огляду на це — these are high-yield connectors for B2 academic writing.
-- This module integrates *all* B2 grammar, so the "Інтеграція граматики B2" point in section 5 should cite concrete earlier modules by name in the content itself (without using English slug names) — e.g., «пасивний стан, вивчений у попередніх модулях, дозволяє...».
+1. **«покликання» needs in-text gloss** at first use: distinguish from vocation meaning. A brief bracketed note like «покликання (citation)» on first use is appropriate at B2.
+
+2. **МАН as structural anchor**: Frame the whole module around a student entering the МАН competition — this gives a concrete, realistic scenario that motivates the academic register. The МАН model includes: written work + oral defence, exactly matching this module's capstone structure.
+
+3. **Вернадський framing — decolonized**: Present as *перший президент Української академії наук* (1918), emphasising that Ukraine created its own independent scientific institution a century ago. Avoid framing him through Soviet science history.
+
+4. **«безособові конструкції»** section in the plan (Section 4) is the key grammar integration point: «Вважається», «Варто зазначити», «Дослідження показують» — these impersonal/passive structures are what distinguish academic register from colloquial Ukrainian. Give 6–8 authentic examples.
+
+5. **Section 3 (Academic Integrity)** should note that Закон України «Про освіту» (2017) and university regulations specifically address plagiarism and academic integrity in contemporary Ukraine — this grounds the topic in real Ukrainian legal/institutional context, not abstract Western academic norms.
+
+6. **Passive voice integration**: The plan calls for passive voice in the grammar section. At B2, passive is formed with:
+   - Past passive participle + бути: «було проведено», «є дослідженим»
+   - Reflexive: «дослідження проводиться»
+   Both forms should appear in content examples.
+
+7. **Avoid**: Using «список літератури» as a heading — modern Ukrainian academic style uses «Список використаних джерел» or «Бібліографія». Correct terminology matters at B2.
 
 ## Resource Discovery
 

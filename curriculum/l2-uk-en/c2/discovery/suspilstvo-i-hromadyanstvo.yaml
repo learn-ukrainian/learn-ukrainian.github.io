@@ -1,0 +1,140 @@
+discovered_at: '2026-03-13T20:31:49.570211+00:00'
+query_keywords:
+- Суспільство і громадянство
+- Громадянський дискурс на рівні С2
+- Civic Discourse at C2 Level
+- Державний устрій і конституційна архітектура
+- State Structure and Constitutional Architecture
+- Суспільні проблеми та нерівність
+- Societal Problems and Inequality
+- Ґендерна рівність і права меншин
+- Gender Equality and Minority Rights
+- Війна, мир та демографічні процеси
+- War, Peace, and Demographic Processes
+- Дискусійні проблеми та громадянська участь
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=CffxFuM3Hnc
+  channel: Суспільне Культура
+  title: 'Масі Наєм про активних громадян і «споглядачів» #shorts'
+  relevance_score: 0.9
+  relevance_note: Directly discusses active citizenship, civic engagement through
+    protests, and addressing societal problems related to justice and war, aligning
+    with civic discourse and participation at a C2 level.
+  transcript_excerpt: Мені здається що в суспільстві зараз А де далі буде війна у
+    нас стільки приводів не об'єднуватись А роз'єднуватись що в якийсь момент це просто
+    вибухне... це активна частина інші це споглядачі вони на це дивляться їх час прийде
+    прийде дуже жорсткий момент.
+  embed_suggestion: After section Дискусійні проблеми та громадянська участь -- as
+    an example of active civic engagement and discourse on controversial issues.
+- url: https://www.youtube.com/watch?v=mRyq3A4auYg
+  channel: Суспільне Культура
+  title: 'Portnikov: "Freedom of speech is citizens'' access to verified information"
+    #shorts'
+  relevance_score: 0.9
+  relevance_note: Directly addresses the concept of freedom of speech in the context
+    of citizens' access to verified information and quality non-personalized discussion,
+    which is fundamental to civic discourse and state architecture.
+  transcript_excerpt: свобода слова - це взагалі доступ громадянина до верифікованої
+    інформації вільний доступ громадянина до верифікованої інформації і забезпечення
+    можливостей якісної не персоніфікованої дискусії.
+  embed_suggestion: 'After section Вступ: Громадянський дискурс на рівні С2 -- as
+    a foundational discussion on the nature of civic discourse and information.'
+- url: https://www.youtube.com/watch?v=LSTV0O7P8CQ
+  channel: Radio Khartia
+  title: 'ГУР про обмін полоненими, сексуальне насильство під час війни та мовні скандали:
+    що варто знати'
+  relevance_score: 0.7
+  relevance_note: Covers current events related to war (a module topic), and touches
+    upon state structure and civic participation through discussions of G7 summit,
+    new prosecutor general, and legislative proposals. Provides concrete examples
+    of political discourse.
+  transcript_excerpt: По-перше, підсумки саміту G7. Далі у нас з'явився новий генпрокурор
+    і також кілька народних депутатів написали кілька документів з законопроектів.
+  embed_suggestion: After section Державний устрій і конституційна архітектура --
+    as a current events example illustrating aspects of state structure and political
+    processes.
+- url: https://www.youtube.com/watch?v=Jrm8PE-ZDf0
+  channel: Radio Khartia
+  title: Сергій Притула, «Пінкі», Шевченко — про війну, допомогу і союзників
+  relevance_score: 0.6
+  relevance_note: The video begins with a segment on the ongoing war, which is a module
+    topic. While it has a news/morning show format, the subject matter of war, aid,
+    and allies is tangentially related to societal problems and civic engagement during
+    conflict.
+  transcript_excerpt: Ви слухаєте радіо Хартія. Триває війна, розв'язана Росією проти
+    України. Щоранку о 9 годині скрізь в нашій країні згадуємо українців, які віддали
+    своє життя.
+  embed_suggestion: After section Війна, мир та демографічні процеси -- as a general
+    discussion on current events surrounding the war.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0307
+  text: "Грома5дський діало5г (соціол.) — механізм пошуку шляхів вирішення су-\nспільних\
+    \ проблем за участі зацікавлених представників різних секторів су-\nспільства:\
+    \ влади, бізнесу та громадськості. Громадя5нське суспі5льство (соціол.) — сукупність\
+    \ недержавних організацій, \nякі представляють волю та інтереси громадян. Елементами\
+    \ г. с. є різні об’єд-\nнання (професійні, творчі, спортивні та ін.), що охоплюють\
+    \ усі сфери люд-\nського життя."
+  section_title: Сторінка 212
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0300
+  text: "217\nСловничок термінів \x1F\nГромадя5нське суспі5льство (соціол.) — сукуп-\n\
+    ність недержавних організацій, які представ-\nляють волю та інтереси громадян.\
+    \ Елементами \nгромадянського суспільства є  різні об’єднан-\nня (професійні,\
+    \ творчі, спортивні та ін.), що \nохоплюють усі сфери суспільного життя. Деба5ти\
+    \ (рит.)  — заздалегідь організоване \nпублічне обговорення питань, за якого учас-\n\
+    ники викладають власні ідеї, оцінки, погляди \nна вирішення важливих проблем.\
+    \ Мета учас-\nників дебатів — переконати ауди"
+  section_title: Сторінка 217
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0234
+  text: "169\nРізновиди суперечки: публічний діалог, дебати \x1F\nДиспут\nпублічна,\
+    \ заздалегідь підго товлена суперечка на наукову, суспіль-\nну, літературну, моральну\
+    \ тему; проводиться на наукових конфе-\nренціях, у  навчальних закладах, на сторінках\
+    \ періодичних видань. Учасники заздалегідь ознайомлюються з  темою, опрацьовують\
+    \ \nлітературу, щоб аргументовано відстоювати свої погляди, оцінки \nподій, проблем,\
+    \ явищ\nДебати\nсуперечка з  приводу висловлених у  доповіді, програмі дій, заяві\
+    \ \nпропозицій щодо розв’язанн"
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0010
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n8\n§ 2\nДискусія — це обговорення певного суперечливого\
+    \ питання з метою дійти згоди. \nВ основі словесного змагання — відстоювання власної\
+    \ позиції. \nВисловлення на дискусійну тему має своєрідну будову.\nБудова дискусійного\
+    \ висловлення\n1. Теза (позиція): «Вважаю, що ...»\n2. Аргумент (доведення позиції):\
+    \  … бо; … тому, що.\n3. Приклади (підтвердження думки): «Яскравим прикладом цього\
+    \ є …» \n4. Висновок (правильність позиції): «Отже, …»\nЗауважте!\nТреба пам’ятати,\
+    \ що суть дискусії поляга"
+  section_title: Сторінка 9
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 141 — E2E
+PASS: pipeline lit 139
 
   Module:   kostenko-marusia-churai-1
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T09:36:32Z
+  Date:     2026-03-13T23:36:57Z

@@ -3,24 +3,24 @@
   "slug": "yuri-andrukhovych",
   "mode": "v5",
   "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T20:19:10Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T12:05:31Z",
+      "ts": "2026-03-13T20:19:10Z",
       "task_id": "v5-yuri-andrukhovych-pA",
       "mode": "full",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
-      }
-    },
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-13T12:05:31Z",
-      "note": "merged-into-research",
-      "executor": {
-        "type": "script",
-        "name": "discovery_search"
       }
     }
   }

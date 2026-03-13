@@ -1,0 +1,125 @@
+discovered_at: '2026-03-13T20:20:04.216561+00:00'
+query_keywords:
+- 'Стратегії ввічливості: Прагматика спілкування'
+- Мистецтво ввічливості та прагматика
+- The Art of Politeness and Pragmatics
+- Стратегії позитивної ввічливості та культурні коди
+- Positive Politeness Strategies and Cultural Codes
+- 'Негативна ввічливість: Пом''якшення та автономія'
+- 'Negative Politeness: Mitigation and Autonomy'
+- 'Соціальна дистанція: Кличний відмінок та займенники'
+- 'Social Distance: Vocative Case and Pronouns'
+- 'Практикум: Майстерність комунікативних намірів'
+- 'Workshop: Mastery of Communicative Intentions'
+- complex politeness strategies in varied social contexts
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode111/
+  title: Birthday presents + Imperative mood in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode112/
+  title: How to cook varenyky + Imperative mood of the second person plural
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode113/
+  title: Ukrainian traditional embroidery masterclass + More about the Imperative
+    mood in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode114/
+  title: How to make pysanky + Imperative mood of the verbs in the first person plural
+    (Let’s…)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0009
+  text: 'уживає такі слова: не переймайтеся, не хвилюйтеся, про0
+
+    шу, усе нормально.
+
+    Уміння чемно відмовитися чи погодитися — теж мис6
+
+    тецтво спілкування. Невміння делікатно відмовитися мо6
+
+    же образити людину. У ситуації відмови користуються
+
+    висловами: дякую, але я сьогодні маю інші справи; спа0
+
+    сибі, але наступним разом; вибачте, але я, на жаль,
+
+    не зможу. Якщо ж погоджуємося з чимось, то викорис6
+
+    товуємо такі вислови: я із задоволенням приймаю Вашу
+
+    пропозицію; щиро дякую; мені приємно, що я теж можу
+
+    бути'
+  section_title: Сторінка 10
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0111
+  text: "К орисна порада\nПро мистецтво спілкування, добір вербальних \nта невербальних\
+    \ засобів, уміння привернути увагу \nспіврозмовника, підготовку до промови читайте\
+    \ у \nкнижці Іржі Томана «Мистецтво говорити». Відомий чеський письменник і соціолог\
+    \ на основі \nвласного досвіду та життєвих спостережень дає \nпрактичні поради,\
+    \ як краще оволодіти технікою \nрозмови з колегами, друзями, рідними. 87"
+  section_title: Сторінка 87
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0160
+  text: "Практична риторика\n114\nПрактична риторика\nЕфективність мовлення.  Комунікативний\
+    \ \nнамір. Мовленнєва поведінка. \nСтратегія і тактика мовленнєвої поведінки\n\
+    Ефективність мовлення полягає в  досягненні промовцем (або співрозмов-\nниками)\
+    \ поставлених цілей.\nВиділяють такі комунікативні наміри (цілі спілкування):\n\
+    \ \n повідомлення, інформування;\n \n висловлення й  аргументування своїх думок;\n\
+    \ \n спонукання до дії;\n \n обговорення проблеми, пошук шляхів її вирішення;\n\
+    \ \n розважання самим процесом приємного сп"
+  section_title: Сторінка 114
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0208
+  text: "Ввічлива людина уважно вислуховує співрозмовника. Нетактовно \nне відповідати\
+    \ на запитання чи робити вигляд, що ви їх не розчули. \nПрислів’я мовить: «Хто\
+    \ не поважає інших, той не шанує себе».\nНе можна перепиняти співрозмовника, а\
+    \ слід терпляче вислухати \nі те, що ви знаєте, і те, з чим ви, можливо, не згодні.\
+    \ Нечемно від­\nразу ж розпочинати суперечку, обстоюючи власну позицію. Коли \n\
+    дослухаєте до кінця аргументи свого співрозмовника, можна стри­\nмано й коректно\
+    \ заперечити: «На мою думку, це...», "
+  section_title: Сторінка 161
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0062
+  text: "Сформулюйте мету промови. Прочитайте речення, у яких передано головну дум-\n\
+    ку виступу. Чи можна назвати промову майстерною? Скористайтеся поданою нижче інфор-\n\
+    мацією. Майстерність промови полягає у  високій культурі, аргументованості й \
+    \ пе-\nреконливості, художній вира5зності, стилістичній точності, які виникають\
+    \ унаслі-\nдок цілеспрямованої праці оратора. Майстерність передбачає наявність\
+    \ профе-\nсійних знань, умінь, навичок, наполегливого оволодіння досвідом попередників\
+    \ \nі  напружених власних тв"
+  section_title: Сторінка 46
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

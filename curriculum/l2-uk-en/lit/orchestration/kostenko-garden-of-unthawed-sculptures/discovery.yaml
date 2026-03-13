@@ -1,0 +1,197 @@
+discovered_at: '2026-03-13T21:10:07.931074+00:00'
+query_keywords:
+- Kostenko Garden Of Unthawed Sculptures
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Kostenko Garden Of Unthawed Sculptures у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video discusses restoring Ukrainian literary heritage, literary
+    canon ('канон' - module vocabulary), and the continuity of Ukrainian literature
+    and the problem of memory, mentioning historical figures like Bazhan and Tychyna.
+    This is highly relevant to understanding the broader cultural and literary context
+    required for analyzing Kostenko's work, especially within the 'Деколонізаційний
+    вимір' section.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. ... Себто так чи інакше ми будемо говорити про тяглість української
+    літератури, про проблему пам'яті...
+  embed_suggestion: After Вступ та культурний контекст -- it provides excellent background
+    on literary canon formation and the historical context of Ukrainian literature,
+    which is crucial for a decolonial perspective.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: The video discusses contemporary Ukrainian poetry by Serhiy Zhadan
+    and the role of the Ukrainian language. While related to Ukrainian literature
+    and language, it does not specifically address Lina Kostenko or the analysis of
+    her work, 'Garden Of Unthawed Sculptures'. It mentions 'метафора', a module vocabulary
+    term.
+  transcript_excerpt: у ній Сергій Жадан досліджує мову як стверджує сам автор цитую
+    здатність мови повертатися і самовідтворюватись про її вразливість про її здатність
+    до опору кінець цитати
+  embed_suggestion: After Вступ та культурний контекст -- it provides a general overview
+    of contemporary Ukrainian literature and the significance of language.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrlit-avramenko-2022_s0308
+  text: '284
+
+    ЗМІСТ
+
+    Розділ 1. МИСТЕЦЬКИЙ СПАДОК НАЩАДКАМ
+
+    Невичерпні джерела мудрості
+
+    Художня література як мистецтво слова . . . . . . . . . . . . . . . . 3
+
+    Початок словесного мистецтва . . . . . . . . . . . . . . . . . . . . 6
+
+    ТЛ  Легенда . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 6
+
+    ТЛ  Міф . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 7
+
+    Про Зоряний Віз . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . 7
+
+    Чому пес живе коло л'
+  section_title: Сторінка 284
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0266
+  text: "7. Талан без таланту може обійтись але \nталантові без талану надзвичайно\
+    \ важко (å\x11 \x8Eільде). 8. Ìіністр порадив \nдепутату погуглити аби зрозуміти\
+    \ визначення «гаазька конвенція» (Ç âè-\n·уску новин\f. ІІ. Підкресліть лексиɱні\
+    \ засоɛи стилістики \vслова в переносному знаɱенні\x0F синоніми\x0F \nантоніми\x0F\
+    \ пароніми\x0F застарілі слова\x0F неологізми\f. Поясніть роль цих засоɛів у коɠному\
+    \ \nреɱенні. ІІІ. Поясніть\x0F як ви розуміɽте зміст сьомого реɱення."
+  section_title: Сторінка 176
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0008
+  text: "5. Чи згодні ви з тим\x0F що метаɮору моɠна розглядати як наɣкоротɲиɣ ɲлях\
+    \ до \nістини\" Відповідь поясніть. коло думок"
+  section_title: Сторінка 8
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0205
+  text: "¨к творець £евченко може бути для нас взірцем в \nусьому \vОлесь \x8Fончар\f\
+    \x11\n* Îðåîë – 1. Променисте коло, сяйво навкруг голови Бога, святого на іконах,\
+    \ \nкультових картинах. 2. (·ерен\x11) Атмосôера слави, успіху, пошани й т. ін.\
+    \ навколо \nкого-небудь. 319. І. ɋпиɲіть\x0F розставляɸɱи пропущені розділові\
+    \ знаки. Оɛʉрунтуɣте пунктограми. 1. Ліси стоять обшарпані й кошлаті \vМ\x11 Луків\f\
+    \x11 2. Ìорозний сніг блис-\nкучий та легкий падає на серце прямо \vМ\x11 Ðильськи±\f\
+    \x11 3. ¤е неначебто \nвчора грали білі завірюхи оркестри"
+  section_title: Сторінка 140
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5563063025474548
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5351868271827698
+  chunk_id: fc2291b5_c3692
+  text: "КОНТЕКСТ (лат. contextus\r\n— з’єднання, зв’язок, зчеплення) — відносно завершена\
+    \ (змістом і формою)\r\nчастина тексту, в межах якої оптимально виявляються сенс,\
+    \ значення\r\nокремого слова, фрази, образного вислову. Відомо, напр., що поза\
+    \ К. (його\r\nстилістичними та смисловими зв’язками) цитата може втратити первісне\
+    \ значення,\r\nнабути іншого, не властивого їй змісту. В худож. л-рі К. визначає\
+    \ конкретний\r\nзміст, стиліст. забарвлення, міру виразності не лише окр. слів,\
+    \ фраз, а й\r\nхудож. засобів (тропів, "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5235984325408936
+  chunk_id: 7808b51b_c0409
+  text: "З залізної клавіатури.\n\nАктивне використання науково-технічної,\r\nсуспільно-політичної\
+    \ і музичної термінології дозволяє авторові досягати\r\nпередбачуваних художніх\
+    \ рішень. Особливістю бажанівського світовідтворення є\r\nвикористання абстрактної,\
+    \ зокрема й термінологічної лексики для персоніфікації,\r\nпобудови метафор: Інша\
+    \ грань нову межу затисла; Безкрайність і кінець\r\nпрядуть єдину сталь; Ти з\
+    \ нами і для нас, товаришу Життя!; Багрово-чорні\r\nсполохи блукали по зомлілій\
+    \ від жаху землі; Тьмяне й гірке"
+  work: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/rusaniv/ru.htm

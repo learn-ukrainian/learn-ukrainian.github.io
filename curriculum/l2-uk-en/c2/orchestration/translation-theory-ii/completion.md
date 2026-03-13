@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 85 — E2E
+PASS: pipeline c2 90
 
   Module:   translation-theory-ii
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T09:11:33Z
+  Date:     2026-03-13T21:59:02Z

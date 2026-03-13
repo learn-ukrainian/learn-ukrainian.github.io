@@ -3,24 +3,24 @@
   "slug": "tsentralna-rada",
   "mode": "v5",
   "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T19:40:17Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T12:21:19Z",
+      "ts": "2026-03-13T19:40:17Z",
       "task_id": "v5-tsentralna-rada-pA",
       "mode": "full",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
-      }
-    },
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-13T12:21:19Z",
-      "note": "merged-into-research",
-      "executor": {
-        "type": "script",
-        "name": "discovery_search"
       }
     }
   }

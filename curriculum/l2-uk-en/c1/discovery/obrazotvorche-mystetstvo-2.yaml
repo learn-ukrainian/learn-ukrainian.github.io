@@ -1,0 +1,125 @@
+discovered_at: '2026-03-13T22:32:16.814905+00:00'
+query_keywords:
+- Образотворче мистецтво II
+- Мистецтво під тиском тоталітаризму
+- Art Under Totalitarian Pressure
+- Бойчукізм та школа монументалізму
+- Boychuism and the School of Monumentalism
+- Шістдесятництво та візуальний спротив Алли Горської
+- The Sixtiers and the Visual Resistance of Alla Horska
+- 'Наївне мистецтво: Марія Примаченко та Катерина Білокур'
+- 'Naive Art: Maria Prymachenko and Kateryna Bilokur'
+- Сучасна арт-сцена та практичне застосування
+- Contemporary Art Scene and Practice
+- the impact of Soviet repression on Ukrainian art.
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=2-PS5RBigl8
+  channel: Суспільне Культура
+  title: How Ukrainian embroidery became part of modern fashion | Kul.Tour
+  relevance_score: 0.5
+  relevance_note: The video discusses Ukrainian embroidery and its place in modern
+    fashion, relating to cultural heritage and contemporary expression. While embroidery
+    is an art form, the focus is on fashion rather than the fine art movements (Boychuism,
+    Sixtiers, Naive Art) or the specific historical context of totalitarian pressure
+    on fine art, which are central to the module. It provides a general cultural context.
+  transcript_excerpt: Ось це вам яскравий приклад того, що наше традиційне, воно не
+    може бути якимсь архаїчним і застарілим... Це модно, це круто, це вчасно, це стильно.
+  embed_suggestion: After section Сучасна арт-сцена та практичне застосування – as
+    an example of how traditional Ukrainian art forms like embroidery are reinterpreted
+    in contemporary cultural and fashion contexts.
+- url: https://www.youtube.com/watch?v=K5Kj2T8dj1M
+  channel: Суспільне Док
+  title: 'Мода 30-х та пам''ять про євреїв України: Серж Смолін у Ковелі | Візуальний
+    код 2'
+  relevance_score: 0.4
+  relevance_note: This video touches upon 1930s fashion and a Ukrainian fashion designer's
+    work, which provides a tangential historical context relevant to the 'Art Under
+    Totalitarian Pressure' section's timeframe. However, the primary focus is on fashion
+    design and cultural memory, not the specific fine art movements or the direct
+    impact of totalitarianism on fine art, as covered in the module.
+  transcript_excerpt: Мене звати секс смолін Я дизайнер сучасного одягу у професії
+    є більше 30 років народився у місті Ковелі це маленьке містечко дало мені путівку
+    майбутню професію...
+  embed_suggestion: 'After section Вступ: Мистецтво під тиском тоталітаризму – due
+    to the historical context of the 1930s, offering a view of cultural expression
+    during that period, albeit through fashion rather than fine art.'
+- url: https://www.youtube.com/watch?v=ZRRMHyM3rrk
+  channel: Суспільне Культура
+  title: 'Двірник виставляє свої картини на смітнику #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=KAQK1W6ooiY
+  channel: Суспільне Док
+  title: Традиційна угорська вишивка й одяг, дизайнерські сукні і винний льох — Берегове
+    | Візуальний код 2
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0006
+  text: "Ці ж два чинники (як причина й на-\nслідок, зміст і форма) визначають належність\
+    \ митця до тієї чи тієї нації. Щоправ-\nда, у протиприродних умовах імперії (коли\
+    \ наднаціональною, найрозвинутішою \nй усіляко заохочуваною стає мова панівної\
+    \ нації, а мови націй поневолених зне-\nважають, а то й забороняють) нерідко трапляється\
+    \ інший варіант: митець уже \nСимволи  кохання\nУкраїна\nНімеччина"
+  section_title: Сторінка 5
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0010
+  text: "8\nВСТУП.  «РОЗСТРІЛЯНЕ ВІДРОДЖЕННЯ»\nО. Екстер, К. Малевич, І. Падалка,\
+    \ А. Пе-\nтрицький, В. Татлін та ін.\nНа жаль, багато видатних художників \nбуло\
+    \ репресовано й знищено комуністич-\nним режимом. У тоталітарному суспіль-\nстві\
+    \ 1930-х років владою був проголоше-\nний соцреалізм — художній метод, який \n\
+    прийшов на зміну «буржуазному» модер-\nнізму й базувався на народності, героїзмі\
+    \ \nтрудящих, монументальності й уславлен-\nні комуністичних вождів.\nДо речі...\n\
+    Репродукції картин українських художників різн"
+  section_title: Сторінка 8
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0039
+  text: "Що, на вашу думку, хотів передати своїм \nтвором художник? Кріпосне право,\
+    \ кріпацтво  — система пра-\nвових норм, які встановлювали залежність се-\nлянина\
+    \ від пана й право останнього володіти \nселянином-кріпаком як власністю. Товаризація \
+    \ — процес, за якого продукти \nпраці виробляються для потреб ринку."
+  section_title: Сторінка 25
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0201
+  text: "Від діячів культури вимагалася лише ло-\nяльність до нової влади. Проте вже\
+    \ незабаром така «свобода» змінилася \nжорстким ідеологічним тиском на мистецьке\
+    \ коло та його творчість. Метою більшовицької політики у сфері культури оголосили\
+    \ формування \nпринципово нової особистості, вихованої на цінностях комуністичної\
+    \ \n­ідеології."
+  section_title: Сторінка 106
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0270
+  text: "Поширені мотиви  — страх, без-\nнадія, біль, страждання, смерть. Експресіонізму\
+    \ \nвластиві загострена емоційність автора й  пер-\nсонажів, фрагментарність оповіді,\
+    \ використання \nсимволіки і  гротеску."
+  section_title: Сторінка 145
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []
