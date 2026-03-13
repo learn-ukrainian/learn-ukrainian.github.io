@@ -84,13 +84,13 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 <critical>
 
 **Pipeline v5** (`build_module_v5.py`) — the ONLY pipeline:
-- research → discover → **sandbox** → content → validate → [review] → activities → mdx
+- research → discover → content → validate → [review] → activities → mdx
 - **v4 and v3 are RETIRED.** Do not use `build_module.py`.
 - **Gemini** builds: research, discover, content, activities
 - **Claude** reviews: review phase (cross-agent adversarial, max 2 fix attempts)
-- **Sandbox**: VESUM-validated word bank (deterministic, no LLM) — injected via `{LEXICAL_SANDBOX}`
+- **Lexical sandbox**: VESUM-validated word bank (runs inline during content/validate, not a separate phase) — injected via `{LEXICAL_SANDBOX}`
 - **Validate**: morphological validator + Russicism detection + agreement checking
-- Discover and sandbox are non-blocking — failures don't halt the pipeline.
+- Discover is non-blocking — failures don't halt the pipeline.
 - Model defaults: `scripts/batch_gemini_config.py` | Review default: `claude-opus-4-6`
 - Build: `.venv/bin/python scripts/build_module_v5.py {track} {num} [--rebuild] [--restart-from {phase}]`
 

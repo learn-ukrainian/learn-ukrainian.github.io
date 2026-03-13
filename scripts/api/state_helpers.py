@@ -26,7 +26,7 @@ try:
     from pipeline_v5 import PHASE_LABELS as _PIPELINE_PHASE_LABELS
     from pipeline_v5 import PHASES as _PIPELINE_PHASES
 except ImportError:
-    _PIPELINE_PHASES = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
+    _PIPELINE_PHASES = ["research", "discover", "content", "validate", "review", "activities", "mdx"]
     _PIPELINE_PHASE_LABELS = {}
 
 

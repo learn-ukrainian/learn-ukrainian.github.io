@@ -166,13 +166,44 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 
 
 # ============================================================================
+# Rebuild File Classification
+# ============================================================================
+
+# Files preserved during --rebuild (provenance, inputs, metadata)
+_REBUILD_KEEP = {
+    "state.json", "state.json.lock", "completion.md", "screen-result.json",
+    "discovery.yaml", "research-prompt.md",
+}
+# Suffixes preserved during --rebuild
+_REBUILD_KEEP_SUFFIXES = (
+    "-gemini-session.json",  # Gemini session logs (build provenance)
+    "-prompt.md",            # prompts sent to LLM
+    "-friction-1.md", "-friction-2.md", "-friction-3.md",  # friction reports
+    "-enrichment.txt",       # enrichment context files
+    "placeholders.yaml",     # activity plan placeholders
+)
+
+
+def _is_rebuild_deletable(filename: str) -> bool:
+    """Return True if a file should be deleted during --rebuild.
+
+    Keeps: state, prompts, gemini sessions, friction reports, discovery,
+           enrichment files, completion, screen results.
+    Deletes: outputs, fix raw files, audit logs, legacy state files.
+    """
+    if filename in _REBUILD_KEEP:
+        return False
+    return not filename.endswith(_REBUILD_KEEP_SUFFIXES)
+
+
+# ============================================================================
 # Single Module Runner
 # ============================================================================
 
 def _run_single_module(args: argparse.Namespace) -> int:
     """Run the pipeline for a single module. Returns 0 on success, 1 on failure."""
     try:
-        # --rebuild: clean orchestration directory + content/activity output files
+        # --rebuild: delete regeneratable outputs, preserve provenance artifacts
         if args.rebuild:
             slug = slug_for_num(args.track, args.num)
             paths = get_module_paths(args.track, slug)
@@ -182,10 +213,23 @@ def _run_single_module(args: argparse.Namespace) -> int:
             if orch_dir.is_dir():
                 removed = 0
                 for f in orch_dir.iterdir():
-                    if f.is_file():
+                    if f.is_file() and _is_rebuild_deletable(f.name):
                         f.unlink()
                         removed += 1
-                print(f"  --rebuild: cleaned orchestration dir ({removed} files removed)", flush=True)
+                print(f"  --rebuild: removed {removed} output files from orchestration", flush=True)
+            # Clear rebuilt phases from state, keep research/discover/sandbox
+            state_file = orch_dir / "state.json"
+            if state_file.exists():
+                try:
+                    st = json.loads(state_file.read_text("utf-8"))
+                    if st.get("mode") == "v5":
+                        phases = st.get("phases", {})
+                        st["phases"] = {k: v for k, v in phases.items()
+                                        if k in ("research", "discover", "sandbox")}
+                        state_file.write_text(json.dumps(st, indent=2, ensure_ascii=False))
+                        print("  --rebuild: preserved state for research/discover/sandbox", flush=True)
+                except Exception:
+                    state_file.unlink(missing_ok=True)
             # Remove content + activities + vocabulary so Gemini regenerates them
             # Research and discovery are preserved
             for key in ("md", "activities", "vocabulary"):

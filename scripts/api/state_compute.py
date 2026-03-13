@@ -20,6 +20,7 @@ from .state_helpers import (
     get_research_score,
     get_word_target_from_plan,
     has_research_file,
+    # BACKWARD-COMPAT: v3/v4/v2 parsers needed for ~100+ modules not yet rebuilt on v5
     parse_v3_phase_status,
     parse_v4_phase_status,
     parse_v5_phase_status,

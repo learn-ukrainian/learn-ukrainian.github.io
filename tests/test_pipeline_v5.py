@@ -1228,3 +1228,64 @@ class TestBackfillExecutor:
             "executor": {"type": "llm", "agent": "gemini", "model": "flash"},
         }, Path("/tmp"))
         assert result is None
+
+
+class TestRebuildStatePreservation:
+    """Test that --rebuild preserves research/discover/sandbox in state.json."""
+
+    def test_rebuild_preserves_research_clears_content(self, tmp_path):
+        """Rebuild should keep research executor but clear content onward."""
+        state = {
+            "track": "a1", "slug": "test", "mode": "v5",
+            "phases": {
+                "research": {
+                    "status": "complete", "ts": "2026-01-01T00:00:00",
+                    "executor": {"type": "llm", "agent": "gemini", "model": "flash"},
+                },
+                "discover": {"status": "complete", "ts": "2026-01-01T00:00:00"},
+                "sandbox": {"status": "complete", "ts": "2026-01-01T00:00:00"},
+                "content": {
+                    "status": "complete", "ts": "2026-01-01T00:00:00",
+                    "executor": {"type": "llm", "agent": "gemini", "model": "flash"},
+                },
+                "validate": {"status": "complete", "ts": "2026-01-01T00:00:00"},
+                "review": {"status": "complete", "ts": "2026-01-01T00:00:00"},
+            },
+        }
+        state_file = tmp_path / "state.json"
+        state_file.write_text(json.dumps(state))
+
+        # Simulate the rebuild state-pruning logic from build_module_v5.py
+        st = json.loads(state_file.read_text("utf-8"))
+        st["phases"] = {k: v for k, v in st["phases"].items()
+                        if k in ("research", "discover", "sandbox")}
+        state_file.write_text(json.dumps(st, indent=2, ensure_ascii=False))
+
+        result = json.loads(state_file.read_text("utf-8"))
+        assert "research" in result["phases"]
+        assert result["phases"]["research"]["executor"]["agent"] == "gemini"
+        assert "discover" in result["phases"]
+        assert "sandbox" in result["phases"]
+        assert "content" not in result["phases"]
+        assert "validate" not in result["phases"]
+        assert "review" not in result["phases"]
+
+
+class TestRebuildFileDeletion:
+    """Test _is_rebuild_deletable classification."""
+
+    def test_deletes_outputs(self):
+        from build_module_v5 import _is_rebuild_deletable
+        for f in ["content-output-1.md", "activities-output.yaml",
+                   "validate-fix1-raw.md", "self-audit-output-1.md",
+                   "phase-A-output.md", "state-v3.json", "state.legacy.json"]:
+            assert _is_rebuild_deletable(f), f"{f} should be deletable"
+
+    def test_keeps_provenance(self):
+        from build_module_v5 import _is_rebuild_deletable
+        for f in ["state.json", "completion.md", "discovery.yaml",
+                   "research-prompt.md", "content-prompt.md",
+                   "content-attempt-1-gemini-session.json",
+                   "validate-fix1-prompt.md", "content-friction-1.md",
+                   "holodomor-svidky-enrichment.txt", "screen-result.json"]:
+            assert not _is_rebuild_deletable(f), f"{f} should be kept"
