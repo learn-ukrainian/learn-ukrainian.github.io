@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:34:01.888975+00:00'
+discovered_at: '2026-03-12T20:24:01.400709+00:00'
 query_keywords:
 - 'Рух: інтеграція префіксів'
 - Система просторових префіксів
@@ -15,7 +15,22 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Префікс
+  title: Prefixes of Usage
+  source: Вікіпедія про словотвір
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode85/
+  title: 'Ukrainian Lessons Podcast: Prefixes'
+  source: Аудіо практика
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes
+  title: Ukrainian Motion Verbs with Prefixes
+  source: Відео уроки
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0156

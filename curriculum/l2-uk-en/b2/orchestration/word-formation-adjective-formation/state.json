@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "word-formation-adjective-formation",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:48:14Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:48:14Z",
+      "task_id": "v5-word-formation-adjective-formation-pA",
+      "mode": "full"
+    }
+  }
+}

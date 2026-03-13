@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "mykola-vasylenko",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:55:44Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:55:44Z",
+      "task_id": "v5-mykola-vasylenko-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 82 — E2E
+FAIL: pipeline hist 82
 
   Module:   valuevskyi-emskyi
   Track:    hist
-  Mode:     e2e
-  Words:    5883 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T21:01:21Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:15:17Z

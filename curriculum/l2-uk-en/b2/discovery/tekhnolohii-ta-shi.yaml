@@ -1,0 +1,146 @@
+discovered_at: '2026-03-12T20:15:33.347541+00:00'
+query_keywords:
+- Технології та ШІ
+- Розминка
+- Warm-up — IT Industry & Historical Context
+- Базова термінологія та культура мовлення
+- Basic Terminology & Language Culture
+- 'Штучний інтелект: від теорії до практики'
+- 'Artificial Intelligence: From Theory to Practice'
+- Кібербезпека та цифрова гігієна
+- Cybersecurity & Digital Hygiene
+- 'Електронне врядування: феномен «Дії»'
+- 'E-governance: The «Diia» Phenomenon'
+- Використовувати IT-термінологію українською мовою
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=SyfDgEXTEJ0
+  channel: Суспільне Культура
+  title: Artificial Intelligence - Threat or Tool? How AI is Replacing Creativity
+  relevance_score: 0.9
+  relevance_note: 'Video directly discusses the practical implications and societal
+    impact of artificial intelligence on creative professions, aligning with the ''Штучний
+    інтелект: від теорії до практики'' section.'
+  transcript_excerpt: Цей трек повністю згенерований штучним інтелектом. ... Шиї уже
+    малює замість художників, пише замість авторів і випускає музику без виконавців.
+  embed_suggestion: 'After section ''Штучний інтелект: від теорії до практики'' —
+    provides real-world examples and societal considerations of AI.'
+- url: https://www.youtube.com/watch?v=sglWG3eAhpw
+  channel: Суспільне Культура
+  title: «Вас спокушають купувати технології» — Софі Бартез та Андрій Парех про «Репродукцію
+    майбутнього»
+  relevance_score: 0.9
+  relevance_note: 'Video discusses a film centered on a future where artificial intelligence
+    performs essential human tasks, directly relating to the societal and practical
+    aspects of AI covered in the ''Штучний інтелект: від теорії до практики'' section.'
+  transcript_excerpt: фільмі йдеться про недалеке майбутнє коли штучний інтелект уже
+    виконує більшість життєво необхідних завдань для людей навіть таких як виношування
+    дитини.
+  embed_suggestion: 'After section ''Штучний інтелект: від теорії до практики'' —
+    offers a philosophical and cinematic perspective on AI''s impact on human life.'
+- url: https://www.youtube.com/watch?v=_hckw5uvxbk
+  channel: Ukrainian Lessons
+  title: ULP 2-51 | Техніка і технології + Давальний відмінок | Electronics and technology
+    + Dative Case
+  relevance_score: 0.9
+  relevance_note: Video explicitly introduces 'Техніка і технології' (Electronics
+    and technology) and discusses related concepts like internet, computers, and social
+    media, making it highly relevant to the module's overall topic and early sections.
+  transcript_excerpt: ми будемо говорити про техніку і технології саме техніка і технології
+    допомагають нам створювати цей подкаст А вам слухати його також зараз важко уявити
+    Світ без технологій інтернет комп'ютери соціальні мережі важлива частина нашого
+    життя.
+  embed_suggestion: After section 'Розминка — IT-індустрія та історичний контекст'
+    or 'Базова термінологія та культура мовлення' — introduces core vocabulary and
+    context for technology.
+- url: https://www.youtube.com/watch?v=2lJCbrtfQrY
+  channel: Klopotenko
+  title: CONDENSED milk - only THREE ingredients Ievgen Klopotenko's advice
+  relevance_score: 0.0
+  relevance_note: Video is about cooking condensed milk and has no relevance to technology
+    or AI.
+  transcript_excerpt: Пропоную приготувати згущене молоко. Я знаю, що його всі обожнюють.
+  embed_suggestion: None
+- url: https://www.youtube.com/watch?v=r_JP1OaE-u0
+  channel: Klopotenko
+  title: Valuable insights How to cook peas | Lifehacks Ievgen Klopotenko
+  relevance_score: 0.0
+  relevance_note: Video is about cooking peas and has no relevance to technology or
+    AI.
+  transcript_excerpt: Як правильно варити горох. Це питання, я думаю, багато хто себе
+    собі ставить і цікавиться і зараз ми швиденько розберемо основні основні зрозумілі
+    речі.
+  embed_suggestion: None
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-zabolotnyi-2024_s0047
+  text: "44\n44\nКультура мовлення\nРозрізняймо\nКАМПАНІЯ\nподія; сукупність заходів\n\
+    КОМПАНІЯ\nтовариство, група осіб; організація\nвступна кампанія\nпосівна кампанія\n\
+    весела компанія\nстрахова компанія\nКНИЖНИЙ\nхарактерний для писемного викладу,\n\
+    не властивий живій мові\nКНИЖКОВИЙ\nузятий із книжок; стосується книжки\nкнижна\
+    \ мова\nкнижна лексика\nкнижкова фабрика\nкнижкова крамниця \nТУРИСТИЧНИЙ\nстосується\
+    \ туризму, подорожі\nТУРИСТСЬКИЙ\nстосується туриста, призначений для нього\n\
+    туристичний похід\nтуристичний сезон \nтуристсь"
+  section_title: Сторінка 48
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0239
+  text: ". . . . . . . . . . . . 154\n§ 73. Розвиток мовлення. Письмова  казка  (з\
+    \  використанням   \nприслівників)  . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . 158"
+  section_title: Сторінка 217
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0184
+  text: "§ 29  Синонімічні й антонімічні прийменники  \n177\nЯк навчається ШІ?\nЧерез\
+    \ \nпроцес \nтренування, \nпід \nчас \nякого комп’ютерна програма отримує ве-\n\
+    лику кількість даних і набір інструкцій. \nЯк працюють чат-боти?\nНа основі тренувальних\
+    \ даних вони \n«запам’ятовують» слова, їхні значення \nта правила поєднання й\
+    \ потім форму-\nють свої тексти у відповідь на запи-\nтання.\nЯк ШІ створює зображення?\n\
+    Із \nмільйонів \nопрацьованих \nмалюн-\nків і фото програми збирають складні ві-\n\
+    зуальні шаблони й за їхньою допомо"
+  section_title: Сторінка 180
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0288
+  text: 'Для високої то-
+
+    нальності варіативність вказаних формул дуже обмежена (З  Інтернету). Значення
+    терміна тональність спілкування з’ясуйте за словничком термінів. 371. Складіть
+    і  розіграйте по 2–4  початкових репліки діалогу, що містять ети-
+
+    кетні формули вітання, уявивши, що ви зустрілися
+
+    • з улюбленим учителем на шкільному подвір’ї перед уроками;'
+  section_title: Сторінка 200
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0289
+  text: "Етикетні жанри: привітання, вибачення \x1F\n201\n• із сімейним лікарем у\
+    \ кабінеті поліклініки, куди звернулися по щеп­\nлення від грипу;\n• із запрошеним\
+    \ на літературний вечір письменником, якого вас попро-\nсили зустріти й провести\
+    \ до школи;\n• з учнем із паралельного класу на тренуванні в спортзалі;\n• з директором\
+    \ школи­інтернату, для учнів якої ваш клас зібрав бібліо-\nтечку;\n• зі старшою\
+    \ сестрою, до якої прийшли допомогти в догляді за дитиною;\n• з однокласницею,\
+    \ яка просить вашої поради для вибору гад"
+  section_title: Сторінка 201
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

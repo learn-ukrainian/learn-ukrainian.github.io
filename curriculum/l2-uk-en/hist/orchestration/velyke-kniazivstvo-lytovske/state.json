@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "velyke-kniazivstvo-lytovske",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:15:06Z",
+      "task_id": "v5-velyke-kniazivstvo-lytovske-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:15:06Z",
+      "note": "merged-into-research"
+    }
+  }
+}

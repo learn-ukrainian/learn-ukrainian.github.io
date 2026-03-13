@@ -1,0 +1,166 @@
+discovered_at: '2026-03-13T08:25:02.169453+00:00'
+query_keywords:
+- 'ОУН: Формування'
+- Народження націоналізму
+- Витоки та ідеологія
+- Діяльність у 1930-х
+- Первинні джерела
+- Деколонізаційний погляд
+- До Другої світової
+- створення та ідеологію ОУН
+- історичний контекст українського націоналізму
+- діяльність ОУН у міжвоєнний період
+- суперечливу спадщину організації
+- Минулий час в історичному наративі
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=H1qSvD2y5iE
+  channel: Реальна Історія
+  title: Феномен УПА. Реальна історія з Акімом Галімовим
+  relevance_score: 0.9
+  relevance_note: The video directly addresses the formation of OUN, its goals, and
+    early military training, which aligns perfectly with the module's topic on OUN's
+    formation and activities in the 1930s. The source 'Реальна Історія' is also highly
+    regarded.
+  transcript_excerpt: частина західних територій України опинилася під владою Польщі
+    інша частина під владою СРСР ... і саме там починає формуватися ОУН організація
+    українських націоналістів яка ставить собі за мету подальшу боротьбу за самостійну
+    Україну.
+  embed_suggestion: After section 'Витоки та ідеологія' or 'Діяльність у 1930-х' as
+    it provides direct historical context and details of OUN's establishment and early
+    operations.
+- url: https://www.youtube.com/watch?v=7vK1j_uH0Ws
+  channel: Суспільне Док
+  title: Як «австрійський аристократ» став духовним лідером українців | «Шептицький.
+    Між війною та вірою»
+  relevance_score: 0.5
+  relevance_note: This video focuses on Metropolitan Andrey Sheptytsky, a significant
+    figure in Ukrainian history during the interwar and WWII periods. While he is
+    relevant to the broader historical context of Ukrainian nationalism and the challenges
+    of the era, the video does not directly discuss the formation or early activities
+    of OUN. It offers a tangential perspective on the complex ethical and political
+    landscape of the time.
+  transcript_excerpt: Його високі ідеали зазнавали зіткнення з дуже складною реальністю.
+    Постать, довкола якої десятиліттями точаться суперечки.
+  embed_suggestion: After section 'Деколонізаційний погляд' as a supplemental resource
+    to provide a nuanced, human-centric perspective on the complex geopolitical and
+    ethical dilemmas faced by Ukrainian leaders and society during the period when
+    OUN was active, offering context without directly focusing on OUN itself.
+- url: https://www.youtube.com/watch?v=ey4TtD7MGzs
+  channel: ІМТГШ
+  title: Як УПА створила державу! (УГВР)
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=2VL3lj5KGQ0
+  channel: ІМТГШ
+  title: ІСТОРІЯ УКРАЇНСЬКОЇ ЦЕРКВИ
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0433
+  text: "2015  р. ДЕКОМУНІЗАЦІЯ\nЗаходи\nУвічнення перемоги над нацизмом \nу  Другій\
+    \ світовій війні (1939—\n1945  рр.)\nДоступ до архівів спецслужб\nПравовий статус\
+    \ учасників \nборотьби за незалежність України\nЗасудження комуністичного \nта \
+    \ нацистського режимів\nЗміна назв населених пунктів, \nвулиць, об’єктів топоніміки,\
+    \ що \nмають імена компартійних діячів; \nзнесення пам’ятників на честь \nкомуністичних\
+    \ лідерів і  подій\n© ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 239
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0320
+  text: "167\n§ 28. Українські землі у  складі Другої Речі Посполитої\n1930-ті рр.\
+    \ він неухильно розвивався. Організаційні витоки були \nпов’язані з  діяльністю\
+    \ Української військової організації (УВО), що була \nстворена в  Празі в  1920 \
+    \ р. групою старшин УСС і  УГА на чолі з  пол-\nковником Євгеном  Коновальцем.\
+    \ Головною метою УВО була Українська \nсамостійна соборна держава, здобуття якої\
+    \ мало здійснитися загально-\nнаціональним повстанням українського народу проти\
+    \ окупантів. Основ­\nним методом боротьби вва"
+  section_title: Сторінка 167
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5699684619903564
+  chunk_id: 479cf43d_c0041
+  text: "Про нього див.: Ленкавський С. \r\nФілософічні підстави \"Націоналізму\"\
+    \ Донцова // Розбудова\r\nНації. — 1928. — Ч. 7, 8; Левинський В. Ідеолог фашизму.\
+    \ — Л., 1936; Єндик\r\nР. Донцов — ідеолог укр. націоналізму. — Мюнхен, 1955;\
+    \ Сосновський М. Дмитро\r\nДонцов: політ. портрет: з історії розвитку укр. націоналізму.\
+    \ — Нью-Йорк; Торонто,\r\n1974; Лісовий В. Драгоманов і Донцов // Філос. і соціол.\
+    \ думка. — \r\n 1991. — №9; Липинський В. Донцов і\r\nЛипинський // Сучасність.\
+    \ — 1992. — №6; Лосев І. Естетичні погляди"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5572642087936401
+  chunk_id: 53691244_c0067
+  text: "1 Міхновський\r\nМикола. Самостійна Україна.—Лондон, 1967.— С.14-15.\n\n\
+    2 Там\r\nсамо.—С.26-27.\n\n3 Там само.—С.29.\n\n4 Донцов Д.\r\nКультура примітивізму.\
+    \ — Черкаси, 1918.—С.8.\n\n5 Донцов\r\nДмитро. Націоналізм.—Лондон–Торонто, 1966.\n\
+    \n6 Там\r\nсамо.—С.230-231.\n\n7 Там\r\nсамо.—С.233.\n\n8 Там\r\nсамо.—С.235.\n\
+    \n9 Там\r\nсамо.—С.257, 263.\n\n10 Там само.—С.258.\n\n11 Там само.—С.263.\n\n\
+    12 Там само.—С.280, 283.\n\n13 Там само.—С.284.\n\n14 Там само.—С.311.\n\n15 «Розбудова\
+    \ нації», Прага, 1928.—Ч.7-8.—С.273.\n\n16 Лисяк-Рудницький Іван"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.554276168346405
+  chunk_id: b715df49_c0688
+  text: "28 Грановський Б. Становлення видавничої\r\nдіяльності УАН-ВУАН 1918-1928\
+    \ // Україна в минулому, вип. 9, с. 145-146."
+  work: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/isaevych/is.htm

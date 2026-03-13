@@ -2,104 +2,83 @@
 
 ## State Standard Reference
 
-**§4.3.1** (lines 1369–1378): "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; проста форма найвищого ступеня: найсолодший, найважливіший; складена форма вищого ступеня: більш солодкий, менш кислий, більш важливий, менш важливий; складена форма найвищого ступеня порівняння: найбільш солодкий, найменш кислий, найбільш важливий, найменш важливий; суплетивні форми: великий – більший, найбільший; малий – менший, найменший."
+**§4.3.1** (lines 1369–1378, A2 Word Formation):
+> "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; проста форма найвищого ступеня: найсолодший, найважливіший; складена форма вищого ступеня: більш солодкий, менш кислий, більш важливий, менш важливий; складена форма найвищого ступеня порівняння: найбільш солодкий, найменш кислий, найбільш важливий, найменш важливий; суплетивні форми: великий – більший, найбільший; малий – менший, найменший."
 
-**Alignment**: Module a2-022 directly addresses the A2 §4.3.1 requirement in full — synthetic forms (-іш-/-ш-), analytic forms (більш/менш + base), and suppletive pairs. Superlative forms are explicitly out of scope for this module (reserved for a2-23), so the standard's superlative entries are noted but not taught here.
+**Alignment:** The module covers exactly what §4.3.1 requires for A2: both simple (-іший/-ший) and analytic (більш/менш +) forms of the comparative, plus suppletive pairs (великий–більший, малий–менший). The Standard's A2 scope stops at the comparative+superlative introduction; irregular forms beyond великий/малий (e.g., гарний–кращий, поганий–гірший) are additional high-value items not explicitly listed but consistent with A2 goals. Note: §4.2.2.1 (lines 1258–1263) also flags "comparative constructions" as a Nominative case use at A2 — reinforcing the ніж + Nominative rule.
 
 ---
 
 ## Vocabulary Frequency
 
-All forms VESUM-verified (✅ = found in morphological dictionary).
+All 19 target words **verified in VESUM** ✅
 
-| Word | GRAC Frequency | IPM (per million) | VESUM | Key collocations / notes |
-|------|---------------|-------------------|-------|--------------------------|
-| ніж (conj) | 791,219 | 390.93 | ✅ conj | Extremely high frequency — core conjunction |
-| набагато | 120,786 | 59.68 | ✅ adv | набагато більший, набагато кращий |
-| більший | 27,215 | 13.45 | ✅ adj | більший розмір, більша частина |
-| кращий | 25,223 | 12.46 | ✅ adj | кращий результат, краща якість, кращий спосіб |
-| вищий | 23,733 | 11.73 | ✅ adj | вищий на зріст, вищий за мене |
-| менший | — | — | ✅ adj | менша кількість, менший розмір |
-| дорожчий | — | — | ✅ adj | дорожчий товар, набагато дорожчий |
-| дешевший | — | — | ✅ adj | дешевший варіант, трохи дешевший |
-| старший | — | — | ✅ adj | старший брат, старший за віком |
-| молодший | — | — | ✅ adj | молодший брат, молодша сестра |
-| гірший | 5,745 | 2.84 | ✅ adj | гірший результат, гірша якість |
-| швидший | — | — | ✅ adj | швидший за..., набагато швидший |
-| довший | — | — | ✅ adj | довший шлях, довший час |
-| коротший | — | — | ✅ adj | коротший варіант |
-| ширший | — | — | ✅ adj | ширший вибір |
-| вужчий | — | — | ✅ adj | вужча вулиця |
-| нижчий | — | — | ✅ adj | нижчий рівень |
-| значно | — | — | ✅ adv | значно кращий, значно більший |
-| трохи | — | — | ✅ adv | трохи дешевший, трохи старший |
+| Word | GRAC Freq / IPM | Key collocations |
+|------|-----------------|-----------------|
+| ніж | 791,219 / 390.93 | extremely high frequency — conjunction + noun |
+| набагато | 120,786 / 59.68 | набагато більший, набагато кращий |
+| старший | 54,207 / 26.78 | старший брат, старший за віком |
+| більший | 27,215 / 13.45 | більший розмір, більша частина, більший вплив |
+| кращий | 25,223 / 12.46 | кращий результат, краща якість, кращий варіант |
+| дорожчий | 2,071 / 1.02 | дорожчий товар, набагато дорожчий |
+| трохи | (high) | трохи дешевший, трохи більший |
+| значно | (high) | значно вищий, значно дорожчий |
 
-**Frequency note**: `набагато` (59.68/M) is the dominant intensifier — much higher corpus weight than `значно` (formal). Prioritize `набагато` in drills; `значно` as secondary.
+**Note on дорожчий (1.02 IPM):** Low raw frequency confirms it's a concrete/situational word — appropriate for A2 retail context but not a core function word. Include it with дешевший as a pair.
+
+**Note on ніж (390.93 IPM):** This is one of the most frequent conjunctions in Ukrainian. Leaner exposure to this word is guaranteed in natural text — make it the primary comparison structure at A2.
 
 ---
 
 ## Cultural Hooks
 
-1. **Київська телевежа (Kyiv TV Tower)** — 380 m, built 1968–1973, all-metal lattice structure. Confirmed by Ukrainian Wikipedia as tallest lattice free-standing structure in the world at time of construction, and still the tallest structure in Ukraine. Comparison drill: Київська телевежа вища за Ейфелеву вежу (324 m) на 56 метрів. ✅ Verified: height differential ~56 m (plan states 55 m — acceptable rounding).
+1. **Київська телевежа** — 380m steel lattice tower, built 1968–1973 in Kyiv. At construction, was the world's tallest lattice free-standing structure. Still the tallest structure in Ukraine. Source: uk.wikipedia.org/wiki/Київська_телевежа. *Use for: вища/нижча, вищий на X метрів constructions.*
 
-2. **«Батьківщина-Мати» (Kyiv monument)** — monumental sculpture on the right bank of the Dnipro, opened 1981, at the National Museum of the History of Ukraine in World War II. Confirmed by Ukrainian Wikipedia as the tallest monumental sculpture in Europe. Total height ~102 m (figure + pedestal). Useful for height comparisons with European monuments. Note: decolonized framing required — the monument was built in Soviet times but now carries Ukrainian national identity; the sword was recently redesigned (trident replacing Soviet star, 2023).
+2. **Батьківщина-Мати (Kyiv)** — monumental sculpture on the right bank of the Dnieper, opened 1981. Wikipedia confirms it is the **highest monumental sculpture in Europe**. Plan states 102m (total with pedestal; the statue itself is 62m — note the distinction for accuracy). Source: uk.wikipedia.org/wiki/Батьківщина-Мати_(Київ). *Use for: вища/нижча comparisons with other European monuments, найвища — pointing forward to superlative in a2-23.*
 
----
-
-## Comparison Structure — Critical Textbook Finding
-
-From **Zabolotnyi Grade 11** (tier 2, authoritative prescriptive source):
-
-> "Порівняння приєднуємо до прикметників вищого ступеня обов'язково за допомогою слів **ніж** (таке порівняння виділяємо комами), **від**, **за**."
-
-Correct paradigm:
-- `менший, ніж сестра` (ніж + Nominative; set off by comma)
-- `менший від сестри` (від + Genitive)
-- `менший за сестру` (за + Accusative)
-
-**Wrong**: `менший сестри` (bare genitive without preposition — common Russicism-adjacent error)
-
-**Module scope**: Plan focuses on `ніж` (Nom) and `за` (Acc) only. `від` (Gen) is present in prescriptive sources and may appear in input — can be noted briefly as a third option without drilling.
+**Height accuracy note for Phase B:** The plan says "Батьківщина-Мати (102m)" — this figure refers to the total monument height including the museum/pedestal complex. The statue alone is 62m. Either use the 102m figure explicitly attributed to the total complex, or use the 62m figure for the statue alone. Do not present 102m as the statue's height without qualification.
 
 ---
 
 ## Common Learner Errors
 
-1. **Double comparative** (*більш кращий*) → `кращий` OR `більш хороший` — occurs because English "more better" logic transfers; learners also confuse the two Ukrainian systems (synthetic vs. analytic) and stack them.
+1. **Double comparative** (*більш кращий*, *більш вищий*) → correct: **кращий** (synthetic) OR **більш хороший** (analytic, not *більш кращий*) — Happens because English "more better" logic transfers directly; Ukrainian allows either synthetic OR analytic form, never both simultaneously.
 
-2. **Case confusion after «за»** — using nominative: *за він* → `за нього`; *за я* → `за мене`; *за вона* → `за неї`. Occurs because learners treat `за` as a conjunction like `ніж` (which does take Nom). The preposition `за` triggers full accusative declension including pronoun shifts.
+2. **Nominative after "за"** (*за він*, *за я*, *за вона*) → correct: **за нього, за мене, за неї** — The preposition "за" in comparison requires Accusative case. Pronoun forms are unexpected for English speakers who see "за" as equivalent to "than".
 
-3. **Forgotten stem alternation** — writing *близькіший*, *дорогіший* → correct: `ближчий`, `дорожчий`. Occurs because -іший is the default suffix and learners apply it universally, missing that -к-, -г-, -х- stems require consonant mutation before -ш-.
-
-4. **No comparison particle** — *він менший мене* (bare form without ніж/за/від) → `він менший за мене` / `він менший, ніж я`. This is the most common spoken error; the comparison object is simply left in genitive by analogy with other Slavic patterns.
+3. **Alternation neglect** (*близький → *близіший*, *дорогий → *дорогіший*) → correct: **ближчий, дорожчий** — Learners apply suffix -іший mechanically without triggering the obligatory consonant shift (г→ж, к→ч, х→ш, зк→жч). Avramenko Grade 6 textbook (tier 1) explicitly flags: "низький→нижчий, високий→вищий, легкий→легший; малий→менший, великий→більший, гарний→кращий."
 
 ---
 
 ## Cross-References
 
-- **Builds on**: A1 adjective agreement (gender/case endings for positive degree), A2-19 (Possessive sviy — adj agreement patterns), basic sentence structure
-- **Prepares for**: a2-23 (The Best, The Worst — superlative; `най-` prefix), a2-24 (Preferences and Choices — `віддавати перевагу`, `подобатися більше`), a2-29 (Smart Shopping — price comparisons in context)
+- **Builds on:** A1 adjective agreement (gender/case endings) · a2-19 (possessive *свій* — adjective inflection patterns) · basic sentence structure with SVO
+- **Prepares for:** a2-23 (The Best, The Worst — superlative degree, an immediate sequel) · a2-24 (Preferences and Choices — *надавати перевагу*, *воліти*, comparison in preference statements) · a2-29 (Smart Shopping — *дорожчий/дешевший* vocabulary in retail transactions)
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered during research)
+- (none encountered during this research phase)
 
 ---
 
 ## Notes for Content Writing
 
-- **Stem alternation table is mandatory**: Group consonant mutations clearly — (г→ж): дорогий→дорожчий, дужий→дужчий; (к→ч): близький→ближчий, глибокий→глибший (suffix -к- drops); (х→ш): тихий→тихіший (no mutation — suffix -іш- attaches to full stem). The plan bundles -г- and -к- mutations together; they are distinct mechanisms and should be presented separately.
-- **Suppress «від + Gen» in drills** but acknowledge its existence in a footnote or note box so learners encountering it in the wild are not confused.
-- **«Чим…тим»** (the older, the wiser) — corpus-frequent structure, covered in plan §3; ensure it appears with both clauses in Ukrainian.
-- **Proverb authenticity**: «Краще один раз побачити, ніж сто разів почути» — standard Ukrainian idiom, safe to use. «Добре слово краще, ніж готові гроші» — less common variant; either works.
-- **Decolonized framing**: Present Ukrainian comparative morphology on its own terms. Polish comparison: Polish also uses synthetic comparatives (starszy, mniejszy) — the synthetic form is a Pan-Slavic feature, not a Russian borrowing. Ukrainian's suppletive forms (більший, кращий, гірший) have deep roots in Common Slavic.
-- **Double-comparative error note**: The analytic form in Ukrainian is `більш + positive` (більш хороший), NOT `більш + comparative` (більш кращий). State this as a rule, not just as an error correction.
-- **«Батьківщина-Мати» framing**: Reference the 2023 redesign (Soviet star → Ukrainian trident on the sword) as a living example of Ukrainian cultural reclamation — brief, 1–2 sentences, anchors contemporary relevance.
+- **Чим…тим structure** (plan: «Чим старіший, тим мудріший»): This correlative comparative is a distinct syntactic pattern — not just a vocabulary item. Worth a dedicated callout box at A2. Keep Ukrainian examples simple (≤15 words, ≤2 clauses per level constraint).
+- **«За» accusative drill priority:** The план's "Error Correction Lab" is pedagogically sound — drill this with pronouns specifically (за мене/тебе/нього/неї/нас/вас/них) since that's where learners make errors. Nouns after «за» are less error-prone (accusative = nominative for inanimates).
+- **Textbook source (Avramenko Grade 6, tier 1):** The canonical textbook treatment uses discovery dialogue → rule box → consonant alternation table → suppletive list. Phase B can mirror this PPP structure directly.
+- **Analytic form register note:** «більш + adj» is somewhat more formal/written than the synthetic form. At A2, introduce both but note synthetic is preferred in conversation.
+- **«За» vs «ніж» stylistic note:** In contemporary spoken Ukrainian, «ніж» dominates overwhelmingly (GRAC: 390.93 IPM). «За» + Accusative is common but slightly more formal/literary. Both are standard and correct.
+- **Decolonized framing:** Ukrainian comparison morphology is a native Slavic feature with its own history. The suffix -іший is specifically Ukrainian (cf. Polish -iejszy, Czech -ejší) — frame it as Ukrainian developing its own comparative system, not as "similar to" any other language.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Dobra Forma 20-1: Comparative Degree](https://opentext.ku.edu/dobraforma/chapter/20-1/) (University of Kansas)
+- [Dobra Forma 20-2: Comparative Exceptions](https://opentext.ku.edu/dobraforma/chapter/20-2/) (University of Kansas)
+- [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/) (Unknown)
 
 ### Textbook References (RAG)
 

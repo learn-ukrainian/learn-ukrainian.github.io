@@ -13,12 +13,9 @@ Validates:
   9. detect_pipeline_info() helper in generate_mdx
 """
 
+import contextlib
 import json
-import tempfile
 from pathlib import Path
-
-import pytest
-
 
 # ==================== state_router helpers ====================
 
@@ -162,13 +159,13 @@ class TestPipelinePhaseOrder:
     """V5_PHASE_ORDER imported from pipeline_v5."""
 
     def test_phase_order_no_sandbox(self):
-        """Sandbox removed in #820."""
+        """Sandbox removed in #820. Activities moved after review."""
         from scripts.api.state_router import V5_PHASE_ORDER
 
         assert "sandbox" not in V5_PHASE_ORDER
         assert V5_PHASE_ORDER == [
-            "research", "discover", "content", "activities",
-            "validate", "review", "mdx",
+            "research", "discover", "content", "validate",
+            "review", "activities", "mdx",
         ]
 
     def test_v4_phase_order_no_sandbox(self):
@@ -190,8 +187,9 @@ class TestClaudeContentDispatch:
         """_dispatch_claude_phase should recognize Phase B delimiters."""
         # We can't call it directly without Claude CLI, but verify the
         # delimiter mapping includes B
-        import scripts.build.pipeline_v5 as pv5
         import inspect
+
+        import scripts.build.pipeline_v5 as pv5
         source = inspect.getsource(pv5._dispatch_claude_phase)
         assert '"B"' in source
         assert "===CONTENT_START===" in source
@@ -200,6 +198,7 @@ class TestClaudeContentDispatch:
     def test_content_dispatch_fn_set_when_use_claude_b(self):
         """phase_content should set content_dispatch_fn when B in use_claude."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import phase_content
 
         ctx = MagicMock()
@@ -226,6 +225,7 @@ class TestClaudeContentDispatch:
     def test_content_dispatch_fn_not_set_without_flag(self):
         """phase_content should NOT set content_dispatch_fn when B not in use_claude."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import phase_content
 
         ctx = MagicMock()
@@ -250,6 +250,7 @@ class TestClaudeContentDispatch:
     def test_make_content_dispatch_fn_calls_claude_phase(self):
         """_make_content_dispatch_fn returns a callable that dispatches to Claude."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import _make_content_dispatch_fn
 
         ctx = MagicMock()
@@ -270,6 +271,7 @@ class TestClaudeContentDispatch:
     def test_make_content_dispatch_fn_writes_output_file(self, tmp_path):
         """Dispatch fn writes to output_file when specified."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import _make_content_dispatch_fn
 
         ctx = MagicMock()
@@ -280,7 +282,7 @@ class TestClaudeContentDispatch:
 
         with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
                     return_value=(True, "content text")):
-            ok, output = dispatch_fn("prompt", "task-1", output_file=out_file)
+            ok, _output = dispatch_fn("prompt", "task-1", output_file=out_file)
 
             assert ok
             assert out_file.exists()
@@ -289,6 +291,7 @@ class TestClaudeContentDispatch:
     def test_make_content_dispatch_fn_no_file_on_failure(self, tmp_path):
         """Dispatch fn does NOT write output_file when Claude fails."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import _make_content_dispatch_fn
 
         ctx = MagicMock()
@@ -299,7 +302,7 @@ class TestClaudeContentDispatch:
 
         with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
                     return_value=(False, "")):
-            ok, output = dispatch_fn("prompt", "task-1", output_file=out_file)
+            ok, _output = dispatch_fn("prompt", "task-1", output_file=out_file)
 
             assert not ok
             assert not out_file.exists()
@@ -307,6 +310,7 @@ class TestClaudeContentDispatch:
     def test_make_content_dispatch_fn_model_override(self):
         """Explicit model parameter overrides ctx.claude_model_B."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import _make_content_dispatch_fn
 
         ctx = MagicMock()
@@ -324,6 +328,7 @@ class TestClaudeContentDispatch:
     def test_make_content_dispatch_fn_ignores_gemini_model(self):
         """Gemini model strings passed by phase_2_content should be ignored."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import _make_content_dispatch_fn
 
         ctx = MagicMock()
@@ -343,6 +348,7 @@ class TestClaudeContentDispatch:
     def test_make_content_dispatch_fn_cleans_tempfile(self):
         """Tempfile is cleaned up even if dispatch fails."""
         from unittest.mock import MagicMock, patch
+
         from scripts.build.pipeline_v5 import _make_content_dispatch_fn
 
         ctx = MagicMock()
@@ -350,11 +356,9 @@ class TestClaudeContentDispatch:
         dispatch_fn = _make_content_dispatch_fn(ctx)
 
         with patch("scripts.build.pipeline_v5._dispatch_claude_phase",
-                    side_effect=RuntimeError("test error")):
-            try:
-                dispatch_fn("prompt", "task-1")
-            except RuntimeError:
-                pass
+                    side_effect=RuntimeError("test error")), \
+             contextlib.suppress(RuntimeError):
+            dispatch_fn("prompt", "task-1")
             # No temp files should remain — we can't check directly but
             # the finally block in _make_content_dispatch_fn ensures cleanup
 
@@ -625,6 +629,7 @@ class TestPipelineVersionsEndpoint:
 
     def test_endpoint_returns_200(self):
         from fastapi.testclient import TestClient
+
         from scripts.api.main import app
 
         client = TestClient(app)
@@ -643,6 +648,7 @@ class TestPipelineVersionsEndpoint:
 
     def test_track_filter(self):
         from fastapi.testclient import TestClient
+
         from scripts.api.main import app
 
         client = TestClient(app)

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:48:36.644843+00:00'
+discovered_at: '2026-03-12T21:30:05.845428+00:00'
 query_keywords:
 - Невизначені та заперечні займенники
 - Логіка невизначеності
@@ -15,7 +15,17 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://talkukrainian.com/indefinite-negative-pronouns/
+  title: 'Talk Ukrainian: Indefinite and Negative Pronouns'
+  source: talkukrainian
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode106/
+  title: Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 6-klas-ukrmova-litvinova-2023_s0012

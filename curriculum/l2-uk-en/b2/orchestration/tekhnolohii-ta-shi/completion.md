@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b2 72 — E2E
+PASS: pipeline b2 77
 
   Module:   tekhnolohii-ta-shi
   Track:    b2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:18Z
+  Verdict:  PASS
+  Date:     2026-03-12T20:16:38Z

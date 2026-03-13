@@ -1,0 +1,112 @@
+discovered_at: '2026-03-12T19:10:04.792930+00:00'
+query_keywords:
+- Презентації та візуалізація
+- Структура виступу та етикет
+- Presentation Structure & Etiquette
+- Опис візуальних даних
+- Describing Visual Data
+- Мовні засоби презентатора
+- Linguistic Tools for Presenters
+- Узагальнення та робота з джерелами
+- Summarizing & Working with Sources
+- Міні-презентація
+- Mini-presentation
+- a 3-5 minute presentation in Ukrainian
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode108/
+  title: Kyiv tour + Participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode95/
+  title: My life in Kyiv (Voice message №3)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode91/
+  title: Asking for advice in Ukrainian + Using imperfective and perfective verb aspects
+    in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode93/
+  title: At the food fair in Ukraine + Diminutive words in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0256
+  text: 'Яке враження я хотіла б (хотів би) справляти на людей. У текст виступу введіть
+    характеристику (або елементи характеристики). Прослухайте виступи в  класі, обговоріть
+    їх. Поясніть відмінність між характеристикою — засобом ораторського тексту та
+    ха-
+
+    рактеристикою  — діловим папером.'
+  section_title: Сторінка 179
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0121
+  text: "Підготовка до виступу. Види читання і  записування тексту виступу. Естетика\
+    \ тексту \x1F\n85\n \n Обговоріть складені плани в  класі. Визначте: 1) найбільш\
+    \ детальний; 2) найне-\nсподіваніший; 3) найцікавіший.\n \n Складіть і  запишіть\
+    \ вступ до одного з  виступів за складеним  планом.\n \n Складіть і  запишіть\
+    \ закінчення (кінцівку) того  ж виступу.\n157. Підготуйте текст публічного виступу\
+    \ (запишіть ключові слова, доберіть \nі  систематизуйте матеріал, складіть план,\
+    \ за планом  — текст) на одну з  тем:\n— Берег"
+  section_title: Сторінка 85
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0169
+  text: "Практична риторика\n120\n \n представлення  — надання інформації про особу,\
+    \ її діяльність, досягнення;\n \n інструкція  — стислі настанови (як використовувати\
+    \ нову технологію, як ді-\nстатися певної вулиці, як користуватися електроприладом,\
+    \ як доглядати за \nдомашньою твариною тощо). Трапляється, що всі ці жанри поєднано\
+    \ в  одному виступі. 211. Прочитайте. Сформулюйте за змістом прочитаного 2–3 \
+    \ проблемних за-\nпитання. Скористайтеся поданою на фо5рзаці підручника таблицею\
+    \ «Види за-\nпитань». Мета будь-я"
+  section_title: Сторінка 120
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0243
+  text: "який? Зміст\nподії і вчинки \nперсонажів\nпричини ознак \nі дій\nознаки особи,\
+    \ \nпредмета\nБудова\nзав’язка — роз-\nвиток подій — \nкульмінація — \nрозв’язка\n\
+    теза — аргумен-\nти — висновок\nзагальне уяв-\nлення про пред-\nмет — окремі \n\
+    його ознаки — \nвисновок\nСТИЛІ МОВЛЕННЯ\nОзнаки\nстилю\nОфіційно-\nділовий\n\
+    Науковий\nПубліци-\nстичний\nРозмовно-\nпобутовий\nХудожній\nСфера \nвикори-\n\
+    стання\nділові \nстосунки\nосвіта, \nнаука, \nтехніка\nпобут\nхудожня \nлітература\n\
+    Призна-\nчення \nурегу-\nлювання \nслужбових \nстосунків\nповідом-\nлен"
+  section_title: Сторінка 226
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

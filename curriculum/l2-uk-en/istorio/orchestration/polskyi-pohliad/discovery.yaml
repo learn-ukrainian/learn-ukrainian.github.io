@@ -1,0 +1,296 @@
+discovered_at: '2026-03-12T23:30:35.527263+00:00'
+query_keywords:
+- Польський погляд на українську історію
+- Традиційний польський наратив
+- Міжвоєнна польська історіографія
+- Волинь 1943 у польській пам'яті
+- Революція Ґедройця
+- Сучасна польська історіографія
+- '2022'
+- Analyze the causes and consequences of польський погляд на українську історію
+- Evaluate the historical significance of два сусіди, дві пам'яті
+- Trace the development of історичний перелом
+- history
+- історія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=6DO5S7FY4wU
+  channel: Реальна Історія
+  title: Що НАСПРАВДІ сталося між поляками та українцями? (Napisy PL)
+  relevance_score: 0.9
+  relevance_note: Directly addresses the module's topic of the Volyn tragedy from
+    a Polish perspective and its impact on modern Ukrainian-Polish relations.
+  transcript_excerpt: Він присвячений Волинській трагедії і україно-польським стосункам.
+    У Польщі вважають, що Волинська трагедія, яку там називають РІЗАНИНА – це геноцид,
+    масові вбивства мирних поляків в Україні...
+  embed_suggestion: After section 'Волинь 1943 у польській пам'яті' to elaborate on
+    the differing interpretations and political implications.
+- url: https://www.youtube.com/watch?v=9tXi2uIOQWg
+  channel: Комік Історик
+  title: 'Юзеф Пілсудський: "божевільний" лідер Польщі'
+  relevance_score: 0.9
+  relevance_note: Discusses Józef Piłsudski, a pivotal figure in interwar Polish history
+    whose actions and legacy directly shaped Polish political and historical narratives
+    relevant to 'Міжвоєнна польська історіографія'.
+  transcript_excerpt: Юзеф Пілсудський... найвидатнішим найвідомішим польським національним
+    героєм... він розписує що Гітлер дуже сильно шанував юозефа пілсуського...
+  embed_suggestion: After section 'Міжвоєнна польська історіографія' to illustrate
+    a key figure of that era and his impact on Polish historical thought.
+- url: https://www.youtube.com/watch?v=hERfjIgExDk
+  channel: Реальна Історія
+  title: З чого почались територіальні суперечки між Україною і Польщею? (Napisy PL)
+  relevance_score: 0.8
+  relevance_note: Provides historical context for the long-standing territorial disputes
+    and intertwined histories between Ukraine and Poland, reinforcing the 'Два сусіди,
+    дві пам'яті' theme.
+  transcript_excerpt: Історія України та Польщі переплетена набагато тісніша, ніж
+    нам здається. ...Все ж таки історично це чиї території, польські чи українські?
+  embed_suggestion: After section 'Вступ — Два сусіди, дві пам'яті' to provide historical
+    depth to the complex relationship.
+- url: https://www.youtube.com/watch?v=Hk8RhT59X3I
+  channel: ІМТГШ
+  title: Історія Польщі за 15 хвилин | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.5
+  relevance_note: Provides a broad, general overview of Polish history. While relevant
+    as background, it lacks specific focus on the 'Polish perspective on Ukrainian
+    history' or the particular historiographical periods/events of the module.
+  transcript_excerpt: польська держава виникла в басейні річки вісло яка впадає в
+    Балтійське море... перший Володар Польщі Мешко пеший згадується в 963 році...
+  embed_suggestion: Not recommended for direct embedding within specific module sections
+    due to its broad nature. Could serve as optional pre-reading if a very general
+    historical overview is desired.
+- url: https://www.youtube.com/watch?v=qYwINjPQza0
+  channel: Комік Історик
+  title: історія Польщі очима українців
+  relevance_score: 0.4
+  relevance_note: Tangentially related, focusing on a Polish folk legend ('Wawel Dragon')
+    through a comedic Ukrainian lens. It provides cultural insight but doesn't delve
+    into historical narratives or historiography relevant to the module's core analytical
+    focus.
+  transcript_excerpt: там є легенда про Краківського дракона... в них там є легенда
+    про Краківського дракона і цей Краківський дракон Там біля вавелю підніжжя стоїть...
+  embed_suggestion: Not recommended for direct embedding within the module's main
+    sections due to its tangential nature.
+- url: https://www.youtube.com/watch?v=cYuoF5mfn60
+  channel: ІМТГШ
+  title: Історія Польщі. Уроки для України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0415
+  text: "288\nДобірêа джерел ціêавої інформації \nПóбліêації  \n \nАрêóша О. Г.,\
+    \ Кондратюê К. К., Мóдрий М. М., Сóхий О. М. Час народів. Історія Уêраїни \nХІХ\
+    \ століття: навчальний посібниê. — Львів: ЛНУ імені Івана Франêа, 2016 р. — 408\
+    \ с.: іл.  \nБовóа Д. Шляхтич, êріпаê і ревізор: польсьêа шляхта між царизмом\
+    \ і óêраїнсьêими \nмасами (1831–1863) /Д. Бовóа; пер. з франц. З. Борисюê; наóê.\
+    \ ред. В. Шандра,  \nН. Яêовенêо. — К.: ІНТЕЛ, 1996. — 421 с.  \nБовóа Д. Битва\
+    \ за землю в Уêраїні: 1863–1914: Поляêи в соціо"
+  section_title: Сторінка 288
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0006
+  text: "6\n§ 1. Повторення. Вступ \uFEFF\uFEFF\n3.\tІсторичні джерела з Ранньомодерної\
+    \ \nдоби історії України\n\e\n\e Які типи історичних джерел з історії Ранньомодерної\
+    \ \nдоби України набули для істориків найбільшого \nзначення? Поясніть чому.\n\
+    Вивчення минулого відбувається за історич-\nними джерелами. Саме їх аналізують\
+    \ дослід-\nники й  дослідниці для отримання інформації \nпро той або інший історичний\
+    \ період. Як ви \nвже знаєте, історичні джерела поділяють на \nтакі типи:\nyy\
+    \ речові: знаряддя праці, побутові речі, зброя, \nреч"
+  section_title: Сторінка 6
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0011
+  text: "В  інших християнських \nкраїнах такі твори мали назву \n«хроніки», і  писали\
+    \ їх найчастіше \nлатиною. СФОРМУЛЮЙТЕ СУДЖЕННЯ ПРО:\n\x84\n\x84\nте, як знання\
+    \ про минуле \nдопоможуть зрозуміти сучасність \nі  спрогнозувати майбутнє;\n\x84\
+    \n\x84\nвзаємозв’язок між історією \nУкраїни та все­світньою історією;\n\x84\n\
+    \x84\nнеобхідність поєднувати \nінформацію з  різних історичних \nджерел для дослідження\
+    \ \nминулого. Працюємо з  хронологією\nV—VІІ  — кінець \nХV ст. Середньовічна\
+    \ \nісторія України\nМонети  — речові історичні джерела"
+  section_title: Сторінка 8
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0030
+  text: '2. Закувала зозуленька. Антологія української народної поетичної творчос-
+
+    ті. – К., 1998. 3. Королюк Н. Маленькі історії про українських композиторів XVIII–ХХ
+    ст. – К.,
+
+    1998. 4. Мишанич О. Система жанрів в українському фольклорі // Українознавство:
+
+    Посібник. – К., 1994. 5. Нудьга Г. Слово і пісня. – К., 1994. Г
+
+    6. Погребенник Ф. Наша дума, наша пісня... Нариси-дослідження. – К., 1991. 7.
+    Руснак І. Український фольклор у школі // Українська мова й література в
+
+    середніх школах, гімназіях, ліцеях т'
+  section_title: Сторінка 21
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0575
+  text: "319 \nРекомендована література \n \n Баран В. Україна в 1950–1960-х рр.\
+    \ Еволюція тоталітарної системи. Львів: \nІнститут українознавства імені Івана\
+    \ Крип’якевича НАН України, 1996. \n Баран В., Даниленко В. Україна в умовах\
+    \ системної кризи. Київ: Либідь, 1999. \n Гирич І. Через ідентичність до держави.\
+    \ Київ: Українські пропілеї, 2021. \n Грицак Я. Нариси історії України: формування\
+    \ модерної української нації  \nXIX–XX ст. Київ: Генеза, 2000. \n Грицак Я. Подолати\
+    \ минуле: глобальна історія України. К"
+  section_title: Сторінка 320
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5793660879135132
+  chunk_id: ed325924_c0165
+  text: "1) Rozmowa między polakiem i kowalem (стор. 1 —\r\n14),\n\n2) Rozmowa między\
+    \ żołnierzem i żydem\r\n(стор. 14 — 25),\n\nз яких перша належить до української\
+    \ літератури, друга\r\n— до польської.\n\nВперше опублікував інтермедію «Rozmowa\
+    \ między polakem\r\ni kowalem, Ів. Франко в роботі «До історії українського вертепа\
+    \ XVIII в.», вміщеній\r\nв ЗНТШ, т. XXIII, 1906, стор. 6—13.\n\nВ книзі інтермедія\
+    \ друкується за рукописом Львівської бібліотеки АН УРСР.\n\n* * *"
+  work: Українські інтермедії XVII-XVIII ст.
+  author: Різні
+  year: 1700
+  genre: interlude
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/ukrinter/int01.htm
+- score: 0.5598574876785278
+  chunk_id: 701afbae_c0001
+  text: 'Галицько-Волинський літопис (розшифровка за Іпатським списком).
+
+
+    Галицько-Волинський літопис (розшифровка за Острозьким списком).
+
+
+    Літопис руський (переклад Л.Махновця).
+
+
+    Повість врем’яних літ. (переклад В.Яременка).
+
+
+    Ярослав Книш. Фрагменти невідомого списку Іпатіївського літопису
+
+
+    «Літописи». З Енциклопедії Українознавства.
+
+
+    «Літописи». З енциклопедії «Українська мова».
+
+
+    А.І.Генсьорський. Термін «Русь» (та похідні) в Древній Русі... (1962).
+
+
+    [Генсьорський А. І. Галицько-Волинський літопис (лек'
+  work: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+  year: 1961
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hens1/hn.htm
+- score: 0.5569106340408325
+  chunk_id: 3d7a3a6b_c0023
+  text: "4 Антонович М. Студії\r\nз часів Наливайка // Праці Українського історико-філологічного\
+    \ товариства.—\r\nПрага, 1942; Брехуненко В. Стосунки українського козацтва з\
+    \ Доном у XVI —\r\nсередині XVII ст.— Київ — Запоріжжя 1998; Василенко Г. А. Хотинська\r\
+    \nвійна.— К., 1960; Гуслистий К. Г. Визвольна боротьба українського\r\nнароду\
+    \ проти гніту шляхетської Польщі в другій половині XVI і в першій половині\r\n\
+    XVII ст. // Нариси з історії України.— К 1941.— Вип. 3; Сергійчук В. 1. Іменем\r\
+    \nВійська Запорозького: Україн"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm

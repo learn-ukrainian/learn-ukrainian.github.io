@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T10:03:39.247559+00:00'
+discovered_at: '2026-03-12T21:40:58.987911+00:00'
 query_keywords:
 - 'Підрядні речення мети: щоб + інфінітив'
 - Вступ та діагностичний тест
@@ -15,7 +15,17 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Підрядне_речення_мети
+  title: Підрядне речення мети
+  source: Вікіпедія
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+purpose+clauses
+  title: Ukrainian Purpose Clauses
+  source: відео пояснення
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0127

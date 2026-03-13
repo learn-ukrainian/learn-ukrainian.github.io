@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "politics-government-vocabulary",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:56:02Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:56:02Z",
+      "task_id": "v5-politics-government-vocabulary-pA",
+      "mode": "full"
+    }
+  }
+}

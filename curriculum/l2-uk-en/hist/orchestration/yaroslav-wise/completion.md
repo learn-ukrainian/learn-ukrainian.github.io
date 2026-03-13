@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 12 — E2E
+PASS: pipeline hist 12
 
   Module:   yaroslav-wise
   Track:    hist
-  Mode:     e2e
-  Words:    6541 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T19:26:27Z
+  Date:     2026-03-13T08:32:17Z

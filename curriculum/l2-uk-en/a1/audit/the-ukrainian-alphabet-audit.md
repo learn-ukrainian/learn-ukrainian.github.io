@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-ukrainian-alphabet.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-12 10:23:08
+**Generated:** 2026-03-13 09:47:29
 
 ## Configuration
 **Type:** A1-grammar
@@ -19,14 +19,14 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | watch-and-repeat | Listen and Repeat | 10 | 1 | ✅ |
-| 2 | image-to-letter | First Letter | 6 | 5 | ✅ |
-| 3 | classify | Vowels and Consonants | 10 | 1 | ✅ |
-| 4 | true-false | Letter Facts | 6 | 6 | ✅ |
-| 5 | anagram | Word Scramble | 8 | 6 | ✅ |
-| 6 | match-up | Letter Sounds | 6 | 6 | ✅ |
-| 7 | fill-in | Complete the Word | 6 | 6 | ✅ |
-| 8 | quiz | Read and Recognize | 6 | 6 | ✅ |
+| 1 | watch-and-repeat | Listen and Repeat the Letters | 10 | 1 | ✅ |
+| 2 | classify | Vowels vs Consonants | 10 | 1 | ✅ |
+| 3 | match-up | Letter to English Sound Match | 10 | 6 | ✅ |
+| 4 | image-to-letter | First Letter Match | 8 | 5 | ✅ |
+| 5 | quiz | Read the Word | 8 | 6 | ✅ |
+| 6 | fill-in | Complete the Phrase | 8 | 6 | ✅ |
+| 7 | anagram | Unscramble the Word | 8 | 6 | ✅ |
+| 8 | true-false | Alphabet Facts | 6 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 8 (target: 8-12) ✅
@@ -36,32 +36,31 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1595/1200 (raw: 1695)
+- **Words:** ✅ 1849/1200 (raw: 2112)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 6.4% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 5.3% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ℹ️ N/A (research_quality not available)
+- **Research:** ✅ Content aligned with research
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Ukrainian Alphabet** | ✅ | 39 | Included in Core |
-| **Вступ — Introduction** | ✅ | 193 | Included in Core |
-| **Presentation** | ✅ | 69 | Included in Core |
-| **Букви і звуки — Letters and Sounds** | ✅ | 224 | Included in Core |
-| **Голосні та приголосні — Vowels and Consonants** | ✅ | 238 | Included in Core |
-| **Перші 10 літер — First 10 Letters** | ✅ | 419 | Included in Core |
-| **Перші слова — First Words in Context** | ✅ | 248 | Included in Core |
-| **Підсумок — Summary** | ✅ | 165 | Included in Core |
+| **The Ukrainian Alphabet** | ✅ | 30 | Included in Core |
+| **Вступ — Introduction** | ✅ | 246 | Included in Core |
+| **Букви і звуки — Letters and Sounds** | ✅ | 259 | Included in Core |
+| **Голосні та приголосні — Vowels and Consonants** | ✅ | 250 | Included in Core |
+| **Перші 10 літер — First 10 Letters** | ✅ | 531 | Included in Core |
+| **Перші слова — First Words in Context** | ✅ | 391 | Included in Core |
+| **Підсумок — Summary** | ✅ | 142 | Included in Core |

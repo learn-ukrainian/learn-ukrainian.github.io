@@ -3,15 +3,16 @@
   "slug": "aspect-past-single-repeated",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:49:56Z",
-      "note": "rebuild-kept"
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:50:14Z",
+      "ts": "2026-03-12T20:56:10Z",
       "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T20:56:10Z",
+      "task_id": "v5-aspect-past-single-repeated-pA",
+      "mode": "full"
     }
   }
 }

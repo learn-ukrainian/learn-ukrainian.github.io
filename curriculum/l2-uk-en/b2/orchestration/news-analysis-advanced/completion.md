@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b2 90 — E2E
+PASS: pipeline b2 72
 
   Module:   news-analysis-advanced
   Track:    b2
-  Mode:     e2e
-  Words:    3048 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:20Z
+  Verdict:  PASS
+  Date:     2026-03-12T19:56:30Z

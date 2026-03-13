@@ -149,7 +149,30 @@ Word counts:
 ===CONTENT_VERIFY_END===
 ```
 
-If any line shows ❌, output a corrected `===CONTENT_START===` to `===CONTENT_END===` block with the fixes applied, THEN output the friction report.
+If any line shows ❌, output a corrected `===CONTENT_START===` to `===CONTENT_END===` block with the fixes applied, THEN output the activity plans and friction report.
+
+## Activity Plans (MANDATORY)
+
+Based on your content, propose activity plans for the activities phase. Each plan specifies the activity type, focus, and item count. These will be built later using textbook exercises from RAG.
+
+```
+===ACTIVITY_PLANS_START===
+- type: {quiz|fill-in|match-up|true-false|unjumble|group-sort|anagram|error-correction|cloze|select|translate}
+  description: "{what the activity practices}"
+  item_count: {6-12}
+  focus: "{specific grammar/vocab point from this lesson}"
+  textbook_source: "{which textbook pattern to adapt, or 'original'}"
+
+- type: ...
+  ...
+===ACTIVITY_PLANS_END===
+```
+
+**Rules for activity plans:**
+- Plan {ACTIVITY_MIN}+ activities with at least 4 different types
+- Each plan should target a specific teaching point from your content
+- Reference textbook exercise patterns where possible
+- Activities must test LANGUAGE skills, not content recall
 
 ## Friction Report (MANDATORY)
 

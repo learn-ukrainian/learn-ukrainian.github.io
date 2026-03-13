@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 96 — E2E
+FAIL: pipeline hist 96
 
   Module:   kholodnyi-yar
   Track:    hist
-  Mode:     e2e
-  Words:    5841 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T22:52:09Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:17:30Z

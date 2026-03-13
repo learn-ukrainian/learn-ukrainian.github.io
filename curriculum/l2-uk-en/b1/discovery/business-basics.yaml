@@ -1,0 +1,108 @@
+discovered_at: '2026-03-12T18:00:41.608563+00:00'
+query_keywords:
+- Основи бізнесу
+- Вступ та історія
+- Introduction & History
+- Структури та формати бізнесу
+- Business Structures & Formats
+- Професійна комунікація та етика
+- Professional Communication & Ethics
+- Офіційне працевлаштування та послуги
+- Official Employment & Services
+- Інвестиції, прибуток та підсумок
+- Investment, Profit & Summary
+- business vocabulary words in context
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=ksH-orFgB6g
+  channel: Repainted Fox
+  title: 'bonus #2 Комерція vs підприємництво'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-istoriya-schupak-2022_s0003
+  text: '5
+
+    ЗМІСТ
+
+    ВСТУП
+
+    § 1. Історія — пам’ять про минуле . .  .  .  .  .  .  .  .  .  . . . . . . . .
+    . . . 7
+
+    РОЗДІЛ 1. НАУКИ, ЩО ВИВЧАЮТЬ МИНУЛЕ
+
+    § 2. Історія — наука про розвиток людства . .  .  .  .  .  . . . . . . . 12
+
+    § 3. Джерела історичної інформації . .  .  .  .  .  .  .  .  . . . . . . . . .
+    . 19
+
+    § 4. Науки-помічниці історії. .  .  .  .  .  .  .  .  .  .  .  . . . . . . . .
+    . . . . . 27
+
+    § 5. Археологічні скарби минулого. .  .  .  .  .  .  .  .  . . . . . . . . . .
+    . 32
+
+    § 6. Писемні пам’ятки, фоль'
+  section_title: Сторінка 5
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0005
+  text: "5\nЗМІСТ\nВСТУП ДО КУРСУ\n§ 1. Повторення. Що вивчає наука історія. . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . 7\n§ 2–3. Як виникли системи літочислення.\
+    \ Історична періодизація: \n               світ і Україна. . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10\n§ 4. Лічба\
+    \ часу в історії первісної доби та стародавнього світу . . . . . . . 18\n§ 5.\
+    \ Джерела з історії первісності та стародавнього світу. . . . . . . . . . . .\
+    \ 21\nРозділ 1. ЖИТТ Я Л ЮДЕЙ У ПЕРВІСН"
+  section_title: Сторінка 7
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0211
+  text: Перегляньте експрес-урок «Спочатку ім’я чи прізвище?». Перекажіть його. Ділові
+    папери
+  section_title: Сторінка 137
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0190
+  text: "§ 30  Особливості вживання прийменників  \n183\nВправа 263\n1   Розгляньте\
+    \ інфографіку  Розкажіть, як на ній відображено важливість на-\nвчання \nШкола\n\
+    Училище, університет, навчальні курси, самоосвіта\nПрофесії\n2  Напишіть есе на\
+    \ одну з  тем \n• Навчання — інвестиція в майбутнє чи марнування \nчасу?\n• Для\
+    \ чого потрібно навчатися?\n• Як я уявляю себе в майбутньому?\n              \
+    \     Підручник \n \n         видавництво \"Ранок\""
+  section_title: Сторінка 186
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

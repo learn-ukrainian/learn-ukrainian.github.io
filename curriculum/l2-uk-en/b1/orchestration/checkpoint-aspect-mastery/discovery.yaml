@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:53:24.372327+00:00'
+discovered_at: '2026-03-12T21:01:48.190685+00:00'
 query_keywords:
 - 'Контрольна точка: Опанування виду'
 - Вступ та самоаналіз
@@ -19,30 +19,30 @@ blogs:
 - url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
   title: Ukrainian Verb Prefixes
   source: ukrainianlessons.com
-  relevance_score: 0.9
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
   title: Verb Aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.9
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/lesson/92/
   title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
     aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/lesson/91/
   title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
     and perfective  verb aspects in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.75
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/lesson/94/
   title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
     and perfective verbs in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.75
+  relevance_score: 1.0
   topics: []
 rag_chunks:
 - score: 0.5

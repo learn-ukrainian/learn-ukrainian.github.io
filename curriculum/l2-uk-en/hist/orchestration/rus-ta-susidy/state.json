@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "rus-ta-susidy",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:26:32Z",
+      "task_id": "v5-rus-ta-susidy-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:26:32Z",
+      "note": "merged-into-research"
+    }
+  }
+}

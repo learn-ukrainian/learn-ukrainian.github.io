@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T10:01:20Z",
+      "ts": "2026-03-12T21:38:30Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T10:01:20Z",
+      "ts": "2026-03-12T21:38:30Z",
       "task_id": "v5-relative-clauses-koly-shcho-pA",
       "mode": "full"
     }

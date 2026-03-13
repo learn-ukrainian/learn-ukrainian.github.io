@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "mariya-zankovetska",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T20:57:08Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T20:57:08Z",
+      "task_id": "v5-mariya-zankovetska-pA",
+      "mode": "full"
+    }
+  }
+}

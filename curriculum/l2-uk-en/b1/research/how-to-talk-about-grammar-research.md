@@ -2,97 +2,159 @@
 
 ## State Standard Reference
 
-**B1 Linguistic Competence Intro (lines 1983–1988):**
-> "Особа вміє розпізнавати та використовувати граматично правильні мовні форми для вираження власних намірів у межах комунікативних потреб, зазначених у тематичному каталозі рівня В1. Обсяг граматичних умінь рівня В1 охоплює всі аспекти, що визначені для рівнів А1, А2, але з розширенням лексичного матеріалу, зростанням діапазону синтаксичних структур та ситуацій комунікації."
+**§4.2 — Морфологія (B1, lines 2036–2113)**
+Direct quote from State Standard (line 2038–2039):
+> "4.2.1. Утворення відмінкових форм іменних частин мови в однині та множині: 4.2.1.1. Іменник... 4.2.1.2. Прикметник... 4.2.1.3. Числівник... 4.2.1.4. Займенник..."
 
-**§4.2.1 — Утворення відмінкових форм іменних частин мови (lines 2038–2113):**
-Covers: іменник (§4.2.1.1), прикметник (§4.2.1.2), числівник (§4.2.1.3), займенник (§4.2.1.4) — full morphological paradigms for all four inflecting POS classes at B1.
+**§4.2.2 — Уживання відмінкових форм (B1, lines 2115–2265)**
+> "4.2.2. Уживання відмінкових форм в однині та множині. Основні значення відмінків: 4.2.2.1. Називний відмінок... 4.2.2.7. Кличний відмінок."
 
-**§4.2.2 — Уживання відмінкових форм. Основні значення відмінків (lines 2115–2265):**
-All 7 cases defined with examples: називний (§4.2.2.1), родовий (§4.2.2.2), давальний (§4.2.2.3), знахідний (§4.2.2.4), орудний (§4.2.2.5), місцевий (§4.2.2.6), кличний (§4.2.2.7).
+All 7 cases (calling through §4.2.2.1–4.2.2.7) are explicitly required at B1.
 
-**Alignment note:** The plan references "§4.2.1: Defining метамова and термін as prerequisites for morphological competence." This is a framing inference, not a direct §4.2.1 quote — §4.2.1 covers morphological form paradigms, not metalanguage theory. The metalanguage prerequisite is implicitly required by the B1 competence intro (lines 1983–1988): to "recognize and use grammatically correct forms," learners must know the Ukrainian names of those forms. This module correctly positions itself as the bridge unlocking §4.2.1–4.2.2 work. No explicit §reference for "метамова" or "термін" exists in the Standard text — do not fabricate one in content.
+**§4.4 — Синтаксис (B1, lines 2344–2431)** covers complex sentence types requiring learners to recognize підмет, присудок, додаток, означення, обставина in context.
+
+**Alignment note:** The State Standard does not name a dedicated "metalanguage" section — §4.2.1 presupposes knowledge of parts-of-speech names as prerequisite for morphological competence at B1. This bridge module supplies exactly that prerequisite. Cite §4.2.1 and §4.2.2 as the primary alignment anchors. Do NOT fabricate a standalone §4.2.1 metalanguage sub-section.
 
 ---
 
 ## Vocabulary Frequency
 
-All 24 core vocabulary items verified in VESUM — **100% found**.
+All 20 core terms verified in VESUM ✅ — all are standard nouns.
 
-| Word | GRAC Frequency (IPM) | Key collocations / Notes |
-|------|----------------------|--------------------------|
-| іменник | 1.69 | рід іменника, відміна іменника, форма іменника |
-| дієслово | 1.52 | час дієслова, вид дієслова, форма дієслова |
-| відмінок | 0.67 | називний відмінок, у формі відмінка, відмінювання |
-| підмет | 0.35 | головний член речення, підмет і присудок |
-| присудок | 0.35 | складений присудок, іменний присудок |
-| метамова | 0.03 | very low — academic/specialist register only; appropriate for bridge module framing but not for learner production targets |
-| термін | 73.66 | граматичний термін, термін вживається, за терміном |
-| прикметник | ~1.5 (est.) | узгодження прикметника, прикметник із іменником |
-| прийменник | ~1.0 (est.) | прийменник із відмінком, прийменниково-відмінкова форма |
+| Word | GRAC Frequency | IPM | Key collocations (textbook-attested) |
+|------|---------------|-----|--------------------------------------|
+| термін | 149,089 | 73.66 | граматичний термін, науковий термін, за терміном |
+| іменник | 3,417 | 1.69 | рід іменника, відміна іменника, іменник у формі |
+| дієслово | 3,074 | 1.52 | вид дієслова, час дієслова, неозначена форма дієслова |
+| прикметник | 2,932 | 1.45 | узгодження прикметника з іменником, відмінювання прикметника |
+| відмінок | 1,355 | 0.67 | називний відмінок, відмінювання, форма відмінка |
+| числівник | — | — | кількісний числівник, порядковий числівник |
+| займенник | — | — | особовий займенник, присвійний займенник |
+| прислівник | — | — | незмінна частина мови, прислівник способу дії |
+| підмет | 703 | 0.35 | головний член речення, підмет і присудок |
+| присудок | 699 | 0.35 | складений присудок, дієслівний присудок |
+| метамова | 66 | 0.03 | термінологічний апарат, наукова метамова |
+| сполучник | — | — | єднальний сполучник, сполучник підрядності |
+| прийменник | — | — | прийменник з відмінком, прийменникова конструкція |
+| частка | — | — | заперечна частка, модальна частка |
+| вигук | — | — | емоційний вигук, вигук звернення |
+| речення | — | high | просте речення, складне речення, члени речення |
+| корінь | — | — | корінь слова, спільний корінь |
+| префікс | — | — | префікс дієслова, словотворчий префікс |
+| суфікс | — | — | іменниковий суфікс, суфіксальний спосіб |
+| закінчення | — | high | відмінкове закінчення, нульове закінчення |
 
-**Note on метамова:** Its very low frequency (0.03 IPM) confirms it is a specialist academic term. It should appear in the Вступ framing but should not be presented as active production vocabulary. The module goal is recognition + deployment of the individual grammar terms (іменник, відмінок etc.), which have much higher frequency.
+**Frequency notes for content writing:**
+- **термін** is high-frequency general vocabulary (73.66 IPM) — learners likely already know it
+- **метамова** is low-frequency (0.03 IPM) — treat as new specialized term, needs explicit scaffolding
+- **іменник/дієслово/прикметник** cluster at 1.4–1.7 IPM — solidly B1-range academic vocabulary
+- **підмет/присудок** at 0.35 IPM — lower frequency, reinforce with repeated examples
 
 ---
 
 ## Cultural Hooks
 
-**1. Мелетій Смотрицький — «Граматика слов'янська» (1619)**
-Source: uk.wikipedia.org/wiki/Мелетій_Смотрицький
-Full name: Мелетій (Максим Герасимович) Смотрицький — письменник, церковний і освітній діяч Речі Посполитої, мовознавець. Author of the *Граматика слов'янська* (Vilno, 1619) — a systematic grammar of Church Slavonic that was "known across all of Europe" and shaped Eastern Slavic linguistic terminology for centuries. Ukrainian grammar terminology used today — including the 7-case system and parts of speech names — flows from the tradition Smotrytsky codified. This is the authentic Ukrainian-rooted historical anchor for the module. (Note: Smotrytsky wrote in Church Slavonic, but he was a Ukrainian-Belarusian Orthodox figure associated with Ukrainian cultural institutions, not a Russian state grammarian — frame decolonially.)
+**Hook 1: Мелетій Смотрицький and the «Граматика слов'янська» (1619)**
+- Source: uk.wikipedia.org/wiki/Мелетій_Смотрицький + uk.wikipedia.org/wiki/Граматика_Мелетія_Смотрицького
+- Verified facts:
+  - Full name: Максим Герасимович Смотрицький (чернече ім'я — Мелетій)
+  - Published «Граматика слов'янська» in 1619 in Єв'є (now Lithuania)
+  - First complete systematic course of Church Slavonic in Ukrainian redaction
+  - Described as "пам'ятка української мови" (monument of the Ukrainian language)
+  - The Grammar systematized grammatical terminology that anchored Eastern Slavic linguistic traditions
+- **Critically — double hook:** In the very same 1619 Grammar, Смотрицький introduced the letter **Ґ** into the alphabet, borrowing the cursive form of Greek gamma (γ). This creates a direct bridge between Hook 1 and Hook 2.
 
-**2. Буква «Ґ» — Symbol of Terminological Integrity**
-Source: uk.wikipedia.org/wiki/Ґ
-Ґ (ґе) — a Cyrillic letter for sound [ɡ], existing in Ukrainian alongside «г». It was suppressed in Soviet Ukrainian orthography in 1933 (during the Stalinist Ukrainization rollback) and officially restored in the 1990 Ukrainian orthography reform. Its restoration is a concrete, teachable symbol of how grammar rules and writing systems are political acts — relevant to the module's decolonization thread. Classroom example: «ґанок», «дзиґа», «ґрунт» — all authentic Ukrainian words that disappeared from officially permitted spelling for decades. Note: the Wikipedia summary is brief; do not over-extend the cultural claim beyond confirmed facts.
+**Hook 2: The Letter Ґ — Suppressed 1933, Restored 1990**
+- Source: uk.wikipedia.org/wiki/Ґ (extensive verified article)
+- Verified facts:
+  - Ґ formally introduced into Ukrainian alphabet by Смотрицький in his 1619 Grammar (see Hook 1)
+  - Actively used in Ukrainian orthographies of XVII–XIX centuries
+  - **Removed in 1933** — Soviet orthography reform under Kaganovich & Olinter eliminated Ґ for ideological reasons (convergence with Russian orthographic norms)
+  - Remained suppressed in Ukraine until 1990; continued in Galicia and Zakarpattia until 1939–1944
+  - **Restored in 1990** — third edition of Ukrainian Pravopys reinstated Ґ
+  - 2019 Pravopys clarifies current usage rules (§6: ґанок, ґрунт, ґудзик, ґрати, etc.)
+  - Words: аґрус, ґава, ґазда, ґанок, ґедзь, ґніт, ґрати, ґрунт, ґудзик, ґуля, дзиґа
+- **Pedagogical angle:** The suppression of Ґ is a concrete, touchable example of how Soviet language policy erased Ukrainian linguistic specificity. Its restoration is a victory of scholarly integrity over political coercion — directly illustrating why precise grammatical terminology and systematic grammar matter for a language's survival and dignity.
 
 ---
 
 ## Common Learner Errors
 
-1. **відмінок vs. відміна** → These are distinct: *відмінок* = grammatical case (7 of them); *відміна* = declension class (noun paradigm group, 4 of them). English-speaking learners often conflate "case" and "declension." Why it happens: English uses "declension" loosely to mean both. Target correction: "Іменник *стіл* належить до другої *відміни* і стоїть у родовому *відмінку*."
+1. **Vocative treated as Nominative** → *Привіт, Андрій!* (wrong) vs. *Привіт, Андрію!* (correct)
+   — Why it happens: English has no vocative case; learners default to the dictionary form. Reinforced by informal digital communication where Ukrainians themselves sometimes skip vocative markers.
 
-2. **Accusative / Genitive with animate nouns** → "Бачу *брата*" (Знахідний) vs. "Немає *брата*" (Родовий) — identical surface forms for animate masculine singular. Why it happens: both look like -a endings; learners over-generalize from inanimate nouns where Accusative = Nominative. This is the single most common case confusion at this level (confirmed by §4.2.2.2 and §4.2.2.4 in the Standard; explicitly targeted in the plan's activity_hints).
+2. **Accusative vs. Genitive confusion with animate nouns** → *Я бачу брат* or *Я бачу брата* (confusion)
+   — Correct: *Бачу брата* (Acc animate = Gen form) vs. *Немає брата* (Gen negation)
+   — Why it happens: Animate accusative forms are identical to genitive — learners either over-apply genitive or use nominative as default.
 
-3. **Grammatical gender via natural sex** → Learners assume рід follows biological sex of the referent (so *стіл* must be neutral). Ukrainian grammatical gender is determined by ending morphology, not referent biology. Key clarification: *стіл* — чоловічий рід (ends in zero/consonant), *шафа* — жіночий рід (ends in -а), *вікно* — середній рід (ends in -о). Plan explicitly targets this; confirm examples match VESUM paradigms — all verified.
+3. **Gender assignment by biological sex, not morphology** → *стіл — він? вона?*
+   — Why it happens: English speakers think grammatical gender maps onto physical sex. Must be redirected to ending-based rules: -а/-я → жіночий, -о/-е → середній, consonant → чоловічий (with exceptions like дядько, суддя).
 
-4. **Missing the 7th case** → Learners from 6-case Indo-European backgrounds (Polish, Latin) or those who first encountered Ukrainian through Soviet-era sources frequently omit *кличний відмінок* from their mental case inventory. Soviet grammars of Ukrainian sometimes listed only 6 cases. The vocative must be explicitly foregrounded as authentic and mandatory, not archaic.
+4. **Merging прийменник and сполучник** → treating *і*, *а*, *але* as prepositions
+   — Why it happens: English "preposition" is a broader, fuzzier category; learners don't have a crisp mental model for conjunction vs. preposition. The functional test (joins clauses vs. governs case) must be explicit.
 
 ---
 
 ## Cross-References
 
-- **Builds on:** A2 completion (a2-all-cases, a2-imperative-requests, a2-the-dative-i-pronouns, a2-the-instrumental-i-accompaniment) — learners have encountered all 7 cases in use but likely without Ukrainian metalanguage labels
-- **Prepares for:** b1-02 (verb-specific terminology — вид, спосіб, стан), b1-03 (reading grammar rules in Ukrainian), b1-05 (metalanguage checkpoint assessment)
+- **Builds on:** A2 completion (all 7 cases conceptually known), basic parts of speech from A1–A2 exposure
+- **Prepares for:** 
+  - b1-02 (verb-specific terminology — requires іменник, дієслово, вид, час)
+  - b1-03 (reading grammar rules — requires full metalanguage repertoire)
+  - b1-05 (metalanguage checkpoint — directly assesses this module's vocabulary)
+  - All B1.1+ modules (operate 100% in Ukrainian, presuppose this vocabulary)
+
+---
+
+## Textbook Teaching Patterns (from RAG)
+
+**Grade 10 (Karaman, tier 1)** — authoritative definition for content writing:
+> «Частини мови — це лексико-граматичні класи слів із подібними семантичними, синтаксичними й морфологічними ознаками.»
+
+**Grade 7 (Avramenko, tier 1)** — table format used in Ukrainian schools:
+- Columns: Частина мови | Позначення | Питання | Приклади
+- самостійні separated from службові with visual break
+
+**Grade 8 (Zabolotnyi, tier 1)** — adds "Синтаксична роль" column — useful for the підмет/присудок/додаток section.
+
+**Grade 4 (Varzatska, tier 2)** — case table format: Назва відмінка | Питання та допоміжні слова | відмінювання в однині | у множині — with auxiliary words (є, немає, даю, бачу, etc.) to disambiguate.
+
+**Mnemonic from textbook tradition:** The standard case order is Називний → Родовий → Давальний → Знахідний → Орудний → Місцевий → Кличний. The plan's mnemonic *«На Різдво Дід Загубив Горішки Між Ковбасками»* maps cleanly: Н-Р-Д-З-О(Г)-М-К. This is pedagogically sound and consistent with textbook practice.
 
 ---
 
 ## Multimedia Resources
-
-- (none encountered during research — discover phase handles multimedia)
+- (none encountered — no web search performed per instructions)
 
 ---
 
 ## Notes for Content Writing
 
-1. **Textbook pattern (Avramenko gr.7 tier 1, Zabolotnyi gr.8 tier 1, Karaman gr.10):** All three use the POS table as the canonical presentation format. Content should include a well-structured table (self-contained, narrative context before/after per B1 rules) but ALSO prose explanation — do not let a table substitute for the 1000-word section requirement.
+1. **Bridge module immersion (70–85% Ukrainian):** Use English sparingly — only for abstract metalinguistic explanations and parenthetical equivalents on first mention of a term. After first introduction, use only Ukrainian.
 
-2. **Karaman gr.10 formal definition:** "Частини мови — це лексико-граматичні класи слів із подібними семантичними, синтаксичними й морфологічними ознаками." This is the authoritative definition for the Самостійні частини мови section — use or adapt it.
+2. **Smotrytsky hook — decolonized framing:** Frame as "Ukrainian scholarly tradition established its own systematic grammar in 1619" — do NOT frame as "Church Slavonic grammar." Note that the Grammar is classified as a пам'ятка *української* мови.
 
-3. **Zabolotnyi gr.8 table structure** (tier 1, confirmed): POS + definition + syntactic role + interrogative — this four-column structure should inform the section layout.
+3. **Ґ hook — tone:** Keep it historically grounded, not polemical. The facts speak clearly: removed 1933 by Soviet directive, restored 1990 by Ukrainian scholars. Let the chronology carry the weight.
 
-4. **метамова frequency caveat:** With only 0.03 IPM, this word lives in academic writing, not spoken Ukrainian. Frame the module's value concretely ("knowing these terms lets you look up grammar rules, understand textbook instructions, and discuss language with teachers") rather than abstractly invoking "metalanguage theory."
+4. **Case mnemonic:** The mnemonic is standard — use it, but also give learners the case-question anchors (Хто?/Що?, Кого?/Чого?, etc.) as the primary memory scaffold, with the mnemonic as reinforcement.
 
-5. **Smotrytsky framing:** Present him as a Ukrainian-Belarusian Orthodox figure and European intellectual — his grammar was cited by Lomonosov as a model, but the point is that Ukrainian/Ruthenian intellectual tradition created the systematic grammar infrastructure long before Russian imperial codification. Do not frame him as "influencing Russian" — frame him as establishing the East Slavic grammatical tradition from its Ukrainian-Belarusian origins.
+5. **Accusative/Genitive drill:** The *Бачу брата / Немає брата* minimal pair is already in textbooks (Zabolotnyi Grade 6 textbook RAG hit). Use it explicitly — it's pedagogically established and familiar to Ukrainian teachers.
 
-6. **Mnemonic "На Різдво Дід Загубив Горішки Між Ковбасками":** Standard Ukrainian classroom mnemonic for the 7 cases (Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий, Кличний). Confirmed culturally authentic. Include it.
+6. **Vocabulary table:** метамова should get an extended gloss — it is low-frequency (0.03 IPM) and genuinely unfamiliar. Use a two-sentence explanation, not just a parenthetical.
 
-7. **Immersion level:** B1.0 Bridge = 70-85% Ukrainian. The Вступ section should use more English scaffolding; by sections 2-5 the prose should shift toward mostly Ukrainian with parenthetical English for new terms only at first mention. Section 6 (Практика) should be nearly 100% Ukrainian.
-
-8. **Word target distribution check:** Plan allocates 500+1000+600+1000+600+300 = 4000 words. Sections 2 and 4 (both 1000 words) are the heaviest and must be richly detailed. Section 6 at 300 words is the minimum — the practice section should be dense with dialogue/drill examples, not padded prose.
-
+7. **Section word budget note:** The plan allocates 1000 words each to parts-of-speech and cases sections. Given the equal-treatment requirement (same depth for all items in a category), aim for consistent ~165 words per part of speech (6 independent PoS × 165 ≈ 990 words) and ~140 words per case (7 cases × 140 ≈ 980 words).
 
 ## Resource Discovery
 
+### Videos
+- [ULP 1-21 | What languages do you speak?](https://www.youtube.com/watch?v=-EViZGkViNo) (Ukrainian Lessons) — The video explicitly provides grammar explanations, discussing the nuances between synonyms ('говорю' vs 'розмовляю') and correct phrase usage ('говорю українською' vs 'говорю по-українському'), directly demonstrating the application of metalanguage to talk about grammar.
+
+### Blog Articles
+- [Ukrainian Grammar Overview](https://www.ukrainianlessons.com/grammar/) (Grammar guide in English)
+- [Dobra Forma: Genitive Case to Express Possession and Relationship](https://opentext.ku.edu/dobraforma/chapter/7-3/) (dobraforma)
+- [At the grocery store + Genitive case](https://www.ukrainianlessons.com/episode46/) (ukrainianlessons.com)
+- [Food festivals + Genitive case](https://www.ukrainianlessons.com/episode47/) (ukrainianlessons.com)
+- [Eating habits + Genitive case](https://www.ukrainianlessons.com/episode48/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 

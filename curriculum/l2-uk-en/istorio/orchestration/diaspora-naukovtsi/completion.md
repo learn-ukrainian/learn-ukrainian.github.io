@@ -1,10 +1,10 @@
-PASS: pipeline istorio 68
+FAIL: pipeline istorio 68
 
   Module:   diaspora-naukovtsi
   Track:    istorio
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T18:18:32Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:15:18Z

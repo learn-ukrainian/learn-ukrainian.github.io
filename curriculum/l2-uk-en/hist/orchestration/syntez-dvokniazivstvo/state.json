@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "syntez-dvokniazivstvo",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:09:09Z",
+      "task_id": "v5-syntez-dvokniazivstvo-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:09:09Z",
+      "note": "merged-into-research"
+    }
+  }
+}

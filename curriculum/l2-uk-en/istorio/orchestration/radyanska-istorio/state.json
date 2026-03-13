@@ -1,0 +1,18 @@
+{
+  "track": "istorio",
+  "slug": "radyanska-istorio",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:25:34Z",
+      "task_id": "v5-radyanska-istorio-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:25:34Z",
+      "note": "merged-into-research"
+    }
+  }
+}

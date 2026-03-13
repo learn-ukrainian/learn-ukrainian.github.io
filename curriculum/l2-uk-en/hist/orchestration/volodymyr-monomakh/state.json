@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "volodymyr-monomakh",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T22:19:28Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T22:19:28Z",
+      "task_id": "v5-volodymyr-monomakh-pA",
+      "mode": "full"
+    }
+  }
+}

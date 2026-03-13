@@ -3,16 +3,15 @@
   "slug": "possessive-sviy",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T09:19:00Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:19:00Z",
-      "task_id": "v5-possessive-sviy-pA",
-      "mode": "full"
+      "ts": "2026-03-12T15:30:15Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:30:15Z",
+      "note": "merged-into-research"
     }
   }
 }

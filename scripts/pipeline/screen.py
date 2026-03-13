@@ -388,9 +388,15 @@ def _run_content_quality_checks(content_text: str, ctx: ModuleContext,
 # Main orchestrator: _deterministic_screen
 # ---------------------------------------------------------------------------
 
-def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScreenResult:
-    """Run all deterministic checks before LLM review."""
-    from pipeline_lib import run_verify
+def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False,
+                          skip_activities: bool = False) -> DScreenResult:
+    """Run all deterministic checks before LLM review.
+
+    Args:
+        skip_review: Skip review-related audit gates.
+        skip_activities: Skip activity/vocab audit gates (for prose-only validation).
+    """
+    from pipeline_lib import run_verify, run_verify_prose_only
 
     result = DScreenResult(metrics={})
 
@@ -411,8 +417,12 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScr
 
     # 4. Single audit run
     if content_path and content_path.exists():
-        result.audit_passed, result.audit_output = run_verify(
-            content_path, skip_review=skip_review)
+        if skip_activities:
+            result.audit_passed, result.audit_output = run_verify_prose_only(
+                content_path)
+        else:
+            result.audit_passed, result.audit_output = run_verify(
+                content_path, skip_review=skip_review)
         result.metrics["COMPUTED_AUDIT_STATUS"] = "PASS" if result.audit_passed else "FAIL"
     else:
         result.audit_passed = False

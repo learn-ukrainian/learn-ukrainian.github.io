@@ -1,0 +1,140 @@
+discovered_at: '2026-03-12T17:12:37.087800+00:00'
+query_keywords:
+- Technology and Media
+- комп'ютер
+- телефон
+- інтернет
+- Україна як IT-хаб
+- Ukraine as an IT Hub
+- Цифровий словник та культура
+- Digital Vocabulary and Culture
+- Граматичні пастки та вибір слів
+- Grammatical Traps and Word Choice
+- Життя в мережі
+- Life Online
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce Ю in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode51/
+  title: Electronics and technology + Dative Case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode53/
+  title: Social Media in Ukrainian + Dative Case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-golub-2022_s0149
+  text: "150\n358   Прочитайте «слова дня». Яким чином вони пов’язані з темою \nуроку?\
+    \ Доберіть слова, з якими ці прикметники можуть поєдну-\nватися, а також антоніми\
+    \ до них.\n359  \nІ   Сформулюйте й запишіть запитання, на які є відповідь у по-\n\
+    даній схемі.\n \nІІ   Побудуйте діалог, у якому використайте складені вами запи-\n\
+    тання і відповіді.\n360  \nІ   Вивчіть подану інформацію. Визначте форму подання.\
+    \ Чи ак-\nтуальна вона? Чому? Перетворіть цю інформацію на тексто-\nву. Коли,\
+    \ на вашу думку, доцільніше використо"
+  section_title: Сторінка 150
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0157
+  text: '159
+
+    ЗМІСТ
+
+    МОВА І МОВЛЕННЯ. Українська абетка: звуки та букви. . . . . . . . . . . . . .
+    5
+
+    СЛОВО. ЗНАЧЕННЯ СЛОВА. . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 16
+
+    ІМЕННИК. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 34
+
+    ПРИКМЕТНИК. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . 63
+
+    ЧИСЛІВНИК. . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 159
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0002
+  text: '3
+
+    Зміст
+
+    ЗМІСТ
+
+    Любі п’ятикласники та  п’ятикласниці! . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 6
+
+    Навігатор до  підручника . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 7
+
+    ВСТУП. УКРАЇНСЬКА  МОВА  В  ЖИТТІ  УКРАЇНЦІВ . . . . . . . . . . . 8
+
+    Мова в  житті людей . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 9
+
+    Мова як засіб спілкування. Значення мови . . . . . . . . . . . . . . . . . . .
+    .'
+  section_title: Сторінка 3
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0002
+  text: '3
+
+    Зміст
+
+    Любі шестикласники та шестикласниці! . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . 7
+
+    Навігатор . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Розділ 1. Краса та багатство української мови . . . . . . . . . . . . . . . .
+    . . . . . . 8
+
+    § 1. Краса звучання української мови . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . 9
+
+    '
+  section_title: Сторінка 3
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0003
+  text: "УМОВНІ ПОЗНАЧЕННЯ\nРобота\nв парах\nМистецька хвилинка\nРобота\nв групах\n\
+    Віртуальна екскурсія; робота з електрон ним \nдодатком і пошук у мережі «Інтернет».\
+    \ \n(Завдання такого типу учні можуть\n виконувати як удома, так і в закладі освіти.)\n\
+    Мікрофон – висловте свою думку\n© Заболотний В. В., Заболотний О. В.,\nСлоньовська\
+    \ О. В., Ярмульська І. В., 2024\n© «Літера ЛТД», 2025\nІнтерактивний електронний\
+    \ додаток\nhttp://ukrlit-8k-nus.e-litera.com.ua/index.html\nЗаболотний В. В.\n\
+    Українська література : підручник дл"
+  section_title: Сторінка 4
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

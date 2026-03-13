@@ -3,15 +3,16 @@
   "slug": "sentence-structure",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:47:54Z",
-      "note": "rebuild-kept"
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:48:12Z",
+      "ts": "2026-03-12T20:41:54Z",
       "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T20:41:54Z",
+      "task_id": "v5-sentence-structure-pA",
+      "mode": "full"
     }
   }
 }

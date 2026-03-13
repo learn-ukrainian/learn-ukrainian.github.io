@@ -1,0 +1,186 @@
+discovered_at: '2026-03-12T23:54:15.616263+00:00'
+query_keywords:
+- 'Бояри та шляхта: Соціальна еліта'
+- Лицарська честь та політична суб'єктність
+- Читання
+- Первинні джерела
+- Деколонізаційний погляд
+- Потрібно більше практики?
+- різницю між боярством та шляхтою
+- Учень розуміє процеси формування привілейованих верств
+- вплив права на українську аристократію
+- Social terminology
+- Formal address forms
+- history
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0081
+  text: "?? Як ви вважаєте, чим була зумов­\nлена поява таких клятв? Про що \nвони\
+    \ свідчать? Знать\nЖерці та писарі\nВоїни\nРемісники\nФараон\nСеляни\nrnk.com.ua/104214\n\
+    Підручник  \nВидавництво «Ранок»"
+  section_title: Сторінка 62
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0206
+  text: "Для вас, допитливі\nrnk.com.ua/110316\nПрацюємо з джерелом\nrnk.com.ua/110317\n\
+    З Універсалу \nБ. Хмельницького  \nдо української спільноти \nіз закликом підтримати\
+    \ \nрозпочату козацтвом \nборотьбу\nПолковник реєстрового лівобережного \nполку.\
+    \ Художник С. Васильківський. 1900  р. \e\n\e Порівняйте вбрання та спорядження\
+    \ \nстаршини та пересічного козака (с. 124)."
+  section_title: Сторінка 127
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0175
+  text: "Відкривали \nшколи й при дворах князів. Бояри та представники знаті винай-\n\
+    мали для своїх дітей приватних учителів, які навчали їх удома. 1"
+  section_title: Сторінка 144
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.56844562292099
+  chunk_id: 3d7a3a6b_c0268
+  text: "21 ЦДІАУ. — Ф. 256,\r\non. l, cnp. 144, арк. 2.\n\n22 Там само, ф. 11,\r\n\
+    on. 1, спр. 8, арк. 36.\n\n23 Яковенко H. M. Українська\r\nшляхта з кінця XIV\
+    \ до середини XVII ст. (Волинь і Центральна Україна). — С.\r\n209.\n\n24 Панашенко\
+    \ В.\r\nВ. Соціальна еліта Гетьманщини (друга половина XVII — XVIII ст.). — К.,\
+    \ 1995.\r\n— С. 81.\n\n25 Леонтович Ф. И.\r\nБояре и служилые люди в Литовско-Русском\
+    \ государстве // Журнал\r\nминистерства юстиции, 1907. — № 5. — С. 223—227.\n\n\
+    26 Леп’явко С. Козацькі\r\nвійни кінця XVI ст. в Україні"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.5502228140830994
+  chunk_id: fc2291b5_c3787
+  text: "Літ.: Степанишин Б.\r\nПроблеми біографічної повісті. «Вітчизна», 1982, №\
+    \ 11.\n\nТ. Ю. Салига."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5452294945716858
+  chunk_id: a418921e_c0441
+  text: "78 Греков В. Д. Рабство\r\nи феодализм в Древней Руси. — С. 48.\n\n79 Там\
+    \ же. — С. 58.\n\n80 Ленин В. И. [Развитие\r\nкапитализма в России] // [3-е изд.\
+    \ — М.; Л., 1929.]; — Т. 3. — С. 150,\n\n81 Ключевский В. О. Боярская дума Древней\
+    \ Руси. — С. 20.\n\n82 Покровский М.\r\nН. Русская история с древнейших времен.\
+    \ — [М.,] 1933. — Т. 1. — С. 65.\n\n83 Сергеевич В. И.\r\nДревности русского права.\
+    \ — Т. 1. — С. 12.\n\n84 Прєсняков А. Е.\r\nКняжое право в Древней Руси. — С.\
+    \ 116: «По суті ця гіпотетична побудова В.\r\nІ. Сергеев"
+  work: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму
+  author: Юшков С.
+  year: 1939
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/yushkov2/yush.htm

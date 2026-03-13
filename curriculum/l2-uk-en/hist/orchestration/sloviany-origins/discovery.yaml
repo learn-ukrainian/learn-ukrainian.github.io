@@ -1,0 +1,211 @@
+discovered_at: '2026-03-12T21:23:27.275012+00:00'
+query_keywords:
+- 'Слов''яни на українських землях: Витоки державності'
+- Читання
+- Первинні джерела
+- Деколонізаційний погляд
+- слов'янські племена на українських землях
+- свідчення античних авторів про слов'ян
+- зв'язок між племінною демократією і українською політичною традицією
+- Історичний наратив
+- Минулий час у науковому тексті
+- history
+- слов'яни
+- праслов'яни
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=bdKTzu3BHUE
+  channel: Реальна Історія
+  title: What was before the Kyivan Rus?
+  relevance_score: 0.95
+  relevance_note: The video directly addresses the topic of what existed before Kyivan
+    Rus' and explicitly debunks Russian imperial narratives regarding the ethnogenesis
+    of Ukrainians, Russians, and Belarusians, aligning perfectly with the 'Деколонізаційний
+    погляд' section and the module's focus on the origins of Ukrainian statehood among
+    Slavic tribes.
+  transcript_excerpt: 'Історія тих часів настільки давня, що в ній важко розібратися
+    і відокремити факти від вигадки. Цим і користуються, до речі, росіяни, коли штовхають
+    в маси версію про триєдиний народ: росіян, українців і білорусів, які нібито походять
+    від спільної слов''янської сутності.'
+  embed_suggestion: After section Деколонізаційний погляд -- The video provides an
+    excellent, detailed decolonized perspective that directly supports and expands
+    upon the concepts introduced in this section.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0020
+  text: "Чому ви так вважаєте? Слов’яни\nСуспільний \nустрій\nРодова  \nгромада\n\
+    Воєнна \nдемократія\nСусідська \nгромада\nРанні державні \nутворення\nПолітичний\
+    \ \nустрій\nВірування \n(язичництво)\nyy Культ предків\nyy Обожнення \nявищ природи\n\
+    yy Землеробські \nкульти\nЗаняття\nХАРАКТЕРНІ ОЗНАКИ РОЗВИТКУ СЛОВ’ЯНСТВА\nyy\
+    \ Землеробство\nyy Городництво\nyy Скотарство (присадибне, \nвідгінне)\nyy Промисли\
+    \ (полювання, \nрибальство, бортництво тощо)\nyy Ремесла\nyy Торгівля та обмін\n\
+    \e\n\e Працюємо в  парах. Використовуючи текст параграфа, \n"
+  section_title: Сторінка 14
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0017
+  text: "Території, на яких наприкінці\nст. проживали:\nVIII\nсхідні слов’яни\nзахідні\
+    \ слов’яни\nÌÎÐÀÂÈ\nНазви слов’янських племен\nПОЛЯНИ\nСлов’янські племена —\n\
+    предки українців\nЯТВЯГИ\nІнші племена\nПівнічний кордон Візантій-\nської імперії\
+    \ напередодні\nВеликого розселення слов’ян\nКордони сучасної України\nпівденні\
+    \ слов’яни\nВелике розселення слов’ян. Слов’янські племена  \nна теренах України\n\
+    Розділ 1. \aВИНИКНЕННЯ ТА СТАНОВЛЕННЯ  \nКИЇВСЬКОЇ ДЕРЖАВИ\n§ 1. СХІДНОСЛОВ’ЯНСЬКІ\
+    \ ПЛЕМЕНА ТА ЇХНІ СУСІДИ"
+  section_title: Сторінка 14
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0250
+  text: "244\nЗАПИТАННЯ І ЗАВДАННЯ\nI.\nЗнаю й систематизую нову інформацію\n1. С\
+    \ а м о о ц і н ю в а н н я\nОцініть свої успіхи в опануванні теми «Поява слов’ян\
+    \ на історичній \nарені». Дайте відповіді на запитання.\n?\nПрекрасно\nДобре\n\
+    Нічого \nне зрозуміло\nКоли на історичній арені з’явилися \nслов’яни?\nЗ яких\
+    \ історичних джерел вчені \nдізнаються про початки \nслов’янської історії?\nЯкі\
+    \ існують гіпотези щодо \nпоходження слов’ян?\nЯкі слов’янські племена жили \n\
+    на теренах України?\nТреба\nпопрацювати\n2. Перевірте правильн"
+  section_title: Сторінка 246
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0014
+  text: "Хай навчається \nтам зростаюча молодь тієї держави гуманності \nй мудрості.\
+    \ Таким чином, твої підлеглі ще з \nдитинства навчаться й справу добре вести,\
+    \ і \nтебе, мудрого правителя, слухатись». 1. Поміркуйте, чому школи і гімназії\
+    \ \nавтор назвав «оселями правдивої муд-\nрості в державі». Станіслав Оріховський.\
+    \ Уявний портрет \n2. Поясніть своє бачення ролі освіти у суспільстві. 3. Джерела\
+    \ з історії українських земель  \nРанньомодерної доби  \nРанньомодерний період\
+    \ в історії українських територій залишив \n"
+  section_title: Сторінка 6
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0093
+  text: "90\nДавні цивілізації річкових д олин\nУкраїнський освітянський \nвидавничий\
+    \ центр \n«Оріон»"
+  section_title: Сторінка 92
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6131244897842407
+  chunk_id: ffcfbeb9_c0042
+  text: "21 Залізняк Л. Від\r\nсклавинів до української нації. — С. 101.\n\n22 Там\
+    \ же. — С. 66."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm
+- score: 0.5731203556060791
+  chunk_id: 5739d24f_c0132
+  text: "[М. Грушевський. Історія України-Руси. Том I. Розділ II. Стор. 9.]\n\nТОМ\
+    \ I     \r\nРозділ II\n\nКУЛЬТУРНА ЕВОЛЮЦІЯ СЕЇ ТЕРІТОРІЇ, КУЛЬТУРНА \r\nЕВОЛЮЦІЯ\
+    \ СЛОВЯНСЬКОЇ ПРАВІТЧИНИ."
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.5710639357566833
+  chunk_id: 5739d24f_c0404
+  text: "Передо всїм мова. Порівняна словянська лїнґвістика \r\n відкриває перед нами\
+    \ спільний запас слів, що становив культурний добуток \r\n прасловянства ще перед\
+    \ розселеннєм і остаточним відокремленнєм поодиноких \r\n племен, і таким чином\
+    \ виказує нам той культурний стан, в якім наші племена \r\n виступали на своїх\
+    \ займанщинах, на теперішнїй території, по своїм \r\n відокремленню  1). Очевидно,\
+    \ що було загальним культурним добутком \r\n всього Словянства взагалї, то було\
+    \ добутком і наших племен з окрема. Розуміє"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm

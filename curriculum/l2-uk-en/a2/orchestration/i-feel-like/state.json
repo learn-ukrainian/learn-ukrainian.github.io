@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "i-feel-like",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:53:16Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:53:16Z",
+      "task_id": "v5-i-feel-like-pA",
+      "mode": "full"
+    }
+  }
+}

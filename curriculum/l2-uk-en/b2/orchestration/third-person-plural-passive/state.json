@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "third-person-plural-passive",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:48:17Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:48:17Z",
+      "task_id": "v5-third-person-plural-passive-pA",
+      "mode": "full"
+    }
+  }
+}

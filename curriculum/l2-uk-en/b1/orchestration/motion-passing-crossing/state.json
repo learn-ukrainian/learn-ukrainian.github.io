@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T09:16:46Z",
+      "ts": "2026-03-12T21:08:52Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:16:46Z",
+      "ts": "2026-03-12T21:08:52Z",
       "task_id": "v5-motion-passing-crossing-pA",
       "mode": "full"
     }

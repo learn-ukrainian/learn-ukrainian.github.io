@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "checkpoint-complex-sentences-2",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:59:13Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:59:13Z",
+      "task_id": "v5-checkpoint-complex-sentences-2-pA",
+      "mode": "full"
+    }
+  }
+}

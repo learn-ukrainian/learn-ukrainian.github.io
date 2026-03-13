@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 113 — E2E
+FAIL: pipeline hist 113
 
   Module:   destalinizatsiia
   Track:    hist
-  Mode:     e2e
-  Words:    3832 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  FAIL
-  Date:     2026-02-25T23:36:41Z
+  Date:     2026-03-13T01:20:06Z

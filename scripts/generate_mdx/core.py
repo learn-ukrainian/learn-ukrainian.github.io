@@ -21,25 +21,26 @@ from .converters import (
     resolve_slug_links,
     yaml_activities_to_jsx,
 )
-from .utils import fix_html_for_jsx
 from .resources import (
+    b1_vocab_items_to_markdown,
     embed_youtube_video_links,
     format_resources_for_mdx,
-    b1_vocab_items_to_markdown,
     vocab_items_to_markdown,
 )
-from .utils import CURRICULUM_DIR, STARLIGHT_DOCS_DIR, PROJECT_ROOT, SCRIPT_DIR, escape_jsx
+from .utils import CURRICULUM_DIR, PROJECT_ROOT, SCRIPT_DIR, STARLIGHT_DOCS_DIR, escape_jsx, fix_html_for_jsx
 
 # Ensure scripts/ is on sys.path for sibling imports
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from manifest_utils import CORE_LEVELS, TRACKS, Module, get_modules_for_level  # noqa: E402
-from slug_utils import to_bare_slug  # noqa: E402
-from yaml_activities import ActivityParser  # noqa: E402
+from manifest_utils import CORE_LEVELS, TRACKS, Module, get_modules_for_level
+from slug_utils import to_bare_slug
 
 # Re-export Activity for type annotations used by callers
-from yaml_activities import Activity  # noqa: E402, F401
+from yaml_activities import (
+    Activity,  # noqa: F401
+    ActivityParser,
+)
 
 
 def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | None]:
@@ -138,6 +139,24 @@ def parse_frontmatter(content: str) -> tuple[dict, str]:
     return fm, body
 
 
+def _activity_plans_to_jsx(plans: list[dict]) -> str:
+    """Render activity plans as ActivityPlaceholder JSX components."""
+    parts = []
+    for plan in plans:
+        atype = escape_jsx(plan.get('type', 'unknown'))
+        desc = escape_jsx(plan.get('description', ''))
+        item_count = plan.get('item_count', '')
+        focus = escape_jsx(plan.get('focus', ''))
+
+        attrs = [f'type="{atype}"', f'description="{desc}"']
+        if item_count:
+            attrs.append(f'itemCount={{{item_count}}}')
+        if focus:
+            attrs.append(f'focus="{focus}"')
+        parts.append(f'<ActivityPlaceholder {" ".join(attrs)} />')
+    return '\n\n'.join(parts)
+
+
 def generate_mdx(
     md_content: str,
     module_num: int,
@@ -148,6 +167,7 @@ def generate_mdx(
     level: str = 'a1',
     pipeline_version: str | None = None,
     build_status: str | None = None,
+    activity_plans: list[dict] | None = None,
 ) -> str:
     """Convert markdown content to MDX.
 
@@ -223,6 +243,7 @@ import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
 import Classify from '@site/src/components/Classify';
 import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
 import { Tabs, TabItem } from '@astrojs/starlight/components';"""
 
     # Frontmatter
@@ -270,6 +291,8 @@ sidebar:
     # --- TAB 3: Activities ---
     if yaml_activities:
         activities_content = yaml_activities_to_jsx(yaml_activities, is_ukrainian_forced)
+    elif activity_plans:
+        activities_content = _activity_plans_to_jsx(activity_plans)
     else:
         no_act_msg = "\u041d\u0435\u043c\u0430\u0454 \u0432\u043f\u0440\u0430\u0432 \u0434\u043b\u044f \u0446\u044c\u043e\u0433\u043e \u043c\u043e\u0434\u0443\u043b\u044f." if is_ukrainian_forced else "No activities for this module."
         activities_content = f"*{no_act_msg}*"
@@ -510,6 +533,18 @@ def main():
                 print(f'\n\u274c CRITICAL: Error parsing YAML activities for {mod.slug}: {e}')
                 sys.exit(1)
 
+        # Load ACTIVITY PLANS (fallback when activities not yet built)
+        plans_file = level_dir / 'activities' / f"{mod.slug}-plans.yaml"
+        loaded_activity_plans = None
+        if not yaml_activities and plans_file.exists():
+            try:
+                with open(plans_file, encoding='utf-8') as f:
+                    p_data = yaml.safe_load(f)
+                    if isinstance(p_data, list):
+                        loaded_activity_plans = p_data
+            except Exception as e:
+                print(f'  \u26a0\ufe0f  Error parsing activity plans for {mod.slug}: {e}')
+
         # EXTERNAL RESOURCES
         module_id = f"{mod.level}-{mod.slug}"
         module_resources = all_resources.get(module_id, {})
@@ -517,7 +552,7 @@ def main():
         # Detect pipeline version and build status
         pv, bs = detect_pipeline_info(level_dir, mod.slug)
 
-        mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level, pipeline_version=pv, build_status=bs)
+        mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level, pipeline_version=pv, build_status=bs, activity_plans=loaded_activity_plans)
 
         # Write output
         output_file = output_dir / f'{mod.slug}.mdx'

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:46:14.775633+00:00'
+discovered_at: '2026-03-12T20:34:51.744506+00:00'
 query_keywords:
 - Мова про дієслова
 - Система дієслова
@@ -18,56 +18,58 @@ videos:
 - url: https://www.youtube.com/watch?v=TBYyOdHOCCk
   channel: Ukrainian Lessons
   title: 'FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian'
-  relevance_score: 1.0
-  relevance_note: This video is entirely focused on verb conjugations ('дієвідміни'),
-    which is a core and foundational component of the 'Система дієслова' (The Verb
-    System) discussed in the module's introduction.
+  relevance_score: 0.9
+  relevance_note: This video directly addresses verb conjugations in Ukrainian, a
+    fundamental aspect of the verb system introduced in the module.
   transcript_excerpt: verb conjugations are useful to know in Order to talk about
-    Present тешні ча. Отже в українській мові є дві дієвідміни дієвідміна means verb
-    conjugation.
-  embed_suggestion: 'After Вступ: Система дієслова -- it explains verb conjugations,
-    which are central to understanding the overall verb system.'
-- url: https://www.youtube.com/watch?v=gpHANzjE9q0
-  channel: Ukrainian Lessons
-  title: ULP 1-26 | Talking about traveling – Past tense in Ukrainian
-  relevance_score: 0.8
-  relevance_note: The video directly addresses the concept of tense within the verb
-    system, specifically focusing on the past tense. This reinforces the broader module
-    topic of 'Категорія часу'.
-  transcript_excerpt: Past tense лий chas in Ukrainian is pretty straight Forward
-    you should Just Remember that unlike the Present tense The Past forms depend on
-    the gender of person who is a subject.
-  embed_suggestion: After Категорія часу та багатство форм майбутнього -- it introduces
-    one of the verb tenses, which is fundamental to understanding the category of
-    time.
-- url: https://www.youtube.com/watch?v=xGrdJHym-9E
-  channel: Ukrainian with Olha
-  title: 'Ukrainian for beginners: Where are u from? Countries, languages | Genitive
-    case,  Verb conjugations'
-  relevance_score: 0.6
-  relevance_note: The video discusses verb conjugations, which is relevant to the
-    module. However, it also covers genitive case and gender of nouns, which are outside
-    the scope of this verb-focused module, thus diluting its direct relevance.
-  transcript_excerpt: Today we will learn several grammar points such as a genitive
-    case of nouns when used to inform about someone's origin, gender of nouns, masculine
-    and feminine, plural of form of nouns, and how to conjugate verbs of the first
-    conjugation type.
-  embed_suggestion: 'After Вступ: Система дієслова -- for the segment on verb conjugations,
-    with a note that other topics like genitive case are also covered.'
+    Present тешні ча It Will Be just a Quick review as Top is Отже в українській мові
+    є дві дієвідміни дієвідміна means verb conjugation.
+  embed_suggestion: 'After Вступ: Система дієслова (Introduction: The Verb System)
+    – verb conjugations are a foundational part of understanding the overall verb
+    system.'
 - url: https://www.youtube.com/watch?v=GL1-z6IGg9A
   channel: Ukrainian with Olha
   title: 'Ukrainian for beginners: Where do you work? Reflective verbs, Diminutives,
     Locative & Vocative cases'
-  relevance_score: 0.6
-  relevance_note: This video introduces different verb conjugation types (first, second,
-    reflective), which aligns with the 'Система дієслова'. However, it includes unrelated
-    topics such as diminutives and other noun cases (locative, vocative).
+  relevance_score: 0.9
+  relevance_note: The video explicitly discusses reflective verbs and verb conjugations
+    (first and second type), which are core components of the verb system.
   transcript_excerpt: Today we will learn several grammar points such as verbs to
     work. and to know of first conjugation type feminitative and masculinative in
     professions verbs of second conjugation type reflective verbs diminutives locative
     case and propositions of place as well as vocative case.
-  embed_suggestion: 'After Вступ: Система дієслова -- for its discussion of various
-    verb types and conjugations, advising viewers to focus on the verb-related content.'
+  embed_suggestion: 'After Вступ: Система дієслова (Introduction: The Verb System)
+    – it provides a good introduction to different verb types and their conjugation
+    patterns, fitting well within the initial overview of the verb system.'
+- url: https://www.youtube.com/watch?v=gpHANzjE9q0
+  channel: Ukrainian Lessons
+  title: ULP 1-26 | Talking about traveling – Past tense in Ukrainian
+  relevance_score: 0.8
+  relevance_note: The video directly discusses the past tense of verbs, which is a
+    component of the broader topic of verb tenses covered in the module.
+  transcript_excerpt: Today we will be talking about My favorite topic podoro traveling
+    many дуже подобається подорожувати... in the Conversation we were Talking All
+    About the Past we were using лий chas Past tense лий chas in Ukrainian is pretty
+    straight Forward you should Just Remember that unlike the Present tense The Past
+    forms depend on the gender of person who is a subject.
+  embed_suggestion: After Категорія часу та багатство форм майбутнього (The Category
+    of Tense and Richness of Future Forms) – it provides a focused explanation of
+    past tense formation, complementing the module's discussion of verb tenses.
+- url: https://www.youtube.com/watch?v=xGrdJHym-9E
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Where are u from? Countries, languages | Genitive
+    case,  Verb conjugations'
+  relevance_score: 0.7
+  relevance_note: The video mentions verb conjugations as one of the grammar points,
+    but it is mixed with other less relevant topics like genitive case and noun gender,
+    making it less focused on verbs than other candidates.
+  transcript_excerpt: Today we will learn several grammar points such as a genitive
+    case of nouns when used to inform about someone's origin, gender of nouns, masculine
+    and feminine, plural of form of nouns, and how to conjugate verbs of the first
+    conjugation type.
+  embed_suggestion: 'After Вступ: Система дієслова (Introduction: The Verb System)
+    – it touches upon verb conjugations, which is relevant to the verb system introduction,
+    but its mixed content reduces its direct impact.'
 - url: https://www.youtube.com/watch?v=yvM7lCH695A
   channel: Repainted Fox
   title: '#27 Пісня про рушник. Андрій Малишко'
@@ -91,33 +93,32 @@ videos:
   transcript_excerpt: ''
   embed_suggestion: ''
 blogs:
+- url: https://www.ukrainianlessons.com/aspect/
+  title: Ukrainian Verb Aspect
+  source: Overview in English
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
   title: Ukrainian Verb Prefixes
   source: ukrainianlessons.com
-  relevance_score: 0.85
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
   title: Verb Aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.85
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/lesson/92/
   title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
     aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/lesson/96/
   title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective
     future tense in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.8
-  topics: []
-- url: https://www.ukrainianlessons.com/lesson/97/
-  title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense
-    of the verbs of motion
-  source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 1.0
   topics: []
 rag_chunks:
 - score: 0.5

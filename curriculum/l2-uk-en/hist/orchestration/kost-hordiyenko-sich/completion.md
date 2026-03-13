@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 65 — E2E
+FAIL: pipeline hist 65
 
   Module:   kost-hordiyenko-sich
   Track:    hist
-  Mode:     e2e
-  Words:    5203 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-24T22:30:39Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:12:38Z

@@ -74,6 +74,27 @@ _YT_JINJA_ID_RE = re.compile(
     r'\{%\s*youtubeVideo\s+id="([A-Za-z0-9_-]{11})"\s*%\}'
 )
 
+# Plain URL in bullet list: "- Label: https://www.youtube.com/watch?v=..."
+# or standalone line: "https://www.youtube.com/watch?v=..."
+_YT_PLAIN_URL_RE = re.compile(
+    r'^(\s*[-*]\s+(.+?):\s+)'                       # bullet + label + colon
+    r'(https?://(?:www\.)?'                          # http(s)://
+    r'(?:youtube\.com/watch\?v=|youtu\.be/)'         # youtube.com/watch?v= or youtu.be/
+    r'[A-Za-z0-9_=&?%.-]+)'                           # video ID + URL params (no spaces)
+    r'\s*$',                                         # end of line
+    re.MULTILINE,
+)
+
+# Standalone bare URL on its own line (no bullet, no label)
+_YT_BARE_URL_RE = re.compile(
+    r'^(\s*)'                                        # optional leading whitespace
+    r'(https?://(?:www\.)?'                          # http(s)://
+    r'(?:youtube\.com/watch\?v=|youtu\.be/)'         # youtube.com/watch?v= or youtu.be/
+    r'[A-Za-z0-9_=-]+)'                              # video ID + params
+    r'\s*$',                                         # end of line
+    re.MULTILINE,
+)
+
 
 def embed_youtube_video_links(body: str) -> str:
     """Replace YouTube markdown links with inline ``<YouTubeVideo>`` components.
@@ -86,36 +107,35 @@ def embed_youtube_video_links(body: str) -> str:
     Gemini sometimes produces instead of markdown links.
     """
 
+    def _yt_component(url: str, label: str = "Video") -> str | None:
+        """Build <YouTubeVideo> JSX if url has a valid video ID, else None."""
+        if not _YT_VID_ID_RE.search(url):
+            return None
+        safe_url = escape_jsx(url)
+        safe_label = escape_jsx(label)
+        return f'\n\n<YouTubeVideo client:load url="{safe_url}" label="{safe_label}" />\n\n'
+
     def _yt_replace(m: re.Match) -> str:
-        text = m.group(1)
-        url = m.group(2)
-        vid_match = _YT_VID_ID_RE.search(url)
-        if not vid_match:
-            return m.group(0)
-        label = escape_jsx(text)
-        return (
-            f'\n\n<YouTubeVideo client:load url="{url}" label="{label}" />\n\n'
-        )
+        return _yt_component(m.group(2), m.group(1)) or m.group(0)
 
     def _yt_jinja_replace(m: re.Match) -> str:
-        url = m.group(1)
-        vid_match = _YT_VID_ID_RE.search(url)
-        if not vid_match:
-            return m.group(0)
-        return (
-            f'\n\n<YouTubeVideo client:load url="{url}" label="Video" />\n\n'
-        )
+        return _yt_component(m.group(1)) or m.group(0)
 
     def _yt_jinja_id_replace(m: re.Match) -> str:
-        vid_id = m.group(1)
-        url = f"https://www.youtube.com/watch?v={vid_id}"
-        return (
-            f'\n\n<YouTubeVideo client:load url="{url}" label="Video" />\n\n'
-        )
+        return _yt_component(f"https://www.youtube.com/watch?v={m.group(1)}") or m.group(0)
 
+    def _yt_plain_url_replace(m: re.Match) -> str:
+        return _yt_component(m.group(3), m.group(2).strip()) or m.group(0)
+
+    def _yt_bare_url_replace(m: re.Match) -> str:
+        return _yt_component(m.group(2)) or m.group(0)
+
+    # Process in order: specific patterns first, then general
     body = _YT_JINJA_ID_RE.sub(_yt_jinja_id_replace, body)
     body = _YT_JINJA_RE.sub(_yt_jinja_replace, body)
-    return _YT_VIDEO_LINK_RE.sub(_yt_replace, body)
+    body = _YT_VIDEO_LINK_RE.sub(_yt_replace, body)
+    body = _YT_PLAIN_URL_RE.sub(_yt_plain_url_replace, body)
+    return _YT_BARE_URL_RE.sub(_yt_bare_url_replace, body)
 
 
 # ---------------------------------------------------------------------------

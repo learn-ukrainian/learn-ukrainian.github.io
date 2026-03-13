@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 112 — E2E
+FAIL: pipeline hist 112
 
   Module:   krym-1954
   Track:    hist
-  Mode:     e2e
-  Words:    5774 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T23:36:39Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:19:58Z

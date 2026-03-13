@@ -1,0 +1,138 @@
+discovered_at: '2026-03-12T16:38:21.338994+00:00'
+query_keywords:
+- Adjective Suffixes — Types
+- прикметник
+- Вступ
+- Матеріали та походження
+- Традиційні вироби
+- дерев'яний
+- скляний
+- залізний
+- Materials and Origins
+- Traditional Crafts
+- Практика та аналіз помилок
+- Practice and Error Analysis
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=t6QpqZRIJPY
+  channel: Ukrainian Lessons
+  title: Introduction to Ukrainian ADJECTIVES - прикметники [Ukrainian Grammar Guide]
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=5tEZczCa1Hw
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Dishes and drinks | Food vocabulary - over 100
+    words😲Declining adjectives'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=nIbxZO0Gv5Q
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Fruits & Vegetables, Colours | Gender endings |
+    Noun-adjective agreement'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=BYBWx6ds8Fk
+  channel: Let's Learn Ukrainian
+  title: 'Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7IzMhjomEiQ
+  channel: Let's Learn Ukrainian
+  title: '40 Adjectives (Antonyms) #Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://opentext.ku.edu/dobraforma/chapter/16-1/
+  title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/16-2/
+  title: 'Dobra Forma 16-2: Soft-Stem Adjectives'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-ukrmova-golub-2023_s0129
+  text: "126\n302   Спишіть словосполучення. Визначте, у якому значенні — прямому\
+    \ \nчи переносному — використані прикметники. Котрі з них можуть \nвиражати якість\
+    \ більшою чи меншою мірою? Визначте групу при-\nкметників за значенням. Висловіть\
+    \ припущення, коли відбувається \nперехід відносних прикметників у якісні. З 2–3\
+    \ парами словосполу-\nчень складіть речення й запишіть їх. \nСкляний посуд — скляний\
+    \ погляд, золотий ланцюжок — \nзолотий голос, лимонний сік — лимонний колір, вишневий\
+    \ \nсад — вишневий светр, стале"
+  section_title: Сторінка 126
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0199
+  text: "Розділ 6. Прикметник \n192\n2. Підкресліть усі прикметники відповідно до\
+    \ ролі в  реченні.\n3. Обведіть прикметники, ужиті в  короткій формі. Запишіть\
+    \ повну форму \nкожного. Надпишіть над прикметниками відмінок.\n4. Поміркуйте,\
+    \ з текстів яких стилів узято речення.\nВідносні прикметники завжди похідні, тобто\
+    \ утво-\nрені від інших слів: срібний ← срібло, осінній ← осінь.\nСловосполучення\
+    \ відносного прикметника з імен-\nником здебільшого можна переробити на словосполу-\n\
+    чення з двох іменників: срібні прикраси"
+  section_title: Сторінка 192
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 6-klas-ukrmova-golub-2023_s0143
+  text: "140\n340   Запишіть словосполучення, уставляючи пропущені букви. \nАлюміні..вий\
+    \ дріт, вельвет..ва куртка, взутт..ва крамниця, \nгруш..вий джем, дій..ва особа,\
+    \ житт..вий випадок, овоч..ве \nрагу, пошт..ва скринька, травн..вий дощ, червн..ва\
+    \ ніч, чутт..ве \nсприймання, помаранч..вий сік, парч..ва сукня. \n341   Утворіть\
+    \ від поданих іменників прикметники, поясніть написання \nсуфіксів. \nЛютий, січень,\
+    \ березень, метал, плюш, аґрус, стиль, вишня, \nгелій, фланель, алюміній, кизил,\
+    \ чебрець, квітень, емаль. \n3"
+  section_title: Сторінка 140
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0271
+  text: "§ 60 Прикметник як частина мови \n151\nОЗНАКИ ПРИКМЕТНИКА\nМорфологічні ознаки\n\
+    Синтаксична роль\nВідмінювані слова, змінюються за родами, числами й відмінками.\
+    \ По-\nчаткова форма: називний відмінок однини чоловічого роду. Можуть \nмати\
+    \ форму ступеня порівняння (якісні прикметники). За лексичними \nй морфологічними\
+    \ ознаками поділяють на якісні, відносні та присвійні\nОсновна: узгоджене озна-\n\
+    чення. Неосновна: іменна \nчастина складеного при-\nсудка\nРОЗРЯДИ ПРИКМЕТНИКІВ\
+    \ ЗА ЗНАЧЕННЯМ\nЯкісні\nвиражають безпосе"
+  section_title: Сторінка 151
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0002
+  text: "СТИЛІ МОВЛЕННЯ\nНазва  \nчастини мови\nЗагальне  \nзначення \nСинтак­сична\
+    \  \nроль \nНа які питання  \nвідпо­відає\nСАМОСТІЙНІ\nІменник\nозначає \nпредмет\n\
+    найчастіше –  \nпідмет, додаток, \nобставина\nх т о ? щ о ? Прикметник\nозначає\
+    \ \nознаку\nпредмета\nозначення,\nприсудок\nя к и й ? ч и й ? Числівник\nозначає\
+    \ \nкількість,\nчисло, поря-\nдок\nпредметів \nпід час лічби\nнайчастіше – \n\
+    підмет,\nозначення, \nдодаток\nс к і л ь к и ? к о т р и й ? Займенник\nвказує\
+    \  \nна особу, \nпредмет, \nознаку,\nкількість\nнайчастіше – \nпідмет,\nдо"
+  section_title: Сторінка 4
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

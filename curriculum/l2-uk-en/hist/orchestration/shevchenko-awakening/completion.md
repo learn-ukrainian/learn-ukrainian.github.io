@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 81 — E2E
+FAIL: pipeline hist 81
 
   Module:   shevchenko-awakening
   Track:    hist
-  Mode:     e2e
-  Words:    6818 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T20:56:02Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:15:07Z

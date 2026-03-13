@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "technology-media",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:12:58Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:12:58Z",
+      "task_id": "v5-technology-media-pA",
+      "mode": "full"
+    }
+  }
+}

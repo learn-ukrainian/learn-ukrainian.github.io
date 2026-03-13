@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "zasnuvannia-kyieva",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:35:09Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:35:09Z",
+      "task_id": "v5-zasnuvannia-kyieva-pA",
+      "mode": "full"
+    }
+  }
+}

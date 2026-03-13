@@ -1,0 +1,120 @@
+discovered_at: '2026-03-12T18:59:56.237492+00:00'
+query_keywords:
+- 'Новини: як читати'
+- 'Стратегії читання: Заголовки та ліди'
+- 'Reading Strategies: Headlines and Leads'
+- 'Медіаграмотність: Факти та маніпуляції'
+- 'Media Literacy: Facts and Manipulations'
+- Лексичні пастки та автентичний контекст
+- Lexical Traps and Authentic Context
+- news reading strategies to authentic Ukrainian texts
+- headlines, leads, and main points in news articles
+- fact from opinion in Ukrainian news
+- Learner is prepared for autonomous news reading at B2
+- News vocabulary and register
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=k_MaCIpx-0Q
+  channel: Ukrainian Lessons
+  title: ULP 5-185 | Як іноземці козака рятували — нова книга від Ukrainian Lessons
+  relevance_score: 0.2
+  relevance_note: The video promotes a new fictional book from Ukrainian Lessons and
+    includes an excerpt from the story. While in Ukrainian, its content is entirely
+    unrelated to news reading strategies, media literacy, or analyzing news articles,
+    which are the core topics of the module.
+  transcript_excerpt: Сьогодні нарешті я хочу поділитися з вами великою новиною ми
+    випустили нову книжку від Ukrainian lessons це дуже особлива книга написана простою
+    українською мовою спеціально для тих хто вивчає українську.
+  embed_suggestion: Not suitable for embedding in this module due to irrelevance.
+- url: https://www.youtube.com/watch?v=j8ujOFzLCP8
+  channel: Repainted Fox
+  title: 'bonus #8 Читати Вголос - читацький щоденник для підлітків'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=yO1V4N90PKY
+  channel: Repainted Fox
+  title: 'bonus #7 Про читацький досвід'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=vPrRPyMfIr8
+  channel: Klopotenko
+  title: 'Здивуйте своїх гостей цим смачним ПИРОГОМ зі ШПИНАТОМ та сиром | Євген Клопотенко
+    #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0195
+  text: "188\nМОВЛЕННЄВИЙ ПРОСТІР\nТекст\nПригадайте!\nТекст — це певне повідомлення;\
+    \ сукупність речень, пов’я-\nзаних між собою за змістом.\nТема — це те, про що\
+    \ йдеться в тексті. Найчастіше тему \nвідображає заголовок тексту.\nПідтема (мікротема)\
+    \ — це частина загальної теми тексту, \nщо зазвичай розкривається в одному абзаці.\n\
+    Основна думка тексту — це те, заради чого був створений \nпевний текст, що хотів\
+    \ донести автор до своїх читачів.\nКлючові слова — це окремі слова чи словосполучення,\
+    \ \nякі визначають тему та "
+  section_title: Сторінка 191
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-golub-2022_s0185
+  text: "186\nВиди читання\nМета читання:\nМовчки\n(про себе)\nВголос\nотримання\n\
+    інформації\n     набуття чуттєвого\n     досвіду\n     набуття естетичного\n \
+    \    досвіду\n435   Зберіть «розсипані» прислів’я, запишіть їх. Поясніть, як ви\
+    \ розу-\nмієте їх. У якому з них ідеться про читання з метою отримання \nінформації?\n\
+    1. Хто, той, багато, знає, багато, читає. 2. Книжки, нудьги, \nчитати, не знати.\
+    \ 3. Книжку, свято, купити, зробити, собі. \n4. Пізнати, книжки, хочеш, світ,\
+    \ читай. 5. Зірку, книжка, \nза, яскравіша, хороша"
+  section_title: Сторінка 186
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0399
+  text: "(За К. Макґоніґал)\n \n \nВизначте, яким способом пов’язані речення в тексті —\
+    \ послідовним \n(ланцюговим) чи паралельним. Які ключові слова визначають тему\
+    \ тексту? А як ви формуєте силу волі? Що ще, крім сили волі, допомагає в до-\n\
+    сягненні мети? 645 Доберіть із художньої літератури уривок тексту про цікаву осо-\n\
+    бистість. Визначте тему й мікротеми, стиль мовлення тексту. Знайдіть за-\nсоби\
+    \ зв’язку речень у тексті (синоніми, займенники, повторювані слова, \nсполучники\
+    \ тощо). Схарактеризуйте текст за йог"
+  section_title: Сторінка 226
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0265
+  text: "1\nПравила  читання\n1\nПершочергово у тексті твору шукай відповіді \nна\
+    \ запитання:\n• Хто діє? Які його / її вчинки?\n• Де і коли відбуваються події?\n\
+    • Кого або що описує автор/авторка?\n2\n \nПри повторному читанні:\n1. Виділи\
+    \ деталі в тексті (портреті, пейзажі, \nописі предмета чи приміщення).\n2. Проаналізуй,\
+    \ яку роль вона відіграє:\n• у портреті: передає зовнішню \nхарактеристику чи\
+    \ звертає увагу на \nвнутрішні якості героя / героїні;\n• у пейзажі: відтворює\
+    \ різноманітні стани \nприроди чи внутрішній стан г"
+  section_title: Сторінка 257
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

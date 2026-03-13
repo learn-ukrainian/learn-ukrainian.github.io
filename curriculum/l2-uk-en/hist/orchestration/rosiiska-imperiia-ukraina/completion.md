@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 75 — E2E
+FAIL: pipeline hist 75
 
   Module:   rosiiska-imperiia-ukraina
   Track:    hist
-  Mode:     e2e
-  Words:    5789 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T20:05:13Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:14:12Z

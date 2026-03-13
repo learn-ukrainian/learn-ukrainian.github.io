@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:39:31.749124+00:00'
+discovered_at: '2026-03-12T20:23:36.695622+00:00'
 query_keywords:
 - The Best, The Worst
 - найкращий
@@ -15,18 +15,17 @@ query_keywords:
 error: null
 warning: null
 videos:
-- url: https://www.youtube.com/watch?v=9f-PNT0Ty6c
+- url: https://www.youtube.com/watch?v=WD3DlnRqTSE
   channel: Klopotenko
-  title: НЕ квашена а ФЕРМЕНТОВАНА капуста! АВТЕНТИЧНИЙ рецепт від Євгена Клопотенка
+  title: 'НЕ квашена а ФЕРМЕНТОВАНА капуста! #клопотенко | Автентичні українські рецепти
+    🧡'
   relevance_score: 0.1
-  relevance_note: The video is a cooking recipe for fermented cabbage and has no direct
-    relevance to the grammar topic ('the best, the worst') or cultural context ('Ukrainian
-    records') of this module. It is in Ukrainian but unrelated to the specific module
-    content.
-  transcript_excerpt: Сьогодні будемо готувати квашену капусту бо е не квашену вже
-    капусту квашена капуста була раніше а зараз ми будемо назвати це ферментована
-    капуста.
-  embed_suggestion: Not relevant for embedding in this module.
+  relevance_note: The video is in Ukrainian, but its topic (fermenting cabbage/cooking)
+    is unrelated to the module's focus on superlative adjectives ('The Best, The Worst')
+    or 'Ukrainian Records'.
+  transcript_excerpt: сьні будемо готувати квашену капусту нарешті ферментація стає
+    частиною нашого життя
+  embed_suggestion: None -- the content is unrelated to the module topic.
 - url: https://www.youtube.com/watch?v=j35DBf4QyuY
   channel: Bright Kids Ukrainian
   title: Reading Aloud in Ukrainian - Як добре, що є Боб
@@ -63,7 +62,17 @@ videos:
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-blogs: []
+blogs:
+- url: https://opentext.ku.edu/dobraforma/chapter/20-3/
+  title: 'Dobra Forma 20-3: Superlative Degree'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+- url: https://www.talkukrainian.com/adjectives-degrees-comparison/
+  title: Degrees of Comparison
+  source: Unknown
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 6-klas-ukrmova-avramenko-2023_s0134

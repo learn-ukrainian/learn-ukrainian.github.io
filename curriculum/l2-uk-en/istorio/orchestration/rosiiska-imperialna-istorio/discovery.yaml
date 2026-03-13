@@ -1,0 +1,277 @@
+discovered_at: '2026-03-12T23:20:53.554884+00:00'
+query_keywords:
+- Російська імперіальна історіографія
+- Карамзін і початок імперського наративу
+- Теорія Погодіна
+- Концепція "Малоросії"
+- Радянська версія імперського наративу
+- Сучасна російська історіографія
+- Критичний аналіз і деконструкція
+- Analyze the causes and consequences of російська імперіальна історіографія
+- Evaluate the historical significance of імперська історіографія як зброя
+- Trace the development of критичний аналіз і деконструкція
+- history
+- історія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=W52LYtBh65k
+  channel: Реальна Історія
+  title: ЯКИЙ ТРЕШ ПИШУТЬ В РОСІЙСЬКИХ ПІДРУЧНИКАХ?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qLal5MQeSlU
+  channel: Реальна Історія
+  title: За що вбивають російських правителів? Реальна історія з Акімом Галімовим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=HWLucth0Qek
+  channel: Комік Історик
+  title: 'історія Київської Русі: кому вона належить?'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=yb6ZJwQEZjU
+  channel: ІМТГШ
+  title: Хто й нащо ВИГАДАВ Російську Імперію? І до чого тут українці? | імені Т.Г.
+    Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=q1SuOdK6GHY
+  channel: ІМТГШ
+  title: Заборонена Історія Росії. Народ, Який Постійно Бунтує - Башкіри | Історія
+    від імені Т.Г. Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0337
+  text: "223\nЗміст\nРозділ V. МОНГОЛЬСЬКА ЕКСПАНСІЯ. КОРОЛІВСТВО РУСЬКЕ\n\t § 15.\
+    \ Походи монголів на Русь. Підпорядкування руських  \nкнязівств Золотій Орді .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 117\n\
+    \t § 16. Створення Королівства Руського . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . 129\n\t § 17. Королівство Руське за  наступників короля Данила\
+    \ . . . . . . . 135\n\t § 18. Культура Галицько-Волинського князівства  \n(Королівства\
+    \ Руського) ХIII  — першої половини XIV  ст."
+  section_title: Сторінка 224
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0209
+  text: "§ 29–31. ПРОЗА ХІХ ст.: ВІД РОМАНТИЗМУ ДО РЕАЛІЗМУ\nОбкладинка до повісті\
+    \ \nМ. Гоголя \n«Тарас Бульба»\nОЗНАКИ РОМАНТИЧНОГО СТИЛЮ \nВ ПОВІСТІ МИКОЛИ ГОГОЛЯ\
+    \ \n«СОРОЧИНСЬКИЙ ЯРМАРОК»"
+  section_title: Сторінка 123
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0119
+  text: "Маланюк? що, на думку письменника, \nє чинниками формування «малоросійства»?\
+    \ Запрошуємо до дискусії\n7. Чи властиве «маëоросіéство» нашим сучасникам? В електронному\
+    \ додатку до підручника ви знайдете повний текст твору \nª. Маланþка «Малоросійство»\
+    \ . Прочитайте його . Дайте відповіді на запи-\nтання, виконайте завдання . читацький\
+    \ практикум"
+  section_title: Сторінка 65
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0290
+  text: '1. У поемі «Кавказ» образ Прометея  — це символ
+
+    А колоніальної політики Російської імперії
+
+    Б безглуздої війни
+
+    В влади
+
+    Г нескореності народу
+
+    НОВА УКРАЇНСЬКА ЛІТЕРАТУРА
+
+    216'
+  section_title: Сторінка 216
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0485
+  text: '. . . . . . . . . . . . . . . . 245
+
+    По дорозі в Казку  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 245
+
+    Теорія літератури. Драматичний етюд . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 247
+
+    Короткий словник літературознавчих термінів . . . . . . . . . . . . . . . . .
+    . . . . . . . 249'
+  section_title: Сторінка 255
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5738760828971863
+  chunk_id: f79fbc43_c0134
+  text: "Однак «Історія» Карамзіна та твори його послідовників мали б\r\nобмежений\
+    \ вплив, якби тема російської величі не набувала поширення у художній\r\nлітературі.\
+    \ Саме тут відбувалась вирішальна битва за імперію. На початку XIX\r\nстоліття\
+    \ появилась велика кількість описів воєнної доблесті, небезпек і пригод\r\nв екзотичних\
+    \ місцевостях, що їх пізніше «об’єднала» Росія. Завоювання Кавказу з\r\nйого численним\
+    \ мусульманським населенням і відносною близькістю до центру\r\nімперії породили\
+    \ велику кількість творів і, р"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5732068419456482
+  chunk_id: c44f1207_c1479
+  text: "Далї, подібні огляди (коротші, часто меньш \r\n докладні) містять курси історії\
+    \ давньої Руси; вкажу Соловйова т. І кн. 3 гл. 1 \r\n (c. 669 і далї), Поґодїна\
+    \ ИзслЂдованія т. VII (вибрані з лїтописей тексти) і \r\n його ж Древняя русская\
+    \ исторія домонгольскаго ига т. II (два видання), \r\n Бестужева-Рюміна Русская\
+    \ исторія т. І (c. 192 і далї), Іловайского Исторія \r\n Россіи т. І (гл. XIX),\
+    \ Рожкова Обзоръ рус. исторіи съ соціолог. точки зрЂнія \r\n (І гл. 4), Платонова\
+    \ Лекціи по рус. исторіи (коротеньке). Ог"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5684959888458252
+  chunk_id: f79fbc43_c0000
+  text: '[Ева Томпсон. Трубадури імперії: Російська література і колоніалізм. — К.,
+    2006. — 368 с.]
+
+
+    Ева М. ТОМПСОН
+
+
+    ТРУБАДУРИ ІМПЕРІЇ
+
+    Російська література і колоніалізм
+
+
+    Київ — 2006
+
+
+    ЗМІСТ
+
+
+    Тетяна Дзядевич. Дистанціюючись від імперії . . . . . . . . . . 6
+
+
+    Подяка . . . . . . . . . . 17
+
+
+    Вступ. Націоналізм, колоніалізм, національна ідентичність . . . . . . . . . .
+    19
+
+
+    1. Постановка питання . . . . . . . . . . 39
+
+
+    2. Народження імперії . . . . . . . . . . 97
+
+
+    3. Консолідуючий підхід . . . . . . . . . . 14'
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm

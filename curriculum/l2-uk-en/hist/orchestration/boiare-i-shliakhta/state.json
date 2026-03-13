@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "boiare-i-shliakhta",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:54:34Z",
+      "task_id": "v5-boiare-i-shliakhta-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:54:34Z",
+      "note": "merged-into-research"
+    }
+  }
+}

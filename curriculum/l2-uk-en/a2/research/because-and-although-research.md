@@ -2,75 +2,84 @@
 
 ## State Standard Reference
 
-**§4.4.2** (lines 1403–1416): *"Складнопідрядні речення зі сполучниками тому що, бо: Віктор не був на лекції, тому що він захворів. Він став відомим архітектором, бо наполегливо вчився."*
+**§4.4.2** (lines 1403–1416): «Складнопідрядні речення зі сполучниками тому що, бо: Віктор не був на лекції, тому що він захворів. Він став відомим архітектором, бо наполегливо вчився»; «складносурядні речення з протиставними відношеннями між його частинами (сполучник але): Ми телефонували додому, але ніхто не відповів»
 
-Also in §4.4.2: складносурядні з протиставним **але**: *"Ми телефонували додому, але ніхто не відповів."*
+**Alignment**: This module directly implements §4.4.2 — causal clauses with тому що/бо and adversative coordination with але. The plan also introduces хоча (concessive) and the prepositions через/завдяки, which extend slightly beyond the explicit A2 standard text but are attested in the A2 mapping description and bridge toward B1 §4.4.3.
 
-**Note on хоча**: The literal §4.4.2 text (lines 1403–1416) does not explicitly list хоча. The mapping.yaml description summarizes it as in scope. Textbook evidence (Grade 9 Voron, Grade 5 Golub) confirms хоча is standard at this level — it is pedagogically appropriate for A2 but taught as an extension beyond the literal Standard text.
-
-**Alignment**: Module directly addresses the §4.4.2 causal clause requirement (тому що, бо) and extends to concessive хоча and the завдяки/через preposition distinction, which falls under §4.5.1 lexical stylistics (synonym/register awareness, lines 1420–1425).
+**Note**: хоча (concessive subordinator) is not listed verbatim in lines 1403–1416 of the standard text, but appears in the mapping file description for §4.4.2. Grade 9 textbooks (Voron) treat допустові clauses formally. Introducing хоча at A2 is a sound pedagogical decision — it appears at 171.96 IPM in authentic use.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | GRAC Frequency (IPM) | VESUM | Notes |
-|------|---------------------|-------|-------|
-| бо | 514.90/M | ✅ conj | Extremely high — everyday spoken causal |
-| через | 887.74/M | ✅ prep | Very high (multi-meaning; causal + spatial) |
-| оскільки | 211.93/M | ✅ conj | High — formal/written register |
-| хоча | 171.96/M | ✅ conj, part | High — standard concessive |
-| але | (conj, standard) | ✅ conj, intj, part | Core adversarial; already known from A1 |
-| завдяки | 106.78/M | ✅ prep | Moderate-high; positive cause only |
-| причина | 25.59/M | ✅ noun | Mid-frequency; key metalanguage |
-| наслідок | 24.27/M | ✅ noun (×2 lemmas) | Mid-frequency; useful for logical framing |
-| тому що | 0 (GRAC limitation — multi-word token, each part separately valid) | NOT FOUND as unit | Compound conjunction — VESUM entry per word. This is a known GRAC limitation for compound conjunctions; frequency is real and high. |
+| Word | Frequency (GRAC IPM) | Notes |
+|------|----------------------|-------|
+| через | 887.74 | Preposition — extremely high; many uses, not only causal |
+| бо | 514.90 | Causal conjunction — very high; core spoken/written register |
+| оскільки | 211.93 | Formal causal conjunction — moderate; press/academic |
+| хоча | 171.96 | Concessive conjunction — moderate; all registers |
+| завдяки | 106.78 | Benefactive preposition — moderate; formal-leaning |
+| тому що | 0 (bigram not indexed) | Compound conjunction — GRAC does not index bigrams; high in authentic use per textbook evidence |
 
-**Takeaway for content**: `бо` is the most frequent spoken causal form; `оскільки` is surprisingly high in corpus (formal written dominates corpus), making register contrast pedagogically motivated. `через` is extremely frequent but polysemous (spatial + causal) — context must disambiguate.
+**VESUM verification** (all confirmed): бо (conj/part ✓), хоча (conj/part ✓), але (conj/intj/part ✓), через (prep ✓), завдяки (prep ✓), оскільки (conj ✓), причина (noun ✓), наслідок (noun ✓)
 
 ---
 
 ## Cultural Hooks
 
-1. **Folk proverb**: *"І трясця не бере без причини"* — "Even the fever doesn't strike without a reason." Confirms the plan's proposed cultural anchor. This is a legitimate Ukrainian folk saying about universal causality. Source: plan note; genre = народна мудрість. Use as intro hook linking folk logic to grammatical logic.
+1. **Folk proverb (Народна творчість)**: «Не тішся чужою бідою, бо твоя стоїть за тобою» — attested in Grade 11 Voron textbook as a canonical example of бо in a causal subordinate clause. Demonstrates the natural spoken register of бо and carries a moral/empathy message relevant to all learners.
 
-2. **Zabolotnyi Grade 8 (2025, tier 1) real-world example**: The textbook teaches завдяки/через with a pair of contemporary Ukrainian sentences — *"Перемагаємо завдяки підтримці наших уболівальниць й уболівальників"* (positive cause → завдяки) vs *"Рух транспортних засобів обмежено через ожеледицю"* (negative/neutral → через). Source: `8-klas-ukrmova-zabolotnyi-2025_s0038`. This is an excellent ready-made contrast pair from the leading A2-level textbook author, grounded in contemporary Ukrainian reality (sports support culture, civic infrastructure).
+2. **Ukrainian folk saying**: «І трясця не бере без причини» (Even the fever doesn't strike without a reason) — included in plan as cultural anchor. Frames the concept that every result has a cause; this aligns with everyday Ukrainian folk wisdom about cause and effect. Source: plan vocabulary_hints note. Verify as authentic folk saying (widespread in Ukrainian oral tradition).
 
 ---
 
 ## Common Learner Errors
 
-1. **English inversion — "Because..." sentence-opener**: English allows *"Because I was tired, I stayed home."* Ukrainian strongly prefers main clause first: *"Я залишився вдома, бо стомився."* Starting with тому що/бо sounds unnatural and is a direct calque. Textbook source: Grade 5 Golub explicitly models main-clause-first structure.
+1. **Sentence-initial "тому що"** → «Тому що він хворів, він не прийшов» should be «Він не прийшов, тому що хворів» — English interference ("Because he was sick, he didn't come"). Ukrainian strongly prefers main clause first with causal subordinate clause following.
 
-2. **Missing comma before тому що / бо / хоча**: Grade 5 Golub (2022): *"Між частинами складного речення ставимо кому."* Learners frequently omit the comma, treating compound conjunctions like single-word connectors. This is a persistent A2 error that the plan's "Comma Phobia" drill directly addresses.
+2. **завдяки for negative causes** → «Він запізнився завдяки пробкам» ❌ → «Він запізнився через пробки» ✓ — завдяки is strictly benefactive (positive outcomes only). Using it for negative/neutral causes sounds illiterate or sarcastic. This error is reinforced by the Russian cognate благодаря, which is used more broadly.
 
-3. **завдяки used for negative/neutral events (hypercorrection)**: Graded from Grade 8 Zabolotnyi exercise. Learners over-generalize завдяки as a "polite/formal" substitute for через in all contexts — producing sentences like *"Я запізнився завдяки затору"* (illogical: thanking the traffic jam). завдяки is strictly for благодійна причина (beneficial cause). через handles negative and neutral causes.
+3. **Missing comma before conjunction** → «Він не прийшов бо хворів» ❌ → «Він не прийшов, бо хворів» ✓ — Learners omit the comma before бо, тому що, хоча, але. Ukrainian punctuation requires a comma before all these conjunctions in complex sentences.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: `telling-stories` (A2-031) — narrative past tense provides the clause content that causal/concessive conjunctions link
-- **Prepares for**: `she-said-that` — indirect speech (що + subordinate clause) directly parallels the тому що clause structure; mastering comma placement and subordinate clause word order here is prerequisite
+- **Builds on**: `telling-stories` (a2-031) — past tense narrative, building sentences about events; this module adds causal/concessive connectors that deepen narrative complexity
+- **Prepares for**: `she-said-that` (connects_to field) — indirect speech uses subordinate clauses with що, structurally parallel to тому що clauses introduced here
 
 ---
 
-## Multimedia Resources
+## Textbook Attestation
 
-- (none encountered — no web search performed per phase instructions)
+**Grade 7 Avramenko (Tier 1, NUS 2022+)**: Lists cause conjunctions in академічний writing context: «адже, бо, тому що, через те що, у зв'язку з тим що, оскільки» — confirms all target items are standard curriculum.
+
+**Grade 11 Voron**: «Підрядні речення причини вказують на причину, що викликає дію головного речення... сполучниками що, завдяки тому що, у зв'язку з тим що, оскільки» and cites Довженко: «На морі ставало темно, тому що з берега насувала важка чорна хмара» — literary-quality example of тому що.
+
+**Grade 9 Voron**: Допустові clauses: «хоч, хоча, дарма що» — confirms хоча as the standard Ukrainian concessive conjunction; formal description: "підрядне допустове речення виражає твердження, всупереч якому дія головного речення все ж відбувається."
+
+**Grade 10 Karaman**: Lists тому що, через те що as compound conjunctions (складені сполучники) alongside simple conjunctions і, а, та, бо, але.
 
 ---
 
 ## Notes for Content Writing
 
-- **тому що vs бо register**: State Standard §4.4.2 lists both without register labels, but corpus data and textbook usage support the neutral/casual distinction. бо (514.90/M) dominates spoken Ukrainian; тому що is more neutral-written; оскільки (211.93/M) is formal. This three-way register ladder is the core PPP scaffold.
-- **хоча not in literal §4.4.2 text**: Flag this honestly in the module — хоча is an extension of the Standard scope, pedagogically motivated by learner need and textbook coverage at this level.
-- **завдяки + Dative / через + Accusative**: Both take different cases. завдяки + дав. відм. (завдяки тобі, завдяки допомозі); через + знах. відм. (через погоду, через помилку). This case distinction is implicit in the vocabulary hints and should be surface-noted in the content.
-- **Comma as a morpheme**: Frame the mandatory comma before subordinating conjunctions not as punctuation preference but as a grammatical signal that a new clause boundary has been crossed — this reframing reduces "comma phobia."
-- **Immersion target 55–75%** (A2 Applied grammar band M21-50): dialogues and examples fully Ukrainian; grammar theory explanations in English only when abstract concepts require it.
+- тому що / бо / оскільки form a register triad: neutral / casual-spoken / formal-written. The module's main pedagogical value is teaching learners to **switch registers** with the same causal meaning.
+- The завдяки/через contrast is a high-value teaching point because it is also a common native-speaker error (especially in hybrid Ukrainian-Russian speaking environments). Frame it as a precision point, not a rule to fear.
+- All examples should follow main-clause-first order for causal clauses. Only хоча naturally appears in sentence-initial position before the main clause.
+- Comma placement: always drill the comma as part of the conjunction, not a separate rule. Use the mnemonic «,бо / ,тому що / ,хоча / ,але — the comma is glued to the conjunction».
+- Word targets: Вступ (300) + Презентація 1 (550) + Презентація 2 (425) + Практика (425) + Продукція (300) = 2000. All sections within plan scope.
 
 ## Resource Discovery
 
+### Videos
+- [Готуємо найпухкіші ВАРЕНИКИ з ПОЛУНИЦЕЮ і розмовляємо з Т. Левчуком про рівність прав](https://www.youtube.com/watch?v=3XfUu2XcJlA) (Klopotenko) — The video directly uses and demonstrates the conjunctions 'тому що' and 'бо' which are core vocabulary and grammatical points for the 'Because and Although' module, specifically in the 'Why and How' section.
+- [Секрети ідеального тіста на пиріжки | Євген Клопотенко](https://www.youtube.com/watch?v=Dv69jKuc-XA) (Klopotenko) — The video uses the conjunction 'але' (but), which is related to conjunctions in general but not the specific 'because' or 'although' (cause and concession) focus of this module. It's tangentially related within the domain of grammar.
+
+### Blog Articles
+- [Ukrainian Conjunctions — Basic Overview](https://www.ukrainianlessons.com/ukrainian-conjunctions/) (ukrainianlessons.com)
+- [Talk Ukrainian: Ukrainian conjunctions](https://talkukrainian.com/conjunctions/) (talkukrainian)
+- [Ukrainian Conjunctions Guide — Advanced](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 

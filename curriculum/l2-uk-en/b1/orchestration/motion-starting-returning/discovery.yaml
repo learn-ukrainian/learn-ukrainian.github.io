@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:20:31.139480+00:00'
+discovered_at: '2026-03-12T21:11:43.519538+00:00'
 query_keywords:
 - 'Рух: початок і повернення'
 - Вступ та Діагностика
@@ -15,7 +15,17 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  title: Дієслова руху
+  source: Вікіпедія
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+verbs+of+motion+prefixes
+  title: Префікси дієслів руху
+  source: відео пояснення
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 10-klas-ukrmova-glazova-2018_s0314

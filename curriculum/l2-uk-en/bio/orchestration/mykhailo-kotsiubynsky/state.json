@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "mykhailo-kotsiubynsky",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:34:52Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:34:52Z",
+      "task_id": "v5-mykhailo-kotsiubynsky-pA",
+      "mode": "full"
+    }
+  }
+}

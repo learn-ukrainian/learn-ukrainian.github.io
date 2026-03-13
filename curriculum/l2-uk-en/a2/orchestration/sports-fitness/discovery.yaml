@@ -1,0 +1,102 @@
+discovered_at: '2026-03-12T17:26:25.895969+00:00'
+query_keywords:
+- Sports and Fitness
+- спорт
+- грати
+- займатися
+- Спортивні споруди та види спорту
+- Sports Facilities and Types of Sports
+- 'Граматика: Керування дієслів'
+- 'Grammar: Verb Government'
+- Практика та діалоги
+- Practice and Dialogues
+- Здоровий спосіб життя та підсумок
+- Healthy Lifestyle and Summary
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=ZP9kslSh7k0
+  channel: Klopotenko
+  title: How to cook oatmeal 🥣 Which oatmeal is the healthiest | Ievgen Klopotenko
+  relevance_score: 0.5
+  relevance_note: The module's main topic is Sports and Fitness, but it includes a
+    'Healthy Lifestyle and Summary' section. This video, while about cooking, discusses
+    the health benefits of oatmeal, which aligns tangentially with the 'Healthy Lifestyle'
+    component of the module.
+  transcript_excerpt: Тому найбільше корисних речовин кажуть що в цільнозерновій тому,
+    що в ній лишаються маленький зовнішній шар який не збивається парою. І в ньому
+    клітковина і більше корисних речовин.
+  embed_suggestion: After section 'Здоровий спосіб життя та підсумок' (Healthy Lifestyle
+    and Summary) -- as it provides practical information related to healthy eating
+    habits, which are part of a healthy lifestyle.
+- url: https://www.youtube.com/watch?v=1ESdniGHv6k
+  channel: Klopotenko
+  title: Як приготувати французький омлет із сиром | Ідеальний омлет від Євгена Клопотенка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0040
+  text: "НАВЧАЮСЯ ДОРЕЧНО ВЖИВАТИ СЛОВА В МОВЛЕННІ\nЧи вмієш ти грати \nв шахи?\n\
+    Чи любиш ти \nгратися?\nпояснюю \nвживаю\nСкладіть і запишіть речення зі словом\
+    \ грати, уживаючи \nйого в різних значеннях.\nВиконувати що-небудь на музичному\
+    \ інструменті.\nПоводитися з яким-небудь предметом, як з іграшкою, \nзабавлятися.\n\
+    Брати участь у якій-небудь грі.\nХвилинка спілкування\n— Як правильно говорити:\
+    \ грати на \nвулиці чи гратися на вулиці?\n— Я думаю, що гратися на вулиці.\n\
+    — А як сказати: в комп'ютерні ігри \nграти чи гратис"
+  section_title: Сторінка 42
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 6-klas-ukrmova-golub-2023_s0062
+  text: "61\nвордів чи вивчення мов. Але й у будь-якому рукоділлі задіяна \nдрібна\
+    \ моторика, що впливає на діяльність і розвиток голов-\nного мозку. Перебування\
+    \ на свіжому повітрі під час занять \nбігом чи гри у волейбол — чудовий спосіб\
+    \ наситити киснем \nвласний мозок і поліпшити його роботу (Ю. Данчук).\n \nІІ\
+    \   Доберіть кілька власних аргументів на користь улюбленого \nзаняття.\n151 \
+    \  І   Розгляньте схему. Що з уміщеного в ній вам відоме? Поставте \nзапитання\
+    \ в разі потреби щось з’ясувати. Підготуйте розповідь "
+  section_title: Сторінка 61
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0253
+  text: "Усно доповніть прочитане своїми міркуваннями про пере-\nваги й недоліки заняття\
+    \ фітнесом у домашніх умовах. ФІТНЕС УДОМА\nФітнес – одна з найпопулярніших си­стем\
+    \ оздоровлення. Не маючи \nзмоги потрапити в тренажерний зал, багато хто займається\
+    \ вдома. Незалежно від місця тренування, варто дотримуватися деяких пра­\nвил.\
+    \ По-перше, тренування мають бути регулярними. По-друге, перед \nтренуванням необхідно\
+    \ розминатися. По-третє, фізич­ні навантаження \nДешифратор\n1\nС\n2\nЕ\n3\nЛ\n\
+    4\nО\n5\nП\n6\nВ\n7\nА\n8\nО"
+  section_title: Сторінка 210
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0025
+  text: "25\nСлова — назви дій\nЩо робить?\nЩо роблять?\nЩо чим роблять?\n\t Який\
+    \ у тебе сьогодні настрій? Вибери.\nСлова — назви дій"
+  section_title: Сторінка 27
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

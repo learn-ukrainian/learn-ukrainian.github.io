@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "kniazivski-usobiytsi",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:16:20Z",
+      "task_id": "v5-kniazivski-usobiytsi-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:16:20Z",
+      "note": "merged-into-research"
+    }
+  }
+}

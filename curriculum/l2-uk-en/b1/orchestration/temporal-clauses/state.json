@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "temporal-clauses",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:41:21Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:41:21Z",
+      "task_id": "v5-temporal-clauses-pA",
+      "mode": "full"
+    }
+  }
+}

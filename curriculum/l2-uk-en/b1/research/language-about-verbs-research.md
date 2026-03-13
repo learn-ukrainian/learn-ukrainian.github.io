@@ -2,124 +2,93 @@
 
 ## State Standard Reference
 
-**§4.2.3.1 — Дійсний спосіб** (lines 2269–2291):
+§4.2.3.1 (lines 2269–2291): "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі… утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили; дієвідмінювання дієслів недоконаного виду в майбутньому часі — складена форма: буду боротися, будеш пити… дієвідмінювання дієслів недоконаного виду в майбутньому часі — синтетична форма: боротимуся, питимеш, кричатиме… дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють."
 
-> «утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили; дієвідмінювання дієслів недоконаного виду в майбутньому часі — складена форма: буду боротися, будеш пити; дієвідмінювання дієслів недоконаного виду в майбутньому часі — синтетична форма: боротимуся, питимеш, кричатиме; дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють.»
+§4.2.3.2 (lines 2293–2295): "Наказовий спосіб. Утворення форм наказового способу…"
+§4.2.3.3 (lines 2297–2298): "Умовний спосіб. Утворення форм умовного способу…"
 
-**Alignment**: The State Standard explicitly uses all key module terms — **доконаний вид**, **недоконаний вид**, **складена форма**, **синтетична форма** — with exact paradigm examples. Module b1-002 teaches learners to *name and reason with* these terms, directly scaffolding the §4.2.3.1 paradigm work. The plan's content_outline is tightly aligned: the Standard's own exemplars (буду боротися / боротимуся / поборють) are the exact contrast the module teaches.
-
-**§4.2.3.2** (lines 2293–2295) also relevant: imperative mood connects to the prohibition vs. warning section — «Не відкривай» (imperfective imperative = prohibition).
+**Alignment**: The Standard explicitly names both **складена форма** (буду + impf. infinitive) and **синтетична форма** (-тиму/-тимеш) as distinct patterns for the B1 verb system — directly validating the module's Cultural Hook on the uniqueness of the synthetic future. The aspect terminology (доконаний / недоконаний вид) is grounded in §4.2.3.1 as a core B1 morphological competency. The module's metalanguage focus (teaching learners to *name* these forms in Ukrainian) maps onto the State Standard's requirement to demonstrate command of this verb system at B1.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | GRAC Frequency (IPM) | Status | Key collocations (textbook-attested) |
-|------|---------------------|--------|--------------------------------------|
-| вид | 23.22 | High-frequency (polysemous: вид = type/species/aspect) | доконаний вид, недоконаний вид, видова пара, зміна виду |
-| заперечення | 10.87 | Medium — appears in grammar metalanguage and everyday use | загальне заперечення, частка заперечення, заперечна форма |
-| доконаний | 0.49 | Low — technical/grammar register only | доконаний вид, форма доконаного виду, дієслово доконаного виду |
-| недоконаний | 0.04 | Very low — exclusively grammar metalanguage | недоконаний вид, дієслова недоконаного виду |
-| синтетична (форма) | — | Technical; phrase query returns 0 (GRAC limitation) | синтетична форма майбутнього часу, проста форма |
-| складена (форма) | — | Technical; phrase query returns 0 (GRAC limitation) | складена форма майбутнього часу, буду + інфінітив |
-| процес | high | Common general vocabulary | позначає процес, тривалий процес |
-| результат | high | Common general vocabulary | результат дії, досягнутий результат |
-| тривалість | medium | — | тривалість дії, необмежена тривалість |
-| повторення | medium | — | повторювана дія, позначає повторення |
+| Word | GRAC Frequency / IPM | Key collocations / Notes |
+|------|---------------------|--------------------------|
+| час | 2,541,073 / 1255.52 | теперішній час, минулий час, майбутній час, зміна часу — ultra-high frequency, core metalanguage |
+| форма | 45,249 / 22.36 | складена форма, синтетична форма, особова форма, початкова форма — high frequency |
+| вид | 46,993 / 23.22 | доконаний вид, недоконаний вид, видова пара — high frequency (note: полysemous noun — context must clearly anchor grammatical meaning) |
+| дія | 26,524 / 13.11 | завершена дія, тривала дія, повторювана дія, результат дії — high frequency |
+| заперечення | 22,008 / 10.87 | загальне заперечення, частка не — high frequency, well-attested |
+| доконаний | 991 / 0.49 | доконаний вид, форма доконаного виду — low absolute but well-established as grammatical term |
+| недоконаний | 75 / 0.04 | недоконаний вид — very low raw frequency; confirms this is specialized metalanguage, not everyday vocabulary — important pedagogical note |
+| синтетична форма | 0 / 0.00 | Phrase not found as bigram in GRAC corpus — confirms it is rare technical prose register; worth flagging in content as advanced/specialized |
+| заборона | VESUM: ✅ noun | заборона дії, зняти заборону — VESUM confirmed |
+| тривалість | VESUM: ✅ noun | тривалість дії — VESUM confirmed |
+| повторення | VESUM: ✅ noun | повторювана дія — VESUM confirmed |
+| завершеність | VESUM: ✅ noun | завершеність дії — VESUM confirmed |
+| дієвідмінювання | VESUM: ✅ noun | дієвідмінювання дієслів — VESUM confirmed |
+| парадигма | VESUM: ✅ noun | paradigm term — confirmed; rare in everyday speech |
+| попередження | VESUM: ✅ noun | попередження про небажаний результат — VESUM confirmed |
 
-**Note on GRAC phrase queries**: multi-word queries (синтетична форма, майбутній час) return 0 — GRAC tokenizes by single lemma. Individual lemmas are confirmed present. The low IPM of **доконаний** (0.49) and **недоконаний** (0.04) confirms these are purely metalinguistic terms — learners will rarely encounter them outside grammar discussions. This supports the module's explicit metalanguage-teaching mission.
-
----
-
-## VESUM Verification
-
-All 15 core vocabulary items verified ✅:
-
-| Word | POS | Result |
-|------|-----|--------|
-| вид | noun | ✅ (2 entries — general + grammar sense) |
-| доконаний | adj | ✅ |
-| недоконаний | adj | ✅ |
-| заперечення | noun | ✅ |
-| заборона | noun | ✅ |
-| процес | noun | ✅ |
-| результат | noun | ✅ |
-| тривалість | noun | ✅ |
-| повторення | noun | ✅ |
-| синтетична | adj | ✅ (lemma: синтетичний) |
-| складена | adj | ✅ (lemma: складений) |
-| спосіб | noun | ✅ |
-| дійсний | adj | ✅ |
-| парадигма | noun | ✅ |
-| дієвідмінювання | noun | ✅ |
-
-Additional terms to verify at content time: **видова пара**, **милозвучність**, **попередження**, **завершеність**, **початкова форма**, **особова форма**.
+**VESUM status**: All 18 vocabulary hint words confirmed in VESUM. No ghost words.
 
 ---
 
 ## Cultural Hooks
 
-**1. The synthetic future as a Ukrainian linguistic treasure (verified: Ukrainian Wikipedia + Grade 7 Litvinova §9)**
+1. **Synthetic Future is uniquely Ukrainian and ancient**: Ukrainian is one of a small number of Slavic languages that preserved a *synthetic* (single-word) future tense form for imperfective verbs alongside the analytic form. The form *писатиму / писатимеш / писатиме* derives from a historical fusion of the infinitive + the auxiliary *иму* (archaic "I have/take"), documented in Old Ukrainian manuscripts. Modern textbooks (Litvinova 2024, grade 7, Tier 1) confirm both forms are taught side-by-side as normative. This is *not* a calque of any other Slavic language — it is a native Ukrainian development. *(Source: Grade 7 textbook — Litvinova 2024, chunk `7-klas-ukrmova-litvinova-2024_s0056`)*
 
-Ukrainian preserves two distinct future tense forms for imperfective verbs: the *складена форма* (буду писати — analytic, using auxiliary буду) and the *синтетична форма* (писатиму — fused, single-word). The synthetic form descends from Old Slavic fusion of the infinitive + a shortened form of *byty* (to be). It is productively attested across the entire modern Ukrainian paradigm (писатиму, писатимеш, писатиме, писатимемо, писатимете, писатимуть). Ukrainian retains this form with full productivity — it carries stylistic connotations of *милозвучність* and literary/formal register. Source: Grade 7 Litvinova 2024, §9 (tier 1 textbook), confirmed against State Standard §4.2.3.1.
-
-**2. Aspect as "internal time" — a Ukrainian grammar tradition (verified: Ukrainian Wikipedia, Вид (мовознавство))**
-
-Ukrainian grammatical tradition defines вид (aspect) as expressing "як проходить у часі або як розподіляється в часі вказана дієсловом дія" (O. M. Pyeshkovskyi, cited on Ukrainian Wikipedia). This framing — aspect as the *shape* of time, not its *location* — is the conceptual core that distinguishes aspect from tense. Ukrainian linguistics has developed this category with full systematic treatment: видова пара, одновидові/двовидові дієслова. The term доконаний comes from *доконати* — to complete, to carry through to the end — a native Ukrainian etymology directly reflecting the semantic content.
+2. **Вид as internal clock, not clock position**: Wikipedia (uk.wikipedia.org/wiki/Вид_(мовознавство)) states: *"На відміну від категорії часу, вид пов'язаний не з часовою локалізацією дії, а з тим, як цю локалізацію тлумачить мовець."* ("Unlike tense, aspect is not about the time-location of the action but about how the speaker *interprets* that location.") This is the philosophical core of the module's «internal time» framing — directly quotable in the content as a verified Ukrainian scholarly definition.
 
 ---
 
 ## Common Learner Errors
 
-1. **«Я прочитаю зараз»** → **«Я читаю зараз»**
-   *Why it happens*: Learners conflate "quick action" with present tense. Perfective aspect cannot form a true present (the result cannot exist at the moment of speech). The perfective «прочитаю» is always future-referential. Textbook source: Grade 7 Avramenko: "Усі дієслова у формі теперішнього часу завжди недоконаного виду."
+1. **"Я прочитаю зараз"** (Perfective present does not exist) → Correct: *"Я читаю зараз"* — Why: English speakers understand "I will read it right now" as near-present, so they reach for the perfective. The rule to teach: the perfective future (*прочитаю*) marks a result that is *not yet achieved*, never a present state. Supported by textbook note (Avramenko gr.7, chunk `7-klas-ukrmova-avramenko-2024_s0064`): *"Усі дієслова у формі теперішнього часу завжди недоконаного виду, бо вони позначають дію, яка відбувається в момент мовлення."*
 
-2. **«Буду прочитати»** → **«Прочитаю»**
-   *Why it happens*: Direct calque from languages with a single future auxiliary pattern. The auxiliary *буду* is categorically restricted to imperfective infinitives (буду читати). Perfective future is formed synthetically without auxiliary. State Standard §4.2.3.1 explicitly distinguishes these two paradigms.
+2. **"Буду прочитати"** (Analytic future restricted to imperfective) → Correct: *"Прочитаю"* (synthetic perfective future) — Why: English "I will read it" maps onto *буду* + infinitive for learners, regardless of aspect. The categorical rule: *буду/будеш…* is **only** combined with **imperfective** infinitives. Perfective future is always synthetic.
 
-3. **«Не відкрий» (intended as prohibition)** → **«Не відкривай»**
-   *Why it happens*: Learners do not distinguish prohibition (заборона, imperfective required) from warning/caution (попередження, perfective permissible to highlight the undesired result). «Не відкрий» = "Be careful not to open it [accidentally]" (perfective = warning against a specific unwanted result). «Не відкривай» = "Don't open it" (imperfective = categorical prohibition). This distinction is uniquely significant in Ukrainian and appears in authentic pedagogical texts.
+3. **"Не відкрий"** (Prohibition aspect error) → Correct: *"Не відкривай"* — Why: English "Don't open it" gives no aspect cue. Learners default to a perfective imperative (the "completed action" frame). The Ukrainian rule: prohibition (*заборона*) requires the imperfective — it bans the *process*. Perfective with *не* signals caution (*попередження*): *"Не відкрий випадково"* (Don't accidentally open it = unwanted result).
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-01 (basic grammar metalanguage — noun/adjective terminology scaffolding); A2 aspect basics (learners have passive recognition of доконаний/недоконаний from A2 indicative §4.2.3.1)
-- **Prepares for**: b1-03 (reading grammar rules — learners need this terminology to decode authentic grammar explanations); b1-08 (Вид дієслова: повна система — full aspectual system); b1-09 (aspect in future tense — builds directly on the складена/синтетична форма distinction)
+- **Builds on**: `b1-001` (basic grammar terminology — спосіб, відмінювання, частина мови); A2 aspect basics (conceptual understanding of доконаний/недоконаний introduced at A2 §4.2.3.1/4.3.2)
+- **Prepares for**: `b1-003` (reading grammar rules — learners will need this metalanguage to decode authentic Ukrainian grammar guides); `b1-008` (вид дієслова full system); `b1-009` (aspect in future tense, where *складена* vs *синтетична* distinction is practiced in production)
 
 ---
 
 ## Multimedia Resources
-
-- (none encountered during research — discover phase will handle)
+- (none encountered during research)
 
 ---
 
 ## Notes for Content Writing
 
-- **Polysemy of «вид»**: The word вид has 5+ meanings in Ukrainian (species, type, appearance, aspect, view). Content must establish the grammar-metalanguage meaning early and unambiguously — e.g. «граматичний вид» or «категорія виду» on first introduction.
-- **Textbook-attested terminology**: Grade 7 Litvinova §7 defines доконаний via etymology: «від слова доконати, тобто здійснити що-небудь, виконати до кінця». This etymology is pedagogically powerful and can be woven into the concept section.
-- **Synthetic form label**: Ukrainian textbooks use **проста форма** for what the plan calls синтетична форма (писатиму). Both terms exist; Litvinova 2024 uses "проста форма" for the single-word synthetic future. Consider using both in parallel: «проста (синтетична) форма».
-- **Negation section**: The prohibition/warning distinction is subtle and high-value. The plan's treatment is correct; reinforce with at least 3 minimal pairs.
-- **Immersion level**: This is a B1.0 Bridge module (modules 1–5 = mixed immersion with English scaffolding). Grammar term explanations in English are permitted; Ukrainian should carry the main prose with English in parentheticals for new terms.
-- **Decolonized framing**: The synthetic future and the aspect system should be framed as intrinsic to Ukrainian's grammatical architecture — not contrasted with Russian or Soviet-era grammar terminology. Use Polish or English as occasional points of comparison if needed (e.g., English has no grammatical aspect → Ukrainian's aspectual system encodes meaning that English expresses through adverbs or context).
-- **Word count allocation**: 4000 words minimum. Plan's section allocations total 4000 (400+800+600+900+600+400+300). The largest section (Категорія часу, 900 words) should anchor the cultural hook on the synthetic future.
-
+- **вид is polysemous**: In Ukrainian, *вид* means "type/kind/view/species" in everyday speech (high frequency at 23.22 IPM). The grammatical meaning must be anchored immediately with the full collocation *доконаний/недоконаний вид*. The content should not introduce bare *вид* without the adjectival qualifier on first use.
+- **недоконаний / доконаний are low-frequency metalanguage words** (0.04 and 0.49 IPM) — this confirms the module's core premise: these ARE specialized terms learners need to be explicitly taught. The content should treat them as new vocabulary, not assumed knowledge.
+- **синтетична форма** has 0 GRAC hits as a bigram — use it as the technical term it is, explain it fully, and pair it with the actual verb forms (*писатиму*, *кричатиме*) immediately on first mention.
+- **Textbook grounding**: Grade 7 Litvinova (Tier 1, NUS 2022+) is the primary Ukrainian school source for the aspect + future tense system. The exact paradigm table (проста форма / складена форма) is confirmed in chunk `7-klas-ukrmova-litvinova-2024_s0056` — content may replicate this structure.
+- **Decolonized frame**: Frame the synthetic future (*писатиму*) as a *нативний* Ukrainian grammatical development — do not compare to Russian (which lacks this form). Compare instead to the Lithuanian/Latvian synthetic futures or Portuguese future-from-infinitive as typological parallels if cross-linguistic comparison is needed.
+- **Negation section pedagogy**: The prohibition/caution distinction (*заборона* impf. vs *попередження* pf.) is well-attested in Ukrainian grammar pedagogy (Avramenko grade 11, chunk `11-klas-ukrajinska-mova-avramenko-2019_s0071`). This is a real pedagogical focus in Ukrainian schools — it can be taught with confidence as verified Ukrainian-source content.
+- **Immersion level**: This is a B1.0 Bridge module — English scaffolding for abstract concepts is permitted and appropriate. Grammar term parentheticals in English are allowed and expected given the metalanguage focus.
 
 ## Resource Discovery
 
 ### Videos
-- [FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian](https://www.youtube.com/watch?v=TBYyOdHOCCk) (Ukrainian Lessons) — This video is entirely focused on verb conjugations ('дієвідміни'), which is a core and foundational component of the 'Система дієслова' (The Verb System) discussed in the module's introduction.
-- [ULP 1-26 | Talking about traveling – Past tense in Ukrainian](https://www.youtube.com/watch?v=gpHANzjE9q0) (Ukrainian Lessons) — The video directly addresses the concept of tense within the verb system, specifically focusing on the past tense. This reinforces the broader module topic of 'Категорія часу'.
-- [Ukrainian for beginners: Where are u from? Countries, languages | Genitive case,  Verb conjugations](https://www.youtube.com/watch?v=xGrdJHym-9E) (Ukrainian with Olha) — The video discusses verb conjugations, which is relevant to the module. However, it also covers genitive case and gender of nouns, which are outside the scope of this verb-focused module, thus diluting its direct relevance.
-- [Ukrainian for beginners: Where do you work? Reflective verbs, Diminutives, Locative & Vocative cases](https://www.youtube.com/watch?v=GL1-z6IGg9A) (Ukrainian with Olha) — This video introduces different verb conjugation types (first, second, reflective), which aligns with the 'Система дієслова'. However, it includes unrelated topics such as diminutives and other noun cases (locative, vocative).
+- [FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian](https://www.youtube.com/watch?v=TBYyOdHOCCk) (Ukrainian Lessons) — This video directly addresses verb conjugations in Ukrainian, a fundamental aspect of the verb system introduced in the module.
+- [Ukrainian for beginners: Where do you work? Reflective verbs, Diminutives, Locative & Vocative cases](https://www.youtube.com/watch?v=GL1-z6IGg9A) (Ukrainian with Olha) — The video explicitly discusses reflective verbs and verb conjugations (first and second type), which are core components of the verb system.
+- [ULP 1-26 | Talking about traveling – Past tense in Ukrainian](https://www.youtube.com/watch?v=gpHANzjE9q0) (Ukrainian Lessons) — The video directly discusses the past tense of verbs, which is a component of the broader topic of verb tenses covered in the module.
+- [Ukrainian for beginners: Where are u from? Countries, languages | Genitive case,  Verb conjugations](https://www.youtube.com/watch?v=xGrdJHym-9E) (Ukrainian with Olha) — The video mentions verb conjugations as one of the grammar points, but it is mixed with other less relevant topics like genitive case and noun gender, making it less focused on verbs than other candidates.
 
 ### Blog Articles
+- [Ukrainian Verb Aspect](https://www.ukrainianlessons.com/aspect/) (Overview in English)
 - [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) (ukrainianlessons.com)
 - [Verb Aspect in Ukrainian](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/) (ukrainianlessons.com)
 - [ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian](https://www.ukrainianlessons.com/lesson/92/) (ukrainianlessons.com)
 - [ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian](https://www.ukrainianlessons.com/lesson/96/) (ukrainianlessons.com)
-- [ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion](https://www.ukrainianlessons.com/lesson/97/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 

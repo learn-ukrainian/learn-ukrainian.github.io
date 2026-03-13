@@ -1,0 +1,145 @@
+discovered_at: '2026-03-12T15:51:25.148605+00:00'
+query_keywords:
+- I Feel Like...
+- Вступ
+- Презентація
+- Культурний контекст
+- мені
+- холодно
+- жарко
+- Практика та вправи
+- Practice and Exercises
+- physical states (hot, cold, painful)
+- emotional states (sad, happy, bored)
+- others about their feelings
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Dv69jKuc-XA
+  channel: Klopotenko
+  title: Секрети ідеального тіста на пиріжки | Євген Клопотенко
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but its topic is cooking (making dough),
+    which is entirely unrelated to expressing feelings or physical states.
+  transcript_excerpt: Всім привіт Сьогодні пропоную поговорити про те як робити дріжджеве
+    тісто та порівняємо його з тістом на кефірі і приготуємо автентичні українські
+    пирожки з калиною.
+  embed_suggestion: Not applicable - the content is unrelated to the module's topic.
+- url: https://www.youtube.com/watch?v=6Rh0041xEog
+  channel: Klopotenko
+  title: 'ЧЕРНІГІВЩИНА НА СМАК: забуті українські страви та смаки | Гастро-експедиція
+    Євгена Клопотенка'
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but its topic is a gastronomic expedition
+    and Ukrainian cuisine, which is entirely unrelated to expressing feelings or physical
+    states.
+  transcript_excerpt: Чернігівщина - це регіон в якому не бояться руйнувати стереотипи
+    та експериментувати зі смаками тушковані огірки линці з крохмалю Кисляк з крупою
+    холодець з бобів.
+  embed_suggestion: Not applicable - the content is unrelated to the module's topic.
+blogs:
+- url: https://www.ukrainianlessons.com/emotions/
+  title: How to express emotions in Ukrainian
+  source: Ukrainian Lessons
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+feelings+vocabulary
+  title: Feelings and Emotions in Ukrainian
+  source: Slow Ukrainian with Yevhen
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/lesson/101/
+  title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+    Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - ULP
+  - Season 3
+  content_type: podcast_episode
+  series: 3
+  season: 3
+  episode: 101
+rag_chunks:
+- score: 0.25
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0170
+  text: "Зразок\nПриїжджала (коли?) влітку.\nОС*Я/ К'/ Ь<ЬС’£$Ю /\nСпілкуючись, завжди\
+    \ пам’ятайте про інтонацію. Так, \nслово дякую можна вимовити м ’яко або грубо,\
+    \ тепло \nчи холодно, сором’язливо або нахабно. Якщо це слово \nпрозвучить іронічно,\
+    \ глузливо чи єхидно, то така інто­\nнація принизить людину.\n•  Випишіть із рубрики\
+    \ прислівники.\n388. Прочитайте фразеологізми.\n1. Одна нога тут, а друга там.\
+    \ 2. Ніс у ніс. 3. До останньої \nнитки. 4. Голкою ніде ткнути. 5. Бурмотіти під\
+    \ носа. 6. На \nодній ноті. 7. На вл"
+  section_title: Сторінка 171
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0021
+  text: "20\nКультура мовлення\nПРАВИЛЬНО\nНЕПРАВИЛЬНО\nпрочитати правильно\nувімкнути\
+    \ світло\nвідчиняти ворота\nрозгорнути зошит\nнаступний урок \nпрочитати вірно\n\
+    включити світло\nвідкривати ворота\nрозкрити зошит\nслідуючий урок \n30.\t Запишіть\
+    \ речення, уставляючи на місці пропуску одне із запропо-\nнованих у рамці слів.\
+    \ \n1. Оксано, ... , будь ласка, лампу.\nуключи / увімкни\n2. Текст записано ...\
+    \ .\nвірно / правильно\n3. ... книжки на сторінці 35.\nрозкрийте / розгорніть\n\
+    4. Поверни ручку, щоб ... двері.\nвідкрити / відчи"
+  section_title: Сторінка 23
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0116
+  text: 'Практична риторика
+
+    82
+
+    — Укладіть словничок популярних у вашій місцевості слів, що вжи-
+
+    вають із діалектним наголосом. До кожного такого слова додайте відпо-
+
+    відник літературної вимови. Напишіть до словничка стислу передмову-за-
+
+    клик дотримувати орфоепічних норм.
+
+    — Складіть план інформаційного виступу на тему: «Можливості укра-
+
+    їнського наголосу». Оберіть журі, яке визначить найкращий з усіх складе-
+
+    них планів та обґрунтує свій вибір. Обравши стиль, відповід-
+
+    ний темі, колективно складіть за цим '
+  section_title: Сторінка 82
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.09090909361839294
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0221
+  text: "214\nРекомендації для знайомства\n• Якщо є можливість, попросіть, щоб вас\
+    \ представила \nтретя особа.\n• Під час знайомства підтримуйте зоровий контакт\
+    \ зі спів-\nрозмовником, дружньо посміхайтеся.\n• Якщо представляєтеся самі, чітко\
+    \ назвіть своє повне \nім’я та прізвище. \n• Процес знайомства варто завершувати\
+    \ етикетними фра-\nзами на кшталт «Радий/а знайомству», «Дуже приємно» \nтощо.\n\
+    Захват, захоплення  — емоційне внутрішнє піднесення, \nзбудження, порив, запал.\
+    \ Для висловлення захвату подіями, \nвчинками "
+  section_title: Сторінка 217
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

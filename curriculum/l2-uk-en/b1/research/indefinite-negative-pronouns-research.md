@@ -2,80 +2,85 @@
 
 ## State Standard Reference
 
-**§4.2.1.4 (B1 рівень, lines 2095–2113):** Займенник — особові, присвійні, зворотний, вказівні, питально-відносні займенники (хто, що, який, яка, яке, чий, котрий).
+§4.2.1.4 (lines 2095–2113, B1 level):
+> «Займенник: особові займенники… присвійні займенники… зворотний займенник себе… вказівні займенники… питально-відносні займенники: хто, що, який, яка, яке, чий, чия, чиє, котрий, котра, котре.»
 
-Цитата релевантного вживання на B1 (§4.4.3, syntax section, line 2378): *"Мабуть, ніхто не зможе забути нашу зустріч."* та (line 2384): *"Ми телефонували додому, але ніхто не відповідав."*
+**Honest observation:** The actual §4.2.1.4 text at lines 2095–2113 explicitly lists personal, possessive, reflexive, demonstrative, and interrogative-relative pronouns — it does NOT enumerate indefinite (хтось, дехто) or negative (ніхто, ніщо) pronouns in that passage. The curriculum mapping's description ("Expanded pronouns — indefinite (хтось, щось, дехто), negative (ніхто, ніщо)") is an interpretive description authored by the curriculum team, extrapolated from the full B1 scope. The indefinite/negative pronoun material is pedagogically standard for B1 per Ukrainian school grade 6 curricula (confirmed across Golub, Avramenko, Litvinova, Zabolotnyi textbooks), and the B1 pronoun section as a whole is the correct scope anchor.
 
-**Важлива архітектурна деталь**: Повна парадигма відмінювання невизначених і заперечних займенників прописана **формально** у B2 §4.1.1.4 (lines 3162–3165):
-> *"відмінювання неозначених займенників: хтось, хто-небудь, щось, що-небудь; відмінювання неозначених займенників: якийсь, який-небудь, чийсь, чий-небудь."*
-
-**Alignment**: Цей модуль (B1) навчає ФУНКЦІОНАЛЬНОГО вживання — правильний вибір серцевини/-сь/-небудь/де-/ні- у контексті та базові правила відмінювання. Повна парадигма (всі відмінкові форми) закріплюється на B2. Фокус модуля відповідає State Standard B1: займенники вживаються в реченнях із подвійним запереченням і прийменниковими конструкціями.
+**Alignment:** Module b1-028 directly addresses §4.2.1.4 by expanding the interrogative pronoun base (хто, що, який, чий) into the full indefinite and negative paradigms — the natural B1 extension of pronouns first introduced at A1–A2.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Frequency (GRAC) | IPM | Key collocations |
-|------|-----------------|-----|------------------|
-| щось | 558,022 | 275.71 | щось трапилось, щось нове, щось цікаве |
-| ніхто | 335,205 | 165.62 | ніхто не знає, ніхто не бачив, ніхто не відповідав |
-| хтось | 246,774 | 121.93 | хтось дзвонив, хтось постукав, хтось є |
-| дехто | 36,453 | 18.01 | дехто вважає, дехто з друзів, дехто каже |
-| хто-небудь | 6,063 | 3.00 | чи є хто-небудь, чи бачив хто-небудь |
+| Word | GRAC Frequency | IPM | Key Collocations / Notes |
+|------|----------------|-----|--------------------------|
+| щось | 558,022 | 275.71/M | щось трапилось, щось нове, щось сказати — extremely high |
+| ніхто | 335,205 | 165.62/M | ніхто не знає, ніхто не бачив — high; mandatory double negation |
+| хтось | 246,774 | 121.93/M | хтось дзвонив, хтось постукав, хтось із нас — high |
+| ніщо | (part of ніхто paradigm) | — | ніщо не вічне, ніщо не допомагає |
+| дехто | 36,453 | 18.01/M | дехто вважає, дехто з нас, дехто з учасників — medium |
+| хто-небудь | 6,063 | 3.00/M | хто-небудь прийде, чи є хто-небудь — low; markedly hypothetical/interrogative register |
+| що-небудь | — | — | дай мені що-небудь, чи маєш що-небудь |
 
-**Frequency profile insight**: хтось (122 IPM) is ~41× more frequent than хто-небудь (3 IPM) in authentic Ukrainian text. This strongly supports the pedagogical priority of the -сь series in the module. дехто (18 IPM) is medium-frequency — important for formal/written register. All 13 target vocabulary items **verified in VESUM**.
+**Key pedagogical implication from frequency data:** щось (275/M) and ніхто (165/M) are extremely high-frequency — learners will encounter these constantly in real texts. хто-небудь (3/M) is markedly lower, reinforcing that the -небудь series is more restricted in actual usage. дехто (18/M) is formal/written register — appropriate target for "academic opener" framing.
+
+**VESUM verification results:**
+- хтось ✅ (noun), щось ✅ (noun + adv), ніхто ✅ (noun), ніщо ✅ (noun), дехто ✅ (noun), дещо ✅ (noun + adv), деякий ✅ (adj), нічий ✅ (adj), ніде ✅ (adv), хто-небудь ✅ (noun), що-небудь ✅ (noun), нікому ✅, нікого ✅
+- "ні з ким" — NOT FOUND as single entry (expected: multi-word form; correct spelling confirmed as three words when preposition splits the pronoun)
 
 ---
 
 ## Cultural Hooks
 
-1. **Proverb register**: Negative pronoun ніхто appears in classical Ukrainian proverb structures as a personification of absolute absence: *"Ніхто не знає, що нас чекає"* — this proverb structure (ніхто + не + verb + що-clause) is authentic and high-pedagogical value for demonstrating double negation in a culturally resonant frame. Source: traditional Ukrainian folk wisdom corpus.
+1. **Stress distinction as meaning distinction** (from Litvinova Grade 6 textbook, tier 1): In oblique cases of ніхто/ніщо, stress position changes meaning: **ніко́го немає** (stressed root = "no one is present — absence") vs **нíкого й спитати** (stressed prefix = "no one to ask — impossibility/lack"). This is a genuine Ukrainian phonological-semantic nuance documented in the State Standard textbooks. Verified source: `6-klas-ukrmova-litvinova-2023_s0276`.
 
-2. **Textbook stress insight (Litvinova, Grade 6, tier 1, p. 269)**: Ukrainian has a meaningful STRESS DISTINCTION in oblique forms of ніхто/ніщо not found in other Slavic languages — a uniquely Ukrainian semantic precision:
-   - *ніко́го* (root-stressed) = absence: *ніко́го немає* ("there is nobody")
-   - *нíкого* (prefix-stressed) = impossibility/unavailability: *нíкого й спитати* ("there's nobody to even ask")
-   This is evidence of Ukrainian's own internal semantic logic for expressing gradations of absence — an authentic Ukrainian feature that can be framed as demonstrating the language's expressive precision.
+2. **Proverb corpus hook:** The Zabolotnyi Grade 6 textbook explicitly instructs students: «Доберіть 6–7 прислів'їв, приказок, фразеологізмів з неозначеними й заперечними займенниками» — confirming that proverbs are a documented pedagogical vehicle for this grammar. The example «Ніщо не вічне» (Nothing is eternal) and «Ніхто не знає, що нас чекає» are standard proverb-grammar anchors in Ukrainian school practice. Verified source: `6-klas-ukrmova-zabolotnyi-2020_s0209`.
 
 ---
 
 ## Common Learner Errors
 
-1. **Omitted double negation** (English transfer): *\*Ніхто прийшов* → **Ніхто не прийшов** — English speakers use "nobody came" (one negation); Ukrainian obligatorily requires the second *не* before the verb. This is the single most common error at B1.
+1. **English-transfer double negation omission** → *«Ніхто прийшов»* (calque of "Nobody came") — Correct: «Ніхто не прийшов». Happens because English speakers learn "double negatives are wrong" and over-apply that rule to Ukrainian.
 
-2. **Wrong particle choice by tense** (хтось vs хто-небудь confusion): *\*Хтось подзвонить завтра* (wrong — future/hypothetical requires хто-небудь) → **Хто-небудь подзвонить завтра**; conversely *\*Хто-небудь дзвонив учора* (wrong — past factual requires хтось) → **Хтось дзвонив учора**.
+2. **-сь / -небудь confusion in future/hypothetical contexts** → *«Хтось подзвонить?»* (asking if "someone will call") — Correct: «Хто-небудь подзвонить?» The -сь series signals an agent known to have existed (past factual events); -небудь signals purely hypothetical or unknown outcome. The distinction maps approximately to English "someone" (known to exist) vs "anyone" (hypothetical), but English speakers use both in questions, causing systematic errors.
 
-3. **Preposition not split**: *\*нікому* when preposition required → **ні з ким**, **ні до кого**, **ні про що** — learners write the preposition before the full pronoun (*\*з ніким*) due to analogy with English "with nobody".
-
-4. **Hyphenation error**: Writing *\*хтонебудь* (solid) instead of **хто-небудь** (hyphen). Textbooks (Golub, Avramenko, Karaman) all explicitly list: де-, аби-, -сь, ні- → SOLID; будь-, -небудь, казна-, хтозна- → HYPHEN.
+3. **Preposition splitting not applied** → *«Нізким не говорю»* — Correct: «Ні з ким не говорю». Learners treat ні- as inseparable prefix; the rule that prepositions insert between ні- and the pronoun root requires explicit drilling. Textbook evidence: Avramenko and Litvinova both include explicit contrast pairs (нікого → ні про кого, нічий → ні про чий).
 
 ---
 
 ## Cross-References
 
-- **Builds on**: interrogative pronouns хто/що/який introduced at A1–A2; basic negation with *не* (A1); possessive and demonstrative pronouns (A2). The -сь and -небудь series are formed by appending particles to the same interrogative roots learners already know.
-- **Prepares for**: b1-100 (B1 final exam) — pronoun choice in integrated grammar tasks; B2 full declension paradigm (§4.1.1.4) where all case forms are tabulated formally.
-- **Lateral connection**: b1-06 (фонетика: асиміляція) — the stress alternation in ніко́го / нíкого is a phonological phenomenon that connects to stress mobility patterns covered in that module.
+- **Builds on:** b1-06 (Фонетика: асиміляція) — stress and sound alternation knowledge is prerequisite for the ніко́го/нíкого stress distinction
+- **Builds on:** A2 indefinite pronouns module (хтось/щось were introduced at A2 basic level; b1-028 is the systematic expansion)
+- **Prepares for:** b1-100 (Фінальний іспит B1) — indefinite/negative pronouns appear in advanced reading comprehension and writing tasks; module is listed as a direct connector
 
 ---
 
 ## Multimedia Resources
-- (none encountered)
+
+- (none encountered during research — RAG-based session only)
 
 ---
 
 ## Notes for Content Writing
 
-- **Immersion level**: This is B1.9, well past the B1.0 bridge — **full Ukrainian immersion required**. No English parentheticals in explanations.
-- **Frequency-first sequencing**: Open with хтось/щось (very high frequency, ~120–276 IPM) before хто-небудь (low, 3 IPM). Learners need хтось far more often.
-- **Stress nuance as a B1 "aha" moment**: The ніко́го vs нíкого stress distinction (from Litvinova gr.6) is a high-value pedagogical hook — present it as evidence of Ukrainian's expressive precision, not complexity.
-- **Spelling rule mnemonic opportunity**: The SOLID vs HYPHEN distinction (ні-/де-/-сь → solid; -небудь/будь-/казна- → hyphen) needs a clear visual rule — textbooks consistently present this as a table.
-- **Double negation reframing**: Frame double negation not as "a rule to memorize" but as Ukrainian's logical completeness — both the pronoun AND the verb carry the negation signal, ensuring no ambiguity. Compare with Polish (*nikt nie przyszedł*) to show it is a Slavic pattern, not an irregularity.
-- **Preposition splitting visual**: The "splitting the atom" metaphor from the plan is strong — ні + preposition + ким = *ні з ким*. Worth a dedicated callout box with 4–5 core preposition examples.
-- **де- series register note**: дехто/деякий/дещо belong to written/formal register (use in academic essays: *дехто вважає*) — B1 learners benefit from knowing this for writing tasks.
-- **Word target 4000**: Sections should average 800 words. The contrastive workshop section (800 words) must include a comprehensive summary table — this alone can justify 200–250 words of structured content.
+1. **Orthography rules from textbooks** (critical B1 literacy gate): ні-, аніхто-, де-, аби-, -сь = written solid (ніхто, дехто, хтось); будь-, казна-, хтозна-, -небудь, -будь = written with hyphen (хто-небудь, будь-хто, казна-що). Confirmed across Golub, Avramenko, Litvinova, Zabolotnyi Grade 6 textbooks. Content should drill this explicitly.
+
+2. **De- series is pedagogically underemphasized** — frequency data shows дехто (18/M) is lower than хтось/ніхто but has high register value in written Ukrainian. The "дехто вважає" academic opener framing is well-grounded and should be given dedicated space — it's the kind of formulaic chunk that immediately elevates learner output.
+
+3. **хто-небудь is rare in real text** (3/M) — content should note this explicitly. Learners may overuse it from textbook drill. In natural spoken Ukrainian, хтось is far more common even in questions; хто-небудь appears primarily in formal or literary contexts.
+
+4. **Negative pronoun declension pattern:** Since VESUM confirms нікого/нікому as inflected forms of ніхто, the declension table should show the full paradigm. Case forms: Н. ніхто / Р. нікого / Д. нікому / З. нікого / О. ніким / М. ні про кого — the locative/prepositional form already demonstrates the splitting rule naturally.
+
+5. **Module is B1.9 (Communication Skills phase)** — by this point learners are at 100% immersion. No English in prose; all explanations in Ukrainian. English appears only in the vocabulary table translation column.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Talk Ukrainian: Indefinite and Negative Pronouns](https://talkukrainian.com/indefinite-negative-pronouns/) (talkukrainian)
+- [Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian](https://www.ukrainianlessons.com/episode106/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 

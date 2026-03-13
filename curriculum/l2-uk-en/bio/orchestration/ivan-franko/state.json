@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "ivan-franko",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:05:59Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:05:59Z",
+      "task_id": "v5-ivan-franko-pA",
+      "mode": "full"
+    }
+  }
+}

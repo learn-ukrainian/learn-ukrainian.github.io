@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "winter-sports",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:50:34Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:50:34Z",
+      "task_id": "v5-winter-sports-pA",
+      "mode": "full"
+    }
+  }
+}

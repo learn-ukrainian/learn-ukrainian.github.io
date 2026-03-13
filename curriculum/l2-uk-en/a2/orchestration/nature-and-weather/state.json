@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "nature-and-weather",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:02:42Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:02:42Z",
+      "task_id": "v5-nature-and-weather-pA",
+      "mode": "full"
+    }
+  }
+}

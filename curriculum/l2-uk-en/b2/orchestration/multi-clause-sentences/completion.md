@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b2 11 — E2E
+PASS: pipeline b2 18
 
   Module:   multi-clause-sentences
   Track:    b2
-  Mode:     e2e
-  Words:    5334 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:42:50Z
+  Date:     2026-03-12T16:47:23Z

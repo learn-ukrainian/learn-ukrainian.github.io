@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:50:15.337935+00:00'
+discovered_at: '2026-03-12T20:58:09.880769+00:00'
 query_keywords:
 - 'Вид у минулому: результат і процес'
 - result from process in past tense
@@ -15,56 +15,61 @@ query_keywords:
 error: null
 warning: null
 videos:
-- url: https://www.youtube.com/watch?v=s9_MS6A0wAw
+- url: https://www.youtube.com/watch?v=L-5TKPVXLCo
   channel: Repainted Fox
-  title: Advanced Packaging & Chiplet Design with Chipletz
-  relevance_score: 0.1
-  relevance_note: The video is in Ukrainian but its content is entirely focused on
-    advanced packaging and chiplet design, which is unrelated to the grammatical topic
-    of verb aspect in the past tense (result vs process).
-  transcript_excerpt: Сьогодні ми розмовляємо зі Стівеном Ньюберрі, Віктором Кронбергом
-    та Чінг-Пінгом Вонгом з Chipletz.
-  embed_suggestion: Not suitable for embedding. The content is irrelevant to the module's
-    topic.
-- url: https://www.youtube.com/watch?v=s9lQP20YlWQ
+  title: Як США і Іран впливають на ціни на нафту і збагачують росію. Аналітика. Дмитро
+    Кулеба
+  relevance_score: 0.2
+  relevance_note: The video is in Ukrainian but its content (geopolitical/economic
+    analysis) is unrelated to the module's grammar topic of verb aspect in the past
+    tense (result vs. process).
+  transcript_excerpt: Привіт. Що там в новинах? Привіт. Про новини зараз поговоримо,
+    але хочу подякувати всім, хто підписаний на наш канал, бо нас вже понад 45 000.
+  embed_suggestion: Not relevant to module content.
+- url: https://www.youtube.com/watch?v=jF35BjmGroQ
   channel: Repainted Fox
-  title: Електростанок, бритва чи тример? Чесний огляд перевірених гаджетів для чоловіків
-    від Philips | COMFY
+  title: Camille Cerf, Claude... forment une équipe | FORT BOYARD FRANCE 2020 E02
   relevance_score: 0.1
-  relevance_note: The video is in Ukrainian but its content is a product review of
-    electric shavers and trimmers, which is unrelated to the grammatical topic of
-    verb aspect in the past tense (result vs process). While the word 'результат'
-    (result) is used, it refers to the outcome of shaving, not linguistic aspect.
-  transcript_excerpt: Кожен пристрій гарантує бездоганний результат і захищає шкіру
-    від подразнень.
-  embed_suggestion: Not suitable for embedding. The content is irrelevant to the module's
-    topic.
+  relevance_note: The video's Ukrainian transcript is a dub of an entertainment show
+    (Fort Boyard), completely unrelated to the module's grammar focus on verb aspect
+    in the past tense (result vs. process).
+  transcript_excerpt: Доброго вечора і ласкаво просимо до цього Новий сезон Форт Боярд.
+    Як ви знаєте, це в цьому легендарному місці що захований скарб, який дозволяє
+    щоб допомогти багатьом гідним справам.
+  embed_suggestion: Not relevant to module content.
+- url: https://www.youtube.com/watch?v=1Bzoux66KKg
+  channel: Ukrainian with Olha
+  title: 'Навчання після самоізоляції: що вимагають від школярів'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
+- url: https://uk.wikipedia.org/wiki/Дієслівний_вид
+  title: Вид дієслова на Вікіпедії
+  source: докладна стаття
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
   title: Ukrainian Verb Prefixes
   source: ukrainianlessons.com
-  relevance_score: 0.95
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
   title: Verb Aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.95
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/lesson/92/
   title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
     aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 1.0
   topics: []
-- url: https://www.ukrainianlessons.com/grammar-past-tense/
-  title: Past Tense in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.75
-  topics: []
-- url: https://www.ukrainianlessons.com/grammar-future/
-  title: Future Tense in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.75
+- url: https://www.youtube.com/results?search_query=ukrainian+verb+aspect
+  title: Ukrainian Aspect Video
+  source: відео пояснення
+  relevance_score: 1.0
   topics: []
 rag_chunks:
 - score: 0.5

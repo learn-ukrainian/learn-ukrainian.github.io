@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:47:33.952087+00:00'
+discovered_at: '2026-03-12T20:38:28.003892+00:00'
 query_keywords:
 - Читаємо граматичні правила
 - Розуміння освітнього процесу
@@ -15,7 +15,34 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://www.ukrainianlessons.com/grammar/
+  title: Ukrainian Grammar Reference
+  source: Grammar in English
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode94/
+  title: At the pizzeria + Sound changes between imperfective and perfective verbs
+    in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode103/
+  title: At the doctor’s + Ukrainian adverbs derived from the numerals
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode113/
+  title: Ukrainian traditional embroidery masterclass + More about the Imperative
+    mood in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+word+formation
+  title: Word Formation
+  source: YouTube tutorials
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 4-klas-ukrmova-zaharijchuk_s0001

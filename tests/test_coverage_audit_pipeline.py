@@ -8,17 +8,13 @@ Target files:
 4. scripts/audit/checks/review_validation.py
 5. scripts/audit/core.py
 6. scripts/manifest_utils.py
-7. scripts/proofread.py
+7. scripts/proofread.py — REMOVED (deprecated, absorbed into v5 review phase)
 """
 
-import hashlib
 import json
-import os
-import re
 import sys
-from dataclasses import dataclass, field
 from pathlib import Path
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
@@ -480,8 +476,8 @@ class TestCountWordsAndEngagement:
     """Tests for count_words_and_engagement."""
 
     def test_counts_words(self):
+        from audit.parsing import AuditState
         from audit.phases_gates import count_words_and_engagement
-        from audit.parsing import AuditContext, AuditState
 
         state = AuditState()
         ctx = _make_ctx(
@@ -494,8 +490,8 @@ class TestCountWordsAndEngagement:
         assert state.total_words > 0
 
     def test_counts_engagement_boxes(self):
-        from audit.phases_gates import count_words_and_engagement
         from audit.parsing import AuditState
+        from audit.phases_gates import count_words_and_engagement
 
         state = AuditState()
         content = "> [!note]\n> Important info\n\n> [!tip]\n> Helpful tip"
@@ -504,8 +500,8 @@ class TestCountWordsAndEngagement:
         assert state.engagement_count >= 2
 
     def test_counts_audio_links(self):
-        from audit.phases_gates import count_words_and_engagement
         from audit.parsing import AuditState
+        from audit.phases_gates import count_words_and_engagement
 
         state = AuditState()
         content = "Text [🔊](audio1.mp3) more [🔊](audio2.mp3)"
@@ -518,37 +514,37 @@ class TestEvaluateImmersion:
     """Tests for evaluate_immersion function."""
 
     def test_checkpoint_no_gate(self):
-        from audit.phases_gates import evaluate_immersion as eval_imm
         from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
 
         state = AuditState()
         ctx = _make_ctx(module_focus='checkpoint', level_code='A1', module_num=1)
-        imm, min_i, max_i = eval_imm(ctx, state)
+        _imm, min_i, max_i = eval_imm(ctx, state)
         assert min_i == 0
         assert max_i == 100
 
     def test_a1_immersion(self):
-        from audit.phases_gates import evaluate_immersion as eval_imm
         from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
 
         state = AuditState()
         ctx = _make_ctx(level_code='A1', module_num=5, module_focus=None)
-        imm, min_i, max_i = eval_imm(ctx, state)
+        imm, _min_i, _max_i = eval_imm(ctx, state)
         assert isinstance(imm, float)
 
     def test_a2_phase_labels(self):
-        from audit.phases_gates import evaluate_immersion as eval_imm
         from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
 
-        for num, expected_substr in [(5, "A2.1"), (25, "A2.2"), (45, "A2.3")]:
+        for num, _expected_substr in [(5, "A2.1"), (25, "A2.2"), (45, "A2.3")]:
             state = AuditState()
             ctx = _make_ctx(level_code='A2', module_num=num, module_focus=None)
             eval_imm(ctx, state)
             # Just verify it ran without error
 
     def test_b1_phase_labels(self):
-        from audit.phases_gates import evaluate_immersion as eval_imm
         from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
 
         for num in [3, 8, 15, 30, 50, 70]:
             state = AuditState()
@@ -556,8 +552,8 @@ class TestEvaluateImmersion:
             eval_imm(ctx, state)
 
     def test_other_level_immersion(self):
-        from audit.phases_gates import evaluate_immersion as eval_imm
         from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
 
         state = AuditState()
         ctx = _make_ctx(level_code='C1', module_num=5, module_focus='grammar',
@@ -566,8 +562,8 @@ class TestEvaluateImmersion:
         eval_imm(ctx, state)
 
     def test_very_low_immersion_triggers_failure(self):
-        from audit.phases_gates import evaluate_immersion as eval_imm
         from audit.parsing import AuditState
+        from audit.phases_gates import evaluate_immersion as eval_imm
 
         state = AuditState()
         ctx = _make_ctx(level_code='A1', module_num=10, module_focus=None,
@@ -580,8 +576,8 @@ class TestCheckTransliterationPolicy:
     """Tests for check_transliteration_policy."""
 
     def test_transliteration_allowed(self):
-        from audit.phases_gates import check_transliteration_policy
         from audit.parsing import AuditState
+        from audit.phases_gates import check_transliteration_policy
 
         state = AuditState()
         ctx = _make_ctx(config={'transliteration_allowed': True, 'min_engagement': 3, 'min_vocab': 25})
@@ -589,8 +585,8 @@ class TestCheckTransliterationPolicy:
         assert not state.has_critical_failure
 
     def test_transliteration_forbidden_no_meta(self):
-        from audit.phases_gates import check_transliteration_policy
         from audit.parsing import AuditState
+        from audit.phases_gates import check_transliteration_policy
 
         state = AuditState()
         ctx = _make_ctx(
@@ -606,8 +602,8 @@ class TestCheckTransliterationPolicy:
         assert not state.has_critical_failure
 
     def test_transliteration_forbidden_with_translit_meta(self):
-        from audit.phases_gates import check_transliteration_policy
         from audit.parsing import AuditState
+        from audit.phases_gates import check_transliteration_policy
 
         state = AuditState()
         ctx = _make_ctx(
@@ -689,8 +685,8 @@ class TestGetDensityTarget:
         assert _get_density_target('nonexistent-type-xyz', config, 'A1', None) == 4
 
     def test_activity_complexity_override(self):
-        from audit.phases_activity import _get_density_target
         from audit.config import ACTIVITY_COMPLEXITY
+        from audit.phases_activity import _get_density_target
         config = {'min_items_per_activity': 4}
         # Find an activity type that has complexity rules
         for act_type, rules in ACTIVITY_COMPLEXITY.items():
@@ -708,8 +704,8 @@ class TestCheckExternalUrls:
     """Tests for _check_external_urls."""
 
     def test_non_seminar_track_skipped(self):
-        from audit.phases_activity import _check_external_urls
         from audit.parsing import AuditState
+        from audit.phases_activity import _check_external_urls
 
         state = AuditState()
         ctx = _make_ctx(level_code='A1', yaml_activities=[])
@@ -717,8 +713,8 @@ class TestCheckExternalUrls:
         assert not state.has_critical_failure
 
     def test_seminar_no_violations(self):
-        from audit.phases_activity import _check_external_urls
         from audit.parsing import AuditState
+        from audit.phases_activity import _check_external_urls
 
         state = AuditState()
         ctx = _make_ctx(level_code='LIT', yaml_activities=[], module_title='Test')
@@ -731,8 +727,8 @@ class TestValidateActivityAnswers:
     """Tests for validate_activity_answers."""
 
     def test_no_yaml_activities(self):
-        from audit.phases_activity import validate_activity_answers
         from audit.parsing import AuditState
+        from audit.phases_activity import validate_activity_answers
 
         state = AuditState()
         ctx = _make_ctx(yaml_activities=None)
@@ -872,7 +868,7 @@ class TestVerifyCitationsAgainstSource:
         from audit.checks.review_validation import _verify_citations_against_source
         source = tmp_path / "source.md"
         source.write_text("some content")
-        verified, total = _verify_citations_against_source([], source)
+        _verified, total = _verify_citations_against_source([], source)
         assert total == 0
 
     def test_citation_found(self, tmp_path):
@@ -880,7 +876,7 @@ class TestVerifyCitationsAgainstSource:
         source = tmp_path / "source.md"
         source.write_text("Це гарне речення яке ми тестуємо тут.")
         citations = ["Це гарне речення яке ми тестуємо тут."]
-        verified, total = _verify_citations_against_source(citations, source)
+        verified, _total = _verify_citations_against_source(citations, source)
         assert verified == 1
 
     def test_citation_in_yaml(self, tmp_path):
@@ -891,7 +887,7 @@ class TestVerifyCitationsAgainstSource:
         act_dir.mkdir()
         (act_dir / "source.yaml").write_text("text: Це речення з активності яке шукаємо")
         citations = ["Це речення з активності яке шукаємо"]
-        verified, total = _verify_citations_against_source(citations, source)
+        verified, _total = _verify_citations_against_source(citations, source)
         assert verified == 1
 
     def test_sliding_window_match(self, tmp_path):
@@ -899,7 +895,7 @@ class TestVerifyCitationsAgainstSource:
         source = tmp_path / "source.md"
         source.write_text("Prefix text: гарне речення яке ми тестуємо тут у тексті")
         citations = ["Slightly different гарне речення яке ми тестуємо тут у тексті"]
-        verified, total = _verify_citations_against_source(citations, source)
+        verified, _total = _verify_citations_against_source(citations, source)
         assert verified == 1
 
 
@@ -1024,8 +1020,7 @@ class TestCheckPipelineReviewFormat:
         assert any(v['type'] == 'REVIEW_VERDICT_FAIL' for v in violations)
 
     def test_missing_headers(self):
-        from audit.checks.review_validation import _check_pipeline_review_format
-        from audit.checks.review_validation import _HEADER_SCORES, _HEADER_ISSUES
+        from audit.checks.review_validation import _HEADER_ISSUES, _HEADER_SCORES, _check_pipeline_review_format
         content = "**Status:** PASS\nSome text."
         cfg = {'required_headers': [_HEADER_SCORES, _HEADER_ISSUES]}
         violations = _check_pipeline_review_format(content, cfg, "fix")
@@ -1043,7 +1038,7 @@ class TestFindReviewFileValidation:
         review.write_text("review")
         md = tmp_path / "my-mod.md"
         md.write_text("content")
-        found, canonical = _find_review_file(str(md), "my-mod")
+        found, _canonical = _find_review_file(str(md), "my-mod")
         assert found == review
 
     def test_content_review_path(self, tmp_path):
@@ -1054,14 +1049,14 @@ class TestFindReviewFileValidation:
         cr.write_text("content review")
         md = tmp_path / "my-mod.md"
         md.write_text("content")
-        found, canonical = _find_review_file(str(md), "my-mod")
+        found, _canonical = _find_review_file(str(md), "my-mod")
         assert found == cr
 
     def test_not_found(self, tmp_path):
         from audit.checks.review_validation import _find_review_file
         md = tmp_path / "my-mod.md"
         md.write_text("content")
-        found, canonical = _find_review_file(str(md), "my-mod")
+        found, _canonical = _find_review_file(str(md), "my-mod")
         assert found is None
 
 
@@ -1233,7 +1228,7 @@ class TestLoadManifest:
     """Tests for load_manifest and cache."""
 
     def test_load_manifest_file_not_found(self):
-        from manifest_utils import load_manifest, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, load_manifest
         clear_manifest_cache()
         with patch('manifest_utils.MANIFEST_PATH', Path("/nonexistent/path.yaml")):
             clear_manifest_cache()
@@ -1285,7 +1280,7 @@ class TestGetModuleBySlug:
     """Tests for get_module_by_slug."""
 
     def test_module_found(self):
-        from manifest_utils import get_module_by_slug, clear_manifest_cache, _load_meta_file
+        from manifest_utils import _load_meta_file, clear_manifest_cache, get_module_by_slug
         clear_manifest_cache()
         _load_meta_file.cache_clear()
         manifest = {
@@ -1296,15 +1291,15 @@ class TestGetModuleBySlug:
                 }
             }
         }
-        with patch('manifest_utils.load_manifest', return_value=manifest):
-            with patch('manifest_utils._load_meta_file', return_value={'title': 'Test'}):
-                mod = get_module_by_slug("test-module")
-                assert mod is not None
-                assert mod.slug == "test-module"
-                assert mod.local_num == 1
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'Test'}):
+            mod = get_module_by_slug("test-module")
+            assert mod is not None
+            assert mod.slug == "test-module"
+            assert mod.local_num == 1
 
     def test_module_not_found(self):
-        from manifest_utils import get_module_by_slug, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, get_module_by_slug
         clear_manifest_cache()
         manifest = {'levels': {'a1': {'type': 'core', 'modules': ['01-other']}}}
         with patch('manifest_utils.load_manifest', return_value=manifest):
@@ -1312,7 +1307,7 @@ class TestGetModuleBySlug:
             assert mod is None
 
     def test_track_module(self):
-        from manifest_utils import get_module_by_slug, clear_manifest_cache, _load_meta_file
+        from manifest_utils import _load_meta_file, clear_manifest_cache, get_module_by_slug
         clear_manifest_cache()
         _load_meta_file.cache_clear()
         manifest = {
@@ -1323,26 +1318,26 @@ class TestGetModuleBySlug:
                 }
             }
         }
-        with patch('manifest_utils.load_manifest', return_value=manifest):
-            with patch('manifest_utils._load_meta_file', return_value={'title': 'Bohdan'}):
-                mod = get_module_by_slug("bohdan-khmelnytskyi")
-                assert mod is not None
-                assert mod.track == "hist"
-                assert mod.global_num == 0
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'Bohdan'}):
+            mod = get_module_by_slug("bohdan-khmelnytskyi")
+            assert mod is not None
+            assert mod.track == "hist"
+            assert mod.global_num == 0
 
 
 class TestGetModulesForLevel:
     """Tests for get_modules_for_level."""
 
     def test_empty_level(self):
-        from manifest_utils import get_modules_for_level, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, get_modules_for_level
         clear_manifest_cache()
         manifest = {'levels': {}}
         with patch('manifest_utils.load_manifest', return_value=manifest):
             assert get_modules_for_level("a1") == []
 
     def test_core_level(self):
-        from manifest_utils import get_modules_for_level, clear_manifest_cache, _load_meta_file
+        from manifest_utils import _load_meta_file, clear_manifest_cache, get_modules_for_level
         clear_manifest_cache()
         _load_meta_file.cache_clear()
         manifest = {
@@ -1350,19 +1345,19 @@ class TestGetModulesForLevel:
                 'a1': {'type': 'core', 'modules': ['01-mod-a', '02-mod-b']},
             }
         }
-        with patch('manifest_utils.load_manifest', return_value=manifest):
-            with patch('manifest_utils._load_meta_file', return_value={'title': 'Test'}):
-                mods = get_modules_for_level("a1")
-                assert len(mods) == 2
-                assert mods[0].global_num == 1
-                assert mods[1].global_num == 2
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'Test'}):
+            mods = get_modules_for_level("a1")
+            assert len(mods) == 2
+            assert mods[0].global_num == 1
+            assert mods[1].global_num == 2
 
 
 class TestGetModuleByNumber:
     """Tests for get_module_by_number."""
 
     def test_valid_number(self):
-        from manifest_utils import get_module_by_number, clear_manifest_cache, _load_meta_file
+        from manifest_utils import _load_meta_file, clear_manifest_cache, get_module_by_number
         clear_manifest_cache()
         _load_meta_file.cache_clear()
         manifest = {
@@ -1370,19 +1365,19 @@ class TestGetModuleByNumber:
                 'a1': {'type': 'core', 'modules': ['01-first', '02-second']},
             }
         }
-        with patch('manifest_utils.load_manifest', return_value=manifest):
-            with patch('manifest_utils._load_meta_file', return_value={'title': 'T'}):
-                mod = get_module_by_number("a1", 2)
-                assert mod is not None
-                assert mod.slug == "second"
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'T'}):
+            mod = get_module_by_number("a1", 2)
+            assert mod is not None
+            assert mod.slug == "second"
 
     def test_out_of_bounds(self):
-        from manifest_utils import get_module_by_number, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, get_module_by_number
         clear_manifest_cache()
         manifest = {'levels': {'a1': {'type': 'core', 'modules': ['01-only']}}}
-        with patch('manifest_utils.load_manifest', return_value=manifest):
-            with patch('manifest_utils._load_meta_file', return_value={'title': 'T'}):
-                assert get_module_by_number("a1", 5) is None
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils._load_meta_file', return_value={'title': 'T'}):
+            assert get_module_by_number("a1", 5) is None
 
 
 class TestResolveSlugLink:
@@ -1398,16 +1393,15 @@ class TestResolveSlugLink:
 
     def test_not_found(self):
         from manifest_utils import resolve_slug_link
-        with patch('manifest_utils.get_module_by_slug', return_value=None):
-            with pytest.raises(ValueError):
-                resolve_slug_link("nonexistent")
+        with patch('manifest_utils.get_module_by_slug', return_value=None), pytest.raises(ValueError):
+            resolve_slug_link("nonexistent")
 
 
 class TestValidateManifest:
     """Tests for validate_manifest."""
 
     def test_valid_manifest(self):
-        from manifest_utils import validate_manifest, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, validate_manifest
         clear_manifest_cache()
         manifest = {
             'levels': {
@@ -1419,7 +1413,7 @@ class TestValidateManifest:
             assert errors == []
 
     def test_duplicate_slug(self):
-        from manifest_utils import validate_manifest, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, validate_manifest
         clear_manifest_cache()
         manifest = {
             'levels': {
@@ -1432,7 +1426,7 @@ class TestValidateManifest:
             assert 'duplicate' in errors[0]
 
     def test_missing_slug(self):
-        from manifest_utils import validate_manifest, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, validate_manifest
         clear_manifest_cache()
         manifest = {
             'levels': {
@@ -1448,7 +1442,7 @@ class TestValidateFilesystemMatch:
     """Tests for validate_filesystem_match."""
 
     def test_level_not_in_manifest(self):
-        from manifest_utils import validate_filesystem_match, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, validate_filesystem_match
         clear_manifest_cache()
         manifest = {'levels': {}}
         with patch('manifest_utils.load_manifest', return_value=manifest):
@@ -1456,7 +1450,7 @@ class TestValidateFilesystemMatch:
             assert any('not found in manifest' in e for e in errors)
 
     def test_matching_filesystem(self, tmp_path):
-        from manifest_utils import validate_filesystem_match, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, validate_filesystem_match
         clear_manifest_cache()
         level_dir = tmp_path / "a1"
         level_dir.mkdir()
@@ -1466,13 +1460,13 @@ class TestValidateFilesystemMatch:
                 'a1': {'type': 'core', 'modules': ['test-mod']},
             }
         }
-        with patch('manifest_utils.load_manifest', return_value=manifest):
-            with patch('manifest_utils.CURRICULUM_PATH', tmp_path):
-                errors = validate_filesystem_match("a1")
-                assert errors == []
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils.CURRICULUM_PATH', tmp_path):
+            errors = validate_filesystem_match("a1")
+            assert errors == []
 
     def test_mismatch(self, tmp_path):
-        from manifest_utils import validate_filesystem_match, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, validate_filesystem_match
         clear_manifest_cache()
         level_dir = tmp_path / "a1"
         level_dir.mkdir()
@@ -1482,17 +1476,17 @@ class TestValidateFilesystemMatch:
                 'a1': {'type': 'core', 'modules': ['01-missing']},
             }
         }
-        with patch('manifest_utils.load_manifest', return_value=manifest):
-            with patch('manifest_utils.CURRICULUM_PATH', tmp_path):
-                errors = validate_filesystem_match("a1")
-                assert len(errors) >= 1
+        with patch('manifest_utils.load_manifest', return_value=manifest), \
+             patch('manifest_utils.CURRICULUM_PATH', tmp_path):
+            errors = validate_filesystem_match("a1")
+            assert len(errors) >= 1
 
 
 class TestGetManifestStats:
     """Tests for get_manifest_stats."""
 
     def test_stats(self):
-        from manifest_utils import get_manifest_stats, clear_manifest_cache
+        from manifest_utils import clear_manifest_cache, get_manifest_stats
         clear_manifest_cache()
         manifest = {
             'version': '1.0',
@@ -1510,389 +1504,7 @@ class TestGetManifestStats:
 
 
 # ============================================================================
-# 7. proofread.py
-# ============================================================================
-
-class TestExtractDelimiterTolerant:
-    """Tests for _extract_delimiter_tolerant."""
-
-    def test_exact_extraction(self):
-        from proofread import _extract_delimiter_tolerant, START_TAG, END_TAG
-        text = f"prefix\n{START_TAG}\nissues: []\n{END_TAG}\nsuffix"
-        result = _extract_delimiter_tolerant(text, START_TAG, END_TAG)
-        assert result == {'issues': []}
-
-    def test_no_start_tag(self):
-        from proofread import _extract_delimiter_tolerant
-        result = _extract_delimiter_tolerant("no tags here", "===START===", "===END===")
-        assert result is None
-
-    def test_missing_end_tag(self):
-        from proofread import _extract_delimiter_tolerant, START_TAG
-        text = f"prefix\n{START_TAG}\nissues:\n  - type: RUSSIANISM\n    severity: HIGH\n"
-        result = _extract_delimiter_tolerant(text, START_TAG, "===MISSING===")
-        assert result is not None
-
-    def test_tolerant_end_with_separator(self):
-        from proofread import _extract_delimiter_tolerant
-        text = "===START===\nissues: []\n─────────────"
-        result = _extract_delimiter_tolerant(text, "===START===", "===END===")
-        assert result == {'issues': []}
-
-    def test_yaml_parse_error(self):
-        from proofread import _extract_delimiter_tolerant, START_TAG, END_TAG
-        text = f"{START_TAG}\n: invalid: yaml: {{{{[\n{END_TAG}"
-        result = _extract_delimiter_tolerant(text, START_TAG, END_TAG)
-        assert result is None
-
-    def test_empty_content(self):
-        from proofread import _extract_delimiter_tolerant, START_TAG, END_TAG
-        text = f"{START_TAG}\n\n{END_TAG}"
-        result = _extract_delimiter_tolerant(text, START_TAG, END_TAG)
-        assert result is None
-
-    def test_tolerant_end_with_checkmark(self):
-        from proofread import _extract_delimiter_tolerant
-        text = "===S===\nissues: []\n✅ Done"
-        result = _extract_delimiter_tolerant(text, "===S===", "===E===")
-        assert result == {'issues': []}
-
-    def test_tolerant_end_with_other_delimiter(self):
-        from proofread import _extract_delimiter_tolerant
-        text = "===S===\nissues: []\n===OTHER==="
-        result = _extract_delimiter_tolerant(text, "===S===", "===E===")
-        assert result == {'issues': []}
-
-
-class TestExtractProofreadOutput:
-    """Tests for extract_proofread_output."""
-
-    def test_valid_output(self):
-        from proofread import extract_proofread_output, START_TAG, END_TAG
-        text = f"{START_TAG}\nissues:\n  - type: RUSSIANISM\n    severity: HIGH\n    text: bad\n    fix: good\n{END_TAG}"
-        result = extract_proofread_output(text)
-        assert isinstance(result, list)
-        assert len(result) == 1
-
-    def test_empty_issues(self):
-        from proofread import extract_proofread_output, START_TAG, END_TAG
-        text = f"{START_TAG}\nissues: []\n{END_TAG}"
-        result = extract_proofread_output(text)
-        assert result == []
-
-    def test_null_issues(self):
-        from proofread import extract_proofread_output, START_TAG, END_TAG
-        text = f"{START_TAG}\nissues:\n{END_TAG}"
-        result = extract_proofread_output(text)
-        assert result == []
-
-    def test_parse_failure(self):
-        from proofread import extract_proofread_output
-        result = extract_proofread_output("no delimiters at all")
-        assert result is None
-
-    def test_non_dict_parsed(self):
-        from proofread import extract_proofread_output, START_TAG, END_TAG
-        text = f"{START_TAG}\n- item1\n- item2\n{END_TAG}"
-        result = extract_proofread_output(text)
-        assert result is None
-
-
-class TestApplyFixes:
-    """Tests for apply_fixes."""
-
-    def test_replace_text(self, tmp_path):
-        from proofread import apply_fixes
-        md = tmp_path / "test.md"
-        md.write_text("Hello bad world end")
-        issues = [{"text": "bad world", "fix": "good world"}]
-        count = apply_fixes(md, issues)
-        assert count == 1
-        assert "good world" in md.read_text()
-
-    def test_delete_text(self, tmp_path):
-        from proofread import apply_fixes
-        md = tmp_path / "test.md"
-        md.write_text("Keep this.\n\n\nRemove this.\n\n\nKeep that.")
-        issues = [{"text": "Remove this.", "fix": "DELETE"}]
-        count = apply_fixes(md, issues)
-        assert count == 1
-        content = md.read_text()
-        assert "Remove this." not in content
-        assert "\n\n\n" not in content  # Triple newlines collapsed
-
-    def test_skip_not_found(self, tmp_path):
-        from proofread import apply_fixes
-        md = tmp_path / "test.md"
-        md.write_text("some content")
-        issues = [{"text": "nonexistent text", "fix": "replacement"}]
-        count = apply_fixes(md, issues)
-        assert count == 0
-
-    def test_skip_empty_text(self, tmp_path):
-        from proofread import apply_fixes
-        md = tmp_path / "test.md"
-        md.write_text("content")
-        issues = [{"text": "", "fix": "something"}]
-        count = apply_fixes(md, issues)
-        assert count == 0
-
-    def test_skip_empty_fix(self, tmp_path):
-        from proofread import apply_fixes
-        md = tmp_path / "test.md"
-        md.write_text("content")
-        issues = [{"text": "content", "fix": ""}]
-        count = apply_fixes(md, issues)
-        assert count == 0
-
-    def test_multiple_fixes(self, tmp_path):
-        from proofread import apply_fixes
-        md = tmp_path / "test.md"
-        md.write_text("A bad. B wrong. C ok.")
-        issues = [
-            {"text": "A bad.", "fix": "A good."},
-            {"text": "B wrong.", "fix": "B right."},
-        ]
-        count = apply_fixes(md, issues)
-        assert count == 2
-        content = md.read_text()
-        assert "A good." in content
-        assert "B right." in content
-
-
-class TestDispatchGemini:
-    """Tests for dispatch_gemini."""
-
-    def test_success(self):
-        from proofread import dispatch_gemini
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="output text")
-            ok, output = dispatch_gemini("prompt", "task-1", "model")
-            assert ok is True
-            assert output == "output text"
-
-    def test_failure(self):
-        from proofread import dispatch_gemini
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=1, stdout="")
-            ok, output = dispatch_gemini("prompt", "task-1", "model")
-            assert ok is False
-
-    def test_timeout(self):
-        from proofread import dispatch_gemini
-        import subprocess
-        with patch('subprocess.run', side_effect=subprocess.TimeoutExpired("cmd", 1800)):
-            ok, output = dispatch_gemini("prompt", "task-1", "model")
-            assert ok is False
-            assert output == ""
-
-
-class TestDispatchClaude:
-    """Tests for dispatch_claude."""
-
-    def test_success(self):
-        from proofread import dispatch_claude
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="output")
-            ok, output = dispatch_claude("prompt", "task-1", "model")
-            assert ok is True
-            assert output == "output"
-
-    def test_failure(self):
-        from proofread import dispatch_claude
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=1, stderr="error msg")
-            ok, output = dispatch_claude("prompt", "task-1", "model")
-            assert ok is False
-
-    def test_not_found(self):
-        from proofread import dispatch_claude
-        with patch('subprocess.run', side_effect=FileNotFoundError):
-            ok, output = dispatch_claude("prompt", "task-1", "model")
-            assert ok is False
-
-    def test_timeout(self):
-        from proofread import dispatch_claude
-        import subprocess
-        with patch('subprocess.run', side_effect=subprocess.TimeoutExpired("cmd", 600)):
-            ok, output = dispatch_claude("prompt", "task-1", "model")
-            assert ok is False
-
-
-class TestRunAudit:
-    """Tests for run_audit."""
-
-    def test_pass(self, tmp_path):
-        from proofread import run_audit
-        md = tmp_path / "test.md"
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=0)
-            assert run_audit(md) is True
-
-    def test_fail(self, tmp_path):
-        from proofread import run_audit
-        md = tmp_path / "test.md"
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=1)
-            assert run_audit(md) is False
-
-
-class TestRegenerateMdx:
-    """Tests for regenerate_mdx."""
-
-    def test_success(self):
-        from proofread import regenerate_mdx
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=0)
-            assert regenerate_mdx("a1", 1) is True
-
-    def test_failure(self):
-        from proofread import regenerate_mdx
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = MagicMock(returncode=1)
-            assert regenerate_mdx("a1", 1) is False
-
-
-class TestResolveModules:
-    """Tests for resolve_modules."""
-
-    def test_all_modules(self):
-        from proofread import resolve_modules
-        with patch('proofread.get_module_index', return_value={'total': 5}):
-            result = resolve_modules("a1", None, True, None)
-            assert result == [1, 2, 3, 4, 5]
-
-    def test_range(self):
-        from proofread import resolve_modules
-        with patch('proofread.get_module_index', return_value={'total': 10}):
-            result = resolve_modules("a1", None, False, "3-7")
-            assert result == [3, 4, 5, 6, 7]
-
-    def test_single_module(self):
-        from proofread import resolve_modules
-        with patch('proofread.get_module_index', return_value={'total': 10}):
-            result = resolve_modules("a1", 5, False, None)
-            assert result == [5]
-
-    def test_invalid_range_format(self):
-        from proofread import resolve_modules
-        with patch('proofread.get_module_index', return_value={'total': 10}):
-            with pytest.raises(SystemExit):
-                resolve_modules("a1", None, False, "invalid")
-
-    def test_range_out_of_bounds(self):
-        from proofread import resolve_modules
-        with patch('proofread.get_module_index', return_value={'total': 5}):
-            with pytest.raises(SystemExit):
-                resolve_modules("a1", None, False, "1-10")
-
-    def test_module_out_of_bounds(self):
-        from proofread import resolve_modules
-        with patch('proofread.get_module_index', return_value={'total': 5}):
-            with pytest.raises(SystemExit):
-                resolve_modules("a1", 10, False, None)
-
-    def test_no_args(self):
-        from proofread import resolve_modules
-        with patch('proofread.get_module_index', return_value={'total': 5}):
-            with pytest.raises(SystemExit):
-                resolve_modules("a1", None, False, None)
-
-
-class TestNormalizeBool:
-    """Tests for _normalize_bool."""
-
-    def test_yes_variants(self):
-        from proofread import _normalize_bool
-        assert _normalize_bool("yes") == "yes"
-        assert _normalize_bool("true") == "yes"
-        assert _normalize_bool("1") == "yes"
-        assert _normalize_bool(True) == "yes"
-
-    def test_no_variants(self):
-        from proofread import _normalize_bool
-        assert _normalize_bool("no") == "no"
-        assert _normalize_bool("false") == "no"
-        assert _normalize_bool("0") == "no"
-        assert _normalize_bool(False) == "no"
-
-    def test_other(self):
-        from proofread import _normalize_bool
-        assert _normalize_bool("maybe") == "maybe"
-
-
-class TestComputeAgreement:
-    """Tests for _compute_agreement."""
-
-    def test_both_na(self):
-        from proofread import _compute_agreement
-        assert _compute_agreement("n/a", "n/a", "n/a", "n/a", "n/a", "n/a") == "N/A"
-
-    def test_one_na(self):
-        from proofread import _compute_agreement
-        assert _compute_agreement("n/a", "n/a", "n/a", "yes", "yes", "yes") == "PARTIAL"
-
-    def test_agree(self):
-        from proofread import _compute_agreement
-        assert _compute_agreement("yes", "yes", "yes", "yes", "yes", "yes") == "AGREE"
-
-    def test_disagree(self):
-        from proofread import _compute_agreement
-        assert _compute_agreement("yes", "yes", "yes", "no", "yes", "yes") == "DISAGREE"
-
-
-class TestScoreEvalRow:
-    """Tests for _score_eval_row."""
-
-    def test_all_yes(self):
-        from proofread import _score_eval_row
-        row = {"correct_diagnosis": "yes", "rewrite_acceptable": "true", "no_new_errors": "1"}
-        correct, apply_, safe = _score_eval_row(row)
-        assert correct and apply_ and safe
-
-    def test_all_no(self):
-        from proofread import _score_eval_row
-        row = {"correct_diagnosis": "no", "rewrite_acceptable": "false", "no_new_errors": "0"}
-        correct, apply_, safe = _score_eval_row(row)
-        assert not correct and not apply_ and not safe
-
-
-class TestGetEvalRow:
-    """Tests for _get_eval_row."""
-
-    def test_found(self):
-        from proofread import _get_eval_row
-        evals = [{"issue_index": 1, "val": "a"}, {"issue_index": 2, "val": "b"}]
-        assert _get_eval_row(evals, 2)["val"] == "b"
-
-    def test_not_found(self):
-        from proofread import _get_eval_row
-        evals = [{"issue_index": 1}]
-        assert _get_eval_row(evals, 99) is None
-
-    def test_empty_list(self):
-        from proofread import _get_eval_row
-        assert _get_eval_row([], 1) is None
-
-    def test_none_list(self):
-        from proofread import _get_eval_row
-        assert _get_eval_row(None, 1) is None
-
-    def test_string_index_comparison(self):
-        from proofread import _get_eval_row
-        # LLM might return string index
-        evals = [{"issue_index": "3", "val": "x"}]
-        assert _get_eval_row(evals, 3)["val"] == "x"
-
-
-class TestLogFunction:
-    """Tests for the log function."""
-
-    def test_log_outputs(self, capsys):
-        from proofread import log
-        log("test message")
-        assert "test message" in capsys.readouterr().out
-
+# 7. proofread.py — REMOVED (deprecated, absorbed into v5 review phase)
 
 # ============================================================================
 # Helpers

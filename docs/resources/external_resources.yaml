@@ -1027,12 +1027,20 @@ resources:
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 4
       url: https://www.ukrainianlessons.com/episode132/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 4
       url: https://www.ukrainianlessons.com/episode133/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
+    - title: 'Dobra Forma 27-2: Verbal Aspect (Past Tense)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-2/
+      relevance: high
+      source: University of Kansas
+    youtube:
+    - title: How did Yevgeny Klopotenko propose to Kateryna?
+      url: https://www.youtube.com/watch?v=4vtNZjrsqEg
+      source: Klopotenko
   a2-future-plans-and-promises:
     websites:
     - title: 'Dobra Forma 27-4: Verbal Aspect (Future Tense)'
@@ -1112,8 +1120,30 @@ resources:
       url: https://www.talkukrainian.com/adjectives-degrees-comparison/
       relevance: high
       source: Unknown
+    articles:
+    - title: 'Dobra Forma 20-1: Comparative Degree'
+      url: https://opentext.ku.edu/dobraforma/chapter/20-1/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 20-2: Comparative Exceptions'
+      url: https://opentext.ku.edu/dobraforma/chapter/20-2/
+      relevance: high
+      source: University of Kansas
+    - title: Degrees of Comparison
+      url: https://www.talkukrainian.com/adjectives-degrees-comparison/
+      relevance: high
+      source: Unknown
   a2-the-best-the-worst:
     websites:
+    - title: 'Dobra Forma 20-3: Superlative Degree'
+      url: https://opentext.ku.edu/dobraforma/chapter/20-3/
+      relevance: high
+      source: University of Kansas
+    - title: Degrees of Comparison
+      url: https://www.talkukrainian.com/adjectives-degrees-comparison/
+      relevance: high
+      source: Unknown
+    articles:
     - title: 'Dobra Forma 20-3: Superlative Degree'
       url: https://opentext.ku.edu/dobraforma/chapter/20-3/
       relevance: high
@@ -1196,10 +1226,9 @@ resources:
       source: ukrainianlessons.com
   a2-checkpoint-aspect-comparison:
     youtube:
-    - title: A little test on Ukrainian language_ A2 level...
-      url: https://www.youtube.com/watch?v=0zgsiO7-TRQ
-      relevance: high
-      channel: Ukrainian grammar
+    - title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in...
+      url: https://www.youtube.com/watch?v=zVdb0g7KDC0
+      source: Ukrainian Lessons
     websites:
     - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
       url: https://opentext.ku.edu/dobraforma/chapter/27-1/
@@ -1222,6 +1251,22 @@ resources:
       url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
       relevance: high
       source: ukrainianlessons.com
+    - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-2: Verbal Aspect (Past Tense)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-2/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-3: Verbal Aspect (Aspectual Pairs)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-3/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 27-4: Verbal Aspect (Future Tense)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-4/
+      relevance: high
+      source: University of Kansas
   a2-telling-stories:
     websites:
     - title: 'Dobra Forma 24-1: Past Tense'
@@ -1239,7 +1284,32 @@ resources:
       url: https://www.ukrainianlessons.com/emotions/
       relevance: high
       source: Ukrainian Lessons
-  a2-which-one: {}
+    - title: Feelings and Emotions in Ukrainian
+      url: https://www.youtube.com/results?search_query=ukrainian+feelings+vocabulary
+      relevance: high
+      source: Slow Ukrainian with Yevhen
+  a2-which-one:
+    articles:
+    - title: ULP 2-51 Electronics and technology + Dative case
+      url: https://www.ukrainianlessons.com/lesson/51/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: ULP 2-52 Buying a phone in Ukraine + Dative case
+      url: https://www.ukrainianlessons.com/lesson/52/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: ULP 2-53 Social Media in Ukrainian + Dative case
+      url: https://www.ukrainianlessons.com/lesson/53/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: ULP 2-56 Asking for an advice + Accusative case
+      url: https://www.ukrainianlessons.com/lesson/56/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+      url: https://www.ukrainianlessons.com/lesson/57/
+      relevance: high
+      source: ukrainianlessons.com
   a2-time-clauses: {}
   a2-health-and-body:
     articles:
@@ -1255,12 +1325,36 @@ resources:
       url: https://www.ukrainianlessons.com/fmu52/
       relevance: high
       source: ukrainianlessons.com
+    - title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals
+      url: https://www.ukrainianlessons.com/lesson/103/
+      relevance: medium
+      source: ukrainianlessons.com
   a2-checkpoint:
     websites:
     - title: Relative Pronouns (який)
       url: https://www.talkukrainian.com/relative-pronouns-ukrainian/
       relevance: high
       source: Unknown
+    articles:
+    - title: Ukrainian Registers
+      url: https://www.ukrainianlessons.com/registers/
+      relevance: high
+      source: Детальний посібник зі стилістики
+    - title: Relative Pronouns (який)
+      url: https://www.talkukrainian.com/relative-pronouns-ukrainian/
+      relevance: high
+      source: Unknown
+    - title: Ukrainer
+      url: https://www.youtube.com/c/Ukrainer
+      relevance: high
+      source: автентичні українські матеріали
+    youtube:
+    - title: FMU 1-53 | How to describe what hurts in Ukrainian | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=DdZjJ4H24a4
+      source: Ukrainian Lessons
+    - title: ULP 5-170 | 15 фразеологізмів з частинами тіла | Ukrainian Lessons Podcast Season 5
+      url: https://www.youtube.com/watch?v=pD8eA7W5ZQw
+      source: Ukrainian Lessons
   a2-basic-motion-prefixes:
     websites:
     - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
@@ -1276,23 +1370,33 @@ resources:
       url: https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/
       relevance: high
       source: Audio examples and drills.
+    - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
+      url: https://opentext.ku.edu/dobraforma/chapter/28-3/
+      relevance: high
+      source: University of Kansas
   a2-advanced-motion-prefixes:
     youtube:
-    - title: 'Learn verbs of movements # 96...'
-      url: https://www.youtube.com/watch?v=-tjrxxvT8Q8
-      relevance: high
-      channel: Ukrainian Language
+    - title: My Elevator Stopped at a Floor That Doesn’t Exist | Horror Podcast
+      url: https://www.youtube.com/watch?v=dcKCbXuAUjQ
+      source: Bright Kids Ukrainian
     websites:
+    - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
+      url: https://opentext.ku.edu/dobraforma/chapter/28-3/
+      relevance: high
+      source: University of Kansas
+    articles:
     - title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
       url: https://opentext.ku.edu/dobraforma/chapter/28-3/
       relevance: high
       source: University of Kansas
   a2-action-verb-prefixes:
     youtube:
-    - title: 'Prefix з-/с-: Which one to use? ...'
-      url: https://www.youtube.com/watch?v=fRv6h6nhPxQ
-      relevance: high
-      channel: 'Spell It Right! #Ukrainian'
+    - title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in...
+      url: https://www.youtube.com/watch?v=zVdb0g7KDC0
+      source: Ukrainian Lessons
+    - title: Cooking verbs in Ukrainian. Дієслова для готування.
+      url: https://www.youtube.com/watch?v=_lvdp6hRm1U
+      source: Bright Kids Ukrainian
     websites:
     - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
       url: https://opentext.ku.edu/dobraforma/chapter/27-1/
@@ -1303,8 +1407,17 @@ resources:
       url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
       relevance: high
       source: ukrainianlessons.com
+    - title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
+      url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+      relevance: high
+      source: University of Kansas
   a2-adjective-suffixes-qualities:
     websites:
+    - title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
+      url: https://opentext.ku.edu/dobraforma/chapter/16-1/
+      relevance: high
+      source: University of Kansas
+    articles:
     - title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
       url: https://opentext.ku.edu/dobraforma/chapter/16-1/
       relevance: high
@@ -1319,12 +1432,23 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/16-2/
       relevance: high
       source: University of Kansas
+    articles:
+    - title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
+      url: https://opentext.ku.edu/dobraforma/chapter/16-1/
+      relevance: high
+      source: University of Kansas
+    - title: 'Dobra Forma 16-2: Soft-Stem Adjectives'
+      url: https://opentext.ku.edu/dobraforma/chapter/16-2/
+      relevance: high
+      source: University of Kansas
   a2-food-and-cooking:
     youtube:
-    - title: 20 Ukrainian Food Words You Need To Know ...
-      url: https://www.youtube.com/watch?v=fN0BIF-iejo
-      relevance: high
-      channel: QUICK and EASY food vocabulary
+    - title: How to cook pork and beef tongue
+      url: https://www.youtube.com/watch?v=hMoX0D7BTvk
+      source: Klopotenko
+    - title: How to cook broccoli | Ievgen Klopotenko
+      url: https://www.youtube.com/watch?v=OokH2O71aqw
+      source: Klopotenko
     articles:
     - title: Food festivals + Genitive case
       url: https://www.ukrainianlessons.com/episode47/
@@ -1359,10 +1483,12 @@ resources:
       source: ukrainianlessons.com
   a2-nature-and-weather:
     youtube:
-    - title: Nature & Weather in Ukrainian...
-      url: https://www.youtube.com/watch?v=x9qlDTX3fVg
-      relevance: high
-      channel: Pinhok Languages
+    - title: ULP 1-16 | Talking about weather in Ukrainian
+      url: https://www.youtube.com/watch?v=ycCrSrHCezQ
+      source: Ukrainian Lessons
+    - title: FMU 1-28 | How to talk about the weather in Ukrainian | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=6MRrGpcGEp4
+      source: Ukrainian Lessons
     articles:
     - title: How to talk about the weather in Ukrainian
       url: https://www.ukrainianlessons.com/fmu28/
@@ -1372,12 +1498,15 @@ resources:
       url: https://www.ukrainianlessons.com/episode16/
       relevance: high
       source: ukrainianlessons.com
+    - title: Sharing memories + Locative case with places
+      url: https://www.ukrainianlessons.com/episode66/
+      relevance: medium
+      source: ukrainianlessons.com
   a2-emotions-personality:
     youtube:
-    - title: How do you really feel? (Ukrainian)
-      url: https://www.youtube.com/watch?v=Mn_MOEThvCI
-      relevance: high
-      channel: EMOTIONS AND FEELINGS VOCABULARY
+    - title: 'FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian'
+      url: https://www.youtube.com/watch?v=TBYyOdHOCCk
+      source: Ukrainian Lessons
     articles:
     - title: Emotions and Feelings in Ukrainian
       url: https://www.ukrainianlessons.com/emotions-in-ukrainian/
@@ -1405,6 +1534,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode8/
       relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: FMU 1-31 | How to talk about your job / occupation in Ukrainian | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=JF5p3gRiZp0
+      source: Ukrainian Lessons
   a2-technology-media:
     youtube:
     - title: '100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...'
@@ -1426,12 +1559,21 @@ resources:
       url: https://www.ukrainianlessons.com/fmu23/
       relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: 'Listen on repeat! Ukrainian intonation and rhythm🎵 Ukrainian mini-podcast: My Hobbies - Мої Хобі'
+      url: https://www.youtube.com/watch?v=NCuY2KIg0lc
+      source: Ukrainian with Olha
   a2-education-learning:
     youtube:
-    - title: 'Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...'
-      url: https://www.youtube.com/watch?v=m2KybmMH1pE
-      relevance: high
-      channel: Ukrainian Guy
+    - title: ULP 5-188 | Шкільна освіта в Україні | Ukrainian Lessons Podcast Season 5
+      url: https://www.youtube.com/watch?v=PFdyKX3TlHY
+      source: Ukrainian Lessons
+    - title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefix...
+      url: https://www.youtube.com/watch?v=eSyqv7R6Qec
+      source: Ukrainian Lessons
+    - title: Вся правда про реформу ШКІЛЬНОГО ХАРЧУВАННЯ від Клопотенка
+      url: https://www.youtube.com/watch?v=zG-e8ZDPWcY
+      source: Klopotenko
     articles:
     - title: 'Ukrainian Phrasebook: Education'
       url: https://www.ukrainianlessons.com/ph-education/
@@ -1441,8 +1583,29 @@ resources:
       url: https://www.ukrainianlessons.com/episode57/
       relevance: high
       source: ukrainianlessons.com
-  a2-checkpoint-full-grammar: {}
-  a2-asking-for-directions: {}
+  a2-checkpoint-full-grammar:
+    articles:
+    - title: At the grocery store + Genitive case
+      url: https://www.ukrainianlessons.com/episode46/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu15/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Grammar point: Plural of nouns in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu46/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Grammar Point: Verb conjugations in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu57/
+      relevance: medium
+      source: ukrainianlessons.com
+  a2-asking-for-directions:
+    youtube:
+    - title: ULP 1-22 | Are you going to the party?  – First verb conjugation in Ukrainian
+      url: https://www.youtube.com/watch?v=kx6zR2UOaBU
+      source: Ukrainian Lessons
   a2-social-media-ukrainian:
     articles:
     - title: Social Media in Ukrainian + Dative Case
@@ -1455,6 +1618,29 @@ resources:
       url: https://www.youtube.com/results?search_query=пасивний+стан+українська
       relevance: high
       source: пошук відеоуроків
+    - title: Asking for advice + Accusative case in Ukrainian
+      url: https://www.ukrainianlessons.com/episode56/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Your schedule in Ukrainian + Accusative case with prepositions
+      url: https://www.ukrainianlessons.com/episode57/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Inviting to a party in Ukrainian + Accusative case of pronouns
+      url: https://www.ukrainianlessons.com/episode58/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu15/
+      relevance: high
+      source: ukrainianlessons.com
+    youtube:
+    - title: Як приготувати МОЦАРЕЛУ вдома за 1 годину? Євген КЛОПОТЕНКО & Тетяна ДЯДЕЧКО
+      url: https://www.youtube.com/watch?v=mgO2DGfyXfI
+      source: Klopotenko
+    - title: Only THREE ingredients 👌 How to cook sour-milk cheese at home | Ievgen Klopotenko's life hacks
+      url: https://www.youtube.com/watch?v=ZO6nk7_9DZI
+      source: Klopotenko
   a1-food-and-shopping:
     youtube:
     - title: 20 Ukrainian Food Words You Need To Know
@@ -1557,33 +1743,44 @@ resources:
       source: Ukrainian Lessons
   a2-root-families-i:
     youtube:
-    - title: 'Welsh vs. Ukrainian: 8 similar words explained...'
-      url: https://www.youtube.com/watch?v=6B_GwMcttmU
-      relevance: high
-      channel: BenjaminAngwin
+    - title: 'ULP 4-123 | Похід у Карпати: як підготуватися | Ukrainian Lessons Podcast Season 4'
+      url: https://www.youtube.com/watch?v=y24LrH5HCLE
+      source: Ukrainian Lessons
     articles:
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode211/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode212/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode214/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: Ukrainian Lessons Podcast Season 6
       url: https://www.ukrainianlessons.com/episode218/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
   a2-shopping-services:
     youtube:
-    - title: 'UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop'
-      url: https://www.youtube.com/watch?v=YLBABZIOoo0
-      relevance: high
-      channel: Speak Ukrainian
+    - title: 'Departments in the store🛒 #learnukrainian #onlineschool #ukrainianlanguage #українськамова #ukraine'
+      url: https://www.youtube.com/watch?v=e4Vc4n-pLVE
+      source: Bright Kids Ukrainian
+    articles:
+    - title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu15/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Grammar point: Plural of nouns in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu46/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Grammar Point: Verb conjugations in Ukrainian'
+      url: https://www.ukrainianlessons.com/fmu57/
+      relevance: medium
+      source: ukrainianlessons.com
   a2-health-wellness:
     youtube:
     - title: 'UKRAINIAN VOCABULARY: body parts and organs'
@@ -1834,6 +2031,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode61/
       relevance: high
       source: ukrainianlessons.com
+    - title: 'Dobra Forma 10-3: Instrumental with працювати, бути, стати'
+      url: https://opentext.ku.edu/dobraforma/chapter/10-3/
+      relevance: high
+      source: University of Kansas
   a2-spatial-prepositions:
     websites:
     - title: 'Dobra Forma 4-1: Locative Case (в and у)'
@@ -1903,6 +2104,9 @@ resources:
     - title: 'FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian'
       url: https://www.youtube.com/watch?v=TBYyOdHOCCk
       source: Ukrainian Lessons
+    - title: 'Ukrainian for beginners: Where do you work? Reflective verbs, Diminutives, Locative & Vocative cases'
+      url: https://www.youtube.com/watch?v=GL1-z6IGg9A
+      source: Ukrainian with Olha
     - title: ULP 1-26 | Talking about traveling – Past tense in Ukrainian
       url: https://www.youtube.com/watch?v=gpHANzjE9q0
       source: Ukrainian Lessons
@@ -2239,6 +2443,11 @@ resources:
       url: https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes
       relevance: high
       source: відео пояснення
+    articles:
+    - title: Ukrainian Motion Verbs
+      url: https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes
+      relevance: high
+      source: відео пояснення
   b1-motion-passing-crossing:
     websites:
     - title: Префікси дієслів руху
@@ -2262,6 +2471,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode95/
       relevance: high
       source: ukrainianlessons.com
+    - title: Префікси дієслів руху
+      url: https://www.youtube.com/results?search_query=ukrainian+verbs+of+motion+prefixes
+      relevance: high
+      source: відео пояснення
   b1-motion-starting-returning:
     websites:
     - title: Префікси дієслів руху
@@ -2273,6 +2486,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Дієслова_руху
       relevance: high
       source: Вікіпедія
+    - title: Префікси дієслів руху
+      url: https://www.youtube.com/results?search_query=ukrainian+verbs+of+motion+prefixes
+      relevance: high
+      source: відео пояснення
   b1-motion-approaching-departing:
     websites:
     - title: Spatial prefixes in Ukrainian
@@ -2296,6 +2513,10 @@ resources:
       url: https://www.ukrainianlessons.com/fmu42/
       relevance: high
       source: ukrainianlessons.com
+    - title: Spatial prefixes in Ukrainian
+      url: https://www.youtube.com/results?search_query=ukrainian+motion+verbs
+      relevance: high
+      source: відео пояснення
   b1-motion-figurative-uses:
     articles:
     - title: Фразеологізми з дієсловами руху
@@ -2317,6 +2538,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode85/
       relevance: high
       source: Аудіо практика
+    - title: Ukrainian Motion Verbs with Prefixes
+      url: https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes
+      relevance: high
+      source: Відео уроки
   b1-motion-patterns-other-verbs:
     websites:
     - title: Ukrainian Verb Prefixes Explained
@@ -2332,6 +2557,10 @@ resources:
       url: https://www.ukrainianlessons.com/reflexive-verbs/
       relevance: high
       source: ukrainianlessons.com
+    - title: Ukrainian Verb Prefixes Explained
+      url: https://www.youtube.com/results?search_query=ukrainian+verb+prefixes+explained
+      relevance: high
+      source: Відео пояснення
   b1-motion-practice-integration:
     websites:
     - title: Фразеологізми про рух
@@ -2343,6 +2572,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode35/
       relevance: high
       source: аудіо урок про напрямки.
+    - title: Фразеологізми про рух
+      url: http://lcorp.ulif.org.ua/dictua/
+      relevance: high
+      source: словник сталих виразів.
   b1-relative-clauses-yakyi:
     websites:
     - title: Ukrainian Relative Clauses
@@ -2362,6 +2595,14 @@ resources:
       url: https://www.ukrainianlessons.com/episode157/
       relevance: high
       source: ukrainianlessons.com
+    - title: Ukrainian Relative Clauses
+      url: https://www.youtube.com/results?search_query=ukrainian+relative+clauses
+      relevance: high
+      source: відео пояснення та приклади
+    - title: Ukrainian Grammar Podcast
+      url: https://www.youtube.com/results?search_query=ukrainian+grammar+podcast
+      relevance: high
+      source: подкаст уроки для аудіального навчання
   b1-relative-clauses-de-kudy-zvidky:
     websites:
     - title: Ukrainian Place Relatives
@@ -2373,6 +2614,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Підрядне_означальне_речення
       relevance: high
       source: Вікіпедія
+    - title: Ukrainian Place Relatives
+      url: https://www.youtube.com/results?search_query=ukrainian+where+direction
+      relevance: high
+      source: відео пояснення
   b1-relative-clauses-koly-shcho:
     websites:
     - title: Ukrainian Complex Sentences
@@ -2384,6 +2629,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Підрядне_означальне_речення
       relevance: high
       source: Вікіпедія
+    - title: Ukrainian Complex Sentences
+      url: https://www.youtube.com/results?search_query=ukrainian+complex+sentences
+      relevance: high
+      source: відео пояснення
   b1-purpose-shchob-infinitive:
     websites:
     - title: Ukrainian Purpose Clauses
@@ -2395,6 +2644,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Підрядне_речення_мети
       relevance: high
       source: Вікіпедія
+    - title: Ukrainian Purpose Clauses
+      url: https://www.youtube.com/results?search_query=ukrainian+purpose+clauses
+      relevance: high
+      source: відео пояснення
   b1-purpose-shchob-past-form:
     articles:
     - title: Складнопідрядні речення
@@ -2407,6 +2660,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення
       relevance: high
       source: Вікіпедія
+    youtube:
+    - title: First Conditional - Перший тип умовних речень
+      url: https://www.youtube.com/watch?v=CSpQzByieI0
+      source: Repainted Fox
   b1-conditionals-unreal-yakby:
     articles:
     - title: Умовний спосіб
@@ -2482,6 +2739,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Дієприслівник
       relevance: high
       source: детальна граматична стаття
+    - title: 'Дієприслівники: відео пояснення'
+      url: https://www.youtube.com/results?search_query=дієприслівник+українська
+      relevance: high
+      source: відеоуроки
   b1-adverbial-participles-perfective:
     websites:
     - title: 'Дієприслівники: відео урок'
@@ -2493,8 +2754,17 @@ resources:
       url: https://uk.wikipedia.org/wiki/Дієприслівник
       relevance: high
       source: детальна граматична стаття
+    - title: 'Дієприслівники: відео урок'
+      url: https://www.youtube.com/results?search_query=дієприслівник+доконаний+вид
+      relevance: high
+      source: відеопояснення
   b1-active-participles-phrases:
     websites:
+    - title: Як ми говоримо
+      url: https://r2u.org.ua/yak-my-hovorymo/
+      relevance: high
+      source: класичний посібник О. Антоненка-Давидовича про русизми
+    articles:
     - title: Як ми говоримо
       url: https://r2u.org.ua/yak-my-hovorymo/
       relevance: high
@@ -2510,6 +2780,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Пасивний_стан
       relevance: high
       source: Вікіпедія
+    - title: Пасивні конструкції в українській мові
+      url: https://www.youtube.com/results?search_query=пасивні+конструкції+українська
+      relevance: high
+      source: відео уроки
   b1-passive-constructions:
     websites:
     - title: Пасивні конструкції
@@ -2521,6 +2795,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Пасивний_стан
       relevance: high
       source: Вікіпедія
+    - title: Пасивні конструкції
+      url: https://www.youtube.com/results?search_query=пасивні+конструкції+українська
+      relevance: high
+      source: відео уроки
   b1-diminutives-master-class:
     websites:
     - title: Ласкаві слова в українській мові
@@ -2532,6 +2810,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Демінутив
       relevance: high
       source: Вікіпедія
+    - title: Ласкаві слова в українській мові
+      url: https://www.youtube.com/results?search_query=демінутиви+українська
+      relevance: high
+      source: відео уроки
   b1-numerals-collectives-fractions:
     websites:
     - title: Числівники в українській мові
@@ -2547,6 +2829,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode112/
       relevance: high
       source: ukrainianlessons.com
+    - title: Числівники в українській мові
+      url: https://www.youtube.com/results?search_query=числівники+українська
+      relevance: high
+      source: відео уроки
   b1-integrated-grammar-lab:
     websites:
     - title: Офіційно-діловий стиль
@@ -2558,14 +2844,28 @@ resources:
       url: https://uk.wikipedia.org/wiki/Стилістика
       relevance: high
       source: Вікіпедія
+    - title: Офіційно-діловий стиль
+      url: https://www.youtube.com/results?search_query=офіційно-діловий+стиль+українська
+      relevance: high
+      source: відео уроки
   b1-expressing-opinions:
     websites:
     - title: 'Ukrainian Lessons: Expressing Opinions'
       url: https://www.ukrainianlessons.com/expressing-opinions/
       relevance: high
       source: Ukrainian Lessons
+    articles:
+    - title: 'Ukrainian Lessons: Expressing Opinions'
+      url: https://www.ukrainianlessons.com/expressing-opinions/
+      relevance: high
+      source: Ukrainian Lessons
   b1-agreement-disagreement:
     websites:
+    - title: Канал «Твоя підпільна гуманітарка»
+      url: https://www.youtube.com/c/ТвояПідпільнаГуманітарка
+      relevance: high
+      source: про культуру дискусії
+    articles:
     - title: Канал «Твоя підпільна гуманітарка»
       url: https://www.youtube.com/c/ТвояПідпільнаГуманітарка
       relevance: high
@@ -2593,8 +2893,17 @@ resources:
       url: https://www.ukrainianlessons.com/episode92/
       relevance: high
       source: ukrainianlessons.com
+    - title: Ukrainian Discourse Markers Guide
+      url: https://www.ukrainianlessons.com/discourse-markers/
+      relevance: high
+      source: Ukrainian Lessons
   b1-discourse-markers-advanced:
     websites:
+    - title: 'Уроки української мови: вставні слова та конструкції'
+      url: https://www.youtube.com/results?search_query=вставні+слова+українська
+      relevance: high
+      source: відеопояснення
+    articles:
     - title: 'Уроки української мови: вставні слова та конструкції'
       url: https://www.youtube.com/results?search_query=вставні+слова+українська
       relevance: high
@@ -2605,8 +2914,22 @@ resources:
       url: https://www.ukrainianlessons.com/environment-vocabulary/
       relevance: high
       source: Ukrainian Lessons
+    articles:
+    - title: 'Ukrainian Vocabulary: Environment'
+      url: https://www.ukrainianlessons.com/environment-vocabulary/
+      relevance: high
+      source: Ukrainian Lessons
+    youtube:
+    - title: ULP 4-136 | Екологічні тренди та екологічні традиції в Україні | Ukrainian Lessons Podcast Season 4
+      url: https://www.youtube.com/watch?v=f7OFIoNUlNo
+      source: Ukrainian Lessons
   b1-relationships:
     websites:
+    - title: 'Ukrainian Lessons: Family and Relationships'
+      url: https://www.ukrainianlessons.com/family-relationships/
+      relevance: high
+      source: Ukrainian Lessons
+    articles:
     - title: 'Ukrainian Lessons: Family and Relationships'
       url: https://www.ukrainianlessons.com/family-relationships/
       relevance: high
@@ -2626,6 +2949,14 @@ resources:
       url: https://www.ukrainianlessons.com/reflexive-verbs/
       relevance: high
       source: ukrainianlessons.com
+    - title: Ізборник
+      url: http://litopys.org.ua/
+      relevance: high
+      source: класична українська філософія та література онлайн
+    - title: '"Твоя підпільна гуманітарка"'
+      url: https://www.youtube.com/c/Твояпідпільнагуманітарка
+      relevance: high
+      source: про мову та мислення
   b1-regions-south:
     articles:
     - title: Одеса — Вікіпедія
@@ -2640,6 +2971,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Херсонська_область
       relevance: high
       source: інформація про регіон
+    youtube:
+    - title: 'ULP 5-169 | Етнографічні регіони України. Частина 2: Південь і Схід України | Ukrainian Lessons P...'
+      url: https://www.youtube.com/watch?v=HvJg9EJv6Cg
+      source: Ukrainian Lessons
   b1-regions-center:
     websites:
     - title: 'Central Ukraine: Culture and History'
@@ -2663,6 +2998,17 @@ resources:
       url: https://www.ukrainianlessons.com/episode95/
       relevance: high
       source: ukrainianlessons.com
+    - title: 'Central Ukraine: Culture and History'
+      url: https://www.ukrainianlessons.com/central-ukraine/
+      relevance: high
+      source: Regional guide
+    youtube:
+    - title: KNYSH - an unsurpassed UKRAINIAN dish in 30 minutes | Ievgen Klopotenko
+      url: https://www.youtube.com/watch?v=nMYYDM0-gHw
+      source: Klopotenko
+    - title: 'ЧЕРНІГІВЩИНА НА СМАК: забуті українські страви та смаки | Гастро-експедиція Євгена Клопотенка'
+      url: https://www.youtube.com/watch?v=6Rh0041xEog
+      source: Klopotenko
   b1-active-lifestyle:
     websites:
     - title: Спортзал просто неба "Качалка"
@@ -2673,14 +3019,37 @@ resources:
       url: https://www.youtube.com/
       relevance: high
       source: Unknown
+    articles:
+    - title: Спортзал просто неба "Качалка"
+      url: https://www.youtube.com/results?search_query=качалка+гідропарк
+      relevance: high
+      source: Unknown
+    - title: Вправи на вуличних тренажерах
+      url: https://www.youtube.com/
+      relevance: high
+      source: Unknown
+    - title: About Crimea — History and Culture
+      url: https://www.ukrainianlessons.com/about-crimea/
+      relevance: medium
+      source: ukrainianlessons.com
   b1-running-in-ukraine:
     websites:
     - title: 'YouTube: Як почати бігати'
       url: https://www.youtube.com/
       relevance: high
       source: Unknown
+    articles:
+    - title: 'YouTube: Як почати бігати'
+      url: https://www.youtube.com/
+      relevance: high
+      source: Unknown
   b1-cycling-water:
     websites:
+    - title: 'YouTube: Правила їзди на велосипеді в місті'
+      url: https://www.youtube.com/
+      relevance: high
+      source: Освітнє відео для безпеки.
+    articles:
     - title: 'YouTube: Правила їзди на велосипеді в місті'
       url: https://www.youtube.com/
       relevance: high
@@ -2695,8 +3064,22 @@ resources:
       url: https://www.ukrainianlessons.com/festivals/
       relevance: high
       source: Cultural guide
+    articles:
+    - title: Ukrainian Holidays and Traditions
+      url: https://www.ukrainianlessons.com/ukrainian-holidays/
+      relevance: high
+      source: Ukrainian Lessons
+    - title: Ukrainian Festivals Calendar
+      url: https://www.ukrainianlessons.com/festivals/
+      relevance: high
+      source: Cultural guide
   b2-passive-voice-system:
     websites:
+    - title: Пасивний стан в українській мові
+      url: https://www.youtube.com/results?search_query=пасивний+стан+українська+мова
+      relevance: high
+      source: пояснення від носіїв мови
+    articles:
     - title: Пасивний стан в українській мові
       url: https://www.youtube.com/results?search_query=пасивний+стан+українська+мова
       relevance: high
@@ -2718,14 +3101,28 @@ resources:
       url: https://www.ukrainianlessons.com/reflexive-verbs/
       relevance: high
       source: ukrainianlessons.com
+    - title: Словники України онлайн
+      url: https://lcorp.ulif.org.ua/dictua/
+      relevance: high
+      source: для перевірки дієслівних форм
   b2-third-person-plural-passive:
     websites:
     - title: Пасивні конструкції в українській мові
       url: https://r2u.org.ua/grammar/passive
       relevance: high
       source: Детальний огляд усіх пасивних форм
+    articles:
+    - title: Пасивні конструкції в українській мові
+      url: https://r2u.org.ua/grammar/passive
+      relevance: high
+      source: Детальний огляд усіх пасивних форм
   b2-passive-in-context:
     websites:
+    - title: Пасивний стан в українській мові
+      url: https://www.youtube.com/results?search_query=пасивний+стан+українська+мова
+      relevance: high
+      source: пояснення від носіїв мови
+    articles:
     - title: Пасивний стан в українській мові
       url: https://www.youtube.com/results?search_query=пасивний+стан+українська+мова
       relevance: high
@@ -2741,6 +3138,10 @@ resources:
       url: https://ukrainianlessons.com/participles
       relevance: high
       source: детальний огляд системи дієприкметників
+    - title: 'YouTube: Українська з Анною'
+      url: https://youtube.com/ukrainewithlove
+      relevance: high
+      source: відеоуроки про складні граматичні теми
   b2-checkpoint-passive-voice:
     youtube:
     - title: Пасивний стан в українській мові
@@ -2803,6 +3204,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Вставні_слова
       relevance: high
       source: теорія вставних конструкцій
+    - title: ГРАК
+      url: https://uacorpus.org/
+      relevance: high
+      source: приклади вживання в реальних текстах
   b2-pomarancheva-revoliutsiia:
     websites:
     - title: Документальний фільм про Помаранчеву революцію (2004)
@@ -2838,6 +3243,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Український_мовний_етикет
       relevance: high
       source: правила ввічливого спілкування
+    - title: Ти чи Ви? Українська мова
+      url: https://www.youtube.com/results?search_query=ти+чи+ви+українська+мова
+      relevance: high
+      source: пояснення від носіїв мови
   b2-register-business-ukrainian:
     websites:
     - title: Бізнес-етикет в Україні
@@ -2857,6 +3266,11 @@ resources:
       source: структура та вимоги
   b2-register-colloquial-style:
     websites:
+    - title: Українська розмовна мова
+      url: https://www.youtube.com/results?search_query=українська+розмовна+мова
+      relevance: high
+      source: реальні приклади від носіїв
+    articles:
     - title: Українська розмовна мова
       url: https://www.youtube.com/results?search_query=українська+розмовна+мова
       relevance: high
@@ -2907,14 +3321,29 @@ resources:
       url: http://uacorpus.org/
       relevance: high
       source: приклади вживання похідних слів
+    articles:
+    - title: ГРАК
+      url: http://uacorpus.org/
+      relevance: high
+      source: приклади вживання похідних слів
   b2-word-formation-adjective-formation:
     websites:
     - title: Словотворення прикметників
       url: https://www.youtube.com/results?search_query=словотворення+прикметників+українська
       relevance: high
       source: відеоуроки
+    articles:
+    - title: Словотворення прикметників
+      url: https://www.youtube.com/results?search_query=словотворення+прикметників+українська
+      relevance: high
+      source: відеоуроки
   b2-word-formation-adverbs-integration:
     websites:
+    - title: Творення прислівників
+      url: https://www.youtube.com/results?search_query=творення+прислівників+українська
+      relevance: high
+      source: відеоуроки
+    articles:
     - title: Творення прислівників
       url: https://www.youtube.com/results?search_query=творення+прислівників+українська
       relevance: high
@@ -2960,6 +3389,14 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       source: ukrainianlessons.com
+    - title: ГРАК
+      url: https://uacorpus.org/
+      relevance: high
+      source: Генеральний регіонально анотований корпус української мови
+    - title: Словники України онлайн
+      url: https://lcorp.ulif.org.ua/dictua/
+      relevance: high
+      source: перевірка видових пар
   b2-aspect-nuances-imperative-infinitive:
     websites:
     - title: Наказовий спосіб в українській мові
@@ -2983,6 +3420,10 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/92/
       relevance: high
       source: ukrainianlessons.com
+    - title: Наказовий спосіб в українській мові
+      url: https://www.youtube.com/results?search_query=наказовий+спосіб+українська+мова
+      relevance: high
+      source: пояснення від носіїв мови
   b2-correlative-constructions:
     articles:
     - title: Синтаксис української мови
@@ -2991,6 +3432,11 @@ resources:
       source: складні речення
   b2-complex-syntax-ellipsis-parcelling:
     websites:
+    - title: Електронна бібліотека
+      url: https://www.ukrlib.com.ua/
+      relevance: high
+      source: твори класиків української літератури
+    articles:
     - title: Електронна бібліотека
       url: https://www.ukrlib.com.ua/
       relevance: high
@@ -3010,6 +3456,14 @@ resources:
       url: https://ukrainianlessons.com/category/proverbs/
       relevance: high
       source: подкаст з поясненням прислів'їв
+    - title: 'YouTube: Speak Ukrainian - Proverbs'
+      url: https://www.youtube.com/results?search_query=ukrainian+proverbs+speak+ukrainian
+      relevance: high
+      source: відеоуроки з вимовою
+    - title: Learn Ukrainian with Anna - Idioms and Proverbs
+      url: https://www.youtube.com/c/LearnUkrainianWithAnna
+      relevance: high
+      source: популярний канал з пояснення фразеології
   b2-proverbs-nature-time-caution:
     websites:
     - title: 'YouTube: Speak Ukrainian - Proverbs'
@@ -3025,6 +3479,10 @@ resources:
       url: https://uk.wikipedia.org/wiki/Категорія:Українські_приказки
       relevance: high
       source: Вікіпедія
+    - title: 'YouTube: Speak Ukrainian - Proverbs'
+      url: https://www.youtube.com/results?search_query=ukrainian+proverbs+speak+ukrainian
+      relevance: high
+      source: відеоуроки з вимовою
   b2-set-expressions-i-body-animals:
     articles:
     - title: Ukrainian Lessons - Idioms Series
@@ -3190,6 +3648,10 @@ resources:
       url: https://www.ukrainianlessons.com/episode106/
       relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: 【Multi Sub】Spoiled Kid Broke His Collectible—So He Sued the Family for $550,000 and WON
+      url: https://www.youtube.com/watch?v=CvrwPG4JQzQ
+      source: Bright Kids Ukrainian
   a2-smart-shopping:
     articles:
     - title: Shopping for clothes — Accusative case in Ukrainian
@@ -3200,9 +3662,20 @@ resources:
       url: https://www.ukrainianlessons.com/fmu15/
       relevance: high
       source: ukrainianlessons.com
-  a2-sports-fitness: {}
+  a2-sports-fitness:
+    youtube:
+    - title: How to cook oatmeal 🥣 Which oatmeal is the healthiest | Ievgen Klopotenko
+      url: https://www.youtube.com/watch?v=ZP9kslSh7k0
+      source: Klopotenko
   a2-at-the-pharmacy: {}
-  a2-rental-accommodation: {}
+  a2-rental-accommodation:
+    youtube:
+    - title: FMU 1-41 | How to look for a place to rent in Ukraine | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=a8zn70qzgfg
+      source: Ukrainian Lessons
+    - title: ULP 2-43 | Шукаю квартиру – Особливі форми множини |  Looking for an apartment + Special plural f...
+      url: https://www.youtube.com/watch?v=YKSKb5u4h48
+      source: Ukrainian Lessons
   a2-scheduling-appointments:
     articles:
     - title: Your schedule in Ukrainian + Accusative case with prepositions
@@ -3213,10 +3686,43 @@ resources:
       url: https://www.ukrainianlessons.com/episode67/
       relevance: high
       source: ukrainianlessons.com
-  a2-giving-directions: {}
-  a2-online-services: {}
+    youtube:
+    - title: FMU 1-54 | How to book an appointment with a doctor in Ukrainian | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=Qi1zY8JmWzs
+      source: Ukrainian Lessons
+  a2-giving-directions:
+    youtube:
+    - title: ULP 1-22 | Are you going to the party?  – First verb conjugation in Ukrainian
+      url: https://www.youtube.com/watch?v=kx6zR2UOaBU
+      source: Ukrainian Lessons
+  a2-online-services:
+    youtube:
+    - title: КРАЩЕ, НІЖ ПІЦА 😍 Улюблений пиріг Клопотенків || неСам Удома з мамою №22
+      url: https://www.youtube.com/watch?v=aY4J3Fzvhvw
+      source: Klopotenko
   a2-participles-passive: {}
-  a2-a2-final-exam: {}
+  a2-a2-final-exam:
+    articles:
+    - title: Verb Aspect in Ukrainian
+      url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Asking for advice in Ukrainian + Using imperfective and perfective verb aspects in Ukrainian
+      url: https://www.ukrainianlessons.com/episode91/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian
+      url: https://www.ukrainianlessons.com/episode94/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: My life in Kyiv (Voice message №3)
+      url: https://www.ukrainianlessons.com/episode95/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: 'Talk Ukrainian: Verb Aspect'
+      url: https://talkukrainian.com/verb-aspect/
+      relevance: medium
+      source: talkukrainian
   b1-checkpoint-aspect-mastery:
     articles:
     - title: Ukrainian Verb Prefixes
@@ -3245,12 +3751,20 @@ resources:
       url: https://talkukrainian.com/indefinite-negative-pronouns/
       relevance: high
       source: talkukrainian
+    - title: Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian
+      url: https://www.ukrainianlessons.com/episode106/
+      relevance: high
+      source: ukrainianlessons.com
   b1-one-member-sentences:
     articles:
     - title: Синтаксис української мови
       url: https://uk.wikipedia.org/wiki/Односкладне_речення
       relevance: high
       source: базові поняття
+    - title: Ukrainian Lessons Podcast Season 4
+      url: https://www.ukrainianlessons.com/episode121/
+      relevance: high
+      source: ukrainianlessons.com
   b1-word-formation-modifiers:
     articles:
     - title: Ukrainian Verb Prefixes
@@ -3319,6 +3833,10 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/79/
       relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: FMU 1-26 | How to talk about sport in Ukrainian | 5 Minute Ukrainian
+      url: https://www.youtube.com/watch?v=cCtNrXgM6I4
+      source: Ukrainian Lessons
   b1-ukrainian-cuisine:
     articles:
     - title: Inviting to a party in Ukrainian + Accusative case of pronouns
@@ -3341,6 +3859,19 @@ resources:
       url: https://www.ukrainianlessons.com/episode48/
       relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: ULP 5-182 | Місцеві кухні України | Ukrainian Lessons Podcast Season 5
+      url: https://www.youtube.com/watch?v=I5MJIGL2OfA
+      source: Ukrainian Lessons
+    - title: '100 років такого не їв! Шукайте ті самі домашні смаки на 100 ШОП #клопотенко #локальнівиробники'
+      url: https://www.youtube.com/watch?v=hZpQUOMarPM
+      source: Klopotenko
+    - title: ULP 5-181 | Українська кухня в радянські часи | Ukrainian Lessons Podcast Season 5
+      url: https://www.youtube.com/watch?v=mgHHF8QyUDU
+      source: Ukrainian Lessons
+    - title: 'НЕ квашена а ФЕРМЕНТОВАНА капуста! #клопотенко | Автентичні українські рецепти 🧡'
+      url: https://www.youtube.com/watch?v=WD3DlnRqTSE
+      source: Klopotenko
   b1-presentations-visuals:
     articles:
     - title: Kyiv tour + Participle in Ukrainian
@@ -3457,6 +3988,19 @@ resources:
       url: https://www.ukrainianlessons.com/episode80/
       relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: Дискусія — обговорення «Про стійкість у літературному каноні України» | КНИЖКОВИЙ АРСЕНАЛ
+      url: https://www.youtube.com/watch?v=zm1yR7hg4V8
+      source: Суспільне Культура
+    - title: 'Війна як крах цивілізації: чи буде щастя після війни? | Дискусія з Кебуладзе і Епплбом | BookForum'
+      url: https://www.youtube.com/watch?v=ET3EV4navzw
+      source: Суспільне Культура
+    - title: Чи заборонять участь проросійських партій у виборах? РФ викрадає дітей | НОВИЙ ВІДЛІК від 10.03.23
+      url: https://www.youtube.com/watch?v=e3AveAAiREc
+      source: Суспільне Док
+    - title: Що було б, якби Чорновіл став президентом? | «Якби Чорновіл. Кращий сценарій для України?»
+      url: https://www.youtube.com/watch?v=CXhIO5Ytbv4
+      source: Суспільне Док
   b2-checkpoint-communication:
     articles:
     - title: Useful Ukrainian Questions
@@ -3691,21 +4235,32 @@ resources:
     articles:
     - title: Ukrainian Conjunctions — Basic Overview
       url: https://www.ukrainianlessons.com/ukrainian-conjunctions/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
     - title: 'Talk Ukrainian: Ukrainian conjunctions'
       url: https://talkukrainian.com/conjunctions/
-      relevance: medium
+      relevance: high
       source: talkukrainian
     - title: Ukrainian Conjunctions Guide — Advanced
       url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
-      relevance: medium
+      relevance: high
       source: ukrainianlessons.com
+    youtube:
+    - title: Готуємо найпухкіші ВАРЕНИКИ з ПОЛУНИЦЕЮ і розмовляємо з Т. Левчуком про рівність прав
+      url: https://www.youtube.com/watch?v=3XfUu2XcJlA
+      source: Klopotenko
+    - title: Секрети ідеального тіста на пиріжки | Євген Клопотенко
+      url: https://www.youtube.com/watch?v=Dv69jKuc-XA
+      source: Klopotenko
   a2-in-order-to:
     articles:
     - title: Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian
       url: https://www.ukrainianlessons.com/episode118/
-      relevance: medium
+      relevance: high
+      source: ukrainianlessons.com
+    - title: How to book an appointment with a doctor in Ukrainian
+      url: https://www.ukrainianlessons.com/fmu54/
+      relevance: high
       source: ukrainianlessons.com
   a1-stress-and-intonation:
     articles:
@@ -3748,13 +4303,1180 @@ resources:
     - title: Навіщо Вигадали Трипільців? | Історія України від імені Т.Г. Шевченка
       url: https://www.youtube.com/watch?v=c7hnIHbdknQ
       source: ІМТГШ
-y78t0
-      source: Реальна Історія
-  hist-trypillian-civilization:
+  b1-interviu-ta-podkasty:
     youtube:
-    - title: Чому весь світ у шоці від цієї культури?
-      url: https://www.youtube.com/watch?v=9xumhDRZabw
+    - title: ULP 5-162 | Інтерв’ю з Іванкою (про життя на карантині) | Ukrainian Lessons Podcast Season 5
+      url: https://www.youtube.com/watch?v=UeYQoQWo5JY
+      source: Ukrainian Lessons
+    - title: ULP 5-179 | Інтерв’ю з Кортні про те, як вона вивчила українську мову | Ukrainian Lessons Podcast...
+      url: https://www.youtube.com/watch?v=Ztj_UHUsHfY
+      source: Ukrainian Lessons
+    - title: 'bonus #42 Про живих. Олександр Михед'
+      url: https://www.youtube.com/watch?v=paJ8DWGgm7I
+      source: Repainted Fox
+    - title: '#84 Змія. Юрій Косач'
+      url: https://www.youtube.com/watch?v=r9UCreU-4PU
+      source: Repainted Fox
+  b2-neologisms-borrowings:
+    youtube:
+    - title: Як виникла українська мова? | «Як українці українською заговорили» | Документальний фільм
+      url: https://www.youtube.com/watch?v=2TqtNB5XSUM
+      source: Суспільне Культура
+    - title: Як звучала українська мова в різні часи | «Як українці українською заговорили» | Освітній фільм
+      url: https://www.youtube.com/watch?v=5SgKLSTZv-s
+      source: Суспільне Док
+  b2-active-participles-past:
+    articles:
+    - title: Booking a room in the Carpathians – One-word synthetic future tense in Ukrainian
+      url: https://www.ukrainianlessons.com/episode98/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense
+        in Ukrainian
+      url: https://www.ukrainianlessons.com/lesson/98/
+      relevance: medium
+      source: ukrainianlessons.com
+  b2-phrases-word-combinations:
+    youtube:
+    - title: Словосполучення. Будова й види словосполучень за способами вираження головного слова.
+      url: https://www.youtube.com/watch?v=HB18v0MpGMA
+      source: Ukrainian Lessons
+    - title: 'Підрядний зв’язок у словосполученнях: узгодження, керування та прилягання #3'
+      url: https://www.youtube.com/watch?v=EB106mClitk
+      source: Ukrainian Lessons
+  a2-checkpoint-word-formation:
+    youtube:
+    - title: 'ULP 6-217 | Про Крим. Частина 1: Географія та корінні народи | Ukrainian Lessons Podcast Season 6'
+      url: https://www.youtube.com/watch?v=YwXG4KKyfwI
+      source: Ukrainian Lessons
+  a2-practical-intro:
+    youtube:
+    - title: 'Ukrainian for beginners: Hobbies | Ukrainian music | Palatalization, Verb + infinitive, Noun cases'
+      url: https://www.youtube.com/watch?v=A49aZdwMz6k
+      source: Ukrainian with Olha
+    - title: What is this? - Ukrainian Grammar
+      url: https://www.youtube.com/watch?v=Sr7Jv9TVOgk
+      source: Bright Kids Ukrainian
+  a2-practical-warm-up:
+    youtube:
+    - title: ULP 2-70 | Електронний лист | Writing an email in Ukrainian – Review 66-69
+      url: https://www.youtube.com/watch?v=YXrsGXJeZ-k
+      source: Ukrainian Lessons
+    - title: Ukrainian Alphabet - Lesson about the letter Г
+      url: https://www.youtube.com/watch?v=X6dkJPEnPmY
+      source: Bright Kids Ukrainian
+  b2-politics-government-vocabulary:
+    youtube:
+    - title: 'Референдум за Незалежність: що було після 24 серпня? | Колапс. Як українці зруйнували імперію зла #7'
+      url: https://www.youtube.com/watch?v=rgOtbTrs55c
+      source: Суспільне Док
+    - title: '«Swan Lake» on the ruins: how does Russia loot art? | BIG RUSSIAN LIES #4'
+      url: https://www.youtube.com/watch?v=Hy2mnmSDM_U
+      source: Суспільне Культура
+    - title: '«Лебедине озеро» на руїнах: як рускій балет відбілює Кремль? | ВЕЛИКА РОСІЙСЬКА БРЕХНЯ'
+      url: https://www.youtube.com/watch?v=leX7aAZJKlM
+      source: Суспільне Док
+  a2-texting-messaging:
+    youtube:
+    - title: ULP 3-120 Голосове повідомлення для… – Voice message to…
+      url: https://www.youtube.com/watch?v=zShCzFtjXR0
+      source: Ukrainian Lessons
+    - title: Епізод №100! Повідомлення від слухачів подкасту – Messages from the podcast listeners
+      url: https://www.youtube.com/watch?v=fJBdHZT0eHY
+      source: Ukrainian Lessons
+  b1-regions-west:
+    youtube:
+    - title: 'ULP 5-168 | Етнографічні регіони України. Частина 1: Захід і Північ України | Ukrainian Lessons P...'
+      url: https://www.youtube.com/watch?v=84pqXbI6G44
+      source: Ukrainian Lessons
+  b1-regions-east:
+    youtube:
+    - title: 'ULP 5-169 | Етнографічні регіони України. Частина 2: Південь і Схід України | Ukrainian Lessons P...'
+      url: https://www.youtube.com/watch?v=HvJg9EJv6Cg
+      source: Ukrainian Lessons
+  a2-gerunds-intro:
+    youtube:
+    - title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian
+      url: https://www.youtube.com/watch?v=S3GgY9Fa8uk
+      source: Ukrainian Lessons
+  bio-ivan-sirko:
+    youtube:
+    - title: Сірко – герой чи зрадник? «Реальна Історія» з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=jORxB_e1eWk
       source: Реальна Історія
-    - title: Навіщо Вигадали Трипільців? | Історія України від імені Т.Г. Шевченка
-      url: https://www.youtube.com/watch?v=c7hnIHbdknQ
+  b2-text-analysis:
+    youtube:
+    - title: '#69 Дивак. Григір Тютюнник'
+      url: https://www.youtube.com/watch?v=hgWn1MtTTjo
+      source: Repainted Fox
+  b2-news-analysis-basics:
+    youtube:
+    - title: 'Законопроєкт про англійську мову: що буде з українським дубляжем та які ризики для кіноіндустрії'
+      url: https://www.youtube.com/watch?v=bulArxOnyAE
+      source: Суспільне Культура
+    - title: Життя за 50 км від найгарячіших точок фронту — історія Вільнянської громади | Сили відновлення
+      url: https://www.youtube.com/watch?v=QQdYgzeumoQ
+      source: Суспільне Док
+  bio-taras-shevchenko:
+    youtube:
+    - title: Як Тарас Шевченко став українським ідолом? «Реальна історія» з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=kxqh-0rnhRo
+      source: Реальна Історія
+    - title: Як російська цензура спотворила Кобзар?
+      url: https://www.youtube.com/watch?v=OFot9H6ODS0
+      source: Реальна Історія
+  b2-tekhnolohii-ta-shi:
+    youtube:
+    - title: Artificial Intelligence - Threat or Tool? How AI is Replacing Creativity
+      url: https://www.youtube.com/watch?v=SyfDgEXTEJ0
+      source: Суспільне Культура
+    - title: «Вас спокушають купувати технології» — Софі Бартез та Андрій Парех про «Репродукцію майбутнього»
+      url: https://www.youtube.com/watch?v=sglWG3eAhpw
+      source: Суспільне Культура
+    - title: ULP 2-51 | Техніка і технології + Давальний відмінок | Electronics and technology + Dative Case
+      url: https://www.youtube.com/watch?v=_hckw5uvxbk
+      source: Ukrainian Lessons
+  b2-mystetstvo-i-literatura:
+    youtube:
+    - title: '#87 Повість без назви. Валер''ян Підмогильний'
+      url: https://www.youtube.com/watch?v=hx6ZQuRkqFg
+      source: Repainted Fox
+    - title: 'Great Russian literature is FAKE!? How the Kremlin uses it for war | BIG RUSSIAN LIES #2'
+      url: https://www.youtube.com/watch?v=1tGT9-haMuA
+      source: Суспільне Культура
+    - title: Чому світ повірив у ФЕЙК про «вєлікую рускую літературу» | ВЕЛИКА РОСІЙСЬКА БРЕХНЯ
+      url: https://www.youtube.com/watch?v=MfnFhf6wR5s
+      source: Суспільне Док
+    - title: '«Лебедине озеро» на руїнах: як рускій балет відбілює Кремль? | ВЕЛИКА РОСІЙСЬКА БРЕХНЯ'
+      url: https://www.youtube.com/watch?v=leX7aAZJKlM
+      source: Суспільне Док
+    - title: '"I buy three books every week that I hardly read" #shorts'
+      url: https://www.youtube.com/watch?v=fHN43SFMmBs
+      source: Суспільне Культура
+    - title: '"ПереФарбований лис" у премії "Слушно"'
+      url: https://www.youtube.com/watch?v=CFBBkMdgrkY
+      source: Repainted Fox
+  b2-modern-diaspora:
+    youtube:
+    - title: 'How Ukrainians passed on traditions far from home: Christmas in emigration'
+      url: https://www.youtube.com/watch?v=JiI0IiwC3zQ
+      source: Суспільне Культура
+  b1-phonetics-assimilation:
+    youtube:
+    - title: 'Фонетика: найлегше пояснення | Уподібнення звуків | НМТ 2024'
+      url: https://www.youtube.com/watch?v=OCoEzjyZ2fo
+      source: Repainted Fox
+  bio-ivan-franko:
+    youtube:
+    - title: Невідомий геній Іван Франко. Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=p64EpeIa_3E
+      source: Реальна Історія
+    - title: Іван Франко знав російську мову?
+      url: https://www.youtube.com/watch?v=S2P8AM-reGo
+      source: Комік Історик
+  hist-sloviany-origins:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: What was before the Kyivan Rus?
+      url: https://www.youtube.com/watch?v=bdKTzu3BHUE
+      source: Реальна Історія
+  hist-slavic-tribes:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  b2-nauka-i-doslidzhennia:
+    youtube:
+    - title: Where's electricity come from? Ukraine's energy system and how it works. The Great Journey of Energy
+      url: https://www.youtube.com/watch?v=Jjy3t21K7wM
+      source: Суспільне Док
+  b2-religion-in-ukraine:
+    youtube:
+    - title: «Цінності українців, що вважалися наївними, стали ядром нашої міцності» — інтерв'ю з Тимофієм Бріком
+      url: https://www.youtube.com/watch?v=g6RHS5yfL_g
+      source: Суспільне Культура
+    - title: '«Вирішив допомогти нечуючим краще пізнати Бога» — як священник вивчив жестову мову #shorts'
+      url: https://www.youtube.com/watch?v=StKYbx81x5c
+      source: Суспільне Док
+  hist-oleh-ihor:
+    youtube:
+    - title: Звідки На Русі Князі? Історія Рюриковичів | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=zHYStnmbcaY
       source: ІМТГШ
+  bio-mykhailo-hrushevskyi:
+    youtube:
+    - title: Яким Грушевський був насправді? Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=8DChjQAVy_s
+      source: Реальна Історія
+    - title: 'Михайло Грушевський: батя української історії'
+      url: https://www.youtube.com/watch?v=aZohRL1mMA4
+      source: Комік Історик
+  hist-olha-sviatoslav:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: 'княгиня Ольга: жінка головнокомандувач'
+      url: https://www.youtube.com/watch?v=GxdZAhusOA0
+      source: Комік Історик
+    - title: 'Ярослав Мудрий: історія розквіту Русі'
+      url: https://www.youtube.com/watch?v=55uxR1YtBTE
+      source: Комік Історик
+  hist-volodymyr-khreshchennia:
+    youtube:
+    - title: МІФИ ПРО ХРЕЩЕННЯ РУСІ. Як все було насправді?
+      url: https://www.youtube.com/watch?v=7u4nLFsZEOA
+      source: Реальна Історія
+    - title: 'Як хрещення Русі Володимиром Великим вплинуло на писемність народу #shorts'
+      url: https://www.youtube.com/watch?v=LHFTWq6xfFs
+      source: Суспільне Док
+    - title: 'Володимир Великий: історія кривавого святого'
+      url: https://www.youtube.com/watch?v=SQeUH26uUJQ
+      source: Комік Історик
+    - title: Походження України. Як все було насправді? Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=njXBZSjXV84
+      source: Реальна Історія
+    - title: Як звучала українська мова в різні часи | «Як українці українською заговорили» | Освітній фільм
+      url: https://www.youtube.com/watch?v=5SgKLSTZv-s
+      source: Суспільне Док
+  hist-yaroslav-wise:
+    youtube:
+    - title: Навіщо росіяни полюють за останками українських правителів? ПРОДОВЖЕННЯ
+      url: https://www.youtube.com/watch?v=8vPbO89ZFoo
+      source: Реальна Історія
+    - title: Як українки правили Європою та закладали наймогутніші династії? Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=rxUVQOqXUbc
+      source: Реальна Історія
+  istorio-shcho-take-istorio:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: розібралися у хронології скіфів, гунів і так далі...
+      url: https://www.youtube.com/watch?v=9IgiisoCZx8
+      source: Комік Історик
+    - title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+      url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+      source: ІМТГШ
+    - title: Чи був Бандера героєм? «Реальна історія» з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=Qk6eZMGiXtg
+      source: Реальна Історія
+  hist-kultura-kyivskoi-rusi:
+    articles:
+    - title: Культура Київської Русі (Історія України)
+      url: https://www.youtube.com/results?search_query=культура+київської+русі
+      relevance: high
+      source: документальні фільми про мистецтво та писемність
+    - title: Літописи Київської Русі
+      url: https://litopys.org.ua/
+      relevance: high
+      source: оригінальні тексти літописів
+    youtube:
+    - title: Походження України. Як все було насправді? Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=njXBZSjXV84
+      source: Реальна Історія
+    - title: Реальна історія Галицько Волинського князівства
+      url: https://www.youtube.com/watch?v=5rW86M7pVYY
+      source: Реальна Історія
+    - title: кого вкрала Росія?
+      url: https://www.youtube.com/watch?v=f9PXJ2vfuqk
+      source: Комік Історик
+  istorio-ukrainska-istoriohrafichna-tradytsiia:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode237/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: ULP 6-237 Михайло Грушевський — великий історик України
+      url: https://www.ukrainianlessons.com/season6/ULP-6-237-mykhailo-hrushevskyi-velykyi-istoryk-ukrainy/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: 'УРСР: історія радянської України'
+      url: https://www.youtube.com/watch?v=ndrhu57hHi4
+      source: Комік Історик
+    - title: The entire history of Ukraine in 30 minutes. «The real history» with Akim Galimov
+      url: https://www.youtube.com/watch?v=2PrthVAZRro
+      source: Реальна Історія
+    - title: All history of Ukraine in 10 min.
+      url: https://www.youtube.com/watch?v=zNFUqradyV4
+      source: ІМТГШ
+  istorio-rosiiska-imperialna-istorio:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-ludy-rusi:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-radyanska-istorio:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-rus-ta-susidy:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: ЯК ГОВОРИТИ З ПОЛЯКАМИ ПРО ІСТОРІЮ? | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=BRCXYuq5GbQ
+      source: ІМТГШ
+    - title: Що Ми Знаємо Про Словаччину? Історія Словаччини | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=tZtrfiESAQ0
+      source: ІМТГШ
+  istorio-polskyi-pohliad:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Що НАСПРАВДІ сталося між поляками та українцями? (Napisy PL)
+      url: https://www.youtube.com/watch?v=6DO5S7FY4wU
+      source: Реальна Історія
+    - title: 'Юзеф Пілсудський: "божевільний" лідер Польщі'
+      url: https://www.youtube.com/watch?v=9tXi2uIOQWg
+      source: Комік Історик
+    - title: З чого почались територіальні суперечки між Україною і Польщею? (Napisy PL)
+      url: https://www.youtube.com/watch?v=hERfjIgExDk
+      source: Реальна Історія
+    - title: Історія Польщі за 15 хвилин | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=Hk8RhT59X3I
+      source: ІМТГШ
+  bio-mykola-leontovych:
+    youtube:
+    - title: Стерта правда про Щедрик. Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=aZSD1lcqhn8
+      source: Реальна Історія
+    - title: 'Щедрик: історія українського хіта №1'
+      url: https://www.youtube.com/watch?v=nPjZGdcy-aQ
+      source: Комік Історик
+  istorio-diaspora-ta-zakhidni-istoriky:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-mongolska-navala:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-mykhailo-chernigivskyi:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-danylo-halytskyi:
+    youtube:
+    - title: 👑 Данило Галицький ⚔️ Перший король України | Документальний фільм про боротьбу і державність
+      url: https://www.youtube.com/watch?v=CVODHhRsfPQ
+      source: Harvard Ukrainian Research Institute
+    - title: Реальна історія Галицько Волинського князівства
+      url: https://www.youtube.com/watch?v=5rW86M7pVYY
+      source: Реальна Історія
+  istorio-metodolohiia-dekolonizatsii:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  bio-symon-petliura:
+    youtube:
+    - title: 'Павло Скоропадський: останній гетьман України'
+      url: https://www.youtube.com/watch?v=kW2WAZqOeMg
+      source: Комік Історик
+  hist-galytsko-volynska-derzhava:
+    youtube:
+    - title: Реальна історія Галицько Волинського князівства
+      url: https://www.youtube.com/watch?v=5rW86M7pVYY
+      source: Реальна Історія
+  hist-boiare-i-shliakhta:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-istorychna-pamiat-i-polityka:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: ГОЛОДОМОР. Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=yc-D5CFnwmI
+      source: Реальна Історія
+    - title: Навіщо росіяни полюють за останками українських правителів? ПРОДОВЖЕННЯ
+      url: https://www.youtube.com/watch?v=8vPbO89ZFoo
+      source: Реальна Історія
+    - title: 'Віктор Ющенко: подкаст про українців'
+      url: https://www.youtube.com/watch?v=t86hh3gFXOc
+      source: Комік Історик
+    - title: 'Данило Яневський: про Шухевича і не тільки @DanyloYanevsky'
+      url: https://www.youtube.com/watch?v=z0I76Eg9p_0
+      source: Комік Історик
+  hist-kinets-halytsko-volyni:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Реальна історія Галицько Волинського князівства
+      url: https://www.youtube.com/watch?v=5rW86M7pVYY
+      source: Реальна Історія
+  istorio-povist-mynulykh-lit-i:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-povist-mynulykh-lit-ii:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-kyievo-pecherskyi-pateryk:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  bio-dmytro-dontsov:
+    youtube:
+    - title: 'Вацлав Липинський: ідеолог українського консерватизму'
+      url: https://www.youtube.com/watch?v=Jv9p_0bXhAs
+      source: Комік Історик
+  istorio-slovo-o-polku-ihorevim:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-velyke-kniazivstvo-lytovske:
+    youtube:
+    - title: Реальна історія Великого князівства Литовського і Руського
+      url: https://www.youtube.com/watch?v=9W1Co8MDYjU
+      source: Реальна Історія
+    - title: історія Великого князівства Литовського
+      url: https://www.youtube.com/watch?v=hhFJcNGEco4
+      source: Комік Історик
+    - title: 'князі Острозькі: від батька до сина'
+      url: https://www.youtube.com/watch?v=UtHGTtiPkS8
+      source: Комік Історик
+    - title: The entire history of Ukraine in 30 minutes. «The real history» with Akim Galimov
+      url: https://www.youtube.com/watch?v=2PrthVAZRro
+      source: Реальна Історія
+  istorio-halytsko-volynskyi-litopys-i:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Реальна історія Галицько Волинського князівства
+      url: https://www.youtube.com/watch?v=5rW86M7pVYY
+      source: Реальна Історія
+  istorio-halytsko-volynskyi-litopys-ii:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-hramoty-ta-akty:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-syntez-serednovichni-dzherela:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-beresteyska-uniia:
+    youtube:
+    - title: 'БЕРЕСТЕЙСЬКА УНІЯ 1596: Розкол чи Спасіння? Православ''я vs УГКЦ ☦️ Історія України 8 клас'
+      url: https://www.youtube.com/watch?v=1rwcOn8lxVs
+      source: Реальна Історія
+  istorio-kozatski-litopysy-ohliad:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-pravoslavna-tserkva-17:
+    youtube:
+    - title: Чому в Україні досі моляться російським царям?
+      url: https://www.youtube.com/watch?v=7e2rAcaviK4
+      source: Реальна Історія
+    - title: 'князі Острозькі: від батька до сина'
+      url: https://www.youtube.com/watch?v=UtHGTtiPkS8
+      source: Комік Історик
+    - title: 'Дмитро Корчинський: історія української церкви @korchynskyi​'
+      url: https://www.youtube.com/watch?v=-jioDbxwX90
+      source: Комік Історик
+  istorio-litopys-samovidtsia:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-litopys-hrabianky:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-litopys-velychka:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-bukovyna-zakarpattia:
+    youtube:
+    - title: В ЧОМУ УНІКАЛЬНІСТЬ БУКОВИНИ? | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=ZgCkV0_nnSI
+      source: ІМТГШ
+    - title: Що Ми Знаємо Про Словаччину? Історія Словаччини | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=tZtrfiESAQ0
+      source: ІМТГШ
+  istorio-universaly-khmelnytkoho:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Навіщо Були Потрібні Універсали? | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=yqH9EY6LY5s
+      source: ІМТГШ
+    - title: The entire history of Ukraine in 30 minutes. «The real history» with Akim Galimov
+      url: https://www.youtube.com/watch?v=2PrthVAZRro
+      source: Реальна Історія
+  istorio-pereyaslavski-statti:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-liudy-ricchi-pospolytoi:
+    youtube:
+    - title: Що насправді Хмельницький зробив полякам?
+      url: https://www.youtube.com/watch?v=JuqLon2RSLw
+      source: Реальна Історія
+    - title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+      url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+      source: ІМТГШ
+  istorio-konstytutsiia-orlyka:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: 'Пилип Орлик: гетьман на фрілансі'
+      url: https://www.youtube.com/watch?v=_8w0QOO9h8M
+      source: Комік Історик
+  istorio-lysty-mazepy:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  istorio-sich-dokumenty:
+    articles:
+    - title: Ukrainian History Course Part 1
+      url: https://www.ukrainianlessons.com/episode71/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 2
+      url: https://www.ukrainianlessons.com/episode72/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+      url: https://www.ukrainianlessons.com/episode73/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: History of Ukraine Course Part 4
+      url: https://www.ukrainianlessons.com/episode74/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Ukrainian History Course Part 5
+      url: https://www.ukrainianlessons.com/episode75/
+      relevance: medium
+      source: ukrainianlessons.com
+  hist-kozatstvo-vytoky:
+    youtube:
+    - title: The entire history of Ukraine in 30 minutes. «The real history» with Akim Galimov
+      url: https://www.youtube.com/watch?v=2PrthVAZRro
+      source: Реальна Історія
+  hist-oun:
+    youtube:
+    - title: Феномен УПА. Реальна історія з Акімом Галімовим
+      url: https://www.youtube.com/watch?v=H1qSvD2y5iE
+      source: Реальна Історія
+    - title: Як «австрійський аристократ» став духовним лідером українців | «Шептицький. Між війною та вірою»
+      url: https://www.youtube.com/watch?v=7vK1j_uH0Ws
+      source: Суспільне Док
+  hist-zaporizka-sich:
+    youtube:
+    - title: 'Реальне життя козаків на Січі: побут, стосунки з жінками та елітний бізнес'
+      url: https://www.youtube.com/watch?v=7WUomx4xpEY
+      source: Реальна Історія
+    - title: ТАЄМНИЦЯ ЗАПОРОЖЦІВ | Історія України від імені Т.Г. Шевченка
+      url: https://www.youtube.com/watch?v=bvxQ8zWlp_w
+      source: ІМТГШ
+    - title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+      url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+      source: ІМТГШ
+    - title: 'Найсильніша Україна в історії: що з нею сталося?'
+      url: https://www.youtube.com/watch?v=uKJBW36MDr0
+      source: Реальна Історія

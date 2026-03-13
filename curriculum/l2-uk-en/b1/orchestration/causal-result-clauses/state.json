@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "causal-result-clauses",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:38:09Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:38:09Z",
+      "task_id": "v5-causal-result-clauses-pA",
+      "mode": "full"
+    }
+  }
+}

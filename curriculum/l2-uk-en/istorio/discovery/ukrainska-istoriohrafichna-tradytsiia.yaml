@@ -1,0 +1,264 @@
+discovered_at: '2026-03-12T23:15:21.280765+00:00'
+query_keywords:
+- Українська історіографічна традиція
+- Михайло Грушевський
+- Львівська школа до 1939
+- Діаспорна історіографія
+- 1945-1991
+- Західні історики України
+- Нова українська історіографія після 1991
+- Trace the evolution of Ukrainian historical thought
+- Assess the contribution of Mykhailo Hrushevsky
+- history
+- історія
+- подія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=ndrhu57hHi4
+  channel: Комік Історик
+  title: 'УРСР: історія радянської України'
+  relevance_score: 0.8
+  relevance_note: Discusses the history of Soviet Ukraine (URSR), which is crucial
+    for understanding the context of 'Нова українська історіографія після 1991'. Critically,
+    it also explores the concept of historical objectivity and the historian's approach,
+    which is directly relevant to the 'historiographical tradition' theme.
+  transcript_excerpt: Професійний історик повинен ставитися безпристрастно до будь-якого
+    аргументу, те, що тему, яку він вивчає, об'єктивно ставитися до історії. Проте
+    це майже ніколи неможливо...
+  embed_suggestion: After section 'Нова українська історіографія після 1991' - provides
+    historical context leading up to this period and discusses the nature of historical
+    inquiry.
+- url: https://www.youtube.com/watch?v=2PrthVAZRro
+  channel: Реальна Історія
+  title: The entire history of Ukraine in 30 minutes. «The real history» with Akim
+    Galimov
+  relevance_score: 0.6
+  relevance_note: Provides a general overview of Ukrainian history from ancient times
+    to modern, delivered by a high-quality source (Realna Istoria). While not specifically
+    about historiography, it sets a broad historical context and touches on the public's
+    current interest in learning history, which indirectly relates to the module's
+    'Why Ukrainian historiography is special' section.
+  transcript_excerpt: До війни історія точно не була пріоритетним питанням для більшості
+    українців. Але тепер все починає змінюватись і чимало з нас хочуть дізнатися історію
+    власної країни.
+  embed_suggestion: After section 'Вступ — Чому українська історіографія особлива?'
+    - provides a general historical overview as context for the study of historiography.
+- url: https://www.youtube.com/watch?v=zNFUqradyV4
+  channel: ІМТГШ
+  title: All history of Ukraine in 10 min.
+  relevance_score: 0.5
+  relevance_note: Offers a quick, engaging overview of Ukraine's entire history. Similar
+    to Candidate 2, it provides general historical context but does not delve into
+    historiography itself. Less detailed than Candidate 2.
+  transcript_excerpt: Уроки з історії були найсумнішими з усіх, за нашого шкільного
+    дитинства. Ці постійні війни і повстання – як їх запам’ятати?
+  embed_suggestion: After section 'Вступ — Чому українська історіографія особлива?'
+    - as an alternative or additional general overview of Ukrainian history.
+- url: https://www.youtube.com/watch?v=uKJBW36MDr0
+  channel: Реальна Історія
+  title: 'Найсильніша Україна в історії: що з нею сталося?'
+  relevance_score: 0.4
+  relevance_note: The video focuses on a specific historical period (the Hetmanate)
+    and events within it, rather than the historiographical tradition or the methodologies
+    of historical writing.
+  transcript_excerpt: 1648 року тут, на Софійській площі, зібрався практично весь
+    Київ... Вважається, що саме в цей день починається історія української козацької
+    держави, яка проіснувала понад 100 років.
+  embed_suggestion: Not a strong fit for a module on historiographical tradition,
+    as it delves into specific history rather than the study of history. Could be
+    a supplementary resource if there's a section on how specific eras are viewed
+    historiographically.
+- url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+  channel: ІМТГШ
+  title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+  relevance_score: 0.4
+  relevance_note: Focuses on the history of Zaporozhian Cossacks and mentions a historical
+    chronicle, but the emphasis is on the historical subject matter rather than the
+    historiographical methods or schools of thought.
+  transcript_excerpt: козацький Літопис Самійла Величка подарунок від наших глядачів
+    і меценатів Валентини і Олександра осмолович ми вдячні
+  embed_suggestion: Not a strong fit. It is too focused on specific historical events
+    rather than the tradition of writing history.
+blogs:
+- url: https://www.ukrainianlessons.com/episode237/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.85
+  topics:
+  - culture
+  - history
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 237
+- url: https://www.ukrainianlessons.com/season6/ULP-6-237-mykhailo-hrushevskyi-velykyi-istoryk-ukrainy/
+  title: ULP 6-237 Михайло Грушевський — великий історик України
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - ULP
+  - Season 6
+  content_type: podcast_episode
+  series: 6
+  season: 6
+  episode: 237
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0115
+  text: "українська історія та література. Після закінчення гімназії Михайло \nСергійович\
+    \ вступив на історико-філологічний факультет Київського \nуніверситету. У студентські\
+    \ роки Грушевський глибоко вивчає історію Середньої \nНаддніпрянщини доби Давньої\
+    \ Русі, а також середньовічну історію \nУкраїни загалом. По закінченні університету\
+    \ він захистив канди­\nдатську дисертацію «Нарис історії Київської землі від смерті\
+    \ \nЯрослава до кінця XIV століття». З 1894 року, очоливши кафедру історії Львівського\
+    \ університету"
+  section_title: Сторінка 91
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0008
+  text: "\e\n\e За допомогою додаткових джерел \nвизначте внесок М. Грушевського \
+    \ \nу  вивчення історії України. ПЕРІОДИЗАЦІЯ СЕРЕДНЬОВІЧЧЯ  \nУ  ВСЕСВІТНІЙ ІСТОРІЇ\n\
+    Назва періоду\nХронологічні межі\nРаннє середньовіччя \nКінець V  — середина ХІ\
+    \ ст. Зріле (Високе)  \nсередньовіччя \nСередина ХІ  — середина \nХІV  ст. Пізнє\
+    \ середньовіччя \nСередина ХІV  — ХV ст."
+  section_title: Сторінка 6
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0006
+  text: "2. Який період всесвітньої історії \nта історії України ви вивчали \nминулого\
+    \ року? Назвіть його \nхронологічні межі. 3. Працюємо в  парах. Обговоріть, \n\
+    які події Стародавньої історії \nУкраїни вам запам’яталися \nнайбільше. Поясніть\
+    \ свою думку. Навчальний фільм\nrnk.com.ua/107458\nПерегляньте відеоролик \n«Михайло\
+    \ Грушевський. Таємниці великих \nукраїнців». Що нового \nви дізналися про цього\
+    \ історичного \nдіяча? Складіть розповідь."
+  section_title: Сторінка 5
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0074
+  text: 'Біблія. – К., 2004. 4. Повернення до Божого Храму. – К., 2004. 5. Ісаєвич
+    Я.Д. Літературна спадщина Івана Федорова. – К., 1989. 6. Довідник з історії України
+    / За ред. І. Підкови та Р. Шуста. – К., 1993. 7. Гайдай Л. Історія України в особах,
+    термінах, назвах і поняттях. – Луцьк,
+
+    2000.'
+  section_title: Сторінка 47
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0367
+  text: "Засновниêом \nêиївсьêої історичної шêоли бóв Володимир Антонович. Йоãо óчень,\
+    \ Михайло \nГрóшевсьêий, започатêóвав львівсьêó шêолó істориêів і ó баãатотомній\
+    \ праці \n«Історія Уêраїни-Рóси» об´рóнтóвав ідею спадêоємності óêраїнсьêої історії\
+    \ від \nчасів Київсьêої Рóсі. Історію Слобідсьêої Уêраїни досліджóвав Дмитро Баãалій,\
+    \ \nХмельниччинó і мазепинсьêó добó — Степан Томашівсьêий, êозацтво — Дмитро \n\
+    Яворницьêий, автор праці «Історія запорозьêих êозаêів» ó 3-х томах. Серед \nóчених-істориêів\
+    \ óспішно працюв"
+  section_title: Сторінка 252
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6215848326683044
+  chunk_id: 479cf43d_c0030
+  text: "Про нього див.: Франко І. \r\nПричинки до історії України-Руси. Ч. І // Писання\
+    \ Івана Франка. — Т.\r\nVI. — Львів, 1912; Герасимчук В. Михайло Грушевський як\
+    \ історіограф\r\nУкраїни // ЗНТШ. — 1922. — Т. 133; Багалій Д. І. Акад. M. C.\r\
+    \nГрушевський і його місце в укр. історіографії (історично-критичний нарис) //\r\
+    \nЧервоний Шлях. — 1927. — №1; Ювілей акад. M. C. Грушевського. 1866 — 1926,\r\
+    \n— К., 1927; Крип’якевич І. Михайло Грушевський. Життя і діяльність. — Львів,\r\
+    \n1935; Стебун І. Проти ворожих теорій в "
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.6192924976348877
+  chunk_id: feaa5fa7_c0933
+  text: "Теоретичне обґрунтування своєї іст. схеми Грушевський\r\nзробив у статті\
+    \ »Звичайна схема »руської історії« і справа раціонального укладу\r\nісторії східнього\
+    \ слов’янства« (надрукованій в »Сборнике статей по\r\nславяноведению«, вид. Академією\
+    \ Наук у Петербурзі, I, 1904 p.). Поза тим\r\nГрушевський опублікував кількасот\
+    \ наук. праць з історії України та укр.\r\nісторіографії й джерелознавства — монографій,\
+    \ розвідок, статтей, заміток,\r\nрецензій, археографічних збірок тощо.\n\nУкраїнські\
+    \ історичні досліди на поч"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.6161077618598938
+  chunk_id: feaa5fa7_c0932
+  text: "Михайло Грушевський (1866\r\n— 1934). Укр. історіографія наприкінці XIX ст.\
+    \ диспонувала вже великим\r\nдоробком монографічної літератури і археографічних\
+    \ видань. Разом із цим\r\nзагальний зріст укр. культури й нац. свідомости владно\
+    \ висував потребу наук.\r\nсинтезування іст. процесу укр. народу і якнайширшої\
+    \ популяризації історії\r\nУкраїни. Цей почесний обов’язок припав київській іст.\
+    \ »школі«, створеній\r\nАнтоновичем, і саме учень Антоновича Михайло Грушевський\
+    \ побудував, уґрунтував\r\nі впровадив у наук. в"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

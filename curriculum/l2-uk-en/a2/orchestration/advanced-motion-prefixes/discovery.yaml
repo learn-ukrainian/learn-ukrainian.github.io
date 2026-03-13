@@ -1,0 +1,151 @@
+discovered_at: '2026-03-12T16:23:04.002560+00:00'
+query_keywords:
+- Advanced Motion Prefixes
+- перейти
+- переходити
+- пройти
+- проходити
+- підійти
+- підходити
+- 'Геометрія руху: Пере-, Про-, Об-'
+- 'Geometry of Motion: Crossing, Through, Around'
+- 'Наближення та Прибуття: Під-, До-, За-, При-'
+- 'Approach and Arrival: Approaching, Reaching, Popping in, Arriving'
+- Практика та Корекція
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=dcKCbXuAUjQ
+  channel: Bright Kids Ukrainian
+  title: My Elevator Stopped at a Floor That Doesn’t Exist | Horror Podcast
+  relevance_score: 0.8
+  relevance_note: The video, though a horror podcast, uses numerous motion verbs with
+    prefixes (e.g., пролітає, тягне вгору, пройти) in context, directly illustrating
+    the concepts of 'crossing, through' (про-) and 'upward motion' related to the
+    module's focus on advanced motion prefixes.
+  transcript_excerpt: ви відчуваєте, як ліфт пролітає повз ваш поверх... Він просто
+    продовжує рухатися. Він тягне вас вгору.
+  embed_suggestion: 'After section Геометрія руху: Пере-, Про-, Об- -- This section
+    explicitly covers the ''про-'' prefix, which is well-demonstrated in the video''s
+    narrative.'
+- url: https://www.youtube.com/watch?v=hd6axW9XqNI
+  channel: Klopotenko
+  title: MANDRIKY Ukrainian COOKIES from ENEID Kotlyarevsky 🍪 Ievgen Klopotenko
+  relevance_score: 0.2
+  relevance_note: The video is in Ukrainian but its topic is entirely focused on Ukrainian
+    cuisine, cultural history, and literature, which is unrelated to the grammar topic
+    of advanced motion prefixes.
+  transcript_excerpt: Мене звати Євген Клопотенко. Ви на моєму YouTube каналі і тут
+    ми говоримо про українське і готуємо українське.
+  embed_suggestion: Not suitable for this module -- The content is unrelated to the
+    module's grammar topic.
+- url: https://www.youtube.com/watch?v=TYr_7AZL-5Q
+  channel: Klopotenko
+  title: Жульєн | Жульєн з Куркою і Грибами Рецепт | Євген Клопотенко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://opentext.ku.edu/dobraforma/chapter/28-3/
+  title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/28-1/
+  title: 'Dobra Forma: Verbs of Motion (іти – їхати)'
+  source: dobraforma
+  relevance_score: 0.44999999999999996
+  topics:
+  - motion
+  - verbs
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/28-2/
+  title: 'Dobra Forma: Verbs of Motion (ходити – їздити)'
+  source: dobraforma
+  relevance_score: 0.44999999999999996
+  topics:
+  - motion
+  - verbs
+  - grammar
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - prefixes
+  - verbs
+  - aspect
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0056
+  text: "55\n121.\tА.  Визначте лексичне значення розміщеного в центрі схеми слова.\
+    \ \nбігти\nпри\nза\nдо\nпо\nна\nв\nз\nвід\nви\nпере\nоб\nпід\nБ.  Додайте почергово\
+    \ до дієслова бігти префікси. Які додаткові зна-\nчення вносять вони в лексичне\
+    \ значення дієслова? \nВ.  Поміркуйте, як префікси допомагають збагатити мову.\
+    \ \nПрефікс (від лат. prae – попереду і fixus – прикріпле-\nний) – це значуща\
+    \ частина слова, яка стоїть перед коренем \nі служить для утворення нових слів.\
+    \ НАПРИКЛАД: чудовий – \nпречудовий, їхати – виїхати, плат"
+  section_title: Сторінка 58
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0061
+  text: "Розділ 2. Будова слова. Орфографія \n54\n§ 9. Написання префіксів ПРЕ-, ПРИ-,\
+    \ ПРІ-\nВправа 89\n1. Прочитайте слова, вставляючи голосні \nзвуки, літери на\
+    \ позначення яких пропу-\nщено.\nпр..сильний\nпр..морський\n2. Поміркуйте, однаковий\
+    \ чи різні звуки \nпропущено в  словах.\n3. Як ви вважаєте, чи можна перевірити\
+    \ \nправопис літери на позначення голосного у  префіксі?\nВ українській мові маємо\
+    \ префікси пре-, при-, прі-,\nякі відрізняються правописом і  значенням.\nПРЕ-\n\
+    ПРИ-\nПРІ-\nНадає значення \nнайвищої міри \nв"
+  section_title: Сторінка 54
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0025
+  text: "27\n\t Спиши речення зі словами, у яких є подвоєння. Поясни пра­\nвопис слів\
+    \ із пропущеними буквами. Познач префікси.\n\t Розглянь малюнок. Опиши гірську\
+    \ річку Черемош (усно).\n68.\t\tПрочитай слова. Порівняй правопис прийменників\
+    \ з імен-\nниками та слів із співзвучними префіксами. Спиши, уста-\nвивши пропущені\
+    \ букви. \nБез зубів — без..убий; без звуків — без..вучний; від \nдзеркала — від..зеркалює;\
+    \ без заперечень — без..апе-\nречний.\n69.\t\tПрочитай слова.\nОб’єднати, роз’їзд,\
+    \ під’їхав, приємний, приїзд, від’ї"
+  section_title: Сторінка 27
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0066
+  text: "65\n1. Присолити, пригасити, приклеїти.\n2. Прикордонний, припечений, пришкільний.\n\
+    3. Приїхати, приперчити, прибігти.\n4. Прибережний, приміський, приклеєний. \n\
+    151.\tСкладіть 2–3 речення-компліменти (для \nпривітання з днем народження, святом),\
+    \ вико-\nриставши слова з префіксом пре-.\n152.\tВиконайте завдання одного з варіантів.\
+    \ \nВаріант 1. Користуючись відповідними \nтехнічними засобами, створіть аудіо-,\
+    \ фото- чи відеорекомендації (по-\nстер, слайди, відеоролик тощо) для соцмереж\
+    \ про правила написання \nп"
+  section_title: Сторінка 68
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0027
+  text: "1. Прочитай та спиши слова. Познач у них префікс. Чітко \nчи нечітко вимовляються\
+    \ звуки, що їх позначають виді­\nлені букви? Чому?\nПремудрий, превисокий, прибіг,\
+    \ прилетів.\n2. Як ти гадаєш, чому в одних словах ми пишемо префікс пре-, \nа\
+    \ в інших — префікс при-?\n3. Досліди, в яких словах треба писати префікс пре-,\
+    \ \nа в яких — при-.\nКрок 1. Який префікс в утворених словах можна замінити словом\
+    \ \nдуже?\nКрок 2. Випиши слова з цим префіксом. Познач його. \nКрокЗ. Зроби висновок.\
+    \ Порівняй його з правилом.\nП"
+  section_title: Сторінка 29
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

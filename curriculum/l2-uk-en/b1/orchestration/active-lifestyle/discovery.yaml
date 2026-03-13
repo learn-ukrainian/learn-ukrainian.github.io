@@ -1,0 +1,126 @@
+discovered_at: '2026-03-12T18:36:47.477184+00:00'
+query_keywords:
+- Активний відпочинок
+- Історія та культура
+- History and Culture
+- Сучасний активний стиль життя
+- Modern Active Lifestyle
+- Граматика та типові помилки
+- Grammar and Common Errors
+- Практичні сценарії
+- Practical Scenarios
+- active lifestyle habits in Ukrainian
+- texts about fitness and outdoor activities
+- vocabulary for diverse physical activities
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=6evAnBiGrEI
+  channel: Klopotenko
+  title: The perfect dough for dumplings with cottage cheese and honey | Ukrainian
+    dish | Ievgen Klopotenko
+  relevance_score: 0.1
+  relevance_note: The video is about preparing varenyky, a Ukrainian dish, which is
+    completely unrelated to the module topic of 'Активний відпочинок' (Active Recreation/Lifestyle).
+  transcript_excerpt: Сьогодні пропоную приготувати вареники Канєшно, вареники...
+    З додаванням гречки З додаванням борошна. Це буде щось незвичне, класне.
+  embed_suggestion: Cannot be embedded - the content is irrelevant to the module's
+    topic.
+blogs:
+- url: https://www.youtube.com/results?search_query=качалка+гідропарк
+  title: Спортзал просто неба "Качалка"
+  source: Unknown
+  relevance_score: 0.95
+  topics: []
+- url: https://www.youtube.com/
+  title: Вправи на вуличних тренажерах
+  source: Unknown
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/about-crimea/
+  title: About Crimea — History and Culture
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - crimea
+  - history
+  - geography
+  - culture
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0020
+  text: "Столітні історії парків і водойм оповиті легендами: тут відпочива-\nли цісарі\
+    \ та проводили найбільші ярмарки старої Європи (І. Ковалик). 4. Напишіть текст\
+    \ у публіцистичному стилі на тему «Чому змалку треба дба-\nти про культуру харчування»\
+    \ (п’ять–вісім речень). Використайте ключові \nслова. Ключові слова: здоров’я,\
+    \ краса, фастфуд, корисний, шкідливий, ожи-\nріння, хвороба серця. 5. Знайдіть\
+    \ у газеті або журналі текст публіцистичного стилю. Випишіть не-\nвеликий фрагмент\
+    \ (чотири-п’ять речень). Доведіт"
+  section_title: Сторінка 18
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0008
+  text: "Отже, виникли різні види мистецтва, кожний із яких своєрідно \nвідображав\
+    \ життя та забезпечував різноманітні естетичні потреби людей. Окрім декоративно-ужиткового\
+    \ мистецтва (художнього оздоблення предме­\nтів повсякденного користування) та\
+    \ архітектури, розвинулися художня лі­\nтература, живопис і графіка, скульптура,\
+    \ музика й хореографія, театр і кіно. Які ж функції відіграє мистецтво в житті\
+    \ людини? По-перше, під час читання художнього твору ви дістаєте позитивні емо-\n\
+    ції. Мистецький твір прищеплю"
+  section_title: Сторінка 8
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0497
+  text: "у  побуті населення українських \nземель відбулися суттєві зміни. Вони були\
+    \ викликані стрімким \nрозвитком технологій виробництва та процесами модернізації,\
+    \ що охо-\nпили суспільство, насамперед урбанізацією, зміною ролі жінки, зростан-\n\
+    *\t\nУрок може бути проведений як навчальна екскурсія до краєзнавчого або \nісторичного\
+    \ музею."
+  section_title: Сторінка 274
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

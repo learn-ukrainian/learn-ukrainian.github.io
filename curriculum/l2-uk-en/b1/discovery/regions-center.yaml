@@ -1,0 +1,179 @@
+discovered_at: '2026-03-12T18:20:20.532808+00:00'
+query_keywords:
+- 'Українські регіони: Центр'
+- Центр
+- The Center as the Heart and Cradle of Ukraine
+- 'Полтавщина: Колиска літературної мови'
+- 'Poltava Region: Cradle of the Literary Language'
+- 'Черкащина: Козацьке серце та гетьманська слава'
+- 'Cherkasy Region: Cossack Heart and Hetman Glory'
+- 'Київ: Від княжої столиці до європейського центру'
+- 'Kyiv: From Princely Capital to European Center'
+- Робота над типовими помилками
+- Working on Common Learner Errors
+- Джерело української ідентичності
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=nMYYDM0-gHw
+  channel: Klopotenko
+  title: KNYSH - an unsurpassed UKRAINIAN dish in 30 minutes | Ievgen Klopotenko
+  relevance_score: 0.9
+  relevance_note: The video explicitly mentions Poltavians (полтавці) and directly
+    refers to knysh as a 'central Ukrainian dish' (центрально-українська страва).
+    Poltava is a key region covered in the module, and the link to Kotlyarevsky's
+    'Eneida' subtly connects to Poltava's role as the 'Cradle of the Literary Language'.
+  transcript_excerpt: А потім я почитав в «Енеїді» Котляревського…Почитав що полтавці
+    також вважають, що це книш ваще тупо центрально-українська страва.
+  embed_suggestion: 'After Полтавщина: Колиска літературної мови — The direct mention
+    of Poltavians and the dish being a ''central Ukrainian dish'' makes it highly
+    relevant to this section, showcasing a cultural aspect of the region and its connection
+    to broader central Ukrainian identity.'
+- url: https://www.youtube.com/watch?v=6Rh0041xEog
+  channel: Klopotenko
+  title: 'ЧЕРНІГІВЩИНА НА СМАК: забуті українські страви та смаки | Гастро-експедиція
+    Євгена Клопотенка'
+  relevance_score: 0.7
+  relevance_note: The video focuses on the Chernihiv region, which is geographically
+    adjacent and culturally related to the 'Center' regions (Kyiv, Poltava). It explores
+    regional identity through local gastronomy and traditions, reinforcing the broader
+    theme of 'Ukrainian Regions' and 'Source of Ukrainian Identity' from a different
+    but relevant regional perspective.
+  transcript_excerpt: Чернігівщина - це регіон в якому не бояться руйнувати стереотипи
+    та експериментувати зі смаками... ця подорож здивувала мене не лише унікальним
+    смаками а й несподівано привела до найдавнішої згадки про їжу в історії України
+    це регіон де минуле оживає через смаки і традиції.
+  embed_suggestion: 'After Підсумок: Джерело української ідентичності — This video,
+    while featuring Chernihivshchyna, effectively demonstrates how regional culinary
+    traditions contribute to a broader Ukrainian identity, serving as a concrete example
+    of the module''s summary theme.'
+blogs:
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode108/
+  title: Kyiv tour + Participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode93/
+  title: At the food fair in Ukraine + Diminutive words in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode95/
+  title: My life in Kyiv (Voice message №3)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/central-ukraine/
+  title: 'Central Ukraine: Culture and History'
+  source: Regional guide
+  relevance_score: 0.95
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0248
+  text: "Оцінювальні жанри: похвала, осуд \x1F\n175\nІсторичні заслуги Полтави як\
+    \ осереддя українського непроминущі. Ми \nвсі виросли з відчуттям того, що Полтава\
+    \ є столицею класичної україн-\nської літератури. Полтава — животворна, відновна,\
+    \ торжествувальна, \nнеповторна корона рідного краю — правдивим золотом сяє в\
+    \ духовно-ін-\nтелектуальному житті нашої країни, живить скарбами рідної землі,\
+    \ гріє \nдушу чарами м’якої вимови, стелиться рушниками мудрих доріг Григорія\
+    \ \nСковороди. Полтава, як щира молитва, як матер"
+  section_title: Сторінка 175
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 3-klas-ukrainska-mova-ponomarova-2020-1_s0131
+  text: "132\n4. Випиши з тексту про ярмарок виділені речення. Підкрес-\nли підмет\
+    \ однією лінією, присудок — двома лініями,\nа під  кожним  другорядним  членом\
+    \  постав  три крапки.\n4\n5. Прочитай повідомлення Щебетунчика.\n3. Прочитай\
+    \ повідомлення Родзинки. Поясни, чому окремі \nслова написані з великої букви.\n\
+    3\n5\nПолтавщину на весь світ прославляє відоме село. \nЦе —  Великі Сорочинці.\
+    \ Щороку тут проходить\nСорочинський ярмарок. Чого там тільки немає! \nВишиванки,\
+    \ картини, прикраси, різноманітні виро-\nби з глини"
+  section_title: Сторінка 132
+  grade: 3
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0066
+  text: 'Використовуючи їх, розкрийте взаємозв’язок літератур-
+
+    ної мови й діалектів. марець — березень
+
+    бадіка — старший віком чоло-
+
+    вік, дядько, сестрин чоловік
+
+    корзаки — чоботи
+
+    засколобина — ущелина
+
+    маржина — худоба
+
+    колешня — хлів, стайня
+
+    бутина — ділянка лісу, призна-
+
+    чена на зруб
+
+    ґазда — хазяїн
+
+    смерека — ялина
+
+    клен — головень (вид риби)
+
+    леда — тільки-но
+
+    бистрень — бистрінь
+
+    Діалект, а ми його надпишем
+
+    Міццю духу і огнем любови
+
+    І нестерпний слід його запишем
+
+    Самостійно між культурні мови. (І. Франко)
+
+    Пі'
+  section_title: Сторінка 36
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0003
+  text: "3. Що таке «історична \nперіодизація», «хронологічні \nмежі», «історичні\
+    \ джерела»? 4. На які періоди поділяють історію \nУкраїни? 5. Працюємо в  парах.\
+    \ Метод \n«Удвох». Обговоріть і  назвіть \nособливості суспільно-\nполітичного\
+    \ розвитку \nукраїнських земель \nу  Середньовіччі. 6. Працюємо разом. Метод \n\
+    «Мозковий штурм». Назвіть \nосновні здобутки в  різних \nсферах розвитку середньовічного\
+    \ \nукраїнського населення. Тестові завдання\nrnk.com.ua/109579"
+  section_title: Сторінка 4
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 3-klas-ukrainska-mova-ponomarova-2020-1_s0132
+  text: "133\n8. Який майстер-клас тебе зацікавив найбільше? Напиши \nпро це текст\
+    \ (3–4 речення).\n8\n9. Прочитай повідомлення Читалочки і спиши. Підкресли \n\
+    головні члени в кожному реченні.\n9\nПолтавщину прославляє знамените село Оп³шня.\
+    \ \nТут здавна живуть майстри гончарної справи. Вони \nвиготовляють із глини статуетки,\
+    \ посуд, іграшки і \nнавіть скульптури.\nТуристи охоче купують керамічні вироби\
+    \ з \nОпішні.\n2. Установи зв’язок слів у записаному реченні за поданими \nпитаннями.\n\
+    1. Прочитай текст. Випиши виділене "
+  section_title: Сторінка 133
+  grade: 3
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

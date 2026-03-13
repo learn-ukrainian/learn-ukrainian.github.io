@@ -156,6 +156,29 @@ Word counts:
 ===CONTENT_VERIFY_END===
 ```
 
+## Activity Plans (MANDATORY)
+
+Based on your content, propose activity plans for Phase 3. Each plan specifies the activity type, focus, and item count. These will be built later using textbook exercises from RAG.
+
+```
+===ACTIVITY_PLANS_START===
+- type: {quiz|fill-in|match-up|true-false|unjumble|group-sort|anagram|error-correction|cloze|select|translate}
+  description: "{what the activity practices}"
+  item_count: {6-12}
+  focus: "{specific grammar/vocab point from this lesson}"
+  textbook_source: "{which textbook pattern to adapt, or 'original'}"
+
+- type: ...
+  ...
+===ACTIVITY_PLANS_END===
+```
+
+**Rules for activity plans:**
+- Plan {ACTIVITY_MIN}+ activities with at least 4 different types
+- Each plan should target a specific teaching point from your content
+- Reference textbook exercise patterns where possible (e.g., "Adapted from Bolshakova Grade 1, syllable matching")
+- Activities must test LANGUAGE skills, not content recall (no "What year did X happen?")
+
 ## Friction Report (MANDATORY)
 
 ```

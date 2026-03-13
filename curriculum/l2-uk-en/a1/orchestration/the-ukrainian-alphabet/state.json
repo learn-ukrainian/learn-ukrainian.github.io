@@ -3,30 +3,36 @@
   "slug": "the-ukrainian-alphabet",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T08:42:03Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:03:09Z",
+      "ts": "2026-03-12T20:16:10Z",
       "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T20:16:10Z",
+      "note": "merged-into-research"
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-12T09:11:51Z",
-      "self_audited": true
+      "ts": "2026-03-12T21:49:06Z"
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-12T09:11:51Z",
+      "ts": "2026-03-12T21:49:06Z",
       "note": "extracted-from-full-build"
     },
     "validate": {
       "status": "complete",
-      "ts": "2026-03-12T09:23:06Z",
-      "attempts": 2
+      "ts": "2026-03-12T21:50:50Z",
+      "attempts": 1
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-12T21:59:40Z",
+      "attempts": 2,
+      "note": "fix-iter1"
     }
-  }
+  },
+  "last_updated": "2026-03-13T08:47:17Z"
 }

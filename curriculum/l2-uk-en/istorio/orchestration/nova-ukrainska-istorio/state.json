@@ -1,0 +1,18 @@
+{
+  "track": "istorio",
+  "slug": "nova-ukrainska-istorio",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:41:44Z",
+      "task_id": "v5-nova-ukrainska-istorio-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:41:44Z",
+      "note": "merged-into-research"
+    }
+  }
+}

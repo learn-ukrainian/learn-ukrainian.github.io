@@ -1,0 +1,62 @@
+{
+  "module": "being-and-becoming",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-12T21:16:38.949758Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-12T21:15:53.315756Z",
+    "meta": null,
+    "activities": "2026-03-12T21:15:53.316769Z",
+    "vocabulary": "2026-03-12T21:15:53.317579Z",
+    "research": "2026-03-12T20:44:51.525765Z",
+    "plan": "2026-03-05T15:41:10.430730Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2411/2000 (raw: 2744) | pedagogy: 16 violations | immersion: 70.8% HIGH (target 45-65% (A2.1))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "30/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Critical Template Violations",
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 1
+  }
+}

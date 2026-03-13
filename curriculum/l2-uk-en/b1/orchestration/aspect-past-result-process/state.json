@@ -3,15 +3,16 @@
   "slug": "aspect-past-result-process",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:50:15Z",
-      "note": "rebuild-kept"
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:51:22Z",
+      "ts": "2026-03-12T20:59:24Z",
       "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T20:59:24Z",
+      "task_id": "v5-aspect-past-result-process-pA",
+      "mode": "full"
     }
   }
 }

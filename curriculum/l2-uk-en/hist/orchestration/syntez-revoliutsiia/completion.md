@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 97 — E2E
+FAIL: pipeline hist 97
 
   Module:   syntez-revoliutsiia
   Track:    hist
-  Mode:     e2e
-  Words:    3848 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  FAIL
-  Date:     2026-02-25T22:55:03Z
+  Date:     2026-03-13T01:17:39Z

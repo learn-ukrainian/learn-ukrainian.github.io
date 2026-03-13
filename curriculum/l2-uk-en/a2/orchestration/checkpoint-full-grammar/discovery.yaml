@@ -1,0 +1,209 @@
+discovered_at: '2026-03-12T17:29:51.487272+00:00'
+query_keywords:
+- Checkpoint — Full Grammar
+- помилка
+- правило
+- відмінок
+- Вступ та огляд
+- Introduction and Overview
+- 'Милозвучність: Секрет мелодійності'
+- 'Euphony: The Secret of Melodiousness'
+- Система відмінків та Кличний
+- The Case System and the Vocative
+- 'Дієслово: Вид та Рух'
+- 'The Verb: Aspect and Motion'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=fjvXz33eEeQ
+  channel: Klopotenko
+  title: 'НЕ ГОТУЙТЕ ТАК МАКАРОНИ: 3 помилки, які постійно роблять 🚫'
+  relevance_score: 0.1
+  relevance_note: A cooking video discussing common mistakes in pasta preparation;
+    not relevant to the module's grammar topics.
+  transcript_excerpt: Давайте розберемо три основні помилки, бо дуже багато із нас,
+    виявляється роблять помилки.
+  embed_suggestion: Not suitable for embedding due to irrelevance to grammar module.
+- url: https://www.youtube.com/watch?v=9rFDxptDI1U
+  channel: Klopotenko
+  title: КОМБУЧА вдома! ФЕРМЕНТАЦІЯ ЧАЙНОГО ГРИБА | ПРОСТИЙ РЕЦЕПТ від Клопотенка.
+    Як зробити комбучу
+  relevance_score: 0.1
+  relevance_note: A cooking video demonstrating how to make kombucha; not relevant
+    to the module's grammar topics.
+  transcript_excerpt: Всім привіт. Настав час, бо ви любите ферментацію. І ми йдемо
+    з вами далі. Це камбуча.
+  embed_suggestion: Not suitable for embedding due to irrelevance to grammar module.
+blogs:
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 46
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/fmu46/
+  title: 'Grammar point: Plural of nouns in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - plural
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 46
+- url: https://www.ukrainianlessons.com/fmu57/
+  title: 'Grammar Point: Verb conjugations in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 57
+- url: https://www.ukrainianlessons.com/episode42/
+  title: My Room – Plural nouns in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - plural
+  - vocabulary
+  - housing
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 42
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0236
+  text: '222
+
+    222
+
+    ЗМІСТ
+
+    § 54. Особливості  написання  іменників  у  кличному  відмінку . . . 106
+
+    § 55. Відмінювання іменників, що мають форму тільки множини . . . 108
+
+    § 56. Написання та відмінювання імен по батькові й прізвищ . . . . . 110
+
+    § 57. Букви е, и, і в суфіксах іменників  . . . . . . . . . . . . . . . . . .
+    . . . . . 112
+
+    § 58. Написання не з  іменниками  . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 114
+
+    § 59. Правопис складних іменників . . . . . . . . . . . . . . . . . . . . . .
+    . . . . '
+  section_title: Сторінка 222
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0235
+  text: '80
+
+    § 43. Рід  іменників. Іменники  спільного  роду . . . . . . . . . . . . . . .
+    . 83
+
+    § 44. Рід  незмінюваних  іменників . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 86
+
+    § 45. Число  іменників . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . 88
+
+    § 46. Відмінки  іменників . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . 90
+
+    § 47. Поділ  іменників  на відміни  та  групи . . . . . . . . . . . . . . . .
+    . . . 92
+
+    § 48. Розвиток мовлення. Письмовий  вибі'
+  section_title: Сторінка 221
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-golub-2023_s0261
+  text: 'Частини мови
+
+    § 22. Самостійні частини мови: повторення вивченого ..............................55
+
+    § 23. Загальна характеристика частин мови. Службові частини мови. Вигук ....57
+
+    § 24. Іменник як частина мови ..............................................................60
+
+    § 25. Іменники загальні і власні, конкретні та абстрактні .........................62
+
+    § 26. Велика буква та лапки у власних назвах .........................................64
+
+    § 27. Рід іменників .................................'
+  section_title: Сторінка 255
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0064
+  text: "66\n2. Пригадай назви відмінків іменників і їхні питання. Перевір\nсебе за\
+    \ таблицею на с. 38. Познач відмінок іменників\nу  записаних  словосполученнях.\n\
+    2\n3. Розглянь таблицю відмінювання прикметників.\n3\nВід-\nмінок\nЧоловічий\n\
+    рід\nЖіночий\nрід\nСередній\nрід\nН.\nР.\nД.\nЗн.\nОр.\nМ.\n(який?) добрий\n(якого?)\
+    \ доброго\n(якому?) доброму\nяк Н. або Р.\n(яким?) добрим\n(на якому?) \nна доброму\n\
+    на добрім\n(яка?) добра\n(якої?) доброї\n(якій?) добрій\n(яку?) добру\n(якою?)\
+    \ доброю\n(на якій?) \nна добрій\n(яке?) добре\n(якого?) доб"
+  section_title: Сторінка 66
+  grade: 4
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0036
+  text: "38\n73. \n1. Розгляньте таблицю. Зверніть увагу на назви від-\nмінків. На\
+    \ які питання відповідає кожен з них? Чим \nвідрізняється кличний відмінок від\
+    \ інших відмінків?\nВІДМІНЮВАННЯ ІМЕННИКІВ\nНазва  \nвідмінка\nПитання та \nдопоміжні\
+    \ \nслова\nВідмінювання  \nіменників\nв однині\nу множині\nНазивний \n(Н.)\nхто?\
+    \ що? \n(є)\nучень\nшкола\nучні\nшколи\nРодовий \n(Р.)\nкого? чого? \n(немає)\n\
+    учня\nшколи\nучнів\nшкіл\nДавальний\n(Д.)\nкому? чому? \n(даю)\nучневі (­ю)\n\
+    школі\nучням\nшколам\nЗнахідний\n(З.)\nкого? що? \n(бачу)\nучня\nшколу\nучнів"
+  section_title: Сторінка 38
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "passive-voice-system",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:30:29Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:30:29Z",
+      "task_id": "v5-passive-voice-system-pA",
+      "mode": "full"
+    }
+  }
+}

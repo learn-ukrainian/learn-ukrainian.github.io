@@ -1,0 +1,118 @@
+discovered_at: '2026-03-12T16:26:33.333740+00:00'
+query_keywords:
+- Другорядні члени речення
+- Другорядні члени та їхня роль у реченні
+- Secondary Members and Their Role in the Sentence
+- 'Додаток: прямий і непрямий'
+- 'Object: Direct and Indirect'
+- Означення та прикладка
+- Attribute and Apposition
+- 'Обставини: вісім типів'
+- 'Adverbials: Eight Types'
+- Комплексний аналіз та практика
+- Complex Analysis and Practice
+- secondary sentence members (object, attribute, adverbial, apposition)
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=XLr33I7bQS4
+  channel: Суспільне Культура
+  title: Мирослав Лаюк про любовну поезію Дмитра Павличка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode63/
+  title: Ukrainian Holiday Greetings
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode47/
+  title: Food festivals + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode48/
+  title: Eating habits + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode49/
+  title: Syrnyky recipe + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0215
+  text: "210\nВідомості із синтаксису й пунктуації. Другорядні члени речення\nДруг\n\
+    повернувся\nмій\nчий?\nучора\nколи?\nДругорядні члени речення\nВправа 341\n1.\
+    \ Прочитайте речення .\nДруг повернувся.\nМій друг учора повернувся.\n2. Порівняйте\
+    \ речення . Чим вони відрізня-\nються?\n3. Виділіть граматичну основу . Чи однакова\
+    \ \nвона в  обох реченнях? Чи однакова в  реченнях основна думка?\n4. У  якому\
+    \ реченні більше інформації? Чому?\nУ структурі речення, окрім головних членів,\
+    \ які виражають \nосновну думку, можуть бути й ін"
+  section_title: Сторінка 210
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0174
+  text: "117\nДругорядні члени речення. Складні випадки кваліфікації \nдругорядних\
+    \ членів речення\n§ 22\nЯкі труднощі виникають при кваліфікації (розмежуванні)\
+    \ \nдругорядних членів речення? 128  \n \a«Найкращий спосіб пояснити  — це самому\
+    \ зробити». Розгляньте таблицю, підготуйте розповідь про другорядні члени речен-\n\
+    ня та способи їх вираження. Другорядні члени речення\nДодаток\nОзначення\nОбставина\n\
+    Означає предмет і відпо-\nвідає на питання непря-\nмих відмінків: За рід-\nний\
+    \ край життя віддай \n(Нар. творчість). Дод"
+  section_title: Сторінка 117
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0164
+  text: "159\n § 69.  Другорядні  члени  речення.  Означення\n1. Прочитайте речення\
+    \ та виконайте завдання. \nНаш двір прикрашає лелече гніздо. \nУ дитинстві я найбільше\
+    \ любила казки про лелек.\nКрила лелеки широкі, їхній розмах сягає двох метрів.\n\
+    А. Визначте, на яке питання — який? або чий? — відповідає кожне з ви­\nділених\
+    \ слів.\nБ. Якими членами речення є виділені слова?\n§ 69.  ДРУГОРЯДНІ  ЧЛЕНИ\
+    \  РЕЧЕННЯ.  ОЗНАЧЕННЯ\nОзначення — другорядний член речення, що вказує на ознаку\
+    \ предме-\nта й відповідає на питання я"
+  section_title: Сторінка 159
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0156
+  text: "Пропуск членів речення може \nробити спілкування зручним, жвавим, невимушеним.\
+    \ Особливості речень\nПропущені члени речення\nРоль у мовленні"
+  section_title: Сторінка 138
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0001
+  text: "РЕЧЕННЯ\nЧЛЕНИ  РЕЧЕННЯ\nВІДМІНКИ\nКритерій\nТипи речень\nЗа метою\nвисловлювання\n\
+    розповідні\n(містять повідомлення про факти,  \nподії чи явища дійсності)\nпитальні\n\
+    (містять запитання)\nспонукальні\n(виражають спонукання до дії)\nЗа емоційним\n\
+    забарвленням\nокличні\n(вимовляємо з підсиленою інтонацією)\nнеокличні\nЗа складом\n\
+    граматичної\nоснови\nдвоскладні\n(граматична основа має підмет і присудок)\nодноскладні\n\
+    (граматична основа має один  \nголовний член речення)\n означено-особові\n неозначено-особові\n\
+     узагальнен"
+  section_title: Сторінка 2
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

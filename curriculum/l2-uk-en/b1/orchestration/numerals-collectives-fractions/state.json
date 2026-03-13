@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "numerals-collectives-fractions",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T16:41:02Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T16:41:02Z",
+      "task_id": "v5-numerals-collectives-fractions-pA",
+      "mode": "full"
+    }
+  }
+}

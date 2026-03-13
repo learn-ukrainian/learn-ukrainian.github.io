@@ -1,0 +1,166 @@
+discovered_at: '2026-03-12T20:07:35.974006+00:00'
+query_keywords:
+- Дискусії та дебати
+- Мистецтво дискусії та історія риторики
+- The Art of Discussion and History of Rhetoric
+- Висловлення та обґрунтування погляду
+- Expressing and Justifying a Viewpoint
+- Етикет незгоди та культура дебатування
+- Etiquette of Disagreement and Debate Culture
+- Аргументація та контраргументація
+- Argumentation and Counter-argumentation
+- Формальні дебати та практичне моделювання
+- Formal Debates and Practical Modeling
+- opinions in formal discussions
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=zm1yR7hg4V8
+  channel: Суспільне Культура
+  title: Дискусія — обговорення «Про стійкість у літературному каноні України» | КНИЖКОВИЙ
+    АРСЕНАЛ
+  relevance_score: 0.9
+  relevance_note: This video is a direct example of a formal discussion ('Дискусія
+    — обговорення') covering the purpose and debate around a literary canon, demonstrating
+    expression and justification of viewpoints.
+  transcript_excerpt: сьогодні ми будемо говорити про стійкість про стійкість У літературному
+    каноні... для чого потрібен Канон Як ви вже слушно сказали та Тобто це певний
+    такий стрижень не скажу ідеологічний а ідейний напевно стрижень та довколо якого
+    точаться різні суперечки.
+  embed_suggestion: After section Формальні дебати та практичне моделювання — as a
+    practical example of a formal discussion.
+- url: https://www.youtube.com/watch?v=ET3EV4navzw
+  channel: Суспільне Культура
+  title: 'Війна як крах цивілізації: чи буде щастя після війни? | Дискусія з Кебуладзе
+    і Епплбом | BookForum'
+  relevance_score: 0.9
+  relevance_note: This video is explicitly a 'Дискусія' on a profound philosophical
+    topic, showcasing how participants express, justify, and debate complex viewpoints,
+    directly aligning with the module's core themes.
+  transcript_excerpt: Та ее ми можемо продовжити цю тезу і запитати, чи є аморальним
+    вбивати вбивці? ... Війна і цивілізація залишив, ми домовилися залишити другу
+    частину на друге коло.
+  embed_suggestion: After section Формальні дебати та практичне моделювання — as another
+    example of a formal debate on complex ethical questions.
+- url: https://www.youtube.com/watch?v=e3AveAAiREc
+  channel: Суспільне Док
+  title: Чи заборонять участь проросійських партій у виборах? РФ викрадає дітей |
+    НОВИЙ ВІДЛІК від 10.03.23
+  relevance_score: 0.9
+  relevance_note: This is a 'суспільно-політичне ток-шоу' explicitly framed as a 'конструктивна
+    дискусія' on a current political issue, serving as an excellent demonstration
+    of formal debate, argumentation, and navigating disagreement.
+  transcript_excerpt: в цій студії підбуватиметься конструктивна дискусія сподіваюсь
+    що конструктивна про майбутнє нашої країни... питання звучить Таким чином чи варто
+    забороняти проросійським політикам користь балотуватися на виборах.
+  embed_suggestion: After section Етикет незгоди та культура дебатування — as a real-world
+    example of constructive political debate.
+- url: https://www.youtube.com/watch?v=CXhIO5Ytbv4
+  channel: Суспільне Док
+  title: Що було б, якби Чорновіл став президентом? | «Якби Чорновіл. Кращий сценарій
+    для України?»
+  relevance_score: 0.7
+  relevance_note: The video presents a hypothetical discussion ('Що було б, якби...')
+    exploring different scenarios and viewpoints regarding a historical figure, demonstrating
+    expression and justification of opinions within a narrative framework.
+  transcript_excerpt: От якби тоді обрали Чорновола то жили б як у Польщі або Чехія
+    От якби Чорновіл якби тологія - це зло але добре Давайте змоделюємо цей сценарій.
+  embed_suggestion: After section Висловлення та обґрунтування погляду — as an example
+    of debating historical counterfactuals and justifying viewpoints.
+blogs:
+- url: https://www.ukrainianlessons.com/episode108/
+  title: Kyiv tour + Participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode95/
+  title: My life in Kyiv (Voice message №3)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode168/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode231/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode80/
+  title: Ukrainian History Test – Review 71-79
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0473
+  text: "264\n \nМовленнєве спілкування. Стилістика і культура мовлення\nТЕМА 23.\
+    \ ДИСКУСІЙНЕ МОВЛЕННЯ. ДЕБАТИ ЯК ФОРМА ДИСКУСІЙ\nДискусія — це не обов’язково\
+    \ су-\nперечка, це можливість кожній \nстороні висловити свою точку зору. О. Ірванець\n\
+    Буду я  навчатись мови золотої\nДискусія — 1) широке, публічне обговорення якогось\
+    \ диску-\nсійного питання на зборах, у пресі тощо; 2) перен. спір, суперечка \n\
+    окремих осіб, співрозмовників. Дискусія відбувається не хаотично, а  за певними\
+    \ правилами \nі  згодою її учасників (о"
+  section_title: Сторінка 264
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0234
+  text: "169\nРізновиди суперечки: публічний діалог, дебати \x1F\nДиспут\nпублічна,\
+    \ заздалегідь підго товлена суперечка на наукову, суспіль-\nну, літературну, моральну\
+    \ тему; проводиться на наукових конфе-\nренціях, у  навчальних закладах, на сторінках\
+    \ періодичних видань. Учасники заздалегідь ознайомлюються з  темою, опрацьовують\
+    \ \nлітературу, щоб аргументовано відстоювати свої погляди, оцінки \nподій, проблем,\
+    \ явищ\nДебати\nсуперечка з  приводу висловлених у  доповіді, програмі дій, заяві\
+    \ \nпропозицій щодо розв’язанн"
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0025
+  text: "Риторика як мистецтво, наука й  навчальна дисципліна. Роль риторики в  сучасному\
+    \ світі \x1F\n19\n \n Як ви розумієте твердження античних учених, що навчитися\
+    \ говорити можна \nлише навчившись мислити? Що є предметом вивчення риторики?\
+    \ Чому риторику вважають водно5час ремес-\nлом і  мистецтвом, майстерністю й \
+    \ наукою? Віками риторику опановували люди, які хотіли досягти в житті успіху.\
+    \ Образ \nуспішного оратора пов’язано з  виявом особистості в  думці та слові.\
+    \ Риторика розвиває в  людині:\n \n культуру мисл"
+  section_title: Сторінка 19
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0235
+  text: "Ознайомтеся з  пам’яткою. Самостійно сформулювавши тему для обгово-\nрення\
+    \ (або обравши із запропонованих), організуйте ділову гру  — проведення \nдебатів.\
+    \ ПАМ’ЯТКА \nЯК ОРГАНІЗУВАТИ ТА ПРОВЕСТИ НАВЧАЛЬНІ ДЕБАТИ\n1. Тему формулюють\
+    \ риторичним реченням, у  якому закладено неоднознач-\nність розуміння певного\
+    \ питання або проблеми."
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0010
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n8\n§ 2\nДискусія — це обговорення певного суперечливого\
+    \ питання з метою дійти згоди. \nВ основі словесного змагання — відстоювання власної\
+    \ позиції. \nВисловлення на дискусійну тему має своєрідну будову.\nБудова дискусійного\
+    \ висловлення\n1. Теза (позиція): «Вважаю, що ...»\n2. Аргумент (доведення позиції):\
+    \  … бо; … тому, що.\n3. Приклади (підтвердження думки): «Яскравим прикладом цього\
+    \ є …» \n4. Висновок (правильність позиції): «Отже, …»\nЗауважте!\nТреба пам’ятати,\
+    \ що суть дискусії поляга"
+  section_title: Сторінка 9
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

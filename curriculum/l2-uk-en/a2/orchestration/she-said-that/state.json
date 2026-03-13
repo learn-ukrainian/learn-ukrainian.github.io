@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "she-said-that",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:40:58Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:40:58Z",
+      "task_id": "v5-she-said-that-pA",
+      "mode": "full"
+    }
+  }
+}

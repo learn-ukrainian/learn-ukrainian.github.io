@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 86 — E2E
+FAIL: pipeline hist 86
 
   Module:   syntez-imperska-doba
   Track:    hist
-  Mode:     e2e
-  Words:    5724 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T21:37:12Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:15:58Z

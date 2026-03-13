@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T09:30:51Z",
+      "ts": "2026-03-12T21:18:13Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:30:51Z",
+      "ts": "2026-03-12T21:18:13Z",
       "task_id": "v5-motion-figurative-uses-pA",
       "mode": "full"
     }

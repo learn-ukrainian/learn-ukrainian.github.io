@@ -1,0 +1,211 @@
+discovered_at: '2026-03-12T21:29:13.440952+00:00'
+query_keywords:
+- Слов'янські племена на українських землях
+- Читання
+- Деколонізаційний погляд
+- Первинні джерела
+- Потрібно більше практики?
+- основні слов'янські племінні союзи на українських землях
+- географічне розселення племен
+- лексику, пов'язану з племінним життям та географією
+- Historical narrative register
+- Relative clauses (який, яка, яке)
+- Passive voice in archaeology
+- history
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=5byTS1qBsKE
+  channel: ІМТГШ
+  title: 'Невідома Румунія: Історія, що змінила Європу | Історія України від імені
+    Т.Г. Шевченка'
+  relevance_score: 0.1
+  relevance_note: The video is about the history and Roman heritage of Romania, its
+    geography, and its formation, contrasting it with Russia's 'Third Rome' concept.
+    While it mentions 'History of Ukraine' in the title, the content is entirely focused
+    on Romanian history and is unrelated to the topic of 'Slavic tribes on Ukrainian
+    lands'.
+  transcript_excerpt: А ви знаєте що з усіх хто претендує на звання спадкоємця Давнього
+    Риму найбільш послідовною і відвертою є Румунія бо вона єдина заявляє про це вже
+    самою назвою країни.
+  embed_suggestion: Not suitable for embedding due to complete irrelevance to the
+    module's topic.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0020
+  text: "Чому ви так вважаєте? Слов’яни\nСуспільний \nустрій\nРодова  \nгромада\n\
+    Воєнна \nдемократія\nСусідська \nгромада\nРанні державні \nутворення\nПолітичний\
+    \ \nустрій\nВірування \n(язичництво)\nyy Культ предків\nyy Обожнення \nявищ природи\n\
+    yy Землеробські \nкульти\nЗаняття\nХАРАКТЕРНІ ОЗНАКИ РОЗВИТКУ СЛОВ’ЯНСТВА\nyy\
+    \ Землеробство\nyy Городництво\nyy Скотарство (присадибне, \nвідгінне)\nyy Промисли\
+    \ (полювання, \nрибальство, бортництво тощо)\nyy Ремесла\nyy Торгівля та обмін\n\
+    \e\n\e Працюємо в  парах. Використовуючи текст параграфа, \n"
+  section_title: Сторінка 14
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0017
+  text: "Території, на яких наприкінці\nст. проживали:\nVIII\nсхідні слов’яни\nзахідні\
+    \ слов’яни\nÌÎÐÀÂÈ\nНазви слов’янських племен\nПОЛЯНИ\nСлов’янські племена —\n\
+    предки українців\nЯТВЯГИ\nІнші племена\nПівнічний кордон Візантій-\nської імперії\
+    \ напередодні\nВеликого розселення слов’ян\nКордони сучасної України\nпівденні\
+    \ слов’яни\nВелике розселення слов’ян. Слов’янські племена  \nна теренах України\n\
+    Розділ 1. \aВИНИКНЕННЯ ТА СТАНОВЛЕННЯ  \nКИЇВСЬКОЇ ДЕРЖАВИ\n§ 1. СХІДНОСЛОВ’ЯНСЬКІ\
+    \ ПЛЕМЕНА ТА ЇХНІ СУСІДИ"
+  section_title: Сторінка 14
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0023
+  text: "21\n1. ІСТОРИЧНІ ДЖЕРЕЛА ДОБИ ПЕРВІСНОСТІ \nТА СТАРОДАВНЬОГО СВІТУ\n  Діємо:\
+    \ практичні завдання\n1. Розгляньте ілюстрації історичних джерел, які допомагають\
+    \ ученим \nдосліджувати історію первісності та стародавнього світу. Чи всі пред-\n\
+    ставлені у вправі види історичних джерел використовують для дослі-\nдження найдавнішої\
+    \ історії людства? Визначте, до якого виду джерел \nналежать ці пам’ятки. \n2. Пригадайте,\
+    \ які спеціальні історичні дисципліни (СІД) допомагають \nдосліджувати минуле\
+    \ людства. Вкажіть до к"
+  section_title: Сторінка 23
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5928710103034973
+  chunk_id: 5739d24f_c0404
+  text: "Передо всїм мова. Порівняна словянська лїнґвістика \r\n відкриває перед нами\
+    \ спільний запас слів, що становив культурний добуток \r\n прасловянства ще перед\
+    \ розселеннєм і остаточним відокремленнєм поодиноких \r\n племен, і таким чином\
+    \ виказує нам той культурний стан, в якім наші племена \r\n виступали на своїх\
+    \ займанщинах, на теперішнїй території, по своїм \r\n відокремленню  1). Очевидно,\
+    \ що було загальним культурним добутком \r\n всього Словянства взагалї, то було\
+    \ добутком і наших племен з окрема. Розуміє"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.589616596698761
+  chunk_id: ffcfbeb9_c0042
+  text: "21 Залізняк Л. Від\r\nсклавинів до української нації. — С. 101.\n\n22 Там\
+    \ же. — С. 66."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm
+- score: 0.5857659578323364
+  chunk_id: 5739d24f_c0136
+  text: "Примітки\n\n1) Се повинно бутя \r\n найважнїйішим завданнєм східно-словянської\
+    \ археольоґії, яка навпаки хапаєть ся \r\n за показнїйші памятки античної та т.зв.\
+    \ скитської культури.\n\nТОМ I     \r\nРозділ II\n\n[М. Грушевський. Історія України-Руси.\
+    \ Том I. Розділ II. Стор. 9.]\n\n[М. Грушевський. Історія України-Руси. Том I.\
+    \ Розділ III. Стор. 1.]\n\nТОМ I     \r\nРозділ III\n\nIII. Історичні дані з часів\
+    \ перед словянським розселеннєм.\n\nЧОРНОМОРСЬКІ ТОРГОВЕЛЬНІ ФАКТОРІЇ Й ГРЕЦЬКА\
+    \ \r\nКОЛЬОНЇЗАЦІЯ; МІЛЄТ І ИНЬШІ МЕТРОПО"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm

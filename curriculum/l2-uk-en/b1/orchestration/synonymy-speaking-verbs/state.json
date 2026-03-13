@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "synonymy-speaking-verbs",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T16:58:39Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T16:58:39Z",
+      "task_id": "v5-synonymy-speaking-verbs-pA",
+      "mode": "full"
+    }
+  }
+}

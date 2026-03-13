@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "register-colloquial-style",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:40:22Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:40:22Z",
+      "task_id": "v5-register-colloquial-style-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,218 @@
+discovered_at: '2026-03-13T00:13:16.990172+00:00'
+query_keywords:
+- 'Слово о полку Ігоревім: Автентичність і значення'
+- Історія рукопису
+- Дебати про автентичність
+- Зміст і структура
+- Фрагмент
+- Слово як історичне джерело
+- 'Analyze the causes and consequences of слово о полку ігоревім: автентичність і
+  значення'
+- Evaluate the historical significance of найзагадковіша пам'ятка
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0305
+  text: "Чу-\nбинського з  незначними змінами. Навчальний фільм\nrnk.com.ua/109563\n\
+    Перегляньте відеоролик \n«Реальна історія українського \nпрапора» і  виконайте\
+    \ завдання \nдо нього. © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 169
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0238
+  text: "Створіть міні-проєкт «Іван \nСірко: міфи та історична правда». Перевірте\
+    \ себе, зайшовши  \nза покликанням https://cutt.ly/ee5CR37d \nабо за QR-кодом."
+  section_title: Сторінка 92
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0076
+  text: "Поясніть свою думку. Як переконатися в  правильності вибору слова? Складіть\
+    \ повідомлення на тему \n«Лексичну норму відображають й  утверджують насамперед\
+    \ словники»."
+  section_title: Сторінка 54
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0440
+  text: "\e\n\e Сформулюйте історичне значення \nзображеного документа. © ТОВ Видавництво\
+    \ «Ранок». Всі права захищено."
+  section_title: Сторінка 243
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.667567789554596
+  chunk_id: c9f36928_c0010
+  text: '«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.
+
+
+    Ироическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)
+
+
+    Михайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII
+    вв. «Слово о полку Ігоревім».
+
+
+    Віталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.
+
+
+    Володимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII
+    віку. Київ, 1926.
+
+
+    Борис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.
+
+
+    «Слово о полку'
+  work: Слово о полку Ігоревім
+  author: Невідомий
+  year: 1187
+  genre: poetry
+  language_period: old_east_slavic
+  source_url: http://litopys.org.ua/slovo/slovo.htm
+- score: 0.6511991620063782
+  chunk_id: 73aa1f1a_c0011
+  text: "Оригінальний текст «Слова о полку Ігоревім»\r\nпідготовлено за виданням 1800\
+    \ p., яке взято за основу, та за Катерининською\r\nкопією (за фототипічними їх\
+    \ виданнями). При цьому враховано й критично\r\nпереоцінено найновіші публікації\
+    \ тексту з відповідними поправками та\r\nкон’єктурами у виданнях: А. С. Орлов,\
+    \ «Слово о полку Игореве». Изд. 2-е, Изд-во\r\nАН СССР, М. — Л., 1946; «Слово\
+    \ о полку Игореве». Под ред. В. П.\r\nАдриановой-Перетц, Изд-во АН СССР, М. —\
+    \ Л., 1950 (Литературные памятники);\r\n«Слово о полку"
+  work: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+  year: 1187
+  genre: poetry
+  language_period: old_east_slavic
+  source_url: http://litopys.org.ua/slovo67/sl01.htm
+- score: 0.6061354875564575
+  chunk_id: 87c07f1b_c0436
+  text: "Оригінальність твору, яку відстоює в своїй праці\r\nГрушевський, сучасні\
+    \ дослідники визнають беззастережно. Див.: Ciževskij\r\nD. History of Russian\
+    \ Literature: From the eleventh Centure to the End of\r\nBaroque. S’-Gravenhage,\
+    \ 1960. P. 135 — 137; Історія української літератури.\r\nК., 1967. T. 1. C. 176\
+    \ — 178 (автор розділу — В. І. Крекотень). На плідній та\r\nметодологічно вивіреній\
+    \ позиції стояв у цьому питанні І. П. Єрьомін: «Питання\r\nпро джерела \"Слова\"\
+    \ ще чекає свого дослідника: визначити їх поки що"
+  work: Грушевський — Історія української літератури, т.3-6
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush3.htm

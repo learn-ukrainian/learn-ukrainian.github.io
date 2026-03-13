@@ -3,16 +3,15 @@
   "slug": "volodymyr-velykii",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T06:13:54Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T06:13:54Z",
-      "task_id": "v5-volodymyr-velykii-pA",
-      "mode": "full"
+      "ts": "2026-03-12T19:10:36Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:10:36Z",
+      "note": "merged-into-research"
     }
   }
 }

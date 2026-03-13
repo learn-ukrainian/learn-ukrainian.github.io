@@ -3,16 +3,15 @@
   "slug": "nestor-litopysets",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T06:18:08Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T06:18:08Z",
-      "task_id": "v5-nestor-litopysets-pA",
-      "mode": "full"
+      "ts": "2026-03-12T19:10:38Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:10:38Z",
+      "note": "merged-into-research"
     }
   }
 }

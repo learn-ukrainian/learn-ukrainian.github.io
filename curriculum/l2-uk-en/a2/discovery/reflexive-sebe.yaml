@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:21:10.921839+00:00'
+discovered_at: '2026-03-12T20:14:20.636463+00:00'
 query_keywords:
 - Reflexive Pronoun Sebe
 - себе/собі/собою
@@ -13,8 +13,23 @@ query_keywords:
 - Навіщо «себе»?
 - Why себе?
 error: null
-warning: No videos found across channels
-videos: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=PLIumsbnlfadhSTA7-IvUfK1elZ6LyQ3ai
+  channel: Klopotenko
+  title: Борщ | Секретний інгредієнт | Євген Клопотенко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QXfpbMZEZas
+  channel: Klopotenko
+  title: Сезонний САЛАТ НІСУАЗ з анчоусами | Простий рецепт літнього салату | Євген
+    Клопотенко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 blogs:
 - url: https://opentext.ku.edu/dobraforma/chapter/23-1/
   title: 'Dobra Forma: Present Tense of -ся Verbs (First Conjugation)'

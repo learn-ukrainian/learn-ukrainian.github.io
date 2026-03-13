@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:47:54.471247+00:00'
+discovered_at: '2026-03-12T20:41:35.730402+00:00'
 query_keywords:
 - Структура речення
 - Анатомія мови
@@ -15,7 +15,32 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://www.ukrainianlessons.com/grammar/
+  title: Ukrainian Syntax
+  source: Grammar overview
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode107/
+  title: At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
+  title: Ukrainian Conjunctions Guide — Advanced
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode116/
+  title: Easter in Ukraine + Complex sentences with Adverbial Clauses
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+sentence+structure
+  title: Sentence Analysis
+  source: YouTube tutorials
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0156

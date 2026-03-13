@@ -3,16 +3,15 @@
   "slug": "roksolana",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T06:47:39Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T06:47:39Z",
-      "task_id": "v5-roksolana-pA",
-      "mode": "full"
+      "ts": "2026-03-12T19:10:42Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:10:42Z",
+      "note": "merged-into-research"
     }
   }
 }

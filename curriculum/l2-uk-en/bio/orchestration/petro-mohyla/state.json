@@ -3,16 +3,15 @@
   "slug": "petro-mohyla",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T07:20:10Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T07:20:10Z",
-      "task_id": "v5-petro-mohyla-pA",
-      "mode": "full"
+      "ts": "2026-03-12T19:10:46Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:10:46Z",
+      "note": "merged-into-research"
     }
   }
 }

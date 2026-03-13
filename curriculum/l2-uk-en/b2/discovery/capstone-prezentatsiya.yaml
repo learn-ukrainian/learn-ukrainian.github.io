@@ -1,0 +1,122 @@
+discovered_at: '2026-03-12T20:34:29.887743+00:00'
+query_keywords:
+- 'Capstone: Презентація'
+- Риторична спадщина та сучасність
+- Rhetorical Heritage and Modernity
+- Структура та логіка виступу
+- Presentation Structure and Logic
+- Візуалізація та дизайн слайдів
+- Visuals and Slide Design
+- Майстерність публічного виступу
+- Public Speaking Mastery
+- Взаємодія та Q&A сесія
+- Interaction and Q&A Session
+- Репетиція та фінальний проєкт
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode108/
+  title: Kyiv tour + Participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode95/
+  title: My life in Kyiv (Voice message №3)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode168/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode231/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode80/
+  title: Ukrainian History Test – Review 71-79
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0048
+  text: "34\nВаш конспект\nДавня наука риторика була призабутою тривалий час. Її відродження\
+    \ із \nсередини ХХ ст. пов’язане з бурхливим потоком інформації, у який порину-\n\
+    ла людина. У цьому потоці кожному з нас потрібно добре орієнтуватися, а \nотже —\
+    \ швидко встановлювати контакт із людьми, знаходити ідеї і точно \nформулювати\
+    \ їх. Ці вміння дають змогу порозумітися. Але це тільки один \nбік спілкування.\
+    \ Другий — етика поведінки людини, її відповідальність за \nслово, а це дуже важливо\
+    \ для кожного з нас.  \nПонят"
+  section_title: Сторінка 34
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0243
+  text: "Ваш конспект\nСкладні речення використовують для вираження найрізноманітніших\
+    \ \nчасових, причиново-наслідкових і просторових відношень. Найчастіше \nними\
+    \ послуговуються в науковому, офіційно-діловому й художньому стилях \nмовлення.\
+    \ 200\n201"
+  section_title: Сторінка 160
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0169
+  text: "Практична риторика\n120\n \n представлення  — надання інформації про особу,\
+    \ її діяльність, досягнення;\n \n інструкція  — стислі настанови (як використовувати\
+    \ нову технологію, як ді-\nстатися певної вулиці, як користуватися електроприладом,\
+    \ як доглядати за \nдомашньою твариною тощо). Трапляється, що всі ці жанри поєднано\
+    \ в  одному виступі. 211. Прочитайте. Сформулюйте за змістом прочитаного 2–3 \
+    \ проблемних за-\nпитання. Скористайтеся поданою на фо5рзаці підручника таблицею\
+    \ «Види за-\nпитань». Мета будь-я"
+  section_title: Сторінка 120
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0294
+  text: '206
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Мовна стійкість. . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+
+    ПРАКТИЧНА РИТОРИКА
+
+    § 2–3. Засоби мовного вираження промови. . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . 10
+
+    § 4–5. Троп як засіб мовного вираження. . . . '
+  section_title: Сторінка 206
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

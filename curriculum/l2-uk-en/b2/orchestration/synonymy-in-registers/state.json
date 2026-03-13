@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "synonymy-in-registers",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:07:31Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:07:31Z",
+      "task_id": "v5-synonymy-in-registers-pA",
+      "mode": "full"
+    }
+  }
+}

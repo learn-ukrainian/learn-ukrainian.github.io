@@ -2,76 +2,89 @@
 
 ## State Standard Reference
 
-**§4.2.3.3**: «Умовний спосіб. Утворення форм умовного способу: говорив би, випила б, прочитали б.»
-(lines 2297–2298)
+**§4.2.3.3** (lines 2297–2298): "Умовний спосіб. Утворення форм умовного способу: говорив би, випила б, прочитали б."
 
-**§4.4.3** (lines 2415–2418): «складнопідрядні речення з підрядною частиною: реальної умови (сполучник якщо): Якщо ви вивчите слова з переліку, то легко зрозумієте цей текст; ірреальної умови (якби, коли б): Якби ви вивчили слова з переліку, то зрозуміли б легко цей текст»
+**§4.4.3** (lines 2417–2418): "складнопідрядні речення з підрядною частиною: ірреальної умови (якби, коли б): Якби ви вивчили слова з переліку, то зрозуміли б легко цей текст;"
 
-**Alignment**: Module directly implements §4.2.3.3 (conditional mood formation) and §4.4.3 (complex conditional subordinate clauses — irreal type). The plan correctly names both markers: `якби` and the alternative `коли б` (mentioned in Standard but not in plan vocabulary — note for content phase). Module also spans §4.5.1 (formal/informal register distinctions in conditional use).
+**Alignment**: Module addresses both the morphological formation (§4.2.3.3 — умовний спосіб = past form + би/б) and the syntactic deployment in subordinate conditional clauses (§4.4.3 — ірреальна умова з якби). The Standard also lists **коли б** as an alternative marker — worth a brief mention in the grammar section. The Standard's own example sentence is a natural model for classroom drill.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| якби | 85.50 ipm (GRAC, 173,046 tokens) — high | якби тільки, якби не, якби ж то |
-| би/б | 388.56 ipm (GRAC, 786,424 tokens) — extremely common particle | говорив би, зробила б, пішли б |
-| мріяти | 4.45 ipm (GRAC, 9,005 tokens) — mid-frequency | мріяти про (+ acc), мріяти стати |
-| уявляти | 1.67 ipm (GRAC, 3,386 tokens) — mid-low | уявляти собі, важко уявити, уявіть собі |
-| шкодувати | 1.21 ipm (GRAC, 2,459 tokens) — low-mid | шкодувати про, не шкодувати ні про що |
-| гіпотетичний | VESUM: ✅ adj (3 forms) — book register | гіпотетична ситуація, гіпотетичне питання |
-| нереальний | VESUM: ✅ adj (3 forms) | нереальна умова, нереальне бажання |
-| ірреальний | VESUM: ✅ adj (3 forms) — synonym of нереальний, higher academic register | ірреальна умова (textbook term at Grade 7) |
-| умовний | VESUM: ✅ adj | умовний спосіб, умовне речення |
+| Word | GRAC Frequency / IPM | VESUM | Key collocations |
+|------|----------------------|-------|------------------|
+| якби | 173,046 / 85.50 | ✅ conj | якби тільки, якби ж то, якби не, коли б |
+| якщо | 1,169,219 / 577.70 | ✅ conj | якщо…то; contrast anchor for the module |
+| мріяти | 9,005 / 4.45 | ✅ verb | мріяти про (+ acc), давно мріяти, мріяти стати |
+| уявляти | 3,386 / 1.67 | ✅ verb | уявляти собі, важко уявити, уявляти, що… |
+| шкодувати | 2,459 / 1.21 | ✅ verb | шкодувати про (+ acc), не шкодувати ні про що |
+| нереальний | 843 / 0.42 | ✅ adj | нереальна умова, нереальне припущення |
+| гіпотетичний | 637 / 0.31 | ✅ adj | гіпотетична ситуація, гіпотетичне питання — book register, low frequency |
+| умовний | — | ✅ adj | умовний спосіб, умовне речення |
 
-**Note on `коли б`**: The State Standard §4.4.3 lists `коли б` as a second marker of irreal conditionals alongside `якби`. It is a stylistically neutral alternative. The plan vocabulary does not list it — recommend adding as a brief mention in grammar section.
+**Frequency note**: The gap between якщо (577 IPM) and якби (85 IPM) is pedagogically useful — якби is common but far less frequent than its real-conditional counterpart, which aligns with the intuition that speakers hedge less often than they state facts.
+
+**Register note**: гіпотетичний (0.31 IPM) is genuinely book-register; mark it as such in the vocabulary table so learners know to use нереальний / умовний in everyday speech.
 
 ---
 
 ## Cultural Hooks
 
-1. **Шевченко «Якби ви вчились так, як треба…»** — From *«І мертвим, і живим, і ненародженим землякам моїм»*, written 14 December 1845 in В'юнищі. Full quotation confirmed via GRAC concordance: «Якби ви вчились так, як треба, То й мудрість би була своя; А то дивитесь, як на диво, На чужоземні, а своє...» The irreal conditional carries sharp moral rebuke — the speaker knows the condition was not met. This is a model example of якби as vehicle of reproach, not mere hypothesis. Source: Wikipedia «І мертвим, і живим…».
+**1. Шевченко, "І мертвим, і живим…" (1845)**
 
-2. **Народна мудрість і формула «якби знав»** — Ukrainian folk proverbs heavily use якби for counterfactual regret: «Якби знав, де впадеш, то соломки б підстелив» (If you knew where you'd fall, you'd lay straw). This is a productive cultural anchor for the "regret" semantic of якби. The proverb is widely attested in GRAC corpus.
+The poem-послання contains the famous conditional apostrophe: *«Якби ви вчились так, як треба, то й мудрість би була своя»* (the Wikipedia article on the poem confirms this is part of the "викривальний діалогізований монолог" from the work, written 14 грудня 1845 у В'юнищі). The conditional construction is not decorative — it carries the entire emotional weight of Shevchenko's reproach to the Ukrainian intellectual class for abandoning their language and culture in favour of foreign models. The grammar encodes irreality: the situation *did not happen*, which is the point of the poem's grief.
+
+**Source**: uk.wikipedia.org/wiki/І_мертвим,_і_живим… — confirms date, place, and character of the monologue section. Verified.
+
+**2. Conditional mood in Ukrainian folk proverbs and aphorisms**
+
+The умовний спосіб is the natural vehicle for Ukrainian народна мудрість and counterfactual reflection: *Якби знав, де впадеш, — соломки б підстелив* (a canonical proverb about foresight). Folk sayings regularly use якби to encode universal human regret about the gap between knowledge and action — making it a rich cultural register, not just a grammar item.
 
 ---
 
 ## Common Learner Errors
 
-1. **«Якщо б» instead of «якби»** → Correct: «якби» — Learners (especially Polish-influenced or Ukrainian-heritage speakers) split the conjunction: *«якщо б я знав»* instead of *«якби я знав»*. Ukrainian has a synthetic fused form. «Якщо» marks real conditionals only; it cannot combine with б/би.
+1. **Using якщо for unreal conditions** → Correct: якби — *Why*: якщо is far more frequent (577 vs 85 IPM) and learners default to the more common conjunction; they haven't yet internalised the realis/irrealis split. Both conjunctions are translated "if" in English.
 
-2. **Wrong tense after якби** → Correct: past-tense verb form — Learners transfer English/L1 patterns and write *«якби я знаю»* or *«якби я знатиму»* instead of *«якби я знав»*. The conditional mood in Ukrainian requires the past-tense form of the verb regardless of the temporal reference of the situation.
+2. **Wrong tense after якби** → Correct: past tense only — *Why*: Calque from English structures ("if I have" / "if I will know") or from languages that use subjunctive/present. Typical errors: *\*якби я маю*, *\*якби я знатиму*. The Standard's example confirms past form is obligatory.
 
-3. **Particle б/би placement confusion** — Learners attach б/би to якби a second time: *«якби б я знав»* (redundant). «Якби» already fuses «як» + «би»; the predicate needs its own б/би, but якби does not get a second particle.
+3. **Confusing би / б distribution** → Rule: б after vowels, би after consonants — *Why*: Learners tend to use би universally (overgeneralisation of the more salient form). Example errors: *\*говорив би я* when euphony calls for *\*говорив би я* (acceptable) vs. *\*випила би* where *випила б* is correct. Drills must cycle both environments.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: `b1-034` (реальна умова з якщо — real conditionals) — this module is the direct contrast partner
-- **Prepares for**: `b1-036` (змішані та складні умови — mixed/complex conditionals)
-- The distinction дійсний / умовний / наказовий спосіб was established at Grade 7 (Litvinova 2024 §12; Avramenko 2024 §12) — learners have textbook exposure but may not have internalized the якби-specific syntax in an L2 context
+- **Builds on**: b1-034 (`conditionals-real-yakshcho`) — real conditionals with якщо; learners already know the realis pattern and clause structure. This module teaches the irrealis counterpart.
+- **Prepares for**: b1-036 (`conditionals-mixed-complex`) — mixed and complex conditionals that combine both якщо and якби patterns in multi-clause structures.
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered during research)
+- (none encountered during this research phase)
 
 ---
 
 ## Notes for Content Writing
 
-- **Terminology**: Use «ірреальна умова» (textbook term, Grade 7 Litvinova) and «нереальна умова» interchangeably — both are attested and VESUM-confirmed. The plan title uses «нереальна»; content may use both with a note that they are synonyms.
-- **Add `коли б`**: The State Standard explicitly lists it alongside «якби». A single comparative note in the grammar section is sufficient — not a separate vocabulary item.
-- **Bi/b euphony rule**: The automatization of б vs. би (depending on whether the preceding sound is a vowel or consonant) is plan-specified (section 4). Confirmed in Grade 7 textbooks as a distinct note. Do not overload grammar section with this — place it in the Practice section as planned.
-- **Shevchenko quote framing**: Frame the послання quote as an example of якби expressing moral reproach/grief — a semantically richer usage than simple hypothesis. The context (intellectual self-reliance, national dignity) is decolonially productive.
-- **Immersion rule**: This is B1.3a (module 35, well past bridge phase M01-05). Full Ukrainian immersion — zero English prose. English only in vocabulary table translations.
-- **Aspect in the якби-clause**: The choice of perfective vs. imperfective verb after якби changes meaning (habitual vs. single event hypothetical). Brief mention warranted in grammar section — not in plan but important for B1 accuracy.
+- **The Standard's own example sentence** (*Якби ви вивчили слова з переліку, то зрозуміли б легко цей текст*) is excellent as an opening diagnostic — use it or a close variant in the Вступ section as a concrete anchor before introducing terminology.
+
+- **коли б** deserves explicit mention (it appears alongside якби in §4.4.3). It is stylistically more literary/elevated but appears in real texts. A brief comparison note avoids learner confusion when they encounter it in reading.
+
+- **Emphatic forms** (якби тільки, якби ж то): the GRAC concordance confirms these appear in authentic 19th-century Ukrainian prose (Shevchenko's diary, folk plays). Mark them as literary/emphatic in the grammar section.
+
+- **Frequency contrast**: Build the contrast table around the якщо (реальна) vs. якби (ірреальна) frequency gap — this is not just grammar, it reflects how often speakers actually make unreal claims vs. real plans.
+
+- **Folk proverbs** work well in the Культурний контекст section alongside Shevchenko: они grounded in everyday wisdom rather than high literary register, which balances the lesson's register range.
+
+- **Decolonized framing**: умовний спосіб is a fully autonomous Ukrainian grammatical category, described in Ukrainian grammar tradition (Синявський, Курило, Сучасна українська мова). Do not frame it as equivalent to any construction in any other language — describe it on its own terms. The form is analytically transparent: past tense form + particle би/б. This is Ukrainian synthetic/analytic mixing — a characteristic feature of Ukrainian verb morphology.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Умовний спосіб](https://uk.wikipedia.org/wiki/Умовний_спосіб) (Вікіпедія)
 
 ### Textbook References (RAG)
 

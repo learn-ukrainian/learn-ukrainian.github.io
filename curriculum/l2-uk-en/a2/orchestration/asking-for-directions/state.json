@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "asking-for-directions",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:01:01Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:01:01Z",
+      "task_id": "v5-asking-for-directions-pA",
+      "mode": "full"
+    }
+  }
+}

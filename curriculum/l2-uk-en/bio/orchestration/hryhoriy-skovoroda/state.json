@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "hryhoriy-skovoroda",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:36:28Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:36:28Z",
+      "task_id": "v5-hryhoriy-skovoroda-pA",
+      "mode": "full"
+    }
+  }
+}

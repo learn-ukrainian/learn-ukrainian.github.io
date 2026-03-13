@@ -1,0 +1,147 @@
+discovered_at: '2026-03-12T18:07:18.378381+00:00'
+query_keywords:
+- Texting and Messaging
+- повідомлення
+- надіслати
+- отримати
+- Діалоги
+- Dialogues
+- Розповідь
+- Narrative
+- text messages
+- common abbreviations
+- informal chat language
+- meetings via text
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=zShCzFtjXR0
+  channel: Ukrainian Lessons
+  title: ULP 3-120 Голосове повідомлення для… – Voice message to…
+  relevance_score: 0.9
+  relevance_note: This video directly relates to the module's topic by explicitly
+    mentioning and discussing 'голосове повідомлення' (voice message), which is a
+    key concept in messaging and directly aligns with 'повідомлення' in the module's
+    vocabulary.
+  transcript_excerpt: Це Ra lessons podcast епізод 120 голосове повідомлення для Voice
+    message to Привіт привіт Це Анна ваша вчителька української...
+  embed_suggestion: After Діалоги – The video discusses voice messages, a direct form
+    of messaging and dialogue.
+- url: https://www.youtube.com/watch?v=fJBdHZT0eHY
+  channel: Ukrainian Lessons
+  title: Епізод №100! Повідомлення від слухачів подкасту – Messages from the podcast
+    listeners
+  relevance_score: 0.9
+  relevance_note: The video's title and content revolve around 'повідомлення від слухачів
+    подкасту' (messages from podcast listeners) and 'Voice messages from people Who
+    learn Ukrainian', directly addressing the concept of 'повідомлення' (messages)
+    from the module's vocabulary.
+  transcript_excerpt: У сьогоднішньому 100-му епізоді ви послухаєте голосові повідомлення
+    від людей, які вивчають українську та слухають цей подкаст.
+  embed_suggestion: After Діалоги – The video features a compilation of voice messages,
+    which serves as a practical example of receiving and processing multiple messages.
+- url: https://www.youtube.com/watch?v=ABASDOeqckY
+  channel: Bright Kids Ukrainian
+  title: Як гарно формулювати думки. Пам'ять,, словниковий запас, оратоське мистецтво
+    і саморозвиток.
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but focuses on oral communication, public
+    speaking skills, memory, and poetry, not digital messaging or texting. It is unrelated
+    to the module's specific topic.
+  transcript_excerpt: Коли я починаю говорити мої думки наче кудись зникають я не
+    можу в голові скласти речення Під час своєї промови і все зводиться до випадкових
+    слів фраз і звуків...
+  embed_suggestion: Not suitable for embedding.
+- url: https://www.youtube.com/watch?v=ZNvk4h7AS4U
+  channel: Bright Kids Ukrainian
+  title: Пишемо листи НІМЕЦЬКОЮ! Іспит А1. Schreiben. Goethe-Zertifikat A1 | Start
+    Deutsch 1. Урок №38
+  relevance_score: 0.1
+  relevance_note: The video discusses writing formal and informal letters, but specifically
+    in German for an A1 exam, not Ukrainian or text messaging. While it is about written
+    communication, the language and medium are incorrect for the module.
+  transcript_excerpt: Вчимося писати листи німецькою зазвичай листи потрібно писати
+    на іспитах усіх рівнів а також це може знадобитися у щоденному житті відразу зафіксуємо
+    що є два типи листів розрізняють формальні листи офіційні...
+  embed_suggestion: Not suitable for embedding.
+- url: https://www.youtube.com/watch?v=3Qh30zJL2MA
+  channel: Klopotenko
+  title: Помилки хлопців під час переписки з дівчиною
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0073
+  text: "72\nНапиши смс-повідомлення мамі, татові, учительці, друзям.\nРозкажи про\
+    \ щось\nЯ прийшов до …\nСпонукай до чогось\nПрийди… Напиши…\nЗапитай про щось\n\
+    Хто? Що? Куди? Де?\nрозПовІДнІ речення\nРечення, у якому про щось розповідається\
+    \ або пові-\nдомляється, називається розповідним. У кінці розпо-\nвідного речення\
+    \ ставиться крапка     або знак оклику.\nВизнач, яке речення в кожному рядку є\
+    \ розповідним. Поясни \nчому. Спиши розповідні речення. \n1\nДіти пішли \nдо зоопарку.\n\
+    Куди пішли \nдіти?\nДіти, йдіть \nдо зоопарку"
+  section_title: Сторінка 72
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0215
+  text: "214\nУРОКИ  \nРОЗВИТКУ МОВЛЕННЯ\nТЕМА 1. МОВЛЕННЯ І СПІЛКУВАННЯ\n519.\tІ.\
+    \ Поміркуйте, що таке спілкування. Для чого воно потрібне \nлюдям­? \nІІ. Розгляньте\
+    \ меми. Які думки вони доносять до нас? \n   \nДозвольте собі найбільшу \nрозкіш\
+    \ у житті –  \nспілкування зі мною!\n   \nЩо ж робити, якщо я не \nможу відірватися\
+    \ від  \nспілкування з тобою?\nМовлення – це використання мовних засобів (слів,\
+    \ ре-\nчень тощо) для спілкування.\nСпілкування – передавання інформації від однієї\
+    \ осо-\nби до іншої безпосередньо або за до"
+  section_title: Сторінка 217
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 5-klas-ukrmova-golub-2022_s0136
+  text: "137\n2   Як правильно будувати діалог?\n3   Коли діалог називають продуктивним,\
+    \ вдалим, гармо -\nнійним?\nВідповідно до поставлених запитань сформулюйте особисті\
+    \ \nцілі.\n330  Поміркуйте й назвіть сфери, де діалог необхідний.\nДіалог — це:\
+    \ \n  різновид прямої мови;\n  розмова двох осіб.\nДіалог складається з реплік.\
+    \ Кожну репліку пишемо \nз нового рядка і з великої букви.\nПеред репліками ставимо\
+    \ тире.\nЯкщо репліку супроводжують слова автора, то стави-\nмо ті самі розділові\
+    \ знаки, що й при прямій мові, але \n"
+  section_title: Сторінка 137
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0009
+  text: "8\nмова І мовЛЕння \nмова — це засіб спілкування людей (система звуків \n\
+    і букв, слова, речення, тексти, правила). \nМова потрібна, щоб:\nКоли ти розповідаєш\
+    \ про щось, то користуєшся мо-\nвою. Це мовлення. \nМОВЛЕННЯ\nУСНЕ           \
+    \                    ПИСЕМНЕ\nЯ читаю. Я пишу.\nЯ говорю. Я слухаю. \nПривіт!\n\
+    Прочитай речення. Спочатку назви ті, у яких ідеться про усне \nмовлення, потім\
+    \ ті, у яких ідеться про писемне. Спиши ре-\nчення. Зміни речення так, щоб у них\
+    \ про щось запитувалося.\n  Я oлухаЬ gагадку. Я "
+  section_title: Сторінка 8
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0389
+  text: "dialogos  — розмова, бесіда)  — форма мов-\nлення у вигляді повідомлень від\
+    \ мовця до адресата і навпаки. Най-\nхарактерніші особливості діалогу: наявність\
+    \ двох співрозмовників; \nшвидкий обмін репліками; лаконічність, чіткість реплік;\
+    \ ситуативна \nзалежність реплік; зорове і слухове сприйняття; важливість інтона-\n\
+    ції, тембру, тональності. Невід’ємною складовою діалогу є  реплі-\nка — окреме\
+    \ повідомлення особи. У спілкуванні істотну роль відіграють невербальні засоби.\
+    \ (За Ф. Бацевичем)"
+  section_title: Сторінка 221
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

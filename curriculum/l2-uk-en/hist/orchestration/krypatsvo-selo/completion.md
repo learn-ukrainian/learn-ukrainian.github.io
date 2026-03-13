@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 79 — E2E
+FAIL: pipeline hist 79
 
   Module:   krypatsvo-selo
   Track:    hist
-  Mode:     e2e
-  Words:    3779 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  FAIL
-  Date:     2026-02-25T20:45:14Z
+  Date:     2026-03-13T01:14:48Z

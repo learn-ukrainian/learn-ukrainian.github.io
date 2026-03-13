@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 45 — E2E
+FAIL: pipeline istorio 45
 
   Module:   holodomor-istorio
   Track:    istorio
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-20T00:10:04Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:11:36Z

@@ -1,0 +1,119 @@
+discovered_at: '2026-03-12T21:56:37.753772+00:00'
+query_keywords:
+- Неологізми та запозичення
+- Introduction — Language Evolution
+- Типи неологізмів
+- Types of Neologisms
+- Запозичення
+- Borrowings — Adaptation and Pronunciation
+- Калькування та перекладні позичення
+- Calques and Translation Loans
+- Сучасне українське словотворення та практика
+- Modern Ukrainian Word Creation and Practice
+- neologisms by type (general, authorial, potential, semantic)
+- how borrowings are phonetically and morphologically adapted to Ukrainian
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=2TqtNB5XSUM
+  channel: Суспільне Культура
+  title: Як виникла українська мова? | «Як українці українською заговорили» | Документальний
+    фільм
+  relevance_score: 0.8
+  relevance_note: The video provides strong foundational context by discussing the
+    historical evolution of the Ukrainian language and its dialects. This directly
+    reinforces the module's introductory section on 'Вступ — еволюція мови', which
+    is essential for understanding how languages change and adapt, leading to neologisms
+    and borrowings. It does not, however, directly address specific types of neologisms
+    or borrowing mechanisms.
+  transcript_excerpt: 'Мовознавці припускають, що східні слов’яни у V-VIII столітті,
+    до хрещення Київської Русі, спілкувались праслов’янською говіркою. І вже тоді
+    в побуті були слова, які мали явні риси української мови: око, чоло, кінь, сорочка,
+    молоко, риба, людин.'
+  embed_suggestion: 'After section: Вступ — еволюція мови'
+- url: https://www.youtube.com/watch?v=5SgKLSTZv-s
+  channel: Суспільне Док
+  title: Як звучала українська мова в різні часи | «Як українці українською заговорили»
+    | Освітній фільм
+  relevance_score: 0.8
+  relevance_note: Similar to Candidate 1, this video offers excellent background by
+    exploring the historical development and dialects of the Ukrainian language. This
+    content is highly relevant to the 'Вступ — еволюція мови' section, establishing
+    a necessary understanding of linguistic change before diving into neologisms and
+    borrowings. It does not cover the specific mechanics of neologisms or borrowings.
+  transcript_excerpt: Мовознавці припускають, що східні слов'яни у V-8 столітті до
+    хрещення Київської Русі спілкувалися праслов'янською говіркою. І вже тоді у побуті
+    були слова, які мали явні риси української мови. Око, чоло, кінь, сорочка, молоко,
+    риба людина.
+  embed_suggestion: 'After section: Вступ — еволюція мови'
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0086
+  text: "На-\nведіть приклади. — Які типи фразеологічних словників ви знаєте? Розкажіть\
+    \ про їхню \nбудову й укладіть анотацію до одного з них. — Доведіть, що фразеологізми,\
+    \ як і слова, мають синоніми та антоніми."
+  section_title: Сторінка 59
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0092
+  text: "87\nУ цьому розділі ми поговоримо про таке: \n Як відрізнити фразеологізм\
+    \ від словосполучення і слова?\n Хто вигадує фразеологізми? \n Які є різновиди\
+    \ фразеологізмів?\n Навіщо нам потрібні фразеологізми?\n Що пишуть у фразеологічному\
+    \ словнику?\nФРАЗЕОЛОГІЯ"
+  section_title: Сторінка 87
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0310
+  text: "Залежність значень слова від контексту. Слововживання: вибір слова, \nлексична\
+    \ сполучуваність . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .28\n\
+    § 6 \nСлова власне українські й запозичені. Виправдані й небажані запозичення\
+    \ . . . . . . . . . . . . . . . . . .32\n§ 7 \nЛексичні й фразеологічні синоніми.\
+    \ Синонімічне багатство української мови . . . . . . . . . . . . . . . .36\n§\
+    \ 8 \nЛексичні й фразеологічні антоніми "
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0489
+  text: 'Основні ознаки фразеологізмів . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . 110
+
+    § 42 Джерела української фразеології. Національна специфіка української фразеології
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . 112
+
+    § 43 Прислів’я і приказки, крилаті вислови. Стійкі народні порівняння. Побажання,
+    приповідки, каламбури . . . . . . . 113
+
+    § 44 Багатозначність, синонімія та антонімія фразеологізмів . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 270
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0107
+  text: "102\nФразеологія.  Підсумовуємо й узагальнюємо\nПІДСУМОВУЄМО Й  УЗАГАЛЬНЮЄМО\n\
+    Запитання для самоперевірки\n1.\t Що таке фразеологізм?\n2.\t Які є різновиди\
+    \ фразеологічних одиниць? \n3.\t Як з’являються фразеологізми?\n4.\t Для чого\
+    \ потрібні фразеологізми в мовленні людини?\n5.\t Яку інформацію подають у фразеологічних\
+    \ словниках?\nСаморефлексія\n1.\t Що нового ви дізналися під час опрацювання розділу?\n\
+    2.\t Що вас найбільше зацікавило?\n3.\t Де ви можете використати здобуті знання?\n\
+    4.\t Чи задоволені ви своїми успіха"
+  section_title: Сторінка 102
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

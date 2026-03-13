@@ -1,0 +1,105 @@
+discovered_at: '2026-03-12T18:03:31.707324+00:00'
+query_keywords:
+- Подорожі та географія
+- 'Лексичні нюанси: Поняття «подорож»'
+- 'Lexical Nuances: The Concept of ''Travel'''
+- Географія та природні дива
+- Geography & Natural Wonders
+- 'Граматичний практикум: Прийменники та локації'
+- 'Grammar Workshop: Prepositions & Locations'
+- Подорожні плани та враження
+- Travel Plans & Impressions
+- travel and geography words in context
+- between подорож/мандрівка/поїздка
+- natural collocations with travel vocabulary
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode84/
+  title: At the bank in Ukraine + Prefixes об- and від-
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode107/
+  title: At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode86/
+  title: Meeting the headmaster of the school in Ukraine + Prefixes в-, у-
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode93/
+  title: At the food fair in Ukraine + Diminutive words in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0018
+  text: "17\nЛексикологія\nЛексикологія (від грец. lexikos – словесний, словни-\n\
+    ковий і logos – учення) – це розділ мовознавства, що ви-\nвчає словниковий склад\
+    \ мови.\n2. ЛЕКСИЧНЕ ЗНАЧЕННЯ СЛОВА.  \nОДНОЗНАЧНІ ТА БАГАТОЗНАЧНІ СЛОВА\nПро\
+    \ те, що означають слова, скільки значень можуть мати,  \nа також про вживання\
+    \ слів відповідно до їхнього значення\nПРИГАДАЙМО. Чим слово відрізняється від\
+    \ речення? \n24.\t А.  Порівняйте подані в рамці записи. У якій колонці маємо\
+    \ слова, \nа в якій – лише сполучення звуків?\nБ.  Поясн"
+  section_title: Сторінка 20
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-golub-2023_s0047
+  text: "Якщо \nспробувати з’ясувати істину, то багато чого можна дізнатися \nпро\
+    \ історію, географію. Вивчаючи топоніми, ми дізнаємося \nне тільки про історичні\
+    \ зміни в житті людей, а й про мовні \nпроцеси, що відбивають ці зміни."
+  section_title: Сторінка 46
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0220
+  text: "Інколи увагу читача на багатозначність слова звертають навмисне. Існують\
+    \ \nтакі способи стилістичного використання багатозначності слова:\n \n уживання\
+    \ того самого слова в  одному реченні (тексті) в  різних значеннях: \nМалі (недорослі)\
+    \ діти — малий (незначний) клопіт, великі (дорослі) діти — \nвеликий (значний,\
+    \ обтяжливий) клопіт;\n \n використання слова в  одному реченні (тексті) в  його\
+    \ вужчому й  ширшому \nзначенні: Пахне хвоєю в  лісі, а  злежаний почорнілий сніг\
+    \ уже пахне весною;"
+  section_title: Сторінка 156
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0182
+  text: "Порівняйте: \nЯ, на жаль, запізнився і Я запізнився. Речення, що містять\
+    \ вставні слова, звертання або однорідні члени, на-\nзиваємо ускладненими."
+  section_title: Сторінка 175
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0089
+  text: "Використайте подані словосполу-\nчення, змінюючи, де потрібно, їхню граматичну\
+    \ форму. Неповторний краєвид; відгуки про пейзаж; радіти з незрівнянної кра-\n\
+    си; неймовірно гарний; стояли завмерши; незабутнє враження; зачаровані \nколоритом;\
+    \ узятися до улюбленої справи; освітлений яскраво; докладати \nзусиль; здобувати\
+    \ знання; якнайвища оцінка; справжнісінька сенсація; \nвідзначити дипломом."
+  section_title: Сторінка 65
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

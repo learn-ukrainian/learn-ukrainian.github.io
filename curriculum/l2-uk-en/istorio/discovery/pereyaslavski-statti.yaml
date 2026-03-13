@@ -1,0 +1,196 @@
+discovered_at: '2026-03-13T00:56:12.457947+00:00'
+query_keywords:
+- 'Переяславські статті: Текст і контекст'
+- Що насправді відбулося в січні 1654
+- Березневі статті
+- Фрагмент
+- Інтерпретації
+- Чому це важливо досі
+- 'Analyze the causes and consequences of переяславські статті: текст і контекст'
+- Evaluate the historical significance of найконтроверсійніший документ
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0232
+  text: "СФОРМУЛЮЙТЕ СУДЖЕННЯ ПРО:\n\x84\n\x84\nвплив Козацької держави \nна  міжнародні\
+    \ відносини \nРанньомодерної доби;\n\x84\n\x84\nзначення зовнішньої політики \n\
+    Б. Хмельницького для Козацької \nдержави;\n\x84\n\x84\nпричини звернення гетьмана\
+    \ \nпо  допомогу до Московської \nдержави та зміст «Березневих \nстатей» 1654 \
+    \ р. Працюємо з  хронологією\nСічень \n1654  р. Переяславська рада\nБерезень \n\
+    1654  р. «Березневі статті»"
+  section_title: Сторінка 141
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0185
+  text: "Розділ З \nКОЗАЦЬКА РЕВОЛЮЦІЯ середини XVII ст.\nНезгода полковника Івана\
+    \ Богуна \n(картина художника Мирослава Добрянського, 2005 р.)\nРозгляньте картину\
+    \ й визначте, які настрої в частини українського суспіль­\nства викликала Переяславська\
+    \ угода. Як художник відобразив ці настрої?\n2. Березневі статті 1654 р.\n27 лютого\
+    \ 1654 р. до Москви вирушило посольство з умовами угоди з \nбоку української сторони\
+    \ (23 статті — пункти).\nЗ 23 березня до 5 квітня тривали перемовини, під час\
+    \ яких велася \nдискусія щодо "
+  section_title: Сторінка 138
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0182
+  text: 'Якими, на вашу думку, були справжні мотиви цього рішення? Московити прибули
+    до Переяслава напередодні проведення козаць­
+
+    кої ради, яка планувалася на 18 січня 1654 р. Домовилися про оголо­
+
+    шення змісту українсько-московської угоди на старшинській раді. 136'
+  section_title: Сторінка 136
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0366
+  text: "Кам’янецька \n­угода \nСічень \n1654  р. Переяславська рада \nБерезень \n\
+    1654  р. «Березневі статті»\n1655  р. битва під Охма­товом \n1656  р. Віленське\
+    \ перемир’я \nКінець \n1656  — \n1657  р. спільний похід трансільванських \nі \
+    \ козацьких військ проти Польщі \nта  його поразка \n1658  р. Гадяцька угода \n\
+    1659  р. Конотопська ­битва \n1663  р. перше обрання І. Сірка кошовим \nотаманом"
+  section_title: Сторінка 187
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0102
+  text: "ОПРАЦЮВАВШИ ПАРАГРАФ, \nВИ  ДІЗНАЄТЕСЬ:\n\x84\n\x84\nпро причини та передумови\
+    \ \nукладення, сутність і наслідки \nБерестейської церковної унії;\n\x84\n\x84\
+    \nяк розвивалася полемічна \nлітература;\n\x84\n\x84\nу чому полягав вплив унії\
+    \ \nна  церковне життя українських \nземель. Тестові завдання\nrnk.com.ua/109588\n\
+    Працюємо з  джерелом\nrnk.com.ua/110301\nІз меморандуму \nправославних єпископів\
+    \ \nдо польського короля \nЖигмунта (Сигізмунда) III\nДля вас, допитливі\nrnk.com.ua/110300"
+  section_title: Сторінка 65
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5385960340499878
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5331822037696838
+  chunk_id: a27d9879_c1324
+  text: "1307 Усе це й справді\r\nвідбувалось у 1693 р. Дивно тільки, чому С. Величко,\
+    \ будуючи розповідь\r\nхронологічно, вмістив документ на початку року,— можливо,\
+    \ вважав, що ці події\r\nвідбувались у кінці 1692 р. Зважимо також на факт, що\
+    \ Літопис залишився\r\nнедоопрацьований автором."
+  work: Літопис Величка
+  author: Величко С.В.
+  year: 1720
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/velichko/vel01.htm
+- score: 0.5312190651893616
+  chunk_id: 004505f2_c0005
+  text: "ЮРІЙ НЕМИРИЧ. Маніфестація від імені війська\r\nЗапорозького до іноземних\
+    \ володарів, що пояснює причини розриву з Москвою, від\r\nжовтня 1658 року. Переклали\
+    \ Валерія Пічик та Віктор Андрушко\n\nІВАН ВИГОВСЬКИЙ. Перелік пунктів і покірних\r\
+    \nпрохань... його королівській милості і всій Річі Посполитій, від 1659 року.\
+    \ Переклав Домет Олянчин\n\nЮРІЙ ХМЕЛЬНИЦЬКИЙ. Статті, прислані князю\r\nТрубецькому,\
+    \ від 1659 року. Переклав Валерій Шевчук\n\nСТАТТІ, або ПЕРЕЯСЛАВЛЬСЬКІ КОНСТИТУЦІЇ...\
+    \ від 1659 року. Переклав Вале"
+  work: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+  year: 1600
+  genre: polemic
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/suspil/sus.htm

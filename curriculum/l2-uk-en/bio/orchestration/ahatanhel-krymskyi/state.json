@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "ahatanhel-krymskyi",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T22:16:45Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T22:16:45Z",
+      "task_id": "v5-ahatanhel-krymskyi-pA",
+      "mode": "full"
+    }
+  }
+}

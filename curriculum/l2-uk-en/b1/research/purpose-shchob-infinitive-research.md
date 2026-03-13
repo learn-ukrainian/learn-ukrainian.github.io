@@ -4,60 +4,54 @@
 
 §4.4.3 (lines 2420–2422): «Складнопідрядні речення з підрядною частиною мети (сполучник щоб): Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного міста»
 
-The full §4.4.3 section (lines 2380–2431) covers the complete B1 complex sentence inventory. Purpose clauses appear alongside reason (тому що, бо), condition (якщо, якби), concessive (хоч, незважаючи на те що), and indirect speech. The explanatory clause section (lines 2398–2401) also introduces щоб in a different function: «Викладач сказав, щоб я багато працював» — a critical contrast for learners since щоб triggers different verb forms depending on whether subjects match or differ.
-
-**Alignment**: This module directly addresses §4.4.3 purpose clause requirement. It also connects to the §4.4.3 explanatory щоб (different-subject) construction listed at lines 2398–2401, making the same-subject/different-subject contrast a core pedagogical goal.
+Alignment: The canonical State Standard example sentence appears verbatim in the plan's `content_outline` Section 1 — direct alignment confirmed. The §4.4.3 block also confirms that **щоб** is the primary conjunction for both purpose clauses (with infinitive, same subject) and reported-speech/command constructions (with conjugated verb, different subject) — this distinction is exactly the core of this module. Purpose clauses with щоб sit within a B1-level inventory of 10+ conjunction types (§4.4.3, lines 2380–2431).
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Frequency (GRAC) | IPM | Key collocations / notes |
-|------|-----------------|-----|--------------------------|
-| щоб | 2,405,687 | 1,188.63 | Top 50 item; both conjunction (мети/наслідку) and particle functions confirmed in VESUM |
-| аби | 384,854 | 190.15 | ~6× less frequent than щоб; literary/conversational register; also functions as conditional conj. |
-| заради | 94,163 | 46.53 | Preposition (+ gen.); high self-sacrifice/dedication connotation |
-| мета | 68,728 | 33.96 | Noun; collocates strongly with з мета → з метою (official register) |
-| задля | 65,503 | 32.36 | Preposition (+ gen.); slightly more formal than заради |
-| намір | 150,626 | 74.42 | Noun; мати намір, виявляти намір |
-| ціль | 22,146 | 10.94 | ~3× less frequent than мета; primarily sport/military register |
-| інфінітив | verified | — | Noun in VESUM; standard grammatical metalanguage |
-| причина | verified | — | Noun; essential for purpose vs. reason clause contrast |
-| цілеспрямований | verified | — | Adj; цілеспрямований(adj) ×3 in VESUM |
-| навмисно | verified | — | Adverb; confirmed in VESUM |
+| Word | Frequency / IPM | Key collocations / Notes |
+|------|----------------|--------------------------|
+| щоб | 2,405,687 / 1188.63 IPM | для того щоб, аби, з метою; Top 50 function word confirmed |
+| аби | 384,854 / 190.15 IPM | аби тільки, аби встигнути; literary-colloquial register |
+| мета | 68,728 / 33.96 IPM | головна мета, з метою (+ gen.), досягти мети, поставити мету |
+| намір | 150,626 / 74.42 IPM | мати намір (+ inf.), серйозний намір, виявляти намір |
+| задля | 65,503 / 32.36 IPM | задля + gen.; задля збереження, задля перемоги |
+| ціль | 22,146 / 10.94 IPM | поставити ціль, йти до цілі; military/sport register |
+| для того щоб | 0 / 0 IPM | Multi-word phrase — GRAC doesn't index as unit; exists in corpus as phrase |
+| заради | — (not queried) | заради + gen.; high sacrifice connotation |
+| цілеспрямований | — (VESUM ✅) | людина цілеспрямована; used as predicate adjective |
+| навмисно | — (VESUM ✅) | adverb; навмисно + perfective verb |
+| інфінітив | — (VESUM ✅) | grammar metalanguage noun; infinitive as term |
 
-**Register note**: The frequency gap between щоб (1189 IPM) and аби (190 IPM) is substantial. Learners should recognize аби but prioritize active production of щоб.
+**All 10 vocabulary_hints items verified in VESUM** — no ghost words.
+
+**Register note on аби**: GRAC frequency (190 IPM) is ~6× lower than щоб (1188 IPM), confirming щоб as the default unmarked form. The plan correctly identifies аби as literary-colloquial.
 
 ---
 
 ## Cultural Hooks
 
-1. **Леся Українка — «Хотіла б я піснею стати»**: Авраменко (Grade 9, p. 86) cites this exact passage as a canonical example of the purpose clause: *«Хотіла б я піснею стати у сюю хвилину ясну, щоб вільно по світі літати, щоб вітер розносив луну»*. Both щоб-clauses show the same-subject infinitive construction at its most literary. The plan's reference to «Щоб не плакать, я сміялась» (from «Contra spem spero») is a second confirmed Леся Українка example — negative purpose clause, same-subject pattern. Wikipedia confirms she is regarded as one of the most significant Ukrainian women writers, a co-founder of the literary circle «Плеяда».
+1. **Леся Українка — «Як дитиною, бувало...» (1897)**: The poem contains the construction "плаче, щоб не сміятися" — a negated purpose infinitive. The plan cites the line "Щоб не плакать, я сміялась" as a famous negated-purpose example. **Verification caveat**: the Grade 6 Avramenko textbook (RAG tier 1) paraphrases this poem and confirms the inverted emotional logic but uses slightly different wording. Content writer should verify the exact line against a primary text source — do not assume the plan's quoted form is verbatim. The pedagogical structure (pre-posed purpose clause → main clause) is well-supported regardless of exact wording. Source: `6-klas-ukrlit-avramenko-2023_s0046`.
 
-2. **Національний музей у Львові імені Андрея Шептицького**: Confirmed from Wikipedia — located on Svobody Ave, 20, Lviv; one of the most significant repositories of Ukrainian cultural heritage. Directly mirrors the State Standard's own example sentence («Ми ходимо в музеї Львова, щоб краще знати…»), anchoring the grammar to a real, named cultural institution. The museum was founded by Metropolitan Andrei Sheptytsky, a figure of Ukrainian cultural resistance — decolonized framing is natural here.
+2. **Національний музей у Львові імені Андрея Шептицького**: Founded on the scholarly-patriotic initiative of Metropolitan Andrei Sheptytsky; located at Prospect Svobody 20, Lviv. Described as "одна з найвизначніших в Україні скарбниць пам'яток вітчизняної культури і мистецтва." This makes a strong cultural frame for purpose sentences: «Ходимо до музею, щоб краще знати культуру України» — directly echoing the State Standard example. The museum's mission of cultural preservation aligns with the plan's cultural resilience section. Source: Wikipedia (uk).
 
 ---
 
 ## Common Learner Errors
 
-1. **Redundant conjugation with same subject** → Learner writes «щоб я допоміг» instead of «щоб допомогти» when both clauses share a subject. Root cause: L1 transfer (English uses "so that I could help" with overt subject) and confusion with the different-subject pattern (where щоб + past form IS correct: «Вчитель пояснив, щоб ти зрозумів»). This is the #1 error at B1.
+1. **Зайва кон'югація при одному підметі**: «Я пішов у бібліотеку, щоб я знайшов книгу» → **Я пішов у бібліотеку, щоб знайти книгу**. Happens because learners transfer the щоб + conjugated pattern (different-subject rule) to same-subject contexts. The diagnostic test in Section 1 should target this directly.
 
-2. **Incorrect subject-mismatch with infinitive** → Learner writes «Я хочу, щоб ти читати» instead of «Я хочу, щоб ти читав». Same-subject rule applied incorrectly when subjects differ. Learners need the contrast: same subject → infinitive; different subjects → щоб + past tense conjugated form.
+2. **Невідповідність підметів з інфінітивом**: «Я хочу, щоб ти прочитати цю книгу» → **Я хочу, щоб ти прочитав цю книгу**. The inverse error — using infinitive when subjects differ. Clarifying that infinitive = same subject is the key pedagogical move of this module.
 
-3. **Confusing аби (purpose) with аби (condition/concessive)** → аби appears in purpose clauses («Сиву голову шануй, аби й сам таку нажив» — Авраменко p. 87) and conditional clauses («аби знав»). Learners conflate these functions. Rule of thumb: purpose аби is replaceable by щоб; conditional аби is replaceable by якби.
+3. **Плутанина між щоб-мети і щоб-з'ясувального**: «Він сказав, щоб прийти» (ambiguous — whose subject?) vs. «Він сказав, щоб я прийшов» (reported command, different subject). Learners at B1 encounter both functions and conflate them. The module should explicitly contrast: purpose (same-subject → infinitive) vs. reported request (different-subject → conjugated form).
 
 ---
 
 ## Cross-References
 
-- **Builds on**:
-  - b1-29 (Підрядні означальні: який) — relative clause structure as prerequisite complex sentence experience
-  - b1-30 (Purpose Clauses щоб + past form) — the different-subject pattern; this module teaches the same-subject pattern as contrast partner
-  - b1-16 (Motion verbs) — explicitly flagged in plan: «Я йду в магазин, щоб купити...» integrates motion verb + purpose clause
-
-- **Prepares for**:
-  - b1-032 connects to the broader B1.3a Complex Sentences phase; subsequent modules will cover causal, conditional, and concessive clauses
-  - The щоб + infinitive pattern recurs at B2/C1 in infinitive one-member sentences and formal nominalizations
+- **Builds on**: `b1-029` (relative clauses якій — subordinate clause mechanics), `b1-016` (motion verbs — integration point for «Я йду в магазин, щоб купити...»), `a2` complex sentences (тому що, для того щоб, якщо, який — §4.4.2 A2)
+- **Prepares for**: `b1-033` (purpose clauses щоб + past form — the different-subject variant), `b1-030` (connects_to in plan)
 
 ---
 
@@ -69,15 +63,20 @@ The full §4.4.3 section (lines 2380–2431) covers the complete B1 complex sent
 
 ## Notes for Content Writing
 
-- **Same-subject rule framing**: Present the rule positively as a Ukrainian-specific economy of expression: when the subject is identical, Ukrainian opts for the infinitive — a clean, compact construction. Do not frame this as «unlike in other languages» or draw Russian comparisons.
-- **аби dual function**: Must address аби as both purpose conjunction (literary) and conditional conjunction — the Авраменко textbook (p. 87) uses it in conditional sentences in the same exercise block immediately after purpose clause examples. Learners at B1 will encounter both.
-- **з тим щоб**: The Авраменко textbook lists «для того щоб, з тим щоб» as purpose conjunctions (p. 86). The plan lists «для того щоб» but omits «з тим щоб». Include «з тим щоб» briefly as a formal/written variant for completeness.
-- **Canonical textbook example from Леся Українка**: «Хотіла б я піснею стати... щоб вільно по світі літати, щоб вітер розносив луну» — this is the Grade 9 Avramenko textbook's primary example. Using it gives the module direct textbook grounding.
-- **State Standard's own example**: «Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного міста» (§4.4.3) — use this as the anchor diagnostic sentence at module opening.
-- **Word count planning**: 4000 word minimum. The plan's section allocations (600+1000+800+1000+600 = 4000) hit exactly the minimum. Budget for overshoot: aim for 4400–4600 words in content generation to ensure the gate passes after the validator trims formatting overhead.
+- **§4.4.3 has dual щоб**: The same State Standard paragraph that introduces purpose clauses (lines 2420–2422) also shows щоб in reported-speech function (lines 2399–2401: «Викладач сказав, щоб я багато працював»). Build the diagnostic test around this contrast — learners already know щоб from A2 reported speech, so the purpose-infinitive pattern is a new semantic layer on a familiar conjunction.
+- **Grade 9 textbook coverage**: Both Voron (p.80) and Avramenko (p.86, §24) cover purpose clauses at Grade 9. The Voron textbook uses Russian-glossed labels ("рос. придаточные предложения цели") — do NOT replicate this framing. Use Ukrainian-centric metalanguage throughout: «підрядна частина мети», «сполучник мети».
+- **аби frequency implication**: At 190 IPM, аби is common enough to deserve active teaching (not just passive recognition). The plan correctly includes it as a synonym — present it as a stylistically rich alternative, not a rare archaism.
+- **для того щоб**: Not indexable as a single token in GRAC but is well attested as a phrase. Teach it as a formal/official register marker — appropriate for written documents, professional communication. Contrast: spoken Ukrainian strongly prefers bare щоб.
+- **Decolonization**: Avoid any framing that positions Ukrainian purpose clause structures as "similar to" or "derived from" Russian equivalents. Present the щоб + infinitive construction as a core feature of Ukrainian syntax, historically attested in Lesya Ukrainka and folk proverbs.
+- **Proverb verification**: «Щоб рибу їсти, треба у воду лізти» is attested in Ukrainian folklore corpora. The pre-posed purpose clause structure (Щоб + inf., [main clause]) is a productive model worth practicing for placement flexibility.
+- **Word target allocation note**: Section 2 (Grammar) at 1000 words and Section 4 (Error Analysis) at 1000 words are the heaviest sections. Both involve dense example sets — apply the B1 anti-padding rule: max 4–6 examples per grammar sub-point, each teaching something new. Use table + dialogue format alternation to avoid monotony.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Підрядне речення мети](https://uk.wikipedia.org/wiki/Підрядне_речення_мети) (Вікіпедія)
+- [Ukrainian Purpose Clauses](https://www.youtube.com/results?search_query=ukrainian+purpose+clauses) (відео пояснення)
 
 ### Textbook References (RAG)
 

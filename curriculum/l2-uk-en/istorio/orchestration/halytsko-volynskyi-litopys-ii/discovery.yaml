@@ -1,0 +1,219 @@
+discovered_at: '2026-03-13T00:22:45.655112+00:00'
+query_keywords:
+- 'Галицько-Волинський літопис II: Стиль і світогляд'
+- Літературні особливості
+- Західні впливи
+- Світогляд літописця
+- Фрагмент
+- Волинська частина
+- 'Analyze the causes and consequences of галицько-волинський літопис ii: стиль і
+  світогляд'
+- Evaluate the historical significance of література як історія
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0178
+  text: "144\nРозділ 4. ВОЛИНЬ І ГАЛИЧИНА КІНЦЯ ХІІ — \nСЕРЕДИНИ ХІІІ ст. ...\nДослідіть\n\
+    Поясніть, для чого потрібно перевидавати стародавні літописи. На яких читачів\
+    \ \nорієнтовані такі видання? Чи можна вважати цей літопис історичним джерелом?\
+    \ \nЧому? \n1, 2 — сучасні видання Галицько-Волинського літопису;  \n3 — фрагмент\
+    \ тексту давнього Галицько-Волинського літопису\n1\n2\n3\n\aЯк розвивалась архітектура\n\
+    Поміркуйте\nВизначте особливості розвитку архітектури Волинсько-Галицької держави.\n\
+    Піднесення господарського жит"
+  section_title: Сторінка 147
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0139
+  text: "Матеріал цього розділу відкриває перед вами широкі можливості для усві-\n\
+    домлення гуманізму як основи світоглядних переконань розвиненої особистості, \n\
+    оптимізму й  життєствердження як важливих духовних цінностей буття; розумін-\n\
+    ня благотворного впливу на людину краси природи; усвідомлення рівності жінок \n\
+    і чоловіків у всіх сферах суспільного життя як необхідної умови розв’язання ак-\n\
+    туальних політичних, соціально-культурних та психологічних проблем.\nОпрацьовуючи\
+    \ матеріал розділу, ви маєте змогу н"
+  section_title: Сторінка 75
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0001
+  text: "«Українська мова. Буквар»  \nпідручник для 1 класу закладів  \nзагальної\
+    \ середньої освіти\n(у 2-х частинах)\nЧастина  друга\nМар’яна  Захарійчук\nВидавництво\
+    \ «Грамота»\n2025\nPidruchnyk.com.ua"
+  section_title: Сторінка 2
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6479371786117554
+  chunk_id: 701afbae_c0268
+  text: "Всі відзначені стилістичні прийоми редактора\r\nгалицької частини Галицько-Волинського\
+    \ літопису, тенденція в його\r\nлітописно-розповідному стилі до багатообразності\
+    \ мови, до варіювання\r\nрізноманітних конструкцій фраз, то коротких, нанизуваних\
+    \ одна на одну, то\r\nрозгорнених, авторські емоціонально-експресивні відступи,\
+    \ індивідуалізація\r\nпромов — все це робить твір живим, образним і високо драматизованим,\
+    \ на\r\nвідміну від інших пам’яток розповідного жанру XIII — XIV ст.\n\n[Генсьорський\
+    \ А. І. Галицько-Во"
+  work: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+  year: 1961
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hens1/hn.htm
+- score: 0.6351057291030884
+  chunk_id: 701afbae_c0001
+  text: 'Галицько-Волинський літопис (розшифровка за Іпатським списком).
+
+
+    Галицько-Волинський літопис (розшифровка за Острозьким списком).
+
+
+    Літопис руський (переклад Л.Махновця).
+
+
+    Повість врем’яних літ. (переклад В.Яременка).
+
+
+    Ярослав Книш. Фрагменти невідомого списку Іпатіївського літопису
+
+
+    «Літописи». З Енциклопедії Українознавства.
+
+
+    «Літописи». З енциклопедії «Українська мова».
+
+
+    А.І.Генсьорський. Термін «Русь» (та похідні) в Древній Русі... (1962).
+
+
+    [Генсьорський А. І. Галицько-Волинський літопис (лек'
+  work: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+  year: 1961
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hens1/hn.htm
+- score: 0.6339406967163086
+  chunk_id: 701afbae_c0276
+  text: "Таким чином, можна встановити в прийомах стилю\r\nволинського літописця як\
+    \ основну його рису прагнення до розгорнутого вислову,\r\nдо чіткості й зрозумілості\
+    \ мови, потрібних для спілкування з якнайширшими\r\nверствами суспільства. Наслідком\
+    \ цього є деяка розтягненість, властива стилям\r\nпросторічної розповіді. Проте\
+    \ цей примітивізм не позбавлений всіх тих\r\nдостоїнств, які має простота примітивного\
+    \ стилю. Саме ця простота свідчить про\r\nщільне наближення літописця до живої\
+    \ народної мови, що, як побачимо "
+  work: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+  year: 1961
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hens1/hn.htm

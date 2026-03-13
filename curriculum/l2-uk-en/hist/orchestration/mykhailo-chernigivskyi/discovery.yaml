@@ -1,0 +1,190 @@
+discovered_at: '2026-03-12T23:41:12.011576+00:00'
+query_keywords:
+- 'Михайло Чернігівський: Опір Орді'
+- 'Читання: Життя та опір Михайла Чернігівського'
+- Первинні джерела
+- Деколонізаційний погляд
+- Потрібно більше практики?
+- 'Analyze the causes and consequences of михайло чернігівський: опір орді'
+- Evaluate the historical significance of вступ
+- Trace the development of потрібно більше практики?
+- history
+- Михайло
+- Всеволодович
+- Чернігівське
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0339
+  text: "1210  р. rnk.com.ua/107326\nМетоди інтерактивного  \nнавчання та розвитку\
+    \  \nкритичного мислення\nrnk.com.ua/107325\nПлани-схеми та \nхарактеристики \n\
+    різних форм роботи \nз  підручником\nСвятослав Ярославич \nіз родиною. Мініатюра\
+    \ \nз  «Ізборника» Святослава. 1076  р."
+  section_title: Сторінка 224
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0391
+  text: "Ольжич та інші. Українство стало на шлях збройної \nборотьби проти окупаційної\
+    \ влади. і\nЯрослав Стецько\nОлена Теліга\nВолодимир Кубійович"
+  section_title: Сторінка 204
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0143
+  text: '6. Луценко Ю. Григорій Граб’янка та його літопис // Літопис гадяцького пол-
+
+    ковника Григорія Граб’янки. – К., 1992.'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5224978923797607
+  chunk_id: 479cf43d_c0109
+  text: "Про нього див.: Тарасенко М. \r\nМ. О. Максимович // Життя й Революція. —\
+    \ 1927. — №6; Острянин Д.\r\nX. Світогляд М. О. Максимовича. — К., 1960; Марков\
+    \ П. Г. Общественно-полит.\r\nи ист. взгляды М. А. Максимовича. — К., 1986; Єфремов\
+    \ С. Максимович в\r\nісторії укр. самосвідомості // Літературно-критичні статті.\
+    \ — К., 1993; Жмир\r\nВ. М. О. Максимович — патріарх новітньої укр. науки // Філос.\
+    \ і соціол.\r\nдумка. — 1994. — №1 — 2; Марков П. Г. Жизнь и труды М. А.\r\nМаксимовича.\
+    \ — К., 1997; Педагог, учений, пат"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5220632553100586
+  chunk_id: 479cf43d_c0235
+  text: 'В. Білодід
+
+
+    Див. також:
+
+
+    Ігор Гирич. В. Вернадський. Між російським і українським берегами.
+
+
+    [Філософська думка в Україні: Біобібліографічний словник. — К., 2002. — С. 33-36.]'
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5165230631828308
+  chunk_id: 484d0ffb_c0931
+  text: "19 Петров А. Памятники\r\nцерковно-религиозной жизни... — С. 1, 164.\n\n\
+    20 Там само. — С.\r\n185 б, 27 б, 201 а.\n\n21 Фотинский О. Волынский\r\nрелигиозный\
+    \ вольнодумец XVII в. // ЧОНЛ. — 1905. — Кн. 18, вып. 3/4, отдел 2.\r\n— С. 83.\n\
+    \n22 Там само. — С.\r\n86.\n\n23 Там само. — С.\r\n88."
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

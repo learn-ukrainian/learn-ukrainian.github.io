@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "pluperfect-tense",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:16:05Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:16:05Z",
+      "task_id": "v5-pluperfect-tense-pA",
+      "mode": "full"
+    }
+  }
+}

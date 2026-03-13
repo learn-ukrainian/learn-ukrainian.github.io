@@ -1,0 +1,280 @@
+discovered_at: '2026-03-12T23:55:45.561925+00:00'
+query_keywords:
+- Історична пам'ять і політика
+- Теоретичні основи
+- Інструменти політики пам'яті
+- Війни пам'яті
+- Законодавство про пам'ять в Україні
+- Місця пам'яті в Україні
+- Виклики і перспективи
+- Analyze the causes and consequences of історична пам'ять і політика
+- Evaluate the historical significance of пам'ять як поле битви
+- Trace the development of виклики і перспективи
+- history
+- історія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=yc-D5CFnwmI
+  channel: Реальна Історія
+  title: ГОЛОДОМОР. Реальна історія з Акімом Галімовим
+  relevance_score: 1.0
+  relevance_note: Video directly addresses Holodomor as a key component of Ukrainian
+    historical memory and its political manipulation, touching on re-evaluation of
+    historical figures and the role of state legislation regarding memory.
+  transcript_excerpt: Ющенко объявил 2008 годом памяти жертв голодомора всё это происходит
+    на фоне переоценки ценностей на Украине когда бывшие бандеровцы становятся героями
+    Украины а памятники Советской эпохи называются здесь памятниками тоталитарному
+    режиму.
+  embed_suggestion: After section Законодавство про пам'ять в Україні -- It directly
+    illustrates how historical events become subject to state policy and memory politics.
+- url: https://www.youtube.com/watch?v=8vPbO89ZFoo
+  channel: Реальна Історія
+  title: Навіщо росіяни полюють за останками українських правителів? ПРОДОВЖЕННЯ
+  relevance_score: 1.0
+  relevance_note: Video is a prime example of 'Війни пам'яті — Україна vs. Росія',
+    detailing Russia's attempts to appropriate Ukrainian historical figures and narratives
+    to undermine Ukrainian identity.
+  transcript_excerpt: спадщина Великого київського князя Ярослава Мудрого стала історичною
+    основою війни між Україною та Росією для президента Росії Володимира Путіна Київська
+    Русь є доказом того що Росія та Україна єдиний історичний і духовний простір кінець
+    цитати.
+  embed_suggestion: After section Війни пам'яті — Україна vs. Росія -- It provides
+    concrete examples of the historical and cultural conflict over memory between
+    Ukraine and Russia.
+- url: https://www.youtube.com/watch?v=t86hh3gFXOc
+  channel: Комік Історик
+  title: 'Віктор Ющенко: подкаст про українців'
+  relevance_score: 0.9
+  relevance_note: Video discusses the theft of Ukrainian cultural heritage by Russia,
+    directly linking to memory wars and the political struggle for national identity.
+    Yushchenko's role in promoting Ukrainian identity through historical memory is
+    also relevant.
+  transcript_excerpt: улюблена професія росіян - це красти не маючи своєї культури
+    не маючи своєї мови не маючи свого звичаю та власно і назва власної назви і дні
+    народження свої все крадене є цифри які які точно говорять про те скільки мільйонів
+    артефактів України сьогодні починаючи від Москви санкт-петербурга і губертських
+    музеїв зберігаються в Росії.
+  embed_suggestion: After section Інструменти політики пам'яті -- The discussion of
+    cultural appropriation and the state's role in shaping identity aligns with the
+    tools of memory politics.
+- url: https://www.youtube.com/watch?v=z0I76Eg9p_0
+  channel: Комік Історик
+  title: 'Данило Яневський: про Шухевича і не тільки @DanyloYanevsky'
+  relevance_score: 0.9
+  relevance_note: Video addresses the collection of Ukrainian artifacts, contributing
+    to 'Місця пам'яті', and extensively discusses Roman Shukhevych, a key figure in
+    Ukrainian historical memory, directly relating to 'Пам'ять як поле битви' and
+    'Війни пам'яті'.
+  transcript_excerpt: Поїхали про Шухевича. Ден Борисович, вітаю вас. Вітаю вас, шановні,
+    це велика честь для мене з вами познайомитися, подивитися вам в очі в очікуванні
+    якихось несподіванок. Можна від вас за спів почути УПА, Роман Шухевич. Чому про
+    це важливо говорити і чому нашим слухачам, глядачам важливо про це слухати? Ну,
+    починаємо спочатку. Це частина не просто української історії, це частина українська-польська
+    історія.
+  embed_suggestion: After section Пам'ять як поле битви -- The controversy and significance
+    of figures like Shukhevych are central to understanding memory as a battlefield
+    in Ukraine.
+- url: https://www.youtube.com/watch?v=gsn_yZ08USk
+  channel: Harvard Ukrainian Research Institute
+  title: 'Відбудова України, Відбудова світу. Сесія 1: Новий світовий устрій'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=oxYJJY0daMQ
+  channel: ІМТГШ
+  title: Таємна історія Княгині Ольги / Русь, або ж Київська Русь / Історія України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=HCKvj8y0yZY
+  channel: ІМТГШ
+  title: HISTORY OF MARIUPOL
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0235
+  text: "Ознайомтеся з  пам’яткою. Самостійно сформулювавши тему для обгово-\nрення\
+    \ (або обравши із запропонованих), організуйте ділову гру  — проведення \nдебатів.\
+    \ ПАМ’ЯТКА \nЯК ОРГАНІЗУВАТИ ТА ПРОВЕСТИ НАВЧАЛЬНІ ДЕБАТИ\n1. Тему формулюють\
+    \ риторичним реченням, у  якому закладено неоднознач-\nність розуміння певного\
+    \ питання або проблеми."
+  section_title: Сторінка 169
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0451
+  text: "Практичні заняття\n1. Дослідження документів та матеріалів усної історії\
+    \ \nпро Другу світову війну\n2. Війна в  пам’ятниках рідного краю\nЗавдання для\
+    \ узагальнення знань і підготовки  \nдо тематичного оцінювання за розділом VI\
+    \  \n«Україна в  роки Другої світової війни (1939—1945  рр.)»\nі"
+  section_title: Сторінка 234
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0113
+  text: "Історична наука та історична пам’ять\n113\nЗапитання і завдання\nI.\nЗнаю\
+    \ й систематизую нову інформацію\nСамооцінювання. Оцініть свої успіхи в опануванні\
+    \ теми «Історична \nпам’ять» — поєднайте кожне із запитань для самоконтролю із\
+    \ відповід-\nним смайликом успіху. Дайте відповіді на запитання. \nЩо означають\
+    \ поняття «усна \nісторія», «історична пам’ять»?\nЧому історична пам’ять \nспільнот\
+    \ відрізняється?\nНа яких цінностях має\nбазуватися культура пам’яті?\nЧим відрізняється\
+    \ історична \nпам’ять від наукових зна"
+  section_title: Сторінка 113
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0508
+  text: "281\nПлани-схеми для самостійної роботи з  підручником і  додатковою літературою\n\
+    Плани-схеми для самостійної роботи з  підручником  \nі  додатковою літературою\n\
+    Як скласти план\n\t 1. Уважно прочитайте текст, до якого вам треба скласти план.\
+    \ 2. Виберіть із нього лише той матеріал, який відповідає темі плану. 3. Поділіть\
+    \ текст на логічно завершені частини, знайдіть у  кожній із них \nголовну думку,\
+    \ чітко сформулюйте та запишіть їх. 4. Дайте назви частинам тексту. 5. Перед тим\
+    \ як записати план у зошит, "
+  section_title: Сторінка 281
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.4831284284591675
+  chunk_id: 484d0ffb_c1451
+  text: "Поступово формувалася методологія, що базувалася на\r\nпевних наукових принципах,\
+    \ наприклад історично-юридичний метод. Останній\r\nзводився до використання історичного\
+    \ й правового прецеденту як способу\r\nдоведення авторської тези. При цьому наводилися\
+    \ документальні матеріали (повні\r\nтексти й витяги з них), а також застосовувався\
+    \ апарат посилань.\n\nТеоретичний рівень мислення відігравав засадничу роль\r\n\
+    у розвитку історичної думки. Це проявилося насамперед у зв’язку з висвітленням\r\
+    \nукраїнськими авторами"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm
+- score: 0.48036834597587585
+  chunk_id: feaa5fa7_c3176
+  text: "Українці в сов. армії: Національная политика\r\nВКП(б) в цифрах. М. 1930;\
+    \ Golovine N. The Russian Army in the World War.\r\nНью Гевн 1931; Wallenberg\
+    \ E. The Red Army — a study in the growth of\r\nSoviet imperialism. Лондон 1940;\
+    \ Berchin M.-Ben-Horin E. The Red Army.\r\nНью-Йорк 1942; Cole D. The Red Army.\
+    \ Лондон 1943; White D. The\r\ngrowth of the Red Army. Прінстон 1944; Kalinow\
+    \ D. Sowjetmarschälle\r\nhaben das Wort. Гамбург 1950; Кисіль В. Охорона кордонів\
+    \ СССР. Перемога,\r\nІ. Мюнхен 1951.\n\nОНОКС: Карпатсь"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.4797065556049347
+  chunk_id: feaa5fa7_c3063
+  text: "Література. Політичні партії: Багатий матеріял у політ. пресі. Lewinskyj\
+    \ W Das erste Jahrzehnt\r\nder ukrainischen Sozialdemokratie in Österreich. Der\
+    \ Kampf III 7; Петлюра\r\nС. Укр. партія соціял-демократів. К. 1907; Гайдалемівський\
+    \ П. Укр. політ.\r\nпартії. Зальцведель 1919; Календар Вперед (статті Дорошенка\
+    \ В., Ганкевича Л.\r\nі М., Чернецького А.). Л. 1920; Грушевський М. З починів\
+    \ соц. руху\r\nна Україні. Драгоманів і женевський гурток. Відень 1922; Левицький\
+    \ К. Історія\r\nполіт. думки галицьких україн"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

@@ -2,117 +2,94 @@
 
 ## State Standard Reference
 
-§4.3.1 (lines 1369–1378):
-> "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; проста форма найвищого ступеня: найсолодший, найважливіший; складена форма вищого ступеня: більш солодкий, менш кислий, більш важливий, менш важливий; складена форма найвищого ступеня порівняння: найбільш солодкий, найменш кислий, найбільш важливий, найменш важливий; суплетивні форми: великий – більший, найбільший; малий – менший, найменший."
+**§4.3.1** (lines 1369–1378): *"Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; проста форма найвищого ступеня: найсолодший, найважливіший; складена форма вищого ступеня: більш солодкий, менш кислий, більш важливий, менш важливий; складена форма найвищого ступеня порівняння: найбільш солодкий, найменш кислий, найбільш важливий, найменш важливий; суплетивні форми: великий – більший, найбільший; малий – менший, найменший."*
 
-**Alignment**: Module a2-023 covers all four patterns mandated by §4.3.1 — simple superlative (най-), compound superlative (найбільш/найменш +), and suppletive pairs (великий→найбільший, малий→найменший, добрий→найкращий, поганий→найгірший). Full compliance. The emphatic prefixes якнай-/щонай- are an enrichment beyond the Standard's minimum — mark them as enrichment, not core requirement.
+**Alignment**: Module addresses all four sub-categories from §4.3.1 — simple superlative (най- + comparative), compound superlative (найбільш/найменш + base form), and suppletive pairs. The standard explicitly lists найбільший/найменший as the only two suppletive superlatives at this level; the plan's inclusion of найкращий/найгірший is pedagogically appropriate (high frequency) but goes slightly beyond the standard's listed examples — treat as enrichment, not core requirement.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | GRAC frequency | IPM | VESUM status | Key collocations |
+| Word | GRAC Frequency | IPM | VESUM Status | Key collocations |
 |------|---------------|-----|--------------|-----------------|
 | найбільший | 41,244 | 20.38 | ✅ adj | найбільша країна, найбільше місто, найбільша помилка |
 | найкращий | 35,416 | 17.50 | ✅ adj | найкращий друг, найкращий час, найкраща ідея |
-| найвищий | 14,906 | 7.36 | ✅ adj | найвища гора, найвищий бал, найвищий рівень |
-| найменший | 6,081 | 3.00 | ✅ adj | найменша дитина, найменша ціна, найменша деталь |
-| найгірший | 5,080 | 2.51 | ✅ adj | найгірший день, найгірший сценарій, найгірша погода |
-| найважливіший | 3,780 | 1.87 | ✅ adj | найважливіше питання, найважливіший крок |
-| найбільш | — | — | ✅ adv (найбільше) | найбільш цікавий, найбільш важливий |
-| якнайшвидше | — | — | ✅ adv | якнайшвидше виїхати, зробити якнайкраще |
-| станція | — | — | ✅ noun | станція метро, кінцева станція |
-| гора | — | — | ✅ noun | висока гора, гірська вершина |
-| печера | — | — | ✅ noun | темна печера, довга печера |
-| літак | — | — | ✅ noun | великий літак, транспортний літак |
+| найвищий | 14,906 | 7.36 | ✅ adj | найвищий рівень, найвища гора, найвищий бал |
+| найменший | — | — | ✅ adj | найменша дитина, найменша деталь |
+| найгірший | 5,080 | 2.51 | ✅ adj | найгірший сценарій, найгірша погода |
+| найважливіший | — | — | ✅ adj | найважливіше питання, найважливіший крок |
 | найглибший | — | — | ✅ adj | найглибша станція, найглибше озеро |
-| найдовший | — | — | ✅ adj | найдовша печера, найдовша річка |
+| найдовший | — | — | ✅ adj | найдовша річка, найдовший шлях |
 | найпотужніший | — | — | ✅ adj | найпотужніший двигун, найпотужніший літак |
+| якнайшвидше | — | — | ✅ adv | зробити якнайшвидше |
+| щонайкраще | — | — | ✅ adv | щонайкраще виконати |
+| найбільш | — | — | ✅ (as найбільше/adv) | найбільш важливий, найбільш цікавий |
 
-**Note on найбільш**: VESUM matches it to `найбільше` (adverb). It functions as an analytic particle before adjectives (`найбільш цікавий`). Content should present it as an adverb-particle, not an adjective — this distinction matters for A2 learners.
+**Note on найбільш**: VESUM indexes this under the adverb lemma *найбільше* — the analytic particle form *найбільш* (frozen/invariant) is attested and correct in formal register. Phase B should clarify that *найбільш* is the invariant particle (does not decline), while *найбільший* is a full adjective that agrees in gender/number/case.
 
 ---
 
 ## Cultural Hooks
 
-### ⚠️ CRITICAL ACCURACY FLAGS — Plan Contains Outdated Information
+1. **Арсенальна** — станція Київського метрополітену, відкрита 6 листопада 1960 р. Розташована між станціями «Хрещатик» і «Дніпро» на Святошинсько-Броварській лінії. Verified via Wikipedia as deepest metro station in the world (105.5 m). Use as prime example of *найглибша станція метро у світі*.
 
-**1. Арсенальна station — NO LONGER the world's deepest**
-Wikipedia (verified): "Станом на 2011 рік станція вважалася найглибшою у світі, вона розташовується на глибині 105,5 метрів. 25 січня 2022 року цей рекорд побила станція Хун'яньцунь Чунцінського метрополітену з глибиною закладання 116 метрів."
+2. **Говерла** — підтверджено: *найвища вершина Українських Карпат і найвища точка України*, висота 2,061 м над рівнем моря, вік ~25 млн років. Located on border of Ivano-Frankivsk and Zakarpattia oblasts. Use as *найвища гора України*.
 
-The plan's claim that Арсенальна is "найглибша станція метро у світі" is **factually incorrect as of January 2022**. 
-
-**Correct framing options for content**:
-- "Арсенальна — найглибша станція метро в Україні (105,5 м)" — STILL TRUE
-- "Арсенальна — найглибша станція метро в Східній Європі" — Wikipedia calls it "єдина в Східній Європі двосклепна станція" — use with caution, needs separate verification
-- "До 2022 року Арсенальна була найглибшою станцією метро у світі" — HISTORICALLY ACCURATE framing
-
-**2. Ан-225 «Мрія» — destroyed in 2022**
-Wikipedia (verified): "До 2022 року Ан-225 був найбільшим та найпотужнішим літаком у світі." The «Мрія» was destroyed at Hostomel airport on 27 February 2022 during Russia's full-scale invasion.
-
-The plan uses present tense "найбільший і найпотужніший транспортний літак у світі" — **factually incorrect**. 
-
-**Correct framing**: Use past tense — "Ан-225 «Мрія» був найбільшим і найпотужнішим транспортним літаком у світі." Frame the loss as culturally significant — the plane's destruction is itself a powerful superlative lesson ("найбільша втрата", "найважливіший символ"). This is pedagogically richer, not weaker.
-
-**3. Говерла — VERIFIED CORRECT**
-Wikipedia (verified): "Говерла — найвища вершина Українських Карпат і найвища точка України, її висота становить 2 061 м над рівнем моря."
-The plan's figure of 2061 м is correct. ✅
-
----
-
-## Textbook Evidence
-
-**Grade 6, Avramenko 2023** (tier 1, trust): Covers ступені порівняння in §63–64. Key pedagogical point noted: alternation (низький→нижчий, малий→менший) explicitly taught. Dialogue approach used: "лавандовий найприємніший" — conversational register. This confirms the dialogic approach planned for this module is textbook-standard.
-
-**Grade 6, Litvinova 2023** (tier 1, trust): Clear two-axis table (simple/compound × comparative/superlative). The formula: `Префікс най- + форма вищого ступеня` is explicitly stated.
-
-**Grade 8, Zabotnyi 2025** (tier 1, trust): Parallel table for adjectives AND adverbs (найширший / найбільш широкий / найвеселіше / найбільш весело). Useful: adverb superlatives appear alongside adjective superlatives — consider one adverb example in the dialogues for enrichment (e.g., якнайшвидше).
-
-**Grade 11, Avramenko 2019** (tier 2): Stylistic angle — notes that superlatives can be applied to relative adjectives for creative/advertising effect ("найкрабовіші"). Skip this for A2 — too metalinguistic.
+3. **АН-225 «Мрія»** — CRITICAL PEDAGOGICAL NOTE: Wikipedia confirms "До 2022 року Ан-225 був найбільшим та найпотужнішим літаком у світі." The aircraft was destroyed on 27 February 2022 at Hostomel airport during the Russian full-scale invasion. Phase B must frame this in the **past tense** ("був найбільшим") with context about its destruction and the symbolic importance of the name *Мрія* (Dream). Ukraine has plans to rebuild it; Antonov Design Bureau is the Ukrainian national institution. This is emotionally significant material — handle with care, not as trivia.
 
 ---
 
 ## Common Learner Errors
 
-1. **"Самий" calque from Russian** → `самий великий` ✗ → `найбільший` ✓ (or `найбільш великий` analytic form) — happens because Russian uses `самый` as a superlative marker; Ukrainian has no such word in this function.
+1. **"Самий великий" (Russian calque)** → correct: **найбільший** or **найбільш великий** — Happens because Russian uses "самый" as a superlative particle. Directly addressed in Ukrainian textbooks (Golub Grade 6, NUS 2022+): *"Слово «самий» ніколи не вживаємо з прикметниками, натомість використовуємо префікс най-."* Must be the first error addressed explicitly in the module.
 
-2. **Double superlative mixing** → `найбільш цікавіший` ✗ (mixes analytic prefix with comparative suffix -іш-) → must choose ONE form: `найбільш цікавий` OR `найцікавіший` ✓ — confusion from treating `найбільш` like a modifier stackable onto any adjective form.
+2. **Double superlative mixing** ("найбільш цікавіший") → correct: either **найбільш цікавий** (analytic) or **найцікавіший** (synthetic) — Learners mix the two forms by stacking both superlative markers simultaneously. Only one formation strategy per word.
 
-3. **Applying superlatives to non-qualitative adjectives** — textbooks explicitly note that color adjectives (блакитний, вороний) and material adjectives (дерев'яний) do not take degrees of comparison. A2 learners sometimes try `найдерев'яніший` or `найчервоніший` (the latter is technically possible but marginal). Keep examples to prototypical qualitative adjectives.
+3. **Superlative applied to relative adjectives** (e.g., *\*найкрабовіший* from an ad parody in Avramenko Grade 11 textbook) — logically inappropriate but attested in advertising and creative use. At A2 level, teach that superlatives apply only to qualitative adjectives (*якісні прикметники*), not relative (*відносні*) ones.
 
-4. **Gender/number agreement after superlative prefix** — superlatives still decline like adjectives. Learners sometimes treat `найкращий` as invariable (L1 English transfer). Reinforce agreement: найкращий план / найкраща ідея / найкраще рішення.
+4. **Gender/case agreement lapse** — learners often treat superlatives as invariant (using masculine form everywhere). Reinforce that *найкращий / найкраща / найкраще* must agree with the noun, just like any adjective.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: `bigger-better-stronger` (a2-018) — comparative degree (більший, кращий, швидший) is the direct foundation; the plan correctly notes that superlative = `най-` + comparative form
-- **Prepares for**: `preferences-and-choices` (connects_to field) — superlatives naturally lead into expressing preferences and making ranked choices
+- **Builds on**: `bigger-better-stronger` (A2-018) — comparative degree (більший, менший, кращий, гірший, вищий). Module must activate this prior knowledge immediately — the superlative is mechanically *най-* + comparative, so learners who know the comparative already know 80% of the superlative.
+- **Prepares for**: `preferences-and-choices` (A2-next) — superlatives are the natural tool for expressing absolute preferences ("найкращий варіант для мене").
 
 ---
 
-## Multimedia Resources
+## Textbook Sources (RAG-verified)
 
-- (none encountered during research — discover phase handles multimedia)
+| Source | Grade | Tier | Content |
+|--------|-------|------|---------|
+| Avramenko 2023 | 6 | 1 (NUS) | §63–64: Ступені порівняння якісних прикметників — suppletive forms table, consonant alternations (низький→нижчий, великий→більший) |
+| Golub 2023 | 6 | 1 (NUS) | Explicit "самий" prohibition; якнай-/щонай- prefixes with examples: *щонайяскравіший, якнайсильніший* |
+| Glazova 2019 | 11 | 2 | Full formation table: simple/compound forms for both comparative and superlative degrees side-by-side |
+| Avramenko 2019 | 11 | 2 | Creative/advertising usage of superlatives; discussion of appropriateness |
 
 ---
 
 ## Notes for Content Writing
 
-1. **Fix the Арсенальна claim**: Use "найглибша станція метро в Україні (105,5 м)" instead of "найглибша у світі." The world record was lost in January 2022. The Ukrainian-centric framing is actually stronger pedagogically — no need for the inflated claim.
+- **Lead with the механічне правило**: най- + comparative = superlative. Students who completed bigger-better-stronger know all the base comparatives; this module should feel like an "unlock," not a new system.
+- **Suppletive pairs to drill**: великий→більший→**найбільший**, малий→менший→**найменший**, добрий→кращий→**найкращий**, поганий→гірший→**найгірший**. These are §4.3.1-listed + high-frequency enrichment.
+- **АН-225 must use past tense**: "був найбільшим і найпотужнішим транспортним літаком у світі." Include one sentence acknowledging its destruction and symbolic weight. Do not present it as a current record.
+- **Agreement tables are essential**: najkraschyy needs a 3-column gender table (найкращий / найкраща / найкраще) with example nouns. Keep it tight — 3 rows, not a full paradigm.
+- **якнай-/щонай- as enrichment, not core**: Introduce with 2–3 examples (якнайшвидше, якнайкраще, щонайменше), enough to recognize and use, not to memorize paradigms.
+- **Decolonized framing**: Present Ukrainian superlative formation as a system with its own internal logic (prefix *най-* is native Ukrainian morphology, attested in Old Ukrainian texts). The Russian "самий" calque is a learner error to avoid, not the "original" from which Ukrainian departs.
+- **Cultural section tone**: Celebrate genuine Ukrainian achievements and geography — Арсенальна, Говерла, and the Оптимістична cave are real, verifiable records. АН-225 is both a record and a symbol of loss; treat with appropriate gravity.
 
-2. **Fix the Мрія tense**: Use past tense throughout. The loss of the Мрія is a culturally significant teaching moment — frame it as "був найбільшим літаком у світі" with a note about its symbolic importance and destruction, which contextualizes the superlative emotionally and historically.
+---
 
-3. **Decolonized framing**: The `самий` error section must frame it purely as a **Ukrainian grammar rule** being violated, not as "Russian influence." Say: "In Ukrainian, the superlative is formed with `най-`, NOT with `самий`." Never use "unlike in Russian" construction. The rule stands on its own Ukrainian logic.
-
-4. **Якнай-/щонай- scope**: These emphatic prefixes are enrichment content. Present them briefly with 2–3 high-frequency examples (якнайшвидше, якнайкраще, якнайбільше). Do not expand into a full rule derivation — A2 learners need recognition, not production.
-
-5. **Analytic form register**: Grade 8 Zabotnyi confirms that compound superlative (найбільш + adjective) is presented alongside simple forms as equivalent. At A2, use it for longer/technical adjectives and explicitly tell learners: "Both forms are correct; the simple form is more common in speech."
-
-6. **Immersion target 55–75%**: Module 23 is in the "Applied grammar" band. Structure: Ukrainian examples first, English grammar explanation below. Never mix within a sentence. The dialogue sections should be 100% Ukrainian with no English interleaving.
+## Multimedia Resources
+- (none encountered during research — discover phase handles media)
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Dobra Forma 20-3: Superlative Degree](https://opentext.ku.edu/dobraforma/chapter/20-3/) (University of Kansas)
+- [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/) (Unknown)
 
 ### Textbook References (RAG)
 

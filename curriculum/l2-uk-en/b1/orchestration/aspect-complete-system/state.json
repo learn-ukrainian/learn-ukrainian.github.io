@@ -5,12 +5,12 @@
   "phases": {
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T08:49:37Z",
-      "note": "rebuild-kept"
+      "ts": "2026-03-12T15:27:54Z",
+      "note": "file-exists"
     },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:49:55Z",
+      "ts": "2026-03-12T15:27:54Z",
       "note": "merged-into-research"
     }
   }

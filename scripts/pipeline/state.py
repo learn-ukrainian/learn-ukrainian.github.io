@@ -12,9 +12,52 @@ import os
 import tempfile
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, NotRequired, TypedDict
 
 logger = logging.getLogger(__name__)
+
+
+class PhaseExecutor(TypedDict):
+    """Provenance info for the agent/script that executed a pipeline phase.
+
+    Attributes:
+        type: "llm" | "script" | "deterministic" (always required)
+        agent: LLM agent name (e.g. "gemini", "claude") — for type="llm"
+        model: Exact model ID — for type="llm"
+        name: Script/component name — for type="script" | "deterministic"
+    """
+
+    type: str                    # "llm", "script", or "deterministic"
+    agent: NotRequired[str]      # e.g. "gemini", "claude"
+    model: NotRequired[str]      # e.g. "gemini-3-flash-preview", "claude-opus-4-6"
+    name: NotRequired[str]       # e.g. "vesum_sandbox", "mdx_generator"
+
+
+def executor_llm(agent: str, model: str) -> PhaseExecutor:
+    """Create an LLM executor dict."""
+    return PhaseExecutor(type="llm", agent=agent, model=model)
+
+
+def executor_script(name: str) -> PhaseExecutor:
+    """Create a script executor dict."""
+    return PhaseExecutor(type="script", name=name)
+
+
+def executor_deterministic(name: str) -> PhaseExecutor:
+    """Create a deterministic executor dict."""
+    return PhaseExecutor(type="deterministic", name=name)
+
+
+def detect_self_review(state: dict) -> bool:
+    """Check if the same LLM agent did both content and review phases."""
+    phases = state.get("phases", {})
+    content_exec = phases.get("content", {}).get("executor", {})
+    review_exec = phases.get("review", {}).get("executor", {})
+    if not content_exec or not review_exec:
+        return False
+    if content_exec.get("type") != "llm" or review_exec.get("type") != "llm":
+        return False
+    return content_exec.get("agent") == review_exec.get("agent")
 
 # Late imports to avoid circular dependency
 _pipeline_lib = None

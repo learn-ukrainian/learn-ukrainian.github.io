@@ -1,0 +1,208 @@
+discovered_at: '2026-03-12T21:59:12.891666+00:00'
+query_keywords:
+- Володимир і Хрещення Русі
+- Розминка
+- 'Читання: Князь Володимир: від язичника до святого'
+- Корсунська кампанія і шлюб із Анною
+- Первинні джерела
+- Деколонізаційний погляд
+- Значення хрещення для культури
+- Потрібно більше практики?
+- Understand the significance of 988
+- Analyze the political reasons for baptism
+- Discuss the cultural impact of Christianization
+- Past tense narrative
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=7u4nLFsZEOA
+  channel: Реальна Історія
+  title: МІФИ ПРО ХРЕЩЕННЯ РУСІ. Як все було насправді?
+  relevance_score: 1.0
+  relevance_note: Directly addresses the module's central theme of Volodymyr and the
+    Baptism of Rus', including decolonization and historical significance. From a
+    user-approved gold-standard channel.
+  transcript_excerpt: Хрещення Русі Володимиром - одна з ключових подій у нашій історії,
+    але сьогодні її намагаються використати для побудови свого національного міфу
+    росіяни... Тут самий час розібратися, як насправді християнство прийшло на наші
+    землі.
+  embed_suggestion: After Деколонізаційний погляд -- because it discusses historical
+    myths and the decolonization perspective of the event.
+- url: https://www.youtube.com/watch?v=LHFTWq6xfFs
+  channel: Суспільне Док
+  title: 'Як хрещення Русі Володимиром Великим вплинуло на писемність народу #shorts'
+  relevance_score: 1.0
+  relevance_note: Directly addresses the cultural impact (writing, language) and political
+    reasons of the Baptism of Rus' by Volodymyr, which are key aspects of the module.
+  transcript_excerpt: Офіційно абетка, мова і писемність прийшли на руські землі у
+    988 році, коли князь Володимир Великий хрестив Русь... Хрестив для того, щоби
+    підняти політичний рівень Русі.
+  embed_suggestion: After Значення хрещення для культури -- as it specifically discusses
+    the cultural impact of Christianization on writing.
+- url: https://www.youtube.com/watch?v=SQeUH26uUJQ
+  channel: Комік Історик
+  title: 'Володимир Великий: історія кривавого святого'
+  relevance_score: 0.9
+  relevance_note: Directly discusses Volodymyr the Great, his role in the Christianization
+    of Rus', and his significance in Ukrainian history, including the decolonization
+    aspect.
+  transcript_excerpt: Сьогодні ми говоримо про Великого князя Володимира Великого
+    про людину яка принесла в нашу культуру герб людина яка нас хрестила... Володимир
+    Великий це один з найважливіших історичних постатей одна з найважливіших в українській
+    історії в побудові української державності.
+  embed_suggestion: 'After Читання: Князь Володимир: від язичника до святого -- as
+    it provides more depth on Volodymyr''s character and historical role.'
+- url: https://www.youtube.com/watch?v=njXBZSjXV84
+  channel: Реальна Історія
+  title: Походження України. Як все було насправді? Реальна історія з Акімом Галімовим
+  relevance_score: 0.7
+  relevance_note: Provides good background on Kyivan Rus' history and primary sources
+    ('Повість минулих літ'), which is relevant to understanding the context of Volodymyr's
+    baptism, but doesn't focus specifically on the baptism itself. From a user-approved
+    gold-standard channel.
+  transcript_excerpt: Вся історія яка стосується якраз Русі Київської Русі як ми говоримо
+    Вона починається з Повісті минулих літ не маємо іншого джерела... майже усе що
+    історики знають про Русь походить з цього джерела Повісті минулих або як сказав
+    пан Дмитро врем'яних літ.
+  embed_suggestion: After Первинні джерела -- because it discusses the primary source
+    for the era.
+- url: https://www.youtube.com/watch?v=5SgKLSTZv-s
+  channel: Суспільне Док
+  title: Як звучала українська мова в різні часи | «Як українці українською заговорили»
+    | Освітній фільм
+  relevance_score: 0.5
+  relevance_note: Provides general historical context on the Ukrainian language before
+    the Baptism of Rus', but the main focus is not on Volodymyr or the baptism event
+    itself. Tangentially related.
+  transcript_excerpt: Мовознавці припускають, що східні слов'яни у V-8 столітті до
+    хрещення Київської Русі спілкувалися праслов'янською говіркою.
+  embed_suggestion: Not directly applicable, perhaps as an optional extended resource
+    for linguistic context.
+- url: https://www.youtube.com/watch?v=JbYRJFw-Tos
+  channel: ІМТГШ
+  title: Як відбувалось ХРЕЩЕННЯ РУСІ? / Русь, або ж Київська Русь/ Історія України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=oxYJJY0daMQ
+  channel: ІМТГШ
+  title: Таємна історія Княгині Ольги / Русь, або ж Київська Русь / Історія України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0071
+  text: "Розділ ІІІ. Русь у період розквіту. Початок децентралізації \n50\nЗдійсненню\
+    \ задумів князя сприяв збіг об-\nставин. Візантійський імператор Василій  II \n\
+    Болгаробійця звернувся до Володимира з  про-\nханням про військову допомогу для\
+    \ придушен-\nня заколоту. Київський князь поставив умову: \nсестра імператора\
+    \ Анна мала стати його дру-\nжиною. Володимир зобов’язувався охреститися \nразом\
+    \ із населенням своєї країни. Василій II \nпогодився на це. За підтримки війська\
+    \ київського князя \nзаколот у  Візантії прид"
+  section_title: Сторінка 51
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0068
+  text: "Розділ ІІІ. Русь у період розквіту. Початок децентралізації \n48\nЗамість\
+    \ найманців-варягів князю почали служити «мужі кращі» зі \n­слов’ян­ських союзів\
+    \ племен. Південні кордони було посилено системою укріп­\nлень, відомою як «змієві\
+    \ вали».\nБагато уваги Володимир приділяв розбудові свого «стольного града» Киє-\n\
+    ва. Князь розпочав будівництво нової фортеці — «міста Володимира». Його \nцентральну\
+    \ частину, або Гору, оточили високі земляні вали з  дерев’яними \nвежами. До «міста\
+    \ Володимира» прилягали укріп"
+  section_title: Сторінка 49
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0058
+  text: "47\n§ 6. Київська держава за часів \nВолодимира Великого\n3. З якими реформами\
+    \ князя Володимира пов’язані ілюстрації? Поясніть свою \nдумку.\n1\n2\n3\n1 —\
+    \ \aчастина Стародавнього Києва — місто \nВолодимира (макет Д. Мазюкевич);\n2\
+    \ — \aзлатник і срібник Володимира: на моне­\nтах зображався з одного боку Христос\
+    \ \nСпаситель, з іншого — князь Володимир;\n3 — \aоборонний вал (сучасна реконструкція)\n\
+    \aЯк відбувалося хрещення Русі\nПоміркуйте \nНа основі тексту зробіть висновки:\
+    \ чому і як в Русі було запроваджено христи"
+  section_title: Сторінка 50
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0076
+  text: "1)\t Підготуйте повідомлення за темою «Християнізація Русі». 2)\t Складіть\
+    \ екскурсійний (туристичний) маршрут «Похід князя Воло-\nдимира на Херсонес»."
+  section_title: Сторінка 53
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-hlibovska-2024_s0039
+  text: "У боротьбі з Польським королівством відвоював Червенські \nміста (Голодло,\
+    \ Червен, Сутійськ, Угровецьк та інші) та \nприєднав їх до Русі-України. В 985\
+    \ році здійснив вдалий похід \nпроти Волзької Булгарії й уклав вигідний торговельний\
+    \ договір. 43 \nВідбувся обмін посольствами зі Священною Римською імперією. Князь\
+    \ \nВолодимир \nзапровадив \n«шлюбну \nдипломатію» \n– \nодружував доньок та синів\
+    \ із представниками монархічних \nродів Європи. Завдяки такому вдалому прийому\
+    \ правитель мав \nдоброзичливі відносини "
+  section_title: Сторінка 22
+  grade: 7
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.608580470085144
+  chunk_id: e0892426_c0125
+  text: "Князь Володимир відомий саме як хреститель Русі.\r\nОчевидно, про Володимира\
+    \ існувало давнє сказання, яке послужило основою як для\r\nагіографічних, так\
+    \ і для літописних творів про нього. На думку російського\r\nдослідника М.І. Серебрянського,\
+    \ проложне житіє князя Володимира виникло в часи\r\nКиївської Русі. За легендами,\
+    \ Володимир — позашлюбний син князя Святослава і\r\nключниці княгині Ольги Малуші.\
+    \ Щодо хрещення князя Володимира, то, згідно з\r\n«Повістю временних літ», він\
+    \ охрестився в Корсуні (Херсонес"
+  work: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/dzuba/dzubapered.htm
+- score: 0.6072929501533508
+  chunk_id: 9896ad09_c0227
+  text: "По сім наступає нова історія: «І не розпустив від\r\nсебе полків, а послав\
+    \ воєвод своїх Ольга та Жберна до Царгороду, до царя\r\nКонстантина і Василя просити\
+    \ за себе їх сестру Анну». «Коли,— рече,— не дасте\r\nїї за мене, вчиню вашому\
+    \ городові те, що й Корсуневі». (Пор. оповідання про\r\nСвятослава). Царі збирають\
+    \ «вселенський собор» і ставлять Володимирові, як в\r\nлітописі, умовою схрещення.\
+    \ Володимир годиться і посилає «скорі посли». Царівна\r\nАнна приїздить до Корсуня,\
+    \ але Володимир зостається у власті"
+  work: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush2.htm
+- score: 0.6021832823753357
+  chunk_id: 5739d24f_c0823
+  text: "Серед сих подїй якось, видно, непримітно \r\n стало ся саме охрещеннє Володимира.\
+    \ Не тільки чужі джерела не дають \r\n докладнїйших відомостей в сїй справі 14),\
+    \ але, що дивнїйше, й на \r\n Руси при кінцї XI в. про се ходили найріжнїйші оповідання:\
+    \ „се же не свЂдуще \r\n право глаголють, яко крестился єсть в КиевЂ, инии же\
+    \ рЂша: въ ВасилевЂ, друзи \r\n же рЂша инако сказующе“, каже лїтопись і запевняє,\
+    \ що Володимир охрестив ся в \r\n Корсунї, після того як приїхала його наречена.\
+    \ Одначе иньше джерело — старе"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm

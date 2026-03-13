@@ -1,93 +1,88 @@
 # Дослідження: Рух: Прибуття та вихід
 
 ## State Standard Reference
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати."
+*(UKRAINIAN-STATE-STANDARD-2024.txt, lines 2336–2338)*
 
-§4.3.8 (lines 2336–2338):
-> «Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати.»
-
-**Alignment**: Module b1-019 directly addresses §4.3.8 by focusing on the three highest-priority directional prefixes (при-, ви-, в-/у-) with both foot and vehicle motion verbs. The standard lists exactly the base pairs (іти/їхати) with all prefixed derivations. This module narrows scope to arrival, exit, and entry semantics — the most communicatively loaded subset — leaving перейти/від-/до- for b1-018 and b1-022 as noted in `connects_to`.
+**Alignment**: Module b1-019 directly implements §4.3.8 by focusing on three of the highest-priority prefix meanings — при- (arrival/reaching destination), ви- (exit/outward motion), and в-/у- (entry/inward motion). The Standard lists all five core base verbs (іти, їхати) with their prefixed derivatives. This module addresses the subset most critical for communicative competence at B1: прийти/приїхати, вийти/виїхати, увійти/в'їхати, зайти.
 
 ---
 
-## Vocabulary Frequency (GRAC corpus, 2B tokens)
+## Vocabulary Frequency
+All 14 target words verified in VESUM (14/14 found).
 
-All 14 planned vocabulary items verified in VESUM — **14/14 found**.
+| Word | Frequency (GRAC) | IPM | Key collocations |
+|------|-----------------|-----|-----------------|
+| вийти | 102,802 | 50.79 | вийти заміж, вийти з ладу, вийти з себе, вийти на вулицю |
+| прийти | 48,690 | 24.06 | прийти вчасно, прийти до тями, прийти додому |
+| виїхати | 34,071 | 16.83 | виїхати за кордон, виїхати з гаража |
+| приїхати | 25,196 | 12.45 | приїхати поїздом, приїхати в гості, приїхати з-за кордону |
+| увійти | 20,943 | 10.35 | увійти в кімнату, увійти в історію, увійти в систему |
+| зайти | VESUM ✓ | — | зайти в кафе, зайти до друга |
+| в'їхати | VESUM ✓ | — | в'їхати в місто, в'їхати в двір |
+| прибуття | VESUM ✓ (7 forms) | — | час прибуття, перон прибуття |
+| вихід | VESUM ✓ (2 forms) | — | запасний вихід, вихідний день, безвихідна ситуація |
+| вхід | VESUM ✓ (2 forms) | — | вхід вільний, парадний вхід |
+| прибігти | VESUM ✓ | — | прибігти першим |
+| вилетіти | VESUM ✓ | — | вилетіти з голови (idiom), вилетіти з університету |
+| прилетіти | VESUM ✓ | — | літак прилетів вчасно |
+| напрямок | VESUM ✓ (2 forms) | — | в протилежному напрямку |
 
-| Word | GRAC freq | IPM | Priority |
-|------|-----------|-----|----------|
-| вийти | 102,802 | 50.79 | TOP — highest-frequency motion verb in corpus |
-| вихід | 91,275 | 45.10 | TOP — extremely high; drives idiom section |
-| прийти | 48,690 | 24.06 | TOP — core arrival verb |
-| виїхати | 34,071 | 16.83 | HIGH |
-| прибуття | 31,230 | 15.43 | HIGH — practical (transport signage) |
-| зайти | 28,468 | 14.07 | HIGH |
-| приїхати | 25,196 | 12.45 | HIGH |
-| вхід | 22,768 | 11.25 | HIGH — practical (signage, login) |
-| увійти | 20,943 | 10.35 | HIGH — written register preference over зайти |
-| прибігти | — | — | VESUM ✓ (recommended) |
-| вилетіти | — | — | VESUM ✓ (recommended) |
-| прилетіти | — | — | VESUM ✓ (recommended) |
-| напрямок | — | — | VESUM ✓ (recommended) |
-| в'їхати | — | — | VESUM ✓ |
-
-**Register note**: зайти dominates spoken/informal usage; увійти is the written/formal register counterpart. Both must be taught as a pair at B1.
+**Frequency ranking significance**: вийти is the highest-frequency verb in this set by a large margin (50.79 IPM), nearly double прийти (24.06 IPM). This justifies giving вийти and its idioms (вийти заміж, вийти з ладу) significant emphasis. Concordance evidence confirms прийти до тями is productive in literary, journalistic, and everyday prose.
 
 ---
 
 ## Cultural Hooks
 
-1. **Зустріч із хлібом-сіллю / Коровай** — Wikipedia (uk.wikipedia.org/wiki/Коровай) confirms: «Згідно з українським звичаєм, дорогих гостей зустрічають хлібом-сіллю — короваєм, який виносять на вишитому рушнику.» This is attested as a living Ukrainian reception ritual (весілля, офіційні заходи, зустріч делегацій). Directly anchors при- prefix semantics (прибуття = the moment хліб-сіль is presented). **Source**: uk.wikipedia.org/wiki/Коровай
+1. **Хліб-сіль** (arrival greeting ritual) — Wikipedia verified: *"Хліб-сіль — коровай хліба й сіль, які за звичаєм слов'янських народів підносять на знак великої поваги до того, кого зустрічають, під час урочистих церемоній. У кожній українській селянській хаті хліб-сіль, покриті рушником, були необхідним атрибутом. Запрошуючи до столу, господар казав: Просимо до нашого хліба-солі."* (uk.wikipedia.org/wiki/Хліб-сіль). This is a prototypical при- context: the guest прийшов / приїхав and is greeted at the threshold. Links the grammar directly to Ukrainian hospitality culture.
 
-2. **Посидіти на дорогу** — No standalone Wikipedia article exists for this custom; however it is mentioned as a known Ukrainian folk practice in uk.wikipedia.org/wiki/Парі_Паскаля alongside other pre-departure rituals. The custom (sitting silently for a moment before departing) is well documented in ethnographic literature as a departure ritual tied to ви- prefix semantics (вийти, виїхати). **Note for Phase B**: cite as «народний звичай» without overstating the Wikipedia sourcing. It is not in dispute culturally.
-
-3. **Idiom density of вийти/вхід**: The corpus frequency of вихід (45.10 IPM) and вийти (50.79 IPM) signals these words are semantically extended far beyond literal motion — вийти заміж, вийти з ладу, вийти з себе, безвихідна ситуація. This makes the idiom section essential, not decorative.
+2. **Посидіти на дорогу** (pre-departure sitting ritual) — No dedicated Wikipedia article found; mentioned in passing in "Парі Паскаля" alongside other folk customs (постукати по дереву, сплюнути через ліве плече). The tradition is well-attested in ethnographic literature: before departing on a journey, the household sits in silence for a moment at the threshold — a pause between вийти (leaving) and arriving. It embeds вийти semantics in a meaningful cultural frame. **Note for Phase B**: present this as a Ukrainian tradition; do not attribute it to Russian/Slavic generalization.
 
 ---
 
 ## Common Learner Errors
 
-1. **при- vs по- confusion** → Я поїхав додому ✓ (set off) vs Я приїхав додому ✓ (arrived, am here now). Learners say «я приїхав в Київ» to mean «I headed to Kyiv» — при- encodes **result at destination**, not initiation of motion. при- = destination reached; по- = motion begun.
+1. **при- vs по- confusion** → Correct form: при- encodes *reaching the destination* (Я приїхав = I arrived / I am here now), while по- encodes *departure/onset of motion* (Я поїхав = I left / I set off). Learners often produce *Я приїхав у Київ завтра* (using arrival verb for future departure plan) — should be *Я поїду в Київ завтра*. Error source: both prefixes begin with "п" and appear adjacent in dictionaries; the result-state vs. process distinction requires explicit teaching.
 
-2. **Preposition mismatch with при-** → «приїхати з Києва» ❌ (з = source/genitive, contradicts arrival). Correct: «приїхати до Києва» / «приїхати в Київ» (destination). The з/із preposition belongs to ви-/від- verbs (виїхати з Києва). English speakers import the source preposition because English "arrive from" embeds both concepts.
+2. **Preposition mismatch with при-** → Correct pattern: при- verbs require destination prepositions **в/на** (for motion-to): *приїхати в Київ, приїхати на конференцію*. Learners frequently produce *\*приїхати з Києва* (using origin preposition з, which belongs with від- or виїхати). Error source: при- "sounds like" it should co-occur with a source (something you came *from*), but semantically it anchors the *arrival point*.
 
-3. **приходив vs прийшов aspect confusion** → приходив (impf) = visited repeatedly / was in the process of coming; прийшов (pf) = arrived and is here. Learners default to perfective for all completed actions and miss the habitual/repetition meaning of imperfective prefixed verbs. Minimal pairs: «Він щодня приходив о восьмій» vs «Він щойно прийшов».
+3. **Aspect conflation: приходив vs прийшов** → Learners overgeneralise the perfective (прийшов) because arrival "feels like a completed event." But imperfective приходив signals habitual/repeated visits (*Він щодня приходив о 9-й*) or ongoing process. Minimal pairs needed: *Він щодня приходив* (habit, impf) vs *Він нарешті прийшов* (single completed event, pf).
 
-4. **зайти vs увійти register mismatch** → In formal or written Ukrainian, увійти is strongly preferred over зайти for entering a space. Зайти is natural in speech («зайди в магазин»), but in written official language («делегація увійшла до залу») or system interfaces (увійти в систему = log in), зайти sounds colloquial. At B1 both must be known with their register range.
+4. **Russianism відправлятися used as catch-all** → Confirmed by Grade 10 Karaman textbook (p. 188): under Russian influence (*отправляться/отправиться*), learners use *відправлятися* for all departure contexts. Correct Ukrainian uses specific lexical choices: *автобус відбуває/виїжджає* з Києва; *ми вирушаємо в дорогу*. This is directly relevant to the ви- prefix cluster and decolonized framing.
 
 ---
 
 ## Cross-References
-
-- **Builds on**: b1-018 (Motion: passing & crossing — перейти, дійти, від'їхати) — learners already have the prefix concept; this module deepens direction semantics for при-/ви-/в-
-- **Prepares for**: b1-022 (Motion: full prefix integration — всі префікси в системі); also feeds into any B1 module on spatial prepositions (в/на + accusative for direction)
+- **Builds on**: b1-018 (motion-passing-crossing — префікси пере-, до-, про-) — learners already have the conceptual frame of prefixes changing motion direction
+- **Prepares for**: b1-022 (motion-full-prefix-integration) — this module establishes при-, ви-, в- as the core arrival/exit triad before the full 8-prefix system
 
 ---
 
-## Textbook Grounding
-
-- **Grade 5, Заболотний (2023), p. 55** — §prefix schema exercise: «бігти» + prefixes (при, за, до, по, на, в, з, від, ви, пере, об, під) with semantic analysis. Establishes the radial prefix model that §4.3.8 formalizes. Directly usable as a pedagogical diagram concept for the Grammar Concept section.
-- **Grade 6, Литвинова (2023), §9** — Covers «Написання префіксів ПРЕ-, ПРИ-, ПРІ-» with a meaning table. Note: this textbook section focuses on spelling, not motion semantics — relevant only for the orthographic при- spelling rule (not приї- from приїхати, which is при- + їхати with apostrophe).
-- **Grade 3, Вашуленко (2020)** — «Від слова йти утвори нові слова за допомогою різних префіксів» — confirms prefix derivation from motion verbs is introduced at primary level; B1 extends to semantic discrimination.
+## Textbook Evidence
+- **Grade 5, Заболотний (2023), p. 55** (tier 1): Prefix wheel exercise with *бігти* + all prefixes — pedagogical model of radial semantic expansion. Validates the "visual semantics" approach in the plan.
+- **Grade 6, Литвинова (2023)**: §9 covers ПРЕ-/ПРИ-/ПРІ- spelling and meaning differences — confirms ПРИ- meaning "approaching/arrival" is introduced at Grade 6, so B1 learners will have partial prior exposure but likely lack systematic production.
+- **Grade 10, Карaman (2018), p. 188** (tier 2): Explicit warning that *відправлятися* is a Russianism — validates error-correction lab focus on departure verb lexis.
 
 ---
 
 ## Multimedia Resources
-
-- (none encountered — no targeted video search performed; discover phase handles this)
+- (none encountered during research)
 
 ---
 
 ## Notes for Content Writing
-
-- **Frequency inversion**: вийти (50.79 IPM) is more frequent than прийти (24.06 IPM) in the corpus, likely because вийти extends into numerous idioms and metaphorical uses. Phase B should open the idiom section with вийти-family as the richest semantic field.
-- **вхід / вийти orthography**: в'їхати uses an apostrophe (VESUM confirmed). Phase B must include a brief spelling note — в'їхати not *вїхати.
-- **Коровай hook**: Use it to frame при- as «досягнення мети» — the moment you arrive is the moment the коровай is presented. This grounds abstract prefix semantics in sensory cultural experience.
-- **Aspect pairs to cover**: прийти/приходити, вийти/виходити, увійти/входити — each pair needed for the aspect nuance section.
-- **Hotel Concierge persona**: well-aligned with all three prefixes — прибуття гостей (при-), реєстрація / вхід до номера (в-), виїзд / вихід (ви-). Natural production context.
-- **B1.2 immersion rule**: Full Ukrainian prose. No English in parentheses for grammar explanations. English appears ONLY in vocabulary table translations. Section titles must be 100% Ukrainian.
+- **вийти is the workhorse**: At 50.79 IPM it is twice as frequent as прийти. Give it proportionally more collocational and idiomatic depth (вийти заміж, вийти з ладу, вийти з себе, вийти на зв'язок).
+- **Aspectual pairs need 5+ minimal pair examples** as specified in plan §3 — concordance data confirms приходив/прийшов is the highest-stakes pair for learners.
+- **Хліб-сіль anchor**: Frame the arrival section using the хліб-сіль greeting scene — guest прийшов/приїхав → господар підносить хліб-сіль → guest увійшов до хати. Natural narrative arc covering all three target prefixes.
+- **Russianism alert for activities**: Avoid *відправлятися* in example sentences; flag it explicitly in the error-correction lab section.
+- **в- vs у- allomorphy**: в'їхати uses apostrophe; увійти uses у-. Both are в-/у- allomorphs governed by euphony (consonant cluster avoidance). Worth one short callout box.
+- **Decolonized framing**: Describe prefix semantics in terms of Ukrainian spatial logic (approaching a goal, exiting a container, entering a space) — not via contrast with any other language. The Karaman textbook itself frames this as restoring authentic Ukrainian usage.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Ukrainian Motion Verbs](https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes) (відео пояснення)
 
 ### Textbook References (RAG)
 

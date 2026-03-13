@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "ukrainski-sviata-ta-festyvali",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:57:09Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:57:09Z",
+      "task_id": "v5-ukrainski-sviata-ta-festyvali-pA",
+      "mode": "full"
+    }
+  }
+}

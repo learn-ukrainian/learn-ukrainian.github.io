@@ -1,0 +1,92 @@
+discovered_at: '2026-03-12T16:50:31.114111+00:00'
+query_keywords:
+- Співвідносні конструкції
+- 'Граматичний фундамент: Основні пари'
+- 'Grammatical Foundation: Common Pairs'
+- Просторові, часові та кількісні зв'язки
+- Spatial, Temporal, and Quantitative Links
+- Стилістика та запобігання калькам
+- Stylistics and Calque Prevention
+- Практичне застосування та синтез
+- Practical Application and Synthesis
+- complex sentences using correlative pairs
+- between different types of correlative constructions
+- punctuate sentences with correlative words
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  title: Синтаксис української мови
+  source: складні речення
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0180
+  text: "Прочитайте складні речення, визначте їхні види. Утворіть на основі поданих\
+    \ складних речень конструкції зі всіма видами \nсинтаксичного зв’язку. Новоутворені\
+    \ речення запишіть, накресліть їхні \nсхеми. 137"
+  section_title: Сторінка 137
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-mova-zabolotnij-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0068
+  text: "67\nІІ. Виконайте завдання до тексту. \n1. \aЗнайдіть у тексті спільнокореневі\
+    \ слова й запишіть. Позначте ко-\nрені. \n2. \aВипишіть по два слова зі звуковим\
+    \ і нульовим закінченням. Які \nграматичні значення виражають ці закінчення? \n\
+    3. \aВипишіть 3–4 слова з префіксами. Позначте префікси. \n4. \aРозберіть за будовою\
+    \ виділені слова. \n5. \aДоберіть за фото для опису Патрона 2–3 слова з відтінком\
+    \ пест-\nливості, здрібнілості. Які суфікси мають дібрані слова? \n157.\tПОПРАЦЮЙТЕ\
+    \ В ПАРАХ. Складіть кожен / кожна сл"
+  section_title: Сторінка 70
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-zabolotnyi-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0297
+  text: '207
+
+    § 34. Вставні конструкції. . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 109
+
+    § 35–36. Однорідні члени речення. . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . 114
+
+    § 37–38. Відокремлені означення й прикладки. . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . 120
+
+    § 39. Відокремлені обставини. . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . '
+  section_title: Сторінка 207
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

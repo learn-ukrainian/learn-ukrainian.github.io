@@ -1,50 +1,48 @@
 # Дослідження: Reflexive Pronoun Sebe
 
 ## State Standard Reference
-§4.2.1.4 (A2 band): "Expanded pronouns — possessive, demonstrative, interrogative"
-Alignment: The A2 standard covers expanded pronoun inventory. The reflexive pronoun себе is introduced here as a core complement to the A2-019 possessive свій module; the formal reflexive pronoun category is fully codified at B2 (§4.2.1.4 B2: "Full pronoun system — reflexive, reciprocal, definitive").
+§4.2.1.4: "Expanded pronouns — possessive, demonstrative, interrogative" (lines 1244–1254, A2 morphology)
+Alignment: Reflexive себе is the fourth pronoun category at A2. This module directly addresses the full declensional paradigm of себе and its functional distinctions — the State Standard requires A2 learners to master expanded pronoun forms.
 
 ## Vocabulary Frequency
-
-| Word / Phrase | Notes | Key collocations |
-|---|---|---|
-| себе (Gen/Acc) | Most frequent reflexive form; core A2 item | бачити себе, чути себе, контролювати себе |
-| собі (Dat/Loc) | Beneficiary dative + colloquial intensifier | купи собі, знайди собі, думати про себе |
-| собою (Inst) | After задоволений, бути, пишатися | задоволений собою, бути собою, пишатися собою |
-| бути собою | Fixed Instrumental phrase; frequent idiom | Будь собою! (fixed exclamative) |
-| купити собі | Dat beneficiary construction; very high frequency | Купи собі каву / Купила собі книгу |
-| дбати про себе | Essential wellbeing phrase; Acc after про | Треба дбати про себе |
-| думати про себе | Acc after про (not Dat) — common error trigger | Він думає про себе |
-| контролювати себе | Emotional register; Acc reflexive | Важко контролювати себе |
-| задоволений собою | Adj + Inst; positive self-assessment | Вона задоволена собою |
-| Іди собі! | Colloquial intensifier; dismissive | Fixed phrase; register = informal |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| себе | Gen/Acc; most frequent form | бачити себе, чути себе, контролювати себе, думати про себе |
+| собі | Dat beneficiary & colloquial intensifier | купити собі, знайти собі, дати собі, Іди собі! |
+| собою | Inst; appears after задоволений, за | задоволений собою, бути собою, взяти з собою |
+| дбати про себе | Wellbeing phrase; high cultural frequency | дбаєш про себе? |
+| бути собою | Fixed phrase; Inst; identity expression | "Будь собою!" |
+| купити собі | Dat beneficiary construction | Купи собі каву / книжку |
+| контролювати себе | Emotional self-regulation | Він не може контролювати себе |
+| задоволений собою | Instrumental after satisfied | Вона задоволена собою |
+| митися | Obligatory -ся reflexive (vs. мити себе emphatic) | Він митися щодня |
+| намагатися | Obligatory -ся; no себе equivalent | намагаюся, намагається |
 
 ## Cultural Hooks
-1. **"Розкажіть про себе"** — the classic self-introduction request, cited in Grade 5 Голуб textbook (p. 172): *"яке прохання більшість із нас ставить у глухий кут? «Розкажіть про себе»"*. Immediately activates себе in a universal, high-stakes real-life context (job interviews, first meetings). Use as the discovery opener.
-2. **"Цінуй себе"** — Grade 6 Голуб (p. 14) leads with *"Цінувати себе — це важливо"* as a section header. The self-worth theme ("Кожна людина чимось цінна") pairs naturally with себе phrases: дбати про себе, поважати себе, бути собою.
-3. **"Як я уявляю себе в майбутньому?"** — essay prompt from Grade 7 Літвінова (p. 186) — shows себе used in a reflective/future projection context. Good for a reading hook at A2.
+1. **"Розкажіть про себе"** — the universal Ukrainian job interview opener. Grade 5 Golub p.172 uses this exact scenario: *"Чи помічали ви, яке прохання більшість із нас ставить у глухий кут? «Розкажіть про себе»."* Perfect discovery hook — every adult learner has faced this moment.
+2. **"Цінувати себе — це важливо"** — Grade 6 Golub p.14 opens a lesson with this self-worth theme, quoting Честерсон (*"Цінні ви. Цінний я"*) and Watson (*"Я хочу робити це сама"*). The textbook uses себе naturally in a values context — culturally grounded, not abstract.
+3. **Іди собі!** — colloquial dismissive used in informal speech and folk sayings. Contrasts sharply with the beneficiary собі (Купи собі каву), teaching register awareness through a single word.
 
 ## Common Learner Errors
-1. **Себе in nominative position** → no nominative form exists. English "myself" is sometimes placed as subject ("Myself did it") but in Ukrainian the subject is always я/ти/він etc. себе cannot fill the Nom slot. Textbook Grade 6 Голуб, ex. 28 directly targets awareness of pronoun case selection.
-2. **себе instead of собі in Dat beneficiary** → *Купив себе* (incorrect) → **купив собі** (correct). Learners carry the Acc form over from the Gen/Acc and miss that купити governs a Dat beneficiary. The Gen/Acc form looks identical to Acc, reinforcing the error.
-3. **Overusing себе when -ся is obligatory** → *Він намагається себе* → **Він намагається** (obligatory -ся; no себе). And overusing explicit себе where -ся is idiomatic: *Вона одягає себе* (odd) → **Вона одягається** (natural). Grade 5 Голуб ex. 403 "Розкажіть про себе" models the natural register of reflexive verbs.
-4. **Confusing себе (action target) with свій (possession)** → *Він бачить свій у дзеркалі* (incorrect) → **Він бачить себе**; conversely: *Він узяв себе книгу* (incorrect) → **Він узяв свою книгу**. Direct follow-on error from A2-019 (Possessive свій).
+1. **Six-form overgeneralization** → English speakers expect *himself/herself/themselves* to each have different forms; they search for a masculine/feminine split in себе that doesn't exist. Себе covers all persons and genders.
+2. **Wrong case after купити/знайти** → *Купи себе каву* (Acc instead of Dat beneficiary собі). The verb doesn't take a second direct object; собі is the dative of interest.
+3. **себе where -ся is idiomatic** → *Він одягає себе* sounds odd; *Він одягається* is natural. Grade 6 Golub p.16 models this indirectly: *"переконаєте себе"* (emphatic/deliberate) vs. routine action verbs.
+4. **себе/свій confusion** → *Він узяв себе телефон* instead of *Він узяв свій телефон*. Possession → свій; action target/recipient → себе.
 
 ## Cross-References
-- Builds on: `a2-019` (Possessive свій — essential contrast), A1 personal pronoun paradigm (я/ти/він/вона/ми/ви/вони), A2 case system basics (Dat, Acc, Inst, Loc already established)
-- Prepares for: `a2-021` (Indefinite and Negative Pronouns), `i-feel-like` (emotional/physical expression with reflexive structures)
+- Builds on: a2-019 (Possessive свій — learner already knows possession vs. reflexive distinction is upcoming), A1 personal pronouns (я/ти/він/вона), A2 case system (Dat, Acc, Inst, Loc from earlier modules)
+- Prepares for: a2-021 (Indefinite and Negative pronouns — extends the pronoun paradigm); i-feel-like (reflexive emotional constructions build on собі usage)
 
 ## Teaching Strategy
-- **Discovery exercise**: Open with three sentences on the board — *Я бачу себе в дзеркалі. / Ти бачиш себе в дзеркалі. / Вони бачать себе в дзеркалі.* Ask: "What changes? What stays the same?" Learner notices: verb conjugates, but себе never changes. Then show English equivalents (myself / yourself / themselves) — six forms vs one. The contrast lands immediately. Model: Grade 5 Голуб p. 172 (про себе as a stable self-reference phrase).
-- **Best context**: The job interview / first-meeting scenario ("Розкажіть про себе") — universal, motivating, allows all case forms naturally: *Я розкажу про себе* (Acc); *Я купив собі телефон* (Dat beneficiary); *Я задоволений собою* (Inst). Café and daily routine contexts work for купити собі каву, знайди собі місце.
-- **Contrastive pairs for disambiguation**: (a) себе vs -ся: *Він миє себе* (emphatic) vs *Він миється* (natural/routine) — use translation-back drill; (b) себе vs свій: "If you can say 'own' → свій; if you can say 'himself/herself' → себе" — Grade 7 plan's rule-of-thumb is textbook-ready.
+- **Discovery exercise**: Present the three Grade 6 Golub p.16 sentences without explanation — *"переконаєте себе, що не створені для публічних виступів"*, *"дасте собі шанс"*, *"людина цінує себе"*. Ask: What does себе/собі refer to in each sentence? Who is the actor? Learners notice себе always loops back to the subject — before any rule is stated.
+- **Best context**: The "Розкажіть про себе" scenario (Grade 5 Golub p.172) — self-introduction, job interview, dating profile. Concrete, motivating, high-frequency.
+- **Contrastive pairs**: (1) *Він миє себе* (emphatic) vs. *Він миється* (routine); (2) *Купи собі каву* (Dat beneficiary) vs. *Іди собі!* (colloquial intensifier); (3) *Він узяв свою книгу* (possession) vs. *Він бачить себе в дзеркалі* (action target).
 
 ## Notes for Content Writing
-- Module is A2.2 band (45-65% Ukrainian) — grammar theory sections can stay 50% Ukrainian with parallel English.
-- Sentences must stay ≤15 Ukrainian words; max 2 clauses.
-- The colloquial собі intensifier (Іди собі! / Сидить собі читає) is production-caution only — learners recognise, don't produce.
-- Do NOT introduce abstract nouns (стан, відчуття) — stick to concrete verbs: бачити, купити, мити, одягати, контролювати.
-- себе/собі/собою confusion is the #1 pedagogical risk — the declension table needs to be presented BEFORE the -ся contrast section.
+- The colloquial собі intensifier section needs careful register marking — learners should recognise it passively but produce it cautiously at A2.
+- Textbook evidence: Grade 6 Golub p.16 provides three authentic себе/собі examples in one exercise — cite these as model sentences.
+- The "no Nominative" explanation is the key aha-moment: the subject slot is already filled by я/ти/він — себе can only appear in the other slots. Keep this visual (pronoun table with empty Nom cell).
+- Max 15-word Ukrainian sentences per A2 constraints; no -ся verbs with abstract nouns.
 
 ## Resource Discovery
 

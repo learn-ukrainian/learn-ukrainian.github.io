@@ -1,0 +1,261 @@
+discovered_at: '2026-03-13T00:35:11.450420+00:00'
+query_keywords:
+- 'Козацькі літописи: Огляд традиції'
+- Історичний контекст
+- Три літописи
+- Спільні риси
+- Відмінності
+- Як читати козацькі літописи
+- 'Analyze the causes and consequences of козацькі літописи: огляд традиції'
+- Evaluate the historical significance of козацька історіографія
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=BCui9kBqNZM
+  channel: Комік Історик
+  title: 'історія Холодного Яру: чекістам вхід заборонено'
+  relevance_score: 0.3
+  relevance_note: The video discusses the history of the Kholodny Yar Republic (early
+    20th century), which is Ukrainian history but completely unrelated to Cossack
+    chronicles (17th-18th century historiography).
+  transcript_excerpt: Воля України або смерть, як казали самі холодноярівці, немає
+    полону для Холодного яру і Холодний Яр в полон не бере.
+  embed_suggestion: Not suitable for embedding in this module due to low relevance.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0041
+  text: '(Переклад В. Близнеця)
+
+    3. Ознайомтеся з інформацією про літописи як історико-художні
+
+    твори й виконайте завдання. Література Русі-України, пройшовши період використання
+    й
+
+    перекладу релігійних книг, збагачувалася й оригінальними творами,
+
+    стаючи на самостійний шлях розвитку. Найдавнішими пам’ятками
+
+    оригінальної світської літератури Київської держави є літописи. ДАВНЯ ЛІТЕРАТУРА
+
+    38'
+  section_title: Сторінка 38
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0069
+  text: '3. Прочитайте матеріал про козацькі літописи й законспектуйте
+
+    його. КОЗАЦЬКІ ЛІТОПИСИ
+
+    Літописання було характерне для літератури періоду Київ-
+
+    ської Русі. Цей вид творчості розвивався й пізніше, зокрема в добу
+
+    Хмельниччини — героїчного часу в житті українського народу. Ко-
+
+    зацькі літописи — це твори, у яких подано характеристики видат-
+
+    них діячів, описи важливих подій у хронологічній послідовності,
+
+    тлумачення окремих періодів політичного життя. Вони належать
+
+    до історично-мемуарної прози — творів'
+  section_title: Сторінка 59
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0142
+  text: '87
+
+    8
+
+    ДАВНЯ ЛІТЕРАТУРА
+
+    Äèñêóòóєìî
+
+    1. Чи має право літописець, створюючи свою працю, висловлювати власне став-
+
+    лення до зображуваних подій? І якщо він так чинить, то чим це зумовлено? 2. Доведіть
+    чи спростуйте думку, що козацькі літописи відіграли важливу роль у
+
+    формуванні національної самосвідомості українців. 3. Проаналізуйте, які спільні
+    риси можна віднайти в давніх літописних творах
+
+    («Слово про похід Ігорів», «Повість временних літ») і козацьких літописах. 4.
+    Поміркуйте й аргументовано доведіт'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0323
+  text: "250 \n§ 50. КОЗАЦЬКІ ЛІТОПИСИ  \nЯК ІСТОРИЧНЕ ДЖЕРЕЛО \n \nПрактична робота\
+    \ № 5 \nМета. На основі витягів із козацьких літописів XVII—XVIII \nстоліть визначити\
+    \ способи та засоби, до яких вдавалися гетьмани, \nстаршина, аби відстояти суверенітет\
+    \ козацької держави. Завдання 1. Об’єднайтеся в малі групи. Пригадайте: \n1) що\
+    \ таке літописи; 2) які літописи вам відомі; 3) у чому \nцінність літописів як\
+    \ історичного джерела. Завдання 2. Порівняйте вузьке значення поняття «літопис»\
+    \ з \n«Енциклопедії історії Україн"
+  section_title: Сторінка 126
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0123
+  text: А. Визначте головну думку тексту та тип мовлення. Б. Які емоції у вас викликала
+    зовнішність козака? В. Складіть простий план опису зовнішності людини (письмово).
+    Г. Прочитайте текст удруге та докладно його перекажіть (усно).
+  section_title: Сторінка 110
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5830588340759277
+  chunk_id: 701afbae_c0001
+  text: 'Галицько-Волинський літопис (розшифровка за Іпатським списком).
+
+
+    Галицько-Волинський літопис (розшифровка за Острозьким списком).
+
+
+    Літопис руський (переклад Л.Махновця).
+
+
+    Повість врем’яних літ. (переклад В.Яременка).
+
+
+    Ярослав Книш. Фрагменти невідомого списку Іпатіївського літопису
+
+
+    «Літописи». З Енциклопедії Українознавства.
+
+
+    «Літописи». З енциклопедії «Українська мова».
+
+
+    А.І.Генсьорський. Термін «Русь» (та похідні) в Древній Русі... (1962).
+
+
+    [Генсьорський А. І. Галицько-Волинський літопис (лек'
+  work: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+  year: 1961
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hens1/hn.htm
+- score: 0.5730357766151428
+  chunk_id: b167837e_c0000
+  text: "ВСТУП\n\nЛітопис як своєрідна форма\r\nісторичного й літературного твору\
+    \ має свою давню традицію, що починається ще за\r\nчасів Київської Русі. Загальновідомо,\
+    \ якого високого розвитку досягла літописна\r\nсправа в межах теперішньої України\
+    \ у XI — XIII ст.\n\nЛітописна література дуже\r\nбурхливо розвивається за обставин,\
+    \ коли народ переживає великі події, що\r\nзнаменують нову добу в його історії.\
+    \ Серед представників освічених шарів народу\r\nтоді з’являється потреба записати\
+    \ основні моменти цих подій. Щось под"
+  work: Літопис Самовидця
+  author: Невідомий
+  year: 1702
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/samovyd/sam01.htm
+- score: 0.5725083351135254
+  chunk_id: 5794da94_c0822
+  text: "6. Лїтература козацьких рухів 1590-х років. \r\nназад...\n\nКозацькі рухи\
+    \ XVI в. притягали до себе здавна \r\n увагу дослїдників і розроблені в порівнянню\
+    \ з иньшими частями історії козачини \r\n досить незле. Крім старших праць є кілька\
+    \ робіт новійших, які досить повно \r\n використували приступний джереловий матеріал.\
+    \ Але при хаотичности самих рухів \r\n і уривковости переважної части джерел все\
+    \ таки зостаєть ся в них багато \r\n неясного що до звязи, порядку, навіть простої\
+    \ хронольоґії подїй."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm

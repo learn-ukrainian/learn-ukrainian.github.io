@@ -2,88 +2,104 @@
 
 ## State Standard Reference
 
-**§4.2.3.1** (B1, lines 2269–2291): «Утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили»
+**§4.2.3.1** (B1 Indicative Mood, lines 2280–2282):
+> «утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили»
 
-The Standard at B1 covers **form generation** for both aspect types in past tense (§4.2.3.1). Aspect **selection** based on contextual meaning — single vs. repeated actions — is the applied extension of this competence, addressed as functional grammar use under B1 indicative mood (§4.2.3.1 full scope). The Standard does not enumerate frequency-marker rules explicitly; the module operationalises the implicit B1 expectation that learners distinguish aspect meaning in past contexts.
+Broader §4.2.3.1 context (lines 2269–2291): covers full conjugation paradigms for present, compound future, synthetic future, and perfective future — aspect in all tenses is explicitly within scope.
 
-**Alignment**: Module addresses the §4.2.3.1 requirement directly — past-tense aspect form use in realistic narrative contexts — and extends it to the pragmatic dimension of frequency markers signalling aspect choice.
+**Alignment:** This module targets the past-tense component of §4.2.3.1 — specifically the semantic contrast between imperfective past (repeated/habitual) and perfective past (single/completed). The Standard lists the morphological forms; this module addresses the pragmatic selection rules that determine which form to use. Fully within B1 scope.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | GRAC Frequency (per million) | VESUM Status | Key collocations |
-|------|------------------------------|--------------|-----------------|
-| завжди | 255.96 | ✅ adv | назавжди, завжди був, завжди казав |
-| ніколи | 191.94 | ✅ adv | ніколи не, майже ніколи, ніколи раніше |
-| часто | 146.58 | ✅ adv | дуже часто, досить часто, як часто |
-| вперше | 108.19 | ✅ adv | вперше побачив, вперше почув, вперше в житті |
-| постійно | 91.81 | ✅ adv | постійно думав, постійно відчував |
-| щодня | 49.14 | ✅ adv | робити щодня, бачити щодня, займатися щодня |
-| іноді | 44.45 | ✅ adv | тільки іноді, іноді навіть, іноді буває |
-| зазвичай | 42.83 | ✅ adv | зазвичай ми, він зазвичай, як зазвичай |
-| рідко | 21.11 | ✅ adv | дуже рідко, рідко коли, все рідше |
-| востаннє | 12.27 | ✅ adv | востаннє бачив, востаннє говорив |
-| щонеділі | — | ✅ adv | щонеділі ходили, збиралися щонеділі |
-| неодноразово | — | ✅ adv | formal; неодноразово звертався |
-| регулярно | — | ✅ adv | formal; регулярно займатися |
+| Word | Freq (GRAC) | IPM | VESUM | Key collocations |
+|------|-------------|-----|-------|-----------------|
+| завжди | 518,033 | 255.96 | ✅ adv | завжди був, завжди казав, назавжди |
+| ніколи | 388,470 | 191.94 | ✅ adv | ніколи не бачив, ніколи не думав |
+| часто | 296,672 | 146.58 | ✅ adv | досить часто, дуже часто, як часто |
+| вперше | 218,974 | 108.19 | ✅ adv | вперше побачив, вперше спробував |
+| постійно | 185,821 | 91.81 | ✅ adv | постійно думав, постійно робив |
+| щодня | 99,449 | 49.14 | ✅ adv | робити щодня, бачити щодня |
+| іноді | 89,963 | 44.45 | ✅ adv | іноді навіть, тільки іноді |
+| неодноразово | 87,123 | 43.05 | ✅ adv | неодноразово говорив, неодноразово просив |
+| зазвичай | 86,679 | 42.83 | ✅ adv | зазвичай ми, він зазвичай |
+| рідко | 42,727 | 21.11 | ✅ adv | дуже рідко, рідко коли, хіба що рідко |
+| востаннє | 24,835 | 12.27 | ✅ adv | востаннє бачив, востаннє чув |
+| регулярно | — | — | ✅ adv | регулярно виконував, регулярно ходив |
+| щонеділі | — | — | ✅ adv | приходити щонеділі, зустрічатися щонеділі |
 
-**Note on multi-word markers**: «одного разу», «того разу», «того дня» return 0 in GRAC (corpus queries single tokens). These are phrases, not lexemes — correct to teach as collocations, not single-word items. Component words «раз», «той», «день» are extremely high-frequency.
+**VESUM notes on multi-word expressions:**
+- «одного разу», «того разу», «того дня» — NOT in VESUM as lexical entries (these are syntactic phrases: gen. sg. of «один/той» + gen. sg. of «раз/день»). Component forms are grammatically valid. Content should treat them as phrasemes, not dictionary entries.
 
 ---
 
 ## Cultural Hooks
 
-**1. «Одного разу...» — Ukrainian folk-tale formula**
-Ukrainian folk tales (Українські народні казки) open with two canonical formulas: «Жили собі...» (sets up habitual/ongoing backstory — imperfective) and «Одного разу...» (signals the single event that disrupts the backstory — perfective trigger). Source: Ukrainian Wikipedia *Українські народні казки* + Grade 5 Zabotnyi literature textbook (tier 1). The three-category taxonomy (чарівні / соціально-побутові / про тварин) is officially taught at Grade 5. The contrast between the two openers maps directly onto the imperfective/perfective distinction this module teaches. ✅ Verified.
+1. **«Одного разу...» as folk-tale зачин** — Ukrainian folk tales (казки) use traditional opening formulas. The formula «Одного разу» (Once upon a time / One day) is the canonical narrative opener that signals a single, story-initiating event — linguistically, this triggers perfective aspect for the key action. Wikipedia confirms: «Казка — народно-поетичний або писемно-літературний твір... іноді за участю фантастичних сил, який має повчальну мету.» Traditional зачини (tale-openers) are a recognized compositional feature of Ukrainian folk tales (Wikipedia: Казка). The contrast with «Жили-були...» (imperfective habitual background: "they used to live") is immediately available for aspect illustration.
 
-**2. Aspect as a speaker's perspective, not just grammar**
-Ukrainian linguistics (Wikipedia *Вид (мовознавство)*) defines aspect not as a temporal marker but as the speaker's framing: «вид пов'язаний не з часовою локалізацією дії, а з тим, як цю локалізацію тлумачить мовець.» The three imperfective functions are formally named: **конкретно-процесна** («відчиняв»), **необмежена** («відчиняв вікно вечорами»), **загально-фактична** («Так, відчиняв»). The perfective has **конкретно-фактична** function. This linguistic framing supports the module's memoirist angle: the speaker chooses aspect to signal their interpretive stance. ✅ Verified.
+2. **«Щонеділі» / «на свята» as imperfective ritual markers** — Ukrainian family and community culture centers recurring collective actions around weekly gatherings and holidays. Sunday family dinners, holiday visits, seasonal cooking — all described with imperfective past (ходили, збиралися, варили, пекли). GRAC concordance for «того разу» confirms its use as a specific-event narrative marker in literary prose: "Того разу вечеря була багатою..." / "Того разу я взяв м'ясо назад..." — exclusively single-event contexts.
 
 ---
 
 ## Common Learner Errors
 
-1. **Perfective for habitual actions** → *Він прочитав книгу щодня* (wrong) → *Він читав книгу щодня* — **Why**: Learners associate perfective with "completed action" and assume any finished daily action takes perfective. They miss that frequency markers override completion.
+1. **Perfective + frequency marker** → «Він прочитав книгу щодня» ❌ → «Він читав книгу щодня» ✅  
+   *Why it happens:* Learners fixate on «completion» as the dominant feature of perfective and overapply it regardless of context. Frequency adverbs (щодня, часто, завжди, зазвичай) are incompatible with perfective aspect because they signal iteration, not termination.
 
-2. **Confusing process with result** → *Я складав іспит тричі* (process: repeated attempts) vs. *Я склав іспит* (achievement: success). Learners often use perfective for the "timed" event even when the outcome is uncertain or repeated. Source: Grade 7 Litvinova 2024 §7 frames dokonanyj as «завершену, обмежену в часі дію» — learners overgeneralise "bounded in time" to mean any timed repetition.
+2. **"Used to" construction interference** → Learners search for a separate Ukrainian structure for habitual past, as in English ("used to read"). In Ukrainian, past imperfective «читав» covers: *was reading*, *used to read*, *would read (habitually)*, and *read (repeatedly)*. No extra auxiliary is needed.
 
-3. **English «used to» interference** → Learners search for a Ukrainian structural equivalent («колись + verb?»). The past imperfective fully covers «used to» semantically: *Ми їздили щоліта* = «We used to go every summer». This is an English-specific analytical structure; Ukrainian expresses it through aspect alone. Textbook confirmation: Grade 7 Avramenko 2024 — «Усі дієслова у формі теперішнього часу завжди недоконаного виду» confirms aspect-tense interaction.
+3. **Process vs. achievement confusion** → «Я складав іспит» (I was in the process of taking the exam) vs. «Я склав іспит» (I passed/completed the exam). Learners conflate duration with completion, especially with telic verbs where the imperfective implies attempt and the perfective implies success.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-08 (Вид дієслова: повна система — result vs. process, basic aspectual pair recognition)
-- **Prepares for**: b1-14 (Aspect integration practice — extended production combining all past, present, future aspect uses)
+- **Builds on:** `b1-008` (aspect-past-result-process) — establishes the result/process distinction; this module extends to the single/habitual contrast using time markers as selection triggers
+- **Prepares for:** `b1-014` (aspect-integration-practice) — consolidation of all past-aspect rules in connected discourse; `b1-025`+ (aspect in imperatives, future, negation) — aspect selection in other tenses and moods
+
+---
+
+## Textbook Evidence
+
+**Grade 7, Litvinova 2024 (tier 1), p. 30 — §7 «Види дієслова»:**
+> «Дієслова доконаного виду позначають завершену, обмежену в часі дію й відповідають на питання що зробити? що зробив? що зробить?»
+Illustrated with «Я розв'язав задачу!» (perfective, completion) vs «Я розв'язував задачу…» (imperfective, process). Directly usable as a model contrast pair.
+
+**Grade 7, Litvinova 2024 (tier 1), p. 40 — §9 «Часи дієслова»:**
+> «Дієслова у формі минулого часу позначають дію, що відбувалася або відбулася до моменту мовлення про неї: допоміг, розв'язала, здалося, відчули.»
+Confirms textbook framing: imperfective = «відбувалася» (ongoing/repeated), perfective = «відбулася» (completed).
+
+**Grade 7, Avramenko 2024 (tier 1), p. 63–66 — «Минулий час дієслів»:**
+Contains exercises distinguishing perfective/imperfective past forms, including identification tasks (проводжала, навідував — imperfective; спромоглися — perfective). Good model for activity design.
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered during research — discover phase to handle)
+- (none encountered during research)
 
 ---
 
 ## Notes for Content Writing
 
-- **«Жили собі» + «Одного разу» pairing** is a ready-made illustrative contrast for the opening test section — no additional sourcing needed.
-- **Imperfective necessary-function**: the Wikipedia linguistic taxonomy (необмежена функція vs. конкретно-фактична) gives precise Ukrainian-language terms to explain this contrast without metalanguage borrowing.
-- **Frequency tiers matter for activities**: завжди/ніколи (highest frequency) → reliable recognition triggers; востаннє/щонеділі (lower frequency) → more demanding, suitable for later drill sections.
-- **«одного разу» as phrase**: teach as a fixed narrative opener + collocation (одного разу вранці / ввечері / взимку), not as a standalone adverb. This avoids VESUM ambiguity and matches real-text usage.
-- The standard focuses on **form** at §4.2.3.1; the module's strength is the **contextual use** layer — ensure the content clearly signals this is the extension of form knowledge into pragmatic competence.
-- Decolonized framing: Ukrainian aspect is an autonomous, fully theorised system. The Ukrainian linguistic tradition names and classifies aspect functions natively (конкретно-фактична, необмежена, загально-фактична). No external baseline needed.
-
+- The aspect system in Ukrainian past has independent grammatical validity — do not frame imperfective habitual as "lacking completion" (negative framing). Frame it positively: «недоконаний вид передає тривалість, повторюваність або процес дії».
+- «Одного разу» is a high-leverage entry point: it appears in folk tales, memoirs, and everyday spoken narrative, making it culturally rich and pedagogically versatile.
+- The «Жили-були» (imperfective background) + «Одного разу» (perfective event) contrast from folk tales maps perfectly onto the lesson's pedagogical goals — use it as the structural backbone of the Test section.
+- GRAC confirms «того разу» is exclusively used in single-event literary/narrative contexts — safe to present as an unambiguous perfective trigger.
+- Frequency adverb hierarchy for the master table (by GRAC IPM): завжди (256) > ніколи (192) > часто (147) > вперше (108) > постійно (92) > щодня (49) > іноді (44) > неодноразово (43) > зазвичай (43) > рідко (21) > востаннє (12). Rank ordering helps learners intuit which markers are most common in authentic Ukrainian text.
+- «Неодноразово» (43 ipm) is formally registered and more frequent than expected — worth including as a formal-register synonym for «кілька разів».
+- Multi-word markers «одного разу», «того разу», «того дня» should be presented as frozen phrasemes with genitive structure explained in a brief note, not as VESUM-verified individual lexemes.
 
 ## Resource Discovery
 
 
 ### Blog Articles
+- [Вид дієслова на Вікіпедії](https://uk.wikipedia.org/wiki/Дієслівний_вид) (докладна стаття)
 - [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) (ukrainianlessons.com)
 - [Verb Aspect in Ukrainian](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/) (ukrainianlessons.com)
 - [ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian](https://www.ukrainianlessons.com/lesson/92/) (ukrainianlessons.com)
-- [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) (ukrainianlessons.com)
-- [Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future/) (ukrainianlessons.com)
+- [Ukrainian Aspect Video](https://www.youtube.com/results?search_query=ukrainian+verb+aspect) (відео пояснення)
 
 ### Textbook References (RAG)
 

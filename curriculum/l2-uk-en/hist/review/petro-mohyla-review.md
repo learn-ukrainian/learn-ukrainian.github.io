@@ -1,1 +1,0 @@
-# Review: petro-mohyla

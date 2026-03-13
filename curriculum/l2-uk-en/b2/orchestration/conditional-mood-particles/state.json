@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "conditional-mood-particles",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:20:47Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:20:47Z",
+      "task_id": "v5-conditional-mood-particles-pA",
+      "mode": "full"
+    }
+  }
+}

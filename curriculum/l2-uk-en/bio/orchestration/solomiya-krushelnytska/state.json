@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "solomiya-krushelnytska",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:20:25Z",
+      "task_id": "v5-solomiya-krushelnytska-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:20:25Z",
+      "note": "merged-into-research"
+    }
+  }
+}

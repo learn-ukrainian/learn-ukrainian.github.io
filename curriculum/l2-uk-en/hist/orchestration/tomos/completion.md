@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 129 — E2E
+FAIL: pipeline hist 129
 
   Module:   tomos
   Track:    hist
-  Mode:     e2e
-  Words:    8415 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T23:52:02Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:22:33Z

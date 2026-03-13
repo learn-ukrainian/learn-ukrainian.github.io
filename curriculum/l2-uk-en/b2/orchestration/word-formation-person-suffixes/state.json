@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "word-formation-person-suffixes",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:38:27Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:38:27Z",
+      "task_id": "v5-word-formation-person-suffixes-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "homonyms-paronyms",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:05:16Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:05:16Z",
+      "task_id": "v5-homonyms-paronyms-pA",
+      "mode": "full"
+    }
+  }
+}

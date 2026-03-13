@@ -1,0 +1,133 @@
+discovered_at: '2026-03-12T18:18:42.653295+00:00'
+query_keywords:
+- Impersonal Passive Forms
+- Зроблено в Україні
+- пасивний стан
+- -но/-то impersonal passive formation
+- -но/-то in official and digital registers
+- зроблено
+- написано
+- закрито
+- Написи навколо нас
+- Signs Around Us
+- Утворення форм на -но/-то
+- Formation of -но/-то Forms
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=mgO2DGfyXfI
+  channel: Klopotenko
+  title: Як приготувати МОЦАРЕЛУ вдома за 1 годину? Євген КЛОПОТЕНКО & Тетяна ДЯДЕЧКО
+  relevance_score: 0.7
+  relevance_note: The video demonstrates the process of making mozzarella, providing
+    authentic context for the verb 'зробити' (to make), which is the root of the impersonal
+    passive form 'зроблено' (made). This reinforces the module's vocabulary and the
+    concept of 'Зроблено в Україні' (Made in Ukraine).
+  transcript_excerpt: А чи можна зробити моцарелу вдома? Я думаю, це дуже легко і
+    просто.
+  embed_suggestion: 'After section Національна ідентичність: ''Зроблено в Україні'''
+- url: https://www.youtube.com/watch?v=ZO6nk7_9DZI
+  channel: Klopotenko
+  title: Only THREE ingredients 👌 How to cook sour-milk cheese at home | Ievgen Klopotenko's
+    life hacks
+  relevance_score: 0.7
+  relevance_note: The video demonstrates the process of making sour-milk cheese, providing
+    authentic context for the verb 'зробити' (to make), which is the root of the impersonal
+    passive form 'зроблено' (made). This reinforces the module's vocabulary and the
+    concept of 'Зроблено в Україні' (Made in Ukraine).
+  transcript_excerpt: як лише з трьох інгредієнтів зробити домашній сир.
+  embed_suggestion: 'After section Національна ідентичність: ''Зроблено в Україні'''
+blogs:
+- url: https://www.youtube.com/results?search_query=пасивний+стан+українська
+  title: Пасивний стан в українській мові
+  source: пошук відеоуроків
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode56/
+  title: Asking for advice + Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode57/
+  title: Your schedule in Ukrainian + Accusative case with prepositions
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode58/
+  title: Inviting to a party in Ukrainian + Accusative case of pronouns
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0140
+  text: "Увага! Пасивні конструкції з дієслівними формами на -но, -то в українській\
+    \ \nмові використовують обмежено. § 22"
+  section_title: Сторінка 97
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0128
+  text: "112\nЗауважте!\nВ українській мові з іменниками / займенниками у формі орудного\
+    \ від-\nмінка, що позначають  виконавця, дієслівні форми на -но, -то не вживає-\n\
+    мо: Книжку було прочитано, а не Мною було прочитано книжку. \n  Шахіст виграв\
+    \ турнір, а не Турнір виграно шахістом.  \n2.\t Замініть у словосполученнях пасивні\
+    \ дієприкметники дієслівними фор-\nмами на -но, -то. Запишіть утворені конструкції\
+    \ як окремі речення.\nКуплений скейтборд, почута пісня, випрана футболка, побілений\
+    \ бу-\nдинок, обраний депутат,"
+  section_title: Сторінка 115
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0109
+  text: "81\nПасивні конструкції\n§ 25. ПАСИВНІ КОНСТРУКЦІЇ\nСПОСТЕРЕЖЕННЯ\n1.\t Прочитайте\
+    \ речення й виконайте завдання.\nУсі інгредієнти придбані. \nРецепт читається\
+    \ учнями уважно.\nПісля чого страва готується ними вправно.\nУсі інгредієнти придбано.\
+    \ \nУчні уважно читають рецепт. \nПісля чого вони вправно готують страву. \nА.\t\
+    \ Речення якої колонки, на вашу думку, звучать більш природно?\nБ.\t Перевірте\
+    \ свою інтуїцію, опрацювавши теоретичний матеріал.\nСинтаксичні конструкції з\
+    \ формами на -но, -то\nВ українській мові ш"
+  section_title: Сторінка 81
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0100
+  text: "§ 17  Активні й пасивні дієприкметники   \n93\nзони, де вже чекала евакуаційна\
+    \ група. Четверо бійців за-\nбрали пораненого на ношах.\n(За матеріалами сайту\
+    \ «Новинарня». \nФото ілюстративне)\n2   Про що повідомляє новина? Про які риси\
+    \ українських бійців, на вашу \nдумку, свідчить ця історія?\n3   Знайдіть у тексті\
+    \ дієприкметники  Схарактеризуйте їх за ознаками актив-\nности/пасивности та часу\
+    \ \n4   Поміркуйте, чи є дієприкметником виділене слово  Поясніть свою думку \n\
+    Відмінювання дієприкметників\nДієприкмет"
+  section_title: Сторінка 96
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0129
+  text: "113\n§ 51. Дієслівні  форми  на  -но, -то\n5. Вправу виконано учнями. 6.\
+    \ Бібліотекарем було видано школярам нові \nпідручники. 7. Траву вже зібрано нами.\
+    \ 8. Смаколики для родинного свята \nспечено бабусею. 4. Виконайте завдання в\
+    \ тестовій формі. 1. Дієслова на -но, -то можна утворити від усіх дієприкметників\
+    \ у варіанті\nА\t народжений, створений, лежачий\nБ\t зав’язаний, читаний, позеленілий\
+    \ \nВ\t укритий, загороджений, сяючий\nГ\t спланований, освітлений, почутий\n\
+    2. Виділений іменник ужито в називному відм"
+  section_title: Сторінка 116
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

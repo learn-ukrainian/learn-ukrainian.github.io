@@ -1,0 +1,194 @@
+discovered_at: '2026-03-12T17:22:27.127188+00:00'
+query_keywords:
+- Shopping and Services
+- магазин
+- ціна
+- купувати
+- Лексика та культура
+- Vocabulary and Culture
+- Граматика
+- Grammar
+- Діалоги та практика
+- Dialogues and Practice
+- Послуги та підсумок
+- Services and Summary
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=e4Vc4n-pLVE
+  channel: Bright Kids Ukrainian
+  title: 'Departments in the store🛒 #learnukrainian #onlineschool #ukrainianlanguage
+    #українськамова #ukraine'
+  relevance_score: 0.9
+  relevance_note: The video directly introduces and demonstrates various departments
+    within a store, which is highly relevant to the 'Shopping and Services' module
+    and its vocabulary.
+  transcript_excerpt: мені треба у магазин Так це овочевий відділ ... іду у Інший
+    о відділ одягу о сюди мені потрібно
+  embed_suggestion: After section 'Лексика та культура' because it introduces relevant
+    vocabulary for shopping contexts.
+- url: https://www.youtube.com/watch?v=rdFaECLtLdg
+  channel: Klopotenko
+  title: 'Автентична страва до Великодня: ПОДІЛЬСЬКА НАЧИНКА від Євгена Клопотенка'
+  relevance_score: 0.1
+  relevance_note: This video is a cooking tutorial for an Easter dish and has no direct
+    relevance to the module's topic of shopping and services. It uses Ukrainian, but
+    the content is unrelated.
+  transcript_excerpt: Всім привіт У нас Великдень і на Великдень зазвичай якісь хочеться
+    автентичні страви готувати
+  embed_suggestion: Not applicable, as the video is not relevant to the module's content.
+- url: https://www.youtube.com/watch?v=nVpWkTrNMQg
+  channel: Klopotenko
+  title: 'БУРГЕР для тих, хто живе на правому березі #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/fmu15/
+  title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 15
+- url: https://www.ukrainianlessons.com/fmu46/
+  title: 'Grammar point: Plural of nouns in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - plural
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 46
+- url: https://www.ukrainianlessons.com/fmu57/
+  title: 'Grammar Point: Verb conjugations in Ukrainian'
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - review
+  content_type: podcast_episode_short
+  series: FMU
+  season: 0
+  episode: 57
+- url: https://www.ukrainianlessons.com/episode32/
+  title: Shopping for clothes — Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - vocabulary
+  - clothing
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 32
+- url: https://www.ukrainianlessons.com/episode42/
+  title: My Room – Plural nouns in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - plural
+  - vocabulary
+  - housing
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 42
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0065
+  text: "60\nЛексикологія.  Групи слів за походженням\n4.\t До  українських слів доберіть\
+    \ спільнокореневі й  запишіть їх.  \n5.\t Складіть речення з  будь-яким словом\
+    \ на  вибір.  Замініть це слово сино-\nнімом.  Дослідіть, чим відрізняються обидва\
+    \ речення.\nВправа 83\n1.\t Прочитайте статтю зі  словника іншомовних слів.\n\
+    МУЗИКА [грец.  μουσική — мистецтво муз] — мистецтво, яке відоб­ражає \nдійсність\
+    \ у  звукових художніх образах.\n2.\t Порівняйте її зі статтями з тлумачного словника.\
+    \  Які відмінності ви \n­знай­шли?\n3"
+  section_title: Сторінка 60
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0010
+  text: '. . . . 261
+
+    Орфографія. Графіка . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 263
+
+    Синтаксис. Пунктуація . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 266
+
+    СЛОВНИК ТЕРМІНІВ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 270
+
+    СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . 276
+
+    ПІДКАЗКИ  . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 5
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0154
+  text: "149\n § 64–65.  Речення,  його  граматична  основа\nвала Квакуша в тому теремі.\
+    \ Щоранку приходив до неї \nслуга й подавав вишукані страви та найчистішу воду…\
+    \ \n(За В. Рутківським). \nА. Виберіть граматичну основу, яка може бути заголовком\
+    \ \nдо тексту.\nБ. Напишіть своє продовження казки й прочитайте його \nоднокласникам\
+    \ та однокласницям (п’ять–сім речень).\nКультура слова\n1.\tЗапам’ятайте правильний\
+    \ варіант слововживання. \nНЕПРАВИЛЬНО\nПРАВИЛЬНО\nзатягувати рішення\nзволікати\
+    \ з рішенням \nпідняти питання \nпор"
+  section_title: Сторінка 149
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0242
+  text: ". . . . . . . . . . . . . . . . . . . . . . . 151\n\t38. Граматична помилка\
+    \ у словосполученнях . . . . . . . . . . . 156\n\t39. Речення, його граматична\
+    \ основа . . . . . . . . . . . . . . . . . 158\n\t40. Види речень за метою висловлювання\
+    \ та емоційним  \nзабарвленням . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . 163\n\t41. Додаток. . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . 167\n\t42. Означення . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . 170\n\t"
+  section_title: Сторінка 242
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0128
+  text: "111\nКультура мовлення\n ЩО РАНІШЕ, ТО ЛІПШЕ\nНерідко з граматичних синонімів\
+    \ вибирають один засіб і забувають \nінший. Така доля спіткала складний сполучник\
+    \ що... то в значенні \nвідповідності. Замість нього частіше вживають сполучник\
+    \ чим... тим. \nЦе вислови на зразок Чим більше слухаєш, тим більше хочеться \n\
+    чути (М. Коцюбинський). Сполучник що... то нічим не гірший за \nсполучник чим...\
+    \ тим, а навіть кращий. НАПРИКЛАД: Що багатша \nдумка, то багатша мова (М. Рильський);\
+    \ Що вище підіймалися, то \nвидні"
+  section_title: Сторінка 115
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

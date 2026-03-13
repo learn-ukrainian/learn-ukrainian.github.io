@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 125 — E2E
+FAIL: pipeline hist 125
 
   Module:   movna-polityka
   Track:    hist
-  Mode:     e2e
-  Words:    6726 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T23:51:45Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:21:58Z

@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T09:30:21Z",
+      "ts": "2026-03-12T20:18:36Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:30:21Z",
+      "ts": "2026-03-12T20:18:36Z",
       "task_id": "v5-indefinite-negative-pronouns-pA",
       "mode": "full"
     }

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T10:23:17.241069+00:00'
+discovered_at: '2026-03-12T21:03:13.487595+00:00'
 query_keywords:
 - Because and Although
 - Вступ
@@ -15,30 +15,47 @@ query_keywords:
 error: null
 warning: null
 videos:
+- url: https://www.youtube.com/watch?v=3XfUu2XcJlA
+  channel: Klopotenko
+  title: Готуємо найпухкіші ВАРЕНИКИ з ПОЛУНИЦЕЮ і розмовляємо з Т. Левчуком про рівність
+    прав
+  relevance_score: 0.9
+  relevance_note: The video directly uses and demonstrates the conjunctions 'тому
+    що' and 'бо' which are core vocabulary and grammatical points for the 'Because
+    and Although' module, specifically in the 'Why and How' section.
+  transcript_excerpt: тому що Тимур Левчук він є радником такої прекрасної організації
+    яка називається англійсько Мо tca
+  embed_suggestion: 'After section Презентація: Чому та Як -- The video provides practical
+    examples of ''тому що'' and ''бо'' in a conversational context, which would reinforce
+    the grammar presented in this section.'
 - url: https://www.youtube.com/watch?v=Dv69jKuc-XA
   channel: Klopotenko
   title: Секрети ідеального тіста на пиріжки | Євген Клопотенко
-  relevance_score: 0.2
-  relevance_note: Video topic is cooking, which is unrelated to the grammar module.
-    However, it contains natural examples of 'якщо' (if/although) in conversational
-    Ukrainian, which could serve as supplementary listening material.
-  transcript_excerpt: Вони абсолютно ідентичні, але якщо вам по душі, ви звикли ось
-    так, то робіть ось так.
-  embed_suggestion: After Production and Dialogues -- for supplementary listening
-    practice to identify target grammar in natural speech.
-- url: https://www.youtube.com/watch?v=6Rh0041xEog
-  channel: Klopotenko
-  title: 'ЧЕРНІГІВЩИНА НА СМАК: забуті українські страви та смаки | Гастро-експедиція
-    Євгена Клопотенка'
-  relevance_score: 0.2
-  relevance_note: Video topic is a food expedition, which is unrelated to the grammar
-    module. However, it contains natural examples of 'бо' (because) in conversational
-    Ukrainian, which could serve as supplementary listening material.
-  transcript_excerpt: Почнемо нашу експедицію з розборок про нішинський огірок, бо
-    дуже-дуже хочеться свої продукти пізнавати і любити.
-  embed_suggestion: After Production and Dialogues -- for supplementary listening
-    practice to identify target grammar in natural speech.
-blogs: []
+  relevance_score: 0.5
+  relevance_note: The video uses the conjunction 'але' (but), which is related to
+    conjunctions in general but not the specific 'because' or 'although' (cause and
+    concession) focus of this module. It's tangentially related within the domain
+    of grammar.
+  transcript_excerpt: Я знаю що багато людей порізному відносяться до калини хтось
+    ї обожнє хтось ні але пирожки з калиною це так по-українськи
+  embed_suggestion: None -- The video's primary conjunction ('але') does not align
+    directly with the module's core grammar points of 'because' and 'although'.
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-conjunctions/
+  title: Ukrainian Conjunctions — Basic Overview
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://talkukrainian.com/conjunctions/
+  title: 'Talk Ukrainian: Ukrainian conjunctions'
+  source: talkukrainian
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/
+  title: Ukrainian Conjunctions Guide — Advanced
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.1111111119389534
   chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0246

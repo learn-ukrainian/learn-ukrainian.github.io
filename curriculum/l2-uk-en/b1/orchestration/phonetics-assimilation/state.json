@@ -3,15 +3,16 @@
   "slug": "phonetics-assimilation",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:48:33Z",
-      "note": "rebuild-kept"
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:49:17Z",
+      "ts": "2026-03-12T20:49:44Z",
       "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T20:49:44Z",
+      "task_id": "v5-phonetics-assimilation-pA",
+      "mode": "full"
     }
   }
 }

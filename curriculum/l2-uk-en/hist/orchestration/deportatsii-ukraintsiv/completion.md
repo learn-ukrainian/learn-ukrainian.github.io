@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 110 — E2E
+FAIL: pipeline hist 110
 
   Module:   deportatsii-ukraintsiv
   Track:    hist
-  Mode:     e2e
-  Words:    6729 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T23:36:30Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:19:39Z

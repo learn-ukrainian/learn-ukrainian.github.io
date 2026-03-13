@@ -1,10 +1,10 @@
-PASS: pipeline istorio 133
+FAIL: pipeline istorio 133
 
   Module:   syntez-ahentsnist
   Track:    istorio
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T18:18:33Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:25:13Z

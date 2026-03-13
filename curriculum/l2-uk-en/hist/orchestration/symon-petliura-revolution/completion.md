@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 94 — E2E
+FAIL: pipeline hist 94
 
   Module:   symon-petliura-revolution
   Track:    hist
-  Mode:     e2e
-  Words:    4077 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  FAIL
-  Date:     2026-02-25T22:37:10Z
+  Date:     2026-03-13T01:17:11Z

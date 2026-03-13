@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "slobozhanshchyna",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:55:15Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:55:15Z",
+      "task_id": "v5-slobozhanshchyna-pA",
+      "mode": "full"
+    }
+  }
+}

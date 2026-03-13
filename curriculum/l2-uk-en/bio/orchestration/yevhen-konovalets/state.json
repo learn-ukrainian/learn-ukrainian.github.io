@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "yevhen-konovalets",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:52:38Z",
+      "task_id": "v5-yevhen-konovalets-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:52:38Z",
+      "note": "merged-into-research"
+    }
+  }
+}

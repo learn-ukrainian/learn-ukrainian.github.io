@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 130 — E2E
+FAIL: pipeline hist 130
 
   Module:   syntez-nezalezhnist
   Track:    hist
-  Mode:     e2e
-  Words:    3781 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  FAIL
-  Date:     2026-02-25T23:52:04Z
+  Date:     2026-03-13T01:22:42Z

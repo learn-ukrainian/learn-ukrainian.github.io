@@ -1,0 +1,211 @@
+discovered_at: '2026-03-12T23:36:09.592954+00:00'
+query_keywords:
+- Діаспора та західні історики
+- Українські наукові інституції на Заході
+- Омелян Пріцак і Гарвард
+- Орест Субтельний
+- Інші ключові постаті
+- Методологічні особливості західної школи
+- Діалог із Україною після 1991
+- Analyze the causes and consequences of діаспора та західні історики
+- Evaluate the historical significance of історія в екзилі
+- Trace the development of діалог із україною після 1991
+- history
+- історія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=pH_OIga-_O0
+  channel: Реальна Історія
+  title: ХТО ПОДІЛИВ УКРАЇНУ НА ТРИ СОРТИ? Реальна історія з Акімом Галімовим
+  relevance_score: 0.1
+  relevance_note: The video discusses modern Ukrainian political history and Russian
+    influence, focusing on events post-2004, which is unrelated to the module's topic
+    of Ukrainian diaspora and Western historians' contributions to historical studies.
+  transcript_excerpt: Сьогодні я хочу розповісти про те як нас штучно розділяли на
+    схід і захід особливо під час виборів розділяли для того аби приводити до влади
+    потрібних кандидатів і тримати нас в орбіті Кремля.
+  embed_suggestion: Not suitable for embedding in this module as the topic is entirely
+    different.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0241
+  text: "при Гарвардському університеті в  США \nпрацював Український науковий інститут.\
+    \ Вирішаль-\nна роль у розвитку цього наукового закладу належа-\nла його директору,\
+    \ вченому, історику-енциклопедис-\nту Омеляну Пріцаку. Важливим здобутком української\
+    \ діаспори цієї \nдоби залишалася діяльність відродженого Наукового \nтовариства\
+    \ імені Т. Шевченка. У  цей час воно ви-\nдавало десятитомну «Енциклопедію українознавства»\
+    \ \n(до 1989  р.). У  1979  р. виник один із наймолодших"
+  section_title: Сторінка 133
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0483
+  text: "Неоціненну функцію \nоберігача і примножувача традицій української незалежності\
+    \ в \nкультурній і духовній сфері виконала для України українська \nдіаспора,\
+    \ саме в той час, коли в Україні таку діяльність \nприрівнювали до державного\
+    \ злочину. В державах поселення \nполітична еміграція створила сотні українських\
+    \ інституцій, які \nрозвивали і вивчали національну інтелектуальну думку, нагадували\
+    \ \nсвіту про свою державну традицію. Серед її представників визначні \nінтелектуали-гуманітарії\
+    \ – професори Юрій Ше"
+  section_title: Сторінка 264
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0001
+  text: "Рекомендовано Міністерством освіти і науки України\nІгор Щупак\nОлена Бурлака\n\
+    Наталія Власова\nІрина Піскарьова\nУкраїнський освітянський \nвидавничий центр\
+    \ \n«Оріон»"
+  section_title: Сторінка 3
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0391
+  text: "Ольжич та інші. Українство стало на шлях збройної \nборотьби проти окупаційної\
+    \ влади. і\nЯрослав Стецько\nОлена Теліга\nВолодимир Кубійович"
+  section_title: Сторінка 204
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0575
+  text: "319 \nРекомендована література \n \n Баран В. Україна в 1950–1960-х рр.\
+    \ Еволюція тоталітарної системи. Львів: \nІнститут українознавства імені Івана\
+    \ Крип’якевича НАН України, 1996. \n Баран В., Даниленко В. Україна в умовах\
+    \ системної кризи. Київ: Либідь, 1999. \n Гирич І. Через ідентичність до держави.\
+    \ Київ: Українські пропілеї, 2021. \n Грицак Я. Нариси історії України: формування\
+    \ модерної української нації  \nXIX–XX ст. Київ: Генеза, 2000. \n Грицак Я. Подолати\
+    \ минуле: глобальна історія України. К"
+  section_title: Сторінка 320
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5726401209831238
+  chunk_id: 94271a53_c0003
+  text: "Під час писання дисертації та її переробки у\r\nмонографію мені допомагало\
+    \ багато людей. Науковий керівник моєї дисертації\r\nпрофесор Альфред Дж. Рібер\
+    \ завжди був щедрий на поради і заохочував мене до\r\nроботи. Професор Олександр\
+    \ Оглоблин, який колись викладав у Київському\r\nуніверситеті, дав мені багато\
+    \ цінних порад щодо історичних джерел і ділився\r\nсвоїми багатющими знаннями\
+    \ з історії України XVIII ст. Директор Українського\r\nнаукового інституту Гарвардського\
+    \ університету професор Омелян Пріцак прив"
+  work: Когут — Російський централізм і українська автономія
+  author: Когут З.
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss5/koh.htm
+- score: 0.5409205555915833
+  chunk_id: 9a2443f5_c0096
+  text: "Нарешті слід назвати українського історика, який\r\nбагато ще скаже в науці,\
+    \ Ореста Субтельного, відомого останнім часом рядом\r\nтворів, що дістали високу\
+    \ оцінку і не тільки в українців за кордоном. Мені, на\r\nжаль, відома лише одна\
+    \ його книга «Мазепинці» *, де він багато уваги приділяє\r\nтакому важливому питанню,\
+    \ як взаємини Мазепи й Орлика з запорожцями.\n\n220 Винар Л. Огляд\r\nісторичної\
+    \ літератури про початки української козаччини // Укр. історик. 1965.\r\nЧ. IV.\
+    \ С. 33.\n\n221 Там само. С. 33\r\n— 34.\n\n* "
+  work: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+  year: 1994
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/holob/hol.htm
+- score: 0.5344902873039246
+  chunk_id: 850100d0_c0007
+  text: "У праці з неслов’янськими джерелами неоціненну\r\nдопомогу авторові надали\
+    \ Омелян Пріцак, Карл Г. Менґес (тюркські мови), Ніна Ґ.\r\nҐарсоян, Крікор Г.\
+    \ Максудян, Джеймс Р. Рассел (вірменська мова), Марвін І.\r\nГерцоґ і Мордке Шехтер\
+    \ (ідиш та гебрайська мова). Мани для цього видання\r\nнакреслив Григорій Колодій.\
+    \ В усіх бібліотеках, де автор працював, йому дуже\r\nдопомагали їхні співробітники.\
+    \ Особливий борг дяки автор має перед Романом\r\nМаланчуком (Нью-Йоркська публічна\
+    \ бібліотека), Бейсілом Надраґою (Б"
+  work: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevelov/shev.htm

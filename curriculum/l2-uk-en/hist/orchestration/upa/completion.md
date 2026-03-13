@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 107 — E2E
+FAIL: pipeline hist 107
 
   Module:   upa
   Track:    hist
-  Mode:     e2e
-  Words:    6289 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-24T22:23:37Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:19:12Z

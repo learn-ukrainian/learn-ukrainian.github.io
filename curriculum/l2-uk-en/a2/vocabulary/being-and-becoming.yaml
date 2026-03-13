@@ -1,60 +1,115 @@
-- term: називний відмінок
-  translation: "Nominative case"
-  pos: noun phrase
-- term: називний
-  translation: "Nominative"
-  pos: adjective
-- term: орудний відмінок
-  translation: "Instrumental case"
-  pos: noun phrase
-- term: орудний
-  translation: "Instrumental"
-  pos: adjective
-- term: множина
-  translation: "plural"
-  pos: noun
-- term: фемінітив
-  translation: "feminitive (feminine form of a profession)"
-  pos: noun
-- term: айтішник
-  translation: "IT specialist (colloquial)"
-  pos: noun
-- term: фахівець
-  translation: "specialist, expert"
-  pos: noun
-- term: розробник
-  translation: "developer"
-  pos: noun
-- term: тестувальник
-  translation: "tester (QA)"
-  pos: noun
-- term: копірайтер
-  translation: "copywriter"
-  pos: noun
-- term: аналітик
-  translation: "analyst"
-  pos: noun
-- term: гетьман
-  translation: "Hetman (Cossack leader)"
-  pos: noun
-- term: князь
-  translation: "prince"
-  pos: noun
-- term: мрія
-  translation: "dream"
-  pos: noun
-- term: стати
-  translation: "to become"
-  pos: verb
-- term: працювати
-  translation: "to work"
-  pos: verb
-- term: дизайнерка
-  translation: "designer (female)"
-  pos: noun
-- term: інженер
-  translation: "engineer"
-  pos: noun
-- term: волонтер
-  translation: "volunteer"
-  pos: noun
+items:
+  - lemma: "бути"
+    translation: "to be"
+    pos: "verb"
+  - lemma: "стати"
+    translation: "to become (perfective)"
+    pos: "verb"
+  - lemma: "ставати"
+    translation: "to be becoming (imperfective)"
+    pos: "verb"
+  - lemma: "працювати"
+    translation: "to work"
+    pos: "verb"
+  - lemma: "лікар"
+    translation: "doctor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "лікарка"
+    translation: "doctor"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вчитель"
+    translation: "teacher"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вчителька"
+    translation: "teacher"
+    pos: "noun"
+    gender: "f"
+  - lemma: "програміст"
+    translation: "programmer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "програмістка"
+    translation: "programmer"
+    pos: "noun"
+    gender: "f"
+  - lemma: "айтішник"
+    translation: "IT professional"
+    pos: "noun"
+    gender: "m"
+  - lemma: "айтішниця"
+    translation: "IT professional"
+    pos: "noun"
+    gender: "f"
+  - lemma: "інженер"
+    translation: "engineer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "інженерка"
+    translation: "engineer"
+    pos: "noun"
+    gender: "f"
+  - lemma: "журналіст"
+    translation: "journalist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "журналістка"
+    translation: "journalist"
+    pos: "noun"
+    gender: "f"
+  - lemma: "юрист"
+    translation: "lawyer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "юристка"
+    translation: "lawyer"
+    pos: "noun"
+    gender: "f"
+  - lemma: "економіст"
+    translation: "economist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "економістка"
+    translation: "economist"
+    pos: "noun"
+    gender: "f"
+  - lemma: "менеджер"
+    translation: "manager"
+    pos: "noun"
+    gender: "m"
+  - lemma: "менеджерка"
+    translation: "manager"
+    pos: "noun"
+    gender: "f"
+  - lemma: "спеціаліст"
+    translation: "specialist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "спеціалістка"
+    translation: "specialist"
+    pos: "noun"
+    gender: "f"
+  - lemma: "громадянин"
+    translation: "citizen"
+    pos: "noun"
+    gender: "m"
+  - lemma: "громадянка"
+    translation: "citizen"
+    pos: "noun"
+    gender: "f"
+  - lemma: "називний"
+    translation: "nominative"
+    pos: "adjective"
+  - lemma: "орудний"
+    translation: "instrumental"
+    pos: "adjective"
+  - lemma: "директор"
+    translation: "director"
+    pos: "noun"
+    gender: "m"
+  - lemma: "директорка"
+    translation: "director"
+    pos: "noun"
+    gender: "f"

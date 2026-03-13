@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "relationships",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:57:32Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:57:32Z",
+      "task_id": "v5-relationships-pA",
+      "mode": "full"
+    }
+  }
+}

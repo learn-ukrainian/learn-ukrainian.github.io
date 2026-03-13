@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T10:13:52.815209+00:00'
+discovered_at: '2026-03-12T21:46:48.312785+00:00'
 query_keywords:
 - 'Умовні речення: реальна умова (якщо)'
 - Реальні умови в мовленні
@@ -13,9 +13,28 @@ query_keywords:
 - Dialogues and Skill Production
 - real conditional constructions
 error: null
-warning: No videos found across channels
-videos: []
-blogs: []
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=CSpQzByieI0
+  channel: Repainted Fox
+  title: First Conditional - Перший тип умовних речень
+  relevance_score: 1.0
+  relevance_note: The video directly explains the 'first conditional' (перший тип
+    умовних речень), which corresponds to 'real conditions' using 'якщо' and discusses
+    its structure with the future tense, perfectly aligning with the module's core
+    grammar point.
+  transcript_excerpt: 'Такий приклад: Якщо погода буде гарна, ми підемо на прогулянку.
+    Речення складається із двох частинок: If the weather is fine... і основна частинка:
+    we will go for a Wok ми підемо на прогулянку.'
+  embed_suggestion: 'After section ''Граматична презентація: Якщо та майбутній час''
+    -- The video provides a clear explanation and examples of the grammatical concept
+    covered in this section.'
+blogs:
+- url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення
+  title: Умовні речення
+  source: Вікіпедія
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 5-klas-ukrmova-avramenko-2022_s0011

@@ -1,10 +1,10 @@
-PASS: pipeline istorio 121
+FAIL: pipeline istorio 121
 
   Module:   syntez-yevrei-ukraina
   Track:    istorio
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T18:18:33Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:23:27Z

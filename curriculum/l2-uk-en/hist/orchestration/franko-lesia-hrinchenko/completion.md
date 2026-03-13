@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 85 — E2E
+FAIL: pipeline hist 85
 
   Module:   franko-lesia-hrinchenko
   Track:    hist
-  Mode:     e2e
-  Words:    7522 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T21:29:06Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:15:45Z

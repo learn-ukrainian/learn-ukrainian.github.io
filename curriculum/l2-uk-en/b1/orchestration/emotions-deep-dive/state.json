@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "emotions-deep-dive",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:54:12Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:54:12Z",
+      "task_id": "v5-emotions-deep-dive-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:33:09.929551+00:00'
+discovered_at: '2026-03-12T20:20:39.142396+00:00'
 query_keywords:
 - Bigger, Better, Stronger
 - більший
@@ -15,6 +15,39 @@ query_keywords:
 error: null
 warning: null
 videos:
+- url: https://www.youtube.com/watch?v=oe9gWuN0-FA
+  channel: Klopotenko
+  title: 'КАЛИНА у пиріжках? Цікаво дізнатись більше про рецепт? Підписуйтесь на канал,
+    усе покажу! #калина'
+  relevance_score: 0.1
+  relevance_note: The video is a cooking tutorial for viburnum pie and has no thematic
+    or grammatical connection to the module's focus on comparative adjectives and
+    comparison structures.
+  transcript_excerpt: Я люблю калину не лише за вікном А я люблю калину і у [музика]
+    ріжках
+  embed_suggestion: Not suitable for embedding.
+- url: https://www.youtube.com/watch?v=dD-MPAYyQak
+  channel: Bright Kids Ukrainian
+  title: 'Національний український одяг, якому більше 100 років #ukraine #ukrainianhistory
+    #nationalclothes'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=6wysbtUqud4
+  channel: Bright Kids Ukrainian
+  title: Independence Day of Ukraine Celebration_Bright Kids Ukrainian Online School
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=4g-BGV3SWmQ
+  channel: Klopotenko
+  title: 'Кекс з гарбуза у якому ви не відчуєте гарбуз 😇 #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 - url: https://www.youtube.com/watch?v=PLwCHSzvXl7weAUvvyGZf6Qg3SEIjHmH_7
   channel: Ukrainian with Olha
   title: Рецепти українською - Recipes in Ukraine
@@ -22,7 +55,22 @@ videos:
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-blogs: []
+blogs:
+- url: https://opentext.ku.edu/dobraforma/chapter/20-1/
+  title: 'Dobra Forma 20-1: Comparative Degree'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/20-2/
+  title: 'Dobra Forma 20-2: Comparative Exceptions'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+- url: https://www.talkukrainian.com/adjectives-degrees-comparison/
+  title: Degrees of Comparison
+  source: Unknown
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 6-klas-ukrmova-litvinova-2023_s0206

@@ -1,0 +1,18 @@
+{
+  "track": "istorio",
+  "slug": "kyievo-pecherskyi-pateryk",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:09:20Z",
+      "task_id": "v5-kyievo-pecherskyi-pateryk-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:09:20Z",
+      "note": "merged-into-research"
+    }
+  }
+}

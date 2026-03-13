@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b2 22 — E2E
+PASS: pipeline b2 30
 
   Module:   register-literary-ukrainian
   Track:    b2
-  Mode:     e2e
-  Words:    4850 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:43:40Z
+  Date:     2026-03-12T17:33:28Z

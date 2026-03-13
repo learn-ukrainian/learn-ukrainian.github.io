@@ -1,0 +1,176 @@
+discovered_at: '2026-03-12T20:26:39.990273+00:00'
+query_keywords:
+- Сучасна діаспора
+- Глобальне українство
+- Global Ukrainedom
+- Історія та чотири хвилі еміграції
+- History and Four Waves of Emigration
+- Організації та інституційна мережа
+- Organizations and Institutional Network
+- М’яка сила та культурна дипломатія
+- Soft Power and Cultural Diplomacy
+- Мова діаспори та типові помилки
+- Language of Diaspora and Common Errors
+- Аналіз та рефлексія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=JiI0IiwC3zQ
+  channel: Суспільне Культура
+  title: 'How Ukrainians passed on traditions far from home: Christmas in emigration'
+  relevance_score: 0.9
+  relevance_note: The video directly addresses the topic of Ukrainian diaspora, its
+    history, and the preservation of cultural traditions across generations and recent
+    emigration waves, aligning perfectly with the module's core themes.
+  transcript_excerpt: Герої нашого випуску живуть в еміграції. Хтось уже в четвертому
+    поколінні народився в родині емігрантів, а хтось від початку повномасштабної війни.
+  embed_suggestion: After section Історія та чотири хвилі еміграції — The video directly
+    discusses different generations of emigrants and the impact of the full-scale
+    war, providing real-world examples for this section.
+- url: https://www.youtube.com/watch?v=J7mOEUhJfbc
+  channel: Суспільне Культура
+  title: «Час поезії». Випуск №6. Євген Маланюк
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=bch4Jc7kbLk
+  channel: Repainted Fox
+  title: '#28 Тигролови. Іван Багряний'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=MMQzpL5ZGJs
+  channel: Repainted Fox
+  title: '#29 Говорюща риба. Казка про яян. Емма Андієвська'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-istoriya-schupak-2022_s0183
+  text: 'РОЗДІЛ 4
+
+    182
+
+    української мови та культури, багато вихідців з України при-
+
+    святили життя збереженню національної культури.
+
+    Після початку повномасштабної війни Росії проти Украї-
+
+    ни у 2022 р. мільйони українців змушені були шукати при-
+
+    хисток в інших країнах.
+
+    Північна
+
+    Америка
+
+    Південна
+
+    Америка
+
+    Африка
+
+    Азія
+
+    Європа
+
+    Австралія
+
+    Океанія
+
+    Північна
+
+    Америка
+
+    Бл. 1,5 млн осіб
+
+    Бл. 800 тис. осіб
+
+    Бл. 7600 тис. осіб
+
+    Бл. 4,8 млн осіб
+
+    Південна
+
+    Америка
+
+    Африка
+
+    Азія
+
+    Європа
+
+    Австралія
+
+    Океанія
+
+    Бл. 4 млн осіб
+
+    Бл. 35 тис. ос'
+  section_title: Сторінка 182
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0555
+  text: "Ще \n6,3 млн шукають безпеки за кор-\nдоном. З урахуванням обставин та \n\
+    залежно від національного законо-\nдавства приймаючої сторони виму-\nшено переміщені\
+    \ громадяни Укра-\nїни отримують різний статус: від \nбіженців \nдо \nосіб, \n\
+    щодо \nяких \nзастосовується \nтимчасовий \nчи \nінший подібний механізм захисту.\
+    \ Найбільше громадян України \nзнайшли притулок у Польщі, Німеччині. Багато українців\
+    \ зараз \nпроживають і в інших країнах Європи, таких як: Італія, Іспанія, \nФранція,\
+    \ Велика Британія, Чехія, Угорщина, Р"
+  section_title: Сторінка 304
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0244
+  text: "238\nРозпад Римської імперії. Велике п ереселення народів\n1. Дізнайтеся\
+    \ за картою, які племена і в яких напрямках переміщувалися під час Великого переселення\
+    \ \nнародів.\n2. З’ясуйте, в яких частинах Римської імперії були утворені варварські\
+    \ королівства.\n3. Які племена пройшли територією України в часи Великого переселення\
+    \ народів?\nУкраїнський освітянський \nвидавничий центр \n«Оріон»"
+  section_title: Сторінка 240
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0189
+  text: "Чимало \nдіячів культури після зміни політичних \nрежимів, рятуючись від\
+    \ переслідувань, \nбезладу та анархії або просто шукаючи \nкраще життя, виїхали\
+    \ до еміграції. і\nі\nМодернізм  — сукупність течій у  мистецтві \nXX ст., якій\
+    \ притаманні змішування елементів \nрізних стилів і революційні перетворення за-\n\
+    собів виразності. Футуризм — авангардний напрямок у мисте-\nцтві, що заперечував\
+    \ загальноприйняті мовні \nй мистецькі норми, пропагував крайній інди-\nвідуалізм\
+    \ та формалізм. Символізм  — одна зі стильов"
+  section_title: Сторінка 100
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0016
+  text: "11\nОбговоріть у класі\nЩо таке Велике переселення народів? Назвіть кілька\
+    \ народів / племен, що пере-\nселялися. Що називають Великим розселенням слов’ян?\
+    \ Де вони розселялися? Дослідіть \nРозгляньте карту. Коли і де розселилися східні,\
+    \ південні й західні слов’яни? На­\nзвіть слов’янські племена, що представляють\
+    \ кожну із груп. Яка з них є пред-\nками сучасних українців? Чому ви так думаєте?\
+    \ Визначте, які східнослов’янські \nплемена розселилися на територіях сучасних\
+    \ держав — сусідів України. У Г О Р Ц "
+  section_title: Сторінка 14
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

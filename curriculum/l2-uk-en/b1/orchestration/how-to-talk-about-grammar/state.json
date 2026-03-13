@@ -3,15 +3,16 @@
   "slug": "how-to-talk-about-grammar",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:45:50Z",
-      "note": "rebuild-kept"
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:46:14Z",
+      "ts": "2026-03-12T20:32:18Z",
       "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T20:32:18Z",
+      "task_id": "v5-how-to-talk-about-grammar-pA",
+      "mode": "full"
     }
   }
 }

@@ -1,0 +1,101 @@
+discovered_at: '2026-03-12T17:45:49.171464+00:00'
+query_keywords:
+- Довкілля та екологія
+- Словник та поняття
+- Vocabulary & Concepts
+- 'Природа України: Карпати'
+- 'Nature of Ukraine: The Carpathians'
+- Причина і наслідок
+- Cause and Effect
+- Практика та підсумок
+- Practice & Summary
+- environmental vocabulary words in context
+- environmental issues using appropriate collocations
+- between довкілля/навколишнє середовище/природа
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=f7OFIoNUlNo
+  channel: Ukrainian Lessons
+  title: ULP 4-136 | Екологічні тренди та екологічні традиції в Україні | Ukrainian
+    Lessons Podcast Season 4
+  relevance_score: 0.9
+  relevance_note: The video directly addresses the topic of ecology and environmental
+    trends in Ukraine, explicitly mentioning the importance of learning environmental
+    vocabulary. It covers concepts like climate change and global warming, which are
+    central to the module's theme.
+  transcript_excerpt: я вирішила розповісти вам щось про одне дуже актуальне питання
+    питання екології... я подумала що вам було б корисно знати певні слова вирази
+    українською мовою на тему зміни клімату.
+  embed_suggestion: After section 'Словник та поняття' (Vocabulary & Concepts) --
+    it introduces key environmental vocabulary and concepts relevant to the module.
+blogs:
+- url: https://www.ukrainianlessons.com/environment-vocabulary/
+  title: 'Ukrainian Vocabulary: Environment'
+  source: Ukrainian Lessons
+  relevance_score: 0.95
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0146
+  text: "3. Озеленення території. 4. Тиждень \nматематики. 5. День української писемності\
+    \ та мови. 6. Екологічна толока. 7. Благодій-\nний ярмарок. Опорні слова\nіменники\n\
+    прикметники\nдієприкметники\nдієслова\nкошти\nмоніторинг\nекскурсовод\nініціативний\
+    \ \nрегулярний\nзмістовний\nорганізований\nприбраний\nкуплений\nдопомагати\nзалучати\n\
+    замовляти"
+  section_title: Сторінка 112
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0274
+  text: "Викори\x10\nстаɣте кілька з наведених опорних понять \nɣ оцінну лексику.\
+    \  облаштування парків, алей, \n \nнабережних\n благоустрій прибудинкових \n\
+    \ \nтериторій\n велосипед як екологічно чистий\n \nвид транспорту\n сприятливі\
+    \ умови для життєдіяльності \n \nлюдей з інвалідністю"
+  section_title: Сторінка 180
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0016
+  text: "13\nнізувати книгу В. Нестайка «Тореадори з Васюківки». 3. Кожна лю­\nдина\
+    \ з порушенням слуху може звернутися по допомогу до Служби \nпорятунку, використовуючи\
+    \ мобільний застосунок «Перекладач ЖМ». \n4. Обираючи солодощі в магазині, потрібно\
+    \ звертати увагу на склад \nпродукту (З медіа).\nІІ.  Розберіть за будовою виділені\
+    \ дієслова.\nІІІ. Визначте усно частину мови кожного слова в першому реченні.\
+    \ \n20\t\nТРЕТЄ ЗАЙВЕ. У кожному рядку знайдіть одне дієслово, яке належить до\
+    \ ін-\nшої форми, ніж решта.\n1. Пишу"
+  section_title: Сторінка 17
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 3-klas-ukrainska-mova-ponomarova-2020-1_s0023
+  text: "24\n5. Спиши із завдання 4 ті речення, у яких виділені слова\nвжито в переносному\
+    \  значенні.\n6. Прочитай текст. Випиши слова, вжиті в переносному \nзначенні.\
+    \ \n6\nКарпати дивували друзів непо-\nвторною красою. \nВершини гір одягли білі\
+    \ шап-\nки. Схèли закутались у листяні \nта хвойні дерева. Полонини вкри-\nлися\
+    \ барвистим трав’яним кили-\nмом.\n7. Разом із однокласниками/однокласницями складіть\n\
+    і запишіть свої речення, вживаючи виписані слова в\nпрямому  значенні.\n8. Прочитай\
+    \ у словнику значення слів. Напиши"
+  section_title: Сторінка 24
+  grade: 3
+  author: ponomarova
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0169
+  text: "Що є волею для неї? ÒÂÎÐ×Å ÇÀÂÄÀÍÍß\n18. За бажанням знайдіть інформацію\
+    \ про плавні Дніпра й Дунаю, їхній рослинний \nі  тваринний світ. Підготуйте розповідь,\
+    \ презентацію або відеоролик для одно-\nкласників / однокласниць."
+  section_title: Сторінка 114
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

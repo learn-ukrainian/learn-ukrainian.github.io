@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 7 — E2E
+PASS: pipeline istorio 7
 
   Module:   nova-ukrainska-istorio
   Track:    istorio
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:23:18Z
+  Date:     2026-03-12T23:41:44Z

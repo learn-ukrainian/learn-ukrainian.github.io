@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "checkpoint-lexicology",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:34:18Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:34:18Z",
+      "task_id": "v5-checkpoint-lexicology-pA",
+      "mode": "full"
+    }
+  }
+}

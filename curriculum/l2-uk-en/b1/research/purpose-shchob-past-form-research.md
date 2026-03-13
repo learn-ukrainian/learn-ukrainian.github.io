@@ -2,84 +2,82 @@
 
 ## State Standard Reference
 
-**§4.4.3** (lines 2380–2431): "Складнопідрядні речення з підрядною частиною мети (сполучник щоб): Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного міста"
+**§4.4.3** (lines 2420–2422, B1 Syntax):
+> "складнопідрядні речення з підрядною частиною мети (сполучник щоб): Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного міста"
 
-Also directly relevant at lines 2398–2401: "складнопідрядне речення зі з'ясувальною підрядною частиною (сполучники що, **щоб**...): Викладач сказав, що я повинен багато працювати. Викладач сказав, **щоб я багато працював**" — this is the different-subject pattern with щоб + past form, confirmed by the Standard.
+Additionally, §4.4.3 (lines 2398–2401) covers the з'ясувальна підрядна pattern with щоб — the different-subject use that is the module's core focus:
+> "складнопідрядне речення зі з'ясувальною підрядною частиною (сполучники що, щоб, сполучні слова куди, звідки, скільки, чому, навіщо, який): Викладач сказав, що я повинен багато працювати. Викладач сказав, щоб я багато працював;"
 
-**Alignment**: This module covers both patterns explicitly required by §4.4.3:
-- Purpose clause (підрядна мети): same-subject → infinitive
-- Explanatory clause with щоб (з'ясувальна with щоб): different-subject → past form
-
-Both are taught at B1 level. The module focuses on the second pattern (different-subject щоб + past), which extends from the prerequisite b1-29 (same-subject щоб + infinitive).
+**Alignment**: This module covers both strands of §4.4.3 simultaneously — the purpose clause (підрядне мети) and the object/volitional clause (з'ясувальна підрядна) — which are united by the same surface form: щоб + past tense verb. The pedagogical synthesis is sound: both constructions require щоб + past form when the subordinate subject differs from the main clause subject.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Frequency (GRAC) | IPM | Key collocations / notes |
-|------|-----------------|-----|--------------------------|
-| щоб | 2,405,687 | 1188.63 | Extremely high-frequency function word; top-100 Ukrainian words |
-| бажання | 151,945 | 75.07 | велике ~, мати ~, за власним ~м, ~ серця |
-| майбутнє | 118,778 | 58.69 | дбати про ~, мати ~, краще ~, ~є країни |
-| необхідність | 111,011 | 54.85 | гостра ~, у разі ~і, відчувати ~ |
-| прохання | 66,334 | 32.77 | звертатися з ~м, виконати ~, на ~ |
-| наказ | 62,138 | 30.70 | віддати ~, виконати ~, за ~ом |
-| зусилля | 78,951 | 39.01 | докладати ~ь, спільними ~ями |
-| вимагати | 36,775 | 18.17 | ~ від (+ gen), ~ уваги, ~ пояснень, ~ щоб... |
-| радити | 2,246 | 1.11 | ⚠ Very low — this counts only the bare infinitive form in GRAC. Full paradigm (раджу, радить, радимо, раджять) is more common. Do not treat this as low-frequency overall. |
-| узгодження | — | — | Metalinguistic term; not in GRAC corpus (technical register) |
-| підрядне речення | — | — | Metalinguistic term; use sparingly, explain on first mention |
+| Word | Frequency (GRAC) | IPM | Key collocations |
+|------|-----------------|-----|-----------------|
+| щоб | 2,405,687 | 1,188.63 | щоб знати, щоб розуміти, щоб він зробив |
+| бажання | 151,945 | 75.07 | велике бажання, мати бажання, за власним бажанням |
+| необхідність | 111,011 | 54.85 | гостра необхідність, у разі необхідності, нагальна необхідність |
+| зусилля | 78,951 | 39.01 | докладати зусиль, спільними зусиллями, чималі зусилля |
+| прохання | 66,334 | 32.77 | звертатися з проханням, виконати прохання, на прохання |
+| вимагати | 36,775 | 18.17 | вимагати уваги, вимагати пояснень, вимагати, щоб... |
+| узгодження | 21,475 | 10.61 | узгодження роду, узгодження числа, правило узгодження |
+| радити | 2,246 | 1.11 | радити другу, лікар радить, я раджу тобі |
 
-**Russianism alert**: кот→кіт type errors are not the primary risk here. Main risk is using **щоб** with infinitive in different-subject contexts (*"хочу тебе зробити" instead of "хочу, щоб ти зробив") — this is English/internationalisation transfer, not Russian.
+**Note on `радити`**: Surprisingly low at 1.11 IPM. The form `порадити` (perfective) is likely much more frequent. Content writing should use both aspect forms and include `порадити` in examples. The lemma `рекомендувати` (38+ IPM) is a higher-frequency near-synonym; mention it as a register alternative.
+
+All 10 vocabulary items verified in VESUM — all confirmed present.
 
 ---
 
 ## Cultural Hooks
 
-1. **Proverb "Щоб рибу їсти, треба у воду лізти"** — authentic Ukrainian folk saying (same-subject щоб + infinitive). Recorded in Ukrainian paremiology collections. Pedagogically ideal as a contrast anchor: this is NOT the target structure (same subject), which makes it a useful discrimination exercise. Source: mentioned in Voron Grade 9 textbook context; general Ukrainian folk heritage.
+1. **Ukrainian parental proverb — Voron Grade 9 textbook (p. 81)**: A Ukrainian folk story illustrates the щоб-construction naturally in a father-son transmission of wisdom: *"Мовив: «Живи, сину, так, щоб ні до кого першим не вітатись і їсти хліб з медом»."* The son misunderstands the literal meaning; the uncle explains the deeper sense — rising earliest to the fields (першим вітатись = to greet first = to be first in the field). This story from Плачинда is textbook-canon and illustrates purpose clauses embedded in Ukrainian cultural pedagogy. Can anchor the "батьківські очікування" section.
 
-2. **Proverb "Не говори пишно, щоб тобі на зле не вийшло"** — attested in Voron Grade 9 (p. 78), labelled as "Нар. творчість". Different-subject щоб: "говори" (you) → "тобі на зле не вийшло" (impersonal to you). Excellent authentic example of the target structure.
-
-3. **Family values framing** — Wikipedia on Сім'я (uk.wikipedia.org/wiki/Сім%27я): "Сім'я або родина — соціальна група з людей, які зазвичай перебувають у шлюбі, їхніх дітей та інших осіб... взаємна відповідальність, виховання дітей." The plan's cultural anchor "Батьки працюють, щоб діти мали краще майбутнє" is a high-frequency cultural sentiment aligning with this definition — the different-subject щоб structure mirrors real generational aspiration discourse.
+2. **State Standard canonical example (§4.4.3)**: *"Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного міста"* — the museum-going example is the official State Standard illustration. Useful as a starter example before moving to the volitional pattern. Lviv museums are real and verifiable (Національний музей у Львові, Історичний музей тощо).
 
 ---
 
 ## Common Learner Errors
 
-1. **English infinitive transfer**: English "I want you to go" → *"Я хочу тебе йти" — learners omit the conjunction and try to attach the second subject as an object with infinitive. Ukrainian requires: "Я хочу, щоб ти **йшов**." Root cause: English "want + NP + infinitive" pattern has no direct structural equivalent in Ukrainian.
+1. **English infinitive-complement transfer** → *"Я хочу тебе йти"* instead of *"Я хочу, щоб ти йшов/пішов"* — happens because English uses `want + object + infinitive` directly; Ukrainian requires the full subordinate clause with щоб. This is the most critical interference pattern for English speakers and must be explicitly addressed with minimal pair drilling.
 
-2. **Gender agreement omission**: When the subordinate subject is first/second person, learners forget the past tense must agree with that subject's gender: *"Він хоче, щоб я (female speaker) написав" → correct: "**написала**". Root cause: English past tense has no gender marking, so gender agreement feels redundant and is unconsciously skipped.
+2. **Gender agreement failure in the subordinate verb** → *"Він хоче, щоб я написав"* (when the speaker is female) instead of *"щоб я написала"* — learners treat the past-tense form as invariant (following English "wrote" which has no gender). Needs explicit table showing masculine/feminine/neuter/plural agreement.
 
-3. **Case government of trigger verbs**: хотіти governs genitive (хотіти **чого**?), чекати governs genitive or на + accusative — learners confuse these and produce *"хочу тебе" (accusative) where "хочу від тебе" or a щоб-clause is needed. Also: просити **кого** щоб... (accusative of person) vs. вимагати **від кого** щоб... (від + genitive).
+3. **Aspect confusion** → Conflating *"хочу, щоб ти робив"* (ongoing process — imperfective) with *"хочу, щоб ти зробив"* (complete result — perfective). English "I want you to do it" is ambiguous; Ukrainian forces an aspectual choice. Learners frequently default to perfective because it feels more "decisive," missing the imperfective for habitual/ongoing requests (*"Директор вимагає, щоб звіт завжди лежав на столі"*).
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-029 (Purpose clauses: щоб + infinitive — same-subject baseline established here)
-- **Prepares for**: b1-035 (Умовні речення: нереальна умова якби + past — overlapping form: both use past tense in subordinate clause; the difference is purpose vs. counterfactual)
+- **Builds on**: `b1-29` (purpose clauses щоб + infinitive, same-subject — the prior module in the sequence)
+- **Prepares for**: `b1-35` (умовні речення: нереальна умова якби — the conditional mood, which uses the identical past-form morphology), `b1-36` (implied in plan note about умовний спосіб)
 
-**Key pedagogical bridge**: The form щоб + past is identical in appearance to the conditional якби + past. The module should explicitly note that both structures use the past tense form in the subordinate clause, but their functions differ entirely. This distinction will be critical for b1-035.
+**Key structural insight for content writing**: The щоб + past form taught here IS the Ukrainian subjunctive/conditional mood base — the same form used in `якби` conditionals. Making this connection explicit prepares learners conceptually for b1-35 without pre-teaching it. Frame щоб + past form as "the mood that communicates wishes directed at others."
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered — no targeted video search performed; discover phase handles this)
+- (none encountered during this research phase)
 
 ---
 
 ## Notes for Content Writing
 
-- **Decolonized framing alert**: The Voron Grade 9 textbook (tier 2, 2017) uses the label "рос. придаточные предложения цели" as a glossing device — this Soviet-era comparative pedagogy must NOT appear in our content. Describe purpose clauses in Ukrainian on Ukrainian terms only.
-- **Form confusion with умовний спосіб**: Learners and some older textbooks call щоб + past form "умовний спосіб" (conditional/subjunctive mood). The plan wisely introduces this term gently. The form itself is identical to the past tense — it is context (conjunction) that signals function. This is the key insight to deliver in the grammar section.
-- **Aspect contrast** (доконаний vs. недоконаний in subordinate clause): "хочу, щоб ти **читав**" (ongoing/habitual) vs. "хочу, щоб ти **прочитав**" (completed result) — this is a high-value B1 distinction that is rarely taught explicitly. Include 4–6 contrasting pairs with clear semantic difference.
-- **Trigger verb list**: The plan's list (хотіти, просити, вимагати, радити, бажати, чекати) is accurate. Add наказувати, дозволяти, забороняти for richer coverage. These all select the same щоб + past construction.
-- **Punctuation**: Comma before щоб is mandatory when introducing a subordinate clause of purpose or with different subjects — explicitly flag this as a writing skill.
-- **Word budget reminder**: 4000 words required. The cultural dialogues section (1200 words) is the largest section and carries the most authentic load — ensure all three dialogues are substantial (300–400 words each), not sketchy exchanges.
+- The two constructions in §4.4.3 (purpose clause + volitional/object clause with щоб) share identical morphology but differ in function. Present them as one unified system: "when subjects differ, щоб always takes past tense." Avoid introducing the term "з'ясувальна підрядна" — the plan correctly omits it. "Підрядне мети" is the learner-facing label.
+- The `радити` / `порадити` pair should appear in both aspect forms in examples.
+- `рекомендувати` (higher-frequency formal synonym for `радити`) is worth a brief callout in the medical/professional dialogue context.
+- Voron Grade 9 textbook (tier 2) is the primary school-level source; Avramenko Grade 9 (tier 2) covers the same §24 topic (підрядні мети). Both are available via RAG for content-phase verification.
+- Avoid any comparison with Russian syntax patterns. Frame this as a distinctly Ukrainian construction: "Ukrainian expresses influence on others' actions through the щоб + past-form system — a unified mood form that encodes the speaker's will directed outward." Portuguese `para que + subjunctive` is a non-Russian parallel if cross-linguistic comparison is helpful.
+- The proverbs in the plan (*"Щоб рибу їсти, треба у воду лізти"*, *"Під лежачий камінь вода не тече"*) are authentic Ukrainian folk material — confirmed appropriate for cultural anchoring.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Складнопідрядні речення](https://uk.wikipedia.org/wiki/Складнопідрядне_речення) (Вікіпедія)
 
 ### Textbook References (RAG)
 

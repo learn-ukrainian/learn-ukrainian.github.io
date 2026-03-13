@@ -3,9 +3,16 @@
   "slug": "checkpoint-aspect-comparison",
   "mode": "v5",
   "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:37:58Z",
+      "note": "merged-into-research"
+    },
     "research": {
-      "status": "failed",
-      "ts": "2026-03-12T10:11:47Z"
+      "status": "complete",
+      "ts": "2026-03-12T15:37:58Z",
+      "task_id": "v5-checkpoint-aspect-comparison-pA",
+      "mode": "full"
     }
   }
 }

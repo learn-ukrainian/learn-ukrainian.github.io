@@ -1,0 +1,155 @@
+discovered_at: '2026-03-12T23:41:01.867563+00:00'
+query_keywords:
+- Нова українська історіографія після 1991
+- Перше десятиліття
+- 1991-2000
+- Друге десятиліття
+- 2000-2014
+- Декомунізація
+- '2015'
+- Інститут національної пам'яті
+- Сучасний стан
+- 2022+
+- Виклики і перспективи
+- Analyze the causes and consequences of нова українська історіографія після 1991
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=2PrthVAZRro
+  channel: Реальна Історія
+  title: The entire history of Ukraine in 30 minutes. «The real history» with Akim
+    Galimov
+  relevance_score: 0.4
+  relevance_note: The video provides a general overview of Ukrainian history from
+    ancient times, covering the origins of Ukraine and its people. While the channel
+    is a reputable source for Ukrainian history, the module's focus is specifically
+    on 'new Ukrainian historiography after 1991', i.e., the *writing and interpretation*
+    of history since independence, rather than a chronological account of historical
+    events. The video's content is tangentially related as it provides general historical
+    context but does not address the module's specific focus on historiographical
+    shifts post-1991.
+  transcript_excerpt: До війни історія точно не була пріоритетним питанням для більшості
+    українців. Але тепер все починає змінюватись і чимало з нас хочуть дізнатися історію
+    власної країни.
+  embed_suggestion: After section 'Вступ — Історія для нової держави'. The video's
+    opening discusses the renewed interest in Ukrainian history, which could provide
+    context for the emergence of new historiographical approaches post-1991, though
+    the video itself then delves into ancient history.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0004
+  text: "— на початку \nXXI  ст. Періоди історії України\nДавня історія\nСередньо-\n\
+    вічна історія\nНова історія\nНовітня історія\nI період\nII період\nI період\n\
+    II період\nБлизько \n1  млн ро-\nків тому  — \nV  ст. н. е. V  — кінець \nXV \
+    \ ст. XVI—\nXVIII  ст. Кінець \nXVIII  — \nпочаток \nXX  ст. 1914—\n1945  рр.\
+    \ 1945  р. — \nпочаток \nXXI  ст. ?? Який період історії України ви вивчатимете\
+    \ цього року?"
+  section_title: Сторінка 5
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0005
+  text: 'е. Середньовічна історія
+
+    V  ст. н. е. — кінець XV  ст. Нова історія
+
+    XVI  — початок XX  ст. Новітня історія
+
+    1914  р. — початок XXI  ст.'
+  section_title: Сторінка 5
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0005
+  text: "Національно-визвольна війна українського народу середини \nХVІІ ст. (Хмельниччина).\
+    \ Створення Української козацької \nдержави. Боротьба за збереження державності.\
+    \ Ліквідація \nКозацької держави\nЧетвертий\n1764  р. — кінець XVIII ст. Перехід\
+    \ українських земель під імперську владу\n\e\n\e Працюємо в  парах. Перегляньте\
+    \ зміст підручника. З’ясуйте, які теми  \nви розглянете, вивчаючи періоди історії\
+    \ України Ранньомодерної доби. Працюємо з джерелом\nrnk.com.ua/110281\nЗі статті\
+    \ «Історія України: \nРанній Новий ч"
+  section_title: Сторінка 5
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0003
+  text: "5\n§ 1. Вступ\n§ 1. Вступ\n\e\n\e\n1. Який період історії України ви вивчали\
+    \ минулого року? Назвіть його хроно-\nлогічні межі. 2. Які події Нової історії\
+    \ України кінця XVIII  — початку XX  ст. ви \nвважаєте найважливішими? Поясніть\
+    \ свою точку зору. 3. Яким був регіональний \nподіл та адміністративно-територіальний\
+    \ устрій українських земель у складі Росій-\nської та Австро-Угорської імперій\
+    \ на початку XX  ст.? 4. Яку політику здійснюва-\nли імперські уряди щодо українського\
+    \ населення на початку XX  ст.? 5. Н"
+  section_title: Сторінка 5
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0006
+  text: "4\n§ 1. Повторення. Вступ\n§ 1. повторення. Вступ\nнаВчальна мета:\nактуалізувати\
+    \ знання про події \nпершого періоду Новітньої історії \nукраїни та визначити\
+    \ основні події \nі тенденції розвитку україни й світу \nв 1945 р. — на початку\
+    \ ХХІ ст. пРиГадайте\n1. Назвіть хронологічні межі першого\nперіоду Новітньої\
+    \ історії україни. 2. Які\nісторичні події відбулися впродовж\n1914—1945 рр.?\
+    \ Складіть перелік\nдоленосних для світу та україни подій. Поясніть, чому ви вибрали\
+    \ саме\nїх. 3. Поясніть, у чому полягала сутн"
+  section_title: Сторінка 6
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6078845262527466
+  chunk_id: 3588aaff_c0012
+  text: "До речі, хоч історію української літератури узвичаєно\r\nділити на щойно\
+    \ згадані три основні етапи, можна постулювати, що цей останній\r\nетап, — новітньої\
+    \ української літератури, XIX і XX ст., — таки ділиться, за\r\nперіоду революції\
+    \ й удержавлення української літератури, на два фундаментально\r\nвідмінні етапи\
+    \ і що вони, може, більше, ніж в інших літературах,\r\nхарактеризуються саме перервністю\
+    \ традицій, тем, функцій і ролей читача тощо.\r\nЦей перелом не так між літературою\
+    \ XIX і XX ст., як між літерату"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.6059538722038269
+  chunk_id: fbf8bdff_c0023
+  text: "10. Загальна схема розвитку української літератури\r\nвиглядає (на думку\
+    \ автора книги) так:\n\nІ. Доба монументального стилю — 11 ст.\n\nII. Доба орнаментального\
+    \ стилю — 12-13 ст.\n\nIII. Переходова доба — 14-15 ст. (від цього часу\r\nзалишилося\
+    \ надто мало пам’яток, які, до того, є великою мірою компілятивними\r\nтворами\
+    \ або творами, що стоять на окраї літератури).\n\nIV. Ренесанс та реформація —\
+    \ кінець 16 ст.\n\nV. Барокко — 17-18 ст.\n\nVI. Клясицизм — кінець 18 ст. — 40\
+    \ роки 19 ст.\n\nVII. Романтика — кінець 20-"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5996543169021606
+  chunk_id: feaa5fa7_c0022
+  text: "Дві перші совєтські окупації (543). Третя окупація\r\nУкраїни большевиками\
+    \ і політика »воєнного комунізму« (1919 — 21 pp.) (544).\r\n»Нова економічна політика«\
+    \ (1922 — 30) (546). »Українізація« (547). Ухили в\r\nком. партії (549). Криза\
+    \ большевізму й зріст бюрократії (550). Ліквідація\r\nприватного господарства.\
+    \ Колективізація (550). Голод 1933 р. (551). Боротьба\r\nпроти укр. культури (552).\
+    \ Сталінська конституція (553). Господарство України\r\nперед війною (554). »Єжовщина«\
+    \ (554). Після »єжовщини« (554) Д"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "capstone-research",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T22:02:26Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T22:02:26Z",
+      "task_id": "v5-capstone-research-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,111 @@
+discovered_at: '2026-03-12T20:56:17.695741+00:00'
+query_keywords:
+- Rental Accommodation
+- оренда
+- зняти
+- квартира
+- Презентація лексики
+- Vocabulary Presentation
+- 'Контекстне читання: Оголошення'
+- 'Reading Context: Ads'
+- 'Діалог: Огляд квартири'
+- 'Dialogue: Viewing the Apartment'
+- Комунальні послуги та умови
+- Utilities and Conditions
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=a8zn70qzgfg
+  channel: Ukrainian Lessons
+  title: FMU 1-41 | How to look for a place to rent in Ukraine | 5 Minute Ukrainian
+  relevance_score: 0.9
+  relevance_note: The video directly addresses how to find an apartment for rent in
+    Ukraine, discussing common platforms like OLX, Telegram, and Facebook, and introduces
+    key vocabulary related to rental accommodation.
+  transcript_excerpt: Я шукаю квартиру в Києві де це краще робити так щоб без ріелтора
+    ти дивився на сайті olx ні на якому сайті о X OLX це найбільший сайт оголошень
+    в Україні.
+  embed_suggestion: 'After section: Контекстне читання: Оголошення'
+- url: https://www.youtube.com/watch?v=YKSKb5u4h48
+  channel: Ukrainian Lessons
+  title: ULP 2-43 | Шукаю квартиру – Особливі форми множини |  Looking for an apartment
+    + Special plural f...
+  relevance_score: 0.9
+  relevance_note: This video focuses on the verbs 'знімати квартиру' (to rent an apartment)
+    and 'здавати квартиру' (to rent out an apartment), and then delves into detailed
+    vocabulary for different rooms within an apartment.
+  transcript_excerpt: 'Сьогодні ми знову будемо говорити про житло А про квартири
+    будемо знімати квартиру в Києві. Let''s learn The types of кімнати: Кухня, спальня,
+    вітальня, коридор, ванна, туалет.'
+  embed_suggestion: 'After section: Презентація лексики'
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-ukrmova-golub-2023_s0236
+  text: "232\n569   Змоделюйте три різні ситуації, для яких важливе значення має \n\
+    оголошення. Запропонуйте текст оголошення до однієї з них. На-\nскільки важливо,\
+    \ щоб текст був написаний грамотно?\n570   Складіть текст оголошення, у якому\
+    \ обов’язковим компонентом \nє опис зовнішності тварини або рослини.\n571   Підготуйте\
+    \ текст усного оголошення на одну з пропонованих тем\nі виголосіть його.\n1. Інформувати\
+    \ першокласників про важливу подію. \n2. Прохання допомогти знайти братика / сестричку,\
+    \ що загу-\nбився / заг"
+  section_title: Сторінка 232
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0078
+  text: "НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ \nЗ ДІЄСЛОВАМИ\nПрочитайте речення. Простежте,\
+    \ \nякі різні дії означає слово іде.\nскладаю\nІде катер. Іде поїзд. Іде зима.\
+    \ Іде час. Іде концерт.\n• Замініть у кожному реченні слово іде дієсловом, близьким\
+    \ \nза значенням. Скористайтеся довідкою. Запишіть речення\nза зразком.\nІде катер.\
+    \ \nПливе катер.\n? годинник\nДовідка\nВідбувається, їде, минає, пливе, настає.\n\
+    б| Розглянь малюнки. Напиши, хто як пересувається,\nвикориставши дієслова з довідки.\n\
+    На які питання \nвідповідають \nдієслов"
+  section_title: Сторінка 80
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0129
+  text: "131\n\t\n  \aПеревірте свої міркування за поданим висновком. \nкрісло\nзручне\n\
+    Шукаймо \nприкметники до назв \nпредметів інтер’єру!\n\t \t\n3   \aСклади усну\
+    \ розповідь на тему «Моя кімната», використову-\nючи іменники з довідки. Добери\
+    \ до іменників прикметники \nі використай їх у тексті. \nКімната, двері, вікно,\
+    \ стеля, стіни, коридор, шафа, стіл, стілець, \nтумбочка, ліжко, підлога. \nДовідка\n\
+    Навчаюся визначати рід і число прикметників  \nза іменником\nРід і число прикметників\
+    \ визначаються за формами \nроду і числа і"
+  section_title: Сторінка 131
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0019
+  text: "21\n36. 1. Попрацюйте з таблицею. Доберіть і запишіть відсутні \nречення.\n\
+    ВИДИ РЕЧЕНЬ\nЗа метою  \nвисловлювання\nЗа інтонацією\nНеокличні\nОкличні\nРозповідні\
+    \ \n(про щось розпо-\nвідається або пові-\nдомляється)\nОсінь вміє ода-\nряти\
+    \ сотнями \nдарів.\nПитальні \n(про щось  \nзапитується)\nЧи вміє осінь \nодаряти\
+    \ сотнями \nдарів?!\nСпонукальні \n(висловлюється \nспонукання до дії: \nпрохання,\
+    \ пора-\nда, застереження, \nзаборона, заклик, \nнаказ тощо)\n2. З якою метою\
+    \ ми вживаємо розповідні речення? пи-\nтальні речення? спо"
+  section_title: Сторінка 21
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

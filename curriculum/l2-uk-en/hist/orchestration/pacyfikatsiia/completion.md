@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 99 — E2E
+FAIL: pipeline hist 99
 
   Module:   pacyfikatsiia
   Track:    hist
-  Mode:     e2e
-  Words:    7558 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  FAIL
-  Date:     2026-02-25T23:19:21Z
+  Date:     2026-03-13T01:17:58Z

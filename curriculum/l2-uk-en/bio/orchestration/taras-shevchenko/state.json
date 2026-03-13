@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "taras-shevchenko",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T20:01:34Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T20:01:34Z",
+      "task_id": "v5-taras-shevchenko-pA",
+      "mode": "full"
+    }
+  }
+}

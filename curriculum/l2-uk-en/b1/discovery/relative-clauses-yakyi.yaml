@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:52:41.267911+00:00'
+discovered_at: '2026-03-12T21:34:02.661538+00:00'
 query_keywords:
 - 'Підрядні означальні: який'
 - Relative Clauses with який
@@ -15,7 +15,27 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Підрядне_означальне_речення
+  title: Підрядне означальне речення
+  source: детальна стаття на Вікіпедії
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode157/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+relative+clauses
+  title: Ukrainian Relative Clauses
+  source: відео пояснення та приклади
+  relevance_score: 0.95
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+grammar+podcast
+  title: Ukrainian Grammar Podcast
+  source: подкаст уроки для аудіального навчання
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0268

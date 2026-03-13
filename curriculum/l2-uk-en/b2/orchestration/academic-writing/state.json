@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "academic-writing",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:45:10Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:45:10Z",
+      "task_id": "v5-academic-writing-pA",
+      "mode": "full"
+    }
+  }
+}

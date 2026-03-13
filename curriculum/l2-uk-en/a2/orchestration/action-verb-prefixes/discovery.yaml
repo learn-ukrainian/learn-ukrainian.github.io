@@ -1,0 +1,224 @@
+discovered_at: '2026-03-12T16:26:46.103707+00:00'
+query_keywords:
+- Action Verb Prefixes
+- дієслово
+- відчинити
+- відкрити
+- зачинити
+- Логіка LEGO в українських дієсловах
+- The LEGO logic of Ukrainian verbs
+- Світ префіксів пере-, до- та по-
+- The world of prefixes Pere-, Do-, and Po-
+- Відчинити чи відкрити? Битва за простір
+- To open or to reveal? The battle for space
+- Трансформація смислів
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=zVdb0g7KDC0
+  channel: Ukrainian Lessons
+  title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+    and perfective verbs in...
+  relevance_score: 0.9
+  relevance_note: This video explicitly discusses the perfective and imperfective
+    aspects of verbs ('доконаний і недоконаний вид дієслів') and the 'зміни які відбуваються
+    при утворенні доконаного виду' (changes that occur when forming the perfective
+    aspect), which is highly relevant to the concept of verb prefixes and their role
+    in transforming verb meanings.
+  transcript_excerpt: поговоримо ще трохи про доконаний і недоконаний вид дієслів
+    а саме про чергування зміни які відбуваються при утворенні доконаного виду
+  embed_suggestion: 'After Презентація: Світ префіксів пере-, до- та по- or Відчинити
+    чи відкрити? Битва за простір – to deepen the understanding of how prefixes contribute
+    to aspectual changes and semantic transformation.'
+- url: https://www.youtube.com/watch?v=_lvdp6hRm1U
+  channel: Bright Kids Ukrainian
+  title: Cooking verbs in Ukrainian. Дієслова для готування.
+  relevance_score: 0.5
+  relevance_note: The video focuses on cooking verbs, which are 'дієслова', but does
+    not specifically cover prefixes or how they transform meaning. It's verb-related
+    vocabulary rather than prefix grammar.
+  transcript_excerpt: '[музика] cooking [музика] мити чистити [музика] різати розбивати
+    [музика] сипати збивати'
+  embed_suggestion: Not recommended for direct embedding in this grammar-focused module,
+    as it does not address prefixes.
+- url: https://www.youtube.com/watch?v=TBYyOdHOCCk
+  channel: Ukrainian Lessons
+  title: 'FMU 1-57 | Grammar Point: Verb conjugations in Ukrainian | 5 Minute Ukrainian'
+  relevance_score: 0.4
+  relevance_note: The video explains verb conjugations, a fundamental aspect of Ukrainian
+    verbs. While related to verbs, it does not directly address prefixes or their
+    impact on verb meaning transformation.
+  transcript_excerpt: в українській мові є дві дієвідміни дієвідміна means verb conjugation
+    and from Now on I will use this Word in ukrainianієвідміaієвідміa is a pattern
+    of verbs CH in the Present T inukrainian there are Only two suchatterns
+  embed_suggestion: Not recommended, as the focus is on conjugation patterns rather
+    than prefixes.
+- url: https://www.youtube.com/watch?v=xGrdJHym-9E
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Where are u from? Countries, languages | Genitive
+    case,  Verb conjugations'
+  relevance_score: 0.2
+  relevance_note: This video covers genitive case, noun gender, plural nouns, and
+    verb conjugations, but does not mention verb prefixes or the transformation of
+    verb meanings.
+  transcript_excerpt: Today we will learn several grammar points such as a genitive
+    case of nouns when used to inform about someone's origin, gender of nouns, masculine
+    and feminine, plural of form of nouns, and how to conjugate verbs of the first
+    conjugation type.
+  embed_suggestion: Not relevant to the module's topic.
+- url: https://www.youtube.com/watch?v=A49aZdwMz6k
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Hobbies | Ukrainian music | Palatalization, Verb
+    + infinitive, Noun cases'
+  relevance_score: 0.2
+  relevance_note: This video discusses verb + infinitive constructions, palatalization,
+    pronouns, negation, and noun cases. It does not cover verb prefixes or their semantic
+    impact.
+  transcript_excerpt: today we will learn some new grammar points such as verb plus
+    infinitive construction, palatalization, interrogative relative pronoun, який,
+    negation, and we will touch a bit dative and instrumental cases.
+  embed_suggestion: Not relevant to the module's topic.
+- url: https://www.youtube.com/watch?v=PLexOoy6MUY
+  channel: Bright Kids Ukrainian
+  title: Verbs & infinitives in Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
+  title: Ukrainian Verb Prefixes
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/27-1/
+  title: 'Dobra Forma 27-1: Verbal Aspect (Introduction)'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/episode81/
+  title: Meeting on a plane in Ukrainian + Prefixes ви- and пере-
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 81
+- url: https://www.ukrainianlessons.com/episode84/
+  title: At the bank in Ukraine + Prefixes об- and від-
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - vocabulary
+  - idioms
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 84
+- url: https://www.ukrainianlessons.com/episode87/
+  title: Teacher’s Day in Ukraine + Prefixes роз-, про-
+  source: ukrainianlessons.com
+  relevance_score: 0.30000000000000004
+  topics:
+  - grammar
+  - verbs
+  - conjugation
+  - culture
+  - holidays
+  - vocabulary
+  - idioms
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 87
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0076
+  text: "§ 14 СЛОВА — НАЗВИ Дій \nпредметів (дієслова)\nНАВЧАЮСЯ ВИЗНАЧАТИ СЛОВА —\
+    \ НАЗВИ \nдій предметів\nу, — учителька\nПрочитай і розкажи \n; у класі.\n1\n\
+    визначаю\nЯ — учитель\nщо робить?\n— - — ■*\nщо робив?\nщо зробить?\nВ українській\
+    \ мові є слова — назви дій предметів, \nякі відповідають на питання що робити?\
+    \ \nщо робить? що роблять? що робив? що зробив? \nщо буде робити? що зробить?.\
+    \ Це дієслова.\nВивчіть напам'ять уривок із \nі розкажіть одне одному.\nДієслово\
+    \ — слово діє: \nходить, робить, носить, сіє. \nСлово плаче"
+  section_title: Сторінка 78
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0064
+  text: "НАВЧАЮСЯ ВЖИВАТИ ІМЕННИКИ В МОВЛЕННІ\n40 Додайте слова — назви предметів\
+    \ \nіз довідки. Поясніть свій вибір. а\nвідчиняти ? \nрозгортати ? \nвідкривати\
+    \ ?\nзачиняти ? \nзгортати ? \nзакривати ?\nдоповнюю \nскладаю\nДовідка\nВікно,\
+    \ блокнот, магазин, підручник, зошит, двері, \nпортфель.\n41| Дайте дітям імена\
+    \ і прочитайте малюнковий текст.\nУ музичній школі діти навчаються грати на різних\
+    \ \nмузичних інструментах.\nграє на г\nна музичних \nінструментах?\nХто з вас\
+    \ грає\nнавчається гри на 1В\nзахоплюється грою на\nвже трішк"
+  section_title: Сторінка 66
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0126
+  text: "128\n3. За допомогою ножиць вирізати малюнок.\n4. Розгорнути складений папір.\
+    \ Ажурна серветка готова.\n2. У якій формі вжито дієслова в тексті інструкції?\n\
+    3. Складіть і запишіть інструкцію: I варіант — до відомої \nгри; II варіант —\
+    \ для приготування страви; III варіант — \nз виготовлення вітальної листівки.\
+    \ Використовуйте діє-\nслова в неозначеній формі.\n270. Склади і запиши текст\
+    \ поради однокласникам, як го-\nтуватися до контрольної роботи з української мови.\n\
+    § 41. Змінювання дієслів теперішнього часу"
+  section_title: Сторінка 128
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0078
+  text: "НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ \nЗ ДІЄСЛОВАМИ\nПрочитайте речення. Простежте,\
+    \ \nякі різні дії означає слово іде.\nскладаю\nІде катер. Іде поїзд. Іде зима.\
+    \ Іде час. Іде концерт.\n• Замініть у кожному реченні слово іде дієсловом, близьким\
+    \ \nза значенням. Скористайтеся довідкою. Запишіть речення\nза зразком.\nІде катер.\
+    \ \nПливе катер.\n? годинник\nДовідка\nВідбувається, їде, минає, пливе, настає.\n\
+    б| Розглянь малюнки. Напиши, хто як пересувається,\nвикориставши дієслова з довідки.\n\
+    На які питання \nвідповідають \nдієслов"
+  section_title: Сторінка 80
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0102
+  text: "104\n\t Добери з тексту сполучення слів, у яких дієслова вжиті в пере-\n\
+    носному значенні. Запиши.  \n\t Випиши речення із фразеологізмами. Який із них\
+    \ відповідає \nзначенню «зазнати невдачі»? Підкресли дієслова, які вжиті в \n\
+    неозначеній формі. Познач суфікси.\n247.\t\tСклади й запиши три речення з дієсловами,\
+    \ які вжито в \nпереносному значенні.\n248.\t\tПрочитай дитячу мирилку.\nВишнi\
+    \ спілі розвиваються,\nСинє озеро розливається,\nЯсне сонечко усмiхається,\nЖито\
+    \ силоньки набирається.\n\t Добери з вірша дієслова до"
+  section_title: Сторінка 104
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

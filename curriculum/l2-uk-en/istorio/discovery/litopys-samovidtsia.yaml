@@ -1,0 +1,197 @@
+discovered_at: '2026-03-13T00:39:28.784280+00:00'
+query_keywords:
+- 'Літопис Самовидця: Голос очевидця'
+- Питання авторства
+- Зміст і структура
+- Особливості стилю
+- Фрагмент
+- Критика джерела
+- 'Analyze the causes and consequences of літопис самовидця: голос очевидця'
+- Evaluate the historical significance of найстаріший козацький літопис
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0416
+  text: Поясніть розділові знаки в тексті. Випишіть мовні засоби розмовного стилю,
+    схарактеризуйте їх.
+  section_title: Сторінка 235
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0265
+  text: "1\nПравила  читання\n1\nПершочергово у тексті твору шукай відповіді \nна\
+    \ запитання:\n• Хто діє? Які його / її вчинки?\n• Де і коли відбуваються події?\n\
+    • Кого або що описує автор/авторка?\n2\n \nПри повторному читанні:\n1. Виділи\
+    \ деталі в тексті (портреті, пейзажі, \nописі предмета чи приміщення).\n2. Проаналізуй,\
+    \ яку роль вона відіграє:\n• у портреті: передає зовнішню \nхарактеристику чи\
+    \ звертає увагу на \nвнутрішні якості героя / героїні;\n• у пейзажі: відтворює\
+    \ різноманітні стани \nприроди чи внутрішній стан г"
+  section_title: Сторінка 257
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0330
+  text: ". . . . . . . . . . . . . . . . . . . . . . 193\n§ 45 \nВимоги до вживання\
+    \ синтаксичних одиниць у різних стилях  . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . 202\n \nЗапитання і завдання для самоконтролю . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 205"
+  section_title: Сторінка 222
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5748554468154907
+  chunk_id: b167837e_c0001
+  text: "Однією з найвидатніших\r\nісторіографічних пам’яток і одним з найдостовірніших\
+    \ історичних джерел XVII ст.\r\nє літопис Самовидця. Ця пам’ятка має цілком світський,\
+    \ загальноукраїнський\r\nхарактер. Поряд з іншими літописними творами початку\
+    \ XVIII ст., такими, як\r\nлітописи Граб’янки і Величка, праця Самовидця є чи\
+    \ не винятковим за своєю\r\nсамобутністю й оригінальністю явищем української писемності\
+    \ XVII ст. Як\r\nісторичне джерело (його автор був очевидцем подій) літопис Самовидця\
+    \ містить\r\nповідомлення про "
+  work: Літопис Самовидця
+  author: Невідомий
+  year: 1702
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/samovyd/sam01.htm
+- score: 0.5677816867828369
+  chunk_id: b167837e_c0014
+  text: "Подібні місця переписувачі\r\nлегко зводили в одне оповідання. Так, у пізніших\
+    \ списках з’єднано в одне\r\nоповідання події 1698 і 1699 рр.\n\nЧимало сторінок\
+    \ літописної\r\nчастини праці мають яскраву форму щоденника історичних подій і\
+    \ явищ.\n\nДумка О. Левицького про те,\r\nщо 1672 р. кінчається історичний виклад\
+    \ подій і починається літописний, згодом\r\nбула уточнена М. Петровським (він\
+    \ слушно історичну частину продовжив до 1677\r\nр.) 2.\n\nТекстологічний аналіз\r\
+    \nлітопису Самовидця дав можливість ученим, переду"
+  work: Літопис Самовидця
+  author: Невідомий
+  year: 1702
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/samovyd/sam01.htm
+- score: 0.5656324625015259
+  chunk_id: 9896ad09_c0283
+  text: "Форма «Слова».\r\n Як бачимо, невважаючи на більш ніж\r\nстолітню працю над\
+    \ «Словом» палеографів, лінгвістів, фольклористів та істориків,\r\nчитається його\
+    \ текст і досі місцями тяжко, навіть дуже. Підчеркую — місцями, бо\r\nзнов єсть\
+    \ багато таких місць, що виглядають немов тільки що проспівані, з\r\nзахованням\
+    \ ритму, з явними прикметами первісної поетичної фактури. Чим\r\nпояснюються отсі\
+    \ темні плями в тексті і така неодностайність його: сорозмірна\r\nясність і гладкість\
+    \ в одних частях, такі чорториї в других"
+  work: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush2.htm

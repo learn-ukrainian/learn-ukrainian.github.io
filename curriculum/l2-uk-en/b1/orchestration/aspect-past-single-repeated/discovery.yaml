@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:49:56.076403+00:00'
+discovered_at: '2026-03-12T20:55:51.542371+00:00'
 query_keywords:
 - 'Вид у минулому: одного разу vs щодня'
 - 'Тест: Два спогади'
@@ -16,31 +16,31 @@ error: null
 warning: No videos found across channels
 videos: []
 blogs:
+- url: https://uk.wikipedia.org/wiki/Дієслівний_вид
+  title: Вид дієслова на Вікіпедії
+  source: докладна стаття
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/ukrainian-verb-prefixes/
   title: Ukrainian Verb Prefixes
   source: ukrainianlessons.com
-  relevance_score: 0.95
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
   title: Verb Aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.95
+  relevance_score: 1.0
   topics: []
 - url: https://www.ukrainianlessons.com/lesson/92/
   title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
     aspect in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 1.0
   topics: []
-- url: https://www.ukrainianlessons.com/grammar-past-tense/
-  title: Past Tense in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.75
-  topics: []
-- url: https://www.ukrainianlessons.com/grammar-future/
-  title: Future Tense in Ukrainian
-  source: ukrainianlessons.com
-  relevance_score: 0.75
+- url: https://www.youtube.com/results?search_query=ukrainian+verb+aspect
+  title: Ukrainian Aspect Video
+  source: відео пояснення
+  relevance_score: 1.0
   topics: []
 rag_chunks:
 - score: 0.5

@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 119 — E2E
+FAIL: pipeline hist 119
 
   Module:   shliakh-nezalezhnosti
   Track:    hist
-  Mode:     e2e
-  Words:    3755 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  FAIL
-  Date:     2026-02-25T23:51:19Z
+  Date:     2026-03-13T01:21:04Z

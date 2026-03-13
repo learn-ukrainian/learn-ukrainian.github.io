@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "scheduling-appointments",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:48:50Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:48:50Z",
+      "task_id": "v5-scheduling-appointments-pA",
+      "mode": "full"
+    }
+  }
+}

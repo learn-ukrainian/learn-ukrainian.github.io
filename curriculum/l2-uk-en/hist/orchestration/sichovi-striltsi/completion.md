@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 89 — E2E
+FAIL: pipeline hist 89
 
   Module:   sichovi-striltsi
   Track:    hist
-  Mode:     e2e
-  Words:    7076 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T22:05:53Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:16:26Z

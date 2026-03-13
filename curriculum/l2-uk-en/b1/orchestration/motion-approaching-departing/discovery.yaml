@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:24:12.870411+00:00'
+discovered_at: '2026-03-12T21:15:02.077817+00:00'
 query_keywords:
 - 'Рух: наближення і віддалення'
 - 'Діагностика: Вступний тест'
@@ -15,7 +15,32 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Дієслово_руху
+  title: Префікси дієслів руху
+  source: Вікіпедія
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode47/
+  title: Food festivals + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/fmu42/
+  title: Vocabulary booster! Housing and rooms in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+motion+verbs
+  title: Spatial prefixes in Ukrainian
+  source: відео пояснення
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0137

@@ -1,0 +1,157 @@
+discovered_at: '2026-03-12T17:36:42.960131+00:00'
+query_keywords:
+- Practical Warm-up
+- текст
+- питання
+- запитання
+- Setting the Stage
+- 'Навички читання: Скарби Книжкового Форуму'
+- 'Reading Skills: Book Forum Treasures'
+- 'Слухання та Говоріння: Активне сприйняття'
+- 'Listening & Speaking: Active Perception'
+- 'Письмо: Радіодиктант національної єдності'
+- 'Writing: Radio Dictation of National Unity'
+- Інтеграція та Підсумок
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=YXrsGXJeZ-k
+  channel: Ukrainian Lessons
+  title: ULP 2-70 | Електронний лист | Writing an email in Ukrainian – Review 66-69
+  relevance_score: 1.0
+  relevance_note: 'This video directly addresses ''Writing an email in Ukrainian,''
+    which perfectly aligns with the module''s ''Writing: Radio Dictation of National
+    Unity'' section and the broader writing skill focus.'
+  transcript_excerpt: сьогодні на подкасті ми повторимо трохи слова останніх п'яти
+    уроків а також я розповім вам як писати листи українською
+  embed_suggestion: 'After Письмо: Радіодиктант національної єдності -- as it directly
+    teaches a practical writing skill relevant to the module.'
+- url: https://www.youtube.com/watch?v=X6dkJPEnPmY
+  channel: Bright Kids Ukrainian
+  title: Ukrainian Alphabet - Lesson about the letter Г
+  relevance_score: 0.5
+  relevance_note: The video teaches a specific letter of the Ukrainian alphabet. While
+    foundational for reading, its focus is very granular, and the target audience
+    appears to be very young children, which may not align with the module's general
+    learner profile.
+  transcript_excerpt: одні на уроці української мови ми вивчимо цікаву літеру разом
+    із нашою господинею
+  embed_suggestion: 'After Навички читання: Скарби Книжкового Форуму -- if the module
+    aims to offer very basic phonics or alphabet review as a warm-up for reading skills.'
+- url: https://www.youtube.com/watch?v=x1kW08scie0
+  channel: Ukrainian with Olha
+  title: 'Я ти він вона воно ми ви вони #ukrainianlanguage #ukrainianlessons #learnukrainian'
+  relevance_score: 0.2
+  relevance_note: The video teaches personal pronouns, which is a specific grammar
+    point. While part of general language learning, it does not directly relate to
+    the practical warm-up skills (reading, listening, speaking, writing) as the primary
+    focus of the module.
+  transcript_excerpt: Я, ти, він, вона, воно, ми, ви, вони. Yeah.
+  embed_suggestion: Not applicable
+- url: https://www.youtube.com/watch?v=eC1N8Wov9iU
+  channel: Ukrainian with Olha
+  title: 'Будь ласка - Please / You are welcome #ukrainianlessons #ukrainianlanguage
+    #learnukrainian'
+  relevance_score: 0.2
+  relevance_note: The video teaches the phrase 'Будь ласка'. This is a specific vocabulary
+    item/phrase, not a broad skill warm-up in reading, listening, speaking, or writing.
+  transcript_excerpt: Скажіть, будь ласка, me please. Заходьте, будь ласка. Come in,
+    please. Сідайте, будь ласка. Sit down, please.
+  embed_suggestion: Not applicable
+- url: https://www.youtube.com/watch?v=3hhIb-RUF9U
+  channel: Bright Kids Ukrainian
+  title: Ukrainian Grammar - Topic 1
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=8JX72GmPMww
+  channel: Klopotenko
+  title: 'ХМЕЛЬНИЧЧИНА: легендарна ковбаса, білий борщ, фляки з печі і начинка | Застигла
+    АРИСТОКРАТІЯ'
+  relevance_score: 0.0
+  relevance_note: The video is a travel and cuisine vlog, completely unrelated to
+    the practical language skills (reading, listening, speaking, writing) or the warm-up
+    nature of the module.
+  transcript_excerpt: Хмельниччина - це місце, яке довго залишалося для мене загодкою.
+    Тут стільки аристократичних маєтків, ніби Галичина, але відчуття зовсім інші.
+  embed_suggestion: Not applicable
+- url: https://www.youtube.com/watch?v=8CdfB38PWMo
+  channel: Ukrainian Lessons
+  title: '1000 Most Useful Ukrainian Words : How To Use Anki'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-2_s0001
+  text: "ДОРОГІ ДІТИ!\nВи тримаєте в руках новий підручник, який допоможе вам \nнавчитися\
+    \ швидко і вдумливо читати. Уміти читати — це не \nлише утворювати слова зі складів,\
+    \ а й розуміти зміст, відчу­\nвати красу мови. Герої оповідань, віршів, казок\
+    \ збагатять \nваші знання про Україну, важливість навчання, допоможуть \nпоринути\
+    \ в прекрасний світ природи, розкажуть про став­\nлення до тварин. А ще ви дізнаєтеся,\
+    \ що таке дружба, прав­\nдивість, взаємодопомога, милосердя, як чинити в різних\
+    \ \nситуаціях, поводитися в "
+  section_title: Сторінка 3
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0026
+  text: "21\nВступ. Українська мова в житті українців. Види інформації . Робота з підручником\n\
+    Іноді, старанно прочитавши текст, ми не можемо запам’я-\nтати інформацію. Існують\
+    \ різні прийоми, які допоможуть упо-\nратися із цією проблемою.\nДля того, щоб\
+    \ краще запам’ятати прочитане, кілька разів \nповторіть його. Пригадайте, як ми\
+    \ запам’ятовуємо тексти пі-\nсень: спеціально їх не вчимо, але після кількох прослуховувань\
+    \ \nуже знаємо напам’ять. Проте велику книжку важко перечита-\nти кілька разів.\
+    \ Тому виділіть голо"
+  section_title: Сторінка 21
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0121
+  text: "Підготовка до виступу. Види читання і  записування тексту виступу. Естетика\
+    \ тексту \x1F\n85\n \n Обговоріть складені плани в  класі. Визначте: 1) найбільш\
+    \ детальний; 2) найне-\nсподіваніший; 3) найцікавіший.\n \n Складіть і  запишіть\
+    \ вступ до одного з  виступів за складеним  планом.\n \n Складіть і  запишіть\
+    \ закінчення (кінцівку) того  ж виступу.\n157. Підготуйте текст публічного виступу\
+    \ (запишіть ключові слова, доберіть \nі  систематизуйте матеріал, складіть план,\
+    \ за планом  — текст) на одну з  тем:\n— Берег"
+  section_title: Сторінка 85
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0002
+  text: "3\nДорогий друже!\nТи хочеш учитися читати?\nТи прагнеш спілкуватися?\nТи\
+    \ любиш фантазувати?\nТоді ця книга саме для тебе! \nВона допоможе тобі навчитися\
+    \ читати, \nвисловлювати думки й почуття, спілкуватися.\nУмовні позначення:\n\
+    \ \n — слухаю \n \n— досліджую мовлення\n \n — читаю \n — обговорюю малюнок\n\
+    \ \n — спілкуюся \n \n— мислю критично"
+  section_title: Сторінка 3
+  grade: 1
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0195
+  text: "188\nМОВЛЕННЄВИЙ ПРОСТІР\nТекст\nПригадайте!\nТекст — це певне повідомлення;\
+    \ сукупність речень, пов’я-\nзаних між собою за змістом.\nТема — це те, про що\
+    \ йдеться в тексті. Найчастіше тему \nвідображає заголовок тексту.\nПідтема (мікротема)\
+    \ — це частина загальної теми тексту, \nщо зазвичай розкривається в одному абзаці.\n\
+    Основна думка тексту — це те, заради чого був створений \nпевний текст, що хотів\
+    \ донести автор до своїх читачів.\nКлючові слова — це окремі слова чи словосполучення,\
+    \ \nякі визначають тему та "
+  section_title: Сторінка 191
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

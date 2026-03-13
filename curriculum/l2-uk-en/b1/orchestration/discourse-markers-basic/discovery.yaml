@@ -1,0 +1,140 @@
+discovered_at: '2026-03-12T17:26:15.138677+00:00'
+query_keywords:
+- 'Дискурсивні маркери: базові конектори'
+- Категорії та частотність
+- Categories and Frequency
+- Граматика та пунктуація
+- Grammar and Punctuation
+- Регістри та культура мовлення
+- Registers and Speech Culture
+- Читання та аналіз
+- Reading and Analysis
+- 'Практика та продукція: Діалоги'
+- 'Practice and Production: Dialogues'
+- basic discourse markers in context
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode108/
+  title: Kyiv tour + Participle in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode95/
+  title: My life in Kyiv (Voice message №3)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode91/
+  title: Asking for advice in Ukrainian + Using imperfective and perfective verb aspects
+    in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/discourse-markers/
+  title: Ukrainian Discourse Markers Guide
+  source: Ukrainian Lessons
+  relevance_score: 0.95
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0010
+  text: '. . . . 261
+
+    Орфографія. Графіка . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 263
+
+    Синтаксис. Пунктуація . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 266
+
+    СЛОВНИК ТЕРМІНІВ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 270
+
+    СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . 276
+
+    ПІДКАЗКИ  . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 5
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-golub-2023_s0263
+  text: '256
+
+    § 50. Ступені порівняння якісних прикметників, творення їх ................. 129
+
+    § 51. Прикметники твердої і м’якої груп. Відмінювання прикметників .... 132
+
+    § 52. Творення прикметників. Перехід прикметників в іменники ............ 135
+
+    § 53. Написання суфіксів прикметників ...............................................
+    138
+
+    § 54. Написання не з прикметниками ..................................................
+    141
+
+    § 55. Написання -н- і -нн- у прикметниках .......................................'
+  section_title: Сторінка 256
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0367
+  text: "239\nПУНКТУАÖäЙНА НОРÌА\n| 27. Пунктуаційна помилка. Тире між підметом і\
+    \ присудком \n \n та в неповному реченні  ...................................................\
+    \ 118\n| 28. Розділові знаки в простих реченнях, ускладнених \n \n звертаннями\
+    \ та вставними словами \n \n (словосполученнями, реченнями)  .....................................\
+    \ 123\n| 29. Розділові знаки в реченнях, ускладнених \n \n однорідними членами\
+    \ речення  ......................................... 128\n| 30. Ðозвиток мовлення\x11\
+    \ Есе на художньо-"
+  section_title: Сторінка 239
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-golub-2022_s0254
+  text: "254\n§ 27. Повторення вивченого з графіки в 1–4 класах. Особливості української\
+    \ графіки \n(відповідність звуків і графічних знаків, звук [ґ] і буква ґ) ......80\n\
+    § 28. Звукове значення букв я, ю, є та щ. Правила вживання апострофа ..............................................83\n\
+    § 29. Склад. Правила перенесення слів з рядка в рядок ...................86\n\
+    § 30. Милозвучність української мови. Правила милозвучності (чергування у–в, і–й,\
+    \ з–із–зі) ............89\n§ 31. Спрощення в групах приголосних ...."
+  section_title: Сторінка 254
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

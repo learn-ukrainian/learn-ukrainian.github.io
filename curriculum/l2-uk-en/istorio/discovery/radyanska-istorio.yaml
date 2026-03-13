@@ -1,0 +1,188 @@
+discovered_at: '2026-03-12T23:25:15.142537+00:00'
+query_keywords:
+- 'Радянська історіографія: Деформації'
+- Заборонені теми
+- Обов'язкові наративи
+- Тези 1954 року
+- Механізми контролю
+- Опір і альтернативи
+- Спадщина радянської історіографії
+- 'Analyze the causes and consequences of радянська історіографія: деформації'
+- Evaluate the historical significance of історія на службі партії
+- Trace the development of спадщина радянської історіографії
+- history
+- історія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0284
+  text: '3. Сформулюйте тези статті на тему: «Національна та соціальна структура населення
+
+    УРСР». 4. Підготуйте презентацію на тему: «Життєвий рівень населення в період
+    системної кризи
+
+    радянського ладу».'
+  section_title: Сторінка 156
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0433
+  text: "2015  р. ДЕКОМУНІЗАЦІЯ\nЗаходи\nУвічнення перемоги над нацизмом \nу  Другій\
+    \ світовій війні (1939—\n1945  рр.)\nДоступ до архівів спецслужб\nПравовий статус\
+    \ учасників \nборотьби за незалежність України\nЗасудження комуністичного \nта \
+    \ нацистського режимів\nЗміна назв населених пунктів, \nвулиць, об’єктів топоніміки,\
+    \ що \nмають імена компартійних діячів; \nзнесення пам’ятників на честь \nкомуністичних\
+    \ лідерів і  подій\n© ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 239
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0335
+  text: ". . . . . . . . . . . . 53\n\t\n§ 9. Русь у  1054—1132  рр. . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 60\n\t § 10.\
+    \ Суспільний і  політичний устрій та господарське життя . . . . . 70\n\t § 11.\
+    \ Культура Русі . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . 80\n\t\n\t Практичне заняття за розділом\
+    \ ІІІ . . . . . . . . . . . . . . . . . . . . . . . . . . . 87\n\t\n\t Узагальнення\
+    \ за розділом ІІІ . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 223
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0171
+  text: "ІІІ варіант\nОбговорення результатів роботи учнів та учениць над \nнавчальними\
+    \ проєктами до розділу. Узагальнення знань  \nза розділом ІІ. Україна в умовах\
+    \ десталінізації\nПоштова марка СРСР. Напис: \n«Слава підкорювачам цілини!». 1962 р.\
+    \ Радянська карикатура, яка \nзасуджує генетиків. 1950-ті рр."
+  section_title: Сторінка 94
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0307
+  text: "Голодомор мовою документів, свідчень, чисел\n2. Пропагандистський ідеал радянської\
+    \ людини та її повсяк-\nденне життя\nЗавдання для узагальнення знань і підготовки\
+    \  \nдо тематичного оцінювання за розділом IV \n«Встановлення й  утвердження комуністичного\
+    \  \nтоталітарного режиму в  Україні»"
+  section_title: Сторінка 160
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5342413783073425
+  chunk_id: ffcfbeb9_c0068
+  text: "34 Інформаційний\r\nзвіт про цю конференцію був надрукований у журналі «Вопросы\
+    \ истории», — 1951. -\r\n№ 5. — С. 137-139."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm
+- score: 0.5233696699142456
+  chunk_id: f648356f_c0060
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 44-58.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm
+- score: 0.5184202194213867
+  chunk_id: f648356f_c0037
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 21-44.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm

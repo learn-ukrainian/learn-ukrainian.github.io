@@ -2,15 +2,15 @@
   "module": "the-ukrainian-alphabet",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-12T10:23:08.217804Z",
+  "last_audit": "2026-03-13T09:47:29.480646Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-12T10:22:00.167060Z",
+    "md": "2026-03-12T22:59:25.104563Z",
     "meta": "2026-03-12T10:15:04.257510Z",
-    "activities": "2026-03-12T10:16:37.249779Z",
-    "vocabulary": "2026-03-12T10:11:51.758066Z",
+    "activities": "2026-03-12T22:55:22.874798Z",
+    "vocabulary": "2026-03-12T22:49:06.320850Z",
     "research": "2026-03-12T09:42:03.524845Z",
-    "plan": "2026-03-12T08:39:53.687575Z"
+    "plan": "2026-03-12T14:13:39.850203Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1595/1200 (raw: 1695)"
+      "message": "1849/1200 (raw: 2112)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "info",
+      "status": "pass",
       "violations": 0,
-      "message": "N/A (research_quality not available)"
+      "message": "Content aligned with research"
     },
     "review": {
       "status": "deferred",
@@ -52,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 1
   }

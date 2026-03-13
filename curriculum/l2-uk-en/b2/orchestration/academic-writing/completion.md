@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b2 77 — E2E
+PASS: pipeline b2 69
 
   Module:   academic-writing
   Track:    b2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:19Z
+  Verdict:  PASS
+  Date:     2026-03-12T19:45:10Z

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 109 — E2E
+FAIL: pipeline hist 109
 
   Module:   povoienne-vidbudova
   Track:    hist
-  Mode:     e2e
-  Words:    5610 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T23:36:25Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:19:31Z

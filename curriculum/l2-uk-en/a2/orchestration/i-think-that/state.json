@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "i-think-that",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:48:54Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:48:54Z",
+      "task_id": "v5-i-think-that-pA",
+      "mode": "full"
+    }
+  }
+}

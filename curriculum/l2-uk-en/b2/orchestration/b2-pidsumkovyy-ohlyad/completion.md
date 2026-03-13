@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b2 83 — E2E
+PASS: pipeline b2 84
 
   Module:   b2-pidsumkovyy-ohlyad
   Track:    b2
-  Mode:     e2e
-  Words:    5497 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T14:27:38Z
+  Date:     2026-03-12T20:37:35Z

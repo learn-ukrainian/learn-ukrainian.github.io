@@ -2,84 +2,116 @@
 
 ## State Standard Reference
 
-**§4.2.1.4** (B1 Morphology — Pronoun): "питально-відносні займенники: хто, що, який, яка, яке, чий, чия, чиє, котрий, котра, котре." (lines 2112–2113)
+**§4.4.3** (B1 Syntax, lines 2402–2405):
+> "складнопідрядне речення з підрядною означальною частиною (сполучні слова який (яка, яке, які) у називному та непрямих відмінках): Пані, яку ми сьогодні зустріли коло пошти, живе в сусідній квартирі. Будинки, які розташовані на площі Ринок, належать до Всесвітньої спадщини ЮНЕСКО."
 
-**§4.4.3** (B1 Syntax — Complex sentence, the core reference): "складнопідрядне речення з підрядною означальною частиною (сполучні слова **який (яка, яке, які)** у називному та непрямих відмінках): *Пані, яку ми сьогодні зустріли коло пошти, живе в сусідній квартирі. Будинки, які розташовані на площі Ринок, належать до Всесвітньої спадщини ЮНЕСКО.*" (lines 2402–2405)
+**§4.2.1.4** (B1 Morphology, line 2112–2113):
+> "питально-відносні займенники: хто, що, який, яка, яке, чий, чия, чиє, котрий, котра, котре."
 
-**Alignment**: Module addresses §4.2.1.4 by systematising the full case paradigm of який, and §4.4.3 by teaching attributive subordinate clauses with який as sполучне слово. Both canonical State Standard examples (Пані/яку and Будинки/які) are directly cited in the plan's content_outline — full alignment confirmed.
+**Alignment**: This module directly implements both requirements — the full declension paradigm of який (§4.2.1.4) and its syntactic deployment in attributive subordinate clauses with correct case marking (§4.4.3). The canonical textbook examples from the Standard (Пані, яку... / Будинки, які...) should appear in the theory section.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Frequency (GRAC) | IPM | Notes |
-|------|-----------------|-----|-------|
-| який | 2,353,331 | 1162.76 | Extremely high; top-50 word in Ukrainian |
-| котрий | 88,779 | 43.86 | Medium; formal/literary register; stylistic alternative to який |
-| речення | 22,499 | 11.12 | Grammar metalanguage; teach as classroom vocabulary |
-| узгодження | 21,475 | 10.61 | Grammar metalanguage; needed for explaining agreement rule |
-| відмінок | 1,355 | 0.67 | Low — grammar term; already known from prior case modules |
-| сполучник | 661 | 0.33 | Low — grammar term; use сполучне слово as in textbooks |
-| підрядний | 212 | 0.10 | Very low — grammar metalanguage only |
-| антецедент | 34 | 0.02 | Extremely rare; academic/linguistic term — introduce with clear Ukrainian paraphrase "слово, яке ми описуємо" |
+| Word | Frequency (GRAC) | IPM | Key collocations / notes |
+|------|-----------------|-----|--------------------------|
+| який | 2,353,331 | 1162.76 | Top ~30 word in Ukrainian; concord examples show який in all genders/cases naturally |
+| котрий | 88,779 | 43.86 | Medium; stylistically more formal/bookish than який; used for precise enumeration |
+| речення | 22,499 | 11.12 | Grammar metalanguage; hlavne речення, складне речення, підрядна частина |
+| узгодження | 21,475 | 10.61 | Grammar metalanguage; принцип узгодження, повне узгодження |
+| відмінок | 1,355 | 0.67 | Low (grammar text context only); називний відмінок, непрямі відмінки |
+| сполучник | 661 | 0.33 | Low (grammar metalanguage); сполучне слово vs сполучник distinction is important |
+| підрядний | 212 | 0.10 | Very low (grammar text only); підрядна частина, підрядне речення |
+| антецедент | verified VESUM | — | Academic/pedagogic term; confirmed in VESUM dictionary |
 
-**Key insight**: який itself is one of the highest-frequency words in Ukrainian (rank ~top-50). This module teaches learners to leverage a word they encounter constantly but may be using only in nominative singular. Expanding their productive command to all 7 cases multiplies expressive power enormously — a strong motivational frame.
-
-**котрий vs який**: The ~27x frequency gap (1162 vs 44 IPM) confirms that який dominates modern standard Ukrainian. котрий survives in formal/official/literary register. Teach як dominant, котрий as learned stylistic variant.
+**Key note**: який at 1162 IPM is one of the highest-frequency words in Ukrainian. This is not an obscure grammar point — learners encounter який in virtually every paragraph of authentic text.
 
 ---
 
 ## Cultural Hooks
 
-1. **Думи — Ukrainian epic poetry** (verified: uk.wikipedia.org/wiki/Дума): Думи are the definitive Ukrainian oral epic genre — lyric-epic works about Cossack life in the 16th–18th centuries, performed by wandering musician-singers (кобзарі, бандуристи, лірники) in Left-Bank Ukraine. The Wikipedia article demonstrating який in live use: *"ліро-епічні твори... **який** виконували мандрівні співці-музики"* and *"оповідний характер опису подій, **який**, як правило, ведеться у хронологічній послідовності."* The **hero-definition formula** in dumy — establishing a character through a chain of relative clauses — is a productive structural template: *Козак, **який** ніколи не зраджував, **якому** вірила вся Україна...* This gives learners an authentic, culturally resonant model for chaining які-clauses.
+1. **Думи — козацький епос**: Думи — жанр суто українського речитативного народного та героїчного епосу, ліро-епічні твори про події з життя козаків XVI–XVIII століть, які виконували кобзарі, бандуристи, лірники в Лівобережній Україні. (Source: Wikipedia — uk.wikipedia.org/wiki/Дума). Relative clauses are structural building blocks of epic description in думи: "козак, який мав шаблю...", "земля, яку вони боронили...". This makes який a carrier of the heroic-definition pattern — an apt cultural hook for B1 learners.
 
-2. **UNESCO World Heritage site example is canonical** (from State Standard §4.4.3 itself): *"Будинки, які розташовані на площі Ринок, належать до Всесвітньої спадщини ЮНЕСКО"* — this sentence is the State Standard's own example. The площа Ринок in Lviv (part of the Lviv Historic Centre, UNESCO since 1998) can serve as a second cultural anchor: learners describe Ukrainian heritage sites using який-clauses. *Церква, яку збудували у XIV столітті, досі стоїть на площі Ринок.*
+2. **Шевченко і "Кобзар"**: «Кобзар» (1840) — перша збірка поезій Тараса Шевченка. The style of Ukrainian poetry from Shevchenko onward uses який extensively for vivid description. GRAC concordance examples confirm authentic 19th-century literary usage of яка/яке/які in all genders across attributive positions, showing the form is deeply native to Ukrainian literary tradition — not a borrowing pattern.
+
+---
+
+## Якісна/кількісна структура відмінювання (для змісту)
+
+Full paradigm for content writing reference:
+
+| Відмінок | Masc. | Neut. | Fem. | Plural |
+|----------|-------|-------|------|--------|
+| Н. | який | яке | яка | які |
+| Р. | якого | якого | якої | яких |
+| Д. | якому | якому | якій | яким |
+| З. (неістота) | який | яке | яку | які |
+| З. (істота) | якого | якого | яку | яких |
+| О. | яким | яким | якою | якими |
+| М. | якому/якім | якому/якім | якій | яких |
 
 ---
 
 ## Common Learner Errors
 
-1. **"Case Logic Failure" (Пастка ролі)** → Learner copies the antecedent's case into який, ignoring який's own syntactic role in the subordinate clause.
-   - Error: *Я бачу дівчину, **яку** стоїть там.* (дівчину = accusative → яку copied)
-   - Correct: *Я бачу дівчину, **яка** стоїть там.* (яка = subject of стоїть → nominative)
-   - Why it happens: Learners apply proximity agreement instead of syntactic role analysis. The "Two-Look Algorithm" (Look BACK for gender/number; Look FORWARD for case) directly addresses this.
+1. **"Case Logic Failure" (Пастка ролі)**: Learner copies the case of the antecedent instead of determining the case by the function in the subordinate clause. Example: ★ "Я бачу дівчину, **якій** стоїть" (copied dative logic) → ✓ "яка стоїть" (nominative — subject). Why: learners parse linearly and carry over case from the preceding noun without pausing to ask "what role does який play in the subordinate clause?"
 
-2. **Gender/Number Discord** → Learner fails to match який's gender and number to the antecedent, especially in chains with genitive nouns.
-   - Error: *Директор школи, **який** → should be який* (OK here), but: *Дах будинку, **який**...* — learner may write якого (genitive) instead of який (nominative) because будинку is genitive.
-   - Why it happens: The nearest preceding noun (будинку) is in the genitive and pulls agreement. Learner must identify the head noun (дах, masculine), not the modifier.
+2. **Gender/Number Discord**: Using the wrong gender form when the antecedent is embedded in a genitive chain. Example: ★ "будівля університету, **який** зруйновано" → ✓ "яку зруйновано" (будівля is feminine). Why: learners track the last salient noun (університет, masc.) rather than the true head noun (будівля, fem.).
 
-3. **Overuse of invariant що** → Learner substitutes undeclined що for declined який in all positions, losing precision in oblique cases.
-   - Error: *Книга, **що** я прочитав вчора, дуже цікава.* (що as accusative — technically borderline acceptable but stylistically weak)
-   - Correct: *Книга, **яку** я прочитав вчора, дуже цікава.*
-   - Why it happens: що is invariant and easier. Textbook confirmation (Avramenko, Grade 6): *"Займенники який, чий, котрий змінюємо за родами, числами й відмінками; займенники хто, що, скільки — тільки за відмінками"* — teaching the contrast is explicitly grounded in standard textbook practice.
+3. **Invariant що overuse**: Using що where який is grammatically required or stylistically superior in formal register. Example: ★ "Це книга, **що** я прочитав учора" → ✓ "яку я прочитав учора" in formal/academic contexts. (що is valid but imprecise — cannot show case, so complex sentences become ambiguous.) Why: що is shorter and invariant; low-effort default.
+
+---
+
+## Textbook Evidence (RAG)
+
+- **Grade 9 Voron (tier 2)**: §32 "Складнопідрядні речення з підрядними означальними" — defines three types of complex sentences (означальні, з'ясувальні, обставинні); confirms підрядні означальні depend on specific head words.
+- **Grade 11 Voron (tier 2)**: Revisits the same taxonomy; uses literary texts (Сосюра poetry) for which/що/який identification exercises.
+- **Grade 6 Litvinova (tier 1)**: §54 — relative pronouns (який, котрий etc.) taught as a subclass; relative→indefinite derivation exercises (який → будь-який, бозна-який).
+
+**Stylistic distinction confirmed by textbooks**: котрий marks precision/enumeration in formal register; який dominates modern standard Ukrainian. The Standard itself (§4.4.3) uses який in its canonical examples, not котрий.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-017 (Контрольна точка: Опанування виду) — students have consolidated aspect before entering complex sentence territory; b1 A2 complex_sentence §4.4.2 — learners already encountered який/яка/яке in basic complex sentences at A2 level (lines 1403–1416)
-- **Prepares for**: b1-030 (Підрядні означальні: де, куди, звідки) — adverbial relative pronouns; b1-031 (Підрядні з'ясувальні: що, щоб) — complementizer clauses; the contrast між що (complementizer) і який (relative pronoun) becomes critical in b1-031
+- **Builds on**:
+  - b1-17 (Контрольна точка: Опанування виду) — aspect mastery prerequisite
+  - A2 complex sentences (який/яка/яке introduced at A2 §4.4.2 in a basic form)
+  - B1 pronoun morphology (§4.2.1.4) — the full relative pronoun paradigm
+
+- **Prepares for**:
+  - b1-30 (Підрядні означальні: де, куди, звідки) — adverbial relative clauses; same structural logic, different connectors
+  - b1-31 (Підрядні з'ясувальні: що, щоб) — complement clauses; contrast with attributive clauses taught here
+  - B2 participle constructions (дієприкметниковий зворот) — the participial phrase is a compressed form of an attributive relative clause
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered during research — discover phase handles this)
+- (none encountered)
 
 ---
 
 ## Notes for Content Writing
 
-- **The "Two-Look Algorithm" is this module's core teaching tool.** Name it, diagram it, drill it. Every agreement error traced back to skipping one of the two steps.
-- **Grade 6 textbook (Avramenko, tier 1)** confirms the paradigm table format used in Ukrainian schools: який/яка/яке/які declined across all 7 cases. Content should reproduce a full table with example sentences from the plan's canonical State Standard sentences (Пані/яку, Будинки/які).
-- **Grade 9 textbook (Voron, tier 2)** provides the classic ambiguous antecedent exercise: *"Ялина причарувала мене своєю зеленою сукнею, яка росла на галявині"* — яка could refer to ялина or сукня. This is a ready-made example for the "Ambiguous Antecedent" section.
-- **Register note**: State Standard §4.4.3 uses який in both formal contexts (UNESCO buildings) and everyday contexts (lady at the post office). Content should mirror this range: 1–2 formal register examples (official, cultural), 3–4 everyday/conversational examples.
-- **що vs який stylistic distinction**: що is borderline acceptable as a subject/nominative relative (colloquial), but який is required in all oblique cases (accusative, dative, instrumental, etc.) and strongly preferred in standard written Ukrainian. Frame as: що = colloquial shortcut; який = the full-power tool.
-- **Decolonized framing**: Ukrainian який is not cognate with Polish który or "derived from" any other model — it is the native Ukrainian relative/interrogative pronoun with its own full declension history. Do not compare with Russian который at any point. If a structural comparison is useful for L2 learners, compare with Polish który (same Slavic family, independent parallel development) or simply contrast English which/who/that (not a single word in English → one powerful word який covers all three in Ukrainian).
-- **Immersion note (B1.3+)**: Module is in full immersion phase. All grammar metalanguage must be in Ukrainian. Grammar terms (антецедент, узгодження, підрядне речення) must be introduced with brief Ukrainian paraphrases on first use, not English translations.
+1. **TTT structure is well-suited**: Diagnostic test first (learners will attempt який intuitively, revealing their baseline). Present the paradigm table after exposure, not before.
+2. **The "two-look algorithm" is the key pedagogical frame**: Look BACK at the antecedent (→ gender, number) + Look FORWARD at the function in the clause (→ case). Make this a named procedure learners can internalize.
+3. **State Standard canonical examples must appear**: "Пані, яку ми зустріли..." and "Будинки, які належать до ЮНЕСКО..." — these are the anchor examples from §4.4.3 and should be the cornerstone of the theory section.
+4. **Antecedent proximity rule**: Subordinate clause should immediately follow the antecedent noun. Ukrainian prose violates this less than journalistic text; this is worth a brief rule + error example.
+5. **який vs що contrast**: Keep it practical — що is invariant and correct in informal register; який is case-marked and required for formal/academic writing. Frame this as a register choice, not a right/wrong binary.
+6. **Decolonized framing**: Ukrainian відносні займенники (який, котрий) evolved from Proto-Slavic and have direct cognates in Polish (który), Czech (který), and other Slavic languages. This is a native Ukrainian grammatical feature, not a borrowing or derived-from-Russian construct. Confirm Ukrainian uses який as the dominant form (1162 IPM) — it is organically Ukrainian.
+7. **Думи cultural hook**: Use the epic definitional formula ("козак, який...") as the opening cultural frame for the Deepening section. It demonstrates that relative clauses are how Ukrainian tradition constructs heroic identity — not just grammar but a poetic building block.
+8. **Do not reference English parenthetically** — this is B1.3, full immersion module. Grammar algorithm must be explained entirely in Ukrainian with Ukrainian examples.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Підрядне означальне речення](https://uk.wikipedia.org/wiki/Підрядне_означальне_речення) (детальна стаття на Вікіпедії)
+- [Ukrainian Lessons Podcast Season 4](https://www.ukrainianlessons.com/episode157/) (ukrainianlessons.com)
+- [Ukrainian Relative Clauses](https://www.youtube.com/results?search_query=ukrainian+relative+clauses) (відео пояснення та приклади)
+- [Ukrainian Grammar Podcast](https://www.youtube.com/results?search_query=ukrainian+grammar+podcast) (подкаст уроки для аудіального навчання)
 
 ### Textbook References (RAG)
 

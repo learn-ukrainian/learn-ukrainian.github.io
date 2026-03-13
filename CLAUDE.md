@@ -84,7 +84,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 <critical>
 
 **Pipeline v5** (`build_module_v5.py`) — the ONLY pipeline:
-- research → discover → **sandbox** → content → activities → validate → [review] → mdx
+- research → discover → **sandbox** → content → validate → [review] → activities → mdx
 - **v4 and v3 are RETIRED.** Do not use `build_module.py`.
 - **Gemini** builds: research, discover, content, activities
 - **Claude** reviews: review phase (cross-agent adversarial, max 2 fix attempts)

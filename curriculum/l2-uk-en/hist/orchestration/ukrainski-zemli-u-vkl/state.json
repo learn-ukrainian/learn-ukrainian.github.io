@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "ukrainski-zemli-u-vkl",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:18:41Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:18:41Z",
+      "task_id": "v5-ukrainski-zemli-u-vkl-pA",
+      "mode": "full"
+    }
+  }
+}

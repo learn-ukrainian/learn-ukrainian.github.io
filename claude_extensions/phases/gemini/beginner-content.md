@@ -151,7 +151,30 @@ Word counts:
 ===CONTENT_VERIFY_END===
 ```
 
-If any line shows ❌, output a corrected `===CONTENT_START===` to `===CONTENT_END===` block with the fixes applied, THEN output the friction report.
+If any line shows ❌, output a corrected `===CONTENT_START===` to `===CONTENT_END===` block with the fixes applied, THEN output the activity plans and friction report.
+
+## Activity Plans (MANDATORY)
+
+Based on your content, propose activity plans for the activities phase. Each plan specifies the activity type, focus, and item count. These will be built later using textbook exercises from RAG.
+
+```
+===ACTIVITY_PLANS_START===
+- type: {quiz|fill-in|match-up|true-false|unjumble|group-sort|anagram|image-to-letter}
+  description: "{what the activity practices}"
+  item_count: {6-10}
+  focus: "{specific letter/sound/word from this lesson}"
+  textbook_source: "{which textbook pattern to adapt, or 'original'}"
+
+- type: ...
+  ...
+===ACTIVITY_PLANS_END===
+```
+
+**Rules for activity plans:**
+- Plan {ACTIVITY_MIN}+ activities with at least 3 different types
+- Each plan should target a specific teaching point from your content
+- For beginners: focus on letter recognition, sound matching, basic word building
+- Reference textbook exercise patterns (e.g., "Adapted from Bolshakova Grade 1, syllable blending")
 
 ## Friction Report (MANDATORY)
 

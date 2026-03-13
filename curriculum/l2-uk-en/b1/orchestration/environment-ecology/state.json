@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "environment-ecology",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:46:28Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:46:28Z",
+      "task_id": "v5-environment-ecology-pA",
+      "mode": "full"
+    }
+  }
+}

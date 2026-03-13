@@ -2,63 +2,69 @@
 
 ## State Standard Reference
 
-**§4.3.8** (lines 2336–2338): *"Утворення префіксальних дієслів руху: іти – прийти, **перейти**, дійти, відійти, зайти, вийти; їхати – приїхати, **переїхати**, доїхати, від'їхати, заїхати, поїхати, виїхати, **об'їхати**."*
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати."
+*(Джерело: UKRAINIAN-STATE-STANDARD-2024.txt, рядки 2336–2338)*
 
-The Standard explicitly names перейти, переїхати, and об'їхати as B1 targets. Про- prefix is not enumerated in §4.3.8 examples but пройти/проїхати are natural opposites to the listed forms and fall within B1 scope via §4.2.3.1 (aspect pairs, full conjugation). The Standard's accusative section **§4.2.2.4** is equally relevant: *"через (шлях руху): Їхати через ліс"* — establishing that "через + Accusative" marks path of motion. This directly supports the module's error correction goal: **перейти вулицю** (bare Accusative = standard) vs the redundant *перейти через вулицю* (через already encoded in the prefix).
-
-Alignment: This module addresses §4.3.8 directly (пере-, об-), extends it with про- as a natural semantic counterpart, and integrates §4.2.2.4 accusative usage for motion verbs.
+**Alignment notes:**
+- The Standard explicitly exemplifies пере- (перейти, переїхати) and об- (об'їхати) in §4.3.8.
+- про- is NOT in the §4.3.8 example list, but пройти/проходити are core B1 vocabulary by frequency (37.04 IPM — highest among all motion verbs in this module). Teaching про- alongside пере- and об- is pedagogically sound and within scope.
+- The Accusative case without preposition for direct crossing (перейти вулицю) aligns with §4.2.2.4 (B1 Accusative — direction, expanded prepositions).
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Freq (GRAC) | IPM | Key collocations / notes |
-|------|------------|-----|--------------------------|
-| пройти | 74,975 | 37.04 | пройти повз, пройти крізь, пройти шлях — highest-freq verb in set |
-| перейти | 49,695 | 24.55 | перейти дорогу, перейти межу, перейти на інший бік |
-| переходити | 16,987 | 8.39 | Impf pair; переходити вулицю |
-| обійти | 12,451 | 6.15 | обійти навколо, обійти стороною |
-| проїхати | 9,026 | 4.46 | проїхати зупинку, проїхати по мосту |
-| переїхати | 8,510 | 4.20 | переїхати міст, переїхати кордон |
-| об'їхати | 1,916 | 0.95 | об'їхати яму, об'їхати затор — lower freq, needs active teaching |
-| перебігти | (not queried) | — | VESUM: confirmed; implies danger/haste |
-| пробігти | (not queried) | — | VESUM: confirmed |
-| оббігти | (not queried) | — | VESUM: confirmed (double б) |
+| Word | Frequency | IPM | VESUM | Notes |
+|------|-----------|-----|-------|-------|
+| пройти | 74,975 | 37.04 | ✅ | Highest-frequency verb in module — prioritize |
+| перейти | 49,695 | 24.55 | ✅ | Core crossing verb — high frequency |
+| проходити | verified | — | ✅ | Imperfective pair of пройти |
+| переходити | verified | — | ✅ | Imperfective pair of перейти |
+| проїхати | 9,026 | 4.46 | ✅ | Vehicle passing — medium frequency |
+| переїхати | 8,510 | 4.20 | ✅ | Vehicle crossing — medium frequency |
+| обійти | 12,451 | 6.15 | ✅ | Goes around — relatively common |
+| проїжджати | verified | — | ✅ | Imperfective of проїхати |
+| переїжджати | verified | — | ✅ | Imperfective of переїхати |
+| обходити | verified | — | ✅ | Imperfective of обійти |
+| об'їхати | 1,916 | 0.95 | ✅ | Drive around — lower frequency, but essential |
+| об'їжджати | verified | — | ✅ | Imperfective of об'їхати |
+| перебігти | verified | — | ✅ | Running across — productive pattern |
+| перебігати | verified | — | ✅ | Imperfective pair |
+| затор | 2,866 | 1.42 | ✅ | Traffic jam — lower frequency but contextually key |
+| маршрут | verified | — | ✅ | Route |
+| перешкода | verified | — | ✅ | Obstacle |
+| яма | verified | — | ✅ | Pothole/hole |
 
-All 26 vocabulary items from the plan verified in VESUM — 100% found. Note: оббігти/оббігати (not *обігти with single б when meaning "to run around entire perimeter").
+**All 18 vocabulary items 100% verified in VESUM.**
+
+**Frequency hierarchy for teaching priority:** пройти (37 IPM) > перейти (25 IPM) > обійти (6 IPM) > проїхати (4.5 IPM) > переїхати (4.2 IPM) > затор (1.4 IPM) > об'їхати (0.95 IPM).
 
 ---
 
 ## Cultural Hooks
 
-**1. Міст Патона (Kyiv)**
-- Повна назва: Міст імені Євгена Патона — перший у світі суцільнозварний міст (1953), завдовжки 1543 м через Дніпро у Києві.
-- Проєктував академік **Євген Оскарович Патон** — піонер електрозварювання. 26 прольотів, 6 смуг руху.
-- Cultural/pedagogical hook: Фізично перейти мостом Патона пішки (перейти мостом) vs. переїхати (на авто/тролейбусі). The bridge also had trams until 2004 — removal divided Kyiv's tram network into two isolated systems. Current status: emergency object since 2020, weight restrictions in effect. **Source**: uk.wikipedia.org/wiki/Міст_Патона
+1. **Міст Патона (Kyiv)** — Перший у світі суцільнозварний міст завдовжки 1543 метри через Дніпро у Києві. Збудований за участю академіка Євгена Патона. Передано на баланс Міністерства відновлення у 2021 році в рамках програми «Велике будівництво». *(Джерело: uk.wikipedia.org/wiki/Міст_Патона)* — Perfect anchor for переїхати міст / перейти міст distinction (vehicle vs. on foot).
 
-**2. Інгульський міст (Миколаїв)**
-- Розвідний (bascule) міст через річку Інгул у Миколаєві — піднімається для пропуску суден з Миколаївського суднобудівного заводу.
-- Excellent B1 hook: when the bridge is raised, vehicles **об'їжджають** an alternative route; ships **проходять** (пройти під мостом / проходити повз). Learners must select correct prefix based on who is doing what relative to the obstacle. **Source**: uk.wikipedia.org/wiki/Інгульський_міст
+2. **Інгульський міст (Mykolaiv)** — Розвідний міст через річку Інгул у Миколаєві, призначений для пропуску суден з Миколаївського суднобудівного заводу. *(Джерело: uk.wikipedia.org/wiki/Інгульський_міст)* — Real-world use case for «переїжджати/проїжджати» — ships pass *under*, vehicles pass *over*. Illustrates про- (to pass by/through) vs пере- (to cross over).
+
+3. **Плебанівський віадук (Тернопільщина)** — Один з найстаріших мостів в Україні, залізнична конструкція над ярами й ущелинами в с. Плебанівка, Тернопільська область. *(Джерело: uk.wikipedia.org/wiki/Плебанівський_віадук)* — Literary/scenic anchor for train crossing: потяг переїжджає через/по Плебанівському віадуку. Use with care — the viaduct framing is picturesque but geographically niche.
 
 ---
 
 ## Common Learner Errors
 
-1. **Redundant preposition: *перейти через вулицю* → перейти вулицю**
-   — Why it happens: English "to cross *over* the road" / Polish "przejść *przez* ulicę" both use a preposition. The пере- prefix already encodes "across" semantically. Adding через creates redundancy. Standard §4.2.2.4 confirms "через (шлях руху)" but this applies to verbs without the directional prefix (їхати через ліс ✓, but *переїхати через міст* ✗ → переїхати міст ✓).
+1. **Redundant через with crossing verbs** → `перейти через міст` ❌ → `перейти міст` ✅ — English learners map "cross over the bridge" literally and add через. Ukrainian uses direct Accusative without preposition for the crossing action itself. Note: через IS correct when emphasizing passage *via* route: *їхати через місто* (to travel through a city).
 
-2. **Calque: *пройти іспит* → скласти іспит**
-   — Why it happens: English "pass an exam" / Polish "zdać egzamin" use motion-derived or completion verbs. Ukrainian пройти is a physical/spatial verb only. The correct lexical item is скласти іспит (to pass), не скласти (to fail). This is a high-frequency error for English-speaking learners.
+2. **Using motion verbs for academic "passing"** → `пройти іспит / перейти тест` ❌ → `скласти іспит` ✅ — Direct English false-friend transfer ("pass an exam"). Motion verbs in Ukrainian never carry this meaning. Also note: `пройти` can mean "to cover a distance/course" (*пройти курс*) but NOT "to pass with a grade."
 
-3. **Trajectory confusion: пройти vs перейти for crossing**
-   — Why it happens: Both пройти and перейти involve forward motion, but пройти = movement along a path (повз / крізь — passing by or through), while перейти = movement across a boundary (вулицю, міст, кордон — crossing from A to B). Learners conflate these, producing *пройти вулицю* (intended meaning: cross the street) which is non-standard. GRAC concordance confirms перейти межу is also the correct idiomatic form for figurative "crossing a line."
+3. **Confusing про- and об- trajectories** → *Я пройшов перешкоду* (ambiguous: went past? went through?) vs *Я обійшов перешкоду* ✅ (clearly went around) — про- = linear movement past a reference point; об- = curved detour around an obstacle. The trajectory logic must be made visual (diagram/mnemaid) to prevent this persistent error.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-19 (Рух: Прибуття та вихід — при-, від-, ви- prefixes). Learners already know directional prefixes for arrival/departure; this module adds traversal/bypass semantics.
-- **Prepares for**: b1-22 (Motion full prefix integration) — where all prefixes (при-, від-, ви-, пере-, про-, об-, до-, за-) are synthesized in complex route descriptions.
+- **Builds on:** `b1-019` (motion-starting-returning — при-, від-, вирушати, повертатися); also A2 motion basics (іти/їхати aspect pairs)
+- **Prepares for:** `b1-022` (motion-full-prefix-integration — all prefixes in combination)
 
 ---
 
@@ -70,16 +76,23 @@ All 26 vocabulary items from the plan verified in VESUM — 100% found. Note: о
 
 ## Notes for Content Writing
 
-- **§4.3.8 note**: The State Standard lists об'їхати but not обійти in its examples — yet обійти is the pedestrian equivalent and equally B1 scope. Frame пере-/про-/об- as a **coherent trio** (cross / pass / go around) rather than three separate items; this is the pedagogical innovation this module offers.
-- **Figurative meanings are well-attested**: GRAC concordance for "перейти межу" shows 10 authentic examples across journalism, sports, politics, and literature — safe to teach as idiomatic B1 usage.
-- **Міст Патона length** (1543 m) is a memorable fact — useful as a production prompt ("опишіть, як ви переходите/переїжджаєте мостом Патона").
-- **Інгульський міст** is the stronger cultural hook for про- vs об- contrast: a bridge that lifts creates a natural scenario requiring route planning (ob'їhaty when raised, proїhaty / pereїhaty when lowered). This is more concrete than a traffic jam.
-- **Avoid**: Do not frame пере-/про-/об- as "adding meanings to base verbs" (calque from Ukrainian school grammar metalanguage). Frame them as **expressing spatial trajectories** — this is more intuitive for adult L2 learners and avoids the robotic "prefix + meaning" table format.
-- **Accusative with motion verbs**: Use §4.2.2.4 as explicit authority for bare Accusative. Learners at B1 sometimes over-apply prepositions; the Standard backs up the "no preposition" rule directly.
-- **Immersion**: Module is B1.2 (sequence 20) — full 100% Ukrainian immersion. No English in prose. English only in the vocabulary table translation column.
+- **пройти vs перейти distinction is the core conceptual work.** пройти = pass by/along (trajectory continues past point); перейти = cross (trajectory terminates on other side). This distinction does not exist as cleanly in English and needs visual support.
+- **про- collocations to highlight:** пройти повз + Accusative; пройти крізь + Accusative (крізь натовп); проїхати по + Locative (проїхати по мосту — less common but valid for "driving along the bridge surface").
+- **об- note:** Both обійти/об'їхати require an object in Accusative without preposition. The literal trajectory is curved/detour, not linear.
+- **Figurative extension section** should include: обійти увагою (to overlook), перейти межу (to cross the line), пройти повз (figuratively: to ignore). These are high-frequency figurative uses confirmed by GRAC collocations showing обійти frequently appearing with negation (не обійти цього).
+- **Accusative case reminder:** All three prefixes take direct Accusative on the crossed/passed object — no preposition needed. Перейти *вулицю*, пройти *квартал*, обійти *будинок*. This is the key grammar anchor per §4.2.2.4.
+- **Textbook grounding (Grade 5, Zabolotnyi, tier 1):** The textbook demonstrates prefix addition to motion verbs (exercise 121 with бігти + пере/об prefixes). Content can reference this exercise pattern structurally, though the module is B1 level.
+- **Immersion compliance:** Module is B1.2 (sequence 20, well past bridge modules 1–5). Full Ukrainian immersion required. English permitted only in vocabulary table translations and for false-friend disambiguation (скласти іспит vs "pass an exam").
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Дієслова руху](https://uk.wikipedia.org/wiki/Дієслова_руху) (Вікіпедія про дієслова руху)
+- [Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/episode57/) (ukrainianlessons.com)
+- [Kyiv tour + Participle in Ukrainian](https://www.ukrainianlessons.com/episode108/) (ukrainianlessons.com)
+- [My life in Kyiv (Voice message №3)](https://www.ukrainianlessons.com/episode95/) (ukrainianlessons.com)
+- [Префікси дієслів руху](https://www.youtube.com/results?search_query=ukrainian+verbs+of+motion+prefixes) (відео пояснення)
 
 ### Textbook References (RAG)
 

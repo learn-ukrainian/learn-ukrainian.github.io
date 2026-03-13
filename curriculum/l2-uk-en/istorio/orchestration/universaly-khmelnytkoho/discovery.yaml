@@ -1,0 +1,236 @@
+discovered_at: '2026-03-13T00:51:47.794776+00:00'
+query_keywords:
+- Універсали Хмельницького
+- Типи універсалів
+- Ключові універсали
+- Фрагмент
+- Політична риторика
+- Критика джерела
+- Analyze the causes and consequences of універсали хмельницького
+- Evaluate the historical significance of голос гетьмана
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=yqH9EY6LY5s
+  channel: ІМТГШ
+  title: Навіщо Були Потрібні Універсали? | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.7
+  relevance_note: Covers closely related material. It directly addresses the concept
+    and purpose of 'універсали' (universal acts), which is central to the module.
+    However, the video specifically discusses the Central Rada's universal acts from
+    the 20th century, not Khmelnytskyi's from the 17th century. It reinforces the
+    understanding of the document type, though in a different historical context.
+  transcript_excerpt: у 1917 українці обрали в Києві Центральну Раду вона видала чотири
+    універсали і проголосила про створення Української Народної Республіки
+  embed_suggestion: After Типи універсалів. It provides a conceptual understanding
+    of 'universal acts' and their historical significance, which can be followed by
+    a deep dive into Khmelnytskyi's specific ones.
+- url: https://www.youtube.com/watch?v=2PrthVAZRro
+  channel: Реальна Історія
+  title: The entire history of Ukraine in 30 minutes. «The real history» with Akim
+    Galimov
+  relevance_score: 0.5
+  relevance_note: Tangentially related. Provides broad historical context about the
+    emergence of Cossacks and Ukrainian history in general, but does not focus on
+    Khmelnytskyi's universal acts specifically.
+  transcript_excerpt: Звідки пішли козаки і зрештою, чому ми так завзяту боремося
+    за свою свободу?
+  embed_suggestion: After Вступ — Голос гетьмана. It offers a very high-level historical
+    overview that could set a general context.
+- url: https://www.youtube.com/watch?v=jHfkWVxiN50
+  channel: Реальна Історія
+  title: Яким був Скоропадський НАСПРАВДІ?
+  relevance_score: 0.2
+  relevance_note: Unrelated to the specific module topic. Discusses a different Hetman
+    (Pavlo Skoropadsky) from a much later historical period (20th century).
+  transcript_excerpt: Ясновильможний гетьман всієї України Павло Скоропацький. Звідки
+    він взявся і як зміг стати лідером української держави у 1918 році?
+  embed_suggestion: Not suitable for this module.
+- url: https://www.youtube.com/watch?v=SJ_zknpeHKQ
+  channel: ІМТГШ
+  title: Головна Проблема Москви | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.2
+  relevance_note: Unrelated to the module topic. Focuses on historical relations between
+    Rus and Moscow and Russian imperial narratives.
+  transcript_excerpt: Росія уперта називає себе спадкоємцею Русі попри географію яка
+    твердить що Русь виникла на річках чорноморського басейну Москва на Волзі
+  embed_suggestion: Not suitable for this module.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0206
+  text: "Для вас, допитливі\nrnk.com.ua/110316\nПрацюємо з джерелом\nrnk.com.ua/110317\n\
+    З Універсалу \nБ. Хмельницького  \nдо української спільноти \nіз закликом підтримати\
+    \ \nрозпочату козацтвом \nборотьбу\nПолковник реєстрового лівобережного \nполку.\
+    \ Художник С. Васильківський. 1900  р. \e\n\e Порівняйте вбрання та спорядження\
+    \ \nстаршини та пересічного козака (с. 124)."
+  section_title: Сторінка 127
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0351
+  text: "У розділі \n«Віртуальна бібліотека» електронного додатка до підручника ви\
+    \ знайдете \nповний текст твору . читаємо взірці української художньої літератури"
+  section_title: Сторінка 185
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0001
+  text: "«Українська мова. Буквар»  \nпідручник для 1 класу закладів  \nзагальної\
+    \ середньої освіти\n(у 2-х частинах)\nЧастина  друга\nМар’яна  Захарійчук\nВидавництво\
+    \ «Грамота»\n2025\nPidruchnyk.com.ua"
+  section_title: Сторінка 2
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0365
+  text: "Якщо слідувати за цими зв’язками, \nможна читати матеріал у будь-якому порядку,\
+    \ утворюючи різні лінійні тек-\nсти. Прикладом гіпертексту може бути будь-який\
+    \ словник чи енциклопедія, \nде кожна стаття має посилання до інших статей цього\
+    \ ж словника. \aПрочитайте текст. Підготуйте розповідь про особливості гіпертексту.\
+    \ У ХХ столітті людство накопичило стільки інформації, що почали \nвиникати серйозні\
+    \ проблеми з її пошуками і переробкою, у тому \n319\n320\n321"
+  section_title: Сторінка 237
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5574625730514526
+  chunk_id: a5f3ae7f_c0017
+  text: "а) Історичні джерела про Хмельниччину (офіційні\r\nдокументи, листування,\
+    \ «діаріуші» та спогади сучасників, актові книги,\r\nархеологічні знахідки тощо).\
+    \ Ці тексти мають привертати нашу увагу, мабуть,\r\nнайменшою мірою, адже йдеться\
+    \ в них здебільшого про Хмельницького як історичну\r\nособу, а не як культурного\
+    \ героя. А втім, без порівняння історичних документів\r\nіз пізнішими інтерпретаціями\
+    \ та ідеологічними спекуляціями часто неможливо\r\nз’ясувати суть і значення останніх.\
+    \ Після відомих праць М. Костома"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm
+- score: 0.5354955792427063
+  chunk_id: 5794da94_c1714
+  text: "9) Звісний білоцерківський \r\nунїверсал 28 мая, поданий Величком і Історією\
+    \ Русов, повторений Марковичем й \r\nин., видрукований в Актах Запад. Рос. V ч.\
+    \ 23 як автентичний документ — \r\nбезсумнївний фальсіфікат, хоч його ще Кубаля\
+    \ вважав певним в своїй основі (І. \r\nOssolióski II c. 375-6). Томашівський противставив\
+    \ йому як достовірний „перший \r\nзазивний лист Хмельницького” переказаний в orаtiо\
+    \ оbliquа в записках Кушевича \r\n(Записки тов. ім. Шевченка т. XXIV). Але сей\
+    \ риторичний і бідний змістом текс"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5327383279800415
+  chunk_id: a5f3ae7f_c0010
+  text: "Іншим виправданим принципом типологізації (чи,\r\nвласне, ранжування) культурного\
+    \ матеріалу може стати рівень його впливу на\r\nмасову свідомість — кажучи пряміше,\
+    \ рівень поширеності чи популярності. За\r\nтакою ознакою до однієї групи «найвпливовіших»\
+    \ (у наш час) текстів про\r\nХмельницького можуть потрапити, скажімо, «Історія\
+    \ України» О. Субтельного, «Ілюстрована\r\nісторія України-Руси» М. Грушевського\
+    \ та історичні поезії Т. Шевченка (знані\r\nвсім зі шкільної програми), натомість\
+    \ праці В. Липинського, М"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm

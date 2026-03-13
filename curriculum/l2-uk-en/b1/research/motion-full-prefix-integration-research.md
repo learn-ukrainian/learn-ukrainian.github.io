@@ -2,82 +2,77 @@
 
 ## State Standard Reference
 
-**§4.3.8** (lines 2336–2338): "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати."
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати."
+*(Source: UKRAINIAN-STATE-STANDARD-2024.txt, lines 2336–2338)*
 
-**Alignment**: This module directly addresses §4.3.8 by systematizing all prefixes across both bases (іти / їхати), extending to figurative and idiomatic uses not explicitly listed in the Standard, and integrating aspectual transformation — which is the missing layer the Standard implies but does not teach. The module covers the 8 prefixed forms from the Standard plus по-, під-, про-, роз-, над-, bringing total prefix coverage to 12.
+**Alignment**: This module directly implements §4.3.8 as an integration capstone — all eight prefixed forms of іти and all eight prefixed forms of їхати are present in the plan's vocabulary, plus additional items (підійти, розійтися, надійти). The module extends the standard by adding figurative/idiomatic uses and register differentiation, which is appropriate for B1.3.
 
 ---
 
 ## Vocabulary Frequency
 
-All 15 words verified ✅ in VESUM (15/15 found).
+All words verified in VESUM (15/15 found). Frequency from GRAC corpus (2B tokens):
 
-| Word | Freq (GRAC corpus) | IPM | Priority tier |
-|------|-------------------|-----|---------------|
-| піти | 108,180 | 53.45 | Core — highest of all |
-| вийти | 102,802 | 50.79 | Core |
-| пройти | 74,975 | 37.04 | Core |
-| перейти | 49,695 | 24.55 | Core |
-| прийти | 48,690 | 24.06 | Core |
-| зайти | 28,468 | 14.07 | High |
-| увійти / ввійти | 20,943 | 10.35 | Med-High |
-| дійти | 19,858 | 9.81 | Med-High |
-| підійти | 16,875 | 8.34 | Med |
-| відійти | 14,195 | 7.01 | Med |
-| надійти | 4,654 | 2.30 | Lower — abstract/formal register |
-| розійтися | 2,734 | 1.35 | Lower — context-specific |
-| об'їхати | verified | — | Productive but low absolute freq |
-| походити | verified | — | Teach contrast with піти |
+| Word | GRAC freq | IPM | Status |
+|------|-----------|-----|--------|
+| піти | 108,180 | 53.45 | Very high — core |
+| вийти | 102,802 | 50.79 | Very high — core |
+| пройти | 74,975 | 37.04 | Very high — core |
+| перейти | 49,695 | 24.55 | High — core |
+| прийти | 48,690 | 24.06 | High — core |
+| зайти | 28,468 | 14.07 | Medium-high |
+| дійти | 19,858 | 9.81 | Medium |
+| підійти | 16,875 | 8.34 | Medium |
+| відійти | 14,195 | 7.01 | Medium |
+| походити | VESUM ✓ | — | Not queried separately |
+| об'їхати | VESUM ✓ | — | Not queried separately |
+| розійтися | VESUM ✓ | — | Not queried separately |
+| надійти | VESUM ✓ | — | Not queried separately |
+| ввійти / увійти | VESUM ✓ | — | Both forms valid |
 
-**Key insight**: піти (53.45 IPM) is significantly more frequent than прийти (24.06), confirming the plan's focus on the по-/пі- confusion as a top-priority friction point. вийти and пройти are also exceptionally frequent — their figurative collocations (вийти заміж, пройти курс) warrant careful coverage.
+**Note on ввійти/увійти**: both are morphologically correct (euphony alternation). VESUM confirms both. Content should present both, noting у- before consonant clusters is preferred.
+
+**Key collocations confirmed by plan (all VESUM-valid)**:
+- вийти заміж, вийти сухим із води, нічого не вийшло
+- дійти згоди, прийти до висновку, прийти до тями
+- перейти на українську, перейти межу, перейти вулицю
+- руки не доходять, зайти в гості, сонце зайшло
 
 ---
 
 ## Cultural Hooks
 
-**1. Арсенальна — найглибша станція метро в Східній Європі (Wikipedia verified)**
-- Opened 6 November 1960, Sviatoshynsko-Brovarska line, between Khreshchatyk and Dnipro stations
-- **Depth record**: the deepest station in Eastern Europe; double-vault design unique on the continent (described as "англійський" type)
-- Construction required freezing the soil: ~400 boreholes filled with nitrogen to prevent collapse
-- Two-stage escalator: 55.8 m + 46.6 m — the oldest dual escalator in Kyiv
-- **Pedagogical value**: natural scenario for сходити (descend the long escalator), виходити (exit to street), переходити (transfer at Khreshchatyk), зайти до вагону (board train), пройти через турнікет
+**1. Станція «Арсенальна» — Київський метрополітен**
+- Source: Ukrainian Wikipedia, "Арсенальна (станція метро)"
+- Opened: 6 листопада 1960 р., Святошинсько-Броварська лінія
+- Unique architectural fact: єдина в Східній Європі двосклепна станція глибокого закладення ("double-vault deep station")
+- The double escalator (55.8m + 46.6m) is the deepest and oldest in Kyiv
+- The plan calls it "the deepest station in the world" — this is a widely cited popular claim (~105m depth); Wikipedia does not phrase it as a world record explicitly, but the "deepest in Eastern Europe" framing is confirmed. Use the Kyiv superlative confidently; note the world-record claim as widely reported.
+- Pedagogical use: сходити ескалатором (descend), виходити з метро (exit), переходити на іншу лінію (transfer) — all three key verbs naturally embedded
 
-**2. Кам'янець-Подільська фортеця — облога 1621 р. (Wikipedia verified)**
-- 1621: Sultan Osman II besieged the fortress — key event for відійти (tactical retreat/withdrawal)
-- 1672: 300,000 Ottoman troops under Grand Vizier besieged and captured Kamianets on 18 August; Poles retreated from the fortress — пройти крізь облогу, відійти від міста
-- 1919–1920: Kamianets served as capital of the Ukrainian People's Republic (UNR) — historical resonance, decolonized framing opportunity
-- Fortress is one of "7 Wonders of Ukraine" — motivating for learners
+**2. Хотинська битва 1621 — відступ Османа II**
+- Source: Ukrainian Wikipedia, "Битва під Хотином (1621)"
+- Combined forces of Річ Посполита + Ukrainian Cossacks under hetman Петро Сагайдачний defeated the Ottoman army
+- Sultan Osman II "був змушений припинити війну" — i.e., відійти (retreat) from Ukrainian territory
+- Pedagogical use: відійти від міста (physical retreat), перейти через фортецю (crossing fortifications), пройти через облогу (pass through a siege) — literal + figurative prefix meanings embedded in an authentic historical narrative
+- Bonus: reinforces decolonized framing — Ukrainian Cossacks as active military agents defending territory, not passive subjects
 
 ---
 
 ## Common Learner Errors
 
-**1. при- vs. до- conflation**
-- Error: *"Я прийшов до краю"* used for both "arrived at the edge" and "reached the limit"
-- Correct distinction: **при-** = arrival/presence at a destination (goal reached, you are now there); **до-** = reaching a specific limit, edge, or endpoint (the journey's extent, not necessarily stopping there)
-- Why: Both involve reaching a point, so learners overgeneralise при-. The semantic gap — при- is goal-arrival, до- is limit-reaching — is not intuitive from English, where both map to "get to."
-- Key contrast pair: *прийти до друга* (arrive at friend's place, you're there) vs. *дійти до рогу* (reach the corner, often implying you continue or stop at that boundary)
+1. **при- vs. до- confusion** → Correct pair: *прийти до школи* (arrive at school — при- marks the arrival event) vs. *дійти до школи* (reach the school on foot — до- marks reaching the boundary/endpoint). Learners default to при- for all arrival contexts. Fix: при- = "I'm here now" (result of arrival); до- = "I reached that point" (trajectory endpoint). Example contrast: *Він прийшов до мене* (arrived to visit) ≠ *Він дійшов до мого будинку і зупинився* (reached my building and stopped).
 
-**2. походити vs. піти for "to go/set off"**
-- Error: *"Вчора я походив до магазину"* when meaning "I went to the store yesterday"
-- Correct: **піти** (пф., unidirectional base + по-) = set off, leave in a direction; **походити** (пф., multidirectional base + по-) = walk around for a while, roam
-- Why: The по- prefix on both forms looks identical; learners treat them as freely interchangeable. The base verb difference (іти vs. ходити) carries the meaning distinction.
+2. **по- + multidirectional vs. піти (unidirectional + no prefix)** → Learners say *"походити до магазину"* instead of *піти до магазину*. Root cause: they learn по- as a motion prefix and over-apply it. Fix: *походити* = walk around for a while (no specific destination); *піти* = set off in a specific direction. Diagnostic item in §4.3.8 mapping directly covers this friction point.
 
-**3. за- underuse / в- overgeneralisation for entry**
-- Error: Using *ввійти* for all "enter" contexts, missing the "brief visit / drop by" nuance of *зайти*
-- Correct: **ввійти/увійти** = neutral entry (enter a room, enter history); **зайти** = enter briefly, drop in, deviate from a path (зайти в гості, зайти в магазин по дорозі)
-- Also: *сонце зайшло* (the sun set) — figurative за- for "going beyond a boundary/behind"
-- Why: English "enter/go in" doesn't distinguish these; learners default to the neutral form.
-
-**Bonus error flagged by textbook (Grade 10, Karaman)**:
-- **відправлятися** (Russianism) — used where Ukrainian has specific motion verbs: *відбувати/виїжджати* (vehicle departing), *вирушати* (set out on a journey), *іти* (go). Content should model correct alternatives.
+3. **Russianism відправлятися** → Grade 10 Karaman textbook explicitly flags: Ukrainian learners under Russian influence use *відправлятися/відправитися* for all motion meanings. Correct Ukrainian: *виїжджати/виїхати* (depart by vehicle), *вирушати/вирушити* (set out), *відбувати/відбути* (depart — formal/transport). Content should actively model these alternatives.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-18 (дієслова руху: повна система — base verb pairs іти/ходити, їхати/їздити), b1-19 (прибуття та вихід — при- and ви- introduced), b1-20 (наближення та відхід — під- and від- introduced), b1-21 (figurative uses of motion verbs)
-- **Prepares for**: b1-25 (checkpoint — motion verbs: full assessment of the entire motion verb system across b1-18 through b1-24)
+- **Builds on**: b1-018 (motion full system — іти/ходити/їхати/їздити), b1-019 (arriving/exiting — при-, ви-), b1-020 (approaching/departing — під-, від-), b1-021 (figurative uses of motion verbs), b1-022/023 (motion patterns in other verbs)
+- **Prepares for**: b1-025 (checkpoint — motion verbs: cumulative test of all B1.3 content)
 
 ---
 
@@ -89,15 +84,25 @@ All 15 words verified ✅ in VESUM (15/15 found).
 
 ## Notes for Content Writing
 
-- **Frequency hierarchy for teaching order**: Teach піти / вийти / пройти first (highest IPM) before lower-frequency items like надійти / розійтися — these can appear in the practical application section rather than the core system section.
-- **Деколонізований фрейм**: The 1672 Ottoman siege at Kamianets is a Ukrainian-Polish-Ottoman encounter — no Russian axis involved. The 1919–1920 UNR capital note provides an organic Ukrainian-centred historical layer. Frame the fortress as a centre of Podillian/Ukrainian statehood, not a borderland contested between empires.
-- **відправлятися is a flagged Russianism** in Grade 10 Karaman textbook — avoid in all examples; use вирушати, відбувати, виїжджати as appropriate.
-- **Arsenalna escalator** is an ideal controlled vocabulary context: two actions (сходити ескалатором, виходити з метро) already familiar, with переходити as transfer verb — learners get spatial prefix logic reinforced by lived navigation experience.
-- **Aspectual transformation section** (§4.3.8 alignment): the Standard lists only perfective prefixed forms. Content should explicitly show the НДВ/ДВ aspect pair resulting from prefixation: ходити → заходити (impf.) / зайти (pf.) — this is the underlying grammar the Standard requires without spelling it out.
-- **по- homonymy**: по- + unidirectional base = set off in a direction (піти, поїхати); по- + multidirectional base = do for a while / roam (походити, поїздити). This must be treated as a dedicated subsection — it is the single most productive confusion point and the plan rightly flags it.
+1. **Textbook pattern to adopt** (Grade 5, Заболотний): the radial prefix diagram — a central verb with all prefixes radiating outward — is pedagogically proven and used in Ukrainian schools. Adapt this format for іти as a visual anchor in §Система просторових префіксів.
+
+2. **Prefix/preposition distinction exercise** (Grade 3, Ponomarova): the classic "забіг за товаришем / добігли до річки / відпливли від берега" exercise pattern is excellent for B1 — use a parallel structure with prefixed motion verbs and case-marked NPs to reinforce spatial semantics.
+
+3. **Arsenalna depth**: frame as *"Арсенальна — найглибша станція в Києві та одна з найглибших у світі"* — factually safe, pedagogically vivid. Avoid stating "deepest in the world" as a hard fact without Wikipedia citation.
+
+4. **Decolonized framing for Khotyn**: Osman II's retreat = Ukrainian Cossack military effectiveness, not Polish-Lithuanian victory. Saidachnyi's leadership = Ukrainian agency. Use *відійти* and *зазнати поразки* to describe Ottoman retreat — keeps verb focus intact while honoring the correct historical framing.
+
+5. **Register note for figurative uses**: *вийти заміж* is neutral/standard; *вийти сухим із води* is informal/idiomatic; *прийти до висновку* is formal/written. The plan's §Переносні значення section should tag register for each collocation.
+
+6. **Word count distribution check**: Plan allocates 1200 words to §Урбаністика та легенди — this is the largest section and carries both cultural hooks. Ensure the Arsenalna and Khotyn narratives together hit ~600 words each to stay within tolerance. The TTT diagnostic at 400 words is tight; use structured tables or mini-dialogues to reach count efficiently.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Prefixes of Usage](https://uk.wikipedia.org/wiki/Префікс) (Вікіпедія про словотвір)
+- [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/episode85/) (Аудіо практика)
+- [Ukrainian Motion Verbs with Prefixes](https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes) (Відео уроки)
 
 ### Textbook References (RAG)
 

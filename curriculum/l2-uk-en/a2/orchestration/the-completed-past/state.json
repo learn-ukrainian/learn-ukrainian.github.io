@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:56:05Z",
+      "ts": "2026-03-12T20:01:07Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T08:56:05Z",
+      "ts": "2026-03-12T20:01:07Z",
       "task_id": "v5-the-completed-past-pA",
       "mode": "full"
     }

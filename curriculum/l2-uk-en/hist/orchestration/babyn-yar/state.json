@@ -1,0 +1,23 @@
+{
+  "track": "hist",
+  "slug": "babyn-yar",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T07:53:41Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T07:53:41Z",
+      "task_id": "v5-babyn-yar-pA",
+      "mode": "full"
+    },
+    "content": {
+      "status": "failed",
+      "ts": "2026-03-13T07:53:43Z"
+    }
+  },
+  "last_updated": "2026-03-13T07:51:27Z"
+}

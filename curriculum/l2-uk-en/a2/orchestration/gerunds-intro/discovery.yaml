@@ -1,0 +1,113 @@
+discovered_at: '2026-03-12T18:22:47.471356+00:00'
+query_keywords:
+- Introduction to Gerunds
+- 'Дієприслівники:'
+- читаючи
+- працюючи
+- слухаючи
+- Дві дії одночасно
+- Two Actions at Once
+- Дієприслівники теперішнього часу
+- 'Present Gerunds: -ючи/-ачи'
+- Дієприслівники минулого часу
+- 'Past Gerunds: -вши/-ши'
+- 'Золоте правило: Підмет має збігатися'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=S3GgY9Fa8uk
+  channel: Ukrainian Lessons
+  title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle
+    in Ukrainian
+  relevance_score: 0.9
+  relevance_note: The video explicitly states it will discuss the 'дієприслівник'
+    (adverbial participle), which is the core grammatical topic of this module.
+  transcript_excerpt: далі ми поговоримо з вами про особливу частину мови дієприслівник
+    The adverbial participle
+  embed_suggestion: 'After section Вступ: Дві дії одночасно (Introduction: Two Actions
+    at Once) — The video directly introduces the topic of gerunds, making it suitable
+    after the module''s introductory section.'
+- url: https://www.youtube.com/watch?v=bpMgfxZVHL8
+  channel: Let's Learn Ukrainian
+  title: 'What is ДІЄПРИСЛІВНИК? | Ukrainian Grammar | #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLLtIRn44kSOhWeT_dQ0Uq_J1rfwg33vb3
+  channel: Let's Learn Ukrainian
+  title: Verbs
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0111
+  text: "Дієслова на -ся, -сь виражають дію, спрямовану на самого^ \nвиконавця (на\
+    \ самого себе).\n\\________________ _____________________ /\nКрок 1. Прочитай\
+    \ дієслова. Укажи їх особу, число.\nумиваєшся, обливаєшся умивається, обливається\n\
+    Крок 2. Прочитай дієслова умиваєшся, умивається. Поділи їх на \nсклади. Швидко\
+    \ пошепки промов останній склад кожного слова.\nшся [с':а]\nться —> [ц':а]\nКрокЗ.\
+    \ Зроби висновок та порівняй його з правилом.\nҐУ дієсловах 2-ї особи однини -шся\
+    \ вимовляють як [с':а]. У діє-^і \nсловах 3"
+  section_title: Сторінка 113
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0161
+  text: "•  Спишіть текст. Підкресліть дієслова. Укажіть у дужках час, \nособу й число\
+    \ дієслів за зразком у тексті.\nДієслова на -ся\n370. Прочитайте вірш Галини Кирпи.\n\
+    Дерево трудиться назеленітися.\nКвіточка трудиться начервонітися.\nБджілка трудиться\
+    \ налітатися.\nМетеличок трудиться нагойдатися.\nТравичка — водички напитися.\n\
+    Росинка — на білий світ надивитися.\n•  Випишіть дієслова на -ся. Доведіть, що\
+    \ вони означають дію, \nспрямовану на себе. Позначте будову виділених слів.\n\
+    •  Зробіть звуко-буквений аналіз ді"
+  section_title: Сторінка 162
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0080
+  text: "НАВЧАЮСЯ ВЖИВАТИ ДІЄСЛОВА В МОВЛЕННІ\n9| Прочитай. Випиши дієслова за абеткою.\n\
+    Щоб дізнатися новЄ про навколишній \nсвіт, можна: розглядати, слухати, читати,\
+    \ \nспостерігати, вимірювати, експериментувати, \nтобто збирати відомості про\
+    \ довкілля. А потім \nпорівнювати, обмірковувати і робити висновки.\nдоповнюю\
+    \ \nскладаю\n• Поцікався, у якій послідовності записав дієслова твій \nоднокласник\
+    \ (твоя однокласниця).\n10 Розкажи, як ти пізнаЄш світ. Доповни речення.\nЯ читаю\
+    \ ? .\nЯ слухаю ? .\nЯ спостерігаю ? .\nЯ екс"
+  section_title: Сторінка 82
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0065
+  text: "ІІ. Складіть два речення, використавши слова майструвати, виконувати, отримати\
+    \ \n(на вибір) як частини складених дієслівних присудків. ІІІ. Доберіть синоніми\
+    \ до виділених слів."
+  section_title: Сторінка 61
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0108
+  text: "1\nСлова для довідки: червоніти, втікати, думати, мріяти, ліну­\nватися,\
+    \ зазнаватися.\n2. Запиши дієслова в тому порядку, що й фразеологізми. Через \n\
+    риску запиши дієслова майбутнього часу в 2-й особі множини, \nпотім — у 3-й особі\
+    \ множини.\nЗразок. Бігати — бігатимете (2-га ос. мн.), будете бігати \n(2-га\
+    \ ос. мн.), бігатимуть (3-тя ос. мн.), будуть бігати (3-тя ос. мн.).\n299.1. Прочитай\
+    \ дієслова, розкриваючи дужки.\nМатим(е/и)ш, дбатим(е/и)те, шепоч(е/и)ш, скач(е/и)те,\
+    \ обері- \nгатим(е/и)ш, садитим(е/и)"
+  section_title: Сторінка 110
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

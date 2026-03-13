@@ -1,0 +1,110 @@
+discovered_at: '2026-03-12T18:27:41.307668+00:00'
+query_keywords:
+- Українське кіно та серіали
+- Introduction — Ukraine on Screen
+- Золота ера
+- The Golden Era — Dovzhenko and Poetic Cinema
+- Сучасне кіно та феномен дубляжу
+- Modern Cinema and the Dubbing Phenomenon
+- Документальне кіно та голос правди
+- Documentary Cinema and the Voice of Truth
+- 'Як говорити про фільми: лексика та граматика'
+- 'Talking About Movies: Vocab and Grammar'
+- Summary — Watch in Ukrainian!
+- Потрібно більше практики?
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=6RV-LyrIuBQ
+  channel: Repainted Fox
+  title: '#17 Кайдашева сім''я. Іван Нечуй-Левицький'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7we4NrzPKymMxn7_ALfKBs0P
+  channel: Ukrainian with Olha
+  title: Українські серіали- Ukrainian TV series
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrlit-mishhenko-2015_s0224
+  text: "À â \nîïîâ³äàíí³ «Ñêàðá»? Олекса Стороженко\nПодивіться ці фільми, \nспробуйте\
+    \ знайти спільне в \nжитті героя фільмів та \nукраїнського письменника."
+  section_title: Сторінка 142
+  grade: 7
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0225
+  text: "У  кінотеатрах УРСР \nпанувала російська мова. Більшість українських кінофільмів\
+    \ у  цей час \nстворили на Кіностудії імені О. Довженка в Києві. Саме тут працювали\
+    \ відомі режисери Л. Биков, \nЮ. Іллєнко, В. Івченко, М. Мащенко, К. Муратова,\
+    \ \nЛ. Осика та інші. Визначним явищем в  історії кінематографу \nцього періоду\
+    \ стала поява українського поетичного \nкіно. Цей напрям започаткували фільми\
+    \ С. Пара-\nджанова («Тіні забутих предків»), Ю. Іллєнка \n(«Криниця для спраглих»,\
+    \ «Білий птах з  чорною \nознакою»)"
+  section_title: Сторінка 124
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-2_s0000
+  text: "УМОВНІ  ПОЗНАЧЕННЯ\n — працюємо в парі або групі\n — розвиваємо творчі здібності\n\
+    \ — знайомлюся з літературними секретами\n — досліджую світ медіа\n — вчуся слухати\
+    \ і розуміти текст\n — розігруємо сценку, виставу\n© Вашуленко О. В., 2020\n©\
+    \ Видавничий дiм «Освiта», 2020\n \nВашуленко О. В.\nВ23\t \t\nУкраїнська мова\
+    \ та читання : підруч. для 3 класу \nзакладів загальної середньої освіти (у 2-х\
+    \ частинах). \nЧ. 2 / О. В. Вашуленко. — К. : Видавничий дім «Освіта», \n2020.\
+    \ — 160 с. : іл.\n\t\n\t ISBN 978-966-983-120-0.\nУ"
+  section_title: Сторінка 2
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0259
+  text: "КОЗАЦЬКА УКРАЇНА наприкінці 50-х років XVII —\nРОЗДІЛ 4  \nна початку XVIII\
+    \ ст.\n5. Історичний репортаж\nОб’єднайтеся з однокласниками /  однокласницями\
+    \ у творчі групи. \nУпорядкуйте ілюстрації за логікою історичних подій. На основі\
+    \ ілю­\nстративного колажу створіть сценарій до історичного кінофільму. Дайте\
+    \ \nйому назву. Зіграйте сцену з вашого кіно у класі.\nУ К Р А Ї Н А\n^  і \n\\\
+    і' * ч\nШЕКАША\n™ ,■ ПТІЛЛИ\nА  \n\"ТІклил О улчк\n6. Що ми знаємо з теми\nПеревірте,\
+    \ як ви засвоїли матеріал теми за допомо­\nгою он"
+  section_title: Сторінка 194
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 6-klas-ukrlit-avramenko-2023_s0000
+  text: 'Олександр АВРАМЕНКО
+
+    НОВА УКРАЇНСЬКА ШКОЛА
+
+    6
+
+    УКРАЇНСЬКА
+
+    література
+
+    УКРАЇНСЬКА
+
+    література
+
+    УКРАЇНСЬКА
+
+    література'
+  section_title: Сторінка 1
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

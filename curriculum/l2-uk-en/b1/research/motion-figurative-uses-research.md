@@ -2,85 +2,89 @@
 
 ## State Standard Reference
 
-**§4.3.8** (lines 2336–2338):
-> "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати."
+**§4.3.8** (lines 2336–2338): *"Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від'їхати, заїхати, поїхати, виїхати, об'їхати."*
 
-**§4.5.1.1** (lines 2437–2442) — Стилістичні засоби лексики:
-> "метафори: прийшла осінь, місто спить."
+**§4.5.1.1** (lines 2437–2442): *"Стилістичні засоби лексики: антоніми... синоніми... епітети... метафори: прийшла осінь, місто спить."*
 
-**Alignment**: §4.3.8 mandates mastery of the full prefixed motion verb paradigm — this module extends that by teaching how those same prefixed forms generate figurative/idiomatic meaning (the metaphorical layer the Standard points toward via §4.5.1.1). The Standard explicitly cites "прийшла осінь" as a model metaphor: a motion verb ("прийти") used in abstract, non-physical sense. This module systematises that pattern.
-
-**Additional note — §4.3.8 scope**: The Standard lists both *іти*-family and *їхати*-family prefixed forms. This module focuses on *іти*-family (the richer source of figurative expressions), with *їхати*-derivatives appearing only marginally in figurative use.
+**Alignment**: §4.3.8 establishes the formal morphological paradigm for prefixed motion verbs (the literal system). This module extends that into the figurative/idiomatic layer. §4.5.1.1 provides the pedagogical frame: metaphor as a stylistic lexical device, with the State Standard's own examples ("прийшла осінь") being motion-verb metaphors — a direct hook into the lesson's core concept. The module correctly positions figurative motion verbs at the intersection of word formation (§4.3.8) and stylistics (§4.5.1.1).
 
 ---
 
 ## Vocabulary Frequency
 
-All forms verified in VESUM (15/15 found). Frequency data from GRAC (2B-token corpus):
+GRAC concordance and frequency data collected. Note: GRAC multi-word phrase queries return 0 when the exact string isn't a single token — concordance mode provides actual evidence.
 
-| Word | Freq (GRAC) | IPM | Key collocations (GRAC) |
-|------|------------|-----|--------------------------|
-| вийти | 102,802 | 50.79 | вийти з, вийти на (strongest) |
-| пройти | 74,975 | 37.04 | пройти через, пройти в/у |
-| виходити | 52,455 | 25.92 | виходить, що (discourse marker) |
-| перейти | 49,695 | 24.55 | перейти до, перейти на (nearly equal weight) |
-| зайти | 28,468 | 14.07 | зайти до, зайти в |
-| дійти | 19,858 | 9.81 | дійти + висновок (colloc freq: 31,124!) |
-| підійти | 16,875 | 8.34 | підійти до (colloc freq: 97,190 — dominant) |
-| відійти | — | — | відійти від (18,648) |
-| обійтися | — | — | обійтися без (32,881) |
-| фразеологізм | ✅ VESUM | — | — |
-| переносний | ✅ VESUM | — | переносне значення |
-| буквальний | ✅ VESUM | — | буквальний зміст |
-| водити | ✅ VESUM | — | водити за ніс |
-| накивати | ✅ VESUM | — | накивати п'ятами |
+| Expression | GRAC Evidence | Register / Notes |
+|---|---|---|
+| **дійти до висновку** | 5+ concordance hits (formal prose, journalism) | Formal written; stylistically preferred over прийти до висновку |
+| **відійти від теми** | 5+ concordance hits (colloquial-academic mix) | High frequency in discussions, essays, podcasts |
+| **зайти в глухий кут** | 5+ concordance hits (news, political discourse, fiction) | Very high; journalism staple for stalled negotiations |
+| **вийти з ситуації** | 5+ concordance hits (political, narrative, legal) | Productive collocation; pairs well with "гідно вийти" |
+| **підійти до питання** | 5+ concordance hits (professional, scientific, colloquial) | Formal register; collocates with: серйозно, об'єктивно, з іншого боку |
+| **перейти до справи** | Exact phrase 0 in GRAC (phrase-internal variation); natural form "перейдемо до справи" is native colloquial | High-frequency as pragmatic discourse marker |
+| **пройти через** | Phrase-level query returns 0; figurative sense well attested in literary corpus | Emotional register; collocates with: випробування, пекло, кризу |
+| **виходить, що** | Productive discourse connector; all VESUM forms verified | High-frequency logical discourse particle |
 
-**Key observation**: The collocation `дійти + висновок` (31,124 co-occurrences) is one of the strongest verb+noun collocations in the corpus — this is core B1 phraseology worth intensive focus. Similarly, `підійти до` (97,190) is the dominant collocation pattern for that verb, confirming its importance as a high-frequency professional expression.
+All core verbs verified in VESUM: **виходити, дійти, зайти, відійти, підійти, обійтися, перейти, пройти, вийти** — all confirmed. Additional lexical items confirmed: **збожеволіти, накивати, вискочити, коноплі, криза, випробування, глухий кут**.
 
 ---
 
 ## Cultural Hooks
 
-1. **"Гоголем ходити" — the bird, not the writer** (Wikipedia: *Гоголь зеленоголовий*, Bucephala clangula). The гоголь is a water bird (common goldeneye duck) known for its upright, proud posture when walking on land. The idiom "ходити гоголем" means to walk with an air of self-importance, derived from this duck's distinctive bearing — *not* from the writer Гоголь. This etymology is pedagogically useful: it shows how Ukrainian idioms encode observation of the natural world. Source: `uk.wikipedia.org/wiki/Гоголь_зеленоголовий`.
+**1. «Гоголем ходити» — the duck's proud strut**
+The idiom originates from the *гоголь* (гоголь зеленоголовий, *Bucephala clangula*) — a diving duck native to Ukraine, known for its distinctively upright, chest-forward posture when walking on land. The bird's proud bearing became a folk metaphor for swaggering self-importance. Ukrainian Wikipedia confirms: *"Го́голь зеленоголо́вий... єдиний вид роду у фауні України. В Україні — гніздовий, перелітний, зимуючий."* This is a wholly Ukrainian folkloric metaphor with no equivalent in other Slavic languages — a strong decolonized cultural anchor.
 
-2. **Metaphor etymology from Zabolotnyi Grade 11 textbook** (RAG chunk `11-klas-ukrmova-zabolotnyi-2019_s0005`): Метафора is defined as "від гр. metaphora – переміщення, перенесення." This is a perfect metalinguistic hook — the word *metaphor* itself is a Greek motion word meaning "to carry across." Learners studying motion verb figurative use can appreciate that the very concept of metaphor is built on the idea of movement.
+**2. State Standard §4.5.1.1 uses motion-verb metaphors as its primary examples**
+The Standard's own illustrative metaphors are *"прийшла осінь, місто спить"* — both motion-verb constructions. This is pedagogically significant: the official curriculum already introduces the concept of motion-verb metaphor at the stylistics entry point. This module deepens and systematizes what the Standard introduces only briefly.
 
 ---
 
 ## Common Learner Errors
 
-1. **прийти до висновку vs дійти до висновку** → GRAC confirms "дійти + висновок" is a very high-frequency collocation (31,124). Both forms are standard Ukrainian; the plan correctly notes that "дійти до висновку" is stylistically preferred in analytical/formal discourse (emphasises reaching a limit or endpoint), while "прийти до висновку" is widespread in colloquial speech. Learners influenced by English "come to a conclusion" tend to over-rely on "прийти," missing the nuance of "дійти" which implies effort and directionality.
+1. **«прийти до висновку» vs «дійти до висновку»** — both are standard Ukrainian, but "прийти до висновку" is neutral/informal while "дійти до висновку" carries the semantic weight of *reaching a limit/endpoint* (prefix до- = culmination). Error pattern: learners use only "прийти" (the more transparent form) and never activate the stylistically richer "дійти". Correct approach: teach both, mark "дійти до висновку" as the preferred formal/written form. GRAC concordance confirms "дійшов/дійшла до висновку" is the dominant literary form.
 
-2. **Literal translation of English motion idioms** → "go crazy" → ❌ "йти божевільним" (ungrammatical; "йти" does not take an adjective complement this way in Ukrainian) → ✅ "зійти з розуму" / "збожеволіти." Also "go through something" in emotional sense → ❌ "пройти щось" (too literal) → ✅ "пройти через + accusative" ("пройти через випробування"). The preposition "через" is obligatory for the experiential meaning.
+2. **Calque «йти божевільним» / «іти з розуму»** — direct translation of English "go crazy". The correct Ukrainian constructions are **зійти з розуму** (lit. "step off the mind") or **збожеволіти** (single verb). The calque misapplies the literal motion structure to an idiom that doesn't work that way in Ukrainian.
 
-3. **Motion verb in place of occurrence/existence verb** → ❌ "ця проблема йде часто" (calque from English "this problem comes up often") → ✅ "ця проблема виникає часто" / "ця проблема трапляється часто." Ukrainian does not extend "іти" to describe recurring abstract events the way English extends "go/come."
+3. **Overgeneralizing motion metaphors to process verbs** — learners attempt "ця проблема йде часто" modeled on "час іде" or "справа йде добре." The error is domain-mismatch: abstract recurrence requires **виникає/трапляється**, not motion verbs. Ukrainian motion metaphors apply to *directed, goal-oriented abstract movement* (переговори зайшли в глухий кут), not to frequency or recurrence.
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-18 (дієслова руху: повна система), b1-19 (рух: прибуття та вихід), b1-20 (рух: наближення та відхід)
-- **Prepares for**: b1-22 (повна інтеграція префіксів руху), b1-25 (checkpoint — дієслова руху)
+- **Builds on**: `b1-018` (motion-coming-going), `b1-019` (motion-passing-crossing), `b1-020` (motion-starting-returning), `b1-021` (motion-approaching-departing), `b1-022` (motion-full-prefix-integration) — the entire Motion Phase B1.2 prefix system is prerequisite; this module is its semantic capstone.
+- **Prepares for**: `b1-025` (checkpoint-motion-verbs) — the checkpoint will test idiomatic expressions established here. Also connects to B2 stylistics (metaphor, register, lexical tropes) and B2 phraseological units.
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered during research — discover phase handles video sourcing)
+- (none encountered during this research phase)
 
 ---
 
 ## Notes for Content Writing
 
-- **The "metaphor as movement" hook** (metaphora = перенесення) should anchor the Explanation section — it frames the entire module conceptually and is sourced from Zabolotnyi Grade 11.
-- **"Гоголем ходити" etymology** (from the bird, not the writer) is a strong engagement hook — it rewards curious learners and corrects a common misconception. Keep Гоголь the writer out of the framing entirely to avoid Russocentric cultural framing (Wikipedia notes him as primarily a Russian literature figure).
-- **GRAC frequency data** confirms the plan's vocabulary choices are high-frequency and corpus-backed. "Дійти до висновку" and "підійти до питання" are both attested at very high rates — prioritise these.
-- **Prefix semantic logic** (До- = reaching a limit, Ви- = exiting a state, Пере- = crossing to new territory) is not explicitly named in §4.3.8 but is the natural extension of the paradigm listed. Frame this as organic Ukrainian prefix logic, not a calque from any other system.
-- **Register distinction** (§4.5.1): "перейти до справи" and "підійти до питання" belong to formal/professional register; "до мене дійшло" and "зайти занадто далеко" are colloquial — this contrast should be made explicit in the Practice section.
-- **Audit gate — Russianisms**: watch for "так сказать" (русизм) creeping in where "так би мовити" / "інакше кажучи" should be used; also ensure "отримати висновок" never appears (not standard) — always "дійти висновку" or "зробити висновок."
+1. **The TTT structure is well-matched to this topic**: the Test phase (literal vs figurative recognition) will surface the exact gap the module fills. The plan's diagnosis exercise is strong — keep it.
+
+2. **«Вискочити як Пилип з конопель»**: conoplja (коноплі) were a staple field crop in traditional Ukrainian village life — the image is someone jumping out of a hemp field unexpectedly. This needs a brief cultural note in the content (1–2 sentences), not assumed knowledge.
+
+3. **Prefix semantic logic (for the Explanation section)**:
+   - **До-**: movement toward completion/limit → дійти до (висновку, кінця, суті)
+   - **Ви-**: movement outward/exit from a state → вийти з (ситуації, кризи, тіні)
+   - **Пере-**: movement across/transition → перейти до (справи, іншого питання)
+   - **За-**: movement into/deep entry → зайти в (глухий кут, тупик), занадто далеко
+
+4. **«Виходить, що»** deserves spotlight as a high-frequency logical discourse connector — it bridges the motion literal form (виходити = to exit) with a purely abstract function (it turns out / it follows that). This is one of the cleanest examples of the grammaticalization of motion into discourse.
+
+5. **Immersion discipline**: the plan correctly targets 100% Ukrainian. The State Standard's own metaphor examples ("прийшла осінь") can anchor the opening explanation entirely in Ukrainian — no English scaffolding needed.
+
+6. **Decolonized framing is clean here**: these idioms are specifically Ukrainian in origin (гоголь duck, конопляні поля, Пилип as a village-name). Frame them as originating from Ukrainian agrarian and folk culture — no comparison to Russian equivalents is necessary or useful.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [Фразеологізми з дієсловами руху](https://uk.wikipedia.org/wiki/Фразеологія) (Вікіпедія (для загального розвитку).)
 
 ### Textbook References (RAG)
 

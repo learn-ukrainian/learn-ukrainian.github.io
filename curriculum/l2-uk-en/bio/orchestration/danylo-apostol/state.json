@@ -1,0 +1,17 @@
+{
+  "track": "bio",
+  "slug": "danylo-apostol",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:15:20Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:15:20Z",
+      "note": "merged-into-research"
+    }
+  }
+}

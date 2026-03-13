@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 104 — E2E
+FAIL: pipeline hist 104
 
   Module:   karpatska-ukraina
   Track:    hist
-  Mode:     e2e
-  Words:    6252 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T23:23:53Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:18:44Z

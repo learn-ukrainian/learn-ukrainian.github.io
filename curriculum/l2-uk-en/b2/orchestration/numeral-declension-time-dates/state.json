@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "numeral-declension-time-dates",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:50:35Z",
+      "task_id": "v5-numeral-declension-time-dates-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:50:35Z",
+      "note": "merged-into-research"
+    }
+  }
+}

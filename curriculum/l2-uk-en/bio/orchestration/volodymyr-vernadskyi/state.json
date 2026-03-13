@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "volodymyr-vernadskyi",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:21:37Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:21:37Z",
+      "task_id": "v5-volodymyr-vernadskyi-pA",
+      "mode": "full"
+    }
+  }
+}

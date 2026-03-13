@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "oleksa-slisarenko",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:43:53Z",
+      "task_id": "v5-oleksa-slisarenko-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:43:53Z",
+      "note": "merged-into-research"
+    }
+  }
+}

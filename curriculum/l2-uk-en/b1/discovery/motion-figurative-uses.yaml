@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:30:31.180986+00:00'
+discovered_at: '2026-03-12T21:17:54.260309+00:00'
 query_keywords:
 - Переносні значення дієслів руху
 - Тест
@@ -15,7 +15,12 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Фразеологія
+  title: Фразеологізми з дієсловами руху
+  source: Вікіпедія (для загального розвитку).
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0056

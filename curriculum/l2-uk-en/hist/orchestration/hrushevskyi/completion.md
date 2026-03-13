@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 87 — E2E
+FAIL: pipeline hist 87
 
   Module:   hrushevskyi
   Track:    hist
-  Mode:     e2e
-  Words:    5275 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T21:46:35Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:16:07Z

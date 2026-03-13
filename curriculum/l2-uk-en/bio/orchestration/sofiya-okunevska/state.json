@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "sofiya-okunevska",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:47:00Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:47:00Z",
+      "task_id": "v5-sofiya-okunevska-pA",
+      "mode": "full"
+    }
+  }
+}

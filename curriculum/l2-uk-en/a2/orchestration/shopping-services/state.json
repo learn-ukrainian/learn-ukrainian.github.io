@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "shopping-services",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:23:20Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:23:20Z",
+      "task_id": "v5-shopping-services-pA",
+      "mode": "full"
+    }
+  }
+}

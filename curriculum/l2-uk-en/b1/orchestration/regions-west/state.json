@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "regions-west",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:10:27Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:10:27Z",
+      "task_id": "v5-regions-west-pA",
+      "mode": "full"
+    }
+  }
+}

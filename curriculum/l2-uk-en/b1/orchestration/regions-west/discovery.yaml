@@ -1,0 +1,107 @@
+discovered_at: '2026-03-12T18:09:22.500331+00:00'
+query_keywords:
+- 'Українські регіони: Захід'
+- Захід як вікно в Європу
+- The West as a Window to Europe
+- Львів
+- Lviv — City of Coffee and Architecture
+- 'Галичина: Традиції та мовний колорит'
+- 'Galicia: Traditions and Linguistic Flavor'
+- Закарпаття
+- Zakarpattia — A Mosaic of Cultures and Nature
+- Захід у серці України
+- The West in the Heart of Ukraine
+- Western Ukraine's regions and cultural heritage
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=84pqXbI6G44
+  channel: Ukrainian Lessons
+  title: 'ULP 5-168 | Етнографічні регіони України. Частина 1: Захід і Північ України
+    | Ukrainian Lessons P...'
+  relevance_score: 0.9
+  relevance_note: The video explicitly discusses ethnographic regions of Ukraine,
+    with a focus on the West ('Захід') and specifically mentions 'Галичина', directly
+    aligning with the module's topic and key regions.
+  transcript_excerpt: етнографічні регіони України ... Чи чули ви такі назви Галичина
+    Поділля Покуття бесарабія можливо деякі чули а деякі ні правда це етнографічні
+    регіони України
+  embed_suggestion: 'After section ''Вступ: Захід як вікно в Європу'' -- it provides
+    an excellent general introduction to ethnographic regions and specifically highlights
+    Western Ukraine.'
+- url: https://www.youtube.com/watch?v=PLIumsbnlfadia0vQmaqkkSCuUEkfOTm1g
+  channel: Klopotenko
+  title: ГАСТРО ЕКСПЕДИЦІЇ ЄВГЕНА КЛОПОТЕНКА | Україна і її давні рецепти та традиції
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-hlibovska-2024_s0175
+  text: "Вірменський собор у Львові. Світлина \nКам’янецька фортеця. Світлина \nВ’їзна\
+    \ вежа Луцького замку. Світлина \nЗамок Паланок у Мукачеві. Світлина"
+  section_title: Сторінка 85
+  grade: 7
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0078
+  text: "РОЗДІЛ 2\n80\n2.\t СУЧАСНА УКРАЇНА НА КАРТІ ЄВРОПИ\nТериторія сучасної України\
+    \ формувалася упродовж віків \nі набула остаточних контурів у ХХ ст. Україна —\
+    \ найбільша \nза площею держава Європи. Вона має вигідне географічне \nположення.\n\
+    УКРАЇНА В ЄВРОПІ\n1.\t Покажіть на карті кордони і столицю України.\n2.\t Назвіть\
+    \ країни Європейського Союзу, до яких громадяни України \nможуть приїжджати вільно,\
+    \ без візи.\nБезвізовий режим — можливість для громадян України вільно пе-\nретинати\
+    \ міждержавні кордони країн Європ"
+  section_title: Сторінка 80
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0084
+  text: "81\n § 34–35.  Позначення  звуків  мовлення  на  письмі.  Алфавіт\n3.\tРозташуйте\
+    \ й запишіть назви обласних центрів України за алфавітом. \nУ дужках додайте інформацію\
+    \ про напрямок руху до кожного міста, \nякщо виїжджати з вашого населеного пункту\
+    \ (за зразком). \nНапрямки руху: \n•\t західний;\n•\t східний;\n•\t південний;\
+    \ \n•\t північний; \n•\t південно-західний; \n•\t південно-східний; \n•\t північно-західний,\
+    \ \n•\t північно-східний.\nЗразок. Мій населений пункт — м. Київ. \nВінниця (південно-західний);\n\
+    Дніпро (півде"
+  section_title: Сторінка 81
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0195
+  text: "135\nПунктуаційна норма\nУжгород і Вроцлавe Але серцем ôестивалю став Львів\
+    \ – місто, у якому \nзбираються музиканти, Áоб потім роз’їхатися з концертами\
+    \ по різних \nлока¾іях. У місті Лева джаз виконують у ôілармонії, а вечірні джем-сейшени\
+    \ \nтрадиційно проходять у галереї «Дзиãа». Під час ôестивалю також \nпрохо дять\
+    \ майстер-класи й наукові конôеренції, присвячені джазу. Родзинкою заходу є презентація\
+    \ максимальної кількості джазових \nстилів: свінг, ô’южн, бі-боп, джаз-рок, ясс,\
+    \ ôанк, кул, ôрі-джаз тоÁо"
+  section_title: Сторінка 135
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0334
+  text: "258 \nБарвограй ідей \nПопрацюйте в групах. Охарактеризуйте особливості суспільного\
+    \ \nрозвитку історико-географічних регіонів України: Правобережжя, \nЛівобережжя,\
+    \ Слобожанщини, Півдня, західноукраїнських земель у \nранньомодерну добу за критеріями:\
+    \ соціальні стани, основні \nсуспільно-політичні події, історичні постаті  регіону,\
+    \ вплив політики держав, до \nяких входили українські землі, на становище населення.\
+    \ Обговоріть результати \nсвого дослідження з однокласниками та однокласницями.\
+    \ 3. Внесок Украї"
+  section_title: Сторінка 130
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

@@ -1,0 +1,196 @@
+discovered_at: '2026-03-13T01:08:31.848879+00:00'
+query_keywords:
+- 'Документи Січі: Козацьке самоврядування'
+- Устрій Січі
+- Типи документів
+- Козацьке право
+- Фрагмент
+- Січ і зовнішній світ
+- 'Analyze the causes and consequences of документи січі: козацьке самоврядування'
+- Evaluate the historical significance of січ як держава
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0242
+  text: 'Розділ ІІІ. Козацтво від боротьби за станові інтереси до творення держави
+
+    148
+
+    ІСТОРИЧНА СКАРБНИЧКА'
+  section_title: Сторінка 148
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0232
+  text: "СФОРМУЛЮЙТЕ СУДЖЕННЯ ПРО:\n\x84\n\x84\nвплив Козацької держави \nна  міжнародні\
+    \ відносини \nРанньомодерної доби;\n\x84\n\x84\nзначення зовнішньої політики \n\
+    Б. Хмельницького для Козацької \nдержави;\n\x84\n\x84\nпричини звернення гетьмана\
+    \ \nпо  допомогу до Московської \nдержави та зміст «Березневих \nстатей» 1654 \
+    \ р. Працюємо з  хронологією\nСічень \n1654  р. Переяславська рада\nБерезень \n\
+    1654  р. «Березневі статті»"
+  section_title: Сторінка 141
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0144
+  text: "За матеріалом параграфа і додатковими джерелами \nрозпочніть складання таблиці\
+    \ «Розвиток земель-князівств за доби по-\nлітичного дроблення Русі». Назва \n\
+    князівства\nТериторія \nрозміщення\nНайбільші \nміста\nГосподарський \nрозвиток\n\
+    Політичне \nжиття"
+  section_title: Сторінка 97
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5290766358375549
+  chunk_id: c44f1207_c0957
+  text: "Полїтична орґанїзація землї — її ідеальна схема. \r\nЗемська самоуправа,\
+    \ віче на Українї. Функції віча: вибір і усуваннє князя в \r\nКиїві, ряд; неправильність\
+    \ сеї вічевої функції й причини того; факти з иньших \r\nземель; відносини князїв\
+    \ до сеї функції віча. Участь віча в иньших полїтичних \r\nсправах — на запитаннє\
+    \ князя і з власної інїціативи. Город і пригороди. \r\nСтановище князїв супроти\
+    \ віча. Склад віча, форми скликання і нарад віча, місця \r\nнарад і ставленнє\
+    \ рішень."
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5120651125907898
+  chunk_id: c44f1207_c2462
+  text: "80) Ibid. c. 398-401, Акты Зап. Россіи III c. 58 і \r\n 121.\n\n81) Див.\
+    \ про се мою студентську роботу: \r\n Южнорусскіє господарскіе замки въ пол. XVI\
+    \ в., київські Унив. ИзвЂстія 1890, \r\n II.\n\n82) Акты Зап. Россіи III с. 28\
+    \ і 54.\n\n83) Дневник сойму 1569 р. вид. Кояловичом c. 290.\n\n84) Ibid. c. 450\
+    \ і далї.\n\n85) Див. c. 36-7.\n\n86) Роздїл III арт. 12, пор. петицію 1551 р.\
+    \ — \r\n Акты Зап. Рос. III, с. 26-7.\n\n87) Археографическій сборникъ І c. 12.\n\
+    \n88) Статутъ 1566 р. розд. III арт. 4, Статутъ 1588 \r\n р. р"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5028060674667358
+  chunk_id: 3d7a3a6b_c0008
+  text: "Для дослідження генези козацької становості\r\nвикористано матеріали Центрального\
+    \ державного історичного архіву України в\r\nКиєві. Так, у фондах Житомирського\
+    \ гродського суду та збірках документів родин\r\nпольських і литовських магнатів,\
+    \ зокрема, Замойських і Сапєг містяться\r\nсвідчення, які дають уявлення про становище\
+    \ козацтва в кінці XVI — першій\r\nполовит XVII ст. Цікаві інформативні дані взаємовідносин\
+    \ запорожців із владою\r\nта представниками інших верств, списки особового складу\
+    \ рядових козаків є"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm

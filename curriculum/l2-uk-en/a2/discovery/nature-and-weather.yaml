@@ -1,0 +1,170 @@
+discovered_at: '2026-03-12T17:01:45.831507+00:00'
+query_keywords:
+- Nature and Weather
+- погода
+- дощ
+- сніг
+- Природа України
+- Ukraine's Nature
+- 'Лексика: Ландшафти та легенди'
+- 'Vocabulary: Landscapes and Legends'
+- 'Граматика: Погода та стани'
+- 'Grammar: Weather and States'
+- Прогноз та розмови
+- Forecast and Dialogues
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=ycCrSrHCezQ
+  channel: Ukrainian Lessons
+  title: ULP 1-16 | Talking about weather in Ukrainian
+  relevance_score: 0.9
+  relevance_note: Directly teaches phrases and vocabulary related to weather, including
+    a dialogue discussing various weather conditions like sunny, warm, rainy, and
+    cold.
+  transcript_excerpt: Today You will learn The useful phrases to discuss weather in
+    Ukrainian... яка там погода ой чудова погода дуже тепло сонячно температура +29
+    Ого як класно а ти в Україні в Києві Так я в Києві тут справжня осінь іде дощ
+    холодно температура +3 +5.
+  embed_suggestion: 'After Практика: Прогноз та розмови -- It offers practical dialogues
+    and useful phrases for discussing daily weather, directly supporting the module''s
+    practical section.'
+- url: https://www.youtube.com/watch?v=6MRrGpcGEp4
+  channel: Ukrainian Lessons
+  title: FMU 1-28 | How to talk about the weather in Ukrainian | 5 Minute Ukrainian
+  relevance_score: 0.9
+  relevance_note: Focuses on common conversational phrases for discussing weather
+    and forecasts, utilizing relevant vocabulary such as 'погодка', 'дощ', 'вітер',
+    and 'прогноз'.
+  transcript_excerpt: How to talk about the weather in Ukrainian... Ну й погодка сьогодні
+    дощ вітер температура десь 1 градус бр що там за прогнозом ой прогнозують дощі
+    на всі вихідні але має розпогодитись З понеділка.
+  embed_suggestion: 'After Практика: Прогноз та розмови -- It provides a practical
+    dialogue about weather forecasts and expressions, perfectly fitting the module''s
+    practical application of weather vocabulary and grammar.'
+- url: https://www.youtube.com/watch?v=PLIumsbnlfadhY_IATnQMLphVDQ84RIRoV
+  channel: Klopotenko
+  title: Десерти | Рецепти Тортів і Десертів | Євген Клопотенко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=kjrHbYBezFI
+  channel: Let's Learn Ukrainian
+  title: Swear in Ukrainian! Learn some Light Profanities to Speak Like a Native
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/fmu28/
+  title: How to talk about the weather in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode16/
+  title: Talking about weather in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode66/
+  title: Sharing memories + Locative case with places
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - locative
+  - vocabulary
+  - weather
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 66
+- url: https://www.ukrainianlessons.com/episode43/
+  title: Looking for an apartment + Special plural forms
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - grammar
+  - plural
+  - vocabulary
+  - weather
+  - housing
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 43
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0113
+  text: "115\n2   \aПрочитай уривок із вірша Лесі Лужецької.\nУкраїна — край чудовий!\n\
+    Є в нім луки, сині гори.\nЄ ліси — густі, дрімучі.\nЄ сади — рясні, квітучі.\n\
+    Є поля у краю тім.\nІ річки чудові в нім.\nЛуки — лук а  (ж. р.)\n\t\n  \aНазви\
+    \ іменники, ужиті у множині. Утвори від них форму однини і \nзапиши за зразком.\
+    \ Познач закінчення і визнач рід іменників.\n\t \t\n  \aПозначте закінчення іменників\
+    \ в однині і множині. Зробіть \nвисновок про закінчення іменників у різних числових\
+    \ формах.\n\t \t\n  \aРозкажіть, які добрі спра"
+  section_title: Сторінка 115
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-2_s0092
+  text: "\aЧи є в тексті слова, значення яких вам незрозуміле? \nОбговоріть, що вони\
+    \ означають. Якщо виникнуть труд­\nнощі, зверніться до словника.\n \n\t \aЯкий\
+    \ період весни описує авторка? Про які зміни у природі \nвона розповідає? Що вказує\
+    \ на те, що це рання весна?\n \n\t \aДе раніше тане сніг? Чому? Як про це сказано\
+    \ в тексті?\n \n\t \aУ скількох реченнях ужито слово сніг? Прочитай їх.\n \n\t\
+    \ \aЗнайдіть і прочитайте речення, у яких є такі слова: сонце, \nповітря, сонячне\
+    \ проміння, небо, поля, ліс, струмочки.\n\t\n\aПереглян"
+  section_title: Сторінка 94
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0169
+  text: "Що є волею для неї? ÒÂÎÐ×Å ÇÀÂÄÀÍÍß\n18. За бажанням знайдіть інформацію\
+    \ про плавні Дніпра й Дунаю, їхній рослинний \nі  тваринний світ. Підготуйте розповідь,\
+    \ презентацію або відеоролик для одно-\nкласників / однокласниць."
+  section_title: Сторінка 114
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0045
+  text: "2| Вивчи вірш Павла Грабовського і запиши його з пам'яті.\nХмара небо криє.\
+    \ \nСонечко не блисне.\nВітер вовком виє. \nДощ потоком висне.\n• Підкресли слова\
+    \ — назви предметів.\n3| Запишіть прислів'я і приказки про сонце, доповнюючи \n\
+    словами — назвами предметів із довідки. Поясніть їхній \nзміст.\nБлисне сонце\
+    \ і в наше ? .\nСонце встане, то й ? настане.\nСонце блищить, а ? тріщить.\nСонце\
+    \ низько, ? близько.\nСонце на ? повертає, а зима — на мороз.\nДовідка\nРанок,\
+    \ мороз, віконце, \nліто, вечір.\nА які ти знаєш пр"
+  section_title: Сторінка 47
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0188
+  text: "Рильський). 5. Цілує сонце рушники у чистій матери­\nній хаті (Д. Луценко).\
+    \ 6. Між листом зашелестів густий рівний дощ \n(С. Васильченко). ІІ. Складіть\
+    \ усно одне речення, використавши прикметники теплий, лагідний як одно-\nрідні\
+    \ означення. Форму прикметників можна змінювати. ЗВЕРНІТЬ УВАГУ!"
+  section_title: Сторінка 160
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

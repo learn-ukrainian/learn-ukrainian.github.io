@@ -1,0 +1,214 @@
+discovered_at: '2026-03-13T00:00:24.946382+00:00'
+query_keywords:
+- 'Повість минулих літ I: Структура та автори'
+- Структура літопису
+- Питання авторства
+- Редакції та рукописи
+- Мова літопису
+- Чому важлива критика джерела
+- 'Analyze the causes and consequences of повість минулих літ i: структура та автори'
+- Evaluate the historical significance of найстаріший літопис русі
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0013
+  text: 'Зверніться з електронним або звичай-
+
+    ним листом до будь-кого з письменників, які мешкають у вашому місті, районно-
+
+    му центрі, селі, думка якого вам цікава. Якщо можна організувати особисту зустріч,
+
+    проведіть її у формі інтерв’ю і поставте підготовлені запитання. 1. Ковалів Ю.І.
+    Літературознавча енциклопедія. – К., 2007. 2. Фролова К.П. Цікаве літературознавство.
+    – К., 1991. 3. Словник літературознавчих термінів: https://onlyart.org.ua/dictionary-literary-
+
+    terms/.'
+  section_title: Сторінка 10
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0026
+  text: "Які з  норм літературної мови \nв  кожному з  ви5падків порушено? Звіртеся\
+    \ з  поданою на фо5рзаці підручника табли-\nцею «Норми літературної мови»."
+  section_title: Сторінка 21
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0157
+  text: "Які з  норм літературної мови \nв  кожному з  ви5падків порушено? Звіртеся\
+    \ з  поданою на фо5рзаці підручника табли-\nцею «Норми літературної мови»."
+  section_title: Сторінка 110
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0142
+  text: '87
+
+    8
+
+    ДАВНЯ ЛІТЕРАТУРА
+
+    Äèñêóòóєìî
+
+    1. Чи має право літописець, створюючи свою працю, висловлювати власне став-
+
+    лення до зображуваних подій? І якщо він так чинить, то чим це зумовлено? 2. Доведіть
+    чи спростуйте думку, що козацькі літописи відіграли важливу роль у
+
+    формуванні національної самосвідомості українців. 3. Проаналізуйте, які спільні
+    риси можна віднайти в давніх літописних творах
+
+    («Слово про похід Ігорів», «Повість временних літ») і козацьких літописах. 4.
+    Поміркуйте й аргументовано доведіт'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6195688843727112
+  chunk_id: 45f18a4c_c0255
+  text: "Про виникнення «Повісті минулих лі т», її авторів та\r\nредакції див.: Рыбаков\
+    \ Б. А. Древняя Русь. Сказания. Былины. Летописи.\r\nМ., 1963 (найновіша розробка\
+    \ питання); Шахматов А. А. Разыскания о\r\nдревнейших русских летописных сводах.\
+    \ СПб., 1908; його ж. Повесть\r\nвременных лет. Т. І. Вводная часть. Текст. Примечания.\
+    \ Пгр., 1916; Лихачев\r\nД. С. Русские летописи и их культурно-историческое значение.\
+    \ М.-Л., 1947.\r\nДосить повну бібліографію з усіх аспектів літописання див.:\
+    \ Библиография\r\nрусского летоп"
+  work: Галицько-Волинський літопис
+  author: Невідомий
+  year: 1292
+  genre: chronicle
+  language_period: old_east_slavic
+  source_url: http://litopys.org.ua/litop/lit22.htm
+- score: 0.6195688843727112
+  chunk_id: aff8f05d_c0630
+  text: "Про виникнення «Повісті минулих лі т», її авторів та\r\nредакції див.: Рыбаков\
+    \ Б. А. Древняя Русь. Сказания. Былины. Летописи.\r\nМ., 1963 (найновіша розробка\
+    \ питання); Шахматов А. А. Разыскания о\r\nдревнейших русских летописных сводах.\
+    \ СПб., 1908; його ж. Повесть\r\nвременных лет. Т. І. Вводная часть. Текст. Примечания.\
+    \ Пгр., 1916; Лихачев\r\nД. С. Русские летописи и их культурно-историческое значение.\
+    \ М.-Л., 1947.\r\nДосить повну бібліографію з усіх аспектів літописання див.:\
+    \ Библиография\r\nрусского летоп"
+  work: Київський літопис
+  author: Невідомий
+  year: 1198
+  genre: chronicle
+  language_period: old_east_slavic
+  source_url: http://litopys.org.ua/litop/lit13.htm
+- score: 0.6016510128974915
+  chunk_id: 68ba0555_c0181
+  text: "Завдяки праці поколінь дослідників літописних текстів\r\nми тепер можемо\
+    \ уявити, як створювалися літописи. В /114/ тексті кожного\r\nлітопису можна знайти\
+    \ частини, переписані з іншого, старішого тексту, що\r\nписався в якомусь іншому\
+    \ монастирі чи князівському дворі, а також вставки\r\nрізного роду — історичні\
+    \ повісті, іноді цілком фольклорного характеру,\r\nграмоти, інші документи. Оскільки\
+    \ поняття авторства тодішня культура не знала,\r\nкомпілятор не посилався на джерела,\
+    \ і сьогодні встановити, де, що і зв"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm

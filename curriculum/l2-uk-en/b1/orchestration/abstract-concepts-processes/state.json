@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "abstract-concepts-processes",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:15:13Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:15:13Z",
+      "task_id": "v5-abstract-concepts-processes-pA",
+      "mode": "full"
+    }
+  }
+}

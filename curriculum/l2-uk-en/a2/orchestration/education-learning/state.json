@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "education-learning",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:20:06Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:20:06Z",
+      "task_id": "v5-education-learning-pA",
+      "mode": "full"
+    }
+  }
+}

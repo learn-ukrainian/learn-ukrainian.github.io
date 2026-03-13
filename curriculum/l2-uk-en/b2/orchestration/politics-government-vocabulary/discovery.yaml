@@ -1,0 +1,145 @@
+discovered_at: '2026-03-12T17:54:31.496483+00:00'
+query_keywords:
+- Політика та державне управління
+- Мова влади і громадянства
+- Політична система та історичне коріння
+- Political System & Historical Roots
+- Державні інституції та органи влади
+- State Institutions & Organs of Power
+- Виборчий процес та демократичні механізми
+- Electoral Process & Democratic Mechanisms
+- Лексичні тонкощі та типові помилки
+- Lexical Nuances & Common Errors
+- Медіа та політичний дискурс
+- Media & Political Discourse
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=rgOtbTrs55c
+  channel: Суспільне Док
+  title: 'Референдум за Незалежність: що було після 24 серпня? | Колапс. Як українці
+    зруйнували імперію зла #7'
+  relevance_score: 0.9
+  relevance_note: This video is highly relevant as it directly discusses the Ukrainian
+    independence referendum, the collapse of the Soviet Union, and the political implications
+    of establishing Ukraine's statehood, which is fundamental to understanding the
+    political system and its historical roots.
+  transcript_excerpt: Останній ця домовина радянської імперії був забитий українцевими
+    1 грудня. ... Борис Єльцин проводив нараду з вищими керівниками військовими з
+    питанням, чи можуть Україна і Росія обмінятися ядерними ударами в разі проголошення
+    української незалежності.
+  embed_suggestion: 'After section Вступ: Політична система та історичне коріння --
+    The content directly addresses the foundational event of Ukrainian statehood and
+    its historical-political context.'
+- url: https://www.youtube.com/watch?v=Hy2mnmSDM_U
+  channel: Суспільне Культура
+  title: '«Swan Lake» on the ruins: how does Russia loot art? | BIG RUSSIAN LIES #4'
+  relevance_score: 0.6
+  relevance_note: The video discusses Russian cultural institutions' role in political
+    propaganda, historical revisionism regarding 'Novorossiya,' and the justification
+    of annexation and war crimes, which touches on the historical roots of political
+    systems and media discourse.
+  transcript_excerpt: Уся виставка – зразок типової російської пропаганди, що намагається
+    легітимізувати так звану Новоросію, регіон, який нібито завжди існував якось окремо
+    від України.
+  embed_suggestion: 'After section Практика: Медіа та політичний дискурс -- The video
+    directly addresses how media and cultural institutions are used in political discourse
+    and propaganda.'
+- url: https://www.youtube.com/watch?v=leX7aAZJKlM
+  channel: Суспільне Док
+  title: '«Лебедине озеро» на руїнах: як рускій балет відбілює Кремль? | ВЕЛИКА РОСІЙСЬКА
+    БРЕХНЯ'
+  relevance_score: 0.6
+  relevance_note: Similar to Candidate 1, this video focuses on Russian propaganda,
+    the political use of history and culture, and the imperial construct of 'Novorossiya,'
+    relating to historical roots and media discourse within political systems.
+  transcript_excerpt: Уся виставка - зразок типової російської пропаганди, що намагається
+    легітимізувати так звану Новоросію. регіон, який нібито завжди існував якось окремо
+    від України.
+  embed_suggestion: 'After section Практика: Медіа та політичний дискурс -- The video
+    analyzes the use of culture for political legitimization and propaganda, aligning
+    with the practice of media in political discourse.'
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0004
+  text: "5\n§ 1 Мова як знакова система і суспільне явище. Мова і держава\nПрактикум\n\
+    1 Прочитайте. Підготуйте відповіді на запитання: Як у лінгвістиці тракту-\nється\
+    \ зміст понять «система» і «структура» мови? Охарактеризуйте струк-\nтуру мови.\
+    \ Назвіть основні одиниці рівнів мови. СИСТЕМА МОВИ\nСистема — це сукупність взаємо\
+    \ пов’язаних і взаємозумов-\nлених елементів, одиниць, сегментів*, об’єднаних\
+    \ за спіль-\nною ознакою, призначенням. Система мови характеризується \nфункціями,\
+    \ способами, засобами, відношеннями "
+  section_title: Сторінка 5
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0483
+  text: "ЗМІСТ\nМОВА ЯК СУСПІЛЬНЕ ЯВИЩЕ. УКРАЇНСЬКА МОВА В УКРАЇНІ\n§ 1 \nМова як\
+    \ знакова система і суспільне явище. Мова і держава . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . .4\n§ 2 \nПроблема екології української мови. «Мовний суржик». Українська\
+    \ мова як одна з індоєвропейських \nмов. Ознаки самобутності української мови\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 269
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0186
+  text: 'ЗМІСТ
+
+    МОВА І МОВЛЕННЯ
+
+    Мова — жива скарбниця історії народу............................................5
+
+    Розвиток мови. Застарілі й нові слова..............................................6
+
+    Культура мовлення та спілкування....................................................9
+
+    ТЕКСТ
+
+    Тема, основна думка і заголовок тексту ........................................11
+
+    Тема, основна думка в текстах —
+
+    розповідях, описах і міркуваннях ....................................................
+    12
+
+    Засоби зв’язку р'
+  section_title: Сторінка 187
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0009
+  text: "(Зі словника іншомовних слів)\nДемокра5тія. Запозичення з грецької мови demokratia\
+    \ (народне управ-\nління) — складне слово, утворене з основ іменника demos — народ\
+    \ \nі kratos — правити, володіти, бути сильним, що, в свою чергу, походить \n\
+    від kratos — сила, влада."
+  section_title: Сторінка 8
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

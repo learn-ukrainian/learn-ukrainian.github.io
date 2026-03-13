@@ -2,104 +2,86 @@
 
 ## State Standard Reference
 
-**§4.2.3.1 — Дійсний спосіб (lines 2280–2291):**
-> «Утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили; дієвідмінювання дієслів недоконаного виду в майбутньому часі — складена форма: буду боротися, будеш пити, буде кричати, будемо мріяти, будете пам'ятати, будуть знати; синтетична форма: боротимуся, питимеш, кричатиме, любитимемо, пам'ятатимете, мріятимуть; дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють.»
+**§4.2.3.1** (lines 2280–2291): «Утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили; дієвідмінювання дієслів недоконаного виду в майбутньому часі — складена форма: буду боротися, будеш пити…; синтетична форма: боротимуся, питимеш…; дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють.»
 
-**§4.2.3.2 — Наказовий спосіб (lines 2293–2295):**
-> «Утворення форм наказового способу: мрій, мріймо; кажіть, скажіть, скажімо; пий, пиймо, пийте; борися, борімося, боріться, хай / нехай бореться, хай / нехай борються.»
+**§4.2.3.2** (lines 2293–2295): «Наказовий спосіб. Утворення форм наказового способу: мрій, мріймо; кажіть, скажіть, скажімо; пий, пиймо, пийте; борися, борімося, боріться, хай / нехай бореться, хай / нехай борються.»
 
-**Alignment:** Module б1-017 integrates both standards — §4.2.3.1 as the basis for past/future aspect review and §4.2.3.2 for imperative aspect distinction. This is a consolidation checkpoint: no new grammar is introduced, but mastery across all three mood/tense contexts from M06–M14 is tested.
-
-**Термінологічна увага:** The State Standard and textbooks (Авраменко, Літвінова, Grade 7) use **проста форма** (synthetic: боротимуся) and **складена форма** (analytic: буду боротися). The plan's terms "синтетична" and "аналітична" are academically accurate (university-level grammar terminology) but differ from school-standard terms. Content writer may use both with a clarifying gloss: _проста (синтетична) форма_ vs. _складена (аналітична) форма_.
+**Alignment**: This checkpoint module directly consolidates §4.2.3.1 (aspect in all tenses — past gender/number paradigms, synthetic/analytic future) and §4.2.3.2 (imperative aspect distinction), which are the core B1 verb competency requirements. It integrates all aspect knowledge acquired across modules M06–14 before the learner advances to motion verbs (M16+), where aspect is foundational.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Frequency (GRAC) | IPM | VESUM | Key collocations / notes |
-|------|-----------------|-----|-------|--------------------------|
-| опанування | 3,180 | 1.57 | ✅ noun | _успішне опанування мови, процес опанування навичок_ — low general frequency, high in educational register |
-| самооцінка | 1,400 | 0.69 | ✅ noun | _адекватна самооцінка, лист самооцінки_ — very low; pedagogical term |
-| готовність | 56,856 | 28.09 | ✅ noun | _перевірка готовності, повна готовність_ — high frequency, most learnable of the set |
-| закріплення | 14,555 | 7.19 | ✅ noun | _закріплення матеріалу, вправи на закріплення_ — medium; typical educational term |
-| перевірка | 25,398 | 12.55 | ✅ noun | _перевірка результатів, самостійна перевірка_ — medium-high; widely used |
-| досягнення | 100,882 | 49.84 | ✅ noun | _велике досягнення, досягнення мети_ — highest frequency in set; easy to acquire |
-| навичка | 656 | 0.32 | ✅ noun | _практична навичка, опанування навичок_ — very low raw frequency; primarily pedagogical |
-| повторення | 10,931 | 5.40 | ✅ noun | _інтервальне повторення, повторення — мати навчання_ — medium |
-| прогрес | 22,653 | 11.19 | ✅ noun | _помітний прогрес, відстежувати прогрес_ — medium-high; familiar loan word |
-| доконаний | — | — | ✅ adj | _доконаний вид, доконаний факт_ — grammatical metalanguage; GRAC collocations confirm |
-| недоконаний | — | — | ✅ adj | _недоконаний вид, недоконане дієслово_ — grammatical metalanguage |
+| Word | Frequency (GRAC) | IPM | Key collocations |
+|------|-----------------|-----|-----------------|
+| досягнення | 100,882 | 49.84 | велике досягнення, досягнення мети, наукові досягнення |
+| готовність | 56,856 | 28.09 | перевірка готовності, повна готовність, готовність до дії |
+| перевірка | 25,398 | 12.55 | перевірка знань, самостійна перевірка, перевірка результатів |
+| закріплення | 14,555 | 7.19 | закріплення матеріалу, вправи на закріплення, закріплення навичок |
+| опанування | 3,180 | 1.57 | опанування мови, процес опанування, успішне опанування |
+| самооцінка | 1,400 | 0.69 | адекватна самооцінка, лист самооцінки, об'єктивна самооцінка |
 
-**Note:** навичка (0.32 IPM) and самооцінка (0.69 IPM) are the weakest frequency items — both are pedagogical-register words that are unlikely to appear in general corpora. They are appropriate for a B1 academic context but should be introduced with collocations to anchor acquisition.
+**VESUM verification results:**
+- ✅ All plan vocabulary_hints confirmed in VESUM: опанування, самооцінка, готовність, закріплення, перевірка, прогрес, досягнення, навичка, компетенція
+- ✅ Grammar terms: доконаний, недоконаний confirmed
+- ⚠️ **слабкість** found (not **слабка сторона** as a compound — plan uses the phrase, not lexeme; acceptable as pedagogical term)
+- ❌ "видова пара" and "наказовий спосіб" not found as single VESUM entries — expected, as they are multi-word grammar terms (видова + пара; наказовий + спосіб both confirmed individually)
+
+**Note on самооцінка (0.69 IPM)**: Low corpus frequency but high pedagogical frequency in educational contexts. Appropriate for a B1 checkpoint.
 
 ---
 
 ## Cultural Hooks
 
-**1. Прислів'я як закодована аспектологія (GRAC-verified)**
+1. **Ukrainian proverbs as aspect exemplars** — The proverbs «Зробив діло — гуляй сміло» and «Кінець діло хвалить» are well-documented in the Ukrainian oral tradition, canonically collected in Матвій Номис's *Українські приказки, прислів'я і таке інше* (1861, published 1864) — the foundational printed collection of Ukrainian folk wisdom. Both proverbs use perfective verbs (*зробив* — доконаний, минулий; *хвалить* — context of completed action) to encode the cultural value of **completing tasks fully**. This makes them ideal pedagogical hooks: the learner sees aspect doing real communicative work in living folk language, not classroom abstraction.
 
-Two proverbs from the plan are GRAC-confirmed as authentic and in active use in Ukrainian texts:
-
-- **«Зробив діло — гуляй сміло»** — Uses _зробив_ (доконаний, минулий час, factual completion) → reward clause. The perfective encodes "once the result is achieved, action is complete." GRAC concordance confirms this proverb appears frequently in modern Ukrainian texts (fiction, journalism, internet discourse), including ironic reuse. It is genuinely Ukrainian folk origin, not borrowed.
-
-- **«Кінець діло хвалить»** — Uses _хвалить_ (недоконаний, теперішній час, timeless truth). Present imperfective encodes a general, atemporal rule. GRAC confirms active use in fiction and journalism. Ukrainian-language Shakespeare translation by Lesya Ukrainka is titled «Кінець діло хвалить» (_All's Well That Ends Well_) — a powerful cultural anchor showing that this proverb has canonical literary status.
-
-- **«Хто не робить — той не їсть»** — GRAC-confirmed (found in direct speech in fiction). Uses _недоконаний вид_ (_робить_) for a generalizing truth. Contrasts with "зробив" (perfective) to show: general laws use imperfective, specific completed events use perfective.
-
-**2. Лінгвістична унікальність (Wikipedia — Вид (мовознавство))**
-
-Wikipedia (uk) notes: «Вид пов'язаний не з часовою локалізацією дії, а з тим, як цю локалізацію тлумачить мовець.» — Aspect is a _speaker's interpretation_ of time, not objective time itself. This is a powerful framing for B1 learners: aspect is about perspective, not facts. Use this to frame the self-assessment: ask learners to notice when they instinctively choose an aspect and why.
+2. **«Хто не робить, той не їсть»** — A general truth expressed with imperfective (*робить*, *їсть*) to describe a timeless, repeatable condition. Contrasts directly with the прислів'я above: пф = single completed result, нпф = universal law. Source: same oral tradition, widely attested in Ukrainian corpus. This proverb appears in textbooks as an example of "загальні істини" — universal truths expressed in the imperfective present.
 
 ---
 
 ## Common Learner Errors
 
-**1. Доконаний вид у заборонах**
-- **Error:** «Не зроби цього!» / «Не відкрий двері!»
-- **Correct:** «Не роби цього!» / «Не відкривай двері!»
-- **Why:** English speakers hear "Don't do X" as a specific command and reach for the perfective (one-time action). Ukrainian requires imperfective for prohibitions because the rule is about the _ongoing avoidance_ of the act, not about a completed event. Source: Avramenko Grade 11 confirms imperative aspect rules; State Standard §4.2.3.2.
+1. **Неправильне заперечення в наказовому способі** → «Не зроби це!» (доконаний — помилка) замість «Не роби цього!» (недоконаний — норма). Причина: калькування з англійської ("Don't do it!" → однозначне), де заборона не вимагає вибору виду. Українська має обов'язкове правило: заборони завжди НДВ.
 
-**2. Синтетична форма майбутнього плутається з доконаним видом у майбутньому**
-- **Error:** Using _прочитаю_ (perfective future) where _читатиму_ (imperfective synthetic future) is needed, or vice versa.
-- **Why:** Both look like simple future. Learners confuse "прочитаю" (perfective: result-oriented) with "читатиму" (imperfective: process-oriented). The question "що зроблю? vs. що робитиму?" is the diagnostic.
-- **Textbook source:** Avramenko Grade 7 explicitly notes: «Дієслова у формі теперішнього часу завжди недоконаного виду» — present = always imperfective; future splits by aspect.
+2. **Плутанина синтетичного і аналітичного майбутнього часу** → «Я буду прочитаю» або «Я прочитатиму» (від ДВ) — грубі морфологічні помилки. Причина: нечітке розуміння, що: (а) аналітична форма — виключно НДВ (*буду читати*); (б) синтетична форма НДВ — *читатиму*; (в) ДВ має лише просту форму (*прочитаю*). Плутанина особливо поширена, бо аналітична форма (*буду + інфінітив*) нагадує англійський "will + verb".
 
-**3. Заперечення процесу vs. результату в минулому**
-- **Error:** «Я не читав книгу» used when meaning «Я не прочитав книгу» (= I didn't finish it).
-- **Correct distinction:** _не читав_ = the act never occurred at all (no engagement); _не прочитав_ = engagement occurred but completion did not.
-- **Why:** English "I didn't read the book" is ambiguous. Ukrainian grammar forces the speaker to commit to whether a process started or not. This error is high-stakes in real communication.
+3. **Заперечення результату vs. заперечення процесу** → «Він не читав книгу» (НДВ: акт читання не відбувся) vs. «Він не прочитав книгу» (ДВ: результат не досягнутий — можливо, почав, але не завершив). Калькування з англійської ("He didn't read the book") не розрізняє цих значень. Характерна помилка: використання тільки НДВ у запереченні навіть тоді, коли мовець хоче наголосити на незавершеності результату.
 
 ---
 
 ## Cross-References
 
-- **Builds on:** b1-006 (aspect introduction), b1-007 (past tense aspect), b1-008 (future tense forms), b1-009 (imperative aspect), b1-010 through b1-014 (aspect in extended contexts)
-- **Prepares for:** b1-018 (Дієслова руху: повна система) — motion verbs require immediate aspect assignment upon introduction; b1-025 (Motion verbs checkpoint)
-- **Plan's connects_to confirmed:** `b1-18` and `b1-25` — align with curriculum.yaml expectation
+- **Builds on**: `b1-006` (aspect-introduction), `b1-007` (aspect-morphology), `b1-008` (aspect-mastery-pairs), `b1-009` (aspect-introduction at B1), `b1-010` (aspect-in-imperatives), `b1-011` (aspect-negation), `b1-012` (aspect-future), `b1-013` (aspect-complete-system), `b1-014` (aspect-integration-practice)
+- **Prepares for**: `b1-018` (motion-verbs-full-system) — aspect is foundational for all prefixed motion verbs; `b1-025` (checkpoint-motion-verbs)
+
+**Textbook source data** (confirmed from RAG search):
+- Grade 7 Litvinova 2024 (tier 1): §7 «Види дієслова» — definition and paradigm tables for aspect; §9 «Часи дієслова» — future tense forms for both aspects; explicit table of synthetic/analytic future.
+- Grade 7 Avramenko 2024 (tier 1): «Зауважте!» box — "Усі дієслова у формі теперішнього часу завжди недоконаного виду" — key rule for the checkpoint.
+- Grade 11 Avramenko 2019 (tier 2): §17 «Наказовий спосіб дієслова» — parallel imperative forms, aspect in commands.
 
 ---
 
 ## Multimedia Resources
 
-- (none encountered during research — discover phase will handle)
+- (none encountered during research — discover phase handles video resources)
 
 ---
 
 ## Notes for Content Writing
 
-1. **Термінологія: не забути про дві системи.** School term _проста форма_ (синтетична: боротимуся) and _складена форма_ (аналітична: буду боротися) should both appear in Skill 2, with a quick alignment note for learners who may have encountered both systems.
+1. **Word budget is 4000 — this is a checkpoint module.** Each of the 6 sections (500 + 700 + 800 + 700 + 650 + 650) is tight. Avoid padding with repetitive paradigm tables already covered in earlier modules — focus on *integration*, not re-teaching.
 
-2. **Прислів'я — не прикраса, а ілюстрація.** All three GRAC-verified proverbs demonstrate specific aspectual rules: «Зробив» → perfective completion; «хвалить», «не робить» → imperfective for timeless truths. Frame them as linguistic evidence, not just cultural colour.
+2. **Use the proverbs as structural anchors** — introduce «Зробив діло — гуляй сміло» in Section 2 (минулий час) as a live example of the ДВ past encoding result, and «Хто не робить, той не їсть» in Section 6 (integration) as a НДВ general truth. This threads a cultural narrative through the checkpoint.
 
-3. **Shakespeare hook.** Lesya Ukrainka's translation «Кінець діло хвалить» gives the proverb high literary prestige — use as engagement hook in the folk wisdom section.
+3. **Synthetic future is Ukrainian-native** — the form *боротимуся*, *писатимеш* is an authentically Ukrainian construction with no direct parallel in most European languages learners know. Frame it positively: «Синтетична форма майбутнього часу — це питомо українська конструкція». Do NOT frame it as "unlike Russian" or any other language.
 
-4. **Самооцінка та навичка** are low-frequency words — anchor them with strong collocations and short examples immediately; don't use bare.
+4. **Imperative section priority**: The ДВ/НДВ prohibition rule (Не роби! not Не зроби!) is the highest-stakes practical error. Learners encounter imperatives daily in real-life Ukrainian (instructions, requests, signs). Give this 2–3 concrete minimal pair examples: Не закривай вікно (НДВ = don't keep closing) vs. Закрий вікно (ДВ = close it once). Use «Закривайте двері, будь ласка» as the polite НДВ example from the plan.
 
-5. **Negative aspect in imperatives is THE high-stakes error.** Spend more word budget on the prohibition rule (Skill 3) than on paradigm tables — this is where learners produce incorrect but fluent-sounding Ukrainian in real interactions.
+5. **Self-assessment framing**: Use CEFR "Can-do" statements in Ukrainian («Я вмію…», «Я можу…») — this reinforces the metalanguage introduced in earlier B1 bridge modules and gives learners a concrete tool for self-diagnosis. Frame weaknesses positively: «Над чим ще варто попрацювати» rather than «Що я не знаю».
 
-6. **40 базових видових пар (Skill 4):** Textbooks (Litvinova Grade 7, Karaman Grade 10) confirm suffix- and prefix-based pair formation as core B1 scope. Systematic table of morphological markers (суфікс -ува-/-юва-, чергування е/и, prefix пo-/з-/на-/ви-) is textbook-grounded.
+6. **Vocabulary note**: слабкість (weakness as abstract quality) vs. слабке місце / слабка сторона (weak point in performance) — for a self-assessment context, use «слабке місце» or «над чим варто попрацювати» for naturalness; *слабкість* alone sounds like a character flaw rather than a skill gap.
 
-7. **Decolonized framing:** Verbal aspect is native to Ukrainian (and Slavic languages broadly). Frame the system as intrinsic Ukrainian grammar — «Ukrainian encodes speaker perspective through aspect» — without reference to any other language as the comparison point. The Wikipedia definition (вид = як мовець тлумачить локалізацію дії) provides a clean Ukrainian-centric starting frame.
+7. **Decolonized framing reminder**: All aspect explanations must describe Ukrainian independently. Avoid any comparative framing with Russian. Use examples from Ukrainian literature, proverbs, and modern speech.
 
 ## Resource Discovery
 

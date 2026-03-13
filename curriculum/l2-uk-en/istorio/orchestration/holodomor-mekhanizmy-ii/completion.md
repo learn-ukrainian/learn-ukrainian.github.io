@@ -1,10 +1,10 @@
-PASS: pipeline istorio 47
+FAIL: pipeline istorio 47
 
   Module:   holodomor-mekhanizmy-ii
   Track:    istorio
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T18:18:26Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:11:54Z

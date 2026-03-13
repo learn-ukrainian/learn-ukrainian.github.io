@@ -1,0 +1,143 @@
+discovered_at: '2026-03-12T16:54:09.501670+00:00'
+query_keywords:
+- Food and Cooking
+- варити
+- смажити
+- пекти
+- 'Лексика: Кухня та приготування'
+- 'Vocabulary: Kitchen and Cooking'
+- 'Граматика: Орудний відмінок та Наказовий спосіб'
+- 'Grammar: Instrumental Case and Imperative Mood'
+- 'Культура: Традиційні страви'
+- 'Culture: Traditional Dishes'
+- Практика та Підсумок
+- Practice and Summary
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=hMoX0D7BTvk
+  channel: Klopotenko
+  title: How to cook pork and beef tongue
+  relevance_score: 0.9
+  relevance_note: Directly demonstrates cooking techniques and uses relevant 'Food
+    and Cooking' vocabulary. The video provides a practical example of food preparation
+    discussed in the module.
+  transcript_excerpt: Всім привіт. Мене звати Євген Клопотенко. Сьогодні пропоную
+    поговорити про те, як готувати язик свинячий і язик яловичий. Я знаю що ця страва
+    (цей продукт) він є улюбленим у нас українців.
+  embed_suggestion: 'After Лексика: Кухня та приготування — to provide a practical
+    application of the vocabulary and context for food preparation.'
+- url: https://www.youtube.com/watch?v=OokH2O71aqw
+  channel: Klopotenko
+  title: How to cook broccoli | Ievgen Klopotenko
+  relevance_score: 0.9
+  relevance_note: Directly demonstrates cooking a specific vegetable and uses relevant
+    'Food and Cooking' vocabulary. It reinforces verbs like 'приготувати' and discusses
+    kitchen processes.
+  transcript_excerpt: як правильно приготувати броколі? В броколі як і в принципі
+    в багатьох продуктах є свої невеличкі секретики, але вони маленькі такі і не дуже
+    глобальні.
+  embed_suggestion: 'After Лексика: Кухня та приготування — to offer another practical
+    example of cooking vocabulary in action.'
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7weAUvvyGZf6Qg3SEIjHmH_7
+  channel: Ukrainian with Olha
+  title: Рецепти українською - Recipes in Ukraine
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode47/
+  title: Food festivals + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/lviv-food-guide/
+  title: Lviv Food Guide
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode93/
+  title: At the food fair in Ukraine + Diminutive words in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/fmu48/
+  title: Vocabulary booster! Staple food in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-kravtsova-2020-1_s0097
+  text: "99\n278.\t 1.\t Розгадай \nребус.\nкипіѳти\n’’\n’’’’\n’’\n2.\t Прочитай у\
+    \ тлумачному словнику значення слова кипіти.\n3.\t Склади речення зі словом кипіти\
+    \ в прямому та переносному \nзначенні.\n279.\t 1.\t Прочитай. Що цікавого ти дізнався / дізналася?\n\
+    Ніколи \n(не)забувають \nпро \nвареники \nу канадській провінції Альберта. Адже\
+    \ на \nцентральній площі містечка Глендон спору-\nдили пам’ятник... варенику.\
+    \ Скам’янілий кулі-\nнарний шедевр має висоту дев(’)ять метрів \nі важить дві\
+    \ тисячі сімсот кілограмів. Мону-\nмент з’я"
+  section_title: Сторінка 99
+  grade: 3
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0046
+  text: "НАВЧАЮСЯ ДОБИРАТИ ІМЕННИКИ\nІИйД 4! Розгляньте малюнки. Назвіть вироби \n\
+    з тіста. Поставте питання до слів.\nдобираю \nгрупую\n• Розкажіть, що печуть,\
+    \ а що — варять.\n5| Назвіть професії людей, які виготовляють кулінарні \nвироби.\
+    \ На які питання відповідають дібрані слова — \nназви професій? Запишіть їх.\n\
+    Кулінар — кухар, фахівець із приготування їжі. \nКондитер — майстер, що виготовляє\
+    \ кондитерські \nвироби.\nЯкі страви \nлюблять \nготувати у вас \nудома?\n✓\n\
+    Перегляньте відео про народних майстрів. Назвіть \nпр"
+  section_title: Сторінка 48
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0158
+  text: 'В. Складіть і запишіть рецепт приготування салату. Використайте в ньому одно-
+
+    рідні члени речення, поєднані різними видами зв’язку.'
+  section_title: Сторінка 119
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0220
+  text: "211\n211\n  Короткий фразеологічний словник\nОбдерти як липку — усе забрати\
+    \ в кого-небудь.\nОбітована земля — заповітна мета, мрія.\nПахне смаленим — загрожує\
+    \ небезпека.\nПекти раків — червоніти.\nПокласти зуби на полицю — голодувати.\n\
+    По струні ходити — підкорятися.\nПрикусити язика — замовкнути.\nПродавати зуби\
+    \ — сміятися без приводу.\nП’яте колесо у возі — щось зайве, непотрібне.\nРозбити\
+    \ глек — посваритися.\nРуки нагріти — нажитися в нечесний спосіб.\nРуки опускаються\
+    \ — утратити інтерес до чогось.\nРуки св"
+  section_title: Сторінка 211
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0103
+  text: "90\nРецепт \nВідваріть             в підсоленій воді до стану al dente1.\
+    \ Поки вони варяться, ро­\nзігрійте             й підсмажте на оливковій      \
+    \         спочатку               , а потім – наріза­\nний               .\nДля\
+    \ приготування соусу натріть               , перемішайте із сирим яєчним      \
+    \         і \nпоперчіть. Додайте трохи води, у якій варилися спагеті. \nГотові\
+    \ спагеті перемішайте з підсмаженим беконом і соусом. Прикрасьте страву \nнатертим\
+    \ сиром і               . \nBon appetite!2\n1 Аl d"
+  section_title: Сторінка 94
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

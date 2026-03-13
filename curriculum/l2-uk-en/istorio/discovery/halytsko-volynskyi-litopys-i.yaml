@@ -1,0 +1,238 @@
+discovered_at: '2026-03-13T00:18:03.876945+00:00'
+query_keywords:
+- 'Галицько-Волинський літопис I: Про Данила'
+- Контекст
+- Авторство та датування
+- Данило Галицький у літописі
+- Фрагмент
+- Критика джерела
+- 'Analyze the causes and consequences of галицько-волинський літопис i: про данила'
+- Evaluate the historical significance of літопис королівства
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=5rW86M7pVYY
+  channel: Реальна Історія
+  title: Реальна історія Галицько Волинського князівства
+  relevance_score: 0.9
+  relevance_note: The video provides essential historical context for the Galician-Volhynian
+    Principality, which is the setting for the chronicle and Danylo's life discussed
+    in the module. It directly addresses the 'Контекст — Галицько-Волинське князівство'
+    section and is from a trusted source.
+  transcript_excerpt: Сьогодні в нас спеціальний епізод про галицько-волинське князівство
+    і я обіцяю він буде супер цікавим. Мене звати акім галімов І це реальна історія.
+  embed_suggestion: After section Контекст — Галицько-Волинське князівство — The video
+    provides crucial background on the principality that the module's chronicle is
+    about.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0143
+  text: '6. Луценко Ю. Григорій Граб’янка та його літопис // Літопис гадяцького пол-
+
+    ковника Григорія Граб’янки. – К., 1992.'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-hlibovska-2024_s0140
+  text: "Завдання 3. Складіть розповідь про Данила \nРомановича відповідно до алгоритму\
+    \ історичного \nпортрета й запишіть її в зошит. При підготовці до \nрозповіді\
+    \ скористайтесь інформацією, вміщеною в \nпараграфі 21, перегляньте відео за покликанням\
+    \ \nhttps://cutt.ly/zwTEqCuS чи скористайтеся QR-кодом. Історичний портрет \n\
+    1. Як відбулося становлення особистості істо-\n  ричного діяча? Де і коли він\
+    \ народився? Де і в яких умовах жив, зростав, вихо-\nвувався? 2. Особисті якості\
+    \ й риси характеру. Які риси хара"
+  section_title: Сторінка 68
+  grade: 7
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0177
+  text: "143\n \n§ 21. Культура Волинсько-Галицького князівства\nУ \nВолинсько-Галицькій\
+    \ \nдержаві \nпродовжувалися \nтрадиції літописання Русі-­\nУкраїни. Однією з\
+    \ ранніх \nлітописних пам’яток краю \nє датована 1097 р. «Повість \nпро осліплення\
+    \ Василька», \nщо розповідає про трагічну \nдолю теребовлянського кня-\nзя Василька\
+    \ Ростиславича, \nякого схопили й по­збавили \nзору за наказом волинського \n\
+    князя.\nНайвизначнішою \nліто-\nписною пам’яткою Украї­\nни XIII ст. є Галицько-­\n\
+    Волинський літопис, який, \nна відміну від інш"
+  section_title: Сторінка 146
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0219
+  text: "11. Працюємо в  парах. За допомогою додаткових джерел підготуйте \nповідомлення\
+    \ за темою «Іконопис Галицько-Волинського князівства \n(Королівства Руського)»."
+  section_title: Сторінка 149
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0070
+  text: 'Хмельницького, наділяючи його такими характеристиками:
+
+    «Козак розторопний у ділах козацьких воєнних і в письмі швидкий». Літопис написаний
+    книжною українською мовою з полонізмами та
+
+    Українська література доби Ренесансу й доби бароко
+
+    59
+
+    1 Авторство приписують Романові Ракушці-Романовському, генеральному
+
+    військовому підскарбієві (1663–1668), згодом брацлавському священикові Ми-
+
+    колаївської церкви в Стародубі.'
+  section_title: Сторінка 59
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6050131320953369
+  chunk_id: 701afbae_c0001
+  text: 'Галицько-Волинський літопис (розшифровка за Іпатським списком).
+
+
+    Галицько-Волинський літопис (розшифровка за Острозьким списком).
+
+
+    Літопис руський (переклад Л.Махновця).
+
+
+    Повість врем’яних літ. (переклад В.Яременка).
+
+
+    Ярослав Книш. Фрагменти невідомого списку Іпатіївського літопису
+
+
+    «Літописи». З Енциклопедії Українознавства.
+
+
+    «Літописи». З енциклопедії «Українська мова».
+
+
+    А.І.Генсьорський. Термін «Русь» (та похідні) в Древній Русі... (1962).
+
+
+    [Генсьорський А. І. Галицько-Волинський літопис (лек'
+  work: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+  year: 1961
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hens1/hn.htm
+- score: 0.604636549949646
+  chunk_id: 45f18a4c_c0242
+  text: "Це було окреме літописне зведення. Як доводять, над\r\nним працювало не менше\
+    \ п’яти авторів-укладачів (чи редакторів). Перший, що\r\nтрудився десь у 1255\
+    \ році, /VIII/ довів розповідь до 1234 року включно (за\r\nдатуванням Іпатського\
+    \ списку); другий продовжив літопис до 1265 чи 1266 року, а\r\nписав коло 1269\
+    \ року; десь у 1286 році працював третій укладач, який закінчив\r\nвиклад 1285\
+    \ роком включно; четвертий автор трудився близько 1289 року і до\r\nцього ж року\
+    \ включно довів літопис, але грунтовно переробив"
+  work: Галицько-Волинський літопис
+  author: Невідомий
+  year: 1292
+  genre: chronicle
+  language_period: old_east_slavic
+  source_url: http://litopys.org.ua/litop/lit22.htm
+- score: 0.604636549949646
+  chunk_id: aff8f05d_c0617
+  text: "Це було окреме літописне зведення. Як доводять, над\r\nним працювало не менше\
+    \ п’яти авторів-укладачів (чи редакторів). Перший, що\r\nтрудився десь у 1255\
+    \ році, /VIII/ довів розповідь до 1234 року включно (за\r\nдатуванням Іпатського\
+    \ списку); другий продовжив літопис до 1265 чи 1266 року, а\r\nписав коло 1269\
+    \ року; десь у 1286 році працював третій укладач, який закінчив\r\nвиклад 1285\
+    \ роком включно; четвертий автор трудився близько 1289 року і до\r\nцього ж року\
+    \ включно довів літопис, але грунтовно переробив"
+  work: Київський літопис
+  author: Невідомий
+  year: 1198
+  genre: chronicle
+  language_period: old_east_slavic
+  source_url: http://litopys.org.ua/litop/lit13.htm

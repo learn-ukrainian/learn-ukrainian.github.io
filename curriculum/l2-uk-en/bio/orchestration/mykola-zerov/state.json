@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "mykola-zerov",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:39:12Z",
+      "task_id": "v5-mykola-zerov-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:39:12Z",
+      "note": "merged-into-research"
+    }
+  }
+}

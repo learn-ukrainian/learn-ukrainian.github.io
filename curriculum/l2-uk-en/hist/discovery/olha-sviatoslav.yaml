@@ -1,0 +1,244 @@
+discovered_at: '2026-03-12T21:53:48.948714+00:00'
+query_keywords:
+- Ольга та Святослав
+- Читання
+- Первинні джерела
+- Деколонізаційний погляд
+- Потрібно більше практики?
+- Analyze Olha reforms
+- Evaluate Sviatoslav military strategy
+- Contrast diplomactic vs military approach
+- Narrative tenses
+- Action verbs
+- history
+- княгиня
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=GxdZAhusOA0
+  channel: Комік Історик
+  title: 'княгиня Ольга: жінка головнокомандувач'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses Princess Olha, her rule, and the historical
+    context of her time, aligning perfectly with the module's topic and the 'Analyze
+    Olha reforms' objective.
+  transcript_excerpt: так Фелікса ми будемо говорити про княгиню Ольгу про цю видатну
+    володарку Русі яка у нас являється До речі святою рівноапостильною святою.
+  embed_suggestion: After Вступ -- to provide an immediate video introduction to Princess
+    Olha.
+- url: https://www.youtube.com/watch?v=55uxR1YtBTE
+  channel: Комік Історик
+  title: 'Ярослав Мудрий: історія розквіту Русі'
+  relevance_score: 0.5
+  relevance_note: The video focuses on Yaroslav the Wise, a later ruler, but touches
+    on the decolonization of Kyivan Rus' history, which is a section in the module.
+    It doesn't directly cover Olha or Sviatoslav.
+  transcript_excerpt: Ярослав Мудрий - це один з наймогутніших володарів середньовічної
+    Європи середньовічної держави яку ми знаємо під назвою Русь або Київська Русь.
+  embed_suggestion: After Деколонізаційний погляд -- to expand on the decolonization
+    of historical narratives, even though it focuses on a different historical figure.
+- url: https://www.youtube.com/watch?v=fKZFDVd2_s0
+  channel: Суспільне Док
+  title: 'Курс «Легкі пологи 2.0» — стендап Олі Стеценко #shorts'
+  relevance_score: 0.1
+  relevance_note: The video is a stand-up comedy short about childbirth and has no
+    thematic relevance to the module about Olha and Sviatoslav or Kyivan Rus' history.
+  transcript_excerpt: Я готуюсь до пологів Я купила собі курс який називається легкі
+    пологи 2.0.
+  embed_suggestion: None -- completely irrelevant.
+- url: https://www.youtube.com/watch?v=PLf7WNRsk3qtYs3yJsQYvtVO3U-ZVeJyfp
+  channel: Реальна Історія
+  title: Реальна історія
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=oxYJJY0daMQ
+  channel: ІМТГШ
+  title: Таємна історія Княгині Ольги / Русь, або ж Київська Русь / Історія України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=C7_vl4NblEg
+  channel: ІМТГШ
+  title: Таємниця Князя Святослава Хороброго. Нащо він стільки "ходив"? / Київська
+    Русь / Історія України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0339
+  text: "1210  р. rnk.com.ua/107326\nМетоди інтерактивного  \nнавчання та розвитку\
+    \  \nкритичного мислення\nrnk.com.ua/107325\nПлани-схеми та \nхарактеристики \n\
+    різних форм роботи \nз  підручником\nСвятослав Ярославич \nіз родиною. Мініатюра\
+    \ \nз  «Ізборника» Святослава. 1076  р."
+  section_title: Сторінка 224
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriya-gisem-2023_s0259
+  text: "Монета з  Ольвії у  формі дельфіна. rnk.com.ua/104258\nВнесок давніх  \n\
+    цивілізацій\nrnk.com.ua/104259\nОсновні поняття \nі  терміни\nrnk.com.ua/104260\n\
+    Плани-схеми для різ­\nних форм роботи\nrnk.com.ua/104261\nНайбільш поширені \n\
+    методи інтерактивно­\nго навчання\nПідручник  \nВидавництво «Ранок»"
+  section_title: Сторінка 191
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5832942724227905
+  chunk_id: c44f1207_c1479
+  text: "Далї, подібні огляди (коротші, часто меньш \r\n докладні) містять курси історії\
+    \ давньої Руси; вкажу Соловйова т. І кн. 3 гл. 1 \r\n (c. 669 і далї), Поґодїна\
+    \ ИзслЂдованія т. VII (вибрані з лїтописей тексти) і \r\n його ж Древняя русская\
+    \ исторія домонгольскаго ига т. II (два видання), \r\n Бестужева-Рюміна Русская\
+    \ исторія т. І (c. 192 і далї), Іловайского Исторія \r\n Россіи т. І (гл. XIX),\
+    \ Рожкова Обзоръ рус. исторіи съ соціолог. точки зрЂнія \r\n (І гл. 4), Платонова\
+    \ Лекціи по рус. исторіи (коротеньке). Ог"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5703450441360474
+  chunk_id: b129e02f_c0598
+  text: "15 Давнішу\r\nбібліографію слов'янськими мовами про ці повстання див: Hajek\
+    \ А. Bulgarien\r\nunter der Türkenherrschaft. — Berlin; Leipzig, 1925. — S. 22-64,\r\
+    \n317-321; Stanojević St. Istorija srpskoga naroda. — 3 ed. — Beograd,\r\n1926.\
+    \ — S. 239-314. Найновішу літературу сербською див: Dix annees\r\nd'historiographie\
+    \ jougoslave. — P. 268-274.\n\n16 Повну\r\nбібліографію католицького руху в Болгарії\
+    \ XVII ст. див.: Дуйчев И. Софийската\r\nкатолишка архиепископиа презь XVII вьекь.\
+    \ — София, 1939. — С. 182-184. Вел"
+  work: Дворнік — Слов'яни в Європейській історії та цивілізації
+  author: Дворнік Ф.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/dvornik/dv.htm
+- score: 0.568044900894165
+  chunk_id: fc2291b5_c2158
+  text: "Літ.: Соболевский А. И.\r\nЮжно-славянское влияние на русскую письменность\
+    \ в XIV — XV веках. СПБ, 1894; Лихачев\r\nД. С. Некоторые задачи изучения второго\
+    \ южнославянского влияния в России. М.,\r\n1958; Лихачев Д. С. Развитие русской\
+    \ литературы X — XVII веков. Л., 1973;\r\nКолосова В. П. К вопросу о втором южнославянском\
+    \ влиянии на Украине и в\r\nБелоруссии. Философско-филологическая концепция острожского\
+    \ кружка. В кн.: Славянские\r\nкультуры и мировой культурный процесс. Минск, 1985.\n\
+    \nВ. П. Колосова, Ю. В. "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

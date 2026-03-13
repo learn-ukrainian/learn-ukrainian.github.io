@@ -1,0 +1,146 @@
+discovered_at: '2026-03-12T17:47:51.110993+00:00'
+query_keywords:
+- Scheduling Appointments
+- записатися
+- зустріч
+- вільний
+- Діалоги
+- Dialogues
+- Розповідь
+- Narrative
+- an appointment by phone
+- or cancel a meeting
+- appointment details
+- polite phrases for scheduling
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Qi1zY8JmWzs
+  channel: Ukrainian Lessons
+  title: FMU 1-54 | How to book an appointment with a doctor in Ukrainian | 5 Minute
+    Ukrainian
+  relevance_score: 1.0
+  relevance_note: This video directly addresses the module's topic, 'How to book an
+    appointment with a doctor in Ukrainian,' and uses key vocabulary like 'записатися
+    на прийом до лікаря'.
+  transcript_excerpt: Today he Wants To Make a doctor's appointment записатися на
+    прийом до лікаря слухайте як Андрій буде записуватись на прийом до лікаря а саме
+    до невропатолога.
+  embed_suggestion: After Діалоги (Dialogues) — The video features a practical dialogue
+    for booking an appointment, perfectly reinforcing the 'Dialogues' section.
+- url: https://www.youtube.com/watch?v=VsxkysCljyA
+  channel: Klopotenko
+  title: Це НАЙСОКОВИТІША запечена риба у фользі з лимоном всього за 20 хвилин | Євген
+    Клопотенко
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but its content is about cooking fish,
+    which is unrelated to scheduling appointments.
+  transcript_excerpt: о вау о Вау це так гарно Але найголовніше що це ще і так смачно.
+  embed_suggestion: Not applicable - video is off-topic.
+- url: https://www.youtube.com/watch?v=9K6LiXojhjA
+  channel: Klopotenko
+  title: Радянський спадок у тарілці | КЛОПОТЕНКО & БРАЙЧЕНКО
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian and features a discussion related to Ukrainian
+    cuisine and culture, which is not relevant to scheduling appointments.
+  transcript_excerpt: Ти в мене дома. Точно. >> Ха-ха-ха. Я тебе за заманив додому
+    до себе.
+  embed_suggestion: Not applicable - video is off-topic.
+- url: https://www.youtube.com/watch?v=Zx2JADu-_A0
+  channel: Bright Kids Ukrainian
+  title: День піаніста у школі Bright Kids School
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=P7evjxvyrdw
+  channel: Ukrainian with Olha
+  title: Юрій Липа. Призначення України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode57/
+  title: Your schedule in Ukrainian + Accusative case with prepositions
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode67/
+  title: Telling time in Ukrainian + Ordinal numbers & Locative case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.25
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0178
+  text: "409. Доберіть до дієслів прислівники, які найбільше підходять за \nзмістом.\n\
+    Написав (як? ).... Почулося (звідки? ) .... Зашуміло (де?) \n.... Попросив (як?)\
+    \ ... . Заговорили (як?) ... . Світить (де?) \n.... Зацвіли (коли?) .... Співає\
+    \ (як?) .... Віє (звідки?) ....\n•  Складіть і запишіть речення з 2 словосполученнями.\n\
+    410. Прочитайте текст. Перекажіть.\nТелефонна розмова — це теж важ­\nливий різновид\
+    \ спілкування. Мовлен­\nнєвий етикет передбачає обов’язково \nпредставитися незнайомій\
+    \ людині.\nГоворити по"
+  section_title: Сторінка 179
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-golub-2022_s0136
+  text: "137\n2   Як правильно будувати діалог?\n3   Коли діалог називають продуктивним,\
+    \ вдалим, гармо -\nнійним?\nВідповідно до поставлених запитань сформулюйте особисті\
+    \ \nцілі.\n330  Поміркуйте й назвіть сфери, де діалог необхідний.\nДіалог — це:\
+    \ \n  різновид прямої мови;\n  розмова двох осіб.\nДіалог складається з реплік.\
+    \ Кожну репліку пишемо \nз нового рядка і з великої букви.\nПеред репліками ставимо\
+    \ тире.\nЯкщо репліку супроводжують слова автора, то стави-\nмо ті самі розділові\
+    \ знаки, що й при прямій мові, але \n"
+  section_title: Сторінка 137
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0011
+  text: "12\nРОЗВИТОК МОВЛЕННЯ\nПоміркуйте!\nЗа яких обставин (офіційних чи неофіційних)\
+    \ може відбувати­\nся спілкування в поданих ситуаціях?\n Супермаркет; \n день\
+    \ народження брата; \n пікнік зі своєю родиною;\n спортзал; \n кінотеатр.\n3.\
+    \ Складіть усний діалог за однією із ситуацій спілкування (не менше \nп’яти реплік\
+    \ від кожного/кожної учасника/учасниці діалогу). \n••\nВам дали завдання вирвати\
+    \ бур’ян на шкільній клумбі й полити кві-\nти. Ваші однокласник чи однокласниця\
+    \ хочуть перекласти на вас усю \nроботу. Переко"
+  section_title: Сторінка 12
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrmova-golub-2022_s0200
+  text: "201\nШукаємо відповіді на запитання:\n1   Що називають запрошенням?\n2  \
+    \ Кого, куди і як правильно запрошувати?\nВідповідно до поставлених запитань сформулюйте\
+    \ особисті \nцілі.\nЗапрîшення — коротке повідомлення про якусь подію \nі прохання\
+    \ взяти в ній участь.\nЗапрошення може бути усне або письмове.\nСлова запросити\
+    \ і просити, прохання мають однако-\nвий корінь. Це дає підстави вважати запрошення\
+    \ різ-\nновидом прохання.\n467   Розгляньте подану інформацію. Що вам відоме,\
+    \ а що   — нове? \nЯких помилок припус"
+  section_title: Сторінка 201
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0095
+  text: "■мИ|28| Змініть подані слова за зразком і запишіть.\nнавчати — навчання_\
+    \ >\nРозкажи про свої \nуспіхи в навчанні.\nчитати \nміркувати \nдодавати \nмалювати\
+    \ \nбажати \nуміти\n• Поясніть, що називають записані слова. На які питання вони\
+    \ \nвідповідають? Усно складіть речення з однією парою слів \n(на вибір).\n29\
+    \ Заміни сполучення слів за зразком і запиши.\nКнижка з бібліотеки — ? \nШафа\
+    \ для книжок — ?\nВистава в театрі — ?\nГра на комп'ютері — ?\nрозм°ва по телефону\
+    \ — телефонна розмова\n• Запиши утворені сполучення с"
+  section_title: Сторінка 97
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

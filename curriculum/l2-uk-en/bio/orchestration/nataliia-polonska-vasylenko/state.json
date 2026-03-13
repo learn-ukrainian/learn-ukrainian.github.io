@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "nataliia-polonska-vasylenko",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:17:49Z",
+      "task_id": "v5-nataliia-polonska-vasylenko-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:17:49Z",
+      "note": "merged-into-research"
+    }
+  }
+}

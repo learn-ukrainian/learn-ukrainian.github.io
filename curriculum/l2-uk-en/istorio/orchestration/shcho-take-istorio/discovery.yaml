@@ -1,0 +1,291 @@
+discovered_at: '2026-03-12T23:10:19.145147+00:00'
+query_keywords:
+- Що таке історіографія?
+- Ключові поняття історіографії
+- Хто пише історію?
+- Українська історіографічна традиція
+- Чому це важливо для вас?
+- Практичне застосування
+- Підсумок та перехід
+- Analyze the difference between history and historiography
+- Evaluate the impact of bias and narrative on historical writing
+- history
+- історія
+- подія
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=9IgiisoCZx8
+  channel: Комік Історик
+  title: розібралися у хронології скіфів, гунів і так далі...
+  relevance_score: 0.8
+  relevance_note: The speaker explicitly references 'історіографії, де я вчився в
+    школьних підручниках' and highlights the role of ancient historians like Herodotus
+    in documenting history. This directly relates to 'Хто пише історію?' and the evolution
+    of historical recording within the Ukrainian historiographical tradition.
+  transcript_excerpt: Ну, зазвичай в тій історіографії, де я вчився в школьних підручниках,
+    першими починаються кімерійців згадувати... Потрібно дякувати Богові, що в нас
+    тут Геродот іногда промишляв в наших краях і він нам описав нашу історію, бо аби
+    не було Геродота, ми все і цього б не знали.
+  embed_suggestion: After section 'Хто пише історію?' or 'Українська історіографічна
+    традиція — огляд' to discuss the evolution of historical sources and narratives
+    through education.
+- url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+  channel: ІМТГШ
+  title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+  relevance_score: 0.7
+  relevance_note: The video discusses a specific historical source (Cossack Chronicle
+    of Samiylo Velychko) and implicitly touches on the challenges of historical interpretation
+    ('забагато теорії замало фактів'). This connects directly to 'Ключові поняття
+    історіографії' regarding sources and historical evidence.
+  transcript_excerpt: козацький Літопис Самійла Величка подарунок від наших глядачів
+    і меценатів... Не питайте щодо джерело інформації про козаків вони перед вами
+    в А про походження самого словами довго говорити не будемо цьому питанні забагато
+    теорії замало фактів.
+  embed_suggestion: After section 'Ключові поняття історіографії' to illustrate the
+    role of primary sources and the distinction between facts and theory in historical
+    inquiry.
+- url: https://www.youtube.com/watch?v=Qk6eZMGiXtg
+  channel: Реальна Історія
+  title: Чи був Бандера героєм? «Реальна історія» з Акімом Галімовим
+  relevance_score: 0.6
+  relevance_note: The video demonstrates how historical narratives are shaped by different
+    perspectives and propaganda, directly illustrating the concept of bias in historical
+    writing, which is a key element of historiography. It serves as a strong case
+    study rather than a direct explanation.
+  transcript_excerpt: Можливо він став таким популярним тому що Радянська Пропаганда
+    зробила його головним антигероєм чи можливо він і дійсно був людиною взірцем що
+    поклала життя за незалежність України.
+  embed_suggestion: After section 'Хто пише історію?' or 'Практичне застосування'
+    to exemplify the impact of narrative and bias on historical figures.
+- url: https://www.youtube.com/watch?v=2PrthVAZRro
+  channel: Реальна Історія
+  title: The entire history of Ukraine in 30 minutes. «The real history» with Akim
+    Galimov
+  relevance_score: 0.3
+  relevance_note: This video provides a general overview of Ukrainian history, focusing
+    on 'history' itself rather than 'historiography' (the study of historical writing).
+    While it emphasizes the importance of learning history, it does not delve into
+    the methodologies or interpretations central to historiography.
+  transcript_excerpt: До війни історія точно не була пріоритетним питанням для більшості
+    українців. Але тепер все починає змінюватись і чимало з нас хочуть дізнатися історію
+    власної країни.
+  embed_suggestion: Not directly relevant to the module's core topic of historiography,
+    but could potentially be placed after 'Вступ — Історія vs. Історіографія' if a
+    general historical context is deemed necessary for the audience to distinguish
+    from historiography.
+- url: https://www.youtube.com/watch?v=hhFJcNGEco4
+  channel: Комік Історик
+  title: історія Великого князівства Литовського
+  relevance_score: 0.3
+  relevance_note: This video focuses on the history of the Grand Duchy of Lithuania.
+    It is a historical narrative, not an analysis or discussion of historiography.
+    It does not touch upon how history is written, interpreted, or the underlying
+    concepts of the discipline.
+  transcript_excerpt: Справа в тому що литовці як є народ язичників не мав свого письма
+    перший твір литовською мовою це якщо не помиляюсь кінець xго чи початок X7 століття.
+  embed_suggestion: Not relevant to the module's core topic of historiography.
+- url: https://www.youtube.com/watch?v=86ocybClK4E
+  channel: ІМТГШ
+  title: Святі Чи Грішні? Хто Такий Папа Римський. Історія Ватикану
+  relevance_score: 0.1
+  relevance_note: This video is a historical account of the Papacy and the Vatican.
+    It is purely a narrative of historical events and religious figures, without any
+    discussion or analysis of the methods, interpretations, or theories behind historical
+    writing itself.
+  transcript_excerpt: А почалося все майже 2000 років тому, коли Ісус із палестинського
+    міста Назарет почав проповідувати і врешті проголосив себе сином Божим та Месією,
+    якого так довго чекав народ Юдеї.
+  embed_suggestion: Not relevant to the module's core topic of historiography.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0005
+  text: "4\n§ 1. Вступ \uFEFF\n§ 1. Вступ\n1. Історія України як наука \nі навчальний предмет\n\
+    \e\n\e Порівняйте історію України як науку і  навчальний \nпредмет. Слово «історія»,\
+    \ як ви знаєте, має давньо­\nгрець­ке походження та перекладається як \n«дослідження»,\
+    \ «розповідь про події». Давньо-\nгрецький письменник і  вчений Геродот, якого\
+    \ \nвважають «батьком історії», називав «історія-\nми» свої оповідання про персько-грецькі\
+    \ війни. Термін «історія» має декілька значень. Істо-\nрія як наука вивчає минуле\
+    \ людських спільнот "
+  section_title: Сторінка 5
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0110
+  text: "РОЗДІЛ 3\n110\n2.\t ЩО ТАКЕ ІСТОРИЧНА ПАМ’ЯТЬ\nНаші старші рідні та близькі,\
+    \ бабусі та дідусі пам’ятають \nбагато подій із свого життя. Їхнє, як і ваше,\
+    \ минуле стано-\nвить спільну родинну історію. А історія кожної української \n\
+    родини є частинкою історії України.\nПоступово на основі знань і уявлень представників\
+    \ спіль-\nноти про минуле формується спільна історична пам’ять.\nІсторичні уявлення\
+    \ \nлюдини\nОсобистий досвід\nі родинні історії\nНалежність\nдо певної релігійної,\
+    \ \nнаціональної\nспільноти\nНалежність\nл"
+  section_title: Сторінка 110
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 5-klas-istoriya-schupak-2022_s0047
+  text: "Історичний час і простір\n49\nЧас в уявленнях людини протягом \nісторії\n\
+    § 8\nРозгадайте ребус і розкажіть, що ви знаєте \nпро закодоване слово.\n1.\t\
+    \ ЩО ТАКЕ ІСТОРИЧНИЙ ЧАС\nІсторію прийнято вимірювати часом.\nОдним із головних\
+    \ завдань істориків є вивчення дійсних \nісторичних подій і фактів, визначення\
+    \ часу, коли вони відбу-\nлися. Тому в науці використовують поняття історичний\
+    \ час.\nПоміркуйте над визначенням понять «час» і «історія» — спробуйте \nпояснити,\
+    \ що таке історичний час. Коли розпочався історични"
+  section_title: Сторінка 49
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0006
+  text: "ВСТУП\n8\nЗ давніх-давен слово «історія» означає звістку, розповідь \nпро\
+    \ минуле людини, родини, народу. Людство завжди ціка-\nвилося тим, що було раніше.\
+    \  Відтоді, коли люди оволоділи \nмовою, вони почали розповідати один одному про\
+    \ минуле. \nІноді оповідачі фантазували — і тоді народжувалися диво-\nвижні легенди\
+    \ й міфи. Дехто намагався передати свої відчут-\nтя щодо подій минулого в ритмічній\
+    \ формі — і тоді з’являлися \nвірші й пісні.\nРозгляньте ілюстрації та дайте відповіді\
+    \ на запитання.\n1.\t Пригадайт"
+  section_title: Сторінка 8
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-istoriya-schupak-2022_s0014
+  text: "РОЗДІЛ 1\n16\nїх, розмірковувати про важливі історичні явища. Як справж­\n\
+    ні учені-історики, будете добирати джерела з історії рідного \nкраю, досліджувати\
+    \ родовід.\nІсторія — це наука про життя людей у минулому, про їхні заняття, \n\
+    думки та дії.\n Варто запам’ятати!\nЗАСОБИ ПІЗНАННЯ ІСТОРІЇ\n1.\t За допомогою\
+    \ колажу визначте, якими засобами можна скориста-\nтися для пізнання історії.\n\
+    2.\t З якими із засобів ви вже працювали раніше? Які джерела історич-\nних знань\
+    \ пропонуєте додати до колажу?\n3.\t Як ви думає"
+  section_title: Сторінка 16
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.636846661567688
+  chunk_id: fc2291b5_c2978
+  text: "ІСТОРІОГРАФІЯ (від грец.\r\nίστορία — розповідь про минуле і\r\nγράφω — пишу)\
+    \ літературна — 1) Допоміжна\r\nлітературознавча дисципліна, що вивчає історію\
+    \ розвитку і нагромадження знань з\r\nісторії і теорії л-ри та літ. критики, а\
+    \ також відповідні літ. джерела,\r\nприсвячені творчості окремих письменників\
+    \ і літературознавців. 2) Сукупність літературознавчих\r\nдосліджень, що стосуються\
+    \ певного періоду, літ.-художнього напряму, якої-небудь\r\nважливої проблеми,\
+    \ творчості конкретного письменника, видатного тво"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.6352931261062622
+  chunk_id: feaa5fa7_c0908
+  text: "Відділ »Історія« має своїм завданням подати нарис\r\nісторичного розвитку\
+    \ України й українського народу від найдальших початків їх\r\nіст. буття й до\
+    \ найближчої сучасности. Хоч іст. огляд охоплює всі ділянки\r\nгромадського життя\
+    \ — політику, державний лад, соціяльно-економічні відносини,\r\nкультуру, але\
+    \ головну увагу в цьому відділі приділено питанням політ. історії України,\r\n\
+    оскільки іст. проблеми права, культури, Церкви, народного господарства докладно\r\
+    \nвисвітлюються в наступних відділах »ЕУ«. З друг"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.6286865472793579
+  chunk_id: 89ab7c69_c0014
+  text: "Щодо історіографії, то\r\nзробити це необхідно насамперед, тому, що в розумінні\
+    \ її структури, її\r\nперіодизації і її функціонування автор книги розходиться\
+    \ з нормами, встановленими\r\nу радянській науці. Не кажу вже тут про пресло-вуту\
+    \ марксистсько-ленінську\r\nметодологію з її сміховинними претензіями на роль\
+    \ єдино істинної й ефективної.\r\nЙдеться про речі більш предметні, передусім\
+    \ про структуру історичних творів, її\r\nскладові елементи. Справа в тому, що\
+    \ у нас до недавнього часу домінували\r\nпідходи до"
+  work: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+  year: 2008
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ochyma/ochrus.htm

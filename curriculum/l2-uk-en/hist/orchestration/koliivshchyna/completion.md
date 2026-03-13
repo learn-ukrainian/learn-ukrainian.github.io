@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 71 — E2E
+FAIL: pipeline hist 71
 
   Module:   koliivshchyna
   Track:    hist
-  Mode:     e2e
-  Words:    5751 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-24T23:17:39Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:13:33Z

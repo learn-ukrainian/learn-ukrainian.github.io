@@ -1,0 +1,140 @@
+discovered_at: '2026-03-12T16:19:21.892221+00:00'
+query_keywords:
+- Basic Motion Prefixes
+- входити
+- виходити
+- в'їжджати
+- В- та Ви-
+- V- and VY-
+- Практика та помилки
+- Practice and Errors
+- Підсумок та діалоги
+- Summary and Dialogues
+- entering and exiting places
+- prefixes в-/у- and ви- correctly
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=GcuEOIjMLYQ
+  channel: Klopotenko
+  title: Як правильно обирати і готувати картоплю | З якої картоплі виходить ідеальне
+    пюре | Євген Клопотенко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=dUGh1lYscXw
+  channel: Klopotenko
+  title: Why didn't I cook VINEGAR before 🥗 Vinaigrette with beans | Ievgen Klopotenko
+  relevance_score: 0.0
+  relevance_note: The video discusses cooking a vinaigrette and has no content related
+    to Ukrainian motion prefixes 'В-' or 'Ви-'. Despite being in Ukrainian, the topic
+    is completely irrelevant to the module's grammar focus.
+  transcript_excerpt: Сьогодні пропоную поговорити про одну дуже цікаву страву. Ця
+    страва має назву вінегрет.
+  embed_suggestion: Not applicable. Video is irrelevant to module topic.
+blogs:
+- url: https://www.ukrainianlessons.com/prefixes-of-motion/
+  title: Prefixes of Motion Guide
+  source: Systematic tables for beginners.
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/
+  title: 'Ukrainian Lessons Podcast: Prefixes'
+  source: Audio examples and drills.
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/28-3/
+  title: 'Dobra Forma 28-3: Verbs of Motion (Prefixed)'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/28-1/
+  title: 'Dobra Forma: Verbs of Motion (іти – їхати)'
+  source: dobraforma
+  relevance_score: 0.44999999999999996
+  topics:
+  - motion
+  - verbs
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/28-2/
+  title: 'Dobra Forma: Verbs of Motion (ходити – їздити)'
+  source: dobraforma
+  relevance_score: 0.44999999999999996
+  topics:
+  - motion
+  - verbs
+  - grammar
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0287
+  text: "Повторення вивченого\n280\nпр(и/е)важливий, (з/с/зі)першу, ро(з/с)поділ,\
+    \ (з/с/зі)’яви-\nтися, \nпр(и/е)освященний, \nро(з/с)питати, \n(з/с/зі)хиль-\n\
+    ність, пр(и/е)шкільний, ро(з/с)кривати, пр(и/е/і)звище \n(з/с/зі)низити, пр(и/е)боркати,\
+    \ бе(з/с)лад, (з/с/зі)причи-\nнити, (з/с/зі)’ясувати, (з/с/зі)поживати, ро(з/с)рядитися,\
+    \ \nро(з/с)робляти, пр(и/е)чудовий.\n2. Позначте префікси, сформулюйте правила,\
+    \ які ви використали у вправі.\nВправа 559\n1. Запишіть слова, вставивши на місці\
+    \ пропусків потрібні літери.\nГру"
+  section_title: Сторінка 280
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0217
+  text: "206\nЗМІСТ  \n§ 44–45. Вимова  приголосних  звуків. Написання  сумнівних\
+    \  \nприголосних. Уподібнення  приголосних  звуків . . . . . . . . . . . . . .\
+    \ . 101\n§ 46. Вимова  та  правопис  префіксів  з-  (зі-,  с-),  роз-  (розі-),\
+    \  без- . 105\n§ 47. Спрощення  в  групах  приголосних . . . . . . . . . . . .\
+    \ . . . . . . . . . . 108\n§ 48–49. Чергування  голосних  звуків  . . . . . .\
+    \ . . . . . . . . . . . . . . . . . 111\n§ 50. Чергування  приголосних  звуків\
+    \  . . . . . . . . . . . . . . . . . . . . . . . 11"
+  section_title: Сторінка 206
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.125
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0062
+  text: "§ 9. Написання префіксів ПРЕ-, ПРИ-, ПРІ-  \n55\nВправа 90\n1. Спишіть слова.\n\
+    Превеселий, предивно, презавзятий, преподобіє, пре-\nклоніння, прекрасно, премилий,\
+    \ преображення, претихо.\nПрибудова, прибулець, привіконний, привласнити, \nпригаслий,\
+    \ пригостити, приймач, приготований, при-\nгріти, пригрозити, приїзд, приазовський.\n\
+    Прізвище, прізвисько, прірва.\n2. Виділіть префікси, поясніть їхній правопис.\n\
+    Вправа 91\n1. Спишіть слова, виділіть префікси.\nЗів’янути  — прив’янути, зачинити \
+    \ — причинити, \nзігну"
+  section_title: Сторінка 55
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0056
+  text: "55\n121.\tА.  Визначте лексичне значення розміщеного в центрі схеми слова.\
+    \ \nбігти\nпри\nза\nдо\nпо\nна\nв\nз\nвід\nви\nпере\nоб\nпід\nБ.  Додайте почергово\
+    \ до дієслова бігти префікси. Які додаткові зна-\nчення вносять вони в лексичне\
+    \ значення дієслова? \nВ.  Поміркуйте, як префікси допомагають збагатити мову.\
+    \ \nПрефікс (від лат. prae – попереду і fixus – прикріпле-\nний) – це значуща\
+    \ частина слова, яка стоїть перед коренем \nі служить для утворення нових слів.\
+    \ НАПРИКЛАД: чудовий – \nпречудовий, їхати – виїхати, плат"
+  section_title: Сторінка 58
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0064
+  text: "63\nПрефікс пре- пишемо:\n у прикметниках і прислівни-\nках на позначення\
+    \ збільшеної \nознаки (його можна замінити \nсловом дуже)\nпремудрий (дуже муд­\n\
+    рий), презавзятий, пре-\nвисоко, препогано\n у словах презирство, презирливий,\
+    \ преосвященний, пре-\nподобний, престол\nПрефікс при- пишемо в словах, що означають:\n\
+      наближення, \nпри- \nєд­нання, результат дії, \nчастковість дії чи ознаки\n\
+    приїхати, прибігти, прибуду-\nвати, присісти, прибудований, \nприморожений\n розміщення\
+    \ біля чо-\nгось\nприкордонний, прибе"
+  section_title: Сторінка 66
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

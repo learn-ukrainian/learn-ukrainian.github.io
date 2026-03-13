@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:55:24.301842+00:00'
+discovered_at: '2026-03-12T20:00:25.631602+00:00'
 query_keywords:
 - The Completed Past
 - зробив
@@ -15,27 +15,49 @@ query_keywords:
 error: null
 warning: null
 videos:
+- url: https://www.youtube.com/watch?v=4vtNZjrsqEg
+  channel: Klopotenko
+  title: How did Yevgeny Klopotenko propose to Kateryna?
+  relevance_score: 0.9
+  relevance_note: The video provides a natural, personal narrative using past tense
+    verbs, perfectly demonstrating 'The Completed Past' and 'Narrative Sequencing'
+    through a series of completed actions leading to a specific result (the proposal).
+  transcript_excerpt: 'І я побачила перед очима велику пляшку шампанського. А я дивлюсь,
+    Євген її відкриває, а він каже: ''Ні''. І знімає цю мюзле... стає на коліно і
+    каже: ''Кохана, я тебе дуже кохаю. Чи хочеш ти прожити зі мною життя, чи станеш
+    ти моєю дружиною?'''
+  embed_suggestion: After Narrative Sequencing
 - url: https://www.youtube.com/watch?v=qUT3nRyMJbY
   channel: Klopotenko
   title: Як я готую на тиждень за 60 хвилин ⏳ Раз зробив — тиждень їм! ЗАГОТОВКИ з
     КУРКИ
-  relevance_score: 0.5
-  relevance_note: The video demonstrates the natural usage of a perfective verb (`зробив`,
-    `приготувати`) to describe a completed action with a resulting state, directly
-    relating to the module's core topic of 'The Completed Past' and 'Process vs. Result.'
-    However, it does not explicitly teach grammar; its primary focus is on cooking.
-  transcript_excerpt: І тому це відео саме для тих, хто хоче один раз приготувати,
-    наприклад, в неділю, е, а потім цілий тиждень можна їсти смачні і гарні страви.
-  embed_suggestion: After section Процес проти результату (Process vs. Result) – because
-    it provides a real-world example of completing an action once for a lasting result.
-- url: https://www.youtube.com/watch?v=AoqSJg5gLi4
-  channel: Klopotenko
-  title: 'Ідеальний сніданок Млинці на кефірі #shorts'
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-blogs: []
+  relevance_score: 0.2
+  relevance_note: The video is in Ukrainian but is a cooking tutorial, which is unrelated
+    to the module's grammatical focus on 'The Completed Past' and narrative sequencing.
+  transcript_excerpt: Всім привіт. Я сьогодні пропоную вам такий прикольний лайфхак,
+    як приготувати за один раз собі їжі на тиждень і щоб ви не переживали...
+  embed_suggestion: Not suitable for embedding in this module.
+blogs:
+- url: https://www.ukrainianlessons.com/episode157/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode132/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode133/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/27-2/
+  title: 'Dobra Forma 27-2: Verbal Aspect (Past Tense)'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.1666666716337204
   chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0158

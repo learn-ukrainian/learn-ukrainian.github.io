@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py hist 33 — E2E
+PASS: pipeline hist 33
 
   Module:   beresteyska-uniia
   Track:    hist
-  Mode:     e2e
-  Words:    3886 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-25T19:30:12Z
+  Verdict:  PASS
+  Date:     2026-03-13T08:32:27Z

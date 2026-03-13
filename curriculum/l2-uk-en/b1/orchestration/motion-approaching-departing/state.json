@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T09:26:39Z",
+      "ts": "2026-03-12T21:15:26Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:26:39Z",
+      "ts": "2026-03-12T21:15:26Z",
       "task_id": "v5-motion-approaching-departing-pA",
       "mode": "full"
     }

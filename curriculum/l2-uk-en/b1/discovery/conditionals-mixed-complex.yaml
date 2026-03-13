@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T10:24:25.986298+00:00'
+discovered_at: '2026-03-12T20:19:26.190239+00:00'
 query_keywords:
 - 'Умовні речення: змішані та складні умови'
 - 'Тест: Перевірте себе'
@@ -15,7 +15,12 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення
+  title: Умовні речення
+  source: Вікіпедія
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0243

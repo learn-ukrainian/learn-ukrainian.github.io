@@ -1,0 +1,237 @@
+discovered_at: '2026-03-13T00:59:51.268884+00:00'
+query_keywords:
+- 'Конституція Орлика: Перша європейська'
+- Історичний контекст
+- Автор і обставини
+- Структура і зміст
+- Фрагмент
+- Чому "конституція"?
+- 'Analyze the causes and consequences of конституція орлика: перша європейська'
+- Evaluate the historical significance of конституція в екзилі
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=_8w0QOO9h8M
+  channel: Комік Історик
+  title: 'Пилип Орлик: гетьман на фрілансі'
+  relevance_score: 1.0
+  relevance_note: The video directly discusses Pylyp Orlyk's Constitution, its historical
+    context, the identity of its author, and explicitly addresses the question of
+    why it's called a 'constitution' and the misconception of it being the first,
+    aligning perfectly with multiple module sections and vocabulary terms.
+  transcript_excerpt: ми зараз називаємо це конституцією Пилипа Орлика раніше це були
+    права і постановлення якраз Війська Запорозького... конституція Пилипа Орлика
+    - Це не перша конституція в історії людства якщо будемо по-чесному це взагалі
+    не конституція.
+  embed_suggestion: After section Чому 'конституція'? – The video comprehensively
+    covers the historical background leading to the constitution's creation, the role
+    of Pylyp Orlyk, and directly debates the 'first constitution' myth, making it
+    an excellent reinforcement for this section.
+- url: https://www.youtube.com/watch?v=dUUoe9s3jHU
+  channel: ІМТГШ
+  title: Історія Цукру - НАЙСОЛОДШІ ЧАСИ УКРАЇНИ?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=yifdVanrw-I
+  channel: ІМТГШ
+  title: За що спалили Москву?  | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0261
+  text: "Обговоріть результати роботи в загальному колі. На \nоснові опрацьованих\
+    \ джерел доведіть або спростуйте думку Дмитра \nПавличка: «Пилип Орлик створив\
+    \ першу в Європі демократичну \nконституцію, затверджену козацькою радою 5 квітня\
+    \ 1710 року в \nБендерах. Засади громадянських прав, що лягли в основу цієї \n\
+    конституції, \nвипередили \nна \nчотири \nдесятиліття \nфранцузьких \nенциклопедистів\
+    \ \nта \nна \nвісім \nдесятиліть \nукладачів \nпольської \nантифеодальної хартії\
+    \ з 1794 року». Остання сторінка \nукраїномовного "
+  section_title: Сторінка 101
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0317
+  text: "Узагальнення\nІсторія України в контексті епохи \nІ § 44 Раннього Нового\
+    \ часу. Внесок України \nу формування європейської цивілізації\nГРА «РАННІЙ НОВИЙ\
+    \ ЧАС В ІСТОРІЇ УКРАЇНИ»\nСкористайтеся правилами гри, поданими нас. 8.\nО\nЛитовські\n\
+    статути\n©\nОренда\nї й ,\n©\nФільварок\nИ « А  І\n¥/Ш\n©\nПолемічна\nлітература\n\
+    ©\nЦерковні\nбратства\nУиіииа\n(греко-\nкатолиціька}\nцерква\n© \nЗимівник \n\
+    О\nСл оє'р не­\nгре ко­\nпати нська \nшкола\nЗапорозька\nСіч\nт а\nРеєстрове\n\
+    козацтво\nНизове\nкозацтво\n%\nГ енеральна \nстаршина\nу* \\\nСотня\nН\n"
+  section_title: Сторінка 237
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0256
+  text: "Галявина творчості \nОб’єднайтеся в групи. Створіть лепбук на тему: «Архітектура,\
+    \ \nосвіта, література та образотворче мистецтво в XVIІ – на початку XVIІІ \n\
+    століття», або підготуйте презентацію на тему: «Церковне життя в XVIІ \n— на початку\
+    \ XVIІІ століття». Перевірте себе, зайшовши  \nза покликанням  https://cutt.ly/kefdgK6e\
+    \ \nабо за QR-кодом. 199 \nТитульний аркуш  \n«Конституції…» Пилипа Орлика. Світлина\
+    \ \n§ 40. КОНСТИТУЦІЯ  \nПИЛИПА ОРЛИКА  \n \nПрактична робота № 4 \nМета. Проаналізувати\
+    \ \nзміст \nКонстит"
+  section_title: Сторінка 100
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0251
+  text: "КОЗАЦЬКА УКРАЇНА наприкінці 50-х років XVII —\nРОЗДІЛ 4  \nна початку XVIII\
+    \ ст.\nЗНАЮ МИНУЛЕ » ОСМИСЛЮЮ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \n•» ЗАПИТАННЯ І\
+    \ ЗАВДАННЯ «•\n•» ЗНАЮ І СИСТЕМАТИЗУЮ НОВУ ІНФОРМАЦІЮ\n1. С а м о о ц і н ю в\
+    \ а н н я\nОцініть свої успіхи в опануванні теми «Пилип Орлик і його Конституція.\
+    \ \nЛіквідація козацтва на Правобережній Україні».\nМожу назвати дати укладення\
+    \ конституції П. Орли­\nка, ліквідації козацтва на Правобережжі.\nМожу визначити\
+    \ політичну мету П. Орлика та захо­\nди з її дос"
+  section_title: Сторінка 186
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5665875673294067
+  chunk_id: eef657d3_c0597
+  text: "19 Як це не дивно,\r\nБендерська конституція ще майже не досліджена. Єдина\
+    \ спеціальна розвідка\r\nвідомого українського історика-правника М.П. Василенка\
+    \ «Конституція Пилипа\r\nОрлика». — «Ученые записки Института Истории РАНИИОН»,\
+    \ т. IV, Москва, 1929, с. 153-171. Англійський\r\nпереклад її («The Constitution\
+    \ of Pylyp Orlyk» вміщено в «The Annals of the\r\nUkrainian Academy of Arts and\
+    \ Sciences in the U.S., Vol. VI, №3, 4 (21-22,\r\n1958, pp. 1260-1295).\n\n20\
+    \ І. Борщак, «Orlikiana». — «Хліборобська Україна», "
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.5538413524627686
+  chunk_id: eef657d3_c0595
+  text: "Бендерська конституція 1710 р., ця за виразом В.\r\nЛипинського, «конституційна\
+    \ хартія України» 24, як сталася, так і\r\nзосталася «на вЂкопомную Войска Запорожского\
+    \ и всего Народу Руського\r\n(Українського) славу и пам’ятку» 25.\n\nПРИМІТКИ\n\
+    \n1 «Мазепа». Збірник.\r\nТом І. — «Праці Українського Наукового Інституту», том\
+    \ XLVI, Варшава, 1938, с.\r\n115.\n\n2 Про це — див. нашу\r\nпрацю «Українсько-московська\
+    \ угода 1654». Вид. ООЧСУ-ЛВУ, Ню Йорк-Торонто,\r\n1954, с. 71 і далі.\n\n3 І.\
+    \ Борщак, «Вивід\r\nправ України». — "
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.5242379903793335
+  chunk_id: c44f1207_c3302
+  text: "Лїтературу литовського права остатнїх десятолїть я \r\n зберу тут в системі.\
+    \ Для зверхньої історії права (джерел його) окрім згаданої \r\n вище, досї не\
+    \ пережитої розвідки Леонтовича Русская Правда и Литовскій статут, \r\n 1865,\
+    \ іще: Пахманъ Исторія кодификаціи гражданскаго права, 1871, I-II (тут і \r\n\
+    \ про Л. Статут), Баршевскій Краткая исторія Литовскаго Статута, К. 1882 \r\n\
+    \ (Университ. ИзвЂстія київські 1882, VI), Ясинскій Уставныя земскія грамоты \r\
+    \n Литовско-русскаго государства, К., 1889 (відб. з Из"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm

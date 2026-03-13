@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "andrey-sheptytsky",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:39:24Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:39:24Z",
+      "task_id": "v5-andrey-sheptytsky-pA",
+      "mode": "full"
+    }
+  }
+}

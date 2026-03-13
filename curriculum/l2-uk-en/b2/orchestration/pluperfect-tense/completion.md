@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b2 94 — E2E
+PASS: pipeline b2 42
 
   Module:   pluperfect-tense
   Track:    b2
-  Mode:     e2e
-  Words:    4108 (target: 4000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:20Z
+  Verdict:  PASS
+  Date:     2026-03-12T18:16:05Z

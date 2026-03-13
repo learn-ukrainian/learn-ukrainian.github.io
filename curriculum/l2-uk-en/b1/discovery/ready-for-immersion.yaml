@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:48:13.388479+00:00'
+discovered_at: '2026-03-12T20:45:40.107399+00:00'
 query_keywords:
 - Готові до занурення
 - Стрибок у занурення
@@ -22,7 +22,32 @@ videos:
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  title: Ukrainian Grammar in Ukrainian
+  source: Wikipedia
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode92/
+  title: At the flea market in Ukraine + Forming perfective aspect in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/27-2/
+  title: 'Dobra Forma: Verbal Aspect (Past Tense)'
+  source: dobraforma
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/27-3/
+  title: 'Dobra Forma: Verbal Aspect (Other Types of Aspectual Pairs)'
+  source: dobraforma
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/27-4/
+  title: 'Dobra Forma: Verbal Aspect (Future Tense)'
+  source: dobraforma
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0277

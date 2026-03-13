@@ -3,16 +3,15 @@
   "slug": "preferences-and-choices",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T09:45:04Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:45:04Z",
-      "task_id": "v5-preferences-and-choices-pA",
-      "mode": "full"
+      "ts": "2026-03-12T15:30:17Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:30:17Z",
+      "note": "merged-into-research"
     }
   }
 }

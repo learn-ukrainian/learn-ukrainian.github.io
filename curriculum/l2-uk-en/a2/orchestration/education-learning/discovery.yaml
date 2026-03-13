@@ -1,0 +1,164 @@
+discovered_at: '2026-03-12T17:18:56.852035+00:00'
+query_keywords:
+- Education and Learning
+- школа
+- університет
+- вчитися
+- 'Лексика: Навчальні предмети та речі'
+- 'Vocabulary: Subjects and Supplies'
+- 'Граматика: Дієслова навчання'
+- 'Grammar: Learning Verbs'
+- Академічне життя
+- Academic Life
+- Оцінювання та іспити
+- Assessment and Exams
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=PFdyKX3TlHY
+  channel: Ukrainian Lessons
+  title: ULP 5-188 | Шкільна освіта в Україні | Ukrainian Lessons Podcast Season 5
+  relevance_score: 0.95
+  relevance_note: Directly discusses the Ukrainian school education system, types
+    of schools, and the act of studying ('вчитися'), aligning perfectly with the module's
+    core topic and vocabulary.
+  transcript_excerpt: Сьогодні як я і обіцяла Я розповім вам про школу в Україні а
+    саме про обов'язкову шкільну середню освіту. Спочатку я дам вам загальну інформацію
+    про те як школа в Україні побудована а по потім Поділюсь власним досвідом розкажу
+    трохи про те як я вчилася в школі почнімо
+  embed_suggestion: After section Вступ -- Serves as an excellent introductory overview
+    of the school system in Ukraine, setting the context for the module.
+- url: https://www.youtube.com/watch?v=eSyqv7R6Qec
+  channel: Ukrainian Lessons
+  title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school
+    in Ukraine + Prefix...
+  relevance_score: 0.8
+  relevance_note: Reinforces vocabulary related to school types and roles ('вчителька',
+    'директор школи') within a narrative context about working in a Ukrainian school,
+    closely reinforcing module themes.
+  transcript_excerpt: Христина буде жити в Україні один рік і працювати вчителькою
+    в школі вона буде викладати англійську мову. [...] школа в Україні буває початкова
+    primary початкова середня Middle School середня школа і старша Старша школа High
+    School університет - це вже не школа
+  embed_suggestion: 'After section Лексика: Навчальні предмети та речі -- Introduces
+    practical vocabulary for school roles and different school levels, reinforcing
+    the module''s lexicon.'
+- url: https://www.youtube.com/watch?v=zG-e8ZDPWcY
+  channel: Klopotenko
+  title: Вся правда про реформу ШКІЛЬНОГО ХАРЧУВАННЯ від Клопотенка
+  relevance_score: 0.5
+  relevance_note: The video discusses school nutrition reform, which is part of the
+    broader school environment but not directly focused on education, learning subjects,
+    or grammar as per the module's core topic.
+  transcript_excerpt: Це відео - це історія про шкільне харчування, про реформу шкільного
+    харчування, як вона почалася, як вона відбувалась, як вона відбувається і як вона
+    буде в майбутньому відбуватися.
+  embed_suggestion: After section Академічне життя -- Provides context on school life,
+    specifically the less academic but integral aspect of school food.
+- url: https://www.youtube.com/watch?v=qYbGHhMqukk
+  channel: Bright Kids Ukrainian
+  title: 'Підписуйтесь на нові уроки! #learnukrainian #speakukrainian #ukrainianlanguage'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=hR3WwthPyiM
+  channel: Bright Kids Ukrainian
+  title: School supplies in Ukrainian - Lesson about School supplies in Ukrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=PLIumsbnlfadihbDbDiPiTintNOSy2ML_N
+  channel: Klopotenko
+  title: Шкільне меню | Рецепти для дітей | Євген Клопотенко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/ph-education/
+  title: 'Ukrainian Phrasebook: Education'
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode57/
+  title: Your schedule in Ukrainian + Accusative case with prepositions
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0018
+  text: "17\nЛексикологія\nЛексикологія (від грец. lexikos – словесний, словни-\n\
+    ковий і logos – учення) – це розділ мовознавства, що ви-\nвчає словниковий склад\
+    \ мови.\n2. ЛЕКСИЧНЕ ЗНАЧЕННЯ СЛОВА.  \nОДНОЗНАЧНІ ТА БАГАТОЗНАЧНІ СЛОВА\nПро\
+    \ те, що означають слова, скільки значень можуть мати,  \nа також про вживання\
+    \ слів відповідно до їхнього значення\nПРИГАДАЙМО. Чим слово відрізняється від\
+    \ речення? \n24.\t А.  Порівняйте подані в рамці записи. У якій колонці маємо\
+    \ слова, \nа в якій – лише сполучення звуків?\nБ.  Поясн"
+  section_title: Сторінка 20
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0060
+  text: "НАВЧАЮСЯ ЗМІНЮВАТИ СЛОВА — \nНАЗВИ ПРЕДМЕТІВ\nЯ — учителька\nПрочитай і розкажи\
+    \ \nу класі.\nодин — багато^\nЯ — учитель\nВ українській мові слова можуть називати\
+    \ один \nпредмет або багато предметів.\nтварина \nрослина\nДодай свої \nслова.\n\
+    32| Випишіть із лічилки Тамари Коломієць слова — назви \nпредметів.\nодин\nбагато\n\
+    £ Що не так на \nмалюнку?\nБіжить півень із причілка \nі наспівує лічилку:\n—\
+    \ Раз-два — курчата.\nТри-чотири — зайчата. \nП'ять-шість — гусаки.\nСім-вісім\
+    \ — їжаки. \nДев'ять-десять — йде лисиця. \nНам хо"
+  section_title: Сторінка 62
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
+  text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
+    \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
+    ПРИКМЕТНИКИ"
+  section_title: Сторінка 101
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.10000000149011612
+  chunk_id: 5-klas-ukrmova-golub-2022_s0255
+  text: '141
+
+    § 49. Узагальнення відомостей із синтаксису й пунктуації ............ 143
+
+    РОЗДІЛ V. Інформація
+
+    § 50. Повторення вивченого в 1–4 класах. Інформація .................. 146
+
+    § 51. Види інформації. Текстова інформація ................................ 149
+
+    § 52. Графічна та числова інформація .........................................
+    151
+
+    § 53. Звукова та мультимедійна інформація ................................ 154
+
+    § 54. Джерела інформації .......................................................... '
+  section_title: Сторінка 254
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

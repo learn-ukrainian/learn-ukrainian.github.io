@@ -1,0 +1,18 @@
+{
+  "track": "istorio",
+  "slug": "rosiiska-imperialna-istorio",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:21:18Z",
+      "task_id": "v5-rosiiska-imperialna-istorio-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:21:18Z",
+      "note": "merged-into-research"
+    }
+  }
+}

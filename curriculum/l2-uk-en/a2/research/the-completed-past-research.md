@@ -1,77 +1,88 @@
 # Дослідження: The Completed Past
 
 ## State Standard Reference
-§4.2.4.1 (A2 level): "Indicative mood — expanded: aspect pairs (доконаний/недоконаний)" — past tense formation and use.
-§4.3.2 (A2 word formation): "Aspectual verb pairs — formation patterns."
-Alignment: This module operationalizes both §§ by focusing specifically on the perfective past tense as the primary vehicle for narrating completed actions — the most frequent aspect context at A2.
+
+§4.2.3.1: "Indicative — expanded: aspect pairs (доконаний/недоконаний), motion verbs (їхати/ходити)"
+§4.3.2: "Aspectual verb pairs — formation patterns"
+Alignment: This module focuses squarely on perfective past tense — the primary A2 application of §4.3.2 (aspect pair formation) and §4.2.3.1 (aspectual distinction in the indicative). Both standards are directly addressed.
 
 ---
 
 ## Vocabulary Frequency
-All 20 forms verified in VESUM.
 
-| Form (masc.) | Lemma | Frequency | Key collocations |
+All forms VESUM-verified (verb:perf:past:m). Note: `запам'ятав` verified via lemma `запам'ятати` (VESUM has 16 forms including `запам'ятав`).
+
+| Word (m-form) | Lemma | Frequency | Key collocations |
 |---|---|---|---|
-| зробив | зробити | Top 100 | зробив помилку, зробив вибір, зробив висновок |
-| сказав | сказати | Top 50 | сказав правду, сказав «так», сказав чесно |
-| пішов | піти | Top 50 | пішов додому, пішов геть, пішов на прогулянку |
-| написав | написати | High | написав листа, написав пост, написав книгу |
-| прочитав | прочитати | High | прочитав до кінця, прочитав повідомлення |
-| прийшов | прийти | High | прийшов вчасно, прийшов на допомогу |
+| зробив | зробити | Very High (Top 100) | зробив помилку, зробив вибір, зробив висновок |
+| сказав | сказати | Very High (Top 50) | сказав правду, сказав «так», сказав чесно |
+| пішов | піти | Very High | пішов додому, пішов геть, пішов на роботу |
 | зрозумів | зрозуміти | High | зрозумів ідею, нарешті зрозумів |
 | знайшов | знайти | High | знайшов рішення, знайшов вихід, знайшов час |
-| забув | забути | Med-High | забув пароль, забув ключі |
-| взяв | взяти | High | взяв участь, взяв слово |
+| написав | написати | High | написав листа, написав пост |
+| прочитав | прочитати | High | прочитав до кінця, прочитав повідомлення |
+| прийшов | прийти | High | прийшов вчасно, прийшов на допомогу |
 | побачив | побачити | High | побачив уперше, побачив деталь |
-| почув | почути | High | почув новини, почув звук |
+| забув | забути | Medium-High | забув пароль, забув ключі |
+| взяв | взяти | High | взяв участь, взяв слово |
+| почав | почати | High | почав читати, почав розуміти |
+| закінчив | закінчити | High | закінчив роботу, закінчив читати |
+| приїхав | приїхати | Medium-High | приїхав вчасно, приїхав додому |
 | дав | дати | High | дав відповідь, дав слово |
-| приїхав | приїхати | High | приїхав вчасно, приїхав додому |
-| почав | почати | High | почав читати, почав роботу |
-| закінчив | закінчити | High | закінчив завдання, закінчив роботу |
-| запам'ятав | запам'ятати | Med | запам'ятав правило, запам'ятав слово |
-| загубив | загубити | Med | загубив ключі, загубив телефон |
-| вийшов | вийти | High | вийшов з кімнати, вийшов на вулицю |
-| увійшов | увійти | High | увійшов у кімнату, увійшов до музею |
+| почув | почути | High | почув новину, почув звук |
+| загубив | загубити | Medium | загубив ключі, загубив телефон |
+
+Sequencing adverbs (verified): спочатку, потім, нарешті — all VESUM-confirmed.
 
 ---
 
 ## Cultural Hooks
-1. **Proverb «Діло майстра величає»** — "The deed glorifies the master." Used to open the module framing: completed actions (зробив, написав) reveal character. Common in schools and workplaces.
-2. **Proverb «Кінець — справі вінець»** — "The end is the crown of the work." Direct cultural parallel to the perfective concept: completion is the meaningful unit, not the process.
-3. **Everyday narrative convention**: In Ukrainian casual speech, people narrate their completed day with a rapid chain of perfective verbs: «Прийшов додому, поїв, почитав, ліг спати» — each action a closed, discrete unit. This mirrors how Ukrainians naturally tell stories about daily life.
+
+1. **Proverb**: «Діло майстра величає» (The deed glorifies the master) — highlights Ukrainian cultural valuation of completing tasks; the perfective verb links directly to the concept of a finished deed. Pairs with «Кінець — справі вінець» (The end is the crown of the work).
+2. **Daily life — museum/archive context**: Ukrainian museums (e.g., Музей Ханенків in Kyiv) use past-tense captions on artefacts: «Художник написав цю картину у 1890 році» — a natural perfective past in authentic context.
+3. **Folk custom**: Ukrainian folk tales use sequential perfective chains to advance plot — «прийшов, побачив, зрозумів» — learners can recognize this pattern in казки, which are often public domain and accessible.
 
 ---
 
 ## Common Learner Errors
-1. **Gender/number mismatch** → «Анна написав» ✗ → «Анна написала» ✓ — English past tense has no gender agreement; learners default to masculine form.
-2. **Aspect drift (Imperfective when result meant)** → «Я писав листа» (was writing) used when «Я написав листа» (wrote and finished it) is intended — English "I wrote a letter" is ambiguous; Ukrainian is not.
-3. **Double auxiliary error** → «Вона є написала» ✗ / «Вона була написала» ✗ → «Вона написала» ✓ — English "she has written" maps to a bare Ukrainian past form; no auxiliary exists.
-4. **Treating suppletive pairs as regular** → «ходив додому» ✗ for a single completed trip → «пішов додому» ✓ — піти/ходити, прийти/приходити require knowing which is the perfective partner.
+
+1. **Gender/number agreement error** → «Анна написав» instead of «Анна написала» — English speakers apply a default m-form because they treat the infinitive or m-form as "the verb." Fix: Ukrainian past tense agrees with the subject's grammatical gender/number, not person. Avramenko gr7 exercises explicitly target this with gender-identification drills.
+2. **Aspect drift** → Using imperfective when perfective is required: «Я писав листа» when meaning "I wrote (and finished) the letter." Root cause: English "I wrote" is ambiguous; learners default to the easier imperfective form. Fix: The decision tree «чи я закінчив?» (did I finish it?) resolves ambiguity.
+3. **Double past / auxiliary verb ghost** → «Я мав написав» or «я є написав» — direct calque from English "I have written." Ukrainian has no auxiliary construction for past tense; aspect is encoded in the verb form itself. Litvinova gr7 notes: «Дієслова в минулому часі не змінюємо за особами» — past tense doesn't conjugate by person (a key structural difference from English).
+4. **No past tense for perfective future confusion** → Perfective verbs have no present tense (e.g., «я напишу» is future, not present). At A2, this means learners must learn that perfective past (написав) and perfective future (напишу) are the only two tense options for these verbs.
 
 ---
 
 ## Cross-References
-- Builds on: **a2-14** (Aspect Introduction — imperfective/perfective concept), **A1 past tense formation** (past suffix -в/-ла/-ло/-ли, gender agreement)
-- Prepares for: **a2-16** (Future Plans and Promises — perfective future), **a2-17** (Aspect Morphology — prefix/suffix pair formation), **a2-31** (Telling Stories — extended narrative)
+
+- Builds on: a2-14 (Aspect Introduction — знайомство with доконаний/недоконаний pairs), A1 past tense formation (basic -в/-ла/-ло/-ли suffixes)
+- Prepares for: a2-16 (Future Plans and Promises — perfective future), a2-17 (Aspect Morphology — prefix patterns), a2-31 (Telling Stories — narrative chains)
 
 ---
 
 ## Teaching Strategy
-- **Discovery exercise**: Present 6 sentences about a completed museum workday without any explanation — «Архіваріус прийшов о дев'ятій. Відкрив архів. Знайшов стару карту. Сфотографував її. Написав звіт. Пішов додому.» — Ask: *What did the archivist do? Did he finish each action?* Then contrast with «Він писав звіт» — *Was the report finished?* Let learners notice the prefix patterns (написав vs. писав) before the rule is stated.
-- **Best context**: The museum archivist persona is excellent — every archival task has a clear beginning and end. Also: daily routine narration (пішов на ринок, купив хліб, прийшов додому) is universally relatable and high-frequency.
-- **Contrastive pairs to drill**: писав → написав / читав → прочитав / робив → зробив / ходив → пішов / приходив → прийшов. The suppletive pairs (ходити/піти) need special attention — flag them explicitly.
+
+- **Discovery exercise**: Show a 3-panel scenario. Panel 1: «Михайло читав книгу годину» (Mykhailo was reading a book for an hour). Panel 2: «Михайло прочитав книгу» (Mykhailo read/finished the book). Panel 3: Photo — book closed, satisfied expression. Ask: "Which sentence describes a finished action? How do you know?" Learners notice the prefix «про-» before the rule is given. Kravtsova gr4 uses exactly this comparison format: «що робив? / що зробив?» side-by-side.
+- **Best context**: A workday debrief — «Що ти зробив сьогодні?» (What did you accomplish today?) — forces perfective. Contrast with «Що ти робив?» (What were you doing?) for imperfective. Museum archivist logging completed tasks is a natural fit.
+- **Contrastive pairs**: писав → написав | читав → прочитав | робив → зробив | ходив → пішов (suppletive — flag this explicitly; пішов is not prefix-derived from ходив).
 
 ## Notes for Content Writing
-- Module is in Core Grammar band (M01-20), so 45–65% Ukrainian immersion applies — grammar theory explanations can stay in English.
-- Never exceed 15 words per Ukrainian sentence; no subordinate clauses beyond simple який/що/коли.
-- Suppletive pairs (піти/ходити, прийти/приходити) need a dedicated callout box — they are a distinct error class from prefix-formed perfectives.
-- The «Aspect Drift» decision tree («Was I doing it? / Did I finish it?») is the key pedagogical tool — keep it simple and visual.
-- Sequencing markers (спочатку / потім / нарешті) are the bridge to a2-31 narrative work — introduce them in section 4 but don't over-drill.
+
+- Flag the suppletive pair ходив → пішов (and ходив → прийшов) — these can't be inferred from the pattern. Needs explicit callout.
+- Past tense does NOT change by person — only by gender (m/f/n) and number (sg/pl). This structural difference from English present tense is the #1 source of confusion; worth a dedicated callout box.
+- Immersion at 45-65% for this module (Core grammar band, M01-20). Grammar theory sections can stay majority English.
+- A2 constraint: max 15 words per Ukrainian sentence, max 2 clauses. Keep example sentences short.
 
 ## Resource Discovery
 
 ### Videos
-- [Як я готую на тиждень за 60 хвилин ⏳ Раз зробив — тиждень їм! ЗАГОТОВКИ з КУРКИ](https://www.youtube.com/watch?v=qUT3nRyMJbY) (Klopotenko) — The video demonstrates the natural usage of a perfective verb (`зробив`, `приготувати`) to describe a completed action with a resulting state, directly relating to the module's core topic of 'The Completed Past' and 'Process vs. Result.' However, it does not explicitly teach grammar; its primary focus is on cooking.
+- [How did Yevgeny Klopotenko propose to Kateryna?](https://www.youtube.com/watch?v=4vtNZjrsqEg) (Klopotenko) — The video provides a natural, personal narrative using past tense verbs, perfectly demonstrating 'The Completed Past' and 'Narrative Sequencing' through a series of completed actions leading to a specific result (the proposal).
+
+### Blog Articles
+- [Ukrainian Lessons Podcast Season 4](https://www.ukrainianlessons.com/episode157/) (ukrainianlessons.com)
+- [Ukrainian Lessons Podcast Season 4](https://www.ukrainianlessons.com/episode132/) (ukrainianlessons.com)
+- [Ukrainian Lessons Podcast Season 4](https://www.ukrainianlessons.com/episode133/) (ukrainianlessons.com)
+- [Dobra Forma 27-2: Verbal Aspect (Past Tense)](https://opentext.ku.edu/dobraforma/chapter/27-2/) (University of Kansas)
 
 ### Textbook References (RAG)
 

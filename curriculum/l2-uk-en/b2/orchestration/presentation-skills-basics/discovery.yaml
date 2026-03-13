@@ -1,0 +1,133 @@
+discovered_at: '2026-03-12T20:01:21.539454+00:00'
+query_keywords:
+- 'Презентації: Основи'
+- Структура та подання професійних презентацій
+- Вступ та психологія
+- Introduction & Psychology
+- Риторична спадщина та структура
+- Rhetorical Heritage & Structure
+- 'Мовна навігація: Signposting'
+- 'Linguistic Navigation: Signposting'
+- Візуальна культура та ідентичність
+- Visual Culture & Identity
+- Техніка виступу та робота над помилками
+- Delivery Technique & Error Correction
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Hjj_vmwzxV8
+  channel: Klopotenko
+  title: THREE most delicious MARINADES for SHASHLYKA 🥩 Ievgen Klopotenko
+  relevance_score: 0.1
+  relevance_note: The video is a cooking tutorial, completely unrelated to the topic
+    of presentations. While it is in Ukrainian, its content does not align with any
+    module sections.
+  transcript_excerpt: Я вам пропоную приготувати круті маринади для м'яса.
+  embed_suggestion: Not suitable for embedding in this module due to topic mismatch.
+- url: https://www.youtube.com/watch?v=_iE023LXaUw
+  channel: Суспільне Культура
+  title: Уроки онлайн для 9 класу. Укр. література, Геометрія, Фізика, Історія України,
+    Біологія | 5 травня
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=SgqKHuIjljE
+  channel: Суспільне Культура
+  title: Уроки онлайн для 9 класу. Біологія, Українська література, Екологія, Англійська
+    мова | 5 червня
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=lq37w23NNdI
+  channel: Repainted Fox
+  title: '#5 Маруся. Григорій Квітка-Основ’яненко'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=SNB1QVJFQkI
+  channel: Repainted Fox
+  title: '#1 The Painted Fox. Ivan Franko'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=LWs9qoOzeek
+  channel: Klopotenko
+  title: Соус ПЕСТО за 7 хвилин | Євген Клопотенко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0169
+  text: "Практична риторика\n120\n \n представлення  — надання інформації про особу,\
+    \ її діяльність, досягнення;\n \n інструкція  — стислі настанови (як використовувати\
+    \ нову технологію, як ді-\nстатися певної вулиці, як користуватися електроприладом,\
+    \ як доглядати за \nдомашньою твариною тощо). Трапляється, що всі ці жанри поєднано\
+    \ в  одному виступі. 211. Прочитайте. Сформулюйте за змістом прочитаного 2–3 \
+    \ проблемних за-\nпитання. Скористайтеся поданою на фо5рзаці підручника таблицею\
+    \ «Види за-\nпитань». Мета будь-я"
+  section_title: Сторінка 120
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0256
+  text: 'Яке враження я хотіла б (хотів би) справляти на людей. У текст виступу введіть
+    характеристику (або елементи характеристики). Прослухайте виступи в  класі, обговоріть
+    їх. Поясніть відмінність між характеристикою — засобом ораторського тексту та
+    ха-
+
+    рактеристикою  — діловим папером.'
+  section_title: Сторінка 179
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0221
+  text: "214\nРекомендації для знайомства\n• Якщо є можливість, попросіть, щоб вас\
+    \ представила \nтретя особа.\n• Під час знайомства підтримуйте зоровий контакт\
+    \ зі спів-\nрозмовником, дружньо посміхайтеся.\n• Якщо представляєтеся самі, чітко\
+    \ назвіть своє повне \nім’я та прізвище. \n• Процес знайомства варто завершувати\
+    \ етикетними фра-\nзами на кшталт «Радий/а знайомству», «Дуже приємно» \nтощо.\n\
+    Захват, захоплення  — емоційне внутрішнє піднесення, \nзбудження, порив, запал.\
+    \ Для висловлення захвату подіями, \nвчинками "
+  section_title: Сторінка 217
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0173
+  text: 'скоротили? ПЛАН ОЦІНКИ ІНФОРМАЦІЙНОГО ВИСТУПУ
+
+    1. Тема й мета промови: їх актуальність, корисність для слухачів. 2. Вступ. •
+    Наскільки вичерпним було самопредставлення.'
+  section_title: Сторінка 122
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

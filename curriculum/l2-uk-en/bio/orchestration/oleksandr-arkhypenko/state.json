@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "oleksandr-arkhypenko",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:30:27Z",
+      "task_id": "v5-oleksandr-arkhypenko-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:30:27Z",
+      "note": "merged-into-research"
+    }
+  }
+}

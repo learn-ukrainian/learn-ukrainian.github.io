@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T00:08:58.370284+00:00'
+query_keywords:
+- Києво-Печерський патерик
+- Історія тексту
+- Структура патерика
+- Фрагмент
+- Патерик як історичне джерело
+- Критика джерела
+- Analyze the causes and consequences of києво-печерський патерик
+- Evaluate the historical significance of агіографія як джерело
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0053
+  text: "До речі… \nКиєво-Печерський патерик містить легенди й оповідання про бу-\n\
+    дівництво української святині — Успенського собору Києво-Пе-\nчерської лаври.\
+    \ Цей храм по-варварськи був зруйнований у роки\nДругої світової війни, як і багато\
+    \ інших українських святинь у період\nтоталітарного режиму. Саме такі пам’ятки,\
+    \ як патерик, несуть у віч-\nність нашу історію й духовність. ДАВНЯ ЛІТЕРАТУРА\n\
+    46"
+  section_title: Сторінка 46
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0372
+  text: "Працюємо з  хронологією\n1701  р. Надання Києво-\nМогилянському \nколегіуму\
+    \ статусу \nакадемії\nrnk.com.ua/109917\nПрактичне заняття  \nза розділом ІV\n\
+    rnk.com.ua/109918\nУзагальнення знань  \nза розділом ІV\nrnk.com.ua/109919\nТестові\
+    \ завдання  \nза  розділом  ІV"
+  section_title: Сторінка 228
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0015
+  text: "Вступ\nієм.0: практичні завдання\nПригадайте за допомогою хмаринки слів (с.\
+    \ 12) види \nісторичних джерел. Розгляньте колекцію зображень і ви­\nзначте, які\
+    \ види джерел історії Ранньомодерної доби у ній \nпредставлені. \nВизначте, які\
+    \ сторони життя українського \nсуспільства Ранньомодерної доби ілюструє кожне\
+    \ з них. \nЗ’ясуйте, яка з пам’яток не є первинним історичним джере­\nлом. У чому\
+    \ її цінність для вивчення історії?\nв\nКарта Г. Л. де Боплана \nИНрз://5игІ.дсІ/гІ5Іде\n\
+    Грамота Берестейської унії \n(«Артикул"
+  section_title: Сторінка 13
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6310224533081055
+  chunk_id: fc2291b5_c3326
+  text: "КИЄВО-ПЕЧЕРСЬКИЙ ПАТЕРИК — пам’ятка східнослов’ян. житійної літератури. До\
+    \ нього увійшли\r\nтвори на сюжети з реальної та легендарної історії Києво-Печерського\
+    \ монастиря,\r\nрозповіді про діяльність його засновників Антонія і Феодосія,\
+    \ їхніх учнів та послідовників.\r\nК.-П. п. розкриває духовне життя персонажів,\
+    \ боріння їхніх пристрастей, часто\r\nперсоніфікованих в образах ангелів і бісів.\
+    \ Апологія київ. реліг. традицій стає\r\nформою утвердження історично прогресивної\
+    \ ідеї єдності сх. слов’ян. а згодом\r"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.613601803779602
+  chunk_id: feaa5fa7_c1914
+  text: "»Києво-Печерський Патерик« — видатний і дуже\r\nпопулярний аж до нових часів\
+    \ твір. Жанром це збірник агіографічних творів типу\r\nперекладних візантійських\
+    \ патериків. Постав він у наслідок агіографічної\r\nпраці Якова, Нестора й ін.\
+    \ і завершився першою редакцією XIII ст., що склалась\r\nіз посланій єпископа\
+    \ Симона до Полікарпа і Полікарпа до ігумена\r\nКиєво-Печерського манастиря Акиндина.\
+    \ Розвиваючись далі, ця редакція дала низку\r\nінших, а в XVII ст. »Києво-Печерський\
+    \ Патерик« був надрукований і став\r\nна"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.606701135635376
+  chunk_id: e0892426_c0142
+  text: "XIII ст., перша половина.\r\nФормування «Києво-Печерського патерика» — видатної\
+    \ пам'ятки житійної\r\nлітератури. До нього увійшли розповіді з реальної та легендарної\
+    \ історії\r\nКиєво-Печерського монастиря, про діяльність його засновників Антонія\
+    \ й\r\nФеодосія, про їхніх учнів та послідовників. Основні складові Патерика\r\
+    \nстворювалися протягом другої половини XI — першої половини XIII ст. Це розділи\r\
+    \nз «Повісті временних літ», що стосуються Києво-Печерського монастиря, «Житіє\r\
+    \nАнтонія Печерського», «Житіє"
+  work: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/dzuba/dzubapered.htm

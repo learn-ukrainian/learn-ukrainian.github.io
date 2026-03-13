@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 101 — E2E
+FAIL: pipeline hist 101
 
   Module:   holodomor-mekhanizm
   Track:    hist
-  Mode:     e2e
-  Words:    5560 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T23:23:42Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:18:16Z

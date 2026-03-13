@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "kinets-halytsko-volyni",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:58:59Z",
+      "task_id": "v5-kinets-halytsko-volyni-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:58:59Z",
+      "note": "merged-into-research"
+    }
+  }
+}

@@ -2,9 +2,9 @@ PASS: pipeline istorio 14
 
   Module:   slovo-o-polku-ihorevim
   Track:    istorio
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T18:18:18Z
+  Date:     2026-03-13T00:13:35Z

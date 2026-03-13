@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 43 — E2E
+FAIL: pipeline hist 43
 
   Module:   dmytro-vyshnevetskyi
   Track:    hist
-  Mode:     e2e
-  Words:    5944 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T19:46:43Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:09:15Z

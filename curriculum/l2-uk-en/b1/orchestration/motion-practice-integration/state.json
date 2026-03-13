@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T09:42:50Z",
+      "ts": "2026-03-12T21:24:17Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:42:50Z",
+      "ts": "2026-03-12T21:24:17Z",
       "task_id": "v5-motion-practice-integration-pA",
       "mode": "full"
     }

@@ -1,0 +1,188 @@
+discovered_at: '2026-03-12T20:22:52.999965+00:00'
+query_keywords:
+- Мистецтво і література
+- 'Розминка та вступ: Культурний ландшафт України'
+- 'Warm-up & Introduction: Cultural Landscape of Ukraine'
+- 'Мистецька спадщина та авангард: Від Малевича до Бойчука'
+- 'Artistic Heritage & Avant-Garde: From Malevich to Boichuk'
+- 'Народне мистецтво: Символіка та традиції'
+- 'Folk Art: Symbolism & Traditions'
+- 'Літературні обрії: Від класики до сучасності'
+- 'Literary Horizons: From Classics to Modernity'
+- 'Мистецька критика: Лексика та стилістика'
+- 'Art Criticism: Vocabulary & Stylistics'
+- 'Практика та підсумок: Рецензія як жанр'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=hx6ZQuRkqFg
+  channel: Repainted Fox
+  title: '#87 Повість без назви. Валер''ян Підмогильний'
+  relevance_score: 1.0
+  relevance_note: A podcast episode directly analyzing a specific work of Ukrainian
+    literature by Valerian Pidmohylny, making it highly relevant to the 'Literary
+    Horizons' section.
+  transcript_excerpt: Привіт ви слухаєте подкаст перефарбований лис це проект в якому
+    ми досліджуємо психологію та світогляд українців через українську літературу я
+    Марія Діденко я Валентина мержиєвська і сьогодні у нас випуск який можна назвати
+    не містом єдиним Ми продовжуємо досліджувати творчість валеріяна Підмогильного.
+  embed_suggestion: 'After Літературні обрії: Від класики до сучасності'
+- url: https://www.youtube.com/watch?v=1tGT9-haMuA
+  channel: Суспільне Культура
+  title: 'Great Russian literature is FAKE!? How the Kremlin uses it for war | BIG
+    RUSSIAN LIES #2'
+  relevance_score: 0.8
+  relevance_note: Critically analyzes Russian literature's role in political influence,
+    providing important context for understanding Ukrainian cultural identity in contrast
+    to imperial narratives. Highly relevant to cultural landscape and literature discussions.
+  transcript_excerpt: Мене постійно дивує, як російській культурі вдається бути усюдисущою
+    м'якою силою, що виправдовує агресивну російську політику. ... Російську культуру
+    ніколи не можна повністю відокремлювати від контексту російської політичної історії.
+  embed_suggestion: 'After Літературні обрії: Від класики до сучасності'
+- url: https://www.youtube.com/watch?v=MfnFhf6wR5s
+  channel: Суспільне Док
+  title: Чому світ повірив у ФЕЙК про «вєлікую рускую літературу» | ВЕЛИКА РОСІЙСЬКА
+    БРЕХНЯ
+  relevance_score: 0.8
+  relevance_note: Similar to Candidate 2, this video critically examines the concept
+    of 'great Russian literature' and its political underpinnings, offering a decolonized
+    perspective vital for the Ukrainian cultural context.
+  transcript_excerpt: Чому ми говоримо про велику російську літературу, велику російську
+    культуру, якщо не говоримо так про ніякі інші культури? ... Російську культуру
+    ніколи не можна повністю відокремлювати від контексту російської політичної історії.
+  embed_suggestion: 'After Літературні обрії: Від класики до сучасності'
+- url: https://www.youtube.com/watch?v=leX7aAZJKlM
+  channel: Суспільне Док
+  title: '«Лебедине озеро» на руїнах: як рускій балет відбілює Кремль? | ВЕЛИКА РОСІЙСЬКА
+    БРЕХНЯ'
+  relevance_score: 0.8
+  relevance_note: Discusses Russian art (ballet, museums) as a tool of propaganda,
+    highlighting the political manipulation of culture. This provides a critical lens
+    relevant to Ukrainian artistic heritage and cultural understanding.
+  transcript_excerpt: А ще я розповідаю світові про війну в Україні у своїх англомовних
+    відео на YouTube і водночас намагаюсь зрозуміти, як Росії вдається, вбиваючи тисячі
+    людей. зачаровувати світ мистецтвом.
+  embed_suggestion: 'After Мистецька спадщина та авангард: Від Малевича до Бойчука'
+- url: https://www.youtube.com/watch?v=fHN43SFMmBs
+  channel: Суспільне Культура
+  title: '"I buy three books every week that I hardly read" #shorts'
+  relevance_score: 0.7
+  relevance_note: Discusses books, reading culture, and the state of bookstores in
+    Ukraine, which relates to the cultural landscape and literary aspects.
+  transcript_excerpt: В мене є звичка щотижня купувати по три книги які я майже не
+    читаю. ... книгарень приблизно 43 000 було А зараз їх ледь не сотня в Україні
+    тому вирішив купувати те що нічого не знаю.
+  embed_suggestion: 'After Розминка та вступ: Культурний ландшафт України'
+- url: https://www.youtube.com/watch?v=CFBBkMdgrkY
+  channel: Repainted Fox
+  title: '"ПереФарбований лис" у премії "Слушно"'
+  relevance_score: 0.5
+  relevance_note: A promotional video for a cultural podcast award. While it mentions
+    'culture,' it doesn't directly discuss specific art or literary topics relevant
+    to the module's core content, but rather a meta-discussion about cultural content.
+  transcript_excerpt: Ми хочемо виграти в категорії найкращій культурний підказ тому
+    переходьте за посиланням яке ми тут залишимо і Обирайте в категорії подкасти про
+    культуру перефарбований лис голосування дуже просте.
+  embed_suggestion: 'After Розминка та вступ: Культурний ландшафт України (as general
+    cultural context, if needed)'
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0442
+  text: 'Зміст
+
+    ВСТУП
+
+    Роль і місце художньої літератури в житті нації  . . . . . . . . . . . . . 3
+
+    УСНА НАРОДНА ТВОРЧІСТЬ
+
+    Родинно-побутові пісні  . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . 5
+
+    Місяць на небі, зіроньки сяють  . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 8
+
+    Цвіте терен, цвіте терен  . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . 9
+
+    Сонце низенько  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 10
+
+    У'
+  section_title: Сторінка 334
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0003
+  text: "УМОВНІ ПОЗНАЧЕННЯ\nРобота\nв парах\nМистецька хвилинка\nРобота\nв групах\n\
+    Віртуальна екскурсія; робота з електрон ним \nдодатком і пошук у мережі «Інтернет».\
+    \ \n(Завдання такого типу учні можуть\n виконувати як удома, так і в закладі освіти.)\n\
+    Мікрофон – висловте свою думку\n© Заболотний В. В., Заболотний О. В.,\nСлоньовська\
+    \ О. В., Ярмульська І. В., 2024\n© «Літера ЛТД», 2025\nІнтерактивний електронний\
+    \ додаток\nhttp://ukrlit-8k-nus.e-litera.com.ua/index.html\nЗаболотний В. В.\n\
+    Українська література : підручник дл"
+  section_title: Сторінка 4
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0471
+  text: "303\nЗМІСТ\nЮні читачі та читачки!   \n \n \n \n \n \n \n  3\nВСТУП\nЛітература\
+    \ і художній образ  \n \n \n \n \n \n \n  4\nРозділ 1. ПРОЧИТАЙТЕ ЗНОВУ ТУЮ СЛАВУ\n\
+    НА СТРУНАХ КОБЗИ, ЛІРИ І БАНДУРИ\nНародні історичні пісні  \n \n \n \n \n \n \n\
+      6\n \n \nЗажурилась Україна  \n \n \n \n \n \n \n  8\n \n \nТа, ой, як крикнув\
+    \ же козак Сірко  \n \n \n \n \n 10\n \n \nОй Морозе, Морозенку   \n \n \n \n\
+    \ \n \n 12\n \n \nЧи не той то хміль  \n \n \n \n \n \n \n 14\nПісні Марусі Чурай\
+    \ \n \n \n \n \n \n \n \n 16\n \n \nЗасвіт встали козаченьки  \n \n \n \n \n \n\
+     17\n \n \nОй не ходи, Грицю... "
+  section_title: Сторінка 305
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

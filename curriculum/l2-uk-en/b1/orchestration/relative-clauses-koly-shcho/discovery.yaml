@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:59:25.816033+00:00'
+discovered_at: '2026-03-12T21:38:04.879699+00:00'
 query_keywords:
 - 'Підрядні означальні: коли, що'
 - Вступ та Культурний контекст
@@ -15,7 +15,17 @@ query_keywords:
 error: null
 warning: No videos found across channels
 videos: []
-blogs: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Підрядне_означальне_речення
+  title: Підрядне означальне речення
+  source: Вікіпедія
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+complex+sentences
+  title: Ukrainian Complex Sentences
+  source: відео пояснення
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0268

@@ -1,0 +1,109 @@
+discovered_at: '2026-03-12T20:11:50.444976+00:00'
+query_keywords:
+- 'Контрольна точка: комунікативні навички'
+- Огляд професійного письма
+- Professional Writing Review
+- Завдання з аналізу медіатекстів
+- Media Analysis Tasks
+- Оцінювання презентації та дебатів
+- Presentation and Debate Assessment
+- Комплексне комунікативне портфоліо
+- Comprehensive Communication Portfolio
+- professional writing skills across business and report formats
+- analyze media texts identifying bias and rhetorical devices
+- arguments and participate in structured debate at B2 level
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/useful-ukrainian-questions/
+  title: Useful Ukrainian Questions
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/ph-language/
+  title: 'Ukrainian Phrasebook: Language'
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/fmu1/
+  title: How to explain that you don’t speak Ukrainian very well (yet)
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/fmu2/
+  title: Useful phrases for learning Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/fmu4/
+  title: Vocabulary booster! Transport in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0209
+  text: "136\nСинтаксис. Пунктуація\nПОВТОРЕННЯ \n•\t Прочитайте ознаки різних стилів\
+    \ мови й випишіть ті, що властиві офіційно-діловому стилю. \n•\t Нейтральна лексика;\
+    \ \n•\t терміни; \n•\t неповні речення; \n•\t суспільно-політична лексика; \n\
+    •\t емоційно-забарвлені слова; \n•\t вільний порядок слів у реченні; \n•\t стислість\
+    \ викладу; \n•\t образність; \n•\t мовні кліше (канцеляризми); \n•\t етикетні\
+    \ формули; \n•\t повні речення; \n•\t фразеологізми; \n•\t реквізити; \n•\t розмовна\
+    \ лексика. \nРезюме — документ, у якому особа викладає в"
+  section_title: Сторінка 136
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0283
+  text: "Оцінювальні жанри: рецензія \x1F\n197\nсили, мужності вести мелодію впев-\n\
+    нено й уміло — щоб не розчарувати \nслухачів у залі, а головне, відчути \nсебе\
+    \ не переможеним, а  переможцем.\nЯк вийти непригніченим, не-\nрозгубленим із\
+    \ будь-якої ситуації? \nШкола чесно намагалася дати для \nцього все — знання,\
+    \ вміння, компе-\nтентності. Бачу ваші іронічні погля-\nди — навіщо в таку урочисту\
+    \ мить \nнудні педагогічні терміни? Які ще \nкомпетентності?\nПовернімося до скрипаля\
+    \ й зіпсованої скрипки. Щоб грати на ній, по-\nт"
+  section_title: Сторінка 197
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  text: "3. Скласти план і відповідно до нього систематизувати матеріал. 4. Узагальнити\
+    \ основні положення. 5. Скласти усно текст повідомлення, намагаючись висловити\
+    \ й \nаргументувати власну думку. 6. За потреби записати текст повідомлення повністю\
+    \ або частково \nта переказати усно текст удома."
+  section_title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0067
+  text: "Розділ 1  ДІЄСЛОВО\n60\nВправа 87 \n \nСкоригуйте речення, де це потрібно\
+    \  Поясніть різновид помилки: грама-\nтична чи порушення етикетних норм \n   \
+    \                Підручник \n \n         видавництво \"Ранок\""
+  section_title: Сторінка 63
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0283
+  text: "198\nПрактична риторика\nнормам. Для висловлення осуду вживають оцінну лексику\
+    \ негативно-емоційного забарв-\nлення. Вираження осуду може бути прямим і непрямим.\
+    \ Мета — висловити несхвальне \nставлення та/або вплинути на співрозмовника, викликати\
+    \ в нього почуття провини, змі-\nнити його поведінку. Той, хто висловлює осуд,\
+    \ має заслужити це право своїми людськими \nта/або професійними якостями. Осуд\
+    \ благотворно впливає на адресата лише тоді, якщо \nйого висловлює авторитетна\
+    \ людина. Рецензія — письмовий о"
+  section_title: Сторінка 198
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

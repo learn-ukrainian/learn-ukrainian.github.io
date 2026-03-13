@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:48:33.377247+00:00'
+discovered_at: '2026-03-12T20:48:58.954034+00:00'
 query_keywords:
 - 'Фонетика: асиміляція'
 - Принцип милозвучності
@@ -18,17 +18,16 @@ videos:
 - url: https://www.youtube.com/watch?v=OCoEzjyZ2fo
   channel: Repainted Fox
   title: 'Фонетика: найлегше пояснення | Уподібнення звуків | НМТ 2024'
-  relevance_score: 0.95
-  relevance_note: The video directly addresses 'Фонетика' (Phonetics) and 'Уподібнення
-    звуків' (Assimilation of sounds), which is the module's core topic. The transcript
-    also discusses general pronunciation rules and vowel changes, a foundational concept
-    for assimilation.
+  relevance_score: 0.9
+  relevance_note: The video explicitly covers phonetics and the assimilation (уподібнення
+    звуків) concept, which is the module's main topic. The excerpt focuses on vowel
+    reduction/approximation, a key aspect of sound changes in Ukrainian.
   transcript_excerpt: сьогоднішній урок буду присвячений такому розділу українською
     мовою як фонетика... Перше про що хотілось би поговорити - це про основні норми
     вимови голосних і приголосних звуків.
-  embed_suggestion: 'After Вступ: Принцип милозвучності (Introduction: The Principle
-    of Euphony) -- as it provides a broad introduction to phonetics and pronunciation
-    rules before diving into specific assimilation types.'
+  embed_suggestion: 'After section Вступ: Принцип милозвучності -- It provides a general
+    and accessible introduction to Ukrainian phonetics and sound changes, including
+    initial examples of assimilation, making it suitable for the introductory section.'
 blogs: []
 rag_chunks:
 - score: 0.5

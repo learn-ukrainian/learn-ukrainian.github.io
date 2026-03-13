@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T09:56:28Z",
+      "ts": "2026-03-12T20:28:04Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:56:28Z",
+      "ts": "2026-03-12T20:28:04Z",
       "task_id": "v5-relative-clauses-de-kudy-zvidky-pA",
       "mode": "full"
     }

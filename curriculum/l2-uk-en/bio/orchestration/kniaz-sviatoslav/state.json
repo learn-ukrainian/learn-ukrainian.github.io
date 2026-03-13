@@ -3,16 +3,15 @@
   "slug": "kniaz-sviatoslav",
   "mode": "v5",
   "phases": {
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T00:58:14Z",
-      "note": "merged-into-research"
-    },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T00:58:14Z",
-      "task_id": "v5-kniaz-sviatoslav-pA",
-      "mode": "full"
+      "ts": "2026-03-12T19:10:35Z",
+      "note": "file-exists"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:10:35Z",
+      "note": "merged-into-research"
     }
   }
 }

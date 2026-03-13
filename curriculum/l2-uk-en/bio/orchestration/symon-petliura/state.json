@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "symon-petliura",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:47:41Z",
+      "task_id": "v5-symon-petliura-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:47:41Z",
+      "note": "merged-into-research"
+    }
+  }
+}

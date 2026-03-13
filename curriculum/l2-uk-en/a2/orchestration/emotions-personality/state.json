@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "emotions-personality",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:06:21Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:06:21Z",
+      "task_id": "v5-emotions-personality-pA",
+      "mode": "full"
+    }
+  }
+}

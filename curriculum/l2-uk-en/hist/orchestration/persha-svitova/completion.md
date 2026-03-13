@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 88 — E2E
+FAIL: pipeline hist 88
 
   Module:   persha-svitova
   Track:    hist
-  Mode:     e2e
-  Words:    6530 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T21:59:17Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:16:17Z

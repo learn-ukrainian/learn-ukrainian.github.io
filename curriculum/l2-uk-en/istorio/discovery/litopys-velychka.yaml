@@ -1,0 +1,197 @@
+discovered_at: '2026-03-13T00:47:32.278027+00:00'
+query_keywords:
+- 'Літопис Величка: Барокова історія'
+- Автор і обставини написання
+- Структура і джерела
+- Документи в літописі
+- Фрагмент
+- Критика джерела
+- 'Analyze the causes and consequences of літопис величка: барокова історія'
+- Evaluate the historical significance of найповніший козацький літопис
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0317
+  text: "Узагальнення\nІсторія України в контексті епохи \nІ § 44 Раннього Нового\
+    \ часу. Внесок України \nу формування європейської цивілізації\nГРА «РАННІЙ НОВИЙ\
+    \ ЧАС В ІСТОРІЇ УКРАЇНИ»\nСкористайтеся правилами гри, поданими нас. 8.\nО\nЛитовські\n\
+    статути\n©\nОренда\nї й ,\n©\nФільварок\nИ « А  І\n¥/Ш\n©\nПолемічна\nлітература\n\
+    ©\nЦерковні\nбратства\nУиіииа\n(греко-\nкатолиціька}\nцерква\n© \nЗимівник \n\
+    О\nСл оє'р не­\nгре ко­\nпати нська \nшкола\nЗапорозька\nСіч\nт а\nРеєстрове\n\
+    козацтво\nНизове\nкозацтво\n%\nГ енеральна \nстаршина\nу* \\\nСотня\nН\n"
+  section_title: Сторінка 237
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0416
+  text: Поясніть розділові знаки в тексті. Випишіть мовні засоби розмовного стилю,
+    схарактеризуйте їх.
+  section_title: Сторінка 235
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0002
+  text: "3\nШановні восьмикласники та восьмикласниці! Перш ніж розпочати роботу з \
+    \ підручником, необхідно \nознайомитися з його змістом і структурою. Матеріал\
+    \ у ньо-\nму об’єднано в  п’ять розділів, кожен із яких містить кіль-\nка параграфів,\
+    \ що, у  свою чергу, поділяються на пункти. Ви вже знаєте, що історія, як і  будь-яка\
+    \ інша наука, \nмає власну термінологію, і  її необхідно розуміти. Підруч-\nник\
+    \ містить дати основних подій, визначення понять і тер-\nмінів, інформацію про\
+    \ видатних історичних діячів. Слова "
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5959187746047974
+  chunk_id: 2468994c_c0022
+  text: "Доведено, що Рігельман не був знайомий з такою\r\nважливою для висвітлення\
+    \ подій історії України початку XVIII ст. історіографічною\r\nпам’яткою, як літопис\
+    \ С. Величка. Разом з тим він, очевидно, користувався тим\r\nсамим джерелом, на\
+    \ основі якого написав свій твір С. Величко. Про велику\r\nймовірність такого\
+    \ припущення свідчить ряд документів, які зустрічаються і в\r\n«Літописній оповіді\
+    \ про Малу Росію» і в літопису Величка: Білоцерківський\r\nуніверсал Б. Хмельницького;\
+    \ перша грамота царя Олексія Михайлов"
+  work: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+  year: 1785
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/rigel/rig.htm
+- score: 0.5862985253334045
+  chunk_id: 41d0facc_c0353
+  text: "4. Найвизначніший та найбільший твір третього\r\nлітописця українського барока,\
+    \ Самійла Величка; частини його, щоправда,\r\nстрачено, так що «Літопис» його\
+    \ доходить до 1700 p., хоч автор, здається,\r\nдоводив його до 1720 р. Величко\
+    \ навіть розвиває в передмовах до 1-го та 2-го\r\nтомів «Літопису» деякі основи\
+    \ свого історичного світогляду та своєї історичної\r\n«методології». Джерела Величка\
+    \ не менш різноманітні, аніж грабянківські (так\r\nсаме Пуфендорф), а вплив стилістики\
+    \ римських істориків у нього ще зна"
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm
+- score: 0.5846394300460815
+  chunk_id: fbf8bdff_c0398
+  text: "4. Найвизначніший та найбільший твір третього\r\n„літописця“ українського\
+    \ барокка, Самійла Величка; частини його, щоправда,\r\nвтрачені, так що „Літопис“\
+    \ його доходить до 1700 р., хоч автор, здається, довів\r\nйого до 1720 р. Величко\
+    \ навіть розвиває в передмовах до 1-го та 2-го томів\r\nЛітопису деякі основи\
+    \ свого історичного світогляду та своєї історичної\r\n„методології“. Джерела Величка\
+    \ не менш різноманітні, аніж Граб’янкові (так само\r\n/303/ Пуфендорф, з поетів\
+    \ Тассо), а вплив стилістики римських істор"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm

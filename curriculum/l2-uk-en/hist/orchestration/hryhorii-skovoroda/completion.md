@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 68 — E2E
+FAIL: pipeline hist 68
 
   Module:   hryhorii-skovoroda
   Track:    hist
-  Mode:     e2e
-  Words:    5715 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T19:53:34Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:13:05Z

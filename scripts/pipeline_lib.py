@@ -3283,6 +3283,17 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     log("  content: ⚠ Gemini reported token limit truncation")
                 last_friction = friction if is_real_truncation else last_friction
 
+            # Extract activity plans (generated alongside content for Phase 2→activities handoff)
+            activity_plans = _extract_delimited_content(raw, "===ACTIVITY_PLANS_START===", "===ACTIVITY_PLANS_END===")
+            if activity_plans:
+                plans_path = ctx.paths.get("activities")
+                if plans_path:
+                    plans_file = plans_path.parent / f"{ctx.slug}-plans.yaml"
+                    plans_file.parent.mkdir(parents=True, exist_ok=True)
+                    plans_file.write_text(activity_plans, encoding="utf-8")
+                    (ctx.orch_dir / "activity-plans.yaml").write_text(activity_plans, "utf-8")
+                    log(f"  content: Activity plans extracted → {plans_file.name}")
+
             # Extract self-audit result if Gemini ran audit in-session
             self_audit = _extract_delimited_content(raw, "===SELF_AUDIT_START===", "===SELF_AUDIT_END===")
             if self_audit:

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 83 — E2E
+FAIL: pipeline hist 83
 
   Module:   hromady
   Track:    hist
-  Mode:     e2e
-  Words:    6598 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T21:12:59Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:15:26Z

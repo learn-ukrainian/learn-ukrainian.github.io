@@ -1,0 +1,141 @@
+discovered_at: '2026-03-12T18:32:49.540900+00:00'
+query_keywords:
+- Спорт в Україні
+- Introduction — A Sporting Nation
+- Футбол
+- Football — The Religion of Millions
+- Бокс
+- Boxing — Strength and Resilience
+- Олімпійська та паралімпійська слава
+- Olympic and Paralympic Glory
+- Спорт під час війни та дипломатія
+- Sport During War and Diplomacy
+- Summary — Language Norms and Achievements
+- Ukrainian sports culture in Ukrainian
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=cCtNrXgM6I4
+  channel: Ukrainian Lessons
+  title: FMU 1-26 | How to talk about sport in Ukrainian | 5 Minute Ukrainian
+  relevance_score: 0.9
+  relevance_note: This video directly addresses how to talk about sports in Ukrainian,
+    covering relevant vocabulary and personal experiences with various sports such
+    as football, boxing, and athletics, which align with module sections.
+  transcript_excerpt: А ти знала що я в дитинстві професійно грав у футбол Справді
+    Угу а потім батьки віддали мене на бокс А ти спортом займалась в дитинстві я займалась
+    легкою атлетикою бігала багато Ого круто До речі я хочу записатись у спортзал
+    ти знаєш якийсь хороший Так є тут один недалеко Я ходжу туди на йогу
+  embed_suggestion: After section 'Вступ — Спортивна нація' (Introduction — A Sporting
+    Nation) as it provides a practical introduction to discussing sports and their
+    vocabulary.
+- url: https://www.youtube.com/watch?v=75wNAEoHFZM
+  channel: Ukrainian Lessons
+  title: 'ULP 5-174 | Україна в 2020 році: головні новини | Ukrainian Lessons Podcast
+    Season 5'
+  relevance_score: 0.4
+  relevance_note: The video is a general news recap for 2020 in Ukraine, which mentions
+    'sports' as one of the topics covered. However, it is not primarily focused on
+    sports, making it only tangentially related.
+  transcript_excerpt: Я презентую вам основні новини України а також новини політики
+    культури та спорту. Готові почати випуск новин за 2020 рік.
+  embed_suggestion: After section 'Спорт під час війни та дипломатія' (Sport During
+    War and Diplomacy) if the news segment specifically addresses sports in the context
+    of war or diplomacy, otherwise it is too broad for direct embedding.
+- url: https://www.youtube.com/watch?v=ynAISpOVKNY
+  channel: Klopotenko
+  title: How to cook JUICY and tender chicken FILLET | Ievgen Klopotenko
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but completely unrelated to the topic
+    of sports. It is a cooking tutorial.
+  transcript_excerpt: Всім привіт. Мене звати Євген Клопотенко. Сьогодні хочу вам
+    показати як варити курку. А точніше, як варити куряче філе.
+  embed_suggestion: Not applicable - completely irrelevant.
+- url: https://www.youtube.com/watch?v=ZP9kslSh7k0
+  channel: Klopotenko
+  title: How to cook oatmeal 🥣 Which oatmeal is the healthiest | Ievgen Klopotenko
+  relevance_score: 0.1
+  relevance_note: The video is in Ukrainian but completely unrelated to the topic
+    of sports. It is a cooking tutorial for oatmeal.
+  transcript_excerpt: Отож, що там робити з вівсяними пластівцями? По-перше, що треба
+    з ними робити, треба натиснути лайк, дзвіночок, коментарчик.
+  embed_suggestion: Not applicable - completely irrelevant.
+blogs:
+- url: https://www.ukrainianlessons.com/lesson/79/
+  title: ULP 2-79 Ukrainian History Course Part 9 – Independent Ukraine
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0415
+  text: "Розділ V. Розвиток України як незалежної держави\n236\nНаціональною легендою\
+    \ України є  український \nпрофесійний боксер Олександр Усик: багаторазовий \n\
+    Чемпіон України, Чемпіон Європи, Чемпіон світу, \nОлімпійський чемпіон, Переможець\
+    \ Світових ігор \nсеред військовослужбовців, Абсолютний чемпіон \nсвіту в  першій\
+    \ важкій вазі й  важкій вазі. Також Україна має сильну паралімпійську збірну \n\
+    команду. Від 1996 р. понад 100 українських спортс-\nменів здобули золоті медалі\
+    \ на Паралімпійських \nіграх (серед них"
+  section_title: Сторінка 238
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0487
+  text: "Низка стрічок одержали нагороди на різних \nєвропейських і світових кінофестивалях.\
+    \ Українське мистецтво опано-\nвує сферу масової культури, захоплює молодь, за\
+    \ якою майбутнє. Фізична культура і спорт у всьому світі представляють свою \n\
+    державу на міжнародній арені. В незалежній Україні держава не \nмогла вкладати\
+    \ достатньо великі кошти в спорт. Проте наша країна \nмає прославлених і знаних\
+    \ у світі спортсменів: боксерів братів Віталія \nі Володимира Кличків, фігуристку\
+    \ Оксану Баюл, плавчиню Яну \nКлочк"
+  section_title: Сторінка 266
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0304
+  text: "ÌÎß ÑÒÎÐІÍÊÀ\n197\n¨к це було \nСПОРТИВНІ ЗАПОЗИЧЕННЯ\nОсновним ©постаɱальникомª\
+    \ спортивних термінів вваɠаɸть англіɣську \nмову. ɐе пояснɸɽться тим\x0F що ɛагато\
+    \ видів спорту зародилося саме в англо\x10\nмовних країнах\x0F а англіɣська ɽ\
+    \ одніɽɸ з наɣпоɲиреніɲих у світі. Пригадаɣмо\x0F \nнаприклад\x0F спортивні терміни\
+    \ з футболу та гандболу: тайм, матч, гол, \nраунд, пас, голкіпер, пенальті, аутсайдер,\
+    \ плеймейкер (розігрувач), плей-\nоф, форвард (нападник), овертайм (додатковий\
+    \ час), дискваліфікація. А ось бейсбол \vангл"
+  section_title: Сторінка 197
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0071
+  text: "Урок розвитку мовлення. Створення реклами\n200.1. Прочитай текст.\nФутбол\
+    \ — це круто! Цікавий, захопливий, \nенергійний вид спорту! Футбол — це спритність!\
+    \ \nЦе уміння миттєво оцінювати ситуацію і приймати \nрішення. Це командна гра.\
+    \ Це здоров’я, радість \nперемоги, самоствердження. Що може бути краще за футбол?\n\
+    Тільки футбол!\n2. Зіскануй ОЯ-код та переглянь відео.\n3. Чи можна текст або\
+    \ відеоролик назвати рекламою? \nЧому? Обґрунтуй свою думку.\n4. Як ви гадаєте,\
+    \ як можна зацікавити дітей до занять спор"
+  section_title: Сторінка 73
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0411
+  text: "§ 28. Культурне та релігійне життя\n233\nвступу до закладів вищої освіти.\
+    \ Вступні кампанії \nпровадили державною мовою, іспит з  української \nмови став\
+    \ обов’язковим. У  1990-ті  рр. було зроблено перші суттєві кроки \nщодо реформування\
+    \ професійно-технічної і  вищої \nосвіти. Від підготовки спеціалістів через заочну\
+    \ та \nвечірню форми навчання поступово переходили на \nступеневу підготовку:\
+    \ кваліфікований робітник, мо-\nлодший спеціаліст, бакалавр, спеціаліст, магістр.\
+    \ Поряд із державними почали створюва"
+  section_title: Сторінка 235
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

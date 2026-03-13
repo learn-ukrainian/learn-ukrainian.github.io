@@ -1,0 +1,174 @@
+discovered_at: '2026-03-12T18:53:40.912720+00:00'
+query_keywords:
+- Українська кухня
+- Кулінарна ДНК України
+- Ukraine's Culinary DNA
+- Регіональна гастрономічна мапа
+- Regional Gastronomic Map
+- Символізм та ритуальна кухня
+- Symbolism and Ritual Cuisine
+- Граматика смаку та етикет
+- Grammar of Taste and Etiquette
+- Практика та Продукція
+- Practice and Production
+- Ukrainian regional cuisines in context
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=I5MJIGL2OfA
+  channel: Ukrainian Lessons
+  title: ULP 5-182 | Місцеві кухні України | Ukrainian Lessons Podcast Season 5
+  relevance_score: 1.0
+  relevance_note: Video directly discusses the local cuisines of Ukraine, naming specific
+    regions and their culinary characteristics.
+  transcript_excerpt: сьогодні я вирішила поділитися з вами місцевими українськими
+    стра ми Та кухнями справді Україна - це велика і різноманітна країна.
+  embed_suggestion: After section 'Регіональна гастрономічна мапа' – perfectly aligns
+    with the topic of regional culinary diversity.
+- url: https://www.youtube.com/watch?v=hZpQUOMarPM
+  channel: Klopotenko
+  title: '100 років такого не їв! Шукайте ті самі домашні смаки на 100 ШОП #клопотенко
+    #локальнівиробники'
+  relevance_score: 0.9
+  relevance_note: Video discusses the emotional and traditional connection to Ukrainian
+    food, aligning with the 'Culinary DNA' concept.
+  transcript_excerpt: смак вже закарбований у твоєму ДНК ще коли здалеку впізнаєш
+    запах так вдома варять борщ це емоція яку викликає їжа дитинства.
+  embed_suggestion: 'After section ''Вступ: Кулінарна ДНК України'' – directly relates
+    to the introduction of Ukraine''s culinary identity.'
+- url: https://www.youtube.com/watch?v=mgHHF8QyUDU
+  channel: Ukrainian Lessons
+  title: ULP 5-181 | Українська кухня в радянські часи | Ukrainian Lessons Podcast
+    Season 5
+  relevance_score: 0.8
+  relevance_note: Video provides historical context on Ukrainian cuisine during Soviet
+    times, enriching the understanding of culinary identity and traditions.
+  transcript_excerpt: сьогодні хочу розповісти вам про вплив Радянського Союзу на
+    українську кухню та традиції харчування.
+  embed_suggestion: 'After section ''Вступ: Кулінарна ДНК України'' – offers valuable
+    historical context to the evolution of Ukrainian culinary traditions.'
+- url: https://www.youtube.com/watch?v=WD3DlnRqTSE
+  channel: Klopotenko
+  title: 'НЕ квашена а ФЕРМЕНТОВАНА капуста! #клопотенко | Автентичні українські рецепти
+    🧡'
+  relevance_score: 0.5
+  relevance_note: Video focuses on a specific recipe (fermented cabbage), which is
+    tangentially related to the broader topic of Ukrainian cuisine. It falls under
+    'Practice and Production' but is very specific.
+  transcript_excerpt: сьні будемо готувати квашену капусту нарешті ферментація стає
+    частиною нашого життя давайте всі будемо квасити капусту.
+  embed_suggestion: After section 'Практика та Продукція' – relevant for practical
+    aspects of Ukrainian food preparation, but too specific for other sections.
+- url: https://www.youtube.com/watch?v=-JolLjYcJAo
+  channel: Ukrainian with Olha
+  title: 'Full Lesson 7 - Dishes and drinks - will be released this week. Subscribe!
+    #ukrainianlanguage'
+  relevance_score: 0.4
+  relevance_note: Video is a language lesson focused on basic vocabulary for 'Dishes
+    and drinks', rather than a cultural or historical exploration of Ukrainian cuisine.
+  transcript_excerpt: страви і напої. Dishes and drinks. На сніданок ми готуємо яєчню,
+    молочну кашу, бутерброди.
+  embed_suggestion: Not recommended for direct embedding in the main module content
+    as its primary focus is language vocabulary, not the cultural or thematic elements
+    of the module sections.
+- url: https://www.youtube.com/watch?v=5tEZczCa1Hw
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Dishes and drinks | Food vocabulary - over 100
+    words😲Declining adjectives'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode58/
+  title: Inviting to a party in Ukrainian + Accusative case of pronouns
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/13-2/
+  title: 'Dobra Forma: Personal Pronouns (Accusative and Genitive Cases)'
+  source: dobraforma
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode47/
+  title: Food festivals + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode48/
+  title: Eating habits + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0117
+  text: "Історична наука та історична пам’ять\n117\nЗа допомогою додаткових джерел\
+    \ інформації ді-\nзнайтеся, які об’єкти в Україні належать до списку Сві-\nтової\
+    \ спадщини ЮНЕСКО. Для виконання завдання \nможна скористатися віртуальною гугл-картою.\n\
+    https://cutt.ly/6Oj4DRQ\n  Діємо: практичні завдання\nГугл-карта об’єктів ЮНЕСКО\
+    \ в Україні\n2.\t ПАМ’ЯТКИ ІСТОРІЇ РІДНОГО КРАЮ\nВиконайте мінідослідження «Пам’ятки\
+    \ історії мого рідного міста \n(села)»: оберіть пам’ятку історії чи пам’ятник,\
+    \ що є у вашому населе-\nному пунк"
+  section_title: Сторінка 117
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0316
+  text: "Розділ 5 \nУКРАЇНСЬКІ ЗЕМЛІ у 20-90-х роках XVIII ст.\n2. Мистецька галерея\n\
+    Уважно розгляньте представлені в мистецькій галереї пам’ятки й \nтекстові картки.\
+    \ Увідповідніть зображення зі змістом запропонованих \nкарток (зауважте, що на\
+    \ одну картку може припадати дві-три ілюстра­\nції). Поясніть, за якими ознаками\
+    \ ви встановили відповідність пам’яток \nмистецтва тому чи іншому стилю, жанру.\n\
+    Уявіть, що вам доручили підготувати статтю до путівника «Мистець­\nкі перлини\
+    \ України». Усно складіть розповідь про"
+  section_title: Сторінка 236
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0317
+  text: "Узагальнення\nІсторія України в контексті епохи \nІ § 44 Раннього Нового\
+    \ часу. Внесок України \nу формування європейської цивілізації\nГРА «РАННІЙ НОВИЙ\
+    \ ЧАС В ІСТОРІЇ УКРАЇНИ»\nСкористайтеся правилами гри, поданими нас. 8.\nО\nЛитовські\n\
+    статути\n©\nОренда\nї й ,\n©\nФільварок\nИ « А  І\n¥/Ш\n©\nПолемічна\nлітература\n\
+    ©\nЦерковні\nбратства\nУиіииа\n(греко-\nкатолиціька}\nцерква\n© \nЗимівник \n\
+    О\nСл оє'р не­\nгре ко­\nпати нська \nшкола\nЗапорозька\nСіч\nт а\nРеєстрове\n\
+    козацтво\nНизове\nкозацтво\n%\nГ енеральна \nстаршина\nу* \\\nСотня\nН\n"
+  section_title: Сторінка 237
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

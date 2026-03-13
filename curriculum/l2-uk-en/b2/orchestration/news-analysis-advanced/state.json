@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "news-analysis-advanced",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:56:30Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:56:30Z",
+      "task_id": "v5-news-analysis-advanced-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:45:06.418830+00:00'
+discovered_at: '2026-03-12T19:44:31.100654+00:00'
 query_keywords:
 - Being and Becoming
 - бути + instrumental
@@ -23,7 +23,22 @@ videos:
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-blogs: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode62/
+  title: New Year’s Eve in Ukraine + Instrumental case of Pronouns
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/episode61/
+  title: Christmas dinner in Ukraine + Instrumental case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics: []
+- url: https://opentext.ku.edu/dobraforma/chapter/10-3/
+  title: 'Dobra Forma 10-3: Instrumental with працювати, бути, стати'
+  source: University of Kansas
+  relevance_score: 0.95
+  topics: []
 rag_chunks:
 - score: 0.3333333432674408
   chunk_id: 6-klas-ukrmova-avramenko-2023_s0227

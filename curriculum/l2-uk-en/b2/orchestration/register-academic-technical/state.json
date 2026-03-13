@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "register-academic-technical",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:25:29Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:25:29Z",
+      "task_id": "v5-register-academic-technical-pA",
+      "mode": "full"
+    }
+  }
+}

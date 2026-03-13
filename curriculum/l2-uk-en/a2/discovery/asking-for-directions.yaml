@@ -1,0 +1,154 @@
+discovered_at: '2026-03-12T17:59:47.426102+00:00'
+query_keywords:
+- Asking for Directions
+- йти
+- їхати
+- повертати
+- Практика та діалоги
+- Practice and Dialogues
+- Підсумок та розповідь
+- Summary and Narrative
+- for directions to landmarks
+- complex route descriptions
+- public transport vocabulary
+- their location
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=kx6zR2UOaBU
+  channel: Ukrainian Lessons
+  title: ULP 1-22 | Are you going to the party?  – First verb conjugation in Ukrainian
+  relevance_score: 0.9
+  relevance_note: The video is a Ukrainian lesson explicitly teaching first verb conjugation,
+    including verbs of motion ('йти', implicitly 'їхати') and features a dialogue
+    about going to a party using public transport (bus, metro). This directly relates
+    to the module's topic of asking for directions and associated vocabulary.
+  transcript_excerpt: Today our New verbs are It To Go by Walking and Кати to wait...
+    Привіт ти йдеш на вечірку Так ми йдемо з Дмитром А ти так іду до речі Марта і
+    Олена теж ідуть чудово ти тут на щось чекаєш так Я чекаю на автобус Ми тут Чекаємо
+    вже 20 хвилин Ого а я йду на метро до зустрічі навечірці до вечора.
+  embed_suggestion: After section Презентація (Presentation) -- The video introduces
+    and practices verbs of motion and includes a relevant dialogue, making it a good
+    follow-up to the presentation of new grammar and vocabulary.
+- url: https://www.youtube.com/watch?v=2MWaEr5BpHU
+  channel: Bright Kids Ukrainian
+  title: 'Україна і глобальні гравці: як збалансувати інтереси — ХIII Бандерівські
+    читання'
+  relevance_score: 0.1
+  relevance_note: The video discusses political topics and Ukraine's role in global
+    politics, which is unrelated to asking for directions.
+  transcript_excerpt: Товариство, починаємо нашу другу дискусію, яка називається Україна
+    і глобальні гравці. Як збалансувати інтереси?
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=Ix0lcFFPymQ
+  channel: Bright Kids Ukrainian
+  title: 'Delay The Inevitable. | Clair Obscur: Expedition 33 - Part 1'
+  relevance_score: 0.1
+  relevance_note: The video is a gaming commentary, mentioning a landmark (Eiffel
+    Tower) in a game context, but not in relation to asking for or giving directions.
+  transcript_excerpt: Ось що мені подобається. О Боже. Не дивно, що вони французи.
+    Вони поставили Ейфелеву вежу першою, брате. О, Боже мій. Перше, що ми бачимо в
+    грі, Місто кохання.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=19Qq-b2sy9k
+  channel: Klopotenko
+  title: Роздуми про мітинги, паралелі з 2004 і 2013 та їжу на Майдані | За що ми
+    стоїмо? | Сам Удома №27
+  relevance_score: 0.1
+  relevance_note: The video discusses protests, social issues, and food on Maidan,
+    which is unrelated to asking for directions.
+  transcript_excerpt: Я до сих пір не можу трішки відійти. Багато хто із молоді кричить,
+    підтримує лозунги, а багато, е, таких трішки постарше людей, вони просто мовчать
+    і такі в шоці, щоб тільки це не повторилося, щоб не пережити ті всі жахливі спогади,
+    які проживалися тоді.
+  embed_suggestion: N/A
+blogs:
+- url: https://www.ukrainianlessons.com/episode56/
+  title: Asking for advice + Accusative case in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - grammar
+  - cases
+  - accusative
+  - adjectives
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 56
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0078
+  text: "НАВЧАЮСЯ СКЛАДАТИ РЕЧЕННЯ \nЗ ДІЄСЛОВАМИ\nПрочитайте речення. Простежте,\
+    \ \nякі різні дії означає слово іде.\nскладаю\nІде катер. Іде поїзд. Іде зима.\
+    \ Іде час. Іде концерт.\n• Замініть у кожному реченні слово іде дієсловом, близьким\
+    \ \nза значенням. Скористайтеся довідкою. Запишіть речення\nза зразком.\nІде катер.\
+    \ \nПливе катер.\n? годинник\nДовідка\nВідбувається, їде, минає, пливе, настає.\n\
+    б| Розглянь малюнки. Напиши, хто як пересувається,\nвикориставши дієслова з довідки.\n\
+    На які питання \nвідповідають \nдієслов"
+  section_title: Сторінка 80
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0209
+  text: "204\nВідомості із синтаксису й пунктуації. Види речень за метою висловлення\n\
+    \ Дайте домашку \nз математики.\n15:28\nЯ загубила в класі \nщоденник. Ніхто \n\
+    не бачив?\n15:39\nНа завтра треба \nготувати поробку?\n15:53\nВізьміть завтра\
+    \ під-\nручники з англій-\nської, буде заміна. \n16:21\nХодімо разом \nу кіно.\
+    \ \nр\n16:42\nЯ не знаю, як \nрозв’язати задачу. \nДопоможіть!!!  \n \n \nД\n\
+    \ \n \n \n17:36\nВправа 331\n1. Прочитайте речення, узяті з чату \nкласу .\n2.\
+    \ Назвіть спочатку розповідні ре-\nчення, потім питальні та  спону-\nкальн"
+  section_title: Сторінка 204
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0219
+  text: "218\nДоброго ранку! Добрий день! Привіт! Радий бачити тебе. \n* * *\nДо побачення!\
+    \ На все добре! Гарного дня! Бувайте здорові! До зу-\nстрічі!\nБажаю успіхів!\
+    \ Хай щастить! Рада була зустрітися.\n* * *\nВибачте. Пробачте. Прошу вибачити\
+    \ (пробачити).\nДаруйте. Перепрошую. Вибачте, що турбую.\n* * *\nДякую. Щиро дякую.\
+    \ Я тобі дуже вдячний. Будь ласка. Нема \nза що.\n528.\tІ. ПОПРАЦЮЙТЕ В ПАРАХ.\
+    \ Уявіть, що хтось із вас опинився в \nчужому місті і йому необхідно з’ясувати,\
+    \ де розміщено стадіон (цирк чи \nтеатр). А "
+  section_title: Сторінка 221
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.10000000149011612
+  chunk_id: 5-klas-ukrmova-golub-2022_s0243
+  text: "244\n551   Визначте, які етикетні формули доцільно використовувати \nв таких\
+    \ ситуаціях. Для чого ми їх використовуємо?\n1. … ти приніс мені словник? 2. …\
+    \ котра година? 3. … ви не \nпідкажете, як пройти до вулиці Київської? 4. … я\
+    \ не можу \nвиконати це доручення. 5. … з якої колії відправляється \nпотяг №\
+    \ 242? 6. Сергію, відчини, … , вікно.\n552   Прочитайте вголос діалог і схарактеризуйте\
+    \ його. Які норми \nмовленнєвого етикету порушено? Відредагуйте діалог так, щоб\
+    \ \nтональність спілкування набула доброз"
+  section_title: Сторінка 244
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0054
+  text: "53\n• Продовж діалог. Запиши кілька реплік діалогу в зошит. \nПробач. \n\
+    Я вчинив негарно.\nДякую, що \nвибачився.\n• Випиши слова — назви дій. \nЗразок.\
+    \ Квіти (що роблять?) пнуться, ... .\n• Назви слова, які описують стани людини.\
+    \ Склади з двома \nсловами речення.\nБоїться, радіє, бігає, цікавиться, співає,\
+    \ дивується, танцює.\nсЛова — назви ДІЙ\nЩо ти робиш у школі, удома, на вулиці?\
+    \ Запиши слова — \nназви дій у стовпчики.\nЧитаю, читання, пишу, письмо, малюю,\
+    \ малювання, \nстрибаю, граю, гра, співаю, танцюю, т"
+  section_title: Сторінка 53
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -2,98 +2,61 @@
 
 ## State Standard Reference
 
-**A2 §4.2.1.4** (lines 1244–1254): Pronoun scope at A2 covers personal pronouns (full declension), possessive pronouns (m/n and f), and — implicitly via §4.2.1 descriptor — demonstrative and interrogative pronouns. The section does **not** list indefinite (хтось, щось) or negative (ніхто, ніщо) pronouns.
+**A2 §4.2.1.4** (lines 1244–1254): *"Займенник: особові займенники... присвійні займенники чоловічого і середнього роду... присвійні займенники жіночого роду..."*
 
-**B1 §4.2.1.4** (lines 2095–2113): Covers personal, possessive, reflexive (себе), demonstrative (той/цей, та/ця), and interrogative-relative pronouns (хто, що, який, чий, котрий). The indefinite/negative pronouns are introduced at B1 level per the mapping descriptor, grounded in Grade 6 textbook curricula (Litvinova §54, Avramenko grade 6).
+The A2 pronoun standard lists only personal and possessive pronouns. Indefinite/negative pronouns are explicitly a **B1** item:
 
-**Alignment**: The plan's vocabulary-introduction approach is correct and well-justified. Treating хтось/ніхто as high-frequency items to memorize (without formation rules) at A2 is:
-1. Consistent with the State Standard — A2 does not formally scope them
-2. Pedagogically sound — these words appear in every conversation
-3. Non-conflicting with B1 — B1 adds the morphological system (declension paradigms, будь-/небудь variants, preposition-split rules for ні-pronouns)
+**B1 §4.2.1.4** (lines 2095–2113): *"Розширені займенники — неозначені (хтось, щось, дехто), заперечні (ніхто, ніщо), відносні (який, що, хто)"*
 
-The plan's `scope_note` citing §4.2.1.4 is accurate.
+**Alignment**: The plan's scope_note is accurate. The module is justified at A2 precisely because it treats these pronouns as **vocabulary items** (meaning + usage), not as a morphological system (declension paradigms, formation rules, preposition splitting). This is a pedagogy decision, not a scope violation — communicative use precedes morphological analysis. The plan's deferral to B1 for "full morphological system" directly matches the State Standard placement.
 
 ---
 
 ## Vocabulary Frequency
 
-Source: GRAC corpus (2 billion tokens). All 13 target words verified ✓ in VESUM.
+All 13 target words verified in VESUM. Frequencies from GRAC (2B tokens):
 
-| Word | IPM (per million) | Raw count | Priority |
-|------|-------------------|-----------|----------|
-| нічого | 281.31 | 569,354 | **Critical** — dominant over ніщо in all registers |
-| щось | 275.71 | 558,022 | **Critical** — 2nd most frequent pronoun type |
-| ніколи | 191.94 | 388,470 | **Critical** |
-| ніхто | 165.62 | 335,205 | **Critical** |
-| хтось | 121.93 | 246,774 | **Critical** |
-| десь | 101.79 | 206,014 | **High** |
-| колись | 87.36 | 176,815 | **High** |
-| якось | 77.47 | 156,792 | **Medium** |
-| ніяк | 56.21 | 113,763 | **Medium** |
-| кудись | 22.75 | 46,049 | **Lower** |
-| ніде | 21.40 | 43,316 | **Lower** |
-| нікуди | 20.99 | 42,485 | **Lower** |
+| Word | Freq (abs) | IPM | Priority |
+|------|-----------|-----|----------|
+| нічого | 569,354 | 281.3 | ★★★ core |
+| щось | 558,022 | 275.7 | ★★★ core |
+| ніколи | 388,470 | 191.9 | ★★★ core |
+| ніхто | 335,205 | 165.6 | ★★★ core |
+| хтось | 246,774 | 121.9 | ★★★ core |
+| десь | 206,014 | 101.8 | ★★★ core |
+| колись | 176,815 | 87.4 | ★★ high |
+| якось | 156,792 | 77.5 | ★★ high |
+| ніяк | 113,763 | 56.2 | ★★ high |
+| кудись | 46,049 | 22.8 | ★ medium |
+| ніде | 43,316 | 21.4 | ★ medium |
+| нікуди | 42,485 | 21.0 | ★ medium |
 
-**Key finding**: нічого (281 IPM) significantly outranks ніщо (not queried separately but much lower). The plan's instruction to teach нічого as the default is confirmed by corpus data. щось and нічого are among the 300 most frequent words in the entire GRAC corpus.
-
-**Teaching priority ranking** (for word target allocation): щось ≈ нічого > ніколи > ніхто > хтось > десь > колись > якось > ніяк > кудись ≈ ніде ≈ нікуди
-
----
-
-## Textbook Evidence
-
-Three Grade 6 textbooks (Litvinova 2023, Avramenko 2023, Golub 2023 — all Tier 1) confirm:
-
-**1. Orthography rule** (Avramenko, Golub — Grade 6):
-- Written **together**: заперечні з часткою ні- (ніхто, ніщо, ніяк) та неозначені з -сь (хтось, щось, десь)
-- Written **with hyphen**: будь-, казна-, хтозна-, -небудь (будь-хто, хтозна-що)
-- Written **separately** when a preposition intervenes: ні про кого (preposition splits the pronoun)
-→ At A2, only the fused forms are in scope. The preposition-split rule is B1+ territory.
-
-**2. Stress distinction** (Litvinova §54 — important but B1 scope):
-- ніко́го (stress on root) = absence: "ніко́го немає" (nobody is there)
-- нíкого (stress on prefix) = impossibility: "нíкого й спитати" (there's nobody to ask)
-→ Note for content: mention this as a curiosity to notice, NOT to teach at A2.
-
-**3. Double negation** (Litvinova, confirmed by literary example from Netsaiko):
-"я дурний і нічого не розумію" — standard Ukrainian double negation pattern. This is not a stylistic choice — it is the grammatical norm.
+**Notable**: нічого (281 IPM) outranks хтось (122 IPM) by a factor of 2.3 — confirms the plan's note that нічого is "far more common than ніщо." ніколи and ніхто are higher-frequency than хтось, making the ніхто-family equally or more urgent to teach.
 
 ---
 
 ## Cultural Hooks
 
-1. **"Ніколи не кажи ніколи"** — Universal Ukrainian saying (also title of a 1983 film known in Ukrainian pop culture). The phrase uses ніколи twice — the double ніколи in the saying ironically mirrors Ukrainian's preference for double negation. Useful classroom hook: "Ukrainian sometimes doubles words for extra meaning, just like this famous proverb."
+1. **"Нічого страшного"** — confirmed high-frequency collocation in GRAC corpus (5+ concordance examples). Commonly used to mean "No worries / It's nothing serious." Functions as a conversational reassurance phrase. Source: GRAC concordance; also Avramenko Grade 6 (лікар нічого страшного не знайшов).
 
-2. **"Нічого страшного"** — One of the most frequent social phrases in Ukrainian (corpus-confirmed via нічого + страшного collocation). Means "no worries / it's nothing." This phrase is an idiomatic extension of нічого and appears in every register. It's a perfect first-encounter phrase for the lesson because learners have almost certainly heard it.
-
-3. **Folklore angle**: Ukrainian folk proverbs extensively use ніхто/ніщо/ніколи: "Ніколи не кажи ніколи" (proverbial), "Нічого за гроші не купиш, що серцем дороге" (folk wisdom). The plan's cultural section can mine this vein for authentic material.
+2. **Прислів'я зі словом ніколи**: "Ніколи не кажи ніколи" is a well-known Ukrainian saying (calque of international proverb). The double ніколи is authentic and memorable — demonstrates that even Ukrainian idioms follow the double-negation pattern. Grade 6 textbooks (Zabolotnyi) explicitly recommend collecting proverbs with неозначені/заперечні займенники as an exercise.
 
 ---
 
 ## Common Learner Errors
 
-1. **Omitting не with ні-pronouns** → *"Ніхто прийшов"* → Correct: "Ніхто не прийшов"
-   — Why it happens: English single negation transfer ("Nobody came" has no второе "not"). This is the #1 error and must be flagged explicitly and early.
+1. **Missing не with negative pronouns** → *"Ніхто прийшов"* ✗ → *"Ніхто не прийшов"* ✓ — Direct L1 transfer from English single negation. This is the #1 error; must be marked as a **critical rule** in content. Confirmed in all Grade 6 textbooks as a primary teaching point.
 
-2. **Using ніщо where нічого is expected** → *"Ніщо не сталося"* (formal/literary) vs. "Нічого не сталося" (spoken, everyday)
-   — Why it happens: learners memorize the nominative form ніщо but нічого is actually the high-frequency genitive/accusative form that serves as the colloquial default. Teaching нічого first prevents this.
+2. **Choosing ніщо instead of нічого** → *"Ніщо не сталося"* (grammatically correct but sounds bookish) vs. *"Нічого не сталося"* (natural spoken Ukrainian). Learners need explicit instruction that нічого is the default spoken form.
 
-3. **Wrong word order with ні-pronouns** → *"Я бачив нікого"* → Correct: "Я нікого не бачив"
-   — Why it happens: English SVO transfer ("I saw nobody"). In Ukrainian, the ні-pronoun typically precedes the verb, and не immediately precedes the verb.
+3. **Stress-based meaning distinction ignored** (advanced note, do NOT teach at A2): Litvinova §54 documents that ніко́го (genitive, absence: "nobody is here") vs. нíкого (impossibility: "nobody to ask") differ by stress. This distinction is B1+ material — flag as out-of-scope, but writers should avoid examples that create ambiguity around this contrast.
 
 ---
 
 ## Cross-References
 
-- **Builds on**:
-  - `reflexive-seba` — reflexive pronoun introduces the idea of pronoun-as-vocabulary
-  - A1 interrogative pronouns (хто/що/де/коли) — these are the base roots from which хтось/ніхто derive (recognition link, not taught as a rule at A2)
-  - A1 basic negation with не — prerequisite for double-negation rule
-
-- **Prepares for**:
-  - `bigger-better-stronger` (connects_to) — comparative structures often use хтось/ніхто in comparison contexts
-  - `i-think-that` (connects_to) — opinion structures: "Мені здається, що хтось..." / "Я думаю, що ніхто не..."
-  - B1 indefinite/negative pronoun module — full declension paradigms, будь-/небудь variants, preposition-split rules
+- **Builds on**: `reflexive-sebe` (A2-020), A1 interrogative pronouns хто/що/де/коли, A1 basic negation with не
+- **Prepares for**: B1 `indefinite-negative-pronouns` (full morphological paradigm, declension of ніхто/нічого, preposition-split rule: ні з ким → з ніким)
 
 ---
 
@@ -105,18 +68,21 @@ Three Grade 6 textbooks (Litvinova 2023, Avramenko 2023, Golub 2023 — all Tier
 
 ## Notes for Content Writing
 
-- **нічого as default**: The corpus confirms нічого (281 IPM) dwarfs ніщо. All example sentences should default to нічого unless the nominative function specifically requires ніщо. Phase B should introduce нічого first, mention ніщо as a variant learners may encounter in writing.
-
-- **Word order is a grammar point**: The rule "ні-pronoun precedes verb; не immediately precedes verb" is worth a dedicated short note. Sentence position is how Ukrainian encodes double negation, not just the lexical items.
-
-- **Avoid preposition-split examples at A2**: "Ні про кого не знаю" is correct Ukrainian but involves the preposition-split rule (B1 scope). All A2 examples should use forms that don't require splitting: нікого, нічого, ніде, ніколи (not "ні з ким", "ні про що", etc.).
-
-- **"Щось мені підказує..."** is a high-frequency idiom worth featuring in the cultural section — learners can use it immediately in conversation.
-
-- **Frequency guides section emphasis**: The two highest-frequency items are нічого (281 IPM) and щось (276 IPM). The content should give these the most example sentences and practice reps.
+- **нічого** should appear more frequently than ніщо in all examples — GRAC frequency validates this.
+- The double-negation rule is the load-bearing grammar point; it needs at least 2 explicit callout boxes and multiple examples before the practice section.
+- GRAC confirms "нічого страшного" as a frozen phrase — excellent as a memorable cultural anchor in the cultural context section.
+- Grade 6 textbook coverage (Avramenko, Litvinova, Golub, Zabolotnyi) is consistent: these pronouns are taught together as a spelling + usage unit. The -сь (indefinite) vs. ні- (negative) opposition is the structural frame used across all Grade 6 textbooks — Phase B content should mirror this pedagogical opposition.
+- Avoid stress-mark examples on ніко́го/нíкого — the stress distinction is B1 material and will confuse A2 learners.
+- Litvinova §54 and Avramenko p.186 both confirm declension is a Grade 6 (B1) topic — do not hint at it in A2 content.
 
 ## Resource Discovery
 
+### Videos
+- [【Multi Sub】Spoiled Kid Broke His Collectible—So He Sued the Family for $550,000 and WON](https://www.youtube.com/watch?v=CvrwPG4JQzQ) (Bright Kids Ukrainian) — The video actively uses 'хтось' and its forms ('когось') in conversational context, directly demonstrating the module's core indefinite pronoun 'someone'.
+
+### Blog Articles
+- [Talk Ukrainian: Indefinite and Negative Pronouns](https://talkukrainian.com/indefinite-negative-pronouns/) (talkukrainian)
+- [Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian](https://www.ukrainianlessons.com/episode106/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 

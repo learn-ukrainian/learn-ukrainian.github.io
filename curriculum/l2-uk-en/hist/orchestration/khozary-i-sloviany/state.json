@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "khozary-i-sloviany",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:39:48Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:39:48Z",
+      "task_id": "v5-khozary-i-sloviany-pA",
+      "mode": "full"
+    }
+  }
+}

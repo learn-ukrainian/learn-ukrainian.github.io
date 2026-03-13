@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "syntez-vytoky-1",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:44:00Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:44:00Z",
+      "task_id": "v5-syntez-vytoky-1-pA",
+      "mode": "full"
+    }
+  }
+}

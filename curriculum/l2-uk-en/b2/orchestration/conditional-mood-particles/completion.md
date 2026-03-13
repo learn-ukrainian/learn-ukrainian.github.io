@@ -2,9 +2,9 @@ PASS: pipeline b2 43
 
   Module:   conditional-mood-particles
   Track:    b2
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T16:09:13Z
+  Date:     2026-03-12T18:20:47Z

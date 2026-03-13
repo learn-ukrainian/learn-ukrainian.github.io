@@ -1,0 +1,259 @@
+discovered_at: '2026-03-13T00:04:18.249033+00:00'
+query_keywords:
+- 'Повість минулих літ II: Ключові фрагменти'
+- Фрагмент 1
+- '862'
+- Фрагмент 2
+- '988'
+- Фрагмент 3
+- Практикум
+- 'Analyze the causes and consequences of повість минулих літ ii: ключові фрагменти'
+- Evaluate the historical significance of читаємо первинне джерело
+- Trace the development of ваш аналіз
+- history
+- історія
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0167
+  text: 'Удосконалення написаного
+
+    382. Розгляньте малюнки.
+
+    •  Що незвичайного ви побачили на першому малюнку?
+
+    •  Виконайте завдання в «Зошиті з розвитку писемного мов­
+
+    лення».
+
+    % І З в ’язок прислівників із дієсловам и
+
+    383. Прочитайте вірш Лариси Лужецької. Вивчіть його напам’ять.
+
+    На запитання як? коли?
+
+    Готова всім відповісти.'
+  section_title: Сторінка 168
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0014
+  text: "238\nЧитацький практикум. «Смерть моряка річкового флоту…». . . . 238\nМіж\
+    \ середньовіччям і сьогоденням  \n(«Тамплієри»). . . . . . . . . . . . . . . .\
+    \ . . . . . . . . 239\nУперед у минуле  \n(«Ворошиловград»). . . . . . . . . .\
+    \ . . . . . . . . . 239\nРоман-подорож  \n(«Інтернат»). . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . 240\nГалина Пагутяк . . . . . . . . . . . . . . .\
+    \ . . . . . . . . 241\nПрихований світ магії  \n(«Зачаровані музиканти: роман-феєрія»).\
+    \ . 241\nМирослав Дочинець . . . . . . . . . ."
+  section_title: Сторінка 6
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0105
+  text: "Розділ 2  ДІЄПРИКМЕТНИК\n98\nВправа 138\n1  Запишіть словосполучення, утворивши\
+    \ від діє слів у  дужках дієприкмет-\nники в  потрібній формі \n(Зарядити) планшет,\
+    \ (завантажити) програма, (заблоку­\nвати) акаунт, (зберегти) допис, (зробити)\
+    \ селфі, (повідомити) \nінформація, (купити) одяг, (виграти) кубок.\n2  Виділіть\
+    \ суфікси в  дієприкметниках \nВправа 139\n1  Прочитайте подані прикметники та\
+    \ дієприкметники (увага \nна наголос) \nНевблаганний, невблаганий, незрівнянний,\
+    \ \nнезрівняний, нездоланний, нездоланий."
+  section_title: Сторінка 101
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0448
+  text: '. . . . . 324
+
+    Повторення  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 326
+
+    Літературознавчий словник  . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 330
+
+    335
+
+    Зміст'
+  section_title: Сторінка 335
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6071082353591919
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5624366998672485
+  chunk_id: c44f1207_c2785
+  text: "85) Volum legum III c. 301.\n\n86) Архивъ Югозап. Рос. I т. X ч. 257.\n\n\
+    87) Порівняти нпр. сей привилей кор. Михайла \r\n (Архивъ І. X ч. 257) і його\
+    \ ж о рік старший (ibid. ч. 110), привилей Яна III \r\n (Шематизм c. 241-2 і Черты\
+    \ c. 117, 120), і т. и.\n\n88) Архивъ І. X ч. 110.\n\n89) Процеси сї на підставі\
+    \ актів оповідає \r\n Шараневич Черты с. 129 і далї.\n\n90) Akta gr. і ziem. XII\
+    \ ч. 886 (eundem poponem \r\n hominem profugum, qui fugerat ob timerem Thartharorum).\n\
+    \n91) Laboriosi... Paszko pop de Puthnowicze,"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.541504979133606
+  chunk_id: dfce9072_c0000
+  text: 'ПОВІСТЬ ВРЕМЕННИХ ЛІТ
+
+
+    за Лаврентіївським списком
+
+
+    ПовЂсть времяньныхъ лЂтъ
+
+
+    До лЂта 6414 [906]
+
+
+    Въ лЂто 6415 [907] — въ лЂто 6452 [944]
+
+
+    Въ лЂто 6453 [945] — въ лЂто 6477 [969]
+
+
+    Въ лЂто 6478 [970] — въ лЂто 6493 [985]
+
+
+    Въ лЂто 6494 [986] — въ лЂто 6504 [996]
+
+
+    Въ лЂто 6505 [997] — въ лЂто 6533 [1025]
+
+
+    Въ лЂто 6534 [1026] — въ лЂто 6562 [1054]
+
+
+    Въ лЂто 6563 [1055] — въ лЂто 6579 [1071]
+
+
+    Въ лЂто 6580 [1072] — въ лЂто 6592 [1084]
+
+
+    Въ лЂто 6593 [1085] — въ лЂто 6600 [1092]
+
+
+    Въ лЂто 6601 [1093] — въ '
+  work: Повість временних літ (розшифровка за Лаврентіївським списком)
+  author: Нестор
+  year: 1113
+  genre: chronicle
+  language_period: old_east_slavic
+  source_url: http://izbornyk.org.ua/pvllavr/pvllavr.htm

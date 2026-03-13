@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 67 — E2E
+FAIL: pipeline hist 67
 
   Module:   pylyp-orlyk-konstytutsiia
   Track:    hist
-  Mode:     e2e
-  Words:    5700 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-24T22:49:42Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:12:56Z

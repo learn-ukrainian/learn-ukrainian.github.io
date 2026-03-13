@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "nauka-i-doslidzhennia",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T21:31:24Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:31:24Z",
+      "task_id": "v5-nauka-i-doslidzhennia-pA",
+      "mode": "full"
+    }
+  }
+}

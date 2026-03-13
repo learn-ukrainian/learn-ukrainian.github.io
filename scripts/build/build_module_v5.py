@@ -59,6 +59,7 @@ from pipeline_v5 import (
     PHASE_FUNCTIONS,
     PHASES,
     load_state,
+    run_consultation,
     run_pipeline,
 )
 
@@ -109,11 +110,21 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 
     # --use-claude: set of phase IDs to dispatch via Claude
     # Falls back to CLAUDE_DEFAULT_PHASES from batch_gemini_config when not specified.
+    # Seminar/PRO tracks default to Gemini for research (phase A) — they need
+    # web search for factual/historical research. CLI --use-claude still overrides.
     use_claude_str = getattr(args, "use_claude", "") or ""
     if use_claude_str:
         ctx.use_claude = set(use_claude_str.replace(",", " ").upper().split())  # type: ignore[attr-defined]
     else:
-        ctx.use_claude = set(CLAUDE_DEFAULT_PHASES)  # type: ignore[attr-defined]
+        _is_research_gemini_track = (
+            ctx.track in SEMINAR_TRACKS
+            or ctx.track.startswith("lit-")
+            or ctx.track in PRO_TRACKS
+        )
+        if _is_research_gemini_track:
+            ctx.use_claude = set(CLAUDE_DEFAULT_PHASES) - {"A"}  # type: ignore[attr-defined]
+        else:
+            ctx.use_claude = set(CLAUDE_DEFAULT_PHASES)  # type: ignore[attr-defined]
 
     # Per-phase Claude model
     _is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track in PRO_TRACKS
@@ -189,6 +200,18 @@ def _run_single_module(args: argparse.Namespace) -> int:
 
         t0 = time.time()
         state = load_state(ctx)
+
+        # --consult: run prompt consultation instead of normal pipeline
+        if getattr(args, "consult", False):
+            ok = run_consultation(ctx, state)
+            elapsed = time.time() - t0
+            elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
+            if ok:
+                log(f"\nCONSULTATION COMPLETE — check {ctx.orch_dir}/consultation-*.md [{elapsed_str}]")
+            else:
+                log(f"\nCONSULTATION FAILED [{elapsed_str}]")
+            return 0 if ok else 1
+
         ok = run_pipeline(
             ctx, state,
             research_only=getattr(ctx, "research_only", False),
@@ -344,7 +367,7 @@ def main() -> int:
         description="E2E Module Builder v5 — clean pipeline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
-            Pipeline phases: research → discover → content → activities → validate → [review] → mdx
+            Pipeline phases: research → discover → content → validate → [review] → activities → mdx
 
             Examples:
               %(prog)s a1 12                            # RC mode (no review)
@@ -422,6 +445,8 @@ def main() -> int:
                         help="RAG-enabled mode: Gemini searches textbooks/VESUM via MCP (auto when .gemini/settings.json exists)")
     parser.add_argument("--max-fix", type=int, default=None, dest="max_fix",
                         help="Override max fix iterations (default: 6 core, 8 seminar)")
+    parser.add_argument("--consult", action="store_true", dest="consult",
+                        help="Run prompt consultation on latest failure instead of rebuild")
 
     args = parser.parse_args()
 

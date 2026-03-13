@@ -1,0 +1,145 @@
+discovered_at: '2026-03-12T19:52:11.899308+00:00'
+query_keywords:
+- 'Аналіз новин: Основи'
+- The Power of Information
+- Імерсивна розповідь
+- 'Immersive Narrative: The Anatomy of News'
+- Аналіз та критичне мислення
+- Analysis and Critical Thinking
+- Граматика та стилістика
+- Grammar and Stylistics
+- Підсумок та синтез
+- Summary and Synthesis
+- main ideas and supporting details in news articles
+- between facts and opinions in news reporting
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=bulArxOnyAE
+  channel: Суспільне Культура
+  title: 'Законопроєкт про англійську мову: що буде з українським дубляжем та які
+    ризики для кіноіндустрії'
+  relevance_score: 0.9
+  relevance_note: The video discusses a current news event (English language bill),
+    public reaction, and potential impacts on an industry. This directly relates to
+    analyzing news, identifying different viewpoints, and understanding the significance
+    of information, aligning with the module's focus on news analysis and critical
+    thinking.
+  transcript_excerpt: Законопроєкт викликав хвилю обурення серед кіноспільноти зокрема
+    серед найбільших ризиків - це те що законопроєкт може вплинути на кіногалузь та
+    знищити дубляж.
+  embed_suggestion: After section 'Аналіз та критичне мислення' – provides a real-world
+    example for practicing critical analysis of news reports and understanding diverse
+    perspectives on a topic.
+- url: https://www.youtube.com/watch?v=QQdYgzeumoQ
+  channel: Суспільне Док
+  title: Життя за 50 км від найгарячіших точок фронту — історія Вільнянської громади
+    | Сили відновлення
+  relevance_score: 0.5
+  relevance_note: This is a documentary-style news story about a community affected
+    by war. While it presents news content, it does not specifically focus on the
+    *analysis* of news, distinguishing facts from opinions, or the structure of news
+    reporting, which are key themes of the module.
+  transcript_excerpt: як стратегічно планувати життя громади якщо до найгарячіших
+    точок фронту менше 50 кмт таке питання постає дивлячись на вільнянську громаду
+    Запорізької області.
+  embed_suggestion: After section 'Імерсивна розповідь' – serves as an example of
+    a narrative-driven news piece, demonstrating how stories are conveyed in a compelling
+    way within news.
+- url: https://www.youtube.com/watch?v=aysrSl2RiKo
+  channel: Суспільне Культура
+  title: Як пісні на поезію стали мейнстримом | МУР, Пиріг і Батіг, DakhTrio | Artилерія
+  relevance_score: 0.2
+  relevance_note: The video focuses on Ukrainian music based on poetry, a cultural
+    topic unrelated to news analysis or critical thinking about news reporting.
+  transcript_excerpt: Пісень на основі віршів класиків настільки багато, що я не зможу
+    їх всіх перелічити, навіть якщо буду це робити до кінця цього відео.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=lq37w23NNdI
+  channel: Repainted Fox
+  title: '#5 Маруся. Григорій Квітка-Основ’яненко'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=5wq1Xfx_Gos
+  channel: Repainted Fox
+  title: '#23 Каменярі. Мойсей. Іван Франко'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0139
+  text: "132\nМОВЛЕННЄВИЙ ПРОСТІР\nІнформація\nІнформація (від лат. іnformātiō — «роз’яснення,\
+    \ уяв-\nлення, поняття про що-небудь») — відóмості про навколиш-\nній світ: про\
+    \ людей, речі, події, явища, факти тощо.\nВиди інформації\nЗа способом сприйняття:\
+    \ зорова (сприймаємо органами \nзору), слухова (через органи слуху), тактильна\
+    \ (на дотик), \nнюхова (через нюхові рецептори), смакова (через смакові ре-\n\
+    цептори) тощо.\nЗа формою подання: текстова, числова, графічна, зву-\nкова, аудіовізуальна\
+    \ тощо.\nДжерела інформації"
+  section_title: Сторінка 135
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0295
+  text: "237\nІнформація (від лат. informatio – роз’яснення; виклад фактів, \nподій)\
+    \ – це відомості, які ми отримуємо із зовнішнього світу або \nякі передаємо одне\
+    \ одному, про осіб, предмети, події, явища.\nОсновні види інформації за способом\
+    \ подання\nТекстова\nЛист, розповідь, смс-повідомлення, інтерв’ю, \nсписок продуктів\
+    \ тощо\nЧислова\nТабличка множення, календар, показання лі­\nчильника, математичний\
+    \ вираз тощо\nГрафічна\nГрафік, діаграма, креслення, малюнок, дорож­\nній знак,\
+    \ фотографія, географічна карта тощо\nЗ"
+  section_title: Сторінка 241
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0169
+  text: "Практична риторика\n120\n \n представлення  — надання інформації про особу,\
+    \ її діяльність, досягнення;\n \n інструкція  — стислі настанови (як використовувати\
+    \ нову технологію, як ді-\nстатися певної вулиці, як користуватися електроприладом,\
+    \ як доглядати за \nдомашньою твариною тощо). Трапляється, що всі ці жанри поєднано\
+    \ в  одному виступі. 211. Прочитайте. Сформулюйте за змістом прочитаного 2–3 \
+    \ проблемних за-\nпитання. Скористайтеся поданою на фо5рзаці підручника таблицею\
+    \ «Види за-\nпитань». Мета будь-я"
+  section_title: Сторінка 120
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0035
+  text: "РОЗВИТОК\nМОВЛЕННЯ\n28\n1.\tРозгляньте зображення та виконайте завдання.\
+    \ \nА.\t Яку інформацію люди сприймають цими органами чуття? \nБ.\t За допомогою\
+    \ яких органів чуття можна дістати якнайбільше інформації? \n2.\t Прочитайте та\
+    \ перекажіть відомості про медіатекст (усно). \nЗасоби масової інформації (ЗМІ),\
+    \ або масмедіа, — це засоби переда-\nвання, зберігання та відтворення інформації\
+    \ для великої кількості людей, \nа саме: радіо, телебачення, кіно, вебсайти; газети,\
+    \ журнали, книжки, бук­\nлети; рекламні щити "
+  section_title: Сторінка 31
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0269
+  text: "189\nІнформаційні жанри\n§ 53–54. ІНФОРМАЦІЙНІ ЖАНРИ\nСПОСТЕРЕЖЕННЯ\n1.\t\
+    \ Пригадайте випуск новин якогось конкретного теле- або радіоканалу.\nА.\t Розкажіть,\
+    \ яку інформацію ви добре сприймаєте й запам’ятовуєте.\nБ.\t Що в новинах вас\
+    \ дратує?  \nМета будь-якого інформаційного виступу — дати відомості про той чи\
+    \ інший предмет \nтак, щоб слухачам це було цікаво. \nНайпоширенішими жанрами\
+    \ інформаційних виступів є інформація, пояснення, ін-\nструкція, повідомлення,\
+    \ лекція, доповідь, оголошення та ін. \nІнформація "
+  section_title: Сторінка 189
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,187 @@
+discovered_at: '2026-03-13T00:26:41.246376+00:00'
+query_keywords:
+- 'Грамоти та акти: Княжі документи'
+- Типологія документів
+- Дипломатика
+- Ключові документи
+- Фрагмент
+- Берестяні грамоти
+- 'Analyze the causes and consequences of грамоти та акти: княжі документи'
+- Evaluate the historical significance of документи vs. літописи
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0344
+  text: "273\nТЕМА 19. ВИДИ ДІЛОВИХ ЛИСТІВ. \nЛИСТ-ЗАПРОШЕННЯ, ЛИСТ-ПОВІДОМЛЕННЯ \n\
+    Одним із засобів обміну інформацією є лист. Листи можуть бути \nособистими або\
+    \ діловими (службовими, офіційними). Особисті листи \nпишемо друзям / подругам,\
+    \ рідним, знайомим. За допомогою ділових \nлистів обмінюються інформацією, наприклад,\
+    \ установи й організації, \nа також ми можемо звертатися до якоїсь установи чи\
+    \ навпаки.  \nПід час ділового листування потрібно дотримуватися вимог офі-\n\
+    ційно-ділового стилю мовлення. Тобто викла"
+  section_title: Сторінка 277
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0202
+  text: "А. Уявіть, що вам доручили розмістити цей текст на шкільному сайті. Підготуйте\
+    \ до тексту \nкілька вступних речень, щоб зацікавити учнів вашої школи дочитати\
+    \ його до кінця. Т. Пата. Птахи"
+  section_title: Сторінка 130
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0480
+  text: "Коваль\nБуду я  навчатись мови золотої\nЗвіт — це документ, у якому в письмовій\
+    \ формі подається по-\nвідомлення про виконання якоїсь роботи. Звіти діляться\
+    \ на статистичні (пишуть на спеціальних блан-\nках) і текстові (складають на стандартних\
+    \ аркушах паперу, але за \nвстановленою формою). Матеріал звіту повинен охоплювати\
+    \ визначений період часу."
+  section_title: Сторінка 267
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0156
+  text: "Пропуск членів речення може \nробити спілкування зручним, жвавим, невимушеним.\
+    \ Особливості речень\nПропущені члени речення\nРоль у мовленні"
+  section_title: Сторінка 138
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5400086641311646
+  chunk_id: c8772648_c0168
+  text: "Приклади з грамоти використано в таких мовознавчих дослідженнях: Л.\r\nГумецька,\
+    \ «Втор. спол.», «Перв. прийм.», «Функції», «Мовознавство», № 10,\r\n«Словотв.\
+    \ сист. числ.»; С. Бевзенко, «Нариси», «З істор. коментар.»; М.\r\nАнтошин, «Закарп.\
+    \ гр.»; Я. Спринчак, ВЯ, 1956, № 6; Ф. Медведєв,\r\n«Труди», та ін."
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm
+- score: 0.5297553539276123
+  chunk_id: c8772648_c0149
+  text: "Уривок з грамоти наведений В. Сенкевичем у праці «О влиянии», стор.\r\n10.\n\
+    \nПриклади зустрічаються в таких мовознавчих дослідженнях: В.\r\nЯрошенко, «Укр.\
+    \ мова молд. гр.»; С. Бевзенко, «Істор. морф.»;\r\n«Словник»; А. Кримський, «Укр.\
+    \ грам.»; О. Яцимирський, «Язык»."
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm
+- score: 0.5295499563217163
+  chunk_id: c8772648_c0053
+  text: "Приклади з грамоти зустрічаються в таких мовознавчих публікаціях:\r\nO. Coбoлевський,\
+    \ «Очерки», «Лекции»; А. Кримський, «Укр. грам.»; І.\r\nСвєнціцький, «Нариси»,\
+    \ «Елементи»; Є. Тимченко, «Курс»; П. Бузук,\r\n«Нариси»; Я. Спринчак, УМШ, 1956,\
+    \ № 5; С. Бевзенко, «Нариси»,\r\n«Істор. морф.», «З істор. коментар.»; С. Самійленко,\
+    \ УМШ, 1956, № 6; Ф.\r\nМедведєв, «Укр. гр.», «Нариси», «Труди»; B. Ярошенко,\
+    \ «Укр. мова\r\nмолд. гр.»; Л. Гумецька, «Втор. спол.», «Функції», «Перв. прийм.»,\r\
+    \n«Мовознавство», № 10, та ін"
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm

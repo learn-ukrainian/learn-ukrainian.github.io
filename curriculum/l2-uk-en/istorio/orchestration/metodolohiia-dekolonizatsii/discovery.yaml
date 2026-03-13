@@ -1,0 +1,198 @@
+discovered_at: '2026-03-12T23:45:52.473329+00:00'
+query_keywords:
+- Методологія деколонізації
+- Теоретичні основи
+- Українська постколоніальна критика
+- Методи деколоніального аналізу
+- Практичне застосування
+- Критика і межі методу
+- Analyze the causes and consequences of методологія деколонізації
+- Evaluate the historical significance of що таке деколонізація?
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0404
+  text: "Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.\
+    \ — \n№ 6. — С. 90–100. Домашнє завдання"
+  section_title: Сторінка 248
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0310
+  text: "Залежність значень слова від контексту. Слововживання: вибір слова, \nлексична\
+    \ сполучуваність . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .28\n\
+    § 6 \nСлова власне українські й запозичені. Виправдані й небажані запозичення\
+    \ . . . . . . . . . . . . . . . . . .32\n§ 7 \nЛексичні й фразеологічні синоніми.\
+    \ Синонімічне багатство української мови . . . . . . . . . . . . . . . .36\n§\
+    \ 8 \nЛексичні й фразеологічні антоніми "
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0171
+  text: "ІІІ варіант\nОбговорення результатів роботи учнів та учениць над \nнавчальними\
+    \ проєктами до розділу. Узагальнення знань  \nза розділом ІІ. Україна в умовах\
+    \ десталінізації\nПоштова марка СРСР. Напис: \n«Слава підкорювачам цілини!». 1962 р.\
+    \ Радянська карикатура, яка \nзасуджує генетиків. 1950-ті рр."
+  section_title: Сторінка 94
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0486
+  text: '. . . . . . . . . . . . . . . . .61
+
+    § 21 Вимова звукосполучень приголосних  . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . .63
+
+    § 22 Соціолінгвістичні фактори, що впливають на вимову людини. Основні джерела
+    нормативного мовлення. Мова масмедіа. Сценічна мова  . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 269
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5436827540397644
+  chunk_id: feaa5fa7_c0834
+  text: "Укр. мова в Сов. Україні: Смаль-Стоцький\r\nР. Укр. мова в Совєтській Україні.\
+    \ В. 1936; Рудницький Я. Die Lage der\r\nukrainischen Sprache in der Sowjetunion.\
+    \ Wörter und Sachen. XIX.\r\nГейдельберг 1938; Шерех Ю. Принципи й етапи большевицької\
+    \ політики щодо\r\nслов’янських мов в СССР. Свобода, листопад 1947.\n\n[Енциклопедія\
+    \ українознавства. Загальна частина (ЕУ-I). — Мюнхен, Нью-Йорк, 1949. — Т. 1.\
+    \ — С. 359-366.]\n\n5. Українське письмо і правопис\n\nІсторія українського письма\
+    \ (палеографія)"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5422331690788269
+  chunk_id: f79fbc43_c0095
+  text: "Нехтуючи поділом дискурсів, властивим західній традиції,\r\nпостколоніальні\
+    \ критики вільно використовують поетичні засоби при обстоюванні\r\nпевних філософських\
+    \ поглядів і шокують невтаємничених читачів відверто\r\nсексуальною мовою. Постколоніальні\
+    \ романісти не є в цьому першовідкривачами 57.\r\nВони кажуть, що мають для цього\
+    \ вагомі підстави. Дуже часто колонізатор\r\nрозглядає колонізованого як слабку,\
+    \ подібну до жінки істоту, і підкорені\r\nчоловіки іноді мовчки погоджуються на\
+    \ приписування їм такого об"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.540207028388977
+  chunk_id: 1af78606_c0105
+  text: "Літ.: Жилко Ф. Т.\r\nАреальные единицы укр. языка. В кн.: ОЛА МИ. 1970. М.,\
+    \ 1972; Бевзенко С. П.\r\nУкр. діалектологія. К., 1980; АУМ, т. 1-2. К., 1984-88.\n\
+    \nП. Ю. Гриценко."
+  work: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+  year: 2004
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/ukrmova/um01.htm

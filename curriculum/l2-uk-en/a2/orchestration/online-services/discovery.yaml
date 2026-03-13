@@ -1,0 +1,124 @@
+discovered_at: '2026-03-12T18:11:21.072733+00:00'
+query_keywords:
+- Online Services
+- замовлення
+- кошик
+- доставка
+- Діалоги
+- Dialogues
+- Розповідь
+- Narrative
+- Ukrainian delivery apps
+- online banking basics
+- with support
+- app notifications
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=aY4J3Fzvhvw
+  channel: Klopotenko
+  title: КРАЩЕ, НІЖ ПІЦА 😍 Улюблений пиріг Клопотенків || неСам Удома з мамою №22
+  relevance_score: 0.7
+  relevance_note: While primarily a cooking video, the excerpt mentions 'ми запустили
+    пироги' (we launched pies) and creating 'something instead of pizza,' which hints
+    at a commercial food service that could utilize online ordering or delivery, directly
+    relating to the module's 'доставка' and 'Ukrainian delivery apps' vocabulary.
+  transcript_excerpt: Цей пиріг, він прикольний чим? Що він в нього гарна структура.
+    І ви, можливо, знаєте, можливо не знаєте, ми запустили пироги. Ну, ми хочемо щось
+    створити замість піци.
+  embed_suggestion: After Розповідь - The mention of launching a food product can
+    serve as a narrative hook to discuss how such businesses integrate online services
+    for ordering and delivery.
+- url: https://www.youtube.com/watch?v=KEF_JBjON60
+  channel: Bright Kids Ukrainian
+  title: 'Part 6 - Emma Audiobook by Jane Austen (Vol 3: Chs 01-07)'
+  relevance_score: 0.1
+  relevance_note: The video is an audiobook in Ukrainian, completely unrelated to
+    'Online Services' or any of the module's vocabulary.
+  transcript_excerpt: ТОМ III ГЛАВА I Дуже мало тихих відображення було достатньо,
+    щоб задовольнити Емма також характер її агітація на слух ця новина Френка Черчілля.
+  embed_suggestion: Not applicable - video is irrelevant to the module topic.
+- url: https://www.youtube.com/watch?v=YRxUHkbUVHs
+  channel: Klopotenko
+  title: 'ГОЛУБЦІ з ГРЕЧКОЮ та м’ясом на РІЗДВО 🎆 Євген Клопотенко #shorts'
+  relevance_score: 0.1
+  relevance_note: The video is a cooking short in Ukrainian, focused on a traditional
+    recipe, and has no direct or indirect relevance to 'Online Services' or associated
+    vocabulary.
+  transcript_excerpt: цього Різдва Нового року і я хочу щоб ми всі разом готували
+    українські автентичні страви
+  embed_suggestion: Not applicable - video is irrelevant to the module topic.
+blogs: []
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0073
+  text: "72\nНапиши смс-повідомлення мамі, татові, учительці, друзям.\nРозкажи про\
+    \ щось\nЯ прийшов до …\nСпонукай до чогось\nПрийди… Напиши…\nЗапитай про щось\n\
+    Хто? Що? Куди? Де?\nрозПовІДнІ речення\nРечення, у якому про щось розповідається\
+    \ або пові-\nдомляється, називається розповідним. У кінці розпо-\nвідного речення\
+    \ ставиться крапка     або знак оклику.\nВизнач, яке речення в кожному рядку є\
+    \ розповідним. Поясни \nчому. Спиши розповідні речення. \n1\nДіти пішли \nдо зоопарку.\n\
+    Куди пішли \nдіти?\nДіти, йдіть \nдо зоопарку"
+  section_title: Сторінка 72
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0018
+  text: "17\nмоноЛоГ І ДІаЛоГ\nСлово монолог складається з двох \nчастин: моно —\
+    \ один \n і лог — мов-\nлення. Коли ти розповідаєш комусь про \nщось, описуєш\
+    \ предмет, розмірковуєш \nнаодинці — це монолог.  \nДіалог — це розмова двох\
+    \ (або кількох) осіб. Слово \nдіалог складається з двох частин: діа — два \n\
+    \ і лог — \nмовлення. Коли ти спілкуєшся з другом/подругою, ви гово-\nрите по\
+    \ черзі, тобто обмі нюєтеся репліками.\nА я читаю \nказку «Коти горошко».\n\
+    Я прочитала \nказку «Рукавичка».\nрепліка\nрепліка\nХто з казкови"
+  section_title: Сторінка 17
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-golub-2022_s0136
+  text: "137\n2   Як правильно будувати діалог?\n3   Коли діалог називають продуктивним,\
+    \ вдалим, гармо -\nнійним?\nВідповідно до поставлених запитань сформулюйте особисті\
+    \ \nцілі.\n330  Поміркуйте й назвіть сфери, де діалог необхідний.\nДіалог — це:\
+    \ \n  різновид прямої мови;\n  розмова двох осіб.\nДіалог складається з реплік.\
+    \ Кожну репліку пишемо \nз нового рядка і з великої букви.\nПеред репліками ставимо\
+    \ тире.\nЯкщо репліку супроводжують слова автора, то стави-\nмо ті самі розділові\
+    \ знаки, що й при прямій мові, але \n"
+  section_title: Сторінка 137
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0024
+  text: "• прикликати урожай, успіх, лад у сім’ї;\n• просити долю для дитини, здоров’я,\
+    \ красу, щастя;\n• закохати в себе хлопця / дівчину;\n• відвернути небажане (нелюба,\
+    \ смерть, хворобу);\n• зупинити кров, ворогів, силу негативного впливу, ви-\n\
+    качати страх тощо.\nЗамовляння промовляли вголос. Вважалося, що чим емо-\nційніше\
+    \ сказати замовляння, тим більша його сила впливу.\nЗапитання і завдання\n 1.\
+    \ \nПоясни, які тексти називають замовляннями. Чому вони \nвиникли?\n 2. \nПрочитай\
+    \ замовляння. Визнач, до яких тематичн"
+  section_title: Сторінка 25
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+- score: 0.09090909361839294
+  chunk_id: 5-klas-ukrmova-golub-2022_s0240
+  text: "241\n542   Прочитайте текст. Назвіть слова, словосполучення і речення, \n\
+    зміст яких можна передати за допомогою міміки, жестів. Чи до-\nпомагають ці засоби\
+    \ передати зміст тексту?\n— Як ти думаєш, Ярку, а Миколай є?\n— Не знаю, напевно.\
+    \ Я колись думав, що нема, а тепер \nдумаю, що таки є. А як ти гадаєш, Марто?\n\
+    — Я думаю, що є. У нас у школі Міланка сказала, що \nМиколая нема і то все батьки\
+    \ купують, усі ті подарунки. Але \nЛука сказав, що то все неправда і Миколай є,\
+    \ бо він його раз \nбачив. А я Луці вір"
+  section_title: Сторінка 241
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

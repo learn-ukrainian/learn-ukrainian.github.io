@@ -1,10 +1,10 @@
-PASS: pipeline istorio 35
+FAIL: pipeline istorio 35
 
   Module:   akt-zluki
   Track:    istorio
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T18:18:25Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:10:04Z

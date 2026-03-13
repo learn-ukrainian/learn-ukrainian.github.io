@@ -1,10 +1,10 @@
-PASS: pipeline istorio 107
+FAIL: pipeline istorio 107
 
   Module:   syntez-ekonomichna-kolonizatsiia
   Track:    istorio
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T18:18:33Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:21:22Z

@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "in-order-to",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T15:56:50Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T15:56:50Z",
+      "task_id": "v5-in-order-to-pA",
+      "mode": "full"
+    }
+  }
+}

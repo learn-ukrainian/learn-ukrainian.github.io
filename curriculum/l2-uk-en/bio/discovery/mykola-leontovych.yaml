@@ -1,0 +1,181 @@
+discovered_at: '2026-03-12T23:32:26.466141+00:00'
+query_keywords:
+- 'Микола Леонтович: Автор «Щедрика»'
+- Ранні роки та освіта
+- 1877-1903
+- Педагогічна діяльність
+- 1903-1917
+- Революційні роки
+- 1917-1921
+- Загибель та пам'ять
+- '1921'
+- Світове визнання «Щедрика»
+- 'Analyze the life and legacy of микола леонтович: автор «щедрика»'
+- Evaluate the contributions of пісня, що підкорила світ
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=aZSD1lcqhn8
+  channel: Реальна Історія
+  title: Стерта правда про Щедрик. Реальна історія з Акімом Галімовим
+  relevance_score: 0.95
+  relevance_note: This video directly discusses the history and global recognition
+    of 'Щедрик' and Mykola Leontovych's role, including its connection to Ukrainian
+    independence and the historical context of the Ukrainian People's Republic. The
+    channel 'Реальна Історія' is a highly credible source.
+  transcript_excerpt: Це історія про найзнаменитішу у світі різдвяну пісню Carol of
+    the Bells або Щедрик... в обробці композитора Миколи Леонтовича... як Щедрик став
+    не просто різдвяною піснею а символом боротьби українців за незалежність.
+  embed_suggestion: After section Світове визнання «Щедрика» — provides in-depth historical
+    context for the global reach of the song.
+- url: https://www.youtube.com/watch?v=nPjZGdcy-aQ
+  channel: Комік Історик
+  title: 'Щедрик: історія українського хіта №1'
+  relevance_score: 0.9
+  relevance_note: This video explores the history of 'Щедрик' and its connection to
+    Mykola Leontovych and the Ukrainian Republican Chapel's international tours, reinforcing
+    the theme of the song's global recognition.
+  transcript_excerpt: Запис української народної щедрівки Щедрик виконує республіканська
+    хорова капела Української Народної Республіки музика Миколи Леонтовича 1922 рік
+    гастролі в Сполучених Штатах Америки.
+  embed_suggestion: After section Світове визнання «Щедрика» — offers further details
+    on the song's journey to global fame and its historical context.
+- url: https://www.youtube.com/watch?v=uSy6mrRas-w
+  channel: Суспільне Док
+  title: Як український «Щедрик» став найвідомішою різдвяною піснею | «Щедрик проти
+    "русского міра"»
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0339
+  text: "1210  р. rnk.com.ua/107326\nМетоди інтерактивного  \nнавчання та розвитку\
+    \  \nкритичного мислення\nrnk.com.ua/107325\nПлани-схеми та \nхарактеристики \n\
+    різних форм роботи \nз  підручником\nСвятослав Ярославич \nіз родиною. Мініатюра\
+    \ \nз  «Ізборника» Святослава. 1076  р."
+  section_title: Сторінка 224
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0200
+  text: "Розвиток людства упродовж історії\n199\nЗруйнований\nвнаслідок\nросійського\n\
+    ракетного обстрілу \nМузей Григорія\nСковороди\n(7 травня 2022 р., \nс. Сковородинівка,\
+    \ \nХарківська область)\nПостать епохи: Микола Леонтович\nНайвідомішою різдвяною\
+    \ мелодією у світі вважають композицію \n«Carol of Bells» («Дзвінка колядка»).\
+    \ Цій композиції більш як 100 років, \nі народилася вона в Україні. Композитор\
+    \ Микола Леонтович (1877– \n1921 рр.) знайшов текст народної «Щедрівки» і написав\
+    \ до нього музику. \nДізнайтеся, де і ко"
+  section_title: Сторінка 199
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0372
+  text: "– \nК., 1990. 7. Шевченківський словник: У 2 т. – К., 1976–1977. 8. Світова\
+    \ велич Шевченка: У 3 т. – К., 1964."
+  section_title: Сторінка 217
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0199
+  text: '7. Шевчук В. Дорога в тисячу років. – К., 1990. 8. Драч І., Кримський С.,
+    Попович М. Григорій Сковорода. Біографічна по-
+
+    вість. – К., 1984.'
+  section_title: Сторінка 118
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0091
+  text: "64\nСинтаксис. Пунктуація\n4. Прочитайте текст і виконайте завдання. Де б\
+    \ не вчився, не працював Олександр Довженко, важко \nуявити його життя без пісні.\
+    \ У школі він співав у хорі, учився \nграти на скрипці; на ярмарках записував\
+    \ думи від кобзарів; ра-\nзом з однолітками співав пісень, коли плавав улітку\
+    \ на човнах. Народна пісня вливалася в його душу з молоком матері, \nозивалася\
+    \ співами старших братів; співами кобзарів і лірників; \nспівами дівчат і юнаків,\
+    \ що збиралися на вечорниці. Вона ози-\nвалася "
+  section_title: Сторінка 64
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5829017758369446
+  chunk_id: 6890007d_c0521
+  text: 'І. Детство и отрочество
+
+
+    II. Студенчество и юность. Первая литературная деятельность
+
+
+    III. Учительство и профессура в Киеве
+
+
+    IV. Арест, заключение, ссылка
+
+
+    V. Жизнь в Саратове
+
+
+    VI. Освобождение. Поездка за границу. Возвращение. Участие в трудах по крестьянскому
+    делу
+
+
+    VII. Избрание на петербургскую кафедру. Переезд в Петербург.
+
+
+    VIII. Студенческие смуты. Закрытие университета.
+
+
+    IX. Петербургский университет начала 1860-х годов
+
+
+    X. Поездки с ученою целью.
+
+
+    XI. Занятия Смутным временем.
+
+
+    XII. Поезд'
+  work: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+  year: 1847
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/kostomar/kos.htm
+- score: 0.5758452415466309
+  chunk_id: d77902e2_c0753
+  text: "Літ.: Світова велич\r\nШевченка, т. 1 — 3. К., 1964; Всенародна шана. К.,\
+    \ 1967.\n\nП. М. Федченко."
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.5744149684906006
+  chunk_id: 2971c499_c0925
+  text: "У петербурзький період (1900 — 1917 рр.) наукова,\r\nпубліцистична та літературна\
+    \ діяльність Лотоцького була дуже різнобічною. У\r\nзв’язку з роботою у Державному\
+    \ контролі він серйозно займався економікою та\r\nопублікував низку статей про\
+    \ аграрні відносини, дрібний кредит та кооперацію.\r\nОкремим напрямом інтересів\
+    \ Лотоцького залишалася освіта, зокрема оборона\r\nукраїнської мови у школі (С.-Петербург,\
+    \ ведомости. 1902. № 158; Вести,\r\nвоспитания. 1906. № 7; 1913. № 6; Рус. школа.\
+    \ 1907. № 12). Важливе міс"
+  work: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+  year: 1993
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/cultur/cult.htm

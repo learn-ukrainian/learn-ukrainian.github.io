@@ -1,0 +1,18 @@
+{
+  "track": "istorio",
+  "slug": "universaly-khmelnytkoho",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:52:42Z",
+      "task_id": "v5-universaly-khmelnytkoho-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:52:42Z",
+      "note": "merged-into-research"
+    }
+  }
+}

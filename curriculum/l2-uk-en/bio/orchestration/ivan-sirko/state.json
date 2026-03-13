@@ -3,9 +3,16 @@
   "slug": "ivan-sirko",
   "mode": "v5",
   "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:15:18Z",
+      "note": "merged-into-research"
+    },
     "research": {
-      "status": "failed",
-      "ts": "2026-03-12T07:37:42Z"
+      "status": "complete",
+      "ts": "2026-03-12T19:15:18Z",
+      "task_id": "v5-ivan-sirko-pA",
+      "mode": "full"
     }
   }
 }

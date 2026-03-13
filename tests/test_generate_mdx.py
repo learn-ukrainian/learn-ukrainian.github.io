@@ -14,8 +14,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from generate_mdx import (
@@ -24,19 +22,18 @@ from generate_mdx import (
     escape_jsx,
     fix_html_for_jsx,
     normalize_mdx,
+    parse_anagram,
     parse_cloze,
     parse_error_correction,
-    parse_frontmatter,
-    parse_quiz,
-    parse_match_up,
     parse_fill_in,
+    parse_frontmatter,
+    parse_group_sort,
+    parse_match_up,
+    parse_quiz,
     parse_translate,
     parse_true_false,
     parse_unjumble,
-    parse_group_sort,
-    parse_anagram,
 )
-
 
 # =============================================================================
 # dump_json_for_jsx
@@ -138,7 +135,7 @@ class TestParseFrontmatter:
 
     def test_unclosed_frontmatter(self):
         content = "---\ntitle: Test\nBody text"
-        fm, body = parse_frontmatter(content)
+        fm, _body = parse_frontmatter(content)
         assert fm == {}
 
     def test_empty_frontmatter(self):
@@ -506,8 +503,7 @@ class TestNormalizeMdx:
         # Should have blank line before heading
         lines = result.split("\n")
         for i, line in enumerate(lines):
-            if line.startswith("## "):
-                if i > 0:
+            if line.startswith("## ") and i > 0:
                     assert lines[i - 1].strip() == "", f"Expected blank line before heading, got '{lines[i-1]}'"
 
     def test_preserves_code_blocks(self):
@@ -521,3 +517,80 @@ class TestNormalizeMdx:
     def test_emphasis_normalization(self):
         result = normalize_mdx("Use _italic_ text\n")
         assert "*italic*" in result or "_italic_" in result
+
+
+# =============================================================================
+# YouTube embed conversion
+# =============================================================================
+
+from generate_mdx.resources import embed_youtube_video_links
+
+
+class TestEmbedYoutubeVideoLinks:
+    """Test all YouTube link formats are converted to <YouTubeVideo> components."""
+
+    def test_markdown_link(self):
+        body = '[Watch this](https://www.youtube.com/watch?v=hvB3VpcR3ZE)'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
+        assert 'url="https://www.youtube.com/watch?v=hvB3VpcR3ZE"' in result
+        assert 'label="Watch this"' in result
+
+    def test_plain_bullet_url(self):
+        body = '- Літера А: https://www.youtube.com/watch?v=hvB3VpcR3ZE'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
+        assert 'url="https://www.youtube.com/watch?v=hvB3VpcR3ZE"' in result
+        assert 'label="Літера А"' in result
+
+    def test_multiple_plain_bullet_urls(self):
+        body = (
+            '- Літера А: https://www.youtube.com/watch?v=hvB3VpcR3ZE\n'
+            '- Літера О: https://www.youtube.com/watch?v=gJFxRIPRZbI\n'
+        )
+        result = embed_youtube_video_links(body)
+        assert result.count('<YouTubeVideo') == 2
+        assert 'label="Літера А"' in result
+        assert 'label="Літера О"' in result
+
+    def test_jinja_template(self):
+        body = '{% youtubeVideo "https://www.youtube.com/watch?v=hvB3VpcR3ZE" %}'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
+
+    def test_jinja_id_template(self):
+        body = '{% youtubeVideo id="hvB3VpcR3ZE" %}'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
+
+    def test_playlist_url_not_embedded(self):
+        body = '- Full Playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3ml'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' not in result
+
+    def test_bare_url_on_line(self):
+        body = 'https://www.youtube.com/watch?v=hvB3VpcR3ZE'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
+        assert 'label="Video"' in result
+
+    def test_non_youtube_url_unchanged(self):
+        body = '- Some link: https://www.example.com/watch?v=hvB3VpcR3ZE'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' not in result
+
+    def test_url_with_params(self):
+        body = '- Video: https://youtu.be/hvB3VpcR3ZE?si=xyz123'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
+        assert '?si=xyz123' in result
+
+    def test_url_with_timestamp(self):
+        body = '- Video: https://www.youtube.com/watch?v=hvB3VpcR3ZE&t=42s'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result
+
+    def test_youtu_be_short_url(self):
+        body = '- Short: https://youtu.be/hvB3VpcR3ZE'
+        result = embed_youtube_video_links(body)
+        assert '<YouTubeVideo' in result

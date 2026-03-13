@@ -1,0 +1,74 @@
+discovered_at: '2026-03-12T18:20:13.126789+00:00'
+query_keywords:
+- Умовний спосіб, частки та вигуки
+- Introduction — Conditional Mood Deep Dive
+- Модальні частки
+- Modal Particles
+- Заперечні та підсилювальні частки
+- Negative and Emphatic Particles
+- 'Вигуки: емоційні та спонукальні'
+- 'Interjections: Emotional and Imperative'
+- Practice — Mood, Particles, and Style
+- the conditional mood with correct particle placement
+- modal, negative, and emphatic particles by function
+- interjections appropriately in written and spoken Ukrainian
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0009
+  text: "9\nСклад слова.  \nНаголошені та ненаголошені склади\n\t Що «зайве»? Поділи\
+    \ слова на склади. Визнач \nнаголошений склад.\n        \n        \n        \n\
+    \t Який у тебе сьогодні настрій? Вибери."
+  section_title: Сторінка 11
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0156
+  text: "Пропуск членів речення може \nробити спілкування зручним, жвавим, невимушеним.\
+    \ Особливості речень\nПропущені члени речення\nРоль у мовленні"
+  section_title: Сторінка 138
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-avramenko-2024_s0198
+  text: "178\n2.\t «Лінгвістичне спостереження». З’ясуйте роль модальних часток у\
+    \ \nмовленні. \n1.\tПрочитайте діалоги та виконайте завдання.\n—\t На кого ти\
+    \ будеш учитися \nпісля школи? \n—\t На лікаря, — відповів Анд­\nрій.\n—\t На\
+    \ кого ти будеш учитися \nпісля школи?\n—\t Тільки на біологиню, — від-\nповіла\
+    \ Яна.\nА.\t Хто остаточно визначився з майбутнім фахом — Андрій чи Яна?\nБ.\t\
+    \ Завдяки якому слову ви зробили такий висновок?\nЧастка — службова частина мови,\
+    \ що надає словам чи реченням до-\nдаткових відтінків у значенні "
+  section_title: Сторінка 181
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0416
+  text: Поясніть розділові знаки в тексті. Випишіть мовні засоби розмовного стилю,
+    схарактеризуйте їх.
+  section_title: Сторінка 235
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

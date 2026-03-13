@@ -2,89 +2,102 @@
 
 ## State Standard Reference
 
-**§4.1.1 (B1)**: Lines 1992–2013 — *Голосні та приголосні звуки* (vowel and consonant sounds). The section covers:
-- Чергування голосних [о], [е] з [і]; [о]/[е] з фонетичним нулем
-- Чергування приголосних [г], [к], [х] з [ж], [ч], [ш] та [з'], [ц'], [с'] (declension-triggered)
-- Чергування [д]–[дж], [с]–[ш], [к]–[ч], [т]–[ч] (verb conjugation)
-- **Спрощення у групах приголосних**: виїзд–виїзний, честь–чесний, щастя–щасливий
+**§4.1.1** (B1 level, lines 1992–2013): The literal text at these coordinates covers **чергування** (sound alternations) — vowel alternations о/і, е/і; consonant alternations г/к/х → ж/ч/ш; спрощення in consonant groups. Assimilation (*асиміляція*) is named in the mapping description ("Consonant clusters, assimilation, simplification") but is not listed as a separate subsection heading in the Standard text itself.
 
-**Mapping description**: "Consonant clusters, assimilation, simplification; alternations (о/і, е/і, о/е)"
+**Alignment note**: The State Standard integrates assimilation processes within the broader phonetics competency at B1. The primary authoritative textbook source is **Карaman, Grade 10, §15** ("Асимілятивні й дисимілятивні процеси в групах приголосних"), which gives the full pedagogical treatment. The module aligns with §4.1.1 by teaching learners to correctly apply assimilation rules as part of consonant cluster behaviour.
 
-**Alignment note**: The actual B1 §4.1.1 text focuses on *чергування* and *спрощення*. Assimilation (*уподібнення*) was formally introduced at A2 §4.1.1 ("consonant assimilation, voiced/voiceless"). This module's role at B1 is to **systematize and deepen** assimilation knowledge into its three types (за дзвінкістю, за м'якістю, за місцем творення), and to extend into connected speech — the territory the A2 standard covers only partially. The plan's scope is well-grounded; the -ться pronunciation section directly serves the oral competence objectives of the B1 standard.
+**Quoted requirement from the Standard (lines 2012–2013)**:
+> "спрощення у групах приголосних: виїзд – виїзний, честь – чесний, тиждень – тижня, щастя – щасливий."
+
+This confirms that consonant cluster processes are in scope at B1. Assimilation (уподібнення) is the broader category of which simplification is one sub-type.
 
 ---
 
 ## Vocabulary Frequency
 
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| вимова | 1,931 (0.95/M) — GRAC | правильна ~, чітка ~, особливості ~и, норми ~и |
-| дзвінкий | 2,297 (1.13/M) — GRAC | ~ приголосний, ~ звук, дзвінкі та глухі |
-| звук | high core — VESUM ✓ | голосний ~, приголосний ~, твердий ~, м'який ~ |
-| приголосний | high — VESUM ✓ | твердий/м'який ~, дзвінкий ~, групи ~их |
-| голосний | high — VESUM ✓ | ~ звук, чергування ~их |
-| асиміляція | 941 (0.46/M) — GRAC | ~ за дзвінкістю, регресивна ~, прогресивна ~ |
-| уподібнення | 683 (0.34/M) — GRAC | ~ приголосних, вимовляти з ~м (synonym for асиміляція in textbooks) |
-| чергування | specialized — VESUM ✓ | ~ звуків, ~ голосних, ~ приголосних |
-| спрощення | specialized — VESUM ✓ | ~ приголосних, ~ у групах |
-| милозвучність | 196 (0.10/M) — GRAC | принцип ~ності, ~ мови, ~ українського мовлення |
-| глухий | high — VESUM ✓ | ~ приголосний, дзвінкий і ~ |
-| скоромовка | 100 (0.05/M) — GRAC | вимовляти ~у, ~и для тренування |
-| наголос | high — VESUM ✓ | ставити ~, рухомий ~, ~ у словах |
+| Word | Frequency (GRAC) | IPM | Key collocations / Notes |
+|------|-----------------|-----|--------------------------|
+| вимова | 1,931 | 0.95/M | правильна вимова, чітка вимова, норми вимови — **high core frequency** |
+| дзвінкий | 2,297 | 1.13/M | дзвінкий приголосний, дзвінкий звук — **highest frequency of the set** |
+| глухий | (not queried separately) | — | глухий приголосний — common adjective with multiple meanings |
+| уподібнення | 683 | 0.34/M | уподібнення за дзвінкістю, уподібнення приголосних — native term for assimilation |
+| асиміляція | 941 | 0.46/M | асиміляція приголосних, часткова/повна асиміляція — technical term |
+| милозвучність | 196 | 0.10/M | принцип милозвучності, милозвучність мови — specialized cultural term |
+| скоромовка | 100 | 0.05/M | тренувати скоромовку — very low frequency, pedagogical tool only |
+| наголос | (verified) | — | ставити наголос, наголос на складі |
+| чергування | (verified) | — | чергування звуків, чергування голосних |
+| спрощення | (verified) | — | спрощення приголосних, спрощення в групах |
 
-**All 13 vocabulary items verified in VESUM ✓**
-
-**Textbook term note**: Ukrainian school textbooks use **уподібнення** (Grade 5 Golub, Litvinova, Zabolotnyi — tier 1 NUS) as the primary term alongside/instead of **асиміляція** (Grade 10 Karaman — tier 2). At B1, both terms should be introduced and linked.
+**All 13 vocabulary_hints words verified in VESUM: 13/13 found.**
 
 ---
 
 ## Cultural Hooks
 
-1. **Евфонія як системна риса**: Wikipedia (uk) — *"Евфонія або милозвучність — поняття, що позначає привабливість і виразність звуків і звукосполучень мови або мовлення."* Grade 10 Glazova textbook defines it as: *"Одна з характерних рис української літературної мови — її милозвучність."* Grade 10 Karaman adds: *"У фонетичному арсеналі кожної мови є свої засоби евфонічності. В українській мові це спрощення в групах приголосних... наявність слів із приставним приголосним і без нього, що дає змогу вибору (вогонь — огонь, вуста — уста), варіанти префіксів під- — піді-, з- — зі- — із-, від- — віді-."* → Strong anchor: Ukrainian's euphony mechanisms are **structural, systematic, purposeful** — not ornamental.
+1. **Милозвучність as a defining national trait** — Ukrainian textbooks (Karaman Grade 10 §19; Glazova Grade 10 §15) explicitly frame *милозвучність* as "одна з характерних рис української літературної мови." The Karaman textbook defines it as: *"якість усного мовлення, яка проявляється в його мелодійності, інтонаційній виразності, у відсутності звукосполучень, які були б неприємні для слуху."* The assimilation rules are part of this system — they are *how* Ukrainian achieves melodic flow. Sources: Karaman §19 p.58; Glazova §15 p.68.
 
-2. **Асиміляція як живий фонетичний процес**: Wikipedia (uk) — *"Асиміляція або уподібнення — у мовознавстві, уподібнення звука до сусіднього як в умовах його творення (артикуляції), так і в акустичному плані."* Ukrainian assimilation is predominantly **regressive** (наступний впливає на попередній), which is a consistent structural direction — e.g., просьба → [проз'ба], боротьба → [бород'ба]. This directionality can be framed as a rhythmic principle of forward flow in speech.
+2. **Ukrainian preserves word-final voiced consonants** — Unlike Polish, German, and some other language systems, Ukrainian literary norm maintains voiced consonants at word end: *хліб* stays [хл'іб], *дід* stays [дід], *мороз* stays [мороз]. This is confirmed by Grade 5 Litvinova (p.144): *"Дзвінкі приголосні в кінці слова [зберігаються]."* This is a phonological identity marker: Ukrainian's voiced endings give it a fuller, more resonant sound. Grade 2 Kravcova reinforces this from the earliest stages of native-speaker instruction.
 
 ---
 
 ## Common Learner Errors
 
-1. **Final devoicing** (хліб → \*[хл'іп], дід → \*[діт]) — applying a consonant-weakening pattern common in German, Polish, and other West Slavic languages. Ukrainian **preserves voiced consonants at word boundaries**: хліб = [хл'іб], дід = [дід], мороз = [мороз]. This is a strong identity feature. Drill with minimal pairs: хліб/пліт, код/кіт, плід/пліт.
+1. **Devoicing word-final consonants** → *хліб* [хліп], *дід* [діт], *мороз* [морос] — **Why it happens**: Strong interference from languages where final devoicing is obligatory (German, Polish, also present in some regional speech). Ukrainian literary norm strictly preserves final voicing. Grade 5 Litvinova explicitly calls this out. Drill minimal pairs at word ends.
 
-2. **-ться mispronunciation** — pronouncing it as [т'с'а] (two separate sounds) or hard [ца] instead of the correct [ц'ц'а]. Grade 4 Zaharijchuk textbook explicitly teaches this: *прокидається = [прокидайец':а], навчаєшся = [навчайес':а]*. The assimilation ть+ся → [ц'ц'] is fully predictable and must be automated through drilling high-frequency reflexive verbs.
+2. **Pronouncing -ться as [т'с'а] or hard [ца]** → Correct: [ц'ц'а] (geminate soft affricate) — **Why it happens**: Learners read the orthographic sequence *т+ь+с+я* and pronounce each element separately, or apply voiceless reduction to get [ца]. The Grade 4 Zahariichuk textbook shows the explicit transcription: *прокидається* → [прокидайец':а]; *хлюпається* → [хлупайец':а]. This is the single highest-frequency assimilation in daily speech.
 
-3. **Softness assimilation inconsistency** — failing to soften the preceding consonant before a soft consonant: pronouncing [світ] instead of [с'в'іт], [знімок] as hard instead of [з'н'імок]. The softness propagates leftward but only within certain consonant class pairs — learners need explicit rules for which pairs trigger it.
+3. **Failing to apply softness assimilation in consonant clusters** → *пісня* pronounced [п'іс-н'а] (break) instead of [п'іс'н'а] (flowing) — **Why it happens**: Learners treat orthographic word boundaries as phonetic boundaries, not realizing the leftward propagation of softness. Grade 5 Zabolotnyi (p.102): *тверді приголосні перед м'якими уподібнюємо до парних м'яких: пісня [п'іс′н′а].*
 
 ---
 
 ## Cross-References
 
-- **Builds on**: b1-05 (Ready for Immersion) — this is the first full-immersion B1.1 module; assimilation knowledge from A1–A2 (vowel harmony devices у/в, і/й) and A2 §4.1.1 (basic voiced/voiceless assimilation)
-- **Prepares for**: b1-007 (Phonetics: Alternation & Simplification — connects_to field) — the plan explicitly previews the next module as treating simplification and alternation, leaving those for b1-07
+- **Builds on**: `b1-05` (ready-for-immersion — the last bridge module; learners transition to full Ukrainian immersion); implicitly also `a2` phonetics (§4.1.1 A2: "consonant assimilation, voiced/voiceless" introduced at A2)
+- **Prepares for**: `b1-007` (phonetics-alternation-simplification — covers чергування о/і, е/і and спрощення; the plan's `connects_to` field lists this as the direct continuation)
 
 ---
 
-## Multimedia Resources
+## Textbook Pedagogical Approach (from RAG)
 
-- (none encountered — no web searches conducted)
+The following textbook structures were found relevant:
+
+- **Karaman Grade 10, §15** (tier 2, score 0.50): Full academic treatment — defines асиміляція vs дисиміляція, progressive vs regressive, gives a table of types (за дзвінкістю/глухістю, за м'якістю/твердістю, за місцем і способом творення). Provides practical exercise: "запишіть слова, у яких спостерігається асиміляція."
+- **Karaman Grade 10, §17** (tier 2): Lists practical pronunciation rules for consonants, including *боротьба, вокзал, сміється, зшити, зчіплювач* — directly useful as model words.
+- **Golub Grade 5, §Уподібнення** (tier 1): Simplified table format suitable for visual learners — shows глухий→дзвінкий before voiced; дзвінкий→глухий before voiceless (NOTE: only in the listed exceptions); soft assimilation: *милість* → [мел'іс'т'], *кузня* → [коз'н'а].
+- **Litvinova Grade 5, §Уподібнення** (tier 1): **Critical note for content writing**: Litvinova explicitly restricts devoicing to specific words (*легко, вогко, нігті, кігті, дьогтю*) and prefixes *роз-, з-*. This is the accurate literary norm — devoicing in Ukrainian is **limited and lexically specific**, unlike in many other language systems.
+- **Zabolotnyi Grade 5** (tier 1): Confirms prefix behaviour — *роз-, без-* before voiceless: can be voiced OR voiceless depending on speech tempo. This is pedagogically important nuance.
+
+---
+
+## Wikipedia Phonetics Data (Ukrainian)
+
+Ukrainian has 38 phonemes: 6 vowels, 32 consonants (+ 13 in peripheral subsystem). The assimilation sections confirm:
+- **Voicing assimilation** (section 6): Regressive — voiceless consonant becomes voiced before voiced consonant (in word-medial positions primarily). Devoicing is **limited** in literary Ukrainian (only вогко, легко, кігті, нігті and prefixes роз-/з- before voiceless). **Critical for content**: Do NOT teach devoicing as a general rule the way some languages do.
+- **Softness assimilation** (section 7): Medial position only; тверді before м'які/пом'якшені are softened; свистячі also soften before напівпом'якшені.
+- **Place assimilation** (section 8): Regressive — свистячі before шиплячі become шиплячі (зшити → [шшити]); шиплячі before пом'якшені свистячі reverse; проривні [т], [д] before африкати.
 
 ---
 
 ## Notes for Content Writing
 
-- **Two term system**: always pair *уподібнення* and *асиміляція* on first introduction; Grade 5 tier-1 textbooks prefer *уподібнення*, Grade 10 preferred *асиміляція*. Use *уподібнення* as the everyday Ukrainian term, *асиміляція* as the academic/Latin-origin term.
-- **Regressive dominance**: Ukrainian assimilation is overwhelmingly regressive. Frame the progressive vs regressive distinction briefly but anchor on regressive as the default direction.
-- **Grade 10 Karaman taxonomy** (tier 2, confirmed) lists three types: за дзвінкістю/глухістю, за м'якістю/твердістю, за місцем і способом творення — exactly matching the plan's sections. This taxonomy is safe to use as the structural backbone.
-- **No final devoicing — decolonized framing**: frame this as *"Ukrainian preserves voiced consonants at all word positions"* and use German or Polish as the comparison point for interference, NOT any East Slavic language.
-- **-ться section** is the highest-frequency daily application of assimilation. Grade 4 evidence confirms this rule is taught explicitly in schools — the transcriptions [цʹ:] confirm the geminate palatal affricate pronunciation. Drill words: сміється, навчається, називається, знаходиться, здається, зустрічається.
-- **Скоромовки**: low corpus frequency (100/0.05M) confirms these are specialized pedagogical tools, not everyday lexis — appropriate for the practice section, not for main vocabulary load.
-- **State Standard gap**: The B1 §4.1.1 standard text (lines 1992–2013) is mostly about *чергування* (alternation), not assimilation per se. The assimilation content justification comes from the mapping description and from A2 expansion. When citing the standard, reference the mapping's description ("Consonant clusters, assimilation, simplification") rather than quoting the raw text, to avoid misrepresentation.
-- **Immersion rule**: This is B1.6 — full immersion (100%). No English prose. English only in vocabulary table translation column.
+1. **Immersion is 100% from M06**: This is module 6 — full Ukrainian immersion starts here. No English in prose or callouts. English only in vocabulary table translations. Plan's immersion field: 75–100% Ukrainian; mapping confirms `full_immersion_start: 6`.
 
+2. **Уподібнення vs асиміляція**: Use both terms side by side. *Уподібнення* is the native Ukrainian term; *асиміляція* is the international/Latin-origin term. Both appear in the standard lexicon. Karaman uses both.
+
+3. **Devoicing scope is NARROW**: The content must be precise — Ukrainian does NOT devoice word-final consonants as a general rule. Devoicing only applies in the limited lexical set (легко, вогко, нігті, кігті) and in prefix behaviour (роз-/без-/з- before voiceless, tempo-dependent). Do not overgeneralize.
+
+4. **-ться is the high-frequency payoff**: The [ц'ц'а] pronunciation of -ться is the highest-impact practical takeaway. Grade 4 textbooks already teach this — it has been in learners' awareness since early L1 education. For L2 learners this is genuinely new and immediately useful.
+
+5. **Minimal pairs pedagogy**: Both Litvinova Grade 5 and Karaman Grade 10 use minimal-pair tables. The content should include visual tables matching written form ↔ pronunciation, building on this established textbook pattern.
+
+6. **Скоромовки**: Very low frequency term (100 occurrences in GRAC) but standard pedagogical device in Ukrainian language teaching. Include as a practical tool for articulatory drilling, especially for -ться and сибілянти + шиплячі clusters.
+
+7. **Word count allocation**: 4000-word target. The plan's section on -ться (800 words) and Воicіng assimilation (900 words) are the weightiest — these should drive most of the content expansion.
 
 ## Resource Discovery
 
 ### Videos
-- [Фонетика: найлегше пояснення | Уподібнення звуків | НМТ 2024](https://www.youtube.com/watch?v=OCoEzjyZ2fo) (Repainted Fox) — The video directly addresses 'Фонетика' (Phonetics) and 'Уподібнення звуків' (Assimilation of sounds), which is the module's core topic. The transcript also discusses general pronunciation rules and vowel changes, a foundational concept for assimilation.
+- [Фонетика: найлегше пояснення | Уподібнення звуків | НМТ 2024](https://www.youtube.com/watch?v=OCoEzjyZ2fo) (Repainted Fox) — The video explicitly covers phonetics and the assimilation (уподібнення звуків) concept, which is the module's main topic. The excerpt focuses on vowel reduction/approximation, a key aspect of sound changes in Ukrainian.
 
 ### Textbook References (RAG)
 

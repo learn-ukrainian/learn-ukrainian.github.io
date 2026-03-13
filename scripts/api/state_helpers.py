@@ -9,12 +9,11 @@ import json
 import re
 import sqlite3
 import sys
-from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
 
-from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB
+from .config import CURRICULUM_ROOT, MESSAGE_DB
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -22,11 +21,10 @@ from pipeline.state import is_complete as _phase_complete
 from pipeline.state import load_state as _load_pipeline_state
 from research_quality import assess_research_compat, find_research_path
 
-from .review_parsing import extract_review_score, extract_review_verdict
-
 # Import canonical phase list from pipeline — single source of truth
 try:
-    from pipeline_v5 import PHASES as _PIPELINE_PHASES, PHASE_LABELS as _PIPELINE_PHASE_LABELS
+    from pipeline_v5 import PHASE_LABELS as _PIPELINE_PHASE_LABELS
+    from pipeline_v5 import PHASES as _PIPELINE_PHASES
 except ImportError:
     _PIPELINE_PHASES = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
     _PIPELINE_PHASE_LABELS = {}
@@ -125,7 +123,7 @@ def get_plan_slugs(track_id: str) -> list[tuple[int, str]]:
 
 class StateCtx:
     """Lightweight context for pipeline.state.load_state (needs .track, .slug, .orch_dir)."""
-    __slots__ = ("track", "slug", "orch_dir")
+    __slots__ = ("orch_dir", "slug", "track")
 
     def __init__(self, track: str, slug: str, orch_dir: Path):
         self.track = track
@@ -224,7 +222,18 @@ def parse_v5_phase_status(v5_state: dict, phase_name: str) -> dict:
     phase = v5_state.get("phases", {}).get(phase_name, {})
     if not phase:
         return {"status": "pending"}
-    return {"status": phase.get("status", "pending"), "ts": phase.get("ts")}
+    result = {"status": phase.get("status", "pending"), "ts": phase.get("ts")}
+    # Executor provenance (new structured format)
+    if phase.get("executor"):
+        result["executor"] = phase["executor"]
+    # Backward compat: migrate legacy ad-hoc agent/model to executor
+    elif phase.get("agent") or phase.get("model"):
+        result["executor"] = {
+            "type": "llm",
+            "agent": phase.get("agent", "unknown"),
+            "model": phase.get("model", "unknown"),
+        }
+    return result
 
 
 def parse_v3_phase_status(v3_state: dict, phase_key: str) -> dict:

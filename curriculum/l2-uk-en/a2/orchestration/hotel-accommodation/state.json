@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "hotel-accommodation",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T17:45:05Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T17:45:05Z",
+      "task_id": "v5-hotel-accommodation-pA",
+      "mode": "full"
+    }
+  }
+}

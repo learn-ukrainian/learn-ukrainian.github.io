@@ -1,0 +1,18 @@
+{
+  "track": "istorio",
+  "slug": "litopys-samovidtsia",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T00:39:46Z",
+      "task_id": "v5-litopys-samovidtsia-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T00:39:46Z",
+      "note": "merged-into-research"
+    }
+  }
+}

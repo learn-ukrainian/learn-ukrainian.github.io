@@ -1,0 +1,134 @@
+discovered_at: '2026-03-12T17:39:19.515246+00:00'
+query_keywords:
+- Суспільство та політика
+- Політичні інституції та влада
+- Political Institutions & Power
+- Громадянське суспільство та історія
+- Civil Society & History
+- Демократичний процес та дискурс
+- Democratic Process & Discourse
+- Право, закон та громадянські права
+- Law, Legislation & Civil Rights
+- civic and political vocabulary words in context
+- democratic processes and institutions
+- natural collocations with political vocabulary
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=CTScE1XNPh0
+  channel: Repainted Fox
+  title: '#110 Incomprehensible. Taras Prokhasko'
+  relevance_score: 0.2
+  relevance_note: The video discusses Ukrainian literature, a specific author (Taras
+    Prokhasko), and a podcast exploring psychology and worldview through literary
+    texts. This topic is unrelated to the module's focus on society, politics, institutions,
+    civil rights, or democratic processes, even though it's in Ukrainian.
+  transcript_excerpt: Привіт. Ви дожили до фінального випуску 11-го сезону подкасту
+    Перефарбований лис. ... це Тарас Прохасько. Дуже цікаво, як ми поступово запроваджуємо
+    сучасну літературу в наш подкаст, коли ми продовжуємо читати тексти там X століття,
+    XX століття і, е, коли вплітаються туди тексти абсолютно наших сучасників.
+  embed_suggestion: Not suitable for embedding in this module due to irrelevance.
+- url: https://www.youtube.com/watch?v=jVKmoqjXuG4
+  channel: Repainted Fox
+  title: 'bonus #21 Село і місто. Юля Тимошенко'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=BBtm-dH14oE
+  channel: Klopotenko
+  title: 'Сенсація! Євген Клопотенко отримав ляща #Shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=FD4FyflQGtE
+  channel: Ukrainian Lessons
+  title: Як народжувалось громадянське суспільство в Україні
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=MXwo5D4ZVJs
+  channel: Ukrainian Lessons
+  title: 'Тема 6. Сутність політики: її різновиди і вплив на суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=WYcqStEVxv8
+  channel: Ukrainian with Olha
+  title: Як зароджується громадянське суспільство?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0101
+  text: "98\nЗАПИТАННЯ І ЗАВДАННЯ\nI.\nЗнаю й систематизую нову інформацію\nС а м\
+    \ о о ц і н ю в а н н я\nОцініть свої успіхи в опануванні теми «Влада і суспільство\
+    \ в держа-\nвах Стародавнього Сходу». Дайте відповіді на запитання.\n?\nПрекрасно\n\
+    Добре\nНічого \nне зрозуміло\nЯк було організоване управління \nдавніми державами?\n\
+    Якими були характерні риси влади \nправителів давніх держав Сходу?\nЯкою була\
+    \ соціальна структура \nсуспільств давніх держав Сходу?\nЯк поява писаних законів\
+    \ впливала \nна розвиток держав Стародавньо"
+  section_title: Сторінка 100
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0307
+  text: "Грома5дський діало5г (соціол.) — механізм пошуку шляхів вирішення су-\nспільних\
+    \ проблем за участі зацікавлених представників різних секторів су-\nспільства:\
+    \ влади, бізнесу та громадськості. Громадя5нське суспі5льство (соціол.) — сукупність\
+    \ недержавних організацій, \nякі представляють волю та інтереси громадян. Елементами\
+    \ г. с. є різні об’єд-\nнання (професійні, творчі, спортивні та ін.), що охоплюють\
+    \ усі сфери люд-\nського життя."
+  section_title: Сторінка 212
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1111111119389534
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0102
+  text: "Обговоріть, \nякими були особливості \nструктури феодального \nсуспільства\
+    \ й  управління \nдержавою в  середньовічній \nЗахідній і  Центральній Європі.\
+    \ ОПРАЦЮВАВШИ ПАРАГРАФ, \nВИ  ДІЗНАЄТЕСЬ:\n\x84\n\x84\nпро політичний устрій Русі\
+    \ \nнаприкінці X  — у  першій \nполовині XI  ст.;\n\x84\n\x84\nякими були особливості\
+    \ \nстановища представників різних \nверств населення;\n\x84\n\x84\nпро сутність\
+    \ суспільних відносин \nу  Русі;\n\x84\n\x84\nпро стан розвитку господарства \n\
+    й  торгівлі; \n\x84\n\x84\nщо таке «імперія», «князівська \nрада», «духовенство»,\
+    \ «дом"
+  section_title: Сторінка 71
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0300
+  text: "217\nСловничок термінів \x1F\nГромадя5нське суспі5льство (соціол.) — сукуп-\n\
+    ність недержавних організацій, які представ-\nляють волю та інтереси громадян.\
+    \ Елементами \nгромадянського суспільства є  різні об’єднан-\nня (професійні,\
+    \ творчі, спортивні та ін.), що \nохоплюють усі сфери суспільного життя. Деба5ти\
+    \ (рит.)  — заздалегідь організоване \nпублічне обговорення питань, за якого учас-\n\
+    ники викладають власні ідеї, оцінки, погляди \nна вирішення важливих проблем.\
+    \ Мета учас-\nників дебатів — переконати ауди"
+  section_title: Сторінка 217
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "communication-channels",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:07:10Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:07:10Z",
+      "task_id": "v5-communication-channels-pA",
+      "mode": "full"
+    }
+  }
+}

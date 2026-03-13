@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T09:39:43Z",
+      "ts": "2026-03-12T21:21:04Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T09:39:43Z",
+      "ts": "2026-03-12T21:21:04Z",
       "task_id": "v5-motion-patterns-other-verbs-pA",
       "mode": "full"
     }

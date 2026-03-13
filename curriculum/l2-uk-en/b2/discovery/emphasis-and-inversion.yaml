@@ -1,0 +1,92 @@
+discovered_at: '2026-03-12T16:54:13.846161+00:00'
+query_keywords:
+- Емфаза та інверсія
+- Word Order in Ukrainian
+- 'Актуальне членування речення: Тема та Рема'
+- Topic-Comment Structure
+- Емфатичний порядок та логічний наголос
+- Emphatic Order and Logical Stress
+- Інверсія та стилістичні ефекти
+- Inversion and Stylistic Effects
+- Лексичні та граматичні засоби виділення
+- Lexical and Grammatical Tools for Highlighting
+- Корекція та Синтез
+- Correction and Synthesis
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  title: Синтаксис української мови
+  source: теоретичні основи
+  relevance_score: 1.0
+  topics: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0266
+  text: '. 164
+
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО У 8-му КЛАСІ
+
+    § 80. Словосполучення і речення. Головні та другорядні члени речення . . . . .
+    . . . . . . 168
+
+    § 81. Односкладне речення. Неповне речення . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 170
+
+    § 82. Розділові знаки в простому ускладненому реченні . . . . . . . . . . . .
+    . . . . . . . . . . . . 172
+
+    Словники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . 1'
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0242
+  text: Визначте усно члени речення в останньому реченні. ЗВЕРНІТЬ УВАГУ! Розділові
+    знаки
+  section_title: Сторінка 203
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0266
+  text: "187\nСинтаксичні одиниці в різних стилях\nЯкщо порядок слів у реченні збігається\
+    \ з порядком слів у словосполученні, то він є пря-\nмим. Якщо порушується, маємо\
+    \ інверсію — зворотний порядок слів (від латин. іnversio — \nперестановка, переміщення),\
+    \ тобто порушення прямого порядку слів: Каченята дикі пла-\nвали спокійно в маленькому\
+    \ ставку. Інверсію вживають, щоб виокремити найважливіше слово в повідомленні,\
+    \ наприклад: \nПишу план я. План я пишу. В усному мовленні таку роль відіграє\
+    \ логічний наголос, а в"
+  section_title: Сторінка 187
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0077
+  text: А. Випишіть речення з непрямим порядком слів. Б. Підкресліть інверсовані слова
+    відповідно до їхньої синтаксичної ролі.
+  section_title: Сторінка 64
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1111111119389534
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0194
+  text: '2. Для виділення членів речен­ня ви­
+
+    Інтонація
+
+    ЗВЕРНІТЬ УВАГУ!'
+  section_title: Сторінка 164
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

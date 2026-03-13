@@ -1,0 +1,212 @@
+discovered_at: '2026-03-13T00:31:07.391960+00:00'
+query_keywords:
+- 'Синтез: Методи роботи з літописами'
+- Порівняння джерел
+- Методологічний інструментарій
+- Типові проблеми і рішення
+- Практикум
+- Від Русі до козацтва
+- 'Analyze the causes and consequences of синтез: методи роботи з літописами'
+- Evaluate the historical significance of що ми вивчили
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0330
+  text: ". . . . . . . . . . . . . . . . . . . . . . 193\n§ 45 \nВимоги до вживання\
+    \ синтаксичних одиниць у різних стилях  . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . 202\n \nЗапитання і завдання для самоконтролю . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 205"
+  section_title: Сторінка 222
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0010
+  text: '. . . . 261
+
+    Орфографія. Графіка . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 263
+
+    Синтаксис. Пунктуація . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 266
+
+    СЛОВНИК ТЕРМІНІВ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . 270
+
+    СКЛАДНІ ВИПАДКИ НАГОЛОШУВАННЯ . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . 276
+
+    ПІДКАЗКИ  . . . . . . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 5
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5678244233131409
+  chunk_id: feaa5fa7_c0916
+  text: "Головні видання джерел:\r\n»Полное собрание русских летописей«, зокрема томи\
+    \ I (Лаврентіївський літопис),\r\nII (Іпатський літопис), XVII (т. зв. »західньоруські«\
+    \ літописи); »Летопись по\r\nИпатьевскому списку« (вид. Петербурзької Археографічної\
+    \ Комісії); »Русская\r\nИсторическая Библиотека« (вид. Петербурзької Археографічної\
+    \ Комісії); акти »Литовської\r\nметрики»; »Акты, относящиеся к истории Западной\
+    \ России«, томи I — V; »Акты,\r\nотносящиеся к истории Южной и Западной России«,\
+    \ томи I — XV; »Архив Юго-Зап"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5596212148666382
+  chunk_id: 1af78606_c0212
+  text: "Літ.: Фінкель О. М.\r\nТеорія і практика перекладу. X., 1929; Кундзіч О.\
+    \ Слово і образ. К., 1966;\r\nКовганюк С. Практика перекладу (З досвіду перекладача).\
+    \ К., 1968; Коптілов В.\r\nАктуальні питання укр. худож. перекладу. К., 1971;\
+    \ Коптілов В. Першотвір і\r\nпереклад. Роздуми і спостерження. К., 1972; Рильський\
+    \ М. Мистецтво перекладу.\r\nСтатті, виступи, нотатки. К., 1975; Зорівчак Р. П.\
+    \ Реалії і переклад. На мат-лі\r\nангломов. перекладів укр. прози. Л., 1989.\n\
+    \nС. Я. Єрмоленко.\n\nЛЕКСИКОГРАФІЯ (грец.\r\nλεξι"
+  work: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+  year: 2004
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/ukrmova/um01.htm
+- score: 0.5579395294189453
+  chunk_id: a27d9879_c0048
+  text: "56 Там же.\n\n56 Там же.— С.\r\n23—25.\n\n57 Антонович В. Источники\r\nдля\
+    \ истории Юго-Западной России // Антонович В. Лекции 1880—1881 гт.—К.,\r\n1881.—С.\
+    \ 20—27.\n\n58 Иконников В. Опы\r\nрусской историографии.— С. 1597.\n\n59 Житецкий\
+    \ П. Очерк\r\nлитературной истории малорусского наречия в XVII и XVIII вв. — К.,\
+    \ 1899.—С.\r\n116— 136.\n\n60 Дзыра Я. Летопись\r\nС. Величко и творчество Т.\
+    \ Шевченко // Автореферат дис. на соискание ученой\r\nстепени кандидата филологических\
+    \ наук.— К., 1963.— С. 4.\n\n61 Там же.\n\n62 Шевченко "
+  work: Літопис Величка
+  author: Величко С.В.
+  year: 1720
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/velichko/vel01.htm

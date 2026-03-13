@@ -1,0 +1,240 @@
+discovered_at: '2026-03-12T23:25:46.331593+00:00'
+query_keywords:
+- 'Русь та сусіди: Візантія, Польща, Угорщина'
+- Русь і Візантія
+- Русь і Польща
+- Русь і Угорщина
+- Степові сусіди
+- Скандинавія та Захід
+- Trace the history of Russo-Byzantine relations
+- Understand the role of dynastic marriages in Rus foreign policy
+- Analyze the relations with western and steppe neighbors
+- Past tense narrative
+- Diplomatic and international relations terminology
+- history
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=BRCXYuq5GbQ
+  channel: ІМТГШ
+  title: ЯК ГОВОРИТИ З ПОЛЯКАМИ ПРО ІСТОРІЮ? | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.8
+  relevance_note: This video directly addresses the complex historical relationship
+    between Poles and Ukrainians, which is a crucial aspect of understanding 'Русь
+    і Польща'. Although it focuses on later periods, the discussion of shared history,
+    common enemies (Muscovy), and historical disputes is highly relevant to the long-standing
+    dynamic between these two neighboring peoples.
+  transcript_excerpt: найслабшою ланкою стосунків між поляками і українцями є спільна
+    історія цих народів із цим висловили згоду 60% поляків у той час коли 86% українців
+    історія не хвилює насправді Тут немає нічого дивного Ми з поляками маємо спільного
+    ворога московію
+  embed_suggestion: After section 'Русь і Польща' – it delves into the historical
+    interactions and complexities between Poland and Ukraine, directly expanding on
+    the module's topic.
+- url: https://www.youtube.com/watch?v=tZtrfiESAQ0
+  channel: ІМТГШ
+  title: Що Ми Знаємо Про Словаччину? Історія Словаччини | Історія України від імені
+    Т.Г. Шевченка
+  relevance_score: 0.5
+  relevance_note: The video discusses the history of Slovakia and its geographical
+    and historical connections to Poland, a neighbor of Rus'. The mention of the legend
+    of the three brothers (Czech, Rus, Lyakh) provides a direct link to the origins
+    of Rus' and its Slavic neighbors, making it tangentially relevant to the module's
+    broader theme of Rus' and its neighbors, particularly Poland.
+  transcript_excerpt: власні гірські хребти формують Північний кордони з Польщею ви
+    звісно знаєте легенд про трьох братів чеха Руса і ляха за
+  embed_suggestion: After section 'Русь у міжнародному контексті' or 'Русь і Польща'
+    – it offers a broader regional historical context and specifically mentions the
+    Polish border and the legend of Slavic origins.
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0029
+  text: "ПЕРША \nБОЛГАРСЬКА \nДЕРЖАВА\nСЛОВ’ЯНСТВО ТА ЙОГО СУСІДИ\n\e\n\e 1.  Які\
+    \ народи і  країни в ІХ ст. були сусідами \nслов’янських племен, що жили на теренах\
+    \ \nУкраїни?  2.  Простежте, через які землі \nпроходив воєнно-торговельний шлях\
+    \ «із \nварягів у  греки». За допомогою додаткових \nджерел з’ясуйте час його\
+    \ виникнення \nі  занепаду.\nТериторії розселення \nплемен у ІХ ст.:\nТериторії\
+    \ державних \nутворень:\n«Руська земля»\nШлях «із варягів \nу греки»\nІмовірні\
+    \ межі \nтериторій, \nпідпорядкованих \nкнязю Рюрику\nВеликомо"
+  section_title: Сторінка 19
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0196
+  text: "158\nРозділ 5. РУСЬКІ ЗЕМЛІ В СКЛАДІ СУСІДНІХ ДЕРЖАВ \n(СЕРЕДИНА ХІV — ПОЧАТОК\
+    \ ХV ст.)... \aЯкі руські території було приєднано Угорським \nкоролівством, Молдавським\
+    \ та Московським \nкнязівствами\nПоміркуйте\nЩо спільного було в політиці правителів\
+    \ Угорщини, Молдавського князівства \nта Московії щодо українських земель? Крім\
+    \ Великого князівства Литовського та Королівства Поль-\nського, за землі Київської\
+    \ держави та Королівства Руського боро-\nлися сусідні держави — Угорське королівство,\
+    \ Молдавське кня-\nзі"
+  section_title: Сторінка 161
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0312
+  text: "210\n§ 25. Історія Русі в контексті епохи середніх віків (узагальнення)\n\
+    стала частиною Польського королівства, а  По-\nділля розділили між собою Польське\
+    \ королів-\nство й  Велике князівство Литовське. Наприкінці XV ст. про право на\
+    \ всі ці \nземлі заявило Велике князівство Московське, \nстверджуючи, що воно\
+    \ є спадкоємцем Русі. Після низки воєн Московська держава зуміла \nзахопити у \
+    \ Великого князівства Литовського \nЧернігово-Стародубське і  Новгород-Сіверське\
+    \ \nкнязівства. Закарпаття ще з другої половин"
+  section_title: Сторінка 211
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0310
+  text: "Які держави розділили між \nсобою українські землі на \nпочатку XVI  ст.?\
+    \ ОПРАЦЮВАВШИ ПАРАГРАФ, \nВИ  ДІЗНАЄТЕСЬ:\n\x84\n\x84\nякими були цивілізаційні\
+    \ \nздобутки русько-українського \nсуспільства в  середньовіччі;\n\x84\n\x84\n\
+    який внесок зробило русько-\nукраїнське суспільство IX—XV  ст. у  загальноєвропейську\
+    \ культурну \nспадщину;\n\x84\n\x84\nщо було спільного \nй  відмінного в  процесах\
+    \ \nі  явищах загальноєвропейської \nта  української історії \nсередньовіччя.\
+    \ Цікаві факти\nДоцільно звернути увагу на \nвіротерпимість, яка панува"
+  section_title: Сторінка 209
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0025
+  text: "Розділ І. Велике розселення слов’янства. Зміна населення причорноморських\
+    \ степів \n16\n§ 3. Слов’янські племена \nна теренах України та їхні сусіди\n\
+    1. Сусіди слов’ян на українських землях\n\e\n\e Які народи і  країни в  середні\
+    \ віки стали сусідами \nслов’янських племен, що мешкали на землях сучасної \n\
+    України? Що характеризувало їхній розвиток? Терени Центрально-Східної Європи на\
+    \ пів-\nніч від степів Причорномор’я були заселені \nслов’янськими, балтськими\
+    \ та угро-фінськими \nплеменами. Ці племена перебували"
+  section_title: Сторінка 17
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5702846646308899
+  chunk_id: c44f1207_c0586
+  text: "Ал. Добрянський в своїй статї про західнї \r\n границї Руси (див. прим. 8)\
+    \ пробував довести, що Сандеччина й Спиш належали \r\n давнїйше також до Руси.\
+    \ Його гадка була прийнята деякими росийськими \r\n дослїдниками — нпр. Барсовим\
+    \ Географія c. 284, Филевичем Борьба Польши и \r\n Литвы-Руси с. 185, але треба\
+    \ признати, що доводи його не йдуть далї деяких \r\n правдоподібностей. В XIII\
+    \ в. у всякім разї й Спіш і Сандеччина до Руси не \r\n належали, як показують\
+    \ численні польські й угорські документи: Спиш належ"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5576021671295166
+  chunk_id: c44f1207_c0387
+  text: "Про се сьвідчать виразно звістки про руську \r\n границю в Карпатах. В компіляції\
+    \ званій Угорсько-польською хронїкою, говорить \r\n ся, що границї Руси, Польщі\
+    \ й Угорщини сходили ся на верхнїй Топлї і \r\n Торицї 13). Се потверджують угорські\
+    \ грамоти XIII і XIV в. Одна (з \r\n 1277 р.), вичисляючи ряд осад в области горішньої\
+    \ Топлї, в околицї Габолтова і \r\n Бардіїва, каже, що сї осади лежать коло границь\
+    \ Угорщини з Польщею й \r\n Русию 14). Друга (з 1342 р.) говорить про замок, поставлений\
+    \ в \r\n сусїдстві "
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.553205132484436
+  chunk_id: 53691244_c0198
+  text: "Симптоматичною є орієнтація Будапешта на те, що в міру\r\nзміцнення Української\
+    \ держави вона стане активним союзником Угорщини в захисті\r\nінтересів угорської\
+    \ національної меншини, в розвитку інтеґраційних процесів у\r\nЄвропі. Міцна й\
+    \ стабільна Україна в союзі з європейськими державами зможе\r\nсильніше впливати\
+    \ на подолання несправедливостей, пов’язаних із розділом\r\nугорської нації: на\
+    \ цьому шляху співробітництво України й Угорщини має\r\nперспективу і стане ефективним.\n\
+    \nОстаннім часом Угорщина також д"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

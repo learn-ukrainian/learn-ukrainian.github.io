@@ -939,3 +939,292 @@ class TestRAGReviewTools:
         assert "Edit" in d2_tools
         assert "mcp__rag__verify_lemma" in d2_tools
         assert "mcp__rag__search_literary" in d2_tools
+
+
+# =============================================================================
+# Phase reorder: activities after review
+# =============================================================================
+
+class TestPhaseOrder:
+    """Verify the new phase sequence: activities after review."""
+
+    def test_activities_after_review(self):
+        from pipeline_v5 import PHASES
+        review_idx = PHASES.index("review")
+        activities_idx = PHASES.index("activities")
+        assert activities_idx > review_idx, (
+            f"activities ({activities_idx}) should come after review ({review_idx})"
+        )
+
+    def test_validate_before_activities(self):
+        from pipeline_v5 import PHASES
+        validate_idx = PHASES.index("validate")
+        activities_idx = PHASES.index("activities")
+        assert validate_idx < activities_idx
+
+    def test_content_before_validate(self):
+        from pipeline_v5 import PHASES
+        content_idx = PHASES.index("content")
+        validate_idx = PHASES.index("validate")
+        assert content_idx < validate_idx
+
+    def test_all_phases_have_functions(self):
+        from pipeline_v5 import PHASE_FUNCTIONS, PHASES
+        for phase in PHASES:
+            assert phase in PHASE_FUNCTIONS, f"Missing function for phase: {phase}"
+
+    def test_all_phases_have_labels(self):
+        from pipeline_v5 import PHASE_LABELS, PHASES
+        for phase in PHASES:
+            assert phase in PHASE_LABELS, f"Missing label for phase: {phase}"
+
+
+# =============================================================================
+# Activity plan extraction
+# =============================================================================
+
+class TestActivityPlanExtraction:
+    """Test extraction of activity plans from content output."""
+
+    def test_extract_activity_plans_delimiter(self):
+        raw = """Some content here
+===ACTIVITY_PLANS_START===
+- type: quiz
+  description: "Test letter recognition"
+  item_count: 8
+  focus: "Letters А-Е"
+===ACTIVITY_PLANS_END===
+More stuff"""
+        plans = _extract_delimiter(raw, "===ACTIVITY_PLANS_START===", "===ACTIVITY_PLANS_END===")
+        assert plans is not None
+        assert "type: quiz" in plans
+        assert "item_count: 8" in plans
+
+    def test_extract_activity_plans_missing(self):
+        raw = "No plans here, just content"
+        plans = _extract_delimiter(raw, "===ACTIVITY_PLANS_START===", "===ACTIVITY_PLANS_END===")
+        assert plans is None
+
+
+# =============================================================================
+# Activity plan loading
+# =============================================================================
+
+class TestLoadActivityPlans:
+    """Test _load_activity_plans helper."""
+
+    def test_load_from_activities_dir(self, tmp_path):
+        from pipeline_v5 import _load_activity_plans
+        ctx = _make_ctx(tmp_path)
+        plans_file = tmp_path / "activities" / "test-module-plans.yaml"
+        plans_file.write_text("- type: quiz\n  focus: letters\n", "utf-8")
+        result = _load_activity_plans(ctx)
+        assert "type: quiz" in result
+
+    def test_load_from_orch_dir(self, tmp_path):
+        from pipeline_v5 import _load_activity_plans
+        ctx = _make_ctx(tmp_path)
+        plans_file = ctx.orch_dir / "activity-plans.yaml"
+        plans_file.write_text("- type: fill-in\n  focus: words\n", "utf-8")
+        result = _load_activity_plans(ctx)
+        assert "type: fill-in" in result
+
+    def test_returns_empty_when_no_plans(self, tmp_path):
+        from pipeline_v5 import _load_activity_plans
+        ctx = _make_ctx(tmp_path)
+        result = _load_activity_plans(ctx)
+        assert result == ""
+
+
+# =============================================================================
+# MDX activity plans to JSX
+# =============================================================================
+
+class TestActivityPlansToJsx:
+    """Test _activity_plans_to_jsx rendering."""
+
+    def test_renders_placeholder_components(self):
+        sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+        from generate_mdx.core import _activity_plans_to_jsx
+        plans = [
+            {"type": "quiz", "description": "Test letters", "item_count": 8, "focus": "А-Е"},
+            {"type": "fill-in", "description": "Complete words", "item_count": 6},
+        ]
+        jsx = _activity_plans_to_jsx(plans)
+        assert "<ActivityPlaceholder" in jsx
+        assert 'type="quiz"' in jsx
+        assert 'type="fill-in"' in jsx
+        assert "itemCount={8}" in jsx
+        assert 'focus="А-Е"' in jsx
+
+    def test_handles_empty_plans(self):
+        from generate_mdx.core import _activity_plans_to_jsx
+        jsx = _activity_plans_to_jsx([])
+        assert jsx == ""
+
+
+# =============================================================================
+# Consultation
+# =============================================================================
+
+class TestConsultation:
+    """Test run_consultation function."""
+
+    def test_returns_false_without_failure_data(self, tmp_path):
+        from pipeline_v5 import run_consultation
+        ctx = _make_ctx(tmp_path)
+        state = {"phases": {}}
+        result = run_consultation(ctx, state)
+        assert result is False
+
+
+# =============================================================================
+# Executor provenance (#852)
+# =============================================================================
+
+class TestPhaseExecutor:
+    """Test PhaseExecutor TypedDict and helper constructors."""
+
+    def test_executor_llm(self):
+        from pipeline.state import executor_llm
+        ex = executor_llm("gemini", "gemini-3-flash-preview")
+        assert ex["type"] == "llm"
+        assert ex["agent"] == "gemini"
+        assert ex["model"] == "gemini-3-flash-preview"
+
+    def test_executor_script(self):
+        from pipeline.state import executor_script
+        ex = executor_script("discovery_search")
+        assert ex["type"] == "script"
+        assert ex["name"] == "discovery_search"
+        assert "agent" not in ex
+
+    def test_executor_deterministic(self):
+        from pipeline.state import executor_deterministic
+        ex = executor_deterministic("morphological_validator")
+        assert ex["type"] == "deterministic"
+        assert ex["name"] == "morphological_validator"
+
+    def test_executor_stored_in_state(self, tmp_path):
+        from pipeline.state import executor_llm, mark_complete
+        ctx = _make_ctx(tmp_path)
+        state = {"phases": {}}
+        mark_complete(state, "content", ctx,
+                      executor=executor_llm("gemini", "gemini-3-flash-preview"))
+        phase_data = state["phases"]["content"]
+        assert phase_data["executor"]["type"] == "llm"
+        assert phase_data["executor"]["agent"] == "gemini"
+        assert phase_data["executor"]["model"] == "gemini-3-flash-preview"
+
+    def test_executor_persisted_to_json(self, tmp_path):
+        from pipeline.state import executor_llm, load_state, mark_complete
+        ctx = _make_ctx(tmp_path)
+        state = {"track": "a1", "slug": "test", "mode": "v5", "phases": {}}
+        mark_complete(state, "research", ctx,
+                      executor=executor_llm("claude", "claude-opus-4-6"))
+        loaded = load_state(ctx)
+        assert loaded["phases"]["research"]["executor"]["agent"] == "claude"
+
+
+class TestDetectSelfReview:
+    """Test self-review detection (AC10)."""
+
+    def test_no_self_review(self):
+        from pipeline.state import detect_self_review
+        state = {"phases": {
+            "content": {"status": "complete", "executor": {"type": "llm", "agent": "gemini", "model": "flash"}},
+            "review": {"status": "complete", "executor": {"type": "llm", "agent": "claude", "model": "opus"}},
+        }}
+        assert detect_self_review(state) is False
+
+    def test_self_review_detected(self):
+        from pipeline.state import detect_self_review
+        state = {"phases": {
+            "content": {"status": "complete", "executor": {"type": "llm", "agent": "gemini", "model": "flash"}},
+            "review": {"status": "complete", "executor": {"type": "llm", "agent": "gemini", "model": "pro"}},
+        }}
+        assert detect_self_review(state) is True
+
+    def test_no_executor_no_crash(self):
+        from pipeline.state import detect_self_review
+        state = {"phases": {
+            "content": {"status": "complete"},
+            "review": {"status": "complete"},
+        }}
+        assert detect_self_review(state) is False
+
+    def test_deterministic_review_no_self_review(self):
+        from pipeline.state import detect_self_review
+        state = {"phases": {
+            "content": {"status": "complete", "executor": {"type": "llm", "agent": "gemini", "model": "flash"}},
+            "review": {"status": "complete", "executor": {"type": "deterministic", "name": "validator"}},
+        }}
+        assert detect_self_review(state) is False
+
+
+class TestParseV5PhaseStatusExecutor:
+    """Test that parse_v5_phase_status returns executor (AC7-AC8)."""
+
+    def test_returns_executor(self):
+        sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+        from api.state_helpers import parse_v5_phase_status
+        state = {"phases": {
+            "content": {
+                "status": "complete", "ts": "2026-03-13T08:00:00Z",
+                "executor": {"type": "llm", "agent": "gemini", "model": "flash"},
+            }
+        }}
+        result = parse_v5_phase_status(state, "content")
+        assert result["executor"]["agent"] == "gemini"
+
+    def test_backward_compat_legacy_agent_model(self):
+        from api.state_helpers import parse_v5_phase_status
+        state = {"phases": {
+            "content": {
+                "status": "complete", "ts": "2026-03-13T08:00:00Z",
+                "agent": "gemini", "model": "flash",
+            }
+        }}
+        result = parse_v5_phase_status(state, "content")
+        assert result["executor"]["type"] == "llm"
+        assert result["executor"]["agent"] == "gemini"
+
+    def test_missing_executor_returns_no_executor(self):
+        from api.state_helpers import parse_v5_phase_status
+        state = {"phases": {
+            "content": {"status": "complete", "ts": "2026-03-13T08:00:00Z"}
+        }}
+        result = parse_v5_phase_status(state, "content")
+        assert "executor" not in result
+
+    def test_pending_phase(self):
+        from api.state_helpers import parse_v5_phase_status
+        result = parse_v5_phase_status({"phases": {}}, "content")
+        assert result == {"status": "pending"}
+
+
+class TestBackfillExecutor:
+    """Test backfill_executor script logic."""
+
+    def test_infer_discover(self):
+        from backfill_executor import _infer_executor
+        ex = _infer_executor("discover", {"status": "complete"}, Path("/tmp"))
+        assert ex == {"type": "script", "name": "discover_passthrough"}
+
+    def test_infer_validate(self):
+        from backfill_executor import _infer_executor
+        ex = _infer_executor("validate", {"status": "complete"}, Path("/tmp"))
+        assert ex == {"type": "deterministic", "name": "morphological_validator"}
+
+    def test_legacy_agent_model_migrated(self):
+        from backfill_executor import _infer_executor
+        ex = _infer_executor("content", {"status": "complete", "agent": "gemini", "model": "flash"}, Path("/tmp"))
+        assert ex == {"type": "llm", "agent": "gemini", "model": "flash"}
+
+    def test_already_has_executor_returns_none(self):
+        from backfill_executor import _infer_executor
+        result = _infer_executor("content", {
+            "status": "complete",
+            "executor": {"type": "llm", "agent": "gemini", "model": "flash"},
+        }, Path("/tmp"))
+        assert result is None

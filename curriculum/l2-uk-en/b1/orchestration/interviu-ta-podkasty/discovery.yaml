@@ -1,0 +1,146 @@
+discovered_at: '2026-03-12T19:02:58.211736+00:00'
+query_keywords:
+- Інтерв'ю та подкасти
+- Феномен українського аудіопростору
+- The Ukrainian Audio Phenomenon
+- Стратегії активного слухання
+- Active Listening Strategies
+- Практичний аналіз інтерв'ю
+- Practical Interview Analysis
+- Створення власного резюме
+- Creating a Summary
+- Слухай щодня
+- Listen Daily
+- listening strategies to authentic Ukrainian interviews and podcasts
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=UeYQoQWo5JY
+  channel: Ukrainian Lessons
+  title: ULP 5-162 | Інтерв’ю з Іванкою (про життя на карантині) | Ukrainian Lessons
+    Podcast Season 5
+  relevance_score: 1.0
+  relevance_note: Highly relevant. This is a Ukrainian language learning podcast episode
+    that is explicitly an interview, and the host states that they will analyze interesting
+    sentences from it, directly aligning with 'Практичний аналіз інтерв'ю' and 'Стратегії
+    активного слухання'.
+  transcript_excerpt: Сьогодні у нас особливий епізод подкасту це буде інтерв'ю інтерв'ю
+    з Іванкою войцихович моєю подругою... спочатку послухайте інтерв'ю а потім ми
+    проаналізуємо 10 цікавих речень які сказала Іванка.
+  embed_suggestion: After Практичний аналіз інтерв'ю -- as it explicitly includes
+    analysis of the interview for learning purposes.
+- url: https://www.youtube.com/watch?v=Ztj_UHUsHfY
+  channel: Ukrainian Lessons
+  title: ULP 5-179 | Інтерв’ю з Кортні про те, як вона вивчила українську мову | Ukrainian
+    Lessons Podcast...
+  relevance_score: 0.9
+  relevance_note: Highly relevant. This is a Ukrainian language learning podcast episode
+    featuring an interview about learning Ukrainian, making it an excellent example
+    for 'Практичний аналіз інтерв'ю' and 'Стратегії активного слухання' in a language
+    learning context.
+  transcript_excerpt: ви слухаєте Ukrainian lessons podcast це епізод 179 інтерв'ю
+    с Кортні про вивчення української мови... Сьогодні в нас на подкасті особливий
+    епізод це інтерв'ю яке я давно хотіла взяти.
+  embed_suggestion: After Стратегії активного слухання -- as a practical example of
+    an interview with a language learner, offering rich material for active listening
+    practice.
+- url: https://www.youtube.com/watch?v=paJ8DWGgm7I
+  channel: Repainted Fox
+  title: 'bonus #42 Про живих. Олександр Михед'
+  relevance_score: 0.7
+  relevance_note: An example of an interview within a Ukrainian podcast. It directly
+    showcases an interview format and the interviewer briefly discusses the podcast's
+    origin.
+  transcript_excerpt: Всім привіт ви слухаєте подкаст перефарбований Лис і сьогодні
+    ми записуємо бонусний випуск з письменником з членом українського Пен з Олександром
+    михедом.
+  embed_suggestion: After Практичний аналіз інтерв'ю -- as a real-world example of
+    a Ukrainian interview.
+- url: https://www.youtube.com/watch?v=r9UCreU-4PU
+  channel: Repainted Fox
+  title: '#84 Змія. Юрій Косач'
+  relevance_score: 0.6
+  relevance_note: An example of a Ukrainian podcast discussing literary analysis.
+    It fits the 'Ukrainian Audio Phenomenon' but not directly active listening or
+    interview analysis skills.
+  transcript_excerpt: Привіт ви слухаєте подкаст перефарбований лис це проект в якому
+    ми досліджуємо психологію та світогляд українців через українську літературу.
+  embed_suggestion: 'After Вступ: Феномен українського аудіопростору -- as a practical
+    example of a Ukrainian podcast.'
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0026
+  text: "21\nВступ. Українська мова в житті українців. Види інформації . Робота з підручником\n\
+    Іноді, старанно прочитавши текст, ми не можемо запам’я-\nтати інформацію. Існують\
+    \ різні прийоми, які допоможуть упо-\nратися із цією проблемою.\nДля того, щоб\
+    \ краще запам’ятати прочитане, кілька разів \nповторіть його. Пригадайте, як ми\
+    \ запам’ятовуємо тексти пі-\nсень: спеціально їх не вчимо, але після кількох прослуховувань\
+    \ \nуже знаємо напам’ять. Проте велику книжку важко перечита-\nти кілька разів.\
+    \ Тому виділіть голо"
+  section_title: Сторінка 21
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0486
+  text: '. . . . . . . . . . . . . . . . .61
+
+    § 21 Вимова звукосполучень приголосних  . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . .63
+
+    § 22 Соціолінгвістичні фактори, що впливають на вимову людини. Основні джерела
+    нормативного мовлення. Мова масмедіа. Сценічна мова  . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 269
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0272
+  text: "Доберіть рекомендації кваліфікованих психологів, соціологів \nтощо. ×ÈÒÀÖÜÊÈÉ\
+    \ ÊËÓÁ\nНа вебсайті «Слухай» у вільному доступі є аудіокнижка «Метелики в кри-\n\
+    жаних панцирах», записана Хмельницькою обласною бібліотекою для дітей \nімені\
+    \ Т. Г. Шевченка за підтримки Українського культурного фонду. Тексти \nначитали\
+    \ Оксана Радушинська та інші. Прочитайте або прослухайте книжку повністю, адже\
+    \ там ще є багато ціка-\nвих сюжетних ліній і незвичайних персонажів, що спонукатимуть\
+    \ вас до \nміркувань. Стереотип – т"
+  section_title: Сторінка 177
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-golub-2022_s0233
+  text: "234\nЩо було важливим для мене на уроці? Чого я навчився / \nнавчилася? Що\
+    \ мене здивувало? Які емоції переважали на \nуроці? Здобуті знання я використаю\
+    \ … .\n528  \nІ   Виберіть улюблену тему з будь-якого підручника. Прочи-\nтайте\
+    \ зміст параграфа і сформулюйте перелік різноманітних \nзапитань. Які з них передбачають\
+    \ розгорнуту відповідь?\n \nІІ   Пригадайте і запишіть запитання, на які ви відповідали\
+    \ сьо-\nгодні на різних уроках (наприклад, з української літератури, \nісторії,\
+    \ інформатики). Запишіть повну "
+  section_title: Сторінка 234
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 80 — E2E
+FAIL: pipeline hist 80
 
   Module:   kyrylo-mefodiivtsi
   Track:    hist
-  Mode:     e2e
-  Words:    6929 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-25T20:49:44Z
+  Verdict:  FAIL
+  Date:     2026-03-13T01:14:57Z

@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "word-formation-adverbs-integration",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T18:51:52Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T18:51:52Z",
+      "task_id": "v5-word-formation-adverbs-integration-pA",
+      "mode": "full"
+    }
+  }
+}

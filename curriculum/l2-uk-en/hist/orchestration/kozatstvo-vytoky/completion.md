@@ -1,10 +1,10 @@
-PASS: build_module_v2.py hist 41 — E2E
+PASS: pipeline hist 41
 
   Module:   kozatstvo-vytoky
   Track:    hist
-  Mode:     e2e
-  Words:    7076 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T19:46:35Z
+  Date:     2026-03-13T08:32:31Z

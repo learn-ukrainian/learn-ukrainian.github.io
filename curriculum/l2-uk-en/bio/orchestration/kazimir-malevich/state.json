@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "kazimir-malevich",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T23:42:58Z",
+      "task_id": "v5-kazimir-malevich-pA",
+      "mode": "full"
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T23:42:58Z",
+      "note": "merged-into-research"
+    }
+  }
+}

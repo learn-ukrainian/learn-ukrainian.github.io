@@ -2,90 +2,66 @@
 
 ## State Standard Reference
 
-**§4.2.3.1** (рядки 2280–2282):
-> «утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили»
+§4.2.3.1 (lines 2280–2282): *"утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили"*
 
-**Alignment**: Модуль b1-010 безпосередньо реалізує цю вимогу через зіставлення форм минулого часу обох видів з фокусом на комунікативному виборі мовця (результат vs процес). Стандарт фіксує граматичну форму; модуль надбудовує прагматику вибору.
-
-Додатково релевантні рядки: §4.2.3.1 (2269–2291) також описує складену та синтетичну форми майбутнього часу недоконаного виду — підтвердження того, що вид перекриває всі часові форми; минулий час у цьому модулі є точкою входу до системи.
+Alignment: The standard explicitly requires B1 learners to form past tense gender/number agreement for both aspects. This module addresses the semantic distinction (result vs. process) that governs aspect selection — the communicative layer above the morphological forms already introduced. Together they complete the B1 past tense competency.
 
 ---
 
 ## Vocabulary Frequency
 
-Усі слова перевірено у VESUM (12/12 знайдено).
+| Word | GRAC Frequency / IPM | VESUM | Key collocations |
+|------|----------------------|-------|-----------------|
+| вже | 2,650,479 / 1309.58 | ✅ adv | вже зробив, вже готово, я вже знаю |
+| нарешті | 172,888 / 85.42 | ✅ adv | нарешті прийшов, нарешті зробив, ну нарешті |
+| процес | 228,428 / 112.86 | ✅ noun | у процесі, навчальний процес, тривалий процес |
+| результат | 115,758 / 57.19 | ✅ noun | досягти результату, головний результат, результат роботи |
+| завершення | 109,042 / 53.88 | ✅ noun | успішне завершення, після завершення, до завершення |
+| тривалість | — | ✅ noun | середня тривалість, тривалість дії |
+| довго | — | ✅ adv | довго чекав, дуже довго, працював довго |
+| поступово | — | ✅ adv | поступово звикав, поступово навчався |
+| раптом | — | ✅ adv | раптом зрозумів, раптом зупинився |
+| миттєво | — | ✅ adv | миттєво зреагував, зробив миттєво |
 
-| Слово | Частота (IPM) / Джерело | Ключові колокації з плану |
-|-------|------------------------|--------------------------|
-| процес | 112.86 / GRAC | у процесі, навчальний процес, тривалий процес |
-| довго | 94.29 / GRAC | довго чекав, довго читала, довго йшли |
-| нарешті | 85.42 / GRAC | нарешті прийшов, нарешті зробив, ну нарешті |
-| раптом | 81.89 / GRAC | раптом зупинився, раптом побачила |
-| результат | 57.19 / GRAC | досягти результату, головний результат |
-| поступово | 37.28 / GRAC | поступово навчався, поступово змінювалось |
-| завершення | 53.88 / GRAC | успішне завершення, після завершення |
-| тривалість | 9.21 / GRAC | середня тривалість, тривалість дії |
-| вже | (particle — VESUM: adv) | вже зробив, вже готово |
-| миттєво | (VESUM: adv) | миттєво відреагував |
-| збудували | (VESUM: збудувати, verb pf) | Ми збудували хату |
-| будували | (VESUM: будувати, verb ipf) | Ми будували хату весь день |
-
-**Примітка для Phase B**: `тривалість` (9.21 IPM) — формальне/академічне слово; у побутовому мовленні частіше `довго` або `тривалий час`. Варто подати обидва варіанти в поясненні.
+All vocabulary_hints items verified in VESUM. **вже** is ultra-high frequency (1309 IPM) — treat as core function word. **нарешті** (85 IPM) and **процес** (112 IPM) are solidly high-frequency.
 
 ---
 
 ## Cultural Hooks
 
-**1. Толока — verified (uk.wikipedia.org/wiki/Толока)**
-Толока — давній українській звичай одноразової безоплатної колективної праці для виконання великих робіт: спорудження будинків, збирання врожаю, будування церков. Сусіди та родичі збиралися разом, господар частував їх після завершення роботи. Традиція існує дотепер — у сучасній культурі слово «толока» позначає громадські та масові проєкти.
+1. **Толока** (Wikipedia verified): *"одноразова безоплатна праця гуртом для швидкого виконання великої за обсягом роботи... форма селянської взаємодопомоги, на яку скликають сусідів, родичів та товаришів."* — The toloka is a perfect dual-aspect anchor: the process was collective labor (будували весь день — imperfective, ongoing); the result was a completed structure (збудували хату до заходу сонця — perfective, bounded). This is an authentic Ukrainian institution, not a borrowed concept.
 
-→ **Аспектне ядро**: «Будували хату весь день» (НДВ — процес, колективна праця) vs «Збудували хату до заходу сонця» (ДВ — результат, привід для гуляння). Це не штучний приклад — це реальна культурна ситуація, де обидва аспекти відбуваються в одному наративі.
+2. **Ukrainian proverbs as aspect mnemonics** (well-attested in Ukrainian folklore collections):
+   - *"Зробив діло — гуляй сміло"* — encodes perfective result as prerequisite for rest; models the пф. past in a culturally natural frame.
+   - *"Тихіше їдеш — далі будеш"* — encodes process quality (manner of ongoing action); note the imperfective present, not past — the contrast to the first proverb is aspectual as well as tonal.
 
-**2. Прислів'я як маркери аспекту — verified (усні традиції)**
-- «Зробив діло — гуляй сміло» (ДВ: *зробив* = досягнутий результат → дозвіл на відпочинок). Джерело: українська паремія.
-- «Тихіше їдеш — далі будеш» (НДВ: *їдеш* = тривалий процес → наголос на способі дії). Джерело: українська паремія.
-
-→ Ці прислів'я є вбудованими дидактичними інструментами: вони кодують прагматику вибору виду безпосередньо в культурному тексті.
-
----
-
-## Common Learner Errors
-
-**1. Imperfective for completed achievement («Process for Result»)**
-- Помилка: «Я писав статтю» як відповідь на «Чи ти закінчив статтю?»
-- Правильно: «Я написав статтю»
-- Причина: Англійська не розрізняє вид у минулому часі — «I wrote» покриває і процес, і результат. Учні калькують англійську форму і використовують НДВ за замовчуванням.
-
-**2. Аналітичний допоміжний «був» («був ходив»)**
-- Помилка: «Я був ходив до магазину»
-- Правильно: «Я ходив до магазину»
-- Причина: Перенесення з англійської аналітичної конструкції «I had gone» → учні шукають допоміжне дієслово. В українській минулий час синтетичний; «був» у такому контексті — або давньоминулий (застарілий), або просторічна помилка.
-
-**3. Гендерна/числова неузгодженість форм минулого часу**
-- Помилка: Жінка каже «Я зробив» (чоловіча форма)
-- Правильно: «Я зробила»
-- Причина: Учні вчать «базову» форму (чоловічий рід) і не автоматизують переключення. Особливо часто для ДВ з префіксом (зробив/зробила, написав/написала).
-
----
-
-## Cross-References
-
-- **Будується на**: `b1-08` (Вид дієслова: повна система — базова класифікація ДВ/НДВ) → `b1-09` (Вид у минулому: одного разу vs щодня — вже відомий контраст однократності та повторюваності)
-- **Готує до**: `b1-14` (Аспект: інтеграційна практика) — синтез всіх вивчених аспектних контрастів
+   Note: Wikipedia search did not return a direct article on these proverbs; they are attested in standard Ukrainian phraseological dictionaries. Mark as "folk proverb" rather than citing a specific URL.
 
 ---
 
 ## Textbook Grounding
 
-З підручника Літвінової, 7 клас (2024, tier 1, `7-klas-ukrmova-litvinova-2024_s0037`):
-> «Дієслова доконаного (від слова доконати, тобто здійснити що-небудь, виконати до кінця) виду позначають завершену, обмежену в часі дію й відповідають на питання що зробити? що зробив? що зробить?»
+Grade 7 Litvinova (NUS 2024, trust tier 1, chunk `7-klas-ukrmova-litvinova-2024_s0037`):
+> *"Діє слова доконаного (від слова доконати, тобто здійснити що-небудь, виконати до кінця) виду позначають завершену, обмежену в часі дію й відповідають на питання що зробити? що зробив? що зробить?"*
 
-→ Ілюстративний мінімальний контраст: «Я розв'язав задачу!» (ДВ) vs «Я розв'язував задачу…» (НДВ). Phase B може використати аналогічний принцип «одне слово — одна крапка»: ДВ завершує думку, НДВ лишає її відкритою.
+This Grade 7 definition is the anchor formulation — B1 learners can be expected to know it. The module deepens it by adding the communicative why: speaker's focus on result vs. activity, not just morphological label.
 
-З підручника Аврамека, 7 клас (2024, tier 1, `7-klas-ukrmova-avramenko-2024_s0064`):
-> «Усі дієслова у формі теперішнього часу завжди недоконаного виду, бо вони позначають дію, яка відбувається в момент мовлення»
+---
 
-→ Підтверджує: теперішній час = НДВ завжди. Минулий час — єдиний, де ДВ і НДВ повністю симетрично доступні. Це робить минулий час ідеальною точкою входу для контрасту.
+## Common Learner Errors
+
+1. **Process for result** — *"Я писав статтю"* used to report a completed achievement → Correct: *"Я написав статтю"*. Cause: L1 English has no grammaticalized aspect; learners default to the more frequent imperfective form they learned first.
+
+2. **Auxiliary ghost construction** — *"Я був ходив до магазину"* → Correct: *"Я ходив до магазину"*. Cause: English-like compound past ("I had gone") transferred into Ukrainian; also echoes the Ukrainian pluperfect (давноминулий), which is dialectally present but not standard in this context.
+
+3. **Gender mismatch in past tense** — Female speaker says *"Я зробив"* instead of *"Я зробила"*. Cause: The -в ending is phonetically prominent and learned as the default past-tense signal; learners under communicative pressure drop the gender marking.
+
+---
+
+## Cross-References
+
+- **Builds on**: `b1-08` (aspect full system — доконаний/недоконаний pair formation), `b1-09` (aspect in past: once vs. habitually — одного разу vs. щодня)
+- **Prepares for**: `b1-14` (aspect integration practice), `b1-asp-complete-system` (checkpoint)
 
 ---
 
@@ -97,22 +73,22 @@
 
 ## Notes for Content Writing
 
-1. **Прагматика > граматика**: Стандарт фіксує форми, але комунікативна мета модуля — навчити мовця обирати вид залежно від фокусу (результат vs процес). Phase B має ставити комунікативне питання першим, граматичне правило — другим (TTT-підхід відповідно до плану).
-2. **Толока як наскрізний контекст**: Культурний гак достатньо багатий, щоб обслуговувати всі п'ять секцій — від діагностики до фінальних діалогів. Це забезпечує тематичну когерентність на 4000 слів без тематичних стрибків.
-3. **Маркери як лексичний клас**: `вже`, `нарешті`, `весь день`, `довго`, `до кінця` варто подати як функціональну систему («тригери виду»), а не як розрізнені слова. Це підвищує засвоюваність і дає учням інструмент самоперевірки.
-4. **Гендерна форма — системна, не виняткова**: Підрозділ «Gender Mismatch Clinic» у плані виправданий — учні часто засвоюють ДВ-форми в чоловічому роді (бо перший приклад у парі), а перемикання на жіночий/середній рід потребує окремої практики.
-5. **Уникати «Russian doesn't distinguish…» framing**: Контраст аспекту описується виключно через внутрішні засоби української — питання «що зробив?» vs «що робив?», без порівняння з іноземними мовами у пояснюючих секціях.
-
+- The toloka example provides a single event that naturally splits into process (недок.) and result (док.) readings depending on speaker focus — use it consistently across sections rather than introducing multiple unrelated contexts.
+- The proverbs work well as section openers but need phonetic contextualization so they feel like living language, not classroom artifacts.
+- §4.2.3.1 explicitly names the хотів/побачив paradigm — the theory section should echo this exact phrasing to establish State Standard compliance.
+- Duration markers (весь день, довго, тривалий час) and result markers (вже, нарешті, успішно) should be presented as a paired contrast table, not as two separate lists — the contrast is the teaching point.
+- Avoid framing aspect as a Slavic curiosity; Portuguese (perfeito/imperfeito) and Spanish offer non-Russian analogues if cross-linguistic comparison is needed.
+- **вже** appears in both aspect contexts (вже робив = ongoing at reference time; вже зробив = result achieved) — this is a productive source of nuance worth a callout box.
 
 ## Resource Discovery
 
 
 ### Blog Articles
+- [Вид дієслова на Вікіпедії](https://uk.wikipedia.org/wiki/Дієслівний_вид) (докладна стаття)
 - [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) (ukrainianlessons.com)
 - [Verb Aspect in Ukrainian](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/) (ukrainianlessons.com)
 - [ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian](https://www.ukrainianlessons.com/lesson/92/) (ukrainianlessons.com)
-- [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) (ukrainianlessons.com)
-- [Future Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-future/) (ukrainianlessons.com)
+- [Ukrainian Aspect Video](https://www.youtube.com/results?search_query=ukrainian+verb+aspect) (відео пояснення)
 
 ### Textbook References (RAG)
 

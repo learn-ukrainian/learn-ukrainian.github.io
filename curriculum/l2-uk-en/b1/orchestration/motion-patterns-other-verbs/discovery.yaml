@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T09:39:24.564943+00:00'
+discovered_at: '2026-03-12T21:20:39.846028+00:00'
 query_keywords:
 - Префікси руху в інших дієсловах
 - Тест
@@ -16,10 +16,20 @@ error: null
 warning: No videos found across channels
 videos: []
 blogs:
+- url: https://uk.wikipedia.org/wiki/Словотвір
+  title: Словотвір в українській мові
+  source: Вікіпедія про будову слів
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/reflexive-verbs/
   title: Reflexive Verbs in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.8
+  relevance_score: 1.0
+  topics: []
+- url: https://www.youtube.com/results?search_query=ukrainian+verb+prefixes+explained
+  title: Ukrainian Verb Prefixes Explained
+  source: Відео пояснення
+  relevance_score: 0.95
   topics: []
 rag_chunks:
 - score: 0.5

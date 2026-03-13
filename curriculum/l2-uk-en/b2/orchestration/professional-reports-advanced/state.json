@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "professional-reports-advanced",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-12T19:41:37Z",
+      "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T19:41:37Z",
+      "task_id": "v5-professional-reports-advanced-pA",
+      "mode": "full"
+    }
+  }
+}

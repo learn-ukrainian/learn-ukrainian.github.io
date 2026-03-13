@@ -1,0 +1,210 @@
+discovered_at: '2026-03-13T00:43:45.902623+00:00'
+query_keywords:
+- 'Літопис Грабянки: Козацький патріотизм'
+- Автор і його позиція
+- Структура і зміст
+- Ідеологічна програма
+- Фрагмент
+- Барокова історіографія
+- 'Analyze the causes and consequences of літопис грабянки: козацький патріотизм'
+- Evaluate the historical significance of патріотичний літопис
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0143
+  text: '6. Луценко Ю. Григорій Граб’янка та його літопис // Літопис гадяцького пол-
+
+    ковника Григорія Граб’янки. – К., 1992.'
+  section_title: Сторінка 87
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0005
+  text: "А після \nкожного розділу слід виконати завдання на узагаль-\nнення. Підручник\
+    \ містить інтерактивний електронний \nдодаток. Перейшовши за QR-кодами (коротким\
+    \ по-\nкликанням) наприкінці розділів, ви знайдете роз-\nробки практичних занять\
+    \ і тестові завдання для \nпідготовки до тематичного контролю. Авторський колектив\n\
+    Та хоч би й крила мені солов’їні,\nІ воля своя, —\nЯ б не лишила тебе в самотині,\n\
+    Країно моя! Леся Українка"
+  section_title: Сторінка 5
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0004
+  text: '4    Зміст
+
+    Борис Грінченко. . . . . . . . . . . . . . . . . . . . . . 65
+
+    Проблема моралі («Без хліба»). . . . . . . . . 66
+
+    На захист людської гідності . («Сам собі пан»). . . . . . . . . . . . . . . .
+    . . . . . 67
+
+    Громадянська лірика. . . . . . . . . . . . . . . . . . 68
+
+    Читацький практикум. До праці. . . . . . . . . . . . . . . . . . . . . . . 68
+
+    Доки? . . . . . . . . . . . . . . . . . . . . . . . . . 69
+
+    До народу. . . . . . . . . . . . . . . . . . . . . . 69
+
+    Філософські роздуми («Моє щастя»).'
+  section_title: Сторінка 4
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5758824944496155
+  chunk_id: 5794da94_c0524
+  text: "КОЗАЧИНА ПРОГОЛОШУЄ СВОЮ СОЛЇДАРНІСТЬ З УКРАЇНСЬКИМ СУСПІЛЬСТВОМ В СПРАВАХ\
+    \ \r\nПРАВОСЛАВНОЇ РЕЛЇҐІЇ, ЇЇ УЧАСТЬ В ЦЕРКОВНИХ СПРАВАХ В ДРУГІМ ДЕСЯТИЛЇТЮ\
+    \ XVII \r\nВ.: РЕЛЇҐІЙНО-НАЦІОНАЛЬНИЙ ЕЛЄМЕНТ В ПРОГРАМІ КОЗАЧАНИ, ТРАДИЦІЯ ПРО\
+    \ \r\nНЕЦЕРКОВНІСТЬ КОЗАЧИНИ І РЕЛЇҐІЙНА ІДЕОЛЬОҐІЯ В КОЗАЦЬКІМ ОБИХОДЇ, КУЛЬТУРНО\
+    \ \r\nНАСТРОЄНІ ЕЛЄМЕНТИ КОЗАЧИНИ І БЛИЗКІСТЬ ЇМ РЕЛЇҐІЙНО-НАЦІОНАЛЬНОЇ СПРАВИ,\
+    \ \r\nНЕПОТРІБНІСТЬ ЗДОГАДІВ ПРО СПЕЦІАЛЬНУ РЕЛЇҐІЙНУ ПРОПАҐАНДУ МІЖ КОЗАЧИНОЮ,\
+    \ \r\nХАРАКТЕРИСТИКА РЕЛЇҐІЙНОСТИ КОЗАЧИНИ У ЙОВ"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5488925576210022
+  chunk_id: 004505f2_c0029
+  text: "М. Пашковський стоїть, таким чином, на досить\r\nрадикальній позиції, заявляючи\
+    \ себе палким українським патріотом. Маємо тут\r\nрозвиток та вивищення визвольних\
+    \ тенденцій у суспільно-політичному мисленні\r\nукраїнців. Звертає увагу й те,\
+    \ що поет послідовно вживає термін «Україна».\n\nЗагалом сказати, це постать мало\
+    \ вивчена, хоч\r\nзаслуговує на значну увагу, бо саме в нього (і ми про це скажемо\
+    \ докладніше\r\nдалі) можна побачити переорієнтацію від шляхетської позиції до\
+    \ козацької,\r\nбільше того, він був у п"
+  work: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+  year: 1600
+  genre: polemic
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/suspil/sus.htm
+- score: 0.5300425291061401
+  chunk_id: 479cf43d_c0041
+  text: "Про нього див.: Ленкавський С. \r\nФілософічні підстави \"Націоналізму\"\
+    \ Донцова // Розбудова\r\nНації. — 1928. — Ч. 7, 8; Левинський В. Ідеолог фашизму.\
+    \ — Л., 1936; Єндик\r\nР. Донцов — ідеолог укр. націоналізму. — Мюнхен, 1955;\
+    \ Сосновський М. Дмитро\r\nДонцов: політ. портрет: з історії розвитку укр. націоналізму.\
+    \ — Нью-Йорк; Торонто,\r\n1974; Лісовий В. Драгоманов і Донцов // Філос. і соціол.\
+    \ думка. — \r\n 1991. — №9; Липинський В. Донцов і\r\nЛипинський // Сучасність.\
+    \ — 1992. — №6; Лосев І. Естетичні погляди"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

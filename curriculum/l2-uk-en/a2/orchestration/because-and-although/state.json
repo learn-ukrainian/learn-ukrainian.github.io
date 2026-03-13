@@ -5,12 +5,12 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T10:24:08Z",
+      "ts": "2026-03-12T21:03:58Z",
       "note": "merged-into-research"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-12T10:24:08Z",
+      "ts": "2026-03-12T21:03:58Z",
       "task_id": "v5-because-and-although-pA",
       "mode": "full"
     }

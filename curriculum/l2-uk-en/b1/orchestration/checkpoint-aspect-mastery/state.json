@@ -3,15 +3,16 @@
   "slug": "checkpoint-aspect-mastery",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:53:24Z",
-      "note": "rebuild-kept"
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:53:43Z",
+      "ts": "2026-03-12T21:02:13Z",
       "note": "merged-into-research"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-12T21:02:13Z",
+      "task_id": "v5-checkpoint-aspect-mastery-pA",
+      "mode": "full"
     }
   }
 }

@@ -1,68 +1,61 @@
 # Дослідження: Being and Becoming
 
 ## State Standard Reference
-§4.2.2.5: "Instrumental — means, manner, agent; with prepositions (з/із, за, між, над, перед, під)" (A2, lines 1304–1322)
-§4.2.2.5.1 (plan reference): "Без прийменника: характеристика особи за професією чи статусом" — predicate instrumental with бути/стати
-Alignment: Module 6 directly targets the prepositional-free (predicative) instrumental — the specific subtype where English speakers have maximum transfer interference ("I want to be a doctor" → *Я хочу бути лікар*). Builds directly on a2-04/05 (instrumental endings and instrumental of means).
+§4.2.2.5.1: "Без прийменника: характеристика особи за професією чи статусом: Олег буде програмувальником. Микола хоче стати викладачем. Він працював менеджером. Вона мріє стати громадянкою України."
+Alignment: This module directly implements §4.2.2.5.1 — predicate instrumental with бути/стати/працювати/мріяти for profession and status. All four State Standard example constructions are covered.
 
 ## Vocabulary Frequency
 
-All forms VESUM-verified ✅
-
-| Word (Nom.) | Instr. form | Frequency | Key collocations |
-|-------------|-------------|-----------|------------------|
-| лікар / лікарка | лікарем / лікаркою | Very High | *працювати лікарем*, *стати лікаркою* |
-| вчитель / вчителька | вчителем / вчителькою | Very High | *буде вчителем*, *хоче стати вчителькою* |
-| програміст / програмістка | програмістом / програмістком | High (prestige) | *працює програмістом*; formal alt: *програмувальник* |
-| айтішник / айтішниця | айтішником / айтішницею | High (colloquial) | *став айтішником* — extremely common in modern speech |
-| інженер / інженерка | інженером / інженеркою | Medium-High | *працював інженером* |
-| журналіст / журналістка | журналістом / журналісткою | Medium | *стати журналістом* |
-| юрист / юристка | юристом / юристкою | Medium | *працює юристкою* |
-| менеджер / менеджерка | менеджером / менеджеркою | High (modern) | *працює менеджером* — calque trap: NOT *як менеджер* |
-| директор / директорка | директором / директоркою | Medium | 2020 reform focus; *директорка* now official |
-| спеціаліст / спеціалістка | спеціалістом / спеціалісткою | Medium | *стати хорошим спеціалістом* |
-| громадянин / громадянка | громадянином / громадянкою | Medium | State Standard example: *мріє стати громадянкою* |
+| Word | Notes | Key collocations |
+|------|-------|------------------|
+| лікар / лікарка | High Frequency; VESUM ✓ both forms | працювати лікарем, буде лікарем |
+| вчитель / вчителька | High Frequency; VESUM ✓ | буде вчителем, хоче стати вчителькою |
+| програміст / програмістка | High Prestige; VESUM ✓; formal alt: програмувальник (also ✓) | працювати програмістом, став програмістом |
+| айтішник / айтішниця | Colloquial; High Frequency in modern speech; VESUM ✓ | став айтішником, працює айтішницею |
+| інженер / інженерка | Medium-High; VESUM ✓ | працював інженером, хоче стати інженеркою |
+| журналіст / журналістка | Medium; VESUM ✓ | стати журналістом, працює журналісткою |
+| юрист / юристка | Medium; VESUM ✓ | працює юристкою, хоче стати юристом |
+| менеджер / менеджерка | High in business; VESUM ✓ | працює менеджером (NOT: працює як менеджер) |
+| директор / директорка | Medium; VESUM ✓ both; 2020 reform showcase | став директором, директорка школи |
+| громадянин / громадянка | State Standard example word; VESUM ✓ | мріє стати громадянкою України |
 
 ## Cultural Hooks
-
-1. **Ukraine as European IT hub** — Ukraine has ~300,000 IT professionals and is one of Europe's top software outsourcing countries. *Програміст* / *айтішник* are among the most aspirational profession nouns for young Ukrainians. Real-life hook: a learner's Ukrainian friend or colleague is very likely an *айтішник*.
-2. **Femininitives as identity** — The 2020 Ukrainian Grammar Reform officially codified *директорка*, *менеджерка*, *філологиня*. These aren't informal — they appear in official documents. This is a genuine societal shift: Ukrainian women name their professions in Ukrainian grammatical gender, unlike Russian practice. Concrete pair for discussion: *вона директор* (old) vs. *вона директорка* (current standard).
-3. **State Standard example sentence** — *Мрію стати громадянином/громадянкою України* appears explicitly in the State Standard as a model sentence for predicative instrumental, making it both grammatically canonical and emotionally resonant given Ukraine's current context.
+1. **Ukraine as European IT hub**: Ukraine has one of Europe's largest developer communities. "Айтішник" is a prestige identity marker — young Ukrainians joke that every second person "хоче стати айтішником." This makes the colloquial/formal register contrast (айтішник vs. програміст vs. програмувальник) feel immediately relevant.
+2. **2020 Feminitives Reform**: The Grammar Commission officially codified femininitives. The pair *директор / директорка* is a real-world example learners can look up. This makes the module culturally current — using *директорка* is a marker of contemporary, educated Ukrainian.
+3. **State Standard example sentence**: "Вона мріє стати громадянкою України" — this is a real sentence from the State Standard and resonates for many L2 learners who may themselves be on a citizenship path or learning Ukrainian because of the war.
 
 ## Common Learner Errors
-
-1. **Nominative Trap** — *Він хоче бути лікар* → *Він хоче бути лікарем* — Direct English transfer: "He wants to be a doctor" has no case inflection, so learners drop the instrumental ending. Most frequent error at A2.
-2. **"як" calque** — *Вона працює як менеджер* → *Вона працює менеджером* — "She works as a manager" triggers insertion of *як*; English "as" has no grammatical equivalent here. Textbook exercises targeting synonym/antonym pairs (as in Grade 3 kravtsova, p. 66) model how to contrast structural patterns — same approach applies here: show correct vs. incorrect pair side by side.
-3. **Gender mismatch** — *Вона хороший лікар* → *Вона хороша лікарка* — Learners use masculine profession nouns for women, copying Russian practice. Must drill alongside femininitives.
-4. **Aspect confusion with стати/ставати** — *Він ставав директором* (intended: single completed event) → *Він став директором* — imperfective *ставати* implies ongoing/repeated process; completed role-change requires perfective *стати*. Flag explicitly.
+1. **Nominative after бути/стати** → *Він хоче бути лікар* ✗ → *Він хоче бути лікарем* ✓ — Direct L1 calque: "He wants to be a doctor" uses nominative in English. Most frequent error at this level.
+2. **"як" calque with працювати** → *Вона працює як менеджер* ✗ → *Вона працює менеджером* ✓ — "She works as a manager" → learners import "як" (as). Textbook §4.2.2.5.1 shows zero examples with "як" after working verbs; this must be drilled explicitly.
+3. **Gender agreement on profession nouns** → *Вона — хороший лікар* ✗ → *Вона — хороша лікарка* ✓ — Learners use masculine default for professions, as in English. Pair drills (він/вона + profession) fix this.
+4. **Forgetting instrumental in the past** → *Він був студент* ✗ → *Він був студентом* ✓ — Present tense has null copula + nominative (Він студент), so learners extend this wrongly to past/future.
 
 ## Cross-References
-
-- Builds on: a2-04 (instrumental endings), a2-05 (instrumental of means), A1 present tense (null copula + nominative)
-- Prepares for: a2-07 (Spatial Prepositions — instrumental reappears), a2-11 (All Cases Practice — predicative instrumental consolidated), a2-49 (Work & Professions — vocabulary expansion)
+- Builds on: a2-04 (Instrumental endings), a2-05 (Instrumental means), A1 present tense identity sentences
+- Prepares for: a2-07 (Spatial Prepositions), a2-11 (All Cases Practice), a2-49 (Work & Professions vocab expansion)
 
 ## Teaching Strategy
-
-- **Discovery exercise**: Present three sentences without explanation:
-  *Я лікар.* / *Я був лікарем.* / *Я хочу стати лікарем.*
-  Ask: "What changes? What stays the same?" Let learners notice the -ем ending appears whenever *бути/стати* is not in present tense. Then confirm the rule. This mirrors Grade 4 textbook approach (p. 25): list verbs first, name the pattern second.
-- **Best context**: Career conversations — "What do you do?" / "What did you want to be as a child?" / "What does your friend do?" These scenarios make the бути/стати/працювати triad feel natural and immediately usable.
-- **Contrastive pairs**: 
-  - *Він лікар* (now, identity) vs. *Він був лікарем* (past role) vs. *Він стане лікарем* (future)
-  - *Вона працює менеджером* ✅ vs. *Вона працює як менеджер* ❌
-  - *Він став директором* (completed) vs. *Він ставав директором* (process/repeated)
+- **Discovery exercise**: Show learners three pairs side by side — *Він студент.* / *Він був студентом.* / *Він хоче стати студентом.* Ask: "What changes? Why does the word look different?" Let them notice the pattern before naming the case. Mirrors the Grade 4 textbook approach (Grade 4, p.25) of observing word behavior in context before labeling it.
+- **Best context**: Job interview / career conversation. "Ким ти хочеш стати?" is a real question Ukrainian children get from adults — universally familiar and emotionally engaging.
+- **Contrastive pairs**: Nominative (identity, present) vs. Instrumental (role, process, past/future):
+  - *Я лікар.* (now, who I am) ↔ *Я буду лікарем.* (future role)
+  - *Він студент.* ↔ *Він був студентом.* (past role)
+  - *Вона менеджер.* ↔ *Вона стала менеджеркою.* (change of state)
 
 ## Notes for Content Writing
-
-- Module 6 is Core Grammar band (M01–20): 45–65% Ukrainian immersion. Grammar theory sections (case rule explanation) should be in English; Ukrainian appears in example sentences and dialogues.
-- Max 15 words per Ukrainian sentence; max 2 clauses. Keep examples short: *Він хоче стати програмістом.* not complex constructions.
-- Use both masculine and feminine forms throughout ALL examples — not just the femininitives section. This reinforces the 2020 standard organically.
-- *Айтішник/айтішниця* should appear in dialogues, not just vocabulary tables — it's the realistic word a learner will actually hear.
-- Avoid abstract nouns (*стан*, *сутність*) per A2 quick-ref. The "identity vs. role" concept must be explained through concrete examples, not meta-commentary.
-
+- Immersion band: Core grammar (M06), target 45–65% Ukrainian. Grammar explanations in English are permitted and expected — use them for the Nominative Trap and "як" calque warnings.
+- Keep sentences ≤15 words (A2 rule). No participles, no complex subordination.
+- Use both masculine and feminine forms for every profession example — this reinforces the 2020 reform naturally without requiring a separate grammar lesson.
+- The State Standard sentence "Вона мріє стати громадянкою України" should appear verbatim — it's emotionally resonant for the target learner demographic.
+- Aspect note: стати (pf) vs. ставати (impf) distinction is worth one brief callout but not the focus — keep it to 2–3 sentences.
 
 ## Resource Discovery
 
+
+### Blog Articles
+- [New Year’s Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/episode62/) (ukrainianlessons.com)
+- [Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/episode61/) (ukrainianlessons.com)
+- [Dobra Forma 10-3: Instrumental with працювати, бути, стати](https://opentext.ku.edu/dobraforma/chapter/10-3/) (University of Kansas)
 
 ### Textbook References (RAG)
 
