@@ -71,21 +71,15 @@ a:hover { text-decoration: underline; }
   white-space: nowrap; display: none;
 }
 
-/* Phase color combos for chips — v3 */
+/* Phase color combos for chips */
 .chip-none { background: var(--gray); color: var(--text2); }
-.chip-A { background: #5a3e1b; color: var(--orange); }
-.chip-B { background: #1a3055; color: var(--blue); }
+.chip-research { background: #5a3e1b; color: var(--orange); }
+.chip-content { background: #1a3055; color: var(--blue); }
 .chip-audit { background: #1a3f25; color: var(--green); }
-.chip-D { background: #2d1f5a; color: var(--purple); }
+.chip-review { background: #2d1f5a; color: var(--purple); }
 .chip-pass { background: var(--green); color: #000; }
 
-/* Phase color combos for chips — v4 */
-.chip-v4-research { background: #5a3e1b; color: var(--orange); }
-.chip-v4-content { background: #1a3055; color: var(--blue); }
-.chip-v4-validate { background: #1f3d4d; color: var(--cyan, #39d2c0); }
-.chip-v4-pass { background: var(--green); color: #000; }
-
-/* Obsolete (non-v4) modules */
+/* Unbuilt modules */
 .obsolete { opacity: 0.4; }
 
 .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -118,17 +112,15 @@ a:hover { text-decoration: underline; }
   <div class="stat-card"><div class="value" style="color:var(--green)" id="total-audit">—</div><div class="label">Audit Passing</div></div>
   <div class="stat-card"><div class="value" style="color:var(--purple)" id="total-reviewed">—</div><div class="label">Reviewed</div></div>
   <div class="stat-card"><div class="value" style="color:#58a6ff" id="total-final-review">—</div><div class="label">Final QA</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-v4">—</div><div class="label">V4 Pipeline</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-v5">—</div><div class="label">V5 Pipeline</div></div>
 </div>
 
 <div class="container">
   <div class="legend">
     <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Full pass</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#1f3d4d;border:1px solid var(--cyan)"></div> V4 Validate</div>
     <div class="legend-item"><div class="legend-dot" style="background:#1a3055;border:1px solid var(--blue)"></div> Content</div>
     <div class="legend-item"><div class="legend-dot" style="background:#5a3e1b;border:1px solid var(--orange)"></div> Research</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#1a3f25;border:1px solid var(--green)"></div> Audit pass (v3)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--gray);opacity:0.4"></div> Obsolete (v3/unbuilt)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gray);opacity:0.4"></div> Unbuilt</div>
   </div>
 
   <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">
@@ -155,41 +147,21 @@ function progressBar(val, total, cls) {
   <div class="phase-count">${val}/${total} (${p}%)</div>`;
 }
 
-function isV4(mod) {
-  return mod.pipeline_version === 'v4';
-}
-
 function chipClass(mod) {
   const phases = mod.phases || {};
-  if (isV4(mod)) {
-    if ((phases.review && phases.review.status === 'complete') || (phases.mdx && phases.mdx.status === 'complete')) return 'chip-v4-pass';
-    if (phases.validate && phases.validate.status === 'complete') return 'chip-v4-validate';
-    if (phases.content && phases.content.status === 'complete') return 'chip-v4-content';
-    if (phases.research && phases.research.status === 'complete') return 'chip-v4-research';
-    return 'chip-none';
-  }
-  // v3/unbuilt
-  if (phases.D && phases.D.status === 'complete' && mod.audit === 'pass') return 'chip-pass';
-  if (phases.audit && phases.audit.status === 'complete') return 'chip-audit';
-  if (phases.B && phases.B.status === 'complete') return 'chip-B';
-  if (phases.A && phases.A.status === 'complete') return 'chip-A';
+  if ((phases.review && phases.review.status === 'complete') || (phases.mdx && phases.mdx.status === 'complete')) return 'chip-pass';
+  if (phases.validate && phases.validate.status === 'complete') return 'chip-audit';
+  if (phases.content && phases.content.status === 'complete') return 'chip-content';
+  if (phases.research && phases.research.status === 'complete') return 'chip-research';
   return 'chip-none';
 }
 
 function chipLabel(mod) {
   const phases = mod.phases || {};
-  if (isV4(mod)) {
-    if ((phases.review && phases.review.status === 'complete') || (phases.mdx && phases.mdx.status === 'complete')) return '✓';
-    if (phases.validate && phases.validate.status === 'complete') return 'Va';
-    if (phases.content && phases.content.status === 'complete') return 'C';
-    if (phases.research && phases.research.status === 'complete') return 'R';
-    return '·';
-  }
-  // v3/unbuilt
-  if (phases.D && phases.D.status === 'complete' && mod.audit === 'pass') return '✓';
-  if (phases.audit && phases.audit.status === 'complete') return 'Au';
-  if (phases.B && phases.B.status === 'complete') return 'B';
-  if (phases.A && phases.A.status === 'complete') return 'A';
+  if ((phases.review && phases.review.status === 'complete') || (phases.mdx && phases.mdx.status === 'complete')) return '✓';
+  if (phases.validate && phases.validate.status === 'complete') return 'Va';
+  if (phases.content && phases.content.status === 'complete') return 'C';
+  if (phases.research && phases.research.status === 'complete') return 'R';
   return '·';
 }
 
@@ -213,7 +185,7 @@ async function loadModulePanel(trackId, panel) {
       const cls = chipClass(mod);
       const label = chipLabel(mod);
       const title = chipTitle(mod);
-      const obsolete = isV4(mod) ? '' : ' obsolete';
+      const obsolete = mod.pipeline_version === 'v5' ? '' : ' obsolete';
       return `<div class="module-chip ${cls}${obsolete}" data-tip="${title}">${label}</div>`;
     }).join('');
 
@@ -286,9 +258,9 @@ async function load() {
     document.getElementById('total-audit').textContent = t.audit_passing;
     document.getElementById('total-reviewed').textContent = t.reviewed || 0;
     document.getElementById('total-final-review').textContent = t.final_review_done;
-    document.getElementById('total-v4').textContent = `${pv.counts?.v4 || 0}`;
+    document.getElementById('total-v5').textContent = `${pv.counts?.v5 || 0}`;
     document.getElementById('topbar-subtitle').textContent =
-      `Pipeline state across all tracks — ${pv.pct_v4 || 0}% migrated to v4`;
+      `Pipeline state across all tracks — ${pv.pct_v5 || 0}% on v5`;
 
     const container = document.getElementById('tracks-container');
     const trackEntries = Object.entries(data.tracks)

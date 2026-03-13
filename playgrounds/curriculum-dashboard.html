@@ -57,10 +57,10 @@ a:hover { text-decoration: underline; }
 .module-table .rq-score.stub { color: var(--red); }
 .module-table .rq-coverage { color: var(--text3); font-size: 11px; }
 .module-table .ver-label { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 3px; }
-.module-table .ver-v4 { background: rgba(63,185,80,0.15); color: var(--green); }
+.module-table .ver-v5 { background: rgba(63,185,80,0.15); color: var(--green); }
 .module-table .ver-v3, .module-table .ver-unbuilt { background: rgba(72,79,88,0.2); color: var(--text3); }
 
-/* Obsolete (non-v4) modules */
+/* Unbuilt modules */
 .obsolete { opacity: 0.4; }
 
 /* Dimension bar */
@@ -221,9 +221,9 @@ async function loadTrackDetail(trackId) {
         ${data.modules.map(m => {
           const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
           const ver = m.pipeline_version || 'unbuilt';
-          const isV4 = ver === 'v4';
-          const obsolete = isV4 ? '' : ' obsolete';
-          const verCls = isV4 ? 'ver-v4' : ver === 'v3' ? 'ver-v3' : 'ver-unbuilt';
+          const isV5 = ver === 'v5';
+          const obsolete = isV5 ? '' : ' obsolete';
+          const verCls = isV5 ? 'ver-v5' : ver === 'v3' ? 'ver-v3' : 'ver-unbuilt';
           const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
           const r = m.research || {};
           let rCol;
@@ -385,7 +385,7 @@ async function loadModuleDetail(trackId, slug) {
         : '');
 
   const pipelineVer = m.pipeline_version || 'unknown';
-  const verColor = pipelineVer === 'v4' ? 'var(--green)' : 'var(--text3)';
+  const verColor = pipelineVer === 'v5' ? 'var(--green)' : 'var(--text3)';
 
   panel.innerHTML = `
     <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>

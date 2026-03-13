@@ -411,7 +411,7 @@ function filterWeak() {
       if (issue.startsWith('low_words')) return `<span class="issue-tag tag-words">${issue.replace('low_words_', 'words: ')}</span>`;
       return `<span class="issue-tag">${issue}</span>`;
     }).join('');
-    if (m.pipeline_version && m.pipeline_version !== 'v4') {
+    if (m.pipeline_version && m.pipeline_version !== 'v5') {
       tags += `<span class="issue-tag tag-v3">${m.pipeline_version}</span>`;
     }
     const rsStr = m.research_score !== null ? `${m.research_score}/10` : '—';
