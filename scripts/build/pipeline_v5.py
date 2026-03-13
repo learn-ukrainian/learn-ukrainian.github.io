@@ -55,6 +55,7 @@ from pipeline_lib import (
     _dispatch_prompt,
     _gemini_output_path,
     _get_activities_template,
+    _get_content_template,
     # Tier-based prompt dispatch
     _get_prompt_tier,
     _get_scoring_output_table,
@@ -2533,6 +2534,12 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
         if template is None:
             return False
 
+    # Check for consultation-patched template (from --consult)
+    patched = ctx.orch_dir / f"consultation-patched-{template.name}"
+    if patched.exists():
+        template = patched
+        log(f"  activities: Using consultation-patched template: {patched.name}")
+
     # Build prompt with plan + RAG overrides
     prompt_file = ctx.orch_dir / "activities-prompt.md"
     overrides = {}
@@ -3830,51 +3837,72 @@ def run_consultation(ctx: ModuleContext, state: dict) -> bool:
     """Run prompt consultation on the latest failure.
 
     Instead of fixing content, this diagnoses template issues and proposes
-    template edits. Results saved to orchestration/{slug}/consultation-{N}.md.
+    template edits. Gemini reads files directly via paths. Results are parsed
+    and either applied (this_module) or queued (all_modules).
     """
+    from pipeline.consultation import (
+        apply_template_patch,
+        parse_consultation,
+        queue_for_approval,
+        record_consultation,
+    )
+
     log(f"\n  Consultation mode for {ctx.slug}")
 
-    # Find latest review/validate failure output
+    # ── 1. Find failure data ──────────────────────────────────────────
     review_failures = ""
     for fname in ("review-result.md", "review-raw-output.md"):
         f = ctx.orch_dir / fname
         if f.exists():
-            review_failures = f.read_text("utf-8")[:3000]
+            review_failures = f.read_text("utf-8")[:4000]
             log(f"  consultation: Using failure data from {fname}")
             break
 
     if not review_failures:
-        # Try validate friction reports
         friction_files = sorted(ctx.orch_dir.glob("validate-fix*-raw.md"), reverse=True)
         if friction_files:
-            review_failures = friction_files[0].read_text("utf-8")[:3000]
+            review_failures = friction_files[0].read_text("utf-8")[:4000]
             log(f"  consultation: Using failure data from {friction_files[0].name}")
 
     if not review_failures:
         log("  consultation: No failure data found — nothing to consult on")
         return False
 
-    # Find the template that was used
-    template_excerpt = ""
+    # ── 2. Identify base template + rendered prompt + output ──────────
+    # Base template: the source file in PHASES_DIR (what we want to fix)
+    content_template_name = _get_content_template(
+        ctx.track, ctx.module_num,
+        full_build=getattr(ctx, "full_build", False),
+        rag=getattr(ctx, "rag", False),
+        slug=ctx.slug,
+    )
+    base_template_path = PHASES_DIR / content_template_name
+
+    # Also check activities template
+    if not base_template_path.exists():
+        activities_template_name = _get_activities_template(ctx.track, ctx.module_num, slug=ctx.slug)
+        base_template_path = PHASES_DIR / activities_template_name
+
+    if not base_template_path.exists():
+        log(f"  consultation: Base template not found: {base_template_path}")
+        return False
+    log(f"  consultation: Base template → {base_template_path}")
+
+    # Rendered prompt (what was sent to LLM)
+    rendered_prompt_path = ""
     for prompt_name in ("content-prompt.md", "activities-prompt.md"):
-        prompt_f = ctx.orch_dir / prompt_name
-        if prompt_f.exists():
-            full = prompt_f.read_text("utf-8")
-            # Extract the task section (most relevant)
-            task_idx = full.find("## Your Task")
-            template_excerpt = full[task_idx:task_idx + 2000] if task_idx >= 0 else full[:2000]
-            log(f"  consultation: Using template from {prompt_name}")
+        p = ctx.orch_dir / prompt_name
+        if p.exists():
+            rendered_prompt_path = str(p)
             break
 
-    # Find the output excerpt
-    output_excerpt = ""
+    # Module output
+    module_output_path = ""
     content_path = ctx.paths.get("md")
     if content_path and content_path.exists():
-        text = content_path.read_text("utf-8")
-        # Take first 2000 chars as representative sample
-        output_excerpt = text[:2000]
+        module_output_path = str(content_path)
 
-    # Build consultation prompt
+    # ── 3. Build consultation prompt (paths, not excerpts) ────────────
     consultation_template = PHASES_DIR / "consultation.md"
     if not consultation_template.exists():
         log(f"  consultation: Template not found: {consultation_template}")
@@ -3882,11 +3910,13 @@ def run_consultation(ctx: ModuleContext, state: dict) -> bool:
 
     prompt_text = consultation_template.read_text("utf-8")
     prompt_text = prompt_text.replace("{REVIEW_FAILURES}", review_failures)
-    prompt_text = prompt_text.replace("{TEMPLATE_EXCERPT}", template_excerpt)
-    prompt_text = prompt_text.replace("{OUTPUT_EXCERPT}", output_excerpt)
+    prompt_text = prompt_text.replace("{BASE_TEMPLATE_PATH}", str(base_template_path))
+    prompt_text = prompt_text.replace("{RENDERED_PROMPT_PATH}", rendered_prompt_path)
+    prompt_text = prompt_text.replace("{MODULE_OUTPUT_PATH}", module_output_path)
 
-    # Count existing consultations
-    existing = list(ctx.orch_dir.glob("consultation-*.md"))
+    # Count existing consultations (exclude prompt files from count)
+    existing = [f for f in ctx.orch_dir.glob("consultation-*.md")
+                if "-prompt" not in f.name and "-raw" not in f.name]
     n = len(existing) + 1
 
     prompt_file = ctx.orch_dir / f"consultation-{n}-prompt.md"
@@ -3896,7 +3926,7 @@ def run_consultation(ctx: ModuleContext, state: dict) -> bool:
         log(f"  consultation: DRY-RUN — would dispatch consultation #{n}")
         return True
 
-    # Dispatch to Gemini
+    # ── 4. Dispatch to Gemini ─────────────────────────────────────────
     output_file = _gemini_output_path(ctx.slug, f"consultation-{n}")
     ok, raw = dispatch_gemini(
         _dispatch_prompt(ctx, prompt_file),
@@ -3909,24 +3939,66 @@ def run_consultation(ctx: ModuleContext, state: dict) -> bool:
         log("  consultation: Gemini dispatch FAILED")
         return False
 
-    # Extract consultation result
+    # ── 5. Extract and parse result ───────────────────────────────────
     from pipeline.parsing import _extract_delimiter
     result_text = _extract_delimiter(raw, "===CONSULTATION_START===", "===CONSULTATION_END===")
-    if result_text:
-        result_file = ctx.orch_dir / f"consultation-{n}.md"
-        result_file.write_text(result_text, "utf-8")
-        log(f"  consultation: Result saved → {result_file.name}")
 
-        # Log key findings
-        for line in result_text.split("\n"):
-            if line.startswith("scope:") or line.startswith("action:") or line.startswith("confidence:"):
-                log(f"    {line.strip()}")
-    else:
-        # Save raw output for debugging
+    if not result_text:
         raw_file = ctx.orch_dir / f"consultation-{n}-raw.md"
         raw_file.write_text(raw, "utf-8")
         log(f"  consultation: No delimiters found — raw saved to {raw_file.name}")
+        record_consultation(state, n, None, "parse_failed")
+        save_state(ctx, state)
+        return False
 
+    result_file = ctx.orch_dir / f"consultation-{n}.md"
+    result_file.write_text(result_text, "utf-8")
+    log(f"  consultation: Result saved → {result_file.name}")
+
+    parsed = parse_consultation(result_text)
+    if not parsed:
+        log("  consultation: YAML parse failed — see raw result")
+        record_consultation(state, n, None, "parse_failed")
+        save_state(ctx, state)
+        return True  # Not a dispatch failure, just bad YAML
+
+    # Log key findings
+    log(f"    scope: {parsed.scope}")
+    log(f"    action: {parsed.action}")
+    log(f"    confidence: {parsed.confidence}")
+    log(f"    changes: {len(parsed.proposed_changes)}")
+
+    # ── 6. Act on result ──────────────────────────────────────────────
+    if parsed.scope == "all_modules":
+        queue_path = queue_for_approval(
+            parsed, ctx.slug, ctx.track, n,
+            consultation_file=result_file,
+        )
+        record_consultation(state, n, parsed, "queued")
+        log(f"  consultation: Queued for human approval → {queue_path.name}")
+
+    elif parsed.action == "rebuild":
+        # Patch a copy of the base template for rebuild
+        patched_path = ctx.orch_dir / f"consultation-patched-{base_template_path.name}"
+        success, applied = apply_template_patch(
+            base_template_path, parsed.proposed_changes, patched_path,
+        )
+        if success and applied > 0:
+            record_consultation(state, n, parsed, "applied")
+            log(f"  consultation: Patched template ({applied} changes) → {patched_path.name}")
+            log("  consultation: Rebuild with:")
+            log(f"    .venv/bin/python scripts/build_module_v5.py {ctx.track} {ctx.module_num} --restart-from content")
+        else:
+            record_consultation(state, n, parsed, "no_match")
+            log("  consultation: Patch produced 0 matches — template may have changed")
+            log(f"  consultation: Review consultation-{n}.md manually")
+
+    else:
+        # action == "fix" — one-off LLM fluke, template is fine
+        record_consultation(state, n, parsed, "no_action")
+        log("  consultation: One-off LLM issue — no template change needed")
+
+    save_state(ctx, state)
     return True
 
 

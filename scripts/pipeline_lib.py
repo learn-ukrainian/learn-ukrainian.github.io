@@ -3144,7 +3144,12 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         slug=ctx.slug,
     )
     template = PHASES_DIR / content_template_name
-    if not template.exists():
+    # Check for consultation-patched template (from --consult)
+    patched = ctx.orch_dir / f"consultation-patched-{content_template_name}"
+    if patched.exists():
+        template = patched
+        log(f"  content: Using consultation-patched template: {patched.name}")
+    elif not template.exists():
         # Fallback to monolithic prompt
         template = PHASES_DIR / "content.md"
         log(f"  content: Tier template {content_template_name} not found, falling back to content.md")

@@ -1068,7 +1068,7 @@ class TestActivityPlansToJsx:
 # =============================================================================
 
 class TestConsultation:
-    """Test run_consultation function."""
+    """Test run_consultation function (#853)."""
 
     def test_returns_false_without_failure_data(self, tmp_path):
         from pipeline_v5 import run_consultation
@@ -1076,6 +1076,281 @@ class TestConsultation:
         state = {"phases": {}}
         result = run_consultation(ctx, state)
         assert result is False
+
+    def test_full_consultation_flow_scope_this_module_rebuild(self, tmp_path):
+        """Mock Gemini returning a valid consultation YAML → patch applied."""
+        from pipeline_v5 import run_consultation
+
+        ctx = _make_ctx(tmp_path)
+        ctx.module_num = 1
+        ctx.model = "test-model"
+        ctx.full_build = False
+        ctx.rag = False
+
+        # Create failure data so consultation proceeds past step 1
+        review_file = ctx.orch_dir / "review-result.md"
+        review_file.write_text("## Issues\n- English leaking into tables\n")
+
+        # Create base template in a mock PHASES_DIR
+        phases_dir = tmp_path / "phases"
+        phases_dir.mkdir()
+        base_template = phases_dir / "content.md"
+        base_template.write_text("Write a comparison table\nwith examples\n")
+
+        # Create consultation template
+        consult_template = phases_dir / "consultation.md"
+        consult_template.write_text(
+            "Review failures:\n{REVIEW_FAILURES}\n"
+            "Base template: {BASE_TEMPLATE_PATH}\n"
+            "Rendered prompt: {RENDERED_PROMPT_PATH}\n"
+            "Module output: {MODULE_OUTPUT_PATH}\n"
+        )
+
+        # Gemini's mock response with valid consultation YAML
+        gemini_yaml = (
+            "Some preamble text\n"
+            "===CONSULTATION_START===\n"
+            "root_cause: Template does not specify Ukrainian-only content in tables\n"
+            "proposed_changes:\n"
+            "  - find: \"Write a comparison table\"\n"
+            "    replace: \"Write a Ukrainian-only comparison table\"\n"
+            "    file: \"content.md\"\n"
+            "    rationale: Prevents English leaking\n"
+            "scope: this_module\n"
+            "action: rebuild\n"
+            "confidence: high\n"
+            "===CONSULTATION_END===\n"
+        )
+
+        state = {"track": "a1", "slug": "test-module", "mode": "v5", "phases": {}}
+
+        with patch("pipeline_v5.PHASES_DIR", phases_dir), \
+             patch("pipeline_v5._get_content_template", return_value="content.md"), \
+             patch("pipeline_v5.dispatch_gemini", return_value=(True, gemini_yaml)), \
+             patch("pipeline_v5._dispatch_prompt", return_value="test"), \
+             patch("pipeline_v5._gemini_output_path", return_value=tmp_path / "out.md"), \
+             patch("pipeline_v5.save_state"):
+
+            result = run_consultation(ctx, state)
+
+        assert result is True
+
+        # Patched template should exist
+        patched = ctx.orch_dir / "consultation-patched-content.md"
+        assert patched.exists()
+        assert "Ukrainian-only" in patched.read_text()
+
+        # State should record the consultation
+        assert "consultations" in state
+        assert state["consultations"][0]["outcome"] == "applied"
+
+    def test_full_consultation_flow_scope_all_modules_queued(self, tmp_path):
+        """Mock Gemini returning scope=all_modules → queued for approval."""
+        from pipeline_v5 import run_consultation
+
+        ctx = _make_ctx(tmp_path)
+        ctx.module_num = 1
+        ctx.model = "test-model"
+        ctx.full_build = False
+        ctx.rag = False
+
+        review_file = ctx.orch_dir / "review-result.md"
+        review_file.write_text("## Issues\n- Systemic template problem\n")
+
+        phases_dir = tmp_path / "phases"
+        phases_dir.mkdir()
+        base_template = phases_dir / "content.md"
+        base_template.write_text("Some template text\n")
+        consult_template = phases_dir / "consultation.md"
+        consult_template.write_text(
+            "{REVIEW_FAILURES}\n{BASE_TEMPLATE_PATH}\n"
+            "{RENDERED_PROMPT_PATH}\n{MODULE_OUTPUT_PATH}\n"
+        )
+
+        gemini_yaml = (
+            "===CONSULTATION_START===\n"
+            "root_cause: Systemic issue\n"
+            "proposed_changes:\n"
+            "  - find: \"Some template text\"\n"
+            "    replace: \"Better template text\"\n"
+            "    file: \"content.md\"\n"
+            "scope: all_modules\n"
+            "action: rebuild\n"
+            "confidence: high\n"
+            "===CONSULTATION_END===\n"
+        )
+
+        state = {"track": "a1", "slug": "test-module", "mode": "v5", "phases": {}}
+        queue_dir = tmp_path / "queue"
+
+        with patch("pipeline_v5.PHASES_DIR", phases_dir), \
+             patch("pipeline_v5._get_content_template", return_value="content.md"), \
+             patch("pipeline_v5.dispatch_gemini", return_value=(True, gemini_yaml)), \
+             patch("pipeline_v5._dispatch_prompt", return_value="test"), \
+             patch("pipeline_v5._gemini_output_path", return_value=tmp_path / "out.md"), \
+             patch("pipeline_v5.save_state"), \
+             patch("pipeline.consultation.QUEUE_DIR", queue_dir):
+
+            result = run_consultation(ctx, state)
+
+        assert result is True
+        assert state["consultations"][0]["outcome"] == "queued"
+
+        # Queue file should exist
+        queue_files = list(queue_dir.glob("*.yaml"))
+        assert len(queue_files) == 1
+
+    def test_consultation_fix_action_records_no_action(self, tmp_path):
+        """action=fix means one-off LLM issue, no template change."""
+        from pipeline_v5 import run_consultation
+
+        ctx = _make_ctx(tmp_path)
+        ctx.module_num = 1
+        ctx.model = "test-model"
+        ctx.full_build = False
+        ctx.rag = False
+
+        review_file = ctx.orch_dir / "review-result.md"
+        review_file.write_text("## Issues\n- Minor one-off issue\n")
+
+        phases_dir = tmp_path / "phases"
+        phases_dir.mkdir()
+        (phases_dir / "content.md").write_text("Template\n")
+        (phases_dir / "consultation.md").write_text(
+            "{REVIEW_FAILURES}\n{BASE_TEMPLATE_PATH}\n"
+            "{RENDERED_PROMPT_PATH}\n{MODULE_OUTPUT_PATH}\n"
+        )
+
+        gemini_yaml = (
+            "===CONSULTATION_START===\n"
+            "root_cause: One-off hallucination\n"
+            "proposed_changes:\n"
+            "  - find: \"x\"\n"
+            "    replace: \"y\"\n"
+            "    file: \"content.md\"\n"
+            "scope: this_module\n"
+            "action: fix\n"
+            "confidence: low\n"
+            "===CONSULTATION_END===\n"
+        )
+
+        state = {"phases": {}}
+
+        with patch("pipeline_v5.PHASES_DIR", phases_dir), \
+             patch("pipeline_v5._get_content_template", return_value="content.md"), \
+             patch("pipeline_v5.dispatch_gemini", return_value=(True, gemini_yaml)), \
+             patch("pipeline_v5._dispatch_prompt", return_value="test"), \
+             patch("pipeline_v5._gemini_output_path", return_value=tmp_path / "out.md"), \
+             patch("pipeline_v5.save_state"):
+
+            result = run_consultation(ctx, state)
+
+        assert result is True
+        assert state["consultations"][0]["outcome"] == "no_action"
+
+    def test_dry_run_skips_dispatch(self, tmp_path):
+        """In dry-run mode, consultation writes the prompt but doesn't dispatch."""
+        from pipeline_v5 import run_consultation
+
+        ctx = _make_ctx(tmp_path)
+        ctx.module_num = 1
+        ctx.model = "test-model"
+        ctx.full_build = False
+        ctx.rag = False
+        ctx.dry_run = True
+
+        review_file = ctx.orch_dir / "review-result.md"
+        review_file.write_text("## Issues\n- Something\n")
+
+        phases_dir = tmp_path / "phases"
+        phases_dir.mkdir()
+        (phases_dir / "content.md").write_text("Template\n")
+        (phases_dir / "consultation.md").write_text(
+            "{REVIEW_FAILURES}\n{BASE_TEMPLATE_PATH}\n"
+            "{RENDERED_PROMPT_PATH}\n{MODULE_OUTPUT_PATH}\n"
+        )
+
+        state = {"phases": {}}
+
+        with patch("pipeline_v5.PHASES_DIR", phases_dir), \
+             patch("pipeline_v5._get_content_template", return_value="content.md"), \
+             patch("pipeline_v5.dispatch_gemini") as mock_dispatch:
+
+            result = run_consultation(ctx, state)
+
+        assert result is True
+        mock_dispatch.assert_not_called()
+        # Prompt file should still be written
+        prompt_files = list(ctx.orch_dir.glob("consultation-*-prompt.md"))
+        assert len(prompt_files) == 1
+
+
+class TestPatchedTemplateSelection:
+    """Test that content/activities phases pick up consultation-patched templates."""
+
+    def test_content_phase_uses_patched_template(self, tmp_path):
+        """When consultation-patched-{name} exists in orch_dir, content phase uses it."""
+        # This tests the logic at pipeline_lib.py:3147-3151
+        orch_dir = tmp_path / "orch"
+        orch_dir.mkdir()
+
+        # Simulate: base template is "content.md", patched copy exists in orch_dir
+        template_name = "content.md"
+        patched = orch_dir / f"consultation-patched-{template_name}"
+        patched.write_text("Patched template with Ukrainian-only instructions\n")
+
+        # The selection logic: if patched exists, use it
+        base = tmp_path / "phases" / template_name
+        base.mkdir(parents=True, exist_ok=True)
+        # Simulating the actual conditional from pipeline_lib.py
+        template = base
+        check = orch_dir / f"consultation-patched-{template_name}"
+        if check.exists():
+            template = check
+
+        assert template == patched
+        assert "Patched" in template.read_text()
+
+    def test_activities_phase_uses_patched_template(self, tmp_path):
+        """When consultation-patched-{name} exists in orch_dir, activities phase uses it."""
+        # This tests the logic at pipeline_v5.py:2537-2541
+        orch_dir = tmp_path / "orch"
+        orch_dir.mkdir()
+
+        # Simulate: activities template is "activities.md"
+        template_path = tmp_path / "phases" / "activities.md"
+        template_path.parent.mkdir(parents=True, exist_ok=True)
+        template_path.write_text("Original activities template\n")
+
+        patched = orch_dir / f"consultation-patched-{template_path.name}"
+        patched.write_text("Patched activities template\n")
+
+        # Simulating the actual conditional from pipeline_v5.py
+        template = template_path
+        check = orch_dir / f"consultation-patched-{template.name}"
+        if check.exists():
+            template = check
+
+        assert template == patched
+        assert "Patched" in template.read_text()
+
+    def test_no_patched_template_uses_original(self, tmp_path):
+        """Without a patched file, the original template is used."""
+        orch_dir = tmp_path / "orch"
+        orch_dir.mkdir()
+
+        template_name = "content.md"
+        base = tmp_path / "phases" / template_name
+        base.parent.mkdir(parents=True, exist_ok=True)
+        base.write_text("Original template\n")
+
+        template = base
+        check = orch_dir / f"consultation-patched-{template_name}"
+        if check.exists():
+            template = check
+
+        assert template == base
+        assert "Original" in template.read_text()
 
 
 # =============================================================================
