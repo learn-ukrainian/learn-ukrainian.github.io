@@ -2,9 +2,9 @@
 """E2E Module Builder v5 — clean pipeline CLI (no v2/v3 legacy).
 
 Usage:
-    %(prog)s a1 12                           # RC mode (no review)
-    %(prog)s a1 12 --review                  # Full mode (with Gemini review)
-    %(prog)s a1 12 --review-claude           # Full mode (with Claude review)
+    %(prog)s a1 12                           # Full build (review on by default)
+    %(prog)s a1 12 --skip-review             # Skip review phase
+    %(prog)s a1 12 --review-claude           # Use Claude for review
     %(prog)s a1 --all                        # Build entire track
     %(prog)s a1 --range 1-20                 # Build range
     %(prog)s a1 12 --rebuild                 # Nuke state, restart
@@ -79,10 +79,11 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     ctx.mode = "v5"  # type: ignore[attr-defined]
     ctx.state["mode"] = "v5"
 
-    # Review flags
-    ctx.review = getattr(args, "review", False) or getattr(args, "review_claude", False)  # type: ignore[attr-defined]
+    # Review flags — review is ON by default, use --skip-review to disable
+    skip_review = getattr(args, "skip_review", False)
+    ctx.review = not skip_review or getattr(args, "review_claude", False)  # type: ignore[attr-defined]
     ctx.skip_discover = getattr(args, "skip_discover", False)  # type: ignore[attr-defined]
-    # Review agent: --review-claude forces Claude, --review uses config default.
+    # Review agent: --review-claude forces Claude, default uses config.
     # CLAUDE_DEFAULT_REVIEW from batch_gemini_config is the source of truth.
     if getattr(args, "review_claude", False):
         ctx.review_agent = "claude"  # type: ignore[attr-defined]
@@ -324,7 +325,7 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
                     if full_passed:
                         # Check v5 state — if review requested but not done, fall through
                         orch_dir = paths["md"].parent / "orchestration" / slug
-                        want_review = getattr(args, "review", False) or getattr(args, "review_claude", False)
+                        want_review = not getattr(args, "skip_review", False) or getattr(args, "review_claude", False)
                         if want_review:
                             v5_state = orch_dir / "state.json"
                             review_done = False
@@ -411,12 +412,13 @@ def main() -> int:
         description="E2E Module Builder v5 — clean pipeline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
-            Pipeline phases: research → discover → content → validate → [review] → activities → mdx
+            Pipeline phases: research → discover → content → validate → review → activities → mdx
+            Review runs by default. Use --skip-review to disable.
 
             Examples:
-              %(prog)s a1 12                            # RC mode (no review)
-              %(prog)s a1 12 --review                   # Full mode (with Gemini review)
-              %(prog)s a1 --all                         # Build entire track (RC)
+              %(prog)s a1 12                            # Full build (with review)
+              %(prog)s a1 12 --skip-review              # Skip review phase
+              %(prog)s a1 --all                         # Build entire track
               %(prog)s a1 --range 1-20                  # Build range
               %(prog)s a1 12 --rebuild                  # Nuke state, restart
               %(prog)s a1 12 --dry-run                  # Show plan, no dispatches
@@ -458,11 +460,11 @@ def main() -> int:
     parser.add_argument("--skip-discover", action="store_true", dest="skip_discover",
                         help="Skip video/blog discovery phase")
 
-    # Review
-    parser.add_argument("--review", action="store_true",
-                        help="Include Gemini RAG-grounded review phase")
+    # Review (on by default)
+    parser.add_argument("--skip-review", action="store_true", dest="skip_review",
+                        help="Skip review phase (review runs by default)")
     parser.add_argument("--review-claude", action="store_true", dest="review_claude",
-                        help="Include Claude review phase (uses Claude instead of Gemini)")
+                        help="Use Claude for review instead of default agent")
 
     # Model overrides
     parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
