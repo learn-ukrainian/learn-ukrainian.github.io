@@ -172,7 +172,7 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
             continue
         # Skip lines that are mostly single Cyrillic words (vocab drills)
         # These are short lines with 1-3 Cyrillic words and no sentence structure
-        cyrillic_words = re.findall(r'[\u0400-\u04ff]{2,}', stripped)
+        cyrillic_words = re.findall(r'[\u0400-\u04ff\u0301]{2,}', stripped)
         if (1 <= len(cyrillic_words) <= 3 and len(stripped) < 50
                 and not re.search(r'\b(є|був|була|було|буде|можна|треба|потрібно)\b', stripped, re.IGNORECASE)):
                 continue
@@ -188,7 +188,7 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
         if cyrillic_chars > 5:
             # Additional check: skip if this looks like a word list
             # Word lists have high comma-to-word ratio (>0.3)
-            words = re.findall(r'[\u0400-\u04ff]{2,}', sent)
+            words = re.findall(r'[\u0400-\u04ff\u0301]{2,}', sent)
             commas = sent.count(',')
             if len(words) > 0 and commas / len(words) > 0.3:
                 continue

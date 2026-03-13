@@ -135,8 +135,11 @@ def check_sentence_complexity(text: str, level_code: str) -> list[dict]:
 
     sentences = extract_ukrainian_sentences(text)
     for sent in sentences:
-        # Only count words with 2+ characters (excludes single-letter endings like -а/-я/-о/-е)
-        words = re.findall(r'[\u0400-\u04ff]{2,}', sent)
+        # Only count words with 2+ Cyrillic chars (excludes single-letter endings like -а/-я/-о/-е)
+        # Include combining accents (U+0301 stress marks) so "опи́суємо" is one word, not two
+        words = re.findall(r'[\u0400-\u04ff\u0301]{2,}', sent)
+        # Strip standalone accent marks that aren't part of a word
+        words = [w for w in words if any(c in 'абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ' for c in w)]
         # Skip drill lists (all-caps syllable/letter sequences like "МА МО МУ НА НО НУ")
         if words and all(w == w.upper() and len(w) <= 3 for w in words):
             continue

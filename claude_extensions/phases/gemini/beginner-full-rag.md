@@ -113,15 +113,6 @@ Even when no exact textbook exercise matches, ground your content in textbook pe
 
 3. **Vary containers.** Never use the same container type twice in a row. Alternate between tables, example lists, dialogues, and pattern boxes to keep the rhythm natural.
 
-### Sentence Complexity (HARD FAIL if violated)
-
-- **A1**: Ukrainian sentences must be **≤10 words**
-- **A2**: Ukrainian sentences must be **≤15 words**
-- This limit applies to ALL Ukrainian text — examples, dialogues, pattern boxes, bulleted lists
-- English explanatory paragraphs are EXEMPT from this limit
-- If a Ukrainian sentence exceeds the limit, **split it into two shorter sentences**
-- **No participles (дієприкметники) until B1** — use relative clauses or simple sentences instead (e.g., NOT "написаний лист" → "лист, який написали")
-
 ### Style Rules
 
 - Ukrainian section headers with English in parentheses: `## Наказовий спосіб (The Imperative Mood)`
@@ -386,8 +377,6 @@ Rules for YAML:
 - [ ] {ENGAGEMENT_MIN}+ callout boxes?
 - [ ] All target vocabulary words used in content?
 - [ ] No Russianisms, Russian characters, IPA?
-- [ ] **No Ukrainian sentences over {TRACK} word limit** (A1=10, A2=15)?
-- [ ] **No participles** (дієприкметники)?
 - [ ] **Grammar terms glossed on first use** (e.g., "орудний відмінок (instrumental case)")?
 - [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
 - [ ] **Dialogue quality**: Max 2-3 dialogues total. Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
