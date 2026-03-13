@@ -106,7 +106,7 @@ Even when no exact textbook exercise matches, ground your content in textbook pe
 1. **Paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
 
 2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
-   - **Tables** — paradigms, vocabulary groups, gender sorting (highest immersion density)
+   - **Tables** — paradigms, vocabulary groups, gender sorting (WARNING: tables contribute ZERO to immersion score)
    - **Bulleted example lists** — Ukrainian line + English gloss: `- **Читай книгу!** — Read the book!`
    - **Blockquote dialogues** — mini-conversations with labeled speakers
    - **Pattern boxes** — transformations: `читати → читай → читайте`
