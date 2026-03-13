@@ -425,17 +425,34 @@ def get_pedagogical_constraints(track: str, module_num: int, plan: dict | None =
 
 
 def _build_exact_section_titles(ctx) -> str:
-    """Build an explicit list of required H2 section titles from the content outline."""
+    """Build an explicit list of required H2 section titles from the content outline.
+
+    Auto-appends Summary/Підсумок if missing from the outline — the audit
+    structure gate requires it and 35+ A2 plans omit it.
+    """
     if not ctx.content_outline:
         return ""
     titles = []
+    has_summary = False
     for section in ctx.content_outline:
         name = section.get("section") or section.get("title", "")
         words = section.get("words", 0)
         if name:
             titles.append(f"- `## {name}` (~{words} words)")
+            if "підсумок" in name.lower() or "summary" in name.lower():
+                has_summary = True
     if not titles:
         return ""
+
+    # Auto-inject Summary if the plan doesn't include it
+    if not has_summary:
+        summary_heading = (
+            "Summary" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
+            else "Підсумок — Summary" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
+            else "Підсумок"
+        )
+        titles.append(f"- `## {summary_heading}` (~150 words) — recap + 3-4 self-check questions")
+
     return (
         "## REQUIRED H2 Sections (use EXACT titles)\n\n"
         "Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, "
