@@ -143,7 +143,9 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
     orch_dir = track_dir / "orchestration" / slug
 
     version = detect_pipeline_version(orch_dir)
-    phases = get_phases_for_version(orch_dir, version)
+    # Read state once — reuse for phases + consultations (avoids duplicate I/O)
+    state_data = read_v2_state(orch_dir) if version == "v5" else {}
+    phases = get_phases_for_version(orch_dir, version, state_data=state_data)
 
     audit = get_audit_status(track_dir, slug)
     word_target = audit.get("word_target", 0)
@@ -160,21 +162,25 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
             "status": audit["status"], "word_count": audit.get("word_count", 0),
             "word_target": word_target, "blocking_issues": audit.get("blocking_issues", []),
         },
-        "research": {"exists": has_research_file(track_dir, slug), "score": get_research_score(track_dir, slug, track_id)},
+        "research": {
+            "exists": has_research_file(track_dir, slug),
+            "score": get_research_score(track_dir, slug, track_id),
+        },
         "review": {"exists": (track_dir / "review" / f"{slug}-review.md").exists()},
         "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
         "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
         "final_review": get_final_review_info(track_dir, slug),
         "enriched": plan_file.with_suffix(".yaml.bak").exists(),
+        "consultations": state_data.get("consultations", []),
         "comms": get_broker_messages_for_slug(slug, limit=15),
         "generated_at": datetime.now(UTC).isoformat(),
     }
 
 
-def get_phases_for_version(orch_dir, version):
+def get_phases_for_version(orch_dir, version, *, state_data: dict | None = None):
     """Get phase status dict appropriate for the pipeline version."""
     if version == "v5":
-        v5 = read_v2_state(orch_dir)
+        v5 = state_data if state_data is not None else read_v2_state(orch_dir)
         return {name: parse_v5_phase_status(v5, name) for name in V5_PHASE_ORDER}
     elif version == "v4":
         v4 = read_v4_state(orch_dir)

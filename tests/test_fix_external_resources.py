@@ -315,8 +315,8 @@ class TestIntegration:
 
         assert report["total_entries"] > 0
         assert report["total_modules"] > 0
-        # We know there are YouTube search URLs
-        assert len(report["youtube_search"]) > 0
+        # After #752 cleanup, no YouTube search URLs should remain
+        assert len(report["youtube_search"]) == 0
 
     def test_clean_then_audit_shows_no_search_urls(self):
         """After cleaning, audit should find zero YouTube search URLs."""

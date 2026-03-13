@@ -40,10 +40,6 @@ from .state_compute import (
     compute_research_detail,
     severity_key,
 )
-from .state_issues import (
-    compute_final_reviews,
-    compute_issues,
-)
 from .state_coverage import (
     compute_pipeline_track,
     compute_research_coverage,
@@ -51,8 +47,6 @@ from .state_coverage import (
     compute_summary,
 )
 from .state_helpers import (
-    V4_PHASE_ORDER,
-    V5_PHASE_ORDER,
     cache_get,
     cache_set,
     detect_pipeline_version,
@@ -67,6 +61,10 @@ from .state_helpers import (
     read_v2_state,
     read_v3_state,
     read_v4_state,
+)
+from .state_issues import (
+    compute_final_reviews,
+    compute_issues,
 )
 
 # Re-export symbols used by dashboard_router and tests (backward compat)
@@ -95,7 +93,7 @@ async def state_summary():
 
 @router.get("/pipeline/{track_id}")
 async def pipeline_track(track_id: str):
-    """Per-module v3 phase state for one track."""
+    """Per-module v5/v4/v3 phase state for one track."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})

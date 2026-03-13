@@ -402,7 +402,8 @@ def get_pedagogical_constraints(track: str, module_num: int, plan: dict | None =
         return ""
 
     # Extract phase key from plan (e.g., "A1.1 [First Contact]" → "A1.1")
-    phase_str = plan.get("phase", "")
+    phase_raw = plan.get("phase", "")
+    phase_str = str(phase_raw) if phase_raw else ""
     phase_key = phase_str.split("[")[0].strip() if phase_str else ""
 
     phase_constraint = _A1_PHASE_CONSTRAINTS.get(phase_key, "")
@@ -535,7 +536,8 @@ def _get_writing_style(ctx) -> str:
     A1.1 (alphabet/phonology): letter-by-letter instruction, no dialogues, no verbs.
     A1.2+ (grammar modules): DISCOVER-UNDERSTAND-PRACTICE with dialogues.
     """
-    phase_str = ctx.plan.get("phase", "") if ctx.plan else ""
+    phase_raw = ctx.plan.get("phase", "") if ctx.plan else ""
+    phase_str = str(phase_raw) if phase_raw else ""
     phase_key = phase_str.split("[")[0].strip() if phase_str else ""
 
     if phase_key == "A1.1":

@@ -92,7 +92,7 @@ Sample response:
 
 ### `GET /api/state/pipeline/{track}`
 
-Per-module v3/v4 phase state for one track. Shows each module's phase progress. Detects pipeline version automatically per module.
+Per-module v5/v4/v3 phase state for one track. Shows each module's phase progress. Detects pipeline version automatically per module.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
@@ -124,18 +124,18 @@ Returns (v3 module):
 }
 ```
 
-Returns (v4 module):
+Returns (v5 module):
 ```json
 {
   "num": 10, "slug": "my-world-objects",
-  "pipeline_version": "v4",
+  "pipeline_version": "v5",
   "phases": {
-    "research": {"status": "complete", "ts": "2026-03-02T20:08:33Z"},
+    "research": {"status": "complete", "ts": "2026-03-02T20:08:33Z", "executor": {"type": "llm", "agent": "gemini", "model": "gemini-2.5-flash"}},
     "discover": {"status": "complete", "ts": "2026-03-02T20:08:49Z"},
     "content": {"status": "complete", "ts": "2026-03-02T20:12:36Z"},
-    "activities": {"status": "complete", "ts": "2026-03-02T20:15:12Z"},
-    "validate": {"status": "pending"},
-    "review": {"status": "pending"},
+    "validate": {"status": "complete", "ts": "2026-03-02T20:14:00Z"},
+    "review": {"status": "complete", "ts": "2026-03-02T20:15:12Z"},
+    "activities": {"status": "complete", "ts": "2026-03-02T20:16:00Z"},
     "mdx": {"status": "pending"}
   },
   "audit": "pass",
@@ -145,12 +145,15 @@ Returns (v4 module):
 }
 ```
 
-**Pipeline version detection** (per module): `state-v4.json` > `state-v3.json` > `state.json["mode"]` > `"unbuilt"`.
+**Pipeline version detection** (per module): `state.json["mode"] == "v5"` > `state-v4.json` > `state-v3.json` > `"unbuilt"`.
 
-All module-level responses include `needs_rebuild: true|false` — true for v3/unbuilt modules, false for v4.
+All module-level responses include `needs_rebuild: true|false` — true for v3/unbuilt modules, false for v5/v4.
 
+V5 phases: `research`, `discover`, `content`, `validate`, `review`, `activities`, `mdx`.
 V4 phases: `research`, `discover`, `content`, `activities`, `validate`, `review`, `mdx`.
 V3 phases: `A`, `B`, `C`, `audit`, `D`.
+
+**Executor provenance** (v5 only): Each phase may include an `executor` object with `type` (llm/script), `agent`, and `model` fields — tracks which LLM or script executed the phase.
 
 Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
@@ -158,7 +161,7 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
 ### `GET /api/state/pipeline-versions[?track=x]`
 
-Migration progress — how many modules are v4 vs v3/unbuilt. **The single-glance v4 migration dashboard.**
+Migration progress — how many modules are v5 vs v4/v3/unbuilt. **The single-glance v5 migration dashboard.**
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
@@ -169,18 +172,17 @@ Returns:
 ```json
 {
   "total": 64,
-  "counts": {"v4": 2, "v3": 62, "unbuilt": 0},
-  "pct_v4": 3,
-  "needs_rebuild": 62,
-  "per_track": {"a1": {"v4": 2, "v3": 62, "unbuilt": 0}},
-  "v4_modules": [
-    {"track": "a1", "num": 1, "slug": "the-cyrillic-code-i"},
-    {"track": "a1", "num": 10, "slug": "my-world-objects"}
-  ]
+  "counts": {"v5": 40, "v4": 2, "v3": 22, "unbuilt": 0},
+  "pct_v5": 63,
+  "pct_built": 66,
+  "needs_rebuild": 22,
+  "per_track": {"a1": {"v5": 40, "v4": 2, "v3": 22, "unbuilt": 0}},
+  "v5_modules": [...],
+  "v4_modules": [...]
 }
 ```
 
-`needs_rebuild` = `v3 + unbuilt` count. `v4_modules` lists only the modules already on v4.
+`needs_rebuild` = `v3 + unbuilt` count. `pct_v5` shows v5 adoption rate.
 
 ---
 
@@ -230,8 +232,8 @@ curl -s http://localhost:8765/api/state/module/a1/9 | python3 -m json.tool
 ```
 
 Returns:
-- `pipeline_version` — `"v4"`, `"v3"`, or `"unbuilt"`
-- `phases` — v4: named phases (`research`..`mdx`); v3: letter-coded (`A`..`F`) with status/timestamps
+- `pipeline_version` — `"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`
+- `phases` — v5/v4: named phases (`research`..`mdx`) with executor provenance; v3: letter-coded (`A`..`F`)
 - `audit` — status, word_count, word_target, blocking_issues
 - `research` — exists, quality score (0-10)
 - `review` — exists
@@ -239,6 +241,7 @@ Returns:
 - `content_review` — whether `/content-review` has been run (bool, checks `audit/{slug}-content-review.md`)
 - `final_review` — verdict (APPROVE/NEEDS_WORK), issue count, issue summaries
 - `enriched` — whether plan was enriched (`.yaml.bak` exists)
+- `consultations` — list of consultation attempts from `--consult` runs (num, outcome, scope, action, confidence, timestamp)
 - `comms` — last 15 broker messages related to this module's slug
 
 ---
@@ -317,7 +320,7 @@ curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version` (`"v5"`, `"v4"`, or `"unbuilt"`). Returns list sorted by track then num. Use before running `build_module_v5.py --all`.
+Each entry includes `pipeline_version` (`"v5"`, `"v4"`, `"v3"`, or `"unbuilt"`). Returns list sorted by track then num. Use before running `build_module_v5.py --all`.
 
 ---
 
@@ -348,7 +351,7 @@ curl -s http://localhost:8765/api/state/failing | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/failing?track=a1" | python3 -m json.tool
 ```
 
-Each entry includes `pipeline_version` and `blocking_issues` — failed gate names and messages. V4 failed phases use named keys (e.g. `"content"`, `"validate"`); v3 uses letter codes (e.g. `"B"`, `"D"`).
+Each entry includes `pipeline_version` and `blocking_issues` — failed gate names and messages. V5/V4 failed phases use named keys (e.g. `"content"`, `"validate"`); v3 uses letter codes (e.g. `"B"`, `"D"`).
 
 ---
 

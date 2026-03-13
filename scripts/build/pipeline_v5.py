@@ -3864,6 +3864,13 @@ def run_consultation(ctx: ModuleContext, state: dict) -> bool:
             review_failures = friction_files[0].read_text("utf-8")[:4000]
             log(f"  consultation: Using failure data from {friction_files[0].name}")
 
+    # Fallback: audit report (when validate/review artifacts were cleaned)
+    if not review_failures:
+        audit_log = ctx.paths["md"].parent / "audit" / f"{ctx.slug}-audit.md"
+        if audit_log.exists():
+            review_failures = audit_log.read_text("utf-8")[:4000]
+            log("  consultation: Using failure data from audit report")
+
     if not review_failures:
         log("  consultation: No failure data found — nothing to consult on")
         return False

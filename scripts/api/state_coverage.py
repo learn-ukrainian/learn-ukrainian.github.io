@@ -4,26 +4,23 @@ These functions compute summary, pipeline track, research coverage,
 and review coverage data. All are sync functions designed for asyncio.to_thread().
 """
 
+import sys
 from datetime import UTC, datetime
+from pathlib import Path
 
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_helpers import (
-    PLANS_ROOT,
     PROFILE_MAP,
+    detect_pipeline_version,
     get_audit_status,
     get_plan_slugs,
     get_research_score,
     get_word_target_from_plan,
-    has_research_file,
     is_content_done,
     is_research_done,
     load_module_state,
     parse_phase_status_from_state,
-    detect_pipeline_version,
 )
-
-import sys
-from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -35,7 +32,7 @@ from .review_parsing import count_review_issues, extract_plan_verdict, extract_r
 try:
     from pipeline_v5 import PHASES as _PIPELINE_PHASES
 except ImportError:
-    _PIPELINE_PHASES = ["research", "discover", "sandbox", "content", "activities", "validate", "review", "mdx"]
+    _PIPELINE_PHASES = ["research", "discover", "content", "validate", "review", "activities", "mdx"]
 
 
 def compute_summary() -> dict:
