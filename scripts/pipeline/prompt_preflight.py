@@ -316,20 +316,17 @@ def run_prompt_preflight(
     output_path = orch_dir / "preflight-output.md"
     task_id = f"preflight-{track}-{module_num}"
 
-    from pipeline_lib import _run_with_heartbeat
-    ok = _run_with_heartbeat(
-        dispatch_fn,
+    ok, raw = dispatch_fn(
         str(preflight_prompt_path),
-        str(output_path),
-        task_id=task_id,
-        label="Gemini preflight",
+        task_id,
+        output_file=output_path,
     )
 
-    if not ok or not output_path.exists():
+    if not ok:
         log("  preflight: Gemini dispatch failed")
-        return PreflightResult(status="DISPATCH_ERROR", raw_output="")
+        return PreflightResult(status="DISPATCH_ERROR", raw_output=raw or "")
 
-    raw_output = output_path.read_text("utf-8")
+    raw_output = output_path.read_text("utf-8") if output_path.exists() else (raw or "")
     result = parse_preflight_response(raw_output)
 
     # Log results
