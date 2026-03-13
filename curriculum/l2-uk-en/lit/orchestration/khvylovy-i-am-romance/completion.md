@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 91 — E2E
+PASS: pipeline lit 95
 
   Module:   khvylovy-i-am-romance
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T17:41:11Z
+  Date:     2026-03-13T18:53:21Z

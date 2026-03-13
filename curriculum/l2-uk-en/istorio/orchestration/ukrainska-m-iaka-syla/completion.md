@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 132
+PASS: pipeline istorio 132
 
   Module:   ukrainska-m-iaka-syla
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 132
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:25:04Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:00:46Z

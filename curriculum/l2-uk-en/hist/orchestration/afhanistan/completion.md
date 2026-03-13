@@ -1,4 +1,4 @@
-FAIL: pipeline hist 116
+PASS: pipeline hist 116
 
   Module:   afhanistan
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 116
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:20:36Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:11:25Z

@@ -1,0 +1,267 @@
+discovered_at: '2026-03-13T16:35:21.205073+00:00'
+query_keywords:
+- Franko Social Poetry
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Franko Social Poetry у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=8l_FfmbpEWs
+  channel: Radio Khartia
+  title: Культура виживає завдяки тим, хто не здається
+  relevance_score: 0.8
+  relevance_note: Covers closely related material. This video discusses the survival
+    of Ukrainian culture and language, specifically mentioning Ivan Nechuy-Levytsky,
+    a contemporary of Franko, and the challenges faced by Ukrainian writers under
+    imperial pressure. This provides excellent historical and cultural context directly
+    relevant to Franko's social poetry and its 'Деколонізаційний вимір'.
+  transcript_excerpt: В мене таке враження, що для того, щоб функціонувала от так
+    би мовити культура, потрібні і под, ну, тим більше держава, нація, потрібні і
+    подвижники... Іван Не Чуєвицький, ... він, між іншим, все життя викладав русскою
+    словесност. ...українську словесность неможливо було викладати.
+  embed_suggestion: After section 'Вступ та культурний контекст' or 'Деколонізаційний
+    вимір' -- to illustrate the historical context of Ukrainian literary figures and
+    their struggle for cultural preservation.
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.7
+  relevance_note: Covers closely related material. It discusses the Ukrainian literary
+    'канон' and the continuity/challenges of Ukrainian literature, which is highly
+    relevant to understanding the cultural and historical context (Вступ та культурний
+    контекст) and the decolonization dimension of Franko's work, even though it features
+    other authors.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. ... Ми будемо говорити про тяглість української літератури, про проблему
+    пам'яті, власне, про те, що в є в назві книжки Віри Павліної про амнезію, про
+    її подолання.
+  embed_suggestion: After section 'Вступ та культурний контекст' or 'Деколонізаційний
+    вимір' -- to provide broader context on literary canon and cultural memory in
+    Ukraine.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: Tangentially related. While it discusses modern Ukrainian poetry
+    and the resilience of language, linking to the concept of 'метафора' (metaphor)
+    and language's social role, it does not directly address Ivan Franko or his specific
+    social poetry. It could offer a contemporary contrast to Franko's themes.
+  transcript_excerpt: Збірка віршів це поезія про мову... здатність мови повертатися
+    і самовідтворюватись, про її вразливість, про її здатність до опору.
+  embed_suggestion: After section 'Мова, стиль та поетика' -- to contrast modern poetic
+    language and its social function with Franko's era.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/episode223/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 223
+- url: https://www.ukrainianlessons.com/episode224/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - vocabulary
+  - housing
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 224
+- url: https://www.ukrainianlessons.com/episode225/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 225
+- url: https://www.ukrainianlessons.com/episode226/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 226
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0185
+  text: "97\nІван  Франко\nПро­лог прой­ня­тий та­ким же ви­со­ким гро­ма­дян­ським\
+    \ па­фо­сом, по­лум’яним \nпат­рі­о­тиз­мом, як і «Бо­жес­твен­на ко­ме­дія»,\
+    \ зок­ре­ма піс­ня VІ «Чис­ти­ли­ща», де \nміс­тить­ся ві­до­ме звер­нен­ня Дан­те\
+    \ до Іта­лії. Про­лог І. Франка — це стис­лий ху­дож­ній лі­то­пис іс­то­рії ук­ра­їн­сько­го\
+    \ на­ро­ду, \nду­хов­но­фі­ло­соф­ське її ос­мис­лен­ня. Ог­ля­да­ю­чи ми­ну­ле\
+    \ Ук­ра­ї­ни, по­ет ба­чить у \nньо­му не тіль­ки «об­луд­ли­ву по­кір­ність уся­ко­му,\
+    \ хто зра­дою і роз"
+  section_title: Сторінка 97
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0184
+  text: "Він став сво­є­рід­ним ко­мен­та­рем, який увіб­рав ос­нов­ні ідей­но­\n\
+    фі­ло­соф­ські нас­та­но­ви тво­ру, го­лов­ні проб­ле­ми, а та­кож гро­ма­дян­ський\
+    \ та на­ці­о­\nналь­но­виз­воль­ний па­фос. Про­лог про­мо­вис­то зас­від­чує,\
+    \ що по­е­ма спро­ек­то­ва­на в \nсу­час­ну для ав­то­ра ук­ра­їн­ську дій­сність,\
+    \ ад­же в ньо­му поет (який у цьо­му ра­зі цілком \nото­тож­нює се­бе з лі­рич­ним\
+    \ ге­ро­єм) без­по­се­ред­ньо звер­та­єть­ся до рід­но­го на­ро­ду:\n\t\n\t\n\
+    На­ро­де мій, за­му­че­ний, роз­би­тий"
+  section_title: Сторінка 96
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0399
+  text: "(За К. Макґоніґал)\n \n \nВизначте, яким способом пов’язані речення в тексті —\
+    \ послідовним \n(ланцюговим) чи паралельним. Які ключові слова визначають тему\
+    \ тексту? А як ви формуєте силу волі? Що ще, крім сили волі, допомагає в до-\n\
+    сягненні мети? 645 Доберіть із художньої літератури уривок тексту про цікаву осо-\n\
+    бистість. Визначте тему й мікротеми, стиль мовлення тексту. Знайдіть за-\nсоби\
+    \ зв’язку речень у тексті (синоніми, займенники, повторювані слова, \nсполучники\
+    \ тощо). Схарактеризуйте текст за йог"
+  section_title: Сторінка 226
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5736080408096313
+  chunk_id: fc2291b5_c3692
+  text: "КОНТЕКСТ (лат. contextus\r\n— з’єднання, зв’язок, зчеплення) — відносно завершена\
+    \ (змістом і формою)\r\nчастина тексту, в межах якої оптимально виявляються сенс,\
+    \ значення\r\nокремого слова, фрази, образного вислову. Відомо, напр., що поза\
+    \ К. (його\r\nстилістичними та смисловими зв’язками) цитата може втратити первісне\
+    \ значення,\r\nнабути іншого, не властивого їй змісту. В худож. л-рі К. визначає\
+    \ конкретний\r\nзміст, стиліст. забарвлення, міру виразності не лише окр. слів,\
+    \ фраз, а й\r\nхудож. засобів (тропів, "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5706561207771301
+  chunk_id: fbf8bdff_c0734
+  text: "It should be remembered that Franko was also a\r\nscholar and publicist (his\
+    \ research into the different linguistic devices used\r\nin these various branches\
+    \ of the literary language deserves further study).\r\nThis accounts for the particular\
+    \ attention he paid to investigating the\r\nbeginnings and sources of conflicts-whether\
+    \ contemporaneous or future. He\r\ndelighted, for example, in stories about children\
+    \ and he provided for the adult\r\ncharacters of his, prose /94/ detailed descriptions\
+    \ of their motiv"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5536607503890991
+  chunk_id: 479cf43d_c0174
+  text: "Центральну для себе проблему \"особистість і\r\nзагал\" Ф. розгортає у різних\
+    \ площинах: герой і маса, творець і народ,\r\nмитець і публіка, будитель і спільнота.\
+    \ Ця суперечність в її різних модифікаціях\r\nосмислюється і переживається поетом\
+    \ як смисложиттєва, спроектована на долю укр.\r\nінтелігента, що за вкрай несприятливих\
+    \ обставин життя бездержавної спільноти\r\nмає бути готовим до жертовного подвигу,\
+    \ щоб сприяти перетворенню маси на\r\nактивну й самосвідому нац. силу. Його опорою\
+    \ на цьому шляху є віра в "
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

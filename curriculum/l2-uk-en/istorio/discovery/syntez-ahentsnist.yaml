@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T14:05:15.678570+00:00'
+query_keywords:
+- 'Синтез: Від жертви до суб''єкта'
+- Стратегії виживання
+- Поворотні моменти агентності
+- Хто будував Україну
+- Від об'єкта до суб'єкта
+- 'Analyze the causes and consequences of синтез: від жертви до суб''єкта'
+- Evaluate the historical significance of наратив агентності
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0005
+  text: "4 \n \n \n \nРозділ 4. ВІДНОВЛЕННЯ ДЕРЖАВНОЇ НЕЗАЛЕЖНОСТІ УКРАЇНИ,  \n  \
+    \                                  ЇЇ РОЛЬ У РОЗПАДІ СОЮЗУ РАДЯНСЬКИХ  \n    \
+    \                                        СОЦІАЛІСТИЧНИХ РЕСПУБЛІК \n§ 30. Початок\
+    \ перебудовчого процесу в СРСР і Україна ................178 \n§ 31. Розгортання\
+    \ національного руху в Україні..........................184 \n§ 32. Становище\
+    \ у сфері культури. Відродження релігійного та \nцерковного життя .............................................................."
+  section_title: Сторінка 5
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0256
+  text: "Виговського;\n\x84\n\x84\nчинники, що зумовили вибух \nгромадянської війни\
+    \ \nв  Гетьманщині;\n\x84\n\x84\nГадяцьку угоду та реакцію на неї \nукраїнського\
+    \ суспільства \nй  сусідніх держав;\n\x84\n\x84\nспроби Ю. Хмельницького \nврятувати\
+    \ Гетьманщину від Руїни;\n\x84\n\x84\nрозкол Гетьманщини на \nПравобережну і \
+    \ Лівобережну;\n\x84\n\x84\nпочаток правління гетьмана \nП. Дорошенка;\n\x84\n\
+    \x84\nАндрусівське перемир’я між \nРіччю Посполитою і  Московією."
+  section_title: Сторінка 158
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0422
+  text: "розділ V. розвиток україни як незалежної держави\n240\n1. Складіть перелік\
+    \ подій у незалежній Україні, які \nви вважаєте найважливішими. Обґрунтуйте свій\
+    \ \nвибір. 2. Поясніть значення понять і  термінів: незалеж-\nність, ринкова економіка,\
+    \ приватизація, гіпер-\nінфляція, багатовекторність, інтеграція, «пома-\nранчева\
+    \ революція». 3. Визначте здобутки і  прорахунки політики пре-\nзидентів України:\
+    \ Л. Кравчука, Л. Кучми, \nВ. Ющенка. 4. У чому полягає суперечливість процесу\
+    \ розбудови \nнезалежної держави в  "
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0005
+  text: "4\n§ 1. Повторення. Вступ\n1. Другий період Новітньої історії України\nІсторія\
+    \ України, як ви вже знаєте, поділяється \nна історичні періоди – етапи її політичного,\
+    \ соці-\nально-економічного та культурного розвитку. Цьо-\nго року ви дізнаєтеся\
+    \ про події другого періоду \nНовітньої історії України. Зокрема, йтиметься про\
+    \ \nдисидентський правозахисний рух, «шістдесятни-\nцтво», наполегливу працю українського\
+    \ народу \nв різних галузях господарства, розвиток української \nкультури, відновлення\
+    \ незалежності Укр"
+  section_title: Сторінка 6
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0559
+  text: "Розділ V.\t Розвиток  України як незалежної держави\nРозділ VI.\t Європейський\
+    \ вибір України. Російсько-українська війна\nРозділ IV.\t Відновлення державної\
+    \  \nнезалежності України,  \nїї роль у розпаді СРСР\nrnk.com.ua/109561\n«Хто\
+    \ віддав нашу ядерну зброю»\nrnk.com.ua/109901\n«З чого почалася російсько-\n\
+    українська війна»\nrnk.com.ua/109556\n«Війна за незалежність України. \nРеальна\
+    \ історія УНР»\nrnk.com.ua/109563\n«Реальна історія \nукраїнського прапора»\n\
+    rnk.com.ua/109903\n«Ось чому історію в Росії пишуть \nспец"
+  section_title: Сторінка 323
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5248152017593384
+  chunk_id: 53691244_c0002
+  text: "§6. Становлення\r\nміждержавних відносин\n\nГлава 3. \r\nУкраїна в концепціях\
+    \ і доктринах Угорщини (Микола ДЕРЖАЛЮК)\n\n§1. Угорська\r\nдержавність у першій\
+    \ третині XX століття та український чинник\n\n§2. Угорські\r\nгеополітичні комбінації\
+    \ у Другій світовій війні\n\n§3. Угорська політика\r\nщодо України на сучаcному\
+    \ етапі\n\nГлава 4. \r\nУкраїна та\r\n«українське питання» в політиці Чехословаччини\
+    \ (Степан ВІДНЯНСЬКИЙ)\n\n§1. Утворення\r\nЧехословацької республіки та «українське\
+    \ питання»\n\n§2. Розвиток двосторонніх зв’язкі"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5179418325424194
+  chunk_id: 53691244_c0003
+  text: "§7. Україна в\r\nзовнішньополітичній концепції об’єднаної Німеччини (Андрій\
+    \ МАРТИНОВ)\n\nГлава 8. \r\nУкраїна у зовнішньополітичних доктринах США\n\n§1.\
+    \ Terra incognita\r\n(Євген КАМІНСЬКИЙ)\n\n§2. На периферії інтересів\r\n(Євген\
+    \ КАМІНСЬКИЙ)\n\n§3. «Українське\r\nпитання» і «холодна війна» (Євген КАМІНСЬКИЙ)\n\
+    \n§4. Дезінтеґрація\r\nСРСР і Україна: виклик для США (Олексій ГАРАНЬ)\n\n§5.\
+    \ Прорив у\r\nдвосторонніх відносинах (Євген КАМІНСЬКИЙ)\n\nГлава 9. \r\n«Українське\
+    \ питання» в політичній стратегії Росії\n\n§1. «Українське\r\nп"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5172527432441711
+  chunk_id: 53691244_c0392
+  text: "5\r\n Bouretz\r\nPierre. Désir de transparence et respect du secret. Esprit,\
+    \ №211, Mai\r\n1995.—P.49.\n\n6\r\n Ницше\r\nФридрих. Человеческое, слишком человеческое.—В\
+    \ кн.: Ницше Фридрих. Соч.: В 2-х т.—М., 1990.—Т.2—С. 447.\n\n7 Аристотель.\r\n\
+    Никомахова этика.—В кн: Соч. в 4-х томах.—Т.4.—М., 1984.—С.150.\n\n8 Рикер\r\n\
+    Поль. Герменевтика. Этика. Политика. Московские лекции и интервью.—М.,1995.—С.\r\
+    \n49.\n\n9\r\n Див.: Adorno Theodore, Frenkel-Brunswick, Levison D.I., Newitt\
+    \ R. The\r\nAuthoritarian Personality. Studies in "
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

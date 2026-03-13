@@ -1,0 +1,139 @@
+discovered_at: '2026-03-13T18:57:39.357701+00:00'
+query_keywords:
+- Сучасна українська література
+- Introduction — Today's Literary Landscape
+- Провідні автори та культурні ікони
+- Leading Authors and Cultural Icons
+- Жанрова панорама та нове покоління
+- Genre Panorama and the New Generation
+- Книжкова інфраструктура та індустрія
+- Book Infrastructure and Industry
+- Майстерня книжкового оглядача
+- Book Reviewer's Workshop
+- Створення вторинних текстів
+- Creating Secondary Texts
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=KO9kjMcvIkM
+  channel: Суспільне Культура
+  title: LITERATURE IN 2025? WHICH BOOKS ABOUT WAR ARE THE MOST DISCUSSED
+  relevance_score: 0.95
+  relevance_note: Directly discusses modern Ukrainian literature, current popular
+    themes (war literature), best-selling authors, and how war influences reading
+    habits, aligning perfectly with the module's focus on the contemporary literary
+    landscape and new generations/genres.
+  transcript_excerpt: Війна стала ключовою темою сучасної української літератури.
+    Це помітно хоча б з того, які книжки сьогодні очолюють читацькі рейтинги.
+  embed_suggestion: After section Вступ — Літературний ландшафт сьогодення
+- url: https://www.youtube.com/watch?v=dPYcHKg52XY
+  channel: Radio Khartia
+  title: 'Lina Kostenko: I need to understand the origins of the empire | Serhiy Zhadan'
+  relevance_score: 0.9
+  relevance_note: Features Lina Kostenko, a key 'cultural icon' and leading author
+    of modern Ukrainian literature, discussing her new historical prose works and
+    her perspective on historical events. This directly relates to 'Провідні автори
+    та культурні ікони' and 'Жанрова панорама та нове покоління'.
+  transcript_excerpt: Перша серія, в якій Ліна Костенко говорить про свої нові книжки,
+    які вона зараз дописує і здає до друку. Це історична проза.
+  embed_suggestion: After section Провідні автори та культурні ікони
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.85
+  relevance_note: Discusses the restoration of Ukrainian literary traditions, the
+    literary canon (mentioning 20th-century figures like Bazhan, Tychyna), and the
+    continuity of Ukrainian literature, which provides crucial historical context
+    for understanding the 'Літературний ландшафт сьогодення' and 'Провідні автори
+    та культурні ікони'. Features Serhiy Zhadan.
+  transcript_excerpt: Ми будемо говорити про тяглість української літератури, про
+    проблему пам'яті, власне, про те, що в є в назві книжки Віри Павліної про амнезію,
+    про її подолання...
+  embed_suggestion: After section Вступ — Літературний ландшафт сьогодення
+- url: https://www.youtube.com/watch?v=7e-NS-DyvQE
+  channel: Суспільне Культура
+  title: '«Російську культуру ніколи не можна повністю відокремити від політичного
+    контексту» #shorts'
+  relevance_score: 0.4
+  relevance_note: Discusses Russian culture in a political context, which is tangentially
+    related to the broader cultural landscape surrounding modern Ukrainian literature,
+    but not directly about Ukrainian literature itself. It could provide context for
+    decolonization efforts, but that's not an explicit section here.
+  transcript_excerpt: культура ніколи не відривається повністю від політичного контексту
+    російську культуру ніколи не можна повністю відокремлювати від контексту Російської
+    політичної історії
+  embed_suggestion: After section Вступ — Літературний ландшафт сьогодення -- if addressing
+    post-colonial context of Ukrainian literature
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0002
+  text: "М\nО\nЛ\nД\nА В\nІ Я\nВ\nА\nЛ\nА\nХ І\nЯ\nР\nУ\nМ\nУ\nН\nІ Я\nА В С Т Р І\
+    \ Й С Ь К А\nІ М П Е Р І Я\nУ\nГ\nО\nР\nЩ\nИ Н\nА\nО С М А Н С Ь К А\nІ М П Е\
+    \ Р І Я\nР\nО\nС\nІ\nЙ\nС\nЬ\nК\nА\n \nІ\nМ\nП\nЕ\nР\nІ\nЯ\nМОДЕРНА  УКРАЇНСЬКА\
+    \  ПРОЗА\nВСТУП. РЕАЛІСТИЧНА \nУКРАЇНСЬКА ПРОЗА\nУКРАЇНСЬКА  ЛІТЕРАТУРА  ДРУГОЇ\
+    \  ПОЛОВИНИ  ХІХ ст. В  КОНТЕКСТІ  РОЗВИТКУ  ТОДІШНЬОГО   \nСУСПІЛЬСТВА, КУЛЬТУРИ\
+    \  Й  МИСТЕЦТВА"
+  section_title: Сторінка 3
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0004
+  text: "3\nЮні читачі та читачки! \nЦього року українські письменники й письменниці\
+    \ поведуть вас \nу чарівний світ художньої літератури. Скільки попереду яскравих\
+    \ \nобразів, епітетів, метафор, захопливих кульмінацій і несподіваних \nрозв’язок!\
+    \ \nВи прочитаєте цікаві оповідання, повісті, поеми, драми, байки, \nвірші; напевно,\
+    \ відчуєте радість із багатьма персонажами та хвилюван-\nня за них. Радимо вчитатись\
+    \ у словесне мереживо, прислухатися до \nписьменницьких голосів і спробувати зрозуміти\
+    \ підтекст художнього \nт"
+  section_title: Сторінка 5
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0139
+  text: "Матеріал цього розділу відкриває перед вами широкі можливості для усві-\n\
+    домлення гуманізму як основи світоглядних переконань розвиненої особистості, \n\
+    оптимізму й  життєствердження як важливих духовних цінностей буття; розумін-\n\
+    ня благотворного впливу на людину краси природи; усвідомлення рівності жінок \n\
+    і чоловіків у всіх сферах суспільного життя як необхідної умови розв’язання ак-\n\
+    туальних політичних, соціально-культурних та психологічних проблем.\nОпрацьовуючи\
+    \ матеріал розділу, ви маєте змогу н"
+  section_title: Сторінка 75
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0414
+  text: "218  Су÷асна українська література\nЩо таке сучасна література? Сучасною\
+    \ літературою називаємо всі твори останніх двох-трьох десяти-\nліть. Важко судити,\
+    \ що саме з поточної книжкової продукції стане класикою \nі збережеться надовго.\
+    \ Буває, що модні й популярні літературні явища дуже \nшвидко забуваються. Наука\
+    \ про літературу не належить до точних, адже вона досліджує живий \nі мінливий\
+    \ творчий процес. Тому й періодизація сучасної літератури є доволі \nумовною й\
+    \ почасти дискусійною. Сьогодні до сучасн"
+  section_title: Сторінка 218
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0389
+  text: "Сучасна українська література має свої здобутки, що виявляються в таких жан-\n\
+    рово-стильових тенденціях: • пригодницький роман С. Стеценка «Чорна акула в \n\
+    червоній воді»; • історична повість В. Туркевича «Тіара скіфського царя», історичний\
+    \ \nроман Д. Міщенка «Між Сциллою і Харибдою»; • українська готична новела-руб­\n\
+    рика Ю. Винничука в журналі «Кур’єр Кривбасу»; • есеїстика (Ю. Андрухович, \n\
+    О. Забужко, Г. Пагутяк); • «сільська» проза  — А. Кондратюк «Новели нашого \n\
+    хутора», Д. Пономаренко «Дерево "
+  section_title: Сторінка 240
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

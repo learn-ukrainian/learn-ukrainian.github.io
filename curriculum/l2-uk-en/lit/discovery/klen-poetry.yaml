@@ -1,0 +1,274 @@
+discovered_at: '2026-03-13T18:48:09.515653+00:00'
+query_keywords:
+- Klen Poetry
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати поезію Клена у контексті діаспорного неокласицизму
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.7
+  relevance_note: This video discusses the Ukrainian literary canon, the importance
+    of historical literary figures like Bazhan and Tychyna, and the need to restore
+    Ukrainian literary heritage. This directly relates to establishing the 'культурний
+    контекст' and 'деколонізаційний вимір' for Klen's poetry, especially concerning
+    the concept of literary 'канон' which is in the module's vocabulary.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. Ми будемо говорити про тяглість української літератури, про проблему
+    пам'яті.
+  embed_suggestion: After Вступ та культурний контекст -- The discussion on restoring
+    Ukrainian literary ground and re-evaluating the literary canon provides essential
+    context for understanding Klen's place within Ukrainian literary history and the
+    diaspora neoclassicism movement.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: The video discusses contemporary Ukrainian poetry, language resilience,
+    and the role of language in modern Ukrainian culture. While generally related
+    to poetry and language, it does not specifically focus on Klen's work or the diaspora
+    neoclassicism movement, making it tangentially relevant.
+  transcript_excerpt: Збірка віршів «Скрипниківка» — це поезія про мову, про її вразливість,
+    про її здатність до опору. Більше людей цікавляться українською музикою, українською
+    літературою, українським кіно.
+  embed_suggestion: After Мова, стиль та поетика -- The video discusses the contemporary
+    role and resilience of the Ukrainian language through poetry, which could serve
+    as a modern counterpoint or broader context to Klen's poetic language.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/episode223/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 223
+- url: https://www.ukrainianlessons.com/episode224/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - vocabulary
+  - housing
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 224
+- url: https://www.ukrainianlessons.com/episode225/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 225
+- url: https://www.ukrainianlessons.com/episode226/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 226
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0399
+  text: "(За К. Макґоніґал)\n \n \nВизначте, яким способом пов’язані речення в тексті —\
+    \ послідовним \n(ланцюговим) чи паралельним. Які ключові слова визначають тему\
+    \ тексту? А як ви формуєте силу волі? Що ще, крім сили волі, допомагає в до-\n\
+    сягненні мети? 645 Доберіть із художньої літератури уривок тексту про цікаву осо-\n\
+    бистість. Визначте тему й мікротеми, стиль мовлення тексту. Знайдіть за-\nсоби\
+    \ зв’язку речень у тексті (синоніми, займенники, повторювані слова, \nсполучники\
+    \ тощо). Схарактеризуйте текст за йог"
+  section_title: Сторінка 226
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0190
+  text: "135\nКома й крапка з комою в складному реченні\nА.\t Проаналізуйте текст\
+    \ за поданим планом (усно).\n                                    План\n1. Тема\
+    \ тексту, його жанр.\n2. Принцип поділу тексту на дві частини.\n3. Особливості\
+    \ мовного стилю частин тексту. \nБ.\t Відредагуйте пост Марка Галаневича (письмово).\
+    \ \nВ.\t Висловте свої міркування про те, чи можуть публічні люди, \nпредставники\
+    \ українського музичного мистецтва, у соціальних \nмережах спілкуватися суржиком\
+    \ і не дотримуватися пунктуа­\nційних норм (усн"
+  section_title: Сторінка 135
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0265
+  text: "1\nПравила  читання\n1\nПершочергово у тексті твору шукай відповіді \nна\
+    \ запитання:\n• Хто діє? Які його / її вчинки?\n• Де і коли відбуваються події?\n\
+    • Кого або що описує автор/авторка?\n2\n \nПри повторному читанні:\n1. Виділи\
+    \ деталі в тексті (портреті, пейзажі, \nописі предмета чи приміщення).\n2. Проаналізуй,\
+    \ яку роль вона відіграє:\n• у портреті: передає зовнішню \nхарактеристику чи\
+    \ звертає увагу на \nвнутрішні якості героя / героїні;\n• у пейзажі: відтворює\
+    \ різноманітні стани \nприроди чи внутрішній стан г"
+  section_title: Сторінка 257
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5788569450378418
+  chunk_id: 7808b51b_c0446
+  text: "Метафорика Юрія Клена ускладнена і разом з тим\r\nпрозора. Ускладненість\
+    \ полягає у вживанні взаємно доповнюваних метафор (І\r\nмолоком пливуть у вирій\
+    \ хмари. Сміються ранки голубі; На вічності ланах зійдуть\r\nті квіти, що ними\
+    \ знову буде голубіти років безмірна далечінь; Над парком\r\nСаксонським кулачиться\
+    \ тінь, розмоклою ватою небо нависло). Тихі води,\r\nкаштани, небо, мости, вітер,\
+    \ береза та інші — ці слова лежать в основі\r\nбагатьох метафор. Та найулюбленішим\
+    \ центром образного осмислення дійсності є "
+  work: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/rusaniv/ru.htm
+- score: 0.572547435760498
+  chunk_id: fc2291b5_c3692
+  text: "КОНТЕКСТ (лат. contextus\r\n— з’єднання, зв’язок, зчеплення) — відносно завершена\
+    \ (змістом і формою)\r\nчастина тексту, в межах якої оптимально виявляються сенс,\
+    \ значення\r\nокремого слова, фрази, образного вислову. Відомо, напр., що поза\
+    \ К. (його\r\nстилістичними та смисловими зв’язками) цитата може втратити первісне\
+    \ значення,\r\nнабути іншого, не властивого їй змісту. В худож. л-рі К. визначає\
+    \ конкретний\r\nзміст, стиліст. забарвлення, міру виразності не лише окр. слів,\
+    \ фраз, а й\r\nхудож. засобів (тропів, "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5641351938247681
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

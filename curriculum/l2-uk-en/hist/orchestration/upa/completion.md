@@ -1,4 +1,4 @@
-FAIL: pipeline hist 107
+PASS: pipeline hist 107
 
   Module:   upa
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 107
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:19:12Z
+  Verdict:  PASS
+  Date:     2026-03-13T13:03:55Z

@@ -1,0 +1,199 @@
+discovered_at: '2026-03-13T13:14:58.617741+00:00'
+query_keywords:
+- 'Культурна резистенція: Стратегії виживання'
+- Закодовані послання
+- Підпілля
+- Подвійне життя
+- Церква як схованка
+- 'Analyze the causes and consequences of культурна резистенція: стратегії виживання'
+- Evaluate the historical significance of як виживає культура
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0142
+  text: "1. Серед безпорадної, похмурої голизни акацій, тополь та \nгустих терновників\
+    \ (червоно)медяні дуби навіть (у)зимку ви-\nглядають (по)гетьманськи зверхньо\
+    \ (М. Руденко). 2. Можна \nзнайти в природі (пів)тони, можна життя спинити на\
+    \ (пів)\nслові, але нема в житті (напів)ціни, але нема в житті (напів)\nлюбові\
+    \ (А. Демиденко)."
+  section_title: Сторінка 79
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0188
+  text: "Розвиток людства упродовж історії\n187\n1.\t Розгляньте карту і визначте,\
+    \ які релігійні вчення належать до \nнайбільш поширених у світі. \n2.\t Як ви\
+    \ розумієте, у чому полягає відмінність між світовими і на-\nціональними релігіями?\
+    \ Які з представлених релігій є світовими, \nа які — національними?\n3.\t За допомогою\
+    \ додаткових джерел інформації дізнайтеся, які \nз представлених на карті релігій\
+    \ належать до монотеїстичних, \nа які — до політеїстичних.\n  Діємо: практичні\
+    \ завдання\nЩо таке релігійна нетерпимість"
+  section_title: Сторінка 187
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0554
+  text: "а \n \n303 \nЖитло для тимчасово переміщених осіб \nу модульному містечку\
+    \ на вулиці Пулюя \nу Львові, травень 2022 року. Світлина  \n \nВикористайте \n\
+    додаткові \nджерела \nінформації. 1. Дізнайтеся, де ще в Україні зведені \nмодульні\
+    \ \nмістечка \nдля \nтимчасово \nпереміщених осіб. 2. Як допомагають тимчасово\
+    \ пере-\nміщеним \nособам \nу \nрегіоні, \nде \nви \nпроживаєте? ПОВСЯКДЕННЯ В\
+    \ УМОВАХ ВІЙНИ \n Які території України вважаються тимчасово окупованими?  Пригадайте,\
+    \ що таке «Рух Опору». Назвіть до нього антонім. "
+  section_title: Сторінка 304
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5505570769309998
+  chunk_id: c44f1207_c3860
+  text: "КУЛЬТУРНЕ ЖИТЄ: УПАДОК ЦЕРКВИ Й ОСЛАБЛЕННЄ \r\nЇЇ КУЛЬТУРНОГО ЗНАЧІННЯ, БЕЗВИГЛЯДНІСТЬ\
+    \ РУСЬКОЇ КУЛЬТУРИ, ЗНЕВАЖЛИВІ ВІДЗИВИ ПРО \r\nШКІЛЬНИЦТВО, НИЗЬКИЙ РІВЕНЬ ЙОГО,\
+    \ ПОГЛЯДИ ПОСТУПОВИХ УКРАЇНЦІВ, РОЗПОВСЮДНЕННЄ \r\nНИЗШИХ ШКІЛ, ЇХ ОРҐАНЇЗАЦІЯ\
+    \ І НАУКА, НАУКА ДОМАШНЯ, УКРАЇНЦЇ В ЧУЖИХ ШКОЛАХ. \r\nКНИЖНІСТЬ, ЗАПАС КНИЖНИЙ\
+    \ — КАТАЛЬОҐ СУПРАСЛЬСЬКОЇ БІБЛЇОТЕКИ, ЛЇТЕРАТУРА \r\nБОГОСЛОВСЬКА, МОРАЛЇСТИЧНА\
+    \ Й ІСТОРИЧНА, СТАРОРУСЬКА КНИЖНА ТРАДИЦІЯ, ПІЗНЇЙШІ \r\nПРИБУТКИ, ПИСАННЯ ОРИҐІНАЛЬНІ\
+    \ І ПЕРЕКЛАДИ, НЕЗНАЧНІСТЬ ЗА"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5419126749038696
+  chunk_id: 68ba0555_c0001
+  text: "Культурно-політичний сенс роздрібненості . . . . . .\r\n. . . . . . . . .\
+    \ 10\n\n§3. Соціальні світи Русі . . . . . . . . . . . . . .\r\n. 71\n\nСвіт села\
+    \ . . . . . . . . . . . . . . . 71\n\nСвіт міста . . . . . . . . . . . . . . .\
+    \ 73\n\nКнязівський світ . . . . . . . . . . . . . . . 77\n\nСвіт церкви . . .\
+    \ . . . . . . . . . . . . 81\n\nВлада і свобода . . . . . . . . . . . . . . .\
+    \ 83\n\n§4. Сакральна культура . . . . . . . . . . . . . . . 87\n\nХристиянська\
+    \ культура . . . . . . . . . . . . . . .\r\n87\n\nТеологічні іде"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.5330918431282043
+  chunk_id: c44f1207_c3963
+  text: "ПОБУТ: ІДЕОЛЬОҐІЧНИЙ ЗМІСТ ЖИТЯ, СЛАБКІ \r\nСУСПІЛЬНІ ІДЕЇ, ІНТЕРЕСИ МАТЕРІАЛЬНІ,\
+    \ ЗВЕРХНЇ ПРОЯВИ БОГАЦТВА, РОСКІШ В \r\nОБСТАНОВІ, ПРИКЛАДИ З МАҐНАТСЬКОГО І ШЛЯХЕЦЬКОГО\
+    \ ЖИТЯ. УЖИВАННЄ ЖИТЯ — \r\nПРИМІТИВНИЙ МАТЕРІАЛЇЗМ ЙОГО. НАРІКАННЯ СУЧАСНИКІВ\
+    \ НА ВИБАГЛИВІСТЬ — РЕЙ, \r\nПСЕВДО-МЕЛЕШКО, МИХАЙЛО ЛИТВИН; ЗМІНИ В ПОБУТЇ, ПОВЕРХОВНІСТЬ\
+    \ КУЛЬТУРИ; БОПЛЯН \r\nПРО ПОЛЬСЬКІ ПИРИ; КОНСЕРВАТИЗМ В УКРАЇНСЬКІЙ СУСПІЛЬНОСТИ,\
+    \ ВИШЕНСЬКИЙ ПРО НОВІ \r\nФАСОНИ, ЙОГО ЗАПЕРЕЧЕННЄ ІДЕАЛЬНОГО ЗМІСТУ ЖИТЯ, ПРИКЛАДИ\
+    \ НЕКУЛЬТУРНОСТИ"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm

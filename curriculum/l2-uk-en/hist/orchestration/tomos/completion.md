@@ -1,4 +1,4 @@
-FAIL: pipeline hist 129
+PASS: pipeline hist 129
 
   Module:   tomos
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 129
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:22:33Z
+  Verdict:  PASS
+  Date:     2026-03-13T15:25:48Z

@@ -1,0 +1,76 @@
+discovered_at: '2026-03-13T19:22:54.480107+00:00'
+query_keywords:
+- Контрольна точка C1.3
+- мовознавчі поняття
+- Лексикологічна компетентність
+- Морфологічна грамотність
+- Текстознавчий аналіз
+- Соціолінгвістична обізнаність
+- Комплексне завдання
+- Demonstrate mastery of linguistics terminology and classification
+- Apply lexicological knowledge to identify and correct paronym errors
+- Decline compound numerals and use full pronoun paradigm accurately
+- Analyze text structure, cohesion, and style in authentic materials
+- Comprehensive review of C1.3 grammar topics
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0074
+  text: "Морфологічна норма\n54\nЗнаю, вмію, набуваю компетентностей! \nЗАПИТАННЯ\
+    \ І ЗАВДАННЯ ДЛЯ САМОКОНТРОЛЮ\n— Дайте визначення мовної норми, назвіть різновиди\
+    \ мовних норм. \nЗвіртеся з поданою на фо5рзаці підручника таблицею.\n— Поясніть\
+    \ значення терміна «морфологічна норма». Наведіть  приклади \nморфологічних помилок\
+    \ у вживанні прикметника, прислівника, дієслова.\n— Які форми ступенів порівняння\
+    \ прикметників — проста чи складе-\nна — уживаються частіше? Як вибір форми залежить\
+    \ від стилю вислов-\nлення?\n— Склад"
+  section_title: Сторінка 54
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0372
+  text: "103\n\t\nТестові завдання для підготовки  \nдо тематичного контролю за розділом \
+    \ ІІІ. . . . . . . . . . . . . . . 103"
+  section_title: Сторінка 190
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 10-klas-ukrajinska-mova-zabolotnij-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 10-klas-ukrmova-zabolotnyi-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

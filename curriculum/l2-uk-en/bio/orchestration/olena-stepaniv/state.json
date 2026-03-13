@@ -3,24 +3,24 @@
   "slug": "olena-stepaniv",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-13T09:45:00Z",
-      "task_id": "v5-olena-stepaniv-pA",
-      "mode": "full",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-13T09:45:00Z",
+      "ts": "2026-03-13T14:33:27Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
         "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T14:33:27Z",
+      "task_id": "v5-olena-stepaniv-pA",
+      "mode": "meta-only",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

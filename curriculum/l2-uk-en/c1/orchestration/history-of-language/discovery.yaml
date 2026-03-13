@@ -1,0 +1,129 @@
+discovered_at: '2026-03-13T18:51:51.915702+00:00'
+query_keywords:
+- 'Історія мови: Від Русі до сьогодення'
+- Витоки та давньоруський період
+- Origins and Old East Slavic Period
+- Середньоукраїнська доба та Козаччина
+- Ruthenian Era and Cossack Period
+- Епоха заборон та лінгвоциду
+- Era of Bans and Linguicide
+- Відродження та кодифікація
+- Revival and Codification
+- 'Радянський період: Українізація та репресії'
+- 'Soviet Period: Ukrainization and Repressions'
+- Сучасна мовна політика
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Yr8nVqJMCek
+  channel: Суспільне Культура
+  title: Artemiy is the father of the Glukhiv economic miracle INHERITANCE OF TERESCHENKI
+    | The first series
+  relevance_score: 0.4
+  relevance_note: The video provides historical context about Ukraine, the Hetmanate,
+    and the 19th century under Tsarist Russia. While it is related to Ukrainian history,
+    its focus is on socio-economic developments and specific historical figures (Tereşçenko
+    family), not directly on the history or evolution of the Ukrainian language, its
+    codification, or linguistic policies, which is the core topic of the module.
+  transcript_excerpt: Козацька держава в минулому, більша частина земель під царською
+    росією, державою, в якій все життя людини визначалося її соціальним становищем.
+  embed_suggestion: After section Середньоукраїнська доба та Козаччина -- The video
+    discusses the historical period of the Hetmanate and the 19th century under Tsarist
+    rule, offering relevant historical background even if its primary focus isn't
+    language.
+- url: https://www.youtube.com/watch?v=lAB4i8_AkbQ
+  channel: Суспільне Культура
+  title: Лекція «Мова як умова. Умова виживання чи пережитку?»
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0033
+  text: "Виконайте синтаксичний розбір цього речення. СПІЛКУВАННЯ\n39 На основі інформації\
+    \ про походження української мови побудуйте \nдіалог у формі запитань і відповідей\
+    \ «Українці — звідки ми і наша мова». Домашнє завдання\n40 Підготуйте лігвістичне\
+    \ повідомлення «Українська мова — одна \nз  найдавніших індоєвропейських мов»,\
+    \ використовуючи матеріали під-\nручника та інтернетних джерел. Перевірте себе\n\
+    \ \n Дайте відповіді на запитання. — Назвіть етапи формування та розвитку \nукраїнської\
+    \ національної мови. — Як"
+  section_title: Сторінка 19
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0030
+  text: "З історії розвитку української мови \n18\n(дорозі, дівці, кожусі); споконвічні\
+    \ українські форми займенників \n(тобі, собі); м’яке закінчення дієслів 3-ї особи\
+    \ (носить, косить); \nформа майбутнього часу (знатиму, робитиму), закінчення -мо\
+    \ \nв дієсловах (знаємо, ходимо). Мовознавець М. Жовтобрюх доводить, що найбільш\
+    \ моно-\nлітними на той час були діалекти південно-східного наріччя, зо-\nкрема\
+    \ середньо-наддніпрянські та східно-полтавські. Вони і лягли \nв основу формування\
+    \ української національної мови. О"
+  section_title: Сторінка 18
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0308
+  text: '189
+
+    § 25. Букви н і н н у  різних частинах мови..................................................................
+    193
+
+    § 26. Не з різними частинами м ов и ................................................................................196
+
+    § 27. Службові частини мови та вигук...........................................................................200
+
+    М и діти твої, Україно! Відкривач дороги до зір о к .....................................204
+
+    СИНТАКСИС І ПУНКТУАЦІЯ
+
+    § 28. Словосполучення і речення'
+  section_title: Сторінка 239
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0170
+  text: "ЛЕКСИКОЛОГІЯ\n96\nПраслов’янська лексика утворилася, коли слов’яни жили \n\
+    спільним життям. Спільнослов’янські слова називають людей, тва-\nрин, птахів (чоловік,\
+    \ жінка, голуб, ведмідь); житло, одяг, взуття, при-\nкраси (вікно, дзеркало, шуба);\
+    \ їжу (молоко, сало); предмети і явища \nприроди (вітер, роса, серп, плуг); абстрактні\
+    \ поняття (правда, гнів); \nобряди (Купала). Потужним джерелом збагачення української\
+    \ мови стала \nстарослов’янська мова  — перша літературно-писемна мова \nслов’ян,\
+    \ створена на основ"
+  section_title: Сторінка 96
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

@@ -1,0 +1,27 @@
+{
+  "track": "c1",
+  "slug": "literature-review",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T17:58:32Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T17:58:32Z",
+      "task_id": "v5-literature-review-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-sonnet-4-6"
+      }
+    }
+  }
+}

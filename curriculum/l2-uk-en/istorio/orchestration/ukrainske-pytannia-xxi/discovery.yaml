@@ -1,0 +1,205 @@
+discovered_at: '2026-03-13T14:10:43.154834+00:00'
+query_keywords:
+- Українське питання XXI століття
+- Всі теми разом
+- Російське питання
+- Європейське питання
+- Глобальне значення
+- Analyze the causes and consequences of українське питання xxi століття
+- Evaluate the historical significance of українське питання
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5499999999999999
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0029
+  text: "24\nВступ. Українська мова в житті українців.  Види інформації.  Робота з підручником\n\
+    Це спільне творіння, яке останні 17  років доповнювали \nй редагували мільйони\
+    \ людей: кожен може змінити її в будь-\nякий час. Вона стала найбільшою колекцією\
+    \ загальних знань \nу  людській історії.\n(З інтернет-видання «Український інтерес»,\
+    \ \nавтор статті Євген Букет)\n2.\t Розкажіть, про що йдеться в  прочитаному тексті.\
+    \  Що було для вас уже \nвідомим? Що нового ви дізналися?\n3.\t Які види інформації\
+    \ подано у вправі? З"
+  section_title: Сторінка 24
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0162
+  text: 'Відповідь аргументуйте. Напишіть есе на тему: «Риторика XXI століття: між
+    популізмом і  людяністю». Ефективність мовлення. Комунікативний намір. Стратегія
+    і  тактика мовленнєвої поведінки'
+  section_title: Сторінка 115
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0365
+  text: "Якщо слідувати за цими зв’язками, \nможна читати матеріал у будь-якому порядку,\
+    \ утворюючи різні лінійні тек-\nсти. Прикладом гіпертексту може бути будь-який\
+    \ словник чи енциклопедія, \nде кожна стаття має посилання до інших статей цього\
+    \ ж словника. \aПрочитайте текст. Підготуйте розповідь про особливості гіпертексту.\
+    \ У ХХ столітті людство накопичило стільки інформації, що почали \nвиникати серйозні\
+    \ проблеми з її пошуками і переробкою, у тому \n319\n320\n321"
+  section_title: Сторінка 237
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0204
+  text: "Подані слова, знявши риски, запишіть у  дві колонки: ті, що пишуться че-\n\
+    рез дефіс, і  ті, що треба писати разом. Загально/освітній, \nзахідно/європейський,\
+    \ \nукраїнсько/французький, \nукраїнсько/мовний, фізико/математичний, всесвітньо/історичний,\
+    \ важ-\nко/доступний, народно/визвольний, механіко/металургійний."
+  section_title: Сторінка 146
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0500
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 258
+
+    Тема 21. Стаття в газету на морально-етичну, професійну тему  . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . 259
+
+    Тема 22. Електронний лист. Смс-повідомлення  . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 262
+
+    Тема 23. Дискусійне мовлення. Дебати як форма дискусій  . . . . . .'
+  section_title: Сторінка 271
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5613481402397156
+  chunk_id: 3d51722e_c0253
+  text: "У \"Правде\" з цим листом вчинили так, як і\r\nскрізь роблять з безліччю\
+    \ подібних листів, — переслали в іншу інстанцію, щоб\r\nта \"спустила\" Ще в нижчу,\
+    \ аж поки він десь не загубився на віки\r\nвічні... І справді, що відповісти на\
+    \ таку простодушну нескромність, яка чомусь\r\nне хоче задовольнитися гумовими\
+    \ загальниками і \"прикрывающими\r\nверсиями\" і добивається, щоб їй прямо сказали:\
+    \ треба бути українській\r\nнації \" со всеми вытекающими последствиями\" чи не\
+    \ треба бути українській\r\nнації також \"со всеми выте"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.5530210137367249
+  chunk_id: ea8ba17c_c0026
+  text: "Взагалі в тім, що зветься \"русскою\r\nісторією\", я бачу комбінацію, чи,\
+    \ властиво, — конкуренцію кількох понять:\r\nісторія Російської держави (сформування\
+    \ й розвою державної організації й її\r\nтериторії), історія Росії, себто того,\
+    \ що було на її території, історія\r\n\"руських народностей\", і, нарешті, — історія\
+    \ великоруського народу\r\n(його державного й культурного життя). Кожде з сих\
+    \ понять, в консеквентнім\r\nпереведенні, може бути вповні оправданим предметом\
+    \ наукового представлення, але\r\nпри такім комб"
+  work: Грушевський — Вибрані статті
+  author: Грушевський М.
+  year: 1920
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrs/hrs.htm
+- score: 0.5506799221038818
+  chunk_id: 3588aaff_c0299
+  text: "Поява національної диференційованої літератури,\r\nзникнення — структурна\
+    \ неможливість — білінгвізму, зумовили радикальні\r\nперетворення в російсько-українських\
+    \ літературних взаєминах. Ці взаємини стають\r\nщораз тіснішими, з’являються нові\
+    \ точки дотику, посилюється взаємний вплив\r\nтощо. Але тепер партнери в цьому\
+    \ обміні більш-менш рівноправні. На кілька\r\nдесятиліть — принаймні до сталінських\
+    \ погромів 30-х років — українська й\r\nросійська літератури стають співмірними\
+    \ величинами.\n\n1981\n\n[Григорій Граб"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

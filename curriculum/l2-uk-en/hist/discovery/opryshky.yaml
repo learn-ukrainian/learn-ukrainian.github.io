@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T11:37:06.896524+00:00'
+discovered_at: '2026-03-13T19:31:15.231585+00:00'
 query_keywords:
 - 'Опришки Карпат: Легенда Довбуша'
 - Пролог у сакральному Холодному Яру та Горганах
@@ -18,16 +18,10 @@ videos:
 - url: https://www.youtube.com/watch?v=cp0Jt5tMyb8
   channel: Комік Історик
   title: 'Олекса Довбуш: історія легенди Карпат'
-  relevance_score: 0.9
-  relevance_note: The video directly discusses Olexa Dovbush, his historical background,
-    his legendary status as a 'Ukrainian Robin Hood,' and the myths surrounding his
-    treasures, all of which are central to the module's topic.
-  transcript_excerpt: Олекса Довбуш... народився він тут на Прикарпатті сучасне івано-франківщина
-    а село Печеніжин... 1700 рік... Його знають як такого шляхетного розбійника, який
-    забирає в багатіїв віддає бідним.
-  embed_suggestion: 'After section Олекса Довбуш: Від бідного легіня до легендарного
-    вождя нації -- The video provides a good overview of Dovbush''s life, origin,
-    and public perception, making it an excellent follow-up to his biographical section.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 - url: https://www.youtube.com/watch?v=jyseyi8eViw
   channel: ІМТГШ
   title: Загадка Олекси Довбуша.

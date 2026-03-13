@@ -1,4 +1,4 @@
-FAIL: pipeline hist 127
+PASS: pipeline hist 127
 
   Module:   aneksiia-krymu
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 127
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:22:15Z
+  Verdict:  PASS
+  Date:     2026-03-13T15:12:15Z

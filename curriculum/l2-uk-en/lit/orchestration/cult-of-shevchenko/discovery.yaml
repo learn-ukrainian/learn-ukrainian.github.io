@@ -1,0 +1,192 @@
+discovered_at: '2026-03-13T14:37:31.261492+00:00'
+query_keywords:
+- 'Культ Шевченка: Рецепція і Міфи'
+- Радянський Шевченко
+- Діаспорний Шевченко
+- Сучасні реінтерпретації
+- Концепція "Національного Батька"
+- Analyze the evolution of Shevchenko's image from poet to national myth.
+- Contrast Soviet, Diasporic, and Modern interpretations of Shevchenko.
+- Critically evaluate the risks and benefits of cultural canonization.
+- Critical discourse
+- Modern essayistic style
+- culture
+- культ
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode168/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - history
+  - kyiv
+  - lviv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 168
+- url: https://www.ukrainianlessons.com/episode180/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 180
+- url: https://www.ukrainianlessons.com/about-crimea/
+  title: About Crimea — History and Culture
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - crimea
+  - history
+  - geography
+  - culture
+- url: https://www.ukrainianlessons.com/episode49/
+  title: Syrnyky recipe + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - phrases
+  - introductions
+  - culture
+  - traditions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 49
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0372
+  text: "– \nК., 1990. 7. Шевченківський словник: У 2 т. – К., 1976–1977. 8. Світова\
+    \ велич Шевченка: У 3 т. – К., 1964."
+  section_title: Сторінка 217
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  text: "Використана  література\nІванюк С. Міфи про Миколу Куліша / Сергій Іванюк\
+    \ // Наукові записки Національного \nуніверситету «Києво-Могилянська академія».\
+    \ — 1998. — Т. 4. — С. 75–83. — (Серія \n«Філологія»). Кузякіна Н. Траєкторія\
+    \ доль / Наталя Кузякіна. — К. : Темпора, 2010. Куліш А. Спогади про Миколу Куліша\
+    \ // Куліш М. Твори: В 2 т. — К., 1990. — Т. 2. — \nС. 695–753. Наєнко М. Художня\
+    \ література України / М. Наєнко. — К., 2007. — С. 845–857. Панченко В. Арки і\
+    \ шибениці (драматургія Миколи Куліша) /"
+  section_title: Сторінка 126
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0404
+  text: "Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.\
+    \ — \n№ 6. — С. 90–100. Домашнє завдання"
+  section_title: Сторінка 248
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0368
+  text: '2. Чиї відгуки про творчість Шевченка вам особливо запам’яталися й чому?
+    Ìіðêóєìî
+
+    1. На чому наголошують представники інших культур – шанувальники творчості
+
+    Шевченка? 2. Окресліть здобутки Кобзаря в царині малярства, зв’язок його творчості
+    з музич-
+
+    ним мистецтвом. Проілюструйте свою відповідь цитатами з поезій.'
+  section_title: Сторінка 215
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0055
+  text: "Як же нам хотілося довести всьому світові, що Шевченко і модер-\nний, і сучасний,\
+    \ адже з нього постійно ліпили тільки селянського \nромантика і таврувальника\
+    \ панів, понижуючи образ національного \nгенія до постаті бідного кобзаря, що\
+    \ печально пощипує струни кобзи \nчи бандури. Тобто: «Читайте «Наймичку» й «Тополю»,\
+    \ забудьте \n«Мертвим і живим», як уїдливо зауважив сучасний поет. Біда в тому,\
+    \ що в багатьох шкільних і студентських аудиторіях \nсаме такий образ Шевченка\
+    \ переважає й досі — кріпак і селянс"
+  section_title: Сторінка 39
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6049218773841858
+  chunk_id: d77902e2_c0985
+  text: "Літ. Александрович С. X. Т. Г. Шевченко і Янка Купала. «Радянське літературознавство»,\r\
+    \n1958, № 5; Виноградов В. О. Шевченко і Янка Купала. «Радянське\r\nлітературознавство»,\
+    \ 1962, № 6; Ларчанка М. Г. Тарас Шевченко і Янка\r\nКупала. В кн.: Збірник праць\
+    \ першої і другої наукових шевченківських\r\nконференцій. К., 1954.\n\nМ. Г. Ярош."
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.6033765077590942
+  chunk_id: a5f3ae7f_c0138
+  text: "Навіть перший погляд на цей комунікаційний потік дозволяє\r\nвичленувати\
+    \ в ньому кілька, умовно кажучи, рівнів, що характеризуються\r\nконцептуально\
+    \ різними підходами до Шевченка як об’єкта: /99/\n\nа) Шевченко як складник ідеологічних\
+    \ (політичних)\r\nпобудов, у яких він носить переважно узагальнено-символічний\
+    \ характер; цей\r\nкомунікаційний рівень можна було б назвати «національною думкою»,\
+    \ абстрагувавшись\r\nвід (але не ігноруючи) того відомого факту, що у своїх побудовах\
+    \ постать\r\nШевченка широко вживали"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm
+- score: 0.6028285026550293
+  chunk_id: a5f3ae7f_c0136
+  text: "Перша — проблема популярності Шевченка як\r\nпоета (поета «взагалі» і поета\
+    \ власне українського, що не зовсім те саме) та як\r\nособистості (в різних його\
+    \ прижиттєвих іпостасях: як українського, чи, для\r\nкогось — малоросійського\
+    \ літератора, як реального чи віртуального громадсько\r\nго, національного діяча,\
+    \ як помітного члена петербурзького «інтелігентного\r\nтовариства» та ін). Ця\
+    \ проблематика охоплює цілу низку питань: як приходили до\r\nчитача поетові вірші,\
+    \ які саме і коли; в якій матеріальній формі і"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm

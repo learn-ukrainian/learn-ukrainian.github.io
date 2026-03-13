@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 24 — E2E
+PASS: pipeline c2 20
 
   Module:   style-blending
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:44:57Z
+  Date:     2026-03-13T18:12:36Z

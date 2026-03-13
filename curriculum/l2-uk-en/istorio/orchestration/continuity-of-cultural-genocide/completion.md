@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 135
+PASS: pipeline istorio 135
 
   Module:   continuity-of-cultural-genocide
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 135
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:25:30Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:23:56Z

@@ -1,0 +1,191 @@
+discovered_at: '2026-03-13T13:54:18.773442+00:00'
+query_keywords:
+- 'Шістдесятники: Бунт проти сірості'
+- Культурний вибух
+- Первинні джерела
+- Деколонізаційний погляд
+- 'Analyze the causes and consequences of шістдесятники: бунт проти сірості'
+- Evaluate the historical significance of хрущовська відлига
+- Trace the development of деколонізаційний погляд
+- history
+- історія
+- держава
+- народ
+- влада
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0290
+  text: "Його автор \nписав: «Я пропоную… одну­єдину річ: свободу — свободу чесного\
+    \ публічного \nобговорення національного питання, свободу національного вибору,\
+    \ свободу \nнаціонального самопізнання і саморозвитку». Невдовзі «шістдесятники»\
+    \ скла-\nли помітну моральну опозицію радянській владі, яка, відчувши загрозу,\
+    \ від-\nреагувала наступом на свободу слова. Перші арешти й судові процеси над\
+    \ українськими дисидентами (від лат. dissidens — незгодний) припали на 1965 рік.\
+    \ Їх звинуватили в «антирадянській \nагітац"
+  section_title: Сторінка 150
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0079
+  text: "76\nЛабіринт Міноса\nСтіна\nД\nЦ\nЦ\nКитайська\nІндійська\nІндійська\nМінойська\n\
+    Мінойська\nШумерська\nДавній \nЄгипет\nДавній \nЄгипет\nФараон\nНіл\nТигр і Євфрат\n\
+    Хуанхе\nІнд\nострів Крит\nГільгамеш\nБрама Іштар\nБрахма\n1\n5\n2\n3\n4\n6\nНайдавніші\
+    \ цивілізації\nУкраїнський освітянський \nвидавничий центр \n«Оріон»"
+  section_title: Сторінка 78
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0145
+  text: "Розділ ІІ. Україна в умовах десталінізації\n78\nЗверніть увагу\nХарактеристика\
+    \ діяльності \n«шістдесятників»: \n\x83\x83 активна громадянська позиція \nта прагнення\
+    \ свободи творчості; \n\x83\x83 критика офіційної ідеології \nта боротьба за національну\
+    \ \nсамобутність України; захист \nукраїнської мови й культури; \n\x83\x83 новаторство\
+    \ в мистецтві \nта літературі. «Шістдесятники» мали значний вплив \nна суспільне\
+    \ життя України, хоча їхня \nдіяльність часто зазнавала утисків із \nбоку влади.\
+    \ Деякі представники \n«шістдесятників» с"
+  section_title: Сторінка 80
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5200038552284241
+  chunk_id: fc2291b5_c4769
+  text: "Літ.: Лазоренко А.\r\nМолодые семидесятых. В кн.: Донбасс: писатель и время.\
+    \ Донецк, 1979.\n\nЛ. П. Кир’яков."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5145633220672607
+  chunk_id: f79fbc43_c0473
+  text: "———. Children of the Arbat. Translated by Harold Shukman.\r\nBoston: Little,\
+    \ Brown. 1988.\n\nSaid, Edward. Orientalism (1979). New York: Vintage Books.\r\
+    \n1994.\n\n———. Culture and Imperialism. New York: Alfred A. Knopf.\r\n1993.\n\
+    \nScheler, Max. Ressentiment. Translated by W. Holdheim. New\r\nYork; Free Press.\
+    \ 1960.\n\nSeton-Watson, Hugh. The Russian Empire 1801-1917. Oxford:\r\nClarendon\
+    \ Press, 1967.\n\nShafer, Boyd A. Faces of Nationalism. New York: Harcourt\r\n\
+    Brace, 1972.\n\nShirer, William L. The Rise and Fall of"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5124786496162415
+  chunk_id: b715df49_c0268
+  text: "150\r\n NK2, s. 407.\n\n151\r\n DDP 6, s. 43, 193.\n\n152\r\n Lelewel J.\
+    \ Bibliograficznych księg\r\ndwoje, t. l, Wilno 1823, s. 200.\n\n153\r\n Turkowski\
+    \ T. Druki Litwy i Rusi w\r\nświetle wileńskiej wystawy książki 1932 // Grafika,\r\
+    \n1932-1933, Nr 6, s. 30; Kołaczkowski J. Wiadomości tyczące\r\nsię przemysłu\
+    \ i sztuki w dawnej Polsce, Kraków 1888, s. 155.\n\n154\r\n Tworek S. Działalność\r\
+    \noświatowo-kulturalna kalwinizmu małopolskiego (połowa XVI —\r\npołowa XVIII\
+    \ w), Lublin 1970, s. 156."
+  work: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/isaevych/is.htm

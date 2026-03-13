@@ -1,4 +1,4 @@
-FAIL: pipeline hist 134
+PASS: pipeline hist 134
 
   Module:   bucha-irpin
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 134
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:23:19Z
+  Verdict:  PASS
+  Date:     2026-03-13T15:51:45Z

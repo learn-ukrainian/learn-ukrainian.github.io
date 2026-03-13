@@ -1,4 +1,4 @@
-FAIL: pipeline hist 124
+PASS: pipeline hist 124
 
   Module:   yanukovych
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 124
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:48Z
+  Verdict:  PASS
+  Date:     2026-03-13T15:00:48Z

@@ -1,0 +1,173 @@
+discovered_at: '2026-03-13T16:44:56.721370+00:00'
+query_keywords:
+- 'Леся Українка: Донька Прометея'
+- Вступ та культурний контекст
+- Біографія та творчий шлях
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- 'Проаналізувати твір Леся Українка: Донька Прометея у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+- literature
+- канон
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0139
+  text: "Матеріал цього розділу відкриває перед вами широкі можливості для усві-\n\
+    домлення гуманізму як основи світоглядних переконань розвиненої особистості, \n\
+    оптимізму й  життєствердження як важливих духовних цінностей буття; розумін-\n\
+    ня благотворного впливу на людину краси природи; усвідомлення рівності жінок \n\
+    і чоловіків у всіх сферах суспільного життя як необхідної умови розв’язання ак-\n\
+    туальних політичних, соціально-культурних та психологічних проблем.\nОпрацьовуючи\
+    \ матеріал розділу, ви маєте змогу н"
+  section_title: Сторінка 75
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0040
+  text: 'дім «Києво-Могилянська академія», 2014. Пахаренко В. Основи теорії літератури.
+    — К. : Генеза, 2007. — 296 с. Стус В. Феномен доби (Сходження на Голгофу слави)
+    —  К. : Кліо, 2015. — 104 с. Домашнє завдання'
+  section_title: Сторінка 28
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  text: "Використана  література\nІванюк С. Міфи про Миколу Куліша / Сергій Іванюк\
+    \ // Наукові записки Національного \nуніверситету «Києво-Могилянська академія».\
+    \ — 1998. — Т. 4. — С. 75–83. — (Серія \n«Філологія»). Кузякіна Н. Траєкторія\
+    \ доль / Наталя Кузякіна. — К. : Темпора, 2010. Куліш А. Спогади про Миколу Куліша\
+    \ // Куліш М. Твори: В 2 т. — К., 1990. — Т. 2. — \nС. 695–753. Наєнко М. Художня\
+    \ література України / М. Наєнко. — К., 2007. — С. 845–857. Панченко В. Арки і\
+    \ шибениці (драматургія Миколи Куліша) /"
+  section_title: Сторінка 126
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0404
+  text: "Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.\
+    \ — \n№ 6. — С. 90–100. Домашнє завдання"
+  section_title: Сторінка 248
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5465022921562195
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5411962866783142
+  chunk_id: fc2291b5_c3773
+  text: "Тв.: З моїх споминів. В\r\nкн.: Спогади про Лесю Українку. К., 1963.\n\n\
+    Літ.: Одарченко П. Ольга\r\nПетрівна Косач-Кривинюк — сестра Лесі Українки. В\
+    \ кн.: Леся Українка.\r\nХронологія життя і творчості. Нью-Йорк, 1970; Борисюк\
+    \ Т. Трагедія великого\r\nроду. «Літературна Україна», 1991, 1 серпня.\n\nР. C.\
+    \ Міщук."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.533243715763092
+  chunk_id: a5f3ae7f_c0359
+  text: "А ще — всі три наші героїні, особливо Леся Українка,\r\nактивно використовуються\
+    \ в гендерних студіях. Коли на побутовому рівні\r\nвиникають суперечки між чоловіками\
+    \ та жінками, хто з них краще, Леся Українка\r\nпоруч із Софією Ковалевською і\
+    \ Склодовською-Кюрі є козирною картою проти\r\nтверджень про тотальну маскулінність\
+    \ людської цивілізації. Слабка і квола Леся\r\nє достатньо могутньою каріатидою\
+    \ для підтримки багатьох теоретичних побудов. Досить\r\nзгадати, що одних з трьох\
+    \ китів української класики (за "
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm

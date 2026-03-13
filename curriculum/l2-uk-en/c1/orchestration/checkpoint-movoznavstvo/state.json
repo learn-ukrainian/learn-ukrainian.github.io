@@ -1,0 +1,27 @@
+{
+  "track": "c1",
+  "slug": "checkpoint-movoznavstvo",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T19:23:17Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T19:23:17Z",
+      "task_id": "v5-checkpoint-movoznavstvo-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-sonnet-4-6"
+      }
+    }
+  }
+}

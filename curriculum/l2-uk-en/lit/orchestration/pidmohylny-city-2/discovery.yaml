@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T19:01:59.641463+00:00'
+query_keywords:
+- Pidmohylny City 2
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Pidmohylny City 2 у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: The video directly addresses the concept of 'канон' (canon) in Ukrainian
+    literature, discusses the re-evaluation of significant literary figures like Bazhan
+    and Tychyna, and touches upon the continuity of Ukrainian literature and the 'problem
+    of memory.' These themes are highly relevant to understanding the historical and
+    cultural context of Pidmohylny's work and its place within the Ukrainian literary
+    tradition, especially from a decolonial perspective.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. ... Себто так чи інакше ми будемо говорити про тяглість української
+    літератури, про проблему пам'яті, власне, про те, що в є в назві книжки Віри Павліної
+    про амнезію, про її подолання
+  embed_suggestion: After section Деколонізаційний вимір -- the discussion on literary
+    canon, reclaiming writers, and the problem of memory directly supports the decolonization
+    aspect of Ukrainian literature.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: The video discusses the general increased interest in Ukrainian
+    literature and culture in the contemporary context, which provides a broad cultural
+    backdrop but does not specifically address Pidmohylny or his work. It is tangentially
+    related as it speaks to the overall cultural environment.
+  transcript_excerpt: збільшився інтерес взагалі до української книги як з огляду
+    на вашу творчість Ви можете бачити серед української аудиторії серед читачів Ну
+    мені здається та збільшився більше людей цікавляться і українською музикою українською
+    літературою українським кіно
+  embed_suggestion: After section Вступ та культурний контекст -- it provides current
+    cultural context for Ukrainian literature.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0014
+  text: "Текст ІІ потужніше, ніж перший, активізує увагу слухачів, бо в ньому використано:\n\
+    •\t риторичні запитання (Ви хочете мати успіх у престижній фірмі? Готові слухати?);\
+    \ \n•\t пряме звернення на ви, яке «приміряє» на себе кожен учасник заходу (на\
+    \ противагу \nбезособовим конструкціям потрібно влаштуватися, варто пам’ятати,\
+    \ треба підготу-\nватися); \n•\t тропи (провалити співбесіду, виграти у двобої,\
+    \ людина в дорогому костюмі)."
+  section_title: Сторінка 10
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0265
+  text: "1\nПравила  читання\n1\nПершочергово у тексті твору шукай відповіді \nна\
+    \ запитання:\n• Хто діє? Які його / її вчинки?\n• Де і коли відбуваються події?\n\
+    • Кого або що описує автор/авторка?\n2\n \nПри повторному читанні:\n1. Виділи\
+    \ деталі в тексті (портреті, пейзажі, \nописі предмета чи приміщення).\n2. Проаналізуй,\
+    \ яку роль вона відіграє:\n• у портреті: передає зовнішню \nхарактеристику чи\
+    \ звертає увагу на \nвнутрішні якості героя / героїні;\n• у пейзажі: відтворює\
+    \ різноманітні стани \nприроди чи внутрішній стан г"
+  section_title: Сторінка 257
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5695440769195557
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5389584898948669
+  chunk_id: 3588aaff_c0551
+  text: "4. У тому-таки вступному розділі, де подається\r\nкороткий огляд попередньої\
+    \ української науки про літературу, Чижевський також\r\nвважає за потрібне спробувати\
+    \ десь на шести сторінках викласти ази поетики. Для\r\nангломовних читачів це\
+    \ може видатися ексцентричним або вищою мірою недоречним.\r\nОдначе така спроба\
+    \ цілком відповідає тим настановам, про які йшлося вище.\r\nПочавши з двох параграфів,\
+    \ присвячених мові (де він згадує, приміром, архаїзми,\r\nнеологізми, жаргон тощо),\
+    \ продовживши короткими визначен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5367062091827393
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

@@ -1,0 +1,189 @@
+discovered_at: '2026-03-13T18:16:23.377288+00:00'
+query_keywords:
+- Кримські татари після 2014
+- Подвійні жертви
+- Російська окупація та репресії
+- Спротив та еміграція
+- Первинні джерела
+- Деколонізаційний погляд
+- Боротьба триває
+- становище кримських татар після анексії
+- репресії окупаційної влади
+- роль Меджлісу та активістів
+- зв'язок українців та кримських татар
+- Теперішній та минулий час
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=h0lrFhCijEA
+  channel: Комік Історик
+  title: 34 питання про історію України
+  relevance_score: 0.4
+  relevance_note: This is a general overview of Ukrainian history, mentioning ancient
+    peoples of Crimea ('Таври'). While it touches upon the geographic region of Crimea,
+    it does not specifically address Crimean Tatars or the post-2014 period. It's
+    tangentially related at best.
+  transcript_excerpt: Також ми бачимо скіфи. Скіфи замінили сармати. Саміж скіфи замінили
+    кімерійців, які також були тут. Потім вони також отримали назву і Таври. Звідси
+    йде і назва півдня України і частково Криму, як Тав
+  embed_suggestion: Potentially after 'Деколонізаційний погляд' as a very broad, ancient
+    historical context of the Crimean peninsula, but its relevance to the specific
+    module topic is very low.
+- url: https://www.youtube.com/watch?v=RiMeKwdhvZs
+  channel: Реальна Історія
+  title: Чи було насправді монголо-татарське іго?
+  relevance_score: 0.1
+  relevance_note: The video discusses the Mongol-Tatar Yoke, which is an ancient historical
+    period. While it mentions 'Tatars', it's about the Golden Horde and not directly
+    relevant to the Crimean Tatars after 2014. It could cause confusion.
+  transcript_excerpt: Золота орда і монгола-татари - це такі терміни, які дивним чином
+    зі школи дуже міцно засіли в нашій голові. Але скажу вам, що реальна історія свідчить
+    про те, що так зване іго було не таким, як ми уявляємо.
+  embed_suggestion: Not suitable for this module. The topic is historically distant
+    and not specific to Crimean Tatars.
+- url: https://www.youtube.com/watch?v=5rW86M7pVYY
+  channel: Реальна Історія
+  title: Реальна історія Галицько Волинського князівства
+  relevance_score: 0.1
+  relevance_note: The video is about the history of the Galician-Volhynian Principality,
+    which is completely unrelated to the module's topic of Crimean Tatars after 2014.
+  transcript_excerpt: '[музика] галицько-волинське князівство для мене зі школи -
+    це щось нудне і складне в пам''яті залишилося дуже мало фактів але причина цьому
+    російські пропагандисти які переписали цей період нашої історії так щоб він здавався
+    незрозумілим нелогічним і неважливим'
+  embed_suggestion: Not suitable for this module.
+- url: https://www.youtube.com/watch?v=Ty6qWS7-efU
+  channel: Комік Історик
+  title: 'Дмитро Кулеба: історія української дипломатії'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=KJPpXeocRjA
+  channel: ІМТГШ
+  title: ХТО ТАКИЙ СТЕПАН БАНДЕРА?
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=WOmw9begJzQ
+  channel: ІМТГШ
+  title: Найтемніша пляма в історії України!
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0408
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 226
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0446
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 255
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0220
+  text: "Розділ III. Україна в період системної кризи Союзу Радянських Соціалістичних\
+    \ Республік\n120\nнелегальні збори представників кримськотатарських \n«ініціативних\
+    \ груп». У 1967  р. влада повернула кримським татарам \nгромадянські права й \
+    \ заявила про можливість при-\nйняти певну кількість переселенців до Криму. Це\
+    \ \nспричинило протести серед кримських татар, які \nпроживали в  Узбекистані.\
+    \ Влада відповіла миттєво. Зібрання кримських татар було розігнано, частину \n\
+    активістів заарештовано. Відбулася низка су"
+  section_title: Сторінка 122
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0454
+  text: "247 \nКримські татари \nдемонструють свої \nдокументи \nНапис на плакаті:\
+    \ \n«Геноцид \nпродовжується»\nНапис на плакаті: \n«Волю вже маємо. Дайте ж землі!»\
+    \ \nрадше ситуативно реагувала на ті чи інші проблеми, аніж керувалася \nцілеспрямованим\
+    \ діалогом. 1. Коли й завдяки чому кримські татари змогли повернутися на історичну\
+    \ батьківщину? 2. Хто й чому наполягав на проголошенні Автономної Республіки Крим?\
+    \ 3. Кому з Президентів України вдалося налагодити діалог з лідерами кримських\
+    \ татар? У той час, коли…  на "
+  section_title: Сторінка 248
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5549089908599854
+  chunk_id: f79fbc43_c0264
+  text: "7. Seton-Watson, 443-44; Richard A. Pierce, Russian Central Asia\r\n1867-1917:\
+    \ A Study in Colonial Rule (Berkeley and Los Angeles: Univ. of\r\nCalifornia Press,\
+    \ 1960); і Robert J. Kaiser, «Ethnic Demography and Interstate\r\nRelations in\
+    \ Central Asia,» in Roman Szporluk, ed., National Identity and\r\nEthnicity in\
+    \ Russia and the New States of Eurasia (Armonk, NY: M. E.\r\nSharpe, 1994), 230-65.\n\
+    \n8. M. Вахабов, 22.\n\n9. H. С. Гумилев, Собрание сочинений, edited by G. P.\
+    \ Struve\r\nand V. Filippov (Washington, D"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5447393655776978
+  chunk_id: 294b54e7_c0569
+  text: "8 Иордан, О происхождении и деяниях гетов.\r\n— Москва, 1960, с. 204, 205.\n\
+    \n9 Кулаковский Ю. Керченская христианская\r\nкатакомба 491 года // МАР. — 1891.\
+    \ — Вып. 6, с. 27.\n\n10 Прокопий Кесарийский. О постройках //\r\nВДИ. — 1932.\
+    \ — №4, с. 249, 250.\n\n11 Амброз А. К. Дунайские элементы в\r\nраннесредневековой\
+    \ культуре Крыма (VI— VII вв.)//КСИА. — 1986. -Вып. ИЗ, с.\r\n10—23.\n\n12 Айбабин\
+    \ А. И. Этническая принадлежность\r\nмогильников Крыма IV — первой половины VII\
+    \ вв. н. э., с. 194.\n\nНа кінець VII ст. процес а"
+  work: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult/ikult.htm
+- score: 0.5424520969390869
+  chunk_id: c846b4d3_c0238
+  text: "Після того, як Росія завоювала Крим і берег Чорного\r\nморя, татарських набігів\
+    \ уже більше не було. Татари стали жити в Криму мирно,\r\nпрацювати коло землі,\
+    \ а багато їх, щоб утекти від усякої кривди, од\r\nхристиянського уряду, перебралось\
+    \ у Турцію. Турецьке царство занепадало. Які\r\nбули під ним християнські народи,\
+    \ то мало не всі повибивалися на волю, як от\r\nсерби, болгари, молдавани і греки.\n\
+    \nДедалі в турків стає все менше та менше сили.\n\nПримітки\n\nПримітки\n\nМихайло\
+    \ ДРАГОМАНОВ\n\nАНТРАКТ З ІСТОРІЇ УК"
+  work: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+  year: 1880
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag.htm

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 3 — E2E
+PASS: pipeline c2 3
 
   Module:   naukovyi-styl-mastery
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:13:54Z
+  Date:     2026-03-13T17:18:21Z

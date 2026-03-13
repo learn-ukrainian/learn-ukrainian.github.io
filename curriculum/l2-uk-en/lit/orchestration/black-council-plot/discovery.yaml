@@ -1,0 +1,170 @@
+discovered_at: '2026-03-13T14:58:13.986785+00:00'
+query_keywords:
+- 'Чорна рада: Роман'
+- Сюжет і структура
+- Система персонажів
+- Літературні архетипи
+- Художні особливості
+- 'Analyze literary techniques in чорна рада: роман'
+- Interpret themes and motifs of перший український історичний роман
+- Literary Archetypes
+- literature
+- історичний
+- роман
+- архетип
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrlit-avramenko-2022_s0265
+  text: 'Куліша «Чорна рада». Розвиваємо компетентності
+
+    Теорія літератури
+
+    Я
+
+    Аля'
+  section_title: Сторінка 245
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0265
+  text: "1\nПравила  читання\n1\nПершочергово у тексті твору шукай відповіді \nна\
+    \ запитання:\n• Хто діє? Які його / її вчинки?\n• Де і коли відбуваються події?\n\
+    • Кого або що описує автор/авторка?\n2\n \nПри повторному читанні:\n1. Виділи\
+    \ деталі в тексті (портреті, пейзажі, \nописі предмета чи приміщення).\n2. Проаналізуй,\
+    \ яку роль вона відіграє:\n• у портреті: передає зовнішню \nхарактеристику чи\
+    \ звертає увагу на \nвнутрішні якості героя / героїні;\n• у пейзажі: відтворює\
+    \ різноманітні стани \nприроди чи внутрішній стан г"
+  section_title: Сторінка 257
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0387
+  text: "славних лицарів: Петра Конашевича-Сагайдачного, Самійла Кішку,\nТараса Трясила,\
+    \ Северина Наливайка, Якова Остряницю, Нестора\nМорозенка й ін. Автор спрямовує\
+    \ свою увагу на чвари між рядовими\nкозаками та старшиною, між міщанами й шляхтичами.\
+    \ Наскрізним\nобразом, який ніби рухає сюжет твору, є дорога, у яку вирушає свя-\n\
+    щеник Іван Шрам зі своїм сином Петром до гетьмана Якима Сомка.\nЦією дорогою вони\
+    \ зустрічають різних за соціальним статусом і полі-\nтичними поглядами людей.\
+    \ \nП. Кулішеві вдалося майсте"
+  section_title: Сторінка 290
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5359750986099243
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5000390410423279
+  chunk_id: 9896ad09_c0283
+  text: "Форма «Слова».\r\n Як бачимо, невважаючи на більш ніж\r\nстолітню працю над\
+    \ «Словом» палеографів, лінгвістів, фольклористів та істориків,\r\nчитається його\
+    \ текст і досі місцями тяжко, навіть дуже. Підчеркую — місцями, бо\r\nзнов єсть\
+    \ багато таких місць, що виглядають немов тільки що проспівані, з\r\nзахованням\
+    \ ритму, з явними прикметами первісної поетичної фактури. Чим\r\nпояснюються отсі\
+    \ темні плями в тексті і така неодностайність його: сорозмірна\r\nясність і гладкість\
+    \ в одних частях, такі чорториї в других"
+  work: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush2.htm
+- score: 0.49648910760879517
+  chunk_id: fc2291b5_c4985
+  text: "Літ.: Помяловський И.\r\nМарк Теренций Варрон Реатинский и Мениппова сатура.\
+    \ СПБ, 1869; Тройський І. М.\r\nІсторія античної літератури. К., 1959; История\
+    \ греческой литературы, т. 3. М., 1960.\n\nВ. П. Маслюк."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

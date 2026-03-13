@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 127
+PASS: pipeline istorio 127
 
   Module:   hromadianske-suspilstvo
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 127
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:24:21Z
+  Verdict:  PASS
+  Date:     2026-03-13T13:26:12Z

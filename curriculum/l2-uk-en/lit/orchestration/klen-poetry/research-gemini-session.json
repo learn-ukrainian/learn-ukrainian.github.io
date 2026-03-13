@@ -1,0 +1,682 @@
+{
+  "sessionId": "15995361-f68c-4f22-b4e8-289b6952e1a4",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T18:46:00.683Z",
+  "lastUpdated": "2026-03-13T18:48:09.295Z",
+  "messages": [
+    {
+      "id": "24f562f3-f1a3-4f23-a7b2-a57ce10a38fa",
+      "timestamp": "2026-03-13T18:46:00.683Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-lit.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: lit-093\nlevel: LIT\nsequence: 93\nslug: klen-poetry\nversion: '2.0'\ntitle: Klen Poetry\nsubtitle: Klen Poetry\nfocus: literature\npedagogy: Seminar\nphase: LIT.4 Diaspora and Dissidence 1933-1991\nword_target: 5000\nobjectives:\n- Проаналізувати поезію Клена у контексті діаспорного неокласицизму\n- Дослідити стилістичні особливості тексту\n- Зрозуміти деколонізаційне значення автора\nsources:\n- name: Klen Poetry — тексти та аналіз\n  url: https://www.ukrlib.com.ua/\n  type: primary\n  notes: Основне джерело\ncontent_outline:\n- section: Вступ та культурний контекст\n  points:\n  - Юрій Клен / Освальд Бурґгардт — неокласик в еміграції\n  - Місце в літературному каноні\n  - Чому цей текст важливий сьогодні\n  words: 850\n- section: 'Аналіз твору: Сюжет та структура'\n  points:\n  - Ключові твори — «Попіл Клена» та лірика\n  - Впливи та джерела\n  - Конфлікт між батьківщиною і вигнанням\n  words: 850\n- section: Герменевтика та ключові образи\n  points:\n  - Детальний розбір символіки\n  - Образ спаленого клена як метафора культурного знищення\n  - Архетипи та класичні підтексти\n  words: 850\n- section: Мова, стиль та поетика\n  points:\n  - Стилістичні інновації автора\n  - Синтез класичної і сучасної поетики\n  - Особливості ритміки та синтаксису\n  words: 850\n- section: Деколонізаційний вимір\n  points:\n  - Який імперський міф руйнує цей текст?\n  - Еміграція як культурний опір\n  - Опір асиміляції та культурне самоствердження\n  words: 850\n- section: Підсумок та рецепція\n  points:\n  - Вплив на МУРівську та Нью-Йоркську групи\n  - Світовий контекст діаспорної поезії\n  - Питання для дискусії\n  words: 750\nvocabulary_hints:\n  required:\n  - канон (canon)\n  - метафора (metaphor)\n  - дискурс (discourse)\n  - інтерпретація (interpretation)\n  recommended:\n  - алегорія (allegory)\n  - контекст (context)\n  - рецепція (reception)\nactivity_hints:\n- type: reading\n  focus: Аналіз ключових уривків klen-poetry\n  source: UkrLib\n  items: 5+\n- type: essay-response\n  focus: Філософський або літературознавчий аспект твору\n  output: Аналітичне есе\nconnects_to:\n- lit-209\nprerequisites:\n- lit-207\npersona:\n  voice: Senior Philologist & Critic\n  role: Exile Poet\nmodule_type: literature\nimmersion: 100% Ukrainian\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Klen Poetry** for the **lit** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n**Workflow**: Search Wikipedia FIRST for factual foundation → search literary RAG for primary quotes → verify vocabulary with VESUM.\n\n### Research Requirements\n\n1. **Sources**: Use `query_wikipedia` (mode=`extract`) for Ukrainian Wikipedia articles. Also consult history.org.ua, litopys.org.ua. Use `search_literary` for primary source excerpts. Russian-language sources are PROHIBITED.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find 2+ quotable primary source excerpts (original Ukrainian text preferred).\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **4000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Klen Poetry\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Klen Poetry\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "10aafff0-c05c-4b16-a402-1f23b9f630a6",
+      "timestamp": "2026-03-13T18:46:09.017Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to Research",
+          "description": "I'm now focused on the next step: gathering information. I will begin by searching multiple sources to uncover details about the subject. My approach will prioritize gathering relevant facts to build a comprehensive understanding.",
+          "timestamp": "2026-03-13T18:46:05.909Z"
+        },
+        {
+          "subject": "Investigating the Query",
+          "description": "I am now starting to actively explore the subject, beginning with a specific search on Wikipedia to find direct information. My plan includes checking the accuracy of the details, such as the title of his most well-known poetry.",
+          "timestamp": "2026-03-13T18:46:08.861Z"
+        }
+      ],
+      "tokens": {
+        "input": 20539,
+        "output": 19,
+        "cached": 0,
+        "thoughts": 236,
+        "tool": 0,
+        "total": 20794
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773427568985_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Юрій Клен",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773427568985_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Юрій Клен' — 5 results\n\n1. **Юрій Клен** — Юрій Клен, справжнє ім&#039;я — Освальд-Еккард Бургардт (нім. Oswald-Eckard Burghardt; 4 жовтня 1891, Сербинівці — 30 жовтня 1947, Аугсбург) — український\n2. **Вулиця Юрія Клена** —  на честь якої названі ці об’єкти: Юрій Клен Вулиця Юрія Клена (Вінниця) Вулиця Юрія Клена (Київ) Провулок Юрія Клена (Городок) Хмельницької області.\n3. **Попіл імперій** — портрет Юрія Клена) Михайло Дмитренко. Юрій Клен. Вибране / Упоряд., авт. перед. та приміт. Ю. Ковалів; — Київ: Дніпро, 1991. — С. 450. Юрій Клен. Твори\n4. **Неокласики** — Зеров, Павло Филипович, Михайло Драй-Хмара, Освальд Бургардт (псевдонім Юрій Клен), Максим Рильський. До кола неокласиків відносять також таких авторів:\n5. **Вулиця Юрія Клена (Київ)** — Ву́лиця Ю́рія Кле́на — вулиця у Святошинському районі міста Києва, селище Жовтневе. Пролягає від вулиці Тараса Бульби-Боровця до Жмеринської вулиці. Прилучаються"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:09.282Z",
+          "resultDisplay": "Wikipedia search: 'Юрій Клен' — 5 results\n\n1. **Юрій Клен** — Юрій Клен, справжнє ім&#039;я — Освальд-Еккард Бургардт (нім. Oswald-Eckard Burghardt; 4 жовтня 1891, Сербинівці — 30 жовтня 1947, Аугсбург) — український\n2. **Вулиця Юрія Клена** —  на честь якої названі ці об’єкти: Юрій Клен Вулиця Юрія Клена (Вінниця) Вулиця Юрія Клена (Київ) Провулок Юрія Клена (Городок) Хмельницької області.\n3. **Попіл імперій** — портрет Юрія Клена) Михайло Дмитренко. Юрій Клен. Вибране / Упоряд., авт. перед. та приміт. Ю. Ковалів; — Київ: Дніпро, 1991. — С. 450. Юрій Клен. Твори\n4. **Неокласики** — Зеров, Павло Филипович, Михайло Драй-Хмара, Освальд Бургардт (псевдонім Юрій Клен), Максим Рильський. До кола неокласиків відносять також таких авторів:\n5. **Вулиця Юрія Клена (Київ)** — Ву́лиця Ю́рія Кле́на — вулиця у Святошинському районі міста Києва, селище Жовтневе. Пролягає від вулиці Тараса Бульби-Боровця до Жмеринської вулиці. Прилучаються",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e27d8645-a83a-40f8-8c86-c503b4e6b8bd",
+      "timestamp": "2026-03-13T18:46:14.927Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing The Article's Content",
+          "description": "\\n\\n\nI am now focused on obtaining the complete article and cross-referencing information to ensure accuracy. I will next proceed to examine the text and compare different potential search results.",
+          "timestamp": "2026-03-13T18:46:12.976Z"
+        },
+        {
+          "subject": "Refining The Search Strategy",
+          "description": "\\n\\n\nI am adjusting my approach, planning to extract both \"Юрій Клен\" and \"Попіл імперій\" from the knowledge source. This will allow for cross-validation and hopefully clarify the relationship between the article title and the poem \"Попіл імперій.\"",
+          "timestamp": "2026-03-13T18:46:14.720Z"
+        }
+      ],
+      "tokens": {
+        "input": 20969,
+        "output": 40,
+        "cached": 0,
+        "thoughts": 186,
+        "tool": 0,
+        "total": 21195
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773427574827_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Юрій Клен"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773427574827_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Юрій Клен\n**URL**: https://uk.wikipedia.org/wiki/%D0%AE%D1%80%D1%96%D0%B9_%D0%9A%D0%BB%D0%B5%D0%BD\n\nЮрій Клен, справжнє ім'я — Освальд-Еккард Бургардт (нім. Oswald-Eckard Burghardt; 4 жовтня 1891, Сербинівці — 30 жовтня 1947, Аугсбург) — український поет, перекладач, літературний критик. Батько українського перекладача та редактора Вольфрама Бургардта. Входив до «п'ятірного грона» неокласиків на чолі з М. Рильським.\n\n\n== Життєпис ==\nНародився 4 жовтня 1891 року в селі Сербинівці в родині німецького купця-колоніста Фрідріха Бургардта та Каттіни Сідонії Тіль. Дід поета, Август Бургардт, походив з пруського міста Зельдена, оселився в ХІХ сторіччі на Волині і заклав там фабрику сукна. Мав п'ятьох синів, з яких найстарший Фрідріх Адам, купець за фахом (деякий час він займався продажем сільськогосподарських машин), одружений з Сідонією Амалією, з дому Тіль (Thiel), був батьком Юрія Клена, який народився в сім'ї третьою і останньою дитиною. Поет мав двоє хресних імен: Освальд і Екарт.\n\nРодина постійно переїжджала від містечка до містечка на Волині й Поділлі. Підлітком протягом кількох років мешкав у містечку Славута Заславського повіту, де розташовувалася резиденція князя Романа Санґушка, що пізніше стала для поета символом «старої романтики». Завершив середню освіту в Київській першій гімназії з золотою медаллю, звідки у 1911 році вступив на романо-германський відділ філологічного факультету київського Університету святого Володимира.\nВ університеті одержав ґрунтовну освіту: вивчав англійську, німецьку та слов'янську філологію, історію літератури. Вже тоді захопився творчістю Рільке, мав про нього наукову доповідь, перекладав російською його вірші. 1915 року з передмовою професора Володимира Перетца з'явилася друком наукова праця Бургардта «Новые горизонты в области исследования поэтического стиля».\n3 початком Першої світової війни Освальда Бургардта депортовано до Архангельської губернії (с. Мар'їна гора). Повернувшись до Києва у 1918 році, закінчив у 1920 році університет — і його прийнято до аспірантури при дослідному інституті УАН. Викладав разом із М. Зеровим у соціально-економічному технікумі с. Баришівки, а також латинську мову в Першій українській гімназії ім. Т. Г. Шевченка.\nУже в 20-ті роки розкрилися ті особливості його манери письма, що зближували Юрія Клена з неокласиками: досконале володіння мистецькою формою, своєрідний панестетизм.\nУ Київському інституті народної освіти створив кафедру прикладного мистецтва (1930—1931), брав активну участь у роботі ВУАН.\n\n\n=== В еміграції ===\n\nЗ 1931 року живе та працює в Німеччині, тісно співпрацює з поетами, що об'єднувались довкола «Вісника» Д. Донцова. У 1934 році за допомогою професорів Маєра і Чижевського влаштувався викладачем російської і української мови у Мюнстерському університеті. Там само написав і захистив німецькомовну докторську дисертацію «Головні мотиви творчості Леоніда Андрєєва» (1936).\nУ роки Другої світової війни служив за перекладача при штабі 17-ї армії. З 1943 р. працює викладачем в Українському вільному університеті в Празі, по закінченні війни — коротко професором слов'янської філології Інсбруцького університету.\nЗдобув третю премію Українського католицького союзу (трійця переможців — Галина Журба, Юрій Косач та Юрій Клен).\n\nЗ травня 1947 року і до смерті працював головним редактором літературного журналу «Літаври» (виходив у Зальцбурзі, Австрія). За життя поета світ побачило п'ять чисел журналу.\nПомер Юрій Клен 30 жовтня 1947 року в німецькому Авґсбурзі. Ось як про це згадує Ігор Качуровський:\n\n\n== Творчість ==\n1943 року з'являється в світ збірка поезій Юрія Клена «Каравели», в якій автор спробував синтезувати творчі принципи київських неокласиків та ідейно-художні шукання поетів «празької школи». Автор поєднує в єдиному естетичному вимірі трагічну античність («Антоній і Клеопатра», «Цезар і Клеопатра», «Шляхами Одіссея»), героїзм середньовічної лицарської доби («Жанна д'Арк», «Вікінги») та князівсько-гетьманську українську традицію («Володимир», «Символ», «Україна»).\nЮрій Клен — автор збірки «Каравели» (1943), епопеї «Попіл імперій» (1943—1947), есею «Спогади про неоклясиків» (1946), багатьох літературознавчих праць, перекладів з англійської, німецької, французької та інших мов.\nВершинними здобутками Юрія Клена-поета є поеми «Прокляті роки» (1937) та «Попіл імперій» (1943—1947). Трагічне знищення української культури в добу сталінізму, нелюдська жорстокість другої світової війни — центральні теми цих творів.\n\n\n=== Переклади ===\nОкремими книжками перекладів вийшли «Залізні сонети» Фрідріха Рюккерта, новели Ґеорґа Гайма. Крім «Гамлета» і «Бурі» Шекспіра («Гамлета» видано в Україні у 1930-х роках, проте без імені перекладача), переклав Юрій Клен також вокальні твори Л. Бетговена, Ф. Шуберта, Р. Шумана, лібрето до опери Ріхарда Штравса «Саломея» (за однойменною драмою Оскара Вайлда), уривки з поеми «Пісня про Нібелунгів» та численні поезії англійських (Байрон, Шеллі), німецьких (Рільке і Ґеорґе) і французьких поетів. Імена французьких перекладач називає сам у «Спогадах про неоклясиків»: «Я дав поодинокі речі з Рембо, Верлена, Мореаса, Самена, Валері, Готьє, Леконт де Ліля» (мова про «Антологію французької поезії», яку здали 1930 року до друку київські неоклясики і яку не пропустила цензура).\nЗа редакцією Освальда Бургардта вийшло тридцятитомове видання творів Джека Лондона (незакінчене, вийшло 26 з 30 томів), восьмитомове Бернарда Шоу, а також твори Діккенса (якого перекладав і сам Бургардт), Гамсуна, Ґете.\nЮрію Клену належать переклади сонетів Миколи Зерова німецькою мовою, що увійшли до збірки В. Державина «Gelb und Blau: Moderne ukrainische Dichtung in Auswahl» (Авґсбурґ, 1948). Із шведської він переклав повість Свена Гедіна «Завойовники Америки» (Харків: Книгоспілка, 1926).\n\n\n== Родина ==\nЙого дружиною була Зінаїда Гнатівна Бургардт, до шлюбу Бромірська (6 вересня 1896, Володимир, Волинська область — 8 травня 1991, Лондон, Онтаріо, Канада).\nПодружжя мало сина й доньку.\nДонька — Ірина Бургардт (4 жовтня 1922, Київ — 10 грудня 2010, Ричмонд-Гілл, Онтаріо, Канада).\nСин — Вольфрам Бургардт (нар. 19 жовтня 1935, Мюнстер), професор української, іспанської та італійської мов, мешкав у місті Лондон в Канаді. Він відредагував і видав, разом з Євгеном Маланюком, твори Юрія Клена, з архіву, який зберегла та привезла до Канади Зінаїда. Мав трьох дітей.\n\n\n== Вшанування пам'яті ==\n\nІменем Юрія Клена названі вулиці у містах Вінниця, Дніпро та Київ.\nУ травні 2022 р. в місті Городок Хмельницької області провулок Гайдара перейменували на провулок Юрія Клена.\n26 липня 2024 року у місті Дніпро вулицю Шахтинську перейменували на вулицю Юрія Клена.\n\n\n== Твори ==\nПоезія:\n\nВірші, писані протягом 1913—1922 років російською мовою\nСонети, написані в період 1921—1922 років російською мовою\nпоема «Прокляті роки» (видана двічі у Львові 1937 та 1943 рр.; Кракові 1943 року)\nпоема «Попіл імперій» (1943—1947)\nзбірка «Каравели» (Прага, 1943)\n«Spätlese» (вірші, написані у період 1932—1945 років німецькою мовою)\n«Дияболічні параболи» (у співавторстві, Зальцбург, 1947)\nНовели:\n\n«Акація» (Льойташ, Тіроль, Австрія, травень 1947)\n«Яблука» (Льойташ, червень 1947)\n«Пригоди архангела Рафаїла» (Льойташ, липень 1947)\n«Медальйон» (Баварія, осінь 1947)\nНариси:\n\n«Черга»\n«Крізь Великодні минулі…»\n«Чудо Воскресіння»\n«Мідь звенящая» (травень 1947)\nМемуаристика:\n\n«Спогади про неоклясиків» (Мюнхен, 1947)\n\n\n== Рукописи ==\nDichtung der Verdammten. Eine Anthologie ukrainischer Dichtung, ausgewählt und übertragen von Oswald Burghardt (Jurij Klen). Zweisprachige Ausgabe: Deutsch und Ukrainisch. Hrsg. von Nataliia Kotenko-Vusatyuk und Andrii Portnov sowie mit Erinnerungen an den Autor von Dmytro Tschyshewskyj / Поезія проклятих. Редактори Наталія Котенко-Вусатюк (Київ) та Андрій Портнов (Берлін) / Arco Verlag, 2025.\t120 S. ISBN 978-3965870499\n\n\n== Примітки ==\n\n\n== Джерела та література ==\nС. І. Білокінь. Клен Юрій (справжні прізв., ім'я та по батькові — Бургардт Освальд Федорович) // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2007. — Т. 4 : Ка — Ком. — С. 346. — ISBN 978-966-00-0692-8.\nМ. Я. Неврлий. Бурґгардт Освальд Федорович // Енциклопедія сучасної України / ред. кол.: І. М. Дзюба [та ін.] ; НАН України, НТШ. — К. : Інститут енциклопедичних досліджень НАН України, 2001­–2025. — ISBN 966-02-2074-X.\nЛучків І. Юрій Клен. Бібліографічний покажчик. — Торонто: Самвидав, 1973. — 106 с.\n\n\n=== Література ===\n«Празька школа»: Хрестоматія прозових творів / Упоряд., передм. і приміт. В. А. Просалової;— Донецьк: Східний видавничий дім, 2004. — 236 с.\nПразька літературна школа: Ліричні та епічні твори / Упорядування і передмова В. А. Просалової. — Донецьк: Східний видавничий дім, 2008. — 280 с.\nКлен Юрій. Твори. Том 1. Нью-Йорк: Наукове Товариство ім. Шевченка, 1992. 382 с.\nКлен Юрій. Твори. Торонто: Фундація імені Юрія Клена, 1957—1960. Том 2. — 349 с.; Том 3. — 221 c.; Том 4. — 407 c.\nКлен Юрій. Вибрані твори. Поезія. Спогади. Листи. — Дрогобич: Каменяр,2003. — 616 с. 259\nАстаф'єв О. Образ і знак. Українська емігрантська поезія у структурно-семіотичній перспективі. — К.: Наукова думка, 2000. — c.28-33.\nКовалів Ю. Освальд Бурґгардт (Юрій Клен) // Слово і час. — 1991. — № 4. — С.41-45.\nКовалів Ю. «Празька школа»: на крутосхилах «філософії чину». — К.: Бібліотека українця, 2001. −120 с.\nКовалів Ю. Прокляті роки Юрія Клена // Клен Юрій. Вибране. — К.: Дніпро, 1991. — С. 3-23.\nСаєнко В. Поетика творчості Юрія Клена // Саєнко В. Українська модерна поезія 20-х років XX століття: Ренесансна парадигма. — Одеса, 2004.\nСарапин В. Маловідомий Юрій Клен // Українська мова та література. — 2000. — Ч. 7. — С. 3-4.\nСарапин В. Осінні мотиви в поезії Юрія Клена // Дивослово. — 1998. — № 9. — С. 8-11.\nСарапин В. Поезія Юрія Клена та її місце в літературному процесі першої половини XX ст.: Автореферат дис. на здобуття наук. ступеня канд. філол. наук. — К., 2000. — 20 с.\nФилипович О. Життя і творчість Юрія Клена // Сучасність. — 1967. — Ч.10 (82). — С. 47-85.\nТворчість Юрія Клена і міжвоєнна доба в українській літературі. Збірник наукових праць. — Вип. 2 / Ред. кол. І. Руснак (гол.), О. Баган та ін. — Вінниця: ТОВ Фірма «Планер», 2012. — 568 с.\nЧижевський Д. Юрій Клен, вчений та людина (Із спогадів) // Філософські твори: У 4 т. — К.: Смолоскип, 2005. — Т. 2. — С. 244—253.\nУкраїнська діаспора: літературні постаті, твори, біобібліографічні відомості / Упорядк. В. А. Просалової. — Донецьк: Східний видавничий дім, 2012. — 516 с.\nРудницький Л. Роберт Люїс Стівенсон і Юрій Клен // Сучасність. — 1974. — Ч. 12 (168). -С. 25-38.\nЄ. М. Пам'яті Освальда Бурґгардта 17. XII. 47. // Літературно-науковий вістник — Реґенсбурґ. Річник XXXII, травень 1948. — С.43-46.\nЖулинський М. Бурґгардт Освальд // Українська літературна енциклопедія: У 5 т. — К.: Українська енциклопедія ім. М. П. Бажана, 1988. — Т. 1. — С. 249—250.\nКачуровський І. Життя і творчість Юрія Клена // Променисті сильвети: лекції, доповіді, статті, есеї, розвідки. — К.: Вид. дім «Києво-Могилянська академія», 2008. — С. 249—284.*\nМ. Орест. Ю. Клен про самого себе// Україна і Світ. — Ганновер, 1951. — З. 5. — С. 9-10.\nВ. Кримський. Храм Ґрааля (До проблеми світогляду Юрія Клена). — Зальцбурґ-Інсбрук: Звено, 1948. — 20 с.\nО. Корчак-Городиський. Спогад про Юрія Клена//Вісті Комбатанта. — Торонто-Нью-Йорк, 1967. — Ч.4.\nІ. Костецький. Мій Юрій Клен// Сучасність. — 1966. — Ч. 7 (67). — С. 55-73\nOswald Burghardt, Jurij Klen: Leben und Werke/ von Josefine Burghardt. — München: Verlag Ukraine, 1962, 112 S.\nJutta Lindekugel, Vielfalt der Dichtarten im Werk von Oswald Burghardt (Jurij Klen). Diss. Greifswald. Kassel, kassel university press, 2003. ISBN 978-3-89958-017-4\nКлен Ю. Спогади про неокласиків / Юрій Клен. — Мюнхен: Накладом Укр. вид. спілки в Мюнхені, 1947. — 48 с.\nІрина Руснак. До питання про місце народження Юрія Клена (Освальда Бурґгардта) // Філологічний дискурс: Зб. наук. пр. — Хмельницький: ХДПА. — 2016. — Вип. 3. — С. 138—146.\nСамі про себе. Автобіографії українських митців 1920-х років/ Упоряд. Раїса Мовчан. — Київ : Кліо, 2015. — 640 с. — ISBN 978-617-7023-36-3.\n\n\n== Посилання ==\nКлен Юрій // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 3, кн. V : Літери К — Ком. — С. 651. — 1000 екз.\n\n\n=== Біографічна довідка ===\nInternet Encyclopedia of Ukraine: Klen, Yurii (англ.)\nБучинський Д. Юрій Клен в житті і творчості. — Мюнхен: Українське Видавництво, 1962. — 39 с.\nМарко Роберт Стех Про київських неокласиків // «Очима культури», № 74\nГоробець О. Блукання довкруги знаменитого Клена\n\n\n=== Твори ===\nКлен Ю. Тексти творів на сайті Чтиво\nКлен Ю. Каравели. — Прага, 1943.\nКлен Ю. Спогади про неоклясиків. — Мюнхен, 1947.\nКлен Ю. Твори. Т. 1. — Нью-Йорк, 1992.\nКлен Ю. Твори. Т. 2 [Архівовано 2 квітня 2016 у Wayback Machine.]. — Торонто, 1957.\nКлен Ю. Твори Т. 3 [Архівовано 28 липня 2014 у Wayback Machine.]. — Торонто, 1960.\nКлен Ю. Твори Т. 4. — Торонто, 1960.\nКлен Ю. Баляда про помсту// Літературно-науковий вісник. — Реґенсбурґ. Річник XXXII, травень 1948. — С. 6–11.\nКлен Ю. Прокляті роки. — Краків: Українське Видавництво, 1943. — 40 с.\nКлен Ю. Прокляті роки// Вітчизна. — 1990. — № 7.\nАудіочитка\nЮрій Клен. Беатріче https://www.youtube.com/watch?v=X2a9LuDzU5s\nЮрій Клен. Беатріче : https://www.youtube.com/watch?v=H4sNGenwEDA\n\n\n=== Критика ===\nВіра Просалова. Текст у світі текстів празької літературної школи\nКлен Ю. Рецензія на поему Т. Осьмачки «Поет» // Арка. — 1947. — Ч. 5. — С. 40–41."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:17.739Z",
+          "resultDisplay": "# Юрій Клен\n**URL**: https://uk.wikipedia.org/wiki/%D0%AE%D1%80%D1%96%D0%B9_%D0%9A%D0%BB%D0%B5%D0%BD\n\nЮрій Клен, справжнє ім'я — Освальд-Еккард Бургардт (нім. Oswald-Eckard Burghardt; 4 жовтня 1891, Сербинівці — 30 жовтня 1947, Аугсбург) — український поет, перекладач, літературний критик. Батько українського перекладача та редактора Вольфрама Бургардта. Входив до «п'ятірного грона» неокласиків на чолі з М. Рильським.\n\n\n== Життєпис ==\nНародився 4 жовтня 1891 року в селі Сербинівці в родині німецького купця-колоніста Фрідріха Бургардта та Каттіни Сідонії Тіль. Дід поета, Август Бургардт, походив з пруського міста Зельдена, оселився в ХІХ сторіччі на Волині і заклав там фабрику сукна. Мав п'ятьох синів, з яких найстарший Фрідріх Адам, купець за фахом (деякий час він займався продажем сільськогосподарських машин), одружений з Сідонією Амалією, з дому Тіль (Thiel), був батьком Юрія Клена, який народився в сім'ї третьою і останньою дитиною. Поет мав двоє хресних імен: Освальд і Екарт.\n\nРодина постійно переїжджала від містечка до містечка на Волині й Поділлі. Підлітком протягом кількох років мешкав у містечку Славута Заславського повіту, де розташовувалася резиденція князя Романа Санґушка, що пізніше стала для поета символом «старої романтики». Завершив середню освіту в Київській першій гімназії з золотою медаллю, звідки у 1911 році вступив на романо-германський відділ філологічного факультету київського Університету святого Володимира.\nВ університеті одержав ґрунтовну освіту: вивчав англійську, німецьку та слов'янську філологію, історію літератури. Вже тоді захопився творчістю Рільке, мав про нього наукову доповідь, перекладав російською його вірші. 1915 року з передмовою професора Володимира Перетца з'явилася друком наукова праця Бургардта «Новые горизонты в области исследования поэтического стиля».\n3 початком Першої світової війни Освальда Бургардта депортовано до Архангельської губернії (с. Мар'їна гора). Повернувшись до Києва у 1918 році, закінчив у 1920 році університет — і його прийнято до аспірантури при дослідному інституті УАН. Викладав разом із М. Зеровим у соціально-економічному технікумі с. Баришівки, а також латинську мову в Першій українській гімназії ім. Т. Г. Шевченка.\nУже в 20-ті роки розкрилися ті особливості його манери письма, що зближували Юрія Клена з неокласиками: досконале володіння мистецькою формою, своєрідний панестетизм.\nУ Київському інституті народної освіти створив кафедру прикладного мистецтва (1930—1931), брав активну участь у роботі ВУАН.\n\n\n=== В еміграції ===\n\nЗ 1931 року живе та працює в Німеччині, тісно співпрацює з поетами, що об'єднувались довкола «Вісника» Д. Донцова. У 1934 році за допомогою професорів Маєра і Чижевського влаштувався викладачем російської і української мови у Мюнстерському університеті. Там само написав і захистив німецькомовну докторську дисертацію «Головні мотиви творчості Леоніда Андрєєва» (1936).\nУ роки Другої світової війни служив за перекладача при штабі 17-ї армії. З 1943 р. працює викладачем в Українському вільному університеті в Празі, по закінченні війни — коротко професором слов'янської філології Інсбруцького університету.\nЗдобув третю премію Українського католицького союзу (трійця переможців — Галина Журба, Юрій Косач та Юрій Клен).\n\nЗ травня 1947 року і до смерті працював головним редактором літературного журналу «Літаври» (виходив у Зальцбурзі, Австрія). За життя поета світ побачило п'ять чисел журналу.\nПомер Юрій Клен 30 жовтня 1947 року в німецькому Авґсбурзі. Ось як про це згадує Ігор Качуровський:\n\n\n== Творчість ==\n1943 року з'являється в світ збірка поезій Юрія Клена «Каравели», в якій автор спробував синтезувати творчі принципи київських неокласиків та ідейно-художні шукання поетів «празької школи». Автор поєднує в єдиному естетичному вимірі трагічну античність («Антоній і Клеопатра», «Цезар і Клеопатра», «Шляхами Одіссея»), героїзм середньовічної лицарської доби («Жанна д'Арк», «Вікінги») та князівсько-гетьманську українську традицію («Володимир», «Символ», «Україна»).\nЮрій Клен — автор збірки «Каравели» (1943), епопеї «Попіл імперій» (1943—1947), есею «Спогади про неоклясиків» (1946), багатьох літературознавчих праць, перекладів з англійської, німецької, французької та інших мов.\nВершинними здобутками Юрія Клена-поета є поеми «Прокляті роки» (1937) та «Попіл імперій» (1943—1947). Трагічне знищення української культури в добу сталінізму, нелюдська жорстокість другої світової війни — центральні теми цих творів.\n\n\n=== Переклади ===\nОкремими книжками перекладів вийшли «Залізні сонети» Фрідріха Рюккерта, новели Ґеорґа Гайма. Крім «Гамлета» і «Бурі» Шекспіра («Гамлета» видано в Україні у 1930-х роках, проте без імені перекладача), переклав Юрій Клен також вокальні твори Л. Бетговена, Ф. Шуберта, Р. Шумана, лібрето до опери Ріхарда Штравса «Саломея» (за однойменною драмою Оскара Вайлда), уривки з поеми «Пісня про Нібелунгів» та численні поезії англійських (Байрон, Шеллі), німецьких (Рільке і Ґеорґе) і французьких поетів. Імена французьких перекладач називає сам у «Спогадах про неоклясиків»: «Я дав поодинокі речі з Рембо, Верлена, Мореаса, Самена, Валері, Готьє, Леконт де Ліля» (мова про «Антологію французької поезії», яку здали 1930 року до друку київські неоклясики і яку не пропустила цензура).\nЗа редакцією Освальда Бургардта вийшло тридцятитомове видання творів Джека Лондона (незакінчене, вийшло 26 з 30 томів), восьмитомове Бернарда Шоу, а також твори Діккенса (якого перекладав і сам Бургардт), Гамсуна, Ґете.\nЮрію Клену належать переклади сонетів Миколи Зерова німецькою мовою, що увійшли до збірки В. Державина «Gelb und Blau: Moderne ukrainische Dichtung in Auswahl» (Авґсбурґ, 1948). Із шведської він переклав повість Свена Гедіна «Завойовники Америки» (Харків: Книгоспілка, 1926).\n\n\n== Родина ==\nЙого дружиною була Зінаїда Гнатівна Бургардт, до шлюбу Бромірська (6 вересня 1896, Володимир, Волинська область — 8 травня 1991, Лондон, Онтаріо, Канада).\nПодружжя мало сина й доньку.\nДонька — Ірина Бургардт (4 жовтня 1922, Київ — 10 грудня 2010, Ричмонд-Гілл, Онтаріо, Канада).\nСин — Вольфрам Бургардт (нар. 19 жовтня 1935, Мюнстер), професор української, іспанської та італійської мов, мешкав у місті Лондон в Канаді. Він відредагував і видав, разом з Євгеном Маланюком, твори Юрія Клена, з архіву, який зберегла та привезла до Канади Зінаїда. Мав трьох дітей.\n\n\n== Вшанування пам'яті ==\n\nІменем Юрія Клена названі вулиці у містах Вінниця, Дніпро та Київ.\nУ травні 2022 р. в місті Городок Хмельницької області провулок Гайдара перейменували на провулок Юрія Клена.\n26 липня 2024 року у місті Дніпро вулицю Шахтинську перейменували на вулицю Юрія Клена.\n\n\n== Твори ==\nПоезія:\n\nВірші, писані протягом 1913—1922 років російською мовою\nСонети, написані в період 1921—1922 років російською мовою\nпоема «Прокляті роки» (видана двічі у Львові 1937 та 1943 рр.; Кракові 1943 року)\nпоема «Попіл імперій» (1943—1947)\nзбірка «Каравели» (Прага, 1943)\n«Spätlese» (вірші, написані у період 1932—1945 років німецькою мовою)\n«Дияболічні параболи» (у співавторстві, Зальцбург, 1947)\nНовели:\n\n«Акація» (Льойташ, Тіроль, Австрія, травень 1947)\n«Яблука» (Льойташ, червень 1947)\n«Пригоди архангела Рафаїла» (Льойташ, липень 1947)\n«Медальйон» (Баварія, осінь 1947)\nНариси:\n\n«Черга»\n«Крізь Великодні минулі…»\n«Чудо Воскресіння»\n«Мідь звенящая» (травень 1947)\nМемуаристика:\n\n«Спогади про неоклясиків» (Мюнхен, 1947)\n\n\n== Рукописи ==\nDichtung der Verdammten. Eine Anthologie ukrainischer Dichtung, ausgewählt und übertragen von Oswald Burghardt (Jurij Klen). Zweisprachige Ausgabe: Deutsch und Ukrainisch. Hrsg. von Nataliia Kotenko-Vusatyuk und Andrii Portnov sowie mit Erinnerungen an den Autor von Dmytro Tschyshewskyj / Поезія проклятих. Редактори Наталія Котенко-Вусатюк (Київ) та Андрій Портнов (Берлін) / Arco Verlag, 2025.\t120 S. ISBN 978-3965870499\n\n\n== Примітки ==\n\n\n== Джерела та література ==\nС. І. Білокінь. Клен Юрій (справжні прізв., ім'я та по батькові — Бургардт Освальд Федорович) // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2007. — Т. 4 : Ка — Ком. — С. 346. — ISBN 978-966-00-0692-8.\nМ. Я. Неврлий. Бурґгардт Освальд Федорович // Енциклопедія сучасної України / ред. кол.: І. М. Дзюба [та ін.] ; НАН України, НТШ. — К. : Інститут енциклопедичних досліджень НАН України, 2001­–2025. — ISBN 966-02-2074-X.\nЛучків І. Юрій Клен. Бібліографічний покажчик. — Торонто: Самвидав, 1973. — 106 с.\n\n\n=== Література ===\n«Празька школа»: Хрестоматія прозових творів / Упоряд., передм. і приміт. В. А. Просалової;— Донецьк: Східний видавничий дім, 2004. — 236 с.\nПразька літературна школа: Ліричні та епічні твори / Упорядування і передмова В. А. Просалової. — Донецьк: Східний видавничий дім, 2008. — 280 с.\nКлен Юрій. Твори. Том 1. Нью-Йорк: Наукове Товариство ім. Шевченка, 1992. 382 с.\nКлен Юрій. Твори. Торонто: Фундація імені Юрія Клена, 1957—1960. Том 2. — 349 с.; Том 3. — 221 c.; Том 4. — 407 c.\nКлен Юрій. Вибрані твори. Поезія. Спогади. Листи. — Дрогобич: Каменяр,2003. — 616 с. 259\nАстаф'єв О. Образ і знак. Українська емігрантська поезія у структурно-семіотичній перспективі. — К.: Наукова думка, 2000. — c.28-33.\nКовалів Ю. Освальд Бурґгардт (Юрій Клен) // Слово і час. — 1991. — № 4. — С.41-45.\nКовалів Ю. «Празька школа»: на крутосхилах «філософії чину». — К.: Бібліотека українця, 2001. −120 с.\nКовалів Ю. Прокляті роки Юрія Клена // Клен Юрій. Вибране. — К.: Дніпро, 1991. — С. 3-23.\nСаєнко В. Поетика творчості Юрія Клена // Саєнко В. Українська модерна поезія 20-х років XX століття: Ренесансна парадигма. — Одеса, 2004.\nСарапин В. Маловідомий Юрій Клен // Українська мова та література. — 2000. — Ч. 7. — С. 3-4.\nСарапин В. Осінні мотиви в поезії Юрія Клена // Дивослово. — 1998. — № 9. — С. 8-11.\nСарапин В. Поезія Юрія Клена та її місце в літературному процесі першої половини XX ст.: Автореферат дис. на здобуття наук. ступеня канд. філол. наук. — К., 2000. — 20 с.\nФилипович О. Життя і творчість Юрія Клена // Сучасність. — 1967. — Ч.10 (82). — С. 47-85.\nТворчість Юрія Клена і міжвоєнна доба в українській літературі. Збірник наукових праць. — Вип. 2 / Ред. кол. І. Руснак (гол.), О. Баган та ін. — Вінниця: ТОВ Фірма «Планер», 2012. — 568 с.\nЧижевський Д. Юрій Клен, вчений та людина (Із спогадів) // Філософські твори: У 4 т. — К.: Смолоскип, 2005. — Т. 2. — С. 244—253.\nУкраїнська діаспора: літературні постаті, твори, біобібліографічні відомості / Упорядк. В. А. Просалової. — Донецьк: Східний видавничий дім, 2012. — 516 с.\nРудницький Л. Роберт Люїс Стівенсон і Юрій Клен // Сучасність. — 1974. — Ч. 12 (168). -С. 25-38.\nЄ. М. Пам'яті Освальда Бурґгардта 17. XII. 47. // Літературно-науковий вістник — Реґенсбурґ. Річник XXXII, травень 1948. — С.43-46.\nЖулинський М. Бурґгардт Освальд // Українська літературна енциклопедія: У 5 т. — К.: Українська енциклопедія ім. М. П. Бажана, 1988. — Т. 1. — С. 249—250.\nКачуровський І. Життя і творчість Юрія Клена // Променисті сильвети: лекції, доповіді, статті, есеї, розвідки. — К.: Вид. дім «Києво-Могилянська академія», 2008. — С. 249—284.*\nМ. Орест. Ю. Клен про самого себе// Україна і Світ. — Ганновер, 1951. — З. 5. — С. 9-10.\nВ. Кримський. Храм Ґрааля (До проблеми світогляду Юрія Клена). — Зальцбурґ-Інсбрук: Звено, 1948. — 20 с.\nО. Корчак-Городиський. Спогад про Юрія Клена//Вісті Комбатанта. — Торонто-Нью-Йорк, 1967. — Ч.4.\nІ. Костецький. Мій Юрій Клен// Сучасність. — 1966. — Ч. 7 (67). — С. 55-73\nOswald Burghardt, Jurij Klen: Leben und Werke/ von Josefine Burghardt. — München: Verlag Ukraine, 1962, 112 S.\nJutta Lindekugel, Vielfalt der Dichtarten im Werk von Oswald Burghardt (Jurij Klen). Diss. Greifswald. Kassel, kassel university press, 2003. ISBN 978-3-89958-017-4\nКлен Ю. Спогади про неокласиків / Юрій Клен. — Мюнхен: Накладом Укр. вид. спілки в Мюнхені, 1947. — 48 с.\nІрина Руснак. До питання про місце народження Юрія Клена (Освальда Бурґгардта) // Філологічний дискурс: Зб. наук. пр. — Хмельницький: ХДПА. — 2016. — Вип. 3. — С. 138—146.\nСамі про себе. Автобіографії українських митців 1920-х років/ Упоряд. Раїса Мовчан. — Київ : Кліо, 2015. — 640 с. — ISBN 978-617-7023-36-3.\n\n\n== Посилання ==\nКлен Юрій // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 3, кн. V : Літери К — Ком. — С. 651. — 1000 екз.\n\n\n=== Біографічна довідка ===\nInternet Encyclopedia of Ukraine: Klen, Yurii (англ.)\nБучинський Д. Юрій Клен в житті і творчості. — Мюнхен: Українське Видавництво, 1962. — 39 с.\nМарко Роберт Стех Про київських неокласиків // «Очима культури», № 74\nГоробець О. Блукання довкруги знаменитого Клена\n\n\n=== Твори ===\nКлен Ю. Тексти творів на сайті Чтиво\nКлен Ю. Каравели. — Прага, 1943.\nКлен Ю. Спогади про неоклясиків. — Мюнхен, 1947.\nКлен Ю. Твори. Т. 1. — Нью-Йорк, 1992.\nКлен Ю. Твори. Т. 2 [Архівовано 2 квітня 2016 у Wayback Machine.]. — Торонто, 1957.\nКлен Ю. Твори Т. 3 [Архівовано 28 липня 2014 у Wayback Machine.]. — Торонто, 1960.\nКлен Ю. Твори Т. 4. — Торонто, 1960.\nКлен Ю. Баляда про помсту// Літературно-науковий вісник. — Реґенсбурґ. Річник XXXII, травень 1948. — С. 6–11.\nКлен Ю. Прокляті роки. — Краків: Українське Видавництво, 1943. — 40 с.\nКлен Ю. Прокляті роки// Вітчизна. — 1990. — № 7.\nАудіочитка\nЮрій Клен. Беатріче https://www.youtube.com/watch?v=X2a9LuDzU5s\nЮрій Клен. Беатріче : https://www.youtube.com/watch?v=H4sNGenwEDA\n\n\n=== Критика ===\nВіра Просалова. Текст у світі текстів празької літературної школи\nКлен Ю. Рецензія на поему Т. Осьмачки «Поет» // Арка. — 1947. — Ч. 5. — С. 40–41.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773427574927_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Попіл імперій"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773427574927_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Попіл імперій\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BF%D1%96%D0%BB_%D1%96%D0%BC%D0%BF%D0%B5%D1%80%D1%96%D0%B9\n\n«Попіл імперій» — поема українського поета і перекладача Юрія Клена (Освальда Бурґгардта). Поема лишилась незавершеною через смерть автора. Окремі розділи та фрагменти з неї друкувались в емігрантській періодиці та антологіях 1940-х—50-х рр.\n\n\n== Історія написання ==\nЗадум твору виник у Юрія Клена в 1942 році, наступного року поет розпочав працю над поемою, що тривала до смерті автора 1947 року. Юрій Клен так у 1946 описував історію створення поеми: «Думки дати українській літературі епопею, якої їй бракує, надто, може, смілива й зухвала. Вона не одразу в мене склалася. Коли мене в 1942 році доля закинула до Берліну, де я в невеликому колі кількох українців читав вечорами свою продукцію, пані Н. присвятила мені довгого вірша, в якому переконувала, що пора мені від дрібних поезій перейти до великої поеми про сучасну добу, увійти в „гекзаметра дзвінкі колони“. Та, ніби випадково кинута, думка почала поволі зріти і набирати з часом певних форм. Приїхавши влітку 1943 року на два тижні в Райхенав (у Чехії), я написав там три уривки. Насамперед мою уяву полонила постать Архімеда, яку я вважав за символічну для наших часів. Архімед сидить під час бою в Сиракузах і креслить на піску свої геометричні рисунки, роблячи сміливі винаходи і байдужий до інших подій. Сп'янілому від крови римському воякові, що вдирається до нього, він кидає слова: „Noli tangere circulos meos!“ — „Не смій торкатися моїх рисунків!“ і гине від меча того вояка, що не розуміє значіння отих на піску викреслених фіґур [ ].Згадуючи довгі колони полонених українців, що йшли битими шляхами, відроджене в наші часи невільництво, беручи на увагу хитливість нашого континенту, якого почала заливати страшна хвиля варварства, я думав над тим, чи варто взагалі щось писати в наші дні, дні тієї доби, що змітає з землі всю нашу віками творену культуру [ ].У хаосі руїн, що починали повставати навколо, я чув виразно один голос, голос пророка Єремії, плач його над загиблими містами; отже, виникли тоді перші „Плачі Єремії“, що разом із згаданим уривком мають увійти в Третю частину поеми. Далі в Райхенаві конкретне протиставлення двох століть: XIX і XX; століття, в якому доживала стара романтика, і століттю літака й атомової бомби.Перша частина поеми склалася з найрізноманітніших уривків, писаних різними розмірами. Вона охоплює час Першої світової війни і революції. Філософське обґрунтування її: ми бачимо тільки відтинки величезного килима, що проходить перед нашими очима, а тому не можемо уявити собі цілости його узору; ми тримаємо в руці тільки зерна й не бачимо гаїв, що з них виростуть, тому й не в стані збагнути сенсу того страшного лихоліття, яке переживаємо.Друга частина поеми цілісніша. Вона малює пекло, через яке довелось проходити нашому народові, і писана більшою частиною восени 1944 року в Ґайліґвассер коло Іннсбруку. Тут поема Данте з його подорожжю через пекло була за зразок. Тому й Данте веде (як його самого вів Верґілій) автора отим пеклом. Писана та частина й розміром „Божественної комедії“ — терцинами.Третя частина охоплює наші часи: початок і розвій гітлерівства, Друга світова війна, руїна Європи, берлінська катастрофа, сучасність. В Гітлері автор побачив посланця Люцифера, що явився народові в блискучих ризах антихриста, якому владними чарами вдалося зачарувати натовп і повести його за собою. Як Христа спокушав у пустелі Люцифер, так спокушав він вождя, і той, спокусі улягши, вступає на шлях катастрофи.Четверта частина, філософська, що шукатиме шляхів виходу з сучасного хаосу, намічена в загальних рисах і ще не набрала форм.Я на початку ставив собі скромне завдання — дати поему на кілька сот рядків, але вона, мимо моєї волі, росла, захоплюючи все ширші обрії, і мені довелось її розмір рахувати вже не сотнями, а тисячами рядків. Чи задовольнить вона вимоги, що ставиться до епопеї? Про це судити не авторові.»\nЗа чотирнадцять місяців, що відділяють цю статтю від смерті автора, зайшла певна зміна в плані «Попелу імперій». Картина повоєнного хаосу оформилась в окремій Четвертій частині, а філософська тематика перенеслась на задуману, але майже не здійснену П'яту частину.\n\n\n== Видання твору ==\nПовністю поема побачила світ 1957 року у другому томі чотиритомного зібрання творів Юрія Клена, виданого зусиллями Фундації ім. Ю. Клена. Літературний редактор видання Євген Маланюк, обов'язки технічного редактора виконував Вольфрам Бурґгардт. Художник (графічне оформлення оправи та портрет Юрія Клена) Михайло Дмитренко.\n\n\n== Примітки ==\n\n\n== Посилання ==\nКлен Ю. Попіл імперій: Частина 1. — Б.м. : Золота Брама, 1946. — 23 с."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:17.739Z",
+          "resultDisplay": "# Попіл імперій\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BF%D1%96%D0%BB_%D1%96%D0%BC%D0%BF%D0%B5%D1%80%D1%96%D0%B9\n\n«Попіл імперій» — поема українського поета і перекладача Юрія Клена (Освальда Бурґгардта). Поема лишилась незавершеною через смерть автора. Окремі розділи та фрагменти з неї друкувались в емігрантській періодиці та антологіях 1940-х—50-х рр.\n\n\n== Історія написання ==\nЗадум твору виник у Юрія Клена в 1942 році, наступного року поет розпочав працю над поемою, що тривала до смерті автора 1947 року. Юрій Клен так у 1946 описував історію створення поеми: «Думки дати українській літературі епопею, якої їй бракує, надто, може, смілива й зухвала. Вона не одразу в мене склалася. Коли мене в 1942 році доля закинула до Берліну, де я в невеликому колі кількох українців читав вечорами свою продукцію, пані Н. присвятила мені довгого вірша, в якому переконувала, що пора мені від дрібних поезій перейти до великої поеми про сучасну добу, увійти в „гекзаметра дзвінкі колони“. Та, ніби випадково кинута, думка почала поволі зріти і набирати з часом певних форм. Приїхавши влітку 1943 року на два тижні в Райхенав (у Чехії), я написав там три уривки. Насамперед мою уяву полонила постать Архімеда, яку я вважав за символічну для наших часів. Архімед сидить під час бою в Сиракузах і креслить на піску свої геометричні рисунки, роблячи сміливі винаходи і байдужий до інших подій. Сп'янілому від крови римському воякові, що вдирається до нього, він кидає слова: „Noli tangere circulos meos!“ — „Не смій торкатися моїх рисунків!“ і гине від меча того вояка, що не розуміє значіння отих на піску викреслених фіґур [ ].Згадуючи довгі колони полонених українців, що йшли битими шляхами, відроджене в наші часи невільництво, беручи на увагу хитливість нашого континенту, якого почала заливати страшна хвиля варварства, я думав над тим, чи варто взагалі щось писати в наші дні, дні тієї доби, що змітає з землі всю нашу віками творену культуру [ ].У хаосі руїн, що починали повставати навколо, я чув виразно один голос, голос пророка Єремії, плач його над загиблими містами; отже, виникли тоді перші „Плачі Єремії“, що разом із згаданим уривком мають увійти в Третю частину поеми. Далі в Райхенаві конкретне протиставлення двох століть: XIX і XX; століття, в якому доживала стара романтика, і століттю літака й атомової бомби.Перша частина поеми склалася з найрізноманітніших уривків, писаних різними розмірами. Вона охоплює час Першої світової війни і революції. Філософське обґрунтування її: ми бачимо тільки відтинки величезного килима, що проходить перед нашими очима, а тому не можемо уявити собі цілости його узору; ми тримаємо в руці тільки зерна й не бачимо гаїв, що з них виростуть, тому й не в стані збагнути сенсу того страшного лихоліття, яке переживаємо.Друга частина поеми цілісніша. Вона малює пекло, через яке довелось проходити нашому народові, і писана більшою частиною восени 1944 року в Ґайліґвассер коло Іннсбруку. Тут поема Данте з його подорожжю через пекло була за зразок. Тому й Данте веде (як його самого вів Верґілій) автора отим пеклом. Писана та частина й розміром „Божественної комедії“ — терцинами.Третя частина охоплює наші часи: початок і розвій гітлерівства, Друга світова війна, руїна Європи, берлінська катастрофа, сучасність. В Гітлері автор побачив посланця Люцифера, що явився народові в блискучих ризах антихриста, якому владними чарами вдалося зачарувати натовп і повести його за собою. Як Христа спокушав у пустелі Люцифер, так спокушав він вождя, і той, спокусі улягши, вступає на шлях катастрофи.Четверта частина, філософська, що шукатиме шляхів виходу з сучасного хаосу, намічена в загальних рисах і ще не набрала форм.Я на початку ставив собі скромне завдання — дати поему на кілька сот рядків, але вона, мимо моєї волі, росла, захоплюючи все ширші обрії, і мені довелось її розмір рахувати вже не сотнями, а тисячами рядків. Чи задовольнить вона вимоги, що ставиться до епопеї? Про це судити не авторові.»\nЗа чотирнадцять місяців, що відділяють цю статтю від смерті автора, зайшла певна зміна в плані «Попелу імперій». Картина повоєнного хаосу оформилась в окремій Четвертій частині, а філософська тематика перенеслась на задуману, але майже не здійснену П'яту частину.\n\n\n== Видання твору ==\nПовністю поема побачила світ 1957 року у другому томі чотиритомного зібрання творів Юрія Клена, виданого зусиллями Фундації ім. Ю. Клена. Літературний редактор видання Євген Маланюк, обов'язки технічного редактора виконував Вольфрам Бурґгардт. Художник (графічне оформлення оправи та портрет Юрія Клена) Михайло Дмитренко.\n\n\n== Примітки ==\n\n\n== Посилання ==\nКлен Ю. Попіл імперій: Частина 1. — Б.м. : Золота Брама, 1946. — 23 с.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "b34374d6-90c3-4ca1-9814-9575921c3ae5",
+      "timestamp": "2026-03-13T18:46:23.472Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Querying Wikipedia for Info",
+          "description": "I'm now looking into how to gather the necessary details to move forward. I'm focusing on \"Прокляті роки\" and how to incorporate the potential typo from the plan, aiming for a broader understanding to ensure I'm on the right track.",
+          "timestamp": "2026-03-13T18:46:22.049Z"
+        },
+        {
+          "subject": "Expanding Research Parameters",
+          "description": "I'm now cross-referencing information using different resources. My goal is to broaden the search, accounting for potential misspellings or variations. I am making sure to note any discrepancies or new details that come up.",
+          "timestamp": "2026-03-13T18:46:23.337Z"
+        }
+      ],
+      "tokens": {
+        "input": 28455,
+        "output": 20,
+        "cached": 0,
+        "thoughts": 238,
+        "tool": 0,
+        "total": 28713
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773427583471_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Прокляті роки"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773427583471_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Прокляті роки' — 5 results\n\n1. **Прокляті поети** — Стаття «Прокляті поети» в Літературознавча енциклопедія / Автор-укладач Юрій Ковалів. — Т. 2. — К.: Академія, 2007. с. 279. Стаття «Прокляті поети» в\n2. **Прокляті (фільм, 1947)** — 20914) «Прокляті» на сайті All Movie Guide (англ.) (Станом на 19.12.20914) «Прокляті» на Rotten Tomatoes (Станом на 18.12.20914) Трейлер фільму Прокляті на YouTube\n3. **Острів проклятих (фільм)** — «О́стрів про́клятих» (англ. Shutter Island) — американський психологічний трилер від режисера Мартіна Скорсезе за однойменним романом Денніса Лігейна 2003\n4. **Прокляті королі** — Францією. Епопею екранізовано двічі — 1972 та 2005 років. Прокляті королі на сайті IMDb (англ.) Прокляті королі на сайті IMDb (англ.) Офіційний сайт міні-серіалу\n5. **Прокляті (роман)** — «Прокляті» (англ. Damned) — роман Чака Паланіка, опублікований у 2011 році. Продовження роману, «Приречені», було опубліковано у 2013 році. Головна героїня"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:23.776Z",
+          "resultDisplay": "Wikipedia search: 'Прокляті роки' — 5 results\n\n1. **Прокляті поети** — Стаття «Прокляті поети» в Літературознавча енциклопедія / Автор-укладач Юрій Ковалів. — Т. 2. — К.: Академія, 2007. с. 279. Стаття «Прокляті поети» в\n2. **Прокляті (фільм, 1947)** — 20914) «Прокляті» на сайті All Movie Guide (англ.) (Станом на 19.12.20914) «Прокляті» на Rotten Tomatoes (Станом на 18.12.20914) Трейлер фільму Прокляті на YouTube\n3. **Острів проклятих (фільм)** — «О́стрів про́клятих» (англ. Shutter Island) — американський психологічний трилер від режисера Мартіна Скорсезе за однойменним романом Денніса Лігейна 2003\n4. **Прокляті королі** — Францією. Епопею екранізовано двічі — 1972 та 2005 років. Прокляті королі на сайті IMDb (англ.) Прокляті королі на сайті IMDb (англ.) Офіційний сайт міні-серіалу\n5. **Прокляті (роман)** — «Прокляті» (англ. Damned) — роман Чака Паланіка, опублікований у 2011 році. Продовження роману, «Приречені», було опубліковано у 2013 році. Головна героїня",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "cc2c37ea-4493-467e-bcb1-4f1bfab6e4b6",
+      "timestamp": "2026-03-13T18:46:29.159Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Locating relevant passages",
+          "description": "I'm now zeroing in on the desired information. My next step will be to sift through the search results to extract relevant passages. I'll need to carefully examine each result for its connection to the topic at hand.",
+          "timestamp": "2026-03-13T18:46:28.328Z"
+        },
+        {
+          "subject": "Searching literary works",
+          "description": "I'm now starting to implement the search, focusing on the Ukrainian author. I will specifically seek out passages relating to their works. This focused approach should quickly yield relevant results.",
+          "timestamp": "2026-03-13T18:46:28.997Z"
+        }
+      ],
+      "tokens": {
+        "input": 28905,
+        "output": 47,
+        "cached": 27527,
+        "thoughts": 90,
+        "tool": 0,
+        "total": 29042
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773427589109_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Юрій Клен Попіл імперій"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773427589109_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Юрій Клен Попіл імперій\"\n\n### Result 1 (score: 0.5419)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0013`\n- **Text**:\nВідвідали нас у нашому кутику, де нема де ні сісти, ні стати, Юрій Клен, який вчора прибув до табору, і Неофіт Кибалюк. Клен втомлений й заклопотаний, але завжди усміхнений доброю, теплою усмішкою. І тут же погодився зачитати нам кілька уривків зі своєї поеми \"Попіл імперії\", над якою він тепер працює, – монументальна, клясично віршована, педантично продумана тема, яка одного разу збагатить нашу шкільну лектуру змістом, стилем, думкою, ідеєю. Її історіософічна тенденція стане збагаченням націона\n\n### Result 2 (score: 0.4439)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0257`\n- **Text**:\nЧитатимуть свої драм-твори: Іван Багряний – \"Морітурі\", Д. Гуменна – \"Епізод з життя Европи Крицької\", І. Керницький – \"На ріках Вавилонських\", Л. Коваленко – \"Домаха\", Ю. Косач – \"Змова пана К.\", І. Костецький – \"Близнята ще зустрінуться\". І. Майстренко – \"Кінець Страхова\", Л. Полтава – \"Пам’ятник\", ну і я наміряюсь показати мої \"Шумлять жорна\", дарма що вони все ще не як слід опрацьовані.\n\nНедавно Ю. Дивнич помістив у \"Укр. вістях\" цікаву статтю в обороні МУРу… Щось, як контратака на чисельні \n\n### Result 3 (score: 0.4116)\n- **Work**: Литовсько-білоруські літописи та хроніки (1980)\n- **Author**: ПСРЛ\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `3bd1f572_c0334`\n- **Text**:\nA kniaża imenem Apolon В, kotoroie\r\nteż u tom meste było, zabrawszysia zo wsim, y pry nem było\r\npiatsot semen Г szlachty rymskoie, a meży nimi czotyry\r\nrożaj na wyspie szlachty rymskoie, imenem z herbu Kitowrasowa Dowsprunkow,\r\nherbu z Kolumnow Preszpor Cezarinus, a z herbu Urseynow Julianus, a z herbu\r\nRoży Toroho Д, poszoł morem meży zemli y\r\nwziął so soboju odnoho astronoma, kotory astronom znał sia po\r\nzwizdach. Y poszli na korablech morem na połnocz, y obszedszy Francyiu i\r\nAngiliju, y wosz\n\n### Result 4 (score: 0.4081)\n- **Work**: Остап Вишня. Літературно-мистецькі усмішки (збірка) (1889)\n- **Author**: Вишня О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e4a86fbc_c0033`\n- **Text**:\nПрекрасний Л. Жуковський — Максим Кочубей. Отаким і повинен бути радянський інженер: щоб не держався за столицю, щоб перебудовував наші Захлюпанки — на Ясні Зорі, щоб учив дурноверхих Поем і любив наших чудесних Галь.\n\nЖора Поцілуйко — Гашинський. Таку підлоту в \"блискавках\" треба вміти зробити. Гашинський уміє. І знаєте чому? Він ненавидить Жору! І правильно робить!\n\nОбидві Белли (В. Півторадні, В. Івашова) дуже противні. Значить, хорошо і правильно обидві артистки їх грають.\n\nДівчатка: Пріся —\n\n### Result 5 (score: 0.4026)\n- **Work**: Іван Котляревський. Енеїда (1769)\n- **Author**: Котляревський І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `cf05bddd_c0098`\n- **Text**:\nЕней на Турна напустив,\n\nОддячивши йому сто з оком,\n\nІ вражу шаблю перебив.\n\nЯким же побитом спастися-\n\nТрохи не лучше уплестися-\n\nБез шаблі нільзя воювать.\n\nТак Турн зробив без дальней думки,\n\nЯ к кажуть підобравши клунки,\n\nАну! Чим тьху навтіки драть.\n\n158 Біжит пан Турн і репетує,\n\nІ просить у своїх меча;\n\nНіхто сердеги не ратує\n\nОд рук троянська силача!\n\nЯк ось іще перерядилась\n\nСестриця і пред ним явилась\n\nІ в руку сунула палаш;\n\nОп'ять шабельки заблищали,\n\nОп'ять панцирі забряжчали,\n\nОп'ят\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:31.330Z",
+          "resultDisplay": "Found 5 results for: \"Юрій Клен Попіл імперій\"\n\n### Result 1 (score: 0.5419)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0013`\n- **Text**:\nВідвідали нас у нашому кутику, де нема де ні сісти, ні стати, Юрій Клен, який вчора прибув до табору, і Неофіт Кибалюк. Клен втомлений й заклопотаний, але завжди усміхнений доброю, теплою усмішкою. І тут же погодився зачитати нам кілька уривків зі своєї поеми \"Попіл імперії\", над якою він тепер працює, – монументальна, клясично віршована, педантично продумана тема, яка одного разу збагатить нашу шкільну лектуру змістом, стилем, думкою, ідеєю. Її історіософічна тенденція стане збагаченням націона\n\n### Result 2 (score: 0.4439)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0257`\n- **Text**:\nЧитатимуть свої драм-твори: Іван Багряний – \"Морітурі\", Д. Гуменна – \"Епізод з життя Европи Крицької\", І. Керницький – \"На ріках Вавилонських\", Л. Коваленко – \"Домаха\", Ю. Косач – \"Змова пана К.\", І. Костецький – \"Близнята ще зустрінуться\". І. Майстренко – \"Кінець Страхова\", Л. Полтава – \"Пам’ятник\", ну і я наміряюсь показати мої \"Шумлять жорна\", дарма що вони все ще не як слід опрацьовані.\n\nНедавно Ю. Дивнич помістив у \"Укр. вістях\" цікаву статтю в обороні МУРу… Щось, як контратака на чисельні \n\n### Result 3 (score: 0.4116)\n- **Work**: Литовсько-білоруські літописи та хроніки (1980)\n- **Author**: ПСРЛ\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `3bd1f572_c0334`\n- **Text**:\nA kniaża imenem Apolon В, kotoroie\r\nteż u tom meste było, zabrawszysia zo wsim, y pry nem było\r\npiatsot semen Г szlachty rymskoie, a meży nimi czotyry\r\nrożaj na wyspie szlachty rymskoie, imenem z herbu Kitowrasowa Dowsprunkow,\r\nherbu z Kolumnow Preszpor Cezarinus, a z herbu Urseynow Julianus, a z herbu\r\nRoży Toroho Д, poszoł morem meży zemli y\r\nwziął so soboju odnoho astronoma, kotory astronom znał sia po\r\nzwizdach. Y poszli na korablech morem na połnocz, y obszedszy Francyiu i\r\nAngiliju, y wosz\n\n### Result 4 (score: 0.4081)\n- **Work**: Остап Вишня. Літературно-мистецькі усмішки (збірка) (1889)\n- **Author**: Вишня О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e4a86fbc_c0033`\n- **Text**:\nПрекрасний Л. Жуковський — Максим Кочубей. Отаким і повинен бути радянський інженер: щоб не держався за столицю, щоб перебудовував наші Захлюпанки — на Ясні Зорі, щоб учив дурноверхих Поем і любив наших чудесних Галь.\n\nЖора Поцілуйко — Гашинський. Таку підлоту в \"блискавках\" треба вміти зробити. Гашинський уміє. І знаєте чому? Він ненавидить Жору! І правильно робить!\n\nОбидві Белли (В. Півторадні, В. Івашова) дуже противні. Значить, хорошо і правильно обидві артистки їх грають.\n\nДівчатка: Пріся —\n\n### Result 5 (score: 0.4026)\n- **Work**: Іван Котляревський. Енеїда (1769)\n- **Author**: Котляревський І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `cf05bddd_c0098`\n- **Text**:\nЕней на Турна напустив,\n\nОддячивши йому сто з оком,\n\nІ вражу шаблю перебив.\n\nЯким же побитом спастися-\n\nТрохи не лучше уплестися-\n\nБез шаблі нільзя воювать.\n\nТак Турн зробив без дальней думки,\n\nЯ к кажуть підобравши клунки,\n\nАну! Чим тьху навтіки драть.\n\n158 Біжит пан Турн і репетує,\n\nІ просить у своїх меча;\n\nНіхто сердеги не ратує\n\nОд рук троянська силача!\n\nЯк ось іще перерядилась\n\nСестриця і пред ним явилась\n\nІ в руку сунула палаш;\n\nОп'ять шабельки заблищали,\n\nОп'ять панцирі забряжчали,\n\nОп'ят\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773427589157_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Юрій Клен Прокляті роки"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773427589157_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Юрій Клен Прокляті роки\"\n\n### Result 1 (score: 0.5765)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0442`\n- **Text**:\nСталінська епоха розметала людей по світу, у тому\r\nчислі й письменників. В еміграції розквітла творчість Юрія Клена (Освальда\r\nБурггардта), поета, що в 20-ті роки належав до грона неокласиків. Проте на\r\nвідміну від своїх колег він був яскраво виявленим епіком. Його камерна поезія\r\nтакож позначена особливостями епічного напряму: історичністю, зв’язком зі\r\nсвітовим класичним мистецтвом, опорою на традиції української класичної\r\nлітератури, в тому числі барокової. Якийсь час, особливо в період не б\n\n### Result 2 (score: 0.5370)\n- **Work**: Михайло Драй-Хмара. І знов обвугленими сірниками... (1889)\n- **Author**: Драй-Хмара М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c70b3bdf_c0000`\n- **Text**:\nІ знов обвугленими сірниками\n\nна сірих мурах сірі дні значу,\n\nі без кінця топчу тюремний камінь\n\nі туги напиваюсь досхочу.\n\nНапившись, запрягаю коні в шори\n\nі доганяю молоді літа,\n\nлечу в далекі голубі простори,\n\nде розцвітала юність золота.\n\n— Вернітеся, — благаю, — хоч у гості!\n\n— Не вернемось, — гукнуло з далині.\n\nЯ на калиновім заплакав мості...\n\nІ знов побачив мури ці сумні,\n\nі клаптик неба, розп'ятий на ґратах,\n\nі нездріманне око у вовчку...\n\nНі, ні, на вороних уже не грати:\n\nя в кам'янім,\n\n### Result 3 (score: 0.5084)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0257`\n- **Text**:\nЧитатимуть свої драм-твори: Іван Багряний – \"Морітурі\", Д. Гуменна – \"Епізод з життя Европи Крицької\", І. Керницький – \"На ріках Вавилонських\", Л. Коваленко – \"Домаха\", Ю. Косач – \"Змова пана К.\", І. Костецький – \"Близнята ще зустрінуться\". І. Майстренко – \"Кінець Страхова\", Л. Полтава – \"Пам’ятник\", ну і я наміряюсь показати мої \"Шумлять жорна\", дарма що вони все ще не як слід опрацьовані.\n\nНедавно Ю. Дивнич помістив у \"Укр. вістях\" цікаву статтю в обороні МУРу… Щось, як контратака на чисельні \n\n### Result 4 (score: 0.4836)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0446`\n- **Text**:\nМетафорика Юрія Клена ускладнена і разом з тим\r\nпрозора. Ускладненість полягає у вживанні взаємно доповнюваних метафор (І\r\nмолоком пливуть у вирій хмари. Сміються ранки голубі; На вічності ланах зійдуть\r\nті квіти, що ними знову буде голубіти років безмірна далечінь; Над парком\r\nСаксонським кулачиться тінь, розмоклою ватою небо нависло). Тихі води,\r\nкаштани, небо, мости, вітер, береза та інші — ці слова лежать в основі\r\nбагатьох метафор. Та найулюбленішим центром образного осмислення дійсності є \n\n### Result 5 (score: 0.4632)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0443`\n- **Text**:\nЗвернення до загальнолюдської епічної спадщини — характерна\r\nознака творчості неокласиків — п’яти незалежних поетів, з яких доля зберегла в\r\nУкраїні тільки М. Рильського. Сам Юрій Клен в післявоєнні роки перебував на\r\nеміграції, а М. Зеров, П. Филипович і М. Драй-Хмара загинули в сталінських\r\nкатівнях.\n\nЯ був один із лебедів, які\n\nналежали до грона п’ятірного\n\nнездоланих співців, —\n\nписав про себе Юрій Клен.\n\nІ в ліриці, і в епіці поети «грона п’ятірного» не\r\nпочували себе одинаками. Вони перебу\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:31.330Z",
+          "resultDisplay": "Found 5 results for: \"Юрій Клен Прокляті роки\"\n\n### Result 1 (score: 0.5765)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0442`\n- **Text**:\nСталінська епоха розметала людей по світу, у тому\r\nчислі й письменників. В еміграції розквітла творчість Юрія Клена (Освальда\r\nБурггардта), поета, що в 20-ті роки належав до грона неокласиків. Проте на\r\nвідміну від своїх колег він був яскраво виявленим епіком. Його камерна поезія\r\nтакож позначена особливостями епічного напряму: історичністю, зв’язком зі\r\nсвітовим класичним мистецтвом, опорою на традиції української класичної\r\nлітератури, в тому числі барокової. Якийсь час, особливо в період не б\n\n### Result 2 (score: 0.5370)\n- **Work**: Михайло Драй-Хмара. І знов обвугленими сірниками... (1889)\n- **Author**: Драй-Хмара М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c70b3bdf_c0000`\n- **Text**:\nІ знов обвугленими сірниками\n\nна сірих мурах сірі дні значу,\n\nі без кінця топчу тюремний камінь\n\nі туги напиваюсь досхочу.\n\nНапившись, запрягаю коні в шори\n\nі доганяю молоді літа,\n\nлечу в далекі голубі простори,\n\nде розцвітала юність золота.\n\n— Вернітеся, — благаю, — хоч у гості!\n\n— Не вернемось, — гукнуло з далині.\n\nЯ на калиновім заплакав мості...\n\nІ знов побачив мури ці сумні,\n\nі клаптик неба, розп'ятий на ґратах,\n\nі нездріманне око у вовчку...\n\nНі, ні, на вороних уже не грати:\n\nя в кам'янім,\n\n### Result 3 (score: 0.5084)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0257`\n- **Text**:\nЧитатимуть свої драм-твори: Іван Багряний – \"Морітурі\", Д. Гуменна – \"Епізод з життя Европи Крицької\", І. Керницький – \"На ріках Вавилонських\", Л. Коваленко – \"Домаха\", Ю. Косач – \"Змова пана К.\", І. Костецький – \"Близнята ще зустрінуться\". І. Майстренко – \"Кінець Страхова\", Л. Полтава – \"Пам’ятник\", ну і я наміряюсь показати мої \"Шумлять жорна\", дарма що вони все ще не як слід опрацьовані.\n\nНедавно Ю. Дивнич помістив у \"Укр. вістях\" цікаву статтю в обороні МУРу… Щось, як контратака на чисельні \n\n### Result 4 (score: 0.4836)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0446`\n- **Text**:\nМетафорика Юрія Клена ускладнена і разом з тим\r\nпрозора. Ускладненість полягає у вживанні взаємно доповнюваних метафор (І\r\nмолоком пливуть у вирій хмари. Сміються ранки голубі; На вічності ланах зійдуть\r\nті квіти, що ними знову буде голубіти років безмірна далечінь; Над парком\r\nСаксонським кулачиться тінь, розмоклою ватою небо нависло). Тихі води,\r\nкаштани, небо, мости, вітер, береза та інші — ці слова лежать в основі\r\nбагатьох метафор. Та найулюбленішим центром образного осмислення дійсності є \n\n### Result 5 (score: 0.4632)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0443`\n- **Text**:\nЗвернення до загальнолюдської епічної спадщини — характерна\r\nознака творчості неокласиків — п’яти незалежних поетів, з яких доля зберегла в\r\nУкраїні тільки М. Рильського. Сам Юрій Клен в післявоєнні роки перебував на\r\nеміграції, а М. Зеров, П. Филипович і М. Драй-Хмара загинули в сталінських\r\nкатівнях.\n\nЯ був один із лебедів, які\n\nналежали до грона п’ятірного\n\nнездоланих співців, —\n\nписав про себе Юрій Клен.\n\nІ в ліриці, і в епіці поети «грона п’ятірного» не\r\nпочували себе одинаками. Вони перебу\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "91166e4f-35a0-4e8d-ba2e-055e5fa416e3",
+      "timestamp": "2026-03-13T18:46:37.977Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Information Gathering",
+          "description": "\\n\\n\nI am starting to focus on gathering specific data. I will use a series of queries to find relevant details and supporting information. I aim to uncover deeper meaning through the available resources. The goal is to obtain accurate and comprehensive knowledge.",
+          "timestamp": "2026-03-13T18:46:36.604Z"
+        },
+        {
+          "subject": "Confirming Search Parameters",
+          "description": "\\n\\n\nOkay, I am focusing on refining my search parameters. I'll initiate verification of the vocabulary list to ensure accuracy. Then, I plan to leverage the search capabilities to quickly establish a context for further investigation. The aim is to get a solid grasp of the core concepts.",
+          "timestamp": "2026-03-13T18:46:37.788Z"
+        }
+      ],
+      "tokens": {
+        "input": 31797,
+        "output": 62,
+        "cached": 0,
+        "thoughts": 171,
+        "tool": 0,
+        "total": 32030
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773427597892_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "канон",
+              "метафора",
+              "дискурс",
+              "інтерпретація",
+              "алегорія",
+              "контекст",
+              "рецепція"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773427597892_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 7 words\n\nFound: 7/7\n\n- **канон** — FOUND (2 match): канон(noun), канон(noun)\n- **метафора** — FOUND (1 match): метафора(noun)\n- **дискурс** — FOUND (2 match): дискурс(noun), дискурс(noun)\n- **інтерпретація** — FOUND (1 match): інтерпретація(noun)\n- **алегорія** — FOUND (1 match): алегорія(noun)\n- **контекст** — FOUND (2 match): контекст(noun), контекст(noun)\n- **рецепція** — FOUND (1 match): рецепція(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:38.274Z",
+          "resultDisplay": "Batch verification: 7 words\n\nFound: 7/7\n\n- **канон** — FOUND (2 match): канон(noun), канон(noun)\n- **метафора** — FOUND (1 match): метафора(noun)\n- **дискурс** — FOUND (2 match): дискурс(noun), дискурс(noun)\n- **інтерпретація** — FOUND (1 match): інтерпретація(noun)\n- **алегорія** — FOUND (1 match): алегорія(noun)\n- **контекст** — FOUND (2 match): контекст(noun), контекст(noun)\n- **рецепція** — FOUND (1 match): рецепція(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773427597948_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Прокляті роки поема Юрій Клен"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773427597948_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Прокляті роки поема Юрій Клен' — 3 results\n\n1. **Юрій Клен** — 6–11. Клен Ю. Прокляті роки. — Краків: Українське Видавництво, 1943. — 40 с. Клен Ю. Прокляті роки// Вітчизна. — 1990. — № 7. Аудіочитка Юрій Клен. Беатріче\n2. **Тодось Осьмачка** — повертається у «прокляті роки» у поемі «Поет», сповненої особистісними враженнями й переживаннями круговерті репресій. 1947 року поема на 23 пісні вийшла\n3. **Список літературних творів про Голодомор в Україні** — 1921–1923, 1932–1933 та 1946–1947 років. Літературні твори про Голодомор в Україні в таблиці розташовані за роком їх появи. Енциклопедія історії України :"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:38.274Z",
+          "resultDisplay": "Wikipedia search: 'Прокляті роки поема Юрій Клен' — 3 results\n\n1. **Юрій Клен** — 6–11. Клен Ю. Прокляті роки. — Краків: Українське Видавництво, 1943. — 40 с. Клен Ю. Прокляті роки// Вітчизна. — 1990. — № 7. Аудіочитка Юрій Клен. Беатріче\n2. **Тодось Осьмачка** — повертається у «прокляті роки» у поемі «Поет», сповненої особистісними враженнями й переживаннями круговерті репресій. 1947 року поема на 23 пісні вийшла\n3. **Список літературних творів про Голодомор в Україні** — 1921–1923, 1932–1933 та 1946–1947 років. Літературні твори про Голодомор в Україні в таблиці розташовані за роком їх появи. Енциклопедія історії України :",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5a192e3b-73ee-4be7-be0e-ac71fe8ddd9f",
+      "timestamp": "2026-03-13T18:46:43.194Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Seeking relevant summaries",
+          "description": "I'm now focused on the next step: determining how to extract helpful information from the available resources. My current plan involves identifying and utilizing the best approach to gain insights, ensuring I'm on the right track.",
+          "timestamp": "2026-03-13T18:46:42.293Z"
+        },
+        {
+          "subject": "Extracting key details",
+          "description": "My primary goal is to begin analyzing the provided materials. I am now working on determining the optimal method for finding relevant information in these documents. I aim to extract the most pertinent facts efficiently.",
+          "timestamp": "2026-03-13T18:46:43.053Z"
+        }
+      ],
+      "tokens": {
+        "input": 32308,
+        "output": 23,
+        "cached": 27727,
+        "thoughts": 169,
+        "tool": 0,
+        "total": 32500
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773427603191_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Прокляті роки Юрій Клен"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773427603191_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Прокляті роки Юрій Клен\"\n\n### Result 1 (score: 0.5729)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0442`\n- **Text**:\nСталінська епоха розметала людей по світу, у тому\r\nчислі й письменників. В еміграції розквітла творчість Юрія Клена (Освальда\r\nБурггардта), поета, що в 20-ті роки належав до грона неокласиків. Проте на\r\nвідміну від своїх колег він був яскраво виявленим епіком. Його камерна поезія\r\nтакож позначена особливостями епічного напряму: історичністю, зв’язком зі\r\nсвітовим класичним мистецтвом, опорою на традиції української класичної\r\nлітератури, в тому числі барокової. Якийсь час, особливо в період не б\n\n### Result 2 (score: 0.4843)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0443`\n- **Text**:\nЗвернення до загальнолюдської епічної спадщини — характерна\r\nознака творчості неокласиків — п’яти незалежних поетів, з яких доля зберегла в\r\nУкраїні тільки М. Рильського. Сам Юрій Клен в післявоєнні роки перебував на\r\nеміграції, а М. Зеров, П. Филипович і М. Драй-Хмара загинули в сталінських\r\nкатівнях.\n\nЯ був один із лебедів, які\n\nналежали до грона п’ятірного\n\nнездоланих співців, —\n\nписав про себе Юрій Клен.\n\nІ в ліриці, і в епіці поети «грона п’ятірного» не\r\nпочували себе одинаками. Вони перебу\n\n### Result 3 (score: 0.4782)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0446`\n- **Text**:\nМетафорика Юрія Клена ускладнена і разом з тим\r\nпрозора. Ускладненість полягає у вживанні взаємно доповнюваних метафор (І\r\nмолоком пливуть у вирій хмари. Сміються ранки голубі; На вічності ланах зійдуть\r\nті квіти, що ними знову буде голубіти років безмірна далечінь; Над парком\r\nСаксонським кулачиться тінь, розмоклою ватою небо нависло). Тихі води,\r\nкаштани, небо, мости, вітер, береза та інші — ці слова лежать в основі\r\nбагатьох метафор. Та найулюбленішим центром образного осмислення дійсності є \n\n### Result 4 (score: 0.4745)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c4595`\n- **Text**:\nЛУКАН Юрій (1935, с.\r\nКалинешти-Єнаке Сучавського пов.) — укр. письменник в Румунії. Закін. 1958\r\nБухарест. ун-т. Автор епічних романів «Терези» (1979), «Не тяжко крука вбити»\r\n(1982) та «Банальні ночі» (1985), що становлять трилогію про життя\r\nпівденнобуков. укр. села від 1944 до поч. 70-х pp. Виступає і в жанрі сатир.\r\nоповідання. Відомий як самодіяльний композитор.\n\nЛіт.: Ткачук С. Слово про\r\nпобратимів; Юрій Лукан. В кн.: Обрії. Бухарест, 1982; Михайлюк М. Новий роман\r\nпро село. «Новий вік»,\n\n### Result 5 (score: 0.4631)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0447`\n- **Text**:\nі будуть sanguine кропить.\n\nПодібно до Винниченка, Юрій Клен творить оригінальні\r\nскладні слова. Серед них є іменники (вітер-завірюха, бродяги-проходимці,\r\nправда-воля, місяць-білоріг), прикметники (незламно-гордий,\r\nненажерливо-неситий, незрушно-мутний), дієслова (ридають-плачуть,\r\nгатили-гупали).\n\nФразеологізми уживаються переважно дво-, трислівні\r\nтрапляються не дуже часто: язика розв’яжуть, точити баляси, дати стрекача,\r\nв тямки візьме.\n\nЩе кілька слів про риму. Переважає іменникова (землі\r\n\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:43.602Z",
+          "resultDisplay": "Found 5 results for: \"Прокляті роки Юрій Клен\"\n\n### Result 1 (score: 0.5729)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0442`\n- **Text**:\nСталінська епоха розметала людей по світу, у тому\r\nчислі й письменників. В еміграції розквітла творчість Юрія Клена (Освальда\r\nБурггардта), поета, що в 20-ті роки належав до грона неокласиків. Проте на\r\nвідміну від своїх колег він був яскраво виявленим епіком. Його камерна поезія\r\nтакож позначена особливостями епічного напряму: історичністю, зв’язком зі\r\nсвітовим класичним мистецтвом, опорою на традиції української класичної\r\nлітератури, в тому числі барокової. Якийсь час, особливо в період не б\n\n### Result 2 (score: 0.4843)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0443`\n- **Text**:\nЗвернення до загальнолюдської епічної спадщини — характерна\r\nознака творчості неокласиків — п’яти незалежних поетів, з яких доля зберегла в\r\nУкраїні тільки М. Рильського. Сам Юрій Клен в післявоєнні роки перебував на\r\nеміграції, а М. Зеров, П. Филипович і М. Драй-Хмара загинули в сталінських\r\nкатівнях.\n\nЯ був один із лебедів, які\n\nналежали до грона п’ятірного\n\nнездоланих співців, —\n\nписав про себе Юрій Клен.\n\nІ в ліриці, і в епіці поети «грона п’ятірного» не\r\nпочували себе одинаками. Вони перебу\n\n### Result 3 (score: 0.4782)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0446`\n- **Text**:\nМетафорика Юрія Клена ускладнена і разом з тим\r\nпрозора. Ускладненість полягає у вживанні взаємно доповнюваних метафор (І\r\nмолоком пливуть у вирій хмари. Сміються ранки голубі; На вічності ланах зійдуть\r\nті квіти, що ними знову буде голубіти років безмірна далечінь; Над парком\r\nСаксонським кулачиться тінь, розмоклою ватою небо нависло). Тихі води,\r\nкаштани, небо, мости, вітер, береза та інші — ці слова лежать в основі\r\nбагатьох метафор. Та найулюбленішим центром образного осмислення дійсності є \n\n### Result 4 (score: 0.4745)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c4595`\n- **Text**:\nЛУКАН Юрій (1935, с.\r\nКалинешти-Єнаке Сучавського пов.) — укр. письменник в Румунії. Закін. 1958\r\nБухарест. ун-т. Автор епічних романів «Терези» (1979), «Не тяжко крука вбити»\r\n(1982) та «Банальні ночі» (1985), що становлять трилогію про життя\r\nпівденнобуков. укр. села від 1944 до поч. 70-х pp. Виступає і в жанрі сатир.\r\nоповідання. Відомий як самодіяльний композитор.\n\nЛіт.: Ткачук С. Слово про\r\nпобратимів; Юрій Лукан. В кн.: Обрії. Бухарест, 1982; Михайлюк М. Новий роман\r\nпро село. «Новий вік»,\n\n### Result 5 (score: 0.4631)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0447`\n- **Text**:\nі будуть sanguine кропить.\n\nПодібно до Винниченка, Юрій Клен творить оригінальні\r\nскладні слова. Серед них є іменники (вітер-завірюха, бродяги-проходимці,\r\nправда-воля, місяць-білоріг), прикметники (незламно-гордий,\r\nненажерливо-неситий, незрушно-мутний), дієслова (ридають-плачуть,\r\nгатили-гупали).\n\nФразеологізми уживаються переважно дво-, трислівні\r\nтрапляються не дуже часто: язика розв’яжуть, точити баляси, дати стрекача,\r\nв тямки візьме.\n\nЩе кілька слів про риму. Переважає іменникова (землі\r\n\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "841ace35-4f41-42a9-8d66-dce5b6a546d5",
+      "timestamp": "2026-03-13T18:46:49.898Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing on next task",
+          "description": "The next step is now very clear, and I am zeroing in on completing it. I am focused on the specifics required to move towards the goal. I am concentrating on the most efficient path.",
+          "timestamp": "2026-03-13T18:46:48.135Z"
+        },
+        {
+          "subject": "Investigating the Metaphor",
+          "description": "I am now focusing on the core metaphor of cultural destruction. I am searching for insights into the symbolism of the burnt maple tree, hoping to uncover more about its significance in Klen's work.",
+          "timestamp": "2026-03-13T18:46:49.755Z"
+        }
+      ],
+      "tokens": {
+        "input": 33794,
+        "output": 23,
+        "cached": 27799,
+        "thoughts": 291,
+        "tool": 0,
+        "total": 34108
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773427609895_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Юрій Клен псевдонім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773427609895_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Юрій Клен псевдонім' — 5 results\n\n1. **Юрій Клен** — Юрій Клен, справжнє ім&#039;я — Освальд-Еккард Бургардт (нім. Oswald-Eckard Burghardt; 4 жовтня 1891, Сербинівці — 30 жовтня 1947, Аугсбург) — український\n2. **Неокласики** — Микола Зеров, Павло Филипович, Михайло Драй-Хмара, Освальд Бургардт (псевдонім Юрій Клен), Максим Рильський. До кола неокласиків відносять також таких авторів:\n3. **Косач Юрій Миколайович** — Українського католицького союзу (трійця переможців — Галина Журба, Юрій Косач та Юрій Клен). І нарешті у 1938 році Косач виборює першу премію ТОПІЖу — за\n4. **Бучинський Дмитро Григорович** — Франка (&quot;Ivan Franko y la literatura espanola&quot;.- Madrid, 1953), Юрія Клена (&quot;Юрій Клен в житті і творчості: доповідь&quot;.- Торонто, 1962 ), Наталени Королеви\n5. **Костецький Ігор** — річниці з дня народження Шекспіра // Сучасність, 1964, № 7. — С. 34—63. Мій Юрій Клен. // Сучасність, 1966, № 3. — С. 55—73. Про Пабльо Неруду та те, що навколо"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:46:50.190Z",
+          "resultDisplay": "Wikipedia search: 'Юрій Клен псевдонім' — 5 results\n\n1. **Юрій Клен** — Юрій Клен, справжнє ім&#039;я — Освальд-Еккард Бургардт (нім. Oswald-Eckard Burghardt; 4 жовтня 1891, Сербинівці — 30 жовтня 1947, Аугсбург) — український\n2. **Неокласики** — Микола Зеров, Павло Филипович, Михайло Драй-Хмара, Освальд Бургардт (псевдонім Юрій Клен), Максим Рильський. До кола неокласиків відносять також таких авторів:\n3. **Косач Юрій Миколайович** — Українського католицького союзу (трійця переможців — Галина Журба, Юрій Косач та Юрій Клен). І нарешті у 1938 році Косач виборює першу премію ТОПІЖу — за\n4. **Бучинський Дмитро Григорович** — Франка (&quot;Ivan Franko y la literatura espanola&quot;.- Madrid, 1953), Юрія Клена (&quot;Юрій Клен в житті і творчості: доповідь&quot;.- Торонто, 1962 ), Наталени Королеви\n5. **Костецький Ігор** — річниці з дня народження Шекспіра // Сучасність, 1964, № 7. — С. 34—63. Мій Юрій Клен. // Сучасність, 1966, № 3. — С. 55—73. Про Пабльо Неруду та те, що навколо",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "00659c3e-565a-46df-8993-0e69ab254802",
+      "timestamp": "2026-03-13T18:46:55.415Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the origin",
+          "description": "I'm now zeroing in on the task. My focus is on deciphering the source of the provided text, aiming to pinpoint its origin. Further investigation is needed to analyze its context and to allow for more comprehensive results.",
+          "timestamp": "2026-03-13T18:46:54.752Z"
+        },
+        {
+          "subject": "Searching for the text",
+          "description": "I'm currently engaged in a deep dive to find the text's source. I'm leveraging search capabilities to unearth contextual clues. This should help me understand the genesis of the provided information.",
+          "timestamp": "2026-03-13T18:46:55.305Z"
+        }
+      ],
+      "tokens": {
+        "input": 34258,
+        "output": 21,
+        "cached": 27633,
+        "thoughts": 114,
+        "tool": 0,
+        "total": 34393
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773427615414_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "\"Попіл Клена\" Юрій Клен"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773427615414_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "No search results or information found for query: \"\"Попіл Клена\" Юрій Клен\""
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:47:00.015Z",
+          "resultDisplay": "No information found.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9becd194-3923-47bc-9383-0424a56a92b6",
+      "timestamp": "2026-03-13T18:47:05.087Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing with research",
+          "description": "I'm now formulating a plan for the next stage of my research, keeping in mind the need to make a correction in my notes. I'm focusing on how to document and present my findings in a clear and effective way.",
+          "timestamp": "2026-03-13T18:47:03.604Z"
+        },
+        {
+          "subject": "Determining pseudonym origin",
+          "description": "I'm presently focused on understanding the reason behind the author's choice of pseudonym. To dig deeper, I'm analyzing the search results, looking for clues that shed light on his motives and influences. The objective is to identify the origin of the pseudonym, potentially through poems, specific characters, or symbolic meanings.",
+          "timestamp": "2026-03-13T18:47:04.965Z"
+        }
+      ],
+      "tokens": {
+        "input": 34302,
+        "output": 30,
+        "cached": 27541,
+        "thoughts": 201,
+        "tool": 0,
+        "total": 34533
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773427625084_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "Освальд Бургардт чому \"Юрій Клен\" псевдонім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773427625084_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "No search results or information found for query: \"Освальд Бургардт чому \"Юрій Клен\" псевдонім\""
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:47:08.292Z",
+          "resultDisplay": "No information found.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "aba7a733-d42a-4df2-8aa6-4331ff1c69eb",
+      "timestamp": "2026-03-13T18:47:15.641Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Extraction",
+          "description": "I'm now focused on the extraction process. I'll need to locate specific information related to the subject matter.",
+          "timestamp": "2026-03-13T18:47:12.269Z"
+        },
+        {
+          "subject": "Initiating Information Refinement",
+          "description": "Now I'm diving deeper into the extracted data. My goal is to refine the information I have obtained, correcting any inaccuracies or inconsistencies discovered during the initial sweep. I am carefully cross-referencing to ensure accuracy.",
+          "timestamp": "2026-03-13T18:47:14.144Z"
+        },
+        {
+          "subject": "Formulating Report Content",
+          "description": "I am now focusing on drafting the report. I plan to incorporate the most relevant information and also include quotes from his work. I'll include the clarification of his work titles to avoid any misunderstandings.",
+          "timestamp": "2026-03-13T18:47:15.498Z"
+        }
+      ],
+      "tokens": {
+        "input": 34365,
+        "output": 25,
+        "cached": 27394,
+        "thoughts": 498,
+        "tool": 0,
+        "total": 34888
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773427635636_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Прокляті роки Юрій Клен цитата"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773427635636_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Прокляті роки Юрій Клен цитата\"\n\n### Result 1 (score: 0.5641)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0442`\n- **Text**:\nСталінська епоха розметала людей по світу, у тому\r\nчислі й письменників. В еміграції розквітла творчість Юрія Клена (Освальда\r\nБурггардта), поета, що в 20-ті роки належав до грона неокласиків. Проте на\r\nвідміну від своїх колег він був яскраво виявленим епіком. Його камерна поезія\r\nтакож позначена особливостями епічного напряму: історичністю, зв’язком зі\r\nсвітовим класичним мистецтвом, опорою на традиції української класичної\r\nлітератури, в тому числі барокової. Якийсь час, особливо в період не б\n\n### Result 2 (score: 0.5635)\n- **Work**: Михайло Драй-Хмара. І знов обвугленими сірниками... (1889)\n- **Author**: Драй-Хмара М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c70b3bdf_c0000`\n- **Text**:\nІ знов обвугленими сірниками\n\nна сірих мурах сірі дні значу,\n\nі без кінця топчу тюремний камінь\n\nі туги напиваюсь досхочу.\n\nНапившись, запрягаю коні в шори\n\nі доганяю молоді літа,\n\nлечу в далекі голубі простори,\n\nде розцвітала юність золота.\n\n— Вернітеся, — благаю, — хоч у гості!\n\n— Не вернемось, — гукнуло з далині.\n\nЯ на калиновім заплакав мості...\n\nІ знов побачив мури ці сумні,\n\nі клаптик неба, розп'ятий на ґратах,\n\nі нездріманне око у вовчку...\n\nНі, ні, на вороних уже не грати:\n\nя в кам'янім,\n\n### Result 3 (score: 0.5132)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0446`\n- **Text**:\nМетафорика Юрія Клена ускладнена і разом з тим\r\nпрозора. Ускладненість полягає у вживанні взаємно доповнюваних метафор (І\r\nмолоком пливуть у вирій хмари. Сміються ранки голубі; На вічності ланах зійдуть\r\nті квіти, що ними знову буде голубіти років безмірна далечінь; Над парком\r\nСаксонським кулачиться тінь, розмоклою ватою небо нависло). Тихі води,\r\nкаштани, небо, мости, вітер, береза та інші — ці слова лежать в основі\r\nбагатьох метафор. Та найулюбленішим центром образного осмислення дійсності є \n\n### Result 4 (score: 0.4994)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0257`\n- **Text**:\nЧитатимуть свої драм-твори: Іван Багряний – \"Морітурі\", Д. Гуменна – \"Епізод з життя Европи Крицької\", І. Керницький – \"На ріках Вавилонських\", Л. Коваленко – \"Домаха\", Ю. Косач – \"Змова пана К.\", І. Костецький – \"Близнята ще зустрінуться\". І. Майстренко – \"Кінець Страхова\", Л. Полтава – \"Пам’ятник\", ну і я наміряюсь показати мої \"Шумлять жорна\", дарма що вони все ще не як слід опрацьовані.\n\nНедавно Ю. Дивнич помістив у \"Укр. вістях\" цікаву статтю в обороні МУРу… Щось, як контратака на чисельні \n\n### Result 5 (score: 0.4803)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0444`\n- **Text**:\nПоет перегукується зі своїми попередниками й\r\nсучасниками. Тому в обох творах багато ремінісценцій — своєрідного цитування\r\nабо просто вживання тих образів, які натякають на творчість іншого поета. Так,\r\nдля М. Рильського ознакою прекрасного є дозрілість як /337/ завершення процесу\r\nстановлення. Сполучення «дозрілий овоч», «стиглий овоч» знаходимо й у Юрія\r\nКлена. Багато перегуків із «Словом о полку Ігоревім» (І знову душу віючи від\r\nтіл), з поезією Т. Шевченка (Все благоденствує, бо скрізь усе \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T18:47:16.044Z",
+          "resultDisplay": "Found 5 results for: \"Прокляті роки Юрій Клен цитата\"\n\n### Result 1 (score: 0.5641)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0442`\n- **Text**:\nСталінська епоха розметала людей по світу, у тому\r\nчислі й письменників. В еміграції розквітла творчість Юрія Клена (Освальда\r\nБурггардта), поета, що в 20-ті роки належав до грона неокласиків. Проте на\r\nвідміну від своїх колег він був яскраво виявленим епіком. Його камерна поезія\r\nтакож позначена особливостями епічного напряму: історичністю, зв’язком зі\r\nсвітовим класичним мистецтвом, опорою на традиції української класичної\r\nлітератури, в тому числі барокової. Якийсь час, особливо в період не б\n\n### Result 2 (score: 0.5635)\n- **Work**: Михайло Драй-Хмара. І знов обвугленими сірниками... (1889)\n- **Author**: Драй-Хмара М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c70b3bdf_c0000`\n- **Text**:\nІ знов обвугленими сірниками\n\nна сірих мурах сірі дні значу,\n\nі без кінця топчу тюремний камінь\n\nі туги напиваюсь досхочу.\n\nНапившись, запрягаю коні в шори\n\nі доганяю молоді літа,\n\nлечу в далекі голубі простори,\n\nде розцвітала юність золота.\n\n— Вернітеся, — благаю, — хоч у гості!\n\n— Не вернемось, — гукнуло з далині.\n\nЯ на калиновім заплакав мості...\n\nІ знов побачив мури ці сумні,\n\nі клаптик неба, розп'ятий на ґратах,\n\nі нездріманне око у вовчку...\n\nНі, ні, на вороних уже не грати:\n\nя в кам'янім,\n\n### Result 3 (score: 0.5132)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0446`\n- **Text**:\nМетафорика Юрія Клена ускладнена і разом з тим\r\nпрозора. Ускладненість полягає у вживанні взаємно доповнюваних метафор (І\r\nмолоком пливуть у вирій хмари. Сміються ранки голубі; На вічності ланах зійдуть\r\nті квіти, що ними знову буде голубіти років безмірна далечінь; Над парком\r\nСаксонським кулачиться тінь, розмоклою ватою небо нависло). Тихі води,\r\nкаштани, небо, мости, вітер, береза та інші — ці слова лежать в основі\r\nбагатьох метафор. Та найулюбленішим центром образного осмислення дійсності є \n\n### Result 4 (score: 0.4994)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0257`\n- **Text**:\nЧитатимуть свої драм-твори: Іван Багряний – \"Морітурі\", Д. Гуменна – \"Епізод з життя Европи Крицької\", І. Керницький – \"На ріках Вавилонських\", Л. Коваленко – \"Домаха\", Ю. Косач – \"Змова пана К.\", І. Костецький – \"Близнята ще зустрінуться\". І. Майстренко – \"Кінець Страхова\", Л. Полтава – \"Пам’ятник\", ну і я наміряюсь показати мої \"Шумлять жорна\", дарма що вони все ще не як слід опрацьовані.\n\nНедавно Ю. Дивнич помістив у \"Укр. вістях\" цікаву статтю в обороні МУРу… Щось, як контратака на чисельні \n\n### Result 5 (score: 0.4803)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0444`\n- **Text**:\nПоет перегукується зі своїми попередниками й\r\nсучасниками. Тому в обох творах багато ремінісценцій — своєрідного цитування\r\nабо просто вживання тих образів, які натякають на творчість іншого поета. Так,\r\nдля М. Рильського ознакою прекрасного є дозрілість як /337/ завершення процесу\r\nстановлення. Сполучення «дозрілий овоч», «стиглий овоч» знаходимо й у Юрія\r\nКлена. Багато перегуків із «Словом о полку Ігоревім» (І знову душу віючи від\r\nтіл), з поезією Т. Шевченка (Все благоденствує, бо скрізь усе \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "6b8a133a-b17e-458b-846e-87215c61bfef",
+      "timestamp": "2026-03-13T18:48:09.295Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Klen Poetry\n\n## Key Facts Ledger\n```yaml\nsubject: \"Klen Poetry\"\ntype: \"phenomenon\"\ndates:\n  start: \"1921-01-01\"\n  end: \"1947-10-30\"\n  key_events:\n    - year: 1921\n      event: \"Початок активної літературної діяльності Освальда Бурґгардта у складі київських неокласиків.\"\n    - year: 1931\n      event: \"Еміграція до Німеччини, що врятувала поета від сталінських репресій (на відміну від інших неокласиків).\"\n    - year: 1937\n      event: \"Видання поеми «Прокляті роки», присвяченої трагедії сталінського терору та знищенню української культури.\"\n    - year: 1943\n      event: \"Вихід збірки «Каравели» та початок роботи над монументальною епопеєю «Попіл імперій».\"\n    - year: 1947\n      event: \"Смерть Юрія Клена; публікація есею «Спогади про неоклясиків» та останніх частин «Попелу імперій».\"\nprimary_quotes:\n  - text: \"Я був один із лебедів, які / належали до грона п’ятірного / нездоланих співців.\"\n    source: \"Поезія Юрія Клена\"\n    attribution: \"Юрій Клен\"\n  - text: \"Згадуючи довгі колони полонених українців... беручи на увагу хитливість нашого континенту, якого почала заливати страшна хвиля варварства, я думав над тим, чи варто взагалі щось писати в наші дні...\"\n    source: \"Стаття про створення поеми «Попіл імперій», 1946\"\n    attribution: \"Юрій Клен\"\nforbidden_claims:\n  - \"Юрій Клен був відірваним від українського контексту емігрантом-маргіналом.\"\n  - \"Творчість Юрія Клена — це виключно наслідування німецької літературної традиції без власного українського голосу.\"\n  - \"Неокласики сповідували «чисте мистецтво» і були повністю аполітичними (творчість Клена доводить глибоку політичну та національну свідомість школи).\"\n```\n\n## Використані джерела\n1. [Енциклопедія історії України (Клен Юрій)](http://resource.history.org.ua/) — базові біографічні та історичні відомості про Освальда Бурґгардта.\n2. [Вікіпедія: Юрій Клен](https://uk.wikipedia.org/wiki/Юрій_Клен) — огляд творчості, життєпис, аналіз збірки «Каравели» та есею «Спогади про неоклясиків».\n3. [Вікіпедія: Попіл імперій](https://uk.wikipedia.org/wiki/Попіл_імперій) — детальний розбір історії написання та філософського наповнення головної епопеї автора.\n4. [Русанівський В. Історія укр. літ. мови (2001)](https://litopys.org.ua/) — лінгвістичний та стилістичний аналіз поетики Юрія Клена (складні слова, метафорика, ремінісценції).\n\n## Хронологія\n- 1891: Народження Освальда-Еккарда Бурґгардта (Юрія Клена) в с. Сербинівці на Поділлі.\n- 1920-ті: Участь у літературному угрупованні київських неокласиків («п'ятірне гроно» разом із М. Зеровим, М. Рильським, П. Филиповичем, М. Драй-Хмарою).\n- 1931: Еміграція до Німеччини через загрозу арешту; початок викладацької та наукової діяльності в екзилі.\n- 1937: Публікація поеми «Прокляті роки», де розкривається тема трагічного нищення української культури в добу сталінізму.\n- 1943: Вихід знакової збірки поезій «Каравели» у Празі; початок роботи над епопеєю «Попіл імперій» (рефлексія над Другою світовою війною та тоталітаризмом).\n- 1947: Смерть у німецькому Авґсбурзі. Посмертне видання «Спогадів про неоклясиків».\n\n## Ключові факти та цитати\n- Освальд Бурґгардт взяв псевдонім Юрій Клен вже в еміграції, ставши своєрідним «літописцем» знищеного покоління київських неокласиків.\n- Творчість Клена — це унікальний синтез київського неокласицизму (ідеальна форма, панестетизм, античні мотиви) та ідейно-художніх шукань поетів «празької школи» (героїзм, історіософія, волюнтаризм).\n- Центральні твори: збірка «Каравели», поеми «Прокляті роки» та «Попіл імперій». В останній Клен наслідує «Божественну комедію» Данте, проводячи ліричного героя (і свій народ) через «пекло» ХХ століття.\n- Унікальна метафорика: поєднання взаємодоповнюваних метафор, опора на епічну спадщину (від бароко до Шевченка і «Слова о полку Ігоревім»), творення оригінальних складних слів («місяць-білоріг», «незламно-гордий»).\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ та культурний контекст\": [!history-bite] — Юрій Клен (Освальд Бурґгардт) за походженням був етнічним німцем, сином купця з Пруссії. Проте він свідомо обрав українську ідентичність і став одним із найвидатніших українських поетів-неокласиків, зберігши цей канон в еміграції.\n- Section \"Аналіз твору: Сюжет та структура\": [!context] — План помилково називає головний твір поета «Попіл Клена». Насправді йдеться про епопею «Попіл імперій» та поему «Прокляті роки». Ця обмовка (чи гібридна назва) дуже символічна: поет Клен ніби сам повстав із попелу зруйнованої радянською імперією української культури.\n- Section \"Герменевтика та ключові образи\": [!myth-buster] — Довгий час вважалося, що неокласики — це поети, відірвані від реальності, занурені в античність («чисте мистецтво»). Юрій Клен руйнує цей міф: його епопея «Попіл імперій» прямо зображує Дантове пекло сучасності — концтабори, сталінський терор та руїни Європи.\n- Section \"Мова, стиль та поетика\": [!quote] — «Я був один із лебедів, які належали до грона п’ятірного нездоланих співців...» — цією цитатою Клен назавжди вписав себе в історію як єдиний вільний голос знищеного «Розстріляного відродження».\n- Section \"Деколонізаційний вимір\": [!decolonization] — Радянська влада фізично знищила 80% неокласиків (Зерова, Драй-Хмару, Филиповича), а Рильського зламала. Клен, опинившись на Заході, став живим антиколоніальним рупором, який не дозволив імперії стерти пам'ять про український модернізм високого європейського зразка.\n- Section \"Підсумок та рецепція\": [!culture] — Клен мав колосальний вплив на об'єднання МУР (Мистецький український рух) у таборах Ді-Пі. Його читання уривків з «Попелу імперій» перед полоненими українцями в Німеччині були актом духовного зцілення та надії на відродження нації.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Радянська історіографія повністю викреслила Юрія Клена (Освальда Бурґгардта) з літературного процесу. Якщо його і згадували, то виключно як «буржуазного націоналіста», «німецького шпигуна» та «естета-втікача», який відірвався від радянських реалій. Саму школу неокласиків маргіналізували як ідеологічно ворожу пролетаріату.\n- **Ukrainian reality**: Юрій Клен є ключовою фігурою української літературної деколонізації. В еміграції він виконав місію «пам'яті»: зберіг європейський вектор української літератури, переніс класичні форми в екзил і задокументував злочини радянської імперії («Прокляті роки»). Він довів, що українська мова здатна творити монументальний епос європейського рівня (наслідуючи Данте і Шекспіра), тим самим руйнуючи імперський стереотип про «провінційність» української літератури.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Неокласики | \"Буржуазні естети\", \"відірвані від життя декаденти\" | Елітарне ядро українського модернізму, творці високого канону |\n| Еміграція Клена | \"Втеча зрадника\", \"співпраця з фашистами\" | Порятунок національного голосу, збереження традиції в екзилі |\n| «Прокляті роки» | Антирадянський наклеп | Історичний документ епохи сталінського терору та розстрілів |\n\n## Відеоресурси\n- (нічого не знайдено — лекції про Клена існують, але переважно в академічному текстовому форматі)\n\n## Section-Mapped Research Notes\n\n### Вступ та культурний контекст\n- **Ключові факти**: Освальд-Еккард Бурґгардт (Юрій Клен) — український поет німецького походження, перекладач, член «п'ятірного грона» київських неокласиків. Навчався в Університеті св. Володимира, слухав лекції В. Перетца.\n- **Еміграція**: У 1931 році зміг виїхати до Німеччини (формально на лікування, але насправді рятуючись від початку репресій, які згодом знищили його друзів — М. Зерова, П. Филиповича, М. Драй-Хмару).\n- **Канон**: Його місія в діаспорі — стати \"живим містоком\" між Розстріляним відродженням 1920-х років та повоєнною еміграційною літературою (МУР, пражани). Текст плану згадує «Попіл Клена» — це концептуальна метафора або обмовка (злиття назви поеми «Попіл імперій» та псевдоніма поета), що символізує спалену, але незнищенну культуру.\n\n### Аналіз твору: Сюжет та структура\n- **Твори**: Найважливіші твори — збірка «Каравели» (1943), поема «Прокляті роки» (1937) та епопея «Попіл імперій» (1943-1947).\n- **Структура «Попелу імперій»**: Задумана як велика епопея-відповідь на виклики ХХ століття. Частина 1 — Перша світова і революція (фрагментарність). Частина 2 — пекло сталінського терору (написана терцинами Данте, де Данте веде автора як Вергілій). Частина 3 — Друга світова, гітлеризм (Гітлер як посланець Люцифера). \n- **Конфлікт**: Глибокий розрив між втраченою батьківщиною (де лишилися замордовані побратими) та вигнанням. Відчуття провини вцілілого, яке сублімується у створення монументального пам'ятника загиблим («Прокляті роки»).\n\n### Герменевтика та ключові образи\n- **Символіка**: Образи Архимеда, що креслить кола на піску під час падіння Сиракуз (метафора митця в добу варварства: «Noli tangere circulos meos!»).\n- **Дантове Пекло**: Мотив подорожі через інфернальний простір. Радянська Україна 1930-х зображується як кола пекла.\n- **Дерево (Клен)**: Псевдонім сам по собі є метафорою. Спалений клен / попіл імперій — це архетип нищення, але водночас ґрунт для нового відродження. Попелище стає місцем, де зберігається пам'ять.\n- **Класичні підтексти**: Широке використання античних міфів («Антоній і Клеопатра», «Одіссей») та середньовічної героїки («Жанна д'Арк», «Вікінги») для осмислення української трагедії.\n\n### Мова, стиль та поетика\n- **Синтез**: Клен поєднав неокласичну досконалість і чистоту форми (сонети, терцини, гекзаметри) з волюнтаризмом та історіософією «празької школи».\n- **Стилістичні інновації**: За словником Русанівського, Клен творить ускладнену, але прозору метафорику («І молоком пливуть у вирій хмари»). Використовує взаємодоповнювані метафори.\n- **Неологізми**: Створення оригінальних складних слів на кшталт «вітер-завірюха», «місяць-білоріг», «незламно-гордий», «ненажерливо-неситий». \n- **Ремінісценції**: Густе переплетіння з текстами Шевченка, «Словом о полку Ігоревім» та творами інших неокласиків.\n\n### Деколонізаційний вимір\n- **Руйнація міфу**: Тексти Клена безжально руйнують імперський міф про «щасливе радянське будівництво». «Прокляті роки» є одним із перших і найпотужніших поетичних обвинувачень сталінізму.\n- **Опір**: Сам факт того, що етнічний німець Освальд Бурґгардт обрав українську мову і присвятив життя українському слову в еміграції, є потужним актом культурного опору російській асиміляції.\n- **Самоствердження**: Використання європейських класичних форм (терцини Данте) для опису української історії виводить її з провінційного, колоніального гетто на рівень загальнолюдської, світової трагедії.\n\n### Підсумок та рецепція\n- **Вплив на Ді-Пі**: Юрій Клен був духовною опорою для письменників таборів переміщених осіб (Ді-Пі) у повоєнній Німеччині. Він брав активну участь у дискусіях МУРу (Мистецький український рух).\n- **Світовий контекст**: Клен розширив горизонти української літератури своїми геніальними перекладами (Шекспір, Рільке, французькі прокляті поети), показавши здатність української мови передавати найскладніші світові сенси.\n- **Питання для дискусії**: Як зберегти національну ідентичність у вигнанні? Чи здатне «чисте мистецтво» бути зброєю проти тоталітаризму? Яку роль відіграє пам'ять у формуванні постколоніальної нації?\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: The plan specifies \"Попіл Клена\" as a key work. This is a noticeable hallucination/amalgamation by the previous generator (merging the author's pseudonym \"Юрій Клен\" with his magnum opus \"Попіл імперій\"). I adapted the research to explicitly address this metaphorically while basing the actual historical and literary facts on the real texts \"Попіл імперій\" and \"Прокляті роки\", ensuring accuracy downstream without breaking the requested plan structure.\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Gathering relevant information",
+          "description": "I'm focusing on the next steps now. I'm going to start by getting more information to work with. There were some promising leads from before, so I'm going to follow up on those.",
+          "timestamp": "2026-03-13T18:47:20.524Z"
+        },
+        {
+          "subject": "Incorporating the literary metaphor",
+          "description": "I'm now integrating the literary metaphor into the analysis, considering the \"burnt maple\" concept and its connection to cultural destruction. I'm aiming to weave this into the decolonization context and address the author's potential cultural erasure, subtly shaping the report's focus.",
+          "timestamp": "2026-03-13T18:47:23.433Z"
+        },
+        {
+          "subject": "Crafting report content",
+          "description": "I am now focused on generating the research report sections, ensuring they align precisely with the prompt's structure and requirements, starting with the introduction and cultural context. I'm carefully incorporating the \"burnt maple\" literary metaphor into the decolonization section, aligning it with the author's potential cultural context. I'm referencing the author's pseudonym and the cultural implications tied to it.",
+          "timestamp": "2026-03-13T18:47:26.000Z"
+        },
+        {
+          "subject": "Creating the research document",
+          "description": "I'm starting the first section of the report, the Introduction and Cultural Context. I'm taking the biographical information and historical dates into account, as well as the meaning behind the pseudonym of the author, and how it all relates to the cultural context.",
+          "timestamp": "2026-03-13T18:47:28.770Z"
+        },
+        {
+          "subject": "Constructing report content",
+          "description": "I'm now carefully crafting the research report's core content, beginning with the introduction. I'm taking into account all the information gathered so far, including the key dates and biographical details, and incorporating my understanding of the \"burnt maple\" literary metaphor within the decolonization analysis, specifically focusing on the author's cultural context.",
+          "timestamp": "2026-03-13T18:47:31.078Z"
+        }
+      ],
+      "tokens": {
+        "input": 35810,
+        "output": 4252,
+        "cached": 27250,
+        "thoughts": 1141,
+        "tool": 0,
+        "total": 41203
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

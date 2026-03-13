@@ -1,0 +1,203 @@
+discovered_at: '2026-03-13T13:21:24.262665+00:00'
+query_keywords:
+- 'Громадянське суспільство: Держава без держави'
+- Історичні корені
+- Майдан як лабораторія
+- Волонтерський рух
+- Після 2022
+- 'Analyze the causes and consequences of громадянське суспільство: держава без держави'
+- Evaluate the historical significance of самоорганізація
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0422
+  text: "В \nУкраїні відбувалося становлення громадянського суспільства як \nневід’ємного\
+    \ атрибуту правової держави. Його складовими частинами є \nдіяльність політичних\
+    \ партій, здатних репрезентувати групові інтереси, \nвільне висловлювання власної\
+    \ думки, вільні та альтернативні політичні \nвибори, розвиток місцевого самоврядування,\
+    \ наявність ринкових \nвідносин. Але на той час громадянське суспільство в Україні\
+    \ пере-\nбувало все ще в зародковому стані. 1. Що стало причиною протестних акцій\
+    \ у листопаді 2004 рок"
+  section_title: Сторінка 230
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0404
+  text: "7. Висловіть припущення, чому влада \nнаважилася на застосування зброї \n\
+    проти мирних протестувальників. 8. Згідно з  деякими даними, у  мирних \nакціях\
+    \ Майдану взяли участь близько \n20 % населення України, а  це понад \n8,5 млн\
+    \ осіб. Про що свідчать ці дані? Узагальнюємо і  оцінюємо\n9. Висловіть думку,\
+    \ які цінності захи-\nщали прихильники Майдану. Яких \nпоглядів дотримувалися\
+    \ прихильни-\nки Антимайдану? 10. За додатковими джерелами створіть \nпрезентацію\
+    \ за темою «Революція \nГідності — боротьба проти "
+  section_title: Сторінка 224
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0504
+  text: "276 \nуникнути кровопролиття. Помаранчева революція, що тривала упродовж\
+    \ \n_________–_________ _______ року, засвідчила важливі ментальні зрушення \n\
+    в \nсуспільстві. В \nУкраїні \nвідбувалося \nстановлення \n______________ \nсуспільства\
+    \ як невід’ємного атрибуту правової держави. Його складовими \nчастинами є діяльність\
+    \ __________ партій, здатних репрезентувати групові \nінтереси, вільне ____________\
+    \ власної думки, вільні та альтернативні \nполітичні __________, розвиток місцевого\
+    \ самоврядування, наявність р"
+  section_title: Сторінка 277
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0264
+  text: "Вересень 1989 р. Словник\n«Мітингова демократія» — 1)  назва \nперіоду в \
+    \ історії боротьби \nза  незалежність України; 2)  явище, яке \nстало виявом активності\
+    \ суспільства, \nреакцією на складне соціально-\nекономічне становище, політичну\
+    \ \nнестабільність. Громадсько-політичне віче у  Львові 13  червня 1988  р. Навчальний\
+    \ фільм\nrnk.com.ua/109557\nПерегляньте відеоролик \n«Реальна історія ЗУНР» \n\
+    і  виконайте завдання \nдо  нього. © ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 146
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5367863774299622
+  chunk_id: 53691244_c0004
+  text: "§2. Етнополітична\r\nреальність України\n\nГлава 4. \r\nУ пошуках моделі\
+    \ економічного розвитку (Ігор БУРАКОВСЬКИЙ)\n\n§1. Стратегії\r\nекономічних перетворень\n\
+    \n§2. Стартові умови\r\nтрансформаційного процесу\n\n§3. Формування\r\nпосткомуністичної\
+    \ економічної системи\n\nГлава 5.\r\nПострадянські форми суспільних змін (Андрій\
+    \ ФЕДОРОВ)\n\n§1. Людина\r\nкорпоративна\n\n§2. Радянський цех\n\n§3. Пострадянська\r\
+    \nфратрія\n\nГлава 6. \r\nНевигаданий «п’ятий світ» (Сергій МАКЕЄВ, Наталія КОСТЕНКО)\n\
+    \n§1. Про\r\nнепроблематичність «п’ятого с"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.516436755657196
+  chunk_id: 479cf43d_c0045
+  text: "Про нього див.: Стешенко І. \r\nДрагоманов і його значення в історії розвитку\
+    \ укр. народу. — К., 1905;\r\nФранко І. Суспільно-політ. погляди М. Драгоманова\
+    \ // ЛНВ. — 1906. — Т.\r\nXXXV. — Кн. 8; Хатченко А. (Кистяковский Б.) М. П. Драгоманов\
+    \ и вопрос\r\nо самостоятельной укр. культуре // Укр. жизнь. — 1912. — №6; Лозинський\
+    \ М.\r\nУкр. нац. питання у творах М. Драгоманова. — [Львів], 1915; Пам’яті М.\r\
+    \nДрагоманова. — X., 1920; Ефремов С. Памяти М. Драгоманова // Укр.\r\nжизнь.\
+    \ — 1915. — №7; Овсянико-Куликовск"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5152336955070496
+  chunk_id: e86cf6ca_c0468
+  text: "Погляди українських\r\nгуманістів XVI — поч. XVII ст. на актуальні питання\
+    \ тогочасного державного і\r\nгромадського життя, таким чином, далеко не завжди\
+    \ мають стрункий концептуальний\r\nвиклад. Частіше вони репрезентовані у різних\
+    \ за жанром творах у вигляді\r\nрозмірковувань, висловлювань своєї думки на ту\
+    \ чи іншу суспільно-політичну\r\nтему, що в процесі дослідницької реконструкції\
+    \ складаються у певну систему\r\nпоглядів на проблеми походження і сутності держави,\
+    \ війни і миру, на форми\r\nдержавного правлінн"
+  work: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/lytv/lyt.htm

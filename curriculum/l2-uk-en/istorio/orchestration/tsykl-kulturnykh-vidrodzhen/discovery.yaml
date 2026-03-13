@@ -1,0 +1,197 @@
+discovered_at: '2026-03-13T12:56:15.593464+00:00'
+query_keywords:
+- 'Цикл культурних відроджень: Теорія'
+- Теоретична рамка
+- Історичні цикли
+- Механізми виживання
+- Чому культура виживає
+- 'Analyze the causes and consequences of цикл культурних відроджень: теорія'
+- Evaluate the historical significance of пригнічення → відродження
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0383
+  text: "•\t Відновлення і  поширення релігійної \nкультури. •\t Звільнення від настанов\
+    \ і  стереотипів \nрадянських часів. •\t Поява нових жанрів, типів, напрямів \n\
+    мистецтва і  загалом культури. •\t Повернення емігрантської культури \nна батьківщину,\
+    \ зв’язок із діаспорою\n•\t Залежність культурного \nрозвитку від запитів ринку,\
+    \ \nкомерціалізація культури. •\t Значне зменшення \nдержавного фінансування \n\
+    культури. •\t Звуження сфери діяльності \nустанов культури. •\t Поширення і  засилля\
+    \ масової \nкультури. •\t Цілеспрямов"
+  section_title: Сторінка 212
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0007
+  text: Але в минулого можна багато чого навчитися. Читайте, думайте, аналізуйте —
+    і вам відкриються таємниці історії.
+  section_title: Сторінка 3
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0236
+  text: '§ 15. Розвиток культури
+
+    129
+
+    © ТОВ Видавництво «Ранок». Всі права захищено.'
+  section_title: Сторінка 131
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0086
+  text: "61\nКультура спілкування\nЧи вмієте ви сперечатися?\n58\n \nІ   \aПрочитайте\
+    \ текст. Розгляньте фотоілюстрації. Визначте, які речення \nтексту пояснюють зображення.\
+    \ \nЧому виникають конфлікти? Насамперед через розбіжності в \nрозумінні тих чи\
+    \ інших фактів, несхожість думок, розходження в \nоцінці вчинків, рішень і, звичайно,\
+    \ внаслідок надмірних емоцій. \nКажуть, що в суперечці народжується істина, але\
+    \ тільки за умови \nрівноправного обговорення поглядів, думок, аналізу аргументів\
+    \ і \nконтраргументів. Однак ча"
+  section_title: Сторінка 61
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5466907620429993
+  chunk_id: 484d0ffb_c0007
+  text: "Якщо йдеться про верхню межу, то точно датовані події\r\nрозглядаються у\
+    \ випадку, коли вони відбулися не пізніше 1647 р. Однак багато\r\nкультурних процесів\
+    \ були тривалими, часто вони датуються цілими десятиріччями і\r\nстоліттями. До\
+    \ того ж врахування пізніших явищ було необхідне і для висвітлення\r\nшляхом ретроспективного\
+    \ аналізу процесів, які розгорталися впродовж попередніх\r\nісторичних періодів.\n\
+    \nРізні сторони культурного життя і різні періоди\r\nвисвітлюються нерівномірно.\
+    \ Джерельна база деяких з ни"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm
+- score: 0.545585572719574
+  chunk_id: 484d0ffb_c0398
+  text: "Зрозуміло, нові політичні умови впливали на культурне\r\nжиття. Однак творення\
+    \ культури — процес повільний, а головне, безперервний: нові\r\nявища зароджуються\
+    \ непомітно і лише дуже поступово модифікують те, що було\r\nуспадковане від попередніх\
+    \ поколінь. Відсутність різких змін — якщо не брати\r\nдо уваги порівняно рідкі\
+    \ політичні катаклізми — значною мірою пояснюється тим,\r\nщо не буває повної\
+    \ одночасної зміни одного покоління іншим. Як у житті людей\r\nкожного дня хтось\
+    \ помирає і хтось народжується, так"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm
+- score: 0.5443159341812134
+  chunk_id: 41d0facc_c0407
+  text: "Культурно-історична періодизація зустрічається з тими\r\nсамими труднощами,\
+    \ що й усяка періодизація взагалі: «зміст» часу, те, що в часі\r\nвідбувається,\
+    \ ані в якій мірі не розподіляється само по собі на такі відтинки,\r\nурізки,\
+    \ що цілком би відповідали урізкам часу. Ані один історичний період не\r\nпочався\
+    \ з певного дня, року та навіть десяти — або століття. Якщо іноді і є\r\nможливим\
+    \ вказати на перший визначний твір, перший видатний вияв нової духовної\r\nтечії,\
+    \ нового духу, то завжди ще перед цим визнач"
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm

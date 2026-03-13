@@ -1,4 +1,4 @@
-FAIL: pipeline hist 117
+PASS: pipeline hist 117
 
   Module:   chornobyl
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 117
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:20:45Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:18:23Z

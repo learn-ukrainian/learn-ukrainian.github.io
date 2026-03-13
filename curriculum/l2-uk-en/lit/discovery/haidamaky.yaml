@@ -1,0 +1,211 @@
+discovered_at: '2026-03-13T13:47:29.782613+00:00'
+query_keywords:
+- 'Гайдамаки: Кривава Свобода'
+- Структура поеми
+- Ярема і Оксана
+- Гонта і сини
+- Етика бунту
+- Analyze the historical context of Koliivshchyna
+- evaluate the ethical conflict of Gonta
+- Discuss the concept of "Holy Knife"
+- Epic poetry stylistics
+- Historical terminology
+- Rhetorical questions and exclamations
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0271
+  text: 'поет використав фольклорні джерела, зокрема перекази й пісні.
+
+    Наймит Ярема (Галайда), ставши повстанцем, борцем за справед-
+
+    ливість, відчув, що в боротьбі за волю в нього «виросли крила, / Що
+
+    неба достане, коли полетить». Уражає чистота й глибина його лю-
+
+    бові до Оксани — дочки титаря, якого закатували до смерті конфе-
+
+    дерати. Митець особливо тонко ліризував ті місця, у яких показано
+
+    стосунки закоханих, використовуючи весь арсенал народнопоетич-
+
+    них засобів. Композиційно поема складається з 2 вс'
+  section_title: Сторінка 200
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0324
+  text: 'НОВА УКРАЇНСЬКА ЛІТЕРАТУРА
+
+    190
+
+    Ïîâòîðþєìî
+
+    1. Чому поема називається «Гайдамаки»? Коли відбувалися події, описані в ній?
+    2. Які дві сюжетні лінії простежуються в поемі? 3. Опишіть головних героїв твору.
+    Прочитайте уривки, де їх схарактеризовано. Ìіðêóєìî
+
+    1. Перекажіть історію виникнення й розвитку гайдамацького повстання (чи будь-
+
+    який розділ) від імені кожного з героїв поеми. 2. Поясніть, у чому особливість
+    композиції поеми «Гайдамаки». 3. Підготуйте історичну довідку про Коліївщину.
+    Укажіть, де'
+  section_title: Сторінка 190
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0270
+  text: 'Ватажки
+
+    повстання  — Іван Ґонта й Максим Залізняк (вони ж — і головні ге-
+
+    рої твору). Коліївщина була відповіддю на жорстокі дії конфедера-
+
+    тів  — польської шляхти, яка рішуче виступала проти православ’я. Поема має дві
+    сюжетні лінії: гайдамацький рух під проводом
+
+    Максима Залізняка й кохання Оксани та Яреми. Головний герой
+
+    поеми — повсталий народ, він конкретизований в індивідуальних
+
+    образах-персонажах Яреми, Ґонти, Залізняка, Волоха, кобзаря, за-
+
+    порожця тощо. Т. Шевченко розвіяв міф істориків п'
+  section_title: Сторінка 199
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0291
+  text: "УКРАЇНСЬКІ ЗЕМЛІ у 20-90-х роках XVIII ст. \nРОЗДІЛ 5\nфакт чи <рейк?\nІлюстрація\
+    \ до поеми Т. Шевченка «Гайдамаки» \n{роботахудожника Опанаса Сластіона, 1886р.)\n\
+    Іван Гонта в Умані вбив своїх дітей за те, що у \nшколі їх перехрестили в католиків.\
+    \ Насправді\nІ. Гонта не вбивав дітей. Ілюстрація відображає \nхудожній домисел\
+    \ Т. Шевченка.\nВідео «Бандити чи герої?»\n(Канал ім. Т. Г. Шевченка, \nтривалість\
+    \ 18 хв 25 с)\nННр8:/Л|г.огїопсепІг.сот.иа/В0с1Р2\n1. Поміркуйте, чому Великий\
+    \ Кобзар у своєму творі зобразив"
+  section_title: Сторінка 217
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0002
+  text: ". . . 24\nПроблемно-тематична основа . . . . . . . . . . 25\nАвторська позиція.\
+    \ . Риси національного характеру. . . . . . . . . . 26\nПерсонажі повісті. . .\
+    \ . . . . . . . . . . . . . . . . . 27\nКомічне в зображенні персонажів. . . .\
+    \ . . . 28\nЧитацький практикум. Кайдашева сім’я. . . . . . . . . . . . . . .\
+    \ . . 30\nПанас Мирний. . . . . . . . . . . . . . . . . . . . . . . . 37\nЛітературна\
+    \ творчість. . . . . . . . . . . . . . . . . 38\nУкраїнське народне життя \nв реалістичному\
+    \ освітленні  \n(«Хіба ревут"
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6116014719009399
+  chunk_id: d77902e2_c0410
+  text: "Поема складається із вступу, 11-ти основних розділів,\r\n«Епілогу», прозової\
+    \ передмови і «Приписів». Вступ і «Епілог» є композиційним\r\nобрамленням поеми.\
+    \ У вступі поет декларує свій ідейний задум — оспівати\r\nгайдамаків. Він полемізує\
+    \ тут з реакц. критикою, утверджує ідею народності л-ри\r\nі право укр. письменства\
+    \ на існування й розвиток. Кожен розділ поеми сповнений\r\nдрам. напруження. На\
+    \ відміну від багатьох тогочасних драм. поем, у Шевченка, як\r\nі в письменників-декабристів,\
+    \ як у О. Пушкіна, роман"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.5406439304351807
+  chunk_id: d77902e2_c0411
+  text: "Літ.: Пархоменко М. Н. Поэма революционного гнева. «Литературная учеба»,\
+    \ 1939, № 3; Бернштейн\r\nМ. Д. Літературно-текстологічний аналіз поеми «Гайдамаки»\
+    \ Т. Г. Шевченка.\r\n«Радянське літературознавство», 1939, № 4; Кирилюк Є. П.\
+    \ Сторіччя поеми.\r\n«Радянська Україна». 1941, № 1; Івакін Ю. О. Сатира Шевченка.\
+    \ К., 1959; Гнатюк\r\nМ. П. Поема Т. Г. Шевченка «Гайдамаки». К., 1963; Івакін\
+    \ Ю. О. Коментар\r\nдо «Кобзаря» Шевченка. Поезії до заслання. К., 1964; Бородін\
+    \ В. С. Над\r\nтекстами Т. Г. Шевченка. К., 19"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.5231237411499023
+  chunk_id: d77902e2_c0922
+  text: "Розмаїта за своїми жанрово-композиційними формами\r\nШевченкова лірика. Ліричні\
+    \ роздуми і монолог характерні для\r\nінтимної та політ. лірики поета («Думи мої,\
+    \ думи мої, лихо мені з вами!»,\r\n«Минають дні, минають ночі», «Мені однаково,\
+    \ чи буду», «В неволі тяжко, хоча й\r\nволі», «Я не нездужаю, нівроку» тощо).\
+    \ В ліричному вірші розвиток одного мотиву\r\nчасто становить основу К. цілого\
+    \ вірша. Зміни настрою, хід почуття-переживання як\r\nоснову К ліричного твору\
+    \ яскраво виражено, напр., у поезії «Минають д"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm

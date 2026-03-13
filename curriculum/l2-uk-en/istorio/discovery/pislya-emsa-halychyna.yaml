@@ -1,0 +1,193 @@
+discovered_at: '2026-03-13T12:57:56.575485+00:00'
+query_keywords:
+- 'Після Емса: Галицький розквіт'
+- Емський указ
+- Галичина
+- Інституційне будівництво
+- Вплив на всю Україну
+- 'Analyze the causes and consequences of після емса: галицький розквіт'
+- Evaluate the historical significance of культура переїжджає
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0448
+  text: "На початку XX  ст. вагомі здобутки українського націо-\nнального руху в \
+    \ Галичині перетворили її на «український \nП’ємонт». \x17\n\x17 Унаслідок наполегливої\
+    \ боротьби українці Галичини, спираючись \nна свої політичні партії, змогли досягти\
+    \ певних результатів у  боротьбі \nза український університет, загальне виборче\
+    \ право та реформу крайо-\nвого статуту."
+  section_title: Сторінка 248
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0003
+  text: 'Пилип Орлик і його Конституція. Ліквідація козацтва на Правобережній Україні..............................183
+
+    § 34. Церковне життя. Освіта. Наукові знання. Архітектура. Образотворче мистецтво..........................................................................187
+
+    § 35. У загальнення з розділу 4 .....................................................................192'
+  section_title: Сторінка 4
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0433
+  text: "\e\n\e\n1. Якими були основні течії суспільно-політичного руху на західноукраїнських\
+    \ зем­\nлях у  другій половині XIX  ст.? 2. Як розгортався український національний\
+    \ рух \nна західноукраїнських землях у цей період? 3. Як утворилися українські\
+    \ політичні \nпартії в  Галичині?"
+  section_title: Сторінка 240
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0102
+  text: "ОПРАЦЮВАВШИ ПАРАГРАФ, \nВИ  ДІЗНАЄТЕСЬ:\n\x84\n\x84\nпро причини та передумови\
+    \ \nукладення, сутність і наслідки \nБерестейської церковної унії;\n\x84\n\x84\
+    \nяк розвивалася полемічна \nлітература;\n\x84\n\x84\nу чому полягав вплив унії\
+    \ \nна  церковне життя українських \nземель. Тестові завдання\nrnk.com.ua/109588\n\
+    Працюємо з  джерелом\nrnk.com.ua/110301\nІз меморандуму \nправославних єпископів\
+    \ \nдо польського короля \nЖигмунта (Сигізмунда) III\nДля вас, допитливі\nrnk.com.ua/110300"
+  section_title: Сторінка 65
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5117126703262329
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5107132196426392
+  chunk_id: c8772648_c0274
+  text: "Галичь, в Галичү, подъ Галичемъ місто на р. Дністер 4,\r\n41, 64 — «Собр.\
+    \ др. гр.», стор. LX; М. Тихомиров, «Гал. митр.»; М.\r\nСтрийковський, «Kronika»,\
+    \ стор. 20; М. Бєльський, «Kronika», стор. 62; М.\r\nВолков, «Стат. св.», стор.\
+    \ 31; М. Карамзін, «История», т. IV, стор. 249; М.\r\nСмирнов, «Судьбы», стор.\
+    \ 77; А. Петрушевич, «Наук. сб.», стор. 24 — 49; В.\r\nТатищев, «История», т.\
+    \ II, стор. 239; «Указатель», стор. 64 — 69; В.\r\nЛяскоронський, «Боплан», стор.\
+    \ 9; «Иностр. карты», стор. 9; М. Барсов, «Матери"
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm
+- score: 0.5091802477836609
+  chunk_id: feaa5fa7_c1651
+  text: "М. Стахів\n\nЛітература: Чубатий М. Основи держ. устрою Зах.-Укр. Республіки.\
+    \ Л. 1920; Лозинський\r\nМ. Галичина. Відень 1921; Христюк П. Замітки і матеріяли\
+    \ до історії укр.\r\nреволюції 1917 — 20 pp., I — IV. Відень 1921 — 22; Дністрянський\
+    \ С.\r\nЗагальна наука права і політики. І. Прага 1923; Сулятицький П. Нариси\
+    \ з\r\nісторії революції на Кубані. Прага 1926; Кедрин І. Берестейський мир. Л.\r\
+    \n1928; Шелухин С. Історично-правні підстави укр. державности. Вінніпеґ\r\n1929;\
+    \ Левицький К. Історія визвольних змаг"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

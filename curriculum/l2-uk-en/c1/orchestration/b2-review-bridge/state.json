@@ -1,0 +1,27 @@
+{
+  "track": "c1",
+  "slug": "b2-review-bridge",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T17:12:37Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T17:12:37Z",
+      "task_id": "v5-b2-review-bridge-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-sonnet-4-6"
+      }
+    }
+  }
+}

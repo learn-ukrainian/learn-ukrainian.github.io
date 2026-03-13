@@ -1,4 +1,4 @@
-FAIL: pipeline hist 120
+PASS: pipeline hist 120
 
   Module:   rukh
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 120
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:12Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:37:19Z

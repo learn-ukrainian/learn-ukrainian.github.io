@@ -1,4 +1,4 @@
-FAIL: pipeline hist 137
+PASS: pipeline hist 137
 
   Module:   hromadske-suspilstvo
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 137
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:23:45Z
+  Verdict:  PASS
+  Date:     2026-03-13T16:01:57Z

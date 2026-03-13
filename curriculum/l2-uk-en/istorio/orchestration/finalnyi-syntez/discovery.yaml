@@ -1,0 +1,221 @@
+discovered_at: '2026-03-13T14:24:41.075716+00:00'
+query_keywords:
+- 'Фінальний синтез: Що ми дізналися'
+- Методологічні уроки
+- Тематичні уроки
+- Практичні уроки
+- Відкриті питання
+- Підсумок курсу
+- 'Analyze the causes and consequences of фінальний синтез: що ми дізналися'
+- Evaluate the historical significance of кінець курсу, початок розуміння
+- history
+- історія
+- подія
+- джерело
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0450
+  text: "Хід заняття\n\t 1. Опрацюйте наведений матеріал і дайте відповіді на запитання.\
+    \ 2. Зробіть висновки відповідно до мети заняття."
+  section_title: Сторінка 249
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-golub-2022_s0255
+  text: '141
+
+    § 49. Узагальнення відомостей із синтаксису й пунктуації ............ 143
+
+    РОЗДІЛ V. Інформація
+
+    § 50. Повторення вивченого в 1–4 класах. Інформація .................. 146
+
+    § 51. Види інформації. Текстова інформація ................................ 149
+
+    § 52. Графічна та числова інформація .........................................
+    151
+
+    § 53. Звукова та мультимедійна інформація ................................ 154
+
+    § 54. Джерела інформації .......................................................... '
+  section_title: Сторінка 254
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0142
+  text: '124
+
+    § 21. Типи текстів.........................................................................................128
+
+    § 22. Повторення вивченого за рік...........................................................
+    142
+
+    143'
+  section_title: Сторінка 143
+  grade: 2
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0017
+  text: "8    Пізнавати себе і світ\nДопоможуть вам на цьому шляху запитання та завдання,\
+    \ які ми згрупу-\nвали за рубриками.\n\x03\n\x83 Опрацьовуємо прочитане\n\x03\n\
+    \x83 Досліджуємо самостійно\n\x03\n\x83 Ділимося читацьким досвідом\n\x03\n\x83\
+    \ Запрошуємо до дискусії\n\x03\n\x83 Виявляємо літературну компетентність \n\x03\
+    \n\x83 Виявляємо обізнаність у сфері культури\n\x03\n\x83 Виявляємо творчі здібності\n\
+    \x83\tЧитацький практикум\n\x83\tЧитаємо взірці української художньої літератури\n\
+    Біля деяких завдань ви помітите додаткові позначки.\n — виконуємо завдання письмово\n\
+     "
+  section_title: Сторінка 8
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5244103074073792
+  chunk_id: 4800ab33_c0883
+  text: "Трактат про причини завершимо доповненням у формі\r\nкількох дрібних питань,\
+    \ які дехто подає на початку цього трактату. Але ми\r\nрозглядаємо їх в кінці,\
+    \ бо переконані, що для їх розв’язання потрібне попереднє\r\nдосконале пізнання\
+    \ причин. Тут ми досліджуємо дві справи: по-перше, чи можуть\r\nпричини бути взаємно\
+    \ для себе причинами і, по-друге, чи внаслідок дії двох\r\nоднакових причин може\
+    \ виникнути той самий наслідок."
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5239388942718506
+  chunk_id: fc2291b5_c5177
+  text: "М. як наука має вел. значення для розроблення термінології,\r\nу наук. коментуванні\
+    \ мовних текстів, машинному перекладі; воно дає і теор.\r\nвисновки для розв’язання\
+    \ проблеми взаємостосунків матеріального та ідеального.\r\nПроблема взаємозв’язку\
+    \ мови й мислення, мовних і логічних величин вивчається\r\nодночасно М. і філософією.\
+    \ Осн. види мовозн. методів — описовий, зіставний\r\n(конфронтативний, контрастивний),\
+    \ типол., істор. (порівняльно-істор.,\r\nкомпаративний) і нормативно-стилістичний."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.520238995552063
+  chunk_id: 4800ab33_c0322
+  text: "1. «Заключна частила — це остання частина промови\r\nабо її мистецьке закінчення»\
+    \ — так говорить Ціцерон («Про підбір матеріалу»,\r\nкн. I), де добре зверни увагу,\
+    \ що не лише не треба занедбувати побудови цієї\r\nчастини, навіть треба вишукувати\
+    \ тут найбільше мистецтво, щоб хибний кінець не\r\nспотворив вигляду попередніх\
+    \ [частин] промови. \\239\\\n\n2. Отже, треба знати, що кінець складається з двох\r\
+    \nчастин: з переліку сказаного і збудження почуттів. Інколи бракує першої\r\n\
+    частини, бо перелік того, що було "
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

@@ -1,0 +1,207 @@
+discovered_at: '2026-03-13T16:51:53.493826+00:00'
+query_keywords:
+- Lesia Cassandra
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Lesia Cassandra у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: The video directly addresses the concept of the Ukrainian literary
+    canon, discussing key figures like Bazhan and Tychyna, and the need to restore
+    or re-evaluate literary figures. This is highly relevant to understanding Lesia
+    Ukrainka's place in the broader cultural context.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. Бажан має бути повернутий в шкільну програму.
+  embed_suggestion: After section Вступ та культурний контекст -- The discussion on
+    forming and re-evaluating the Ukrainian literary canon provides essential context
+    for Lesia Ukrainka's significance within Ukrainian culture.
+- url: https://www.youtube.com/watch?v=8l_FfmbpEWs
+  channel: Radio Khartia
+  title: Культура виживає завдяки тим, хто не здається
+  relevance_score: 0.7
+  relevance_note: The video discusses the survival of Ukrainian culture through dedicated
+    individuals and historical challenges, referencing Ivan Nechuy-Levytsky and the
+    suppression of Ukrainian language. This provides important historical context
+    for the decolonization dimension of the module.
+  transcript_excerpt: для того, щоб функціонувала ... культура, потрібні і подвижники,
+    але потрібні і ті, хто працює на культуру. ... Іван Не Чуєвицький... все життя
+    викладав русскою словесност. Ну, українську словесность неможливо було викладати.
+  embed_suggestion: After section Деколонізаційний вимір -- The historical examples
+    of cultural struggle and the explicit mention of Ukrainian figures like Nechuy-Levytsky
+    directly support the decolonization theme by illustrating the challenges faced
+    by Ukrainian language and literature.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: The video discusses contemporary Ukrainian poetry and the resilience
+    of the Ukrainian language, touching on themes of language and poetics, which are
+    tangentially related to the module's linguistic analysis and decolonization dimension.
+  transcript_excerpt: Він презентує нову збірку віршів скрипниківка... Сергій Жадан
+    досліджує мову... здатність мови повертатися і самовідтворюватись про її вразливість
+    про її здатність до опору.
+  embed_suggestion: After section Мова, стиль та поетика -- The video explores how
+    contemporary poets view the Ukrainian language, its ability to self-reproduce
+    and resist, complementing a discussion on the poetics of Lesia Ukrainka.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0322
+  text: "Леся Українка відійшла \nвід усталеного однозначного трактування й по-\n\
+    бачила в ній те, що дуже хвилювало її саму. Головною темою драматичної поеми є зоб­\n\
+    раження трагічної безвиході людини  — за-\nручниці обставин  — у  спробах порозумітися\
+    \ \nз  оточенням. Біда в  тому, що люди не  завжди \nбажають знати правду навіть\
+    \ перед лицем не-\nминучої катастрофи. Вони живуть у  комфорт-\nному світі звичних\
+    \ уявлень і  зазвичай вороже \nставляться до  всього, що із  цими уявленнями \n\
+    не погоджується. В  одному з "
+  section_title: Сторінка 174
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0306
+  text: 'Чародійка оперної сц ен и........................................145
+
+    Розвиток мовлення. Твір у публіцистичному стилі
+
+    на морально-етичну тем у..........................................................................................147
+
+    Контрольні запитання і завдання..........................................................................150
+
+    238'
+  section_title: Сторінка 238
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0003
+  text: "4\nЧИТАЄМО Й РОЗПОВІДАЄМО \nЧИТАЄМО Й РОЗПОВІДАЄМО \nПРО СВОЇ ЗАХОПЛЕННЯ\n\
+    ПРО СВОЇ ЗАХОПЛЕННЯ\n \nОзнайомтеся з новим підручником. Знайдіть у змісті \n\
+    перший розділ. Які твори вміщені в ньому? Які автори творів \nвам знайомі? Яка\
+    \ назва видалася вам особливо цікавою?\nЧитайте вдумливо:\n\nвизначайте тему\
+    \ твору, де й коли відбувалась описана \nподія;\n\nне залишайте поза увагою\
+    \ незрозуміле;\n\nвизначте, який це вид твору; \n\nхто дійові особи, які в\
+    \ них почуття, вчинки;\n\nпрогнозуйте розвиток сюжету;\n\nмір"
+  section_title: Сторінка 4
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5719799995422363
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5411996245384216
+  chunk_id: fc2291b5_c3692
+  text: "КОНТЕКСТ (лат. contextus\r\n— з’єднання, зв’язок, зчеплення) — відносно завершена\
+    \ (змістом і формою)\r\nчастина тексту, в межах якої оптимально виявляються сенс,\
+    \ значення\r\nокремого слова, фрази, образного вислову. Відомо, напр., що поза\
+    \ К. (його\r\nстилістичними та смисловими зв’язками) цитата може втратити первісне\
+    \ значення,\r\nнабути іншого, не властивого їй змісту. В худож. л-рі К. визначає\
+    \ конкретний\r\nзміст, стиліст. забарвлення, міру виразності не лише окр. слів,\
+    \ фраз, а й\r\nхудож. засобів (тропів, "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5306882858276367
+  chunk_id: 172f2637_c0087
+  text: '4. Грубою помилкою було б негайно ідентифікувати ці висновки зі світоглядом
+    автора. Частіше їх доводиться іден­тифікувати з світоглядом редактора, а то й
+    видавця, а часто й просто Мар''ї Алексєвни. Світогляд автора знаходиться ста­ранною
+    аналітичною роботою над усіма його творами і су­часною йому творчістю інших. В
+    данім оповіданні куточок світогляду визирає з-під відношення автора до кволих
+    лю­дей.
+
+
+    5. Знайти справжній світогляд автора, аналізуючи тільки його твори, — справа дуже
+    нелегка, а поде'
+  work: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+  year: 1895
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=25044

@@ -1,0 +1,118 @@
+discovered_at: '2026-03-13T18:28:49.665279+00:00'
+query_keywords:
+- Цифрова комунікація
+- Регістри та канали цифрової комунікації
+- Registers and Channels of Digital Communication
+- 'Мистецтво ділового листування: Етикет та структура'
+- 'Art of Business Correspondence: Etiquette and Structure'
+- Специфіка спілкування в месенджерах та робочих чатах
+- Specifics of Communication in Messengers and Work Chats
+- Відеоконференції та цифрова етика
+- Video Conferences and Digital Ethics
+- Корекція типових помилок та кальок
+- Correction of Common Errors and Calques
+- 'Практикум: Трансформація стилів та написання'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=o23XXCS8k3s
+  channel: Суспільне Культура
+  title: 'Ксенія Шиманська та Богдан Мойса: кібербулінг + Юрій Юдін, мультфільм  «Як
+    я став кіберсупергероєм»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=JVv4aidZdNU
+  channel: Суспільне Док
+  title: Як жінки-лідерки розвивають громади під час війни? | Документальний проєкт
+    «Будь її голосом»
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=IpSCSXGMXQE
+  channel: Суспільне Док
+  title: «Війна мене вразила, і тепер бачу себе у служінні» – історія Юрія Гандери
+    | Відтінки України. Війна
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=dMnfTSwSf4s
+  channel: Radio Khartia
+  title: '"Why teach this?" is the question with which school begins today.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0080
+  text: "Розгадайте ребуси та виконайте завдання. •\t\nДо якого виду інформації (текстової\
+    \ / графічної) належать поняття, назви яких \nзакодовані? 6. Перетворивши текстову\
+    \ інформацію вправи 4 на графічну, ознайомте з нею \nоднокласників / батьків /\
+    \ друзів. 1\nУ=І\nР=Х\n,\n,,,\n,,\n,\n5,1\n1,4\nІ. ІІ."
+  section_title: Сторінка 66
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0003
+  text: "Підручник має інтернет-підтримку (електронний дода-\nток). На його сторінках\
+    \ розміщені QR-коди, за якими ви \nзнайдете:\nyy текстові джерела;\nyy додаткову\
+    \ інформацію до параграфів;\nyy словник основних термінів і понять;\nyy матеріали\
+    \ для проведення практичних занять;\nyy завдання на узагальнення знань за розділами;\n\
+    yy плани-схеми з інструкціями до виконання завдань;\nyy список рекомендованої\
+    \ літератури;\nyy онлайн-тестування для підготовки до тематичного \nконтролю за\
+    \ кожним розділом. Із повагою, авторс"
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0321
+  text: "Уміння вести телеôонний діалог \nполягає в тому, Áоб стисло передати суть\
+    \ питання, ситуа-\nції, дати конкретні відповіді. момент налаго-\nдження контакту\n\
+    викладення суті \nсправи\nзавершення \nрозмови\nСкладники теле¼онної розµови"
+  section_title: Сторінка 206
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

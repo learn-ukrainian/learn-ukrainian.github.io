@@ -1,0 +1,223 @@
+discovered_at: '2026-03-13T14:52:20.804427+00:00'
+query_keywords:
+- Помаранчева революція
+- Передумови революції
+- 'Медіа та суспільство: Інформаційний прорив'
+- 'Майдан: Народний спротив'
+- 'Судова перемога: Рішення Верховного Суду'
+- 'Деколонізаційний погляд: Українці обирають Європу'
+- Первинні джерела
+- причини та хронологію Помаранчевої революції
+- роль Ющенка та Тимошенко
+- роль громадянського суспільства
+- значення рішення Верховного Суду 2004 року
+- history
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=mts4K6IfGsU
+  channel: Реальна Історія
+  title: Американські президенти і Україна. Реальна історія відносин
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=WjydAaZl6o8
+  channel: Реальна Історія
+  title: Розстріл на МАЙДАНІ у 2014-му. Ось що встановило СЛІДСТВО! Хронологія подій
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=-qmmMv1Elsc
+  channel: Harvard Ukrainian Research Institute
+  title: 'Oct 5, 2006. Symp: Ukraine''s Democratic Revolution Comes Full Circle? Session
+    1'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=JcTwtWo8RIQ
+  channel: Harvard Ukrainian Research Institute
+  title: April 10, 2006. Petryshyn Memorial Lecture. Haran
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7viLq-O6EcM
+  channel: Комік Історик
+  title: Корчинський про католицизм
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.youtube.com/...
+  title: Документальний фільм про Помаранчеву революцію (2004)
+  source: Унікальні архівні кадри
+  relevance_score: 0.95
+  topics: []
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0422
+  text: "В \nУкраїні відбувалося становлення громадянського суспільства як \nневід’ємного\
+    \ атрибуту правової держави. Його складовими частинами є \nдіяльність політичних\
+    \ партій, здатних репрезентувати групові інтереси, \nвільне висловлювання власної\
+    \ думки, вільні та альтернативні політичні \nвибори, розвиток місцевого самоврядування,\
+    \ наявність ринкових \nвідносин. Але на той час громадянське суспільство в Україні\
+    \ пере-\nбувало все ще в зародковому стані. 1. Що стало причиною протестних акцій\
+    \ у листопаді 2004 рок"
+  section_title: Сторінка 230
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0504
+  text: "276 \nуникнути кровопролиття. Помаранчева революція, що тривала упродовж\
+    \ \n_________–_________ _______ року, засвідчила важливі ментальні зрушення \n\
+    в \nсуспільстві. В \nУкраїні \nвідбувалося \nстановлення \n______________ \nсуспільства\
+    \ як невід’ємного атрибуту правової держави. Його складовими \nчастинами є діяльність\
+    \ __________ партій, здатних репрезентувати групові \nінтереси, вільне ____________\
+    \ власної думки, вільні та альтернативні \nполітичні __________, розвиток місцевого\
+    \ самоврядування, наявність р"
+  section_title: Сторінка 277
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0324
+  text: "Співачка Руслана під час «помаранчевої \nреволюції». Листопад 2004  р. ©\
+    \ ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 180
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5264566540718079
+  chunk_id: e86cf6ca_c0010
+  text: "За своєю антифеодальною,\r\nпротобуржуазною сутністю Реформація тотожна Відродженню,\
+    \ але розгортались вони\r\nу різних формах. Зміст поняття \"Реформація\" включає\
+    \ такі елементи: 1)\r\nРеформація — масовий антифеодальний рух; 2) заразом вона\
+    \ є рухом\r\nпередбуржуазним; 3) вона спрямовується проти панівної церковної ієрархії\
+    \ та\r\nкліру; 4) здійснює свої секуляризаційні завдання під гаслом боротьби за\
+    \ істинну\r\nвіру; 5) ідеалізує й намагається відродити первісне християнство;\
+    \ 6) підносить\r\nіндивідуально-духов"
+  work: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/lytv/lyt.htm
+- score: 0.5203633308410645
+  chunk_id: f4f6fb3d_c0471
+  text: "Отсутствие общественного начала, сдерживающего фактические\r\nпроявления\
+    \ как законной реакции подавленных слоев общества, так и личные порывы\r\nк своеволию,\
+    \ корысти и произволу, отразилось невыгодно и на характере народного\r\nпротеста.\
+    \ Находя легкий исход в проявлениях чисто личных, единичных, протест\r\nэтот не\
+    \ был поставлен в необходимость группироваться, уяснять свои нравственные\r\n\
+    основы, искать прочной опоры в солидной разработке своих принципов, в\r\nприведении\
+    \ их в цельное, стройное, глубоко созна"
+  work: Антонович — Вибрані праці
+  author: Антонович В.
+  year: 1900
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/anton/ant.htm
+- score: 0.5101091861724854
+  chunk_id: 5739d24f_c0909
+  text: "28 Див.: Гутнова\r\nЕ. В. Место и значение буржуазной позитивистской историографии\
+    \ второй\r\nполовины XIX в. в развитии исторической науки (по материалам медиевистики)\
+    \ // Средние\r\nвека. — М., 1964. — Вып. 25. — С. 283 — 298.\n\nМ. С. Грушевський\
+    \ не обминув і такого принципового\r\nпитання, як полярність соціальних інтересів\
+    \ різних станових груп населення\r\nукраїнського суспільства, їх боротьбу за свої\
+    \ права і привілеї. Більше того,\r\nсоціальну напруженість, міжкласові конфлікти\
+    \ він пояснює комплексом прич"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm

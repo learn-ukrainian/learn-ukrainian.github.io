@@ -1,188 +1,64 @@
-# Phase A: Research + Meta (Seminar Track)
+# Phase A: Meta Outline Only (Research Already Exists)
 
-> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**
-> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**
+> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module).**
+> **Research is already complete. Your ONLY task: Rebuild the meta outline from the existing research.**
 
 ---
 
 ## Your Input
 
-**Plan file (SOURCE OF TRUTH):**
+Read the **existing research notes** (already complete — do NOT re-research):
 
-> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.
-> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/bio/research/olena-stepaniv-research.md
+```
 
-```yaml
-module: bio-099
-level: BIO
-sequence: 99
-slug: olena-stepaniv
-version: '2.0'
-title: 'Олена Степанів: Перша жінка-офіцер'
-focus: biography
-phase: BIO
-word_target: 5000
-objectives:
-- 'Analyze the life and legacy of олена степанів: перша жінка-офіцер'
-- Evaluate the contributions of жінка, що зламала стереотипи
-- Trace the career and influence of спадщина та пам'ять
-sources:
-- name: Олена Степанів (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Степанів_Олена_Львівна
-  type: primary
-  notes: Біографія, військова кар'єра, наукова діяльність
-- name: Музей визвольної боротьби України
-  url: https://mvbu.org.ua
-  type: reference
-  notes: Українські Січові Стрільці
-- name: Національний університет ім. І. Франка
-  url: https://lnu.edu.ua
-  type: reference
-  notes: Географічні дослідження
-content_outline:
-- section: Вступ — Жінка, що зламала стереотипи
-  points:
-  - Степанів як перша жінка-офіцер в українській армії
-  - Поєднання військової служби та наукової кар'єри
-  - Символ жіночої участі у визвольних змаганнях
-  words: 850
-- section: Молодість та освіта (1892-1914)
-  points:
-  - Народження у Львові в патріотичній родині
-  - Навчання у Львівському університеті
-  - Членство в товаристві «Пласт»
-  - Формування національних переконань
-  words: 850
-- section: Українські Січові Стрільці (1914-1918)
-  points:
-  - Вступ до УСС на початку Першої світової
-  - Бойове хрещення та участь у битвах
-  - Отримання офіцерського звання хорунжої
-  - Полон та повернення
-  words: 850
-- section: Визвольні змагання (1918-1921)
-  points:
-  - Участь у Листопадовому повстанні
-  - Служба в Українській Галицькій армії
-  - Шлюб з Романом Дашкевичем
-  - Польський полон та інтернування
-  words: 850
-- section: Наукова кар'єра та репресії (1921-1963)
-  points:
-  - Захист докторської дисертації з географії
-  - Викладання у Львівському університеті
-  - Арешт НКВС та заслання (1940)
-  - Повернення та продовження наукової роботи
-  words: 850
-- section: Спадщина та пам'ять
-  points:
-  - Внесок у українську географію
-  - Роль у жіночому русі
-  - Вшанування після незалежності
-  - Символ для сучасних захисниць України
-  words: 750
-vocabulary_hints:
-  required:
-  - жінка-офіцер (female officer)
-  - хорунжа (ensign/female officer rank)
-  - Січові Стрільці (Sich Riflemen)
-  - визвольні змагання (liberation struggle)
-  - полон (captivity)
-  - інтернування (internment)
-  - репресії (repressions)
-  - заслання (exile)
-  - географія (geography)
-  - докторська дисертація (doctoral dissertation)
-  recommended:
-  - Пласт (Plast/Ukrainian Scouts)
-  - Українська Галицька армія (Ukrainian Galician Army)
-  - НКВС (NKVD)
-  - Листопадове повстання (November Uprising)
-  - бойове хрещення (baptism of fire)
-activity_hints:
-- type: reading
-  focus: Військова та наукова біографія
-  source: Мемуари та історичні дослідження
-  items: 3 passages
-- type: essay-response
-  focus: Чому участь жінок у війні була революційною?
-  output: Історичне есе
-connects_to:
-- bio-59 (Ольга Басараб)
-- bio-68 (Олена Теліга)
-- bio-110 (Мілена Рудницька)
-prerequisites:
-- 'bio-60 (Кирило Трильовський: Засновник Січі)'
-persona:
-  voice: Senior Biographer
-  role: Legionary Officer
-module_type: biography
-immersion: 100% Ukrainian
+Read the plan file (SOURCE OF TRUTH for structure):
 
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/bio/olena-stepaniv.yaml
 ```
 
 ---
 
-## PART 1: Deep Research
+## Your Task
 
-Research **Олена Степанів: Перша жінка-офіцер** for the **bio** track. Produce structured research notes that will drive content writing in Phase B.
+**Rebuild** the `content_outline` from scratch using:
+- The **plan's section structure** as the skeleton (match section names exactly)
+- The **research notes** to inform depth, word allocation, and specific bullet points
 
-### Your RAG Tools (USE THEM)
+The existing meta `content_outline` is likely outdated (wrong section sizes, stale points). Do NOT copy it. Start fresh from the plan + research.
 
-You have access to Ukrainian language tools via MCP. **Use them during research.**
+### Rules
 
-| Tool | When to use | Args |
-|------|-------------|------|
-| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode="extract"` |
-| `query_wikipedia` | See article structure before diving in | `query`, `mode="sections"` |
-| `query_wikipedia` | Read a specific section by index | `query`, `mode="section"`, `section=N` |
-| `query_wikipedia` | Find the right article title | `query`, `mode="search"` |
-| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |
-| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |
-| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode="frequency"` |
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
+- Allocations must sum to approximately **5000** words (±10% acceptable)
+- Minimum section allocation: 200 words (merge smaller sections)
+- For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
+- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
+- Each section must have `section`, `words`, and `points` fields
+- Section names must be in Ukrainian (these become H2 headings in the lesson)
+- **Section names must match plan exactly** — if the plan has a `content_outline` with section names,
+  use those EXACT names (or very close Ukrainian equivalents). When splitting a large plan section,
+  add a subtitle (e.g. "Читання: I — Походження").
+- Points reflect research findings — cite specific facts, dates, quotes where relevant
+- Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
 
-> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.
+### How to split a plan section (CRITICAL)
 
-**Workflow**: Search Wikipedia FIRST for factual foundation → search literary RAG for primary quotes → verify vocabulary with VESUM.
+**The plan's bullet points are section topics, not sub-bullets.** A plan section with 10 bullet points should become 3-5 meta sections, not one giant section.
 
-### Research Requirements
+**Process:**
+1. Count the bullet points in each plan section
+2. If a section has 5+ bullets: group them into thematic clusters of 2-4 bullets
+3. Each cluster becomes its own meta section with the parent name as prefix:
+   - `"Читання: I — Розселення та племінна мозаїка"` (bullets 1-4)
+   - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
+   - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
+   - etc.
+4. Allocate words based on research depth for each cluster
 
-1. **Sources**: Use `query_wikipedia` (mode=`extract`) for Ukrainian Wikipedia articles. Also consult history.org.ua, litopys.org.ua. Use `search_literary` for primary source excerpts. Russian-language sources are PROHIBITED.
-2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.
-3. **Primary Quotes**: Find 2+ quotable primary source excerpts (original Ukrainian text preferred).
-4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:
-   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths
-   - `[!history-bite]` — Surprising or lesser-known facts
-   - `[!context]` — Broader historical/cultural context
-   - `[!quote]` — Primary source citations
-   - `[!decolonization]` — Ukraine-centric reframing
-   - `[!culture]` — Cultural significance
-5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).
-6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.
-
-### Research Output Cap
-Keep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).
-Focus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.
-
-If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:
-
-```markdown
-## Contested Terms
-
-| Concept | Imperial framing | Ukrainian (decolonized) framing |
-|---------|-----------------|-------------------------------|
-| ...     | ...             | ...                           |
-```
-
----
-
-## Downstream Audit Gates (Phase B content will be checked for)
-
-Plan your research and outline knowing that Phase B content must pass these gates:
-- **Word count**: minimum **5000** words — allocate outline sections accordingly
-- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines
-- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
-- **Duplicate headers**: ensure outline section names don't share keywords
+**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
 
 ---
 
@@ -190,99 +66,59 @@ Plan your research and outline knowing that Phase B content must pass these gate
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
 
-### Output Block 1: Research Notes
+### Output Block: Meta Outline
 
-===RESEARCH_START===
-
-# Дослідження: Олена Степанів: Перша жінка-офіцер
-
-## Key Facts Ledger
-<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->
-```yaml
-subject: "Олена Степанів: Перша жінка-офіцер"
-type: "event" # "event", "biography", or "phenomenon"
-vital_status: "living" # ONLY for biography: "living" or "deceased" (omit for events)
-dates:
-  start: "YYYY-MM-DD" # Event start OR biography birth (approximate: "~YYYY")
-  end: "YYYY-MM-DD"   # Event end OR biography death (omit if living/ongoing)
-  key_events:
-    - year: YYYY
-      event: "Event description (Ukrainian)"
-    - year: YYYY
-      event: "Event description"
-primary_quotes:
-  - text: "Exact Ukrainian quote"
-    source: "Source name, year"
-    attribution: "Who said/wrote it"
-  - text: "..."
-    source: "..."
-    attribution: "..."
-forbidden_claims:
-  - "Common myth or Russian propaganda claim to avoid"
-  - "..."
+```
+===META_OUTLINE_START===
+content_outline:
+  - section: "{Section 1 name in Ukrainian}"
+    words: {allocation}
+    points:
+      - "{key point 1 — informed by research}"
+      - "{key point 2}"
+  - section: "{Section 2 name}"
+    words: {allocation}
+    points:
+      - "..."
+  # ... all sections
+  # Total: ~5000 words
+===META_OUTLINE_END===
 ```
 
-## Використані джерела
-1. [Source name](URL) — brief description
-2. ...
-3. ...
+### Validation checklist (complete before outputting):
 
-## Хронологія
-- {date}: {event}
-- ...
+- [ ] All section names are Ukrainian
+- [ ] Section names match plan structure
+- [ ] Each section has `words` and `points`
+- [ ] Sum of all `words` ≈ 5000
+- [ ] No section has fewer than 200 words
+- [ ] Points reflect research findings
+- [ ] 8-12 sections for ≥ 4000w targets
 
-## Ключові факти та цитати
-- ...
-
-## Engagement Hooks (mapped to sections)
-- Section "{section_name}": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}
-- ...
-
-## Деколонізаційний контекст
-- Imperial/Soviet myth: ...
-- Ukrainian reality: ...
-
-## Contested Terms (if applicable)
-| Concept | Imperial framing | Ukrainian framing |
-|---------|-----------------|-------------------|
-| ...     | ...             | ...               |
-
-## Відеоресурси
-(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)
-- {Канал — Назва — URL — Короткий опис релевантності}
-- (нічого не знайдено)
-
-## Section-Mapped Research Notes
-
-### {Section 1 from content_outline}
-Key facts, dates, sources for this section...
-
-### {Section 2 from content_outline}
-...
-
-===RESEARCH_END===
+---
 
 ## Friction Report (MANDATORY)
 
-After Output Block 1, include the Friction Report:
+After the meta outline output, include:
 
+```
 ===FRICTION_START===
-**Phase**: Phase A: Research + Meta (Seminar)
-**Step**: {what you were doing when friction occurred, or "Full Phase A"}
+**Phase**: Phase A: Meta Outline Only (research-exists mode)
+**Step**: {what you were doing when friction occurred, or "Full meta outline"}
 **Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...
 **Raw Error**: {actual error or "None"}
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
+```
 
 ---
 
 ## Boundaries
 
-- Do NOT write lesson content — only research notes
+- Do NOT re-research — use only the provided research file
+- Do NOT write lesson content — only the meta outline
 - Do NOT generate activities or vocabulary
 - Do NOT skip any section from the plan's content_outline
-- Do NOT use Russian-language sources
-- Do NOT fabricate quotes or dates — if unsure, mark as "[needs verification]"
-- Do NOT reference persona names or voice instructions — persona is assigned at content generation time
+- Do NOT reference persona names or voice instructions
 - Do NOT request skills, delegate to Claude, or skip this phase

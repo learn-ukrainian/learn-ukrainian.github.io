@@ -1,4 +1,4 @@
-FAIL: pipeline hist 125
+PASS: pipeline hist 125
 
   Module:   movna-polityka
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 125
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:58Z
+  Verdict:  PASS
+  Date:     2026-03-13T15:04:13Z

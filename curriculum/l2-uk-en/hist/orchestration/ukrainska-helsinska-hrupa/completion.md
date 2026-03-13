@@ -1,4 +1,4 @@
-FAIL: pipeline hist 115
+PASS: pipeline hist 115
 
   Module:   ukrainska-helsinska-hrupa
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 115
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:20:24Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:04:16Z

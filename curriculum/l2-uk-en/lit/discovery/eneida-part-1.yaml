@@ -1,0 +1,181 @@
+discovered_at: '2026-03-13T12:49:07.248549+00:00'
+query_keywords:
+- 'Енеїда: Сміх над Безоднею (Частина I)'
+- Еней
+- Олімп як петербурзька канцелярія
+- Синонімічні ряди та "макаронічна мова"
+- Структура першої частини
+- Analyze the structure of Eneida Part 1
+- Understand the transformation of Roman heroes into Cossacks
+- Identify satirical elements of the Olympian bureaucracy
+- Burlesque style markers
+- Macaronic language usage
+- Synonymic series construction
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0262
+  text: "Крім того, пароніми є засобом творення гумору, іронії, са ти-\n ри. НАПРИКЛАД:\
+    \ На які інстан¾іì він бігав до того\x0F як стати \nчем·іоном у стометрівці\"\
+    \ («інстанція» – «дистанція»). За·озичені \nñëîâà\nСлова іншоµовного ¸оходження\
+    \ часто виступають як терміни \nй мають відтінок книжності, оôіційності \v·роекція\x0F\
+    \ нітратна \n»орма\f. Водночас за допомогою запозичених слів можна творити ко-\n\
+    лорит оôіційності, досягати урочистості, паôосності мовлен-\nня чи, навпаки, гумористичного\
+    \ або сатиричного еôекту. НАПРИ"
+  section_title: Сторінка 174
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0049
+  text: "Ім енники-синонім и, ім енники-антонім и, \nбагатозначність ім енників\n\
+    101. Прочитайте іменники.\nДобро, війна, радість, мир, герой, бруд, шум, тиша,\
+    \ \nкрик, потворність, мовчання, чистота, купівля, продаж, \nкраса, боягуз, зло,\
+    \ сум.\n•  Доберіть із запропонованих слів антоніми до виділених імен­\nників.\
+    \ Запишіть парами. Назвіть іменники — назви конкрет­\nних предметів.\n102. Прочитайте\
+    \ іменники.\nБажання, базіка, квартира, колір, маля, мир.\n•  Доберіть до них\
+    \ синоніми з довідки.\nДовідка: пустомеля, хоті"
+  section_title: Сторінка 50
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0248
+  text: "«Коли оклики не втихали, –\nписав Іван Франко, – один з акторів виступив\
+    \ на сцену, щоб пояснити зібраним,\nщо автор якраз перед 10-ма літами вмер. Але\
+    \ розентузіазмовані русини прийняли\nйого за автора і заглушили його слова довгими\
+    \ бурхливими оплесками; бідоласі не\n лишалося ніщо, як тільки поклонитися і піти\
+    \ зі сцени. Отак постав анекдот про те,\nщо Котляревський 1848 року був у Коломиї».\
+    \ Як відомо, поема «Енеїда» славиться своїми синонімічними рядами. Проведіть\n\
+    легку літературну розминку – протяго"
+  section_title: Сторінка 146
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0052
+  text: "47\nЛексикологія.  Синоніми\nреготати\nсміятися\nхіхікати\nНадворі\nмряка.\n\
+    злива.\nдощ.\nСиноніми\nВправа 60\n1.\t  Розгляньте малюнки.  Які з наведених\
+    \ слів їм відповідають? \nСлова, різні за звучанням і написанням, але близькі\
+    \ або одна-\nкові за  значенням, називаємо синонімами.\nСиноніми утворюють синонімічний\
+    \ ряд.  В одному синоніміч-\nному ряді переважно слова однієї частини мови:\n\
+    хоробрий  — сміливий  — мужній  — безстрашний (усі \nприкметники).\nСиноніми допомагають\
+    \ точно та  яскраво висловити думку. \nПор"
+  section_title: Сторінка 47
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-golub-2022_s0017
+  text: "18\nСиноніми\nАнтоніми\nЛЕКСИЧНЕ ЗНАЧЕННЯ\nОмоніми  \nа) різне;\nб) подібне\
+    \ / однакове;\nв) протилежне\nШукаємо відповіді на запитання:\n1   Яку роль у\
+    \ нашому мовленні відіграють синоніми?\n2   У яких мовленнєвих ситуаціях потрібні\
+    \ антоніми?\n3   Як розрізнити омоніми й багатозначні слова?\nВідповідно до запитань\
+    \ сформулюйте особисті цілі.\n33\n  Запишіть пари слів. До якої групи вони належать?\
+    \ Відповідь \nобґрунтуйте. Яким словам ви віддаєте перевагу? Чому?\nГармонія —\
+    \ злагода, абсолютно — цілковито, генерація"
+  section_title: Сторінка 18
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5396150350570679
+  chunk_id: fbf8bdff_c0455
+  text: "6. До найсильніших сторін „Енеїди“ належить не лише\r\nмова, а й багатство\
+    \ тих побутових тем, про які ця мова оповідає. „Енеїда“ не\r\nлише перший широкий\
+    \ словник української народної мови, але й перша енциклопедія\r\nукраїнської етнографії.\
+    \ Народний побут матеріяльний, житло та вбрання, страви\r\nта напої, музика та\
+    \ танці, забавки та повсякденне життя, чари та церковний\r\nпобут — все — в світлі\
+    \ мовного багатства „Енеїди“ — проходить перед очима\r\nчитача.\n\nВарто глянути\
+    \ на якусь сторінку побуту. Ось,\r\nнап"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5386951565742493
+  chunk_id: 41d0facc_c0546
+  text: "10 Див. видання В.\r\nМ. Істріна. Книгы временьныя... Георгія Мниха. Петроград,\
+    \ 1920, де згадані\r\nімена легко знайти за індексом."
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm
+- score: 0.5344769358634949
+  chunk_id: cf05bddd_c0155
+  text: '15. Еней і сам со старшиною — як і в реальному тогочасному житті, в "Енеїді"
+    виразно розмежовані суспільні стани: народ, простолюд; над ним — старшина, дворяни;
+    над старшиною — вища знать, державці, Олімп. Одначе цікаво, що в першій частині
+    поеми розмежування далеко не таке виразне, як у наступних. У Дідони всі троянці
+    бенкетують за одним столом; Еней і поведінкою, і способом життя не вирізняється
+    з-поміж інших троянців, які при зустрічі з Дідоною лають його останніми словами.
+    А тут — Еней уже с'
+  work: Іван Котляревський. Енеїда
+  author: Котляревський І.
+  year: 1769
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=1052

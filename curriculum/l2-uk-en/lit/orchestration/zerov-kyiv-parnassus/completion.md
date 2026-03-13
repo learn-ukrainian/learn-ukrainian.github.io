@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 87 — E2E
+PASS: pipeline lit 88
 
   Module:   zerov-kyiv-parnassus
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T07:16:10Z
+  Date:     2026-03-13T18:34:50Z

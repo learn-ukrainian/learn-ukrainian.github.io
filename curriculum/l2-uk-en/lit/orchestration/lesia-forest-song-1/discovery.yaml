@@ -1,0 +1,204 @@
+discovered_at: '2026-03-13T16:47:09.005467+00:00'
+query_keywords:
+- '«Лісова пісня»: Світ природи та духу'
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- 'Проаналізувати твір «Лісова пісня»: Світ природи та духу у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+- literature
+- канон
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0327
+  text: "Леся Українка. Драма-феєрія «Лісова пісня»    177\nТема і проблеми,  \n\
+    художня організація\nНа думку М. Драй-Хмари, у  «Лісовій пісні» \nзмальовано «трагедію\
+    \ високої душі, що заблу-\nдилась серед болота буденного життя». Душев-\nна краса\
+    \ і  приземлений практицизм піднесені \nв  драмі до  рівня символічних узагальнень,\
+    \ що \nспонукають до  роздумів про справжнє покли-\nкання людини. Основні проблеми\
+    \ твору мають переважно \nфілософський характер. Вони стосуються сенсу \nжиття,\
+    \ духовної свободи, матеріального"
+  section_title: Сторінка 177
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0364
+  text: "Досліджуємо самостійно\t\n2. Звернувшись до  тексту, простежте, як образи\
+    \ природи допомагають уявити \nрозвиток почуттів Лукаша й Мавки. Підготуйте усне\
+    \ повідомлення. Готуємо проект\t\n3. Підготуйте мультимедійну презентацію за темою\
+    \ «Міфологічні образи в «Лі-\nсовій пісні». Ділимося думками і враженнями, виявляємо\
+    \ екологічну компетентність\n4. Як у творі представлена проблема взаємин людини\
+    \ і природи? Чи актуальне \nце питання в наш час? Виявляємо літературну, інформаційно-цифрову\
+    \ компетентності\t\n5. В "
+  section_title: Сторінка 197
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0421
+  text: "Най­ха­рак­тер­ні­шою ком­по­зи­цій­ною особ­ли­віс­тю «Лі­со­\nвої піс­ні»\
+    \ є ор­га­ніч­не пе­реп­ле­тен­ня сві­ту при­ро­ди та сві­ту лю­ди­ни. Дра­ма\
+    \ скла­\nда­єть­ся з про­ло­гу й трьох дій, кож­на з яких спів­від­но­сить­ся\
+    \ з різ­ни­ми по­ра­ми \n"
+  section_title: Сторінка 222
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5761991739273071
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5329370498657227
+  chunk_id: ce21b6f1_c0000
+  text: 'ЛІТЕРАТУРА, ЇЇ ЗАВДАННЯ І НАЙВАЖНІШІ ЦІХИ
+
+
+    ("Правда", часть літературно-наукова. Книжка друга. "Сьогочасне літературне прямування")'
+  work: Іван Франко. Літературно-критичні статті
+  author: Франко І.
+  year: 1856
+  genre: letters
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=648
+- score: 0.5290103554725647
+  chunk_id: e0892426_c0114
+  text: "«Слово» — твір особливого жанру, в якому злилися дві\r\nхудожні стихії —\
+    \ книжна, близька до ораторських творів, і фольклорна, в котрій\r\nпоєдналися\
+    \ елементи «плачів» і «слів». Композиційно воно складається з кількох\r\nвзаємозв'язаних\
+    \ частин. Починається твір вступом-заспівом риторичного\r\nхарактеру, в якому\
+    \ йдеться про вибір принципу викладу подій. Автор має намір\r\nвести мову не за\
+    \ «стародавніми словами ратних повістей», «не за вимислом»\r\nвіщого Бояна, а\
+    \ за «подіями цього часу». Далі йде розповідь пр"
+  work: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/dzuba/dzubapered.htm

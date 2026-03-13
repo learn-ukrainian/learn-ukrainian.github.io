@@ -1,4 +1,4 @@
-FAIL: pipeline hist 101
+PASS: pipeline hist 101
 
   Module:   holodomor-mekhanizm
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 101
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:18:16Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:47:29Z

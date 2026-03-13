@@ -1,0 +1,178 @@
+discovered_at: '2026-03-13T14:30:58.489872+00:00'
+query_keywords:
+- Щоденник ("Журнал") Шевченка
+- Контекст написання
+- 1857-1858
+- Внутрішній світ поета
+- Мовний аналіз
+- Психологічний портрет
+- Understand the psychological shift in Shevchenko's diary from exile to freedom.
+- Analyze the contrast between his public image ("prophet") and private self ("human").
+- Examine his intellectual breadth (arts, technology, literature) and emotional depth.
+- Introspective language
+- Conversational Russian of 19th c.
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0173
+  text: "За додатковими джерелами підготуйте повідомлення або презентацію про вне-\n\
+    сок Т. Шевченка в  розвиток образотворчого мистецтва. Практичне заняття. Повсякденне\
+    \ життя\n\e\n\e\n1. Що таке повсякденне життя? 2. Які характеристики життєдіяльності\
+    \ людей охоп­\nлює повсякденне життя? 3. Які риси характеру та особливості світосприйняття\
+    \ \nбули притаманні козакам і  селянам у  XVI—XVIII  ст.? 4. Як господарювали\
+    \ селяни \nв  попередні століття? 5. Яким було повсякденне життя українців у \
+    \ XVI—XVIII  ст.?"
+  section_title: Сторінка 96
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0372
+  text: "– \nК., 1990. 7. Шевченківський словник: У 2 т. – К., 1976–1977. 8. Світова\
+    \ велич Шевченка: У 3 т. – К., 1964."
+  section_title: Сторінка 217
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0419
+  text: 'А ще він писав казки, п’єси та веселі повісті й анекдоти. Перші
+
+    поетичні твори митця — це ліричні вірші з жовнірського життя. Основні мотиви —
+    туга за рідною домівкою, біль серця, роз-
+
+    лученого з коханою, жаль за марно втраченими роками. Поезія
+
+    Українська поезія другої половини ХІХ ст. 317'
+  section_title: Сторінка 317
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0257
+  text: "Для характеристики персонажа автор ви-\nкористав психологічний портрет, тобто\
+    \ такий, \nщо допомагає розкрити душевні стани. У першу \nчергу він виділив ті\
+    \ риси зовнішності, що несуть \nінформацію про думки, почуття й переживання. А\
+    \ герой О. Довженка якраз і зображений у ди-\nнаміці душевних станів — від страху\
+    \ і зневіри \nдо внутрішньої боротьби й вольового подолан-\nня смерті. Виявляємо\
+    \ літературну компетентність\n1. яке враження справило на вас оповідання? які\
+    \ почуття викликало? який епі-\nзод вразив, "
+  section_title: Сторінка 134
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0182
+  text: "Обкладинка \nдо поеми \nІ. Котляревського \n«Енеїда»\nВидання збірки «Кобзар»\
+    \  \nТ. Шевченка. 1840 р. РОМАНТИЗМ І РЕАЛІЗМ ЯК ОСНОВНІ \nМИСТЕЦЬКІ НАПРЯМИ ХІХ\
+    \ ст. § 24–25. З ПОЕЗІЇ ХІХ століття"
+  section_title: Сторінка 106
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6697124242782593
+  chunk_id: d77902e2_c0692
+  text: "Засилаючи Шевченка, царський уряд намагався духовно\r\nзламати поета, але\
+    \ «горький опыт, — писав він у „Щоденнику“ 20.VI 1857, —\r\nпрошел мимо меня невидимкою.\
+    \ Мне кажется, что я точно тот же, что был и десять\r\nлет тому назад. Ни одна\
+    \ черта в моем внутреннем образе не изменилась».\r\nДовідавшись про близьке звільнення,\
+    \ Шевченко почав вести «Щоденник» («Журнал»).\r\nЦе надзвичайно важливий документ,\
+    \ з якого постає образ великого\r\nмислителя-революціонера.\n\nЛіт.: Тарас Шевченко.\r\
+    \nДокументи і матеріали. 18"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.661022424697876
+  chunk_id: d77902e2_c1654
+  text: "Шевченкові повісті не тільки пов’язані з традиціями\r\nгоголівської викривальної\
+    \ прози, а водночас є свідченням розвитку, поступу до\r\nтієї нової стадії в становленні\
+    \ критичного реалізму, яка в рос. л-рі\r\nвизначилася творами О. Герцена, М. Чернишевського,\
+    \ І. Тургенєва,\r\nМ. Некрасова, М. Салтыкова-Щедріна. Прозу Шевченка слід\r\n\
+    розглядати від перших спроб у повістевому жанрі («Наймичка», «Варнак»,\r\n«Княгиня»)\
+    \ до творів, у яких розв’язуються складні моральні й естетичні\r\nпроблеми («Художник»),\
+    \ і, наре"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm
+- score: 0.6516873836517334
+  chunk_id: d77902e2_c2379
+  text: "Літ.: Резник О. Шевченко и его «Дневник». «Знамя». 1939, № 3; Білецький О.\r\
+    \nІ. «Щоденник» поета-борця. «Літературна газета», 1949, 10 березня; Айзеншток\r\
+    \nИ. Дневник Т. Г. Шевченко. В кн.: Шевченко Т. Г. Собрание сочинений, т.\r\n\
+    5. М., 1949; Нємченко В. М. «Журнал» («Щоденник» Т. Шевченка як\r\nісторичне джерело.\
+    \ «Праці Одеського університету», 1962, т. 152. Серія\r\nфілологічних наук. в.\
+    \ 14; Кирилюк Є. П. Тарас Шевченко. Життя і\r\nтворчість. К., 1964; Шаблиовский\
+    \ Е. Реликвия украинского народа. В кн.:"
+  work: Шевченківський словник
+  author: Колектив
+  year: 1977
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/slovn.htm

@@ -1,0 +1,199 @@
+discovered_at: '2026-03-13T13:34:42.589041+00:00'
+query_keywords:
+- '2004: Кримська криза під час Помаранчевої'
+- Помаранчева революція
+- Сєвєродонецький з'їзд
+- Чому провалилось
+- Уроки для 2014
+- 'Analyze the causes and consequences of 2004: кримська криза під час помаранчевої'
+- Evaluate the historical significance of забута загроза
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0324
+  text: "Співачка Руслана під час «помаранчевої \nреволюції». Листопад 2004  р. ©\
+    \ ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 180
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0419
+  text: "228 \nПомаранчева революція. Київ, майдан Незалежності,  \n22 листопада 2004\
+    \ року. Світлина \n \n1. Висловте припущення, чому події \n2004 року на майдані\
+    \ Незалежності в \nКиєві назвали Помаранчевою рево-\nлюцією. СУСПІЛЬНО-ПОЛІТИЧНЕ\
+    \ ЖИТТЯ  \nВ 2004–2013 РОКАХ \n Коли в Україні вперше почали досліджувати «білі\
+    \ плями» в історії?  Коли відбулася Революція на граніті? Які її результати?\
+    \  Що означають поняття «зросійщення», «партія влади»? 1. Помаранчева революція\
+    \  \nЧергове загострення внутрішньополітично"
+  section_title: Сторінка 229
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0280
+  text: "Рівноправне \nпартнерство» (оприлюднені точки зору \nюристів та економістів).\
+    \ Вересень 1990  р. \e\n\e Чому «Новоогарьовський процес» \nзавершився провалом\
+    \ попри зусилля \nвлади? НАВЧАЛЬНА МЕТА: визначити причини \nрозпаду СРСР; пояснити,\
+    \ із якою метою \nКрим здобув статус автономії; розпо­\nвісти про події, що сприяли\
+    \ проголо-\nшенню незалежності України. ПРИГАДАЙТЕ: \n1. Яких успіхів досяг \n\
+    український національний рух на по-\nчаток 1991  р.? 2. Чим уславився \nМ. Джемілєв?\
+    \ Додаткові матеріали\nrnk.com.ua/10"
+  section_title: Сторінка 155
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0408
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 226
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0446
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 255
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5004979372024536
+  chunk_id: 5794da94_c2150
+  text: "26) З сим мотивованнєм \r\nмобілїзації порівняти донську реляцію, що против\
+    \ сподїваного нападу Кримцїв і \r\nЗапорозцїв донське військо звернулось за помічю\
+    \ до Калмиків: походом на Калмиків \r\nнїби покриваєть ся дїйсний плян походу\
+    \ на Донцїв.\n\n27) Донскія ДЂла IV с. \r\n363-364.\n\nТОМ VIII     \r\nРозділ\
+    \ XIV\n\n[М. Грушевський. Історія України-Руси. Том VIII. Розділ XIV. Стор. 7.]\n\
+    \n[М. Грушевський. Історія України-Руси. Том VIII. Розділ XIV. Стор. 8.]\n\nТОМ\
+    \ VIII     \r\nРозділ XIV\n\nПотвердженнє зборівського ак"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.4983903765678406
+  chunk_id: 68ba0555_c0004
+  text: "§2. Росія на шляху реформ. Еволюція правової та політичної природи самодержавства\
+    \ . . . . . . 400\n\nРеформи Олександра II . . . . . . . . . . . . . . .\r\n400\n\
+    \nКонтрреформи і криза імперії . . . . . . . . . . . .\r\n. . . 407\n\nАнтисемітизм\
+    \ . . . . . . . . . . . . . . . 413\n\n§3. Україна пореформна та передреволюційна\
+    \ . . . . . . . . . . . . . . . 417\n\nСело . . . . . . . . . . . . . . . 417\n\
+    \nУрбанізація краю . . . . . . . . . . . . . . . 423\n\nЗахідна Україна . . .\
+    \ . . . . . . . . . . . . 427\n\n§4. Грома"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.4950107932090759
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

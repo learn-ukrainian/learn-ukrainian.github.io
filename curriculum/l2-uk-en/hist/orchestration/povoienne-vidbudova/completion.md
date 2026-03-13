@@ -1,4 +1,4 @@
-FAIL: pipeline hist 109
+PASS: pipeline hist 109
 
   Module:   povoienne-vidbudova
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 109
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:19:31Z
+  Verdict:  PASS
+  Date:     2026-03-13T13:22:30Z

@@ -1,0 +1,191 @@
+discovered_at: '2026-03-13T12:56:05.990432+00:00'
+query_keywords:
+- 'Наталка Полтавка: Анатомія Почуттів'
+- Сентименталізм як літературний напрям
+- Наталка
+- Музика важливіша за слово
+- Другорядні персонажі
+- Analyze the transition from burlesque to sentimentalism
+- Characterize Natalka as a moral ideal
+- Interpret social conflict in the play
+- Sentimentalism markers
+- Dramatic dialogue structure
+- Folk song integration
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0033
+  text: "Золя. Окремі риси натуралізму \nнаявні у творах українських авторів Панаса\
+    \ Мирного та І. Франка. Натуралізм  — літературна течія \nреалізму, для якої характерна\
+    \ \nнастанова на фотографічно точне \nзображення дійсності. Реалізм  — це літературний\
+    \ і  мис-\nтецький напрям другої половини \nХІХ  століття з  яскраво вираженою\
+    \ \nнастановою на  правдиве й  точне \nвідображення дійсності у  її типо-\nвих\
+    \ проявах."
+  section_title: Сторінка 18
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0135
+  text: 'Сюжет п’єси. В основі сюжету — типовий для європейського
+
+    сентименталізму конфлікт: нерівне кохання й намір нелюба одружи-
+
+    тися з дівчиною. Заможний Терпило не хоче віддати свою дочку На-
+
+    талку за названого сина Петра, хоча молоді й закохані, і виганяє його. Батько
+    спивається, розорюється й помирає, а родина вимушена пе-
+
+    реїхати з Полтави до села (про цю історію читач-глядач дізнається з
+
+    розповіді виборного). Аби зарадити скруті, Горпина Терпилиха хоче
+
+    віддати Наталку за старого, проте заможного '
+  section_title: Сторінка 114
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0382
+  text: "236\nТеорія літератури\nСТОЇЧНА УКРАЇНСЬКА ПОЕЗІЯ\nУ поетиці В. Стуса переважають\
+    \ елементи неокласицизму, неоромантизму \nй сюрреалізму. Йому близьке екзистенційне\
+    \ світобачення. Екзистенційні ідеї в художньому творі\nЕкзистенціалізм (фр. existentialisme\
+    \ — існування) — напрям у філософії та літера-\nтурі, що позиціонує й досліджує\
+    \ людину як унікальну духовну істоту, здатну до ви-\nбору власної долі. Основним\
+    \ проявом екзистенціалізму є свобода. Екзистенціалісти досліджують проблему буття\
+    \ (існування) люди"
+  section_title: Сторінка 236
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0184
+  text: "Гюго (французька) та ін. На  ранньому  етапі  в українській \nлітературі\
+    \ утвердився  фольклорний (або народний) романтизм із такими ознаками:\n•\t незадоволення\
+    \ реальним життям, зосередження уваги на розкритті внутрішнього \nсвіту людини;\n\
+    •\t ідеалізація людських почуттів;\nКиївський національний університет ім. Тараса\
+    \ Шевченка. Сучасне фото\nМикола Лисенко\n2. Романтизм і реалізм як основні \n\
+    мистецькі напрями ХІХ ст."
+  section_title: Сторінка 107
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0121
+  text: "Українська орфоепія\n68\n§ 23\n \n ІНТОНАЦІЙНІ ОСОБЛИВОСТІ УКРАЇНСЬКОГО МОВЛЕННЯ.\
+    \ НАГОЛОС В  УКРАЇНСЬКІЙ МОВІ\nПравильність наголошування є од-\nнією з ознак\
+    \ культури мовлення. О. Пономарів\nБуду я  навчатись мови золотої\nІнтонація \
+    \ — специфічна категорія в  системі мовлення, яка \nнадбудовується над лексичними\
+    \ та  граматичними засобами і  не \nдорівнює їм. Основне її завдання — підсилити\
+    \ й зміцнити стиліс-\nтичні якості мовлення. Логічна інтонація передає особливості\
+    \ оформлення типу ре-\nчення — розповідн"
+  section_title: Сторінка 68
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.584511399269104
+  chunk_id: fbf8bdff_c0495
+  text: "Оповідання Квітки тече плинно, образи заокруглені,\r\nвираз точний, хоч і\
+    \ трохи примітивний. Це все ще цілком у традиції клясичної\r\nпрози. Самостійне\
+    \ відкриття Квіткою селянської тематики зовсім не наближує його\r\nдо російського\
+    \ сентименталізму, де нічого подібного не було. Чутливість Квітки\r\nнайскоріше\
+    \ випливає з української народної вдачі та пісенної традиції. Ще\r\nближче зв’язані\
+    \ „сентиментальні“ елементи у Котляревського з цією традицією,\r\nхоч не треба\
+    \ цілком відкидати можливих впливів російсько"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5714836716651917
+  chunk_id: feaa5fa7_c1955
+  text: "[Енциклопедія українознавства. Загальна частина (ЕУ-I). — Мюнхен, Нью-Йорк,\
+    \ 1949. — Т. 2. — С. 753-761.]\n\n5. Романтика\n\nВступні завваги. Впливи\r\n\
+    романтики (романтизму), що наприкінці XVIII ст. постали в Англії та Німеччині,\r\
+    \nа на початку XIX ст. захопили всю Европу, були в укр. літературі, як і в усіх\r\
+    \nслов’янських, вирішальні. В опозиції до клясицизму та просвічености романтика\r\
+    \nвисунула на перше місце в людському житті та творчості, зокрема мистецькій,\r\
+    \nзначення іраціональних елементів, що, на"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5668784379959106
+  chunk_id: fc2291b5_c4449
+  text: "Мистецтво слова демонструє розмаїття не тільки форм і\r\nстилів, а й худож.\
+    \ методів, які характеризують той чи той літ. напрям і всі\r\nіснуючі в його межах\
+    \ течії (див. Стиль художній, Метод художній, Напрям і\r\nтечія літературні).\
+    \ Творчість кожного видатного письменника\r\nпозначена, поряд з неповторними рисами\
+    \ притаманної йому стильової манери, й\r\nособливостями його худож. мислення,\
+    \ тобто саме методу. Але індивідуальний метод\r\nтакого письменника не протистоїть\
+    \ загальним ідейно-естет. принципам,\r\nхара"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

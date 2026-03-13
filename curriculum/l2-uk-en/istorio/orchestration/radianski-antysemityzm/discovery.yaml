@@ -1,0 +1,210 @@
+discovered_at: '2026-03-13T12:51:21.609966+00:00'
+query_keywords:
+- Радянський антисемітизм
+- Бабин Яр без пам'яті
+- «Безрідні космополіти»
+- Пізній СРСР
+- Спадок
+- Analyze the causes and consequences of радянський антисемітизм
+- Evaluate the historical significance of антисемітизм «без антисемітів»
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=cuf0Xa3axiM
+  channel: Harvard Ukrainian Research Institute
+  title: 'A Paradigm-Changing Day: Jews, Ukrainians, and the 25th Anniversary of the
+    Babyn Yar'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0433
+  text: "2015  р. ДЕКОМУНІЗАЦІЯ\nЗаходи\nУвічнення перемоги над нацизмом \nу  Другій\
+    \ світовій війні (1939—\n1945  рр.)\nДоступ до архівів спецслужб\nПравовий статус\
+    \ учасників \nборотьби за незалежність України\nЗасудження комуністичного \nта \
+    \ нацистського режимів\nЗміна назв населених пунктів, \nвулиць, об’єктів топоніміки,\
+    \ що \nмають імена компартійних діячів; \nзнесення пам’ятників на честь \nкомуністичних\
+    \ лідерів і  подій\n© ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 239
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0264
+  text: "144\nРозділ IV. Відновлення державної незалежності України, її роль у розпаді\
+    \ СРСР\nС\nЛ\nО\nВ\nА\nЧ\nЧ\nИ\nН\nА\nЧ\nЕ\nХ\nО\n-\nУ\nГ\nО\nР\nЩ\nИ\nН\nА\n\
+    П О Л Ь Щ А\nБ і л о р у с ь к а  Р С Р\nМ\nо\nл\nд а\nв с\nь к\nа  \nР\nС\nР\n\
+    Закарпатська\nобл. Кримська\nАРСР\nВолинська\nобл. Р\nо\nс\nі\nй\nс\nь\nк\nа\n\
+    Р\nФ\nС\nР\nР\nУ\nМ\nУ\nН\nІ\nЯ\nВ\nі\nс\nла\nСя\nн\nЗ\nа\nх\n. Буг\nПрип\n’\n\
+    я\nть\nГо\nри\nнь\nД\nн\nіпр\nо\nД\nес\nна\nД\nо\nн\nД\nо\nн\nС\nл\nу\nч\nС\n\
+    ей\nм\nД\nністер\nТиса\nД\nон\nець\nСі\nв\nер\n. Р\nо\nс\nь\n \nВ\nорс\nк\nл\n\
+    а\nПрут\nП\nівд. Б\nу\nг\nДніпро\nК\nу\nбань\nА З О В С Ь К Е\nМ О Р Е\nЧ О Р\
+    \ Н Е    "
+  section_title: Сторінка 146
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0251
+  text: "139 \nЩе до виникнення організованого єврейського руху в містах, де \nпід\
+    \ час війни були здійснені масові розстріли євреїв, склалася традиція \nвшанування\
+    \ загиблих заупокійною молитвою та покладанням вінків у \nрічницю \nїхньої \n\
+    загибелі. Най-\nвідомішим з таких місць став \nБабин Яр у Києві. 29 вересня там\
+    \ \nбагато років поспіль збиралися \nродичі й близькі розстріляних. З \nпочатком\
+    \ \nєврейського \nруху \nза \nвиїзд до Ізраїлю в цей день туди \nстали приходити\
+    \ київські «від-\nмовники» й активісти з інших \nміс"
+  section_title: Сторінка 140
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0553
+  text: "Зайдіть за покликанням https://cutt.ly/TwJ86zPg або за QR-кодом. Ознайомтеся\
+    \ зі змістом Заяви Верховної Ради України «Про вчинення \nРосійською Федерацією\
+    \ геноциду в Україні» та дайте обґрунтовані \nвідповіді на запитання:  \n1) які\
+    \ дії Російської Федерації слід розглядати як акт геноциду? 2) до кого звернулася\
+    \ ВРУ із цією Заявою? 3) чи визнала світова громадськість дії РФ в Україні актом\
+    \ геноциду? 4. Об’єднайтеся в групи і проведіть дослідження за одним із запропонованих\
+    \ напрямків (на\nвибір): «Зда"
+  section_title: Сторінка 303
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0243
+  text: "УКРАЇНА в  1985—1991  рр. БОРОТЬБА ЗА НЕЗАЛЕЖНІСТЬ\nС\nЛ\nО\nВ\nА\nЧ\nЧ\n\
+    И\nН\nА\nЧ\nЕ\nХ\nО\n-\nУ\nГ\nО\nР\nЩ\nИ\nН\nА\nП О Л Ь Щ А\nБ і л о р у с ь к\
+    \ а  Р С Р\nМ\nо\nл\nд а\nв с\nь к\nа  \nР\nС\nР\nЗакарпатська\nобл. Кримська\n\
+    АРСР\nВолинська\nобл. Р\nо\nс\nі\nй\nс\nь\nк\nа\nР\nФ\nС\nР\nР\nУ\nМ\nУ\nН\nІ\n\
+    Я\nВ\nі\nс\nла\nСя\nн\nЗ\nа\nх\n. Буг\nПрип\n’\nя\nть\nГо\nри\nнь\nД\nн\nіпр\n\
+    о\nД\nес\nна\nД\nо\nн\nД\nо\nн\nС\nл\nу\nч\nС\nей\nм\nД\nністер\nТиса\nД\nон\n\
+    ець\nСі\nв\nер\n. Р\nо\nс\nь\n \nВ\nорс\nк\nл\nа\nПрут\nП\nівд. Б\nу\nг\nДніпро\n\
+    К\nу\nбань\nА З О В С Ь К Е\nМ О Р Е\nЧ О Р Н Е        М О Р Е\nД\nун\nа\nй\n\
+    о.Зміїний\n"
+  section_title: Сторінка 135
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5069126486778259
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.4952213168144226
+  chunk_id: 53691244_c0222
+  text: "5 Masaryk T. Novб Evropa (Stanovisko\r\nslovanskй).—Praha, 1920.—S.219-220.\n\
+    \n6 Sladek Zdenek, Jaroslav Valenta. Sprawy\r\nukrainskie w czechoslowackiej polityce\
+    \ wschodniej w latach 1918-1912// Z\r\ndziejуw stosunkуw polsko-radzieckich. Stud.\
+    \ i mater.—1968.—№3.—S.147-148.\n\n7 Бенеш Эдвард. Речь о Подкарпаторусской\r\n\
+    проблеме.—Ужгород, 1934.—С.23.\n\n8 ЦДАВОВ України.—Ф.3696.—оп. 2.—спр.—576.—Арк.6.\n\
+    \n9 «Нова Україна».—1922.—Ч.13-15.—С.6.\n\n10 Necas J.\r\nUprimnй slovo o stycich\
+    \ cesko- ukrajinskэch.—Kyjiv—Praha"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.4914828836917877
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm

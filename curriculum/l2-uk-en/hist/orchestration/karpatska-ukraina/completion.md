@@ -1,4 +1,4 @@
-FAIL: pipeline hist 104
+PASS: pipeline hist 104
 
   Module:   karpatska-ukraina
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 104
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:18:44Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:55:40Z

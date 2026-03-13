@@ -2,9 +2,9 @@ PASS: pipeline lit 59
 
   Module:   kobylianska-tsarivna
   Track:    lit
-  Mode:     v3
-  Words:    0 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T01:09:41Z
+  Date:     2026-03-13T17:14:57Z

@@ -1,0 +1,199 @@
+discovered_at: '2026-03-13T12:49:41.401142+00:00'
+query_keywords:
+- 'Голокост в Україні: Співучасть і рятування'
+- «Голокост від куль»
+- Українська поліція
+- ОУН і євреї
+- Праведники
+- 'Analyze the causes and consequences of голокост в україні: співучасть і рятування'
+- Evaluate the historical significance of найтемніша сторінка
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0405
+  text: "Скільки українців опинилося в  евакуації? і\nГолокост  — планомірне й  організоване\
+    \ зни-\nщення єврейського населення в  роки Другої \nсвітової війни. Жертвами\
+    \ Голокосту стали \n6  млн осіб єврейського походження (в Укра-\nїні  — 1,4  млн),\
+    \ що становило близько 63  % \nєвропейського і  36  % світового єврейства. Олена\
+    \ Вітер"
+  section_title: Сторінка 211
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0307
+  text: "Голодомор мовою документів, свідчень, чисел\n2. Пропагандистський ідеал радянської\
+    \ людини та її повсяк-\nденне життя\nЗавдання для узагальнення знань і підготовки\
+    \  \nдо тематичного оцінювання за розділом IV \n«Встановлення й  утвердження комуністичного\
+    \  \nтоталітарного режиму в  Україні»"
+  section_title: Сторінка 160
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0001
+  text: "rnk.com.ua/109544\n«Українці у Другій світовій війні»\nrnk.com.ua/109543\n\
+    «Причини ядерної кризи. \nКарибський конфлікт»\nrnk.com.ua/109551\n«Секретна операція\
+    \ \nКремля проти українців»\nrnk.com.ua/109553\n«Як нищили С. Параджанова за \n\
+    “Тіні забутих предків”»\nrnk.com.ua/109546\n«Що зробили з родичами УПА»\nrnk.com.ua/109552\n\
+    «Чому В. Путін боїться \nВ. Чорновола і М. Плахотнюка»\nrnk.com.ua/109554\n«Каральна\
+    \ психіатрія»\nrnk.com.ua/109555\n«Реальна історія депортації \nкримських татар»\n\
+    rnk.com.ua/109545\n«Чому у Л"
+  section_title: Сторінка 2
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0559
+  text: "Розділ V.\t Розвиток  України як незалежної держави\nРозділ VI.\t Європейський\
+    \ вибір України. Російсько-українська війна\nРозділ IV.\t Відновлення державної\
+    \  \nнезалежності України,  \nїї роль у розпаді СРСР\nrnk.com.ua/109561\n«Хто\
+    \ віддав нашу ядерну зброю»\nrnk.com.ua/109901\n«З чого почалася російсько-\n\
+    українська війна»\nrnk.com.ua/109556\n«Війна за незалежність України. \nРеальна\
+    \ історія УНР»\nrnk.com.ua/109563\n«Реальна історія \nукраїнського прапора»\n\
+    rnk.com.ua/109903\n«Ось чому історію в Росії пишуть \nспец"
+  section_title: Сторінка 323
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0463
+  text: "Голодомор мовою документів, свідчень, чисел \n2. Пропагандистський ідеал\
+    \ радянської людини та її повсякденне життя  . . . . . . . . . 160\n\t\nЗавдання\
+    \ для узагальнення знань і підготовки до тематичного оцінювання \nза  розділом\
+    \ IV «Встановлення й  утвердження комуністичного тоталітарного \nрежиму в  Україні»\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 160\nРозділ V.\
+    \ Західноукраїнські землі в  міжвоєнний періо"
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.551691472530365
+  chunk_id: f4f6fb3d_c0142
+  text: "Наулко В. І. Український\r\nетнос в часі і просторі // Берегиня. 1992. №\
+    \ 1.\n\nНаулко В. И. Украинцы.\r\nК., 1980.\n\nПівторак Г. Українці:\r\nзвідки\
+    \ ми і наша мова. К., 1993.\n\nПолесье: Материальная культура. К., 1988.\n\nТокарев\
+    \ С. А. Религиозные\r\nверования восточнославянских народов XIX — XX вв. М.; Л.,\
+    \ 1957.\n\nУкраїнська минувшина: ілюстр. етногр. довідник. К.,\r\n1993.\n\nУкраїнці:\
+    \ Іст.-етногр. дослідження. К., 1959.\n\nУкраїнці: Народні вірування, повір’я,\
+    \ демонологія.\r\nК., 1991.\n\nШухевич В. Гуцульщина.\r\nЛьві"
+  work: Антонович — Вибрані праці
+  author: Антонович В.
+  year: 1900
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/anton/ant.htm
+- score: 0.546544075012207
+  chunk_id: feaa5fa7_c1703
+  text: "Доба Гетьманщини: Слабченко М. Судівництво\r\nна Україні XVII — XVIII ст.\
+    \ Х. 1919; Мірза-Авак’янц Н. Нариси з історії\r\nсуду на Лівобережжі до пол. XVII\
+    \ ст. Записки Харківської Дослідчої Катедри, II\r\n— III, VI; Падох Я. Ґрунтовий\
+    \ процес Гетьманщини. Л. 1938.\n\nДо звичаєвого процесу: Черкаський І.\r\nПоволання\
+    \ над трупом забитого. Праці Комісії історії укр. права УАН, І. К.\r\n1925; Лащенко\
+    \ Р. Копні суди на Україні. Збірник Правничої Комісії НТШ, I\r\n— II. Л. 1926\
+    \ — 27; Черкаський І. Громадський (копний) "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5410526990890503
+  chunk_id: ffcfbeb9_c0042
+  text: "21 Залізняк Л. Від\r\nсклавинів до української нації. — С. 101.\n\n22 Там\
+    \ же. — С. 66."
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm

@@ -1,0 +1,203 @@
+discovered_at: '2026-03-13T12:53:37.621320+00:00'
+query_keywords:
+- 'Синтез: Зеленський і нова сторінка'
+- Зеленський як символ
+- Меморіал Бабин Яр
+- «Денацифікація»
+- Єврейська громада сьогодні
+- 'Analyze the causes and consequences of синтез: зеленський і нова сторінка'
+- Evaluate the historical significance of символічний момент
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0433
+  text: "2015  р. ДЕКОМУНІЗАЦІЯ\nЗаходи\nУвічнення перемоги над нацизмом \nу  Другій\
+    \ світовій війні (1939—\n1945  рр.)\nДоступ до архівів спецслужб\nПравовий статус\
+    \ учасників \nборотьби за незалежність України\nЗасудження комуністичного \nта \
+    \ нацистського режимів\nЗміна назв населених пунктів, \nвулиць, об’єктів топоніміки,\
+    \ що \nмають імена компартійних діячів; \nзнесення пам’ятників на честь \nкомуністичних\
+    \ лідерів і  подій\n© ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 239
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0252
+  text: "Мовою джерела. Зі спогадів Євгена Сверстюка: \n«…Перед нашими друзями-євреями\
+    \ була ясна перспектива: вихід на волю і \nповернення на свою історичну батьківщину,\
+    \ де на них чекають з розкритими обіймами. Вони розуміли, що перед українцями\
+    \ немає іншої перспективи, крім виходу в \nсибірське заслання або повернення додому,\
+    \ в зону особливого тиску і нагляду. Вони \nпрагнули нам допомогти, як тільки\
+    \ могли. Вони апелювали до вільного світу. Багато з них \nнаписали спогади про\
+    \ спільне життя в зоні. Йосеф Менд"
+  section_title: Сторінка 140
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0146
+  text: "3. Озеленення території. 4. Тиждень \nматематики. 5. День української писемності\
+    \ та мови. 6. Екологічна толока. 7. Благодій-\nний ярмарок. Опорні слова\nіменники\n\
+    прикметники\nдієприкметники\nдієслова\nкошти\nмоніторинг\nекскурсовод\nініціативний\
+    \ \nрегулярний\nзмістовний\nорганізований\nприбраний\nкуплений\nдопомагати\nзалучати\n\
+    замовляти"
+  section_title: Сторінка 112
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0184
+  text: "Хроніка містить відомості про те, як на \nпочатку Хмельниччини єврейське\
+    \ населення на \nтеренах України зазнавало численних погромів, \nвиселень або\
+    \ примусового навернення у право­\nслав’я. Загалом за період Козацької революції\
+    \ \nблизько 300  єврейських громад припинили \n­існування, а кожного другого їхнього\
+    \ представ-\nника було вбито. Загальна кількість жертв серед \nєврейського населення,\
+    \ за різними оцінками, \nстановить від декількох десятків тисяч до \n100  тис.\
+    \ осіб або більше. Словник\nМикитинська С"
+  section_title: Сторінка 113
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5005522966384888
+  chunk_id: c44f1207_c2686
+  text: "МІЩАНСТВО І ЙОГО ВІДОКРЕМЛЕННІСТЬ. РЕЦЕПЦІЯ \r\nНЇМЕЦЬКОГО МІСЬКОГО ПРАВА,\
+    \ ЙОГО ПОЧАТКИ ЗА РУСЬКОЇ ДИНАСТІЇ, СЛЇДИ В ВОЛОДИМИРІ \r\nЙ ЛЬВОВІ, ПРИВИЛЕЙ\
+    \ М. СЯНОКА; ПОЛЇТИЧНА РОЛЯ НЇМЕЦЬКИХ ГРОМАХ І ЇХ ПРОТЕҐОВАННЄ \r\nВ ГАЛИЧИНЇ.\
+    \ РОЗПОВСЮДНЕННЄ НЇМЕЦЬКОГО ПРАВА: ЙОГО ПОЧАТКИ НА ПОДІЛЮ, ПОБУЖУ І \r\nВОЛИНИ,\
+    \ РОЗПОВСЮДНЕННЄ В XVI В. ВЗІРЦЇ МІСЬКОЇ ОРҐАНЇЗАЦІЇ. МІСЬКИЙ ІМУНЇТЕТ, \r\nНАСЛЇДКИ\
+    \ ВИКЛЮЧЕННЯ З ЗАГАЛЬНОЇ ОРҐАНЇЗАЦІЇ, СУПЕРНИЦТВО ШЛЯХТИ, ОБМЕЖЕННЄ МІЩАН \r\n\
+    В ПРАВАХ, ШЛЯХОТСЬКА КОНКУРЕНЦІЯ. УПАДОК МІЩАНС"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.48271888494491577
+  chunk_id: 5794da94_c1579
+  text: "[М. Грушевський. Історія України-Руси. Том VIII. Розділ VIII. Стор. 4.]\n\
+    \n[М. Грушевський. Історія України-Руси. Том VIII. Розділ VIII. Стор. 5.]\n\n\
+    ТОМ VIII     \r\nРозділ VIII\n\nСОЦІЯЛЬНІ МОТИВИ ПОВСТАННЯ: ЙОГО ДЇЙСНИЙ ХАРАКТЕР\
+    \ \r\nІ МАСКОВАННЄ БІЛЬШ КРИКЛИВИМИ ГАСЛАМИ. ВОРОЖНЕЧА ДО МАҐНАЦТВА І ДРІБНОШЛЯХЕЦЬКИЙ\
+    \ \r\nЕЛЄМЕНТ В ПОВСТАННЮ. АНТІСЕМІТИЗМ XVII В., ВІДЗИВИ ПОЛЬСЬКИХ ПИСЬМЕННИКІВ,\
+    \ ЧУТКИ \r\nЗІБРАНІ КУНАКОВИМ, ОПОВІДАННЯ ПРО АРЕНДОВАННЄ ЦЕРКОВ ЖИДАМИ, ПОЕТИЧНА\
+    \ ТРАДИЦІЯ \r\nПРО КРИВДИ ВІД ЖИДІВ-РАНДАР"
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.4796038866043091
+  chunk_id: 3588aaff_c0304
+  text: "Із-поміж творів, які ми розглядатимемо, можна\r\nрозрізнити три головні моделі\
+    \ сприйняття євреїв та оповіді про них, моделі, що\r\nтакож можуть правити за\
+    \ основу періодизації єврейської теми. За браком кращих\r\nтермінів, я б назвав\
+    \ їх стереотипною, соціально-моральною, або\r\n\"реалістичною\" та (це сполучення\
+    \ може здатися дещо парадоксальним)\r\nполітично-етичною. Ці категорії — здебільшого\
+    \ діахронні і визначають приблизні\r\nфази цієї теми, але вони не ексклюзивні.\
+    \ Так, якщо на початку XIX ст. існувала\r\nли"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

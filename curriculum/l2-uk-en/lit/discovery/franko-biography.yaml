@@ -1,0 +1,217 @@
+discovered_at: '2026-03-13T16:18:46.528301+00:00'
+query_keywords:
+- 'Іван Франко: Титан праці'
+- Вступ та культурний контекст
+- Біографія та творчий шлях
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- 'Проаналізувати твір Іван Франко: Титан праці у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+- literature
+- канон
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=mxVd6rjJ-2E
+  channel: Ukrainian Lessons
+  title: ULP 4-158 | Іван Франко ― Великий Каменяр | Ukrainian Lessons Podcast Season
+    4
+  relevance_score: 0.9
+  relevance_note: This podcast episode is explicitly titled 'Іван Франко ― Великий
+    Каменяр' (The Great Stonecutter), which strongly aligns with the module's 'Титан
+    праці' (Titan of Labor) theme. The transcript indicates a direct discussion of
+    Ivan Franko's biography, his diverse literary roles (poet, prose writer, critic,
+    etc.), and his significance as a 'справжній геній', making it highly relevant
+    to the module's biographical and analytical sections.
+  transcript_excerpt: сьогодні на черзі відомих українців Іван Франко... Це український
+    поет прозаїк літературний критик фольклорист драматург публіцист філософ перекладач
+    Ох скільки в нього було професій Якщо коротко То Франко - це справжній геній
+  embed_suggestion: After section Біографія та творчий шлях -- as it directly discusses
+    his life and multifaceted contributions.
+- url: https://www.youtube.com/watch?v=3pGEJB2OYsQ
+  channel: Суспільне Культура
+  title: Перехресні стежки. Іван Франко | Аудіокниги українською | Подкаст «НАША КЛАСИКА»
+  relevance_score: 0.6
+  relevance_note: This video is an audiobook reading of Ivan Franko's work 'Перехресні
+    стежки'. While it features his work, it does not directly analyze his biography,
+    literary impact, style, or decolonizing dimension, which are core to the module's
+    focus on 'Титан праці'. It offers a primary source rather than a critical analysis
+    or biographical overview.
+  transcript_excerpt: Отже слухайте Іван Франко Перехресні стежки... А пан меценас
+    гратулюю гратулюю може тішитися наше місто що дістало такого блискучого оборонця...
+  embed_suggestion: After section Мова, стиль та поетика -- to provide an example
+    of his literary prose style.
+- url: https://www.youtube.com/watch?v=gvsp7SFe90c
+  channel: Суспільне Культура
+  title: 'Ivan Franko: workaholic, fanatic, neurotic and genius | Iconic Ukrainians:
+    marked by the hryvnia'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.44999999999999996
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0221
+  text: "Художній засіб\nПриклад\nПорівняння (не менше двох прикладів)\nЕпітети (не\
+    \ менше двох прикладів)\nУособлення (не менше двох прикладів)\n \n Чи вплинули\
+    \ ці художні засоби на твоє сприйняття оповідання? \nЯк?\n 22. Які прислів’я,\
+    \ наведені на початку розділу, відповідають твору \nІ. Франка?\nДомашнє завдання\
+    \ (на вибір)\n \n1. Склади і запиши в робочий зошит план оповідання.\n \n2. Склади\
+    \ по два запитання кожного виду та усно дай на них \nвідповіді.\n \n3. Напиши\
+    \ твір-роздум на тему «Чи можна виправити свої по-\nмилк"
+  section_title: Сторінка 217
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0152
+  text: "82    Українська література кінця ХІХ  — початку ХХ ст. Титан духу і думки\n\
+    Виявляємо творчі здібності, обізнаність у сфері культури\n9. Уявіть, що вам запропонували\
+    \ створити ілюстрації до  поезії І. Франка «Ка-\nменярі». Опишіть картини, які\
+    \ ви хотіли  б намалювати. Які кольори пере-\nважали б на ваших ілюстраціях? Обґрунтуйте\
+    \ свій вибір кольорової палітри. 10. У фонотеці електронного додатка до  підручника\
+    \ знайдіть добірку музичних \nтворів. Який із  цих творів, на вашу думку, співзвучний\
+    \ загально"
+  section_title: Сторінка 82
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0372
+  text: "– \nК., 1990. 7. Шевченківський словник: У 2 т. – К., 1976–1977. 8. Світова\
+    \ велич Шевченка: У 3 т. – К., 1964."
+  section_title: Сторінка 217
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0140
+  text: "76    Українська література кінця ХІХ  — початку ХХ ст. Титан духу і думки\n\
+    Титан духу і думки\nІван Франко\n(1856—1916)\nІван Якович Франко народився 27\
+    \ серпня 1856  року в  селі  Нагуєвичі \nна Львівщині. Його батько був ковалем,\
+    \ мати походила зі збіднілого шляхет-\nського роду. Від батька успадкував любов\
+    \ до праці та життєвий оптимізм. «На \nдні моїх спогадів, — зізнавався письменник, —\
+    \ і досі горить маленький, але \nміцний огонь. Це огонь із кузні мого батька.\
+    \ І мені здається, що запас його \nя взяв"
+  section_title: Сторінка 76
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6227165460586548
+  chunk_id: fc2291b5_c1164
+  text: "Тв.: Філологічні праці\r\nІвана Могильницького. Львів, 1910; Галицькі граматики\
+    \ української мови... Львів,\r\n1911; Кирило-Мефодіївське братство. Львів, 1921;\
+    \ Григорій Квітка-Основ’яненко. К.,\r\n1946; Титан праці. Львів, 1946; Іван Франко\
+    \ — популяризатор передової\r\nросійської літератури. К., 1953; Письменницька\
+    \ діяльність Івана Борецького на\r\nВолині і у Львові, Львів, 1954; 3 життя і\
+    \ творчості Івана Франка. К., 1955;\r\nНариси про світогляд Івана Франка, Львів,\
+    \ 1955; Велетень думки і праці. К.,\r\n1958.\n"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.6035032868385315
+  chunk_id: 479cf43d_c0175
+  text: "Про нього див.: Назарук О. \r\nПро Івана Франка. — Львів, 1910; Єфремов С.\
+    \ Іван Франко. — Пг.,\r\n1916; Заклинський Р. Світогляд І. Франка. — Львів, 1916;\
+    \ Іван Франко.\r\n— К.. 1926; Суспільно-політ. погляди І. Франка у світлі його\
+    \ творчості та\r\nлистування: Збірна студія. — X., 1932; Сімович В. І. Франко,\
+    \ його життя\r\nі діяльність. — Львів, 1936 (те саме: Львів, 1941); Крук К. Народний\r\
+    \nКаменяр. Ч. 1. — Львів, 1937; Лев В. І. Франко та польські позитивісти.\r\n\
+    — Львів, 1937; Блохин Ю. Естетичні погляди і"
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5682883858680725
+  chunk_id: fc2291b5_c2280
+  text: "Літ.: Франко І. Із\r\nсекретів поетичної творчості В кн.: Франко І. Зібрання\
+    \ творів, т. 31. К., 1981;\r\nТеория литературы. Основные проблемы в историческом\
+    \ освещенни, кн. 3. М., 1965;\r\nЛихачев Д. Нестилизационные подражания. В кн.:\
+    \ Лихачев Д. Поэтика древнерусской\r\nлитературы. М., 1979; Храпченко М. Б. Творческая\
+    \ индивидуальность писателя и\r\nразвитие литературы. В кн.: Храпченко М. Б. Собрание\
+    \ сочинений, т. 3. М., 1981.\n\nМ. П. Бондар."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

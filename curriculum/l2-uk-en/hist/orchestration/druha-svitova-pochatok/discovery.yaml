@@ -1,0 +1,193 @@
+discovered_at: '2026-03-13T12:57:04.712950+00:00'
+query_keywords:
+- 'Друга світова: Початок'
+- Напередодні катастрофи
+- Радянська окупація Західної України
+- 1939-1941
+- Початок німецько-радянської війни
+- Первинні джерела
+- Деколонізаційний погляд
+- Початок апокаліпсису
+- події 1939-1941 років на українських землях
+- наслідки пакту Молотова-Ріббентропа для України
+- «возз'єднання» Західної України з УРСР
+- роль України в початковий період Другої світової
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=a4Fbc14G8AY
+  channel: Реальна Історія
+  title: Українці у Другій Світовій. ЩО нам БРЕХАЛИ совєтські підручники?
+  relevance_score: 0.9
+  relevance_note: This video directly discusses Ukrainians' experience in WWII and
+    challenges the Soviet narrative, which aligns perfectly with the module's decolonization
+    perspective on the war's beginning.
+  transcript_excerpt: Сьогодні ми приїхали до музею історії України у другій світовій
+    війні щоб розказати про історію українців у цьому протистоянні і ця історія набагато
+    ширша ніж те що нам розповідали в советських підручниках.
+  embed_suggestion: After section 'Деколонізаційний погляд' -- as it directly addresses
+    decolonizing the WWII narrative.
+- url: https://www.youtube.com/watch?v=zNFUqradyV4
+  channel: ІМТГШ
+  title: All history of Ukraine in 10 min.
+  relevance_score: 0.5
+  relevance_note: This video offers a very broad overview of 'All history of Ukraine
+    in 10 min.' While it would touch upon WWII, it lacks the specific focus and depth
+    required for a module on the 'beginning' of the war.
+  transcript_excerpt: Розповісти її можна усього за десять хвилин, разом з усіма картами,
+    повстаннями і гетьманами. Не вірите? Пропонуємо побитися об заклад.
+  embed_suggestion: 'After section ''Вступ: Напередодні катастрофи'' -- to provide
+    a very high-level historical context before diving into WWII specifics.'
+- url: https://www.youtube.com/watch?v=nQguCZL8fUc
+  channel: Реальна Історія
+  title: Anti-Terrorist Operation (ATO) in Donbass. Full chronology from 2014 to 2022
+    (ENG SUBS)
+  relevance_score: 0.1
+  relevance_note: The video focuses on the Anti-Terrorist Operation (ATO) in Donbass
+    from 2014-2022, which is a completely different historical period and topic than
+    the beginning of WWII (1939-1941).
+  transcript_excerpt: Відлік цієї історії починається у 2014 році. Революція гідності,
+    втечі Януковича. Росія починає окупацію Криму.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=qYwINjPQza0
+  channel: Комік Історик
+  title: історія Польщі очима українців
+  relevance_score: 0.1
+  relevance_note: This video discusses a legendary story from Polish history (Wawel
+    Dragon) and general historical periods unrelated to WWII.
+  transcript_excerpt: В них там є легенда про Краківського дракона і цей Краківський
+    дракон Там біля вавелю підніжжя стоїть Йому ну не дуже красиве зображення такі
+    скульптура металева власне пам'ятник смоку вавельський дракону да або Краківський.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=qaoB5rDjvW0
+  channel: Комік Історик
+  title: 'Владлен Мараєв: історія гетьмана Тетері @IstoriyaBezMifiv'
+  relevance_score: 0.1
+  relevance_note: The video is about Hetman Pavlo Teteria, a historical figure from
+    the 17th century, which is entirely unrelated to WWII.
+  transcript_excerpt: Ви сказали що дуже недооціненний персонаж це гетьман Павло Тетеря
+    дійсно про нього мало інформації.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=Hk8RhT59X3I
+  channel: ІМТГШ
+  title: Історія Польщі за 15 хвилин | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.1
+  relevance_note: This video provides a general overview of Polish history starting
+    from the 10th century, with no specific focus on WWII or its beginning in Ukraine.
+  transcript_excerpt: Польська держава виникла в басейні річки вісло яка впадає в
+    Балтійське море Саме тут серед рівнинних земель оселилися перші племена які згодом
+    стали відомими як поляки перший Володар Польщі Мешко пеший згадується в 963 році.
+  embed_suggestion: N/A
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0464
+  text: ". 188\n\t\nЗавдання для узагальнення знань і  підготовки до тематичного оцінювання\
+    \ \nза  розділом V «Західноукраїнські землі в  міжвоєнний період» . . . . . .\
+    \ . . . . . . . . . . . . . . . . 188\nРозділ VI. Україна в  роки Другої світової\
+    \ війни \n§ 33—34. Україна на початку Другої світової війни (1939—1941  рр.) \
+    \ . . . . . . . . . . . . . . . . . . . . . 189\n§ 35—36. Україна на початку німецько-радянської\
+    \ війни . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ 197\n§ 37. Україна в  "
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0451
+  text: "Практичні заняття\n1. Дослідження документів та матеріалів усної історії\
+    \ \nпро Другу світову війну\n2. Війна в  пам’ятниках рідного краю\nЗавдання для\
+    \ узагальнення знань і підготовки  \nдо тематичного оцінювання за розділом VI\
+    \  \n«Україна в  роки Другої світової війни (1939—1945  рр.)»\nі"
+  section_title: Сторінка 234
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0365
+  text: "191\n§ 33—34. Україна на початку Другої світової війни (1939—1941  рр.)\n\
+    питання без Радянського Союзу. Німецькі війська перетнули лінію, \nвказану в \
+    \ таємному протоколі, і  просунулися далі на схід, підійшовши \nдо Львова, Бреста,\
+    \ а  також почали більш детально розглядати питання \nстворення в  Галичині Української\
+    \ держави, спираючись на ОУН, яка \nмала організувати антипольське повстання.\
+    \ Також німецькою розвід-\nкою (абвером) у  складі німецької армії було створено\
+    \ український ле-\nгіон переважно з  "
+  section_title: Сторінка 191
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0417
+  text: "Чим була зумовлена ворожнеча між різними течіями руху Опору в Україні? Як\
+    \ \nце впливало на хід боротьби з  нацистською окупацією? § 39. Вигнання нацистських\
+    \ загарбників з  України\n\e\n\e\n1. Коли Україна була окупована нацистськими\
+    \ загарбниками? 2. Яка битва стала \nпереломною в  бойових діях на радянсько-німецькому\
+    \ фронті? 1 \nПочаток визволення України. Бої на Лівобережжі. Після розгрому на-\n\
+    цистських військ у  битві під Сталінградом почалося їх вигнання \nз України. Першим\
+    \ населеним пунктом, звільнен"
+  section_title: Сторінка 217
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5764296054840088
+  chunk_id: feaa5fa7_c0022
+  text: "Дві перші совєтські окупації (543). Третя окупація\r\nУкраїни большевиками\
+    \ і політика »воєнного комунізму« (1919 — 21 pp.) (544).\r\n»Нова економічна політика«\
+    \ (1922 — 30) (546). »Українізація« (547). Ухили в\r\nком. партії (549). Криза\
+    \ большевізму й зріст бюрократії (550). Ліквідація\r\nприватного господарства.\
+    \ Колективізація (550). Голод 1933 р. (551). Боротьба\r\nпроти укр. культури (552).\
+    \ Сталінська конституція (553). Господарство України\r\nперед війною (554). »Єжовщина«\
+    \ (554). Після »єжовщини« (554) Д"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5764296054840088
+  chunk_id: feaa5fa7_c3217
+  text: "Дві перші совєтські окупації (543). Третя окупація\r\nУкраїни большевиками\
+    \ і політика »воєнного комунізму« (1919 — 21 pp.) (544).\r\n»Нова економічна політика«\
+    \ (1922 — 30) (546). »Українізація« (547). Ухили в\r\nком. партії (549). Криза\
+    \ большевізму й зріст бюрократії (550). Ліквідація\r\nприватного господарства.\
+    \ Колективізація (550). Голод 1933 р. (551). Боротьба\r\nпроти укр. культури (552).\
+    \ Сталінська конституція (553). Господарство України\r\nперед війною (554). »Єжовщина«\
+    \ (554). Після »єжовщини« (554) Д"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5721443295478821
+  chunk_id: feaa5fa7_c1422
+  text: "[Енциклопедія українознавства. Загальна частина (ЕУ-I). — Мюнхен, Нью-Йорк,\
+    \ 1949. — Т. 2. — С. 578-591.]\n\n11. Україна під час другої світової війни\n\n\
+    ЗАХІДНЯ УКРАЇНА ДО ПОЧАТКУ НІМ.-СОВ. ВІЙНИ\n\nПольсько-німецька війна. 1.\r\n\
+    IX. 1939 р. вибухла поль.-нім. війна, що дало початок другій світовій війні.\r\
+    \nОдночасно в усій Польщі збільшився тиск на укр. населення. Почалися масові\r\
+    \nарешти українців, переважно інтеліґенції, і заслання до концентраційного табору\r\
+    \nв Картузькій Березі. Укр. нац. життя пішло "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

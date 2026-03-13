@@ -1,0 +1,175 @@
+discovered_at: '2026-03-13T16:00:44.509175+00:00'
+query_keywords:
+- Громадянське суспільство у війні
+- Нація, яка згуртувалася
+- Волонтерський рух
+- Громадські організації
+- Первинні джерела
+- Держава і суспільство
+- Сила спільноти
+- роль громадянського суспільства під час повномасштабного вторгнення
+- діяльність волонтерських організацій
+- трансформацію українського суспільства у війні
+- взаємодію держави та громадянського суспільства
+- Теперішній час для опису актуальних процесів
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=OTFuvJf3lqI
+  channel: Суспільне Док
+  title: '«Більшовики на Донбасі: "Не можеш протистояти – треба очолити"» | Плавильний
+    котел #shorts'
+  relevance_score: 0.7
+  relevance_note: Discusses the dynamics of civil war in Donbas, highlighting historical
+    themes of self-organization, local identity, and resistance to central control,
+    which reinforce the module's focus on civil society's role in conflict.
+  transcript_excerpt: у буревій громадянської війни люди які створили Донбас були
+    внутрішньовільні і жадали волі Це була подоба патріархальної селянської громади
+    лишень у промисловому індустріальному варіанті.
+  embed_suggestion: After section Громадські організації -- offers a historical perspective
+    on community formation and collective action in response to conflict, providing
+    context for modern public organizations.
+- url: https://www.youtube.com/watch?v=4Z9QW3K67Ow
+  channel: Суспільне Док
+  title: 'Портников: «Росіяни чекають, що землі, що вони вважають Росією, повернуться».
+    Остання війна #shorts'
+  relevance_score: 0.5
+  relevance_note: The video provides geopolitical context regarding Russian imperial
+    expectations during the ongoing conflict, which is tangentially related to the
+    'war' aspect of the module, but does not directly address Ukrainian civil society.
+  transcript_excerpt: росіяни продовжують сподіватися що територія які вони вважають
+    історичною Росією повернуться додому.
+  embed_suggestion: 'After section Вступ: Нація, яка згуртувалася -- provides context
+    on the external threat and the adversary''s mindset, reinforcing the need for
+    national unity in wartime.'
+- url: https://www.youtube.com/watch?v=U4GHHH7B1II
+  channel: Комік Історик
+  title: 'історія США: рабство, війни, Трамп'
+  relevance_score: 0.2
+  relevance_note: Discusses US history and geopolitics, with a brief mention of Ukraine's
+    global dependence. Not focused on Ukrainian civil society or its role in war.
+  transcript_excerpt: А так як Україна - це не наддержава лишина своєї ядерної зброї
+    Тобто ми безумовно залежимо від інших і від Сполучених Штатів Америки залежить
+    ну більшисть світу його порядок.
+  embed_suggestion: No suitable section, as the content is too general and not specific
+    to the module's focus on Ukrainian civil society in war.
+- url: https://www.youtube.com/watch?v=p0Y6Ej8hdC0
+  channel: ІМТГШ
+  title: Повна історія ВЕЛИКОЇ французької революції| Історія від імені Т.Г. Шевченка
+  relevance_score: 0.1
+  relevance_note: The video details the French Revolution, which is historically and
+    contextually unrelated to Ukrainian civil society in war.
+  transcript_excerpt: В історії людства небагато подій, які кардинально змінили її
+    хід. І окрім двох світових воїн, які одразу спадають на думку, такою подією була
+    велика французька революція.
+  embed_suggestion: No suitable section, as the content is entirely unrelated to the
+    module topic.
+- url: https://www.youtube.com/watch?v=_GIB3dACWro
+  channel: Harvard Ukrainian Research Institute
+  title: 'Відбудова України, Відбудова світу. Головна промова: Олександра Матвійчук'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0480
+  text: "Тут організовують \nпункти збору гуманітарної допомоги \nдля бійців, які\
+    \ перебувають на \nпередовій, родин вимушених \nпереселенців, сімей загиблих \n\
+    військових. Серед волонтерів є  багато \nпредставників релігійних громад. © ТОВ\
+    \ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 264
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0429
+  text: "CФОРМУЛЮЙТЕ СУДЖЕННЯ ПРО:\n\x84\n\x84 початок російсько-української війни,\
+    \ пере-\nбіг подій внутрішнього життя України \nу  2014—2019  рр. Цікаві факти\n\
+    Основним напрямом діяльності волонтерів \nу  2014  р. стала допомога українській\
+    \ армії \nта пораненим (цим займалося 70 % \nволонтерів). За оцінками дослідників,\
+    \ \nу  2014  р. систематично займалися \nволонтерством 14,5  тис. осіб і  понад\
+    \ \n2,5  тис. організацій. Третина жителів \nУкраїни надавали фінансові ресурси,\
+    \ а  ще \nчверть передавала допомогу через \nволон"
+  section_title: Сторінка 237
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0465
+  text: "Третина жителів \nУкраїни надавали фінансові ресурси, \nа ще чверть передавала\
+    \ допомогу \nчерез волонтерські організації. Волонтерський рух — добровільна \n\
+    благодійна суспільно корисна \nдіяльність окремих осіб або \nорганізацій із реалізації\
+    \ певних \nпроєктів. Логотип одного з волонтерських \nфондів, що постав у 2014 р."
+  section_title: Сторінка 266
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0206
+  text: "Для вас, допитливі\nrnk.com.ua/110316\nПрацюємо з джерелом\nrnk.com.ua/110317\n\
+    З Універсалу \nБ. Хмельницького  \nдо української спільноти \nіз закликом підтримати\
+    \ \nрозпочату козацтвом \nборотьбу\nПолковник реєстрового лівобережного \nполку.\
+    \ Художник С. Васильківський. 1900  р. \e\n\e Порівняйте вбрання та спорядження\
+    \ \nстаршини та пересічного козака (с. 124)."
+  section_title: Сторінка 127
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.518934965133667
+  chunk_id: f82cfba8_c0199
+  text: "Презацноє християнськоє\r\nвоїнство! Дві речі набарзій вас порушити і серця\
+    \ ваші запалити могуть в\r\nмужественной розправі воєнной з тим скрутним бісурмянином,\
+    \ на нас невинне\r\nнаступуючим. Першая — честь божая, другая — любов отчизни."
+  work: Українська література XVII ст.
+  author: Антологія
+  year: 1650
+  genre: anthology
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/old17/old17.htm
+- score: 0.517130970954895
+  chunk_id: c846b4d3_c0480
+  text: "Громадський чоловік, коли почне роздумуватись про\r\nдобро й зло, яке є в\
+    \ громаді, то перш усього наткнеться на віру й церкву. Віра\r\nбула першою думкою\
+    \ громадською, яка впорядкувалась; попівство й церква були\r\nпершими порядками\
+    \ громадськими, які заснувались на думці людській; попівство\r\nбуло першою білою,\
+    \ панською працею, яка виділилась із спільного мужицтва *.\r\nВіра й попівство\
+    \ потім причіплялись до всього доброго й злого в громаді. Проти\r\nвіри й попівства\
+    \ перш усього піднялась скрізь і вільна ду"
+  work: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+  year: 1880
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag.htm
+- score: 0.5131195783615112
+  chunk_id: e86cf6ca_c0557
+  text: "В основу етики\r\nгромадянського гуманізму, як відомо, було покладено ідею\
+    \ громадянського\r\nслужіння, що передбачала підпорядкування особистих інтересів\
+    \ індивідів\r\nспільному благу. Загалом концепція спільного блага посідала важливе\
+    \ місце у\r\nфілософії Сократа, Платона, Арістотеля, Ціцерона. Однак, якщо в античності\r\
+    \nслужіння спільному благові розумілося насамперед як здійснення зовні ефектних\r\
+    \nсоціально значущих справ, то християнська етика Середньовіччя більшою мірою\r\
+    \nакцентувала увагу на психологі"
+  work: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/lytv/lyt.htm

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 15 — E2E
+PASS: pipeline c2 15
 
   Module:   individual-voice-ii
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:33:28Z
+  Date:     2026-03-13T17:55:33Z

@@ -9,6 +9,9 @@
 
 **Plan file (SOURCE OF TRUTH):**
 
+> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.
+> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.
+
 ```yaml
 module: hist-133
 level: HIST
@@ -130,15 +133,17 @@ Research **Маріуполь та Азовсталь** for the **hist** track. 
 
 You have access to Ukrainian language tools via MCP. **Use them during research.**
 
-| Tool | When to use | Example |
-|------|-------------|---------|
-| `query_wikipedia` mode=`extract` | Get full article text (50K chars) for deep research | `query_wikipedia("Богдан Хмельницький", mode="extract")` |
-| `query_wikipedia` mode=`sections` | See article structure before diving in | `query_wikipedia("Запорізька Січ", mode="sections")` |
-| `query_wikipedia` mode=`section` | Read a specific section by index | `query_wikipedia("Запорізька Січ", mode="section", section=3)` |
-| `query_wikipedia` mode=`search` | Find the right article title | `query_wikipedia("Переяславська рада", mode="search")` |
-| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts) | `search_literary("Хмельницький", genre="chronicle")` |
-| `verify_word` / `verify_words` | Check Ukrainian words exist in VESUM dictionary | `verify_words(["гетьман", "козацтво"])` |
-| `query_grac` | Check word frequency in Ukrainian corpus | `query_grac("упокорення", mode="frequency")` |
+| Tool | When to use | Args |
+|------|-------------|------|
+| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode="extract"` |
+| `query_wikipedia` | See article structure before diving in | `query`, `mode="sections"` |
+| `query_wikipedia` | Read a specific section by index | `query`, `mode="section"`, `section=N` |
+| `query_wikipedia` | Find the right article title | `query`, `mode="search"` |
+| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |
+| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |
+| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode="frequency"` |
+
+> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.
 
 **Workflow**: Search Wikipedia FIRST for factual foundation → search literary RAG for primary quotes → verify vocabulary with VESUM.
 
@@ -147,14 +152,14 @@ You have access to Ukrainian language tools via MCP. **Use them during research.
 1. **Sources**: Use `query_wikipedia` (mode=`extract`) for Ukrainian Wikipedia articles. Also consult history.org.ua, litopys.org.ua. Use `search_literary` for primary source excerpts. Russian-language sources are PROHIBITED.
 2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.
 3. **Primary Quotes**: Find 2+ quotable primary source excerpts (original Ukrainian text preferred).
-4. **Engagement Hooks**: Identify 6+ engagement hooks mapped to specific content sections:
+4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:
    - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths
    - `[!history-bite]` — Surprising or lesser-known facts
    - `[!context]` — Broader historical/cultural context
    - `[!quote]` — Primary source citations
    - `[!decolonization]` — Ukraine-centric reframing
    - `[!culture]` — Cultural significance
-5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography and what the Ukrainian-centric framing should be.
+5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).
 6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.
 
 ### Research Output Cap
@@ -177,7 +182,7 @@ If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish
 
 Plan your research and outline knowing that Phase B content must pass these gates:
 - **Word count**: minimum **5000** words — allocate outline sections accordingly
-- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines
 - **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
 - **Duplicate headers**: ensure outline section names don't share keywords
 
@@ -189,19 +194,19 @@ Plan your research and outline knowing that Phase B content must pass these gate
 
 ### Output Block 1: Research Notes
 
-```
 ===RESEARCH_START===
 
 # Дослідження: Маріуполь та Азовсталь
 
 ## Key Facts Ledger
-<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->
 ```yaml
 subject: "Маріуполь та Азовсталь"
-vital_status: "deceased" # or "alive"
+type: "event" # "event", "biography", or "phenomenon"
+vital_status: "living" # ONLY for biography: "living" or "deceased" (omit for events)
 dates:
-  birth: "YYYY-MM-DD"    # or approximate: "~YYYY"
-  death: "YYYY-MM-DD"    # omit if alive
+  start: "YYYY-MM-DD" # Event start OR biography birth (approximate: "~YYYY")
+  end: "YYYY-MM-DD"   # Event end OR biography death (omit if living/ongoing)
   key_events:
     - year: YYYY
       event: "Event description (Ukrainian)"
@@ -232,7 +237,7 @@ forbidden_claims:
 - ...
 
 ## Engagement Hooks (mapped to sections)
-- Section "{section_name}": [!hook_type] — description
+- Section "{section_name}": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}
 - ...
 
 ## Деколонізаційний контекст
@@ -258,13 +263,11 @@ Key facts, dates, sources for this section...
 ...
 
 ===RESEARCH_END===
-```
 
 ## Friction Report (MANDATORY)
 
-After both output blocks, include:
+After Output Block 1, include the Friction Report:
 
-```
 ===FRICTION_START===
 **Phase**: Phase A: Research + Meta (Seminar)
 **Step**: {what you were doing when friction occurred, or "Full Phase A"}
@@ -273,7 +276,6 @@ After both output blocks, include:
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
-```
 
 ---
 

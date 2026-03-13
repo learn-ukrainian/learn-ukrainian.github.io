@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 129
+PASS: pipeline istorio 129
 
   Module:   2004-krymska-kryza
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 129
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:24:38Z
+  Verdict:  PASS
+  Date:     2026-03-13T13:39:01Z

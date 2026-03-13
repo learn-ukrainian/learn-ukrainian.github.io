@@ -1,0 +1,229 @@
+discovered_at: '2026-03-13T13:07:22.398857+00:00'
+query_keywords:
+- 'Синтез: Після 2014 і 2022'
+- Пост-2014
+- Мовний зсув
+- '2022'
+- Чи це останній цикл?
+- 'Analyze the causes and consequences of синтез: після 2014 і 2022'
+- Evaluate the historical significance of новий цикл
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0005
+  text: '4
+
+    Зміст
+
+    Підсумковий тест . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . 100
+
+    Підсумовуємо й  узагальнюємо . . . . . . . . . . . . . . . . . . . . . . . . .
+    . 102
+
+    ФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ . . . . . . . . . 103
+
+    Фонетика. Звуки мовлення . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 104
+
+    Транскрипція  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 107
+
+    Голосні та приг'
+  section_title: Сторінка 4
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0234
+  text: "221\n221\nЗМІСТ\n§ 24–25. Фразеологізми  . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . 46\n§ 26–27. Джерела  українських  фразеологізмів\
+    \ . . . . . . . . . . . . . . . . 50\n§ 28. Розвиток мовлення. Твір-роздум  про\
+    \  вчинки  людей  на   \nоснові  власних  спостережень і  вражень  у  художньому\
+    \  стилі . . . 53\nСловотвір. ОрфогрАфія\n§ 29. Змінювання  і  творення слів \
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . 54\n§ 30. Похідні  і \
+    \ непохідні  слова. Твірне  слово . . . ."
+  section_title: Сторінка 221
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0215
+  text: "205\n ЗМІСТ\n§ 22. Розвиток мовлення. Докладний  письмовий  переказ   \n\
+    тексту  розповідного характеру  з  елементами  опису  тварини,  \nщо  містить\
+    \  синоніми  й  антоніми (за  самостійно  складеним   \nпростим  планом) . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ 56\nБУДОВА СЛОВА. ОРФОГРАФІЯ\n§ 23. Основа  слова. Закінчення. Незмінні  й \
+    \ змінні  слова  . . . . . . 58\n§ 24. Корінь  слова. Спільнокореневі  слова \
+    \ та  форми  слова . . . . . 60\n§ 25. Префікс . . . . ."
+  section_title: Сторінка 205
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0063
+  text: "56\n138\t ДВА – ЧОТИРИ – УСІ РАЗОМ. Поміркуйте, у якому реченні є складений\
+    \ діє­\nслівний присудок. • Будуть сонячні весни усміхатися людям (Д. Луценко).\
+    \ • Люди часто роблять із мухи слона (О. Квітневий). • І про осінь я думать не\
+    \ можу (В. Сосюра). • Дністåр хвилею шумить, Чорне море гомонить (Нар. творчість).\
+    \ 139\t І. Випишіть послідовно лише номери речень із простими присудками. 1. Край\
+    \ дороги синіли чагарі достиг­\nлого терну (В. Шкляр). 2. Ладен я вмер­\nти сто\
+    \ разів за правду (Нар. творчість). 3."
+  section_title: Сторінка 60
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0261
+  text: '. . . . . . . . . . . . . . . . . . 22
+
+    § 10. Уживання у/в, і/й, з/із/зі  . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 24
+
+    § 11. Граматичні помилки (практично)  . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 26
+
+    § 12. Розвиток мовлення. Есе . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 28
+
+    СИНТАКСИС І ПУНКТУАЦІЯ
+
+    § 13. Словосполучення і речення як одиниці синтаксису. Ознаки словосполучення
+    . '
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5356848835945129
+  chunk_id: 850100d0_c0001
+  text: "31. Злиття і та у\r\n— частина друга\n\n32. Просунення вперед е· з перетворенням\r\
+    \nйого на і\n\n33. Потрактування и2 та ’ú\n\n34. Протетичні приголосні\n\n35.\
+    \ Упорядкування складобудови: склади з двома\r\nверхів’ями звучності\n\n36. Нові\
+    \ закономірності у скупченнях приголосних\r\n(середньоукраїнська доба та стислий\
+    \ огляд подальших процесів)\n\n37. Асиміляція у скупченнях приголосний +j (нове\r\
+    \nподвоєння)\n\n38. Ствердіння губних перед голосними\n\n39. Асиміляція голосних\
+    \ у суміжних складах: о\r\n(е) та а\n\n40. Потрактуван"
+  work: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevelov/shev.htm
+- score: 0.4916856288909912
+  chunk_id: 850100d0_c0296
+  text: "13. Українська мова в її стосунку до румунської\n\n14. Українська мова в\
+    \ її стосунку до угорської\n\n15. Українська мова в її стосунку до тюркських мов\n\
+    \n16. Українська мова в її стосунку до котериторіальних мов\n\n17. Підсумковий\
+    \ огляд\n\nВИБРАНА БІБЛІОГРАФІЯ\n\n1. ПРОБЛЕМА ВНУТРІШНЬОЇ ПЕРІОДИЗАЦІЇ ФОНОЛОГІЧНОЇ\
+    \ ЕВОЛЮЦІЇ УКРАЇНСЬКОЇ МОВИ\n\nЯк зазначено в 1.5, періодизація фонологічної\r\
+    \nеволюції української мови, використана в цій книзі, має за основу факти\r\n\
+    зовнішнього ґатунку щодо самих звукозмін, тобто ха"
+  work: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevelov/shev.htm
+- score: 0.489043265581131
+  chunk_id: ffcfbeb9_c0048
+  text: "Після поділу на початку н. е. праслов'янської мовної\r\nспільності на західну\
+    \ й східну діалектні зони розпочався останній,\r\nпізньопраслов'янський період.\
+    \ У цей час дедалі більше зростала відмінність між\r\nвідзначеними зонами на фонетичному\
+    \ й інших мовних рівнях. Ця відмінність\r\nпоглиблювалася з розселенням східнослов'янських\
+    \ племен на широких просторах у\r\nбасейнах Десни, Верхнього Дніпра й Верхньої\
+    \ Оки, оскільки в цей час при\r\nпереважаючих внутрішніх тенденціях мовного розвитку\
+    \ вона зумовлювалася т"
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm

@@ -1,4 +1,4 @@
-FAIL: pipeline hist 110
+PASS: pipeline hist 110
 
   Module:   deportatsii-ukraintsiv
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 110
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:19:39Z
+  Verdict:  PASS
+  Date:     2026-03-13T13:29:22Z

@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T15:09:02.635283+00:00'
+query_keywords:
+- Кирило-Мефодіївське братство
+- Засновники і члени
+- Книги буття українського народу
+- Політична програма
+- Розгром і наслідки
+- Analyze the causes and consequences of кирило-мефодіївське братство
+- Evaluate the historical significance of перша політична організація
+- Political Terminology
+- Religious Rhetoric
+- Historical Narrative
+- history
+- братство
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0066
+  text: "12. Як утворилося й  діяло Кирило-Ме-\nфодіївське братство? 13. Розкрийте\
+    \ зміст ідей, сформульованих у  програмових \nдокументах братства. \x8F\n\x8F\n\
+    14. Складіть ланцюжок подій, пов’язаних із розгортанням українського націо-\n\
+    нального руху в  Наддніпрянщині в  цей період. 15. Об’єднайтеся в  малі групи\
+    \ \nй обговоріть характерні риси українського національного руху в Наддніпрянщині.\
+    \ Сформулюйте та  запишіть їх у  вигляді тез. \x90\n\x90\n16. Підтвердьте або\
+    \ спростуйте за допомогою фактів наведені судження: 1) Новг"
+  section_title: Сторінка 40
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0083
+  text: "Кирила і  Мефодія» (уривки)\nГоловні ідеї:\n1. Визначаємо, що духовне і політичне\
+    \ об’єднання слов’ян є тією справжньою\nметою, якої вони повинні прагнути. 2.\
+    \ Визначаємо, що при об’єднанні кожне слов’янське плем’я повинно мати \nсвою самостійність,\
+    \ а  такими племенами вважаємо: південно-русів (українців  —\nАвт.), північно-русів\
+    \ (росіян  — Авт.), білорусів, поляків, чехів зі словенцями, \nлужичан, ілліросербів\
+    \ із  хуруганами (хорватами  — Авт.) і  болгар. 3. Визначаємо, що кожне плем’я\
+    \ повинно мати нар"
+  section_title: Сторінка 50
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0081
+  text: "49\nПрактичне заняття\n\x8F\n\x8F\n12. Проведіть дискусію за проблемою «Вплив\
+    \ на тогочасне українське суспільство \nросійського та польського визвольних рухів». \n\
+    13.  Заповніть таблицю «Україна \nв  програмових документах декабристів».\nНазва\
+    \ \n­організації\nНазва ­програми\nЯку форму  \n­державного \nустрою \n­обстоювали\n\
+    Як розглядали \nмайбутнє  \nУкраїни\n\x90\n\x90\n14.  Визначте спільне й  відмінне\
+    \ в  польському, російському та українському ви­\nзвольних рухах, що діяли в \
+    \ Наддніпрянщині наприкінці XVIII  — у  першій тре"
+  section_title: Сторінка 49
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0075
+  text: "50\nПраêтичне заняття № 1  \n \n Коли óтворилося Кирило-Мефодіївсьêе товариство\
+    \ (братство)?  Назвіть засновниêів та óчасниêів Кирило-Мефодіївсьêоãо товариства\
+    \ (братства).  У яêих доêóментах бóли виêладені цілі й завдання товариства (братства)?\
+    \ Тема. Проãрамні доêóменти Кирило-Мефодіївсьêоãо товариства (братства). Мета.\
+    \ Визначити основні засади та завдання діяльності братства на основі \nпроãрамних\
+    \ доêóментів та з’ясóвати вплив оêремих особистостей на \nдіяльність братства,\
+    \ ознайомившись із біоãраф"
+  section_title: Сторінка 50
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0070
+  text: "46\nПопрацюйте з êартою «Кирило-Мефодіївсьêе товариство (братство). \nСоціальні\
+    \ протести в Уêраїні ó першій половині ХІХ ст.» \n1. Відшóêайте на êарті території,\
+    \ охоплені соціальними протестами.\n2. З’ясóйте, чи є на êарті інформація про\
+    \ аêтивність óêраїнсьêої інтеліãенції. Яêа саме?\n3. Кирило-Мефодіївсьêе товариство\
+    \ (братство).\nУ січні 1846 р. ó Києві виниêла перша орãанізація новочасної óêраїнсьêої\
+    \ \nінтеліãенції — Кирило-Мефодіївсьêе товариство (братство). Ініціаторами її\
+    \ \nзаснóвання бóли молоді л"
+  section_title: Сторінка 46
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6054933071136475
+  chunk_id: 6890007d_c0010
+  text: "Ідеологія діячів Кирило-Мефодіївського братства, що генетично була\r\nзв’язана\
+    \ з програмою декабристського «Товариства з’єднаних слов’ян» та з\r\n«Книгами\
+    \ польського народу і польського пілігримства» А. Міцкевича, виражала\r\nпозицію\
+    \ масової свідомості, що здобувала зерна соціального досвіду в\r\nлегендарній\
+    \ історії християнства і виходила з просвітительських уявлень про\r\nприродну\
+    \ рівність людей. Вона передбачала мирний шлях поліпшення суспільного\r\nжиття:\
+    \ усунення самодержавства як першопричини неволі н"
+  work: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+  year: 1847
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/kostomar/kos.htm
+- score: 0.5964359045028687
+  chunk_id: 9976239a_c0034
+  text: "У всьому цьому — корінна особливість його позиції у слов’янській\r\nта українській\
+    \ справі, що відрізняла його і від західних слов’янських будителів\r\nта відроджувачів,\
+    \ і від російських слов’янофілів, і від українофілів та навіть\r\nкирило-мефодіївських\
+    \ братчиків. А тема слов’янства з’явилася в його творчості\r\nще до знайомства\
+    \ з майбутніми організаторами братства.\n\nЯк відомо, головний програмовий документ\
+    \ Кирило-Мефодіївського\r\nбратства — «Книга буття українського народу». Нагадуючи\
+    \ «Книги народу\r\nпол"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5861457586288452
+  chunk_id: fc2291b5_c3360
+  text: "КИРИЛО-МЕФОДІЇВСЬКЕ БРАТСТВО, Кирило-Мефодіївське товариство — таємна політична\
+    \ організація укр.\r\nінтелігенції. Виникло в Києві в грудні 1845 — січні 1846.\
+    \ Члени братства — переважно\r\nвихованці Київ. і Харків. ун-тів. Засновники —\
+    \ М. Гулак, М. Костомаров, В.\r\nБілозерський. До орг-ції вступили О. Маркович,\
+    \ О. Навроцький, І. Посяда, П.\r\nКуліш, Д. Пильчиков, О. Тулуб, Г. Андрузький,\
+    \ М. Савич. У квітні 1846 членом\r\nК.-М. б. став Т. Г. Шевченко. Бл. 100 осіб\
+    \ на Україні, в Росії, Білорусії,\r\nПольщі, Л"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

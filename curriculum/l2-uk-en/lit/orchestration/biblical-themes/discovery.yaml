@@ -1,0 +1,257 @@
+discovered_at: '2026-03-13T14:07:02.760030+00:00'
+query_keywords:
+- 'Біблійні теми: Давидові псалми і "Марія"'
+- Давидові псалми
+- Церковнослов'янізми
+- '"Марія"'
+- Концепція "Святої Правди"
+- Understand the role of Biblical themes in Shevchenko's later poetry
+- Analyze the 'humanization' of divine figures in 'Maria'
+- Identify political subtext in 'Psalms of David'
+- Recognize and interpret Church Slavonicisms in modern Ukrainian text
+- Church Slavonicisms
+- High style syntax
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0088
+  text: "51\nБіблія та українська література \nКнига псалмів, або Псалтир, — одна\
+    \ з \nкниг Старого Заповіту Біблії. Вона склада-\nється з псалмів (пісень), авторство\
+    \ яких при-\nписують Давидові — цареві давнього \nІзраїлю. Псалми призначалися\
+    \ для співу з \nмузичним супроводом, вони виражали хвалу \nй поклоніння Богові.\
+    \ Давидові псалми пере-\nкладали Т. Шевченко й І. Франко. Своя \nпоетична версія\
+    \ псалмів є і в Л. Костенко. Перший псалом розповідає про те, що пра-\nведник\
+    \ блажен (тобто щасливий), бо не має \nсправи з"
+  section_title: Сторінка 51
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0336
+  text: ". . . . . . . . . . . . . . . . . . . . . . 115\n\t\n\t Тестові завдання\
+    \ для підготовки  \nдо тематичного контролю за розділом ІV . . . . . . . . . .\
+    \ . . . . . . . 115\n\t\n\t Історична скарбниця . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . 116\nДочки Ярослава Мудрого.\
+    \ Фреска Софійського собору \nв  Києві\nМозаїка Марії Оранти   \nу  Софійському\
+    \ соборі \nв  Києві"
+  section_title: Сторінка 223
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0319
+  text: 'народу… Фраза “а до того / Я не знаю Бога” є своєрідним художнім
+
+    прийомом поета-романтика. Напевне, це ставлення до Бога людини,
+
+    яка, споглядаючи тяжкі страждання свого народу, упала в розпач,
+
+    і, оскільки на землі ніхто не чує й не рятує знедолених, поет посилає
+
+    згорьовані думи до Бога, захисника зневажених…»
+
+    Епіграфи багатьох поем Т. Шевченка взяті з Біблії, а відомо ж,
+
+    що в епіграфі — основна ідея твору. Поет захоплений Біблією. «Єди-
+
+    на моя втіха тепер — Євангеліє. Новий Заповіт я читаю з бла'
+  section_title: Сторінка 244
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0031
+  text: "проблеми, які порушено в легенді про Мойсея, вони й через тися-\nчоліття\
+    \ не втратили своєї актуальності для різних народів світу. \nСвоєрідною є мова\
+    \ біблійних творів. Святе Письмо творили різні\nавтори, але деякі виражальні засоби\
+    \ можна визначити як типові\nдля всієї книги. Характерною ознакою мови Біблії\
+    \ є вживання озна-\nчень після означуваного слова (інверсія): над птаством небесним,\
+    \ до\nмети своєї, день четвертий. Здебільшого інверсовані означення ви-\nкористовують\
+    \ для підсилення урочистості, знач"
+  section_title: Сторінка 30
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5060097575187683
+  chunk_id: 9976239a_c0522
+  text: 'І на вербах повішали
+
+
+    Органи глухії, /364/
+
+
+    І нам стали сміятися
+
+
+    Едомляне злії:
+
+
+    «Розкажіть нам пісню вашу,
+
+
+    Може, й ми заплачем.
+
+
+    Або нашу заспівайте,
+
+
+    Невольники наші».
+
+
+    Якої ж ми заспіваєм?..
+
+
+    На чужому полі
+
+
+    Не співають веселої
+
+
+    В далекій неволі.
+
+
+    І коли тебе забуду,
+
+
+    Ієрусалиме,
+
+
+    Забвен буду, покинутий
+
+
+    Рабом на чужині.
+
+
+    І язик мій оніміє,
+
+
+    Висохне, лукавий,
+
+
+    Як забуду пом’янути
+
+
+    Тебе, наша славо.
+
+
+    І Господь наш вас пом’яне,
+
+
+    Едомськії діти,
+
+
+    Як кричали ви: «Руйнуйте,
+
+
+    Руйнуйте, паліте
+
+
+    Сі'
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5030736923217773
+  chunk_id: 850100d0_c0023
+  text: "Сл. Єфр. Сир. слова (казання) Єфрема Сирина — 14.6.3\n\nСловн. Макс. латинсько-слов’янський\
+    \ словник Івана\r\nМаксимовича — 57.4.13\n\nСлово «Слово к правовЂрним христианом\
+    \ ıєже не\r\nважитися всякому правовЂрному христианину присягати ни направо ни\
+    \ налЂво» («Цар\r\nСонхос») — 43.4.15\n\nСоколя Сокільський рукопис — 57.4.2\n\
+    \nСоф. антол. антологія київського собору св. Софії —\r\n43.4.15\n\nСоф. написи\
+    \ написи в київському соборі св. Софії —\r\n14.6.9\n\nСПб. Єв. див. Єв. Пер.\n\
+    \nСтародуб Стародубські актові книги — 43.4"
+  work: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevelov/shev.htm
+- score: 0.499778687953949
+  chunk_id: 479cf43d_c0235
+  text: 'В. Білодід
+
+
+    Див. також:
+
+
+    Ігор Гирич. В. Вернадський. Між російським і українським берегами.
+
+
+    [Філософська думка в Україні: Біобібліографічний словник. — К., 2002. — С. 33-36.]'
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm

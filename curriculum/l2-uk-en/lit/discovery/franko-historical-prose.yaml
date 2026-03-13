@@ -1,0 +1,193 @@
+discovered_at: '2026-03-13T16:39:25.511157+00:00'
+query_keywords:
+- Franko Historical Prose
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Franko Historical Prose у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video directly addresses the restoration of Ukrainian literary
+    ground, the concept of literary canon (vocabulary term 'канон'), and cultural
+    memory, discussing historical figures like Bazhan and Tychyna. These themes are
+    highly relevant to understanding the cultural and historical context of Ukrainian
+    literature, including Franko's historical prose, and its decolonization dimension.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. Ми будемо говорити про тяглість української літератури, про проблему
+    пам'яті, про її подолання.
+  embed_suggestion: After section Вступ та культурний контекст -- it directly discusses
+    Ukrainian literary history and the formation of its canon.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.6
+  relevance_note: The video discusses contemporary Ukrainian poetry and the resilience
+    of the Ukrainian language, touching on themes of cultural change and identity.
+    While not directly about Franko's historical prose, it uses the vocabulary term
+    'метафора' and provides a modern context for discussions on language and cultural
+    self-preservation, which could relate to the module's decolonization dimension.
+  transcript_excerpt: Збірка «Скрипниківка» також буде містити 20 кольорових фото
+    Сергія Жадана. Автор досліджує здатність мови повертатися і самовідтворюватись,
+    про її вразливість та здатність до опору.
+  embed_suggestion: After section Вступ та культурний контекст -- it provides a modern
+    perspective on language's role in cultural identity.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=KpRA6N5qigU
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0185
+  text: "97\nІван  Франко\nПро­лог прой­ня­тий та­ким же ви­со­ким гро­ма­дян­ським\
+    \ па­фо­сом, по­лум’яним \nпат­рі­о­тиз­мом, як і «Бо­жес­твен­на ко­ме­дія»,\
+    \ зок­ре­ма піс­ня VІ «Чис­ти­ли­ща», де \nміс­тить­ся ві­до­ме звер­нен­ня Дан­те\
+    \ до Іта­лії. Про­лог І. Франка — це стис­лий ху­дож­ній лі­то­пис іс­то­рії ук­ра­їн­сько­го\
+    \ на­ро­ду, \nду­хов­но­фі­ло­соф­ське її ос­мис­лен­ня. Ог­ля­да­ю­чи ми­ну­ле\
+    \ Ук­ра­ї­ни, по­ет ба­чить у \nньо­му не тіль­ки «об­луд­ли­ву по­кір­ність уся­ко­му,\
+    \ хто зра­дою і роз"
+  section_title: Сторінка 97
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0007
+  text: Але в минулого можна багато чого навчитися. Читайте, думайте, аналізуйте —
+    і вам відкриються таємниці історії.
+  section_title: Сторінка 3
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0016
+  text: "Не дивно, що сьогодні ці ідеологічні нашарування (більші чи менші) можуть\
+    \ \nвикликати небажання читати або нерозуміння прочитаного. Тож варто готува-\n\
+    ти себе до критичного й зваженого, вдумливого сприймання цієї «людської іс-\n\
+    торії»: важливо заглиблюватись у підтекст (те, що вичитується «між рядками»),\
+    \ \nа також активізувати можливості нашого критичного мислення. У підручнику йдеться\
+    \ про різні за своїм змістом та формою художні тво-\nри. Вони відмінні не лише\
+    \ за стилем або ідейним спрямуванням, а й"
+  section_title: Сторінка 7
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5701384544372559
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5688444375991821
+  chunk_id: fbf8bdff_c0734
+  text: "It should be remembered that Franko was also a\r\nscholar and publicist (his\
+    \ research into the different linguistic devices used\r\nin these various branches\
+    \ of the literary language deserves further study).\r\nThis accounts for the particular\
+    \ attention he paid to investigating the\r\nbeginnings and sources of conflicts-whether\
+    \ contemporaneous or future. He\r\ndelighted, for example, in stories about children\
+    \ and he provided for the adult\r\ncharacters of his, prose /94/ detailed descriptions\
+    \ of their motiv"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5590792894363403
+  chunk_id: e0892426_c0201
+  text: "Людські вади засуджуються в ній з підвищеною\r\nекспресією, негативні персонажі\
+    \ одержують найрізноманітніші епітети,\r\nототожнюються з дикими звірами, чудовиськами\
+    \ (тигропардос небесний), злі вчинки\r\nасоціюються з грізними силами природи\
+    \ (грозою, темною хмарою). Позитивні герої\r\nпорівнюються з птахами, коштовними\
+    \ каменями; щасливі роки — з весною. Хроніка\r\nКостянтина Манассії послужила\
+    \ зразком для оригінальних історичних творів\r\nБолгарії, Росії, України, Молдови,\
+    \ Румунії. Вона стала джерелом образі"
+  work: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/dzuba/dzubapered.htm

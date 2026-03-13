@@ -2,9 +2,9 @@ PASS: pipeline lit 71
 
   Module:   vynnychenko-honesty
   Track:    lit
-  Mode:     v3
-  Words:    0 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T01:14:52Z
+  Date:     2026-03-13T17:45:48Z

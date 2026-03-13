@@ -1,0 +1,158 @@
+discovered_at: '2026-03-13T19:09:28.837746+00:00'
+query_keywords:
+- Професійні сценарії
+- Сценарій 1
+- Employment Scenario
+- Сценарій 2
+- Business Communication and Etiquette
+- Сценарій 3
+- Documentation and Correspondence
+- Сценарій 4
+- Public Speaking and Presentation
+- Підсумок та самооцінка
+- Summary and Self-Assessment
+- appropriate language for Сценарій 1 — Працевлаштування
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=dMnfTSwSf4s
+  channel: Radio Khartia
+  title: '"Why teach this?" is the question with which school begins today.'
+  relevance_score: 0.7
+  relevance_note: The video discusses professional skills like communication, critical
+    thinking, and public speaking (presenting a book), directly reinforcing themes
+    of business communication, etiquette, and public presentation from the module.
+  transcript_excerpt: Потрібно бути креативним, комунікативним, критично мислити...
+    І сьогодні ми будемо говорити про те, як вчити дітей вчитися.
+  embed_suggestion: After Сценарій 4 — Публічний виступ та презентація (Public Speaking
+    and Presentation) -- it reinforces the importance of communication, critical thinking,
+    and successful public presentations.
+- url: https://www.youtube.com/watch?v=58Bje_oKEHM
+  channel: Суспільне Док
+  title: '«Україна без Кучми»: як виник протест і чи був причетний Кремль? | Помаранчева
+    епоха, епізод 1 «УБК»'
+  relevance_score: 0.1
+  relevance_note: The video discusses Ukrainian political history and a specific scandal,
+    which is unrelated to professional scenarios, employment, business communication,
+    documentation, or public speaking.
+  transcript_excerpt: Наприкінці 1999 року Україна жила президентськими виборами.
+    Відходить у минуле епоха, прекрасна і жорстока, позначена високими злетами людського
+    духу та розуму і бездонними прірвами варварства.
+  embed_suggestion: Not relevant for embedding.
+- url: https://www.youtube.com/watch?v=NigkDwQhJKk
+  channel: Суспільне Док
+  title: Ветерани, що служать в гарячих точках | Документальний фільм Суспільного
+    про батальйон «Штурм»
+  relevance_score: 0.1
+  relevance_note: The video is a documentary about military veterans and their service
+    in conflict zones, which is unrelated to general professional scenarios in a civilian
+    or business context.
+  transcript_excerpt: По медичці, там турнікети і знеболюючі. Те, що по списку. Те,
+    що вони кидали список, ми його їм повністю закрили.
+  embed_suggestion: Not relevant for embedding.
+- url: https://www.youtube.com/watch?v=lKaaK2MsICs
+  channel: Суспільне Культура
+  title: 'Віталій Портников про те, чому не існує «російськомовних українців» #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=o6MwZqkIsfQ
+  channel: Repainted Fox
+  title: '#31 Культурна тероборона'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ZdFmoE4T7ZE
+  channel: Radio Khartia
+  title: 'Генерал Півненко. Печемо хліб, робимо дрони: НГУ має бути самодостатня /
+    Жадан, Сценарій параду'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-ukrmova-golub-2023_s0265
+  text: '238
+
+    § 96. Усне і письмове спілкування. Емоційний стан співрозмовників ....... 240
+
+    § 97. Міжособистісне, групове й масове спілкування ..............................
+    242
+
+    § 98. Ризики віртуального спілкування ................................................
+    244
+
+    § 99. Протидія і запобігання дискримінації, цькуванню .........................
+    247
+
+    § 100. Безпечна поведінка в цифровому просторі....................................
+    249
+
+    § 101. Особливості онлайн-взаємодії ..................................'
+  section_title: Сторінка 256
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0369
+  text: "І   \aПідготуйте зв’язну розповідь про професійний дискурс, його \nособливості.\
+    \ Оволодіння основами будь-якої професії розпочинається із засво-\nєння певної\
+    \ суми загальних і професійних знань, а також оволодіння \nосновними способами\
+    \ розв’язання професійних завдань, тобто ово-\nлодіння мовою професійного спілкування.\
+    \ Мова професійного спілкування (професійна мова) — це функціо­\nнальний різновид\
+    \ української літературної мови, яким послугову-\nються представники певної галузі\
+    \ виробництва, професії, роду"
+  section_title: Сторінка 239
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-golub-2022_s0194
+  text: "195\n452   Розгляньте схему. Чи доводилося вам опинитися хоч в одній зі \n\
+    згаданих ситуацій? Що ви робили? У яких ситуаціях ви почуває-\nтеся невпевнено,\
+    \ розгублено?\n453   Прочитайте інформацію про жанри мовлення. Доберіть і запи-\n\
+    шіть запитання, відповіді на які тут є. Підготуйте діалог, під час \nякого використайте\
+    \ всі запитання. Про що ви ще хотіли б дізна-\nтися на цьому уроці?\nМовленнєві\
+    \ жанри — це зразки \nмовної поведінки в різних ситуаціях \nспілкування.\nМовленнєві\
+    \ жанри підкажуть вам, \nяк збер"
+  section_title: Сторінка 195
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.1428571492433548
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0318
+  text: ". . .60\nМоделювання аудиторії. Контакт із аудито рією. Прийоми налагодження\
+    \ контакту . . . . . . . . . . . . . . . . .63\nТекст як одиниця спілкування.\
+    \ Етапи підготовки тексту виступу  . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . .82\nПідготовка до виступу. Види читання і записування\
+    \ тексту виступу. Естетика тексту . . . . . . . . . . . . . . .85\nЕфективність\
+    \ мовлення. Комунікативний намір. Мовленнєва поведінка. Стратегія і тактика \n\
+    мовленнєвої поведінки . . . . . . . . . . "
+  section_title: Сторінка 223
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0368
+  text: "208\n| 47. Оцінювальні мовленнєві жанри (похвала, осуд, \n \n характеристика,\
+    \ рецензія)  ............................................... 211\n| 48. Етикетні\
+    \ мовленнєві жанри (привітання, вибачення)  ......... 216\nПОВТОРЕНН¨ Й УЗАГАЛ§НЕНН¨\
+    \ ВИВÝЕНОГО  .................... 221\nДОДАТКИ \nДодаток \x14\x11 Відповіді до\
+    \ тестових завдань ................................. 225\nДодаток \x15\x11 Узагальнювальні\
+    \ таблиці  ....................................... 225\nДодаток \x16\x11 Словник\
+    \ наголосів  ..............................."
+  section_title: Сторінка 239
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

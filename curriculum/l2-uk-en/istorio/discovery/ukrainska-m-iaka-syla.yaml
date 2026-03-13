@@ -1,0 +1,193 @@
+discovered_at: '2026-03-13T13:54:47.843941+00:00'
+query_keywords:
+- 'Українська м''яка сила: Культурна дипломатія'
+- Eurovision як фронт
+- Кінематограф
+- Мистецтво і дизайн
+- Цифрова дипломатія
+- 'Analyze the causes and consequences of українська м''яка сила: культурна дипломатія'
+- Evaluate the historical significance of культура як зброя
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0423
+  text: "Розвиток україни як незалежної держави\nСимволіка чемпіонату Європи \nз футболу\
+    \ 2012 р. Плакат, присвячений співробітництву \nЄС та україни\nПрактичне заняття\
+    \ \nза розділом V\nrnk.com.ua/107037\nТестові завдання \nдля підготовки до тематичного\
+    \ \nконтролю за розділом V\nrnk.com.ua/107039"
+  section_title: Сторінка 242
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0493
+  text: "4. Об’єднайтеся у п’ять груп та виконайте мінідослідження за одним із напрямків:\n\
+    «Майбутнє людства визначається наукою», «Смак  сучасної української літератури»,\
+    \ \n«Українська музика: народження чи реанімація», «Спорт — це стиль життя», \
+    \ «Мистецтво \nяк життя і одкровення». За результатами дослідження підготуйте\
+    \ творчий продукт: пісню, \nвідео, сценку, фотоколаж, інсталяцію, постер тощо."
+  section_title: Сторінка 269
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0085
+  text: "а ще ти можеш\nУяви, що ти хочеш розповісти іноземним друзям про шедеври\
+    \ культури Русі-­\nУкраїни кінця X — першої половини XI ст. Підготуй презентацію\
+    \ (5–6 слайдів) про \nнайважливіше з розвитку освіти, книгописання, архітектури\
+    \ та живопису. Викори-\nстай інструмент дослідження. https://vse.ee/cfwx \nВідкрий\
+    \ цифровий додаток і виконай завдання до § 9. https://vse.ee/cfwx"
+  section_title: Сторінка 72
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0003
+  text: "УМОВНІ ПОЗНАЧЕННЯ\nРобота\nв парах\nМистецька хвилинка\nРобота\nв групах\n\
+    Віртуальна екскурсія; робота з електрон ним \nдодатком і пошук у мережі «Інтернет».\
+    \ \n(Завдання такого типу учні можуть\n виконувати як удома, так і в закладі освіти.)\n\
+    Мікрофон – висловте свою думку\n© Заболотний В. В., Заболотний О. В.,\nСлоньовська\
+    \ О. В., Ярмульська І. В., 2024\n© «Літера ЛТД», 2025\nІнтерактивний електронний\
+    \ додаток\nhttp://ukrlit-8k-nus.e-litera.com.ua/index.html\nЗаболотний В. В.\n\
+    Українська література : підручник дл"
+  section_title: Сторінка 4
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5155322551727295
+  chunk_id: 53691244_c0198
+  text: "Симптоматичною є орієнтація Будапешта на те, що в міру\r\nзміцнення Української\
+    \ держави вона стане активним союзником Угорщини в захисті\r\nінтересів угорської\
+    \ національної меншини, в розвитку інтеґраційних процесів у\r\nЄвропі. Міцна й\
+    \ стабільна Україна в союзі з європейськими державами зможе\r\nсильніше впливати\
+    \ на подолання несправедливостей, пов’язаних із розділом\r\nугорської нації: на\
+    \ цьому шляху співробітництво України й Угорщини має\r\nперспективу і стане ефективним.\n\
+    \nОстаннім часом Угорщина також д"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.5100657343864441
+  chunk_id: fc2291b5_c0197
+  text: "Літ.: Микитась В. Л.\r\nУкраїнський письменник-полеміст Михайло Андрелла.\
+    \ Ужгород, 1960; Микитась B. Л.\r\nДавня література Закарпаття. Львів, 1969; Микитась\
+    \ В. Л. Українська література в\r\nборотьбі проти унії. К., 1984.\n\nВ. Л. Микитась."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5099218487739563
+  chunk_id: 484d0ffb_c0004
+  text: "4.10. Виникнення та розвиток друкарства в Україні (Я. Д. Ісаєвич)\n\nЛьвівська\
+    \ друкарня Івана Федорова. Видавнича\r\nдіяльність князя Острозького. Друкарні\
+    \ Львівського братства та Києво-Печерської\r\nлаври. Латинсько-польське книговидання.\
+    \ Друкарство другої чверті XVIII ст.\r\nКниговидання України: успіхи і проблеми.\n\
+    \n4.11. Архітектура та містобудування (В. С. Александрович)\n\nАрхітектура. Містобудування.\
+    \ Замки та укріплені\r\nмонастирі. Житлове будівництво в містах. Муровані та дерев’яні\
+    \ церкви.\r\nСакральн"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

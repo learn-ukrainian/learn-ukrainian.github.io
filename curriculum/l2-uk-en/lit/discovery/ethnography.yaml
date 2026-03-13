@@ -1,0 +1,203 @@
+discovered_at: '2026-03-13T13:16:52.951809+00:00'
+query_keywords:
+- 'Етнографія як Література: Український Світ Квітки'
+- Весільний обряд
+- Похоронний обряд
+- Економічна етнографія
+- Соціальна топографія села
+- Analyze the role of rituals in Kvitka's prose
+- Compare wedding and funeral rites in "Marusya"
+- Evaluate the ethnographic accuracy of Kvitka's works
+- Ethnographic terminology (weddings, funerals)
+- Ritualistic language formulas
+- Symbolism of material culture (clothing, food)
+- culture
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode168/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - history
+  - kyiv
+  - lviv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 168
+- url: https://www.ukrainianlessons.com/episode180/
+  title: Ukrainian Lessons Podcast Season 5
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 5
+  episode: 180
+- url: https://www.ukrainianlessons.com/about-crimea/
+  title: About Crimea — History and Culture
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - crimea
+  - history
+  - geography
+  - culture
+- url: https://www.ukrainianlessons.com/episode49/
+  title: Syrnyky recipe + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - phrases
+  - introductions
+  - culture
+  - traditions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 49
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-istoria-ukr-pometun-2024_s0008
+  text: "177\n§ 27–28. Релігійне життя і культура українських земель  \nу другій половині\
+    \ ХІV — на початку ХVІ ст. . . . . . . . . 186\nУзагальнюємо знання й уміння за\
+    \ розділом 5  . . . . . . . . . . . . 198\nРічне узагальнення  . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . 206"
+  section_title: Сторінка 8
+  grade: 7
+  author: pometun
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0299
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . . 197
+
+    § 59–60. Етикетні жанри . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 201
+
+    Короткий словник наголосів . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . 203
+
+    Короткий словник колоритної української лексики. . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 205'
+  section_title: Сторінка 207
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-istoriya-schupak-2022_s0042
+  text: "РОЗДІЛ 1\n44\nОписи мандрівників\nЛітописи\nМемуари (спогади)\nПравові документи\n\
+    Газети, журнали\nХроніки\nГосподарські записи\nПраці давніх істориків\nПисемні\
+    \ джерела\nз історії України\nВиди писемних джерел з історії України\n2.\t ЯК\
+    \ ЕТНОГРАФІЯ І ФОЛЬКЛОР ДОПОМАГАЮТЬ \nДОСЛІДЖУВАТИ ІСТОРІЮ\nВажливу роль у вивченні\
+    \ історії відіграє відтворення \nминулого за пам’ятками усної народної творчості,\
+    \ дани-\nми етнографічних експедицій. Життя людей, починаючи \nз ХІХ (19) ст.,\
+    \ можна досліджувати за фотографіями, а з ви-"
+  section_title: Сторінка 44
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0169
+  text: 'А староста й крикнув:
+
+    — За таку навуку цiлуйте, дiти, батька в руку! (...)
+
+    Далі описано обряд сватання з піснями й приказками. НОВА УКРАЇНСЬКА ЛІТЕРАТУРА
+
+    134'
+  section_title: Сторінка 134
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0440
+  text: "рушники розвішувалися \nзавжди на визначних місцях: над вікнами, в простінках,\
+    \ на \nпокуті. Надзвичайна стійкість традиції їх використання у сі-\nмейному житті\
+    \ (на рушник становили молодих, рушником їх \nпов’язували, ним сповивали немовля,\
+    \ його дарували в дорогу, \nна ньому підносили хліб-сіль, опускали покійника в\
+    \ яму) по-\nяснюється побутуванням давніх релігійно-магічних уявлень \n(тоді рушники\
+    \ розвішували у священних гаях, на них, як на \nсвоєрідну ікону, наносили язичницькі\
+    \  зображення)». Струнка М."
+  section_title: Сторінка 247
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6166963577270508
+  chunk_id: feaa5fa7_c0646
+  text: "Весілля як родовий акт і весільні пісні: Лозинський\r\nЙ. Ruskoje Wesila.\
+    \ Перемишль 1835; Чубинский П. Труды этнографическо-статистической\r\nэкспедиции\
+    \ в Западно-Русский край. IV; Янчук Н. Малороссийская свадьба в\r\nКонстантиновском\
+    \ уезде, Седлецкой губ. Труды Этнографического Отдела, VII.\r\n1886; Сумцов Н.\
+    \ КСт. X 1881, III 1885, II 1886; Охримович В.\r\nЗначение малорусских свадебных\
+    \ обрядов и песен в историческом развитии семьи.\r\nЭтнографическое обозрение.\
+    \ XI, XV 1892; Ящуржинский Х. Малорусская\r\nсва"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5982033014297485
+  chunk_id: 484d0ffb_c0262
+  text: "Про сімейні обряди та звичаї (передвесільні та\r\nвесільні, пологові, пов’язані\
+    \ з хрестинами, похоронні й поминальні) знаємо лише\r\nз фрагментарних звісток\
+    \ джерел XVI — XVIII ст. і з системніших етнографічних\r\nобстежень XIX — XX ст. 7\n\
+    \n4 ГВЛ. — С. 573\r\n(Махн. — С. 425).\n\n5 ГВЛ. — С. 580\r\n(Махн. — С. 429).\n\
+    \n6 ГВЛ. — С. 596,\r\n597, 598. (Махн, — С. 438 — 439).\n\n7 Чмелик Р. П. Назв.\r\
+    \nпраця. — С. 226 — 239; Кирчів Р. Ф. Сімейні звичаї та обряди //\r\nЕтнографія\
+    \ України. За ред. С. А. Макарчука. — Львів, 1"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm
+- score: 0.5962273478507996
+  chunk_id: 484d0ffb_c0341
+  text: "5 Kultura Polski\r\nśredniowecznej: XIV — XV w. / Red. B. Geremek. — Warszawa,\
+    \ 1997. — S.\r\n422.\n\n10 Див.: Чмелик\r\nР.П. Сім’я та сімейний побут// Укр.\
+    \ народознав. — Львів, 1990. — С. 236.\n\n11 Кісь Р. Коваріації\r\nуявлень про\
+    \ смерть як індикатор типу культури // Thanatos. — С. 9 — 11.\n\n12 Кирчів Р.Ф.\
+    \ Сім’я\r\nі сімейний побут // Етнографія України. — Львів, 1994. — С. 352 — 356.\n\
+    \nТакими ж пережитками позначені всі обряди переходу\r\n(rites de passage), у\
+    \ тому числі весілля: йшлося про смерть у старій і\r\n"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm

@@ -1,0 +1,186 @@
+discovered_at: '2026-03-13T14:22:22.364934+00:00'
+query_keywords:
+- Жіноча доля в "Кобзарі"
+- Катерина
+- Наймичка
+- Архетип Трагічної Матері
+- Димінутиви та емоційний пафос
+- Analyze the archetype of the Tragic Mother (Pokrytka) in Shevchenko's works
+- Compare the characters of Kateryna and Hanna (Naimychka)
+- Discuss Shevchenko's ethical evolution from romanticism to realism
+- Identify the function of diminutives in creating emotional pathos
+- Emotional pathos
+- Diminutives usage
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0181
+  text: "2. Сумніви як правило крадуть у нашої думки сили \v\x9D\x11 Мостова\f. 3.\
+    \ Не \nпокидай мене моя дитино і отчого подвір’я джерело \v\x8E\x11 \x8Dровченко\f\
+    . 4. По-\nперше проблема лише Áойно виникла а по-друге ми безперечно можемо \n\
+    вирішити її самостійно \vЗ ®урналу\f. 5. Та й зрештою причин до сварки \nне знаходилося\
+    \ \vН\x11 \x8Dічуя\f. 6. ä може в ту годину в ту хвилину вродилась \n¸існя \v\
+    М\x11 Ðильськи±\f. 7. Хотів би я мамо веселі пісні співати й сміятись як \nдіти\
+    \ \v\x9C\x11 Üеркасенко\f. 8. ä я виходжу в гомін трав і припадаю до сліда "
+  section_title: Сторінка 126
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0143
+  text: "Вас турбує, що \nдівчина може нехтувати всім цим. Ви турбує­\nтесь за неї,\
+    \ а вона вважає, що ваша стурбова­\nність з­за неї — то вираз невіри в її сили.\
+    \ Ваше \nповодження аж надто необережне й майже об­\nразливе». Зрештою драма нерозуміння\
+    \ призводить \nдо кризи в стосунках. Ось як коментує це сам \nВарецький: «Вона\
+    \ сподівалась, що кохання \nє щось більше, ніж кохати, що наше кохання \nспопелить\
+    \ попельність буденних днів і тижнів, \nщо в коханні розквітне блакитний сон незна­\n\
+    ного майбуття. Вона сподівалас"
+  section_title: Сторінка 78
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0485
+  text: '. . . . . . . . . . . . . . . . 245
+
+    По дорозі в Казку  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 245
+
+    Теорія літератури. Драматичний етюд . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 247
+
+    Короткий словник літературознавчих термінів . . . . . . . . . . . . . . . . .
+    . . . . . . . 249'
+  section_title: Сторінка 255
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0010
+  text: "8\nВступ\n4.\t Мовна мімікрія (рядок 35) тут означає \n\t\nА\t перехід у\
+    \ спілкуванні на російську мову\n\t\nБ\t перехід у спілкуванні на українську мову\n\
+    \t\nВ\t приховування свого соціального походження\n\t\nГ\t дотримання закону про\
+    \ мови в суспільному житті\n5.\t Заголовком до тексту стали слова\n\t\nА\t Ірени\
+    \ Карпи\n\t\nБ\t Оксани Поліщук\n\t\nВ\t Лариси Масенко\n\t\nГ\t Анни Каленської\n\
+    6.\t Підзаголовок ВАЖІЛЬ ПЕРЕМИКАННЯ (рядок 9)  \n\t\nА\t розкриває проблему ставлення\
+    \ оточення до людей, які змінили мову спілкування\n\t\nБ\t має на ме"
+  section_title: Сторінка 8
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0235
+  text: "Германова)\nАвітаміноз настрою лікують передов-\nсім цікавим спілкуванням\
+    \ (З  Інтернету). У текстах художнього і  публіцистичного стилів слова іншомовного\
+    \ похо-\nдження можуть бути засобом:\n \n створення образності: Рожевий вечір,\
+    \ як фламінго, над нами крила роз-\nпростер (Д. Луценко). Почерк у  друга нервовий,\
+    \ як електрокардіограма \n(Л. Костенко);\n \n протиставлення або контрасту: Захоплююся\
+    \ японським малярством стилю \nніхонга, а в очах українські старовинні рушники\
+    \ (І. Шишов);\n \n гумористичного та і"
+  section_title: Сторінка 167
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5303723812103271
+  chunk_id: 3588aaff_c0553
+  text: "Уявлення Чижевського про українську аудиторію та\r\nпрагнення викласти їй\
+    \ найелементарніші знання також зумовлювали значні\r\nспрощення. Ця тенденція,\
+    \ прикра для будь-якого \"наукового огляду\" чи\r\n\"довідника\", породжена не\
+    \ самою лише лаконічністю. Чому, скажімо,\r\nдаючи визначення \"епітету\", \"\
+    антитезі\" або\r\n\"паралелізму\", Чижевський нехтує такими не менш важливими\
+    \ компонентами\r\nпоетики, як образ, парадокс, двозначність або той самий символ?\
+    \ Звичайно,\r\nпояснити це можна його свідомим наміром обмежитися"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5221319198608398
+  chunk_id: fc2291b5_c5356
+  text: "Тв.: Собрание сочинений, т.\r\n1 — 4. М., 1990; Пьесы. М., 1990.\n\nЛіт.:\
+    \ Давыдов С. «Тексты-матрешки»\r\nВладимира Набокова. Мюнхен, 1982; Ерофеев В.\
+    \ Русский метароман В. Набокова, или\r\nВ поисках потерянного рая. «Вопросы литературы»,\
+    \ 1988, № 10; Анастасьев Н. А.\r\nФеномен Набокова. М., 1992.\n\nВ. Я. Звиняцковський."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5193215012550354
+  chunk_id: fc2291b5_c2451
+  text: "Тв.: Народный героический\r\nэпос. М. — Л., 1962; Творчество Анны Ахматовой.\
+    \ Л., 1973; Теория стиха Л.\r\n1975; Теория литературы. Поэтика. Стилистика. Избранные\
+    \ труды. Л., 1977; Байрон\r\nи Пушкин. Л., 1978; Сравнительное литературоведение.\
+    \ Восток и Запад. Л., 1979;\r\nИз истории западноевропейских литератур. Л., 1981;\
+    \ Гете в русской литературе.\r\nЛ., 1981.\n\nЛіт.: Виктор Максимович\r\nЖирмунский.\
+    \ М., 1965; Гольберг М. Я. В. М. Жирмунський як літературознавець і\r\nфольклорист.\
+    \ «Іноземна філологія», 1966, в."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

@@ -1,0 +1,241 @@
+discovered_at: '2026-03-13T15:08:54.047563+00:00'
+query_keywords:
+- 'Анексія Криму: Початок війни'
+- 'Читання: Хроніка злочину'
+- Первинні джерела
+- Деколонізаційний погляд
+- механізм анексії Криму та роль «зелених чоловічків»
+- порушення Будапештського меморандуму
+- основні міфи російської пропаганди про Крим
+- Historical narrative tenses
+- Official vs. Informal register
+- history
+- анексія
+- окупація
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=KR5KeLPgls4
+  channel: Реальна Історія
+  title: Що я реально побачив у 2014?
+  relevance_score: 1.0
+  relevance_note: 'The video is from a highly trusted source (''Реальна Історія''
+    with Akim Halimov) and directly addresses the module''s core topic: the annexation
+    of Crimea, detailing the events of early 2014, the role of ''зелені чоловічки'',
+    and its significance as the start of the war against Ukraine. It perfectly aligns
+    with the ''Хроніка злочину'' and ''Деколонізаційний погляд'' sections.'
+  transcript_excerpt: вже зараз зрозуміло що Крим був початком саме з анексії півострова
+    Росія запустила війну проти України... А для цього я пропоную вам детальний розбір
+    основних подій лютого і березня 2014 року як відбувалося захоплення Криму.
+  embed_suggestion: 'After section Читання: Хроніка злочину -- The video provides
+    a detailed chronological narrative of the annexation, serving as an excellent
+    visual and auditory reinforcement of the ''chronicle of the crime'' presented
+    in text.'
+- url: https://www.youtube.com/watch?v=nQguCZL8fUc
+  channel: Реальна Історія
+  title: Anti-Terrorist Operation (ATO) in Donbass. Full chronology from 2014 to 2022
+    (ENG SUBS)
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=MylHrNj5QJg
+  channel: ІМТГШ
+  title: Таємниця Членства Росії в ООН | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=-8HtoNLr2Og
+  channel: ІМТГШ
+  title: Історія Карпатської України | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0408
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 226
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0088
+  text: "9. Використовуючи знання зі всесвітньої історії, обговоріть явище про-\n\
+    дажу захоплених у полон людей на невільницьких ринках. Висловіть \nвласне ставлення\
+    \ до цього явища. 10. Працюємо разом. Метод «Дискусія». Як у  заняттях населення\
+    \ Крим-\nського півострова цієї доби відображалася взаємодія людини і довкілля?\
+    \ rnk.com.ua/109908\nПрактичне заняття  \nза розділом І\nrnk.com.ua/109909\nУзагальнення\
+    \ знань  \nза розділом I\nrnk.com.ua/109910\nТестові завдання  \nза  розділом \
+    \ I"
+  section_title: Сторінка 56
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0446
+  text: "Блокування і захоплення українських військових об’єктів із боку кримських\n\
+    сепаратистів і російських військ\nВідновлення Кримської АРСР  і перейменування\
+    \ її \nна Автономну Республіку Крим \nМісця компактного розселення кримських татар-репатріантів\n\
+    Місця зосередження українських військових підрозділів\nПідрозділи російського\
+    \ Чорноморського флоту в Криму (відповідно до угод\n 1997 і 2010 рр.)\nЗахоплення\
+    \ російськими кораблями українських катерів у Керченській протоці\nпід час їхнього\
+    \ переходу з Чорного в "
+  section_title: Сторінка 255
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0433
+  text: "2015  р. ДЕКОМУНІЗАЦІЯ\nЗаходи\nУвічнення перемоги над нацизмом \nу  Другій\
+    \ світовій війні (1939—\n1945  рр.)\nДоступ до архівів спецслужб\nПравовий статус\
+    \ учасників \nборотьби за незалежність України\nЗасудження комуністичного \nта \
+    \ нацистського режимів\nЗміна назв населених пунктів, \nвулиць, об’єктів топоніміки,\
+    \ що \nмають імена компартійних діячів; \nзнесення пам’ятників на честь \nкомуністичних\
+    \ лідерів і  подій\n© ТОВ Видавництво «Ранок». Всі права захищено."
+  section_title: Сторінка 239
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5420124530792236
+  chunk_id: 5794da94_c0026
+  text: "2) Антоновичъ и Драгомановъ Истор. пЂсни І ч. 25, \r\n вар. А. і В. (я збираю\
+    \ сї варіанти до купи).\n\n3) Скарга 1536 р., див. вище.\n\n4) l. c. c. 55 і 58.\n\
+    \n5) Архивъ VII. II с. 372.\n\n6) Paprocki Herby rycerstwa polskiego c. 221.\n\
+    \n7) Памятники снош. съ Крымомъ I с. 23.\n\n8) Пулаского збірка ч. 24.\n\n9) Памятники\
+    \ снош. съ Крымомъ І с. 194-6, 305, див. ще низше.\n\n10) Ibid ч. 120 (1510).\n\
+    \n11) Acta Tomiciana VIII ч. 51.\n\n12) Книга посольская в. кн. Литовського І\
+    \ с. 22.\n\n13) Див. у мене т. VI с. 10-1.\n\n14) "
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5339028835296631
+  chunk_id: 5794da94_c0939
+  text: "11) Вельяминовъ-Зерновъ Матеріялы \r\nдля исторыи Крымскаго ханства Nr. 13,\
+    \ 21, у Смірнова op. c. с. 497. також листи \r\nсултана й каймакама в Ukr. spr.\
+    \ с. 73 і 76 (тут перебільшені поголоски, що \r\nкозаки навіть здоули Перекоп\
+    \ і инші замки й тримають їх, і що день їх \r\nприбуває).\n\n12) Collectanea 1\
+    \ c. \r\n187-8.\n\nТОМ VIII     \r\nРозділ II\n\n[М. Грушевський. Історія України-Руси.\
+    \ Том VIII. Розділ II. Стор. 1.]\n\n[М. Грушевський. Історія України-Руси. Том\
+    \ VIII. Розділ II. Стор. 2.]\n\nТОМ VIII     \r\nРозділ "
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5213223099708557
+  chunk_id: 6573f12d_c1149
+  text: "771. Калинина Т. М. Древняя Русь и страны Востока в X\r\nв. (Средневековые\
+    \ арабо-персидские источники о Руси). АКД. — М., — 1976. — С. 21-25\n\n772.Каменцева\
+    \ Е.И. Русская хронология / Отв. ред. А. А. Зимин. — М.,\r\n1960. — 85 с.\n\n\
+    773. Камінський I. Корона Данила в правно-політичній\r\nструктурі Заходу // Analecta\
+    \ ordinis S.Basilii Magni. — Vol.2 (8). — Fasc. 1-2.\r\n— Romae. — 1954. — C.\
+    \ l19-125\n\n774. Карамзин Г. Б. Битва при Грюнвальде. — Л., 1961. — 121 с.\n\n\
+    775. Карамзин Н. М. История государства Росси"
+  work: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/dynasty/dyn01.htm

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1 9 — E2E
+PASS: pipeline c1 9
 
   Module:   thesis-development
   Track:    c1
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T17:57:47Z
+  Date:     2026-03-13T17:41:59Z

@@ -1,0 +1,196 @@
+discovered_at: '2026-03-13T18:14:56.147694+00:00'
+query_keywords:
+- Yanovsky Four Sabres
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Yanovsky Four Sabres у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video discusses the Ukrainian literary canon, cultural memory,
+    and the continuity of Ukrainian literature, mentioning historical figures like
+    Bazhan and Tychyna. This is highly relevant to understanding the broader literary
+    context and decolonization efforts pertinent to works like 'Four Sabres'.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. ... Себто так чи інакше ми будемо говорити про тяглість української
+    літератури, про проблему пам'яті, власне, про те, що в є в назві книжки Віри Павліної
+    про амнезію, про її подолання.
+  embed_suggestion: After section Деколонізаційний вимір -- because it directly addresses
+    the themes of literary canon, cultural memory, and restoring Ukrainian literary
+    heritage, which are central to decolonization in literature.
+- url: https://www.youtube.com/watch?v=8l_FfmbpEWs
+  channel: Radio Khartia
+  title: Культура виживає завдяки тим, хто не здається
+  relevance_score: 0.7
+  relevance_note: This video explores the survival of Ukrainian culture and language
+    through historical oppression, citing the example of Ivan Nechuy-Levytsky. This
+    provides valuable context for the 'Деколонізаційний вимір' by illustrating the
+    historical struggle against cultural suppression.
+  transcript_excerpt: В мене таке враження, що для того, щоб функціонувала от так
+    би мовити культура, потрібні і подвижники, але потрібні і ті, хто працює на культуру.
+    ... Ну, українську словесность неможливо було викладати.
+  embed_suggestion: After section Деколонізаційний вимір -- because it provides historical
+    examples of the fight for Ukrainian cultural survival, directly supporting the
+    decolonization theme.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: This video discusses contemporary Ukrainian literature, language,
+    and the role of metaphor in Serhiy Zhadan's work. While not directly about Yanovsky's
+    'Four Sabres', it touches on themes of language and metaphor in a literary context,
+    which is tangentially related to the module's 'Мова, стиль та поетика' section
+    and general cultural context.
+  transcript_excerpt: В ній Сергій Жадан досліджує мову, як стверджує сам автор, цитую,
+    здатність мови повертатися і самовідтворюватись, про її вразливість, про її здатність
+    до опору.
+  embed_suggestion: After section Мова, стиль та поетика -- because it discusses language
+    and metaphor in a broader literary context.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0180
+  text: "\x03\n\x83 У вигляді схеми, таблиці, конспекту, коміксів тощо занотуйте інформацію\
+    \ про \nтвір ю . яновського «Майстер корабля»: жанрові та стильові особливості,\
+    \ теми \nта проблеми, мотиви, персонажі, основні сюжетні колізії . щоб отримати\
+    \ повніше уявлення про творчість Þ. ßновського, прочи-\nтайте його твори «Ãоллівуд\
+    \ на áерезі ×орного моря», «Áайгород», \n«×отири шаáлі», «Äитинство», «Подвійне\
+    \ коло» . Запрошуємо до бібліотеки"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0179
+  text: "Прозове розмаїття 1920‑х років . юрій яновський . «Майстер корабля»  97\n\
+    2. із чим автор порівнює корабель у цьому тексті? які метафори використовує \n\
+    для його зображення? які з них здалися вам найбільш яскравими? 3. Наведіть приклади\
+    \ використання в тексті персоніфікації . якого ефекту до-\nзволяє досягти використання\
+    \ цього художнього засобу? 4. Знайдіть у тексті приклади звуконаслідувань . З\
+    \ якою метою створює їх автор? 5. які почуття виникли у вас під час читання уривка?\
+    \ як ви гадаєте, чи відпо-"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0170
+  text: "Це все важливо враховувати, аналізуючи \nроман. Організація твору Юрія Яновського\
+    \ доволі \nскладна й експериментальна. Виклад стилізо-\nваний під мемуари — спогади\
+    \ вже немолодого \nгероя про давні часи. Письменник, ще молода \nлюдина, пробує\
+    \ уявити, яким має стати його \nгерой на восьмому десятку років. Він немовби \n\
+    мандрує в часі, гортаючи сторінки людського \nжиття, переноситься від молодості\
+    \ до старості \nй навпаки, тим самим додаючи всьому твору \nфілософської глибини.\
+    \ Автор активно використовує поза"
+  section_title: Сторінка 92
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0323
+  text: "210\nРозділ 4. БУТИ САМИМ СОБОЮ\n7. Прочитайте уривок, у якому автор показує\
+    \ жахливі наслідки війни. Як у цьому \nуривку розкрито потворну суть російського\
+    \ самодержавства в особі царя \n Миколи І? 8. Чи вдалось авторові, на вашу думку,\
+    \ показати справжнє обличчя самодержав-\nства? Наведіть приклади з тексту твору.\
+    \ 9. Об’єднайтеся в групи й виберіть одну-дві з поданих морально-етичних проблем.\
+    \ Розкажіть, як цю проблему розкрито в поемі «Кавказ». підступність\n  \nлицемірство\n\
+    \  \nаморальність\n  \nубивство\nн"
+  section_title: Сторінка 212
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5751086473464966
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.559615433216095
+  chunk_id: 3588aaff_c0551
+  text: "4. У тому-таки вступному розділі, де подається\r\nкороткий огляд попередньої\
+    \ української науки про літературу, Чижевський також\r\nвважає за потрібне спробувати\
+    \ десь на шести сторінках викласти ази поетики. Для\r\nангломовних читачів це\
+    \ може видатися ексцентричним або вищою мірою недоречним.\r\nОдначе така спроба\
+    \ цілком відповідає тим настановам, про які йшлося вище.\r\nПочавши з двох параграфів,\
+    \ присвячених мові (де він згадує, приміром, архаїзми,\r\nнеологізми, жаргон тощо),\
+    \ продовживши короткими визначен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5395095348358154
+  chunk_id: 172f2637_c0087
+  text: '4. Грубою помилкою було б негайно ідентифікувати ці висновки зі світоглядом
+    автора. Частіше їх доводиться іден­тифікувати з світоглядом редактора, а то й
+    видавця, а часто й просто Мар''ї Алексєвни. Світогляд автора знаходиться ста­ранною
+    аналітичною роботою над усіма його творами і су­часною йому творчістю інших. В
+    данім оповіданні куточок світогляду визирає з-під відношення автора до кволих
+    лю­дей.
+
+
+    5. Знайти справжній світогляд автора, аналізуючи тільки його твори, — справа дуже
+    нелегка, а поде'
+  work: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+  year: 1895
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=25044

@@ -1,0 +1,196 @@
+discovered_at: '2026-03-13T15:02:14.831598+00:00'
+query_keywords:
+- Мовна політика незалежної України
+- Мова як поле битви
+- Мовна політика 1991-2012
+- Закон Колесніченка-Ківалова та його наслідки
+- Первинні джерела
+- Деколонізаційний погляд
+- Після 2022 року
+- еволюцію мовної політики України
+- роль мови в національній ідентичності
+- мовні закони та їх вплив
+- сучасну мовну ситуацію
+- Теперішній та минулий час
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=kJVmZ7WVVWo
+  channel: Реальна Історія
+  title: Невже російська – лише говірка української мови? Реальна історія з Акімом
+    Галімовим
+  relevance_score: 1.0
+  relevance_note: This video directly addresses the historical and political manipulation
+    of the Russian language narrative in relation to Ukrainian, and its use as a pretext
+    for war. This is central to understanding the language policy of independent Ukraine,
+    particularly the concept of 'language as a battlefield' and the decolonization
+    perspective.
+  transcript_excerpt: Ще в 2014 році для Путіна була мова і захист російськомовного
+    населення... великий і магучий русский язык - це Афера яку провернули всьогото
+    навсього 200 років тому.
+  embed_suggestion: After section Деколонізаційний погляд -- because it offers a critical,
+    decolonized historical perspective on the relationship between Ukrainian and Russian
+    languages, which is fundamental to understanding independent Ukraine's language
+    policy.
+- url: https://www.youtube.com/watch?v=sHscKq8jVMI
+  channel: Реальна Історія
+  title: The real history of Ukrainian-Hungarian relations
+  relevance_score: 0.6
+  relevance_note: The video discusses Ukrainian-Hungarian relations, historical claims,
+    and the situation of the Hungarian minority in Zakarpattia, which implicitly touches
+    upon language rights and the broader 'language as a battlefield' concept, though
+    not directly on Ukrainian language policy itself.
+  transcript_excerpt: Угорський прем'єр Віктор Орбан - один з небагатьох європейських
+    лідерів, хто відкрито тисне руку Путіну... Будапешт блокує ці важливі для нашого
+    майбутнього переговори і вимагає гарантій для угорської меншини на Закарпатті.
+  embed_suggestion: 'After section Вступ: Мова як поле битви -- because it provides
+    a concrete example of a national minority issue within Ukraine that touches upon
+    identity and (implicitly) language rights, expanding on the ''language as a battlefield''
+    concept.'
+- url: https://www.youtube.com/watch?v=L1FeVj2QiKY
+  channel: Комік Історик
+  title: 'історія Угорщини: прибульці з Уралу'
+  relevance_score: 0.2
+  relevance_note: The video primarily focuses on the history of Hungary and its geopolitical
+    relations, with only tangential and indirect mentions of Zakarpattia in the context
+    of historical Hungarian claims, not Ukrainian language policy.
+  transcript_excerpt: Тріанонським мирним договором на Угорщину покрамсали по величезним
+    частинам... Оцей ресентимент, ревізіонізм, він присутній до сих пір. Ми ж чуємо
+    про Закарпаття, ми чуємо про угорців там.
+  embed_suggestion: None -- the video's focus on Hungarian history is too broad and
+    its connection to Ukrainian language policy is minimal and indirect.
+- url: https://www.youtube.com/watch?v=Hk8RhT59X3I
+  channel: ІМТГШ
+  title: Історія Польщі за 15 хвилин | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.1
+  relevance_note: This video provides a general history of Poland and has no direct
+    or indirect relevance to the language policy of independent Ukraine.
+  transcript_excerpt: польська держава виникла в басейні річки вісло яка впадає в
+    Балтійське море... Мешко перший як і мати Святослава княгиня Ольга прийняв християнство...
+  embed_suggestion: None -- completely unrelated to the module topic.
+- url: https://www.youtube.com/watch?v=3u7PBg6GewI
+  channel: ІМТГШ
+  title: 'Де закінчується Україна: НОВГОРОД?'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0484
+  text: ". . . . . . . . . . . . .23\n§ 8 \nОсобливості розвитку української мови\
+    \ на сучасному етапі  . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . .27\nСУЧАСНА УКРАЇНСЬКА МОВА\
+    \ ЯК ВИЩА ФОРМА ІСНУВАННЯ НАЦІОНАЛЬНОЇ МОВИ\n§ 9 \nФорми існування мови  . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . .30\n§ 10 Писемна і усна форм"
+  section_title: Сторінка 269
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0005
+  text: "УМОВНІ ПОЗНАЧЕННЯ:\n– теоретичні відомості\n– завдання з елементами дослідження\n\
+    – завдання з розвитку мовлення\n– завдання конкурсного характеру\n– завдання підвищеної\
+    \ складності\n– завдання для роботи з додатковими джерелами\nВідповідає модельній\
+    \ навчальній програмі \n«Українська мова. 7–9 класи» \nдля закладів загальної\
+    \ середньої освіти\n (авт.: Çàáîëîòíèé Î. Â., Çàáîëîòíèé Â. Â., Ëàâðèí÷óê Â. Ï.,\
+    \  \nПлівачук К. В., Попова Т. Д.)\nУДК\t811.161.2(075.3)\t\n \nЗ-12\nРекомендовано\
+    \ Міністерством освіти і науки Ук"
+  section_title: Сторінка 6
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0483
+  text: "ЗМІСТ\nМОВА ЯК СУСПІЛЬНЕ ЯВИЩЕ. УКРАЇНСЬКА МОВА В УКРАЇНІ\n§ 1 \nМова як\
+    \ знакова система і суспільне явище. Мова і держава . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . .4\n§ 2 \nПроблема екології української мови. «Мовний суржик». Українська\
+    \ мова як одна з індоєвропейських \nмов. Ознаки самобутності української мови\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 269
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0035
+  text: "26\n20\n \a І   \a«Найкращий спосіб пояснити  — це самому зробити». Прочитайте\
+    \ текст мовчки. РОЗВИТОК МОВОЗНАВСТВА У ХХ СТОЛІТТІ\nПісля політичних баталій\
+    \ 1917–1918 років для лінгвістики настає \nновий бурхливий етап. Українська мова,\
+    \ приречена за царату на \nзагибель, на деякий час набуває правового статусу й\
+    \ нових для себе \nдержавних функцій: поширюється у громадсько-політичному житті,\
+    \ \nу науці й освіті, у пресі та книговиданні, на виробництві та в місь-\nкому\
+    \ побуті. Курс на українізацію вимагав відп"
+  section_title: Сторінка 26
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0007
+  text: "6\nя вивчаЮ УкраїнськУ мовУ \nУкраїнська мова — державна мова України.\n\
+    У кожного народу своя мова. \nУкраїнська мова — скарб українського \nнароду, запорука\
+    \ його незалежності. \nЯ спілкуюсь українською мовою, тому що:\nми — \nукраїнці\n\
+    я живу \nв Україні\nмої рідні \nговорять укра-\nїнською\nмої друзі \nспілкуються\
+    \ \nукраїнською\nце \nмило звучна \nмова\nПрочитай «чарівні» слова. Подумай, які\
+    \ з них ти скажеш \nдрузям, рідним, незнайомим дорослим людям. Розіграй різні\
+    \ \nситуації в парі. Які ролі ти можеш виконати? \n"
+  section_title: Сторінка 6
+  grade: 2
+  author: bolshakova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5907066464424133
+  chunk_id: feaa5fa7_c0834
+  text: "Укр. мова в Сов. Україні: Смаль-Стоцький\r\nР. Укр. мова в Совєтській Україні.\
+    \ В. 1936; Рудницький Я. Die Lage der\r\nukrainischen Sprache in der Sowjetunion.\
+    \ Wörter und Sachen. XIX.\r\nГейдельберг 1938; Шерех Ю. Принципи й етапи большевицької\
+    \ політики щодо\r\nслов’янських мов в СССР. Свобода, листопад 1947.\n\n[Енциклопедія\
+    \ українознавства. Загальна частина (ЕУ-I). — Мюнхен, Нью-Йорк, 1949. — Т. 1.\
+    \ — С. 359-366.]\n\n5. Українське письмо і правопис\n\nІсторія українського письма\
+    \ (палеографія)"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5696681141853333
+  chunk_id: 1af78606_c0101
+  text: "«Державною мовою в Україні є українська мова.\r\nДержава забезпечує всебічний\
+    \ розвиток і функціонування української мови в усіх\r\nсферах суспільного життя\
+    \ на всій території України.\n\nВ Україні гарантується вільний розвиток, використання\r\
+    \nі захист російської, інших мов національних меншин України... Застосування мов\r\
+    \nв Україні гарантується Конституцією України та визначається законом» (ст. 10).\n\
+    \nДля реалізації ст. 10 Конституції України 1997\r\nутворено Раду з питань мовної\
+    \ політики при Президентові У"
+  work: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+  year: 2004
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/ukrmova/um01.htm
+- score: 0.5620895624160767
+  chunk_id: fc2291b5_c5174
+  text: "Літ.: Сулима М.\r\nПисьменницька мова. В кн.: Перший Всеукраїнський з’їзд\
+    \ пролетарських\r\nписьменників 25 — 28 січня 1927 р. Стенографічний звіт. Х.,\
+    \ 1927; Гладкий М.\r\nМова сучасного українського письменства. К. — Х., 1930;\
+    \ Жилко Ф. Т. Питання\r\nаналізу мови художніх творів. «Українська мова в школі»,\
+    \ 1952, № 5; Білодід І.\r\nК. Мова і стиль роману «Вершники» Ю. Яновського. К.,\
+    \ 1955; Виноградов В. В. О\r\nязыке художественной литературы. М., 1959; Коцюбинська\
+    \ М. Література як\r\nмистецтво слова. К., 1965;"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

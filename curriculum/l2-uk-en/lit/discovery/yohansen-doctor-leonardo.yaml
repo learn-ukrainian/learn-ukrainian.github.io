@@ -1,0 +1,177 @@
+discovered_at: '2026-03-13T19:07:38.933127+00:00'
+query_keywords:
+- Yohansen Doctor Leonardo
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Yohansen Doctor Leonardo у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video directly addresses the concept of the 'Ukrainian literary
+    canon' and the need to restore significant 20th-century Ukrainian literary figures.
+    This is highly relevant to understanding the broader context of authors like Yohansen
+    and the 'Деколонізаційний вимір' of the module.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. ... Себто так чи інакше ми будемо говорити про тяглість української
+    літератури, про проблему пам'яті, власне, про те, що в є в назві книжки Віри Павліної
+    про амнезію, про її подолання, про її власне десь невідворотність, а десь мабуть
+    недоречність.
+  embed_suggestion: After section 'Вступ та культурний контекст' to provide foundational
+    literary historical context or before 'Деколонізаційний вимір' for direct relevance.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: The video discusses contemporary Ukrainian literature and language,
+    including the concept of metaphor and the resilience of the Ukrainian language.
+    While relevant to general Ukrainian literary context, it does not specifically
+    mention or analyze Yohansen or 'Doctor Leonardo'.
+  transcript_excerpt: це поезія про мову ... Сергій Жадан досліджує мову як стверджує
+    сам автор цитую здатність мови повертатися і самовідтворюватись про її вразливість
+    про її здатність до опору кінець цитати.
+  embed_suggestion: After section 'Вступ та культурний контекст' if broadening to
+    contemporary literary relevance.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0179
+  text: "Прозове розмаїття 1920‑х років . юрій яновський . «Майстер корабля»  97\n\
+    2. із чим автор порівнює корабель у цьому тексті? які метафори використовує \n\
+    для його зображення? які з них здалися вам найбільш яскравими? 3. Наведіть приклади\
+    \ використання в тексті персоніфікації . якого ефекту до-\nзволяє досягти використання\
+    \ цього художнього засобу? 4. Знайдіть у тексті приклади звуконаслідувань . З\
+    \ якою метою створює їх автор? 5. які почуття виникли у вас під час читання уривка?\
+    \ як ви гадаєте, чи відпо-"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0180
+  text: "\x03\n\x83 У вигляді схеми, таблиці, конспекту, коміксів тощо занотуйте інформацію\
+    \ про \nтвір ю . яновського «Майстер корабля»: жанрові та стильові особливості,\
+    \ теми \nта проблеми, мотиви, персонажі, основні сюжетні колізії . щоб отримати\
+    \ повніше уявлення про творчість Þ. ßновського, прочи-\nтайте його твори «Ãоллівуд\
+    \ на áерезі ×орного моря», «Áайгород», \n«×отири шаáлі», «Äитинство», «Подвійне\
+    \ коло» . Запрошуємо до бібліотеки"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0266
+  text: "7. Талан без таланту може обійтись але \nталантові без талану надзвичайно\
+    \ важко (å\x11 \x8Eільде). 8. Ìіністр порадив \nдепутату погуглити аби зрозуміти\
+    \ визначення «гаазька конвенція» (Ç âè-\n·уску новин\f. ІІ. Підкресліть лексиɱні\
+    \ засоɛи стилістики \vслова в переносному знаɱенні\x0F синоніми\x0F \nантоніми\x0F\
+    \ пароніми\x0F застарілі слова\x0F неологізми\f. Поясніть роль цих засоɛів у коɠному\
+    \ \nреɱенні. ІІІ. Поясніть\x0F як ви розуміɽте зміст сьомого реɱення."
+  section_title: Сторінка 176
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0008
+  text: "5. Чи згодні ви з тим\x0F що метаɮору моɠна розглядати як наɣкоротɲиɣ ɲлях\
+    \ до \nістини\" Відповідь поясніть. коло думок"
+  section_title: Сторінка 8
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5713225603103638
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.547999382019043
+  chunk_id: 3588aaff_c0068
+  text: "що чергування естетичних і формальних систем надає\r\nлітературному процесові\
+    \ певну історичність, воно ще не відповідає на те, як той\r\nпроцес вписується\
+    \ в історію як таку 30), він подає низку тез, в яких\r\nпропонує нову методологічну\
+    \ базу для історії літератури. Ядром його теорії, яка\r\nсвідомо ставить собі\
+    \ за мету основну переміну самої парадигми\r\n(Paradigmawechsel) для осмислення\
+    \ історії літератури, є поняття горизонту\r\nсподівань (Erwartungshorizont). Як\
+    \ теоретична конструкція, горизонт сподівань\r"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5470012426376343
+  chunk_id: 3588aaff_c0071
+  text: "36\r\nRezeptionsasthetik. — S. 133; Toward an Aesthetic of Reception. — P.\
+    \ 25.\n\n37 Пор.: Wurning\r\nRainer. Rezeptionsasthetik als Literaturwissenschaftliche\
+    \ Pragmatik //\r\nRezeptionsasthetik. — S. 24.\n\n38 Ibidem. — S. 28.\n\n39 Гуссерль\
+    \ подає\r\nдосить вичерпну передісторію цього поняття, починаючи від Платона й\r\
+    \nпатристичної та схоластичної теології в праці \"Horizont Structure and\r\nDialogicity\"\
+    \ (Question and Answer: Forms of Dialogic Understannding. — P.\r\n197-199). Пор.\
+    \ також: Holub Robert. Op. cit. — "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

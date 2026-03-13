@@ -1,0 +1,124 @@
+discovered_at: '2026-03-13T19:25:06.117192+00:00'
+query_keywords:
+- Огляд професійної мови
+- Сутність професійної мови
+- Essence of Professional Language
+- Історична спадщина та кодифікація
+- Historical Heritage and Codification
+- Структура та динаміка терміносистем
+- Structure and Dynamics of Terminology Systems
+- Регістри та культура фахового спілкування
+- Registers and Professional Communication Culture
+- Корекція типових помилок та кальок
+- Correction of Common Errors and Calques
+- Систематизувати граматичні явища на рівні усвідомленого володіння
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=bulArxOnyAE
+  channel: Суспільне Культура
+  title: 'Законопроєкт про англійську мову: що буде з українським дубляжем та які
+    ризики для кіноіндустрії'
+  relevance_score: 0.6
+  relevance_note: The video discusses the official status of English in Ukraine and
+    its implications for language use in public administration and the cultural sphere,
+    which touches upon the practical application and regulation of language in professional
+    contexts.
+  transcript_excerpt: 28 червня у Верховній Раді зареєстрували законопроєкт номер
+    94 32 про те щоб офіційно закріпити статус англійською мовою як однієї з мов міжнародного
+    спілкування в Україні. Досвід багатьох країн говорить про те що застосування англійської
+    мови Це дуже вірно правильно особливо державному управлінні це має бути.
+  embed_suggestion: 'After section Вступ: Сутність професійної мови -- It provides
+    a real-world example of discussions around language in official and professional
+    domains, illustrating the ''essence'' of how language policies impact professional
+    communication.'
+- url: https://www.youtube.com/watch?v=Hln8U4K8zxM
+  channel: Суспільне Культура
+  title: 'Українське кіно: утиски радянської влади, розвиток за часів незалежності
+    і вплив війни'
+  relevance_score: 0.1
+  relevance_note: The video focuses on the history of Ukrainian cinema, censorship,
+    and national identity. While it mentions the Ukrainian language in a cultural
+    context, it does not discuss 'professional language' as a linguistic concept or
+    its structure/dynamics.
+  transcript_excerpt: Українське кіно це фільм який створений в українському культурному
+    контексті це головний критерій для мене і другий критерій - це фільм який створений
+    Українською мовою як основною мовою.
+  embed_suggestion: Not suitable for this module -- The topic of Ukrainian cinema
+    history is too far removed from the linguistic study of professional language.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0369
+  text: "І   \aПідготуйте зв’язну розповідь про професійний дискурс, його \nособливості.\
+    \ Оволодіння основами будь-якої професії розпочинається із засво-\nєння певної\
+    \ суми загальних і професійних знань, а також оволодіння \nосновними способами\
+    \ розв’язання професійних завдань, тобто ово-\nлодіння мовою професійного спілкування.\
+    \ Мова професійного спілкування (професійна мова) — це функціо­\nнальний різновид\
+    \ української літературної мови, яким послугову-\nються представники певної галузі\
+    \ виробництва, професії, роду"
+  section_title: Сторінка 239
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0370
+  text: "240\nзанять. Як додаткова лексична система професійна мова, не маючи \nвласної\
+    \ специфіки фонетичного та граматичного рівнів, залишається \nлексичним масивом\
+    \ певної мови. \nПрофесійний дискурс — це сукупність усіх мовних засобів, якими\
+    \ \nпослуговуються у професійно обмеженій сфері комунікації з метою \nзабезпечення\
+    \ порозуміння між людьми, що працюють у цій сфері. \nОсобливості її зумовлюють\
+    \ мета, ситуація професійного спілкуван-\nня, особистісні риси адресата й адресанта\
+    \ (мовна компетенція, вік, \nосвіта,"
+  section_title: Сторінка 240
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0488
+  text: 'Зміст
+
+    ЛЕКСИКОЛОГІЯ
+
+    § 32 Слово як основна одиниця мови. Семасіологія як учення про значення слів і виразів
+    . . . . . . . . . . . . . . . . . . . . . . . . . .86
+
+    § 33 Багатозначні й однозначні слова. Пряме і переносне значення. Омоніми. Пароніми
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . .88
+
+    § 34 Синоніми. Антоніми  . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . .'
+  section_title: Сторінка 270
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0209
+  text: "136\nСинтаксис. Пунктуація\nПОВТОРЕННЯ \n•\t Прочитайте ознаки різних стилів\
+    \ мови й випишіть ті, що властиві офіційно-діловому стилю. \n•\t Нейтральна лексика;\
+    \ \n•\t терміни; \n•\t неповні речення; \n•\t суспільно-політична лексика; \n\
+    •\t емоційно-забарвлені слова; \n•\t вільний порядок слів у реченні; \n•\t стислість\
+    \ викладу; \n•\t образність; \n•\t мовні кліше (канцеляризми); \n•\t етикетні\
+    \ формули; \n•\t повні речення; \n•\t фразеологізми; \n•\t реквізити; \n•\t розмовна\
+    \ лексика. \nРезюме — документ, у якому особа викладає в"
+  section_title: Сторінка 136
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

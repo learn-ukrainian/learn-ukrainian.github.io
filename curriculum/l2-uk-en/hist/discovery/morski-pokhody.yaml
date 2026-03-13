@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T10:39:34.473037+00:00'
+discovered_at: '2026-03-13T19:25:22.001706+00:00'
 query_keywords:
 - Морські походи козаків
 - Чорне море як арена боротьби
@@ -15,42 +15,27 @@ query_keywords:
 error: null
 warning: null
 videos:
-- url: https://www.youtube.com/watch?v=b6ts9Ciir-w
-  channel: ІМТГШ
-  title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
-  relevance_score: 1.0
-  relevance_note: Explicitly mentions Cossack campaigns ('походи') using 'чайки' (chaikas)
-    and their early presence, directly aligning with the module's core topic of sea
-    campaigns and the chaika.
-  transcript_excerpt: Згадки про козаків зустрічаються ще у 15 столітті... живуть
-    вони на островах та по берегах Південного Бугу і низу Дніпра з притоками... і
-    ходять у походи річками на човнах, які звуться чайками.
-  embed_suggestion: 'After section ''Козацька Чайка: Шедевр суднобудування'' as it
-    describes Cossacks using chaiykas for campaigns.'
 - url: https://www.youtube.com/watch?v=m_XN30APU1s
   channel: Комік Історик
   title: 'Петро Сагайдачний: гетьман чи пірат?'
-  relevance_score: 0.9
-  relevance_note: Directly discusses Petro Sahaidachnyi and the transformation of
-    the Cossack army under his leadership, providing crucial context for his sea campaigns.
-  transcript_excerpt: Якщо подумати про гетьмана Петра Конашевича-Сагайдачного, то
-    це взагалі, скажемо, перший гетьман в цьому терміні в повному розумінні. Саме
-    за його гетьманування козацьке військо перетворюється на дисципліновану організовану
-    військову силу.
-  embed_suggestion: 'After section ''Героїчна доба: Походи Петра Сагайдачного'' because
-    it focuses on Sahaidachnyi''s role.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 - url: https://www.youtube.com/watch?v=EvenB0znkeE
   channel: Комік Історик
   title: 'історія Запорізької Січі: найкращі воїни Європи'
-  relevance_score: 0.7
-  relevance_note: Provides a general overview of the history of Zaporizhian Sich and
-    Cossacks, which is related background but not specific to sea campaigns or chaiykas.
-  transcript_excerpt: Сьогодні, 1 жовтня, спеціально до Дня українського козацтва
-    ми відправляємося на легендарний острів Хортиця для того, щоб записати для вас
-    випуск про історію запорізької Січі. Сьогодні ми будемо говорити про козацтво
-    і безпосередньо про Військо Запорозьке Низове або ж Запорозьку Січ.
-  embed_suggestion: 'After section ''Вступ: Чорне море як арена боротьби'' to provide
-    general historical context of the Cossacks.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=b6ts9Ciir-w
+  channel: ІМТГШ
+  title: Феномен Запорожців. Що таке Військо Запорізьке. Історія Козаків
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 - url: https://www.youtube.com/watch?v=ZWZ9wXasvcY
   channel: ІМТГШ
   title: Чому Приховують Кількість Козаків?

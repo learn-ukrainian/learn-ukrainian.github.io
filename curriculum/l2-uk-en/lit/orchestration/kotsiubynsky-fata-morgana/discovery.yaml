@@ -1,0 +1,193 @@
+discovered_at: '2026-03-13T17:37:06.991339+00:00'
+query_keywords:
+- Kotsiubynsky Fata Morgana
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Kotsiubynsky Fata Morgana у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.5
+  relevance_note: This video discusses the Ukrainian literary canon and its restoration,
+    mentioning literary figures and the broader cultural context of literature. While
+    'канон' is in the module's vocabulary, the discussion is not specific to Kotsiubynsky
+    or 'Fata Morgana'.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають.
+  embed_suggestion: Potentially after 'Вступ та культурний контекст' for a general
+    discussion on the literary canon, but the connection to the module's specific
+    topic is weak.
+- url: https://www.youtube.com/watch?v=8l_FfmbpEWs
+  channel: Radio Khartia
+  title: Культура виживає завдяки тим, хто не здається
+  relevance_score: 0.4
+  relevance_note: The video touches upon the survival of Ukrainian culture and mentions
+    Ivan Nechuy-Levytsky, another prominent Ukrainian writer. This provides some general
+    historical literary context but does not directly discuss Kotsiubynsky or 'Fata
+    Morgana'.
+  transcript_excerpt: Я люблю приклад. Ну, от здавалось би Іван Не Чуєвицький, ну,
+    нічим не завонив перед нами.
+  embed_suggestion: Could be used after 'Вступ та культурний контекст' to illustrate
+    the broader Ukrainian literary context, but the relevance is tangential.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.3
+  relevance_note: The video discusses contemporary Ukrainian literature, language,
+    and the concept of metaphor, but it does not directly relate to Mykhailo Kotsiubynsky
+    or his work 'Fata Morgana'.
+  transcript_excerpt: Сергій Жадан досліджує мову як стверджує сам автор цитую здатність
+    мови повертатися і самовідтворюватись про її вразливість про її здатність до опору.
+  embed_suggestion: Not suitable for embedding in this module as it lacks direct thematic
+    relevance.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0016
+  text: "Не дивно, що сьогодні ці ідеологічні нашарування (більші чи менші) можуть\
+    \ \nвикликати небажання читати або нерозуміння прочитаного. Тож варто готува-\n\
+    ти себе до критичного й зваженого, вдумливого сприймання цієї «людської іс-\n\
+    торії»: важливо заглиблюватись у підтекст (те, що вичитується «між рядками»),\
+    \ \nа також активізувати можливості нашого критичного мислення. У підручнику йдеться\
+    \ про різні за своїм змістом та формою художні тво-\nри. Вони відмінні не лише\
+    \ за стилем або ідейним спрямуванням, а й"
+  section_title: Сторінка 7
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0306
+  text: 'Чародійка оперної сц ен и........................................145
+
+    Розвиток мовлення. Твір у публіцистичному стилі
+
+    на морально-етичну тем у..........................................................................................147
+
+    Контрольні запитання і завдання..........................................................................150
+
+    238'
+  section_title: Сторінка 238
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0331
+  text: 'Це все — позасюжетні елемен-
+
+    ти твору. Існують такі різновиди романів: соціальні, соціально-побутові, родинно-по-
+
+    бутові, історичні, воєнні, філософські, інтелектуальні, психологічні, сентимен-
+
+    тальні, сатиричні, пригодницькі, детективні, документальні, автобіографічні,
+
+    біографічні, науково-фантастичні, утопічні та ін. За часом розгортання сюже-
+
+    ту визначають історичний, сучасний, фантастичний, хронологічний романи. У світовій
+    літературі роман бере початок від античного твору «Дафніс
+
+    і Хлоя». Ос'
+  section_title: Сторінка 253
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0295
+  text: "Музика допомог­\nла розкрити важливу тему  — тугу душевно \nбагатої людини\
+    \ за далеким, майже недосяжним \nідеалом. Накресливши психологічні профілі й життє-\n\
+    ві долі трьох різних героїнь, авторка порушила \nпроблеми духовного аристократизму\
+    \ й жіночої \nсамореалізації, висвітлила філософський кон-\nфлікт між прагненням\
+    \ людини до  краси й  до-\nсконалості та  обставинами реального життя. 1\t Меланхолійний\
+    \ вальс. (Фр.)\nПрочитайте новелу Ольги Кобилянської «Impromptu phantasie». Звірте\
+    \ \nвласні враження від т"
+  section_title: Сторінка 159
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0180
+  text: "\x03\n\x83 У вигляді схеми, таблиці, конспекту, коміксів тощо занотуйте інформацію\
+    \ про \nтвір ю . яновського «Майстер корабля»: жанрові та стильові особливості,\
+    \ теми \nта проблеми, мотиви, персонажі, основні сюжетні колізії . щоб отримати\
+    \ повніше уявлення про творчість Þ. ßновського, прочи-\nтайте його твори «Ãоллівуд\
+    \ на áерезі ×орного моря», «Áайгород», \n«×отири шаáлі», «Äитинство», «Подвійне\
+    \ коло» . Запрошуємо до бібліотеки"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5549489855766296
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5546553134918213
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5529583096504211
+  chunk_id: fc2291b5_c5005
+  text: "Літ.: Потебня А. А. Из\r\nзаписок по теории словесности. Х., 1905; Мейлах\
+    \ Б. С. Метафора как элемент\r\nхудожественной системы. В кн.: Мейлах Б. С. Вопросы\
+    \ литературы и эстетики. Л.,\r\n1958; Коцюбинська М. Х. Відтворення чи перетворення.\
+    \ «Радянське\r\nлітературознавство», 1967, № 1; Соловей Е. С. «Метафора-прийом»\
+    \ і\r\n«метафора-відкриття». «Радянське літературознавство», 1970, № 1; Соловей\
+    \ Е. С.\r\nНові дослідження про метафору. «Радянське літературознавство», 1973,\
+    \ № 2: Жоль\r\nК. К. Мысль. Слово. Метафора"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

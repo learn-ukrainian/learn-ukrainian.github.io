@@ -1,0 +1,200 @@
+discovered_at: '2026-03-13T13:48:57.694889+00:00'
+query_keywords:
+- Чому 2022 спрацювало? Анатомія мобілізації
+- Готовність суспільства
+- Інституційна база
+- Лідерство
+- Громадянське суспільство
+- Analyze the causes and consequences of чому 2022 спрацювало? анатомія мобілізації
+- Evaluate the historical significance of «три дні» не сталось
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0488
+  text: "§ 32. україна у 2019—2021 рр.\n279\nСприятливим чинником для України можна\
+    \ \nвважати перемогу на президентських виборах \nу  США Джо Байдена, який був\
+    \ прихильником ак-\nтивної підтримки України в  протистоянні діям \nРосії. Водночас\
+    \ зміна влади в  США сприяла зміц-\nненню євроатлантичного партнерства та відносин\
+    \ \nСША та ЄС.\nУ 2021 р., розуміючи складність ситуації в краї-\nні, було ухвалено\
+    \ Закон України «Про основи націо-\nнального спротиву», який передбачав створення\
+    \ \nпідрозділів територіальної оборони"
+  section_title: Сторінка 281
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0162
+  text: 'Відповідь аргументуйте. Напишіть есе на тему: «Риторика XXI століття: між
+    популізмом і  людяністю». Ефективність мовлення. Комунікативний намір. Стратегія
+    і  тактика мовленнєвої поведінки'
+  section_title: Сторінка 115
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0527
+  text: "15. Проаналізуйте зміст пісень \nпро російсько-українську війну. Поясніть,\
+    \ чи можуть вони \nв  майбутньому бути історичним джерелом. 16. Візьміть \nінтерв’ю\
+    \ у своїх близьких або знайомих і дослідіть, як для \nних почалося широкомасштабне\
+    \ вторгнення, якими були \nїхні стратегії виживання під час бойових дій. 17. Колек-\n\
+    тивна робота в  класі. За допомогою методу «Прес» об­\nговоріть і визначте, що\
+    \ заважає Україні стати повноправним \nчленом ЄС і НАТО. Cформулюйте судження\
+    \ про:\n\x84\n\x84\nключові події широкомас"
+  section_title: Сторінка 304
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0490
+  text: "Широкомасштабне \nвторгнення Росії в  Україну. 24  лютого  — \n20  травня\
+    \ \n2022  р. Оборона міста Маріуполь. Червень \n2022  р. Надання Україні статусу\
+    \ \nкандидата на  членство \nв  ЄС. 6  вересня  — \n2  жовтня \n2022  р. Балаклійсько-Куп’янська\
+    \ \nнаступальна операція \nукраїнських військ. 11  листопада \n2022  р. Звільнення\
+    \ Херсону. Грудень \n2023  р. Початок переговорів щодо \nвступу України до ЄС.\
+    \ rnk.com.ua/107022\nПрактичні заняття  \nза розділом VІ\nrnk.com.ua/107023\n\
+    Узагальнення знань  \nза розділом VI\n"
+  section_title: Сторінка 270
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5418440103530884
+  chunk_id: 53691244_c0004
+  text: "§2. Етнополітична\r\nреальність України\n\nГлава 4. \r\nУ пошуках моделі\
+    \ економічного розвитку (Ігор БУРАКОВСЬКИЙ)\n\n§1. Стратегії\r\nекономічних перетворень\n\
+    \n§2. Стартові умови\r\nтрансформаційного процесу\n\n§3. Формування\r\nпосткомуністичної\
+    \ економічної системи\n\nГлава 5.\r\nПострадянські форми суспільних змін (Андрій\
+    \ ФЕДОРОВ)\n\n§1. Людина\r\nкорпоративна\n\n§2. Радянський цех\n\n§3. Пострадянська\r\
+    \nфратрія\n\nГлава 6. \r\nНевигаданий «п’ятий світ» (Сергій МАКЕЄВ, Наталія КОСТЕНКО)\n\
+    \n§1. Про\r\nнепроблематичність «п’ятого с"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.534538984298706
+  chunk_id: feaa5fa7_c0046
+  text: "Українці в румунській армії (1185). Українці в поль.\r\nармії (1185) А. Ч.\n\
+    \nОРГАНІЗАЦІЯ НАРОДНОЇ ОБОРОНИ »КАРПАТСЬКА СІЧ« (ОНОКС)\r\nД. К. . . . . . . .\
+    \ . . . . . . . . . . . . 1186\n\nУКРАЇНЦІ У ВІЙСЬК. ФОРМАЦІЯХ ПІД ЧАС ДРУГОЇ\
+    \ СВІТОВОЇ\r\nВІЙНИ . . . . . . . . . . . . . . . . . . . 1186\n\nУкраїнці в чужих\
+    \ арміях (1186). Укр. формації у Франції\r\n(1186). Укр. формації на нім. боці\
+    \ (1187). Укр. леґіон (1187). УВВ і УНА\r\n(1187). Дивізія »Галичина« (1187).\
+    \ Охоронно-вартові й поліційні формації (1188)\r\nО. Го"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.534538984298706
+  chunk_id: feaa5fa7_c3241
+  text: "Українці в румунській армії (1185). Українці в поль.\r\nармії (1185) А. Ч.\n\
+    \nОРГАНІЗАЦІЯ НАРОДНОЇ ОБОРОНИ »КАРПАТСЬКА СІЧ« (ОНОКС)\r\nД. К. . . . . . . .\
+    \ . . . . . . . . . . . . 1186\n\nУКРАЇНЦІ У ВІЙСЬК. ФОРМАЦІЯХ ПІД ЧАС ДРУГОЇ\
+    \ СВІТОВОЇ ВІЙНИ . . . . . . . . . . . . . . . . . . . 1186\n\nУкраїнці в чужих\
+    \ арміях (1186). Укр. формації у Франції\r\n(1186). Укр. формації на нім. боці\
+    \ (1187). Укр. леґіон (1187). УВВ і УНА\r\n(1187). Дивізія »Галичина« (1187).\
+    \ Охоронно-вартові й поліційні формації (1188)\r\nО. Гор"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

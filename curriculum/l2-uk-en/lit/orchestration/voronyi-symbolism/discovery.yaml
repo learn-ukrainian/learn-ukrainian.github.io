@@ -1,0 +1,198 @@
+discovered_at: '2026-03-13T17:56:04.671700+00:00'
+query_keywords:
+- Voronyi Symbolism
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Voronyi Symbolism у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.6
+  relevance_note: This video discusses the Ukrainian literary canon, mentioning prominent
+    20th-century poets (Bazhan, Tychyna) and using the module vocabulary term 'канон'.
+    This provides relevant historical and contextual background for understanding
+    Mykola Voronyi's place within Ukrainian literature, although Voronyi himself is
+    not the direct subject.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. Бажан має бути повернутий в шкільну програму.
+  embed_suggestion: After Вступ та культурний контекст – to contextualize Voronyi's
+    work within the broader Ukrainian literary tradition and canon.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.5
+  relevance_note: While the video discusses a modern Ukrainian poet (Serhiy Zhadan)
+    and themes of language resilience and decolonization, and uses the module vocabulary
+    term 'метафора', it does not directly focus on Mykola Voronyi or his symbolism.
+    It's tangentially related through broad literary and linguistic themes.
+  transcript_excerpt: Він презентує нову збірку віршів скрипниківка... Сергій Жадан
+    досліджує мову як стверджує сам автор цитую здатність мови повертатися і самовідтворюватись
+    про її вразливість про її здатність до опору.
+  embed_suggestion: After Мова, стиль та поетика – to provide a contemporary perspective
+    on language and metaphorical usage in Ukrainian literature.
+- url: https://www.youtube.com/watch?v=8l_FfmbpEWs
+  channel: Radio Khartia
+  title: Культура виживає завдяки тим, хто не здається
+  relevance_score: 0.2
+  relevance_note: The video is in Ukrainian and broadly discusses the survival and
+    functioning of Ukrainian culture, mentioning a classical writer (Ivan Nechuy-Levytsky).
+    However, its general focus on cultural preservation is too broad and does not
+    delve into literary analysis, symbolism, or specific figures directly relevant
+    to 'Voronyi Symbolism'.
+  transcript_excerpt: Для того, щоб функціонувала культура, потрібні і подвижники,
+    і ті, хто працює на культуру.
+  embed_suggestion: After Вступ та культурний контекст – for a general perspective
+    on Ukrainian culture, though its direct relevance to Voronyi is minimal.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0011
+  text: '6    Зміст
+
+    Символізм . . . . . . . . . . . . . . . . . . . . . . . . . 203
+
+    Микола Вороний . . . . . . . . . . . . . . . . . . . . 204
+
+    Творча діяльність. . . . . . . . . . . . . . . . . . . 204
+
+    Весна — Блакитна Панна . . . . . . . . . . . . 205
+
+    Читацький практикум. Блакитна Панна. . . . . . . . . . . . . . . . 206
+
+    Схиляння перед красою. . . . . . . . . . . . . . 206
+
+    Читацький практикум. Інфанта. . . . . . . . . . . . . . . . . . . . . . . 207
+
+    Олександр Олесь. . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 6
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0009
+  text: "6\nВСТУП\nПо-друге, твори із цікавим сюжетом (пригадайте хоча б пригоди героїв\
+    \ \nповісті Лесі Ворониної «Таємне Товариство Боягузів, або Засіб від пере-\n\
+    ляку № 9») підказують, як треба повестися в подібній ситуації, тобто \nдопомагають\
+    \ краще розуміти себе та людей, які нас оточують. По-третє, художні твори мають\
+    \ виховне значення. Освічені люди в \nякихось життєвих ситуаціях цитують рядки\
+    \ з різних художніх творів. Саме в байках і притчах як сюжет, так і повчальна\
+    \ частина (мораль) \nвикривають ті негати"
+  section_title: Сторінка 9
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0452
+  text: "239\nМикола  Вороний\n2. Прочитайте рядки. \nАкордами проміннострунними\n\
+    День хвилював і тихо гас. \nНад килимами вогнелунними \nВенера кинула алмаз. \n\
+    В уривку використано\nА   гіперболу\nБ\t \tпорівняння\nВ \tнеологізми\nГ\t \t\
+    синоніми\n3. Установіть відповідність («Блакитна Панна»). \nСлово-образ\nЗначення\
+    \ образу\n1\t камея\n2\t фреска\n3\t блават\n4\t арабеска\nА\t волошка або шовкова\
+    \ тканина блакитного кольору\nБ\t вид орнаменту з геометричних фігур, стилізованого\
+    \ \nлистя, квітів \nВ\t виріб із каменю або черепашки, що має "
+  section_title: Сторінка 239
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0438
+  text: "Особливу \nроль у  пізнанні світу символісти відводили \nтворчій інтуїції.\
+    \ Заслугою символістів стали \nзнахідки у  сфері художньої форми, що ви-\nявились\
+    \ у створенні оригінальних і яскравих \nобразів-символів. Синоніми — слова, відмінні\
+    \ за звучанням, але од-\nнакові чи близькі за змістом. Сонет  — лірична поезія,\
+    \ що має чотирнадцять \nрядків п’ятистопного або шестистопного \nямба та  чітку\
+    \ строфічну організацію: зазви-\nчай складається з двох катренів (чотириряд-\n\
+    кова строфа) та двох терцетів (строфа на"
+  section_title: Сторінка 239
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5930489301681519
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5738091468811035
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5700725317001343
+  chunk_id: fbf8bdff_c0179
+  text: "3. Змінює простоту будови творів та обставина, що їх\r\nсвітогляд має основну\
+    \ рису всякого „середньовіччя“ (в тому числі\r\nвізантійського): погляд на світ\
+    \ є послідовно „символічний“, усяка дійсність є\r\nразом знаком чогось іншого,\
+    \ вищого, безпосередньо в дійсності не даного або нам\r\nнеприступного. Належачи\
+    \ до єства власне всякого, навіть „найреалістичнішого“ мистецтва,\r\nсимволіка\
+    \ дістає в певні моменти розвитку надзвичайне значення (також у барокку\r\nі в\
+    \ романтиці), а саме в зв’язку з світоглядом час"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm

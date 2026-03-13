@@ -1,0 +1,269 @@
+discovered_at: '2026-03-13T12:47:15.638912+00:00'
+query_keywords:
+- Євреї в Україні до 1917
+- Середньовіччя і Козацька доба
+- Штетл
+- Погроми XIX-початок XX ст.
+- Громадянська війна 1917-1921
+- Analyze the causes and consequences of євреї в україні до 1917
+- Evaluate the historical significance of спільна земля
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=mjuiCt9mDgA
+  channel: Комік Історик
+  title: 'Симон Петлюра: історія провалу УНР'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses Symon Petliura and his controversial
+    role during the Ukrainian People's Republic, explicitly mentioning accusations
+    of antisemitism and linking to pogroms. This is highly relevant to both the 'Погроми
+    XIX-початок XX ст.' and 'Громадянська війна 1917-1921' sections of the module,
+    as Petliura's era is deeply connected to these events in Jewish history.
+  transcript_excerpt: або неоднозначно через пропаганду через те що він ярий антисеміт
+  embed_suggestion: After section 'Погроми XIX-початок XX ст.' or 'Громадянська війна
+    1917-1921' as it directly addresses a key, sensitive aspect of Jewish-Ukrainian
+    relations during this period.
+- url: https://www.youtube.com/watch?v=yqH9EY6LY5s
+  channel: ІМТГШ
+  title: Навіщо Були Потрібні Універсали? | Історія України від імені Т.Г. Шевченка
+  relevance_score: 0.8
+  relevance_note: This video details the Ukrainian Revolution of 1917, the Central
+    Rada, and the establishment of the Ukrainian People's Republic. It provides crucial
+    context for the 'Громадянська війна 1917-1921' section of the module, explaining
+    the political landscape during which significant events in Jewish-Ukrainian history
+    occurred.
+  transcript_excerpt: що ми знаємо про українську революцію та нібито багато у 1917
+    українці обрали в Києві Центральну Раду вона видала чотири універсали і проголосила
+    про створення Української Народної Республіки
+  embed_suggestion: After section 'Громадянська війна 1917-1921' to explain the political
+    developments and key players of the Ukrainian Revolution.
+- url: https://www.youtube.com/watch?v=3uCbJ-6nOuY
+  channel: Реальна Історія
+  title: Як Крим хотів вирватися з лап росії? Реальна історія з Акімом Галімовим
+  relevance_score: 0.7
+  relevance_note: This video covers the Ukrainian Revolution and Civil War period
+    (1917-1918), focusing on events in Crimea and the Crimean Democratic Republic.
+    While it highlights Crimean Tatars, the historical timeframe and the context of
+    the Civil War are directly relevant to the module's 'Громадянська війна 1917-1921'
+    section.
+  transcript_excerpt: усі ми досить багато знаємо про українську революцію 1917-1918
+    років... однак дуже рідко Ну майже ніколи не згадуємо про події які відбувалися
+    в цей самий час у Криму
+  embed_suggestion: After section 'Громадянська війна 1917-1921' to provide broader
+    context of national liberation movements during that tumultuous period.
+- url: https://www.youtube.com/watch?v=uixPG6a9B7c
+  channel: Реальна Історія
+  title: 'Черкаси: місто злочину радянської влади'
+  relevance_score: 0.3
+  relevance_note: The video discusses the general history of Cherkasy and the Cossack
+    era, which is part of the broader Ukrainian historical context. However, it does
+    not specifically address the history of Jews in Ukraine, which is the module's
+    core topic.
+  transcript_excerpt: чимало істориків вважають що саме Черкаси дали Нам таке явище
+    як козацтво
+  embed_suggestion: After section 'Середньовіччя і Козацька доба' if a general historical
+    overview of the era is desired, but note it lacks specific Jewish focus.
+- url: https://www.youtube.com/watch?v=C7_vl4NblEg
+  channel: ІМТГШ
+  title: Таємниця Князя Святослава Хороброго. Нащо він стільки "ходив"? / Київська
+    Русь / Історія України
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0005
+  text: "Національно-визвольна війна українського народу середини \nХVІІ ст. (Хмельниччина).\
+    \ Створення Української козацької \nдержави. Боротьба за збереження державності.\
+    \ Ліквідація \nКозацької держави\nЧетвертий\n1764  р. — кінець XVIII ст. Перехід\
+    \ українських земель під імперську владу\n\e\n\e Працюємо в  парах. Перегляньте\
+    \ зміст підручника. З’ясуйте, які теми  \nви розглянете, вивчаючи періоди історії\
+    \ України Ранньомодерної доби. Працюємо з джерелом\nrnk.com.ua/110281\nЗі статті\
+    \ «Історія України: \nРанній Новий ч"
+  section_title: Сторінка 5
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0004
+  text: "— на початку \nXXI  ст. Періоди історії України\nДавня історія\nСередньо-\n\
+    вічна історія\nНова історія\nНовітня історія\nI період\nII період\nI період\n\
+    II період\nБлизько \n1  млн ро-\nків тому  — \nV  ст. н. е. V  — кінець \nXV \
+    \ ст. XVI—\nXVIII  ст. Кінець \nXVIII  — \nпочаток \nXX  ст. 1914—\n1945  рр.\
+    \ 1945  р. — \nпочаток \nXXI  ст. ?? Який період історії України ви вивчатимете\
+    \ цього року?"
+  section_title: Сторінка 5
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0139
+  text: "Назрівали також психологічні передумови до вибуху \nНаціонально-визвольної\
+    \ війни. Ступінь і  характер насиль-\nства в  діях землевласників, орендарів,\
+    \ управителів та \n­урядовців викликали в українському суспільстві озлобле-\n\
+    ність і  прагнення помститися за завдані кривди. Національно-визвольну війну вважають\
+    \ складовою Укра-\nїнської революції XVII ст. (1648—1676 рр.). Після закінчен-\n\
+    ня Національно-визвольної війни українські землі охопили \nстаршинські міжусобиці\
+    \ та руйнування господарського життя "
+  section_title: Сторінка 72
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0138
+  text: "72  Розділ III. Національно-визвольна війна українського народу середини\
+    \ XVII ст. § 14. Передумови, причини і  початок \nНаціонально-визвольної війни\n\
+    Опрацювавши цей параграф, ви дізнаєтесь: яки­\nми були передумови та причини Національно-\n\
+    визвольної війни; про Б. Хмельницького та його \nсоратників; якими були події\
+    \ початку війни; що \nтаке «Національно-визвольна війна українського \nнароду\
+    \ середини XVII ст.», «Українська революція \nXVII  ст.», «Микитинська Січ». Пригадайте: \
+    \ 1. Наведіть факти, що св"
+  section_title: Сторінка 72
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0032
+  text: "21\n§ 4. Воєнні дії на території України в  1916  — на початку 1917  р. Пошук\
+    \ винних у  воєнних пораз-\nках спричинив восени 1916  р. другу \nхвилю переслідувань\
+    \ австро-угорською \nвладою українського населення. Від-\nбувалися нові масові\
+    \ інтернування до \nконцентраційних таборів звинувачених \nу «москвофільстві»\
+    \ українців. Така си-\nтуація тривала до 7  травня 1917  р., коли за рішенням\
+    \ імператора кон-\nцентраційні табори було закрито, а  заарештованих звільнено.\
+    \ 4 \nЖиття на фронті та в  тилу в  роки ві"
+  section_title: Сторінка 21
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6038322448730469
+  chunk_id: 3d7a3a6b_c0268
+  text: "21 ЦДІАУ. — Ф. 256,\r\non. l, cnp. 144, арк. 2.\n\n22 Там само, ф. 11,\r\n\
+    on. 1, спр. 8, арк. 36.\n\n23 Яковенко H. M. Українська\r\nшляхта з кінця XIV\
+    \ до середини XVII ст. (Волинь і Центральна Україна). — С.\r\n209.\n\n24 Панашенко\
+    \ В.\r\nВ. Соціальна еліта Гетьманщини (друга половина XVII — XVIII ст.). — К.,\
+    \ 1995.\r\n— С. 81.\n\n25 Леонтович Ф. И.\r\nБояре и служилые люди в Литовско-Русском\
+    \ государстве // Журнал\r\nминистерства юстиции, 1907. — № 5. — С. 223—227.\n\n\
+    26 Леп’явко С. Козацькі\r\nвійни кінця XVI ст. в Україні"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.5934877395629883
+  chunk_id: 484d0ffb_c0066
+  text: "Документальні джерела зберегли відомості про\r\nєврейські поселення у Перемишлі\
+    \ наприкінці IX ст., у Києві принаймні в XI ст.,\r\nу Володимирі-Волинському —\
+    \ в XIII ст.; очевидно, у той час вони існували й в\r\nінших містах. Щонайменше\
+    \ до XV ст. серед євреїв України побутував\r\nсхіднослов’янський діалект. Внаслідок\
+    \ переслідувань євреїв у ряді країн Європи,\r\nзокрема в Німеччині, розпочався\
+    \ приплив до України західних (ашкеназійських)\r\nєвреїв, рідною мовою яких став\
+    \ ідиш, сформований на основі одного з ні"
+  work: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/istkult2/ikult2.htm
+- score: 0.5872389078140259
+  chunk_id: f4f6fb3d_c0569
+  text: "Див.: Гайдамацький рух на Україні в XVIII ст.: Зб.\r\nдокументів. К., 1970.\n\
+    \nГермайзе О. Коліївщина в\r\nсвітлі новознайдених матеріялів // Україна. 1924.\
+    \ Кн. 1/2.\n\nКоліївщина 1768 р.: Матеріали ювілейної наукової\r\nсесії, присвяченої\
+    \ 200-річчю повстання. К., 1970.\n\nЛола О. П. Гайдамацький\r\nрух на Україні\
+    \ 20 — 60-х рр. XVIII ст. К., 1965.\n\nМірчук П. Коліївщина.\r\nГайдамацьке повстання\
+    \ 1768 р. Нью-Йорк, 1973.\n\nПолонська-Василенко Н. Д. Запоріжжя XVIII століття\
+    \ та його спадщина. Мюнхен, 1965 — 1967. Т. "
+  work: Антонович — Вибрані праці
+  author: Антонович В.
+  year: 1900
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/anton/ant.htm

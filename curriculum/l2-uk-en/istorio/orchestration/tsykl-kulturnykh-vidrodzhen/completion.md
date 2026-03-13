@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 122
+PASS: pipeline istorio 122
 
   Module:   tsykl-kulturnykh-vidrodzhen
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 122
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:23:36Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:56:37Z

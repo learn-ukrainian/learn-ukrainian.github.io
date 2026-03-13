@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 134
+PASS: pipeline istorio 134
 
   Module:   ukrainske-pytannia-xxi
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 134
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:25:22Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:16:24Z

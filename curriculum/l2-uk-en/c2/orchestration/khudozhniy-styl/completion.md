@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 6 — E2E
+PASS: pipeline c2 6
 
   Module:   khudozhniy-styl
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:17:17Z
+  Date:     2026-03-13T17:28:13Z

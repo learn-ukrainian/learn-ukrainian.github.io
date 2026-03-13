@@ -1,0 +1,188 @@
+discovered_at: '2026-03-13T12:51:09.303891+00:00'
+query_keywords:
+- 'Енеїда: Філософія Бенкету (Частина II)'
+- Словник Шлунку
+- Бенкет у Дідони
+- Пекло і Поминки
+- Словник Гріха та Покарання
+- Analyze the cultural significance of the feast
+- Categorize gastronomical vocabulary
+- Interpret the satire of hell
+- Culinary vocabulary
+- Hyperbole usage
+- Synonymic series
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0078
+  text: "3. Зневажить рідним це втратити себе \nканути в Лету (М. Дмитренко). 4. В\
+    \ дорозі наче б не барився набачивсь \nнамотав на вус… І так немовби оновився\
+    \ коли додому повернувсь (В. Бро-\nвченко). 5. Сізіфів труд і бездонна бочка данаїд\
+    \ давні метафори покарання \n§ 12"
+  section_title: Сторінка 55
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0266
+  text: '. 164
+
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО У 8-му КЛАСІ
+
+    § 80. Словосполучення і речення. Головні та другорядні члени речення . . . . .
+    . . . . . . 168
+
+    § 81. Односкладне речення. Неповне речення . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 170
+
+    § 82. Розділові знаки в простому ускладненому реченні . . . . . . . . . . . .
+    . . . . . . . . . . . . 172
+
+    Словники . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . 1'
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0035
+  text: "Огієнка)\nПерекладна література\n33\nРембрандт. Повернення \nблудного сина"
+  section_title: Сторінка 33
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0247
+  text: 'Розвиток мовлення. Резюме...................................................................................................
+    136
+
+    Короткий словник фразеологізмів................................................................................................
+    139
+
+    З орфографічного словника.............................................................................................................
+    142
+
+    З тлумачного словника...............................................................................'
+  section_title: Сторінка 159
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5271706581115723
+  chunk_id: 9dddf65a_c0322
+  text: "...на грЂхъ покута бываетъ. Пор.: «Де гріх, там і покута»\r\n(Номис, 124,\
+    \ стор. 3; Чубинський, I, стор. 284) або: «Нема гріху без покути»\r\n(Франко,\
+    \ I, 2, 42, стор. 460).\n\n...навяза(в)ши (б) на сA камε(н), в(ъ) воду втопи(л).\
+    \ Пор.\r\nКлиментій, 1337; (Номис, 2638, стор. 53; Франко, II, 1, 2, стор. 135).\n\
+    \n...свЂцкимъ здаεтсA то(и) чи(н) за хлЂбъ пшеничны(и) // а\r\nпострыгши(с), позна(в)ши,\
+    \ да(л) бы и zа житны(и). Пор. з народним\r\nафоризмом: «Голодному здається кожен\
+    \ хліб за булку» (Номис, 12108, стор. "
+  work: Климентій Зіновіїв. Вірші. Приповісті.
+  author: Зіновіїв К.
+  year: 1971
+  genre: poetry
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/klyment/kly.htm
+- score: 0.524461567401886
+  chunk_id: 5c054efc_c1215
+  text: "Знаю, что многих умы ищут равновЂсія в награжденіях и наказаніях,\r\nполагая\
+    \ на свои вЂсы мЂру и число дЂла человЂческія и суд божій. Друг мой! Величайшее\r\
+    \nнаказаніе \\471\\ за зло есть здЂлать зло, как и величайшее воздаяніе за добро\r\
+    \nесть дЂлать добро. Любовь добродЂтели / 451 / подобна свЂту огня.\r\nЗажги огнь,\
+    \ тотчас свЂт осіяет глаза твои; возлюби, возчувствуй охоту к\r\nдобродЂтели,\
+    \ тотчас сердце твое освЂтится веселіем. Исполни, произведи в дЂло\r\nдобродЂтели\
+    \ любовь, то корень сердца твоего напои"
+  work: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+  year: 1973
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/skovoroda/skov.htm
+- score: 0.5243139863014221
+  chunk_id: 9dddf65a_c0114
+  text: "εжεлѝ нε прεста́нε(т)\r\nзапо(и)ства проклято́го.\n\nТаковаA и мужа в нищεту\
+    \ увожда́εтъ:\n\nпото́мъ оглядЂвши(с) и сама̀ нищо̀ нε ма́ε(т).\n\nЯкъ посполи́тε\
+    \ мовя(т) іскра полε з(ъ)паляε(т):\n\nа послЂ выпалε(н)A и сама̀ погибаεтъ.\n\n\
+    Zачи(мъ) бы лЂпшъ бε(з) жоны та(к) собЂ пробува́ти:\n\nнεжε таку́ю шка́пу и нεцноту\r\
+    \nдε(р)жати.\n\nI сохраня(и) г(с)ди ω(т) злы(х) жεнъ чεловЂковъ\n\nдобры(х): прε(з)\
+    \ всЂ и(х) лЂта до самы(х) ко(н)чи́нъ вЂко(в).\n\n134. Ω жεна́хъ z дЂтε(и) умира́ючи(х)\
+    \ /84/\n\nДи́вна и о томъ бж̃ε на(ш)"
+  work: Климентій Зіновіїв. Вірші. Приповісті.
+  author: Зіновіїв К.
+  year: 1971
+  genre: poetry
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/klyment/kly.htm

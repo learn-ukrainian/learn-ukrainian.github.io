@@ -1,0 +1,187 @@
+discovered_at: '2026-03-13T14:43:16.847164+00:00'
+query_keywords:
+- Kulish Literary Legacy
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Kulish Literary Legacy у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0007
+  text: Але в минулого можна багато чого навчитися. Читайте, думайте, аналізуйте —
+    і вам відкриються таємниці історії.
+  section_title: Сторінка 3
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0044
+  text: "РОЗДІЛ 1\n46\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    Самооцінювання. Оцініть свої успіхи в опануванні теми «Писемні \nпам’ятки, фольклор\
+    \ і сучасні візуальні джерела про історію». Дайте від-\nповіді на запитання.\n\
+    Що можна дізнатися за \nдопомогою даних етнографії?\nЯкі види писемності існували\
+    \ \nв давнину?\nЧому сучасні види візуальних \nджерел є цінними \nдля історичних\
+    \ досліджень? \nЯк можна дослідити фотографію \nяк історичне джерело?\n?\nПрекрасно\n\
+    Добре\nпопрацювати\nТреба \nНічого не\nзро"
+  section_title: Сторінка 46
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  text: "Використана  література\nІванюк С. Міфи про Миколу Куліша / Сергій Іванюк\
+    \ // Наукові записки Національного \nуніверситету «Києво-Могилянська академія».\
+    \ — 1998. — Т. 4. — С. 75–83. — (Серія \n«Філологія»). Кузякіна Н. Траєкторія\
+    \ доль / Наталя Кузякіна. — К. : Темпора, 2010. Куліш А. Спогади про Миколу Куліша\
+    \ // Куліш М. Твори: В 2 т. — К., 1990. — Т. 2. — \nС. 695–753. Наєнко М. Художня\
+    \ література України / М. Наєнко. — К., 2007. — С. 845–857. Панченко В. Арки і\
+    \ шибениці (драматургія Миколи Куліша) /"
+  section_title: Сторінка 126
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5702263712882996
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5545751452445984
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5508546829223633
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm

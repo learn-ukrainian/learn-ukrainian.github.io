@@ -1,4 +1,4 @@
-FAIL: pipeline hist 121
+PASS: pipeline hist 121
 
   Module:   nezalezhnist-1991
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 121
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:21:22Z
+  Verdict:  PASS
+  Date:     2026-03-13T14:44:19Z

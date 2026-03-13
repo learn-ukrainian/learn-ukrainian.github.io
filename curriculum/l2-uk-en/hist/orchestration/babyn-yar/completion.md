@@ -1,4 +1,4 @@
-FAIL: pipeline hist 106
+PASS: pipeline hist 106
 
   Module:   babyn-yar
   Track:    hist
@@ -6,5 +6,5 @@ FAIL: pipeline hist 106
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T07:53:43Z
+  Verdict:  PASS
+  Date:     2026-03-13T12:58:02Z

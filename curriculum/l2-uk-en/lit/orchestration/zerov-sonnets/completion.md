@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 88 — E2E
+PASS: pipeline lit 89
 
   Module:   zerov-sonnets
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T17:39:44Z
+  Date:     2026-03-13T18:37:36Z

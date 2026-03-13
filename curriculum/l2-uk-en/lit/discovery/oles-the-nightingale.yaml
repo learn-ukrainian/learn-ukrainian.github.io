@@ -1,0 +1,195 @@
+discovered_at: '2026-03-13T17:51:58.734669+00:00'
+query_keywords:
+- Oles The Nightingale
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір Oles The Nightingale у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video directly addresses the concept of the Ukrainian literary
+    'канон' and the importance of specific Ukrainian writers (Bazhan, Tychyna) in
+    shaping the literary landscape. This is highly relevant to understanding the cultural
+    and historical context of Oleksandr Oles and his place within Ukrainian literature,
+    aligning with the 'Вступ та культурний контекст' section.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають. Бажан має бути повернутий в шкільну програму.
+  embed_suggestion: After section Вступ та культурний контекст -- as it directly discusses
+    the Ukrainian literary canon and its formation.
+- url: https://www.youtube.com/watch?v=8l_FfmbpEWs
+  channel: Radio Khartia
+  title: Культура виживає завдяки тим, хто не здається
+  relevance_score: 0.7
+  relevance_note: The video discusses the survival of Ukrainian culture and mentions
+    Ivan Nechuy-Levytsky in the context of the historical suppression of Ukrainian
+    philology. This provides valuable historical and decolonial context relevant to
+    any significant Ukrainian writer like Oles, particularly for the 'Деколонізаційний
+    вимір' section.
+  transcript_excerpt: В мене таке враження, що для того, щоб функціонувала культура,
+    потрібні і подвижники, і ті, хто працює на культуру, адже українську словесність
+    неможливо було викладати.
+  embed_suggestion: After section Деколонізаційний вимір -- because it discusses the
+    historical challenges and survival of Ukrainian culture and language against external
+    pressures.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.4
+  relevance_note: The video discusses modern Ukrainian language and metaphor in a
+    contemporary author's work. While 'мова' (language) and 'метафора' (metaphor)
+    are relevant keywords from the module, the specific focus is on Serhiy Zhadan,
+    not Oleksandr Oles. It offers tangential relevance regarding the broader theme
+    of Ukrainian language and poetry.
+  transcript_excerpt: Він презентує нову збірку віршів скрипниківка роботу над якої
+    автор розпочав у період до і після початку повномасштабного вторгнення до збірки
+    ввійшов 51 вірш це поезія про мову.
+  embed_suggestion: After section Мова, стиль та поетика -- because it discusses language
+    and poetics, albeit in a modern context.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0007
+  text: Але в минулого можна багато чого навчитися. Читайте, думайте, аналізуйте —
+    і вам відкриються таємниці історії.
+  section_title: Сторінка 3
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0096
+  text: "Прочитайте або поновіть у пам’яті твір Îсипа Òурянського «Поза меæами \n\
+    áолþ» . Порівняйте власні враження від твору з матеріалом, запропонованим \nу\
+    \ статтях підручника . У розділі «Віртуальна бібліотека» електронного додатка\
+    \ \nдо підручника ви знайдете повний текст твору, а в розділі «Читацький прак-\n\
+    тикум» — завдання для аналізу тексту . читаємо взірці української художньої літератури\n\
+    Àнтивоºнне, ãóманістичне çвóчання романó, іäея ïеретворення світó сиëоþ ëþä-\n\
+    ськоãо äóõó é ëþбові, ексïресіоністи"
+  section_title: Сторінка 51
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0180
+  text: "\x03\n\x83 У вигляді схеми, таблиці, конспекту, коміксів тощо занотуйте інформацію\
+    \ про \nтвір ю . яновського «Майстер корабля»: жанрові та стильові особливості,\
+    \ теми \nта проблеми, мотиви, персонажі, основні сюжетні колізії . щоб отримати\
+    \ повніше уявлення про творчість Þ. ßновського, прочи-\nтайте його твори «Ãоллівуд\
+    \ на áерезі ×орного моря», «Áайгород», \n«×отири шаáлі», «Äитинство», «Подвійне\
+    \ коло» . Запрошуємо до бібліотеки"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5689575672149658
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5395511984825134
+  chunk_id: 3588aaff_c0550
+  text: "Залишмо на якийсь час осторонь основне питання про\r\nпринципову можливість\
+    \ розмежувати в історичному дослідженні \"літературу як\r\nтаку\" і її \"тло\"\
+    . Ми можемо легко упевнитися в тому, що\r\nанглійське видання має іншу читацьку\
+    \ аудиторію, — американську, канадську чи\r\nзагалом англомовну, але не українську.\
+    \ Вона позбавлена тих \"земних\r\nорієнтирів\", про які йшлося Мілошу, тобто передусім\
+    \ соціальних та\r\nкультурних процесів, що становлять для літератури динамічний\
+    \ контекст і,\r\nкоротше кажучи, уможливлюють"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5312895774841309
+  chunk_id: 3faf433b_c0110
+  text: "Але таке поясніння — нічого\r\nне пояснює, отож ми краще воліємо пристати\
+    \ на давній здогад про те, що являв\r\nсобою Стрибог, він бо випливає з контексту\
+    \ „Сл. о п. Іг.”.\n\n§ 12. „Слово” і західньо-европейський середньовічний епос."
+  work: Перетц — Слово о полку Ігоревім (1926)
+  author: Перетц В.М.
+  year: 1926
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/peretz/peretz01.htm

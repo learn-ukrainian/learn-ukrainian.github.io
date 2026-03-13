@@ -1,0 +1,209 @@
+discovered_at: '2026-03-13T12:59:52.802671+00:00'
+query_keywords:
+- 'Після Сталіна: Шістдесятники'
+- Хто такі шістдесятники
+- Культурний вибух
+- Репресії
+- Від культури до політики
+- 'Analyze the causes and consequences of після сталіна: шістдесятники'
+- Evaluate the historical significance of відлига
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0289
+  text: "150  Літературне «шістдесятництво»\nПовоєнна українська література дуже\
+    \ потерпала через цензуру. Влада \nвизнавала лише соцреалізм — штучний набір правил,\
+    \ за яким письменники \nмали писати твори, а митців розглядала як пропагандистів\
+    \ тоталітарного ра-\nдянського режиму. Цей режим довго тримався на «культі особи»\
+    \ комуністичного диктатора \nЙ. Сталіна. Після його смерті на чолі Радянського\
+    \ Союзу став Микита Хрущов, \nякий виступив із викривальною доповіддю «Про культ\
+    \ особи та його наслідки». Із цього р"
+  section_title: Сторінка 150
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0311
+  text: "189\nДовідка\nслова. Саме в цю епоху заявили про себе багато молодих талановитих\
+    \ письмен-\nників: В. Симоненко, Гр. Тютюнник, Л. Костенко, І. Драч, М. Він­гра­новський,\
+    \ \nВал. Шевчук, Б. Олійник, В. Дрозд, Є. Гуцало, І. Жиленко, Д. Павличко, І.\
+    \ Ка-\nлинець та ін. Їх називають шістдесятниками, оскільки розквіт їхньої творчості\
+    \ \nприпав на другу половину 50-х — 60-і роки ХХ ст. Кожному шістдесятнику властивий\
+    \ неповторний стиль, проте  їх об’єднував \nспільний світогляд та естетичні настанови:\
+    \ культ свобо"
+  section_title: Сторінка 189
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0145
+  text: "Розділ ІІ. Україна в умовах десталінізації\n78\nЗверніть увагу\nХарактеристика\
+    \ діяльності \n«шістдесятників»: \n\x83\x83 активна громадянська позиція \nта прагнення\
+    \ свободи творчості; \n\x83\x83 критика офіційної ідеології \nта боротьба за національну\
+    \ \nсамобутність України; захист \nукраїнської мови й культури; \n\x83\x83 новаторство\
+    \ в мистецтві \nта літературі. «Шістдесятники» мали значний вплив \nна суспільне\
+    \ життя України, хоча їхня \nдіяльність часто зазнавала утисків із \nбоку влади.\
+    \ Деякі представники \n«шістдесятників» с"
+  section_title: Сторінка 80
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0290
+  text: "Його автор \nписав: «Я пропоную… одну­єдину річ: свободу — свободу чесного\
+    \ публічного \nобговорення національного питання, свободу національного вибору,\
+    \ свободу \nнаціонального самопізнання і саморозвитку». Невдовзі «шістдесятники»\
+    \ скла-\nли помітну моральну опозицію радянській владі, яка, відчувши загрозу,\
+    \ від-\nреагувала наступом на свободу слова. Перші арешти й судові процеси над\
+    \ українськими дисидентами (від лат. dissidens — незгодний) припали на 1965 рік.\
+    \ Їх звинуватили в «антирадянській \nагітац"
+  section_title: Сторінка 150
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0291
+  text: "Літературне «шістдесятництво»  151\nдіячів: Василя Стуса, Івана Світличного,\
+    \ Євгена Сверстюка, Ігоря Калинця, Ва-\nлерія Марченка, В’ячеслава Чорновола та\
+    \ ін.\nДекого залякали: одним заборонили друкуватися, інших виключили з уні-\n\
+    верситетів, звільнили з роботи. Чимало митців пішло на співпрацю з владою, \n\
+    вони стали конформістами, тобто пристосуванцями. Аби вберегти себе, муси-\nли\
+    \ виявляти лояльність до влади. Дехто обрав «третій шлях», або так звану \n«внут\
+    \ рішню еміграцію» — припинив активну грома"
+  section_title: Сторінка 151
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5447471737861633
+  chunk_id: 68ba0555_c0709
+  text: "З шістдесятих років в імперії посилюється\r\nсоціалістичний рух у дедалі\
+    \ більшому політико-ідеологічному розмаїтті\r\nвиявів. Соціалістами революціонерів-підпільників\
+    \ називали з 60-х років. В середині\r\n70-х років, після того, як більшість колишніх\
+    \ гуртківців «пішла в народ», виник\r\nі закріпився термін «народники», що охопив\
+    \ також підпільників-терористів. З\r\n90-х років, коли почало поширюватися вчення\
+    \ Маркса, окремі течії, а потім\r\nпартії — спадкоємці народників — проголошують\
+    \ свою монополію на «спра"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm
+- score: 0.5416075587272644
+  chunk_id: a5f3ae7f_c0230
+  text: "Тож не дивно, що будь-яке концептуальне осмислення\r\n(переосмислення) самої\
+    \ парадигми української культури майже неминуче /158/\r\nрозпочинається з «нового\
+    \ тлумачення» ролі й значення Шевченка. Куліш та\r\nКостомаров, Франко та Драгоманов,\
+    \ Євшан та Єфремов, Коряк та Річицький,\r\nХвильовий та Семенко, Донцов та Маланюк,\
+    \ а в пізніші часи — Драч та Сверстюк,\r\nДзюба та Грабович, і ще чимало відомих\
+    \ імен — усі в своїх ідеологічних та\r\nкультурологічних побудовах неодмінно «бралися\
+    \ за Шевченка», за «нове\r\nпр"
+  work: Героїчне та знаменитості в українській культурі
+  author: Колектив
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/heroes/hero.htm
+- score: 0.5322749614715576
+  chunk_id: 53691244_c0126
+  text: "Репресії початку 1970-х призвели до перегляду тактики й\r\nдеяких ідей руху.\
+    \ Василь Овсієнко, осмислюючи причини виникнення\r\nшістдесятництва як суспільного\
+    \ явища, простежує його еволюцію (неопублікована\r\nстаття). Один із висновків:\
+    \ у майбутньому життя буде вимагати організації руху,\r\nа то й переходу його\
+    \ в підпілля 31.\r\nВищезгадані ідеї здобули розвиток насамперед на сторінках\
+    \ самвидавського\r\n«Українського вісника» за редаґуванням В.Чорновіла.\n\nВажливим\
+    \ документом історії непідцензурної\r\nсуспільно"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm

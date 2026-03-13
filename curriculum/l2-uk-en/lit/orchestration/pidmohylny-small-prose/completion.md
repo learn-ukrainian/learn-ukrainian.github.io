@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 96 — E2E
+PASS: pipeline lit 100
 
   Module:   pidmohylny-small-prose
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T17:43:03Z
+  Date:     2026-03-13T19:06:05Z

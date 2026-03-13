@@ -1,0 +1,127 @@
+discovered_at: '2026-03-13T12:52:54.820983+00:00'
+query_keywords:
+- 'Розстріляне відродження II: Механізм терору'
+- Система знищення
+- Механізм репресій
+- Географія смерті
+- Первинні джерела
+- Деколонізаційний погляд
+- Пам'ять та правда
+- систематичний характер терору проти інтелігенції
+- географію репресій (Соловки, Сандармох)
+- механізми державного терору
+- це як культурний геноцид
+- Минулий час в історичному наративі
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=4_zEP5AQQys
+  channel: Реальна Історія
+  title: РЕАЛЬНА ІСТОРІЯ РОЗСТРІЛЯНОГО ВІДРОДЖЕННЯ
+  relevance_score: 1.0
+  relevance_note: The video directly addresses the 'Executed Renaissance' and specifically
+    details the 'mechanism of destruction' (механізм зі знищення), aligning perfectly
+    with the module's focus on the 'Mechanism of Terror' and 'System of Destruction'.
+    It also covers primary sources (SBU archives) and provides historical context
+    and geography.
+  transcript_excerpt: що ми знаємо про те як працював механізм зі знищення українських
+    митців і найголовніше що їм довелося пережити перед своєю смертю Сьогодні я знаходжуся
+    в унікальному місці це архів СБУ де зберігаються усі секрети спецоперацій советських
+    спецслужб.
+  embed_suggestion: 'After ''Вступ: Система знищення'' -- The video provides an excellent
+    and comprehensive introduction to the topic, detailing the mechanism of terror
+    and hinting at primary sources, making it ideal for the introductory section.'
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0307
+  text: "Голодомор мовою документів, свідчень, чисел\n2. Пропагандистський ідеал радянської\
+    \ людини та її повсяк-\nденне життя\nЗавдання для узагальнення знань і підготовки\
+    \  \nдо тематичного оцінювання за розділом IV \n«Встановлення й  утвердження комуністичного\
+    \  \nтоталітарного режиму в  Україні»"
+  section_title: Сторінка 160
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0463
+  text: "Голодомор мовою документів, свідчень, чисел \n2. Пропагандистський ідеал\
+    \ радянської людини та її повсякденне життя  . . . . . . . . . 160\n\t\nЗавдання\
+    \ для узагальнення знань і підготовки до тематичного оцінювання \nза  розділом\
+    \ IV «Встановлення й  утвердження комуністичного тоталітарного \nрежиму в  Україні»\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 160\nРозділ V.\
+    \ Західноукраїнські землі в  міжвоєнний періо"
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0021
+  text: "— 2007. — № 2–4. — С. 32–35. Романенко О. В. Людина і світ в українській\
+    \ літературі доби «розстріляного відро-\nдження» / О. Романенко. — К. : Компанія\
+    \ «ВАІТЕ», 2006. — 98 с. Хархун В. Соцреалістичний канон в українській літературі:\
+    \ генеза, розвиток, модифікації / \nВ. Хархун. — Ніжин : ТОВ «Гідромакс», 2009.\
+    \ — 508 с. Домашнє завдання"
+  section_title: Сторінка 15
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5266128182411194
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.4942242205142975
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.4938207268714905
+  chunk_id: 68ba0555_c0004
+  text: "§2. Росія на шляху реформ. Еволюція правової та політичної природи самодержавства\
+    \ . . . . . . 400\n\nРеформи Олександра II . . . . . . . . . . . . . . .\r\n400\n\
+    \nКонтрреформи і криза імперії . . . . . . . . . . . .\r\n. . . 407\n\nАнтисемітизм\
+    \ . . . . . . . . . . . . . . . 413\n\n§3. Україна пореформна та передреволюційна\
+    \ . . . . . . . . . . . . . . . 417\n\nСело . . . . . . . . . . . . . . . 417\n\
+    \nУрбанізація краю . . . . . . . . . . . . . . . 423\n\nЗахідна Україна . . .\
+    \ . . . . . . . . . . . . 427\n\n§4. Грома"
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm

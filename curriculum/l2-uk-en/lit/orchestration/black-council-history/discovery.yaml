@@ -1,0 +1,210 @@
+discovered_at: '2026-03-13T14:49:46.321014+00:00'
+query_keywords:
+- 'Чорна рада: Історичний контекст'
+- Чорна рада 1663 року
+- Політичні сили епохи
+- Охлократія як проблема
+- Історичні постаті
+- Understand the historical context of "The Ruin" (1657-1687) and the Black Council
+  of 1663.
+- Contrast the political models of Somko (elite/law) and Briukhovetsky (populism/mob
+  rule).
+- Analyze the consequences of internal discord for Ukrainian statehood.
+- Historical terminology
+- history
+- руїна
+- чорна
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0064
+  text: "Але завдяки релігійній полеміці викристалізува­\nлася ідея «руського народу»\
+    \ як третього учасника федеративної Речі По­\nсполитої. УКРАЇНСЬКІ ЗЕМЛІ У СКЛАДІ\
+    \ РЕЧІ ПОСПОЛИТОЇ\nРОЗДІЛ 1 \nу XVI -  першій половині XVII ст."
+  section_title: Сторінка 48
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0214
+  text: "4. Чому перемога під Конотопом \nне додала авторитету гетьману І. Виговському?\
+    \ 5. У  чому поля­\nгала недалекоглядність політики Ю. Хмельницького? \x8F\n\x8F\
+    \ 6. Простежте за картою атласу перебіг воєнних дій українсько-\nмосковської війни\
+    \ 1658—1659  рр. 7. Складіть у  зошиті порів­\nняльну таблицю «Договори, укладені\
+    \ Гетьманщиною із сусідніми \nдержавами». Питання для порівняння визначте самостійно.\
+    \ 8. Робота в парах. Обговоріть і визначте етапи обмеження прав \nУкраїнської\
+    \ козацької держави в  1654—1667  рр"
+  section_title: Сторінка 110
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrlit-avramenko-2022_s0265
+  text: 'Куліша «Чорна рада». Розвиваємо компетентності
+
+    Теорія літератури
+
+    Я
+
+    Аля'
+  section_title: Сторінка 245
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0332
+  text: 'матері»), які відображали багатогранність особистості, розвинули історичний
+
+    роман, що став перехідною ланкою від романтизму до реалізму. В Україні
+
+    жанр роману розвинувся пізніше, ніж в інших країнах Європи. «Чорна ра-
+
+    да» (1857) П. Куліша — перший роман в українській літературі, написаний
+
+    українською мовою, перероблений з російськомовного варіанта.
+
+    Історèчний ромàн відображає конкретну історичну добу, певні істо-
+
+    ричні події, конкретні історичні постаті, які жили й діяли в час, про який
+
+    ідеться '
+  section_title: Сторінка 254
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.4942166805267334
+  chunk_id: 53691244_c0085
+  text: "Охлократія, за Липинським, — «це метод організації такої\r\nнації, яка в\
+    \ процесі свого примітивного матеріяльного і расового розвитку, або\r\nпід впливом\
+    \ попереднього матеріяльного і расового розкладу, ще не витворила\r\nміцно складених\
+    \ по способу своєї матеріяльної продукції і своєму расовому\r\nспорідненню класів,\
+    \ і яка ділиться тільки на політично безформенну, економічно\r\nі расово нездиференційовану\
+    \ юрбу (охлос, звідси: охлократія) та тих, що\r\nправлять цією безкласовою юрбою\
+    \ при помочі своєї озброєно"
+  work: Українська державність у XX столітті
+  author: Колектив
+  year: 1996
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ukrxx/zmist.htm
+- score: 0.4783802032470703
+  chunk_id: 5739d24f_c0193
+  text: "15) Шафарик І § 10. 3-4 (за Оссолїньским, \r\n Wiadomści historyczno-krytyczne),\
+    \ Mair Das Land der Skythen, 0. Schrader \r\n Schracbvergleichung 2 c. 619 (за\
+    \ Лєскіном), Браун Разысканія і т. \r\n ин.\n\nТОМ I     \r\nРозділ III\n\n[М.\
+    \ Грушевський. Історія України-Руси. Том I. Розділ III. Стор. 5.]\n\n[М. Грушевський.\
+    \ Історія України-Руси. Том I. Розділ III. Стор. 6.]\n\nТОМ I     \r\nРозділ III\n\
+    \nУПАДОК СКИТІВ; МАНДРІВКА САРМАТІВ, ЇХ ПЛЕМЕНА, \r\nПОБУТ. АЛЯНИ І ЇХ ПОБУТ,\
+    \ ЇХ ОСТАНКИ.\n\nВід сих північних сусїдів Скитів"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.4774934947490692
+  chunk_id: 5739d24f_c0612
+  text: "3) Огляд праіндоевропейських, або лїпше сказати — \r\n загальноіндоевропейських\
+    \ підстав полїтичної орґанїзації у Шрадера Reallexicon, \r\n sub vocibus König,\
+    \ Staat, Volk, Volksversammlung. В своїй реконструкції \r\n індоевропейського\
+    \ побуту (Sprach vergl. u. Urgeschichte) він одначе не пішов \r\n далї родо-племінних\
+    \ форм, так само і Гірт (Die Indogermanen). Проби Ляйста \r\n (Leist Altrarisches\
+    \ jus gentium, 1889, Altrarisches jus civile, 1892-6), що \r\n намагав ся з памяток\
+    \ ріжних індоевропейських племен в"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm

@@ -1,0 +1,192 @@
+discovered_at: '2026-03-13T12:46:47.096148+00:00'
+query_keywords:
+- Феномен Івана Котляревського
+- Біографія як драма вибору
+- Феномен "Котляревщини"
+- '"Енеїда" в європейському контексті'
+- Роль особистості в культурі
+- Analyze literary techniques in феномен івана котляревського
+- Interpret themes and motifs of чому 1798 рік?
+- literature
+- бурлеск
+- травестія
+- національне
+- відродження
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=k5cwqsz2Bbw
+  channel: Суспільне Культура
+  title: '«За текстом "Енеїди" Котляревського видно, якою багатою була українська
+    мова ще в ті часи» #shorts'
+  relevance_score: 0.9
+  relevance_note: The video directly analyzes the linguistic richness of Kotliarevsky's
+    'Eneida' and its role in demonstrating the established nature of the Ukrainian
+    language, which is highly relevant to understanding the 'Феномен Котляревського'
+    and 'Енеїда в європейському контексті' sections of the module.
+  transcript_excerpt: ми можемо за тим як він пише за текстом і неїде зрозуміти наскільки
+    вона вже на той момент багата так Тобто вона просто дуже багата бо в нього мовна
+    палітра просто широченна вона дуже розвинута вже на той момент
+  embed_suggestion: After section 'Енеїда' в європейському контексті' -- it directly
+    discusses the linguistic impact and richness of 'Eneida' in the context of Ukrainian
+    language development.
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0046
+  text: "Особистість та сóспільно-політичне і творче життя. Іван Котляревсьêий \n\
+    першим ó своїх творах виêористав розмовнó óêраїнсьêó мовó, написавши \nнею сатиричнó\
+    \ поемó «Енеїда». Цю подію оêремі дослідниêи вважають \nпочатêом óêраїнсьêоãо\
+    \ національноãо відродження. Дванадцять роêів"
+  section_title: Сторінка 31
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0245
+  text: "145\n1\nНОВА УКРАЇНСЬКА ЛІТЕРАТУРА\nТВОРЧІ ЗАВДАННЯ\nСпробуйте інсценізувати\
+    \ окремий уривок з п’єси «Наталка Полтавка». Можна\n«перенести» сюжет твору в\
+    \ наші дні – адаптувати його. Тоді возний виявиться,\n приміром, чиновником якоїсь\
+    \ установи, а виборний – поліцейським. Фантазуйте! Давні класичні твори мають\
+    \ багато бурлескних переробок. Бурлескно-травестій-\nне перелицювання «Енеїди»\
+    \ Вергілія ще до Котляревського було здійснено різними \nавторами: в Італії це\
+    \ була «Перелицьована Енеїда» Джованні Лаллі ("
+  section_title: Сторінка 145
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0485
+  text: '. . . . . . . . . . . . . . . . 245
+
+    По дорозі в Казку  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 245
+
+    Теорія літератури. Драматичний етюд . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 247
+
+    Короткий словник літературознавчих термінів . . . . . . . . . . . . . . . . .
+    . . . . . . . 249'
+  section_title: Сторінка 255
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0040
+  text: 'дім «Києво-Могилянська академія», 2014. Пахаренко В. Основи теорії літератури.
+    — К. : Генеза, 2007. — 296 с. Стус В. Феномен доби (Сходження на Голгофу слави)
+    —  К. : Кліо, 2015. — 104 с. Домашнє завдання'
+  section_title: Сторінка 28
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0182
+  text: "Обкладинка \nдо поеми \nІ. Котляревського \n«Енеїда»\nВидання збірки «Кобзар»\
+    \  \nТ. Шевченка. 1840 р. РОМАНТИЗМ І РЕАЛІЗМ ЯК ОСНОВНІ \nМИСТЕЦЬКІ НАПРЯМИ ХІХ\
+    \ ст. § 24–25. З ПОЕЗІЇ ХІХ століття"
+  section_title: Сторінка 106
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.587577223777771
+  chunk_id: cf05bddd_c0102
+  text: '"Енеїда" Івана Котляревського — виняткове художнє явище. Хоч на великій травестії
+    відбився, та й не міг не відбитися, поступ суспільно-літературної думки та поглядів
+    самого автора вподовж трьох десятків років праці над нею, "Енеїда" становить собою
+    напрочуд викінчену, струнку цілість, гармонійну єдність змісту та форми. Травестія
+    не може зовсім відірватися від сюжетної канви першотвору, одначе і в рамках даного
+    жанру блискуче виявилися оригінальність, гнучкість і багатство композиційних засобів '
+  work: Іван Котляревський. Енеїда
+  author: Котляревський І.
+  year: 1769
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=1052
+- score: 0.5815867185592651
+  chunk_id: 3588aaff_c0412
+  text: "20 Дослівно\r\nдраматичним прикладом цього ілюзорного \"ународнення\" письменника\
+    \ є\r\nнедавня інсценізація \"Енеїди\" в театрі ім. Франка в Києві: в даному\r\
+    \nмоменті актор, який грає Котляревського (Богдан Ступка), вибігає у фраку з\r\
+    \nпартеру на сцену і, взявшись за руки, починає танцювати щось подібне до аркана\r\
+    \nз обідраними козацько-троянськими гультіпаками. З історичним Котляревським цей\r\
+    \nприйом не має нічого спільного, зате в ньому вся котляревщина.\n\n21 Див. його\
+    \ есе \"Гамлет\" (1919).\n\nIII. Канон на б"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.570528507232666
+  chunk_id: fc2291b5_c3824
+  text: "Тв.: Собрание сочинений\r\nна малороссийском языке. К., 1874; Полное собрание\
+    \ сочинений на малороссийском\r\nязыке. К. — Одесса, 1890; Повне зібрання творів,\
+    \ т. 1 — 2. К., 1952 — 53;\r\nПоетичні твори. Драматичні твори. Листи. К., 1982;\
+    \ Енеїда. К., 1988; Рос.\r\nперекл. — Энеида. М., 1953; Наталка Полтавка. В кн.:\
+    \ Украинская\r\nклассическая комедия. М., 1954; Энеида. К., 1986; Сочинения. Л.,\
+    \ 1986.\n\nЛіт.: [Грінченко Б. Д.].\r\nИван Котляревский. Описание его жизни.\
+    \ Полтава, 1898; Житецкий П. «Энеида»\r\nКотляр"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

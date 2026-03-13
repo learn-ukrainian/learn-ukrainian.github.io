@@ -1,0 +1,145 @@
+discovered_at: '2026-03-13T18:42:39.967748+00:00'
+query_keywords:
+- Літературний переклад I — поезія
+- Чи можна перекласти поезію?
+- Is Poetry Translatable?
+- Традиції української школи перекладу
+- Traditions of the Ukrainian School of Translation
+- Техніка відтворення форми та звукопису
+- 'Technique: Reproducing Form and Sound Painting'
+- Стилістика та образність за Державним стандартом
+- Stylistics and Imagery per State Standard
+- Аналіз типових помилок та практикум
+- Analysis of Common Errors and Workshop
+- Перекладач як співавтор
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=FRgkF9PPrZw
+  channel: Ukrainian Lessons
+  title: ULP 6-230 | Українська поезія. Ліна Костенко «Страшні слова, коли вони мовчать»
+    | Ukrainian Lesso...
+  relevance_score: 0.9
+  relevance_note: Analyzes Lina Kostenko's poetry, discussing the value of the word
+    and language in Ukrainian poetic tradition, which is highly relevant to understanding
+    the essence of poetry for literary translation.
+  transcript_excerpt: А сьогодні ми поговоримо про слово про свободу слова і про поезію
+    у вірші Ліни Костенко ... який загалом говорить про поезію як нашу цінність цінність
+    слова цінність мови це те про що ми багато-багато говоримо.
+  embed_suggestion: 'After section: Вступ: Чи можна перекласти поезію?'
+- url: https://www.youtube.com/watch?v=D4KDIyq54Lg
+  channel: Radio Khartia
+  title: 'Поезія під знаком традиції: Максим Рильський і Василь Мисик | Сергій Жадан'
+  relevance_score: 0.8
+  relevance_note: Discusses prominent Ukrainian poet Maksym Rylsky and how to interpret
+    Ukrainian poetry today, reinforcing the context of Ukrainian poetic tradition
+    relevant to translation.
+  transcript_excerpt: ми зараз попробуємо розібратися Як цю поезію читати сьогодні
+    і чи тільки поезію... У нас є шанс поговорити про якісь цікаві речі які ставалися
+    з нашою культурою і літературою.
+  embed_suggestion: 'After section: Традиції української школи перекладу'
+- url: https://www.youtube.com/watch?v=tNw1DItTolw
+  channel: Radio Khartia
+  title: “As long as we are here, everything will be fine.” Stus as a way to explain
+    Ukraine today – Zhada...
+  relevance_score: 0.6
+  relevance_note: Focuses on the interpretation and perception of Ukrainian poets
+    (Stus, Semonenko) and poetry generally, which is tangentially related to the broader
+    understanding required for translation.
+  transcript_excerpt: Я там розповідав про якусь, ну, про якусь поезію, як це все
+    зроблено, як це все написано, е, як це все можна сприймати, інтерпретувати.
+  embed_suggestion: 'After section: Вступ: Чи можна перекласти поезію?'
+- url: https://www.youtube.com/watch?v=Wx8mbe7YINc
+  channel: Суспільне Культура
+  title: '"We''re not talking about literary texts yet, and anything related to war
+    is too early" - Sofia An...'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=FJ_duCHmG2s
+  channel: Суспільне Культура
+  title: «Час поезії». Випуск №5. Микола Бажан
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ySf4WaTtoQ0
+  channel: Let's Learn Ukrainian
+  title: Learn Ukrainian Poetry | Мені однаково, Тарас Шевченко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0143
+  text: "Він сам перекладав із чотирнад-\nцяти мов. Йому належать переклади творів\
+    \ Софокла, Горація, Вергілія, В. Шек-\nспіра, Й. В. Ґете, П. Б. Шеллі, А. Теннісона,\
+    \ Дж. Байрона, А. Міцкевича, А. Фран-\nса, Марка Твена, Г. Ібсена та багатьох\
+    \ інших майстрів слова. Опрацьовуємо прочитане, виявляємо читацьку компетентність\
+    \ \t\n1. Дайте короткі відповіді на запитання. \x83\n\x83 У яких галузях реалізувався\
+    \ талант І. Франка? \x83\n\x83 Якими збірками представлена поетична спадщина І.\
+    \ Франка? \x83\n\x83 Які відомі поеми написав І. Фран"
+  section_title: Сторінка 77
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0222
+  text: 'І нехай би чиєсь слово... та не
+
+    можуть ні різець, ні пензель, ні всемогутнє слово виявити того,
+
+    що бачиться іноді в очах дівчини, окрім невимовно солодкого по-
+
+    чуття, яке огортає того, хто заглядає в такі очі. Микола Гоголь
+
+    169'
+  section_title: Сторінка 169
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrlit-zabolotnyi-2023_s0047
+  text: "47\nПОЕТИЧНИЙ ДИВОСВІТ\nПОЕТИЧНИЙ ДИВОСВІТ\n \nПоезія – це віршовані твори\
+    \ невеликого обсягу, у яких \nпередано думки, почуття, переживання, емоції людини.\
+    \ \nПоетичні твори різноманітні за тематикою. У них може \nбути відображено світ\
+    \ дитинства й родинні цінності, карти-\nни природи й почуття кохання, сторінки\
+    \ минулого й \nроздуми про майбутнє тощо. \nПоезія відображає думки й почуття\
+    \ автора / авторки, \nвикликані спогляданням картин природи, спогадами про \n\
+    рідних і близьких, спостереженням за вчинками люд"
+  section_title: Сторінка 47
+  grade: 6
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0298
+  text: "Літературне «шістдесятництво» . Василь Симоненко  155\n* * *\nЄ в коханнi\
+    \ i буднi, i свята,\nЄ у ньому i радiсть, i жаль,\nБо не можна життя заховати\
+    \ \nЗа рожевих iлюзiй вуаль.\nI з тобою було б нам гiрко,\nОбiймав би нас часто\
+    \ сум,\nI, бувало б, темнiла зiрка\nУ туманi тривожних дум.\nАле певен, що жодного\
+    \ разу \nУ вагання i сумнiвiв час\nДрiб’язковi хмарки образи \nНе закрили б сонце\
+    \ вiд нас.\nБо тебе i мене б судила\nНе образа, не гнiв — любов.\nВ душi щедро\
+    \ вона б свiтила,\nОновляла їх знов i знов.\nУ мою б "
+  section_title: Сторінка 155
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0070
+  text: "Плуæника, його пое му «Ãалілей», роман \n«Íедуга» . Обговоріть з однокласниками\
+    \ та однокласницями, які нові \nособ ливості творчості поета ви відкрили . Запрошуємо\
+    \ до бібліотеки"
+  section_title: Сторінка 37
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

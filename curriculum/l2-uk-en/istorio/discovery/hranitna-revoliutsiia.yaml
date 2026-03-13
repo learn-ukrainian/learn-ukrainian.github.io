@@ -1,0 +1,210 @@
+discovered_at: '2026-03-13T13:28:13.318380+00:00'
+query_keywords:
+- Гранітна революція 1990
+- Контекст
+- Голодування
+- Перемога
+- Спадок
+- Analyze the causes and consequences of гранітна революція 1990
+- Evaluate the historical significance of забута революція
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0288
+  text: 'гайдамацьке повстання вибухнуло з новою силою. До тра­
+
+    диційного селянського невдоволення долучилися релігійні чинники. 2 1 5'
+  section_title: Сторінка 215
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0380
+  text: "206 \n«Батьківщина або смерть. Ми на Батьківщині!!!», \n1990-ті роки. Світлина\
+    \ \n1. Що, на вашу думку, змусило\nкримських татар розмістити \nподібне гасло\
+    \ на стіні будинку? 2. За \nдопомогою \nінтернет-\nджерел дізнайтеся обставини\
+    \ \nповернення кримських татар у \nКрим. Статуті ООН та інших міжнародних актах.\
+    \ Однак прийнятий документ \nне одержав статусу конституційного, позаяк парламентська\
+    \ більшість \nвідмовилася задовольнити вимогу опозиції зробити це. Українська\
+    \ РСР \nзалишалася у складі СРСР, тому міжна"
+  section_title: Сторінка 207
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0463
+  text: "Голодомор мовою документів, свідчень, чисел \n2. Пропагандистський ідеал\
+    \ радянської людини та її повсякденне життя  . . . . . . . . . 160\n\t\nЗавдання\
+    \ для узагальнення знань і підготовки до тематичного оцінювання \nза  розділом\
+    \ IV «Встановлення й  утвердження комуністичного тоталітарного \nрежиму в  Україні»\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 160\nРозділ V.\
+    \ Західноукраїнські землі в  міжвоєнний періо"
+  section_title: Сторінка 239
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0045
+  text: "обмін грошових \nзнаків здійснювали у співвідношенні 1 : 1, \nЧинники, які\
+    \ впливали на демографічну ситуацію в  УРСР у  повоєнні роки\nЛюдські втрати \n\
+    під час війни\nЗміна кордонів \nта «обмін \nнаселенням»\nПовернення полонених,\
+    \ \nостарбайтерів, \nевакуйованих тощо\nМасовий \nштучний голод \n1946—1947  рр.\
+    \ Депортації, \nрепресії\nРадянізація \nзахідних \nобластей УРСР\nДемобілізація\
+    \ \nвійськово­\nслужбовців\nПродовження бойових \nдій на території західних \n\
+    областей України\nПереміщення \nробочої сили \nв  процесі відб"
+  section_title: Сторінка 27
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.4580799341201782
+  chunk_id: 22e255be_c0103
+  text: 'Іван це тут побачив і збагнув... Перед ним ділема: здатись, а чи ще змагатися?
+    Не має часу про це думати, там де була його думка, там тепер лиш голод і втома...
+    Але це вже щось, як останні місяці, можливо навіть тижні, цієї доби, назовні,
+    раз-у-раз, зривається розпачливий крик сирен, там то там зриваються вибухи і це
+    підбадьорює, надає сили, до того, там десь в тому он просторі, Віра і, можливо,
+    вона не в кращому стані, ніж він тут, тому, як не видержати. Це понад силу, але
+    треба... Жий, тримайс'
+  work: Улас Самчук. Втеча від себе
+  author: Самчук У.
+  year: 1905
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=3649
+- score: 0.4479323625564575
+  chunk_id: 36657397_c0064
+  text: 'Дасть ось добру пробіжку, впаряться, посліпнуть від поту, тоді заспівають...
+
+
+    Гладун не зводив з них ока.
+
+
+    — Швидше!
+
+
+    Дедалі швидше і швидше біжать вони, біжать, зціпивши зуби, підібравши тощаві студентські
+    свої животи, і тільки чути посилене їхнє дихання, та юхтове чобіття гупає в важкій
+    одностайності через плац.
+
+
+    Гірше, правда, що й самому помкомвзводу доводиться, не відстаючи, бігти поруч
+    з ними, і піт градом уже котить з нього теж, і чим більше кушпели він ковтає з-під
+    їхніх чобіт, тим більш'
+  work: Олесь Гончар. Людина і зброя
+  author: Гончар О.
+  year: 1918
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=547
+- score: 0.4441013038158417
+  chunk_id: fc80c0c0_c0027
+  text: 'І, обережно ділячи, відчув я раптом на собі чийсь погляд, гіпноз жаги, мовчазний
+    крик голоду. Глянув і бачу, як стежить за мною, за рухами моїх пальців той, що
+    котелок у нього вкрали, що казав — має вдома дітей дрібних... Ні, він не посмів
+    у нас просити. Тут не роздають. Тут нема щедрих. І, може, саме тому, що він не
+    іїросив, не принизився до канючіння і що самий погляд його якоюсь змореною чесністю
+    мовби нагадав нам норми іншого життя, — переглянувшись з товаришами, відчув їхню
+    мовчазну згоду: '
+  work: Олесь Гончар. Циклон
+  author: Гончар О.
+  year: 1918
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=553

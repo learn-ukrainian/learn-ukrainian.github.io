@@ -1,0 +1,202 @@
+discovered_at: '2026-03-13T13:42:34.317660+00:00'
+query_keywords:
+- 'Жінки в революціях: Прихована історія'
+- 1917-1921
+- '1990'
+- 2004 і 2014
+- '2022'
+- 'Analyze the causes and consequences of жінки в революціях: прихована історія'
+- Evaluate the historical significance of невидимі героїні
+- history
+- історія
+- подія
+- джерело
+- аналіз
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0460
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . 71
+
+    § 14. Україна в  другій половині 1919  р. . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78
+
+    § 15. Україна наприкінці 1919  — на початку 1920  р. . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . 84
+
+    § 16. Україна навесні 1920  — у  1921  р. . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 91
+
+    § 17. Розвиток '
+  section_title: Сторінка 238
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0522
+  text: "Події революції 1905—1907  рр. на  українських землях  . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . 216\n§ 26. Наддніпрянська Україна в  1907—1914 \
+    \ рр. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . 226\n\t\nПрактичне заняття. Ідеї автономії та самостійності  \nв  програмах\
+    \ українських політичних партій Наддніпрянщини  . . . . . . . . . . . . . . .\
+    \ . . 235\n\t\nУзагальнення знань за розділом VІ  . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 287
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0241
+  text: "§ 21. Розгортання воєнно-політичних подій у 1654—1657 рр.\n147\nЗастосовуємо\
+    \ і  аналізуємо \n4.\t Простежте за картою атласу перебіг воєнних дій у  1654—1657 \
+    \ рр.\n5.\t Закінчіть складати таблицю «Хмельниччина».\n6.\t Працюємо разом. Метод\
+    \ «Дискусійна проблема». Зміна Б. Хмельниць-\nким зовнішньополітичного курсу Козацької\
+    \ держави в  1656  р. стала \nвиправданим кроком, успіхом, необхідністю, помилкою\
+    \ в  його полі-\nтиці чи чимось іншим? \n7.\t Працюємо разом. Метод «Мозковий\
+    \ штурм». Визначте переваги й не-\n"
+  section_title: Сторінка 147
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0020
+  text: "РОЗДІЛ 1\n22\n1. Об’єднайтеся в дослідницькі групи й за допомогою «Пам’ятки\
+    \ для \nдослідження історичного джерела» виконайте дослідження запропоно-\nваних\
+    \ вчителем/вчителькою або поданих авторами на с. 21 історичних \nджерел.\n2. По\
+    \ завершенні роботи поясніть, якими рисами характеру, на вашу \nдумку, має володіти\
+    \ історик/історикиня.\n  Діємо: практичні завдання\nПам’ятка для дослідження історичного\
+    \ джерела\n1. Уважно розгляньте джерело історичної інформації і вста-\nновіть,\
+    \ до якого виду історичних джерел "
+  section_title: Сторінка 22
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0335
+  text: ". . . . . . . . . . . . 53\n\t\n§ 9. Русь у  1054—1132  рр. . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 60\n\t § 10.\
+    \ Суспільний і  політичний устрій та господарське життя . . . . . 70\n\t § 11.\
+    \ Культура Русі . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . 80\n\t\n\t Практичне заняття за розділом\
+    \ ІІІ . . . . . . . . . . . . . . . . . . . . . . . . . . . 87\n\t\n\t Узагальнення\
+    \ за розділом ІІІ . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 223
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5090118050575256
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5038935542106628
+  chunk_id: eef657d3_c0724
+  text: "1 Докладніше про це в\r\nнашій розвідці \"Ukrainian Autonomists of the 1780’s\
+    \ and 1790’s and Count\r\nP.A.Rumyantsey-Zadunaysky\" — \"The Annals of the Ukrainian\
+    \ Academy of\r\nArts and Sciences in the U.S.\", vol. VI, No. 3, 4 (21-22), 195S,\
+    \ p.p.\r\n1313-1326."
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.5016778707504272
+  chunk_id: f648356f_c0037
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 21-44.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm

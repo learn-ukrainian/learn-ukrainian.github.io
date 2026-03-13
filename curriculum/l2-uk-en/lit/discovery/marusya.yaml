@@ -1,0 +1,210 @@
+discovered_at: '2026-03-13T13:02:35.556015+00:00'
+query_keywords:
+- 'Маруся: Ідеал Української Душі'
+- Сюжет і структура повісті
+- Маруся vs Наталка
+- Етнографія як мистецтво
+- Мовні засоби катарсису
+- Analyze the plot and characters of "Marusya"
+- Contrast "Marusya" with "Natalka Poltavka"
+- Identify features of Ukrainian Sentimentalism
+- Sentimentalist vocabulary (emotives)
+- Diminutives usage
+- Narrative syntax (rhetorical questions, exclamations)
+- literature
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0180
+  text: "3. Установіть відповідність. \n4.\nСтисло перекажіть сюжет повісті Г. Квітки-Основ’яненка\
+    \ «Ма-\nруся».\n5. Яка тема й основна ідея повісті «Маруся»? Які проблеми пору-\n\
+    шено у творі? \n6. Які позасюжетні елементи наявні в повісті «Маруся»? Наведіть\n\
+    приклади з твору. \n7. Чим îбрази Марусі й Наталки Полтавки з однойменних творів\n\
+    Г. Квітки-Основ’яненка й І. Котляревського подібні? \n8.\nНазвіть ознаки сентименталізму.\
+    \ Наведіть до кожної з них\nприклади з повісті Г. Квітки-Основ’яненка «Маруся».\n\
+    9. У чому по"
+  section_title: Сторінка 141
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0176
+  text: 'Через два роки до Насті й Наума прийшов чоловік із міста, який роз-
+
+    повів, що бачив там Василя, який постригся в ченці. Тяжко переживаючи
+
+    втрату, він згодом помер. 5. Опрацюйте літературно-критичний матеріал до повісті.
+    За жанром «Маруся» — соціально-побутова й сентиментально-
+
+    реалістична повість. У ній зображено життя українського селянства,
+
+    працю, побут, звичаї українського народу (тема твору). За основу сюжету повісті
+    взято історію ідеального кохання
+
+    сільської дівчини Марусі та міського хлопц'
+  section_title: Сторінка 138
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0179
+  text: '• підвищений інтерес до людських почуттів, співчутливий тон розпо-
+
+    віді, який змушує читача розчулитися й плакати над долею героїв;
+
+    • проста композиція твору, у якій сюжет розгортається послідовно;
+
+    • герої ідеальні, наділені зовнішньою та внутрішньою вродою, позбав-
+
+    лені негативних рис;
+
+    • персонажі з простого народу;
+
+    • змалювання побуту та звичаїв простих людей, акцент на їхній мо-
+
+    ральній вищості над панами;
+
+    • нездоланні перешкоди на шляху закоханих;
+
+    • увага до описів природи;
+
+    • наявність проро'
+  section_title: Сторінка 140
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0255
+  text: 'Широке епічне зображення цієї боротьби визначає патріотичний
+
+    пафос розповіді. Основна ідея — єдність, заснована на християн-
+
+    ській вірі, патріотизмі, товаристві й вольності. У повісті порушено
+
+    НОВА УКРАЇНСЬКА ЛІТЕРАТУРА
+
+    188'
+  section_title: Сторінка 188
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0146
+  text: 'Герой Квітчиної повісті
+
+    «Маруся» — простолюдин-українець, «людина в повному значенні
+
+    слова... У всіх її поняттях і діях... уражає нас саме якась велич, у якій
+
+    відчуваєш природну шляхетність натури людської». Григорій Квітка-Основ’яненко
+
+    121'
+  section_title: Сторінка 121
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5600311756134033
+  chunk_id: feaa5fa7_c0346
+  text: "Література як на стор.\r\n133 і: Кузеля З. Причинки до студій над нашою еміґрацією.\
+    \ ЗНТШ, тт. 101,\r\n105, 107, л. 1911 — 12; Птуха М. В. Материалы по естественному\
+    \ движению\r\nнаселення Украины в 1867 — 1914 тг. Центральное Статистическое Управление\r\
+    \nУССР. Х. 1924; Демографічний Збірник. Українська Академія Наук. К. 1928 — 30;\
+    \ Птуха\r\nМ. В. Смертність у Росії й на Україні. К. Х. 1929; Kubijowytsch W.\
+    \ Die\r\nEntwicklung der Bevölkerung der Ukraine In den Jh. 1890 — 1932. Arch.\
+    \ für\r\nBevölkerungswissenscha"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5549103021621704
+  chunk_id: 48346587_c0446
+  text: "Хоч у повісті «Маруся» дещо засильно вдарився Квітка\r\nв сентиментальний\
+    \ тон, все-таки має ця повість велике значення. Вартість її в\r\nтому, що вона\
+    \ є одним із перших творів не тільки в українській, але взагалі в\r\nєвропейській\
+    \ літературі, в якому автор із щирою, глибокою прихильністю\r\nпоставився до життя\
+    \ простолюддя, вміючи знайти в душах простих селян стільки\r\nгарних прикмет,\
+    \ стільки ніжних почувань. Повість «Маруся» є вислідом пильного\r\nвдумливого\
+    \ споглядання автора, що з замилуванням етнографа "
+  work: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+  year: 1937
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/krypcult/krcult.htm
+- score: 0.5531486868858337
+  chunk_id: feaa5fa7_c0405
+  text: "Концепція літератури в цей період розкривається в\r\nтому ж етнографічно-філологічному\
+    \ пляні. Етнографізується. знароднюється не\r\nлише історія, мова, але й письменство.\
+    \ В письменстві стверджується примат\r\nнароду й нар. усної творчости, примат\
+    \ нар. співців, кобзарства, безіменної\r\nколективної творчости. Усна нар. словесність\
+    \ визнається за джерело й зразок для\r\nписьмової словесности. »Одна нар. поезія\
+    \ стоїть за віковічний взір«. »Писана\r\nсловесність виростає не з якого ґрунту,\
+    \ тільки з самого народу"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

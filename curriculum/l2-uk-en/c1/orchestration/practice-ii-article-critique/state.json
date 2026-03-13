@@ -1,0 +1,27 @@
+{
+  "track": "c1",
+  "slug": "practice-ii-article-critique",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T18:13:53Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T18:13:53Z",
+      "task_id": "v5-practice-ii-article-critique-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-sonnet-4-6"
+      }
+    }
+  }
+}

@@ -1,0 +1,229 @@
+discovered_at: '2026-03-13T14:18:14.926185+00:00'
+query_keywords:
+- 'Тяглість культурного геноциду: 1937 vs 2022'
+- Вступ та контекст
+- 'Методи нищення: Від Сандармоху до Ізюма'
+- Історіографічне порівняння імперських практик
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- 'Дослідити життя та внесок Тяглість культурного геноциду: 1937 vs 2022 у сучасну
+  українську культуру'
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+- history
+- суб'єктність
+- тяглість
+- геноцид
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+- url: https://www.ukrainianlessons.com/episode73/
+  title: Ukrainian History Course Part 3 “Ukrainian Cossacks”
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 73
+- url: https://www.ukrainianlessons.com/episode74/
+  title: History of Ukraine Course Part 4
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 74
+- url: https://www.ukrainianlessons.com/episode75/
+  title: Ukrainian History Course Part 5
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 75
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0440
+  text: "287\nЗМІСТ\nРозділ 3. ЙДУЧИ ДОРОГАМИ ЖИТТЯ   \n \n \n \n \n138\nМУДРІСТЬ\
+    \ КОБЗАРЯ    \n \n \n \n \n \n \n138\n \nТарас Шевченко    \n \n \n \n \n \n \n\
+    138\n \nТополя   \n \n \n \n \n \n \n \n \n139\n \nРозрита могила    \n \n \n\
+    \ \n \n \n \n146\nЛІТЕРАТУРА АНТИВОЄННОГО СПРЯМУВАННЯ   \n \n \n \n150\n \nГригір\
+    \ Тютюнник    \n \n \n \n \n \n \n150\n \nКлимко (Скорочено) \n \n \n \n \n \n\
+    \ \n151\n \nПавло Вишебаба    \n \n \n \n \n \n \n174\n \nМарсіани    \n \n \n\
+    \ \n \n \n \n \n174\n \nД;оньці (Тільки не пиши мені про війну...)   \n \n \n\
+    \ \n177\nРозділ 4. ПІДНЯТИСЯ НАД БУДЕННІСТЮ   \n \n \n \n \n17"
+  section_title: Сторінка 289
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-ukrlit-avramenko-2022_s0308
+  text: '284
+
+    ЗМІСТ
+
+    Розділ 1. МИСТЕЦЬКИЙ СПАДОК НАЩАДКАМ
+
+    Невичерпні джерела мудрості
+
+    Художня література як мистецтво слова . . . . . . . . . . . . . . . . 3
+
+    Початок словесного мистецтва . . . . . . . . . . . . . . . . . . . . 6
+
+    ТЛ  Легенда . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 6
+
+    ТЛ  Міф . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 7
+
+    Про Зоряний Віз . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . 7
+
+    Чому пес живе коло л'
+  section_title: Сторінка 284
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0448
+  text: '. . . . . 324
+
+    Повторення  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 326
+
+    Літературознавчий словник  . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . 330
+
+    335
+
+    Зміст'
+  section_title: Сторінка 335
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5430246591567993
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5373784899711609
+  chunk_id: eef657d3_c0666
+  text: 'вашой святыни нижайшій слуга
+
+
+    Idem qui pridem.
+
+
+    1 /12 Іюня 1721 г.
+
+
+    ВИБРАНА БІБЛІОГРАФІЯ ПУБЛІКАЦІЙ ТА ДОКУМЕНТАЛЬНИХ МАТЕРІАЛІВ ПРО ГЕТЬМАНА ІВАНА
+    МАЗЕПУ (1960-2000)'
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.5321350693702698
+  chunk_id: f79fbc43_c0406
+  text: "18. Юрий Лотман, «О двух типах ориентированности культуры» в Статьи\r\nпо\
+    \ типологии культуры (Tartu: Univ. of Tartu Press, 1970), 86-98.\n\n19. Я хотіла\
+    \ б подякувати професорові Ф. Дж. Томсону з\r\nАнтверпенського університету за\
+    \ те, що він звернув на це мою увагу.\n\n20. «The Account of George Turberville,»\
+    \ in Rude and Barbarous\r\nKingdom, edited by L. E. Berry and R. O. Crummey (Madison:\
+    \ Univ. of\r\nWisconsin Press, 1968), 76.\n\n21. Домострой (Москва: 1882). Цитується\
+    \ за Bradda Books\r\nReprints (1971), 57-"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm

@@ -1,0 +1,195 @@
+discovered_at: '2026-03-13T16:09:43.252655+00:00'
+query_keywords:
+- 'Михайло Старицький: Драматург та мовотворець'
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- 'Проаналізувати твір Михайло Старицький: Драматург та мовотворець у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+- literature
+- канон
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0425
+  text: 'Ста-
+
+    рицького театром. «Наталку Полтавку», «Москаля-чарівника»,
+
+    Михайло Старицький
+
+    321'
+  section_title: Сторінка 321
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0372
+  text: ". . . . . . . . . . . 167\n§ 39–41. Комедія  Михайла Старицького «За двома\
+    \ зайцями» . . . . . . . . . . . . . . . 183\n                   За двома зайцями\
+    \ (Скорочено) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 184\n\t\n        Літературознавчий словник . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . 205"
+  section_title: Сторінка 208
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0439
+  text: "286\nЗМІСТ\nЗМІСТ\nДорогі семикласниці та семикласники! \n \n \n \n \n  3\n\
+    ВСТУП   \n \n \n \n \n \n \n \n \n  4 \nФункції художньої літератури   \n \n \n\
+    \ \n \n \n  4\nРозділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ   \n \n \n \n \n  8\nНАРОДНА\
+    \ ТВОРЧІСТЬ   \n \n \n \n \n \n \n  8\n \nНародні соціально-побутові пісні   \n\
+    \ \n \n \n \n  9\n \nКозацькі пісні   \n \n \n \n \n \n \n \n 10\n \nОй на г;орі\
+    \ та женці жнуть   \n \n \n \n \n \n 12\n \nЧумацькі пісні   \n \n \n \n \n \n\
+    \ \n \n 14\n \nЧум;аче, чумаче, чого зажурився?   \n \n \n \n \n 15\n \nСтрілецькі\
+    \ пісні    \n \n \n \n \n \n \n 17\n \nТам, пі"
+  section_title: Сторінка 288
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.565583348274231
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5505921244621277
+  chunk_id: 3588aaff_c0551
+  text: "4. У тому-таки вступному розділі, де подається\r\nкороткий огляд попередньої\
+    \ української науки про літературу, Чижевський також\r\nвважає за потрібне спробувати\
+    \ десь на шести сторінках викласти ази поетики. Для\r\nангломовних читачів це\
+    \ може видатися ексцентричним або вищою мірою недоречним.\r\nОдначе така спроба\
+    \ цілком відповідає тим настановам, про які йшлося вище.\r\nПочавши з двох параграфів,\
+    \ присвячених мові (де він згадує, приміром, архаїзми,\r\nнеологізми, жаргон тощо),\
+    \ продовживши короткими визначен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5469458699226379
+  chunk_id: 3588aaff_c0645
+  text: "5. Остання обставина дуже показова, не лише з\r\n\"формального\" боку, тим\
+    \ фактом, що найбільшу увагу в розділі про\r\n\"реалізм\" надано письменникові,\
+    \ котрий явно не є реалістом, а\r\nнасамперед з погляду \"змісту\": висвітленням\
+    \ його ролі в українському\r\nлітературному процесі. Бо творчість Лесі Українки\
+    \ забезпечувала Чижевському\r\nідеальну платформу для огляду українського реалізму\
+    \ та української літератури\r\nзагалом. Завдяки Лесі Українці Чижевський отримує\
+    \ точний об’єктивний корелят до\r\nсвого відчуття не"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

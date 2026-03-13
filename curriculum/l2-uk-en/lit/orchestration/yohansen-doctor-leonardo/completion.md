@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 104 — E2E
+PASS: pipeline lit 101
 
   Module:   yohansen-doctor-leonardo
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T14:41:24Z
+  Date:     2026-03-13T19:08:22Z

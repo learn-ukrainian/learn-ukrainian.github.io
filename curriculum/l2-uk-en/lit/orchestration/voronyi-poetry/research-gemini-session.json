@@ -1,0 +1,580 @@
+{
+  "sessionId": "4b1d753d-8662-4be4-9c36-859225046b85",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T17:57:15.637Z",
+  "lastUpdated": "2026-03-13T17:59:46.183Z",
+  "messages": [
+    {
+      "id": "8dac6308-044b-4924-91ea-a6a50e5b939d",
+      "timestamp": "2026-03-13T17:57:15.637Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-lit.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: lit-075\nlevel: LIT\nsequence: 75\nslug: voronyi-poetry\nversion: '2.0'\ntitle: Voronyi Poetry\nsubtitle: Voronyi Poetry\nfocus: literature\npedagogy: Seminar\nphase: LIT.2 European Modernism 1890s-1917\nword_target: 5000\nobjectives:\n- Проаналізувати твір Voronyi Poetry у контексті епохи\n- Дослідити стилістичні особливості тексту\n- Зрозуміти деколонізаційне значення автора\nsources:\n- name: Voronyi Poetry — тексти та аналіз\n  url: https://www.ukrlib.com.ua/\n  type: primary\n  notes: Основне джерело\ncontent_outline:\n- section: Вступ та культурний контекст\n  points:\n  - Історичні умови появи твору/автора\n  - Місце в літературному каноні\n  - Чому цей текст важливий сьогодні\n  words: 850\n- section: 'Аналіз твору: Сюжет та структура'\n  points:\n  - Ключові етапи життя/розвитку сюжету\n  - Впливи та джерела\n  - Конфлікт як рушійна сила\n  words: 850\n- section: Герменевтика та ключові образи\n  points:\n  - Детальний розбір символіки\n  - Система персонажів та їхня еволюція\n  - Архетипи та міфологічні підтексти\n  words: 850\n- section: Мова, стиль та поетика\n  points:\n  - Стилістичні інновації автора\n  - Робота з народною мовою або оказіоналізмами\n  - Особливості ритміки та синтаксису\n  words: 850\n- section: Деколонізаційний вимір\n  points:\n  - Який імперський міф руйнує цей текст?\n  - Агентність українського героя\n  - Опір асиміляції та культурне самоствердження\n  words: 850\n- section: Підсумок та рецепція\n  points:\n  - Вплив на наступні покоління письменників\n  - Світовий контекст твору\n  - Питання для дискусії\n  words: 750\nvocabulary_hints:\n  required:\n  - канон (canon)\n  - метафора (metaphor)\n  - дискурс (discourse)\n  - інтерпретація (interpretation)\n  recommended:\n  - алегорія (allegory)\n  - контекст (context)\n  - рецепція (reception)\nactivity_hints:\n- type: reading\n  focus: Аналіз ключових уривків voronyi-poetry\n  source: UkrLib\n  items: 5+\n- type: essay-response\n  focus: Філософський або літературознавчий аспект твору\n  output: Аналітичне есе\nconnects_to:\n- lit-75\nprerequisites:\n- lit-73\npersona:\n  voice: Senior Philologist & Critic\n  role: Modernist Poet\nmodule_type: literature\nimmersion: 100% Ukrainian\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Voronyi Poetry** for the **lit** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n**Workflow**: Search Wikipedia FIRST for factual foundation → search literary RAG for primary quotes → verify vocabulary with VESUM.\n\n### Research Requirements\n\n1. **Sources**: Use `query_wikipedia` (mode=`extract`) for Ukrainian Wikipedia articles. Also consult history.org.ua, litopys.org.ua. Use `search_literary` for primary source excerpts. Russian-language sources are PROHIBITED.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find 2+ quotable primary source excerpts (original Ukrainian text preferred).\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **4000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Voronyi Poetry\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Voronyi Poetry\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "f4e416e4-91b3-45fe-a856-915bbdc06068",
+      "timestamp": "2026-03-13T17:57:23.585Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Prioritizing Next Steps",
+          "description": "My current focus is on pinpointing the necessary actions to move forward. The next step requires a clear strategy; I'm weighing different approaches to ensure the process flows efficiently. I'm focusing on the optimal path to follow.",
+          "timestamp": "2026-03-13T17:57:19.714Z"
+        },
+        {
+          "subject": "Commencing Initial Search",
+          "description": "I'm now initiating the initial research phase. My plan involves querying relevant sources to gather essential background information. The strategy involves targeting the most pertinent information first, using specialized functions.",
+          "timestamp": "2026-03-13T17:57:23.272Z"
+        },
+        {
+          "subject": "Initiating Wikipedia Inquiry",
+          "description": "I am now beginning to extract information from Wikipedia, starting with \"Микола Вороний.\" The initial step involves querying the Wikipedia API to retrieve pertinent details. After this, the intention is to use the retrieved content to gain a deeper understanding of the subject.",
+          "timestamp": "2026-03-13T17:57:23.320Z"
+        }
+      ],
+      "tokens": {
+        "input": 20508,
+        "output": 20,
+        "cached": 0,
+        "thoughts": 359,
+        "tool": 0,
+        "total": 20887
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773424643581_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Микола Вороний",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773424643581_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Вороний Микола Кіндратович\n**URL**: https://uk.wikipedia.org/wiki/%D0%92%D0%BE%D1%80%D0%BE%D0%BD%D0%B8%D0%B9_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%9A%D1%96%D0%BD%D0%B4%D1%80%D0%B0%D1%82%D0%BE%D0%B2%D0%B8%D1%87\n\nМико́ла Кіндра́тович Ворони́й (24 листопада (6 грудня) 1871(18711206), Катеринославщина — 7 червня 1938, Одеса, Українська РСР) — український письменник, перекладач, театральний режисер, актор, громадсько-політичний діяч, театрознавець. Псевдоніми й криптоніми: Арлекін, Віщий Олег, Homo, Кіндратович, Микольчик, М. В., К-ич М, М-У-ко та інші.\nОдин із засновників Української Центральної Ради. Один із засновників і режисерів Національного театру.\nБув одружений з донькою Миколи Вербицького Вірою. Батько поета Марка Вороного.\n\n\n== Життєпис ==\n\nНародився в родині ремісника. Навчався в Харківському, пізніше в Ростовському реальному училищі; звідти його виключено за зв'язки з народниками: читав та поширював заборонену літературу. Три роки перебував під наглядом поліції із забороною вступати до вищих навчальних закладів Російської імперії. Продовжив навчання у Віденському і Львівському університетах (філософський факультет).\nУ Львові познайомився з Іваном Франком. Працював бібліотекарем і коректором Наукового товариства ім. Шевченка, режисером театру «Руська бесіда», в редакції журналу «Житє і слово», де вів рубрику «Вісті з Росії». Допомагав Івану Франкові у виданні газети «Громадський голос» і «Радикал», деякий час був неофіційним редактором журналу «Зоря».\nЗ 1897 року актор трупи М. Кропивницького, П. Саксаганського та інших.\nЧлен Революційної української партії.\n1901 року покинув сцену і служив в установах Катеринодара, Харкова, Одеси, Чернігова.\n1910 року оселився в Києві, працював у театрі М. Садовського, викладав у театральній школі.\n1917 року один із засновників Української Центральної ради та Українського національного театру, який відкрив свій сезон постановкою «Пригвождених» Володимира Винниченка.\n\n1920 року емігрував за кордон. Жив у Варшаві, де 1921 року вийшла друком збірка його поезій «За Україну». Тут познайомився з польськими письменниками Ю. Тувімом і Л. Стаффом, невдовзі переїхав до Львова. Викладав в Українській драматичній школі при Музичному інституті імені М. Лисенка, деякий час був директором цієї школи.\nПісля повернення у 1926 році до УСРР вів педагогічну і театрознавчу діяльність. Викладав у Харківському музично-драматичному інституті, згодом працював у Києві у Всеукраїнському фотокіноуправлінні тощо.\n1934 року Миколу Вороного заарештовано як польського шпигуна. Деякий час перебував у Воронежі, потім його вислали на Одещину.\n7 червня 1938 року розстріляний з групою селян за вироком особливої трійки НКВС УСРР Одеської області.\n10 листопада 1957 року ухвалою президії Кіровоградського обласного суду Миколу Вороного було реабілітовано.\nАрхів Вороного зберігається в Інституті літератури імені Т. Г. Шевченка НАН України.\n\n\n== Літературна творчість ==\n\nПерші поетичні твори написав ще навчаючись у Харківському реальному училищі. Друкуватися Вороний почав 1893 року (вірш «Не журись, дівчино»). Публікувався у періодичних виданнях «Зоря», «Літературно-науковий вісник», «Засів», «Дзвін», «Сяйво», «Рада», в антологіях, збірниках, декламаторах початку ХХ століття: «Акорди», «Українська муза», в альманахах «Складка», «За красою», «Дубове листя», «На вічну пам'ять Котляревському», «Багаття» та інших. 1899 року поет написав свій найвідоміший твір — поему «Євшан-зілля» про необхідність повернення людині історичної пам'яті, усвідомлення своєї національної приналежності. У 1901 році в «Літературно-науковому вістнику» опублікував відкритий лист програмного характеру, де закликав письменників до участі в альманасі, «який змістом і формою міг би хоч трохи наблизитись до нових течій і напрямів сучасних літератур».\n\nУ виданому ним альманасі «З-над хмар і долин» (Одеса, 1903) поряд з модерними поезіями були представлені твори поетів, що гостро виступали проти декадансу, «чистого мистецтва» та інших течій у літературі і мистецтві, — І. Франка, П. Грабовського, Лесі Українки, М. Старицького, В. Самійленка та інших.\nПерша збірка Миколи Вороного «Ліричні поезії» вийшла 1911 року у Києві. Вірші її були сповнені музикальності, свіжості образів. У наступній збірці «В сяйві мрій», що вийшла у 1913 році, Микола Вороний іде шляхом певної естетизації, самозамилування ліричного героя. Поезія Вороного дедалі глибшає змістом, порушує загальносвітові теми, філософські питання («Мандрівні елегії»). Він одним із перших вводить у лірику тему міста, переймає низку традиційних мотивів європейської поезії, де протиставляється поетична одухотвореність і буденність, утверджує нестримне прагнення людини до краси, світла, осягнення космосу («Ікар», «Сонячні хвилини»), розкриває трагізм духовної самотності (цикл «Осокорі»). Орієнтована передусім на читача, вихованого на найкращих зразках світової літератури, поезія Миколи Вороного була, за висловом О. І. Білецького, «явище високої художньої цінності».\n\nТворчість Вороного знаменує розрив з народницькою традицією, їй притаманна різноманітність метричних форм і строфічних побудов. Тяжіння до модернізму не перешкоджало Вороному писати твори, пройняті щирою любов'ю до народу, шаною до його найкращих синів («Краю мій рідний», «Горами, горами», «Привид», вірші, присвячені Т. Шевченкові, І. Франкові, М. Лисенкові). Водночас створює поезії, в яких висміює псевдопатріотизм («Мерці», «Молодий патріот», «Старим патріотам»).\nВороному належить низка мистецтвознавчих («Пензлем і пером») і театрознавчих розвідок («Театральне мистецтво й український театр», 1912; «Театр і драма», 1913), в яких він виступає прихильником системи Станіславського; «Михайло Щепкін» (1913); «Український театр у Києві» (1914); «Режисер» (1925); «Драматична примадонна», (1924) — про сценічну творчість відомої актриси Л. Ліницької.\nМикола Вороний — автор низки літературознавчих статей, театральних рецензій. У його спадщині значне місце посідають переклади й переспіви з інших літератур.\n\n\n=== Поетичні збірки ===\n«Ліричні поезії» (1911);\n«В сяйві мрій» (1913);\n«Євшан-зілля» (1917);\n«За Україну!» (1921).\n\n\n== Вшанування пам'яті ==\nУ Києві є вулиця Родини Вороних. Іменем Миколи Вороного названо бульвар у Кривому Розі, вулиці в Дрогобичі, Івано-Франківську, Калуші, Львові, Одесі, Рівному, Чернігові.\n\n\n== Примітки ==\n\n\n== Посилання ==\nВороний Микола Кіндратович // Українська музична енциклопедія / Гол. редкол. Г. Скрипник. — Київ : ІМФЕ НАНУ, 2006. — Т. 1 : [А – Д]. — С. 415.\nВороний Микола Кіндратович // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nБібліотека Українського світу / Микола Вороний [Архівовано 7 березня 2016 у Wayback Machine.]\nБіографія і твори Миколи Вороного на «Українському Центрі» [Архівовано 26 січня 2021 у Wayback Machine.]\nТвори Вороного на аудіобібліотеці litplayer\nВороний М. Театр і драма: зб. критич. ст. з обсягу театр. мистец. і драм. л-ри / Микола Вороний. — Київ: Волосожар; Друк. 2-ї Київ. спілки, 1913. — 166 с. [Архівовано 19 лютого 2019 у Wayback Machine.]\nВороний Микола в Електронній бібліотеці «Культура України» [Архівовано 6 березня 2019 у Wayback Machine.]\nВороний М. Поезії. Т. 1 / Микола Вороний. — Вид. 2-ге, змінене й доповн. — Черкаси ; Київ: Вид. т-во «Сяйво», 1920. — 150 с. [Архівовано 6 березня 2019 у Wayback Machine.]\nВороний М. К. Слон Мум: (сюжет позичений) / М. К. Вороний ; мал. Л. Кривінської. — Київ: Культура, 1930?. — 12 с. : іл. [Архівовано 6 березня 2019 у Wayback Machine.]\nМикола Вороний. Блакитна Панна (аудіо)\nМикола Вороний. Чи зумієш ти кохати (аудіо)\nМикола Вороний. Вибрані вірші. Читає Василь Білоцерківський (аудіо) [Архівовано 24 серпня 2021 у Wayback Machine.]\nТвори Миколи Вороного в електронній бібліотеці TOU\n\n\n== Джерела та література ==\nТ. С. Осташко. Вороний Микола Кіндратович [Архівовано 4 червня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2003. — Т. 1 : А — В. — С. 634. — ISBN 966-00-0734-5.\nВороний Микола // Енциклопедія Українознавства: Словникова частина / Голов. ред. В. Кубійович. Репринт. відтворення. — К., 1993. — Т. 1. — С. 338.\nКузьменко В. Микола Вороний // Гроно нездоланих співців: Літературні портрети українських письменників XX століття. — К.: Укр. письменник, 1997. — С. 16—27.\nКузьменко В. Палімпсести Миколи Вороного // Дивослово. — 1996. — № 12.\nВоловець Із-за брами невідомості: Творчість М. Вороного у 10 класі // Українська мова і література в школі. — 1991. — № 3.\nБілецький О. Микола Вороний // Зібр. праць: У 5 т. — К., 1965. — Т. 2. — С. 596—625.\nГундорова Т. «Fiat» Миколи Вороного // Слово і час. — 1994. — № 7. — С. 32—33.\nІльєнко І. Боже! За віщо?: Судний день Миколи Вороного // Українське слово: Хрестоматія. — К.,1994. — Кн. 1.\nСамі про себе. Автобіографії українських митців 1920-х років/ Упоряд. Раїса Мовчан. — Київ : Кліо, 2015. — 640 с. — ISBN 978-617-7023-36-3.\nУкраїнська діаспора: літературні постаті, твори, біобібліографічні відомості / Упорядк. В. А. Просалової. — Донецьк: Східний видавничий дім, 2012. — 516 с.\nЯкубський, Б. Поетична творчість Миколи Вороного: з нагоди 35-ліття літ. діяльності / Б. Якубський // Життя й революція. — 1929. — Кн. 4. — С. 103—110. [Архівовано 15 серпня 2020 у Wayback Machine.]\n\n\n== Посилання ==\nОльга Бомко (7 червня 2023). Микола Вороний: розстріляний зачинатель українського модернізму. Dyvys.info. Архів оригіналу за 7 березня 2026."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:57:23.903Z",
+          "resultDisplay": "# Вороний Микола Кіндратович\n**URL**: https://uk.wikipedia.org/wiki/%D0%92%D0%BE%D1%80%D0%BE%D0%BD%D0%B8%D0%B9_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%9A%D1%96%D0%BD%D0%B4%D1%80%D0%B0%D1%82%D0%BE%D0%B2%D0%B8%D1%87\n\nМико́ла Кіндра́тович Ворони́й (24 листопада (6 грудня) 1871(18711206), Катеринославщина — 7 червня 1938, Одеса, Українська РСР) — український письменник, перекладач, театральний режисер, актор, громадсько-політичний діяч, театрознавець. Псевдоніми й криптоніми: Арлекін, Віщий Олег, Homo, Кіндратович, Микольчик, М. В., К-ич М, М-У-ко та інші.\nОдин із засновників Української Центральної Ради. Один із засновників і режисерів Національного театру.\nБув одружений з донькою Миколи Вербицького Вірою. Батько поета Марка Вороного.\n\n\n== Життєпис ==\n\nНародився в родині ремісника. Навчався в Харківському, пізніше в Ростовському реальному училищі; звідти його виключено за зв'язки з народниками: читав та поширював заборонену літературу. Три роки перебував під наглядом поліції із забороною вступати до вищих навчальних закладів Російської імперії. Продовжив навчання у Віденському і Львівському університетах (філософський факультет).\nУ Львові познайомився з Іваном Франком. Працював бібліотекарем і коректором Наукового товариства ім. Шевченка, режисером театру «Руська бесіда», в редакції журналу «Житє і слово», де вів рубрику «Вісті з Росії». Допомагав Івану Франкові у виданні газети «Громадський голос» і «Радикал», деякий час був неофіційним редактором журналу «Зоря».\nЗ 1897 року актор трупи М. Кропивницького, П. Саксаганського та інших.\nЧлен Революційної української партії.\n1901 року покинув сцену і служив в установах Катеринодара, Харкова, Одеси, Чернігова.\n1910 року оселився в Києві, працював у театрі М. Садовського, викладав у театральній школі.\n1917 року один із засновників Української Центральної ради та Українського національного театру, який відкрив свій сезон постановкою «Пригвождених» Володимира Винниченка.\n\n1920 року емігрував за кордон. Жив у Варшаві, де 1921 року вийшла друком збірка його поезій «За Україну». Тут познайомився з польськими письменниками Ю. Тувімом і Л. Стаффом, невдовзі переїхав до Львова. Викладав в Українській драматичній школі при Музичному інституті імені М. Лисенка, деякий час був директором цієї школи.\nПісля повернення у 1926 році до УСРР вів педагогічну і театрознавчу діяльність. Викладав у Харківському музично-драматичному інституті, згодом працював у Києві у Всеукраїнському фотокіноуправлінні тощо.\n1934 року Миколу Вороного заарештовано як польського шпигуна. Деякий час перебував у Воронежі, потім його вислали на Одещину.\n7 червня 1938 року розстріляний з групою селян за вироком особливої трійки НКВС УСРР Одеської області.\n10 листопада 1957 року ухвалою президії Кіровоградського обласного суду Миколу Вороного було реабілітовано.\nАрхів Вороного зберігається в Інституті літератури імені Т. Г. Шевченка НАН України.\n\n\n== Літературна творчість ==\n\nПерші поетичні твори написав ще навчаючись у Харківському реальному училищі. Друкуватися Вороний почав 1893 року (вірш «Не журись, дівчино»). Публікувався у періодичних виданнях «Зоря», «Літературно-науковий вісник», «Засів», «Дзвін», «Сяйво», «Рада», в антологіях, збірниках, декламаторах початку ХХ століття: «Акорди», «Українська муза», в альманахах «Складка», «За красою», «Дубове листя», «На вічну пам'ять Котляревському», «Багаття» та інших. 1899 року поет написав свій найвідоміший твір — поему «Євшан-зілля» про необхідність повернення людині історичної пам'яті, усвідомлення своєї національної приналежності. У 1901 році в «Літературно-науковому вістнику» опублікував відкритий лист програмного характеру, де закликав письменників до участі в альманасі, «який змістом і формою міг би хоч трохи наблизитись до нових течій і напрямів сучасних літератур».\n\nУ виданому ним альманасі «З-над хмар і долин» (Одеса, 1903) поряд з модерними поезіями були представлені твори поетів, що гостро виступали проти декадансу, «чистого мистецтва» та інших течій у літературі і мистецтві, — І. Франка, П. Грабовського, Лесі Українки, М. Старицького, В. Самійленка та інших.\nПерша збірка Миколи Вороного «Ліричні поезії» вийшла 1911 року у Києві. Вірші її були сповнені музикальності, свіжості образів. У наступній збірці «В сяйві мрій», що вийшла у 1913 році, Микола Вороний іде шляхом певної естетизації, самозамилування ліричного героя. Поезія Вороного дедалі глибшає змістом, порушує загальносвітові теми, філософські питання («Мандрівні елегії»). Він одним із перших вводить у лірику тему міста, переймає низку традиційних мотивів європейської поезії, де протиставляється поетична одухотвореність і буденність, утверджує нестримне прагнення людини до краси, світла, осягнення космосу («Ікар», «Сонячні хвилини»), розкриває трагізм духовної самотності (цикл «Осокорі»). Орієнтована передусім на читача, вихованого на найкращих зразках світової літератури, поезія Миколи Вороного була, за висловом О. І. Білецького, «явище високої художньої цінності».\n\nТворчість Вороного знаменує розрив з народницькою традицією, їй притаманна різноманітність метричних форм і строфічних побудов. Тяжіння до модернізму не перешкоджало Вороному писати твори, пройняті щирою любов'ю до народу, шаною до його найкращих синів («Краю мій рідний», «Горами, горами», «Привид», вірші, присвячені Т. Шевченкові, І. Франкові, М. Лисенкові). Водночас створює поезії, в яких висміює псевдопатріотизм («Мерці», «Молодий патріот», «Старим патріотам»).\nВороному належить низка мистецтвознавчих («Пензлем і пером») і театрознавчих розвідок («Театральне мистецтво й український театр», 1912; «Театр і драма», 1913), в яких він виступає прихильником системи Станіславського; «Михайло Щепкін» (1913); «Український театр у Києві» (1914); «Режисер» (1925); «Драматична примадонна», (1924) — про сценічну творчість відомої актриси Л. Ліницької.\nМикола Вороний — автор низки літературознавчих статей, театральних рецензій. У його спадщині значне місце посідають переклади й переспіви з інших літератур.\n\n\n=== Поетичні збірки ===\n«Ліричні поезії» (1911);\n«В сяйві мрій» (1913);\n«Євшан-зілля» (1917);\n«За Україну!» (1921).\n\n\n== Вшанування пам'яті ==\nУ Києві є вулиця Родини Вороних. Іменем Миколи Вороного названо бульвар у Кривому Розі, вулиці в Дрогобичі, Івано-Франківську, Калуші, Львові, Одесі, Рівному, Чернігові.\n\n\n== Примітки ==\n\n\n== Посилання ==\nВороний Микола Кіндратович // Українська музична енциклопедія / Гол. редкол. Г. Скрипник. — Київ : ІМФЕ НАНУ, 2006. — Т. 1 : [А – Д]. — С. 415.\nВороний Микола Кіндратович // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nБібліотека Українського світу / Микола Вороний [Архівовано 7 березня 2016 у Wayback Machine.]\nБіографія і твори Миколи Вороного на «Українському Центрі» [Архівовано 26 січня 2021 у Wayback Machine.]\nТвори Вороного на аудіобібліотеці litplayer\nВороний М. Театр і драма: зб. критич. ст. з обсягу театр. мистец. і драм. л-ри / Микола Вороний. — Київ: Волосожар; Друк. 2-ї Київ. спілки, 1913. — 166 с. [Архівовано 19 лютого 2019 у Wayback Machine.]\nВороний Микола в Електронній бібліотеці «Культура України» [Архівовано 6 березня 2019 у Wayback Machine.]\nВороний М. Поезії. Т. 1 / Микола Вороний. — Вид. 2-ге, змінене й доповн. — Черкаси ; Київ: Вид. т-во «Сяйво», 1920. — 150 с. [Архівовано 6 березня 2019 у Wayback Machine.]\nВороний М. К. Слон Мум: (сюжет позичений) / М. К. Вороний ; мал. Л. Кривінської. — Київ: Культура, 1930?. — 12 с. : іл. [Архівовано 6 березня 2019 у Wayback Machine.]\nМикола Вороний. Блакитна Панна (аудіо)\nМикола Вороний. Чи зумієш ти кохати (аудіо)\nМикола Вороний. Вибрані вірші. Читає Василь Білоцерківський (аудіо) [Архівовано 24 серпня 2021 у Wayback Machine.]\nТвори Миколи Вороного в електронній бібліотеці TOU\n\n\n== Джерела та література ==\nТ. С. Осташко. Вороний Микола Кіндратович [Архівовано 4 червня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2003. — Т. 1 : А — В. — С. 634. — ISBN 966-00-0734-5.\nВороний Микола // Енциклопедія Українознавства: Словникова частина / Голов. ред. В. Кубійович. Репринт. відтворення. — К., 1993. — Т. 1. — С. 338.\nКузьменко В. Микола Вороний // Гроно нездоланих співців: Літературні портрети українських письменників XX століття. — К.: Укр. письменник, 1997. — С. 16—27.\nКузьменко В. Палімпсести Миколи Вороного // Дивослово. — 1996. — № 12.\nВоловець Із-за брами невідомості: Творчість М. Вороного у 10 класі // Українська мова і література в школі. — 1991. — № 3.\nБілецький О. Микола Вороний // Зібр. праць: У 5 т. — К., 1965. — Т. 2. — С. 596—625.\nГундорова Т. «Fiat» Миколи Вороного // Слово і час. — 1994. — № 7. — С. 32—33.\nІльєнко І. Боже! За віщо?: Судний день Миколи Вороного // Українське слово: Хрестоматія. — К.,1994. — Кн. 1.\nСамі про себе. Автобіографії українських митців 1920-х років/ Упоряд. Раїса Мовчан. — Київ : Кліо, 2015. — 640 с. — ISBN 978-617-7023-36-3.\nУкраїнська діаспора: літературні постаті, твори, біобібліографічні відомості / Упорядк. В. А. Просалової. — Донецьк: Східний видавничий дім, 2012. — 516 с.\nЯкубський, Б. Поетична творчість Миколи Вороного: з нагоди 35-ліття літ. діяльності / Б. Якубський // Життя й революція. — 1929. — Кн. 4. — С. 103—110. [Архівовано 15 серпня 2020 у Wayback Machine.]\n\n\n== Посилання ==\nОльга Бомко (7 червня 2023). Микола Вороний: розстріляний зачинатель українського модернізму. Dyvys.info. Архів оригіналу за 7 березня 2026.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9de08b51-020f-4904-bca3-1cae0becb9c3",
+      "timestamp": "2026-03-13T17:57:32.302Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Focusing on Literature Search",
+          "description": "I'm now zeroing in on the next action: finding relevant literary information. My primary focus is searching for sources related to the literary field I'm investigating. I will be using the tool dedicated to searching through textual sources, which is specifically designed to work well for this goal. I am using my chosen tool to begin the next phase.",
+          "timestamp": "2026-03-13T17:57:29.367Z"
+        },
+        {
+          "subject": "Gathering Poetic Excerpts",
+          "description": "I'm now tasked with extracting meaningful text. I'll utilize the designated tool to locate specific verses and notable excerpts from the target literary works. This targeted search aims to uncover essential content for further analysis, focusing on the poems and the manifesto. I am moving towards finding important text.",
+          "timestamp": "2026-03-13T17:57:32.034Z"
+        }
+      ],
+      "tokens": {
+        "input": 24217,
+        "output": 25,
+        "cached": 20297,
+        "thoughts": 314,
+        "tool": 0,
+        "total": 24556
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773424652300_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Блакитна Панна Микола Вороний"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773424652300_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Блакитна Панна Микола Вороний\"\n\n### Result 1 (score: 0.5669)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0000`\n- **Text**:\nМикола Вороний\n\n(6 грудня 1871 — 7 червня 1938)\n\n### Result 2 (score: 0.5320)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0001`\n- **Text**:\nВороний Микола Кіндратович (псевдонім і криптонім — Арлекін, Віщий Олег, Homo, Sirius, Кіндратович, Микольчик, М.В., К-ич М, М-У-ко та інші; 24.ХІ (6.ХІІ) 1871, Катеринославщина (тепер Дніпропетровщина) — 7 .VI. 1938) — український поет, театрознавець, перекладач. Народився в сім'ї ремісника. Батько — К. П. Вороний походив з кріпаків, мати — О. Д. Колачинська — з роду освітнього діяча 17-18 століття, ректора Київської академії П. Колачинського. Навчався в Харківському реальному училищі, пізніше \n\n### Result 3 (score: 0.5282)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c1206`\n- **Text**:\nВОРОНИЙ Микола\r\nКіндратович [псевд. і крипт. — Арлекін, Віщий Олег, Homo, Sirius, Кондратович,\r\nМикольчик, М. В., К-ич М., М-У-ко та ін.; 24.XI (6.XII) 1871, Катеринославщина\r\n(тепер Дніпропетровщина) — 24.IV 1940] — укр. поет, театрознавець,\r\nперекладач. Нар. в сім’ї ремісника. Батько — К. П. Вороний походив з кріпаків,\r\nмати — О. Д. Колачинська — з роду осв. діяча 17 — 18 ст., ректора Київ.\r\nакадемії П. Колачинського. Навчався в Харків. реальному училищі, пізніше — в\r\nРостов. реальному училищі\n\n### Result 4 (score: 0.5271)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0000`\n- **Text**:\nМИКОЛА ВОРОНИЙ\n\n(1871 — 1938)\n\nПсевдоніми — Арлекін, Віщий Олег, Homo, Sirius, Кіндратович, Микольчик. Криптоніми — М.В., К-ич М., М-У-ко та інші.\n\nМикола Кіндратович Вороний народився 7 грудня 1871р. у сім'ї ремісника на Катеринославщині (тепер Дніпропетровська область). Коли хлопцеві було півроку, родина переїхала до Харкова. Спочатку він навчався в Харківському, а потім у Ростовському реальному училищі, звідки був виключений за зв'язки з народниками, читання і поширення забороненої літератури\n\n### Result 5 (score: 0.5024)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0007`\n- **Text**:\nВороний добре знав європейську літературу, прагнув органічного поєднання кращих традицій європейської лірики з новаторськими пошуками. Висока культура вірша^ намагання сягнути художніх поетичних вершин, збагатити українську лірику новими мотивами й образами ставлять Вороного в першу шеренгу мит-ців-новаторів новітнього часу — поруч з Лесею Українкою, О. Олесем, М. Рильським, П. Тичиною, Є. Плужником, Є. Ма-ланюком. Запрошуючи молодих письменників узяти участь в альманахові, що він задумав, \"який\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:57:33.421Z",
+          "resultDisplay": "Found 5 results for: \"Блакитна Панна Микола Вороний\"\n\n### Result 1 (score: 0.5669)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0000`\n- **Text**:\nМикола Вороний\n\n(6 грудня 1871 — 7 червня 1938)\n\n### Result 2 (score: 0.5320)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0001`\n- **Text**:\nВороний Микола Кіндратович (псевдонім і криптонім — Арлекін, Віщий Олег, Homo, Sirius, Кіндратович, Микольчик, М.В., К-ич М, М-У-ко та інші; 24.ХІ (6.ХІІ) 1871, Катеринославщина (тепер Дніпропетровщина) — 7 .VI. 1938) — український поет, театрознавець, перекладач. Народився в сім'ї ремісника. Батько — К. П. Вороний походив з кріпаків, мати — О. Д. Колачинська — з роду освітнього діяча 17-18 століття, ректора Київської академії П. Колачинського. Навчався в Харківському реальному училищі, пізніше \n\n### Result 3 (score: 0.5282)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c1206`\n- **Text**:\nВОРОНИЙ Микола\r\nКіндратович [псевд. і крипт. — Арлекін, Віщий Олег, Homo, Sirius, Кондратович,\r\nМикольчик, М. В., К-ич М., М-У-ко та ін.; 24.XI (6.XII) 1871, Катеринославщина\r\n(тепер Дніпропетровщина) — 24.IV 1940] — укр. поет, театрознавець,\r\nперекладач. Нар. в сім’ї ремісника. Батько — К. П. Вороний походив з кріпаків,\r\nмати — О. Д. Колачинська — з роду осв. діяча 17 — 18 ст., ректора Київ.\r\nакадемії П. Колачинського. Навчався в Харків. реальному училищі, пізніше — в\r\nРостов. реальному училищі\n\n### Result 4 (score: 0.5271)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0000`\n- **Text**:\nМИКОЛА ВОРОНИЙ\n\n(1871 — 1938)\n\nПсевдоніми — Арлекін, Віщий Олег, Homo, Sirius, Кіндратович, Микольчик. Криптоніми — М.В., К-ич М., М-У-ко та інші.\n\nМикола Кіндратович Вороний народився 7 грудня 1871р. у сім'ї ремісника на Катеринославщині (тепер Дніпропетровська область). Коли хлопцеві було півроку, родина переїхала до Харкова. Спочатку він навчався в Харківському, а потім у Ростовському реальному училищі, звідки був виключений за зв'язки з народниками, читання і поширення забороненої літератури\n\n### Result 5 (score: 0.5024)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0007`\n- **Text**:\nВороний добре знав європейську літературу, прагнув органічного поєднання кращих традицій європейської лірики з новаторськими пошуками. Висока культура вірша^ намагання сягнути художніх поетичних вершин, збагатити українську лірику новими мотивами й образами ставлять Вороного в першу шеренгу мит-ців-новаторів новітнього часу — поруч з Лесею Українкою, О. Олесем, М. Рильським, П. Тичиною, Є. Плужником, Є. Ма-ланюком. Запрошуючи молодих письменників узяти участь в альманахові, що він задумав, \"який\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8ec4292b-73bf-4028-a2eb-8620bc83633d",
+      "timestamp": "2026-03-13T17:57:39.295Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Refining Search Strategies",
+          "description": "I'm now focused on the next step: refining my search approach. I'll utilize a tool that can efficiently search. I'm aiming to refine my methods to yield more focused results for my task.",
+          "timestamp": "2026-03-13T17:57:37.965Z"
+        },
+        {
+          "subject": "Implementing Wikipedia Search",
+          "description": "I'm now implementing the Wikipedia search, specifically for \"Блакитна Панна.\" After the search, I'll analyze the results to ensure they're relevant and useful for progressing towards my goal.",
+          "timestamp": "2026-03-13T17:57:39.147Z"
+        }
+      ],
+      "tokens": {
+        "input": 25532,
+        "output": 21,
+        "cached": 23635,
+        "thoughts": 163,
+        "tool": 0,
+        "total": 25716
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773424659294_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Блакитна Панна"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773424659294_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Блакитна Панна' — 5 results\n\n1. **Блакитна Панна** — «Блаки́тна Па́нна» — вірш українського поета-символіста Миколи Вороного, написаний у 1912 році. Є взірцем пейзажної та інтимної лірики, в якому поет оспівує\n2. **Блакитна троянда** — метелики» — «Гордіїв вузол» — «Блакитна троянда». Леся Українка сама здійснила переклад драми російською мовою. Вперше «Блакитна троянда» поставлена на сцені\n3. **Парокситонна рима** — й із внутрішнім римуванням: «Довгожданна, нездоланна… / Ось вона — Блакитна Панна!» — Микола Вороний; &quot;Гей, на весла, щоб понесла / Буря човен на простір… —\n4. **Склярусний кабінет** — втрачена. Було створено 10 великих стеклярусних панно та два десюдепорти ( оздоби над дверима ). Панно прикрашені вишивками з кольорового шовку з зображенням\n5. **Арфами, арфами** —  Вірш «Арфами, арфами...» має подібності до вірша Миколи Вороного «Блакитна Панна» (1912). Окрім загальної теми й зображення весни в образі дівчини, це"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:57:39.531Z",
+          "resultDisplay": "Wikipedia search: 'Блакитна Панна' — 5 results\n\n1. **Блакитна Панна** — «Блаки́тна Па́нна» — вірш українського поета-символіста Миколи Вороного, написаний у 1912 році. Є взірцем пейзажної та інтимної лірики, в якому поет оспівує\n2. **Блакитна троянда** — метелики» — «Гордіїв вузол» — «Блакитна троянда». Леся Українка сама здійснила переклад драми російською мовою. Вперше «Блакитна троянда» поставлена на сцені\n3. **Парокситонна рима** — й із внутрішнім римуванням: «Довгожданна, нездоланна… / Ось вона — Блакитна Панна!» — Микола Вороний; &quot;Гей, на весла, щоб понесла / Буря човен на простір… —\n4. **Склярусний кабінет** — втрачена. Було створено 10 великих стеклярусних панно та два десюдепорти ( оздоби над дверима ). Панно прикрашені вишивками з кольорового шовку з зображенням\n5. **Арфами, арфами** —  Вірш «Арфами, арфами...» має подібності до вірша Миколи Вороного «Блакитна Панна» (1912). Окрім загальної теми й зображення весни в образі дівчини, це",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5b618075-1cb1-4066-bf72-c32917c511fd",
+      "timestamp": "2026-03-13T17:57:45.937Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing the Poem's Details",
+          "description": "I'm focusing now on extracting the core essence of the poem. I'll get into the details by using the most specific capabilities for deep insight.",
+          "timestamp": "2026-03-13T17:57:44.053Z"
+        },
+        {
+          "subject": "Initiating Textual Acquisition",
+          "description": "I'm now tasked with collecting the raw text and essential data. I will use appropriate functionalities to gather the poem's content. Additionally, I'll retrieve relevant literary context to enhance my understanding.",
+          "timestamp": "2026-03-13T17:57:45.699Z"
+        }
+      ],
+      "tokens": {
+        "input": 25947,
+        "output": 46,
+        "cached": 0,
+        "thoughts": 164,
+        "tool": 0,
+        "total": 26157
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773424665890_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Блакитна Панна"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773424665890_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Блакитна Панна\n**URL**: https://uk.wikipedia.org/wiki/%D0%91%D0%BB%D0%B0%D0%BA%D0%B8%D1%82%D0%BD%D0%B0_%D0%9F%D0%B0%D0%BD%D0%BD%D0%B0\n\n«Блаки́тна Па́нна» — вірш українського поета-символіста Миколи Вороного, написаний у 1912 році. Є взірцем пейзажної та інтимної лірики, в якому поет оспівує прихід весни в образі чарівної дівчини. Твір відкриває цикл поезій «Гротески» і є одним із найвідоміших у творчості поета.\n\n\n== Історія створення ==\nВірш був написаний у 1912 році, в період розквіту українського модернізму та символізму. Початок XX століття характеризувався зростанням суспільно-політичної напруги, і митці-модерністи, зокрема Микола Вороний, намагалися осмислити епоху через пізнання духовних процесів та пошук вічних цінностей, однією з яких було мистецтво, народжене з гармонії та краси.\n\n\n== Аналіз твору ==\n«Блакитна Панна» є яскравим зразком українського модернізму, а саме його течії — символізму. За жанром це ліричний вірш, що поєднує пейзажні та інтимні мотиви.\nГоловною темою твору є гармонійне поєднання краси природи та мистецтва, а провідною ідеєю — возвеличення весни та життя як невичерпного джерела творчої енергії. У вірші весна персоніфікується в образі Блакитної Панни — чарівної, довгоочікуваної дівчини, якій уся земля співає хвалу («Осанна!»). Цей образ символізує не лише прихід весни як пори року, але й пробудження, оновлення та божественну красу.\nПоезія має чітку композицію, що складається з чотирьох семирядкових строф. Кожна строфа розвиває центральний образ: від першої появи Весни «у серпанках і блаватах» до її повного втілення як Блакитної Панни та її впливу на душу ліричного героя. У фінальній строфі природа переходить у внутрішній світ митця, де народжується мистецтво: «в’ються хмелем арабески, миготять камеї, фрески». Це підкреслює ключовий для символізму мотив єдності природи та творчості.\nМикола Вороний виступив новатором у розширенні музичних можливостей українського вірша. Сам поет зазначав: «Я писав не так од образу, як од звуку». Музикальність досягається завдяки використанню асонансів та алітерацій, а також специфічному розташуванню рядків у вигляді «сходинок», що створює особливий темпоритм, схожий на весняну капель.\nДля створення яскравих образів автор використовує численні художні засоби: епітети (весна запашна, усміх примар, неземна чистота), метафори (має крилами Весна, сміючись на пелюстках) та порівняння (а вона, як мрія сну чарівна). Поєднання традиційної лексики з мистецькими термінами (арабески, камеї, фрески, гротески) та релігійними символами (Осанна!) надає твору витонченого інтелектуально-естетичного забарвлення.\n\n\n== Примітки ==\n\n\n== Посилання ==\n«Блакитна Панна» на сайті «Мала Сторінка» (з аудіозаписом)\n«Блакитна Панна» в бібліотеці «УкрЛіб»"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:57:46.859Z",
+          "resultDisplay": "# Блакитна Панна\n**URL**: https://uk.wikipedia.org/wiki/%D0%91%D0%BB%D0%B0%D0%BA%D0%B8%D1%82%D0%BD%D0%B0_%D0%9F%D0%B0%D0%BD%D0%BD%D0%B0\n\n«Блаки́тна Па́нна» — вірш українського поета-символіста Миколи Вороного, написаний у 1912 році. Є взірцем пейзажної та інтимної лірики, в якому поет оспівує прихід весни в образі чарівної дівчини. Твір відкриває цикл поезій «Гротески» і є одним із найвідоміших у творчості поета.\n\n\n== Історія створення ==\nВірш був написаний у 1912 році, в період розквіту українського модернізму та символізму. Початок XX століття характеризувався зростанням суспільно-політичної напруги, і митці-модерністи, зокрема Микола Вороний, намагалися осмислити епоху через пізнання духовних процесів та пошук вічних цінностей, однією з яких було мистецтво, народжене з гармонії та краси.\n\n\n== Аналіз твору ==\n«Блакитна Панна» є яскравим зразком українського модернізму, а саме його течії — символізму. За жанром це ліричний вірш, що поєднує пейзажні та інтимні мотиви.\nГоловною темою твору є гармонійне поєднання краси природи та мистецтва, а провідною ідеєю — возвеличення весни та життя як невичерпного джерела творчої енергії. У вірші весна персоніфікується в образі Блакитної Панни — чарівної, довгоочікуваної дівчини, якій уся земля співає хвалу («Осанна!»). Цей образ символізує не лише прихід весни як пори року, але й пробудження, оновлення та божественну красу.\nПоезія має чітку композицію, що складається з чотирьох семирядкових строф. Кожна строфа розвиває центральний образ: від першої появи Весни «у серпанках і блаватах» до її повного втілення як Блакитної Панни та її впливу на душу ліричного героя. У фінальній строфі природа переходить у внутрішній світ митця, де народжується мистецтво: «в’ються хмелем арабески, миготять камеї, фрески». Це підкреслює ключовий для символізму мотив єдності природи та творчості.\nМикола Вороний виступив новатором у розширенні музичних можливостей українського вірша. Сам поет зазначав: «Я писав не так од образу, як од звуку». Музикальність досягається завдяки використанню асонансів та алітерацій, а також специфічному розташуванню рядків у вигляді «сходинок», що створює особливий темпоритм, схожий на весняну капель.\nДля створення яскравих образів автор використовує численні художні засоби: епітети (весна запашна, усміх примар, неземна чистота), метафори (має крилами Весна, сміючись на пелюстках) та порівняння (а вона, як мрія сну чарівна). Поєднання традиційної лексики з мистецькими термінами (арабески, камеї, фрески, гротески) та релігійними символами (Осанна!) надає твору витонченого інтелектуально-естетичного забарвлення.\n\n\n== Примітки ==\n\n\n== Посилання ==\n«Блакитна Панна» на сайті «Мала Сторінка» (з аудіозаписом)\n«Блакитна Панна» в бібліотеці «УкрЛіб»",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773424665936_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"Блакитна Панна\" вірш"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773424665936_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"Блакитна Панна\" вірш\"\n\n### Result 1 (score: 0.6705)\n- **Work**: Микола Вороний. Блакитна Панна (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `ba12ab51_c0000`\n- **Text**:\nМає крилами Весна\n\nЗапашна,\n\nЛине вся в прозорих шатах,\n\nУ серпанках і блаватах...\n\nСяє усміхом примар\n\nЗ-поза хмар,\n\nПопелястих, пелехатих.\n\nОсь вона вже крізь блакить\n\nМайорить,\n\nДовгождана, нездоланна...\n\nОсь вона — Блакитна Панна!..\n\nГори, гай, луги, поля —\n\nВся земля\n\nЇй виспівує: \"Осанна!\"\n\nА вона, як мрія сну\n\nЧарівна,\n\nСяє вродою святою,\n\nНеземною чистотою,\n\nСміючись на пелюстках,\n\nНа квітках\n\nПроменистою росою.\n\nІ уже в душі моїй\n\nВ сяйві мрій\n\nВ'ються хмелем арабески,\n\nМиготять камеї, \n\n### Result 2 (score: 0.5522)\n- **Work**: Борис Грінченко. Ясні зорі (1863)\n- **Author**: Грінченко Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `72a2fc8d_c0005`\n- **Text**:\nЯка краса!.. такої зроду я\n\nНе бачив ще, та і ніхто запевне...\n\nАні у нас, ані в землі чужій\n\nПишнішої за цю немає квітки!\n\nПанас\n\nТуди к чортам!..\n\nДивись, як ізрадів,\n\nМов батька стрів! А що тобі до неї?\n\nДмитро\n\nДо неї?.. Ні!.. Але вона — краса.\n\nПанас\n\nДак що тобі?\n\nДмитро\n\nБо на світі утіха Великая — краса.\n\nПанас\n\nЯка краса?\n\nДмитро\n\nУсякая: краса в блакитнім небі,\n\nВ зірках ясних, у запашних квітках,\n\nпташиному в садочку щебетанні,\n\nУ личеньку дівочому, в піснях,\n\nВ степах-полях і вільних\n\n### Result 3 (score: 0.5333)\n- **Work**: Шевченко — Повне зібрання творів, т.1 (1961)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `9976239a_c0095`\n- **Text**:\nПостав на могилі. /81/\n\nБуде легше в чужім полі\n\nСироті лежати,\n\nБуде над ним його мила\n\nКвіткою стояти.\n\nІ квіткою, й калиною\n\nЦвісти над ним буду,\n\nЩоб не пекло чуже сонце,\n\nНе топтали люде.\n\nЯ ввечері посумую,\n\nА вранці поплачу,\n\nЗійде сонце — утру сльози,\n\nНіхто й не побачить.\n\nВітре буйний, вітре буйний!\n\nТи з морем говориш,\n\nЗбуди його, заграй ти з ним,\n\nСпитай синє море...\n\nДУМКА («Вітре буйний, вітре буйний!..»)\n\nДжерела тексту:\n\nфрагменти тексту цензурного рукопису альманаху «Ластівка»,\n\n### Result 4 (score: 0.5297)\n- **Work**: Павло Тичина. Сонячні кларнети (збірка) (1891)\n- **Author**: Тичина П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a6a9997d_c0000`\n- **Text**:\nПерша збірка поета.\n\nНе Зевс, не Пан…\n\nЗакучерявилися хмари…\n\nГаї шумлять…\n\nАрфами, арфами…\n\nДесь надходила весна\n\nЦвіт в моєму серці…\n\nНе дивися так привітно…\n\nПодивилась ясно…\n\nЗ кохання плакав я…\n\nО, Панно Інно…\n\nЯ стою на кручі…\n\nТам тополі у полі…\n\nГаптує дівчина…\n\nКвітчастий луг…\n\nОй не крийся, природо…\n\nІще пташки…\n\nСвітає…\n\nЕнгармонійне\n\nХодять по квітах…\n\nУ собор\n\nПастелі\n\nА я у гай ходила.\n\nХтось гладив ниви…\n\nНа стрімчастих скелях\n\nПо хліб шла дитина…\n\nОдчиняйте двері…\n\nСкорбна мати\n\n\n\n### Result 5 (score: 0.5263)\n- **Work**: Павло Тичина. Сковорода (симфонія) (1891)\n- **Author**: Тичина П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `0f990de3_c0134`\n- **Text**:\nі шепотіли люде, прислухаючись\n\nхто з радістю, хто з жахом:\n\nхлоп? — не буде хлоп!\n\n<Зараз, товариство, бо буде пізно, зараз! >\n\nНаростай, могутня хвиле! <наростай> *\n\n<Чорна земле, розвернись! > *\n\nРозвернись, чорна земле! *\n\nЗнеси, зруйнуй і поглинь *,\n\nпотопи білу гниль! *\n\nІ знову < жіноча > постать блакитна\n\n< поміж товпищем, між москалями, мов самосійний будяк,\n\nнемов будяк, якого не викорениш ніяк\n\nі далі огинці поза валами древніми >\n\nна хвильку поміж товпищем, між москалями,\n\nі далі —\n\n\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:57:46.859Z",
+          "resultDisplay": "Found 5 results for: \"\"Блакитна Панна\" вірш\"\n\n### Result 1 (score: 0.6705)\n- **Work**: Микола Вороний. Блакитна Панна (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `ba12ab51_c0000`\n- **Text**:\nМає крилами Весна\n\nЗапашна,\n\nЛине вся в прозорих шатах,\n\nУ серпанках і блаватах...\n\nСяє усміхом примар\n\nЗ-поза хмар,\n\nПопелястих, пелехатих.\n\nОсь вона вже крізь блакить\n\nМайорить,\n\nДовгождана, нездоланна...\n\nОсь вона — Блакитна Панна!..\n\nГори, гай, луги, поля —\n\nВся земля\n\nЇй виспівує: \"Осанна!\"\n\nА вона, як мрія сну\n\nЧарівна,\n\nСяє вродою святою,\n\nНеземною чистотою,\n\nСміючись на пелюстках,\n\nНа квітках\n\nПроменистою росою.\n\nІ уже в душі моїй\n\nВ сяйві мрій\n\nВ'ються хмелем арабески,\n\nМиготять камеї, \n\n### Result 2 (score: 0.5522)\n- **Work**: Борис Грінченко. Ясні зорі (1863)\n- **Author**: Грінченко Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `72a2fc8d_c0005`\n- **Text**:\nЯка краса!.. такої зроду я\n\nНе бачив ще, та і ніхто запевне...\n\nАні у нас, ані в землі чужій\n\nПишнішої за цю немає квітки!\n\nПанас\n\nТуди к чортам!..\n\nДивись, як ізрадів,\n\nМов батька стрів! А що тобі до неї?\n\nДмитро\n\nДо неї?.. Ні!.. Але вона — краса.\n\nПанас\n\nДак що тобі?\n\nДмитро\n\nБо на світі утіха Великая — краса.\n\nПанас\n\nЯка краса?\n\nДмитро\n\nУсякая: краса в блакитнім небі,\n\nВ зірках ясних, у запашних квітках,\n\nпташиному в садочку щебетанні,\n\nУ личеньку дівочому, в піснях,\n\nВ степах-полях і вільних\n\n### Result 3 (score: 0.5333)\n- **Work**: Шевченко — Повне зібрання творів, т.1 (1961)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `9976239a_c0095`\n- **Text**:\nПостав на могилі. /81/\n\nБуде легше в чужім полі\n\nСироті лежати,\n\nБуде над ним його мила\n\nКвіткою стояти.\n\nІ квіткою, й калиною\n\nЦвісти над ним буду,\n\nЩоб не пекло чуже сонце,\n\nНе топтали люде.\n\nЯ ввечері посумую,\n\nА вранці поплачу,\n\nЗійде сонце — утру сльози,\n\nНіхто й не побачить.\n\nВітре буйний, вітре буйний!\n\nТи з морем говориш,\n\nЗбуди його, заграй ти з ним,\n\nСпитай синє море...\n\nДУМКА («Вітре буйний, вітре буйний!..»)\n\nДжерела тексту:\n\nфрагменти тексту цензурного рукопису альманаху «Ластівка»,\n\n### Result 4 (score: 0.5297)\n- **Work**: Павло Тичина. Сонячні кларнети (збірка) (1891)\n- **Author**: Тичина П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a6a9997d_c0000`\n- **Text**:\nПерша збірка поета.\n\nНе Зевс, не Пан…\n\nЗакучерявилися хмари…\n\nГаї шумлять…\n\nАрфами, арфами…\n\nДесь надходила весна\n\nЦвіт в моєму серці…\n\nНе дивися так привітно…\n\nПодивилась ясно…\n\nЗ кохання плакав я…\n\nО, Панно Інно…\n\nЯ стою на кручі…\n\nТам тополі у полі…\n\nГаптує дівчина…\n\nКвітчастий луг…\n\nОй не крийся, природо…\n\nІще пташки…\n\nСвітає…\n\nЕнгармонійне\n\nХодять по квітах…\n\nУ собор\n\nПастелі\n\nА я у гай ходила.\n\nХтось гладив ниви…\n\nНа стрімчастих скелях\n\nПо хліб шла дитина…\n\nОдчиняйте двері…\n\nСкорбна мати\n\n\n\n### Result 5 (score: 0.5263)\n- **Work**: Павло Тичина. Сковорода (симфонія) (1891)\n- **Author**: Тичина П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `0f990de3_c0134`\n- **Text**:\nі шепотіли люде, прислухаючись\n\nхто з радістю, хто з жахом:\n\nхлоп? — не буде хлоп!\n\n<Зараз, товариство, бо буде пізно, зараз! >\n\nНаростай, могутня хвиле! <наростай> *\n\n<Чорна земле, розвернись! > *\n\nРозвернись, чорна земле! *\n\nЗнеси, зруйнуй і поглинь *,\n\nпотопи білу гниль! *\n\nІ знову < жіноча > постать блакитна\n\n< поміж товпищем, між москалями, мов самосійний будяк,\n\nнемов будяк, якого не викорениш ніяк\n\nі далі огинці поза валами древніми >\n\nна хвильку поміж товпищем, між москалями,\n\nі далі —\n\n\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "38e055fa-c5ec-4292-a417-b7e0630793f3",
+      "timestamp": "2026-03-13T17:57:53.044Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing the Search Results",
+          "description": "I'm now diving into the search results. My focus is on synthesizing the information to understand the core themes present in the poet's work. My aim is to extract the essential ideas and connect them.",
+          "timestamp": "2026-03-13T17:57:51.270Z"
+        },
+        {
+          "subject": "Exploring \"Євшан-зілля\"",
+          "description": "I'm starting to explore \"Євшан-зілля,\" using tools to gather key quotes. My goal is to extract the poem's connection to decolonization and national memory. I'm also looking at other sources.",
+          "timestamp": "2026-03-13T17:57:52.779Z"
+        }
+      ],
+      "tokens": {
+        "input": 28493,
+        "output": 48,
+        "cached": 0,
+        "thoughts": 166,
+        "tool": 0,
+        "total": 28707
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773424672991_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Євшан-зілля Вороний"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773424672991_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Євшан-зілля Вороний\"\n\n### Result 1 (score: 0.5938)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0365`\n- **Text**:\nНаприкінці 80-х років уже нинішнього століття\r\nповернувся до українського читача Микола Вороний — друг і якоюсь мірою учень\r\nІвана Франка. Сам поет казав про автора «Зів’ялого листя»: «Вплив його\r\nмогутньої особи був на мене колосальний». Ішлося насамперед про лірику.\r\n«Грубого реалізму не визнаю, — писав М. Вороний. — Терпіти не можу «Тюремних\r\nсонетів» Франка, але закоханий в його «Зів’ялім листі». Так то так, але сам М.\r\nВороний не цурався громадських тем. Адже він автор перекладу «Інтернаціо\n\n### Result 2 (score: 0.5804)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0004`\n- **Text**:\nТам, де пустка замість серця, Порятунку вже не буде!\n\nЗдавалося, ніякі ліки не зарадять, не допоможуть. Та ось старий посланець намагається востаннє \"пробудити\" юнака: він виймає з-за пазухи жменьку сухої трави зі степу — євшан-зілля. Пахощі гіркого полину вдарили в груди, вогнем пронизали серце невільника. І промайнув перед очима \"рідний степ — широкий, вільний\", постав у пам'яті нещасний батько. Зануртувала кров, прокинулось\n\nнайдорожче, найсвятіше почуття — любов до рідного краю. Зрозуміло, щ\n\n### Result 3 (score: 0.5601)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0001`\n- **Text**:\nВороний Микола Кіндратович (псевдонім і криптонім — Арлекін, Віщий Олег, Homo, Sirius, Кіндратович, Микольчик, М.В., К-ич М, М-У-ко та інші; 24.ХІ (6.ХІІ) 1871, Катеринославщина (тепер Дніпропетровщина) — 7 .VI. 1938) — український поет, театрознавець, перекладач. Народився в сім'ї ремісника. Батько — К. П. Вороний походив з кріпаків, мати — О. Д. Колачинська — з роду освітнього діяча 17-18 століття, ректора Київської академії П. Колачинського. Навчався в Харківському реальному училищі, пізніше \n\n### Result 4 (score: 0.5564)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0000`\n- **Text**:\nМикола Вороний\n\n(6 грудня 1871 — 7 червня 1938)\n\n### Result 5 (score: 0.5557)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0007`\n- **Text**:\nВороний добре знав європейську літературу, прагнув органічного поєднання кращих традицій європейської лірики з новаторськими пошуками. Висока культура вірша^ намагання сягнути художніх поетичних вершин, збагатити українську лірику новими мотивами й образами ставлять Вороного в першу шеренгу мит-ців-новаторів новітнього часу — поруч з Лесею Українкою, О. Олесем, М. Рильським, П. Тичиною, Є. Плужником, Є. Ма-ланюком. Запрошуючи молодих письменників узяти участь в альманахові, що він задумав, \"який\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:57:53.771Z",
+          "resultDisplay": "Found 5 results for: \"Євшан-зілля Вороний\"\n\n### Result 1 (score: 0.5938)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0365`\n- **Text**:\nНаприкінці 80-х років уже нинішнього століття\r\nповернувся до українського читача Микола Вороний — друг і якоюсь мірою учень\r\nІвана Франка. Сам поет казав про автора «Зів’ялого листя»: «Вплив його\r\nмогутньої особи був на мене колосальний». Ішлося насамперед про лірику.\r\n«Грубого реалізму не визнаю, — писав М. Вороний. — Терпіти не можу «Тюремних\r\nсонетів» Франка, але закоханий в його «Зів’ялім листі». Так то так, але сам М.\r\nВороний не цурався громадських тем. Адже він автор перекладу «Інтернаціо\n\n### Result 2 (score: 0.5804)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0004`\n- **Text**:\nТам, де пустка замість серця, Порятунку вже не буде!\n\nЗдавалося, ніякі ліки не зарадять, не допоможуть. Та ось старий посланець намагається востаннє \"пробудити\" юнака: він виймає з-за пазухи жменьку сухої трави зі степу — євшан-зілля. Пахощі гіркого полину вдарили в груди, вогнем пронизали серце невільника. І промайнув перед очима \"рідний степ — широкий, вільний\", постав у пам'яті нещасний батько. Зануртувала кров, прокинулось\n\nнайдорожче, найсвятіше почуття — любов до рідного краю. Зрозуміло, щ\n\n### Result 3 (score: 0.5601)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0001`\n- **Text**:\nВороний Микола Кіндратович (псевдонім і криптонім — Арлекін, Віщий Олег, Homo, Sirius, Кіндратович, Микольчик, М.В., К-ич М, М-У-ко та інші; 24.ХІ (6.ХІІ) 1871, Катеринославщина (тепер Дніпропетровщина) — 7 .VI. 1938) — український поет, театрознавець, перекладач. Народився в сім'ї ремісника. Батько — К. П. Вороний походив з кріпаків, мати — О. Д. Колачинська — з роду освітнього діяча 17-18 століття, ректора Київської академії П. Колачинського. Навчався в Харківському реальному училищі, пізніше \n\n### Result 4 (score: 0.5564)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0000`\n- **Text**:\nМикола Вороний\n\n(6 грудня 1871 — 7 червня 1938)\n\n### Result 5 (score: 0.5557)\n- **Work**: Микола Вороний. Життя та творчість Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5d5ca2cb_c0007`\n- **Text**:\nВороний добре знав європейську літературу, прагнув органічного поєднання кращих традицій європейської лірики з новаторськими пошуками. Висока культура вірша^ намагання сягнути художніх поетичних вершин, збагатити українську лірику новими мотивами й образами ставлять Вороного в першу шеренгу мит-ців-новаторів новітнього часу — поруч з Лесею Українкою, О. Олесем, М. Рильським, П. Тичиною, Є. Плужником, Є. Ма-ланюком. Запрошуючи молодих письменників узяти участь в альманахові, що він задумав, \"який\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773424673043_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Євшан-зілля (поема)"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773424673043_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Євшан-зілля (поема)\n**URL**: https://uk.wikipedia.org/wiki/%D0%84%D0%B2%D1%88%D0%B0%D0%BD-%D0%B7%D1%96%D0%BB%D0%BB%D1%8F_(%D0%BF%D0%BE%D0%B5%D0%BC%D0%B0)\n\n«Євшан-зілля» — поема українського письменника Миколи Вороного, написана в Полтаві 1899 р., навіяна літописною легендою про чудодійну траву-зілля євшан, яка повертає людям втрачену пам'ять. \nАктуальна для денаціоналізованих українців, ця легенда надихнула Вороного,  і не тільки його, на поетичне відображення пробудження самосвідомості людей, які втратили своє національне коріння. Сам символ євшану, які й численні переспіви легенди, були настільки актуальні й зрозумілі в Україні, що не лише літературні твори, але і періодичні видання, хорові колективи національного спрямування, вибирали для назви слово євшан, а Микола Федюшка взяв його собі як псевдонім.\n\n\n== Переказ легенди ==\nУ Галицько-Волинському літописі під 1205 роком літописець помістив половецьку легенду. Порівнюючи князя Романа з Володимиром Мономахом, він згадує, як цей князь розгромив половців, як вигнав хана Отрока в Обези за Залізні Ворота, а брата його — Сирчана — за Дон:\n\n\n== Переосмислення легенди ==\nВ українській художній літературі без згадки про половецьку легенду часом натрапляємо на її переосмислення — українські дівчата несуть полин-зілля (євшан — тюркська назва полину ) козакам у турецьку неволю, щоб нагадати їм про отчий край.\nІрина Калинець так поетично відобразила дію цього зілля на українців в альманасі Євшан-Зілля:\n\n\n== Примітки ==\n\n\n== Посилання ==\n\nМикола Вороний «Євшан-зілля» [Архівовано 2 вересня 2013 у Wayback Machine.]\nПовний текст поеми «Євшан-зілля» Миколи Вороного в е-бібліотеці ЛітАрхів\nАудіокнига «Євшан-зілля» Миколи Вороного (укр.) / Читає Антон Смірнов, записано ГО «Вухо», тривалість 9 хв"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:57:53.771Z",
+          "resultDisplay": "# Євшан-зілля (поема)\n**URL**: https://uk.wikipedia.org/wiki/%D0%84%D0%B2%D1%88%D0%B0%D0%BD-%D0%B7%D1%96%D0%BB%D0%BB%D1%8F_(%D0%BF%D0%BE%D0%B5%D0%BC%D0%B0)\n\n«Євшан-зілля» — поема українського письменника Миколи Вороного, написана в Полтаві 1899 р., навіяна літописною легендою про чудодійну траву-зілля євшан, яка повертає людям втрачену пам'ять. \nАктуальна для денаціоналізованих українців, ця легенда надихнула Вороного,  і не тільки його, на поетичне відображення пробудження самосвідомості людей, які втратили своє національне коріння. Сам символ євшану, які й численні переспіви легенди, були настільки актуальні й зрозумілі в Україні, що не лише літературні твори, але і періодичні видання, хорові колективи національного спрямування, вибирали для назви слово євшан, а Микола Федюшка взяв його собі як псевдонім.\n\n\n== Переказ легенди ==\nУ Галицько-Волинському літописі під 1205 роком літописець помістив половецьку легенду. Порівнюючи князя Романа з Володимиром Мономахом, він згадує, як цей князь розгромив половців, як вигнав хана Отрока в Обези за Залізні Ворота, а брата його — Сирчана — за Дон:\n\n\n== Переосмислення легенди ==\nВ українській художній літературі без згадки про половецьку легенду часом натрапляємо на її переосмислення — українські дівчата несуть полин-зілля (євшан — тюркська назва полину ) козакам у турецьку неволю, щоб нагадати їм про отчий край.\nІрина Калинець так поетично відобразила дію цього зілля на українців в альманасі Євшан-Зілля:\n\n\n== Примітки ==\n\n\n== Посилання ==\n\nМикола Вороний «Євшан-зілля» [Архівовано 2 вересня 2013 у Wayback Machine.]\nПовний текст поеми «Євшан-зілля» Миколи Вороного в е-бібліотеці ЛітАрхів\nАудіокнига «Євшан-зілля» Миколи Вороного (укр.) / Читає Антон Смірнов, записано ГО «Вухо», тривалість 9 хв",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9dfdf2bc-480d-4a1d-ba12-2f4144a41b80",
+      "timestamp": "2026-03-13T17:58:00.337Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the Next Step",
+          "description": "I'm now focused on the next stage. Progress is being made by utilizing the available resources to move toward the objective. I'm leveraging the tools to get me closer to completing the task.",
+          "timestamp": "2026-03-13T17:57:58.752Z"
+        },
+        {
+          "subject": "Searching for Information",
+          "description": "I'm currently engaged in gathering information from a variety of sources to further my understanding of the subject. The objective is to compile information that will be helpful for the next step. I'm actively seeking to gain more context.",
+          "timestamp": "2026-03-13T17:58:00.093Z"
+        }
+      ],
+      "tokens": {
+        "input": 30459,
+        "output": 47,
+        "cached": 27313,
+        "thoughts": 146,
+        "tool": 0,
+        "total": 30652
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773424680299_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "відкритий лист Вороний 1901"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773424680299_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"відкритий лист Вороний 1901\"\n\n### Result 1 (score: 0.5347)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0002`\n- **Text**:\nПублікувався в періодичних виданнях \"Зоря\", \"Літературно-науковий вістник\", \"Засів\", \"Дзвін\", \"Сяйво\", \"Рада\", в антологіях, збірниках, декламаторах початку 20 століття: \"Акорди\", \"Українська муза\", в альманахах \"Складка\", \"За красою\", \"Дубове листя\", \"На вічну пам'ять Котляревському\", \"Багаття\" та інших. У 1901 в \"Літературно-науковому вістнику\" опублікував відкритий лист програмного характеру, де закликав письменників до участі в альманасі, \"який змістом і формою міг би хоч трохи наблизитись д\n\n### Result 2 (score: 0.5096)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c1317`\n- **Text**:\nЦей лист, як і попередній, дійшов до нас у двох копіях, що\r\nзберігаються відповідно в ІЛ (ф. 86, № 25) та ДБЛ (ф. 14, № 782). Вперше його\r\nопублікував Д. І. Багалій у виданні 1894 р. за списком, що зберігається в ІЛ.\r\nПублікується за списком ДБЛ, де лист подано під № 1.\n\n### Result 3 (score: 0.5043)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0025`\n- **Text**:\nПублікуеться за копією XIX ст., що зберігається в рукописному\r\nвідділі Державної бібліотеки СРСР ім. В. І. Леніна, ф. Румянцева, № 256, папка\r\n№ 70 — 72, арк. 1 — 2. Розглянута О. Востоковим в «Описании», стор. 117, № LXX.\n\n### Result 4 (score: 0.4900)\n- **Work**: Іван Франко. Сойчине крило (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `871ef9c4_c0006`\n- **Text**:\nРозкрити коверту і переконатися — се була би найпростіша річ. Та ні. Нехай іще хвильку полежить. Ось тут передо мною. Запечатаний лист на твоє ім’я, з невідомого місця, писаний невідомою тобі рукою,— се все-таки якась тайна, містерія, загадка. Люблю такі містерії, бо моє життя тепер не має ніяких. Моє життя — як проста, широка, вигідна, гарними деревами висаджена алея, що веде...\n\nТьфу! Що се я? З якої речі буду сьогодні згадувати про те, що пишається на кінці тої алеї, на кінці кождої життєвої \n\n### Result 5 (score: 0.4876)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0000`\n- **Text**:\nМикола Вороний\n\n(6 грудня 1871 — 7 червня 1938)\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:58:01.264Z",
+          "resultDisplay": "Found 5 results for: \"відкритий лист Вороний 1901\"\n\n### Result 1 (score: 0.5347)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0002`\n- **Text**:\nПублікувався в періодичних виданнях \"Зоря\", \"Літературно-науковий вістник\", \"Засів\", \"Дзвін\", \"Сяйво\", \"Рада\", в антологіях, збірниках, декламаторах початку 20 століття: \"Акорди\", \"Українська муза\", в альманахах \"Складка\", \"За красою\", \"Дубове листя\", \"На вічну пам'ять Котляревському\", \"Багаття\" та інших. У 1901 в \"Літературно-науковому вістнику\" опублікував відкритий лист програмного характеру, де закликав письменників до участі в альманасі, \"який змістом і формою міг би хоч трохи наблизитись д\n\n### Result 2 (score: 0.5096)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c1317`\n- **Text**:\nЦей лист, як і попередній, дійшов до нас у двох копіях, що\r\nзберігаються відповідно в ІЛ (ф. 86, № 25) та ДБЛ (ф. 14, № 782). Вперше його\r\nопублікував Д. І. Багалій у виданні 1894 р. за списком, що зберігається в ІЛ.\r\nПублікується за списком ДБЛ, де лист подано під № 1.\n\n### Result 3 (score: 0.5043)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0025`\n- **Text**:\nПублікуеться за копією XIX ст., що зберігається в рукописному\r\nвідділі Державної бібліотеки СРСР ім. В. І. Леніна, ф. Румянцева, № 256, папка\r\n№ 70 — 72, арк. 1 — 2. Розглянута О. Востоковим в «Описании», стор. 117, № LXX.\n\n### Result 4 (score: 0.4900)\n- **Work**: Іван Франко. Сойчине крило (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `871ef9c4_c0006`\n- **Text**:\nРозкрити коверту і переконатися — се була би найпростіша річ. Та ні. Нехай іще хвильку полежить. Ось тут передо мною. Запечатаний лист на твоє ім’я, з невідомого місця, писаний невідомою тобі рукою,— се все-таки якась тайна, містерія, загадка. Люблю такі містерії, бо моє життя тепер не має ніяких. Моє життя — як проста, широка, вигідна, гарними деревами висаджена алея, що веде...\n\nТьфу! Що се я? З якої речі буду сьогодні згадувати про те, що пишається на кінці тої алеї, на кінці кождої життєвої \n\n### Result 5 (score: 0.4876)\n- **Work**: Микола Вороний. Біографія Миколи Вороного (1871)\n- **Author**: Вороний М.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `02e42d49_c0000`\n- **Text**:\nМикола Вороний\n\n(6 грудня 1871 — 7 червня 1938)\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773424680337_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Український символізм",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773424680337_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Український символізм'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:58:01.264Z",
+          "resultDisplay": "Wikipedia article not found: 'Український символізм'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8fcd08a0-ac62-4157-86d5-de7560ffe23c",
+      "timestamp": "2026-03-13T17:58:12.547Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Searching for Symbolism",
+          "description": "I'm now pursuing the next step. I've adjusted my search strategy. I'm focusing on the term \"Символізм\" to gather relevant information. My goal is to advance to the next task.",
+          "timestamp": "2026-03-13T17:58:08.033Z"
+        },
+        {
+          "subject": "Identifying Cultural Context",
+          "description": "I am now proceeding with the planned steps. I am researching the cultural setting to situate the work effectively. I will examine how it fits into the broader modernist movement. I am prioritizing gathering details to build a strong foundation for the analysis.",
+          "timestamp": "2026-03-13T17:58:12.284Z"
+        },
+        {
+          "subject": "Refining Search Parameters",
+          "description": "I am now proceeding with my planned actions. I've encountered a small hurdle, so I'm trying a different approach. I'm focusing my efforts to ensure I find the information I need to fulfill the current step. I'm ready to keep going.",
+          "timestamp": "2026-03-13T17:58:12.305Z"
+        }
+      ],
+      "tokens": {
+        "input": 31602,
+        "output": 23,
+        "cached": 0,
+        "thoughts": 338,
+        "tool": 0,
+        "total": 31963
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773424692541_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "З-над хмар і долин"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773424692541_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'З-над хмар і долин' (cached)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T17:58:12.588Z",
+          "resultDisplay": "Wikipedia article not found: 'З-над хмар і долин' (cached)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "535436c2-c21c-491d-a542-21b49e62fde4",
+      "timestamp": "2026-03-13T17:59:46.182Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Voronyi Poetry\n\n## Key Facts Ledger\n```yaml\nsubject: \"Voronyi Poetry\"\ntype: \"phenomenon\"\ndates:\n  start: \"1901\"\n  end: \"1938\"\n  key_events:\n    - year: 1899\n      event: \"Написання поеми «Євшан-зілля», маніфесту національної пам'яті.\"\n    - year: 1901\n      event: \"Публікація відкритого листа в «Літературно-науковому вістнику» з закликом до модернізації української літератури.\"\n    - year: 1903\n      event: \"Вихід альманаху «З-над хмар і долин» (Одеса), де зустрілися традиціоналісти і модерністи.\"\n    - year: 1912\n      event: \"Написання вірша «Блакитна Панна», програмного твору українського символізму.\"\n    - year: 1938\n      event: \"Розстріл Миколи Вороного органами НКВС в Одесі.\"\nprimary_quotes:\n  - text: \"Я писав не так од образу, як од звуку.\"\n    source: \"Автокоментар Вороного до своїх творів\"\n    attribution: \"Микола Вороний\"\n  - text: \"Має крилами Весна / Запашна, / Лине вся в прозорих шатах, / У серпанках і блаватах...\"\n    source: \"«Блакитна Панна», 1912\"\n    attribution: \"Микола Вороний\"\n  - text: \"Ось вона — Блакитна Панна!.. / Гори, гай, луги, поля — / Вся земля / Їй виспівує: «Осанна!»\"\n    source: \"«Блакитна Панна», 1912\"\n    attribution: \"Микола Вороний\"\nforbidden_claims:\n  - \"Творчість Вороного — це відрив від української реальності та зрада національних інтересів (радянський міф).\"\n  - \"Українська література початку ХХ століття залишалася суто селянською, нездатною на складні естетичні форми.\"\n```\n\n## Використані джерела\n1. [Вірш «Блакитна Панна» - Wikipedia](https://uk.wikipedia.org/wiki/Блакитна_Панна) — історія створення та аналіз твору.\n2. [Вороний Микола Кіндратович - Wikipedia](https://uk.wikipedia.org/wiki/Вороний_Микола_Кіндратович) — біографічні відомості, етапи творчості, контекст Розстріляного відродження.\n3. RAG Search (Літературні тексти) — оригінальні тексти «Блакитної Панни», «Євшан-зілля», цитати.\n\n## Хронологія\n- 1871: Народження Миколи Вороного на Катеринославщині.\n- 1899: Написання знакової поеми «Євшан-зілля», що стала метафорою історичної пам'яті.\n- 1901: Відкритий лист у ЛНВ, який став каталізатором українського модернізму та викликав палку літературну дискусію (зокрема з І. Франком).\n- 1903: Видання альманаху «З-над хмар і долин» — маніфестація нових течій.\n- 1912: Написання шедевру символізму «Блакитна Панна» (відкриває цикл «Гротески»).\n- 1917: Вороний — один із засновників Української Центральної Ради та Національного театру.\n- 1938: Розстріл за сфабрикованою справою (звинувачення у шпигунстві).\n\n## Ключові факти та цитати\n- Вороний виступив ініціатором оновлення української поезії, закликав наблизити її до «нових течій і напрямів сучасних літератур» (модернізм, символізм).\n- «Блакитна Панна» — це возвеличення весни, яка персоніфікується в образі божественної дівчини, а також метафора творчого натхнення і краси.\n- Поет використав новаторські для української поезії форми: асонанси, алітерації, розширення строфіки (сходинки), синтез мистецтв (арабески, камеї, фрески).\n- Радянська влада репресувала його як «польського шпигуна» — типове кліше для фізичного знищення творців української високої культури.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ та культурний контекст\": `[!myth-buster]` — Спростування імперського міфу про «селянську і плаксиву» українську літературу: Вороний привніс урбанізм, європейський естетизм («мистецтво заради мистецтва») і філософську глибину.\n- Section \"Аналіз твору: Сюжет та структура\": `[!history-bite]` — Вороний був не лише поетом, а й театральним режисером та актором. Його відчуття ритму і сцени прямо вплинуло на музикальність та просторову «візуальну» постановку вірша (розміщення рядків сходинками).\n- Section \"Герменевтика та ключові образи\": `[!quote]` — «В'ються хмелем арабески, / Миготять камеї, фрески...» — блискуча демонстрація синтезу різних видів мистецтв, характерного для європейського символізму.\n- Section \"Мова, стиль та поетика\": `[!culture]` — Вороний створив унікальний темпоритм, який імітує весняну крапель, що стало революційним кроком у розширенні музичних можливостей українського вірша. Як казав він сам: «Я писав не так од образу, як од звуку».\n- Section \"Деколонізаційний вимір\": `[!decolonization]` — Творчість Вороного була свідомим спротивом імперській провінціалізації. Створюючи поезію рівня європейських столиць, він доводив могутність і вишуканість української мови, виводячи її з етнографічного гетто.\n- Section \"Підсумок та рецепція\": `[!context]` — Постріл в Одесі 1938 року обірвав життя поета. Це була частина масштабної кампанії (Розстріляне відродження) зі знищення українського інтелектуального класу, щоб не дати нації завершити формування власної незалежної ідентичності.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth:** Українська література придатна лише для опису сільського побуту і соціальної боротьби, вона є «меншою сестрою» російської літератури, нездатною на абстрактні форми та високий естетизм.\n- **Ukrainian reality:** Вороний та його сучасники інтегрували українську літературу в загальноєвропейський контекст (модернізм, символізм). Вони довели, що українська мова має колосальний потенціал для філософської лірики, чистого естетизму та складної інтелектуальної гри.\n\n## Contested Terms\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Модернізм Вороного | «Буржуазний декаданс», відрив від соціальних проблем народу | Інтелектуалізація літератури, включення України в європейський мистецький процес |\n| Репресії 1938 р. | Справедливе покарання «націоналіста-шпигуна» | Цілеспрямований геноцид української еліти, акт терору проти української державності |\n\n## Відеоресурси\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ та культурний контекст\n- **Історичні умови:** Межа XIX і XX століть характеризувалася кризою старого народницького світогляду. Національна інтелігенція відчувала потребу в оновленні парадигм.\n- **Маніфест 1901 року:** Вороний публікує відкритий лист у «Літературно-науковому вістнику», де закликає письменників творити нову літературу — ближчу до сучасних європейських течій, яка б відійшла від «грубого реалізму» та дидактики.\n- **Літературний канон:** Альманах «З-над хмар і долин» (1903) стає ареною зустрічі класиків і новаторів. Вороний утверджується як батько українського символізму, проголошуючи право митця на пошук чистої краси.\n\n### Аналіз твору: Сюжет та структура\n- **Контекст написання:** Вірш «Блакитна Панна» (1912) є своєрідним ключем до розуміння символістського методу поета. Він відкриває цикл поезій «Гротески».\n- **Сюжетна динаміка:** Розвиток іде від появи Весни-Панни (зовнішній пейзаж) до глибоких переживань ліричного героя (внутрішній стан). Природа пробуджується, і на це пробудження вся земля відповідає сакральним вигуком хвали.\n- **Структура вірша:** Чотири семирядкові строфи зі специфічною архітектонікою. Розташування рядків «сходинками» створює візуальний ефект падіння крапель, ритм пришвидшується і сповільнюється, що надає твору форми музичної партитури.\n\n### Герменевтика та ключові образи\n- **Образ Блакитної Панни:** Це не просто алегорія весни. Це символ оновлення, первозданної божественної краси («Сяє вродою святою») та творчої енергії.\n- **Символіка кольору:** Блакить у модерністів (і зокрема символістів) традиційно означає прагнення до ідеалу, безкінечність, високу духовність.\n- **Природа і Творчість:** У фінальній строфі відбувається злиття зовнішнього світу з внутрішнім. Природа є імпульсом для мистецтва. У душі митця народжуються не просто емоції, а готові форми мистецтва («арабески, камеї, фрески»).\n\n### Мова, стиль та поетика\n- **Звукопис (фоніка):** Домінанта вірша. Вороний геніально використовує асонанси (повторення голосних, наприклад «а-о») та алітерації для створення ефекту музичного звучання.\n- **Синтез мистецтв:** Лексика вірша рясніє термінами з архітектури, образотворчого мистецтва та музики. Це класичний прийом символізму, де слово намагається стати живописом і мелодією одночасно.\n- **Тропи:** Текст насичений метафорами («має крилами Весна»), порівняннями («як мрія сну чарівна») та епітетами («прозорих шатах», «променистою росою»), які позбавлені побутовізму і працюють на створення ірреальної, піднесеної атмосфери.\n\n### Деколонізаційний вимір\n- **Руйнування провінціалізму:** Написавши такий твір, Вороний на практиці довів, що українська мова абсолютно придатна для вираження найскладніших філософсько-естетичних концепцій. Це був удар по імперській теорії про «нарєчіє», здатне лише на фольклор.\n- **Європейський вектор:** Агентність героя тут полягає в його приналежності до європейського інтелектуального простору. Він — естет, здатний до тонкої рецепції краси, а не просто жертва соціальних обставин.\n- **Концепт «Євшан-зілля»:** Додатковим деколонізаційним акцентом є попередня творчість поета (зокрема «Євшан-зілля»), яка прямо артикулювала необхідність повернення історичної пам'яті як запоруки порятунку від імперської асиміляції.\n\n### Підсумок та рецепція\n- **Вплив на нащадків:** Музикальність і символізм Вороного стали фундаментом, на якому згодом виросли шедеври Павла Тичини («Сонячні кларнети») та вишукана лірика київських неокласиків.\n- **Світовий контекст:** Творчість Вороного є органічною частиною загальноєвропейського модерністського руху, цілком суголосною пошукам французьких символістів (Бодлер, Малларме, Верлен).\n- **Пам'ять:** Фізичне знищення Вороного в 1938 році не змогло стерти його внесок. Незважаючи на тривалі заборони, сьогодні його постать міцно закріплена в ядрі українського літературного канону, як символ витонченості і незламності українського духу.\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Begin Research Notes",
+          "description": "I am now ready to begin writing the research notes, focusing on the gathered facts. I will structure the notes for clarity, focusing on the key details I have. I will strive for a concise yet informative style.",
+          "timestamp": "2026-03-13T17:58:18.584Z"
+        },
+        {
+          "subject": "Structuring the Notes",
+          "description": "I am currently working on organizing the gathered information into a structured format. I'm focusing on highlighting the most important facts for each aspect of the subject. My goal is to create a clear and easy-to-understand overview.",
+          "timestamp": "2026-03-13T17:58:22.770Z"
+        },
+        {
+          "subject": "Outlining the Research",
+          "description": "I'm presently building the structure for my research output. My plan is to start with a \"Key Facts Ledger\". I'm concentrating on categorizing the gathered information, preparing to present the data clearly and in a structured fashion.",
+          "timestamp": "2026-03-13T17:58:26.531Z"
+        },
+        {
+          "subject": "Crafting the Ledger",
+          "description": "I am now focusing on creating a structured ledger to present the essential facts about Voronyi's work. I'm choosing a format to present a clear overview of the key events and works. I'm focusing on key dates and quotes to illustrate the impact of his work.",
+          "timestamp": "2026-03-13T17:58:29.220Z"
+        },
+        {
+          "subject": "Constructing the Output",
+          "description": "I'm presently creating the complete research output, weaving together the key facts and quotes. I'm focusing on structuring the information for clarity, ensuring a well-organized and understandable final product for the expert.",
+          "timestamp": "2026-03-13T17:58:32.426Z"
+        },
+        {
+          "subject": "Assembling the Report",
+          "description": "I'm presently building the full report, using the facts and organized structure. I'm focusing on weaving together the details, quotes and key events into a comprehensive overview, making sure it will be a clear and easily understood presentation.",
+          "timestamp": "2026-03-13T17:58:35.814Z"
+        },
+        {
+          "subject": "Creating the Final Text",
+          "description": "I am now focusing on merging all the components of the research. I intend to integrate the key facts, quotes, and chronological data into a cohesive and complete final draft, ensuring that it is well structured, easy to read, and provides a comprehensive overview.",
+          "timestamp": "2026-03-13T17:58:38.666Z"
+        },
+        {
+          "subject": "Writing the Research",
+          "description": "I am now focused on completing the main text of the research notes. I will start by incorporating key facts and quotes, ensuring that the final output provides a clear and comprehensive understanding of the subject. I'm aiming for clarity and a well-structured presentation.",
+          "timestamp": "2026-03-13T17:58:40.900Z"
+        },
+        {
+          "subject": "Finalizing the Research",
+          "description": "I'm presently merging all the components of the research, incorporating the gathered facts and analysis into a cohesive and comprehensive narrative. My focus is on producing a final report that is clear, well-structured, and easy to understand for the expert audience.",
+          "timestamp": "2026-03-13T17:58:44.906Z"
+        },
+        {
+          "subject": "Structuring the Report",
+          "description": "I'm now integrating the compiled information into a comprehensive report. I'm focusing on organizing the facts and quotes into sections, ensuring the final text presents a clear and easily understood narrative for the intended audience, and is structured in a clear way.",
+          "timestamp": "2026-03-13T17:58:47.859Z"
+        },
+        {
+          "subject": "Composing the Sections",
+          "description": "I am now focused on drafting the sections of the research report. I'm incorporating the key facts, quotes, and chronological data into the corresponding sections, and working to ensure a clear and structured presentation for the expert reader.",
+          "timestamp": "2026-03-13T17:58:50.384Z"
+        },
+        {
+          "subject": "Refining Report Sections",
+          "description": "I am now organizing the research output into distinct sections. I'm focusing on structuring the information clearly, ensuring each section supports a cohesive narrative. The goal is to provide a detailed, easy to understand final product, for the expert audience.",
+          "timestamp": "2026-03-13T17:58:53.976Z"
+        },
+        {
+          "subject": "Completing Report Sections",
+          "description": "I am now focused on working to assemble the main sections of the research report, ensuring that the integration of the facts, quotes, and chronological data provides a detailed understanding. I am striving to present a cohesive and easy-to-understand narrative for the expert audience.",
+          "timestamp": "2026-03-13T17:58:56.975Z"
+        },
+        {
+          "subject": "Preparing Final Draft Sections",
+          "description": "I am now focused on integrating all the created sections into a final, well-structured report. I'm carefully organizing the text, quotes, and chronological data within each section, and working to provide a comprehensive and easily-understood final product for the expert audience.",
+          "timestamp": "2026-03-13T17:59:00.017Z"
+        },
+        {
+          "subject": "Creating Report Sections",
+          "description": "I am now focused on completing the main sections of the research report, ensuring the incorporation of facts and analysis for a clear understanding. I'm aiming for a well-structured narrative for the expert audience, providing a detailed and easy-to-understand product.",
+          "timestamp": "2026-03-13T17:59:02.703Z"
+        },
+        {
+          "subject": "Refining the Sections",
+          "description": "I am now focused on integrating all the information, including facts, quotes, and analysis, into the main sections of the research report. The emphasis is on building a comprehensive and clear narrative. My goal is to craft a complete and easy-to-understand product for the expert audience.",
+          "timestamp": "2026-03-13T17:59:07.151Z"
+        },
+        {
+          "subject": "Preparing the Sections",
+          "description": "I am now focused on integrating all the information, including key facts and analysis, into the main sections of the research report. The goal is to ensure a cohesive and comprehensive narrative, presenting a detailed and easy-to-understand product for the expert audience.",
+          "timestamp": "2026-03-13T17:59:07.163Z"
+        }
+      ],
+      "tokens": {
+        "input": 31648,
+        "output": 3335,
+        "cached": 27074,
+        "thoughts": 3653,
+        "tool": 0,
+        "total": 38636
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

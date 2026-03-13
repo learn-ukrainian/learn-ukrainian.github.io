@@ -1,0 +1,182 @@
+discovered_at: '2026-03-13T15:57:35.292810+00:00'
+query_keywords:
+- Воєнна економіка України
+- Економіка на війні
+- Виклики та руйнування
+- Адаптація та мобілізація
+- Первинні джерела
+- Деколонізаційний погляд
+- Відбудова майбутнього
+- трансформацію української економіки під час війни
+- роль волонтерського руху
+- економічні виклики та досягнення
+- стійкість української економіки
+- Теперішній та минулий час
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=QsnCovOGDeE
+  channel: Суспільне Док
+  title: '«Хліб як зброя». Як РФ атакує агропромисловість України | «Ціна українського
+    хліба» #1'
+  relevance_score: 0.9
+  relevance_note: Directly addresses Russia's economic warfare against Ukraine's agro-industrial
+    complex, aligning with 'Виклики та руйнування' and 'Економіка на війні' sections.
+  transcript_excerpt: Сьогоднішні дії Росії у війні проти України включають схожі
+    стратегії знищення зернових полів. Блокування експорту зерна та руйнування інфраструктури,
+    що значно впливає на продовольчу безпеку України.
+  embed_suggestion: After section 'Виклики та руйнування' – it explicitly details
+    the destruction and economic pressure on Ukrainian agriculture.
+- url: https://www.youtube.com/watch?v=z-GrhRpwGg4
+  channel: Суспільне Док
+  title: '«Зерновий коридор». Як продовольчий шантаж РФ впливає на світ | «Ціна українського
+    хліба» #4'
+  relevance_score: 0.9
+  relevance_note: Highly relevant to the war economy, discussing the impact of the
+    blockade on food security and the adaptation through 'зерновий коридор', fitting
+    'Виклики та руйнування' and 'Адаптація та мобілізація'.
+  transcript_excerpt: Повномасштабне вторгнення Росії підкреслило важливу роль України
+    у забезпеченні глобальної продовольчої безпеки. У 2022 році через російську блокаду
+    портів на Чорному морі експорт української аграрної продукції зупинився.
+  embed_suggestion: After section 'Адаптація та мобілізація' – it covers the 'зерновий
+    коридор' as a response and adaptation to Russian food blackmail.
+- url: https://www.youtube.com/watch?v=ESJNrNaiMJU
+  channel: Реальна Історія
+  title: 'Суд над диктатором: чи спіткає Путіна доля балканського тирана?'
+  relevance_score: 0.4
+  relevance_note: Video discusses international criminal justice regarding war criminals,
+    which is tangentially related to the broader war context but not specifically
+    to Ukraine's wartime economy.
+  transcript_excerpt: 17 березня 2023 року міжнародний кримінальний суд видав ордер
+    на арешт президента Російської Федерації.
+  embed_suggestion: Not relevant enough for embedding in this module.
+- url: https://www.youtube.com/watch?v=a6BbDWIinSM
+  channel: Реальна Історія
+  title: Ким козаки були насправді? Вражаюча і найлогічніша версія. Реальна історія
+    з Акімом Галімовим
+  relevance_score: 0.1
+  relevance_note: Video is about the history of Cossacks and associated myths, which
+    is unrelated to the war economy of Ukraine.
+  transcript_excerpt: Сьогодні ми детально Розберемося що правда А що ні в історії
+    козаків і дізнаємось ким вони були насправді.
+  embed_suggestion: Not relevant enough for embedding.
+- url: https://www.youtube.com/watch?v=vDue2EwUfMk
+  channel: Harvard Ukrainian Research Institute
+  title: 'Відбудова України, Відбудова світу. Сесія 3: Воєнні злочини та гуманітарна
+    криза'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=_GIB3dACWro
+  channel: Harvard Ukrainian Research Institute
+  title: 'Відбудова України, Відбудова світу. Головна промова: Олександра Матвійчук'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0006
+  text: "ЄВРОПЕЙСЬКИЙ ВИБІР УКРАЇНИ. РОСІЙСЬКО-УКРАЇНСЬКА ВІЙНА \n§ 46. Геополітичний\
+    \ вибір України.............................................278 \n§ 47. Розгортання\
+    \ Російською Федерацією гібридної війни  \nпроти України ....................................................................284\
+    \ \n§ 48. Суспільно-політичне та соціально-економічне становище \nУкраїни в 2014—2022\
+    \ роках .................................................290 \n§ 49. Широкомасштабне\
+    \ вторгнення російських військ  \nна територію України.."
+  section_title: Сторінка 5
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0050
+  text: "§ 3. Внутрішньополітична та економічна ситуація в УРСР\n27\nCформулюйте судження\
+    \ про:\n\x84\n\x84\nнегативний характер впливу то­\nталітарного імперського гноблення\
+    \ \nна соціально-економічну ситуацію \nв тогочасній Україні. Працюємо з  хронологією\n\
+    1946—1947 рр. — масовий штучний \nголод в УРСР. 11. Визначте соціально-економічні,\
+    \ демографічні, \nполітичні умови, у  яких розпочалася повоєнна від­\nбудова.\
+    \ Результати роботи подайте у  вигляді ментальної \nкарти. 12. Доведіть, що економіку\
+    \ УРСР відбудовували \nне як с"
+  section_title: Сторінка 29
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5849149823188782
+  chunk_id: feaa5fa7_c3176
+  text: "Українці в сов. армії: Національная политика\r\nВКП(б) в цифрах. М. 1930;\
+    \ Golovine N. The Russian Army in the World War.\r\nНью Гевн 1931; Wallenberg\
+    \ E. The Red Army — a study in the growth of\r\nSoviet imperialism. Лондон 1940;\
+    \ Berchin M.-Ben-Horin E. The Red Army.\r\nНью-Йорк 1942; Cole D. The Red Army.\
+    \ Лондон 1943; White D. The\r\ngrowth of the Red Army. Прінстон 1944; Kalinow\
+    \ D. Sowjetmarschälle\r\nhaben das Wort. Гамбург 1950; Кисіль В. Охорона кордонів\
+    \ СССР. Перемога,\r\nІ. Мюнхен 1951.\n\nОНОКС: Карпатсь"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5796148180961609
+  chunk_id: feaa5fa7_c3241
+  text: "Українці в румунській армії (1185). Українці в поль.\r\nармії (1185) А. Ч.\n\
+    \nОРГАНІЗАЦІЯ НАРОДНОЇ ОБОРОНИ »КАРПАТСЬКА СІЧ« (ОНОКС)\r\nД. К. . . . . . . .\
+    \ . . . . . . . . . . . . 1186\n\nУКРАЇНЦІ У ВІЙСЬК. ФОРМАЦІЯХ ПІД ЧАС ДРУГОЇ\
+    \ СВІТОВОЇ ВІЙНИ . . . . . . . . . . . . . . . . . . . 1186\n\nУкраїнці в чужих\
+    \ арміях (1186). Укр. формації у Франції\r\n(1186). Укр. формації на нім. боці\
+    \ (1187). Укр. леґіон (1187). УВВ і УНА\r\n(1187). Дивізія »Галичина« (1187).\
+    \ Охоронно-вартові й поліційні формації (1188)\r\nО. Гор"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5796148180961609
+  chunk_id: feaa5fa7_c0046
+  text: "Українці в румунській армії (1185). Українці в поль.\r\nармії (1185) А. Ч.\n\
+    \nОРГАНІЗАЦІЯ НАРОДНОЇ ОБОРОНИ »КАРПАТСЬКА СІЧ« (ОНОКС)\r\nД. К. . . . . . . .\
+    \ . . . . . . . . . . . . 1186\n\nУКРАЇНЦІ У ВІЙСЬК. ФОРМАЦІЯХ ПІД ЧАС ДРУГОЇ\
+    \ СВІТОВОЇ\r\nВІЙНИ . . . . . . . . . . . . . . . . . . . 1186\n\nУкраїнці в чужих\
+    \ арміях (1186). Укр. формації у Франції\r\n(1186). Укр. формації на нім. боці\
+    \ (1187). Укр. леґіон (1187). УВВ і УНА\r\n(1187). Дивізія »Галичина« (1187).\
+    \ Охоронно-вартові й поліційні формації (1188)\r\nО. Го"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

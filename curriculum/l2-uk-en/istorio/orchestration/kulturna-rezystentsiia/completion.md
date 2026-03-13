@@ -1,4 +1,4 @@
-FAIL: pipeline istorio 126
+PASS: pipeline istorio 126
 
   Module:   kulturna-rezystentsiia
   Track:    istorio
@@ -6,5 +6,5 @@ FAIL: pipeline istorio 126
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-13T01:24:12Z
+  Verdict:  PASS
+  Date:     2026-03-13T13:19:57Z

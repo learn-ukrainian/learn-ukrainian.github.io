@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 45 — E2E
+PASS: pipeline c2 43
 
   Module:   c2-2-checkpoint
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T07:46:24Z
+  Date:     2026-03-13T19:21:40Z

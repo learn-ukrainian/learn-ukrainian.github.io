@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 39 — E2E
+PASS: pipeline c2 37
 
   Module:   digital-literature
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T18:41:09Z
+  Date:     2026-03-13T19:01:53Z

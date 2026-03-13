@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 17 — E2E
+PASS: pipeline c2 23
 
   Module:   c2-1-practice-i
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:36:10Z
+  Date:     2026-03-13T18:20:20Z

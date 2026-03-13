@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c2 32 — E2E
+PASS: pipeline c2 29
 
   Module:   writing-literary-essays
   Track:    c2
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T01:04:37Z
+  Date:     2026-03-13T18:37:27Z

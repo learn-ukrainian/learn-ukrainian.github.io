@@ -1,0 +1,290 @@
+discovered_at: '2026-03-13T13:59:29.135850+00:00'
+query_keywords:
+- Заповіт
+- Граматичний аналіз
+- Поетика тексту
+- Політичний зміст
+- Рецепція і використання
+- Analyze the grammar of the imperative mood in a political context
+- Understand the historical context of 1845
+- Discuss the concept of 'righteous violence' in the poem
+- Recite key lines from memory
+- Imperative Mood
+- Future Tense
+- Conditional Sentences
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=7MM_BujH7h8
+  channel: Суспільне Культура
+  title: Mykola–from a grain merchant to the richest Ukrainian INHERITANCE OF TERESCHENKI
+    | The second series
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=obzi_y-CTQo
+  channel: Суспільне Культура
+  title: '"I don''t care how Russians live, I want to see them dead" - Andriy Bondar'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=nybpU2azUmw
+  channel: Суспільне Док
+  title: '«Щоб зрозуміти Росію, ключем має слугувати кримінальна психологія» — Забужко
+    | Остання війна #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=RhZyGmprxlA
+  channel: Radio Khartia
+  title: 'Fair about meeting with a Russian prisoner #shortsviral #war #russia #fair
+    #warofthesrv'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=eK-dj8XxJmI
+  channel: Radio Khartia
+  title: Знаємо психологію росіян — можемо зруйнувати імперію / Мирослав Маринович,
+    Сергій Жадан
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode28/
+  title: Making plans for the weekend — Future tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  content_type: podcast_episode
+  series: ULP
+  season: 1
+  episode: 28
+- url: https://www.ukrainianlessons.com/episode96/
+  title: New Year’s celebrations at school + Perfective future tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  - conjugation
+  - culture
+  - holidays
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 96
+- url: https://www.ukrainianlessons.com/episode97/
+  title: Plans for winter holidays + Future tense of the verbs of motion
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  - conjugation
+  - culture
+  - holidays
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 97
+- url: https://www.ukrainianlessons.com/episode98/
+  title: Booking a room in the Carpathians – One-word synthetic future tense in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  - vocabulary
+  - housing
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 98
+- url: https://www.ukrainianlessons.com/episode99/
+  title: Travel plan (Voice message №4)
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - grammar
+  - verbs
+  - future tense
+  - vocabulary
+  - food
+  - travel
+  - phrases
+  - introductions
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 99
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0158
+  text: '. . . . . . . . . . . . . 147
+
+    Текст та його ознаки. Повторення вивченного . . . . . . . . . . . . . . . . .
+    . . . . . . . . 147
+
+    Поділ тексту на частини. План тексту. . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 148
+
+    Засоби зв’язку речень у тексті . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 150
+
+    Текст-розповідь. Художній та науково-популярний тексти-описи. Тема і мета. . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 159
+  grade: 4
+  author: zaharijchuk
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0121
+  text: "Підготовка до виступу. Види читання і  записування тексту виступу. Естетика\
+    \ тексту \x1F\n85\n \n Обговоріть складені плани в  класі. Визначте: 1) найбільш\
+    \ детальний; 2) найне-\nсподіваніший; 3) найцікавіший.\n \n Складіть і  запишіть\
+    \ вступ до одного з  виступів за складеним  планом.\n \n Складіть і  запишіть\
+    \ закінчення (кінцівку) того  ж виступу.\n157. Підготуйте текст публічного виступу\
+    \ (запишіть ключові слова, доберіть \nі  систематизуйте матеріал, складіть план,\
+    \ за планом  — текст) на одну з  тем:\n— Берег"
+  section_title: Сторінка 85
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-golub-2022_s0188
+  text: "189\n  проаналізувати зовнішні відомості книжки (обсяг, \nоформлення);\n\
+    \  спробувати передбачити зміст, структуру і смисл \nтексту.\nІІ. Активно мислити,\
+    \ а саме:\n  виявляти у змісті тексту приховані запитання;\n  міркувати, як самим\
+    \ відповісти на запитання, що \nвиникають, або шукати в тексті відповіді на них;\n\
+    \  виділяти (підкреслювати, записувати) головне, сут-\nтєве, важке, невідоме,\
+    \ незрозуміле.\n440   Зіставте назви книжок, зображених на світлинах. Визначте\
+    \ за \nзаголовками, кому вони призначені — учн"
+  section_title: Сторінка 189
+  grade: 5
+  author: golub
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5895391702651978
+  chunk_id: c8772648_c0168
+  text: "Приклади з грамоти використано в таких мовознавчих дослідженнях: Л.\r\nГумецька,\
+    \ «Втор. спол.», «Перв. прийм.», «Функції», «Мовознавство», № 10,\r\n«Словотв.\
+    \ сист. числ.»; С. Бевзенко, «Нариси», «З істор. коментар.»; М.\r\nАнтошин, «Закарп.\
+    \ гр.»; Я. Спринчак, ВЯ, 1956, № 6; Ф. Медведєв,\r\n«Труди», та ін."
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm
+- score: 0.5750592350959778
+  chunk_id: c8772648_c0070
+  text: "Подається за виданням В. Розова. Для фотокопії взято літографічний\r\nзнімок\
+    \ з публікації О. Соболевського, С. Пташицького.\n\nПриклади з грамоти зустрічаються\
+    \ в таких мовознавчих дослідженнях: Л.\r\nГумецька, «Втор. прийм.», «Функції»,\
+    \ «Втор. спол.», «Словотв. присл.»,\r\n«Мовознавство», № 10, «Словотв. сист. числ.»,\
+    \ «Перв. прийм.»; Ф. Медведєв,\r\n«Укр. гр.», «Нариси»; О. Зарудняк, «Наук. зап.»;\
+    \ Д. Шелудько,\r\n«Німецькі елем.»; «Словник»; С. Бевзенко, «Нариси», «Істор.\
+    \ морф.», «З\r\nістор. коментар.»; І. С"
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm
+- score: 0.5728408098220825
+  chunk_id: c8772648_c0132
+  text: "Приклади з грамоти зустрічаються в таких мовознавчих дослідженнях: Л.\r\n\
+    Гумецька, «Словотв. присл.», «Функції», «Втор. спол.», «Втор. прийм.»,\r\n«Перв.\
+    \ прийм.», «Словотв. сист. числ.», «Мовознавство», № 10; Л. Коломієць,\r\n«О фразеол.\
+    \ соч.»; І. Керницький, «Із спостережень»; «Словник»; С.\r\nБевзенко, «З істор.\
+    \ коментар.», «Нариси», «Істор. морф.»; О. Зарудняк,\r\n«Наук. зап.», «Пригл.\
+    \ управление»; І. Нелюбова, «Конструкции»; Ф.\r\nМедведєв, «Укр. гр.», «Нариси»,\
+    \ «Труди»; Я. Спринчак, УМШ, 1956, №\r\n5; С."
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm

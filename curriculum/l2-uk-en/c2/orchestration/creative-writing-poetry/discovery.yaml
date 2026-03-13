@@ -1,0 +1,133 @@
+discovered_at: '2026-03-13T18:48:51.624848+00:00'
+query_keywords:
+- Творче письмо — поезія
+- Introduction — From Reader to Creator
+- Пошук теми та автентичного голосу
+- Finding Theme and Authentic Voice
+- 'Робота з формою: Від сонета до верлібру'
+- 'Working with Form: From Sonnet to Free Verse'
+- Поетична образність та мовотворчість
+- Poetic Imagery and Language-making
+- Звукова організація та фоніка
+- Sound Organization and Phonics
+- Редагування та шліфування тексту
+- Editing and Refining the Text
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=D4KDIyq54Lg
+  channel: Radio Khartia
+  title: 'Поезія під знаком традиції: Максим Рильський і Василь Мисик | Сергій Жадан'
+  relevance_score: 0.8
+  relevance_note: This video directly discusses Ukrainian poetry, focusing on specific
+    poets like Maksym Rylsky and how to approach reading their work. This provides
+    valuable context for aspiring poets in understanding tradition, influence, and
+    the impact of poetic language, aligning well with the 'From Reader to Creator'
+    and 'Poetic Imagery' sections.
+  transcript_excerpt: сьогодні ми з тобою привітаємо одного великого українського
+    поета з днем народження йому 19 березня виповнюється або виповнилося та залежно
+    від того коли ви дивитесь цю програму 130 років і це Максим тадейович Рильський
+    та Максим тадейович Рильський якого ми всі знаємо навіть не читавши його тому
+    що це одне з головних обличчів підручника з української літератури.
+  embed_suggestion: 'After section: Вступ — Від читача до творця (Introduction — From
+    Reader to Creator) — Provides essential context on Ukrainian poetic tradition
+    and key figures, inspiring the transition from reader to creator.'
+- url: https://www.youtube.com/watch?v=RFOfo8hLxVg
+  channel: Суспільне Культура
+  title: «In Search of Skovoroda» | Documentary film Suspilne Culture
+  relevance_score: 0.2
+  relevance_note: The video discusses the Ukrainian philosopher Hryhorii Skovoroda
+    and the culture surrounding him, including analysis of his texts. While it touches
+    upon texts and authors, it does not directly relate to the process or craft of
+    creative writing or poetry, focusing instead on philosophy and cultural impact.
+  transcript_excerpt: Доволі загадковий текст. Як і сам автор. Ти знаєш, незважаючи
+    на величезну кількість книжок, статей і дисертацій, чомусь його таємницю досі
+    не розгадано.
+  embed_suggestion: Not recommended for embedding in this module due to low topical
+    relevance.
+- url: https://www.youtube.com/watch?v=HA7Fm_84VcM
+  channel: Radio Khartia
+  title: 'Міф університету: як він впливає на місто? | Сергій Жадан'
+  relevance_score: 0.2
+  relevance_note: The video discusses the 'myth of the university' and its influence
+    on the city, and generally talks about books. Although it features a prominent
+    Ukrainian writer (Serhiy Zhadan), the core topic is not creative writing, poetry,
+    or the craft itself, making it broadly unrelated to the module's specific learning
+    objectives.
+  transcript_excerpt: Ми дуже Харківське радіо ми любимо це місто ми тримаємося за
+    його маркери за його маяки і за його меми от власне Харківська школа романтиків
+    якесь таке словосполучення яке зокрема спливає пам'ять коли хтось говорить про
+    Харків.
+  embed_suggestion: Not recommended for embedding in this module due to low topical
+    relevance.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0195
+  text: "188\nМОВЛЕННЄВИЙ ПРОСТІР\nТекст\nПригадайте!\nТекст — це певне повідомлення;\
+    \ сукупність речень, пов’я-\nзаних між собою за змістом.\nТема — це те, про що\
+    \ йдеться в тексті. Найчастіше тему \nвідображає заголовок тексту.\nПідтема (мікротема)\
+    \ — це частина загальної теми тексту, \nщо зазвичай розкривається в одному абзаці.\n\
+    Основна думка тексту — це те, заради чого був створений \nпевний текст, що хотів\
+    \ донести автор до своїх читачів.\nКлючові слова — це окремі слова чи словосполучення,\
+    \ \nякі визначають тему та "
+  section_title: Сторінка 191
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0399
+  text: "(За К. Макґоніґал)\n \n \nВизначте, яким способом пов’язані речення в тексті —\
+    \ послідовним \n(ланцюговим) чи паралельним. Які ключові слова визначають тему\
+    \ тексту? А як ви формуєте силу волі? Що ще, крім сили волі, допомагає в до-\n\
+    сягненні мети? 645 Доберіть із художньої літератури уривок тексту про цікаву осо-\n\
+    бистість. Визначте тему й мікротеми, стиль мовлення тексту. Знайдіть за-\nсоби\
+    \ зв’язку речень у тексті (синоніми, займенники, повторювані слова, \nсполучники\
+    \ тощо). Схарактеризуйте текст за йог"
+  section_title: Сторінка 226
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0092
+  text: 'Кому адресовано ви5словлення? Прочитайте слова, які називають адресатів.
+    По-
+
+    ясніть відмінність між власне звертанням і  звертанням риторичним. Яка роль риторичних
+    звертань і  риторичних запитань у  мовленні, зокрема ри-
+
+    торичному? Звіртеся з  поданою після вправи інформацією.'
+  section_title: Сторінка 67
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0018
+  text: "10    Література і дійсність\nДіалогічне прочитання художнього твору\nЧитання\
+    \ можна розглядати як уявний діалог, у  якому людина ставить \nзапитання та  знаходить\
+    \ на  них відповіді завдяки взаємодії з  художнім тво-\nром. Обравши книгу для\
+    \ такого діалогу, ми попередньо визначаємо й мету \nспілкування. Нею може стати\
+    \ збагачення ерудиції, особистісне зростання, \nнавіть просто читання заради розваги.\
+    \ В усіх випадках варто бути активни-\nми й уважними, відкритими до спілкування,\
+    \ ураховувати авторський по"
+  section_title: Сторінка 10
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0336
+  text: "Озвучте текст рецензії в класі. Намагайтеся зацікавити одноліт-\nків. пам’ятка\n\
+    \x90отуêµося ¸исати ре¾ензіâ\n1. Прочитайте книжку (перегляньте кіноôільм, відвідайте\
+    \ виставу, \nконцертну програму), на яку писатимете рецензію. 2. Визначте теми,\
+    \ Áо розвиває автор (авторка) твору. 3. Прокоментуйте назву твору. À\n\x8E"
+  section_title: Сторінка 215
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary: []

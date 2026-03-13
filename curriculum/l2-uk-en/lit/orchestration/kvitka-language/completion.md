@@ -2,9 +2,9 @@ PASS: pipeline lit 10
 
   Module:   kvitka-language
   Track:    lit
-  Mode:     v3
-  Words:    0 (target: 5000)
+  Mode:     v5
+  Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T00:59:55Z
+  Date:     2026-03-13T13:30:11Z
