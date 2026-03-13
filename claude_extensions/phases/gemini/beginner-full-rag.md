@@ -113,6 +113,15 @@ Even when no exact textbook exercise matches, ground your content in textbook pe
 
 3. **Vary containers.** Never use the same container type twice in a row. Alternate between tables, example lists, dialogues, and pattern boxes to keep the rhythm natural.
 
+### Sentence Complexity (HARD FAIL if violated)
+
+- **A1**: Ukrainian sentences must be **≤10 words**
+- **A2**: Ukrainian sentences must be **≤15 words**
+- This limit applies to ALL Ukrainian text — examples, dialogues, pattern boxes, bulleted lists
+- English explanatory paragraphs are EXEMPT from this limit
+- If a Ukrainian sentence exceeds the limit, **split it into two shorter sentences**
+- **No participles (дієприкметники) until B1** — use relative clauses or simple sentences instead (e.g., NOT "написаний лист" → "лист, який написали")
+
 ### Style Rules
 
 - Ukrainian section headers with English in parentheses: `## Наказовий спосіб (The Imperative Mood)`
@@ -128,9 +137,10 @@ Even when no exact textbook exercise matches, ground your content in textbook pe
 Write **{TOPIC_TITLE}** for the {TRACK} track.
 
 **Targets:**
-- {WORD_TARGET}–{WORD_CEILING} words (under {WORD_TARGET} = FAIL)
+- {WORD_TARGET}–{WORD_CEILING} words (under {WORD_TARGET} = FAIL, over {WORD_CEILING} = also FAIL — trim excess)
 - {ENGAGEMENT_MIN}+ callout boxes (`[!tip]`, `[!warning]`, `[!did-you-know]`, `[!culture]`)
 - EXACT H2 titles from the outline below — missing/renamed sections fail validation
+- **MUST end with a `# {SUMMARY_HEADING}` section** containing a brief recap and 3-4 self-check questions with English translations
 
 {EXACT_SECTION_TITLES}
 
@@ -144,12 +154,12 @@ You're writing for someone seeing Ukrainian for the first time. English explains
 
 Follow the structural containment rules above. In each section:
 1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
-2. **Show** the pattern in EXTENSIVE Ukrainian structural containers (long example lists, multiple dialogues, or pattern boxes). To hit word count targets and maintain high immersion, generate many varied Ukrainian examples rather than writing long English essays.
+2. **Show** the pattern in Ukrainian structural containers (example lists, dialogues, or pattern boxes). Balance Ukrainian examples with English explanation to hit both the word target AND immersion target — do not overshoot the word ceiling by padding with examples. 4-6 Ukrainian examples per grammar point is sufficient.
 3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
 
-Do NOT use Ukrainian grammar terminology (іменник, дієслово, голосний, відмінок, орудний тощо) anywhere in the content, activities, or summary questions — students don't know these yet. Use English for grammar terms. Do NOT write IPA or Latin transliteration.
+Do NOT use Ukrainian grammar terminology anywhere in the content, activities, or summary questions — students don't know these yet. Banned terms include but are not limited to: іменник, дієслово, прикметник, голосний, приголосний, називний, знахідний, родовий, давальний, орудний, місцевий, кличний, відмінок, вид, рід, число, особа, інфінітив, дієприкметник, дієприслівник. Use ONLY English grammar terms (e.g., "instrumental case" not "орудний відмінок"). Do NOT write IPA or Latin transliteration.
 
 **Deliberate errors (showing common mistakes):**
 When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
@@ -365,11 +375,15 @@ Rules for YAML:
 {SELF_AUDIT_SNIPPET}
 
 ### Content Checks
-- [ ] Word count ≥ {WORD_TARGET}?
+- [ ] Word count between {WORD_TARGET} and {WORD_CEILING}? (over ceiling = FAIL, trim excess)
 - [ ] Every plan section has prose?
+- [ ] **Summary section present** (`# {SUMMARY_HEADING}`) with self-check questions?
 - [ ] {ENGAGEMENT_MIN}+ callout boxes?
 - [ ] All target vocabulary words used in content?
 - [ ] No Russianisms, Russian characters, IPA?
+- [ ] **No Ukrainian sentences over {TRACK} word limit** (A1=10, A2=15)?
+- [ ] **No participles** (дієприкметники)?
+- [ ] **No Ukrainian grammar terminology** (називний, орудний, відмінок, etc.)?
 - [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
 - [ ] **Dialogue quality**: Max 2-3 dialogues total. Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
 - [ ] **Textbook citations**: At least 1 `<!-- adapted from: ... -->` or `<!-- original: ... -->` comment per H2 section.
