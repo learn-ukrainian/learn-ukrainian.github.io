@@ -2211,7 +2211,8 @@ def _get_content_template(track: str, module_num: int,
             return "beginner-checkpoint.md"
         return "core-checkpoint.md"
     if full_build and tier == "beginner":
-        return "beginner-full-rag.md" if rag else "beginner-full.md"
+        # Always use RAG template — RAG server is always available
+        return "beginner-full-rag.md"
     if tier == "beginner":
         return "beginner-content.md"
     if tier == "seminar":
