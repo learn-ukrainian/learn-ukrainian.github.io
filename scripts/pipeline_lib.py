@@ -3227,6 +3227,30 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not log_prompt_health(health_issues, "Phase 2"):
         return False
 
+    # Prompt preflight: Gemini reviews its own instructions against audit gates
+    if not getattr(ctx, "skip_prompt_preflight", False):
+        try:
+            from pipeline.prompt_preflight import run_prompt_preflight
+            _dispatch_fn = getattr(ctx, "content_dispatch_fn", None) or dispatch_gemini
+            preflight = run_prompt_preflight(
+                prompt_file, ctx.track, ctx.module_num, ctx.orch_dir,
+                dispatch_fn=_dispatch_fn,
+            )
+            if preflight.high_issues:
+                log(f"  preflight: WARNING — {len(preflight.high_issues)} HIGH issue(s) in prompt")
+                for hi in preflight.high_issues:
+                    log(f"    → {hi.problem[:150]}")
+                    if hi.suggested_fix:
+                        log(f"      FIX: {hi.suggested_fix[:150]}")
+                # Save preflight state
+                ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
+                    "status": preflight.status,
+                    "issues": len(preflight.issues),
+                    "high": len(preflight.high_issues),
+                }
+        except Exception as e:
+            log(f"  preflight: Skipped — {e}")
+
     if ctx.dry_run:
         log("  content: DRY-RUN — would dispatch whole-module content generation")
         return True

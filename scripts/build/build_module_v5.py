@@ -163,6 +163,9 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     # Research-only mode
     ctx.research_only = getattr(args, "research_only", False)  # type: ignore[attr-defined]
 
+    # Prompt preflight: Gemini reviews its own prompt before content generation
+    ctx.skip_prompt_preflight = getattr(args, "skip_prompt_preflight", False)  # type: ignore[attr-defined]
+
     return ctx
 
 
@@ -465,6 +468,10 @@ def main() -> int:
                         help="Skip review phase (review runs by default)")
     parser.add_argument("--review-claude", action="store_true", dest="review_claude",
                         help="Use Claude for review instead of default agent")
+
+    # Preflight
+    parser.add_argument("--skip-prompt-preflight", action="store_true", dest="skip_prompt_preflight",
+                        help="Skip Gemini prompt self-review before content generation")
 
     # Model overrides
     parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
