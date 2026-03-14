@@ -437,8 +437,12 @@ def _build_exact_section_titles(ctx) -> str:
     for section in ctx.content_outline:
         name = section.get("section") or section.get("title", "")
         words = section.get("words", 0)
+        points = section.get("points", [])
         if name:
-            titles.append(f"- `## {name}` (~{words} words)")
+            entry = f"- `## {name}` (~{words} words)"
+            if points:
+                entry += "\n" + "\n".join(f"  - {p}" for p in points)
+            titles.append(entry)
             if "підсумок" in name.lower() or "summary" in name.lower():
                 has_summary = True
     if not titles:
@@ -454,9 +458,10 @@ def _build_exact_section_titles(ctx) -> str:
         titles.append(f"- `## {summary_heading}` (~150 words) — recap + 3-4 self-check questions")
 
     return (
-        "## REQUIRED H2 Sections (use EXACT titles)\n\n"
-        "Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, "
-        "or add creative subtitles. The audit will reject any section with a different title.\n\n"
+        "## REQUIRED H2 Sections and Points (MANDATORY)\n\n"
+        "Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. "
+        "Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says "
+        "*айтішник*, use *айтішник*, not a synonym).\n\n"
         + "\n".join(titles)
     )
 

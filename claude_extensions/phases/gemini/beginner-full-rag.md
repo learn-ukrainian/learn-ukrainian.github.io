@@ -149,6 +149,18 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 
 {SECTION_BUDGET_TABLE}
 
+### Beginner Lesson Arc (MANDATORY structure)
+
+Every beginner module follows this arc — the review scores you on it:
+
+1. **WELCOME** — warm greeting, set context ("Today you'll learn how to talk about professions")
+2. **PREVIEW** — explicit "By the end of this module, you'll be able to..." (sets expectations)
+3. **PRESENT** — the main content sections (from the outline)
+4. **PRACTICE** — examples, dialogues, reading practice blocks
+5. **CELEBRATE** — in the Summary, explicitly tell learners what they can now do ("You can now describe your career in Ukrainian!")
+
+Missing PREVIEW or CELEBRATE = review score penalty.
+
 ### Writing Style
 
 You're writing for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
