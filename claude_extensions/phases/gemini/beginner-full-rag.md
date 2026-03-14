@@ -103,7 +103,17 @@ Even when no exact textbook exercise matches, ground your content in textbook pe
 
 **Three rules govern where each language appears:**
 
-1. **Explanatory paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline. However, you SHOULD include short **Reading Practice** paragraphs (3-5 sentences) entirely in Ukrainian at the end of major sections to boost immersion. Follow each with an English translation in a collapsible block or parenthetical.
+1. **Explanatory paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
+
+**MANDATORY for A2+: Ukrainian Reading Practice blocks.** After EVERY major section, include a **Reading Practice** block — a short Ukrainian paragraph (5-8 sentences) that uses the grammar and vocabulary just taught. Follow it with an English translation. This is the PRIMARY driver of immersion score. Format:
+
+> **(Читання / Reading Practice)**
+>
+> Олена працює лікаркою в Києві. Вона дуже любить свою роботу. Раніше вона була студенткою...
+>
+> *(Olena works as a doctor in Kyiv. She loves her job very much. Previously she was a student...)*
+
+Without these blocks, immersion will be 15-20% and the module FAILS.
 
 2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
    - **Tables** — paradigms, vocabulary groups, gender sorting (WARNING: tables contribute ZERO to immersion score)
