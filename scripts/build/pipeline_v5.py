@@ -4,7 +4,7 @@
 Phase implementations + state management + all phase-specific helpers.
 Imported by build_module_v5.py.
 
-Pipeline: research (+ discover) → content → validate → [review] → activities → mdx
+Pipeline: research (+ discover) → content → validate → activities → review → mdx
 (Sandbox phase removed in #820 — VESUM post-validation replaces it.)
 (Discover merged into research — phase_discover() is a passthrough.)
 
@@ -136,7 +136,7 @@ _DIFFUSE_FAILURE_CODES = {
 }
 
 # Phase sequence — activities run AFTER review so prose is human-approved first
-PHASES = ["research", "discover", "content", "validate", "review", "activities", "mdx"]
+PHASES = ["research", "discover", "content", "validate", "activities", "review", "mdx"]
 
 PHASE_LABELS: dict[str, str] = {
     "research":   "Research + Discover",

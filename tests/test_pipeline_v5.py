@@ -942,18 +942,18 @@ class TestRAGReviewTools:
 
 
 # =============================================================================
-# Phase reorder: activities after review
+# Phase order: activities before review (review sees complete module)
 # =============================================================================
 
 class TestPhaseOrder:
-    """Verify the new phase sequence: activities after review."""
+    """Verify phase sequence: activities before review so review covers everything."""
 
-    def test_activities_after_review(self):
+    def test_activities_before_review(self):
         from pipeline_v5 import PHASES
         review_idx = PHASES.index("review")
         activities_idx = PHASES.index("activities")
-        assert activities_idx > review_idx, (
-            f"activities ({activities_idx}) should come after review ({review_idx})"
+        assert activities_idx < review_idx, (
+            f"activities ({activities_idx}) should come before review ({review_idx})"
         )
 
     def test_validate_before_activities(self):

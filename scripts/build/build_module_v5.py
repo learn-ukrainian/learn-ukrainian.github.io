@@ -386,7 +386,7 @@ def main() -> int:
         description="E2E Module Builder v5 — clean pipeline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
-            Pipeline phases: research → discover → content → validate → review → activities → mdx
+            Pipeline phases: research → discover → content → validate → activities → review → mdx
             Review runs by default. Use --skip-review to disable.
 
             Examples:
