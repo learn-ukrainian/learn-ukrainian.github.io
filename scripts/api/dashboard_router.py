@@ -6,7 +6,9 @@ comms monitoring.
 """
 
 import json
+import sys
 from datetime import UTC, datetime
+from pathlib import Path
 
 import yaml
 from fastapi import APIRouter, HTTPException
@@ -30,10 +32,8 @@ from .dashboard_helpers import (
     read_yaml_file,
     scan_pipeline_queues,
     scan_track_cached,
+    scan_track_summary_cached,
 )
-
-import sys
-from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -136,6 +136,18 @@ async def research_overview():
         "tracks": tracks,
         "timestamp": datetime.now(UTC).isoformat(),
     }
+
+
+@router.get("/track/{track_id}/summary")
+async def track_summary(track_id: str):
+    """Lightweight per-module summary: slug, status, pipeline version, review badges only."""
+    manifest = load_manifest()
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
+
+    track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
+    return scan_track_summary_cached(track_id, level_cfg["path"], track_modules)
 
 
 @router.get("/track/{track_id}")

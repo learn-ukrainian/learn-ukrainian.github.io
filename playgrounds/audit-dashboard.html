@@ -192,9 +192,11 @@ a:hover { text-decoration: underline; }
   <div class="loading"><div class="spinner"></div></div>
 </div>
 
-<div class="research-section" id="research-section" style="display:none;">
+<div class="research-section" id="research-section">
   <div class="research-card" id="research-card">
-    <div class="loading"><div class="spinner"></div></div>
+    <h2>Research Coverage</h2>
+    <p style="color:var(--text2);font-size:13px;margin:8px 0;">Research data is large (~1.3MB). Click to load on demand.</p>
+    <button id="load-research-btn" onclick="loadResearch()" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;">Load Research Coverage</button>
   </div>
 </div>
 
@@ -235,11 +237,13 @@ async function fetchOverview() {
   document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
 }
 
-async function fetchTrackDetail(trackId) {
+async function fetchTrackSummary(trackId) {
   if (trackCache[trackId]) return trackCache[trackId];
-  const res = await fetch(`${API}/track/${trackId}`);
+  const res = await fetch(`${API}/track/${trackId}/summary`);
   const data = await res.json();
   trackCache[trackId] = data;
+  // Expire after 5 minutes
+  setTimeout(() => { delete trackCache[trackId]; }, 300000);
   return data;
 }
 
@@ -310,7 +314,7 @@ async function toggleTrack(trackId) {
 
   if (grid.children.length === 0) {
     grid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-    const data = await fetchTrackDetail(trackId);
+    const data = await fetchTrackSummary(trackId);
     renderModuleGrid(grid, data, trackId);
   }
 }
@@ -594,23 +598,29 @@ document.addEventListener('keydown', e => {
 
 // ==================== RESEARCH ====================
 
-async function fetchResearch() {
+async function loadResearch() {
+  const btn = document.getElementById('load-research-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Loading...';
+  }
   try {
     const res = await fetch(`${API}/research`);
     const data = await res.json();
     renderResearch(data);
-  } catch (e) { console.error('Research fetch error:', e); }
+  } catch (e) {
+    console.error('Research fetch error:', e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Load Research Coverage (retry)'; }
+  }
 }
 
 function renderResearch(data) {
-  const section = document.getElementById('research-section');
   const card = document.getElementById('research-card');
 
   if (!data.tracks || data.tracks.length === 0) {
-    section.style.display = 'none';
+    card.innerHTML = '<p style="color:var(--text2);font-size:13px;">No research data available.</p>';
     return;
   }
-  section.style.display = '';
 
   // Aggregate across all tracks
   let totalMods = 0, totalResearched = 0;
@@ -746,12 +756,11 @@ function renderResearch(data) {
 // ==================== INIT ====================
 
 fetchOverview();
-fetchResearch();
+// Research loads on demand via button — no eager fetch
 setInterval(() => {
   trackCache = {};
   fetchOverview();
-}, 30000);
-setInterval(fetchResearch, 60000);
+}, 120000);
 </script>
 </body>
 </html>

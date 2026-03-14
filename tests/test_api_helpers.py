@@ -14,11 +14,7 @@ Covers:
 
 import json
 import time
-from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
-
+from unittest.mock import patch
 
 # ==================== review_parsing ====================
 
@@ -327,7 +323,7 @@ class TestCacheFunctions:
         assert cache_get("nonexistent_key_xyz", ttl=60.0) is None
 
     def test_cache_expired(self):
-        from scripts.api.state_helpers import _ttl_cache, cache_get, cache_set
+        from scripts.api.state_helpers import _ttl_cache, cache_get
 
         _ttl_cache["test_expired"] = (time.time() - 100, "old_value")
         assert cache_get("test_expired", ttl=10.0) is None
@@ -411,9 +407,9 @@ class TestGetAuditStatus:
         assert len(result["blocking_issues"]) == 2
 
     def test_stale_audit(self, tmp_path):
-        from scripts.api.state_helpers import get_audit_status
-
         import time as t
+
+        from scripts.api.state_helpers import get_audit_status
 
         (tmp_path / "status").mkdir()
         status_file = tmp_path / "status" / "test.json"
@@ -467,9 +463,9 @@ class TestIsReviewStale:
         assert is_review_stale(review, None) is False
 
     def test_stale_by_mtime(self, tmp_path):
-        from scripts.api.state_helpers import is_review_stale
-
         import time as t
+
+        from scripts.api.state_helpers import is_review_stale
 
         review = tmp_path / "review.md"
         review.write_text("old review")
@@ -479,9 +475,9 @@ class TestIsReviewStale:
         assert is_review_stale(review, content) is True
 
     def test_not_stale_by_hash_match(self, tmp_path):
-        from scripts.api.state_helpers import is_review_stale
-
         import hashlib
+
+        from scripts.api.state_helpers import is_review_stale
 
         content = tmp_path / "content.md"
         content.write_text("some content")
@@ -670,7 +666,7 @@ class TestScanModulePhases:
                 "validate": {"status": "complete", "ts": "t3"},
             },
         }))
-        furthest, running, latest_ts, audit_status = scan_module_phases(tmp_path, "v5")
+        furthest, running, _latest_ts, audit_status = scan_module_phases(tmp_path, "v5")
         assert furthest == "validate"
         assert running is None
         assert audit_status == "complete"
@@ -706,7 +702,7 @@ class TestScanModulePhases:
         from scripts.api.state_build import scan_module_phases
 
         (tmp_path / "state.json").write_text('{"mode":"v5","phases":{}}')
-        furthest, running, latest_ts, audit_status = scan_module_phases(tmp_path, "v5")
+        furthest, running, _latest_ts, _audit_status = scan_module_phases(tmp_path, "v5")
         assert furthest is None
         assert running is None
 
@@ -796,7 +792,7 @@ class TestCheckFinalReviewHealth:
 
         with patch("scripts.api.state_build.get_final_review_info") as mock_fri:
             mock_fri.return_value = None
-            r, a, att = _check_final_review_health(tmp_path, 1, "test")
+            r, a, _att = _check_final_review_health(tmp_path, 1, "test")
         assert r == 0
         assert a == 0
 
@@ -983,6 +979,59 @@ class TestScanTrackCached:
         entry = _track_cache.get("expired_track")
         assert entry is not None
         assert (time.time() - entry[0]) > 30  # past TTL
+
+
+class TestScanTrackSummaryCached:
+    """scan_track_summary_cached returns cached results within TTL."""
+
+    def test_cache_returns_same_result(self):
+        from scripts.api.dashboard_helpers import _summary_cache, scan_track_summary_cached
+
+        cached_data = {"track_id": "test", "modules": []}
+        _summary_cache["test_summary"] = (time.time(), cached_data)
+        result = scan_track_summary_cached("test_summary", "test_path", [])
+        assert result == cached_data
+
+    def test_expired_cache_is_stale(self):
+        from scripts.api.dashboard_helpers import _summary_cache
+
+        _summary_cache["expired_summary"] = (time.time() - 100, {"old": True})
+        entry = _summary_cache.get("expired_summary")
+        assert entry is not None
+        assert (time.time() - entry[0]) > 60  # past TTL
+
+
+class TestBuildModuleSummary:
+    """build_module_summary returns lightweight module info."""
+
+    def test_missing_module(self, tmp_path):
+        from scripts.api.dashboard_helpers import build_module_summary
+
+        track_dir = tmp_path / "track"
+        track_dir.mkdir()
+        plans_dir = tmp_path / "plans"
+        plans_dir.mkdir()
+
+        result = build_module_summary(track_dir, plans_dir, "test", "nonexistent", 0)
+        assert result["slug"] == "nonexistent"
+        assert result["num"] == 1
+        assert result["status"] == "missing"
+        assert result["pipeline_version"] == "unbuilt"
+        assert result["has_review"] is False
+
+    def test_summary_has_expected_keys(self, tmp_path):
+        from scripts.api.dashboard_helpers import build_module_summary
+
+        track_dir = tmp_path / "track"
+        track_dir.mkdir()
+        plans_dir = tmp_path / "plans"
+        plans_dir.mkdir()
+
+        result = build_module_summary(track_dir, plans_dir, "test", "slug", 2)
+        expected_keys = {"slug", "num", "status", "pipeline_version", "has_review",
+                         "has_final_review", "has_plan_review", "plan_review_verdict"}
+        assert set(result.keys()) == expected_keys
+        assert result["num"] == 3  # idx + 1
 
 
 # ==================== dashboard_comms ====================

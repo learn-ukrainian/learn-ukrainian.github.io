@@ -12,6 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
+
 from .config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -20,7 +21,7 @@ from audit.status_cache import get_source_paths, read_status
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
-from .state_helpers import detect_pipeline_version, parse_v4_phase_status, read_v2_state, read_v4_state, V4_PHASE_ORDER
+from .state_helpers import V4_PHASE_ORDER, detect_pipeline_version, parse_v4_phase_status, read_v2_state, read_v4_state
 
 # Simple TTL cache for scan_track results
 _track_cache: dict[str, tuple[float, dict]] = {}
@@ -250,6 +251,69 @@ def get_orchestration_info(orch_dir: Path) -> dict:
         v4 = read_v4_state(orch_dir)
         info["v4_phases"] = {name: parse_v4_phase_status(v4, name) for name in V4_PHASE_ORDER}
     return info
+
+
+def build_module_summary(track_dir: Path, plans_dir: Path, track_id: str, slug: str, idx: int) -> dict:
+    """Build a lightweight summary for a module — no research, no plan data, no gates detail."""
+    num = idx + 1
+
+    sp = get_source_paths(track_dir, slug) if track_dir.exists() else {}
+    has_md = sp.get("md") and sp["md"].exists() if sp else False
+
+    status_file = track_dir / "status" / f"{slug}.json"
+    result = read_status(status_file, source_paths=sp) if status_file.exists() else None
+
+    overall_status = "missing"
+    if result and result.data:
+        overall_status = result.data.get("overall", {}).get("status", "fail")
+    elif has_md:
+        overall_status = "unaudited"
+
+    orch_dir = track_dir / "orchestration" / slug
+    pipeline_version = detect_pipeline_version(orch_dir) if orch_dir.exists() else "unbuilt"
+    review_info = extract_review_info(track_dir, slug)
+
+    return {
+        "slug": slug, "num": num,
+        "status": overall_status,
+        "pipeline_version": pipeline_version,
+        "has_review": review_info["has_review"],
+        "has_final_review": review_info["has_final_review"],
+        "has_plan_review": review_info["has_plan_review"],
+        "plan_review_verdict": review_info["plan_review_verdict"],
+    }
+
+
+# Simple TTL cache for track summary results
+_summary_cache: dict[str, tuple[float, dict]] = {}
+_SUMMARY_CACHE_TTL = 60.0  # seconds
+
+
+def scan_track_summary_cached(track_id: str, track_path: str, manifest_modules: list) -> dict:
+    """Cached wrapper around scan_track_summary."""
+    entry = _summary_cache.get(track_id)
+    if entry and (time.time() - entry[0]) < _SUMMARY_CACHE_TTL:
+        return entry[1]
+    result = scan_track_summary(track_id, track_path, manifest_modules)
+    _summary_cache[track_id] = (time.time(), result)
+    return result
+
+
+def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -> dict:
+    """Lightweight track scan — only status/badges per module, no research or full detail."""
+    track_dir = CURRICULUM_ROOT / track_path
+    plans_dir = CURRICULUM_ROOT / "plans" / track_id
+
+    modules = [
+        build_module_summary(track_dir, plans_dir, track_id, parse_slug(m_entry), idx)
+        for idx, m_entry in enumerate(manifest_modules)
+    ]
+
+    return {
+        "track_id": track_id, "track_path": track_path,
+        "module_count": len(modules),
+        "modules": modules,
+    }
 
 
 def scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
