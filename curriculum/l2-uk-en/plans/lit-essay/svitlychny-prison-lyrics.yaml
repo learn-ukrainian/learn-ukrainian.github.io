@@ -1,0 +1,66 @@
+module: lit-essay-57
+level: LIT.ESSAY
+sequence: 57
+slug: svitlychny-prison-lyrics
+version: '2.0'
+title: 'Іван Світличний: Табірна лірика і листи'
+subtitle: Ivan Svitlychny — Prison Lyrics and Letters
+focus: literature
+pedagogy: literature
+phase: ESSAY.6 Testimony Prose
+word_target: 5000
+objectives:
+- Проаналізувати табірну лірику Світличного як літературний жанр
+- Дослідити листи з ув'язнення як форму інтелектуального спротиву
+- Зрозуміти Світличного як «невидимого лідера» шістдесятників
+sources:
+- name: Іван Світличний — вибрані твори
+  url: https://www.ukrlib.com.ua/
+  type: primary
+content_outline:
+- section: Вступ та контекст
+  words: 1000
+  points:
+  - Світличний (1929-1992) — літературознавець, дисидент
+  - «Серце для куль і для рим» — поезія з табору
+  - Роль у шістдесятницькому русі — неформальний лідер
+- section: Аналіз ключових творів
+  words: 1200
+  points:
+  - Табірна лірика — поезія в умовах несвободи
+  - Листи до рідних — епістолярна проза
+  - Літературна критика — есеїстика Світличного
+- section: Стилістика та мова автора
+  words: 1200
+  points:
+  - Інтелектуальна ясність у тюремних умовах
+  - Іронія та самоіронія як захисний механізм
+  - Порівняння зі Стусом — два стилі дисидентської поезії
+- section: Деколонізаційна перспектива
+  words: 1000
+  points:
+  - Світличний — доказ існування української інтелектуальної еліти, яку СРСР знищував
+  - Табірна творчість як продовження Розстріляного Відродження
+- section: Підсумок та спадщина
+  words: 800
+  points:
+  - Посмертна публікація та канонізація
+  - Вплив на сучасну правозахисну думку
+vocabulary_hints:
+  required:
+  - дисидент (dissident)
+  - табірна лірика (camp lyrics)
+  - епістолярний (epistolary)
+  recommended:
+  - правозахисний (human rights)
+activity_hints:
+- type: reading
+  focus: Аналіз табірної поезії
+- type: essay-response
+  focus: Порівняння Світличний vs Стус
+- type: critical-analysis
+  focus: Лист як літературна форма
+immersion: 100% Ukrainian
+persona:
+  voice: Senior Specialist
+  role: Dissident Literature Specialist

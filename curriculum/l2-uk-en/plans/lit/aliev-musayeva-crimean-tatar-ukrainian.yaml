@@ -1,0 +1,78 @@
+module: lit-228
+level: LIT
+sequence: 228
+slug: aliev-musayeva-crimean-tatar-ukrainian
+version: '2.0'
+title: 'Алієв і Мусаєва: Кримськотатарські голоси українською'
+subtitle: Aliev and Musayeva — Crimean Tatar Voices in Ukrainian
+focus: literature
+pedagogy: Seminar
+phase: LIT.5 Independence Era 1991-Present
+word_target: 5000
+objectives:
+- Проаналізувати українськомовну творчість кримськотатарських авторів
+- Дослідити книгу «Мустафа Джемілєв. Незламний» як зразок біографічної прози
+- Зрозуміти кримськотатарсько-українську солідарність через літературу
+sources:
+- name: Алієв, Мусаєва — публікації
+  url: https://uk.wikipedia.org/
+  type: primary
+content_outline:
+- section: Вступ та контекст
+  words: 850
+  points:
+  - Кримські татари та українська мова — історичний зв'язок
+  - Алім Алієв — журналіст, активіст, автор
+  - Севгіль Мусаєва — головна редакторка «Української правди»
+- section: '«Мустафа Джемілєв. Незламний»'
+  words: 850
+  points:
+  - Біографія Джемілєва як символ спротиву
+  - Структура книги — документ і наратив
+  - Депортація 1944 та боротьба за повернення
+- section: Публіцистика та журналістика
+  words: 850
+  points:
+  - Мусаєва як голос «Української правди»
+  - Журналістика як літературна форма
+  - Кримське питання в українському медіапросторі
+- section: Мова та стиль
+  words: 850
+  points:
+  - Українська як мова міжетнічної комунікації
+  - Публіцистичний стиль — ясність, аргументація, емоційність
+  - Кримськотатарська лексика в українському тексті
+- section: Деколонізаційний вимір
+  words: 850
+  points:
+  - Кримські татари — корінний народ, не «меншина»
+  - Солідарність проти спільного окупанта
+  - Анексія 2014 як продовження депортації 1944
+- section: Підсумок та рецепція
+  words: 750
+  points:
+  - Роль кримськотатарських авторів у сучасній українській літературі
+  - Деокупація як літературна тема
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - депортація (deportation)
+  - анексія (annexation)
+  - корінний народ (indigenous people)
+  recommended:
+  - солідарність (solidarity)
+  - деокупація (de-occupation)
+activity_hints:
+- type: reading
+  focus: Аналіз уривків «Незламний»
+- type: essay-response
+  focus: Кримськотатарсько-українська літературна взаємодія
+connects_to:
+- lit-213
+prerequisites:
+- lit-200
+persona:
+  voice: Senior Philologist & Critic
+  role: Indigenous Voices Specialist
+module_type: literature
+immersion: 100% Ukrainian

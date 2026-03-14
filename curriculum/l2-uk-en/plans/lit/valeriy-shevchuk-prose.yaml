@@ -1,0 +1,78 @@
+module: lit-223
+level: LIT
+sequence: 223
+slug: valeriy-shevchuk-prose
+version: '2.0'
+title: 'Валерій Шевчук: Три листки за вікном та інша проза'
+subtitle: Valeriy Shevchuk — Three Leaves and Other Prose
+focus: literature
+pedagogy: Seminar
+phase: LIT.4 Resistance and Resilience 1933-1991
+word_target: 5000
+objectives:
+- Проаналізувати ширший прозовий доробок Шевчука — «Три листки за вікном», «Око Прірви»
+- Дослідити готичний містицизм як форму інтелектуального спротиву
+- Порівняти із сучасними наступниками (Виннічук, Іздрик)
+sources:
+- name: Валерій Шевчук — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+content_outline:
+- section: Вступ та контекст
+  words: 850
+  points:
+  - Шевчук-прозаїк — масштаб доробку (60+ книг)
+  - Готична традиція в українській літературі
+  - Порівняння з європейською готикою (Гофман, Потоцький)
+- section: 'Аналіз: «Три листки за вікном»'
+  words: 850
+  points:
+  - Структура та наративні прийоми
+  - Химерна проза як жанр
+  - Фольклорні та містичні мотиви
+- section: 'Аналіз: «Око Прірви» та інші твори'
+  words: 850
+  points:
+  - Філософська проза — екзистенційні питання
+  - Давня Україна як літературний простір
+  - Інтертекстуальність із літописами та хроніками
+- section: Мова та стиль
+  words: 850
+  points:
+  - Архаїзми та неологізми
+  - Ритміка бароковоъ прози
+  - Вплив давньоукраїнської мови
+- section: Деколонізаційний вимір
+  words: 850
+  points:
+  - Шевчук доводить — українська мова здатна на будь-яку інтелектуальну глибину
+  - Альтернатива соцреалізму без відкритого дисидентства
+  - Збереження культурної пам'яті через літературу
+- section: Підсумок та спадщина
+  words: 750
+  points:
+  - Химерна проза як національний жанр
+  - Вплив на сучасну фантастику
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - химерна проза (chimerical prose)
+  - містицизм (mysticism)
+  - притча (parable)
+  recommended:
+  - архаїзм (archaism)
+  - екзистенція (existence)
+activity_hints:
+- type: reading
+  focus: Порівняльний аналіз Шевчука
+- type: essay-response
+  focus: Химерна проза як жанр
+connects_to:
+- lit-222
+prerequisites:
+- lit-222
+persona:
+  voice: Senior Philologist & Critic
+  role: Gothic Literature Specialist
+module_type: literature
+immersion: 100% Ukrainian

@@ -1,0 +1,68 @@
+module: lit-essay-58
+level: LIT.ESSAY
+sequence: 58
+slug: shumuk-memoirs
+version: '2.0'
+title: 'Данило Шумук: Мемуари — УПА та Ґулаг'
+subtitle: Danylo Shumuk — Memoirs of UPA and Gulag
+focus: literature
+pedagogy: literature
+phase: ESSAY.6 Testimony Prose
+word_target: 5000
+objectives:
+- Проаналізувати мемуари Шумука як унікальний документ двох систем терору
+- Дослідити трансформацію автора — від комуніста до борця за незалежність
+- Зрозуміти мемуарну прозу як літературний жанр
+sources:
+- name: Данило Шумук — мемуари
+  url: https://uk.wikipedia.org/
+  type: primary
+content_outline:
+- section: Вступ та контекст
+  words: 1000
+  points:
+  - Шумук (1914-2004) — біографія, ув'язнення, еміграція
+  - 42 роки в ув'язненні — польські, нацистські, радянські тюрми
+  - Мемуари як документ трьох окупацій
+- section: Аналіз ключових творів
+  words: 1200
+  points:
+  - «За східним обрієм» — мемуари з Ґулагу
+  - Трансформація від комуніста до українського патріота
+  - Взаємодія з УПА — документування зсередини
+- section: Стилістика та мова автора
+  words: 1200
+  points:
+  - Простота мови — солдат, не інтелектуал
+  - Документальна точність — дати, імена, місця
+  - Порівняння з Солженіциним — але українською і з іншої перспективи
+- section: Деколонізаційна перспектива
+  words: 1000
+  points:
+  - Шумук — голос «маленької людини» проти трьох імперій
+  - УПА у мемуарах — не ідеалізація, а свідчення
+  - Подвійна окупація Західної України — Польща та СРСР
+- section: Підсумок та спадщина
+  words: 800
+  points:
+  - Шумук як моральний авторитет
+  - Мемуари як історичне джерело
+vocabulary_hints:
+  required:
+  - мемуари (memoirs)
+  - Ґулаг (Gulag)
+  - свідчення (testimony)
+  recommended:
+  - окупація (occupation)
+  - трансформація (transformation)
+activity_hints:
+- type: reading
+  focus: Аналіз мемуарних уривків
+- type: essay-response
+  focus: Мемуари як літературний жанр
+- type: critical-analysis
+  focus: Порівняння перспектив — Шумук vs Стус
+immersion: 100% Ukrainian
+persona:
+  voice: Senior Specialist
+  role: Testimony Literature Specialist

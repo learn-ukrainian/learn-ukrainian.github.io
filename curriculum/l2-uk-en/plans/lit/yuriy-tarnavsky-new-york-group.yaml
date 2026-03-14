@@ -1,0 +1,78 @@
+module: lit-226
+level: LIT
+sequence: 226
+slug: yuriy-tarnavsky-new-york-group
+version: '2.0'
+title: 'Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи'
+subtitle: Yuriy Tarnavsky — New York Group Existentialism
+focus: literature
+pedagogy: Seminar
+phase: LIT.4 Resistance and Resilience 1933-1991
+word_target: 5000
+objectives:
+- Проаналізувати екзистенціалістську прозу та поезію Тарнавського
+- Дослідити урбаністичну тематику як новацію в українській літературі
+- Зрозуміти діалог Тарнавського із західним модернізмом
+sources:
+- name: Юрій Тарнавський — тексти та критика
+  url: https://www.ukrlib.com.ua/
+  type: primary
+content_outline:
+- section: Вступ та контекст
+  words: 850
+  points:
+  - Тарнавський (1934-2025) — біографія, еміграція, повернення
+  - Співзасновник Нью-Йоркської групи
+  - Екзистенціалізм по-українськи — Камю, Сартр, Бекет
+- section: Поезія — «Життя в місті»
+  words: 850
+  points:
+  - Урбанізм — Нью-Йорк як літературний простір
+  - Мінімалізм та конкретна поезія
+  - Порівняння з англомовною поезією (він писав обома мовами)
+- section: '«Без Еспанії» та проза'
+  words: 850
+  points:
+  - Експериментальна проза — потік свідомості
+  - «Три бльондинки і смерть» — абсурдизм
+  - Кіносценарний стиль у прозі
+- section: Мова та стиль
+  words: 850
+  points:
+  - Тарнавський між двома мовами — свідомий вибір української
+  - Вплив англійського синтаксису — благо чи загроза?
+  - Лаконічність проти бароковості (антитеза Шевчуку)
+- section: Деколонізаційний вимір
+  words: 850
+  points:
+  - Українська мова як мова світової літератури
+  - Розрив із провінційністю та «хуторянством»
+  - Діаспора як лабораторія мовних експериментів
+- section: Підсумок та спадщина
+  words: 750
+  points:
+  - Тарнавський у контексті світової літератури
+  - Вплив на сучасну урбаністичну прозу
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - екзистенціалізм (existentialism)
+  - урбанізм (urbanism)
+  - мінімалізм (minimalism)
+  recommended:
+  - конкретна поезія (concrete poetry)
+  - абсурдизм (absurdism)
+activity_hints:
+- type: reading
+  focus: Порівняльний аналіз поезії Тарнавського
+- type: essay-response
+  focus: Урбанізм в українській літературі
+connects_to:
+- lit-225
+prerequisites:
+- lit-225
+persona:
+  voice: Senior Philologist & Critic
+  role: Diaspora Literature Specialist
+module_type: literature
+immersion: 100% Ukrainian

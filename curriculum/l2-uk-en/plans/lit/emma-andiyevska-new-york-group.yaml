@@ -1,0 +1,78 @@
+module: lit-225
+level: LIT
+sequence: 225
+slug: emma-andiyevska-new-york-group
+version: '2.0'
+title: 'Емма Андієвська: Нью-Йоркська група'
+subtitle: Emma Andiyevska — New York Group Surrealism
+focus: literature
+pedagogy: Seminar
+phase: LIT.4 Resistance and Resilience 1933-1991
+word_target: 5000
+objectives:
+- Проаналізувати сюрреалістичну поезію та прозу Андієвської
+- Дослідити Нью-Йоркську групу як діаспорний авангард
+- Зрозуміти як діаспора зберегла експериментальну українську літературу
+sources:
+- name: Емма Андієвська — тексти та критика
+  url: https://www.ukrlib.com.ua/
+  type: primary
+content_outline:
+- section: Вступ та контекст
+  words: 850
+  points:
+  - Нью-Йоркська група — хто, коли, чому
+  - Андієвська (1931-) — біографія, еміграція, творчий шлях
+  - Діаспорний авангард vs радянський соцреалізм
+- section: Поезія Андієвської
+  words: 850
+  points:
+  - Сюрреалізм — образна система, логіка сну
+  - Мовні експерименти — неологізми, звукопис
+  - Сонети та їх трансформація
+- section: '«Роман про добру людину» та проза'
+  words: 850
+  points:
+  - Експериментальна проза — структура та прийоми
+  - «Казка про яян» — дитяча література як філософія
+  - Живопис Андієвської — синтез мистецтв
+- section: Нью-Йоркська група як рух
+  words: 850
+  points:
+  - Тарнавський, Бойчук, Рубчак, Васильківська
+  - Зв'язок із західним модернізмом
+  - Журнал «Нові поезії» — платформа групи
+- section: Деколонізаційний вимір
+  words: 850
+  points:
+  - Діаспора довела — українська мова здатна на авангард
+  - Розрив із «селянським» стереотипом української літератури
+  - Паралельний канон — література, якої не знали в УРСР
+- section: Підсумок та спадщина
+  words: 750
+  points:
+  - Повернення в Україну після 1991 — рецепція
+  - Вплив на Бу-Ба-Бу та постмодернізм
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - сюрреалізм (surrealism)
+  - авангард (avant-garde)
+  - діаспора (diaspora)
+  recommended:
+  - неологізм (neologism)
+  - експеримент (experiment)
+activity_hints:
+- type: reading
+  focus: Поезія Андієвської — аналіз образів
+- type: essay-response
+  focus: Нью-Йоркська група та український авангард
+connects_to:
+- lit-212
+prerequisites:
+- lit-160
+persona:
+  voice: Senior Philologist & Critic
+  role: Diaspora Literature Specialist
+module_type: literature
+immersion: 100% Ukrainian

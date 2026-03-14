@@ -1,0 +1,78 @@
+module: lit-229
+level: LIT
+sequence: 229
+slug: nariman-dzhelyal-publicistics
+version: '2.0'
+title: 'Наріман Джеляль: Листи з ув''язнення'
+subtitle: Nariman Dzhelyal — Letters from Captivity
+focus: literature
+pedagogy: Seminar
+phase: LIT.5 Independence Era 1991-Present
+word_target: 5000
+objectives:
+- Проаналізувати публіцистику Джеляля як зразок літератури опору
+- Дослідити жанр листа з ув'язнення в українській традиції (Стус → Джеляль)
+- Зрозуміти окупацію Криму через голос політв'язня
+sources:
+- name: Наріман Джеляль — публіцистика
+  url: https://uk.wikipedia.org/
+  type: primary
+content_outline:
+- section: Вступ та контекст
+  words: 850
+  points:
+  - Джеляль — заступник голови Меджлісу, журналіст, політв'язень
+  - Арешт 2021 — сфабрикована справа
+  - Традиція листів з ув'язнення — Стус, Світличний, Шумук
+- section: Публіцистика до арешту
+  words: 850
+  points:
+  - Журналістика про права кримських татар
+  - Документування репресій в окупованому Криму
+  - Українська мова як інструмент спротиву
+- section: Листи з ув'язнення
+  words: 850
+  points:
+  - Жанр листа як літературна форма
+  - Порівняння зі Стусом — моральний імператив
+  - Мова та стиль — ясність у неволі
+- section: Кримський контекст
+  words: 850
+  points:
+  - Переслідування Меджлісу після 2014
+  - Політичні в'язні Криму — масштаб репресій
+  - Міжнародна солідарність
+- section: Деколонізаційний вимір
+  words: 850
+  points:
+  - Росія повторює радянську модель — репресії проти корінних народів
+  - Джеляль як сучасний Стус — моральна непохитність
+  - Крим — невід'ємна частина українського літературного простору
+- section: Підсумок та рецепція
+  words: 750
+  points:
+  - Кампанія за звільнення
+  - Роль у формуванні міжнародного дискурсу
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - політв'язень (political prisoner)
+  - Меджліс (Mejlis)
+  - публіцистика (publicistics)
+  recommended:
+  - репресії (repressions)
+  - фабрикація (fabrication)
+activity_hints:
+- type: reading
+  focus: Аналіз листів Джеляля
+- type: essay-response
+  focus: Традиція листів з ув'язнення в українській літературі
+connects_to:
+- lit-228
+prerequisites:
+- lit-228
+persona:
+  voice: Senior Philologist & Critic
+  role: Human Rights Literature Specialist
+module_type: literature
+immersion: 100% Ukrainian
