@@ -3239,7 +3239,8 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
                     d2_template: Path, claude_model: str,
                     review_text: str, review_says_fail: bool,
                     passed: bool, audit_out: str,
-                    plan_adherence_text: str = "") -> bool:
+                    plan_adherence_text: str = "",
+                    d1_fix_note: str = "") -> bool:
     """Run the D2 repair loop after D1 review. Returns True on pass."""
     # Check for citation failures
     _CITATION_FAILURES = ("FABRICATED_CITATIONS", "UNVERIFIED_CITATIONS")
@@ -3289,6 +3290,10 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
     # Inject plan adherence issues (deterministic, HIGH severity)
     if plan_adherence_text:
         fix_plan = plan_adherence_text + "\n\n---\n\n" + fix_plan
+
+    # Tell D2 about already-applied D1 fixes to prevent reversion
+    if d1_fix_note:
+        fix_plan = d1_fix_note + "\n" + fix_plan
 
     for fix_iter in range(MAX_REVIEW_FIX_ITERS):
         total_attempts = 2 + fix_iter
@@ -3444,10 +3449,22 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
         return True
 
     # D2 repair loop
+    # If D1 already applied inline fixes, tell D2 to skip those
+    d1_fix_note = ""
+    if n_d1_fixes > 0:
+        d1_fix_note = (
+            f"\n\n**NOTE: {n_d1_fixes} inline fix(es) from the review "
+            "have ALREADY been applied to the files. Do NOT re-apply "
+            "those fixes. Read the CURRENT file contents carefully — "
+            "they reflect the post-fix state. Only fix issues that "
+            "are still present in the current files.**\n"
+        )
+
     return _review_d2_loop(
         ctx, state, phase, d2_template, claude_model,
         review_text, review_says_fail, passed, audit_out,
         plan_adherence_text=plan_adherence_text,
+        d1_fix_note=d1_fix_note,
     )
 
 

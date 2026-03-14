@@ -11,7 +11,6 @@ from pathlib import Path
 
 from pipeline_lib import ModuleContext, log
 
-
 # ---------------------------------------------------------------------------
 # Module file helpers
 # ---------------------------------------------------------------------------
