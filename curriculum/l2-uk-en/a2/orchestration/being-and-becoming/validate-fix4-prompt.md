@@ -1,9 +1,54 @@
-        # Fix 1 issue(s) in `being-and-becoming`
+        # Fix 10 issue(s) in `being-and-becoming`
 
         ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'хорошою' (f) + 'буду' (f)
-**How to fix:** Change 'хорошою' to match the gender/case of 'буду', or vice versa.
-**Where:** ~line 224
+**What:** Agreement mismatch: 'українська' (f) + 'роботи' (f/p)
+**How to fix:** Change 'українська' to match the gender/case of 'роботи', or vice versa.
+**Where:** ~line 36
+
+### Fix 2: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'професійну' (f) + 'процес' (m)
+**How to fix:** Change 'професійну' to match the gender/case of 'процес', or vice versa.
+**Where:** ~line 36
+
+### Fix 3: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'була' (f) + 'студенткою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'студенткою', or vice versa.
+**Where:** ~line 82
+
+### Fix 4: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'доконане' (n) + 'дієслова' (n/p)
+**How to fix:** Change 'доконане' to match the gender/case of 'дієслова', or vice versa.
+**Where:** ~line 91
+
+### Fix 5: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'жіночу' (f) + 'форми' (f/p)
+**How to fix:** Change 'жіночу' to match the gender/case of 'форми', or vice versa.
+**Where:** ~line 126
+
+### Fix 6: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'сучасної' (f) + 'аспект' (m)
+**How to fix:** Change 'сучасної' to match the gender/case of 'аспект', or vice versa.
+**Where:** ~line 194
+
+### Fix 7: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'жіночий' (m) + 'айтівка' (f)
+**How to fix:** Change 'жіночий' to match the gender/case of 'айтівка', or vice versa.
+**Where:** ~line 194
+
+### Fix 8: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'стала' (f) + 'хорошою' (f)
+**How to fix:** Change 'стала' to match the gender/case of 'хорошою', or vice versa.
+**Where:** ~line 313
+
+### Fix 9: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'українською' (f) + 'плани' (p)
+**How to fix:** Change 'українською' to match the gender/case of 'плани', or vice versa.
+**Where:** ~line 341
+
+### Fix 10: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'теперішній' (f/m) + 'що' (n)
+**How to fix:** Change 'теперішній' to match the gender/case of 'що', or vice versa.
+**Where:** ~line 341
 
 
 

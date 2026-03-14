@@ -1,4 +1,4 @@
-discovered_at: '2026-03-14T00:22:26.687314+00:00'
+discovered_at: '2026-03-14T14:36:15.905824+00:00'
 query_keywords:
 - Lypynsky Letters Brothers
 - історіографія
@@ -15,52 +15,48 @@ query_keywords:
 error: null
 warning: null
 videos:
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.6
+  relevance_note: The video discusses the Polish nobility's connection to Kyivan Rus'
+    and the idea of historical continuity, which aligns with Lypynsky's focus on the
+    role of the Ukrainian gentry (шляхта) in nation-building and the decolonization
+    of historical narratives. While not directly about Lypynsky, it provides relevant
+    contextual understanding.
+  transcript_excerpt: дуже важливо що коли шляхта говорить наші права наші власні
+    права які були не надані польськими королями а лише неми затверджені вони з відтіля
+    вони з Русі вони від тих давніх наших князів
+  embed_suggestion: After section Деколонізаційна перспектива -- The video's themes
+    of historical continuity and national identity through the lens of nobility are
+    highly relevant to Lypynsky's work and the module's decolonization perspective.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.3
+  relevance_note: The video discusses the Tereşchenko family and their suppression
+    during the Soviet era, touching on historiography. While related to Ukrainian
+    history and the term 'історіографія' in the module's vocabulary, it is not directly
+    about Lypynsky or his work.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: Not suitable. The focus is too specific to the Tereşchenko family
+    rather than Lypynsky's 'Letters' or broader historical-political thought relevant
+    to the module.
 - url: https://www.youtube.com/watch?v=cPwiNoy-N5I
   channel: Суспільне Док
   title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
     ТЕРЕЩЕНКІВ | Серія 2'
-  relevance_score: 0.7
-  relevance_note: This video details the rise and influence of the Tereshchenko family,
-    a significant Ukrainian entrepreneurial dynasty. This provides valuable historical
-    context about Ukrainian elites and their role in society, which is highly relevant
-    to understanding the historical and social background that influenced Lypynsky's
-    conservative ideology and his analysis of Ukrainian statehood and national identity.
-    It enriches the module's 'Вступ та контекст' and 'суб'єктність' (agency) themes.
+  relevance_score: 0.1
+  relevance_note: This video focuses on the business and economic history of the Tereşchenko
+    family, which is not relevant to the module's topic of Lypynsky Letters Brothers,
+    their literary contributions, or decolonization themes.
   transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
     часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
     своїм у вищому товаристві.
-  embed_suggestion: After section Вступ та контекст -- provides rich historical context
-    of prominent Ukrainian families and their influence, relevant to understanding
-    the broader historical landscape that shaped Lypynsky's thought.
-- url: https://www.youtube.com/watch?v=qizEIzPxRXc
-  channel: Суспільне Док
-  title: Чому в СРСР рід Терещенків був табуйованим
-  relevance_score: 0.6
-  relevance_note: The video explores the suppression of the Tereshchenko family's
-    legacy by Soviet historiography. This directly ties into the module's 'історіографія'
-    vocabulary and 'Деколонізаційна перспектива' section by demonstrating how Ukrainian
-    historical figures were marginalized, a theme relevant to Lypynsky's work on Ukrainian
-    nation-building.
-  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
-    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
-    викидувала і зневажали.
-  embed_suggestion: After section Деколонізаційна перспектива -- discusses how Soviet
-    historiography suppressed Ukrainian figures, providing a concrete example for
-    decolonization efforts.
-- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
-  channel: Суспільне Культура
-  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
-    Анатолієм Подольським
-  relevance_score: 0.3
-  relevance_note: The video discusses the historiography of World War II, the Holocaust,
-    Holodomor, and Russian crimes. While related to historical narrative and historiography
-    (module vocabulary), its specific focus on 20th-century genocides and contemporary
-    historical challenges is distant from Lypynsky's primary period and works.
-  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
-    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
-    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
-    яка от є складовою українського культури.
-  embed_suggestion: Not applicable -- topic too far removed from Lypynsky's focus.
+  embed_suggestion: Not suitable. The content is unrelated to the module topic.
 - url: https://www.youtube.com/watch?v=aQLb5PaOxWg
   channel: Harvard Ukrainian Research Institute
   title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola

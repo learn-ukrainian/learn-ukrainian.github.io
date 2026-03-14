@@ -1,44 +1,14 @@
-        # Fix 7 issue(s) in `being-and-becoming`
+        # Fix 2 issue(s) in `being-and-becoming`
 
         ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'успішним' (m/n/p) + 'став' (m)
-**How to fix:** Change 'успішним' to match the gender/case of 'став', or vice versa.
-**Where:** ~line 136
+**What:** Agreement mismatch: 'українська' (f) + 'роботу' (f/m)
+**How to fix:** Change 'українська' to match the gender/case of 'роботу', or vice versa.
+**Where:** ~line 36
 
 ### Fix 2: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'була' (f) + 'студенткою' (f)
-**How to fix:** Change 'була' to match the gender/case of 'студенткою', or vice versa.
-**Where:** ~line 230
-
-### Fix 3: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'стала' (f) + 'директоркою' (f)
-**How to fix:** Change 'стала' to match the gender/case of 'директоркою', or vice versa.
-**Where:** ~line 256
-
-### Fix 4: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'задоволена' (f) + 'своїм' (m/n/p)
-**How to fix:** Change 'задоволена' to match the gender/case of 'своїм', or vice versa.
-**Where:** ~line 264
-
-### Fix 5: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'впевнений' (m) + 'що' (n)
-**How to fix:** Change 'впевнений' to match the gender/case of 'що', or vice versa.
-**Where:** ~line 282
-
-### Fix 6: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'була' (f) + 'лікаркою' (f)
-**How to fix:** Change 'була' to match the gender/case of 'лікаркою', or vice versa.
-**Where:** ~line 287
-
-### Fix: Gate `Immersion` FAIL — 34.7% LOW (target 45-65% (A2.1))
-**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
-
-### Other Audit Failures
-
-```
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a2/audit/being-and-becoming-audit.log for details)
-```
+**What:** Agreement mismatch: 'стала' (f) + 'програмісткою' (f)
+**How to fix:** Change 'стала' to match the gender/case of 'програмісткою', or vice versa.
+**Where:** ~line 313
 
 
 

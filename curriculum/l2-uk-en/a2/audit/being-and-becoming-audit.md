@@ -1,7 +1,7 @@
 # Audit Report: M06 — being-and-becoming.md
 **Level:** A2 | **Module:** M06 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-14 12:49:35
+**Generated:** 2026-03-14 16:31:50
 
 ## Configuration
 **Type:** A2-grammar
@@ -19,16 +19,16 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | fill-in | Transform to Past Tense Role | 12 | 8 | ✅ |
-| 2 | fill-in | Choose the Correct Verb Form | 12 | 8 | ✅ |
-| 3 | quiz | Translate the Phrase | 10 | 8 | ✅ |
-| 4 | match-up | Match Person to Profession Form | 10 | 8 | ✅ |
-| 5 | fill-in | Complete the Career Aspiration | 12 | 8 | ✅ |
-| 6 | true-false | Grammar Rules True or False | 8 | 8 | ✅ |
-| 7 | group-sort | Sort Professions by Gender | 8 | 8 | ✅ |
+| 1 | fill-in | From Present to Past | 12 | 8 | ✅ |
+| 2 | fill-in | Career Goals | 12 | 8 | ✅ |
+| 3 | quiz | Who Works As What? | 10 | 8 | ✅ |
+| 4 | match-up | Match the Masculine and Feminine Professions | 10 | 8 | ✅ |
+| 5 | error-correction | Fix the Mistakes | 8 | 6 | ✅ |
+| 6 | true-false | True or False? | 8 | 8 | ✅ |
+| 7 | group-sort | Sort by Gender | 12 | 8 | ✅ |
 | 8 | unjumble | Build the Sentence | 6 | 6 | ✅ |
-| 9 | match-up | Nominative to Instrumental | 10 | 8 | ✅ |
-| 10 | error-correction | Fix the Beginner Mistakes | 6 | 6 | ✅ |
+| 9 | fill-in | Life Goals | 12 | 8 | ✅ |
+| 10 | match-up | Match the Translation | 10 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 10 (target: 10-14) ✅
@@ -38,19 +38,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3525/2000 (raw: 3661)
+- **Words:** ✅ 4443/2000 (raw: 4542)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 19/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 37/1
+- **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.1% (target 45-65% (A2.1))
+- **Immersion:** 🇺🇦 47.3% (target 45-65% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,10 +59,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Being and Becoming** | ✅ | 98 | Included in Core |
-| **Вступ** | ✅ | 586 | Included in Core |
-| **Презентація: Дієслова та відмінювання** | ✅ | 676 | Included in Core |
-| **Соціокультурний контекст: Фемінітиви та IT** | ✅ | 639 | Included in Core |
-| **Практика та запобігання помилкам** | ✅ | 497 | Included in Core |
-| **Діалоги та кар'єрні плани** | ✅ | 920 | Included in Core |
-| **Підсумок** | ✅ | 109 | Included in Core |
+| **Being and Becoming** | ✅ | 60 | Included in Core |
+| **Вступ** | ✅ | 713 | Included in Core |
+| **Презентація: Дієслова та відмінювання** | ✅ | 1099 | Included in Core |
+| **Соціокультурний контекст: Фемінітиви та IT** | ✅ | 647 | Included in Core |
+| **Практика та запобігання помилкам** | ✅ | 645 | Included in Core |
+| **Діалоги та кар'єрні плани** | ✅ | 1032 | Included in Core |
+| **Підсумок** | ✅ | 247 | Included in Core |

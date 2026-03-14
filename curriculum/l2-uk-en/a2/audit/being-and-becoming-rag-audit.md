@@ -1,11 +1,11 @@
 # RAG Verification: being-and-becoming
 
-**Date:** 2026-03-14 11:43 UTC | **Words checked:** 466 | **VESUM coverage:** 456/466 (97.9%)
+**Date:** 2026-03-14 15:27 UTC | **Words checked:** 615 | **VESUM coverage:** 606/615 (98.5%)
 
 ## Summary
-- ✅ Verified (VESUM): 456
-- ⚠️ Partial (RAG only): 6
-- ❌ Not found: 4
+- ✅ Verified (VESUM): 606
+- ⚠️ Partial (RAG only): 3
+- ❌ Not found: 6
 
 ## ❌ Not Found (action required)
 
@@ -13,23 +13,22 @@
 |------|--------|-------|----------|----------|
 | Антон | prose | ✗ | ✗ | ✗ |
 | ею | prose | ✗ | ✗ | ✗ |
+| Олеже | prose | ✗ | ✗ | ✗ |
 | ою | prose | ✗ | ✗ | ✗ |
-| Ірина | prose | ✗ | ✗ | ✗ |
+| ІТ-сфера | prose | ✗ | ✗ | ✗ |
+| ІТ-центр | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
 | Анна | prose | ✗ | ✓ | ✗ |
-| Марія | prose | ✗ | ✓ | ✗ |
-| Олег | prose | ✗ | ✓ | ✗ |
 | Олена | prose | ✗ | ✓ | ✗ |
-| Петро | prose | ✗ | ✓ | ✗ |
-| Іван | prose | ✗ | ✓ | ✗ |
+| ІТ | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 436 | 426 | 4 |
-| Activities (.yaml) | 30 | 30 | 0 |
+| Prose (.md) | 559 | 550 | 6 |
+| Activities (.yaml) | 56 | 56 | 0 |

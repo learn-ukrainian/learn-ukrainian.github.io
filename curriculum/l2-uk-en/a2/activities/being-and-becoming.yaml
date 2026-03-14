@@ -1,377 +1,387 @@
 - type: fill-in
-  title: "Transform to Past Tense Role"
-  instruction: "Change the present identity into a past role. Watch the case endings!"
+  title: "From Present to Past"
+  instruction: "Complete the sentence with the correct past tense form."
   items:
-    - sentence: "Він лікар. → Він був ___."
-      answer: "лікарем"
-      options: ["лікарем", "лікаркою", "лікар", "лікарі"]
-    - sentence: "Вона вчителька. → Вона була ___."
-      answer: "вчителькою"
-      options: ["вчителькою", "вчителем", "вчителька", "вчительки"]
-    - sentence: "Я студент. → Я був ___."
-      answer: "студентом"
-      options: ["студентом", "студенткою", "студент", "студенти"]
-    - sentence: "Я студентка. → Я була ___."
-      answer: "студенткою"
-      options: ["студенткою", "студентом", "студентка", "студентки"]
-    - sentence: "Він інженер. → Він був ___."
-      answer: "інженером"
-      options: ["інженером", "інженеркою", "інженер", "інженери"]
-    - sentence: "Вона економістка. → Вона була ___."
-      answer: "економісткою"
-      options: ["економісткою", "економістом", "економістка", "економістки"]
-    - sentence: "Він спеціаліст. → Він був ___."
+    - sentence: "Зараз він програміст, а раніше він був ___."
+      answer: "програмістом"
+      options: ["програмістом", "програміст", "програмісту", "програмісти"]
+    - sentence: "Зараз вона лікарка, а раніше вона була ___."
+      answer: "лікаркою"
+      options: ["лікарка", "лікаркою", "лікарки", "лікарку"]
+    - sentence: "Зараз він вчитель, а раніше він був ___."
+      answer: "вчителем"
+      options: ["вчитель", "вчителем", "вчителю", "вчителі"]
+    - sentence: "Зараз вона інженерка, а раніше вона була ___."
+      answer: "інженеркою"
+      options: ["інженерка", "інженеркою", "інженерки", "інженерку"]
+    - sentence: "Зараз він юрист, а раніше він був ___."
+      answer: "юристом"
+      options: ["юристом", "юрист", "юристу", "юристи"]
+    - sentence: "Зараз вона менеджерка, а раніше вона була ___."
+      answer: "менеджеркою"
+      options: ["менеджерка", "менеджеркою", "менеджерки", "менеджерку"]
+    - sentence: "Зараз він економіст, а раніше він був ___."
+      answer: "економістом"
+      options: ["економістом", "економіст", "економісту", "економісти"]
+    - sentence: "Зараз вона журналістка, а раніше вона була ___."
+      answer: "журналісткою"
+      options: ["журналістка", "журналісткою", "журналістки", "журналістку"]
+    - sentence: "Зараз він директор, а раніше він був ___."
+      answer: "директором"
+      options: ["директором", "директор", "директору", "директори"]
+    - sentence: "Зараз вона дизайнерка, а раніше вона була ___."
+      answer: "дизайнеркою"
+      options: ["дизайнерка", "дизайнеркою", "дизайнерки", "дизайнерку"]
+    - sentence: "Зараз він спеціаліст, а раніше він був ___."
       answer: "спеціалістом"
-      options: ["спеціалістом", "спеціалісткою", "спеціаліст", "спеціалісти"]
-    - sentence: "Вона юристка. → Вона була ___."
-      answer: "юристкою"
-      options: ["юристкою", "юристом", "юристка", "юристки"]
-    - sentence: "Він менеджер. → Він був ___."
-      answer: "менеджером"
-      options: ["менеджером", "менеджеркою", "менеджер", "менеджери"]
-    - sentence: "Вона директорка. → Вона була ___."
-      answer: "директоркою"
-      options: ["директоркою", "директором", "директорка", "директорки"]
-    - sentence: "Він журналіст. → Він був ___."
-      answer: "журналістом"
-      options: ["журналістом", "журналісткою", "журналіст", "журналісти"]
-    - sentence: "Вона програмістка. → Вона була ___."
-      answer: "програмісткою"
-      options: ["програмісткою", "програмістом", "програмістка", "програмістки"]
+      options: ["спеціалістом", "спеціаліст", "спеціалісту", "спеціалісти"]
+    - sentence: "Зараз вона архітекторка, а раніше вона була ___."
+      answer: "архітекторкою"
+      options: ["архітекторка", "архітекторкою", "архітекторки", "архітекторку"]
 
 - type: fill-in
-  title: "Choose the Correct Verb Form"
-  instruction: "Complete the sentence with the correct form of бути or стати."
+  title: "Career Goals"
+  instruction: "Complete the sentence with the correct instrumental form."
   items:
-    - sentence: "Він хоче ___ інженером."
-      answer: "стати"
-      options: ["стати", "став", "стала", "стаєш"]
-    - sentence: "Вона мріє стати ___."
-      answer: "програмісткою"
-      options: ["програмісткою", "програмістом", "програмістка", "програмістки"]
-    - sentence: "Я хочу ___ кращим."
-      answer: "ставати"
-      options: ["ставати", "стаєш", "стає", "стають"]
-    - sentence: "Мій друг ___ спеціалістом."
-      answer: "став"
-      options: ["став", "стала", "стали", "стаю"]
-    - sentence: "Вона ___ директоркою."
-      answer: "стала"
-      options: ["стала", "став", "стали", "стає"]
-    - sentence: "Я ___ лікарем."
-      answer: "буду"
-      options: ["буду", "буде", "будемо", "будуть"]
-    - sentence: "Ми ___ інженерами."
-      answer: "будемо"
-      options: ["будемо", "буду", "буде", "будуть"]
-    - sentence: "Вони ___ економістами."
-      answer: "були"
-      options: ["були", "був", "була", "було"]
-    - sentence: "Він ___ тестувальником."
-      answer: "став"
-      options: ["став", "стала", "стали", "стає"]
-    - sentence: "Вона ___ офіціанткою."
-      answer: "була"
-      options: ["була", "був", "були", "було"]
-    - sentence: "Ти ___ програмістом."
-      answer: "будеш"
-      options: ["будеш", "буду", "буде", "будуть"]
-    - sentence: "Вони хочуть ___ айтішниками."
-      answer: "стати"
-      options: ["стати", "став", "стала", "стають"]
+    - sentence: "Він дуже хоче стати ___."
+      answer: "айтішником"
+      options: ["айтішником", "айтішник", "айтішники", "айтішнику"]
+    - sentence: "Моя сестра буде ___ в школі."
+      answer: "вчителькою"
+      options: ["вчителька", "вчителькою", "вчительки", "вчительку"]
+    - sentence: "Я мрію бути ___."
+      answer: "громадянином"
+      options: ["громадянин", "громадянином", "громадянину", "громадяни"]
+    - sentence: "Вона стала головною ___."
+      answer: "директоркою"
+      options: ["директорка", "директоркою", "директорки", "директорку"]
+    - sentence: "Ти хочеш працювати ___?"
+      answer: "програмістом"
+      options: ["програміст", "програмістом", "програмісти", "програмісту"]
+    - sentence: "Він став відомим ___."
+      answer: "юристом"
+      options: ["юрист", "юристом", "юристи", "юристу"]
+    - sentence: "Вона довго ставала хорошою ___."
+      answer: "лікаркою"
+      options: ["лікарка", "лікаркою", "лікарки", "лікарку"]
+    - sentence: "Мій брат хоче стати ___ на заводі."
+      answer: "інженером"
+      options: ["інженером", "інженер", "інженери", "інженеру"]
+    - sentence: "Вона мріє стати відомою ___."
+      answer: "журналісткою"
+      options: ["журналістка", "журналісткою", "журналістки", "журналістку"]
+    - sentence: "Він хоче працювати ___."
+      answer: "економістом"
+      options: ["економіст", "економістом", "економісти", "економісту"]
+    - sentence: "Моя подруга стала ___."
+      answer: "менеджеркою"
+      options: ["менеджерка", "менеджеркою", "менеджерки", "менеджерку"]
+    - sentence: "Його друг нещодавно став ___."
+      answer: "тестувальником"
+      options: ["тестувальник", "тестувальником", "тестувальники", "тестувальнику"]
 
 - type: quiz
-  title: "Translate the Phrase"
-  instruction: "Choose the correct Ukrainian translation."
+  title: "Who Works As What?"
+  instruction: "Choose the correct profession based on the description."
   items:
-    - question: "How do you say: 'He works as a manager'?"
-      explanation: "Use працювати directly with the instrumental case. Do not use 'як'."
+    - question: "She works in a school and loves children. Ким вона працює?"
+      explanation: "Вчителька works in a school."
       options:
-        - text: "Він працює менеджером."
+        - text: "Вчителькою"
           correct: true
-        - text: "Він працює як менеджер."
+        - text: "Інженеркою"
           correct: false
-        - text: "Він працює менеджер."
+        - text: "Юристкою"
           correct: false
-        - text: "Він працює менеджеркою."
+        - text: "Айтішницею"
           correct: false
-    - question: "How do you say: 'She works as a lawyer'?"
-      explanation: "Use the feminine feminitive in the instrumental case."
+    - question: "He works with computers in a tech company. Ким він працює?"
+      explanation: "Програміст works with computers."
       options:
-        - text: "Вона працює юристкою."
+        - text: "Програмістом"
           correct: true
-        - text: "Вона працює юристом."
+        - text: "Лікарем"
           correct: false
-        - text: "Вона працює як юристка."
+        - text: "Вчителем"
           correct: false
-        - text: "Вона працює юристка."
+        - text: "Журналістом"
           correct: false
-    - question: "How do you say: 'I work as a programmer (masculine)'?"
-      explanation: "Use the masculine instrumental case without 'як'."
+    - question: "She works in a hospital and helps people. Ким вона працює?"
+      explanation: "Лікарка works in a hospital."
       options:
-        - text: "Я працюю програмістом."
+        - text: "Лікаркою"
           correct: true
-        - text: "Я працюю як програміст."
+        - text: "Економісткою"
           correct: false
-        - text: "Я працює програмістом."
+        - text: "Менеджеркою"
           correct: false
-        - text: "Я працюю програмісткою."
+        - text: "Директоркою"
           correct: false
-    - question: "How do you say: 'You work as a journalist (masculine)'?"
-      explanation: "Use the masculine instrumental case without 'як'."
+    - question: "He writes articles for a newspaper. Ким він працює?"
+      explanation: "Журналіст writes for a newspaper."
       options:
-        - text: "Ти працюєш журналістом."
+        - text: "Журналістом"
           correct: true
-        - text: "Ти працюєш як журналіст."
+        - text: "Програмістом"
           correct: false
-        - text: "Ти працюєш журналісткою."
+        - text: "Інженером"
           correct: false
-        - text: "Ти працює журналістом."
+        - text: "Юристом"
           correct: false
-    - question: "How do you say: 'We work as engineers'?"
-      explanation: "Use the plural instrumental case."
+    - question: "She leads a big company. Ким вона працює?"
+      explanation: "Директорка leads a company."
       options:
-        - text: "Ми працюємо інженерами."
+        - text: "Директоркою"
           correct: true
-        - text: "Ми працюємо інженер."
+        - text: "Вчителькою"
           correct: false
-        - text: "Ми працюєте інженерами."
+        - text: "Лікаркою"
           correct: false
-        - text: "Ми працюємо як інженери."
+        - text: "Студенткою"
           correct: false
-    - question: "How do you say: 'He works as an IT professional'?"
-      explanation: "Use the masculine instrumental case for the colloquial term."
+    - question: "He works in a bank with money. Ким він працює?"
+      explanation: "Економіст works with economics and money."
       options:
-        - text: "Він працює айтішником."
+        - text: "Економістом"
           correct: true
-        - text: "Він працює айтішницею."
+        - text: "Айтішником"
           correct: false
-        - text: "Він працює як айтішник."
+        - text: "Лікарем"
           correct: false
-        - text: "Він працюєш айтішником."
+        - text: "Журналістом"
           correct: false
-    - question: "How do you say: 'She works as an IT professional'?"
-      explanation: "Use the feminine instrumental case for the colloquial term."
+    - question: "She helps people with the law. Ким вона працює?"
+      explanation: "Юристка works with the law."
       options:
-        - text: "Вона працює айтішницею."
+        - text: "Юристкою"
           correct: true
-        - text: "Вона працює айтішником."
+        - text: "Спеціалісткою"
           correct: false
-        - text: "Вона працює як айтішниця."
+        - text: "Програмісткою"
           correct: false
-        - text: "Вона працюєш айтішницею."
+        - text: "Інженеркою"
           correct: false
-    - question: "How do you say: 'He works as a doctor'?"
-      explanation: "Use the masculine instrumental case without 'як'."
+    - question: "He designs machines at a factory. Ким він працює?"
+      explanation: "Інженер designs machines."
       options:
-        - text: "Він працює лікарем."
+        - text: "Інженером"
           correct: true
-        - text: "Він працює як лікар."
+        - text: "Юристом"
           correct: false
-        - text: "Він працює лікаркою."
+        - text: "Вчителем"
           correct: false
-        - text: "Він працює лікарі."
+        - text: "Менеджером"
           correct: false
-    - question: "How do you say: 'He became a tester'?"
-      explanation: "Use стати with the instrumental case."
+    - question: "She manages a team in a big office. Ким вона працює?"
+      explanation: "Менеджерка manages a team."
       options:
-        - text: "Він став тестувальником."
+        - text: "Менеджеркою"
           correct: true
-        - text: "Він став тестувальник."
+        - text: "Вчителькою"
           correct: false
-        - text: "Він стала тестувальником."
+        - text: "Журналісткою"
           correct: false
-        - text: "Він став як тестувальник."
+        - text: "Лікаркою"
           correct: false
-    - question: "How do you say: 'She was a waitress'?"
-      explanation: "Use була with the feminine instrumental case."
+    - question: "He tests software and finds bugs. Ким він працює?"
+      explanation: "Тестувальник tests software."
       options:
-        - text: "Вона була офіціанткою."
+        - text: "Тестувальником"
           correct: true
-        - text: "Вона була офіціантом."
+        - text: "Інженером"
           correct: false
-        - text: "Вона була офіціантка."
+        - text: "Економістом"
           correct: false
-        - text: "Вона був офіціанткою."
+        - text: "Директором"
           correct: false
 
 - type: match-up
-  title: "Match Person to Profession Form"
-  instruction: "Match the starting phrase with the grammatically correct profession ending."
-  pairs:
-    - left: "Вона працює (teacher)"
-      right: "вчителькою"
-    - left: "Він працює (teacher)"
-      right: "вчителем"
-    - left: "Вона буде (doctor)"
-      right: "лікаркою"
-    - left: "Він буде (doctor)"
-      right: "лікарем"
-    - left: "Вона стала (IT professional)"
-      right: "айтішницею"
-    - left: "Він став (IT professional)"
-      right: "айтішником"
-    - left: "Вона була (manager)"
-      right: "менеджеркою"
-    - left: "Він був (manager)"
-      right: "менеджером"
-    - left: "Вона стала (tester)"
-      right: "тестувальницею"
-    - left: "Він був (waiter)"
-      right: "офіціантом"
-
-- type: fill-in
-  title: "Complete the Career Aspiration"
-  instruction: "Fill in the blanks with the correct verbs or nouns."
-  items:
-    - sentence: "Вона мріє стати ___ України."
-      answer: "громадянкою"
-      options: ["громадянкою", "громадянином", "громадянка", "громадяни"]
-    - sentence: "Мій брат ___ стати програмістом."
-      answer: "хоче"
-      options: ["хоче", "хочу", "хочеш", "хочуть"]
-    - sentence: "Моя сестра працює ___."
-      answer: "програмісткою"
-      options: ["програмісткою", "програмістом", "програмістка", "програмістки"]
-    - sentence: "Вони працюють ___."
-      answer: "айтішниками"
-      options: ["айтішниками", "айтішником", "айтішниця", "айтішники"]
-    - sentence: "Він став ___ України."
-      answer: "громадянином"
-      options: ["громадянином", "громадянкою", "громадянин", "громадяни"]
-    - sentence: "Вона ___ стати директоркою."
-      answer: "хоче"
-      options: ["хоче", "хочу", "хочеш", "хочуть"]
-    - sentence: "Він дуже хоче ___ лікарем."
-      answer: "бути"
-      options: ["бути", "буду", "буде", "будеш"]
-    - sentence: "Я мрію ___ лікаркою."
-      answer: "стати"
-      options: ["стати", "став", "стала", "стають"]
-    - sentence: "Раніше він працював ___."
-      answer: "офіціантом"
-      options: ["офіціантом", "офіціанткою", "офіціант", "офіціанти"]
-    - sentence: "Вона стала ___."
-      answer: "тестувальницею"
-      options: ["тестувальницею", "тестувальником", "тестувальниця", "тестувальники"]
-    - sentence: "Ми всі хочемо стати ___."
-      answer: "спеціалістами"
-      options: ["спеціалістами", "спеціалістом", "спеціалісти", "спеціаліст"]
-    - sentence: "Він мріє ___ журналістом."
-      answer: "стати"
-      options: ["стати", "став", "стала", "стають"]
-
-- type: true-false
-  title: "Grammar Rules True or False"
-  instruction: "Decide if the statement about Ukrainian grammar is correct."
-  items:
-    - statement: "You should use the word 'як' to say 'work as' (e.g., працювати як менеджер)."
-      correct: false
-      explanation: "Never use 'як' with працювати. Just use the instrumental case."
-    - statement: "Present tense identity uses the nominative case."
-      correct: true
-      explanation: "Yes, 'Я лікар' uses the dictionary form (nominative)."
-    - statement: "Past tense roles with 'бути' use the instrumental case."
-      correct: true
-      explanation: "Yes, 'Він був студентом' uses the instrumental case."
-    - statement: "Вона працює лікаркою is the grammatically correct way to say 'She works as a doctor'."
-      correct: true
-      explanation: "It correctly uses 'працювати' with the feminine instrumental form."
-    - statement: "The word 'програміст' is only used for women."
-      correct: false
-      explanation: "Програміст is masculine. The feminine form is програмістка."
-    - statement: "Він хоче стати інженер is grammatically correct."
-      correct: false
-      explanation: "It must be 'інженером' because 'стати' requires the instrumental case."
-    - statement: "The word 'директорка' is a modern feminitive form."
-      correct: true
-      explanation: "Yes, it is the officially recognized feminine form of директор."
-    - statement: "The instrumental case answers the question 'ким?'."
-      correct: true
-      explanation: "Yes, 'Ким ти працюєш?' means 'Who do you work as?'"
-
-- type: group-sort
-  title: "Sort Professions by Gender"
-  instruction: "Group the professions into masculine and feminine forms."
-  groups:
-    - name: "Masculine"
-      items: ["лікар", "вчитель", "програміст", "айтішник"]
-    - name: "Feminine"
-      items: ["лікарка", "вчителька", "програмістка", "айтішниця"]
-
-- type: unjumble
-  title: "Build the Sentence"
-  instruction: "Put the words in the correct order to form a natural sentence."
-  items:
-    - words: ["Він", "хоче", "стати", "інженером"]
-      answer: "Він хоче стати інженером"
-    - words: ["Зараз", "вона", "працює", "успішною", "юристкою"]
-      answer: "Зараз вона працює успішною юристкою"
-    - words: ["Тепер", "я", "працюю", "програмістом", "у компанії"]
-      answer: "Тепер я працюю програмістом у компанії"
-    - words: ["Вона", "мріє", "стати", "програмісткою"]
-      answer: "Вона мріє стати програмісткою"
-    - words: ["Минулого", "року", "він", "був", "студентом"]
-      answer: "Минулого року він був студентом"
-    - words: ["Сьогодні", "ми", "разом", "працюємо", "інженерами"]
-      answer: "Сьогодні ми разом працюємо інженерами"
-
-- type: match-up
-  title: "Nominative to Instrumental"
-  instruction: "Match the dictionary form to its instrumental form."
+  title: "Match the Masculine and Feminine Professions"
+  instruction: "Find the matching feminine form for each masculine profession."
   pairs:
     - left: "лікар"
-      right: "лікарем"
-    - left: "лікарка"
-      right: "лікаркою"
+      right: "лікарка"
     - left: "вчитель"
-      right: "вчителем"
-    - left: "вчителька"
-      right: "вчителькою"
+      right: "вчителька"
+    - left: "програміст"
+      right: "програмістка"
+    - left: "айтішник"
+      right: "айтішниця"
     - left: "інженер"
-      right: "інженером"
-    - left: "менеджерка"
-      right: "менеджеркою"
+      right: "інженерка"
     - left: "журналіст"
-      right: "журналістом"
-    - left: "програмістка"
-      right: "програмісткою"
-    - left: "офіціант"
-      right: "офіціантом"
-    - left: "тестувальник"
-      right: "тестувальником"
+      right: "журналістка"
+    - left: "юрист"
+      right: "юристка"
+    - left: "менеджер"
+      right: "менеджерка"
+    - left: "директор"
+      right: "директорка"
+    - left: "економіст"
+      right: "економістка"
 
 - type: error-correction
-  title: "Fix the Beginner Mistakes"
-  instruction: "Find the grammatical error and choose the correct word to replace it."
+  title: "Fix the Mistakes"
+  instruction: "Correct the common mistakes in these sentences."
   items:
     - sentence: "Він хоче бути лікар."
       error: "лікар"
       answer: "лікарем"
-      options: ["лікарем", "лікарка", "лікарі", "лікаря"]
-      explanation: "Use the instrumental case after 'бути'."
-    - sentence: "Вона стала менеджер."
-      error: "менеджер"
+      options: ["лікарем", "лікарю", "лікарі", "лікаря"]
+      explanation: "The verb 'бути' in the past/future takes the instrumental case."
+    - sentence: "Вона працює як менеджерка."
+      error: "як менеджерка"
       answer: "менеджеркою"
-      options: ["менеджеркою", "менеджера", "менеджери", "менеджеру"]
-      explanation: "Use the feminine instrumental case."
+      options: ["менеджеркою", "як менеджеркою", "менеджера", "менеджером"]
+      explanation: "The verb 'працювати' takes the instrumental case directly. Do not use 'як'."
     - sentence: "Вона хороший лікар."
-      error: "лікар"
-      answer: "лікарка"
-      options: ["лікарка", "лікарем", "лікаркою", "лікарі"]
-      explanation: "Match the gender for present identity."
-    - sentence: "Ти працюєш директор."
-      error: "директор"
-      answer: "директором"
-      options: ["директором", "директорка", "директори", "директору"]
-      explanation: "Use the instrumental case with 'працюєш'."
-    - sentence: "Він працює вчителькою."
-      error: "вчителькою"
-      answer: "вчителем"
-      options: ["вчителем", "вчителька", "вчитель", "вчителі"]
-      explanation: "Match the masculine gender."
-    - sentence: "Він буде економісткою."
-      error: "економісткою"
-      answer: "економістом"
-      options: ["економістом", "економіст", "економістці", "економістка"]
-      explanation: "Match the masculine gender."
+      error: "хороший лікар"
+      answer: "хороша лікарка"
+      options: ["хороша лікарка", "хорошою лікаркою", "хорошій лікарці", "хорошу лікарку"]
+      explanation: "Make sure both the adjective and the noun match the feminine gender."
+    - sentence: "Раніше він був студент."
+      error: "студент"
+      answer: "студентом"
+      options: ["студентом", "студенту", "студенти", "студента"]
+      explanation: "The past tense of 'бути' requires the instrumental case."
+    - sentence: "Я хочу стати інженер."
+      error: "інженер"
+      answer: "інженером"
+      options: ["інженером", "інженеру", "інженери", "інженера"]
+      explanation: "The verb 'стати' takes the instrumental case."
+    - sentence: "Вона працювала як вчителька."
+      error: "як вчителька"
+      answer: "вчителькою"
+      options: ["вчителькою", "як вчителькою", "вчителю", "вчителя"]
+      explanation: "Do not use 'як' with 'працювати'."
+    - sentence: "Він хороший директорка."
+      error: "хороший директорка"
+      answer: "хороший директор"
+      options: ["хороший директор", "хорошим директором", "хороша директорка", "хорошою директоркою"]
+      explanation: "Match the masculine gender for 'він'."
+    - sentence: "Моя сестра працює як юристка."
+      error: "як юристка"
+      answer: "юристкою"
+      options: ["юристкою", "як юристкою", "юриста", "юристом"]
+      explanation: "Drop 'як' and use the instrumental case."
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Read the sentence and decide if the grammar and logic are correct."
+  items:
+    - statement: "Він працює лікарем у лікарні."
+      correct: true
+      explanation: "Correct grammar and logic."
+    - statement: "Вона хоче стати програміст."
+      correct: false
+      explanation: "Incorrect case. It should be 'програмістом' or 'програмісткою'."
+    - statement: "Я працюю як менеджер в офісі."
+      correct: false
+      explanation: "Incorrect. Drop 'як' and use 'менеджером'."
+    - statement: "Вона була студенткою."
+      correct: true
+      explanation: "Correct past tense and instrumental case."
+    - statement: "Мій брат працює айтішницею."
+      correct: false
+      explanation: "Gender mismatch. 'Брат' is masculine, so it should be 'айтішником'."
+    - statement: "Вона дуже хороша директорка."
+      correct: true
+      explanation: "Correct use of a feminine profession and adjective."
+    - statement: "Ти будеш вчитель?"
+      correct: false
+      explanation: "Future tense of 'бути' requires the instrumental case 'вчителем'."
+    - statement: "Вона мріє стати громадянкою України."
+      correct: true
+      explanation: "Correct grammar and use of the instrumental case."
+
+- type: group-sort
+  title: "Sort by Gender"
+  instruction: "Sort the professions into masculine and feminine forms."
+  groups:
+    - name: "Masculine"
+      items: ["програміст", "вчитель", "директор", "лікар", "айтішник", "громадянин"]
+    - name: "Feminine"
+      items: ["програмістка", "вчителька", "директорка", "лікарка", "айтішниця", "громадянка"]
+
+- type: unjumble
+  title: "Build the Sentence"
+  instruction: "Put the words in the correct order."
+  items:
+    - words: ["Він", "працює", "айтішником", "у", "Києві"]
+      answer: "Він працює айтішником у Києві"
+    - words: ["Вона", "хоче", "стати", "відомою", "журналісткою"]
+      answer: "Вона хоче стати відомою журналісткою"
+    - words: ["Мій", "брат", "був", "хорошим", "студентом"]
+      answer: "Мій брат був хорошим студентом"
+    - words: ["Я", "буду", "працювати", "головним", "інженером"]
+      answer: "Я буду працювати головним інженером"
+    - words: ["Вона", "мріє", "стати", "громадянкою", "України"]
+      answer: "Вона мріє стати громадянкою України"
+    - words: ["Ти", "хочеш", "працювати", "новим", "директором"]
+      answer: "Ти хочеш працювати новим директором"
+
+- type: fill-in
+  title: "Life Goals"
+  instruction: "Complete the sentence with the correct verb."
+  items:
+    - sentence: "Я хочу ___ лікарем."
+      answer: "стати"
+      options: ["стати", "став", "стала", "стали"]
+    - sentence: "Вона мріє ___ громадянкою України."
+      answer: "стати"
+      options: ["стати", "стала", "став", "стали"]
+    - sentence: "Він довго ___ кращим програмістом."
+      answer: "ставав"
+      options: ["ставав", "ставала", "ставали", "ставати"]
+    - sentence: "Я ___ працювати вчителькою."
+      answer: "буду"
+      options: ["буду", "буде", "будеш", "будуть"]
+    - sentence: "Раніше вона ___ студенткою."
+      answer: "була"
+      options: ["була", "був", "були", "бути"]
+    - sentence: "Кожного дня ти повинен ___ кращим."
+      answer: "ставати"
+      options: ["ставати", "ставав", "ставала", "ставали"]
+    - sentence: "Вони ___ відомими журналістами."
+      answer: "стали"
+      options: ["стали", "став", "стала", "стати"]
+    - sentence: "Ми ___ працювати юристами."
+      answer: "будемо"
+      options: ["будемо", "буду", "будуть", "буде"]
+    - sentence: "Він ___ хорошим спеціалістом."
+      answer: "став"
+      options: ["став", "стала", "стали", "стати"]
+    - sentence: "Вона ___ працювати айтішницею."
+      answer: "почала"
+      options: ["почала", "почав", "почали", "почати"]
+    - sentence: "Ти ___ лікарем у лікарні."
+      answer: "будеш"
+      options: ["будеш", "буду", "буде", "будуть"]
+    - sentence: "Вони ___ студентами."
+      answer: "були"
+      options: ["були", "був", "була", "бути"]
+
+- type: match-up
+  title: "Match the Translation"
+  instruction: "Match the English profession to its Ukrainian translation."
+  pairs:
+    - left: "doctor (masculine)"
+      right: "лікар"
+    - left: "teacher (feminine)"
+      right: "вчителька"
+    - left: "programmer (masculine)"
+      right: "програміст"
+    - left: "IT professional (feminine)"
+      right: "айтішниця"
+    - left: "lawyer (masculine)"
+      right: "юрист"
+    - left: "manager (feminine)"
+      right: "менеджерка"
+    - left: "citizen (masculine)"
+      right: "громадянин"
+    - left: "engineer (feminine)"
+      right: "інженерка"
+    - left: "director (masculine)"
+      right: "директор"
+    - left: "economist (feminine)"
+      right: "економістка"

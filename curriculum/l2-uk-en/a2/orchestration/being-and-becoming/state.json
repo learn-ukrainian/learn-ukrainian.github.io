@@ -23,7 +23,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-14T11:16:45Z",
+      "ts": "2026-03-14T14:43:17Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -32,7 +32,7 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-14T11:16:45Z",
+      "ts": "2026-03-14T14:43:17Z",
       "note": "extracted-from-full-build",
       "executor": {
         "type": "llm",
@@ -41,10 +41,9 @@
       }
     },
     "validate": {
-      "status": "failed",
-      "ts": "2026-03-14T11:31:41Z",
+      "status": "complete",
+      "ts": "2026-03-14T15:15:12Z",
       "attempts": 5,
-      "note": "dedup-prompt-bug:constraint-conflict-dative",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -52,10 +51,10 @@
       }
     },
     "review": {
-      "status": "failed",
-      "ts": "2026-03-14T11:43:45Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
+      "status": "complete",
+      "ts": "2026-03-14T15:27:26Z",
+      "attempts": 3,
+      "note": "fix-iter2",
       "executor": {
         "type": "llm",
         "agent": "claude",
@@ -64,5 +63,5 @@
     }
   },
   "_immersion_regenerated": true,
-  "last_updated": "2026-03-14T10:25:01Z"
+  "last_updated": "2026-03-14T14:37:38Z"
 }

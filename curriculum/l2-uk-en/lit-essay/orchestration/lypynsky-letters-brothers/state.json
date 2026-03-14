@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-14T00:23:12Z",
+      "ts": "2026-03-14T14:37:02Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-14T00:23:12Z",
+      "ts": "2026-03-14T14:37:02Z",
       "task_id": "v5-lypynsky-letters-brothers-pA",
       "mode": "full",
       "executor": {

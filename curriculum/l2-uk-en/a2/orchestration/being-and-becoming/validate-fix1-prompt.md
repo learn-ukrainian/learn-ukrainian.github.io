@@ -1,90 +1,99 @@
-        # Fix 17 issue(s) in `being-and-becoming`
+        # Fix 18 issue(s) in `being-and-becoming`
 
         ### Fix 1: RUSSICISM_OR_NONSTANDARD
 **What:** Non-standard form 'айтішник' — prefer: айтівець
 **How to fix:** Replace 'айтішник' with 'айтівець'
-**Where:** ~line 94
+**Where:** ~line 120
 
 ### Fix 2: RUSSICISM_OR_NONSTANDARD
 **What:** Non-standard form 'айтішниця' — prefer: айтівка
 **How to fix:** Replace 'айтішниця' with 'айтівка'
-**Where:** ~line 94
+**Where:** ~line 120
 
 ### Fix 3: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'стала' (f) + 'лікаркою' (f)
-**How to fix:** Change 'стала' to match the gender/case of 'лікаркою', or vice versa.
-**Where:** ~line 33
+**What:** Agreement mismatch: 'була' (f) + 'студенткою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'студенткою', or vice versa.
+**Where:** ~line 56
 
 ### Fix 4: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'минулого' (m/n) + 'лікаркою' (f)
-**How to fix:** Change 'минулого' to match the gender/case of 'лікаркою', or vice versa.
-**Where:** ~line 33
+**What:** Agreement mismatch: 'стала' (f) + 'відомою' (f)
+**How to fix:** Change 'стала' to match the gender/case of 'відомою', or vice versa.
+**Where:** ~line 66
 
 ### Fix 5: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'була' (f) + 'вчителькою' (f)
-**How to fix:** Change 'була' to match the gender/case of 'вчителькою', or vice versa.
-**Where:** ~line 42
+**What:** Agreement mismatch: 'хорошим' (m/n/p) + 'стану' (m)
+**How to fix:** Change 'хорошим' to match the gender/case of 'стану', or vice versa.
+**Where:** ~line 70
 
 ### Fix 6: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'стала' (f) + 'директоркою' (f)
-**How to fix:** Change 'стала' to match the gender/case of 'директоркою', or vice versa.
-**Where:** ~line 52
+**What:** Agreement mismatch: 'минулого' (m/n) + 'юристом' (m)
+**How to fix:** Change 'минулого' to match the gender/case of 'юристом', or vice versa.
+**Where:** ~line 100
 
 ### Fix 7: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'велике' (n) + 'Київ' (p)
-**How to fix:** Change 'велике' to match the gender/case of 'Київ', or vice versa.
-**Where:** ~line 111
+**What:** Agreement mismatch: 'хорошим' (m/n/p) + 'став' (m)
+**How to fix:** Change 'хорошим' to match the gender/case of 'став', or vice versa.
+**Where:** ~line 128
 
 ### Fix 8: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'великого' (m/n) + 'директоркою' (f)
-**How to fix:** Change 'великого' to match the gender/case of 'директоркою', or vice versa.
-**Where:** ~line 111
+**What:** Agreement mismatch: 'стала' (f) + 'інженеркою' (f)
+**How to fix:** Change 'стала' to match the gender/case of 'інженеркою', or vice versa.
+**Where:** ~line 146
 
 ### Fix 9: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'стала' (f) + 'вчителькою' (f)
-**How to fix:** Change 'стала' to match the gender/case of 'вчителькою', or vice versa.
-**Where:** ~line 123
+**What:** Agreement mismatch: 'була' (f) + 'хорошою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'хорошою', or vice versa.
+**Where:** ~line 158
 
 ### Fix 10: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'стала' (f) + 'менеджеркою' (f)
-**How to fix:** Change 'стала' to match the gender/case of 'менеджеркою', or vice versa.
-**Where:** ~line 130
+**What:** Agreement mismatch: 'була' (f) + 'відомою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'відомою', or vice versa.
+**Where:** ~line 172
 
 ### Fix 11: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'була' (f) + 'журналісткою' (f)
-**How to fix:** Change 'була' to match the gender/case of 'журналісткою', or vice versa.
-**Where:** ~line 147
+**What:** Agreement mismatch: 'новий' (m) + 'Ви' (p)
+**How to fix:** Change 'новий' to match the gender/case of 'Ви', or vice versa.
+**Where:** ~line 184
 
 ### Fix 12: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'відомим' (m/n/p) + 'став' (m)
-**How to fix:** Change 'відомим' to match the gender/case of 'став', or vice versa.
-**Where:** ~line 181
+**What:** Agreement mismatch: 'була' (f) + 'простою' (f/m)
+**How to fix:** Change 'була' to match the gender/case of 'простою', or vice versa.
+**Where:** ~line 218
 
-### Fix 13: ACTIVITY_VESUM_FAIL
-**What:** Activity answers contain VESUM-failed words: Олег
-**How to fix:** Fix spelling or replace these words — students will practice non-existent forms.
-**Where:** being-and-becoming.yaml
+### Fix 13: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'стала' (f) + 'програмісткою' (f)
+**How to fix:** Change 'стала' to match the gender/case of 'програмісткою', or vice versa.
+**Where:** ~line 218
 
-### Fix: Gate `Immersion` FAIL — 31.3% LOW (target 45-65% (A2.1))
-**Action:** Add more Ukrainian-language content blocks. Convert some English explanations to Ukrainian with English glosses.
+### Fix 14: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'наступного' (m/n) + 'України' (f)
+**How to fix:** Change 'наступного' to match the gender/case of 'України', or vice versa.
+**Where:** ~line 218
 
-### Fix 15: PEDAGOGICAL_VIOLATION
-**What:** [METALANGUAGE] Metalanguage terms used but not in vocabulary: орудний
-**How to fix:** Add these grammar terms to vocabulary with translations, or use English equivalents.
+### Fix 15: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'була' (f) + 'лікаркою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'лікаркою', or vice versa.
+**Where:** ~line 242
 
-### Fix 16: PEDAGOGICAL_VIOLATION
-**What:** [CONTENT_REDUNDANCY] Redundant information detected in lesson (71% overlap): "→ He works as a journalist.)
-**How to fix:** Remove redundant paragraphs. Ensure each section adds new unique value.
+### Fix: Gate `Immersion` FAIL — 29.4% LOW (target 45-65% (A2.1))
+**⚠ SCOPE WARNING:** Immersion gap is 16% (29.4% → 45% min). This is too large for a fix pass. Focus on the EASIEST wins:
+1. Add Ukrainian section headers with English in parentheses
+2. Add 'Наприклад:' / 'Порівняйте:' before example blocks
+3. Add short Ukrainian phrases with (translations) in existing paragraphs
+Do NOT rewrite entire sections. Target +5-8% improvement max.
 
 ### Fix 17: PEDAGOGICAL_VIOLATION
-**What:** [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'how do...'.
-**How to fix:** Vary sentence structure.
+**What:** [METALANGUAGE] Metalanguage terms used but not in vocabulary: називний, орудний
+**How to fix:** Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+### Fix 18: PEDAGOGICAL_VIOLATION
+**What:** [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): "- **Мій син хоче стати програмістом.** — My son wants to become a programmer.". Shares significant keywords with sentence at index 13.
+**How to fix:** Remove redundant paragraphs. Ensure each section adds new unique value.
 
 ### Other Audit Failures
 
 ```
-❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (71% overlap): "→ He works as a journalist.)
-❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'how do...'.
+❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): "- **Мій син хоче стати програмістом.** — My son wants to become a programmer.". Shares significant keywords with sentence at index 13.
 ❌ AUDIT FAILED: Transliteration detected: 'Вступ (Introduction)'. Remove Latin in parentheses.
 📚 PEDAGOGICAL VIOLATIONS FOUND:
 ❌ AUDIT FAILED. Correct errors before proceeding.

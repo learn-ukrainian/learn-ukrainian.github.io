@@ -63,13 +63,13 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Encouraging Cultural Guide, acting as Life Coach
-Word count:       3090 / 2000 (154.5%)
+Word count:       4415 / 2000 (220.8%)
 Activities:       10
-Vocabulary items: 31
-Engagement boxes: 4
-Immersion:        45.3% (target: 45-65%)
-Richness:         82% (threshold: 95%)
-Richness gaps:    engagement: 3/5, cultural: 1/3, tables: 0/2
+Vocabulary items: 29
+Engagement boxes: 19
+Immersion:        47.2% (target: 45-65%)
+Richness:         84% (threshold: 95%)
+Richness gaps:    cultural: 0/3, tables: 0/2
 Audit status:     PASS
 ```
 
@@ -92,10 +92,7 @@ Audit status:     PASS
 The following issues were detected by automated regex-based scanners BEFORE your review.
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
-1. **[AGREEMENT_ERROR]** (severity: HIGH)
-   Location: ~line 224
-   Text: Agreement mismatch: 'хорошою' (f) + 'стану' (m)
-   Fix: Change 'хорошою' to match the gender/case of 'стану', or vice versa.
+(No deterministic issues found -- D.0 pre-screen clean)
 
 ---
 
@@ -103,19 +100,18 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 424 | **VESUM coverage:** 414/424 (97.6%)
+**Words checked:** 600 | **VESUM coverage:** 591/600 (98.5%)
 
-**❌ Not found in VESUM or textbooks (10):**
+**❌ Not found in VESUM or textbooks (9):**
 - `Анна` (source: prose)
 - `Антон` (source: prose)
 - `ею` (source: prose)
-- `Марія` (source: prose)
-- `Олег` (source: prose)
+- `Олеже` (source: prose)
 - `Олена` (source: prose)
 - `ою` (source: prose)
-- `Петро` (source: prose)
-- `Іван` (source: prose)
-- `Ірина` (source: prose)
+- `ІТ` (source: prose)
+- `ІТ-сфера` (source: prose)
+- `ІТ-центр` (source: prose)
 
 **Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.
 

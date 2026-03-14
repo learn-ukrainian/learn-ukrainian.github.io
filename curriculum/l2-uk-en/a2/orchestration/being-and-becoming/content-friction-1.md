@@ -1,7 +1,7 @@
 **Phase**: Full Build (Content + Activities + Vocabulary)
-**Step**: Complete build
+**Step**: Structuring the content blocks and formatting activities.
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Expanded content from 1200 words to over 2000 words to strictly hit the minimum floor target. Ensured 4 callout boxes, 10 activities, and exact required H2 headers.
+**Self-Correction**: Expanded English grammar scaffolding around word behaviors and meticulously matched exact strings to schema constraints for `error-correction` and `true-false` fields to prevent YAML parse errors.
 **Proposed Tooling Fix**: N/A
-**RAG Tools Used**: `search_text` (found authentic dialogue starters "Ким ти мрієш стати?"), `verify_words` (verified all profession cases and "громадянином" against VESUM).
+**RAG Tools Used**: mcp_rag_search_text (investigating profession-oriented exercises), mcp_rag_verify_words (batch checking exact noun morphology), mcp_rag_verify_lemma (confirming instrumental forms for femininitives).

@@ -178,15 +178,31 @@ Write **Being and Becoming** for the a2 track.
 - EXACT H2 titles from the outline below — missing/renamed sections fail validation
 - **MUST end with a `# Підсумок` section** containing a brief recap and 3-4 self-check questions with English translations
 
-## REQUIRED H2 Sections (use EXACT titles)
+## REQUIRED H2 Sections and Points (MANDATORY)
 
-Your output MUST use these EXACT H2 headings — do NOT rephrase, translate differently, or add creative subtitles. The audit will reject any section with a different title.
+Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says *айтішник*, use *айтішник*, not a synonym).
 
 - `## Вступ (Introduction)` (~325 words)
+  - Concept of role vs identity — distinguish Present Tense Identity (Nom. - *Я лікар*) vs. Role/Function/Process (Instr. - *Я буду лікарем*) — focus: State Standard §4.2.2.5.1: 'Без прийменника: характеристика особи за професією чи статусом'
+  - Explicit English explanation of the logic behind 'Identity (Nom) vs Function (Instr)' to provide scaffolding for A2.1 learners as suggested in research notes
+  - The 'Nominative Trap' warning — explain L1 interference where learners say *Він хоче бути лікар* instead of the correct Instrumental *лікарем* (English 'to be a doctor' influence)
 - `## Презентація: Дієслова та відмінювання (Presentation: Verbs and Governing)` (~475 words)
+  - 'бути' + instrumental (Past/Future) — key high-frequency collocations: *був студентом*, *буде лікарем*; distinguish from Present Tense null-copula + Nominative
+  - 'стати/ставати' + instrumental (Change of State) — teaching *хоче стати...* constructions; mention formal *програмувальник* vs. universally used *програміст*
+  - 'працювати' + instrumental (Current Role) — explicit focus on the 'Work as' calque error: explain that *працює як менеджер* is incorrect and must be *працює менеджером*
+  - Introduction of primary profession vocabulary: *лікар*, *вчитель*, *інженер*, *програміст*, *журналіст*, *юрист* with their instrumental forms
 - `## Соціокультурний контекст: Фемінітиви та IT (Sociocultural Context: Femininitives and IT)` (~400 words)
+  - The 2020 Grammar Reform: Official status of femininitives (*директорка*, *менеджерка*, *філологиня*) reflecting modern Ukrainian societal shifts towards gender equality
+  - IT Industry Prestige: Discussing Ukraine as a European IT hub; teaching the high-prestige *програміст* alongside the ubiquitous colloquialism *айтішник*
+  - Usage note: Consistent use of both masculine and feminine forms for all profession examples to reflect contemporary linguistic standards
 - `## Практика та запобігання помилкам (Practice and Error Prevention)` (~400 words)
+  - Transformation drills (Present Identity to Past/Future Role) focusing on the shift from Nominative to Instrumental case endings
+  - Addressing Gender Mismatch: Drilling agreement between gendered person nouns and professions (e.g., correcting *Вона хороший лікар* to *Вона хороша лікарка*)
+  - Correction of translation calques: Exercises specifically designed to root out the use of 'як' after the verb *працювати*
 - `## Діалоги та кар'єрні плани (Dialogues and Career Plans)` (~400 words)
+  - 'What do you do?' conversations — modeling natural modern usage in IT and professional contexts (*працюю айтішником*, *став тестувальником*)
+  - Career history scenarios: Describing past roles (*був офіціантом*) and future aspirations (*мрію стати громадянкою України*) as per State Standard examples
+  - Synthesis activity: Learners describe their path of 'being and becoming' using the full range of grammar and vocabulary introduced
 - `## Підсумок` (~150 words) — recap + 3-4 self-check questions
 
 ### Section Word Budgets
@@ -199,6 +215,18 @@ Your output MUST use these EXACT H2 headings — do NOT rephrase, translate diff
 | Практика та запобігання помилкам (Practice and Error Prevention) | 400 |
 | Діалоги та кар'єрні плани (Dialogues and Career Plans) | 400 |
 | **Total** | **2000** |
+
+### Beginner Lesson Arc (MANDATORY structure)
+
+Every beginner module follows this arc — the review scores you on it:
+
+1. **WELCOME** — warm greeting, set context ("Today you'll learn how to talk about professions")
+2. **PREVIEW** — explicit "By the end of this module, you'll be able to..." (sets expectations)
+3. **PRESENT** — the main content sections (from the outline)
+4. **PRACTICE** — examples, dialogues, reading practice blocks
+5. **CELEBRATE** — in the Summary, explicitly tell learners what they can now do ("You can now describe your career in Ukrainian!")
+
+Missing PREVIEW or CELEBRATE = review score penalty.
 
 ### Writing Style
 
