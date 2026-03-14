@@ -9,19 +9,15 @@ import subprocess
 from pathlib import Path
 
 import yaml
-
+from assess_research_helpers import (
+    BOLD,
+    RESET,
+    _build_refresh_queue,
+    _build_upgrade_queue,
+)
 from research_quality import (
     assess_research_compat,
     find_research_path,
-)
-
-from assess_research_helpers import (
-    _build_refresh_queue,
-    _build_upgrade_queue,
-    _colored,
-    BOLD,
-    DIM,
-    RESET,
 )
 
 
@@ -57,7 +53,7 @@ def _upgrade_single_module(
             track_id, str(num), "--force-phase", "research", "--rebuild",
         ]
         try:
-            result = subprocess.run(cmd, timeout=600)
+            result = subprocess.run(cmd, timeout=900)
             if result.returncode == 0:
                 rp = find_research_path(track_dir, slug)
                 if rp:
@@ -83,7 +79,7 @@ def _upgrade_single_module(
                 print(f"  Attempt {attempt}: {BOLD}\033[31mFAIL (exit {result.returncode}){RESET}")
                 return False, attempts_used, last_score
         except subprocess.TimeoutExpired:
-            print(f"  Attempt {attempt}: {BOLD}\033[31mTIMEOUT (10min){RESET}")
+            print(f"  Attempt {attempt}: {BOLD}\033[31mTIMEOUT (15min){RESET}")
             return False, attempts_used, last_score
 
     return False, attempts_used, last_score
@@ -169,7 +165,7 @@ def _process_refresh_queue(track_id: str, results: list[dict], scripts_dir: Path
             track_id, str(num), "--refresh",
         ]
         try:
-            result = subprocess.run(cmd, timeout=600)
+            result = subprocess.run(cmd, timeout=900)
             if result.returncode == 0:
                 passed += 1
                 print(f"  {BOLD}\033[32mPASS{RESET}")
@@ -178,7 +174,7 @@ def _process_refresh_queue(track_id: str, results: list[dict], scripts_dir: Path
                 print(f"  {BOLD}\033[31mFAIL (exit {result.returncode}){RESET}")
         except subprocess.TimeoutExpired:
             failed += 1
-            print(f"  {BOLD}\033[31mTIMEOUT (10min){RESET}")
+            print(f"  {BOLD}\033[31mTIMEOUT (15min){RESET}")
         except KeyboardInterrupt:
             print(f"\n\nInterrupted after {i-1}/{total} modules ({passed} passed, {failed} failed)")
             return
