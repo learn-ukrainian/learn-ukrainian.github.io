@@ -92,6 +92,7 @@ MAX_REVIEW_FIX_ITERS = 2
 # Dispatch timeouts (seconds)
 TIMEOUT_CONTENT = 600
 TIMEOUT_CONTENT_SELFAUDIT = 1200  # 20 min: generate + audit + fix in one session
+TIMEOUT_RESEARCH = 900  # 15 min: research involves many RAG tool calls
 TIMEOUT_ACTIVITIES = 600
 TIMEOUT_FIX = 600
 TIMEOUT_REVIEW = 900
@@ -1834,7 +1835,7 @@ def _dispatch_research(ctx: ModuleContext, prompt_file: Path,
         _dispatch_prompt(ctx, prompt_file),
         task_id=f"v5-{ctx.slug}-pA",
         model=ctx.model, stdout_only=True, output_file=output_file,
-        timeout=TIMEOUT_CONTENT,
+        timeout=TIMEOUT_RESEARCH,
     )
     if raw_output:
         (ctx.orch_dir / "research-output.md").write_text(raw_output, "utf-8")
