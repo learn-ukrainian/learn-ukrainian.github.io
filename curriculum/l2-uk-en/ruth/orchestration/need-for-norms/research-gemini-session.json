@@ -1,0 +1,632 @@
+{
+  "sessionId": "c4fe07aa-30e1-4bfa-846e-fedd94817c9e",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:31:10.429Z",
+  "lastUpdated": "2026-03-14T01:33:19.876Z",
+  "messages": [
+    {
+      "id": "002efde3-ce03-4ca4-9a81-5f05cb6c42ee",
+      "timestamp": "2026-03-14T01:31:10.429Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-049\nlevel: RUTH\nsequence: 49\nslug: need-for-norms\nversion: '2.0'\ntitle: Потреба норм\nsubtitle: The Need for Norms\nfocus: Why codify? The Latin challenge\nphase: 2\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to The Need for Norms\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Language Standardizer\nprerequisites:\n- comparative-lab-parallel\nconnects_to:\n- orthography-letters\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Потреба норм** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Потреба норм\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Потреба норм\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "f37046d2-ca23-4432-bd84-ce8514adff39",
+      "timestamp": "2026-03-14T01:31:22.746Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "\\n\\n\n\nI am now focusing on how best to move forward with the task. I'm exploring the most efficient method to achieve the next step. I'm considering different approaches to ensure I stay on track.",
+          "timestamp": "2026-03-14T01:31:15.476Z"
+        },
+        {
+          "subject": "Pinpointing Key Sources",
+          "description": "\\n\\n\n\nMy current strategy is to pinpoint relevant sources. Specifically, I plan to leverage tools to uncover scholarly literature and primary sources. The goal is to gather materials directly related to Ruthenian language codification and the influence of Latin, ensuring I can form a comprehensive understanding.",
+          "timestamp": "2026-03-14T01:31:19.609Z"
+        },
+        {
+          "subject": "Initiating Wikipedia Queries",
+          "description": "\\n\\n\n\nMy current effort involves gathering initial information through Wikipedia. I've formulated specific queries to explore the Ruthenian language, key grammarians like Smotrytsky, and other relevant figures. The objective is to establish a solid foundation of information for the subsequent research steps.",
+          "timestamp": "2026-03-14T01:31:22.619Z"
+        }
+      ],
+      "tokens": {
+        "input": 20467,
+        "output": 19,
+        "cached": 3375,
+        "thoughts": 622,
+        "tool": 0,
+        "total": 21108
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773451882743_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Проста мова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773451882743_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Проста мова\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D1%81%D1%82%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0\n\nПроста мова іноді також згадується як старобілоруська книжна мова, староукраїнська книжна мова та канцелярська штучна мова - штучна мова для письма, що виникла на території Великого Королівства Литовського та Речі Посполитої шляхом додавання до церковнослов'янської елементів польської, російської, білоруської, української та інших мов. Використовувалася з початку 16 ст. й до середини 18 ст. Схожа на язичіє, яким користувалися москвофіли Західної України з середини 19 ст. й до початку 19 ст."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:22.775Z",
+          "resultDisplay": "# Проста мова\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D1%81%D1%82%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0\n\nПроста мова іноді також згадується як старобілоруська книжна мова, староукраїнська книжна мова та канцелярська штучна мова - штучна мова для письма, що виникла на території Великого Королівства Литовського та Речі Посполитої шляхом додавання до церковнослов'янської елементів польської, російської, білоруської, української та інших мов. Використовувалася з початку 16 ст. й до середини 18 ст. Схожа на язичіє, яким користувалися москвофіли Західної України з середини 19 ст. й до початку 19 ст.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "fc6f0c9b-fed3-4e7d-9e79-9430ef73f85c",
+      "timestamp": "2026-03-14T01:31:32.046Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Process",
+          "description": "I'm focused on moving forward with the project. I've formulated a strategy for taking the next action. My current thought is to ensure I'm aligned for the upcoming step.",
+          "timestamp": "2026-03-14T01:31:28.140Z"
+        },
+        {
+          "subject": "Gathering Historical Context",
+          "description": "I'm now prioritizing the historical context to solidify the groundwork. I'll utilize resources to delve deeper into the codification of the language, paying close attention to the influence of Latin and Polish. I plan to refine the query to capture the specific historical context I need for the next phase.",
+          "timestamp": "2026-03-14T01:31:31.737Z"
+        }
+      ],
+      "tokens": {
+        "input": 20727,
+        "output": 77,
+        "cached": 0,
+        "thoughts": 291,
+        "tool": 0,
+        "total": 21095
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773451891930_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Граматика словенська (1619)"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773451891930_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Граматика словенська (1619)'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:36.566Z",
+          "resultDisplay": "Wikipedia article not found: 'Граматика словенська (1619)'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773451892005_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Смотрицький Мелетій",
+            "mode": "summary"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773451892005_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Мелетій Смотрицький\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D0%B9_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9\n\nМеле́тій Смотри́цький, також відомий як Максим Герасимович Смотрицький — письменник, церковний і освітній діяч Речі Посполитої, український мовознавець, праці якого вплинули на розвиток східнослов'янських мов. Автор відомої свого часу в цілій Європі «Граматики слов'янської» (1619), що систематизувала церковнослов'янську мову."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:36.566Z",
+          "resultDisplay": "# Мелетій Смотрицький\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D0%B9_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9\n\nМеле́тій Смотри́цький, також відомий як Максим Герасимович Смотрицький — письменник, церковний і освітній діяч Речі Посполитої, український мовознавець, праці якого вплинули на розвиток східнослов'янських мов. Автор відомої свого часу в цілій Європі «Граматики слов'янської» (1619), що систематизувала церковнослов'янську мову.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773451892045_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Граматика словенськая (Ужевич)"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773451892045_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Граматика словенськая (Ужевич)'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:36.566Z",
+          "resultDisplay": "Wikipedia article not found: 'Граматика словенськая (Ужевич)'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "017ed008-7ab2-41e0-a719-cbc71d5c1f37",
+      "timestamp": "2026-03-14T01:31:42.419Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the Next Steps",
+          "description": "I am now focusing on determining how to advance the task. I'm exploring the best approach to proceed, and considering the information I have obtained so far. My priority is to figure out the optimal path for moving forward and achieving the desired outcome.",
+          "timestamp": "2026-03-14T01:31:40.729Z"
+        },
+        {
+          "subject": "Commencing the Search",
+          "description": "I'm initiating the search for relevant content now. My aim is to locate specific information and quotes, using my available resources. The next step is to examine and organize the gathered data.",
+          "timestamp": "2026-03-14T01:31:42.244Z"
+        }
+      ],
+      "tokens": {
+        "input": 21097,
+        "output": 60,
+        "cached": 19310,
+        "thoughts": 114,
+        "tool": 0,
+        "total": 21271
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773451902334_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Граматика словенська",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773451902334_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Граматика словенська' — 5 results\n\n1. **Граматика Мелетія Смотрицького** — «Наукова думка» (Пам&#039;ятки української мови), 1979. (у PDF форматі) Граматика словенська: додаток [Архівовано 8 червня 2019 у Wayback Machine.] / Підготовка\n2. **Словенська мова** — У Вікісловнику є сторінка словенська мова. Слове́нська мо́ва (словен. slovenski jezik) — слов&#039;янська мова, належить до групи південних слов&#039;янських мов\n3. **Лаврентій Зизаній** — словенскаго. — В., 1596. Граматика словенська. — В., 1596: Граматика словенська. — В., 1596. Лаврентій Зизаній. Граматика словенська. К., 1980 [Архівовано\n4. **Граматики української мови** —  В кн.: Зизаній Л. Граматика словенська. К., 1980; Розвиток мовознавства в УРСР. 1967—1977. К., 1980; Східнослов&#039;янські граматики XVI—XVII ст. К., 1982;\n5. **Прийменниковий відмінок** — але його частіше називають «першим непрямим». Лаврентій Зизаній. Граматика словенська. — Ізборник. — С. 30. Архів оригіналу за 22 березня 2017. Процитовано"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:45.934Z",
+          "resultDisplay": "Wikipedia search: 'Граматика словенська' — 5 results\n\n1. **Граматика Мелетія Смотрицького** — «Наукова думка» (Пам&#039;ятки української мови), 1979. (у PDF форматі) Граматика словенська: додаток [Архівовано 8 червня 2019 у Wayback Machine.] / Підготовка\n2. **Словенська мова** — У Вікісловнику є сторінка словенська мова. Слове́нська мо́ва (словен. slovenski jezik) — слов&#039;янська мова, належить до групи південних слов&#039;янських мов\n3. **Лаврентій Зизаній** — словенскаго. — В., 1596. Граматика словенська. — В., 1596: Граматика словенська. — В., 1596. Лаврентій Зизаній. Граматика словенська. К., 1980 [Архівовано\n4. **Граматики української мови** —  В кн.: Зизаній Л. Граматика словенська. К., 1980; Розвиток мовознавства в УРСР. 1967—1977. К., 1980; Східнослов&#039;янські граматики XVI—XVII ст. К., 1982;\n5. **Прийменниковий відмінок** — але його частіше називають «першим непрямим». Лаврентій Зизаній. Граматика словенська. — Ізборник. — С. 30. Архів оригіналу за 22 березня 2017. Процитовано",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773451902377_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Іван Ужевич"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773451902377_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Ужевич Іван Петрович\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%A3%D0%B6%D0%B5%D0%B2%D0%B8%D1%87_%D0%86%D0%B2%D0%B0%D0%BD_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87\n\nІва́н Петро́вич Уже́вич — український мовознавець XVII сторіччя. Навчався у Краківському (1637—41/42) та Паризькому університетах. Автор латиномовної «Граматики словенської» (1643) — першої ранньомодерної граматики староукраїнської мови. Також склав панегірик з нагоди одруження Олександра Пшеленцького з Євою Рупньовською (1641)."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:45.934Z",
+          "resultDisplay": "# Ужевич Іван Петрович\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%A3%D0%B6%D0%B5%D0%B2%D0%B8%D1%87_%D0%86%D0%B2%D0%B0%D0%BD_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87\n\nІва́н Петро́вич Уже́вич — український мовознавець XVII сторіччя. Навчався у Краківському (1637—41/42) та Паризькому університетах. Автор латиномовної «Граматики словенської» (1643) — першої ранньомодерної граматики староукраїнської мови. Також склав панегірик з нагоди одруження Олександра Пшеленцького з Євою Рупньовською (1641).",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773451902417_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Граматика словенська"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773451902417_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Граматика словенська\"\n\n### Result 1 (score: 0.6508)\n- **Work**: Українська мова — Енциклопедія (2004)\n- **Author**: Русанівський В.М. та ін.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `1af78606_c0033`\n- **Text**:\nДо 1-ї чверті 19 ст. «Грамматіка...» С. була осн.\r\nпідручником церковнослов’ян. мови, він витримав багато видань. На його основі\r\nукладено анонімну «Грамматїку или писменницу языка Словеньского», надр. 1638 в\r\nм. Крем’янці (тепер Терноп. обл.). Певний вплив С. помітний і на кн.\r\n«Грамматыка словенская» Івана Ужевича (1643), анонімній граматиці, надр. 1773 в\r\nПочаєві, церковнослов’ян. «Грамматіці» Я. Блоницького (1763), а також на\r\n«Грамматиці» А. Коцака (1778), праці «Grammatica slavo-ruthena» М\n\n### Result 2 (score: 0.6362)\n- **Work**: Іван Ужевич — Граматика слов'янська (1643/1645) (1645)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `c32c00be_c0001`\n- **Text**:\nсторінка 54.\n\nсторінка 55.\n\nсторінка 56.\n\nсторінка 57.\n\nсторінка 58.\n\nсторінка 59.\n\nсторінка 60.\n\nсторінка 61.\n\nсторінка 62.\n\nсторінка 63.\n\nсторінка 64.\n\nсторінка 65.\n\nсторінка 66.\n\nсторінка 67.\n\nсторінка 68.\n\nсторінка 69.\n\nсторінка 70.\n\nсторінка 71.\n\nсторінка 72.\n\nсторінка 73.\n\nсторінка 74.\n\nсторінка 75.\n\nсторінка 76.\n\nсторінка 77.\n\nсторінка 78.\n\nсторінка 79.\n\nсторінка 80.\n\nсторінка 81.\n\nсторінка 82.\n\nсторінка 83.\n\nсторінка 84.\n\nсторінка 85.\n\nсторінка 86.\n\nДив. також:\n\nІван Федорович. Буквар (Л\n\n### Result 3 (score: 0.6359)\n- **Work**: Дзюба, Павленко — Літопис культурного життя X-XVII ст. (2001)\n- **Author**: Дзюба О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e0892426_c0273`\n- **Text**:\nГраматика («Грамматіка словенска») Лаврентія Зизанія\r\nскладається з трьох частин: орфографії, просодії,— етимології. Виклад\r\nпобудовано у формі запитань та відповідей. У першій частині — орфографії —\r\nназвані церковнослов'янські «письмена» — літери, які розділені на голосні та\r\nприголосні. У розділі про просодію викладаються правила вживання просодійних\r\nзнаків (наголосів). Найповніша частина — етимологія (морфологія), в якій дана\r\nхарактеристика традиційних «восьми частин мови» — іменника, прик\n\n### Result 4 (score: 0.6350)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0034`\n- **Text**:\n\"Граматика\" М.Смотрицького була покликана\r\nзміцнити норми церковнослов’янської мови. Автор писав у передмові, зверненій\r\nнасамперед до вчителів шкіл: \"ВЂдаєтє абовЂмъ, которыи стє сА ґрєцкои\r\nлюбъ латїнскои гра/м/матїки худозству учили што ωна єсть ку понАтю ıак\r\nıазыка чистости такъ и правогω а сочинногω вєдлугь власности\r\nдїалєктовъ и мовєнА и писанА, и писмъ вырозуменА. ВшєлАкїй пожитокъ который\r\nко/л/вєкъ прєрєчоныхъ ıазыкωвъ rpa/м/матїки чинити звыклы,\r\nбе/з/вонтпєнА и СлавєнскаА въ своємъ \n\n### Result 5 (score: 0.6350)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0135`\n- **Text**:\nГраматикою староукраїнської мови була «Граматика\r\nсловенская» І. Ужевича. Правда, це рукописна праця, написана до того ж у\r\nПарижі. Відома вона в двох варіантах: перший з них, написаний латинською мовою\r\nв 1643 р., зберігається тепер в Національній бібліотеці в Парижі, другий,\r\nнаписаний тією ж мовою в 1645 р., знаходиться в бібліотеці м. Арраса на півночі\r\nФранції. Видані вони тільки в 1970 р. стараннями І.К. Білодіда та Є.М.\r\nКудрицького 1. Текст пам’ятки доводить, що І. Ужевич був знайомий з\r\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:45.934Z",
+          "resultDisplay": "Found 5 results for: \"Граматика словенська\"\n\n### Result 1 (score: 0.6508)\n- **Work**: Українська мова — Енциклопедія (2004)\n- **Author**: Русанівський В.М. та ін.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `1af78606_c0033`\n- **Text**:\nДо 1-ї чверті 19 ст. «Грамматіка...» С. була осн.\r\nпідручником церковнослов’ян. мови, він витримав багато видань. На його основі\r\nукладено анонімну «Грамматїку или писменницу языка Словеньского», надр. 1638 в\r\nм. Крем’янці (тепер Терноп. обл.). Певний вплив С. помітний і на кн.\r\n«Грамматыка словенская» Івана Ужевича (1643), анонімній граматиці, надр. 1773 в\r\nПочаєві, церковнослов’ян. «Грамматіці» Я. Блоницького (1763), а також на\r\n«Грамматиці» А. Коцака (1778), праці «Grammatica slavo-ruthena» М\n\n### Result 2 (score: 0.6362)\n- **Work**: Іван Ужевич — Граматика слов'янська (1643/1645) (1645)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `c32c00be_c0001`\n- **Text**:\nсторінка 54.\n\nсторінка 55.\n\nсторінка 56.\n\nсторінка 57.\n\nсторінка 58.\n\nсторінка 59.\n\nсторінка 60.\n\nсторінка 61.\n\nсторінка 62.\n\nсторінка 63.\n\nсторінка 64.\n\nсторінка 65.\n\nсторінка 66.\n\nсторінка 67.\n\nсторінка 68.\n\nсторінка 69.\n\nсторінка 70.\n\nсторінка 71.\n\nсторінка 72.\n\nсторінка 73.\n\nсторінка 74.\n\nсторінка 75.\n\nсторінка 76.\n\nсторінка 77.\n\nсторінка 78.\n\nсторінка 79.\n\nсторінка 80.\n\nсторінка 81.\n\nсторінка 82.\n\nсторінка 83.\n\nсторінка 84.\n\nсторінка 85.\n\nсторінка 86.\n\nДив. також:\n\nІван Федорович. Буквар (Л\n\n### Result 3 (score: 0.6359)\n- **Work**: Дзюба, Павленко — Літопис культурного життя X-XVII ст. (2001)\n- **Author**: Дзюба О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e0892426_c0273`\n- **Text**:\nГраматика («Грамматіка словенска») Лаврентія Зизанія\r\nскладається з трьох частин: орфографії, просодії,— етимології. Виклад\r\nпобудовано у формі запитань та відповідей. У першій частині — орфографії —\r\nназвані церковнослов'янські «письмена» — літери, які розділені на голосні та\r\nприголосні. У розділі про просодію викладаються правила вживання просодійних\r\nзнаків (наголосів). Найповніша частина — етимологія (морфологія), в якій дана\r\nхарактеристика традиційних «восьми частин мови» — іменника, прик\n\n### Result 4 (score: 0.6350)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0034`\n- **Text**:\n\"Граматика\" М.Смотрицького була покликана\r\nзміцнити норми церковнослов’янської мови. Автор писав у передмові, зверненій\r\nнасамперед до вчителів шкіл: \"ВЂдаєтє абовЂмъ, которыи стє сА ґрєцкои\r\nлюбъ латїнскои гра/м/матїки худозству учили што ωна єсть ку понАтю ıак\r\nıазыка чистости такъ и правогω а сочинногω вєдлугь власности\r\nдїалєктовъ и мовєнА и писанА, и писмъ вырозуменА. ВшєлАкїй пожитокъ который\r\nко/л/вєкъ прєрєчоныхъ ıазыкωвъ rpa/м/матїки чинити звыклы,\r\nбе/з/вонтпєнА и СлавєнскаА въ своємъ \n\n### Result 5 (score: 0.6350)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0135`\n- **Text**:\nГраматикою староукраїнської мови була «Граматика\r\nсловенская» І. Ужевича. Правда, це рукописна праця, написана до того ж у\r\nПарижі. Відома вона в двох варіантах: перший з них, написаний латинською мовою\r\nв 1643 р., зберігається тепер в Національній бібліотеці в Парижі, другий,\r\nнаписаний тією ж мовою в 1645 р., знаходиться в бібліотеці м. Арраса на півночі\r\nФранції. Видані вони тільки в 1970 р. стараннями І.К. Білодіда та Є.М.\r\nКудрицького 1. Текст пам’ятки доводить, що І. Ужевич був знайомий з\r\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "1cb9ad07-ef6e-4ee7-a1a0-4b69b8c6d4e0",
+      "timestamp": "2026-03-14T01:31:55.282Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task",
+          "description": "I am now focused on completing the task. I'm making progress, ensuring the next phase unfolds as planned.",
+          "timestamp": "2026-03-14T01:31:49.665Z"
+        },
+        {
+          "subject": "Proceeding with Analysis",
+          "description": "I'm now zeroing in on the next critical phase, meticulously examining the data I have retrieved. I'm carefully connecting the details to develop a comprehensive understanding and charting a course for the subsequent stage.",
+          "timestamp": "2026-03-14T01:31:52.998Z"
+        },
+        {
+          "subject": "Delving Deeper into Research",
+          "description": "I'm now focused on the specifics. I'm actively researching the key figures and analyzing the available material. I'm carefully compiling essential information to prepare for the final stage.",
+          "timestamp": "2026-03-14T01:31:55.092Z"
+        }
+      ],
+      "tokens": {
+        "input": 23408,
+        "output": 83,
+        "cached": 19608,
+        "thoughts": 428,
+        "tool": 0,
+        "total": 23919
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773451915195_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"латинська\" OR \"польська\" мова вплив на руську"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773451915195_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"латинська\" OR \"польська\" мова вплив на руську\"\n\n### Result 1 (score: 0.6321)\n- **Work**: Генсьорський — ГВЛ лексичні та стилістичні особливості (1961)\n- **Author**: Генсьорський А.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `701afbae_c0326`\n- **Text**:\nОкупація південноруських земель порушила цей\r\nприродний процес дальшого розвитку української літературної мови. Українська\r\nлітературна мова підпала під відчутний латино-польський вплив, який відбився не\r\nлише на засвоєнні досить значної кількості польських слів і висловів, які в\r\nзначній мірі витісняли старші руські, успадковані із староруського періоду, але\r\nтакож і на синтаксисі, словотворі та на семантиці слів. Внаслідок цього\r\nукраїнська літературна мова відірвалась, як відомо, на довгий ча\n\n### Result 2 (score: 0.6250)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0651`\n- **Text**:\nВживання на Україні і в\r\nБілорусії також і латинської мови означало, що якимось аспектом свого\r\nкультурного і політичного життя ці країни входили в той регіон (Західна і\r\nЦентральна Європа), де латина протягом середньовіччя була мовою правових актів,\r\nшколи й науки, більшості жанрів літератури. Написані латиною твори у\r\nлітературному процесі України й Білорусії відігравали певну роль вже з другої\r\nполовини XV ст. їхнє поширення пояснюється роллю латинської мови у\r\nсередньовічній школі, навчанням\n\n### Result 3 (score: 0.6234)\n- **Work**: Лікарські порадники XVIII ст. (1750)\n- **Author**: Невідомий\n- **Genre/Period**: manual / middle_ukrainian\n- **Chunk ID**: `c4f19003_c0015`\n- **Text**:\nРазом з тим у наших пам’ятках натрапляємо на деякі\r\nелементи інших мов, зокрема польської. Так, у «ЛЂкарствахъ ωписа(нъ)нихъ»\r\nпомічається певна залежність від першоджерела, писаного, очевидно, польською\r\nмовою. Про це свідчать фонетико-граматичні та лексичні полонізми: о(т)творона\r\n(2) поряд із о(т)ворεна (2 зв.), нирεкъ (2\r\nзв.), концусш(ъ)ковъ (4), подивовεня (6 зв.), \\14\\\r\nжоло(н)дεкъ (30), з ви(ш)нЂ палоной (62), прошо(к) (95) —\r\nтобто «порошок», Возми ... соку люкрεцковкго (101) та ін. Зви\n\n### Result 4 (score: 0.6234)\n- **Work**: Лікарські та господарські порадники XVIII ст. (1984)\n- **Author**: Невідомий\n- **Genre/Period**: manual / middle_ukrainian\n- **Chunk ID**: `f8ee7822_c0016`\n- **Text**:\nРазом з тим у наших пам’ятках натрапляємо на деякі\r\nелементи інших мов, зокрема польської. Так, у «ЛЂкарствахъ ωписа(нъ)нихъ»\r\nпомічається певна залежність від першоджерела, писаного, очевидно, польською\r\nмовою. Про це свідчать фонетико-граматичні та лексичні полонізми: о(т)творона\r\n(2) поряд із о(т)ворεна (2 зв.), нирεкъ (2\r\nзв.), концусш(ъ)ковъ (4), подивовεня (6 зв.), \\14\\\r\nжоло(н)дεкъ (30), з ви(ш)нЂ палоной (62), прошо(к) (95) —\r\nтобто «порошок», Возми ... соку люкрεцковкго (101) та ін. Зви\n\n### Result 5 (score: 0.6164)\n- **Work**: Наливайко — Очима Заходу: Рецепція України XI-XVIII ст. (2008)\n- **Author**: Наливайко Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `89ab7c69_c0095`\n- **Text**:\nУ цьому ряду\r\nчинників слід згадати й поширення на українських землях латинської мови, яка\r\nбула мовою міжнаціонального спілкування в католицьких країнах середньовічної\r\nЄвропи. Цей процес бере початок ще в Галицько-Волинському князівстві, яке\r\nпідтримувало активні політичні зносини з сусідніми й близькими «латинськими\r\nкраїнами» — з Польщею, Угорщиною, Чехією, Німеччиною, з Тевтонським орденом, —\r\nі це породжувало необхідність знання латини, яка в католицькій Європі була не\r\nтільки мовою церкви\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:56.043Z",
+          "resultDisplay": "Found 5 results for: \"\"латинська\" OR \"польська\" мова вплив на руську\"\n\n### Result 1 (score: 0.6321)\n- **Work**: Генсьорський — ГВЛ лексичні та стилістичні особливості (1961)\n- **Author**: Генсьорський А.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `701afbae_c0326`\n- **Text**:\nОкупація південноруських земель порушила цей\r\nприродний процес дальшого розвитку української літературної мови. Українська\r\nлітературна мова підпала під відчутний латино-польський вплив, який відбився не\r\nлише на засвоєнні досить значної кількості польських слів і висловів, які в\r\nзначній мірі витісняли старші руські, успадковані із староруського періоду, але\r\nтакож і на синтаксисі, словотворі та на семантиці слів. Внаслідок цього\r\nукраїнська літературна мова відірвалась, як відомо, на довгий ча\n\n### Result 2 (score: 0.6250)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0651`\n- **Text**:\nВживання на Україні і в\r\nБілорусії також і латинської мови означало, що якимось аспектом свого\r\nкультурного і політичного життя ці країни входили в той регіон (Західна і\r\nЦентральна Європа), де латина протягом середньовіччя була мовою правових актів,\r\nшколи й науки, більшості жанрів літератури. Написані латиною твори у\r\nлітературному процесі України й Білорусії відігравали певну роль вже з другої\r\nполовини XV ст. їхнє поширення пояснюється роллю латинської мови у\r\nсередньовічній школі, навчанням\n\n### Result 3 (score: 0.6234)\n- **Work**: Лікарські порадники XVIII ст. (1750)\n- **Author**: Невідомий\n- **Genre/Period**: manual / middle_ukrainian\n- **Chunk ID**: `c4f19003_c0015`\n- **Text**:\nРазом з тим у наших пам’ятках натрапляємо на деякі\r\nелементи інших мов, зокрема польської. Так, у «ЛЂкарствахъ ωписа(нъ)нихъ»\r\nпомічається певна залежність від першоджерела, писаного, очевидно, польською\r\nмовою. Про це свідчать фонетико-граматичні та лексичні полонізми: о(т)творона\r\n(2) поряд із о(т)ворεна (2 зв.), нирεкъ (2\r\nзв.), концусш(ъ)ковъ (4), подивовεня (6 зв.), \\14\\\r\nжоло(н)дεкъ (30), з ви(ш)нЂ палоной (62), прошо(к) (95) —\r\nтобто «порошок», Возми ... соку люкрεцковкго (101) та ін. Зви\n\n### Result 4 (score: 0.6234)\n- **Work**: Лікарські та господарські порадники XVIII ст. (1984)\n- **Author**: Невідомий\n- **Genre/Period**: manual / middle_ukrainian\n- **Chunk ID**: `f8ee7822_c0016`\n- **Text**:\nРазом з тим у наших пам’ятках натрапляємо на деякі\r\nелементи інших мов, зокрема польської. Так, у «ЛЂкарствахъ ωписа(нъ)нихъ»\r\nпомічається певна залежність від першоджерела, писаного, очевидно, польською\r\nмовою. Про це свідчать фонетико-граматичні та лексичні полонізми: о(т)творона\r\n(2) поряд із о(т)ворεна (2 зв.), нирεкъ (2\r\nзв.), концусш(ъ)ковъ (4), подивовεня (6 зв.), \\14\\\r\nжоло(н)дεкъ (30), з ви(ш)нЂ палоной (62), прошо(к) (95) —\r\nтобто «порошок», Возми ... соку люкрεцковкго (101) та ін. Зви\n\n### Result 5 (score: 0.6164)\n- **Work**: Наливайко — Очима Заходу: Рецепція України XI-XVIII ст. (2008)\n- **Author**: Наливайко Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `89ab7c69_c0095`\n- **Text**:\nУ цьому ряду\r\nчинників слід згадати й поширення на українських землях латинської мови, яка\r\nбула мовою міжнаціонального спілкування в католицьких країнах середньовічної\r\nЄвропи. Цей процес бере початок ще в Галицько-Волинському князівстві, яке\r\nпідтримувало активні політичні зносини з сусідніми й близькими «латинськими\r\nкраїнами» — з Польщею, Угорщиною, Чехією, Німеччиною, з Тевтонським орденом, —\r\nі це породжувало необхідність знання латини, яка в католицькій Європі була не\r\nтільки мовою церкви\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773451915238_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"проста мова\" захист"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773451915238_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"проста мова\" захист\"\n\n### Result 1 (score: 0.5044)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0375`\n- **Text**:\n18 Див.: Словник\r\nстароукраїнської мови XIV — XV ст. — Київ, 1977-1978. — Т. 1 — 2. Цей\r\nцінний словник реєструє, в основному, актову лексику першого етапу середнього\r\nперіоду історії української писемної мови.\n\nСлово \"проста\", яке вживали самі автори,\r\nкотрі цією мовою писали, інколи тлумачиться дослідниками в тому сенсі, що ця\r\nмова дуже близька до народнорозмовної. Насправді це не зовсім так. Ті, хто\r\nписав \"простою\" мовою, наближали її до розмовної настільки, щоб\r\nзробити зрозумілішою, і вод\n\n### Result 2 (score: 0.4801)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0649`\n- **Text**:\nМожна розрізнити три\r\n\"стилі\" чи, швидше, три рівні престижності: найвищий репрезентувала\r\nцерковнослов’янська мова, \"середній\" — мова \"проста\",\r\nнайнижчий — народнорозмовна або наближена до неї. Тенденція до підвищення\r\nстатусу \"простої\" мови найбільше відчувалася в роки активного\r\nрозвитку української книжності, зокрема друкованої. Парадоксально, що\r\nавторитетність церковнослов’янських видань, зокрема Острізької Біблії, сприяла\r\nактивізації нової хвилі архаїзаційних тенденцій, і це відкривало \n\n### Result 3 (score: 0.4775)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0078`\n- **Text**:\n§ 9. Предтечі „Слова”.\n\n### Result 4 (score: 0.4741)\n- **Work**: Томпсон — Трубадури імперії (2006)\n- **Author**: Томпсон Е.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `f79fbc43_c0103`\n- **Text**:\nСАМОПРЕЗЕНТАЦІЯ РОСІЇ\n\n### Result 5 (score: 0.4717)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0306`\n- **Text**:\n2. Другий спосіб полягає в своєрідному відступі й\r\nобмані, коли про закид говоритимемо в іншому місці, а увагу слухачів переводимо\r\nвід того, що нас тривожило, до розгляду інших речей. Цей спосіб потребує дуже\r\nпроникливого таланту і він менш відомий, його легко можна помітити, і він легко\r\nможе виявитись фальшивим. Через те цей спосіб спростування не треба\r\nзастосовувати окремо, а там, де доведеться спростувати багато фактів, і де\r\nразом з іншими можна застосувати і цей спосіб, який серед них н\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:56.043Z",
+          "resultDisplay": "Found 5 results for: \"\"проста мова\" захист\"\n\n### Result 1 (score: 0.5044)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0375`\n- **Text**:\n18 Див.: Словник\r\nстароукраїнської мови XIV — XV ст. — Київ, 1977-1978. — Т. 1 — 2. Цей\r\nцінний словник реєструє, в основному, актову лексику першого етапу середнього\r\nперіоду історії української писемної мови.\n\nСлово \"проста\", яке вживали самі автори,\r\nкотрі цією мовою писали, інколи тлумачиться дослідниками в тому сенсі, що ця\r\nмова дуже близька до народнорозмовної. Насправді це не зовсім так. Ті, хто\r\nписав \"простою\" мовою, наближали її до розмовної настільки, щоб\r\nзробити зрозумілішою, і вод\n\n### Result 2 (score: 0.4801)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0649`\n- **Text**:\nМожна розрізнити три\r\n\"стилі\" чи, швидше, три рівні престижності: найвищий репрезентувала\r\nцерковнослов’янська мова, \"середній\" — мова \"проста\",\r\nнайнижчий — народнорозмовна або наближена до неї. Тенденція до підвищення\r\nстатусу \"простої\" мови найбільше відчувалася в роки активного\r\nрозвитку української книжності, зокрема друкованої. Парадоксально, що\r\nавторитетність церковнослов’янських видань, зокрема Острізької Біблії, сприяла\r\nактивізації нової хвилі архаїзаційних тенденцій, і це відкривало \n\n### Result 3 (score: 0.4775)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0078`\n- **Text**:\n§ 9. Предтечі „Слова”.\n\n### Result 4 (score: 0.4741)\n- **Work**: Томпсон — Трубадури імперії (2006)\n- **Author**: Томпсон Е.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `f79fbc43_c0103`\n- **Text**:\nСАМОПРЕЗЕНТАЦІЯ РОСІЇ\n\n### Result 5 (score: 0.4717)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0306`\n- **Text**:\n2. Другий спосіб полягає в своєрідному відступі й\r\nобмані, коли про закид говоритимемо в іншому місці, а увагу слухачів переводимо\r\nвід того, що нас тривожило, до розгляду інших речей. Цей спосіб потребує дуже\r\nпроникливого таланту і він менш відомий, його легко можна помітити, і він легко\r\nможе виявитись фальшивим. Через те цей спосіб спростування не треба\r\nзастосовувати окремо, а там, де доведеться спростувати багато фактів, і де\r\nразом з іншими можна застосувати і цей спосіб, який серед них н\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_get_chunk_context_1773451915280_2",
+          "name": "mcp_rag_get_chunk_context",
+          "args": {
+            "chunk_id": "e3af9049_c0034"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_get_chunk_context_1773451915280_2",
+                "name": "mcp_rag_get_chunk_context",
+                "response": {
+                  "output": "Invalid chunk_id format: e3af9049_c0034"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:31:56.043Z",
+          "resultDisplay": "Invalid chunk_id format: e3af9049_c0034",
+          "displayName": "get_chunk_context (rag MCP Server)",
+          "description": "Get surrounding text chunks for context. Given a chunk_id from search results, returns the chunk and its neighbors from the same textbook.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c92a0554-3972-4bd2-b395-7ad2be1d4e69",
+      "timestamp": "2026-03-14T01:32:05.515Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing Query Refinement",
+          "description": "I'm focused on moving forward. I'm going to formulate a query to pull the information I need, and then I'll execute the next step. I'm assessing the best way to get this done.",
+          "timestamp": "2026-03-14T01:32:00.029Z"
+        },
+        {
+          "subject": "Generating Additional Queries",
+          "description": "I'm now generating more specific queries to get the information I need, specifically targeting the key figures and texts. I will refine these searches to ensure accuracy. I will next gather supporting data to build a more comprehensive understanding.",
+          "timestamp": "2026-03-14T01:32:03.098Z"
+        },
+        {
+          "subject": "Implementing Research Steps",
+          "description": "I'm now implementing the concrete steps, I've outlined. I'll get the biography of Smotrytsky from Wikipedia first, and then I'll use it to search for relevant information regarding Ukrainian and related languages. Finally, I will conduct a search using keywords related to Zyzanii's grammar.",
+          "timestamp": "2026-03-14T01:32:05.326Z"
+        }
+      ],
+      "tokens": {
+        "input": 25963,
+        "output": 65,
+        "cached": 23011,
+        "thoughts": 428,
+        "tool": 0,
+        "total": 26456
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773451925423_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Мелетій Смотрицький"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773451925423_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Мелетій Смотрицький\n**URL**: https://uk.wikipedia.org/wiki/%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D0%B9_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9\n\nМеле́тій Смотри́цький, також відомий як Максим Герасимович Смотрицький (1577(1577), Смотрич — 17 (27) грудня 1633, Дермань) — письменник, церковний і освітній діяч Речі Посполитої, український мовознавець, праці якого вплинули на розвиток східнослов'янських мов. Автор відомої свого часу в цілій Європі «Граматики слов'янської» (1619), що систематизувала церковнослов'янську мову.\n\n\n== Життєпис ==\nМелетій Смотрицький народився в родині руського (українського) православного шляхтича, письменника-полеміста Герасима Смотрицького, у містечку Смотрич, тепер селище Кам'янець-Подільського району Хмельницької області, або ж у місті Кам'янці цієї ж області, чи в Острозі.\nНавчався в Острозькій школі, потім (1594–1600, за підтримки князя Василя Костянтина Острозького) — у Віленській академії єзуїтів. За інформацією, надісланою до Риму в 1630 році, його короткої біографії, закінчив «менші студії гуманістичні». Через занепокоєння батьків, родичів його релігійними переконаннями, отриманими під час навчання, був висланий навчатися до Німеччини — до шкіл протестантів. За рапортом папського нунція у Варшаві А. Сантакроче — був виключений з Академії через «схизму»; слухав лекції у Вроцлавському, Лейпцизькому, Віттенберзькому й Нюрнберзькому університетах як наставник (прецептор) молодого князя Богдана Соломирецького. Ймовірно, за кордоном одержав учений ступінь доктора медицини.\nУ 1601 році мешкав у маєтку князів Соломирецьких, де навчав молодих князів. Прізвище Соломирецький є серед записаних на навчання в Лейпцигу 1606 року. Близько 1608 року прибув до Вільна, де, ймовірно, викладав у братській школі. Був діячем Віленського православного братства, за його дорученням виступав з полемічними творами.\nПід псевдонімом Теофіл Ортолог 1610 року надрукував свій видатний полемічний твір «Тренос» («Θринос»). Приблизно в 1615–1618 роках викладав церковнослов'янську та латинську мови в Київській братській школі, був одним з перших її ректорів. У 1616 році виходить його переклад староукраїнською мовою «Євангелія учительного… Калиста». У 1618 році повернувся до Вільна, де у Святодухівському монастирі постригся в ченці під ім'ям Мелетій.\n\n1619 року в м. Єв'ї (Вевіс) біля Вільна вийшла друком його славнозвісна праця «Грамма́тіки Славе́нския пра́вилное Cv́нтагма». Деякі біографи Смотрицького пишуть, що у 1617–1620 роках він уклав лексикон (але жодних слідів словника не збереглося), раніше (1615 року) в Кельні опублікував граматику грецької мови. Брав участь у написанні «Букваря языка славенска», надрукованого 1618 року в Єв'ї.\n1620 року висвячений на православного архієпископа полоцького, єпископа вітебського й мстиславського. Ведучи мову про відродження православ'я в слов'янському світі, висловлювався за принесення в Московське царство православної вченості.\nВидав низку антиуніатських творів і налаштовував простолюд до переслідувань з'єднаних з Апостольським престолом у Римі. Саме з його діяльністю пов'язували загибель полоцького унійного архиєпископа Йосафата Кунцевича. У зв'язку з останнім на початку 1624 року Смотрицький вирушив з Києва в подорож на Схід (Константинополь, Палестина, Єгипет). Навесні 1625 року повернувся до Києва, розчарований побаченим занепадом Східної церкви, змінив свої переконання і приєднався до спільноти прихильників унії з Римом.\nВлітку 1627 року перебував у Дермані на посаді архімандрита Дерманського монастиря, що знаходився на території володінь брацлавського воєводи князя Олександра Заславського, який був католиком. 6 липня 1627 року в маєтку Заславського в присутності київського унійного митрополита Йосифа Велямина Рутського склав визнання віри, написав листи до Папи Урбана VIII, кардинала О. Бандіні, Святої Канцелярії.\n21–31 серпня 1627 року написав листа до патріарха Кирила Лукаріса з проханням детально пояснити Православну доктрину віри. Близько 8/18 вересня в Києві зустрівся, зокрема, з Іовом Борецьким і Петром Могилою. Перед Зеленими святами закінчив писати «Апологію». Брав участь у Синоді православної Церкви в Києві 13/23 серпня 1628 року з метою переконати ієрархів у правоті унійної ідеї. Але 14/24 серпня під час служби в Києво-Печерській лаврі всі православні єпископи прокляли «Апологію» М. Смотрицького, рукопис порвали, розкидали. Аби уникнути переслідувань, він публічно погодився з цим, але, покинувши Київ, далі працював для поширення унійної ідеї.\nПапа Урбан VIII 5 червня 1631 року надав Мелетію Смотрицькому посаду (титул) ієраполітанського архієпископа, який є під юрисдикцією Антіохійського Патріарха.\nПротягом 1628–1629 років видав декілька книжок, у яких обґрунтовував та аргументував свій учинок, агітував за справу церковного єднання (під опікою Риму), за скликання собору для примирення християн Русі з Римом.\nПомер у 1633 році в селі Дермань (нині Здолбунівський район Рівненської області); похований у Дерманському монастирі. За спогадами його сповідника — єзуїта Войцеха Кортицького — перед смертю попросив дати йому папську буллу, яку йому дали через 5 годин після смерті. Кілька днів були марні спроби багатьох забрати її назад з холодної руки; це зробив Йосиф Рутський.\nМелетій Смотрицький використовував для написання своїх творів староукраїнську мову.\n\n\n== Твори ==\nΘρηνος to iest Lament iedyney S. powszechney apostolskiey Wschodniey Cerkwie… — Wilno, 1610.\nApologia. — Львів, 1628 (за сприяння Касіяна Саковича) [1] [Архівовано 13 січня 2021 у Wayback Machine.]. Переклад українською: Апологія паломництва до східних країв (пер. Ростислава Паранька). — Харків: Акта, 2020.\nExethesis abo expostulatia, to jest rosprawa miedzy Apologią у Antidotem o ostanek błedow haereziy у kłamstw Zyzaniowych, Philaletowych, Orthologowych у Klerykowych uczyniona — Львів, друкарня Шеліги, 3.IV 1629.\nΑντιγραφη (Антиграфи) // Памятники полемической лит-ры, — СПб., 1903. — Кн. 3 (Русск. ист. библиотека, Т. 19); багатого мужа в Бозі велебного господина отця Леонтія Карповича, архімандрита общіа обителі при церкві Сошествія святого духа братства церковного Віленського православного гречеського // Пам'ятки братських шкіл в Україні. — К., 1988.\nVerificatia niewinności // АЮЗР. — Ч. 1. — T. 7.\nЛямент у світа убогих на жалостноє преставленіє святолюбивого а в обої добродітелі багатого мужа в Бозі велебного господина отця Леонтія Карповича, архімандрита общіа обителі при церкві Сошествія святого духа братства церковного Віленського православного гречеського // Пам'ятки братських шкіл на Україні. — К., 1988.\nCollected works of Meletij Smortyc'kyj / Harvard Library of Early Ukrainian Literature: Texts: Volume I. Cambridge (Massachusetts): Harvard University, 1987. ISBN 0-916458-20-2.\nThe Jevanhelije učytelnoje of Meletij Smotryc'kyj / Harvard Library of Early Ukrainian Literature: Texts: Volume II. Cambridge (Massachusetts): Harvard University, 1987. ISBN 0-916458-21-0.\n\n\n== Вшанування пам'яті ==\nВулиці Мелетія Смотрицького є у Борисполі, Кам'янці-Подільському, Києві, Львові, Рівному та Хмельницькому.\nУ місті Дніпро провулок Визволення перейменували на провулок Мелетія Смотрицького.\nУ місті Кривий Ріг вулицю Кибальчича перейменували на вулицю Мелетія Смотрицького.\n\n\n== Примітки ==\n\n\n== Література ==\nБабич Сергій. Творчість Мелетія Смотрицького у контексті раннього українського бароко. Монографія [у надзаг.: Львівська медієвістика. — Вип.2] / За редакцією проф. Богдани Криси. — Львів: Свічадо, 2008. — 180 с.\nWakúlenko Serhii. A receção do sistema das partes de oração de Manuel Álvares na antiga gramaticografia ucraniana: o caso de Meletij Smotryc'kyj // 450 anos De intitutione grammatica libri tres. A gramática latino-portuguesa de Manuel Álvares no mundo moderno / Ed. por Rolf Kemmler, Gonçalo Fernandes. — Vila Real: Centro de Estudos em Letras da Universidade de Trás-os-Montes e Alto Douro, 2023. — P. 45–74.\nГолик Р. Тіло, душа і поділений світ: стереотипи раннього бароко у творчості Мелетія М. Смотрицького та Кирила Транквіліона Ставровецького. Біля джерел українського бароко: Збірник наукових праць. — Львів, 2010. — С. 134—163.\nЯковенко Н. Мелетій Смотрицький // Історія України в особах: IX—XVIII ст. — К. : Видавництво «Україна», 1993. — 396 с.\nКралюк П. М. Мелетій Смотрицький і українське духовно культурне відродження кінця XVI — початку XVII ст. — Острог: Вид-во Національного університету «Острозька академія», 2007. — 208 с.\nМицько І. З. Острозька слов'яно-греко-латинська академія. — К., 1990.\nНімчук В. В. Києво-Могилянська академія і розвиток укр. лінгвістики XVII — XIX ст. // Роль Києво-Могилянської академії в культурному єднанні слов'янських народів. — К., 1988.\nНічик В. М., Литвинов В. Д., Стратій Я. М. Гуманістичні і реформаційні ідеї в Україні. — К., 1991.\nВ. Перевезій. Смотрицький Мелетій // Політична енциклопедія. Редкол.: Ю. Левенець (голова), Ю. Шаповал (заст. голови) та ін. — К.: Парламентське видавництво, 2011. — С. 670. — ISBN 978-966-611-818-2.\nСас П. Смотрицький Мелетій // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 676—677. — ISBN 978-966-00-1290-5.\nСоловій Мелетій М. Мелетій Смотрицький як письменник ч. І. — Рим, 1978. (+ ч. II.)\nЯременко П. К. Мелетій Смотрицький. Життя і творчість. — К., 1986;\nFrick Dawid A. Smotrycki Maksym (Maksenty), imie zakonne Melecjusz (Meletij) (ok. 1577—1633) // Polski Słownik Biograficzny. — Warszawa — Kraków: Polska Akademia Nauk, Polska Akademia Umiejętności, 1999. — Tom ХХХІХ/3, zeszyt 162. — S. 356—362. (пол.)\nCollected Works of Meletij Smotryc'kyj / With an Introduction by David A. Frick // Harvard Library of Early Ukrainian Literature. — Vol. I. — CambridgeMass, 1987. — 805 р. (англ.)\nКороткий В. С. Творческий путь Мелетия Смотрицкого. — Минск, 1987. (рос.)\nПрокошина Е. Мелетий Смотрицкий. — Минск, 1966. (рос.)\nЩепанський В. В. Рецепція релігійної філософії Середньовіччя у «Треносі» М. Смотрицького: Дис. на здобуття канд. філос. наук. [Архівовано 20 січня 2022 у Wayback Machine.]  — Острог, 2015.  — 195 с.\nОсин­скій А. С. Ме­ле­тій Смот­риц­кій, Ар­хі­е­пис­копъ По­лоц­кій. — Киев: Тип. Акц. Об-ва «П. Барский в Киеве», 1912. — 155 с. (= Труды Киевской Духовной Академии. 1911, июль — август. Кн. VII—VIII. С. 425—466; 1911, сентябрь. Кн. IX. С. 40-86; 1911, октябрь. Кн. Х. С. 275—300; 1911, декабрь. Кн. ХІ. С. 405—432; Кн. ХІІ. С. 605—619.) (рос.)\n\n\n== Посилання ==\n\nВідскановані стародруки Мелетія Смотрицького // Polona.pl.\nМелетій Смотрицький [Архівовано 26 серпня 2021 у Wayback Machine.] // Віртуальний музей НаУКМА — Києво-Могилянська академія.\nСмотрицький Мелетій // Україна в міжнародних відносинах. Енциклопедичний словник-довідник. Випуск 6. Біографічна частина: Н–Я / Відп. ред. М. М. Варварцев. — К.: Ін-т історії України НАН України, 2016. — С. 212—215.\nСмотрицький Мелетій. Грамматіки славєнскиѣѧ правилноє Сѵнтагма // Історія українського правопису XVI—XX століття. Хрестоматія / НАН України, Інститут української мови; Упоряд.: В. В. Німчук, Н. В. Пуряєва; Передмова В. В. Німчука; Комент. та приміт. Н. В. Пуряєвої. — Київ: Наукова думка, 2004. — С. 32—38. — 584 с. — ISBN 966-00-0261-0.\nСмотрицький Максим, у чернецтві Мелетій // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1965. — Т. 7, кн. XIV : Літери Сен — Сті. — С. 1783. — 1000 екз.\nМЕЛЕТІЙ СМОТРИЦЬКИЙ | Програма Велич особистості | 2016 (ВІДЕО)\nhttp://litopys.org.ua/ukrmova/um96.htm [Архівовано 12 лютого 2013 у WebCite]\nhttp://litopys.org.ua/fdm/fdm55.htm [Архівовано 13 жовтня 2004 у Wayback Machine.]\nБарабаш Ю. Я., Неменский О. Б. Мелетий (Мак­сим Ге­ра­си­мо­вич) Смот­риц­кий [Архівовано 24 червня 2021 у Wayback Machine.] // Большая российская энциклопедия.\nМелетий Смотрицкий [Архівовано 28 червня 2021 у Wayback Machine.] // Викитека"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:32:05.742Z",
+          "resultDisplay": "# Мелетій Смотрицький\n**URL**: https://uk.wikipedia.org/wiki/%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D0%B9_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9\n\nМеле́тій Смотри́цький, також відомий як Максим Герасимович Смотрицький (1577(1577), Смотрич — 17 (27) грудня 1633, Дермань) — письменник, церковний і освітній діяч Речі Посполитої, український мовознавець, праці якого вплинули на розвиток східнослов'янських мов. Автор відомої свого часу в цілій Європі «Граматики слов'янської» (1619), що систематизувала церковнослов'янську мову.\n\n\n== Життєпис ==\nМелетій Смотрицький народився в родині руського (українського) православного шляхтича, письменника-полеміста Герасима Смотрицького, у містечку Смотрич, тепер селище Кам'янець-Подільського району Хмельницької області, або ж у місті Кам'янці цієї ж області, чи в Острозі.\nНавчався в Острозькій школі, потім (1594–1600, за підтримки князя Василя Костянтина Острозького) — у Віленській академії єзуїтів. За інформацією, надісланою до Риму в 1630 році, його короткої біографії, закінчив «менші студії гуманістичні». Через занепокоєння батьків, родичів його релігійними переконаннями, отриманими під час навчання, був висланий навчатися до Німеччини — до шкіл протестантів. За рапортом папського нунція у Варшаві А. Сантакроче — був виключений з Академії через «схизму»; слухав лекції у Вроцлавському, Лейпцизькому, Віттенберзькому й Нюрнберзькому університетах як наставник (прецептор) молодого князя Богдана Соломирецького. Ймовірно, за кордоном одержав учений ступінь доктора медицини.\nУ 1601 році мешкав у маєтку князів Соломирецьких, де навчав молодих князів. Прізвище Соломирецький є серед записаних на навчання в Лейпцигу 1606 року. Близько 1608 року прибув до Вільна, де, ймовірно, викладав у братській школі. Був діячем Віленського православного братства, за його дорученням виступав з полемічними творами.\nПід псевдонімом Теофіл Ортолог 1610 року надрукував свій видатний полемічний твір «Тренос» («Θринос»). Приблизно в 1615–1618 роках викладав церковнослов'янську та латинську мови в Київській братській школі, був одним з перших її ректорів. У 1616 році виходить його переклад староукраїнською мовою «Євангелія учительного… Калиста». У 1618 році повернувся до Вільна, де у Святодухівському монастирі постригся в ченці під ім'ям Мелетій.\n\n1619 року в м. Єв'ї (Вевіс) біля Вільна вийшла друком його славнозвісна праця «Грамма́тіки Славе́нския пра́вилное Cv́нтагма». Деякі біографи Смотрицького пишуть, що у 1617–1620 роках він уклав лексикон (але жодних слідів словника не збереглося), раніше (1615 року) в Кельні опублікував граматику грецької мови. Брав участь у написанні «Букваря языка славенска», надрукованого 1618 року в Єв'ї.\n1620 року висвячений на православного архієпископа полоцького, єпископа вітебського й мстиславського. Ведучи мову про відродження православ'я в слов'янському світі, висловлювався за принесення в Московське царство православної вченості.\nВидав низку антиуніатських творів і налаштовував простолюд до переслідувань з'єднаних з Апостольським престолом у Римі. Саме з його діяльністю пов'язували загибель полоцького унійного архиєпископа Йосафата Кунцевича. У зв'язку з останнім на початку 1624 року Смотрицький вирушив з Києва в подорож на Схід (Константинополь, Палестина, Єгипет). Навесні 1625 року повернувся до Києва, розчарований побаченим занепадом Східної церкви, змінив свої переконання і приєднався до спільноти прихильників унії з Римом.\nВлітку 1627 року перебував у Дермані на посаді архімандрита Дерманського монастиря, що знаходився на території володінь брацлавського воєводи князя Олександра Заславського, який був католиком. 6 липня 1627 року в маєтку Заславського в присутності київського унійного митрополита Йосифа Велямина Рутського склав визнання віри, написав листи до Папи Урбана VIII, кардинала О. Бандіні, Святої Канцелярії.\n21–31 серпня 1627 року написав листа до патріарха Кирила Лукаріса з проханням детально пояснити Православну доктрину віри. Близько 8/18 вересня в Києві зустрівся, зокрема, з Іовом Борецьким і Петром Могилою. Перед Зеленими святами закінчив писати «Апологію». Брав участь у Синоді православної Церкви в Києві 13/23 серпня 1628 року з метою переконати ієрархів у правоті унійної ідеї. Але 14/24 серпня під час служби в Києво-Печерській лаврі всі православні єпископи прокляли «Апологію» М. Смотрицького, рукопис порвали, розкидали. Аби уникнути переслідувань, він публічно погодився з цим, але, покинувши Київ, далі працював для поширення унійної ідеї.\nПапа Урбан VIII 5 червня 1631 року надав Мелетію Смотрицькому посаду (титул) ієраполітанського архієпископа, який є під юрисдикцією Антіохійського Патріарха.\nПротягом 1628–1629 років видав декілька книжок, у яких обґрунтовував та аргументував свій учинок, агітував за справу церковного єднання (під опікою Риму), за скликання собору для примирення християн Русі з Римом.\nПомер у 1633 році в селі Дермань (нині Здолбунівський район Рівненської області); похований у Дерманському монастирі. За спогадами його сповідника — єзуїта Войцеха Кортицького — перед смертю попросив дати йому папську буллу, яку йому дали через 5 годин після смерті. Кілька днів були марні спроби багатьох забрати її назад з холодної руки; це зробив Йосиф Рутський.\nМелетій Смотрицький використовував для написання своїх творів староукраїнську мову.\n\n\n== Твори ==\nΘρηνος to iest Lament iedyney S. powszechney apostolskiey Wschodniey Cerkwie… — Wilno, 1610.\nApologia. — Львів, 1628 (за сприяння Касіяна Саковича) [1] [Архівовано 13 січня 2021 у Wayback Machine.]. Переклад українською: Апологія паломництва до східних країв (пер. Ростислава Паранька). — Харків: Акта, 2020.\nExethesis abo expostulatia, to jest rosprawa miedzy Apologią у Antidotem o ostanek błedow haereziy у kłamstw Zyzaniowych, Philaletowych, Orthologowych у Klerykowych uczyniona — Львів, друкарня Шеліги, 3.IV 1629.\nΑντιγραφη (Антиграфи) // Памятники полемической лит-ры, — СПб., 1903. — Кн. 3 (Русск. ист. библиотека, Т. 19); багатого мужа в Бозі велебного господина отця Леонтія Карповича, архімандрита общіа обителі при церкві Сошествія святого духа братства церковного Віленського православного гречеського // Пам'ятки братських шкіл в Україні. — К., 1988.\nVerificatia niewinności // АЮЗР. — Ч. 1. — T. 7.\nЛямент у світа убогих на жалостноє преставленіє святолюбивого а в обої добродітелі багатого мужа в Бозі велебного господина отця Леонтія Карповича, архімандрита общіа обителі при церкві Сошествія святого духа братства церковного Віленського православного гречеського // Пам'ятки братських шкіл на Україні. — К., 1988.\nCollected works of Meletij Smortyc'kyj / Harvard Library of Early Ukrainian Literature: Texts: Volume I. Cambridge (Massachusetts): Harvard University, 1987. ISBN 0-916458-20-2.\nThe Jevanhelije učytelnoje of Meletij Smotryc'kyj / Harvard Library of Early Ukrainian Literature: Texts: Volume II. Cambridge (Massachusetts): Harvard University, 1987. ISBN 0-916458-21-0.\n\n\n== Вшанування пам'яті ==\nВулиці Мелетія Смотрицького є у Борисполі, Кам'янці-Подільському, Києві, Львові, Рівному та Хмельницькому.\nУ місті Дніпро провулок Визволення перейменували на провулок Мелетія Смотрицького.\nУ місті Кривий Ріг вулицю Кибальчича перейменували на вулицю Мелетія Смотрицького.\n\n\n== Примітки ==\n\n\n== Література ==\nБабич Сергій. Творчість Мелетія Смотрицького у контексті раннього українського бароко. Монографія [у надзаг.: Львівська медієвістика. — Вип.2] / За редакцією проф. Богдани Криси. — Львів: Свічадо, 2008. — 180 с.\nWakúlenko Serhii. A receção do sistema das partes de oração de Manuel Álvares na antiga gramaticografia ucraniana: o caso de Meletij Smotryc'kyj // 450 anos De intitutione grammatica libri tres. A gramática latino-portuguesa de Manuel Álvares no mundo moderno / Ed. por Rolf Kemmler, Gonçalo Fernandes. — Vila Real: Centro de Estudos em Letras da Universidade de Trás-os-Montes e Alto Douro, 2023. — P. 45–74.\nГолик Р. Тіло, душа і поділений світ: стереотипи раннього бароко у творчості Мелетія М. Смотрицького та Кирила Транквіліона Ставровецького. Біля джерел українського бароко: Збірник наукових праць. — Львів, 2010. — С. 134—163.\nЯковенко Н. Мелетій Смотрицький // Історія України в особах: IX—XVIII ст. — К. : Видавництво «Україна», 1993. — 396 с.\nКралюк П. М. Мелетій Смотрицький і українське духовно культурне відродження кінця XVI — початку XVII ст. — Острог: Вид-во Національного університету «Острозька академія», 2007. — 208 с.\nМицько І. З. Острозька слов'яно-греко-латинська академія. — К., 1990.\nНімчук В. В. Києво-Могилянська академія і розвиток укр. лінгвістики XVII — XIX ст. // Роль Києво-Могилянської академії в культурному єднанні слов'янських народів. — К., 1988.\nНічик В. М., Литвинов В. Д., Стратій Я. М. Гуманістичні і реформаційні ідеї в Україні. — К., 1991.\nВ. Перевезій. Смотрицький Мелетій // Політична енциклопедія. Редкол.: Ю. Левенець (голова), Ю. Шаповал (заст. голови) та ін. — К.: Парламентське видавництво, 2011. — С. 670. — ISBN 978-966-611-818-2.\nСас П. Смотрицький Мелетій // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 676—677. — ISBN 978-966-00-1290-5.\nСоловій Мелетій М. Мелетій Смотрицький як письменник ч. І. — Рим, 1978. (+ ч. II.)\nЯременко П. К. Мелетій Смотрицький. Життя і творчість. — К., 1986;\nFrick Dawid A. Smotrycki Maksym (Maksenty), imie zakonne Melecjusz (Meletij) (ok. 1577—1633) // Polski Słownik Biograficzny. — Warszawa — Kraków: Polska Akademia Nauk, Polska Akademia Umiejętności, 1999. — Tom ХХХІХ/3, zeszyt 162. — S. 356—362. (пол.)\nCollected Works of Meletij Smotryc'kyj / With an Introduction by David A. Frick // Harvard Library of Early Ukrainian Literature. — Vol. I. — CambridgeMass, 1987. — 805 р. (англ.)\nКороткий В. С. Творческий путь Мелетия Смотрицкого. — Минск, 1987. (рос.)\nПрокошина Е. Мелетий Смотрицкий. — Минск, 1966. (рос.)\nЩепанський В. В. Рецепція релігійної філософії Середньовіччя у «Треносі» М. Смотрицького: Дис. на здобуття канд. філос. наук. [Архівовано 20 січня 2022 у Wayback Machine.]  — Острог, 2015.  — 195 с.\nОсин­скій А. С. Ме­ле­тій Смот­риц­кій, Ар­хі­е­пис­копъ По­лоц­кій. — Киев: Тип. Акц. Об-ва «П. Барский в Киеве», 1912. — 155 с. (= Труды Киевской Духовной Академии. 1911, июль — август. Кн. VII—VIII. С. 425—466; 1911, сентябрь. Кн. IX. С. 40-86; 1911, октябрь. Кн. Х. С. 275—300; 1911, декабрь. Кн. ХІ. С. 405—432; Кн. ХІІ. С. 605—619.) (рос.)\n\n\n== Посилання ==\n\nВідскановані стародруки Мелетія Смотрицького // Polona.pl.\nМелетій Смотрицький [Архівовано 26 серпня 2021 у Wayback Machine.] // Віртуальний музей НаУКМА — Києво-Могилянська академія.\nСмотрицький Мелетій // Україна в міжнародних відносинах. Енциклопедичний словник-довідник. Випуск 6. Біографічна частина: Н–Я / Відп. ред. М. М. Варварцев. — К.: Ін-т історії України НАН України, 2016. — С. 212—215.\nСмотрицький Мелетій. Грамматіки славєнскиѣѧ правилноє Сѵнтагма // Історія українського правопису XVI—XX століття. Хрестоматія / НАН України, Інститут української мови; Упоряд.: В. В. Німчук, Н. В. Пуряєва; Передмова В. В. Німчука; Комент. та приміт. Н. В. Пуряєвої. — Київ: Наукова думка, 2004. — С. 32—38. — 584 с. — ISBN 966-00-0261-0.\nСмотрицький Максим, у чернецтві Мелетій // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1965. — Т. 7, кн. XIV : Літери Сен — Сті. — С. 1783. — 1000 екз.\nМЕЛЕТІЙ СМОТРИЦЬКИЙ | Програма Велич особистості | 2016 (ВІДЕО)\nhttp://litopys.org.ua/ukrmova/um96.htm [Архівовано 12 лютого 2013 у WebCite]\nhttp://litopys.org.ua/fdm/fdm55.htm [Архівовано 13 жовтня 2004 у Wayback Machine.]\nБарабаш Ю. Я., Неменский О. Б. Мелетий (Мак­сим Ге­ра­си­мо­вич) Смот­риц­кий [Архівовано 24 червня 2021 у Wayback Machine.] // Большая российская энциклопедия.\nМелетий Смотрицкий [Архівовано 28 червня 2021 у Wayback Machine.] // Викитека",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773451925471_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Зизаній граматика"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773451925471_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Зизаній граматика\"\n\n### Result 1 (score: 0.6297)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0119`\n- **Text**:\nДжерела «Граматики» Л. Зизанія грунтовно дослідив М.\r\nВозняк, порівнявши майже всі дефініції Зизанія з матеріалами різних граматичних\r\nпосібників XVI ст. Він показав, що пам’ятка в цьому плані найбільше спільного\r\nмає з граматиками грецької мови Ф. Меланхтона, К. Ласкаріса, М Крузія, М.\r\nМосхопула та з граматиками латинської мови Е. Доната та Ф. Меланхтона (Возняк\r\n1911, 11 — 56).. Працю Ф. Меланхтона, в тому числі й його дефініції, широко\r\nвикористовували автори граматик латинської мови в Польщ\n\n### Result 2 (score: 0.6111)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0121`\n- **Text**:\nЗадум видати «Граматику» як шкільний підручник\r\nзумовив виклад її у формі запитань і відповідей. Текст власне граматики — запитання\r\nй дефініції — подається церковнослов’янською мовою. Загальні визначення\r\nЗизаній перекладає на початку книги (9 — 12), а іноді (наприклад, на 19) формулює\r\nстароукраїнською мовою, що була зрозумілою і для білорусів. До визначень\r\nдодаються численні приклади, парадигми.\n\nЛ. Зизаній досить добре відрізняв церковнослов’янську\r\nмову від живої й книжної української мови\n\n### Result 3 (score: 0.5985)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0117`\n- **Text**:\nУ зауваженні Л. Зизанія в заголовку своєї праці, що\r\nвона «новωсъста(в)ле(н)на», М. Возняк схильний був убачати вказівку автора\r\nна попередні граматики (Возняк 1911, 24). Та, здається, Зизаній добре\r\nусвідомлював, що він пропонує школам нову, першу справжню граматику\r\nцерковнослов’янської мови і підкреслив це не тільки на титульній сторінці, а й\r\nзвертаючись до читача в кінці розділу про дієслово: «Не чудисА\r\nвъ(з)люблен(ъ)ный мой друже, такова бо сила, а не презорство бысть\r\nсъписателево. зри ж\n\n### Result 4 (score: 0.5978)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0118`\n- **Text**:\nПримірник пам’ятки, за яким її досліджуємо,\r\nзберігається в Державній публічній бібліотеці ім. М. Є. Салтикова-Щедріна\r\n(Ленінград). Він являє собою досить добре збережену книжку in 8°. Видавнича\r\nпагінація починається з 9-го аркуша, тобто сторінкується тільки текст власне\r\nграматики. Книжка охоплює саму «Граматику» з тлумаченням молитви «Отче наш» у\r\nкінці її, «Лексис» Л. Зизанія та «Изложеніє ω православной вЂрЂ», «Ω въчловеченїи\r\nГос(ъ)под(ъ)ни» «Ω знаменїи крестном» Стефана Зизанія. Невідомо\n\n### Result 5 (score: 0.5953)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0120`\n- **Text**:\n«Граматика» Зизанія була призначена для шкіл. Тому\r\nавтор із самого початку книги прагнув викликати в учнів інтерес до науки. Про\r\nзначення її він пише кілька разів: в «Епіграммі на Гра(м)матіку» (3) (при\r\nпосиланні на сторінки «Граматики» в дужках подаємо тільки цифру), в «Посланії\r\nспудеωм» (4 — 6), в напученні «Тvпограф Младе(н)цемъ» (8). Дереворит на\r\n2-й сторінці алегорично зображує граматику у вигляді жіночої постаті з ключем у\r\nруці. Ключем, який відчиняє двері до знань, автор називає гра\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:32:05.742Z",
+          "resultDisplay": "Found 5 results for: \"Зизаній граматика\"\n\n### Result 1 (score: 0.6297)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0119`\n- **Text**:\nДжерела «Граматики» Л. Зизанія грунтовно дослідив М.\r\nВозняк, порівнявши майже всі дефініції Зизанія з матеріалами різних граматичних\r\nпосібників XVI ст. Він показав, що пам’ятка в цьому плані найбільше спільного\r\nмає з граматиками грецької мови Ф. Меланхтона, К. Ласкаріса, М Крузія, М.\r\nМосхопула та з граматиками латинської мови Е. Доната та Ф. Меланхтона (Возняк\r\n1911, 11 — 56).. Працю Ф. Меланхтона, в тому числі й його дефініції, широко\r\nвикористовували автори граматик латинської мови в Польщ\n\n### Result 2 (score: 0.6111)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0121`\n- **Text**:\nЗадум видати «Граматику» як шкільний підручник\r\nзумовив виклад її у формі запитань і відповідей. Текст власне граматики — запитання\r\nй дефініції — подається церковнослов’янською мовою. Загальні визначення\r\nЗизаній перекладає на початку книги (9 — 12), а іноді (наприклад, на 19) формулює\r\nстароукраїнською мовою, що була зрозумілою і для білорусів. До визначень\r\nдодаються численні приклади, парадигми.\n\nЛ. Зизаній досить добре відрізняв церковнослов’янську\r\nмову від живої й книжної української мови\n\n### Result 3 (score: 0.5985)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0117`\n- **Text**:\nУ зауваженні Л. Зизанія в заголовку своєї праці, що\r\nвона «новωсъста(в)ле(н)на», М. Возняк схильний був убачати вказівку автора\r\nна попередні граматики (Возняк 1911, 24). Та, здається, Зизаній добре\r\nусвідомлював, що він пропонує школам нову, першу справжню граматику\r\nцерковнослов’янської мови і підкреслив це не тільки на титульній сторінці, а й\r\nзвертаючись до читача в кінці розділу про дієслово: «Не чудисА\r\nвъ(з)люблен(ъ)ный мой друже, такова бо сила, а не презорство бысть\r\nсъписателево. зри ж\n\n### Result 4 (score: 0.5978)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0118`\n- **Text**:\nПримірник пам’ятки, за яким її досліджуємо,\r\nзберігається в Державній публічній бібліотеці ім. М. Є. Салтикова-Щедріна\r\n(Ленінград). Він являє собою досить добре збережену книжку in 8°. Видавнича\r\nпагінація починається з 9-го аркуша, тобто сторінкується тільки текст власне\r\nграматики. Книжка охоплює саму «Граматику» з тлумаченням молитви «Отче наш» у\r\nкінці її, «Лексис» Л. Зизанія та «Изложеніє ω православной вЂрЂ», «Ω въчловеченїи\r\nГос(ъ)под(ъ)ни» «Ω знаменїи крестном» Стефана Зизанія. Невідомо\n\n### Result 5 (score: 0.5953)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0120`\n- **Text**:\n«Граматика» Зизанія була призначена для шкіл. Тому\r\nавтор із самого початку книги прагнув викликати в учнів інтерес до науки. Про\r\nзначення її він пише кілька разів: в «Епіграммі на Гра(м)матіку» (3) (при\r\nпосиланні на сторінки «Граматики» в дужках подаємо тільки цифру), в «Посланії\r\nспудеωм» (4 — 6), в напученні «Тvпограф Младе(н)цемъ» (8). Дереворит на\r\n2-й сторінці алегорично зображує граматику у вигляді жіночої постаті з ключем у\r\nруці. Ключем, який відчиняє двері до знань, автор називає гра\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_verify_words_1773451925512_2",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "граматика",
+              "словенська",
+              "проста",
+              "мова"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773451925512_2",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 4/4\n\n- **граматика** — FOUND (3 match): граматик(noun), граматик(noun), граматика(noun)\n- **словенська** — FOUND (2 match): словенський(adj), словенський(adj)\n- **проста** — FOUND (2 match): простий(adj), простий(adj)\n- **мова** — FOUND (1 match): мова(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:32:05.742Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 4/4\n\n- **граматика** — FOUND (3 match): граматик(noun), граматик(noun), граматика(noun)\n- **словенська** — FOUND (2 match): словенський(adj), словенський(adj)\n- **проста** — FOUND (2 match): простий(adj), простий(adj)\n- **мова** — FOUND (1 match): мова(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "d4818f58-9d45-455a-8773-c7a0bb5e02f2",
+      "timestamp": "2026-03-14T01:32:22.281Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing Information Gathering",
+          "description": "I'm now focused on the next step: using available tools to find the most relevant information. I'll focus on retrieving the most relevant results to inform my analysis.",
+          "timestamp": "2026-03-14T01:32:10.950Z"
+        },
+        {
+          "subject": "Analyzing Historical Context",
+          "description": "Now, I'm digging deeper into the historical context. I'm prioritizing the information I've already gathered to gain a clearer understanding of the key figures and events. Then I will start organizing the data in a more structured manner.",
+          "timestamp": "2026-03-14T01:32:15.166Z"
+        },
+        {
+          "subject": "Synthesizing Initial Findings",
+          "description": "I'm now summarizing my findings. I'm focusing on the main points and key figures. I will integrate the historical context to understand the broader implications of the events.",
+          "timestamp": "2026-03-14T01:32:19.832Z"
+        },
+        {
+          "subject": "Seeking Key Quotes",
+          "description": "I'm now zeroing in on verifying the precise wording from primary sources to refine my analysis. I will consult my resources to precisely pinpoint the key phrases from Zyzanii and Uževyč.",
+          "timestamp": "2026-03-14T01:32:22.129Z"
+        }
+      ],
+      "tokens": {
+        "input": 32240,
+        "output": 47,
+        "cached": 0,
+        "thoughts": 749,
+        "tool": 0,
+        "total": 33036
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773451942230_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Іван Ужевич Граматика цитата"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773451942230_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Іван Ужевич Граматика цитата\"\n\n### Result 1 (score: 0.6656)\n- **Work**: Іван Ужевич — Граматика слов'янська (1643/1645) (1645)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `c32c00be_c0000`\n- **Text**:\nІван УЖЕВИЧ\n\nГРАМАТИКА СЛОВ’ЯНСЬКА\n\n(за вид. «Граматика слов’янська І.Ужевича. Київ — 1970. Пам’ятки української мови XVII ст.»)\n\nПередмова\n\nІ. К. Білодід, Є. М. Кудрицький. Іван Ужевич і його граматика\n\nПАРИЗЬКИЙ РУКОПИС (1643)\n\nНаписи на обкладинці\n\nТитульна сторінка\n\nсторінка 2.\n\nсторінка 3.\n\nсторінка 4.\n\nсторінка 5.\n\nсторінка 6.\n\nсторінка 7.\n\nсторінка 8.\n\nсторінка 9.\n\nсторінка 10.\n\nсторінка 11.\n\nсторінка 12.\n\nсторінка 13.\n\nсторінка 14.\n\nсторінка 15.\n\nсторінка 16.\n\nсторінка 17.\n\nсторінка 18.\n\n\n### Result 2 (score: 0.6221)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0000`\n- **Text**:\nГРАМАТИКА СЛОВ’ЯНСЬКА І. УЖЕВИЧА\n\nПереклад Паризького рукопису\n\nПередмова\n\nІ. К. Білодід, Є. М. Кудрицький. Іван Ужевич і його граматика\n\nЗМІСТ РУКОПИСУ\n\nПАРИЗЬКИЙ РУКОПИС\n\nСлов’янський алфавіт\n\nОбернений алфавіт\n\nЗмішаний алфавіт\n\nРозміщення складів обома способами\n\nВиклад повний\n\nВиклад той же, скорочений\n\nПовний\n\nВиклад повний, писарський\n\nСкорочений\n\nУживані назви (літер) алфавіту\n\nКоментарій до літер\n\nПро голосні о, ү і ы\n\nПро голосні ’v́ і а, ъ, ь\n\nПро приголосні\n\nПРО ЧАСТИНИ МОВИ\n\nПро при\n\n### Result 3 (score: 0.6186)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0275`\n- **Text**:\nІснує потреба всебічного, детального вивчення всього\r\nтексту пам’ятки, щоб повніше висвітлити теоретичні засади її автора й остаточно\r\nідентифікувати описану в ній мовну систему.\n\n* * *\n\n«Граматыка словенска» І. Ужевича порівняно невелика\r\nза обсягом — 142 с. паризький, 170 с. — арраський варіант рукопису у чверть\r\nаркуша.\n\nІ. Ужевич написав граматику української мови. Він\r\nдобре знав, що це перша праця такого змісту, тому після розгляду граматичної\r\nсистеми наприкінці її в «Епіграмі на книгу» с\n\n### Result 4 (score: 0.6142)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0001`\n- **Text**:\nВступну статтю «Іван Ужевич і його граматика»\r\nнаписали І. К. Білодід і Є. М. Кудрицький. Переклад латинського тексту на\r\nукраїнську мову, а також примітки, словопокажчик та бібліографія належать Є. М.\r\nКудрицькому. Відповідальний редактор доктор філологічних наук М. А. ЖОВТОБРЮХ\n\nСканування та обробка: http://litopys.kiev.ua\n\nПЕРЕДМОВА\n\nЛаскавий чителнику!\n\nЛаскавий читачу!\n\nЦя праця, яку Інститут мовознавства ім. О. О. Потебні\r\nАкадемії наук УРСР пропонує Твоїй увазі, становить пам’ятку україн\n\n### Result 5 (score: 0.6026)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0002`\n- **Text**:\nЗвернемося через віки до цієї праці і її автора\r\nсловами Тараса Шевченка:\n\nВ Україну ідіть, діти!\n\nВ нашу Україну...\n\nТам найдете щире серце\n\nІ слово ласкаве,\n\nТам найдете щиру правду,\n\nА ще, може, й славу...\n\nІнститут мовознавства їм. О. О. Потебні АН УРСР\n\nІ. К. Білодід, Є. М. Кудрицький\n\nІВАН УЖЕВИЧ І ЙОГО ГРАМАТИКА\n\nІ\n\nУ Відділі рукописів Національної бібліотеки в Парижі\r\nпід № 3876 зберігається рукопис-автограф in 4° «Граматыка словенскаıа\r\nнаписана прє [з] Ї’ώ’анна Ужє́вича СловАни́на;\r\nСл\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:32:22.651Z",
+          "resultDisplay": "Found 5 results for: \"Іван Ужевич Граматика цитата\"\n\n### Result 1 (score: 0.6656)\n- **Work**: Іван Ужевич — Граматика слов'янська (1643/1645) (1645)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `c32c00be_c0000`\n- **Text**:\nІван УЖЕВИЧ\n\nГРАМАТИКА СЛОВ’ЯНСЬКА\n\n(за вид. «Граматика слов’янська І.Ужевича. Київ — 1970. Пам’ятки української мови XVII ст.»)\n\nПередмова\n\nІ. К. Білодід, Є. М. Кудрицький. Іван Ужевич і його граматика\n\nПАРИЗЬКИЙ РУКОПИС (1643)\n\nНаписи на обкладинці\n\nТитульна сторінка\n\nсторінка 2.\n\nсторінка 3.\n\nсторінка 4.\n\nсторінка 5.\n\nсторінка 6.\n\nсторінка 7.\n\nсторінка 8.\n\nсторінка 9.\n\nсторінка 10.\n\nсторінка 11.\n\nсторінка 12.\n\nсторінка 13.\n\nсторінка 14.\n\nсторінка 15.\n\nсторінка 16.\n\nсторінка 17.\n\nсторінка 18.\n\n\n### Result 2 (score: 0.6221)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0000`\n- **Text**:\nГРАМАТИКА СЛОВ’ЯНСЬКА І. УЖЕВИЧА\n\nПереклад Паризького рукопису\n\nПередмова\n\nІ. К. Білодід, Є. М. Кудрицький. Іван Ужевич і його граматика\n\nЗМІСТ РУКОПИСУ\n\nПАРИЗЬКИЙ РУКОПИС\n\nСлов’янський алфавіт\n\nОбернений алфавіт\n\nЗмішаний алфавіт\n\nРозміщення складів обома способами\n\nВиклад повний\n\nВиклад той же, скорочений\n\nПовний\n\nВиклад повний, писарський\n\nСкорочений\n\nУживані назви (літер) алфавіту\n\nКоментарій до літер\n\nПро голосні о, ү і ы\n\nПро голосні ’v́ і а, ъ, ь\n\nПро приголосні\n\nПРО ЧАСТИНИ МОВИ\n\nПро при\n\n### Result 3 (score: 0.6186)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0275`\n- **Text**:\nІснує потреба всебічного, детального вивчення всього\r\nтексту пам’ятки, щоб повніше висвітлити теоретичні засади її автора й остаточно\r\nідентифікувати описану в ній мовну систему.\n\n* * *\n\n«Граматыка словенска» І. Ужевича порівняно невелика\r\nза обсягом — 142 с. паризький, 170 с. — арраський варіант рукопису у чверть\r\nаркуша.\n\nІ. Ужевич написав граматику української мови. Він\r\nдобре знав, що це перша праця такого змісту, тому після розгляду граматичної\r\nсистеми наприкінці її в «Епіграмі на книгу» с\n\n### Result 4 (score: 0.6142)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0001`\n- **Text**:\nВступну статтю «Іван Ужевич і його граматика»\r\nнаписали І. К. Білодід і Є. М. Кудрицький. Переклад латинського тексту на\r\nукраїнську мову, а також примітки, словопокажчик та бібліографія належать Є. М.\r\nКудрицькому. Відповідальний редактор доктор філологічних наук М. А. ЖОВТОБРЮХ\n\nСканування та обробка: http://litopys.kiev.ua\n\nПЕРЕДМОВА\n\nЛаскавий чителнику!\n\nЛаскавий читачу!\n\nЦя праця, яку Інститут мовознавства ім. О. О. Потебні\r\nАкадемії наук УРСР пропонує Твоїй увазі, становить пам’ятку україн\n\n### Result 5 (score: 0.6026)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0002`\n- **Text**:\nЗвернемося через віки до цієї праці і її автора\r\nсловами Тараса Шевченка:\n\nВ Україну ідіть, діти!\n\nВ нашу Україну...\n\nТам найдете щире серце\n\nІ слово ласкаве,\n\nТам найдете щиру правду,\n\nА ще, може, й славу...\n\nІнститут мовознавства їм. О. О. Потебні АН УРСР\n\nІ. К. Білодід, Є. М. Кудрицький\n\nІВАН УЖЕВИЧ І ЙОГО ГРАМАТИКА\n\nІ\n\nУ Відділі рукописів Національної бібліотеки в Парижі\r\nпід № 3876 зберігається рукопис-автограф in 4° «Граматыка словенскаıа\r\nнаписана прє [з] Ї’ώ’анна Ужє́вича СловАни́на;\r\nСл\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773451942276_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Смотрицький граматика передмова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773451942276_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Смотрицький граматика передмова\"\n\n### Result 1 (score: 0.6734)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0024`\n- **Text**:\n«Граматика» Смотрицького призначена була передусім\r\nдля викладачів. Вона велика обсягом, насичена визначеннями, прикладами,\r\nпоясненнями винятків із правил, увагами. У передмові до неї\r\n(«Учитεлεмь школнымъ...») автор звертається й до учнів. Скорочення «Д\r\n: С : и/Т : З : З :» в заголовку передмови можна розкрити як «...Авторъ:\r\nД[идаскалωмъ] С[ловεнскимъ] и/Т[щатεлεмъ] З[доровьА]\r\nЗ[ычитъ]». Отже, Смотрицький задумав її як підручник. Звертаючись у передмові\r\nдо вчителів, Смотрицький пише про ве\n\n### Result 2 (score: 0.6622)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0160`\n- **Text**:\n«Граматика» Смотрицького була призначена передусім для\r\nвикладачів. Вона велика обсягом, насичена визначеннями, прикладами, поясненнями\r\nвинятків із правил, увагами. У передмові до неї («Учителемъ школънымъ...»)\r\nавтор згертається й до учнів. Скорочення «Д :С : и / Т: З : З: в заголовку\r\nпередмови можна розкрити як «Авторъ: Д[идаскалωмъ] С[ловенскимъ] и\r\nТ[щателемъ] З[доровьА] З[ычитъ]». Отже, автор задумав її як підручник.\r\nЗвертаючись у передмові до вчителів, він пише про велике значення грама\n\n### Result 3 (score: 0.6081)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0027`\n- **Text**:\nЯк і попередні українські граматисти, Смотрицький не\r\nвзяв за джерело своєї теоретичної частини якийсь один граматичний твір.\r\nОскільки «Граматика» Смотрицького й зазначені вище граматики в теоретичній\r\nчастині мають спільні джерела, важко визначити, якою мірою він використав\r\nдефініції із праць 1591 і 1596 рр. Ці граматики, особливо Л. Зизанія, підготували\r\nгрунт для книги Смотрицького, полегшили його працю. Адже в Зизанія він знайшов\r\nприклад систематизації слов'янського мовного матеріалу, від\n\n### Result 4 (score: 0.6056)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0034`\n- **Text**:\n\"Граматика\" М.Смотрицького була покликана\r\nзміцнити норми церковнослов’янської мови. Автор писав у передмові, зверненій\r\nнасамперед до вчителів шкіл: \"ВЂдаєтє абовЂмъ, которыи стє сА ґрєцкои\r\nлюбъ латїнскои гра/м/матїки худозству учили што ωна єсть ку понАтю ıак\r\nıазыка чистости такъ и правогω а сочинногω вєдлугь власности\r\nдїалєктовъ и мовєнА и писанА, и писмъ вырозуменА. ВшєлАкїй пожитокъ который\r\nко/л/вєкъ прєрєчоныхъ ıазыкωвъ rpa/м/матїки чинити звыклы,\r\nбе/з/вонтпєнА и СлавєнскаА въ своємъ \n\n### Result 5 (score: 0.5981)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0162`\n- **Text**:\nУ М. Смотрицького були й українські попередники.\r\nПомітний вплив на нього мали львівська «Грамматіка доброглаголиваго\r\nелинословенскаго языка» 1591 p. та «Грамматіка словенска» Л. Зизанія, що довели\r\nв своїх дослідженнях К. Студинський (Студинський, 34 — 42) та М. Возняк\r\n(Возняк 1911, 48 — 56).\n\nЯк і українські граматисти XVI ст., Смотрицький взяв\r\nза джерело своєї теоретичної частини не якийсь один граматичний твір. Оскільки\r\n«Граматика» Смотрицького й зазначені вище граматики в теоретичній ча\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:32:22.651Z",
+          "resultDisplay": "Found 5 results for: \"Смотрицький граматика передмова\"\n\n### Result 1 (score: 0.6734)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0024`\n- **Text**:\n«Граматика» Смотрицького призначена була передусім\r\nдля викладачів. Вона велика обсягом, насичена визначеннями, прикладами,\r\nпоясненнями винятків із правил, увагами. У передмові до неї\r\n(«Учитεлεмь школнымъ...») автор звертається й до учнів. Скорочення «Д\r\n: С : и/Т : З : З :» в заголовку передмови можна розкрити як «...Авторъ:\r\nД[идаскалωмъ] С[ловεнскимъ] и/Т[щатεлεмъ] З[доровьА]\r\nЗ[ычитъ]». Отже, Смотрицький задумав її як підручник. Звертаючись у передмові\r\nдо вчителів, Смотрицький пише про ве\n\n### Result 2 (score: 0.6622)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0160`\n- **Text**:\n«Граматика» Смотрицького була призначена передусім для\r\nвикладачів. Вона велика обсягом, насичена визначеннями, прикладами, поясненнями\r\nвинятків із правил, увагами. У передмові до неї («Учителемъ школънымъ...»)\r\nавтор згертається й до учнів. Скорочення «Д :С : и / Т: З : З: в заголовку\r\nпередмови можна розкрити як «Авторъ: Д[идаскалωмъ] С[ловенскимъ] и\r\nТ[щателемъ] З[доровьА] З[ычитъ]». Отже, автор задумав її як підручник.\r\nЗвертаючись у передмові до вчителів, він пише про велике значення грама\n\n### Result 3 (score: 0.6081)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0027`\n- **Text**:\nЯк і попередні українські граматисти, Смотрицький не\r\nвзяв за джерело своєї теоретичної частини якийсь один граматичний твір.\r\nОскільки «Граматика» Смотрицького й зазначені вище граматики в теоретичній\r\nчастині мають спільні джерела, важко визначити, якою мірою він використав\r\nдефініції із праць 1591 і 1596 рр. Ці граматики, особливо Л. Зизанія, підготували\r\nгрунт для книги Смотрицького, полегшили його працю. Адже в Зизанія він знайшов\r\nприклад систематизації слов'янського мовного матеріалу, від\n\n### Result 4 (score: 0.6056)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0034`\n- **Text**:\n\"Граматика\" М.Смотрицького була покликана\r\nзміцнити норми церковнослов’янської мови. Автор писав у передмові, зверненій\r\nнасамперед до вчителів шкіл: \"ВЂдаєтє абовЂмъ, которыи стє сА ґрєцкои\r\nлюбъ латїнскои гра/м/матїки худозству учили што ωна єсть ку понАтю ıак\r\nıазыка чистости такъ и правогω а сочинногω вєдлугь власности\r\nдїалєктовъ и мовєнА и писанА, и писмъ вырозуменА. ВшєлАкїй пожитокъ который\r\nко/л/вєкъ прєрєчоныхъ ıазыкωвъ rpa/м/матїки чинити звыклы,\r\nбе/з/вонтпєнА и СлавєнскаА въ своємъ \n\n### Result 5 (score: 0.5981)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0162`\n- **Text**:\nУ М. Смотрицького були й українські попередники.\r\nПомітний вплив на нього мали львівська «Грамматіка доброглаголиваго\r\nелинословенскаго языка» 1591 p. та «Грамматіка словенска» Л. Зизанія, що довели\r\nв своїх дослідженнях К. Студинський (Студинський, 34 — 42) та М. Возняк\r\n(Возняк 1911, 48 — 56).\n\nЯк і українські граматисти XVI ст., Смотрицький взяв\r\nза джерело своєї теоретичної частини не якийсь один граматичний твір. Оскільки\r\n«Граматика» Смотрицького й зазначені вище граматики в теоретичній ча\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4a71060e-e754-4654-9dd7-8051acf54d07",
+      "timestamp": "2026-03-14T01:33:19.875Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Потреба норм\n\n## Key Facts Ledger\n```yaml\nsubject: \"Потреба норм: кодифікація руської та церковнослов'янської мов\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1596\"\n  end: \"~1643\"\n  key_events:\n    - year: 1596\n      event: \"Видання «Граматики словенської» Лаврентія Зизанія у Вільні.\"\n    - year: 1619\n      event: \"Видання «Грамматіки Словенския правилноє Сvнтагма» Мелетія Смотрицького в Єв'ї.\"\n    - year: 1643\n      event: \"Написання «Граматики словенської» (Grammatica sclavonica) Івана Ужевича латиною в Парижі.\"\nprimary_quotes:\n  - text: \"ВЂдаєтє абовЂмъ, которыи стє сА ґрєцкои любъ латїнскои грамматїки худозству учили што ωна єсть ку понАтю ıак ıазыка чистости такъ и правогω а сочинногω вєдлугь власности дїалєктовъ и мовєнА и писанА...\"\n    source: \"«Грамматіка Словенския...», передмова, 1619\"\n    attribution: \"Мелетій Смотрицький\"\n  - text: \"Не чудисА въ(з)люблен(ъ)ный мой друже, такова бо сила, а не презорство бысть съписателево...\"\n    source: \"«Граматика словенська», 1596\"\n    attribution: \"Лаврентій Зизаній\"\nforbidden_claims:\n  - \"Староукраїнська (руська) мова була некодифікованим 'селянським діалектом' до XIX століття.\"\n  - \"Перші справжні граматичні норми східним слов'янам принесла російська наука (наприклад, М. Ломоносов).\"\n  - \"Орієнтація на латину була виключно шкідливою і свідчила про 'ополячення'.\"\n```\n\n## Використані джерела\n1. [Українська мова — Енциклопедія (2004)](mcp-rag) — дані про розвиток мовознавства та граматик (Зизаній, Смотрицький, Ужевич).\n2. [Німчук В. Мовознавство на Україні XIV-XVII ст. (1985)](mcp-rag) — аналіз джерел граматики Зизанія та впливу латинської/грецької традицій.\n3. [Смотрицький — Граматіки Словенскія (1619)](mcp-rag) — першоджерело, передмова до вчителів.\n4. [Wikipedia: Мелетій Смотрицький](https://uk.wikipedia.org/wiki/%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D0%B9_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9) — біографічні та історичні дані про автора фундаментальної граматики.\n5. [Іван Ужевич — Граматика слов'янська (1643)](mcp-rag) — першоджерело Паризького рукопису.\n\n## Хронологія\n- 1586: Заснування Львівської братської школи, що започаткувала систематичне вивчення мов (грецької, слов'янської).\n- 1596: Вихід «Граматики словенської» Лаврентія Зизанія — першої спроби шкільного підручника з церковнослов'янської мови з елементами «простої мови».\n- 1619: Мелетій Смотрицький видає свою монументальну «Грамматіку», що стала стандартом на кілька століть.\n- 1643: Студент Сорбонни Іван Ужевич створює «Граматику словенську» латинською мовою, кодифікуючи староукраїнську книжну («просту») мову.\n\n## Ключові факти та цитати\n- **Тиск латини**: У Речі Посполитій латина була мовою престижу, науки та права, а польська — мовою політики. Некодифіковані мови вважалися «варварськими».\n- **Відповідь братств**: Щоб протистояти єзуїтським колегіумам і захистити православ'я, руські інтелектуали потребували шкіл та власної нормованої мови. Вони почали кодифікувати церковнослов'янську (як сакральну) та «просту мову» (як літературну).\n- **Смотрицький**: Його граматика не просто описувала мову, вона *творила* норму, орієнтуючись на зразки грецьких і латинських граматик, що було європейським підходом до мовознавства.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!context] — У католицькій Європі мовою без граматики не можна було говорити з Богом чи займатися наукою. Латинський виклик змусив українців довести, що їхня мова має власні закони і структуру, рівну латині.\n- Section \"Основний матеріал\": [!quote] — Цитата Смотрицького з передмови 1619 року про те, що вивчення граматики потрібне для «чистости» мови, як це робиться у грецькій чи латинській традиціях.\n- Section \"Основний матеріал\": [!history-bite] — Українець Іван Ужевич написав першу граматику староукраїнської мови у 1643 році, навчаючись у Парижі (Сорбонна), і написав її *латиною*, щоб пояснити європейцям красу своєї рідної мови.\n- Section \"Основний матеріал\": [!decolonization] — Граматика Смотрицького була настільки досконалою, що Михайло Ломоносов через понад століття назвав її «вратами своєї вченості». Норма прийшла до Москви з Києва та Вільна, а не навпаки.\n- Section \"Практика\": [!culture] — Дереворит у граматиці Зизанія (1596) зображував Граматику як жінку з ключем. Цей ключ символічно «відчиняв двері» до всіх інших наук (риторики, філософії).\n- Section \"Підсумок\": [!myth-buster] — Міф про те, що українська мова розвивалася ізольовано в селах. Реальність: її перші норми кувалися в полеміці з єзуїтами, з використанням європейського наукового апарату епохи Ренесансу.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Староукраїнська книжна мова розглядалася або як штучний «канцелярський» суржик, або як тимчасове відхилення від «єдиного общеруського» стандарту, який пізніше нібито врятувала Російська імперія.\n- **Ukrainian reality**: Кодифікація мови у XVI-XVII ст. була самостійним, європейським за своєю суттю процесом. Українські та білоруські інтелектуали створювали граматики (Зизаній, Смотрицький, Ужевич) як інструмент національної та релігійної самооборони в умовах полікультурної Речі Посполитої. Ці праці стали еталоном для всього православного слов'янського світу.\n\n## Contested Terms\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Староукраїнська мова | Западнорусский письменный язык / канцелярский язык | Руська мова / Проста мова / Староукраїнська літературна мова |\n| Кодифікація | Ломоносов як батько-засновник східнослов'янської граматики | Зизаній, Смотрицький та Ужевич як творці фундаментальних норм |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **The Latin Challenge**: У XVI столітті Річ Посполита переживала культурне піднесення. Латина та польська мови домінували. Латина — мова католицької церкви, університетів і міжнародного спілкування.\n- **Статус \"варварської\" мови**: Мова без писаної граматики вважалася неповноцінною. Православним русинам закидали, що їхньою мовою (ані церковнослов'янською, ані тим більше живою «простою») неможливо висловити складні богословські чи філософські поняття.\n- **Потреба у зброї**: Відповіддю на інтелектуальний наступ єзуїтів стало створення православних братств (Острог, Львів, Київ, Вільно) та братських шкіл. Для шкіл критично потрібні були підручники — насамперед граматики. Норма (правила) стала зброєю у боротьбі за ідентичність.\n\n### Основний матеріал\n- **Лаврентій Зизаній (1596)**: Його «Граматика словенська» (Вільно) — піонерська спроба. Написана у формі запитань і відповідей. Хоча вона описувала церковнослов'янську мову, Зизаній часто пояснював складні терміни «простою» староукраїнською мовою, щоб учням було зрозуміло.\n- **Мелетій Смотрицький (1619)**: Вершина граматичної думки — «Грамматіки Словенския правилноє Сvнтагма» (Єв'є). Смотрицький орієнтувався на найкращі грецькі та латинські зразки (зокрема, Е. Доната і Ф. Меланхтона). Він встановив систему з 8 частин мови, ввів нові терміни, закріпив правила орфографії та пунктуації. Його праця була настільки авторитетною, що стала єдиним стандартом на 150 років.\n- **Іван Ужевич (1643)**: Якщо Зизаній і Смотрицький кодифікували сакральну мову, то Ужевич зробив безпрецедентний крок — кодифікував *саму староукраїнську літературну мову* (lingua popularis). Його «Граматика словенська», написана в Парижі латиною, доводила європейцям, що руська мова має чітку структуру, правила і є повноцінною мовою європейської цивілізації.\n\n### Практика\n- Аналіз термінології: багато мовознавчих термінів, які українці використовують сьогодні (іменник, дієслово, відмінок, кома, крапка), були викувані саме в цей період як кальки з грецької або латинської мов (etymology-trace).\n- Транслітерація та читання уривків з передмов Смотрицького чи Зизанія (transcription) дозволяє відчути, як виглядала ця мова (зокрема використання літер Ђ, ω).\n- Ідентифікація граматичних форм у текстах XVII століття підкреслює тяглість мовних норм (grammar-identify).\n\n### Підсумок\n- Кодифікація мови у кінці XVI – першій половині XVII ст. врятувала руську (українську) культуру від асиміляції.\n- Створення чітких норм дозволило розвивати полемічну літературу, поезію та шкільництво власною мовою.\n- Це стало фундаментом для стабілізації орфографії (тема наступного модуля \"orthography-letters\") та подальшого розвитку барокової літератури.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Advancing to the Next Phase",
+          "description": "I am now moving forward with the analysis. The information is prepared. I'm focusing on the next stage.",
+          "timestamp": "2026-03-14T01:32:28.062Z"
+        },
+        {
+          "subject": "Crafting the Final Report",
+          "description": "I'm now consolidating the data and starting the process of writing the report. The key events and quotes have been recorded. I'm focusing on structuring the findings.",
+          "timestamp": "2026-03-14T01:32:31.440Z"
+        },
+        {
+          "subject": "Constructing the Narrative",
+          "description": "I am now focusing on refining the report's structure. The key points are now organized with engagement hooks. I am ready to craft the introduction.",
+          "timestamp": "2026-03-14T01:32:35.230Z"
+        },
+        {
+          "subject": "Outlining the Research Report",
+          "description": "I'm now arranging the structure and integrating the key elements I have gathered. The engagement hooks are helping me structure the report's sections and ensure I have everything.",
+          "timestamp": "2026-03-14T01:32:39.438Z"
+        },
+        {
+          "subject": "Refining Report Content",
+          "description": "I am now focusing on refining the material into a coherent report. I'm prioritizing the structure and integrating the key points for each section. I'm focusing on weaving in engagement hooks to maintain interest.",
+          "timestamp": "2026-03-14T01:32:40.970Z"
+        }
+      ],
+      "tokens": {
+        "input": 35289,
+        "output": 3044,
+        "cached": 26938,
+        "thoughts": 1015,
+        "tool": 0,
+        "total": 39348
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

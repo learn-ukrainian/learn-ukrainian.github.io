@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 11 — E2E
+PASS: pipeline ruth 11
 
   Module:   judicial-procedure
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T01:02:19Z
+  Date:     2026-03-14T07:07:55Z

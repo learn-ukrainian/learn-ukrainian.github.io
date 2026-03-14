@@ -1,0 +1,708 @@
+{
+  "sessionId": "d85db722-0cde-447b-8f59-bfb5c3d0afe1",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T02:02:00.190Z",
+  "lastUpdated": "2026-03-14T02:04:04.064Z",
+  "messages": [
+    {
+      "id": "474b5b99-3e4f-4a13-95b3-94543315946c",
+      "timestamp": "2026-03-14T02:02:00.190Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-062\nlevel: RUTH\nsequence: 62\nslug: dialogue-with-latins\nversion: '2.0'\ntitle: Діалог з латинами\nsubtitle: Dialogue with Latins\nfocus: Arguments against Union of Brest\nphase: 3\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Dialogue with Latins\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Anti-Unionist\nprerequisites:\n- baroque-lists\nconnects_to:\n- social-critique\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Діалог з латинами** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Діалог з латинами\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Діалог з латинами\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "596f3561-dcc9-4d54-b48f-aed50a840ca0",
+      "timestamp": "2026-03-14T02:02:08.710Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Process",
+          "description": "I'm focused on moving forward with the next stage. I've re-evaluated my options and am planning the specifics of my next action.",
+          "timestamp": "2026-03-14T02:02:05.354Z"
+        },
+        {
+          "subject": "Searching for Relevant Info",
+          "description": "I am now proceeding with my search to gather initial information. I'm focusing on the \"Union of Brest\" and related materials. I'm aiming to identify key arguments against the Union for this stage.",
+          "timestamp": "2026-03-14T02:02:08.498Z"
+        }
+      ],
+      "tokens": {
+        "input": 20477,
+        "output": 23,
+        "cached": 16876,
+        "thoughts": 279,
+        "tool": 0,
+        "total": 20779
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453728709_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Антиуніатська література"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453728709_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Антиуніатська література' — 5 results\n\n1. **Пересторога (твір)** — «Пересторо́га» — антиуніатський полемічний анонімний твір, створений 1605 на противагу трактату греко-католицького митрополита київського, галицького і\n2. **Апокрисис** — «Апо́крисис» (грец. άπόκρισις — відповідь) — видатний антиуніатський полемічний твір 16 століття, виданий польською (1597) і староукраїнською (1598) мовами\n3. **Яременко Порфирій Кирилович** — університеті, 1957. – 79 с. Яременко, П. К. &quot;Пересторога&quot; - український антиуніатський памфлет початку XVII ст. – Київ: Видавництво АН УРСР, 1963. – 164 с\n4. **Пахомій (Война-Оранський)** — złożonego archimandryty Dubieńsk., Вільно, 1645) в якій спростовує антиуніатські випади Касіяна Саковича (відомого українського поета, останній, перейшовши\n5. **Мелетій Смотрицький** — принесення в Московське царство православної вченості. Видав низку антиуніатських творів і налаштовував простолюд до переслідувань з&#039;єднаних з Апостольським"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:08.963Z",
+          "resultDisplay": "Wikipedia search: 'Антиуніатська література' — 5 results\n\n1. **Пересторога (твір)** — «Пересторо́га» — антиуніатський полемічний анонімний твір, створений 1605 на противагу трактату греко-католицького митрополита київського, галицького і\n2. **Апокрисис** — «Апо́крисис» (грец. άπόκρισις — відповідь) — видатний антиуніатський полемічний твір 16 століття, виданий польською (1597) і староукраїнською (1598) мовами\n3. **Яременко Порфирій Кирилович** — університеті, 1957. – 79 с. Яременко, П. К. &quot;Пересторога&quot; - український антиуніатський памфлет початку XVII ст. – Київ: Видавництво АН УРСР, 1963. – 164 с\n4. **Пахомій (Война-Оранський)** — złożonego archimandryty Dubieńsk., Вільно, 1645) в якій спростовує антиуніатські випади Касіяна Саковича (відомого українського поета, останній, перейшовши\n5. **Мелетій Смотрицький** — принесення в Московське царство православної вченості. Видав низку антиуніатських творів і налаштовував простолюд до переслідувань з&#039;єднаних з Апостольським",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "d5913e7c-5aca-4471-b734-434c6fe50b55",
+      "timestamp": "2026-03-14T02:02:14.233Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Investigation",
+          "description": "I'm now formulating the next steps to ensure I move ahead effectively. The focus is on implementing the plan. I'm working to make sure I am on the right track.",
+          "timestamp": "2026-03-14T02:02:13.487Z"
+        },
+        {
+          "subject": "Searching for Information",
+          "description": "I'm now starting to execute the initial research phase. My current aim is to gather primary data to use in the subsequent steps.",
+          "timestamp": "2026-03-14T02:02:14.129Z"
+        }
+      ],
+      "tokens": {
+        "input": 20896,
+        "output": 21,
+        "cached": 19812,
+        "thoughts": 94,
+        "tool": 0,
+        "total": 21011
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453734233_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Полемічна література"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453734233_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Полемічна література' — 5 results\n\n1. **Полемічна література** — Полемі́чна літерату́ра (від грец. πολεμιχός — войовничий) — підбірка текстів різних авторів, у яких обговорюються проблемні питання релігійної дискусії\n2. **Апокрисис** — «Апокрисис» мав велику популярність, був поштовхом до розвитку полемічної літератури, сприяв піднесенню визвольного руху в Україні і в Білорусі. Вікіцитати\n3. **Іван Вишенський** — Білецький О. І. Полемічна література. Іван Вишенський // Зібрання праць: у 5 т. — Київ, 1965. — Т. 1. : Давня українська і давня російська література. — 1965\n4. **Старобілоруська мова** — магістратів та ін., релігійно-полемічна література, а також твори світської літератури (літописи, хроніки, хронографи, мемуарна література, перекладні повісті,\n5. **Смотрицький Герасим Данилович** — небесного» (1587, Острог) — перша друкована пам&#039;ятка української полемічної літератури. Автор змагається за незалежність «руської віри», полемізує з єзуїтом"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:14.477Z",
+          "resultDisplay": "Wikipedia search: 'Полемічна література' — 5 results\n\n1. **Полемічна література** — Полемі́чна літерату́ра (від грец. πολεμιχός — войовничий) — підбірка текстів різних авторів, у яких обговорюються проблемні питання релігійної дискусії\n2. **Апокрисис** — «Апокрисис» мав велику популярність, був поштовхом до розвитку полемічної літератури, сприяв піднесенню визвольного руху в Україні і в Білорусі. Вікіцитати\n3. **Іван Вишенський** — Білецький О. І. Полемічна література. Іван Вишенський // Зібрання праць: у 5 т. — Київ, 1965. — Т. 1. : Давня українська і давня російська література. — 1965\n4. **Старобілоруська мова** — магістратів та ін., релігійно-полемічна література, а також твори світської літератури (літописи, хроніки, хронографи, мемуарна література, перекладні повісті,\n5. **Смотрицький Герасим Данилович** — небесного» (1587, Острог) — перша друкована пам&#039;ятка української полемічної літератури. Автор змагається за незалежність «руської віри», полемізує з єзуїтом",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4b96629c-bd01-4488-a476-4630f93b2e19",
+      "timestamp": "2026-03-14T02:02:20.219Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the Search",
+          "description": "I'm now making steady progress on the next stage. I am carefully evaluating the information gathered so far to plan my next course of action. I will refine my approach based on the current results.",
+          "timestamp": "2026-03-14T02:02:19.255Z"
+        },
+        {
+          "subject": "Reading and Comprehending",
+          "description": "I am currently focusing on understanding the article. I will extract relevant details from it as I advance. This should ensure I stay on track.",
+          "timestamp": "2026-03-14T02:02:20.090Z"
+        }
+      ],
+      "tokens": {
+        "input": 21288,
+        "output": 21,
+        "cached": 19787,
+        "thoughts": 115,
+        "tool": 0,
+        "total": 21424
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453740219_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Полемічна література"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453740219_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Полемічна література\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BB%D0%B5%D0%BC%D1%96%D1%87%D0%BD%D0%B0_%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0\n\nПолемі́чна літерату́ра (від грец. πολεμιχός — войовничий) — підбірка текстів різних авторів, у яких обговорюються проблемні питання релігійної дискусії між католицькою та православною церквами з метою їх об'єднання.\n\n\n== Берестейська унія ==\nОсобливого розвитку полемічна література набула в 16—17 ст., коли католицизм почав релігійно-ідеологічний наступ на православ'я, а також у зв'язку з Берестейською унією 1596 р. Поштовхом для полемічної літератури стала книга польського публіциста — єзуїта Петра Скарґи «Про єдність церкви Божої» (пол. O jedności kościoła Bożego) (Вільно, 1577 р.).\nСеред українських політичних, церковних та літературних діячів не було єдиної позиції щодо подій, які відбувалися. Зокрема, як писав В. Щурат: «Унія наблизила Русь до Західної Європи, унія викликала багате письменство, унія прискорила культурний розвиток руського народу». Проте серед прихильників українського православ'я унія породила тривогу і спричинила цілу хвилю протестів у вигляді полемічних трактатів та памфлетів.\nУ відповідь з'явилися анонімні памфлети українських православних літераторів, твори видатних українських письменників-полемістів Г. Смотрицького, Христофора Філалета, Івана Вишенського, Стефана Зизанія, М. Смотрицького, З. Копистенського, М. Андрелли та ін. Зокрема, «Апокрисис» («Відповідь»), виданий в Острозі польською (1597 р.) і староукраїнською (1598 р.) мовами, написаний Христофором Філалетом у відповідь Петру Скарги, гнівно виступає проти підступної політики папства та зрадницьких дій верхівки українського духовенства, застерігає, що польсько-шляхетська політика соціального і національно-релігійного гноблення українців і білорусів може викликати народне повстання. «Апокрисис» мав велику популярність в Україні і Білорусі.\n«Календар римский новый» Смотрицького «змагається» за незалежність «руської віри» з єзуїтом Б. Гербестом, критикує католицьке вчення про божественне походження папської влади і відкидає григоріанський календар. Твір Смотрицького не завжди дотримується теологічних аргументів, натомість використовує гумор з приповідками і прислів'ями, написаний мовою наближеною до народу, і тому стає доступним широким масам.\n\n\n== Питання реформування православної церкви ==\nОднак полемісти не обмежувалися проблемою боротьби з наступом католицизму. У своїх творах вони порушували питання реформування самої православної церкви, колективного управління її справами, висміювали відсталість і консерватизм православних ієрархів. Крім того, піднімалися і соціально-політичні проблеми: нерівноправності людей, експлуатації людини людиною й одного народу іншим. Особливий полемічний пафос виділяє твори Івана Вишенського. Наприклад, у «Посланні до єпископів» він викриває духовенство як користолюбців, що забули Бога. Єдиним способом порятунку людини від егоїзму і жорстокості світу він вважав чернецтво. Сам Вишенський емігрував до Греції і став ченцем-відлюдником в одній з святих печер на горі Афон.\n\n\n== Протести ополяченню ==\nПисьменники-полемісти Мелетій Смотрицький у творі «Тренос», Захар Копистенський у «Палінодії», Іван Вишенський у «Раді про очищення церкви» виступали проти втручання польського уряду у справи православної української церкви, викривали його політику за принципом «чим гірше, тим краще». Річ в тому, що православні священики, які призначалися сеймом, часто були недостатньо освіченими, відрізнялися сумнівними моральними і особистісними якостями. Один з таких священиків, Кирило Терлецький, постав перед судом за вбивство і зґвалтування. Мали місце здирство грошей у парафіян, розпродаж церковного майна і земель. Внаслідок цього, як і задумували ті, хто проводив таку політику, дискредитація і як наслідок, витіснення православної церкви католицькою було б неминучим.\nПолемічна література стала важливою ідейною зброєю в боротьбі за соціальне та національне визволення українського народу та сприяла піднесенню національно-визвольного руху.\n\n\n== Твори полемічної літератури ==\nАпокрисис\nПересторога\nПалінодія\n\n\n== Посилання ==\nПавленко Г. І. Полемічна література // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2011. — Т. 8 : Па — Прик. — С. 322. — ISBN 978-966-00-1142-7.\nТкачук Р. Ф. Полемічна традиція унійних письменників кінця XVI — першої половини XVII ст.: доба і постаті, текст і прототекст, риторика і поетика. Київ: КММ, 2019. 486 с. (link)\nПолемічна література // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 239-241.\nІгор Шевченко. «Україна між Сходом і Заходом». Нарис 10.\nEmilia Janowska. Prawosławna literatura polemiczna związana z wprowadzaniem w życie postanowień Unii Brzeskiej (1596—1610) // Przegląd Wschodnioeuropejski. 2011. № 2. s. 61-75."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:20.229Z",
+          "resultDisplay": "# Полемічна література\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BB%D0%B5%D0%BC%D1%96%D1%87%D0%BD%D0%B0_%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0\n\nПолемі́чна літерату́ра (від грец. πολεμιχός — войовничий) — підбірка текстів різних авторів, у яких обговорюються проблемні питання релігійної дискусії між католицькою та православною церквами з метою їх об'єднання.\n\n\n== Берестейська унія ==\nОсобливого розвитку полемічна література набула в 16—17 ст., коли католицизм почав релігійно-ідеологічний наступ на православ'я, а також у зв'язку з Берестейською унією 1596 р. Поштовхом для полемічної літератури стала книга польського публіциста — єзуїта Петра Скарґи «Про єдність церкви Божої» (пол. O jedności kościoła Bożego) (Вільно, 1577 р.).\nСеред українських політичних, церковних та літературних діячів не було єдиної позиції щодо подій, які відбувалися. Зокрема, як писав В. Щурат: «Унія наблизила Русь до Західної Європи, унія викликала багате письменство, унія прискорила культурний розвиток руського народу». Проте серед прихильників українського православ'я унія породила тривогу і спричинила цілу хвилю протестів у вигляді полемічних трактатів та памфлетів.\nУ відповідь з'явилися анонімні памфлети українських православних літераторів, твори видатних українських письменників-полемістів Г. Смотрицького, Христофора Філалета, Івана Вишенського, Стефана Зизанія, М. Смотрицького, З. Копистенського, М. Андрелли та ін. Зокрема, «Апокрисис» («Відповідь»), виданий в Острозі польською (1597 р.) і староукраїнською (1598 р.) мовами, написаний Христофором Філалетом у відповідь Петру Скарги, гнівно виступає проти підступної політики папства та зрадницьких дій верхівки українського духовенства, застерігає, що польсько-шляхетська політика соціального і національно-релігійного гноблення українців і білорусів може викликати народне повстання. «Апокрисис» мав велику популярність в Україні і Білорусі.\n«Календар римский новый» Смотрицького «змагається» за незалежність «руської віри» з єзуїтом Б. Гербестом, критикує католицьке вчення про божественне походження папської влади і відкидає григоріанський календар. Твір Смотрицького не завжди дотримується теологічних аргументів, натомість використовує гумор з приповідками і прислів'ями, написаний мовою наближеною до народу, і тому стає доступним широким масам.\n\n\n== Питання реформування православної церкви ==\nОднак полемісти не обмежувалися проблемою боротьби з наступом католицизму. У своїх творах вони порушували питання реформування самої православної церкви, колективного управління її справами, висміювали відсталість і консерватизм православних ієрархів. Крім того, піднімалися і соціально-політичні проблеми: нерівноправності людей, експлуатації людини людиною й одного народу іншим. Особливий полемічний пафос виділяє твори Івана Вишенського. Наприклад, у «Посланні до єпископів» він викриває духовенство як користолюбців, що забули Бога. Єдиним способом порятунку людини від егоїзму і жорстокості світу він вважав чернецтво. Сам Вишенський емігрував до Греції і став ченцем-відлюдником в одній з святих печер на горі Афон.\n\n\n== Протести ополяченню ==\nПисьменники-полемісти Мелетій Смотрицький у творі «Тренос», Захар Копистенський у «Палінодії», Іван Вишенський у «Раді про очищення церкви» виступали проти втручання польського уряду у справи православної української церкви, викривали його політику за принципом «чим гірше, тим краще». Річ в тому, що православні священики, які призначалися сеймом, часто були недостатньо освіченими, відрізнялися сумнівними моральними і особистісними якостями. Один з таких священиків, Кирило Терлецький, постав перед судом за вбивство і зґвалтування. Мали місце здирство грошей у парафіян, розпродаж церковного майна і земель. Внаслідок цього, як і задумували ті, хто проводив таку політику, дискредитація і як наслідок, витіснення православної церкви католицькою було б неминучим.\nПолемічна література стала важливою ідейною зброєю в боротьбі за соціальне та національне визволення українського народу та сприяла піднесенню національно-визвольного руху.\n\n\n== Твори полемічної літератури ==\nАпокрисис\nПересторога\nПалінодія\n\n\n== Посилання ==\nПавленко Г. І. Полемічна література // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2011. — Т. 8 : Па — Прик. — С. 322. — ISBN 978-966-00-1142-7.\nТкачук Р. Ф. Полемічна традиція унійних письменників кінця XVI — першої половини XVII ст.: доба і постаті, текст і прототекст, риторика і поетика. Київ: КММ, 2019. 486 с. (link)\nПолемічна література // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 239-241.\nІгор Шевченко. «Україна між Сходом і Заходом». Нарис 10.\nEmilia Janowska. Prawosławna literatura polemiczna związana z wprowadzaniem w życie postanowień Unii Brzeskiej (1596—1610) // Przegląd Wschodnioeuropejski. 2011. № 2. s. 61-75.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "7b2ca23b-0897-4d12-86df-a6eafb57a75f",
+      "timestamp": "2026-03-14T02:02:25.475Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Seeking Relevant Information Next",
+          "description": "I'm focused on moving forward. I'm preparing to find specific pieces of information to advance.",
+          "timestamp": "2026-03-14T02:02:23.554Z"
+        },
+        {
+          "subject": "Searching for Primary Texts",
+          "description": "I'm now setting up the search to gather the quotes needed. My next step involves querying to find primary texts relevant to the search terms I chose earlier.",
+          "timestamp": "2026-03-14T02:02:25.353Z"
+        }
+      ],
+      "tokens": {
+        "input": 23047,
+        "output": 20,
+        "cached": 19980,
+        "thoughts": 188,
+        "tool": 0,
+        "total": 23255
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453745473_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "унія з Римом"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453745473_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"унія з Римом\"\n\n### Result 1 (score: 0.5912)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3355`\n- **Text**:\nІсторія унїї руської церкви з Римом має дуже \r\n показну лїтературу й належить до найлїпше розроблених сторін історії \r\n України-Руси, хоч не у всїх частях однаково. Найбільше звертало на себе увагу \r\n довершеннє унїї, меньше — її попередня історія, тому тут лишаєть ся чимало \r\n невиясненого докладнїйше, тим більше, що прихильники унїї не в однім натягали, \r\n стараючи ся представити жизненність і силу ідеї унїї в тих часах перед її \r\n довершеннєм. Взагалї історія її й досї трактуєть ся занадто cu\n\n### Result 2 (score: 0.5908)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3122`\n- **Text**:\nПроби церковної унїї, чи то злучення, властиво \r\n піддання руської церкви церкві римській, мали свою довгу історію: вони \r\n розпочали ся (коли рахувати звісний епізод з часів кн. Ольги) ще скорше, нїж \r\n була орґанїзована взагалї християнська церква на Руси. Від тодї почавши, можна \r\n сказати, римська курія й католицьке духовенство не переставали з пробами \r\n привести руську церкву — найбільшу й найчисленнїйшу з тодїшнїх східнїх церков, \r\n до послушности Риму, та сї проби довго зіставали ся без \n\n### Result 3 (score: 0.5849)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0351`\n- **Text**:\nЗмагання до релігійної унії.\r\n Щоб рятувати українські землі перед руїною з боку татарської орди,\r\nзадумав уже князь Данило прийняти унію з Римом. В заміну за допомогу\r\nзахідноєвропейських держав у боротьбі з татарами, яку мав зорганізувати\r\nримський папа, пообіцяв Данило провести злуку української церкви з римською.\r\nОтримав, щоправда королівську корону (коронувався в Дорогичині 1253 р.), але\r\nпомочі не діждався, тому й кинув думку про унію. Цю думку підхопив митрополит\r\nГригорій Цамблак, що бу\n\n### Result 4 (score: 0.5788)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0118`\n- **Text**:\nЦього документа, крім митрополита, підписало шість\r\nєпископів. У пунктах київського митрополита М. Рогози, даних луцькому єпископу\r\nКирилу Терлецькому, висловлюється прохання до коронного гетьмана Яна\r\nЗамойського, щоб король видав митрополитові привілея до кінця життя і щоб йому\r\nбуло дано місце в сенаті на рівних правах з римськими духовними, прохалося\r\nзаборонити приїзд грецькому духовенству, зокрема ченцям, в Україну, і щоб вони\r\nне пропускалися «до землі ворожої московської». В наказі єписк\n\n### Result 5 (score: 0.5774)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3255`\n- **Text**:\nВідповідно до сього рішення, владиків виряжено \r\n зараз до Риму 39), а король ще перед їх виїздом (очевидно — з їх \r\n участию) видав унїверсал, де оповіщав про приступленнє до унїї владиків з \r\n митрополитом на чолї і про свою радість з сього поводу, що укоронувала його \r\n давні бажання і змагання до прилучення до римської церкви тих підданих, які \r\n були від тої одности відпали (похопивши ся, що таке підчеркненнє його участи \r\n може бути витолковано на некористь унїї, він додає слїдом: „одначе \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:26.265Z",
+          "resultDisplay": "Found 5 results for: \"унія з Римом\"\n\n### Result 1 (score: 0.5912)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3355`\n- **Text**:\nІсторія унїї руської церкви з Римом має дуже \r\n показну лїтературу й належить до найлїпше розроблених сторін історії \r\n України-Руси, хоч не у всїх частях однаково. Найбільше звертало на себе увагу \r\n довершеннє унїї, меньше — її попередня історія, тому тут лишаєть ся чимало \r\n невиясненого докладнїйше, тим більше, що прихильники унїї не в однім натягали, \r\n стараючи ся представити жизненність і силу ідеї унїї в тих часах перед її \r\n довершеннєм. Взагалї історія її й досї трактуєть ся занадто cu\n\n### Result 2 (score: 0.5908)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3122`\n- **Text**:\nПроби церковної унїї, чи то злучення, властиво \r\n піддання руської церкви церкві римській, мали свою довгу історію: вони \r\n розпочали ся (коли рахувати звісний епізод з часів кн. Ольги) ще скорше, нїж \r\n була орґанїзована взагалї християнська церква на Руси. Від тодї почавши, можна \r\n сказати, римська курія й католицьке духовенство не переставали з пробами \r\n привести руську церкву — найбільшу й найчисленнїйшу з тодїшнїх східнїх церков, \r\n до послушности Риму, та сї проби довго зіставали ся без \n\n### Result 3 (score: 0.5849)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0351`\n- **Text**:\nЗмагання до релігійної унії.\r\n Щоб рятувати українські землі перед руїною з боку татарської орди,\r\nзадумав уже князь Данило прийняти унію з Римом. В заміну за допомогу\r\nзахідноєвропейських держав у боротьбі з татарами, яку мав зорганізувати\r\nримський папа, пообіцяв Данило провести злуку української церкви з римською.\r\nОтримав, щоправда королівську корону (коронувався в Дорогичині 1253 р.), але\r\nпомочі не діждався, тому й кинув думку про унію. Цю думку підхопив митрополит\r\nГригорій Цамблак, що бу\n\n### Result 4 (score: 0.5788)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0118`\n- **Text**:\nЦього документа, крім митрополита, підписало шість\r\nєпископів. У пунктах київського митрополита М. Рогози, даних луцькому єпископу\r\nКирилу Терлецькому, висловлюється прохання до коронного гетьмана Яна\r\nЗамойського, щоб король видав митрополитові привілея до кінця життя і щоб йому\r\nбуло дано місце в сенаті на рівних правах з римськими духовними, прохалося\r\nзаборонити приїзд грецькому духовенству, зокрема ченцям, в Україну, і щоб вони\r\nне пропускалися «до землі ворожої московської». В наказі єписк\n\n### Result 5 (score: 0.5774)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3255`\n- **Text**:\nВідповідно до сього рішення, владиків виряжено \r\n зараз до Риму 39), а король ще перед їх виїздом (очевидно — з їх \r\n участию) видав унїверсал, де оповіщав про приступленнє до унїї владиків з \r\n митрополитом на чолї і про свою радість з сього поводу, що укоронувала його \r\n давні бажання і змагання до прилучення до римської церкви тих підданих, які \r\n були від тої одности відпали (похопивши ся, що таке підчеркненнє його участи \r\n може бути витолковано на некористь унїї, він додає слїдом: „одначе \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "074c8495-fa85-42cf-9df0-e9ed4234ff35",
+      "timestamp": "2026-03-14T02:02:31.529Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the Next Step",
+          "description": "I'm now focused on the next phase. I'm exploring the best approach to proceed, and I'm ready to begin the final steps to accomplish the task.",
+          "timestamp": "2026-03-14T02:02:29.862Z"
+        },
+        {
+          "subject": "Beginning Text Search",
+          "description": "I've shifted my attention to gathering texts. I'm actively searching for key quotes and relevant passages. The next step is clearly defined, and I'm moving swiftly to extract the necessary information.",
+          "timestamp": "2026-03-14T02:02:31.402Z"
+        }
+      ],
+      "tokens": {
+        "input": 24464,
+        "output": 22,
+        "cached": 20073,
+        "thoughts": 172,
+        "tool": 0,
+        "total": 24658
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453751528_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Апокрисис Філалет"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453751528_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Апокрисис Філалет\"\n\n### Result 1 (score: 0.6377)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c0245`\n- **Text**:\n«АПОКРИСИС» (грец.\r\n’απόκρίσις — відповідь) — твір\r\nукр. і білорус. полемічної літератури кін. 16 ст., опубл. невід. автором\r\nпід псевд. Христофор Філалет (Христоносець Правдолюб) польс. мовою 1597 у\r\nКракові. В 1598 вийшов у перекладі давньоукр. мовою в Острозі під назвою\r\n«Апокрисис албо отповЂдь на книжкы о съборЂ Берестейском, именем людій\r\nстарожитной релЂи греческой, через Христофора Филалета врихлЂ дана». Вірогідно,\r\nавтором «А.» був діяч Острозького літературно-наукового гуртка 2-ї пол.\r\n\n### Result 2 (score: 0.6210)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0966`\n- **Text**:\nАвтор цього твору підписався псевдонімом Христофор\r\nФілалет (Христоносець Правдолюб), під яким, найімовірніше, ховалася довірена\r\nособа старого князя, протестант з Великопольщі Мартин Броневський.\r\n\"Апокрисис\" — це одна з вершин високої полеміки, книга, позначена\r\nяскравим літературним хистом і майстерністю досвідченого диспутанта, який\r\nвлучною логікою б’є по слабких місцях опонента. Ще істотнішим є те, що саме в\r\n\"Апокрисисі\" було сформульовано програму, на яку впродовж десятиліть\r\nспиратиметь\n\n### Result 3 (score: 0.6052)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0197`\n- **Text**:\nХристофор Філалет — псевдонім автора полемічного\r\nантиуніатського твору «Апокрисис, албо ОтповЂдь на книжкы о съборЂ берестейском\r\nименем людій старожитнои релЂи гречес.кои... врихлЂ дана». Місце і час видання\r\nне позначені. Існує думка (яку не всі дослідники поділяють), що під псевдонімом\r\nХристофора Філалета виступив Мартин Броневський, поляк-протестант, який\r\nспівчував боротьбі українців і білорусів проти окатоличення. Мартин Броневський\r\nнародився у другій половині XVI ст., після 1692 р. був\n\n### Result 4 (score: 0.5843)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4204`\n- **Text**:\nНатомість слїдом за Ектезісом пущена була в сьвіт\r\nбомба більшого калїбру, поцїлена в самий центр контроверсії, так старанно прикритий\r\nріжними стороннїми розговорами в Скаржиній оборонї. Се був славний Апокрізіс Філялєта,\r\nнаписаний, по словам пізнїйшої унїятської традиції, на замовленнє кн.\r\nОстрозького, на підставі актів з його архиву, але виданий в Вильнї, може з\r\nякихось практичних, а може і з тактичних мотивів 2). Про особу\r\nавтора й обставини написання його книги не маємо сливе нїяких від\n\n### Result 5 (score: 0.5653)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4123`\n- **Text**:\n18) Saulus et Paulus c. 15-6.\n\n19) Видана в т. II Памятників полем. литературы.\n\n20) „Ciє Василієво писаніє испытахомъ извЂстно и \r\n увидЂхомъ, яко не отъ своеє фантазіи новоизобрЂтеннаго помысла, но отъ \r\n божественнаго писанія писа, яже написа; сего ради пріймЂте сіє, молю васъ, съ \r\n усердіємь вседушноє любве”, і т. д. — Акты Ю. і 3. Рос. II с. 264.\n\n21) Каратаєв ч. 158.\n\n22) Зістаєть ся досї незвісним, де жив Філялєт — \r\n на Українї чи Білій Руси. В текстї Апокрізіса єсть вказівки на Вильно,\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:32.021Z",
+          "resultDisplay": "Found 5 results for: \"Апокрисис Філалет\"\n\n### Result 1 (score: 0.6377)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c0245`\n- **Text**:\n«АПОКРИСИС» (грец.\r\n’απόκρίσις — відповідь) — твір\r\nукр. і білорус. полемічної літератури кін. 16 ст., опубл. невід. автором\r\nпід псевд. Христофор Філалет (Христоносець Правдолюб) польс. мовою 1597 у\r\nКракові. В 1598 вийшов у перекладі давньоукр. мовою в Острозі під назвою\r\n«Апокрисис албо отповЂдь на книжкы о съборЂ Берестейском, именем людій\r\nстарожитной релЂи греческой, через Христофора Филалета врихлЂ дана». Вірогідно,\r\nавтором «А.» був діяч Острозького літературно-наукового гуртка 2-ї пол.\r\n\n### Result 2 (score: 0.6210)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0966`\n- **Text**:\nАвтор цього твору підписався псевдонімом Христофор\r\nФілалет (Христоносець Правдолюб), під яким, найімовірніше, ховалася довірена\r\nособа старого князя, протестант з Великопольщі Мартин Броневський.\r\n\"Апокрисис\" — це одна з вершин високої полеміки, книга, позначена\r\nяскравим літературним хистом і майстерністю досвідченого диспутанта, який\r\nвлучною логікою б’є по слабких місцях опонента. Ще істотнішим є те, що саме в\r\n\"Апокрисисі\" було сформульовано програму, на яку впродовж десятиліть\r\nспиратиметь\n\n### Result 3 (score: 0.6052)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0197`\n- **Text**:\nХристофор Філалет — псевдонім автора полемічного\r\nантиуніатського твору «Апокрисис, албо ОтповЂдь на книжкы о съборЂ берестейском\r\nименем людій старожитнои релЂи гречес.кои... врихлЂ дана». Місце і час видання\r\nне позначені. Існує думка (яку не всі дослідники поділяють), що під псевдонімом\r\nХристофора Філалета виступив Мартин Броневський, поляк-протестант, який\r\nспівчував боротьбі українців і білорусів проти окатоличення. Мартин Броневський\r\nнародився у другій половині XVI ст., після 1692 р. був\n\n### Result 4 (score: 0.5843)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4204`\n- **Text**:\nНатомість слїдом за Ектезісом пущена була в сьвіт\r\nбомба більшого калїбру, поцїлена в самий центр контроверсії, так старанно прикритий\r\nріжними стороннїми розговорами в Скаржиній оборонї. Се був славний Апокрізіс Філялєта,\r\nнаписаний, по словам пізнїйшої унїятської традиції, на замовленнє кн.\r\nОстрозького, на підставі актів з його архиву, але виданий в Вильнї, може з\r\nякихось практичних, а може і з тактичних мотивів 2). Про особу\r\nавтора й обставини написання його книги не маємо сливе нїяких від\n\n### Result 5 (score: 0.5653)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4123`\n- **Text**:\n18) Saulus et Paulus c. 15-6.\n\n19) Видана в т. II Памятників полем. литературы.\n\n20) „Ciє Василієво писаніє испытахомъ извЂстно и \r\n увидЂхомъ, яко не отъ своеє фантазіи новоизобрЂтеннаго помысла, но отъ \r\n божественнаго писанія писа, яже написа; сего ради пріймЂте сіє, молю васъ, съ \r\n усердіємь вседушноє любве”, і т. д. — Акты Ю. і 3. Рос. II с. 264.\n\n21) Каратаєв ч. 158.\n\n22) Зістаєть ся досї незвісним, де жив Філялєт — \r\n на Українї чи Білій Руси. В текстї Апокрізіса єсть вказівки на Вильно,\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "b12beaff-afbb-4399-9ce2-2fd5c6bc30d3",
+      "timestamp": "2026-03-14T02:02:37.110Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on charting a course for the subsequent action. I've begun to consider the specific steps needed to reach the ultimate goal and am formulating a strategy to ensure everything aligns perfectly for the best outcome. This involves meticulous planning to move forward efficiently.",
+          "timestamp": "2026-03-14T02:02:35.940Z"
+        },
+        {
+          "subject": "Identifying Relevant Quotes",
+          "description": "I am currently concentrating on identifying and extracting the necessary quotes. My approach involves pinpointing the exact information needed, and I am putting effort into ensuring I find the correct text for the task at hand, to get the desired outcome.",
+          "timestamp": "2026-03-14T02:02:36.900Z"
+        }
+      ],
+      "tokens": {
+        "input": 25957,
+        "output": 24,
+        "cached": 23540,
+        "thoughts": 118,
+        "tool": 0,
+        "total": 26099
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453757109_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Іван Вишенський католики папа"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453757109_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Іван Вишенський католики папа\"\n\n### Result 1 (score: 0.5312)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0313`\n- **Text**:\nЛюбить він антитези, — так на його думку при спілці\r\nправославних з протестантами сполучуються:\n\nстарожитноє з новотою утвержденіє,\n\nі камень недвижимий з легкомисльности тростиною,\n\nширота з тіснотою,\n\nплідність з неплодієм,\n\nсвятобливості, з проклятієм,\n\nдобрий порядок з помішанієм,...\n\nмиро благоуханноє з грязю,\n\nсвітлость з темностю,\n\nХристос з Веліаром...\n\nтеж у закликах:\n\nне мішайте людських справ з Божськими,\n\nмирских з духовними,\n\nземних з небесними,\n\nдочасних з вічними...\n\nСтиль Потія н\n\n### Result 2 (score: 0.5282)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0107`\n- **Text**:\nІ. Вишенський у всьому, в тому числі і в мові, —\r\nтрадиціоналіст. Він добре знає церковнослов’янську мову, обстоює її перед П.\r\nСкаргою як знаряддя істинної святості: «То всЂ, Скарго, род руский в писмЂ и\r\nнауке славянскаго языка благодатию Христа бога одержал, засвидЂтельствовал и\r\nтако достатечне спробовал» (193). І разом з тим кілька разів підкреслює, що він\r\nякихось особливих шкіл не закінчував, а до філософії, риторики й інших\r\n«латинських» наук відчуває відразу. «Наперед тебе от тое прелес\n\n### Result 3 (score: 0.5200)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1281`\n- **Text**:\nПроблематика творів Івана Вишенського змінюється\r\nвідповідно до суспільно-релігійної ситуації та її запитів. І хоча чільне місце\r\nналежить поборюванню Берестейської унії, особливо в \"Писанії к утікшим од\r\nправославної віри єпископом\", тематичний діапазон набагато ширший і\r\nмістить мотиви соціального служіння Церкви, суспільних відносин, релігійної моралі,\r\nосвіти тощо. Єдиний жанровий тип послання варіюється залежно від спонук і умов\r\nнаписання та характеру адресата, набуваючи особливої масштабн\n\n### Result 4 (score: 0.5098)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0343`\n- **Text**:\nЗ Афону він шле громові послання, писані в стилі\r\nапостола Павла, велить їх читати на братських зібраннях, навіть викладає науку,\r\nяк саме їх читати, посилає від себе посланців.., повчає, сварить, сердиться,\r\nнаказує, дає моральну науку, бичує суспільні порядки, панство, духовенство —\r\nодне слово, не тільки відчуває свій тісний зв’язок з народом, але й поводиться\r\nтак, як провідник, керманич того народу. \"Господь-бо з нами, і я повсякчас\r\nз вами\", — не зовсім скромно вістить Вишенський... 13.\n\n1\n\n### Result 5 (score: 0.5094)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0317`\n- **Text**:\nУ творах своїх Вишенський порушує не лише актуальні\r\nпитання релігійної боротьби („утекші єпископи“), твори його підносяться над\r\nчасом, говорячи, як у цитованих уривках, про актуальні тоді, але актуальні і\r\nзавжди питання. /236/\n\n4. Церковна програма Вишенського в усіх його творах\r\nпроста, — це утриматися старого: „до церкви на правило соборноє ходіте і во всім\r\nпо уставу церковному — ні прилагающе од своєго умисла що, ні отімлюще..., ні\r\nроздирающе мнінієм творіте“. Але Вишенський навіть за ут\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:37.360Z",
+          "resultDisplay": "Found 5 results for: \"Іван Вишенський католики папа\"\n\n### Result 1 (score: 0.5312)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0313`\n- **Text**:\nЛюбить він антитези, — так на його думку при спілці\r\nправославних з протестантами сполучуються:\n\nстарожитноє з новотою утвержденіє,\n\nі камень недвижимий з легкомисльности тростиною,\n\nширота з тіснотою,\n\nплідність з неплодієм,\n\nсвятобливості, з проклятієм,\n\nдобрий порядок з помішанієм,...\n\nмиро благоуханноє з грязю,\n\nсвітлость з темностю,\n\nХристос з Веліаром...\n\nтеж у закликах:\n\nне мішайте людських справ з Божськими,\n\nмирских з духовними,\n\nземних з небесними,\n\nдочасних з вічними...\n\nСтиль Потія н\n\n### Result 2 (score: 0.5282)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0107`\n- **Text**:\nІ. Вишенський у всьому, в тому числі і в мові, —\r\nтрадиціоналіст. Він добре знає церковнослов’янську мову, обстоює її перед П.\r\nСкаргою як знаряддя істинної святості: «То всЂ, Скарго, род руский в писмЂ и\r\nнауке славянскаго языка благодатию Христа бога одержал, засвидЂтельствовал и\r\nтако достатечне спробовал» (193). І разом з тим кілька разів підкреслює, що він\r\nякихось особливих шкіл не закінчував, а до філософії, риторики й інших\r\n«латинських» наук відчуває відразу. «Наперед тебе от тое прелес\n\n### Result 3 (score: 0.5200)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1281`\n- **Text**:\nПроблематика творів Івана Вишенського змінюється\r\nвідповідно до суспільно-релігійної ситуації та її запитів. І хоча чільне місце\r\nналежить поборюванню Берестейської унії, особливо в \"Писанії к утікшим од\r\nправославної віри єпископом\", тематичний діапазон набагато ширший і\r\nмістить мотиви соціального служіння Церкви, суспільних відносин, релігійної моралі,\r\nосвіти тощо. Єдиний жанровий тип послання варіюється залежно від спонук і умов\r\nнаписання та характеру адресата, набуваючи особливої масштабн\n\n### Result 4 (score: 0.5098)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0343`\n- **Text**:\nЗ Афону він шле громові послання, писані в стилі\r\nапостола Павла, велить їх читати на братських зібраннях, навіть викладає науку,\r\nяк саме їх читати, посилає від себе посланців.., повчає, сварить, сердиться,\r\nнаказує, дає моральну науку, бичує суспільні порядки, панство, духовенство —\r\nодне слово, не тільки відчуває свій тісний зв’язок з народом, але й поводиться\r\nтак, як провідник, керманич того народу. \"Господь-бо з нами, і я повсякчас\r\nз вами\", — не зовсім скромно вістить Вишенський... 13.\n\n1\n\n### Result 5 (score: 0.5094)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0317`\n- **Text**:\nУ творах своїх Вишенський порушує не лише актуальні\r\nпитання релігійної боротьби („утекші єпископи“), твори його підносяться над\r\nчасом, говорячи, як у цитованих уривках, про актуальні тоді, але актуальні і\r\nзавжди питання. /236/\n\n4. Церковна програма Вишенського в усіх його творах\r\nпроста, — це утриматися старого: „до церкви на правило соборноє ходіте і во всім\r\nпо уставу церковному — ні прилагающе од своєго умисла що, ні отімлюще..., ні\r\nроздирающе мнінієм творіте“. Але Вишенський навіть за ут\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8ab34ff6-9224-4b6b-8d66-39651aae3e3a",
+      "timestamp": "2026-03-14T02:02:44.252Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Initiating the Search",
+          "description": "I'm now zeroing in on the next phase. My focus is on refining the search parameters. I will adjust the scope of information gathering to ensure the results are relevant.",
+          "timestamp": "2026-03-14T02:02:43.189Z"
+        },
+        {
+          "subject": "Targeting Relevant Details",
+          "description": "I'm currently focused on extracting information from the sources. I'm now working to obtain precise quotes and specific details, by using the best tools available for gathering pertinent facts to further progress the task.",
+          "timestamp": "2026-03-14T02:02:44.093Z"
+        }
+      ],
+      "tokens": {
+        "input": 27333,
+        "output": 22,
+        "cached": 0,
+        "thoughts": 158,
+        "tool": 0,
+        "total": 27513
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453764251_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Пересторога (твір)"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453764251_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Пересторога (твір)\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%B3%D0%B0_(%D1%82%D0%B2%D1%96%D1%80)\n\n«Пересторо́га» — антиуніатський полемічний анонімний твір, створений 1605 на противагу трактату греко-католицького митрополита київського, галицького і всієї Руси Іпатія Потія «Poselstwo do papieża rzymskiego Sixta IV od duchowieństwa i od książάt i panów ruskich w roku 1476» (Вільня, 1605). У творі владики Іпатія розгорталося канонічне обґрунтування прийняття православними Флорентійської унії церков (1439). \n\n\n== Обставини ==\nНаписана 1605 року або на початку 1606 р. під впливом праць Івана Вишенського та інших полемічних творів, подає історію боротьби українського народу проти засилля католицизму та унії і викриває політику Варшави в Україні.\nЄ зразком української полемічної літератури початку 17 ст. Хоча на думку літературознавців, за стилем твір відрізняється від інших пам'яток полемічної писемності початку XVII століття, бо в ньому об'єднані власне полемічно-публіцистичний памфлет та опис реальних подій. Праця написана мовою, близькою до розмовної, рясно збагачена народними фразеологізмами. Антигероями Перестороги є Михаїл Рогоза та Іпатій Потій, а власне героєм і зразком для наслідування — князь Костянтин Василь Острозький. \nОдні дослідники авторство «Пересторо́ги» приписують українському церковному діячу святому Іову Борецькому. Інші, серед яких, зокрема, Іван Франко — діячу Львівського братства Юрію Рогатинцю.\n1879 А. Попов висунув гіпотезу, що автором твору міг бути пресвітер церкви святого Вознесіння у Львові, діяч Львівського Успенського братства, нотар-хроніст берестейського православного собору Андрій Вознесенський.  \nУ Російській імперії твір «Пересторо́га» трактувався у вульгарному дусі — як суто антипольський, а ієрархи Унійної Церкви в російській інтерпретації зазнали ще більших карикатурних метаморфоз, ніж їх міг уявити сам анонімний автор. \n\n\n== Примітки ==\n\n\n== Джерела та література ==\nДзюба О. М. «Пересторога» // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2011. — Т. 8 : Па — Прик. — С. 139. — ISBN 978-966-00-1142-7.\nГайдай Л. Історія України в особах, термінах, назвах і поняттях. — Луцьк: Вежа, 2000.\nГрицай М., Микитась В., Шолом Ф. Давня українська література. — К.: Вища школа, 1978. — 416 с. — С. 125—132.\nРад. енциклопедія історії України. — К., 1971. — Т. 3.\nСамусік А.Ф. Палеміка вакол мэтазгоднасці дзейнасці брацкіх школ на беларуска-ўкраінскіх землях у пачатку XVII ст. // Государства Центральной и Восточной Европы в исторической перспективе: сборник научных статей по материалам IV Международной научно-практической конференции, Пинск, 20 – 21 декабря 2019 г. / редкол. : К.К. Шебеко [и др.]. Пинск: ПолесГУ, 2019. Вып. 4. C. 56-60.\n\n\n== Посилання ==\n«Пересторога» // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Буенос-Айрес, 1962. — Т. 5, кн. X : Літери Ол — Пер. — С. 1332. — 1000 екз.\n«Пересторога зіло потребная на потомныє часы православным христіаном» // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 202."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:44.954Z",
+          "resultDisplay": "# Пересторога (твір)\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%B3%D0%B0_(%D1%82%D0%B2%D1%96%D1%80)\n\n«Пересторо́га» — антиуніатський полемічний анонімний твір, створений 1605 на противагу трактату греко-католицького митрополита київського, галицького і всієї Руси Іпатія Потія «Poselstwo do papieża rzymskiego Sixta IV od duchowieństwa i od książάt i panów ruskich w roku 1476» (Вільня, 1605). У творі владики Іпатія розгорталося канонічне обґрунтування прийняття православними Флорентійської унії церков (1439). \n\n\n== Обставини ==\nНаписана 1605 року або на початку 1606 р. під впливом праць Івана Вишенського та інших полемічних творів, подає історію боротьби українського народу проти засилля католицизму та унії і викриває політику Варшави в Україні.\nЄ зразком української полемічної літератури початку 17 ст. Хоча на думку літературознавців, за стилем твір відрізняється від інших пам'яток полемічної писемності початку XVII століття, бо в ньому об'єднані власне полемічно-публіцистичний памфлет та опис реальних подій. Праця написана мовою, близькою до розмовної, рясно збагачена народними фразеологізмами. Антигероями Перестороги є Михаїл Рогоза та Іпатій Потій, а власне героєм і зразком для наслідування — князь Костянтин Василь Острозький. \nОдні дослідники авторство «Пересторо́ги» приписують українському церковному діячу святому Іову Борецькому. Інші, серед яких, зокрема, Іван Франко — діячу Львівського братства Юрію Рогатинцю.\n1879 А. Попов висунув гіпотезу, що автором твору міг бути пресвітер церкви святого Вознесіння у Львові, діяч Львівського Успенського братства, нотар-хроніст берестейського православного собору Андрій Вознесенський.  \nУ Російській імперії твір «Пересторо́га» трактувався у вульгарному дусі — як суто антипольський, а ієрархи Унійної Церкви в російській інтерпретації зазнали ще більших карикатурних метаморфоз, ніж їх міг уявити сам анонімний автор. \n\n\n== Примітки ==\n\n\n== Джерела та література ==\nДзюба О. М. «Пересторога» // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2011. — Т. 8 : Па — Прик. — С. 139. — ISBN 978-966-00-1142-7.\nГайдай Л. Історія України в особах, термінах, назвах і поняттях. — Луцьк: Вежа, 2000.\nГрицай М., Микитась В., Шолом Ф. Давня українська література. — К.: Вища школа, 1978. — 416 с. — С. 125—132.\nРад. енциклопедія історії України. — К., 1971. — Т. 3.\nСамусік А.Ф. Палеміка вакол мэтазгоднасці дзейнасці брацкіх школ на беларуска-ўкраінскіх землях у пачатку XVII ст. // Государства Центральной и Восточной Европы в исторической перспективе: сборник научных статей по материалам IV Международной научно-практической конференции, Пинск, 20 – 21 декабря 2019 г. / редкол. : К.К. Шебеко [и др.]. Пинск: ПолесГУ, 2019. Вып. 4. C. 56-60.\n\n\n== Посилання ==\n«Пересторога» // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Буенос-Айрес, 1962. — Т. 5, кн. X : Літери Ол — Пер. — С. 1332. — 1000 екз.\n«Пересторога зіло потребная на потомныє часы православным христіаном» // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 202.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "387a7a65-eb49-4ff0-97b8-cfe951831745",
+      "timestamp": "2026-03-14T02:02:50.839Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Step",
+          "description": "I'm focused on moving forward. I'm actively thinking through the next required actions to complete the task. I'm currently reviewing the options available to make sure I am ready to make progress.",
+          "timestamp": "2026-03-14T02:02:50.085Z"
+        },
+        {
+          "subject": "Investigating the Options",
+          "description": "I am now delving into the next phase of the process. I am examining and clarifying the actions necessary to take the next step. I'm focusing on ensuring all aspects are addressed.",
+          "timestamp": "2026-03-14T02:02:50.710Z"
+        }
+      ],
+      "tokens": {
+        "input": 28643,
+        "output": 21,
+        "cached": 13556,
+        "thoughts": 139,
+        "tool": 0,
+        "total": 28803
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453770838_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Тренос Смотрицький",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453770838_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Тренос Смотрицький' — 5 results\n\n1. **Тренос** — Львів, 2009 Мелетій Смотрицький. Тренос (Фрагменти твору) [Архівовано 12 жовтня 2007 у Wayback Machine.] М. Смотрицький та його «Тренос». Михайло Грушевський\n2. **Мелетій Смотрицький** — Меле́тій Смотри́цький, також відомий як Максим Герасимович Смотрицький (1577(1577), Смотрич — 17 (27) грудня 1633, Дермань) — письменник, церковний і\n3. **Михайло Михайлович Вишневецький** — Львівського братства. Йому як покровителю православ&#039;я присвятив свій «Тренос» Мелетій Смотрицький. Михайло Вишневецький брав участь у придушенні повстання Наливайка:\n4. **Смотрицький Герасим Данилович** — гуртка; у 1580 році Г. Смотрицький — перший ректор Острозької школи (академії). Разом з Іваном Федоровичем Герасим Смотрицький — один із видавців «Острозької\n5. **Література українського бароко** — початком українського літературного бароко вважається трактат Мелетія Смотрицького «Тренос» (1610), а його кінцем — творчість Григорія Сковороди (1790-ті)."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:50.878Z",
+          "resultDisplay": "Wikipedia search: 'Тренос Смотрицький' — 5 results\n\n1. **Тренос** — Львів, 2009 Мелетій Смотрицький. Тренос (Фрагменти твору) [Архівовано 12 жовтня 2007 у Wayback Machine.] М. Смотрицький та його «Тренос». Михайло Грушевський\n2. **Мелетій Смотрицький** — Меле́тій Смотри́цький, також відомий як Максим Герасимович Смотрицький (1577(1577), Смотрич — 17 (27) грудня 1633, Дермань) — письменник, церковний і\n3. **Михайло Михайлович Вишневецький** — Львівського братства. Йому як покровителю православ&#039;я присвятив свій «Тренос» Мелетій Смотрицький. Михайло Вишневецький брав участь у придушенні повстання Наливайка:\n4. **Смотрицький Герасим Данилович** — гуртка; у 1580 році Г. Смотрицький — перший ректор Острозької школи (академії). Разом з Іваном Федоровичем Герасим Смотрицький — один із видавців «Острозької\n5. **Література українського бароко** — початком українського літературного бароко вважається трактат Мелетія Смотрицького «Тренос» (1610), а його кінцем — творчість Григорія Сковороди (1790-ті).",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e5dfe566-91db-427a-ab98-5d781540c1ad",
+      "timestamp": "2026-03-14T02:02:55.931Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Analysis of Text",
+          "description": "I'm now starting to analyze the provided text. My focus is on deciphering the core elements to initiate the next phase. I will need to process it and then to extract the relevant data efficiently.",
+          "timestamp": "2026-03-14T02:02:55.299Z"
+        },
+        {
+          "subject": "Processing Wikipedia Data",
+          "description": "I'm now focusing on the data I retrieved from the initial source. I need to make sure I understand the context before proceeding. I'm readying to sift through the information and extract key insights.",
+          "timestamp": "2026-03-14T02:02:55.809Z"
+        }
+      ],
+      "tokens": {
+        "input": 29053,
+        "output": 17,
+        "cached": 0,
+        "thoughts": 82,
+        "tool": 0,
+        "total": 29152
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453775929_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Тренос"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453775929_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Тренос\n**URL**: https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D0%B5%D0%BD%D0%BE%D1%81\n\nТренос (грец. Θρηνος to iest lament iedyney świętej Powszechney Apostolskiey Wschodniej Cerkwie z obiasnieniem dogmat wiary)  (\"Тренос, тобто плач єдиної святої Вселенської Апостольської Східної Церкви з поясненням догматів віри\") —  твір Мелетія Смотрицького, написаний, надрукований у 1610 році польською мовою. В перекладі означає «плач». Присвячений магнату Михайлу Вишневецькому.\nВийшов у друкарні православного братства Святого Духу Вільнюса.  Занепокоєний цим, король Сігізмунд ІІІ Ваза в листі з-під Смоленська 1 квітня 1610 року писав, що «в друкарні руській Св. Духа якісь пасквілі проти зверхності та потаємні книги друкують»; потім видав мандат, за яким наклад книги мав бути спалений, друкар та автор мали бути арештовані. Друкар — Леонтій Карпович — був потім ув'язнений за вихід книги, анонімний автор уник цього.\n«Тренос» справив великий вплив на сучасників Мелетія Смотрицького. Полемічно-художня книга письменника «Тренос або плач Східної церкви» видана у Вільно під псевдонімом Теофіл Ортолог. Приводом для книги стала сутичка між православними і прихильниками Берестейської унії, а також відібрання у віленських православних братського Троїцького монастиря.\nБезпосередньою причиною був погром віленських православних міщан, вчинений в 1609 році Іпатієм Потієм за підтримки польських королівських властей.\nЗа традиційним \"прикнижним реквізитом\" подаються 10 самостійних розділів: 1) Плач, або нарікання Сх. Церкви на злочинних синів; 2) Напучування Сх. Церкви до сина, який залишив її разом з іншими; 3) Проти єдиновладного верховенства рим. єпископа; 4) Трактат про сучасну Рим. Церкву і про Сх. Церкву; 5) Трактат про походження Святого Духа; 6) Про прісний і про квасний хліб Таїнства Господньої Вечері; 7) Про чистилище; 8) Про відкинення Рим. Церквою Чаші Нового Завіту; 9) Про взивання святих; 10) Катехізис, тобто підсумок, або коротке зібрання віри обрядів святої Сх. Церкви.\nПлач Матері-Церкви побудований на контрасті: колись була, як вранішня зоря, як місяць, як сонце, а тепер стала посміховиськом для всього світу. Церква нарікає на своїх синів, які залишили її і пішли за мачухою. Руська шляхта, котра перейшла в католицтво (48 родів), зображена автором у вигляді коштовних каменів, що прикрашали корону Матері-Церкви і які вона втратила. У 2-му розділі Мати-Церква звертається до унійця Іпатія Потія і просить його покаятися. Гротескно зображені інші унійні ієрархи: Михаїл Рагоза, Григорій-Герман Загоровський, Кирило Терлецький. У наступних розділах заперечується зверхність Папи Римського як наступника апостола Петра. Автор стверджує, що рим. єпископові надавалося не Божественне право на верховенство, а лише перше місце серед інших. Відстоюється догмат православної церкви проти \"Filioque\", використання у таїнстві Причастя квасного хліба і вина. \"Тренос\" засвідчує утвердження стилю бароко в українська полемічній прозі.\n«Тренос» є вершиною літературної творчості Мелетія Смотрицького і всієї слов'янської полемічної літератури, плач-голосіння української православної церкви за всіма церквами та монастирями, які були відібрані королем і католиками.\n\n\n== Примітки ==\n\n\n== Джерела ==\nМ. Грушевський. Історія України-Руси. — Т. VI. — С. 590—600.\nГ.І. Павленко. Тренос або плач східної церкви [Архівовано 13 березня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2013. — Т. 10 : Т — Я. — С. 142. — ISBN 978-966-00-1359-9.\nDawid A. Frick. Smotrycki Maksym (Maksenty), imie zakonne Melecjusz (Meletij) (ok. 1577—1633) // Polski Słownik Biograficzny. — Warszawa — Kraków: Polska Akademia Nauk, Polska Akademia Umiejętności, 1999. — Tom XXXIX/3, zeszyt 162. — S. 356—362. (пол.)\nГолубев С. Киевский митрополит Петр Могила и его сподвижники: Опыт церковно-исторического исследования, т. 1. К., 1883\nЗбірник, присвячений світлій пам’яті Мелетія Смотрицького з нагоди трисотлітніх роковин смерти. Львів, 1934\nСоловій М. Мелетій Смотрицький як письменник, т. 1—2. Рим—Торонто, 1977—78\nЯременко П.К. Мелетій Смотрицький: життя і творчість. К., 1986\nКороткий В. Творческий путь Мелетия Смотрицкого. Минск, 1987\nУшкалов Л. Феномен української полемічної літератури. «Слово і час», 2000, № 10\nКралюк М.П. Мелетій Смотрицький і українське духовно-культурне відродження кінця XVI — початку XVII ст. Острог, 2007\nБабич С. Творчість Мелетія Смотрицького у контексті раннього українського бароко: Львівська медієвістика, вип. 2. Львів, 2009\n\n\n== Посилання ==\nМелетій Смотрицький. Тренос (Фрагменти твору) [Архівовано 12 жовтня 2007 у Wayback Machine.]\nМ. Смотрицький та його «Тренос». Михайло Грушевський. Історія української літератури. Том 5. Книга 2. [Архівовано 13 травня 2013 у Wayback Machine.]\nМелетій Смотрицький — публіцист, вчений і патріот. Газета «ДЕНЬ». № 23, 2003 [Архівовано 24 грудня 2007 у Wayback Machine.]"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:02:55.944Z",
+          "resultDisplay": "# Тренос\n**URL**: https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D0%B5%D0%BD%D0%BE%D1%81\n\nТренос (грец. Θρηνος to iest lament iedyney świętej Powszechney Apostolskiey Wschodniej Cerkwie z obiasnieniem dogmat wiary)  (\"Тренос, тобто плач єдиної святої Вселенської Апостольської Східної Церкви з поясненням догматів віри\") —  твір Мелетія Смотрицького, написаний, надрукований у 1610 році польською мовою. В перекладі означає «плач». Присвячений магнату Михайлу Вишневецькому.\nВийшов у друкарні православного братства Святого Духу Вільнюса.  Занепокоєний цим, король Сігізмунд ІІІ Ваза в листі з-під Смоленська 1 квітня 1610 року писав, що «в друкарні руській Св. Духа якісь пасквілі проти зверхності та потаємні книги друкують»; потім видав мандат, за яким наклад книги мав бути спалений, друкар та автор мали бути арештовані. Друкар — Леонтій Карпович — був потім ув'язнений за вихід книги, анонімний автор уник цього.\n«Тренос» справив великий вплив на сучасників Мелетія Смотрицького. Полемічно-художня книга письменника «Тренос або плач Східної церкви» видана у Вільно під псевдонімом Теофіл Ортолог. Приводом для книги стала сутичка між православними і прихильниками Берестейської унії, а також відібрання у віленських православних братського Троїцького монастиря.\nБезпосередньою причиною був погром віленських православних міщан, вчинений в 1609 році Іпатієм Потієм за підтримки польських королівських властей.\nЗа традиційним \"прикнижним реквізитом\" подаються 10 самостійних розділів: 1) Плач, або нарікання Сх. Церкви на злочинних синів; 2) Напучування Сх. Церкви до сина, який залишив її разом з іншими; 3) Проти єдиновладного верховенства рим. єпископа; 4) Трактат про сучасну Рим. Церкву і про Сх. Церкву; 5) Трактат про походження Святого Духа; 6) Про прісний і про квасний хліб Таїнства Господньої Вечері; 7) Про чистилище; 8) Про відкинення Рим. Церквою Чаші Нового Завіту; 9) Про взивання святих; 10) Катехізис, тобто підсумок, або коротке зібрання віри обрядів святої Сх. Церкви.\nПлач Матері-Церкви побудований на контрасті: колись була, як вранішня зоря, як місяць, як сонце, а тепер стала посміховиськом для всього світу. Церква нарікає на своїх синів, які залишили її і пішли за мачухою. Руська шляхта, котра перейшла в католицтво (48 родів), зображена автором у вигляді коштовних каменів, що прикрашали корону Матері-Церкви і які вона втратила. У 2-му розділі Мати-Церква звертається до унійця Іпатія Потія і просить його покаятися. Гротескно зображені інші унійні ієрархи: Михаїл Рагоза, Григорій-Герман Загоровський, Кирило Терлецький. У наступних розділах заперечується зверхність Папи Римського як наступника апостола Петра. Автор стверджує, що рим. єпископові надавалося не Божественне право на верховенство, а лише перше місце серед інших. Відстоюється догмат православної церкви проти \"Filioque\", використання у таїнстві Причастя квасного хліба і вина. \"Тренос\" засвідчує утвердження стилю бароко в українська полемічній прозі.\n«Тренос» є вершиною літературної творчості Мелетія Смотрицького і всієї слов'янської полемічної літератури, плач-голосіння української православної церкви за всіма церквами та монастирями, які були відібрані королем і католиками.\n\n\n== Примітки ==\n\n\n== Джерела ==\nМ. Грушевський. Історія України-Руси. — Т. VI. — С. 590—600.\nГ.І. Павленко. Тренос або плач східної церкви [Архівовано 13 березня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2013. — Т. 10 : Т — Я. — С. 142. — ISBN 978-966-00-1359-9.\nDawid A. Frick. Smotrycki Maksym (Maksenty), imie zakonne Melecjusz (Meletij) (ok. 1577—1633) // Polski Słownik Biograficzny. — Warszawa — Kraków: Polska Akademia Nauk, Polska Akademia Umiejętności, 1999. — Tom XXXIX/3, zeszyt 162. — S. 356—362. (пол.)\nГолубев С. Киевский митрополит Петр Могила и его сподвижники: Опыт церковно-исторического исследования, т. 1. К., 1883\nЗбірник, присвячений світлій пам’яті Мелетія Смотрицького з нагоди трисотлітніх роковин смерти. Львів, 1934\nСоловій М. Мелетій Смотрицький як письменник, т. 1—2. Рим—Торонто, 1977—78\nЯременко П.К. Мелетій Смотрицький: життя і творчість. К., 1986\nКороткий В. Творческий путь Мелетия Смотрицкого. Минск, 1987\nУшкалов Л. Феномен української полемічної літератури. «Слово і час», 2000, № 10\nКралюк М.П. Мелетій Смотрицький і українське духовно-культурне відродження кінця XVI — початку XVII ст. Острог, 2007\nБабич С. Творчість Мелетія Смотрицького у контексті раннього українського бароко: Львівська медієвістика, вип. 2. Львів, 2009\n\n\n== Посилання ==\nМелетій Смотрицький. Тренос (Фрагменти твору) [Архівовано 12 жовтня 2007 у Wayback Machine.]\nМ. Смотрицький та його «Тренос». Михайло Грушевський. Історія української літератури. Том 5. Книга 2. [Архівовано 13 травня 2013 у Wayback Machine.]\nМелетій Смотрицький — публіцист, вчений і патріот. Газета «ДЕНЬ». № 23, 2003 [Архівовано 24 грудня 2007 у Wayback Machine.]",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "04d89db7-fe41-4720-8830-ffff275514ab",
+      "timestamp": "2026-03-14T02:03:01.172Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "\\n\\n\n\nI'm now focused on the next phase. I'm carefully considering how to move forward, making sure I align with the established objectives for this task. The path ahead is becoming clearer, and I'm ready to begin the next phase.",
+          "timestamp": "2026-03-14T02:03:00.304Z"
+        },
+        {
+          "subject": "Searching for Relevant Content",
+          "description": "\\n\\n\n\nMy current strategy is to find relevant content. I will analyze the literary search results and proceed with the most promising avenues of inquiry. I am confident in finding the information I seek by refining my searches, which will help me move forward to the next step.",
+          "timestamp": "2026-03-14T02:03:01.035Z"
+        }
+      ],
+      "tokens": {
+        "input": 30912,
+        "output": 23,
+        "cached": 27247,
+        "thoughts": 116,
+        "tool": 0,
+        "total": 31051
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453781170_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Вишенський Рада про очищення церкви"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453781170_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Вишенський Рада про очищення церкви\"\n\n### Result 1 (score: 0.6305)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4217`\n- **Text**:\nСе посланиє можна вважати вершком полємічної\r\nдїяльности Вишеньського, але за ним пішло ще кілька дуже цінних річей. Поява\r\nАпокрізіса викликала в нїм, в формі листу до кн. Острозького дуже інтересний по\r\nоріґінальности свого замислу й стильовости виконання плач над „нагле здохлим\r\nтрупом“ римської церкви, папської гордости й пихи, прирівняної до похвалок\r\nбіблїйного Рапсака: ся противхристиянська гордість, мовляв, вбила папство й\r\nримську церкву, і Вишенський взиває вірних оплакати її труп 1). \n\n### Result 2 (score: 0.5842)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0317`\n- **Text**:\nУ творах своїх Вишенський порушує не лише актуальні\r\nпитання релігійної боротьби („утекші єпископи“), твори його підносяться над\r\nчасом, говорячи, як у цитованих уривках, про актуальні тоді, але актуальні і\r\nзавжди питання. /236/\n\n4. Церковна програма Вишенського в усіх його творах\r\nпроста, — це утриматися старого: „до церкви на правило соборноє ходіте і во всім\r\nпо уставу церковному — ні прилагающе од своєго умисла що, ні отімлюще..., ні\r\nроздирающе мнінієм творіте“. Але Вишенський навіть за ут\n\n### Result 3 (score: 0.5653)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0136`\n- **Text**:\nПодає мислитель і ознаки правдивої церкви: постійна\r\nборотьба «супроти лукавих духів» і людей, що їм наслідують; церква має бути\r\nпереслідувана, приходити у змаління, але не в знищення; світ має її ненавидіти;\r\nвона має нести свого хреста й любити убогість; а також бути супроти мирської\r\nпремудрості «дурною і нехитрою»; блаженні в цій церкві мають бути вбогі духом,\r\nзасмучені, лагідні, голодні, спрагнені правди, милостиві, чисті серцем, гнані\r\nза правду. Ці ознаки й характеризують східну церкву,\n\n### Result 4 (score: 0.5590)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0322`\n- **Text**:\nШлях до Бога Вишенський знає лише внутрішній,\r\nдуховний; цей шлях містичний, шлях самоочищення та просвітлення, як його в\r\nтрадиції старої містики знову відкрили афонські „гезихасти“: містик „своє\r\nначіння душеносноє очистив... і тот сосуд душевний сльозами помив: постом,\r\nмолитвою, скорбми, бідами, трудом і подвигом вижег, випік і виполеровав, і\r\nновоє чистоє насіння богословія посіяв.“ Очищення веде до „освЂщенія ума, отъ которого\r\nся и тЂло свЂтить,... за которымъ идетъ въ. доспЂвшихъ неизреч\n\n### Result 5 (score: 0.5453)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0105`\n- **Text**:\nІ. Вишенський, як істинний захисник православного\r\nхристиянства, всі інші віровчення сприймав як єресь. Тому переклади святого\r\nписьма на просту мову засуджував. Він писав: «Евангелия и Апостола в церкви на\r\nлитургии простым языком не вывирочайте. По литургии же для зрозуменя людского\r\nпопросту толкуйте и выкладайте. Книги церковные всЂ и уставы словенским языком\r\nдрукуйте. Сказую бо вам тайну великую: як диявол толикую завист имает на\r\nсловенский язык, же ледве жив от гнЂва; рад бы его до щеты \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:03:01.599Z",
+          "resultDisplay": "Found 5 results for: \"Вишенський Рада про очищення церкви\"\n\n### Result 1 (score: 0.6305)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4217`\n- **Text**:\nСе посланиє можна вважати вершком полємічної\r\nдїяльности Вишеньського, але за ним пішло ще кілька дуже цінних річей. Поява\r\nАпокрізіса викликала в нїм, в формі листу до кн. Острозького дуже інтересний по\r\nоріґінальности свого замислу й стильовости виконання плач над „нагле здохлим\r\nтрупом“ римської церкви, папської гордости й пихи, прирівняної до похвалок\r\nбіблїйного Рапсака: ся противхристиянська гордість, мовляв, вбила папство й\r\nримську церкву, і Вишенський взиває вірних оплакати її труп 1). \n\n### Result 2 (score: 0.5842)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0317`\n- **Text**:\nУ творах своїх Вишенський порушує не лише актуальні\r\nпитання релігійної боротьби („утекші єпископи“), твори його підносяться над\r\nчасом, говорячи, як у цитованих уривках, про актуальні тоді, але актуальні і\r\nзавжди питання. /236/\n\n4. Церковна програма Вишенського в усіх його творах\r\nпроста, — це утриматися старого: „до церкви на правило соборноє ходіте і во всім\r\nпо уставу церковному — ні прилагающе од своєго умисла що, ні отімлюще..., ні\r\nроздирающе мнінієм творіте“. Але Вишенський навіть за ут\n\n### Result 3 (score: 0.5653)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0136`\n- **Text**:\nПодає мислитель і ознаки правдивої церкви: постійна\r\nборотьба «супроти лукавих духів» і людей, що їм наслідують; церква має бути\r\nпереслідувана, приходити у змаління, але не в знищення; світ має її ненавидіти;\r\nвона має нести свого хреста й любити убогість; а також бути супроти мирської\r\nпремудрості «дурною і нехитрою»; блаженні в цій церкві мають бути вбогі духом,\r\nзасмучені, лагідні, голодні, спрагнені правди, милостиві, чисті серцем, гнані\r\nза правду. Ці ознаки й характеризують східну церкву,\n\n### Result 4 (score: 0.5590)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0322`\n- **Text**:\nШлях до Бога Вишенський знає лише внутрішній,\r\nдуховний; цей шлях містичний, шлях самоочищення та просвітлення, як його в\r\nтрадиції старої містики знову відкрили афонські „гезихасти“: містик „своє\r\nначіння душеносноє очистив... і тот сосуд душевний сльозами помив: постом,\r\nмолитвою, скорбми, бідами, трудом і подвигом вижег, випік і виполеровав, і\r\nновоє чистоє насіння богословія посіяв.“ Очищення веде до „освЂщенія ума, отъ которого\r\nся и тЂло свЂтить,... за которымъ идетъ въ. доспЂвшихъ неизреч\n\n### Result 5 (score: 0.5453)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0105`\n- **Text**:\nІ. Вишенський, як істинний захисник православного\r\nхристиянства, всі інші віровчення сприймав як єресь. Тому переклади святого\r\nписьма на просту мову засуджував. Він писав: «Евангелия и Апостола в церкви на\r\nлитургии простым языком не вывирочайте. По литургии же для зрозуменя людского\r\nпопросту толкуйте и выкладайте. Книги церковные всЂ и уставы словенским языком\r\nдрукуйте. Сказую бо вам тайну великую: як диявол толикую завист имает на\r\nсловенский язык, же ледве жив от гнЂва; рад бы его до щеты \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "df13e833-c673-4763-8818-a1d9ea2761e0",
+      "timestamp": "2026-03-14T02:03:08.319Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Seeking Relevant Excerpts",
+          "description": "\\n\\n\n\nI am now focused on retrieving the necessary excerpts. I've initiated the process to find the most relevant information and am awaiting the results. My primary objective is to obtain the precise arguments I need.",
+          "timestamp": "2026-03-14T02:03:07.693Z"
+        },
+        {
+          "subject": "Identifying Key Arguments",
+          "description": "\\n\\n\n\nI'm currently focused on extracting the core arguments. I am sifting through the gathered information to pinpoint the key points of contention. The goal is to isolate the most pertinent statements.",
+          "timestamp": "2026-03-14T02:03:08.183Z"
+        }
+      ],
+      "tokens": {
+        "input": 32311,
+        "output": 23,
+        "cached": 27366,
+        "thoughts": 100,
+        "tool": 0,
+        "total": 32434
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453788315_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "аргументи проти Берестейської унії"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453788315_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"аргументи проти Берестейської унії\"\n\n### Result 1 (score: 0.5716)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0371`\n- **Text**:\nУнія в Бересті, яку деякі українські владики уклали з\r\nРимом, була наслідком невідрадних явищ у житті православної церкви, упадку\r\nморалі серед православного духовенства й нестачі освіти. На жаль, унія прийшла\r\nдещо запізно, коли багато українських визначних родів опинилося вже в\r\nкатолицькому таборі. Владиками, що рік перед собором у Бересті підписали заяву\r\nприступлення до унії, були володимирський та берестейський єпископ Іпатій Потій\r\nта луцький єпископ Кирило Терлецький. До них приступив та\n\n### Result 2 (score: 0.5602)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0155`\n- **Text**:\nТаким чином, ідея з’єднання уніатів та православних у\r\nжиття втілена не була. Щоправда, треба зазначити, що православні посильно\r\nзаймалися агітацією між уніатським духовенством і мали тут певні успіхи.\r\nВиникла навіть потреба у спеціальній формулі відречення священика від унії\r\nпісля повернення до православ’я, а також формула єпископської грамоти\r\nсвященикам та дияконам, що навертаються з унії. Їх склав відомий Сильвестр\r\nКосов, єпископ і майбутній київський митрополит, що замістив П. Могилу.\r\n\n\n### Result 3 (score: 0.5487)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4206`\n- **Text**:\nІсторію берестейського собору Філялет лишає на боцї,\r\nвідсилаючи читача по неї до Ектезіса, і тільки на доповненнє його подає\r\nсоборний унїверсал православних. Далї, розвиваючи гадки сього унїверсалу, подає\r\nпреінтересну й високо пікантну для сучасників збірку листів митрополита й Потїя,\r\nз яких виходить, що вони до останньої хвилї таїли ся й вирікали ся всякої\r\nсолїдарности з унїєю, а переведеннє її не вважали можливим инакше, як соборним\r\nспособом, з участю вірних 1). Королівськими листами, да\n\n### Result 4 (score: 0.5404)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3250`\n- **Text**:\nРозумієть ся, Балабан оповідав байки, що в Берестю \r\n в 1590 р. і в Сокалї 1594 р. не було мови про унїю й Терлецький пописав ті \r\n деклярації без відомости й згоди владиків; Балабан використав для сього факт, \r\n що на тих з'їздах дані були владиками блянкети з підписами й \r\n печатками 26) й видумав з того історію про фальсифікацію унїї. Се не \r\n перешкодило місяць пізнїйше Копистенському повторити ту саму історію й занести \r\n подібну ж протестацію перед перемишльським ґродом буквально повторяюч\n\n### Result 5 (score: 0.5386)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1512`\n- **Text**:\nБерестейська унія (1595 — 96). В таких умовах на Україні відродилася ідея злуки Правос. Церкви з\r\nКатолицькою, накреслена 150 років раніше на соборі в Фльоренції (1439). Від неї\r\nчекали піднесення укр. духівництва з занепаду й спинення наступу латинського\r\nкатолицтва на Україну. Ця ідея зродилася в колі укр. маґната кн. Костянтина\r\nОстрозького, найбагатшого пана в Поль.-Лит. державі, протектора Правос. Церкви.\r\nКн. Острозький заслужився тим, що заснував Академію в Острозі (бл. 1580) з друкарнею,\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:03:08.702Z",
+          "resultDisplay": "Found 5 results for: \"аргументи проти Берестейської унії\"\n\n### Result 1 (score: 0.5716)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0371`\n- **Text**:\nУнія в Бересті, яку деякі українські владики уклали з\r\nРимом, була наслідком невідрадних явищ у житті православної церкви, упадку\r\nморалі серед православного духовенства й нестачі освіти. На жаль, унія прийшла\r\nдещо запізно, коли багато українських визначних родів опинилося вже в\r\nкатолицькому таборі. Владиками, що рік перед собором у Бересті підписали заяву\r\nприступлення до унії, були володимирський та берестейський єпископ Іпатій Потій\r\nта луцький єпископ Кирило Терлецький. До них приступив та\n\n### Result 2 (score: 0.5602)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0155`\n- **Text**:\nТаким чином, ідея з’єднання уніатів та православних у\r\nжиття втілена не була. Щоправда, треба зазначити, що православні посильно\r\nзаймалися агітацією між уніатським духовенством і мали тут певні успіхи.\r\nВиникла навіть потреба у спеціальній формулі відречення священика від унії\r\nпісля повернення до православ’я, а також формула єпископської грамоти\r\nсвященикам та дияконам, що навертаються з унії. Їх склав відомий Сильвестр\r\nКосов, єпископ і майбутній київський митрополит, що замістив П. Могилу.\r\n\n\n### Result 3 (score: 0.5487)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c4206`\n- **Text**:\nІсторію берестейського собору Філялет лишає на боцї,\r\nвідсилаючи читача по неї до Ектезіса, і тільки на доповненнє його подає\r\nсоборний унїверсал православних. Далї, розвиваючи гадки сього унїверсалу, подає\r\nпреінтересну й високо пікантну для сучасників збірку листів митрополита й Потїя,\r\nз яких виходить, що вони до останньої хвилї таїли ся й вирікали ся всякої\r\nсолїдарности з унїєю, а переведеннє її не вважали можливим инакше, як соборним\r\nспособом, з участю вірних 1). Королівськими листами, да\n\n### Result 4 (score: 0.5404)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3250`\n- **Text**:\nРозумієть ся, Балабан оповідав байки, що в Берестю \r\n в 1590 р. і в Сокалї 1594 р. не було мови про унїю й Терлецький пописав ті \r\n деклярації без відомости й згоди владиків; Балабан використав для сього факт, \r\n що на тих з'їздах дані були владиками блянкети з підписами й \r\n печатками 26) й видумав з того історію про фальсифікацію унїї. Се не \r\n перешкодило місяць пізнїйше Копистенському повторити ту саму історію й занести \r\n подібну ж протестацію перед перемишльським ґродом буквально повторяюч\n\n### Result 5 (score: 0.5386)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1512`\n- **Text**:\nБерестейська унія (1595 — 96). В таких умовах на Україні відродилася ідея злуки Правос. Церкви з\r\nКатолицькою, накреслена 150 років раніше на соборі в Фльоренції (1439). Від неї\r\nчекали піднесення укр. духівництва з занепаду й спинення наступу латинського\r\nкатолицтва на Україну. Ця ідея зродилася в колі укр. маґната кн. Костянтина\r\nОстрозького, найбагатшого пана в Поль.-Лит. державі, протектора Правос. Церкви.\r\nКн. Острозький заслужився тим, що заснував Академію в Острозі (бл. 1580) з друкарнею,\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "b1dea7e1-1e8c-45cb-b3d7-ad14e9c10276",
+      "timestamp": "2026-03-14T02:03:24.722Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the next step",
+          "description": "I'm making progress, focusing on how to advance the current task. I'm considering what actions will move me toward the ultimate goal. I need to make sure the next operation is the most efficient and will produce the best results, based on my knowledge of the task.",
+          "timestamp": "2026-03-14T02:03:19.676Z"
+        },
+        {
+          "subject": "Drafting the final output",
+          "description": "I am now focused on completing the research notes. I am carefully constructing the response, making sure all necessary information is included. My goal is to present a cohesive and informative final product.",
+          "timestamp": "2026-03-14T02:03:21.496Z"
+        },
+        {
+          "subject": "Constructing the Output",
+          "description": "I'm presently putting together the research notes, focusing on accuracy and clarity. I'm organizing the information in a way that is easily understood. I am striving to present a cohesive summary of the collected facts, ensuring key details are highlighted.",
+          "timestamp": "2026-03-14T02:03:23.147Z"
+        },
+        {
+          "subject": "Formulating the summary",
+          "description": "I am now focused on summarizing the information, which includes key facts and quotes. I am trying to condense the main points into a concise, understandable narrative that highlights the core information. I aim for accuracy in the summary, ensuring the most important details are included.",
+          "timestamp": "2026-03-14T02:03:24.579Z"
+        }
+      ],
+      "tokens": {
+        "input": 33724,
+        "output": 29,
+        "cached": 27487,
+        "thoughts": 641,
+        "tool": 0,
+        "total": 34394
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773453804719_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "полемічний",
+              "антиуніатський",
+              "апокрисис",
+              "тренос"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773453804719_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 2/4\n\n- **полемічний** — FOUND (3 match): полемічний(adj), полемічний(adj), полемічний(adj)\n- **антиуніатський** — FOUND (3 match): антиуніатський(adj), антиуніатський(adj), антиуніатський(adj)\n- **апокрисис** — NOT FOUND\n- **тренос** — NOT FOUND"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:03:24.736Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 2/4\n\n- **полемічний** — FOUND (3 match): полемічний(adj), полемічний(adj), полемічний(adj)\n- **антиуніатський** — FOUND (3 match): антиуніатський(adj), антиуніатський(adj), антиуніатський(adj)\n- **апокрисис** — NOT FOUND\n- **тренос** — NOT FOUND",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "13573371-e592-44f3-8c0b-d5b4b138f987",
+      "timestamp": "2026-03-14T02:04:04.064Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Діалог з латинами\n\n## Key Facts Ledger\n```yaml\nsubject: \"Антиуніатська полеміка (Діалог з латинами)\"\ntype: \"phenomenon\"\ndates:\n  start: \"1577\"\n  end: \"1630-ті\"\n  key_events:\n    - year: 1577\n      event: \"Видання книги Петра Скарги «Про єдність церкви Божої», що стала каталізатором полеміки.\"\n    - year: 1596\n      event: \"Берестейська унія, офіційне проголошення об'єднання церков, що викликало вибух полемічної літератури.\"\n    - year: 1597\n      event: \"Вихід польською мовою «Апокрисису» Христофора Філалета (староукраїнською — у 1598 р.).\"\n    - year: 1605\n      event: \"Написання анонімного трактату «Пересторога» у відповідь на твори Іпатія Потія.\"\n    - year: 1610\n      event: \"Видання «Треносу» Мелетія Смотрицького.\"\nprimary_quotes:\n  - text: \"То всЂ, Скарго, род руский в писмЂ и науке славянскаго языка благодатию Христа бога одержал, засвидЂтельствовал и тако достатечне спробовал.\"\n    source: \"Послання Івана Вишенського\"\n    attribution: \"Іван Вишенський (звернення до Петра Скарги)\"\n  - text: \"Евангелия и Апостола в церкви на литургии простым языком не вывирочайте. По литургии же для зрозуменя людского попросту толкуйте и выкладайте.\"\n    source: \"Послання Івана Вишенського\"\n    attribution: \"Іван Вишенський\"\n  - text: \"Тренос, тобто плач єдиної святої Вселенської Апостольської Східної Церкви з поясненням догматів віри.\"\n    source: \"Тренос (1610)\"\n    attribution: \"Мелетій Смотрицький\"\nforbidden_claims:\n  - \"Полемісти захищали інтереси 'єдиної неподільної Росії' або Московського патріархату.\"\n  - \"Антиуніатська література була виключно релігійною та не мала національно-культурного виміру.\"\n  - \"Полеміка зводилася лише до конфлікту між українцями та поляками, ігноруючи внутрішні реформи.\"\n```\n\n## Використані джерела\n1. [Wikipedia: Полемічна література](https://uk.wikipedia.org/wiki/Полемічна_література) — Огляд розвитку жанру та головних авторів.\n2. [Wikipedia: Пересторога (твір)](https://uk.wikipedia.org/wiki/Пересторога_(твір)) — Аналіз анонімного трактату та його антигероїв (Рогоза, Потій).\n3. [Wikipedia: Тренос](https://uk.wikipedia.org/wiki/Тренос) — Інформація про вплив твору Смотрицького та репресії з боку короля.\n4. Історія української культури (1937, І. Крип'якевич) — Контекст укладання Берестейської унії.\n5. Історія української літератури (1956, Д. Чижевський) — Аналіз стилю та внутрішньої містики Івана Вишенського.\n6. Історія України-Руси (М. Грушевський) — Оцінка ролі «Апокрисису» Філалета як «бомби більшого калібру» в полеміці.\n\n## Хронологія\n- 1577: Видання праці єзуїта Петра Скарги «Про єдність церкви Божої», яка стала поштовхом до релігійної дискусії.\n- 1587: Видання «Ключа царства небесного» Герасима Смотрицького (Острог) — першої друкованої пам'ятки української полемічної літератури.\n- 1596: Берестейський собор і проголошення унії, що розділила суспільство і спровокувала хвилю трактатів.\n- 1597-1598: Публікація «Апокрисису» Христофора Філалета (маркірує перехід до інтелектуальної, високопрофесійної полеміки).\n- 1605: Поява «Перестороги», твору, написаного близькою до розмовної мовою.\n- 1610: Видання «Треносу» Мелетія Смотрицького у Вільні, яке викликало мандат короля Сигізмунда III на спалення накладу й арешт друкаря (Леонтія Карповича).\n- 1590-ті – 1620-ті: Епістолярна діяльність Івана Вишенського з Афону (послання до братств, єпископів-відступників).\n\n## Ключові факти та цитати\n- **Суть полеміки**: Вона не обмежувалася догматичними богословськими розбіжностями між Римом і Царгородом. Це була боротьба за збереження \"руської\" (українсько-білоруської) ідентичності, культурної автономії та соціальних прав в умовах Речі Посполитої.\n- **«Апокрисис»**: Твір Христофора Філалета (ймовірно, протестанта Мартина Броневського) був написаний під патронатом князя Костянтина Острозького. Філалет застерігав, що релігійне гноблення може викликати народне повстання.\n- **Іван Вишенський**: Традиціоналіст, який критикував ієрархів за користолюбство та відхід від істинного служіння. Він обстоював церковнослов'янську мову як сакральну, але підтримував розтлумачення Письма простою мовою для народу («По литургии же для зрозуменя людского попросту толкуйте и выкладайте»).\n- **Внутрішня критика**: Полемісти критикували не лише католиків, а й власних православних ієрархів (напр., Кирила Терлецького), висміюючи їхню відсталість, корупцію та аморальність, що призвело до дискредитації церкви і зробило унію можливою.\n- **Стилістика**: Твори писалися різними мовами (староукраїнською, польською, латиною), що свідчить про високий рівень освіченості авторів. У них зароджуються риси українського бароко — антитези, метафори («Мати-Церква» у «Треносі»), гротеск.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": `[!context]` — Поява полемічної літератури була реакцією не лише на Берестейську унію 1596 року, а й на загальноєвропейські процеси Контрреформації та тиск ордену єзуїтів, зокрема твори Петра Скарги.\n- Section \"Вступ\": `[!decolonization]` — Російська історіографія зображувала полемістів як захисників \"русского міра\". Насправді ж, українська полемічна література була формою інтелектуального спротиву русинів (українців і білорусів), які захищали власну, окрему від Москви і Варшави, ідентичність та право на голос у європейському контексті.\n- Section \"Основний матеріал\": `[!quote]` — Цитата Вишенського про використання простої мови для розуміння («По литургии же для зрозуменя людского попросту толкуйте...») демонструє, що полемісти розуміли потребу наближення церкви до народу.\n- Section \"Основний матеріал\": `[!history-bite]` — «Тренос» Мелетія Смотрицького (1610) мав такий потужний резонанс, що польський король Сигізмунд ІІІ видав спеціальний мандат на спалення всіх примірників книги, а друкар Леонтій Карпович був кинутий до в'язниці.\n- Section \"Практика\": `[!myth-buster]` — Міф про те, що православні полемісти лише захищалися. Насправді, твори на кшталт «Апокрисису» були гостроатакуючими. Автор застерігав уряд Речі Посполитої, що релігійний примус спровокує масштабне збройне повстання українців.\n- Section \"Підсумок\": `[!culture]` — Полемічна література стала колискою українського літературного бароко. Зіставлення протилежностей, химерні метафори, пафос і гротеск, які використовували Смотрицький та Вишенський, назавжди змінили стиль українського письменства.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Полемічна література — це просто \"боротьба православних проти католиків\", де українці несвідомо чекали на \"порятунок\" з боку єдиновірної Московської держави. Тексти трактувалися виключно як антипольські.\n- **Ukrainian reality**: Це була блискуча, самостійна інтелектуальна боротьба європейського рівня. Руська (українська) еліта (як світська — Острозькі, так і духовна — братства, Вишенський, Смотрицький) творила власні концепції устрою суспільства, свободи совісті та ідентичності. Полемісти виступали проти асиміляції, відстоюючи свої права в межах європейської правової культури (напр., посилаючись на статути та привілеї).\n\n## Contested Terms\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Руська віра | Російське православ'я (РПЦ) | Київська православна традиція, спадщина Русі-України |\n| Уніати | Зрадники, \"запроданці\" Польщі | Частина української еліти, що шукала європейського вектора розвитку (хоч їхні дії й критикувалися опонентами) |\n| Полемісти | Захисники \"русского православного отечества\" | Творці ранньомодерної української політичної та національної свідомості |\n\n## Відеоресурси\n- (нічого не знайдено під час дослідження тексту, очікується на фазі discover)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Опис**: Контекст появи полеміки. Контрреформація в Європі та тиск католицизму в Речі Посполитій. Вихід праці П. Скарги (1577). \n- **Берестейська унія (1596)**: Як розкол в українському суспільстві призвів до вибуху літератури. \n- **Ідеологічна основа**: Боротьба за права «старожитної руської віри» як маркера національної ідентичності. Це був не лише теологічний спір, а захист соціально-політичних прав руського (українського) народу від полонізації та маргіналізації.\n- **Деколонізація**: Спростувати московський міф про орієнтацію полемістів на Росію; підкреслити їхню самобутність.\n\n### Основний матеріал\n- **Твори та автори**: \n  - *«Апокрисис» (1597)* Христофора Філалета (М. Броневського): інтелектуальна відповідь, погроза народним повстанням, підтримка К. Острозького.\n  - *«Пересторога» (1605)*: анонімний твір, близький до народної мови, викриття І. Потія та М. Рогози.\n  - *«Тренос» (1610)* Мелетія Смотрицького: бароковий плач \"Матері-Церкви\" (метафора втрати еліти, 48 родів шляхти), репресії з боку короля (спалення книги).\n  - *Іван Вишенський*: Радикальний традиціоналіст, критика як латинян, так і власних корумпованих православних ієрархів. Його концепція \"очищення церкви\".\n- **Стилістика**: Зародження бароко. Гротеск, антитеза, використання різних мов (староукраїнська, церковнослов'янська, польська) для різних аудиторій.\n\n### Практика\n- **Мовний вимір**: Аналіз першоджерел (можна використати цитату Вишенського про використання \"простого язика\" для тлумачення Євангелія).\n- **Аргументація**: Як саме полемісти будували свої докази. Поєднання богословських аргументів (проходження Святого Духа, чистилище) з політичними (порушення прав, гарантованих королівськими привілеями).\n- **Роль братств**: Друкарні (Острозька, Львівська, Віленська) як центри поширення полемічної літератури.\n\n### Підсумок\n- **Наслідки**: Полемічна література не змогла скасувати унію, але відіграла колосальну роль у кристалізації української національної свідомості.\n- **Культурний спадок**: Формування українського літературного бароко. Збагачення мови новими поняттями та стилістичними фігурами.\n- **Перехід**: Підготовка ґрунту для соціальної критики та подальшої боротьби за права, що виллється у козацькі повстання та інтелектуальний рух Києво-Могилянського кола.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Stage",
+          "description": "I'm focused on moving forward now, aiming to integrate the data to achieve the goal. I'm strategizing how to best weave together the different information streams. The path ahead is being carefully considered.",
+          "timestamp": "2026-03-14T02:03:34.432Z"
+        },
+        {
+          "subject": "Constructing the Outline",
+          "description": "I am now organizing the material into the specified sections. I am matching the gathered data to the outline's structure, ensuring a coherent presentation. My focus is on effectively integrating all components.",
+          "timestamp": "2026-03-14T02:03:36.971Z"
+        },
+        {
+          "subject": "Mapping Content to Sections",
+          "description": "I'm presently linking the data to the outline. My objective is to align each research snippet with its corresponding section, ensuring a logical flow. I am focusing on placing the hooks correctly.",
+          "timestamp": "2026-03-14T02:03:37.995Z"
+        }
+      ],
+      "tokens": {
+        "input": 33863,
+        "output": 3454,
+        "cached": 27049,
+        "thoughts": 436,
+        "tool": 0,
+        "total": 37753
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

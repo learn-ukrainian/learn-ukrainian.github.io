@@ -1,0 +1,803 @@
+{
+  "sessionId": "9728ee75-22a2-46ce-a890-c7c9818c315c",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T02:24:39.176Z",
+  "lastUpdated": "2026-03-14T02:27:18.190Z",
+  "messages": [
+    {
+      "id": "ff059fb6-a868-4710-84ff-4187d51d10d6",
+      "timestamp": "2026-03-14T02:24:39.176Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-076\nlevel: OES\nsequence: 76\nslug: slovo-first-battle\nversion: '2.0'\ntitle: 'Слово: Перша битва'\nsubtitle: 'Slovo: The First Battle'\nfocus: Aorist/Imperfect poetic usage\nphase: 4\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - 'Introduction to Slovo: The First Battle'\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Vanguard Captain\nprerequisites:\n- slovo-mustering\nconnects_to:\n- slovo-defeat\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Слово: Перша битва** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Слово: Перша битва\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Слово: Перша битва\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "e487bda5-a986-4cf1-91eb-9c7104767544",
+      "timestamp": "2026-03-14T02:24:46.360Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task",
+          "description": "I am now focused on completing the task. I'm making further progress by refining the approach for the next step.",
+          "timestamp": "2026-03-14T02:24:43.599Z"
+        },
+        {
+          "subject": "Starting Wikipedia Research",
+          "description": "I am commencing the Wikipedia research, using the search tool to find relevant information about \"Слово о полку Ігоревім\". The goal is to establish a foundational understanding for this task.",
+          "timestamp": "2026-03-14T02:24:46.134Z"
+        }
+      ],
+      "tokens": {
+        "input": 20490,
+        "output": 24,
+        "cached": 0,
+        "thoughts": 341,
+        "tool": 0,
+        "total": 20855
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455086359_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Слово о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455086359_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Слово о полку Ігоревім' — 5 results\n\n1. **Слово о полку Ігоревім** — «Сло́во о полку́ І́горевім» (д.-рус. Слово о плъку Игоревѣ), також «Сло́во про І́горів похі́д» — пам&#039;ятка києворуського письменства, героїчна поема кінця\n2. **Новгород-Сіверський історико-культурний музей-заповідник «Слово о полку Ігоревім»** — Новгород-Сіверський історико-культурний музей-заповідник «Слово о полку Ігоревім» — комплекс історичних пам&#039;яток Сіверщини. Створений рішенням Чернігівського\n3. **Сказання про Ігорів похід** — пам&#039;ятки літератури стародавньої Руси, героїчної поеми кінця XII ст. «Слово о полку Ігоревім». Автори сценарію: Юрій Новіков, Борис Крижанівський Режисер-постановник:\n4. **Воїнов Святослав Святославович** — 16 грудня 2014) — кандидат філологічних наук, відомий дослідник «Слова о полку Ігоревім», засновник музею. Народився 29 січня 1942 року в Новгороді-Сіверському\n5. **Троян** — обратиша»); «Слово і одкровення святих апостолів» («мняще богы многы: Перуна и Хорса, Дыя и Трояна»). Третє джерело — «Слово о полку Ігоревім». У сучасних"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:24:46.373Z",
+          "resultDisplay": "Wikipedia search: 'Слово о полку Ігоревім' — 5 results\n\n1. **Слово о полку Ігоревім** — «Сло́во о полку́ І́горевім» (д.-рус. Слово о плъку Игоревѣ), також «Сло́во про І́горів похі́д» — пам&#039;ятка києворуського письменства, героїчна поема кінця\n2. **Новгород-Сіверський історико-культурний музей-заповідник «Слово о полку Ігоревім»** — Новгород-Сіверський історико-культурний музей-заповідник «Слово о полку Ігоревім» — комплекс історичних пам&#039;яток Сіверщини. Створений рішенням Чернігівського\n3. **Сказання про Ігорів похід** — пам&#039;ятки літератури стародавньої Руси, героїчної поеми кінця XII ст. «Слово о полку Ігоревім». Автори сценарію: Юрій Новіков, Борис Крижанівський Режисер-постановник:\n4. **Воїнов Святослав Святославович** — 16 грудня 2014) — кандидат філологічних наук, відомий дослідник «Слова о полку Ігоревім», засновник музею. Народився 29 січня 1942 року в Новгороді-Сіверському\n5. **Троян** — обратиша»); «Слово і одкровення святих апостолів» («мняще богы многы: Перуна и Хорса, Дыя и Трояна»). Третє джерело — «Слово о полку Ігоревім». У сучасних",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e7b1ea4a-0269-41ba-ab98-e25c3eacb18e",
+      "timestamp": "2026-03-14T02:24:50.627Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Commencing extraction of content",
+          "description": "I am now focusing on getting the relevant content. I'm preparing to make progress on obtaining the necessary information by formulating queries to get sections from a Wikipedia article. I'll need to sift through the data to isolate the key sections needed for the task at hand.",
+          "timestamp": "2026-03-14T02:24:50.560Z"
+        }
+      ],
+      "tokens": {
+        "input": 20946,
+        "output": 24,
+        "cached": 16478,
+        "thoughts": 38,
+        "tool": 0,
+        "total": 21008
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455090627_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Слово о полку Ігоревім",
+            "mode": "sections"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455090627_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Слово о полку Ігоревім':\n\n1 Жанр (index=1)\n2 Історія знахідки (index=2)\n3 Історична основа і зміст поеми (index=3)\n4 Мова і поетика (index=4)\n5 Дискусії щодо автентичності (index=5)\n  5.1 Питання про авторство (index=6)\n  5.2 Версія про автентичність (index=7)\n  5.3 Скептицизм щодо автентичності (index=8)\n6 «Слово о полку Ігоревім» у мистецтві (index=9)\n  6.1 У малярстві (index=10)\n7 Переклади і переспіви (index=11)\n8 Текст твору (index=12)\n9 Див. також (index=13)\n10 Примітки (index=14)\n11 Джерела (index=15)\n12 Література (index=16)\n13 Посилання (index=17)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:24:50.639Z",
+          "resultDisplay": "Sections of 'Слово о полку Ігоревім':\n\n1 Жанр (index=1)\n2 Історія знахідки (index=2)\n3 Історична основа і зміст поеми (index=3)\n4 Мова і поетика (index=4)\n5 Дискусії щодо автентичності (index=5)\n  5.1 Питання про авторство (index=6)\n  5.2 Версія про автентичність (index=7)\n  5.3 Скептицизм щодо автентичності (index=8)\n6 «Слово о полку Ігоревім» у мистецтві (index=9)\n  6.1 У малярстві (index=10)\n7 Переклади і переспіви (index=11)\n8 Текст твору (index=12)\n9 Див. також (index=13)\n10 Примітки (index=14)\n11 Джерела (index=15)\n12 Література (index=16)\n13 Посилання (index=17)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4f43567c-cacd-49e7-994d-5e556bdb7130",
+      "timestamp": "2026-03-14T02:24:55.149Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Section Analysis",
+          "description": "I'm now focused on dissecting the third section. My current task is to understand and begin extracting the historical foundation and core meaning of the poem.",
+          "timestamp": "2026-03-14T02:24:55.082Z"
+        }
+      ],
+      "tokens": {
+        "input": 21233,
+        "output": 26,
+        "cached": 19772,
+        "thoughts": 37,
+        "tool": 0,
+        "total": 21296
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455095148_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "section": 3,
+            "mode": "section",
+            "query": "Слово о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455095148_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Слово о полку Ігоревім — Section 3\n\nІсторична основа і зміст поеми\nПоштова марка СРСР 1985 року випуску, присвячена 800-й річниці походу князя Ігоря, описаного у «Слові о полку Ігоревім».\nЯк і в Гомеровій «Іліаді», основний задум твору не в описові подій протягом походу, а в тому, що похід змінив світогляд князя Ігоря&nbsp;— «від свавільного гніву до розуміння об'єднавчої ролі держави». В епілозі твору князь Ігор іде до церкви Пирогощої «країни заради»&nbsp;— «страни ради».\n\nТвір присвячено «землі Трояні» і її військовому оплоту&nbsp;— військовим дружинам&nbsp;— «стадам лебединців», «галицім стадам», «копіям» та «дівицям», які перейшли за Дунай. Князь Ігор йшов до Дону, щоб там «копіє приломити»&nbsp;— «відновити кордон землі на річці Дон» та «пошукати града Тьмуторокані».\n\nЦей самовільний вчинок князя Ігоря був невдалий і саме на прикладі цієї невдачі автор закликає князів до солідарності. Історичною основою (не темою) «Слова…» є невдалий похід новгород-сіверського князя Ігоря Святославича на половців навесні 1185&nbsp;р., а вже у 1187 році об'єднані дружини князів здійснили успішний похід.\n\nВійськовий похід князя Ігоря автор відтворив в епічно-ліричному плані, піднісши як найвищий принцип долю Руської землі і засуджуючи князів за їх незгоди, за те що ставили особисте над загальним. До історичної оповіді автор додав мотиви снів, плачів, реакцій природи на долю героїв, монологи князів тощо. Автор згадує свого попередника&nbsp;— співця Бояна, який в XI&nbsp;ст. прославляв князів, і зв'язує Бояна, Велесового внука, з давнім дохристиянським світом божеств та обіцяє співати в його стилі, щоб об'єднати славів (слави&nbsp;— слов'яни).\n\nПісля описів готування до походу, триденного бою і поразки Ігоря, автор «Слова…» з'ясовує причини, які довели до недолі Руську землю. Закінчується поема, після опису втечі Ігоря з полону, приходом князя до церкви Святої Богородиці Пирогощої&nbsp;— Державної Богоматері. Автор віддає належне походу князя Ігоря. Твір завершується прославою спершу «старим князям»&nbsp;— Ігореві та Всеволодові, а потім «молодим», що їх представником був Володимир Ігорович."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:24:55.191Z",
+          "resultDisplay": "# Слово о полку Ігоревім — Section 3\n\nІсторична основа і зміст поеми\nПоштова марка СРСР 1985 року випуску, присвячена 800-й річниці походу князя Ігоря, описаного у «Слові о полку Ігоревім».\nЯк і в Гомеровій «Іліаді», основний задум твору не в описові подій протягом походу, а в тому, що похід змінив світогляд князя Ігоря&nbsp;— «від свавільного гніву до розуміння об'єднавчої ролі держави». В епілозі твору князь Ігор іде до церкви Пирогощої «країни заради»&nbsp;— «страни ради».\n\nТвір присвячено «землі Трояні» і її військовому оплоту&nbsp;— військовим дружинам&nbsp;— «стадам лебединців», «галицім стадам», «копіям» та «дівицям», які перейшли за Дунай. Князь Ігор йшов до Дону, щоб там «копіє приломити»&nbsp;— «відновити кордон землі на річці Дон» та «пошукати града Тьмуторокані».\n\nЦей самовільний вчинок князя Ігоря був невдалий і саме на прикладі цієї невдачі автор закликає князів до солідарності. Історичною основою (не темою) «Слова…» є невдалий похід новгород-сіверського князя Ігоря Святославича на половців навесні 1185&nbsp;р., а вже у 1187 році об'єднані дружини князів здійснили успішний похід.\n\nВійськовий похід князя Ігоря автор відтворив в епічно-ліричному плані, піднісши як найвищий принцип долю Руської землі і засуджуючи князів за їх незгоди, за те що ставили особисте над загальним. До історичної оповіді автор додав мотиви снів, плачів, реакцій природи на долю героїв, монологи князів тощо. Автор згадує свого попередника&nbsp;— співця Бояна, який в XI&nbsp;ст. прославляв князів, і зв'язує Бояна, Велесового внука, з давнім дохристиянським світом божеств та обіцяє співати в його стилі, щоб об'єднати славів (слави&nbsp;— слов'яни).\n\nПісля описів готування до походу, триденного бою і поразки Ігоря, автор «Слова…» з'ясовує причини, які довели до недолі Руську землю. Закінчується поема, після опису втечі Ігоря з полону, приходом князя до церкви Святої Богородиці Пирогощої&nbsp;— Державної Богоматері. Автор віддає належне походу князя Ігоря. Твір завершується прославою спершу «старим князям»&nbsp;— Ігореві та Всеволодові, а потім «молодим», що їх представником був Володимир Ігорович.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e9db2ed3-e8c5-4d2b-8e06-e4c80f715222",
+      "timestamp": "2026-03-14T02:24:59.127Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Begin researching the battle",
+          "description": "I'm now starting to investigate the details of the battle. I'll search for the battle on Wikipedia to understand the events better, including the context and outcome. I will then examine the search results to formulate a better understanding.",
+          "timestamp": "2026-03-14T02:24:59.058Z"
+        }
+      ],
+      "tokens": {
+        "input": 22024,
+        "output": 19,
+        "cached": 19859,
+        "thoughts": 58,
+        "tool": 0,
+        "total": 22101
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455099126_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Сююрлій"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455099126_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "No Wikipedia results for: 'Сююрлій'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:24:59.344Z",
+          "resultDisplay": "No Wikipedia results for: 'Сююрлій'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "52de89fb-4793-4ba5-8d58-f3bfee223422",
+      "timestamp": "2026-03-14T02:25:03.876Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Locating the Missing Name",
+          "description": "\\n\\n\n\nI'm now zeroing in on the name. I've initiated another round of searches, hoping to unearth the missing piece of information. The clues are there; I just need to connect the dots. I will continue to refine my search queries as needed.",
+          "timestamp": "2026-03-14T02:25:03.156Z"
+        },
+        {
+          "subject": "Pinpointing Relevant Literary Clues",
+          "description": "\\n\\n\n\nI've begun analyzing the provided text extracts for crucial elements. My focus is on deciphering any possible literary context that could aid in pinpointing the sought-after battle name. I am carefully assessing the relationships between the presented terms.",
+          "timestamp": "2026-03-14T02:25:03.779Z"
+        }
+      ],
+      "tokens": {
+        "input": 22059,
+        "output": 30,
+        "cached": 19798,
+        "thoughts": 74,
+        "tool": 0,
+        "total": 22163
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455103875_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Слово о полку Ігоревім п'ятниця половці"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455103875_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Слово о полку Ігоревім п'ятниця половці\"\n\n### Result 1 (score: 0.6169)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0213`\n- **Text**:\nС заранія в пятокъ\r\nпотопташа поганыя плъкы Половецкыя] пор. в Іп. р. 1185 „заутра же пятъку наставшу, во обЂднее веремя,\r\nусрЂтоша полкы ПоловЂцькиЂ”... „и Русь же дошедше вежь и ополонишася”... ст.\r\n639 — 640. Нагадаємо, що „потопташа” — вислів в аналогічних випадках у\r\nлітопису звичайний: „абье Мьстислав сшибеся с полкы ихъ, и потопташа середини\r\nполкъ”, Іп. 1174, ст. 576; „Половци же видивше устремишася на нЂ и сразишася с\r\nнимь, Русь же потопташа Ђ” 1180 p., ст. 623; 1195 р. — „стяги Олгови\n\n### Result 2 (score: 0.6037)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0064`\n- **Text**:\nЩитами червоними! Для себе\n\nЧести йщуть вни, а для князя слави.\n\nIV. Побіда над половцями\n\nОй ще зрана в п’яток руські повки\n\nПотоптали і стерли погану\n\nПоловецьку силу і, стрілами\n\nПо степу розсипавшись, помчали\n\nКрасні діви половецькі, з ними\n\nЗлото й дорогії оксамити\n\nЙ скарби яко богату здобичу.\n\nОртьмами, опончами поганих,\n\nКожухами і добром усяким\n\nПоловецьким зачали мостити\n\nМости по болотах і грязюках.\n\nЧервен прапір, білую хоругов,\n\nСрібне стружжє і червону чілку, —\n\nСе віддано Ігорю кн\n\n### Result 3 (score: 0.5995)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0002`\n- **Text**:\nА в п’ятницю,\r\n назавтра, місяця березня у двадцять і четвертий день, зібралися половці. І\r\n виладнали половці полки свої, і пішли до бою. Князі ж наші поклали надію свою\r\n на бога і сказали: «Уже смерть нам тут, так станемо кріпко!» І поцілували\r\n вони один одного, і, звівши очі свої до неба, призивали вони бога\r\n Всевишнього. А коли ж сталося зіткнення і битва сильна, бог Всевишній глянув\r\n на іноплемінників із гнівом, [і] падали вони перед християнами. І так\r\n переможені були іноплемінники, і\n\n### Result 4 (score: 0.5992)\n- **Work**: Панас Мирний. Дума про військо Ігореве (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `34a2d4e7_c0002`\n- **Text**:\nСивий туман поле покриває;\n\nСоловейко заснув — не співає;\n\nТільки галячий клекіт устає —\n\nСуму додає:\n\nА хоробрі русини\n\nШирокі поля червоними щитами перегородили,\n\nСобі чести добуваючи,\n\nА князеві слави шукаючи.\n\nIII\n\nОй у п’ятницю святую,\n\nУ ранню досвітню годину,\n\nТа як наші вставали,\n\nПоганське військо половецьке потопцем топтали,\n\nСтрілами по полю літали,\n\nКрасних дівчат половецьких у неволю брали,\n\nІ золото, й паволоки,\n\nІ дорогі оксамити…\n\nВеликі болота-багнюки\n\nПоганськими вжитками гатил\n\n### Result 5 (score: 0.5982)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0339`\n- **Text**:\nА другі половці\r\n пішли по тій стороні до Путивля — Коза [Бурнович] із силами великими,— і,\r\n попустошивши волость [їх], вони й села їх 16 попалили. Спалили\r\n вони також і острог коло Путивля, і вернулися до себе.\n\nІгор же\r\n Святославич на ту пору був у Половцях і говорив: «Я по заслузі моїй зазнав\r\n біди. За повелінням твоїм, владико господи, а не поганською одвагою обломано\r\n силу рабів твоїх. Не жаль мені є за своє лиходійство прийняти всі біди, що їх\r\n я прийняв».\n\nПоловці ж,\r\n поважаючи йог\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:04.351Z",
+          "resultDisplay": "Found 5 results for: \"Слово о полку Ігоревім п'ятниця половці\"\n\n### Result 1 (score: 0.6169)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0213`\n- **Text**:\nС заранія в пятокъ\r\nпотопташа поганыя плъкы Половецкыя] пор. в Іп. р. 1185 „заутра же пятъку наставшу, во обЂднее веремя,\r\nусрЂтоша полкы ПоловЂцькиЂ”... „и Русь же дошедше вежь и ополонишася”... ст.\r\n639 — 640. Нагадаємо, що „потопташа” — вислів в аналогічних випадках у\r\nлітопису звичайний: „абье Мьстислав сшибеся с полкы ихъ, и потопташа середини\r\nполкъ”, Іп. 1174, ст. 576; „Половци же видивше устремишася на нЂ и сразишася с\r\nнимь, Русь же потопташа Ђ” 1180 p., ст. 623; 1195 р. — „стяги Олгови\n\n### Result 2 (score: 0.6037)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0064`\n- **Text**:\nЩитами червоними! Для себе\n\nЧести йщуть вни, а для князя слави.\n\nIV. Побіда над половцями\n\nОй ще зрана в п’яток руські повки\n\nПотоптали і стерли погану\n\nПоловецьку силу і, стрілами\n\nПо степу розсипавшись, помчали\n\nКрасні діви половецькі, з ними\n\nЗлото й дорогії оксамити\n\nЙ скарби яко богату здобичу.\n\nОртьмами, опончами поганих,\n\nКожухами і добром усяким\n\nПоловецьким зачали мостити\n\nМости по болотах і грязюках.\n\nЧервен прапір, білую хоругов,\n\nСрібне стружжє і червону чілку, —\n\nСе віддано Ігорю кн\n\n### Result 3 (score: 0.5995)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0002`\n- **Text**:\nА в п’ятницю,\r\n назавтра, місяця березня у двадцять і четвертий день, зібралися половці. І\r\n виладнали половці полки свої, і пішли до бою. Князі ж наші поклали надію свою\r\n на бога і сказали: «Уже смерть нам тут, так станемо кріпко!» І поцілували\r\n вони один одного, і, звівши очі свої до неба, призивали вони бога\r\n Всевишнього. А коли ж сталося зіткнення і битва сильна, бог Всевишній глянув\r\n на іноплемінників із гнівом, [і] падали вони перед християнами. І так\r\n переможені були іноплемінники, і\n\n### Result 4 (score: 0.5992)\n- **Work**: Панас Мирний. Дума про військо Ігореве (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `34a2d4e7_c0002`\n- **Text**:\nСивий туман поле покриває;\n\nСоловейко заснув — не співає;\n\nТільки галячий клекіт устає —\n\nСуму додає:\n\nА хоробрі русини\n\nШирокі поля червоними щитами перегородили,\n\nСобі чести добуваючи,\n\nА князеві слави шукаючи.\n\nIII\n\nОй у п’ятницю святую,\n\nУ ранню досвітню годину,\n\nТа як наші вставали,\n\nПоганське військо половецьке потопцем топтали,\n\nСтрілами по полю літали,\n\nКрасних дівчат половецьких у неволю брали,\n\nІ золото, й паволоки,\n\nІ дорогі оксамити…\n\nВеликі болота-багнюки\n\nПоганськими вжитками гатил\n\n### Result 5 (score: 0.5982)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0339`\n- **Text**:\nА другі половці\r\n пішли по тій стороні до Путивля — Коза [Бурнович] із силами великими,— і,\r\n попустошивши волость [їх], вони й села їх 16 попалили. Спалили\r\n вони також і острог коло Путивля, і вернулися до себе.\n\nІгор же\r\n Святославич на ту пору був у Половцях і говорив: «Я по заслузі моїй зазнав\r\n біди. За повелінням твоїм, владико господи, а не поганською одвагою обломано\r\n силу рабів твоїх. Не жаль мені є за своє лиходійство прийняти всі біди, що їх\r\n я прийняв».\n\nПоловці ж,\r\n поважаючи йог\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "6af8c5ac-ae28-4058-a358-d26570e3764b",
+      "timestamp": "2026-03-14T02:25:10.734Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Moving Towards the Goal",
+          "description": "I'm now focused on the next action. My progress feels smooth, and I'm ready to proceed. I have a clearer picture of what needs to happen to move on to the following step.",
+          "timestamp": "2026-03-14T02:25:07.859Z"
+        },
+        {
+          "subject": "Executing the Search",
+          "description": "I'm now initiating the search for the text. My focus is on ensuring accuracy, and I am double-checking that I have the correct query terms. This step is critical, and I am making sure I am on the right track.",
+          "timestamp": "2026-03-14T02:25:10.555Z"
+        },
+        {
+          "subject": "Performing the Query",
+          "description": "I am now ready to use the tool to initiate the search. I'm focusing on the query terms to ensure the search yields precise results. Accuracy is paramount at this stage, and I am double-checking to confirm that everything is in order.",
+          "timestamp": "2026-03-14T02:25:10.577Z"
+        }
+      ],
+      "tokens": {
+        "input": 23579,
+        "output": 24,
+        "cached": 19993,
+        "thoughts": 334,
+        "tool": 0,
+        "total": 23937
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455110732_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "С заранія в пятокъ потопташа"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455110732_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"С заранія в пятокъ потопташа\"\n\n### Result 1 (score: 0.5360)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 2 (score: 0.5201)\n- **Work**: Іван Франко. Не спитавши броду (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a6f16582_c0154`\n- **Text**:\n— Третя.\n\n— От і у мене одна! — скрикнув Борис, сіпнувши вудкою. — Та хай їй цур, упала з гачка!\n\n— Ха, ха, ха! — засміялась пані. — Четверта! А ось і п’ята! А ось і шоста. Фе, встидайтесь! Невже у вас ані одної ще нема?\n\n— Ну, прецінь дав бог одну, — сказав Борис, викидаючи здерку.\n\n— А у мене вже десять, — сказала по хвилі пані Міхонська.\n\n— У мене три, — відповів Борис.\n\n— У мене п’ятнадцять, — знов по хвилі роздався голос пані.\n\n— У мене п’ять.\n\nЩе з півгодини ловили, поки не смерклось. У Бо\n\n### Result 3 (score: 0.5155)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0018`\n- **Text**:\nдо потопа . лѣт̑ . ҂в҃ . с҃ .\r\nм҃ . в҃ . а ѿ потопа до Аврама. лѣт҃.\r\n҂а҃. п҃ . . в҃. ѿ Аврама 1 до\r\nисхожениӕ Моисѣєва . лѣтъ . у҃ 2. л҃ .\r\nѿ 3 исхожениӕ Моисѣѡва . до Дв҃да .\r\nлѣт҃ . х҃ . а҃ . ѿ Дв҃да и до 4\r\nначала цс̑ртва Соломонѧ . до плѣнениӕ Иєрс̑лмова . лѣт̑\r\n. у҃ . 5 . м҃ . и҃ . ѿ плѣнениӕ\r\nдо Александра. лѣт̑ . т҃ . и҃ı . ѿ 6\r\nЛександра до Хс̑ва ржс̑тв 7 Ж . лѣт̑ .\r\nт҃ . л҃ . г҃ . ѿ 8 Хс̑ва рожьства до Костѧнтина\r\n. лѣт̑ . т҃ . и҃ı . ѿ 9\r\nКостѧнтина же 10 до Михаила сего . лѣт̑ . ф҃ .\r\n\n### Result 4 (score: 0.5075)\n- **Work**: Іван Нечуй-Левицький. На кожум'яках (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `7ef81786_c0053`\n- **Text**:\nГ о с т р о х в о с т и й. (як опечений). Ой, не треба! Вони з Оленкою тепер натомились: мабуть, вже сплять.\n\nЄ в ф р о с и н а . Неначе зроду не бачили тітки! Сказати правду всім у вічі, мені б не хотілось, щоб моя тітка була на моїм весіллі. Вона тут нашуробурить так, що мені буде сором перед моїми пансіонськими подругами.\n\nГ о с т р о х в о с т и й. Який у вас великий розум. Євфросино Сидоровно! Я тільки стою та дивуюсь, витріщивши очі. Отак і мені здається, як вам. Чи не можна б було нам пов\n\n### Result 5 (score: 0.4991)\n- **Work**: Іван Нечуй-Левицький. Сільський старшина бенкетує! (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `e2ecbb5d_c0001`\n- **Text**:\n15 мая ще спозаранку коло управи в дворі прибирали, замітали, ставили рядками столи, забивали кругом столів сосонки та гілки кленків, чепляли гойдалки з дощок на стовпах. На широкому ставку, на зеленому маленькому острівці сільська аристократія задумала справити святкування окроме для себе самої. Острівець той, маленький та довгенький, зарослий старими тополями, неначе плавав серед ставка, мов зелений човен з високими зеленими щоглами, і чудово одбивався в тихій воді. Після холодного апріля наст\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:11.068Z",
+          "resultDisplay": "Found 5 results for: \"С заранія в пятокъ потопташа\"\n\n### Result 1 (score: 0.5360)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 2 (score: 0.5201)\n- **Work**: Іван Франко. Не спитавши броду (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a6f16582_c0154`\n- **Text**:\n— Третя.\n\n— От і у мене одна! — скрикнув Борис, сіпнувши вудкою. — Та хай їй цур, упала з гачка!\n\n— Ха, ха, ха! — засміялась пані. — Четверта! А ось і п’ята! А ось і шоста. Фе, встидайтесь! Невже у вас ані одної ще нема?\n\n— Ну, прецінь дав бог одну, — сказав Борис, викидаючи здерку.\n\n— А у мене вже десять, — сказала по хвилі пані Міхонська.\n\n— У мене три, — відповів Борис.\n\n— У мене п’ятнадцять, — знов по хвилі роздався голос пані.\n\n— У мене п’ять.\n\nЩе з півгодини ловили, поки не смерклось. У Бо\n\n### Result 3 (score: 0.5155)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0018`\n- **Text**:\nдо потопа . лѣт̑ . ҂в҃ . с҃ .\r\nм҃ . в҃ . а ѿ потопа до Аврама. лѣт҃.\r\n҂а҃. п҃ . . в҃. ѿ Аврама 1 до\r\nисхожениӕ Моисѣєва . лѣтъ . у҃ 2. л҃ .\r\nѿ 3 исхожениӕ Моисѣѡва . до Дв҃да .\r\nлѣт҃ . х҃ . а҃ . ѿ Дв҃да и до 4\r\nначала цс̑ртва Соломонѧ . до плѣнениӕ Иєрс̑лмова . лѣт̑\r\n. у҃ . 5 . м҃ . и҃ . ѿ плѣнениӕ\r\nдо Александра. лѣт̑ . т҃ . и҃ı . ѿ 6\r\nЛександра до Хс̑ва ржс̑тв 7 Ж . лѣт̑ .\r\nт҃ . л҃ . г҃ . ѿ 8 Хс̑ва рожьства до Костѧнтина\r\n. лѣт̑ . т҃ . и҃ı . ѿ 9\r\nКостѧнтина же 10 до Михаила сего . лѣт̑ . ф҃ .\r\n\n### Result 4 (score: 0.5075)\n- **Work**: Іван Нечуй-Левицький. На кожум'яках (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `7ef81786_c0053`\n- **Text**:\nГ о с т р о х в о с т и й. (як опечений). Ой, не треба! Вони з Оленкою тепер натомились: мабуть, вже сплять.\n\nЄ в ф р о с и н а . Неначе зроду не бачили тітки! Сказати правду всім у вічі, мені б не хотілось, щоб моя тітка була на моїм весіллі. Вона тут нашуробурить так, що мені буде сором перед моїми пансіонськими подругами.\n\nГ о с т р о х в о с т и й. Який у вас великий розум. Євфросино Сидоровно! Я тільки стою та дивуюсь, витріщивши очі. Отак і мені здається, як вам. Чи не можна б було нам пов\n\n### Result 5 (score: 0.4991)\n- **Work**: Іван Нечуй-Левицький. Сільський старшина бенкетує! (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `e2ecbb5d_c0001`\n- **Text**:\n15 мая ще спозаранку коло управи в дворі прибирали, замітали, ставили рядками столи, забивали кругом столів сосонки та гілки кленків, чепляли гойдалки з дощок на стовпах. На широкому ставку, на зеленому маленькому острівці сільська аристократія задумала справити святкування окроме для себе самої. Острівець той, маленький та довгенький, зарослий старими тополями, неначе плавав серед ставка, мов зелений човен з високими зеленими щоглами, і чудово одбивався в тихій воді. Після холодного апріля наст\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "86fe0b92-d5d5-4f75-9970-c1e275069c26",
+      "timestamp": "2026-03-14T02:25:18.880Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Moving Towards the Goal",
+          "description": "I'm focused on moving forward to the next stage now, and I've identified the necessary pieces for the next step. I'm now making certain everything is aligned for a smooth transition. The specifics are coming together.",
+          "timestamp": "2026-03-14T02:25:15.267Z"
+        },
+        {
+          "subject": "Identifying the Battle's Aftermath",
+          "description": "I'm now shifting my focus to what happened after the initial battle. My goal is to discover what occurred following that event. It's time to gather details about the aftermath.",
+          "timestamp": "2026-03-14T02:25:17.316Z"
+        },
+        {
+          "subject": "Analyzing the Battlefield",
+          "description": "I'm now switching to understand what happened at the River Syurliy. I am using information previously discovered to refine the search. The next part will give insight into the battle's location.",
+          "timestamp": "2026-03-14T02:25:18.678Z"
+        }
+      ],
+      "tokens": {
+        "input": 24978,
+        "output": 18,
+        "cached": 19973,
+        "thoughts": 461,
+        "tool": 0,
+        "total": 25457
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455118878_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Сююрлій"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455118878_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Сююрлій\"\n\n### Result 1 (score: 0.4401)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 2 (score: 0.4176)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c2198`\n- **Text**:\nДУРИЛІН Сергій\r\nМиколайович [14 (26).IX 1877, Москва — 14.XII 1954, там же] — рос. рад. літературознавець,\r\nмистецтвознавець, доктор філол. наук з 1943, чл.-кор. АН СРСР з 1945. Закінчив\r\n1914 Моск. археол. ін-т. З 1945 працював в Ін-ті історії мистецтв АН СРСР.\r\nАвтор праць з історії рос. л-ри (про творчість К. Леонтьєва, М. Лермонтова, М.\r\nГоголя, О. Островського, Ф. Достоєвського та ін.), про літ.культурні зв’язки\r\nРосії і Зх. Європи («Російські письменники у Гете», 1932; «М-м де Сталь га її\r\n\n### Result 3 (score: 0.4133)\n- **Work**: Микола Хвильовий. Арабески (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `6ce5d436_c0003`\n- **Text**:\nНародився я (Сойрейль, припустім, бо для мене просвітянський реалізм — \"к чорту\" ...навіть у прізвищах, бо я його органічно \"органонами\" не виношу), народився я, Сойрейль, которого не треба плутати з Карейлем, автором \"Французької республіки\", оскільки в Англії нема просвітянства такого, як у нас, але, може, є й покраще: я маю на увазі Ірландію й англійський бокс, після якого й після літургії (підсмалені очі д'горі) навіть соіtus за \"розписанням\",— народився я в одному з тих городків, саме в сте\n\n### Result 4 (score: 0.4133)\n- **Work**: Микола Хвильовий. Сині етюди (збірка) (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e377fcf8_c0187`\n- **Text**:\nНародився я (Сойрейль, припустім, бо для мене просвітянський реалізм — \"к чорту\" ...навіть у прізвищах, бо я його органічно \"органонами\" не виношу), народився я, Сойрейль, которого не треба плутати з Карейлем, автором \"Французької республіки\", оскільки в Англії нема просвітянства такого, як у нас, але, може, є й покраще: я маю на увазі Ірландію й англійський бокс, після якого й після літургії (підсмалені очі д'горі) навіть соіtus за \"розписанням\",— народився я в одному з тих городків, саме в сте\n\n### Result 5 (score: 0.4048)\n- **Work**: Михайло Коцюбинський. Fata Morgana (1864)\n- **Author**: Коцюбинський М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `babf0a87_c0082`\n- **Text**:\nІ не встигли ще розступитись, коли крізь юрму пролетіло щось мокре, все у рідкому болоті, захлюпало всіх і просто кинулось до вогню. На мент тільки плигнула перед очима чорна фігура, піднята рука і вже простягла людям шаплик вогню, що курився як серце, тільки що вирване з грудей.\n\n— Пийте!\n\nАле як пити?\n\n— Лий воду! Дайте води...\n\nХтось приніс воду і хлюпнув нею в шаплик.\n\nВогонь притих, зігнувся, дихнув востаннє й сконав.\n\n— Ура! горілка!\n\nРуки здіймались і простягались — тремтячі, напрасні, з \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:19.342Z",
+          "resultDisplay": "Found 5 results for: \"Сююрлій\"\n\n### Result 1 (score: 0.4401)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 2 (score: 0.4176)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c2198`\n- **Text**:\nДУРИЛІН Сергій\r\nМиколайович [14 (26).IX 1877, Москва — 14.XII 1954, там же] — рос. рад. літературознавець,\r\nмистецтвознавець, доктор філол. наук з 1943, чл.-кор. АН СРСР з 1945. Закінчив\r\n1914 Моск. археол. ін-т. З 1945 працював в Ін-ті історії мистецтв АН СРСР.\r\nАвтор праць з історії рос. л-ри (про творчість К. Леонтьєва, М. Лермонтова, М.\r\nГоголя, О. Островського, Ф. Достоєвського та ін.), про літ.культурні зв’язки\r\nРосії і Зх. Європи («Російські письменники у Гете», 1932; «М-м де Сталь га її\r\n\n### Result 3 (score: 0.4133)\n- **Work**: Микола Хвильовий. Арабески (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `6ce5d436_c0003`\n- **Text**:\nНародився я (Сойрейль, припустім, бо для мене просвітянський реалізм — \"к чорту\" ...навіть у прізвищах, бо я його органічно \"органонами\" не виношу), народився я, Сойрейль, которого не треба плутати з Карейлем, автором \"Французької республіки\", оскільки в Англії нема просвітянства такого, як у нас, але, може, є й покраще: я маю на увазі Ірландію й англійський бокс, після якого й після літургії (підсмалені очі д'горі) навіть соіtus за \"розписанням\",— народився я в одному з тих городків, саме в сте\n\n### Result 4 (score: 0.4133)\n- **Work**: Микола Хвильовий. Сині етюди (збірка) (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e377fcf8_c0187`\n- **Text**:\nНародився я (Сойрейль, припустім, бо для мене просвітянський реалізм — \"к чорту\" ...навіть у прізвищах, бо я його органічно \"органонами\" не виношу), народився я, Сойрейль, которого не треба плутати з Карейлем, автором \"Французької республіки\", оскільки в Англії нема просвітянства такого, як у нас, але, може, є й покраще: я маю на увазі Ірландію й англійський бокс, після якого й після літургії (підсмалені очі д'горі) навіть соіtus за \"розписанням\",— народився я в одному з тих городків, саме в сте\n\n### Result 5 (score: 0.4048)\n- **Work**: Михайло Коцюбинський. Fata Morgana (1864)\n- **Author**: Коцюбинський М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `babf0a87_c0082`\n- **Text**:\nІ не встигли ще розступитись, коли крізь юрму пролетіло щось мокре, все у рідкому болоті, захлюпало всіх і просто кинулось до вогню. На мент тільки плигнула перед очима чорна фігура, піднята рука і вже простягла людям шаплик вогню, що курився як серце, тільки що вирване з грудей.\n\n— Пийте!\n\nАле як пити?\n\n— Лий воду! Дайте води...\n\nХтось приніс воду і хлюпнув нею в шаплик.\n\nВогонь притих, зігнувся, дихнув востаннє й сконав.\n\n— Ура! горілка!\n\nРуки здіймались і простягались — тремтячі, напрасні, з \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "6cf0254e-d6dc-4dfa-b949-a9e3baca523c",
+      "timestamp": "2026-03-14T02:25:27.092Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Moving Towards the Goal",
+          "description": "I'm now focused on the next action. My progress feels smooth, and I'm ready to proceed. I have a clearer picture of what needs to happen to move on to the following step.",
+          "timestamp": "2026-03-14T02:25:23.755Z"
+        },
+        {
+          "subject": "Pinpointing Specific Text",
+          "description": "I'm zeroing in on the relevant text within the chronicle. Considering the date I need, I'll concentrate my efforts to verify the information. I'm cross-referencing to confirm the accuracy of the details.",
+          "timestamp": "2026-03-14T02:25:26.069Z"
+        },
+        {
+          "subject": "Verifying Date Information",
+          "description": "I'm now employing a tool to confirm the date information. I need to be completely certain about the accuracy of the dates before proceeding. After the verification, I'll assess the next stage of this task.",
+          "timestamp": "2026-03-14T02:25:26.983Z"
+        }
+      ],
+      "tokens": {
+        "input": 26241,
+        "output": 22,
+        "cached": 23163,
+        "thoughts": 389,
+        "tool": 0,
+        "total": 26652
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455127092_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Битва на Каялі",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455127092_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Битва на Каялі' — 5 results\n\n1. **Битва на Каялі** — Битва на Каялі — битва між руськими князями та половцями відбулась 10-12 травня 1185 року поблизу річки Каяла. Похід Ігоря Святославича відбувався орієнтовно\n2. **Битва на річці Трубіж** — можна вважати перемогу у битві біля Ростовця і знищення руського війська під командуванням Ігоря Святославича (битва на річці Каялі). Літопис руський / Пер\n3. **Битви в історії України** — Сутінь 1107 — Битва над Сулою 1111 — Битва при Сальниці 1183 — Битва на Орелі 1185 — Битва на річці Хорол 1185 — Битва на Каялі 1205 — Битва під Завихостом\n4. **Копті** — кочували на лівому березі Дніпра, на річці Самарі. У 1185 році разом з Гзаком, Кончаком та іншими половецькими ханами брав участь у битві на Каялі, де половці\n5. **Роман Кзич** — змінив ім&#039;я на Роман. Час звільнення з полону невідомий. У 1185 році разом з Гзаком та іншими половецькими ханами брав участь у битві на Каялі, де зазнали"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:27.327Z",
+          "resultDisplay": "Wikipedia search: 'Битва на Каялі' — 5 results\n\n1. **Битва на Каялі** — Битва на Каялі — битва між руськими князями та половцями відбулась 10-12 травня 1185 року поблизу річки Каяла. Похід Ігоря Святославича відбувався орієнтовно\n2. **Битва на річці Трубіж** — можна вважати перемогу у битві біля Ростовця і знищення руського війська під командуванням Ігоря Святославича (битва на річці Каялі). Літопис руський / Пер\n3. **Битви в історії України** — Сутінь 1107 — Битва над Сулою 1111 — Битва при Сальниці 1183 — Битва на Орелі 1185 — Битва на річці Хорол 1185 — Битва на Каялі 1205 — Битва під Завихостом\n4. **Копті** — кочували на лівому березі Дніпра, на річці Самарі. У 1185 році разом з Гзаком, Кончаком та іншими половецькими ханами брав участь у битві на Каялі, де половці\n5. **Роман Кзич** — змінив ім&#039;я на Роман. Час звільнення з полону невідомий. У 1185 році разом з Гзаком та іншими половецькими ханами брав участь у битві на Каялі, де зазнали",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2817e538-b2e4-488c-8815-76cc0cefa691",
+      "timestamp": "2026-03-14T02:25:33.983Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on finalizing the next step. I'm carefully considering how to move forward, making sure I am being efficient and not missing any key information before taking action. I am also trying to remain flexible and adaptive to any unforeseen details.",
+          "timestamp": "2026-03-14T02:25:32.602Z"
+        },
+        {
+          "subject": "Preparing to Extract Information",
+          "description": "I'm zeroing in on the extraction phase. My focus is on refining the search parameters to capture all the essential details. I am also planning the next actions to extract the exact text I need from the search results, ensuring accuracy.",
+          "timestamp": "2026-03-14T02:25:33.835Z"
+        }
+      ],
+      "tokens": {
+        "input": 26670,
+        "output": 22,
+        "cached": 0,
+        "thoughts": 264,
+        "tool": 0,
+        "total": 26956
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455133982_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Битва на Каялі"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455133982_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Битва на Каялі\n**URL**: https://uk.wikipedia.org/wiki/%D0%91%D0%B8%D1%82%D0%B2%D0%B0_%D0%BD%D0%B0_%D0%9A%D0%B0%D1%8F%D0%BB%D1%96\n\nБитва на Каялі — битва між руськими князями та половцями відбулась 10-12 травня 1185 року поблизу річки Каяла.\n\n\n== Місце битви ==\nПохід Ігоря Святославича відбувався орієнтовно 23 квітня — 12 травня 1185 року, бої з половцями, скоріш за все, — 10 і 12 травня. Місце боїв — украй дискусійне, береги річок Сюурлій і Каяла, на роль котрих історики і краєзнавці запропонували десятки річок на території Харківської, Донецької, Запорізької областей України, Воронезької та Ростовської областей Росії.\n\n\n== Командувачі ==\nРуським військом керували брати Ігор Святославич і Всеволод Буй-тур Святославич, окремими полками керували син Ігоря Володимир (на момент битви князь путивльський) і племінник Святослав Олегович (1160—? рр., після походу 1185 р. або помер у полоні, або повернувся і став князем курським), а також воєвода чернігівського князя Ярослава Ольстин Олексич.\nПоловецьке військо очолювали хан Бурчевичів Гзак, лідер донецької конфедерації половців хан Кончак, син Гзака Роман Гзич, лідери орд Токсобичів, Колобичів, Єтебичів, Тертробичів, Улашевичів, Тарголове.\n\n\n== Передумови битви і сили сторін ==\nОльговичі, зокрема Ігор Святославич (за деякими відомостями, його мати була з половецького княжого роду), вели гнучку політику щодо Степу та своїх суперників Мономаховичів, часто вступаючи в союзи то з одними, то з іншими. По суті, руський похід квітня — травня 1185 р. — епізод в особливих стосунках Русі та Степу, позначених як військовими конфліктами, так і приреченістю на співіснування. Безпосередньою метою Ігоря було підвищення авторитету серед родичів та взяття здобичі, для чого годився невеликий переможний похід проти хана Кончака, уже один раз розбитого об'єднаним руським військом у березні 1185 р. на річці Хорол. Тому сили князя Ігоря, навіть з урахуванням віддаленості зимових кочовищ хана на річці Тор, були не надто великими, можливо, 1—1,5 тисячі дружинників (навряд чи Ольговичі могли виставити більше), певна кількість «їздячої піхоти», кількасотенний загін легких кіннотників-ковуїв (лівобережний аналог відомих васалів київського князя — «чорних клобуків»). Повідомлення Татищева про 5 тисяч лише полонених русичів на Каялі є певним (хоча, може, й невеликим) перебільшенням. Сили половців були вочевидь більшими за руські, але будь-які відомості про них у літописі традиційно відсутні і мають виключно оцінний характер.\n\n\n== Озброєння і тактика сторін ==\nЯк і в більшості руських походів у Степ, ядро руського війська складала кіннота — княжі важкоозброєні дружинники, доповнені легкими стрільцями з луків з числа тюрків-ковуїв. Стійкості руським полкам надавала присутність у складі війська «їздячої піхоти», що йшла в бій спішившись, формуючи традиційні щільні бойові шикування.\nТактична побудова русичів у першому бою з половецьким авангардом 10 травня була досить вдалою: руське військо вишикувалося в 6 полків, першу лінію (стрільці у прикритті основних сил) складали полки ковуїв, Володимира Ігоревича і полк відбірних стрільців з числа княжих ратників; «лінійна» піхота і кінні дружинники Ігоря — у центрі, Всеволода — на правому фланзі та Святослава Олеговича — на лівому.\nОснову половецької тактики складали стратегічне заманювання супротивника в зручні для нападу легкої кінноти місця, відрізання від джерел води, довгий обстріл з луків і зрештою прикінцева серія ударів не надто численної важкої кінноти на чолі з ханськими дружинниками та родовою аристократією («господичичами»).\n\n\n== Хід битви ==\n\nПохід розпочався 23 квітня, 1 травня Ігор став свідком сонячного затемнення, що не надто позитивно вплинуло на моральний стан його війська. Дочекавшись підкріплень — війська Всеволода, князь вирушив до зимових кочовищ Кончака, котрий спішно збирав сили. Перший бій відбувся на берегах степової річки Сюурлій 10 травня, русичі перемогли половецький авангард і взяли невелику здобич, захопивши частину половецьких «веж».\nПобачивши підхід головних сил Кончака та Гзака, Ігор влаштував військову нараду, на котрій вирішили почати відступ. Можливо, через поганий стан коней воїнів Святослава Олеговича і наявність не дуже швидкої «їздячої піхоти» русичі відступали повільно, а потім взагалі спішилися (вкрай дискусійне місце з літопису). Відступ 11 та початок дня 12 травня супроводжував обстріл з половецьких луків, потім не витримали й почали тікати ковуї — наймобільніша частина княжого війська. Ігор, намагаючись повернути їх, відірвався з частиною дружинників від похідної колони і був взятий у полон (ще попереднього дня його руку поранили стрілою). Поріділе руське військо очолив Всеволод, який мужньо бився, схоже, сформувавши стіну з щитів поблизу загадкового «озера», але вже без шансів на порятунок: руські воїни гинули від обстрілу, у рукопашних сутичках або потрапляли в полон. До настання ночі все було скінчено.\n\n\n== Втрати сторін і наслідки події ==\nПоловці здобули блискучу перемогу — у полон було взято 4 руські князі, кілька тисяч руських воїнів, серед яких і ядро дружинного війська Новгород-Сіверської землі; втечею врятувалися лише 15 русичів та кілька ковуїв. Втрати степовиків невідомі, але навряд чи вони були надто великі. Гзак спустошив території Посейм'я, Кончак навіть обложив Переяслав, який насилу оборонив тамтешній князь Володимир Глібович, а також узяв місто Римів. Щоправда, перелому в стосунках половців і Русі ці події не зробили. Говорити про неймовірну половецьку загрозу для Русі в цей період — велика натяжка.\nПолон Ігоря тривав недовго: князь утік, тим самим врятувавши своїх підданих від уплати чималого викупу. Подальше одруження сина Ігоря, Володимира, з донькою Кончака призвело до міцного миру між колишніми ворогами.\n\n\n== Історична пам'ять ==\nНесподіваній поразці Ігоря надзвичайно пощастило майже одразу ж увійти в пам'ять сучасників, а згодом і нащадків, ставши символом боротьби Русі зі Степом і необхідності єднання руських князів. Результатом є і докладний опис події в літописі, і славнозвісне «Слово» (яке більшість істориків схильні вважати оригінальним епічним твором XII ст., а не пізнішою підробкою чи стилізацією), і десятки прозових, поетичних, драматичних творів, картин, натхненних героями та подіями 1185 р\" не кажучи вже про сотні наукових історичних і краєзнавчих праць і цілих «енциклопедій» «Слова о полку…». Аж ніяк не вирішальна в політичній чи військовій історії Русі подія стала джерелом натхнення для класиків літератури, живопису та музичного мистецтва (В. Капніста, Т. Шевченка, С. Руданського, Ю. Федьковича, М. Шашкевича, Панаса Мирного, І. Франка, М. Рильського, Н. Забіли, Г. Хоткевича, В. Жуковського, А. Майкова, К. Бальмонта, М. Заболоцького, О. Югова, Ю. Нарбута, В. Васнецова, І. Білібіна, М. Лисенка, О. Бородіна, Я. Купали тощо).\nОсновні джерела про битву — Київський літопис за Іпатіївським літописним зведенням, «Слово о полку Ігоревім», невідомі літописи, використані у XVIII ст. В. Татищевим.\n\n\n== Див. також ==\nСлово о полку Ігоревім\n\n\n== Джерела ==\nВизначні битви та полководці української історії / Д. В. Журавльов. — Харків: Книжковий Клуб «Клуб Сімейного Дозвілля», 2013. — 416 с .: іл.\nМандзяк В. Битви української середньовічної та ранньомодерної історії. — Львів: Літопис, 2011. — С. 153."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:34.783Z",
+          "resultDisplay": "# Битва на Каялі\n**URL**: https://uk.wikipedia.org/wiki/%D0%91%D0%B8%D1%82%D0%B2%D0%B0_%D0%BD%D0%B0_%D0%9A%D0%B0%D1%8F%D0%BB%D1%96\n\nБитва на Каялі — битва між руськими князями та половцями відбулась 10-12 травня 1185 року поблизу річки Каяла.\n\n\n== Місце битви ==\nПохід Ігоря Святославича відбувався орієнтовно 23 квітня — 12 травня 1185 року, бої з половцями, скоріш за все, — 10 і 12 травня. Місце боїв — украй дискусійне, береги річок Сюурлій і Каяла, на роль котрих історики і краєзнавці запропонували десятки річок на території Харківської, Донецької, Запорізької областей України, Воронезької та Ростовської областей Росії.\n\n\n== Командувачі ==\nРуським військом керували брати Ігор Святославич і Всеволод Буй-тур Святославич, окремими полками керували син Ігоря Володимир (на момент битви князь путивльський) і племінник Святослав Олегович (1160—? рр., після походу 1185 р. або помер у полоні, або повернувся і став князем курським), а також воєвода чернігівського князя Ярослава Ольстин Олексич.\nПоловецьке військо очолювали хан Бурчевичів Гзак, лідер донецької конфедерації половців хан Кончак, син Гзака Роман Гзич, лідери орд Токсобичів, Колобичів, Єтебичів, Тертробичів, Улашевичів, Тарголове.\n\n\n== Передумови битви і сили сторін ==\nОльговичі, зокрема Ігор Святославич (за деякими відомостями, його мати була з половецького княжого роду), вели гнучку політику щодо Степу та своїх суперників Мономаховичів, часто вступаючи в союзи то з одними, то з іншими. По суті, руський похід квітня — травня 1185 р. — епізод в особливих стосунках Русі та Степу, позначених як військовими конфліктами, так і приреченістю на співіснування. Безпосередньою метою Ігоря було підвищення авторитету серед родичів та взяття здобичі, для чого годився невеликий переможний похід проти хана Кончака, уже один раз розбитого об'єднаним руським військом у березні 1185 р. на річці Хорол. Тому сили князя Ігоря, навіть з урахуванням віддаленості зимових кочовищ хана на річці Тор, були не надто великими, можливо, 1—1,5 тисячі дружинників (навряд чи Ольговичі могли виставити більше), певна кількість «їздячої піхоти», кількасотенний загін легких кіннотників-ковуїв (лівобережний аналог відомих васалів київського князя — «чорних клобуків»). Повідомлення Татищева про 5 тисяч лише полонених русичів на Каялі є певним (хоча, може, й невеликим) перебільшенням. Сили половців були вочевидь більшими за руські, але будь-які відомості про них у літописі традиційно відсутні і мають виключно оцінний характер.\n\n\n== Озброєння і тактика сторін ==\nЯк і в більшості руських походів у Степ, ядро руського війська складала кіннота — княжі важкоозброєні дружинники, доповнені легкими стрільцями з луків з числа тюрків-ковуїв. Стійкості руським полкам надавала присутність у складі війська «їздячої піхоти», що йшла в бій спішившись, формуючи традиційні щільні бойові шикування.\nТактична побудова русичів у першому бою з половецьким авангардом 10 травня була досить вдалою: руське військо вишикувалося в 6 полків, першу лінію (стрільці у прикритті основних сил) складали полки ковуїв, Володимира Ігоревича і полк відбірних стрільців з числа княжих ратників; «лінійна» піхота і кінні дружинники Ігоря — у центрі, Всеволода — на правому фланзі та Святослава Олеговича — на лівому.\nОснову половецької тактики складали стратегічне заманювання супротивника в зручні для нападу легкої кінноти місця, відрізання від джерел води, довгий обстріл з луків і зрештою прикінцева серія ударів не надто численної важкої кінноти на чолі з ханськими дружинниками та родовою аристократією («господичичами»).\n\n\n== Хід битви ==\n\nПохід розпочався 23 квітня, 1 травня Ігор став свідком сонячного затемнення, що не надто позитивно вплинуло на моральний стан його війська. Дочекавшись підкріплень — війська Всеволода, князь вирушив до зимових кочовищ Кончака, котрий спішно збирав сили. Перший бій відбувся на берегах степової річки Сюурлій 10 травня, русичі перемогли половецький авангард і взяли невелику здобич, захопивши частину половецьких «веж».\nПобачивши підхід головних сил Кончака та Гзака, Ігор влаштував військову нараду, на котрій вирішили почати відступ. Можливо, через поганий стан коней воїнів Святослава Олеговича і наявність не дуже швидкої «їздячої піхоти» русичі відступали повільно, а потім взагалі спішилися (вкрай дискусійне місце з літопису). Відступ 11 та початок дня 12 травня супроводжував обстріл з половецьких луків, потім не витримали й почали тікати ковуї — наймобільніша частина княжого війська. Ігор, намагаючись повернути їх, відірвався з частиною дружинників від похідної колони і був взятий у полон (ще попереднього дня його руку поранили стрілою). Поріділе руське військо очолив Всеволод, який мужньо бився, схоже, сформувавши стіну з щитів поблизу загадкового «озера», але вже без шансів на порятунок: руські воїни гинули від обстрілу, у рукопашних сутичках або потрапляли в полон. До настання ночі все було скінчено.\n\n\n== Втрати сторін і наслідки події ==\nПоловці здобули блискучу перемогу — у полон було взято 4 руські князі, кілька тисяч руських воїнів, серед яких і ядро дружинного війська Новгород-Сіверської землі; втечею врятувалися лише 15 русичів та кілька ковуїв. Втрати степовиків невідомі, але навряд чи вони були надто великі. Гзак спустошив території Посейм'я, Кончак навіть обложив Переяслав, який насилу оборонив тамтешній князь Володимир Глібович, а також узяв місто Римів. Щоправда, перелому в стосунках половців і Русі ці події не зробили. Говорити про неймовірну половецьку загрозу для Русі в цей період — велика натяжка.\nПолон Ігоря тривав недовго: князь утік, тим самим врятувавши своїх підданих від уплати чималого викупу. Подальше одруження сина Ігоря, Володимира, з донькою Кончака призвело до міцного миру між колишніми ворогами.\n\n\n== Історична пам'ять ==\nНесподіваній поразці Ігоря надзвичайно пощастило майже одразу ж увійти в пам'ять сучасників, а згодом і нащадків, ставши символом боротьби Русі зі Степом і необхідності єднання руських князів. Результатом є і докладний опис події в літописі, і славнозвісне «Слово» (яке більшість істориків схильні вважати оригінальним епічним твором XII ст., а не пізнішою підробкою чи стилізацією), і десятки прозових, поетичних, драматичних творів, картин, натхненних героями та подіями 1185 р\" не кажучи вже про сотні наукових історичних і краєзнавчих праць і цілих «енциклопедій» «Слова о полку…». Аж ніяк не вирішальна в політичній чи військовій історії Русі подія стала джерелом натхнення для класиків літератури, живопису та музичного мистецтва (В. Капніста, Т. Шевченка, С. Руданського, Ю. Федьковича, М. Шашкевича, Панаса Мирного, І. Франка, М. Рильського, Н. Забіли, Г. Хоткевича, В. Жуковського, А. Майкова, К. Бальмонта, М. Заболоцького, О. Югова, Ю. Нарбута, В. Васнецова, І. Білібіна, М. Лисенка, О. Бородіна, Я. Купали тощо).\nОсновні джерела про битву — Київський літопис за Іпатіївським літописним зведенням, «Слово о полку Ігоревім», невідомі літописи, використані у XVIII ст. В. Татищевим.\n\n\n== Див. також ==\nСлово о полку Ігоревім\n\n\n== Джерела ==\nВизначні битви та полководці української історії / Д. В. Журавльов. — Харків: Книжковий Клуб «Клуб Сімейного Дозвілля», 2013. — 416 с .: іл.\nМандзяк В. Битви української середньовічної та ранньомодерної історії. — Львів: Літопис, 2011. — С. 153.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "24407624-e825-46fc-82ad-024baba7c753",
+      "timestamp": "2026-03-14T02:25:40.786Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on finalizing the next step. I'm carefully considering how to best achieve the desired outcome.",
+          "timestamp": "2026-03-14T02:25:39.003Z"
+        },
+        {
+          "subject": "Refining Search Strategies",
+          "description": "I'm now carefully crafting my approach to locate the relevant passages. I need to pinpoint the appropriate search parameters to identify the correct quotes. My aim is to accurately extract the pertinent information, and I'm concentrating on refining my search strategy to guarantee precision.",
+          "timestamp": "2026-03-14T02:25:40.694Z"
+        }
+      ],
+      "tokens": {
+        "input": 29274,
+        "output": 27,
+        "cached": 26472,
+        "thoughts": 293,
+        "tool": 0,
+        "total": 29594
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455140781_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Слово о полку Ігоревім Сюурлій"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455140781_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Слово о полку Ігоревім Сюурлій\"\n\n### Result 1 (score: 0.6057)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.5841)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 3 (score: 0.5637)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 4 (score: 0.5609)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0130`\n- **Text**:\nПосумніли з жалю цвіти.\n\nВ тузі дерево додолу\n\nприклонило свої віти.\n\nНе сороки скреготали —\n\nто за Ігорем в погоні\n\nГза з Кончаком поспішали.\n\nЩе й не кракали ворони,\n\nще й галки тоді мовчали,\n\nта й сороки у тій хвилі\n\nскреготу не піднімали,\n\nтихо в лозині сиділи.\n\nТільки дятли путь на воду\n\nстуком кажуть на заранні\n\nй соловії сповіщають\n\nлюбим щебетом світанне.\n\nГза говорить: «Коли сокіл\n\nв гніздо лине перед нами,\n\nми соколича розстрілим\n\nзолоченими стрілками!»\n\nКончак каже: «Коли сокіл\n\nв гні\n\n### Result 5 (score: 0.5590)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0011`\n- **Text**:\nОригінальний текст «Слова о полку Ігоревім»\r\nпідготовлено за виданням 1800 p., яке взято за основу, та за Катерининською\r\nкопією (за фототипічними їх виданнями). При цьому враховано й критично\r\nпереоцінено найновіші публікації тексту з відповідними поправками та\r\nкон’єктурами у виданнях: А. С. Орлов, «Слово о полку Игореве». Изд. 2-е, Изд-во\r\nАН СССР, М. — Л., 1946; «Слово о полку Игореве». Под ред. В. П.\r\nАдриановой-Перетц, Изд-во АН СССР, М. — Л., 1950 (Литературные памятники);\r\n«Слово о полку\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:40.953Z",
+          "resultDisplay": "Found 5 results for: \"Слово о полку Ігоревім Сюурлій\"\n\n### Result 1 (score: 0.6057)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.5841)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 3 (score: 0.5637)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 4 (score: 0.5609)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0130`\n- **Text**:\nПосумніли з жалю цвіти.\n\nВ тузі дерево додолу\n\nприклонило свої віти.\n\nНе сороки скреготали —\n\nто за Ігорем в погоні\n\nГза з Кончаком поспішали.\n\nЩе й не кракали ворони,\n\nще й галки тоді мовчали,\n\nта й сороки у тій хвилі\n\nскреготу не піднімали,\n\nтихо в лозині сиділи.\n\nТільки дятли путь на воду\n\nстуком кажуть на заранні\n\nй соловії сповіщають\n\nлюбим щебетом світанне.\n\nГза говорить: «Коли сокіл\n\nв гніздо лине перед нами,\n\nми соколича розстрілим\n\nзолоченими стрілками!»\n\nКончак каже: «Коли сокіл\n\nв гні\n\n### Result 5 (score: 0.5590)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0011`\n- **Text**:\nОригінальний текст «Слова о полку Ігоревім»\r\nпідготовлено за виданням 1800 p., яке взято за основу, та за Катерининською\r\nкопією (за фототипічними їх виданнями). При цьому враховано й критично\r\nпереоцінено найновіші публікації тексту з відповідними поправками та\r\nкон’єктурами у виданнях: А. С. Орлов, «Слово о полку Игореве». Изд. 2-е, Изд-во\r\nАН СССР, М. — Л., 1946; «Слово о полку Игореве». Под ред. В. П.\r\nАдриановой-Перетц, Изд-во АН СССР, М. — Л., 1950 (Литературные памятники);\r\n«Слово о полку\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "62061fb9-fb3b-4ccc-89f1-3b8f3cf2057d",
+      "timestamp": "2026-03-14T02:25:48.368Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on finalizing the next step. I'm carefully considering how to move forward, making sure I am being efficient and not missing any key information before taking action. I am also trying to remain flexible and open to new approaches as I encounter new information.",
+          "timestamp": "2026-03-14T02:25:45.793Z"
+        },
+        {
+          "subject": "Identifying Relevant Information",
+          "description": "I'm presently focused on retrieving the original Old East Slavic quote. My plan is to use the most suitable tools available to accurately locate the quote and its context. I am carefully considering the best strategies for extracting the information.",
+          "timestamp": "2026-03-14T02:25:48.271Z"
+        },
+        {
+          "subject": "Refining the Search Strategy",
+          "description": "I'm now carefully selecting the best tools to locate the Old East Slavic text. I'm choosing the most relevant search tools, aiming to pinpoint the exact quote and avoid irrelevant information. The plan is to get an accurate representation of the original text.",
+          "timestamp": "2026-03-14T02:25:48.275Z"
+        }
+      ],
+      "tokens": {
+        "input": 30806,
+        "output": 26,
+        "cached": 26516,
+        "thoughts": 341,
+        "tool": 0,
+        "total": 31173
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455148364_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "красныя дѣвкы половецкыя"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455148364_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"красныя дѣвкы половецкыя\"\n\n### Result 1 (score: 0.5561)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0214`\n- **Text**:\nкрасныя дЂвкы] сполучення звичайне для XI — XII вв.,\r\nпор.„не сквьрньная агница... добрая дЂвъка Θекла” Стихир. XII в. й ин.\r\n„Красьно отроча”, „уношя красьнъ зЂло” Изб. Свят. 1076 p.; „отъврати очи твои\r\nотъ жены красьны”, Панд. Ант. XI в. Срезн. I, 1318. Іп.: „жену красну вельми”\r\nст. 284; у велик. піснях — Тіх.-Мілл. „препусти мнЂ ту дЂвку красную”, 34; „с\r\nкрасных девок повенечное”, Милл., Ист. п. 196; Шейн, Вел.: красная девка №№\r\n365, 554, 398, 1642 та ин.; в українських — /183/ красна дів\n\n### Result 2 (score: 0.5249)\n- **Work**: Грушевський — Історія української літератури (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5e7696fa_c0284`\n- **Text**:\nСтарим дідам по києчку,\n\nСтарим бабам по серпочку,\n\nМалим дітям по яблочку,\n\nА дівчатам по віночку,\n\nА хлопчатам по батожочку\n\n(Волинь).\n\nМалим діткам — ручечки бити,\n\nА дівонькам та й погуляти,\n\nА господарям поле орати,\n\nА господиням кросенця ткати,\n\nА старим дідам раду радити,\n\nРаду радити — пиво варити,\n\nА к якому дню — свят Великодню.\n\n(Підляше — варіант поправляю).\n\nМотив сей дуже часто виступає при забавах як вступ до\r\nсатиричних паралель дівоцького і хлоп’ячого стану, дівоцької і парубоць\n\n### Result 3 (score: 0.5232)\n- **Work**: Грушевський — Історія української літератури (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5e7696fa_c0402`\n- **Text**:\nТри місяці ясні — три парубки красні.\n\nЄден парубочок — молод Васильочок,\n\nДругий парубочок — молод Павлусьочок,\n\nТретій парубочок — молод Іваночок.\n\nНа тім явороньку три зіроньки красні,\n\nТри зіроньки красні — три дівоньки красні,\n\nОдна ми дівонька — молода Маруся,\n\nДруга ми дівонька — молода Ганнуся,\n\nТретя ми дівонька — молода Настуся.\n\nМарусеньку взявши — Василькові давши,\n\nГаннусеньку взявши — Павлусьові давши,\n\nНастусеньку взявши — Іванкові давши.\n\n(вар.: А ти, Федуненьку,\r\nвзей си Марусен\n\n### Result 4 (score: 0.5219)\n- **Work**: Леся Українка. Голосні струни (1871)\n- **Author**: Українка Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `2280b8c9_c0001`\n- **Text**:\nОтак вона йде й тепер, опустивши очі; ті спущені очі надавали дивний вираз обличчю, поневолі здійнятому вгору. Легенька краска то вступить їй в обличчя, то зникне, і обличчя пополотніє. Так вона йде між клопотливим міським гуртом, що снується повз неї, штовха її, минає і – оглядається! Ось біжать дві панночки, лепечуть одна до одної голосно, шпарко, здається, нічого перед собою не бачать, забалакались. \"Ах, вибачайте!\" – кинула одна панночка, зачепивши нехотячи нашу дівчину. Тая нічого не сказал\n\n### Result 5 (score: 0.5174)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0269`\n- **Text**:\nC заранія в пяток потопташа\r\nпогания полки половецкия і рассушась стрілами по полю, помчаша красния дівки\r\nполовецкия, а с ними злато, і паволоки, і драгия оксамити. Оретомами і\r\nяпончицами, і кожухи начашя мости мостити по болотом і грязивим містом, — і\r\nвсякими узорочьї половецкими. Черлен стяг, біла хорюгов, черлена чолка,\r\nсребрено стружіє — храброму Святославличю.\n\nДремлеть в полі Ольгово\r\nхороброє гніздо. Далече залетіло! Не било оно Обиді порождено, ни соколу, ни\r\nкречету, ни тебі, чорний\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:48.698Z",
+          "resultDisplay": "Found 5 results for: \"красныя дѣвкы половецкыя\"\n\n### Result 1 (score: 0.5561)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0214`\n- **Text**:\nкрасныя дЂвкы] сполучення звичайне для XI — XII вв.,\r\nпор.„не сквьрньная агница... добрая дЂвъка Θекла” Стихир. XII в. й ин.\r\n„Красьно отроча”, „уношя красьнъ зЂло” Изб. Свят. 1076 p.; „отъврати очи твои\r\nотъ жены красьны”, Панд. Ант. XI в. Срезн. I, 1318. Іп.: „жену красну вельми”\r\nст. 284; у велик. піснях — Тіх.-Мілл. „препусти мнЂ ту дЂвку красную”, 34; „с\r\nкрасных девок повенечное”, Милл., Ист. п. 196; Шейн, Вел.: красная девка №№\r\n365, 554, 398, 1642 та ин.; в українських — /183/ красна дів\n\n### Result 2 (score: 0.5249)\n- **Work**: Грушевський — Історія української літератури (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5e7696fa_c0284`\n- **Text**:\nСтарим дідам по києчку,\n\nСтарим бабам по серпочку,\n\nМалим дітям по яблочку,\n\nА дівчатам по віночку,\n\nА хлопчатам по батожочку\n\n(Волинь).\n\nМалим діткам — ручечки бити,\n\nА дівонькам та й погуляти,\n\nА господарям поле орати,\n\nА господиням кросенця ткати,\n\nА старим дідам раду радити,\n\nРаду радити — пиво варити,\n\nА к якому дню — свят Великодню.\n\n(Підляше — варіант поправляю).\n\nМотив сей дуже часто виступає при забавах як вступ до\r\nсатиричних паралель дівоцького і хлоп’ячого стану, дівоцької і парубоць\n\n### Result 3 (score: 0.5232)\n- **Work**: Грушевський — Історія української літератури (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5e7696fa_c0402`\n- **Text**:\nТри місяці ясні — три парубки красні.\n\nЄден парубочок — молод Васильочок,\n\nДругий парубочок — молод Павлусьочок,\n\nТретій парубочок — молод Іваночок.\n\nНа тім явороньку три зіроньки красні,\n\nТри зіроньки красні — три дівоньки красні,\n\nОдна ми дівонька — молода Маруся,\n\nДруга ми дівонька — молода Ганнуся,\n\nТретя ми дівонька — молода Настуся.\n\nМарусеньку взявши — Василькові давши,\n\nГаннусеньку взявши — Павлусьові давши,\n\nНастусеньку взявши — Іванкові давши.\n\n(вар.: А ти, Федуненьку,\r\nвзей си Марусен\n\n### Result 4 (score: 0.5219)\n- **Work**: Леся Українка. Голосні струни (1871)\n- **Author**: Українка Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `2280b8c9_c0001`\n- **Text**:\nОтак вона йде й тепер, опустивши очі; ті спущені очі надавали дивний вираз обличчю, поневолі здійнятому вгору. Легенька краска то вступить їй в обличчя, то зникне, і обличчя пополотніє. Так вона йде між клопотливим міським гуртом, що снується повз неї, штовха її, минає і – оглядається! Ось біжать дві панночки, лепечуть одна до одної голосно, шпарко, здається, нічого перед собою не бачать, забалакались. \"Ах, вибачайте!\" – кинула одна панночка, зачепивши нехотячи нашу дівчину. Тая нічого не сказал\n\n### Result 5 (score: 0.5174)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0269`\n- **Text**:\nC заранія в пяток потопташа\r\nпогания полки половецкия і рассушась стрілами по полю, помчаша красния дівки\r\nполовецкия, а с ними злато, і паволоки, і драгия оксамити. Оретомами і\r\nяпончицами, і кожухи начашя мости мостити по болотом і грязивим містом, — і\r\nвсякими узорочьї половецкими. Черлен стяг, біла хорюгов, черлена чолка,\r\nсребрено стружіє — храброму Святославличю.\n\nДремлеть в полі Ольгово\r\nхороброє гніздо. Далече залетіло! Не било оно Обиді порождено, ни соколу, ни\r\nкречету, ни тебі, чорний\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "bbea0e35-1c37-4e90-af2d-ffa9112ebc47",
+      "timestamp": "2026-03-14T02:25:57.106Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the next step",
+          "description": "I'm now focused on the next stage. Considering the best way to move forward, I am carefully evaluating the information and figuring out the optimal sequence of actions to reach the objective. I'm exploring various possibilities and weighing the potential outcomes.",
+          "timestamp": "2026-03-14T02:25:53.933Z"
+        },
+        {
+          "subject": "Evaluating Forward Movement",
+          "description": "I'm now carefully examining the existing text. I'm strategizing how to best integrate the available information. I am working towards formulating the subsequent steps, keeping in mind the most efficient way to proceed.",
+          "timestamp": "2026-03-14T02:25:55.541Z"
+        },
+        {
+          "subject": "Initiating Word Verification",
+          "description": "I'm now prioritizing the verification of specific words. I will use the tool to check the validity of these terms in the context. This should contribute towards understanding the meaning of the given text.",
+          "timestamp": "2026-03-14T02:25:56.974Z"
+        }
+      ],
+      "tokens": {
+        "input": 32339,
+        "output": 26,
+        "cached": 0,
+        "thoughts": 501,
+        "tool": 0,
+        "total": 32866
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773455157100_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "оксамит",
+              "паволока",
+              "опонча",
+              "отьма"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773455157100_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 2/4\n\n- **оксамит** — FOUND (2 match): оксамит(noun), оксамит(noun)\n- **паволока** — FOUND (1 match): паволока(noun)\n- **опонча** — NOT FOUND\n- **отьма** — NOT FOUND"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:25:57.121Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 2/4\n\n- **оксамит** — FOUND (2 match): оксамит(noun), оксамит(noun)\n- **паволока** — FOUND (1 match): паволока(noun)\n- **опонча** — NOT FOUND\n- **отьма** — NOT FOUND",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "f1954fa2-07f2-45a1-a3cf-b56f99db82f0",
+      "timestamp": "2026-03-14T02:26:09.145Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on finalizing the next step. I'm carefully considering how to move forward, making sure I am being efficient and not missing any key information before taking action. I am also trying to remain flexible and adaptive to any unforeseen details.",
+          "timestamp": "2026-03-14T02:26:03.130Z"
+        },
+        {
+          "subject": "Structuring the Notes",
+          "description": "I am now focused on organizing the information I've gathered. I am actively planning the structure of my research notes, ensuring all the required sections are included and well-defined. My goal is a clear and logical flow to present the data.",
+          "timestamp": "2026-03-14T02:26:05.166Z"
+        },
+        {
+          "subject": "Refining Note Sections",
+          "description": "I'm now carefully reviewing and refining the sections for my notes. I'm taking another look to make sure I've captured all the relevant details, especially concerning the introduction to the battle. My next step will be to make sure the structure works well for the overall narrative I'm creating.",
+          "timestamp": "2026-03-14T02:26:09.058Z"
+        },
+        {
+          "subject": "Reviewing Section Content",
+          "description": "I am now taking another look at the introduction, and ensuring it has a good overview of the battle's context. I am also checking that I've accurately captured all the necessary historical details and the perspectives of the various parties involved, including the Cumans, and also looking at linguistic nuances.",
+          "timestamp": "2026-03-14T02:26:09.059Z"
+        }
+      ],
+      "tokens": {
+        "input": 32449,
+        "output": 20,
+        "cached": 0,
+        "thoughts": 600,
+        "tool": 0,
+        "total": 33069
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773455169143_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "mode": "frequency",
+            "query": "Сюурлій"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773455169143_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**Сюурлій**: frequency = 65, relative = 0.03 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:26:12.168Z",
+          "resultDisplay": "**Сюурлій**: frequency = 65, relative = 0.03 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2426ef65-b525-4722-b149-898535f1dc8e",
+      "timestamp": "2026-03-14T02:27:18.190Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Слово: Перша битва\n\n## Key Facts Ledger\n```yaml\nsubject: \"Слово: Перша битва\"\ntype: \"event\"\ndates:\n  start: \"1185-05-10\"\n  end: \"1185-05-10\"\n  key_events:\n    - year: 1185\n      event: \"10 травня (п'ятниця): Перша битва дружини Ігоря Святославича з половецьким авангардом на річці Сюурлій. Блискуча перемога русичів.\"\n    - year: 1185\n      event: \"Захоплення багатої здобичі: золота, шовків (паволок), оксамиту, а також половецьких клейнодів.\"\nprimary_quotes:\n  - text: \"С заранія в пяток потопташа погания полки половецкия і рассушась стрілами по полю, помчаша красния дівки половецкия, а с ними злато, і паволоки, і драгия оксамити.\"\n    source: \"Слово о полку Ігоревім\"\n    attribution: \"Невідомий автор\"\n  - text: \"Оретомами і япончицами, і кожухи начашя мости мостити по болотом і грязивим містом, — і всякими узорочьї половецкими.\"\n    source: \"Слово о полку Ігоревім\"\n    attribution: \"Невідомий автор\"\n  - text: \"Черлен стяг, біла хорюгов, черлена чолка, сребрено стружіє — храброму Святославличю.\"\n    source: \"Слово о полку Ігоревім\"\n    attribution: \"Невідомий автор\"\nforbidden_claims:\n  - \"Половці були бідними дикунами без розвиненої культури (спростовується наявністю в них шовків та оксамитів).\"\n  - \"Похід Ігоря був виключно релігійною «священною війною» проти язичників (насправді це був типовий феодальний набіг за славою та здобиччю).\"\n```\n\n## Використані джерела\n1. [Слово о полку Ігоревім (Ізборник)](http://litopys.org.ua) — оригінальний текст та поетичні переклади, що демонструють лексику та граматику першої битви.\n2. [Київський літопис (за Іпатіївським списком)](http://litopys.org.ua) — літописний контекст походу та бою в п'ятницю.\n3. [Вікіпедія: Битва на Каялі](https://uk.wikipedia.org/wiki/Битва_на_Каялі) — фактологічна база щодо датування (10 травня 1185 р.) та локалізації (річка Сюурлій).\n4. [Перетц В.М. Слово о полку Ігоревім (1926)](http://litopys.org.ua) — академічний аналіз тексту, порівняння літописних та поетичних тропів.\n\n## Хронологія\n- 1 травня 1185: Сонячне затемнення (зловісний знак).\n- 10 травня 1185: Зіткнення з половецьким авангардом на річці Сюурлій (перша битва, описана в «Слові»). Перемога русичів.\n- 11 травня 1185: Початок відступу та оточення руських полків головними силами Кончака та Гзака.\n- 12 травня 1185: Розгром руського війська на Каялі, полонення князів.\n\n## Ключові факти та цитати\n- Перша битва відбулася зранку в п'ятницю («С заранія в пяток»).\n- Руське військо здобуло швидку і нищівну перемогу над половецьким авангардом («потопташа погания полки половецкия»).\n- Граматичний фокус поеми: використання **аориста** для опису стрімких, завершених дій: *потопташа* (потоптали), *помчаша* (помчали/захопили), *начашя* (почали).\n- Здобич була настільки великою і розкішною, що дорогими тканинами (опончами, япончицями) мостили шлях через болота («начашя мости мостити по болотом»). Це класична поетична гіпербола, що підкреслює грандіозність успіху.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!history-bite] — Точна дата тріумфу. Битва сталася в п'ятницю, 10 травня 1185 року на річці Сюурлій. Автор спеціально фіксує день тижня («в пяток»), щоб надати епічній поемі документальної достовірності.\n- Section \"Основний матеріал\": [!myth-buster] — Міф про «бідних кочівників». Російська імперська історіографія часто малювала половців як диких варварів. Однак здобич Ігоря — «паволоки» (шовк) та «оксамити» — свідчить, що Степ був глибоко інтегрований у глобальні торгові мережі (Шовковий шлях), а половецька еліта жила в розкоші.\n- Section \"Основний матеріал\": [!quote] — Цитата «С заранія в пяток потопташа...» для ілюстрації дії аориста як граматичного засобу передачі динаміки бою.\n- Section \"Практика\": [!culture] — «Мостити мости» оксамитами по болотах. Ця художня деталь — не лише гіпербола багатства, а й демонстрація військової зневаги до матеріальних благ порівняно з головним трофеєм — княжою славою та військовими клейнодами.\n- Section \"Практика\": [!context] — Половецькі клейноди. Захоплення «черленого стяга» та «срібного стружія» означало не просто трофей, а привласнення символічної влади ворожого полководця.\n- Section \"Підсумок\": [!decolonization] — Деколонізація мотиву походу. Це не був релігійний «хрестовий похід» цивілізації проти дикунства, як це трактували пізніші московські історики. Це був класичний феодальний набіг заради «слави» та здобичі, цілком у дусі лицарської культури Європи.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Зображення половців як абсолютно чужого, варварського, нецивілізованого елементу, проти якого Русь вела перманентну священну війну на знищення.\n- **Ukrainian reality**: Половці були складним суспільством, з яким руські князі (особливо Ольговичі) мали тісні політичні, торговельні та родинні зв'язки. Багата здобич (шовк, золото, оксамит) вказує на їхню заможність. Сам похід був не війною на знищення, а лицарською авантюрою за престиж, що призвела до трагічних наслідків.\n\n## Contested Terms\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Культура половців | Бідні дикуни-язичники | Заможне суспільство, інтегроване у міжнародну торгівлю шовком та оксамитом |\n| Мета походу Ігоря | Захист християнства від степу | Лицарський феодальний набіг за здобиччю та особистою славою («пошукати града Тьмуторокані») |\n| Термін «Погані» | Виключно як «нечисті/язичники» | Політичний та культурний «Інший» у системі тогочасних координат |\n\n## Відеоресурси\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Контекст події**: Зранку в п'ятницю, 10 травня 1185 року, військо князя Ігоря досягло річки Сюурлій.\n- **Динаміка**: Руські полки несподівано атакували половецький авангард і вщент розбили його. \n- **Граматичний аспект**: Вступ до теми використання часових форм у давньоруській мові. Для передачі блискавичності цього розгрому автор використовує **аорист** (минулий час доконаного виду), що створює ефект швидкої зміни кадрів: *потоптали* -> *помчали*. Це контрастує з імперфектом, який використовується для тривалих описів.\n\n### Основний матеріал\n- **Аналіз тексту**: Розбір фрагмента «С заранія в пяток потопташа...». Увага на форми аориста 3-ї особи множини на *-ша*: *потопташа* (розтоптали, розгромили), *помчаша* (помчали, повели з собою), *начашя* (почали).\n- **Матеріальна культура Степу**: Розбір здобичі. Що таке «паволоки» (коштовні шовкові тканини) та «оксамити». Їх наявність руйнує міф про бідність кочівників і свідчить про контроль половців над торговими шляхами до Візантії та Сходу.\n- **Військові символи**: Крім матеріальних благ, Ігор отримує найголовніше — військові клейноди: «Черлен стяг, біла хорюгов, черлена чолка, сребрено стружіє». Це символи перемоги та військової доблесті, які віддаються «храброму Святославличю» (князю Ігорю).\n- **Поетика гіперболи**: Мостіння мостів оксамитами через болота («начашя мости мостити по болотом і грязивим містом»). Естетика зневаги до багатства заради слави.\n\n### Практика\n- **Граматичні вправи**: Ідентифікація аориста у тексті. Переклад давньоруських дієслів на сучасну українську (потопташа -> потоптали). Порівняння динаміки аориста з описовим імперфектом.\n- **Лексичний розбір**: Робота з термінами-історизмами та запозиченнями. Етимологія слів *оксамит* (з грецької), *хоругва* (тюркське або монгольське запозичення), *стяг*.\n- **Аналіз метафор**: Вправи на розуміння поетичних фігур твору (наприклад, що означає «помчаша красния дівки» — взяли в полон, або що символізує «черлен стяг»).\n\n### Підсумок\n- **Значення першої битви**: П'ятничний бій став піком слави Ігоря в цьому поході. Блискуча перемога принесла багату здобич і підняла бойовий дух.\n- **Фатальна ілюзія**: Цей легкий успіх виявився тактичною пасткою. Він засліпив князів, змусив їх повірити у власну непереможність і затягнув вглиб ворожої території, де вже збиралися головні сили ханів Кончака та Гзака.\n- **Перехід до наступної теми**: Цей тріумф є лише прологом до трагедії. Від п'ятничної ейфорії розповідь перейде до суботнього оточення і недільної катастрофи, що стане темою наступного модуля «Слово: Поразка».\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Continuing the next phase",
+          "description": "I'm now fully focused on making progress towards the next objective. I'm carefully considering the best approach. I've re-evaluated my options, and am now formulating a plan of action. I'm confident I can make strides forward.",
+          "timestamp": "2026-03-14T02:26:16.941Z"
+        },
+        {
+          "subject": "Initiating research organization",
+          "description": "I'm now prioritizing the structure of my research notes. I am considering different ways to categorize the incoming information. I'm focusing on defining the key elements for organization. My goal is a structured, useful format for the next step.",
+          "timestamp": "2026-03-14T02:26:19.246Z"
+        },
+        {
+          "subject": "Establishing Key Information",
+          "description": "I'm now detailing the core facts of the battle. My next step will be to examine the grammar used. I am focused on extracting essential data from the sources, to ensure precision.",
+          "timestamp": "2026-03-14T02:26:23.085Z"
+        },
+        {
+          "subject": "Refining information extraction",
+          "description": "I'm now carefully examining the primary sources. I'm focusing on the specific wording of key quotes. I'm intent on the extraction of relevant information. I'm comparing the initial information with the source material.",
+          "timestamp": "2026-03-14T02:26:25.785Z"
+        },
+        {
+          "subject": "Developing initial interpretations",
+          "description": "I am now focused on evaluating the extracted information. I am also working on synthesizing the key arguments. I am ready to begin formulating my interpretations.",
+          "timestamp": "2026-03-14T02:26:29.744Z"
+        },
+        {
+          "subject": "Deepening the Analysis",
+          "description": "I'm now delving into the core elements of the battle's context. I am carefully evaluating the quotes, along with their significance. My goal is to extract the most relevant details to clarify the key points.",
+          "timestamp": "2026-03-14T02:26:33.805Z"
+        },
+        {
+          "subject": "Constructing a Narrative Outline",
+          "description": "I am now focusing on organizing the extracted information into a coherent outline. The structure will feature introductory context and will later delve into the key quotes. My aim is to build a narrative.",
+          "timestamp": "2026-03-14T02:26:37.321Z"
+        },
+        {
+          "subject": "Finalizing Narrative Planning",
+          "description": "I'm now integrating all the gathered information to outline my next steps. I'm focusing on organizing the facts and interpretations into a coherent and structured narrative. This will include introductory elements and analysis of primary source material.",
+          "timestamp": "2026-03-14T02:26:41.574Z"
+        },
+        {
+          "subject": "Creating the output document",
+          "description": "I'm now structuring my findings into the final document. The focus is on formatting the outline sections. I will now integrate the extracted information, including quotes, and begin weaving it into a complete and polished narrative, with the goal of creating a useful document.",
+          "timestamp": "2026-03-14T02:26:44.633Z"
+        }
+      ],
+      "tokens": {
+        "input": 32496,
+        "output": 3031,
+        "cached": 25789,
+        "thoughts": 2217,
+        "tool": 0,
+        "total": 37744
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

@@ -1,0 +1,557 @@
+{
+  "sessionId": "8d82106e-d47e-4e43-817e-6c39b7c64a9e",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T00:27:46.533Z",
+  "lastUpdated": "2026-03-14T00:29:12.898Z",
+  "messages": [
+    {
+      "id": "714fe1ea-12b9-4b1b-8300-119c95837984",
+      "timestamp": "2026-03-14T00:27:46.533Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-023\nlevel: RUTH\nsequence: 23\nslug: document-types\nversion: '2.0'\ntitle: Види документів\nsubtitle: Document Types\nfocus: Привілей, Лист, Універсал\nphase: 1\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Document Types\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Royal Archivist\nprerequisites:\n- legal-profession\nconnects_to:\n- paleography-lab-skoropys\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Види документів** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Види документів\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Види документів\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "4891fdf7-a967-4595-819f-fececf91c164",
+      "timestamp": "2026-03-14T00:27:55.226Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Retrieval of Data",
+          "description": "I am now focused on retrieving the necessary information. I'm prioritizing the use of tools designed to find the most relevant data. My goal is to gather information that directly contributes to the next phase of the process.",
+          "timestamp": "2026-03-14T00:27:51.059Z"
+        },
+        {
+          "subject": "Querying for More Details",
+          "description": "I am now focusing on gathering more data to build a fuller picture of the document types. I'm leveraging tools that will deepen the investigation. My goal is to extract relevant details about specific terms.",
+          "timestamp": "2026-03-14T00:27:54.769Z"
+        },
+        {
+          "subject": "Starting to Gather Background",
+          "description": "I am now querying Wikipedia to gather basic context on \"Універсал\", \"Привілей\", and \"Лист.\" I will use these initial findings to inform further investigation, ensuring a strong foundation for the research phase.",
+          "timestamp": "2026-03-14T00:27:54.799Z"
+        }
+      ],
+      "tokens": {
+        "input": 20460,
+        "output": 57,
+        "cached": 16874,
+        "thoughts": 356,
+        "tool": 0,
+        "total": 20873
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773448075140_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Універсал",
+            "mode": "summary"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448075140_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Універсал\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%A3%D0%BD%D1%96%D0%B2%D0%B5%D1%80%D1%81%D0%B0%D0%BB\n\nУніверса́л — актовий документ, який доводить до загального відома певну постанову влади, її розпорядження адміністративно-політичного характеру."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:27:55.740Z",
+          "resultDisplay": "# Універсал\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%A3%D0%BD%D1%96%D0%B2%D0%B5%D1%80%D1%81%D0%B0%D0%BB\n\nУніверса́л — актовий документ, який доводить до загального відома певну постанову влади, її розпорядження адміністративно-політичного характеру.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773448075182_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Привілей"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448075182_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Привілей\n**Description**: виключне право, перевага\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D0%B2%D1%96%D0%BB%D0%B5%D0%B9\n\nПривілей — законодавчий акт в Королівстві Польському і Великому князівстві Литовському, що являє собою даровану грамоту, дану монархом окремим особам, станам, етноконфесійним групам або землям."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:27:55.740Z",
+          "resultDisplay": "# Привілей\n**Description**: виключне право, перевага\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D0%B2%D1%96%D0%BB%D0%B5%D0%B9\n\nПривілей — законодавчий акт в Королівстві Польському і Великому князівстві Литовському, що являє собою даровану грамоту, дану монархом окремим особам, станам, етноконфесійним групам або землям.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773448075225_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Лист документ історія"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448075225_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Лист документ історія' — 5 results\n\n1. **Українська мова у XX сторіччі: історія лінгвоциду** — Українська мова у XX сторіччі: історія лінгвоциду — збірник, в якому вміщено документи і матеріали, що стосуються мовної політики радянського керівництва\n2. **Київський лист** — «Ки́ївський лист» — рекомендаційний лист, виданий мару Якову бен Хануці хозарською юдейською громадою Києва. На думку першовідкривачів, цей лист є найдавнішим\n3. **Кембриджський документ** — Кембриджський документ, Кембриджський анонім (за місцем зберігання) або Лист Шехтера (за іменем першовідкривача) — рукопис Х століття, написаний давньоєврейською\n4. **Лист творчої молоді Дніпропетровська** — «Собор». Сам лист розповсюджувався як анонімний — за підписом «Лист творчої молоді м. Дніпропетровська». Написаний у серпні 1968 р., документ адресувався\n5. **Прощальний лист американському народу** — нинішнього штату Оклахома. Лист донині вважається одним з найважливіших документів в історії американських індіанців. До початку XIX століття уряд США і, зокрема"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:27:55.740Z",
+          "resultDisplay": "Wikipedia search: 'Лист документ історія' — 5 results\n\n1. **Українська мова у XX сторіччі: історія лінгвоциду** — Українська мова у XX сторіччі: історія лінгвоциду — збірник, в якому вміщено документи і матеріали, що стосуються мовної політики радянського керівництва\n2. **Київський лист** — «Ки́ївський лист» — рекомендаційний лист, виданий мару Якову бен Хануці хозарською юдейською громадою Києва. На думку першовідкривачів, цей лист є найдавнішим\n3. **Кембриджський документ** — Кембриджський документ, Кембриджський анонім (за місцем зберігання) або Лист Шехтера (за іменем першовідкривача) — рукопис Х століття, написаний давньоєврейською\n4. **Лист творчої молоді Дніпропетровська** — «Собор». Сам лист розповсюджувався як анонімний — за підписом «Лист творчої молоді м. Дніпропетровська». Написаний у серпні 1968 р., документ адресувався\n5. **Прощальний лист американському народу** — нинішнього штату Оклахома. Лист донині вважається одним з найважливіших документів в історії американських індіанців. До початку XIX століття уряд США і, зокрема",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "cc5fe017-376e-4814-9d16-a80b00be2f04",
+      "timestamp": "2026-03-14T00:28:03.718Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Commencing the Next Stage",
+          "description": "\\n\\n\n\nI'm focused on moving forward to the subsequent step now. I'm building a plan to execute the next part.",
+          "timestamp": "2026-03-14T00:28:03.514Z"
+        },
+        {
+          "subject": "Continuing Expansion of Search",
+          "description": "\\n\\n\n\nMy current effort involves refining the search. I need to gather more detailed information, especially regarding the specifics of \"Універсал\" and \"Привілей\". Furthermore, I'll attempt to uncover the correct terminology for \"Лист\" in the context of Ruthenian documents, exploring various possibilities to ensure accuracy.",
+          "timestamp": "2026-03-14T00:28:03.541Z"
+        }
+      ],
+      "tokens": {
+        "input": 21132,
+        "output": 58,
+        "cached": 19752,
+        "thoughts": 248,
+        "tool": 0,
+        "total": 21438
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773448083637_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Універсал"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448083637_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Універсал\n**URL**: https://uk.wikipedia.org/wiki/%D0%A3%D0%BD%D1%96%D0%B2%D0%B5%D1%80%D1%81%D0%B0%D0%BB\n\nУніверса́л (від лат. Universalis — загальний, через пол. Uniwersał) — актовий документ, який доводить до загального відома певну постанову влади, її розпорядження адміністративно-політичного характеру.\nУніверсалами називались маніфести або законодавчі акти у Речі Посполитій та Україні у XVI—XVIII століттях, які видавали гетьмани Корони Польської, Великого князівства Литовського, Війська Запорозького, Гетьманщини.\nВ Україні в XVII—XVIII століттях, на зразок польських королів чи сейму, універсали видавали гетьмани, особи з генеральної старшини або полковники. За своїм змістом універсали охоплювали найрізноманітніші сторони управління Україною:\n\nстосувалися військових справ (накази про виступ у похід, про несення сторожової служби, про розквартирування військ тощо),\nгосподарської діяльності (роздача та підтвердження земельних володінь, підтвердження купчих, заповітів, поділів землі та іншого майна),\nпоточного управління (призначення на урядові пости, стягнення податків, надання привілеїв, щодо зовнішньої політики) та ін.\nУніверсал укладався в гетьманській або полкових канцеляріях і містив у вступі імена та титули тих, хто видавав і кому призначався універсал, в кінці ставилась дата видання, підпис та прикладалась печатка. Деякі універсали розповсюджувалися у копіях, які розсилалися до місцевої адміністрації. Іноді універсали оголошувалися прилюдно на площах та в церквах.\nПізніше назву «універсал» надано і деяким політичним документам, зверненням до народу представників визвольного руху: керівники Коліївщини 1768 видали універсал до селян з закликом до боротьби проти польської шляхти за визволення «з неволі і ярма панського», у 1917–1918 роках Центральна Рада назвала універсалами свої головні державно-політичні акти.\n\n\n== Див. також ==\nУніверсали Богдана Хмельницького\nУніверсали Української Центральної Ради\nУніверсал національної єдності\n\n\n== Джерела та література ==\nІ. Л. Бутич Універсал // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2013. — Т. 10 : Т — Я. — С. 233. — ISBN 978-966-00-1359-9.\nГуржій О. І. Гетьманські універсали // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2004. — Т. 2 : Г — Д. — 518 с. : іл. — ISBN 966-00-0405-2.\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nНюхіна П. О. Козацькі універсали XVII—XVIII ст.: історико-правове дослідження: дис. … канд. юрид. наук: 12.00.01 / Нюхіна Поліна Олександрівна; НАН України, Інститут держави і права імені В. М. Корецького. — К., 2011.\nО. Кресін Універсал гетьманський // Політична енциклопедія / Редкол.: Ю. Левенець (голова), Ю. Шаповал (заст. голови) та ін. — К.:Парламентське видавництво, 2011. — С. 736. — ISBN 978-966-611-818-2.\nМалий словник історії України / відпов. ред. В. А. Смолій. — К. : Либідь, 1997. — 464 с. — ISBN 5-325-00781-5.\n\n\n== Посилання ==\nУніверсал // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2004. — Т. 6 : Т — Я. — 768 с. — ISBN 966-7492-06-0.\nУніверсал // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1966. — Т. 8, кн. XV : Літери Ст — Уц. — С. 1959. — 1000 екз."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:04.228Z",
+          "resultDisplay": "# Універсал\n**URL**: https://uk.wikipedia.org/wiki/%D0%A3%D0%BD%D1%96%D0%B2%D0%B5%D1%80%D1%81%D0%B0%D0%BB\n\nУніверса́л (від лат. Universalis — загальний, через пол. Uniwersał) — актовий документ, який доводить до загального відома певну постанову влади, її розпорядження адміністративно-політичного характеру.\nУніверсалами називались маніфести або законодавчі акти у Речі Посполитій та Україні у XVI—XVIII століттях, які видавали гетьмани Корони Польської, Великого князівства Литовського, Війська Запорозького, Гетьманщини.\nВ Україні в XVII—XVIII століттях, на зразок польських королів чи сейму, універсали видавали гетьмани, особи з генеральної старшини або полковники. За своїм змістом універсали охоплювали найрізноманітніші сторони управління Україною:\n\nстосувалися військових справ (накази про виступ у похід, про несення сторожової служби, про розквартирування військ тощо),\nгосподарської діяльності (роздача та підтвердження земельних володінь, підтвердження купчих, заповітів, поділів землі та іншого майна),\nпоточного управління (призначення на урядові пости, стягнення податків, надання привілеїв, щодо зовнішньої політики) та ін.\nУніверсал укладався в гетьманській або полкових канцеляріях і містив у вступі імена та титули тих, хто видавав і кому призначався універсал, в кінці ставилась дата видання, підпис та прикладалась печатка. Деякі універсали розповсюджувалися у копіях, які розсилалися до місцевої адміністрації. Іноді універсали оголошувалися прилюдно на площах та в церквах.\nПізніше назву «універсал» надано і деяким політичним документам, зверненням до народу представників визвольного руху: керівники Коліївщини 1768 видали універсал до селян з закликом до боротьби проти польської шляхти за визволення «з неволі і ярма панського», у 1917–1918 роках Центральна Рада назвала універсалами свої головні державно-політичні акти.\n\n\n== Див. також ==\nУніверсали Богдана Хмельницького\nУніверсали Української Центральної Ради\nУніверсал національної єдності\n\n\n== Джерела та література ==\nІ. Л. Бутич Універсал // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2013. — Т. 10 : Т — Я. — С. 233. — ISBN 978-966-00-1359-9.\nГуржій О. І. Гетьманські універсали // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2004. — Т. 2 : Г — Д. — 518 с. : іл. — ISBN 966-00-0405-2.\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nНюхіна П. О. Козацькі універсали XVII—XVIII ст.: історико-правове дослідження: дис. … канд. юрид. наук: 12.00.01 / Нюхіна Поліна Олександрівна; НАН України, Інститут держави і права імені В. М. Корецького. — К., 2011.\nО. Кресін Універсал гетьманський // Політична енциклопедія / Редкол.: Ю. Левенець (голова), Ю. Шаповал (заст. голови) та ін. — К.:Парламентське видавництво, 2011. — С. 736. — ISBN 978-966-611-818-2.\nМалий словник історії України / відпов. ред. В. А. Смолій. — К. : Либідь, 1997. — 464 с. — ISBN 5-325-00781-5.\n\n\n== Посилання ==\nУніверсал // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2004. — Т. 6 : Т — Я. — 768 с. — ISBN 966-7492-06-0.\nУніверсал // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1966. — Т. 8, кн. XV : Літери Ст — Уц. — С. 1959. — 1000 екз.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773448083676_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Привілей"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448083676_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Привілей\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D0%B2%D1%96%D0%BB%D0%B5%D0%B9\n\nПривілей (також жалувана грамота; від лат. privilegium — спеціальний закон; пол. przywilej) — законодавчий акт в Королівстві Польському (з XII століття) і Великому князівстві Литовському (з кінця XIV століття), що являє собою даровану грамоту, дану монархом окремим особам, станам, етноконфесійним групам або землям.\nЗа змістом привілеї ділилися на пільги, скарги та охоронні. У XIII столітті видавалися земські привілеї, що розповсюджувалися на всю шляхту. З ростом міст давалися привілеї окремим містам на магдебурзьке право. У XIV—XV століттях окремі земські привілеї називалися статутами.\nТакож у Великому князівстві Литовському видавалися окремі обласні привілеї.\n\n\n== Див. також ==\nПривілеї шляхетські\n\n\n== Посилання ==\nПривілей // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2003. — Т. 5 : П — С. — 736 с. — ISBN 966-7492-05-2.\nПривілей // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1963. — Т. 6, кн. XII : Літери По — Риз. — С. 1489. — 1000 екз."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:04.228Z",
+          "resultDisplay": "# Привілей\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D0%B2%D1%96%D0%BB%D0%B5%D0%B9\n\nПривілей (також жалувана грамота; від лат. privilegium — спеціальний закон; пол. przywilej) — законодавчий акт в Королівстві Польському (з XII століття) і Великому князівстві Литовському (з кінця XIV століття), що являє собою даровану грамоту, дану монархом окремим особам, станам, етноконфесійним групам або землям.\nЗа змістом привілеї ділилися на пільги, скарги та охоронні. У XIII столітті видавалися земські привілеї, що розповсюджувалися на всю шляхту. З ростом міст давалися привілеї окремим містам на магдебурзьке право. У XIV—XV століттях окремі земські привілеї називалися статутами.\nТакож у Великому князівстві Литовському видавалися окремі обласні привілеї.\n\n\n== Див. також ==\nПривілеї шляхетські\n\n\n== Посилання ==\nПривілей // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2003. — Т. 5 : П — С. — 736 с. — ISBN 966-7492-05-2.\nПривілей // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1963. — Т. 6, кн. XII : Літери По — Риз. — С. 1489. — 1000 екз.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773448083715_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Лист грамота ВКЛ",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448083715_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Лист грамота ВКЛ' — 5 results\n\n1. **Шот Микола Миколайович** — Укрмедкнига, 2021. — С. 716 + 8 с. вкл. Шот М. Вогнечас / Микола Шот. — Тернопіль: ТНМУ, Укрмедкнига, 2025. — С. 512 + 8 с. вкл. Садовська Г. Перо, що сіє добро\n2. **Богуш Михайло Боговитинович** — За правління Сигізмунда I Старого став одним з найвідоміших можновладців ВКЛ. Діяльний як дипломат, господарник, мав приязні стосунки з діячами Корони\n3. **Литовська метрика** — урядів. Окрім того, ЛМ містить матеріали інших канцелярій ВКЛ, приватних архівів, оригінальні грамоти тощо. М. Бережков уважав, що вже наприкінці XV ст. книги\n4. **Земельний контракт** — товарно-грошових відносин на українських землях Великого князівства Литовського (ВКЛ) поширюється купівля-продаж, обмін, застава та оренда маєтків. Це вимагало\n5. **Варсонофій (смоленський єпископ)** — відданих ВКЛ смоленчан, на чолі яких станув сам єпископ. У жовтні 1514 р. він таємно вирядив до короля Васька Ходикіна, свого племінника, з листом, де закликав"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:04.228Z",
+          "resultDisplay": "Wikipedia search: 'Лист грамота ВКЛ' — 5 results\n\n1. **Шот Микола Миколайович** — Укрмедкнига, 2021. — С. 716 + 8 с. вкл. Шот М. Вогнечас / Микола Шот. — Тернопіль: ТНМУ, Укрмедкнига, 2025. — С. 512 + 8 с. вкл. Садовська Г. Перо, що сіє добро\n2. **Богуш Михайло Боговитинович** — За правління Сигізмунда I Старого став одним з найвідоміших можновладців ВКЛ. Діяльний як дипломат, господарник, мав приязні стосунки з діячами Корони\n3. **Литовська метрика** — урядів. Окрім того, ЛМ містить матеріали інших канцелярій ВКЛ, приватних архівів, оригінальні грамоти тощо. М. Бережков уважав, що вже наприкінці XV ст. книги\n4. **Земельний контракт** — товарно-грошових відносин на українських землях Великого князівства Литовського (ВКЛ) поширюється купівля-продаж, обмін, застава та оренда маєтків. Це вимагало\n5. **Варсонофій (смоленський єпископ)** — відданих ВКЛ смоленчан, на чолі яких станув сам єпископ. У жовтні 1514 р. він таємно вирядив до короля Васька Ходикіна, свого племінника, з листом, де закликав",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "7791521f-f7f1-4075-a485-2a5f522e5931",
+      "timestamp": "2026-03-14T00:28:12.186Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing to the Next Task",
+          "description": "I'm now focused on the next phase. I'm exploring the best way to move forward, refining my approach, and ensuring I'm on the right track. My current focus is to identify the necessary actions.",
+          "timestamp": "2026-03-14T00:28:08.440Z"
+        },
+        {
+          "subject": "Implementing Literary Search Queries",
+          "description": "I'm currently engaged in executing the literary searches, tailoring each query to the specific terms and contexts as planned. The process involves multiple calls, each designed to extract relevant information, and is progressing as expected.",
+          "timestamp": "2026-03-14T00:28:12.013Z"
+        }
+      ],
+      "tokens": {
+        "input": 23537,
+        "output": 73,
+        "cached": 19918,
+        "thoughts": 289,
+        "tool": 0,
+        "total": 23899
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773448092108_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "limit": 5,
+            "query": "універсал Богдан Хмельницький"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773448092108_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"універсал Богдан Хмельницький\"\n\n### Result 1 (score: 0.6128)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2871`\n- **Text**:\nТому вже другий раз відписуючи п. \r\nректорові, видаю сей універсал, остерігаючи, в нім, що мині се доручено королем \r\nй. м., а ніяким (иншим) універсалам віри не давайте, хочби вони були з печатю і \r\nпідписом короля й. м.: бо він їх мусить видавати боячися шляхти. Робім як \r\nнайскорше, що мусимо робити, а на св. Яна підемо на Краків. Я вже всюди \r\nпорозсилав універсали до хлопів, і вони радо ставляться — і в Новотарґськім \r\nпанстві всі, п. Станислав Маршалок буде там їх полковником. Прошу тільки\n\n### Result 2 (score: 0.5955)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c3240`\n- **Text**:\n6) Мабуть се той “універсал”, \r\nнадрукований в польськім перекладі у Ґрабовского Ojczyste. Spominki II c. 131, і \r\nз повним довірєм повторений Костомаровим с. 489: “Богдан Хмельницький гетьман \r\nвійська Запорозького, староста чигринський(!). Відомо чиню всім, а зосібна \r\nполковникам, осаулам, сотникам і всім молодцям війська Запорозького, по містах, \r\nмісточках і селах будучим, і Ляхам побратимство з нами тримаючим (!). Уважаючи \r\nна певні й великі прикрости й кривди, що нам перед тим Ляхи чинил\n\n### Result 3 (score: 0.5836)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0130`\n- **Text**:\n128 Тоді ще не було\r\nрозподілу на Правобережну й Лівобережну Україну.\n\n129 За Хмельницького\r\nкозаків так не називали.\n\n130 Дати універсалу\r\nпогоджені, певна річ, з Величковими.\n\nСтояв він там\r\nдовго і розіслав був у всю малоросійську Україну, що лежить обіруч річки\r\nДніпра, свої гетьманські універсали, визначаючи в них широкі руські кордони, що\r\nїх захопили були в своє володіння поляки 127. Виклав він стародавні\r\nправа й вольності українського люду, і причини, через які повстав він війною на\r\nпо\n\n### Result 4 (score: 0.5723)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2959`\n- **Text**:\nБогдан Хмельницький гетьман з \r\nвійськом Запорозьким п. п. полковникам: білоцерківському, винницькому, \r\nбраславському, уманському, паволоцькому доброго здоровля од Господа Бога мило \r\nбажаємо! Ознаймуємо вам, що прирадили ми з товариством, щоб не відкладаючи ні до \r\nтижня ні до двох неділь, таки зараз були готові й збиралися до купи. Тому \r\nнаказуємо, аби ті вищезгадані полки, будучи близькими до Білоцерківського, \r\nзбиралися під Білу Церкву, а я буду зараз збирати під Корсунем тамошні полки, б\n\n### Result 5 (score: 0.5666)\n- **Work**: Гвоздик-Пріцак — Економічна і політична візія Хмельницького (1999)\n- **Author**: Гвоздик-Пріцак Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `878e19f5_c0090`\n- **Text**:\nУ червні 1652 р. Богдан Хмельницький мав почати\r\nоблогу Кам’янця-Подільського. Він звернувся до місцевої влади та міщан міста з\r\nпропозицією здатися на прийнятних для них умовах 355. Восени 1655 р.,\r\nколи козацьке військо мусило обложити Львів, Хмельницький виявив велике\r\nрозуміння й терпимість і вів тривалі переговори з членами магістрату Львова,\r\nщоб не допустити зруйнування цього важливого міста. Коли місто у 1655 р.\r\nзнаходилося в облозі, він послав львів’янам з 3 по 22 жовтня аж чотирнадцят\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:13.478Z",
+          "resultDisplay": "Found 5 results for: \"універсал Богдан Хмельницький\"\n\n### Result 1 (score: 0.6128)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2871`\n- **Text**:\nТому вже другий раз відписуючи п. \r\nректорові, видаю сей універсал, остерігаючи, в нім, що мині се доручено королем \r\nй. м., а ніяким (иншим) універсалам віри не давайте, хочби вони були з печатю і \r\nпідписом короля й. м.: бо він їх мусить видавати боячися шляхти. Робім як \r\nнайскорше, що мусимо робити, а на св. Яна підемо на Краків. Я вже всюди \r\nпорозсилав універсали до хлопів, і вони радо ставляться — і в Новотарґськім \r\nпанстві всі, п. Станислав Маршалок буде там їх полковником. Прошу тільки\n\n### Result 2 (score: 0.5955)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c3240`\n- **Text**:\n6) Мабуть се той “універсал”, \r\nнадрукований в польськім перекладі у Ґрабовского Ojczyste. Spominki II c. 131, і \r\nз повним довірєм повторений Костомаровим с. 489: “Богдан Хмельницький гетьман \r\nвійська Запорозького, староста чигринський(!). Відомо чиню всім, а зосібна \r\nполковникам, осаулам, сотникам і всім молодцям війська Запорозького, по містах, \r\nмісточках і селах будучим, і Ляхам побратимство з нами тримаючим (!). Уважаючи \r\nна певні й великі прикрости й кривди, що нам перед тим Ляхи чинил\n\n### Result 3 (score: 0.5836)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0130`\n- **Text**:\n128 Тоді ще не було\r\nрозподілу на Правобережну й Лівобережну Україну.\n\n129 За Хмельницького\r\nкозаків так не називали.\n\n130 Дати універсалу\r\nпогоджені, певна річ, з Величковими.\n\nСтояв він там\r\nдовго і розіслав був у всю малоросійську Україну, що лежить обіруч річки\r\nДніпра, свої гетьманські універсали, визначаючи в них широкі руські кордони, що\r\nїх захопили були в своє володіння поляки 127. Виклав він стародавні\r\nправа й вольності українського люду, і причини, через які повстав він війною на\r\nпо\n\n### Result 4 (score: 0.5723)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2959`\n- **Text**:\nБогдан Хмельницький гетьман з \r\nвійськом Запорозьким п. п. полковникам: білоцерківському, винницькому, \r\nбраславському, уманському, паволоцькому доброго здоровля од Господа Бога мило \r\nбажаємо! Ознаймуємо вам, що прирадили ми з товариством, щоб не відкладаючи ні до \r\nтижня ні до двох неділь, таки зараз були готові й збиралися до купи. Тому \r\nнаказуємо, аби ті вищезгадані полки, будучи близькими до Білоцерківського, \r\nзбиралися під Білу Церкву, а я буду зараз збирати під Корсунем тамошні полки, б\n\n### Result 5 (score: 0.5666)\n- **Work**: Гвоздик-Пріцак — Економічна і політична візія Хмельницького (1999)\n- **Author**: Гвоздик-Пріцак Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `878e19f5_c0090`\n- **Text**:\nУ червні 1652 р. Богдан Хмельницький мав почати\r\nоблогу Кам’янця-Подільського. Він звернувся до місцевої влади та міщан міста з\r\nпропозицією здатися на прийнятних для них умовах 355. Восени 1655 р.,\r\nколи козацьке військо мусило обложити Львів, Хмельницький виявив велике\r\nрозуміння й терпимість і вів тривалі переговори з членами магістрату Львова,\r\nщоб не допустити зруйнування цього важливого міста. Коли місто у 1655 р.\r\nзнаходилося в облозі, він послав львів’янам з 3 по 22 жовтня аж чотирнадцят\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773448092146_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "limit": 5,
+            "query": "привілей шляхта міщани"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773448092146_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"привілей шляхта міщани\"\n\n### Result 1 (score: 0.5997)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0320`\n- **Text**:\nДо 1784 р., коли попередній проект Грамоти для\r\nдворянства став загальновідомим, українська знать претендувала на права\r\nпольськолитовської шляхти і не бажала вступати в російське дворянство, оскільки\r\nкористувалася різноманітними привілеями, яких російське дворянство було\r\nпозбавлене 1.\n\n1 Миллер Д. Превращение...\r\n// КС. — 1897. — № 2. — С. 194-196. Докладніше див. про це у кодексі 1786 р.: Экстракт\r\nиз указов... / Под ред. Н.Василенко. — С. 216-231.\n\nЗгідно з Литовським статутом, шляхтич міг \n\n### Result 2 (score: 0.5888)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2430`\n- **Text**:\nЗемський привилей Олександра (1492) застеріг важні \r\n права в сфері державної управи маґнатам, як членам ради в. князївства, але \r\n шляхтї нових свобід не принїс; одну тільки точку його можна піднести — се \r\n обіцянка, що в. князь не буде ”виносити простих людей над шляхту”. Привилеї в. \r\n кн. Жиґимонта (1506 і 1529 р.) і Жиґимонта Авґуста (1547 і 1551 рр.) обмежили \r\n ся потвердженнєм давнїйших свобід і надань 31). Важні постанови \r\n натомість містять привилеї видані в переддень унїї (і по част\n\n### Result 3 (score: 0.5875)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3718`\n- **Text**:\nПривілєґії, які в порівнянню з міщанством, з \r\n купцями, мала в перевозї й вивозї продуктів свого господарства верства \r\n шляхецька, заохочували її до того, аби вести самим експорт продуктів свого \r\n господарства й промислу. Та обставина, що господарство служило цїлям \r\n заграничного експорту, вводило її в тїсні й безпосереднї зносини з \r\n заграничними фірмами й посередниками. Нарештї той факт, що в номінальній \r\n приналежности до держави, з широкими привілєґіями безмитности опинило ся таке \r\n м\n\n### Result 4 (score: 0.5807)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2431`\n- **Text**:\nПривилеї поодиноких земель видані в перших роках \r\n XVI в. дають також деякі інтересні постанови що до суми шляхетських прав. \r\n Насамперед, вони потверджують рівноправність панів-шляхти поодиноких руських \r\n земель з панами-шляхтою литовською 33). Далї, признають шляхтї ріжні \r\n привілєґії в судї: як ми бачили вже, київський і волинський й иньші привилеї \r\n застерігають, що воєводи чи старости не можуть судити шляхтича без участи \r\n князїв, панів і бояр землї; крім того київський і волинський п\n\n### Result 5 (score: 0.5791)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2366`\n- **Text**:\nВолинський привилей, виданий десь також в другій \r\n половинї Казимирового правлїння 18) і наново потверджений в 1501 і \r\n 1509 р., уже в своїй першій редакції був лише відповідю на скарги місцевої \r\n шляхти на ріжні конкретні надужитя в.княжих намісників. Обидва привилеї — і \r\n волинський і київський, не виходять властиво поза ґваранції ріжних свобід \r\n місцевому панству й шляхтї як верстві шляхетській (видані вони не на проханнє \r\n цїлої землї, а тільки місцевих панів і шляхти) і справами земсь\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:13.478Z",
+          "resultDisplay": "Found 5 results for: \"привілей шляхта міщани\"\n\n### Result 1 (score: 0.5997)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0320`\n- **Text**:\nДо 1784 р., коли попередній проект Грамоти для\r\nдворянства став загальновідомим, українська знать претендувала на права\r\nпольськолитовської шляхти і не бажала вступати в російське дворянство, оскільки\r\nкористувалася різноманітними привілеями, яких російське дворянство було\r\nпозбавлене 1.\n\n1 Миллер Д. Превращение...\r\n// КС. — 1897. — № 2. — С. 194-196. Докладніше див. про це у кодексі 1786 р.: Экстракт\r\nиз указов... / Под ред. Н.Василенко. — С. 216-231.\n\nЗгідно з Литовським статутом, шляхтич міг \n\n### Result 2 (score: 0.5888)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2430`\n- **Text**:\nЗемський привилей Олександра (1492) застеріг важні \r\n права в сфері державної управи маґнатам, як членам ради в. князївства, але \r\n шляхтї нових свобід не принїс; одну тільки точку його можна піднести — се \r\n обіцянка, що в. князь не буде ”виносити простих людей над шляхту”. Привилеї в. \r\n кн. Жиґимонта (1506 і 1529 р.) і Жиґимонта Авґуста (1547 і 1551 рр.) обмежили \r\n ся потвердженнєм давнїйших свобід і надань 31). Важні постанови \r\n натомість містять привилеї видані в переддень унїї (і по част\n\n### Result 3 (score: 0.5875)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3718`\n- **Text**:\nПривілєґії, які в порівнянню з міщанством, з \r\n купцями, мала в перевозї й вивозї продуктів свого господарства верства \r\n шляхецька, заохочували її до того, аби вести самим експорт продуктів свого \r\n господарства й промислу. Та обставина, що господарство служило цїлям \r\n заграничного експорту, вводило її в тїсні й безпосереднї зносини з \r\n заграничними фірмами й посередниками. Нарештї той факт, що в номінальній \r\n приналежности до держави, з широкими привілєґіями безмитности опинило ся таке \r\n м\n\n### Result 4 (score: 0.5807)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2431`\n- **Text**:\nПривилеї поодиноких земель видані в перших роках \r\n XVI в. дають також деякі інтересні постанови що до суми шляхетських прав. \r\n Насамперед, вони потверджують рівноправність панів-шляхти поодиноких руських \r\n земель з панами-шляхтою литовською 33). Далї, признають шляхтї ріжні \r\n привілєґії в судї: як ми бачили вже, київський і волинський й иньші привилеї \r\n застерігають, що воєводи чи старости не можуть судити шляхтича без участи \r\n князїв, панів і бояр землї; крім того київський і волинський п\n\n### Result 5 (score: 0.5791)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2366`\n- **Text**:\nВолинський привилей, виданий десь також в другій \r\n половинї Казимирового правлїння 18) і наново потверджений в 1501 і \r\n 1509 р., уже в своїй першій редакції був лише відповідю на скарги місцевої \r\n шляхти на ріжні конкретні надужитя в.княжих намісників. Обидва привилеї — і \r\n волинський і київський, не виходять властиво поза ґваранції ріжних свобід \r\n місцевому панству й шляхтї як верстві шляхетській (видані вони не на проханнє \r\n цїлої землї, а тільки місцевих панів і шляхти) і справами земсь\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773448092186_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "genre": "legal",
+            "query": "лист грамота",
+            "limit": 5
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773448092186_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"лист грамота\"\n\n### Result 1 (score: 0.5873)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0103`\n- **Text**:\nПриклади з грамоти зустрічаються в таких мовознавчих дослідженнях: І.\r\nСвєнціцький, «Елементи», «Західноукр. грам.»; С. Бевзенко, «Нариси»,\r\n«Істор. морф.», «З істор. коментар.»; Ф. Медведєв, «Укр. гр.», «Нариси»,\r\n«Труди»; С. Самійленко, УМШ, 1958, № 2; Л. Гумецька, «Функції»,\r\n«Втор. спол.», «Перв. прийм.», «Словотв. присл.», «Мовознавство», № 10;\r\n«Словник», та ін.\n\nОригінал зберігається у B. Cz., D. p., № I. 208.\n\nДля даної публікації використано текст грамоти з видання В. Розова.\r\nФотокопія\n\n### Result 2 (score: 0.5870)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0137`\n- **Text**:\nПриклади з грамоти зустрічаються у таких мовознавчих дослідженнях: Є.\r\nТимченко, «Курс»; П. Бузук, «Нарис іст.»; І. Свенціцький,\r\n«Нариси»; О. Шахматов, А. Кримський, «Нариси»; А. Кримський,\r\n«Укр. грам.»; О. Соболевський, «Очерки», «Лекции»; Я. Спринчак,\r\n«Очерк» та ВЯ, 1956, № 6; «Словник»; І. Василенко, «Истор. грам. р. я.»;\r\nФ. Медведєв, «Укр. гр.», «Нариси»; С. Бевзенко, «Нариси», «Істор.\r\nморф.»; Л. Гумецька, «Перв. прийм.», «Словотв. сист. числ.», «Функції»,\r\n«Мовознавство», № 10; О. Зару\n\n### Result 3 (score: 0.5729)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0077`\n- **Text**:\nГрамота описана А. Прохаскою у праці «Codex», стор. 34; О.\r\nСмирновим в «Сборнике», № 69, стор. 69; І. Срезневським у «Др. п. р. п. и яз.»,\r\n1863, стор. 116, 1882, стовп. 250; Є. Карським в «Белоруссах», т. I; в\r\n«Протоколах», стор. 212.\n\nПриклади з грамоти зустрічаються в таких мовознавчих дослідженнях: O.\r\nСоболевський, «Очерки», «Лекции»; А. Кримський, «Укр. грам.»; І.\r\nСвєнціцький, «Нариси»; Є. Тимченко, «Курс».\n\nДля цієї збірки взято текст Я. Головацького з «Памятников».\n\nФотокопію зроблено\n\n### Result 4 (score: 0.5695)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0092`\n- **Text**:\nОписана або згадується М. Дашкевичем у «Заметках», стор. 95; Ф.\r\nЛеонтовичем в «Источниках», стор. 8; Є. Карським у «Белоруссах», стор. 16.\n\nПриклади з грамоти зустрічаються в таких мовознавчих дослідженнях: П.\r\nБузук, «Нарис іст.»; Я.Спринчак, «Очерк»; О. Соболевський, «Лекции».\n\nКопія зберігається в Ленінградському відділенні архіву АН СРСР, ф.\r\n216, оп. 1, од. зб. 39, арк. 151; літографія грамоти (з помилками) — у відділі\r\nрукописів Державної бібліотеки СРСР ім. В. І. Леніна, ф. 218, папка 46\n\n### Result 5 (score: 0.5691)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0000`\n- **Text**:\n[Грамоти XIV ст. / Упорядк., вст. ст., ком. i слов.-покаж. М. М. Пещак — К., 1974. — С. 5-7.]\n\nШрифт\n\nПЕРЕДМОВА\n\nXIV сторіччя залишило немало грамот різних східнослов’янських і\r\nсуміжних з ними земель. У цьому виданні їх вміщено 84. Підставою для визначення\r\nдокумента як пам’ятки з більш чи менш вираженими ознаками української мови\r\nпослужили історичні й мовознавчі наукові праці, в яких є аргументи для цього.\r\nЗрозуміло, що ці аргументи не можна вважати рівноцінними, тому що вони не мають\r\nєдини\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:13.478Z",
+          "resultDisplay": "Found 5 results for: \"лист грамота\"\n\n### Result 1 (score: 0.5873)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0103`\n- **Text**:\nПриклади з грамоти зустрічаються в таких мовознавчих дослідженнях: І.\r\nСвєнціцький, «Елементи», «Західноукр. грам.»; С. Бевзенко, «Нариси»,\r\n«Істор. морф.», «З істор. коментар.»; Ф. Медведєв, «Укр. гр.», «Нариси»,\r\n«Труди»; С. Самійленко, УМШ, 1958, № 2; Л. Гумецька, «Функції»,\r\n«Втор. спол.», «Перв. прийм.», «Словотв. присл.», «Мовознавство», № 10;\r\n«Словник», та ін.\n\nОригінал зберігається у B. Cz., D. p., № I. 208.\n\nДля даної публікації використано текст грамоти з видання В. Розова.\r\nФотокопія\n\n### Result 2 (score: 0.5870)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0137`\n- **Text**:\nПриклади з грамоти зустрічаються у таких мовознавчих дослідженнях: Є.\r\nТимченко, «Курс»; П. Бузук, «Нарис іст.»; І. Свенціцький,\r\n«Нариси»; О. Шахматов, А. Кримський, «Нариси»; А. Кримський,\r\n«Укр. грам.»; О. Соболевський, «Очерки», «Лекции»; Я. Спринчак,\r\n«Очерк» та ВЯ, 1956, № 6; «Словник»; І. Василенко, «Истор. грам. р. я.»;\r\nФ. Медведєв, «Укр. гр.», «Нариси»; С. Бевзенко, «Нариси», «Істор.\r\nморф.»; Л. Гумецька, «Перв. прийм.», «Словотв. сист. числ.», «Функції»,\r\n«Мовознавство», № 10; О. Зару\n\n### Result 3 (score: 0.5729)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0077`\n- **Text**:\nГрамота описана А. Прохаскою у праці «Codex», стор. 34; О.\r\nСмирновим в «Сборнике», № 69, стор. 69; І. Срезневським у «Др. п. р. п. и яз.»,\r\n1863, стор. 116, 1882, стовп. 250; Є. Карським в «Белоруссах», т. I; в\r\n«Протоколах», стор. 212.\n\nПриклади з грамоти зустрічаються в таких мовознавчих дослідженнях: O.\r\nСоболевський, «Очерки», «Лекции»; А. Кримський, «Укр. грам.»; І.\r\nСвєнціцький, «Нариси»; Є. Тимченко, «Курс».\n\nДля цієї збірки взято текст Я. Головацького з «Памятников».\n\nФотокопію зроблено\n\n### Result 4 (score: 0.5695)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0092`\n- **Text**:\nОписана або згадується М. Дашкевичем у «Заметках», стор. 95; Ф.\r\nЛеонтовичем в «Источниках», стор. 8; Є. Карським у «Белоруссах», стор. 16.\n\nПриклади з грамоти зустрічаються в таких мовознавчих дослідженнях: П.\r\nБузук, «Нарис іст.»; Я.Спринчак, «Очерк»; О. Соболевський, «Лекции».\n\nКопія зберігається в Ленінградському відділенні архіву АН СРСР, ф.\r\n216, оп. 1, од. зб. 39, арк. 151; літографія грамоти (з помилками) — у відділі\r\nрукописів Державної бібліотеки СРСР ім. В. І. Леніна, ф. 218, папка 46\n\n### Result 5 (score: 0.5691)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0000`\n- **Text**:\n[Грамоти XIV ст. / Упорядк., вст. ст., ком. i слов.-покаж. М. М. Пещак — К., 1974. — С. 5-7.]\n\nШрифт\n\nПЕРЕДМОВА\n\nXIV сторіччя залишило немало грамот різних східнослов’янських і\r\nсуміжних з ними земель. У цьому виданні їх вміщено 84. Підставою для визначення\r\nдокумента як пам’ятки з більш чи менш вираженими ознаками української мови\r\nпослужили історичні й мовознавчі наукові праці, в яких є аргументи для цього.\r\nЗрозуміло, що ці аргументи не можна вважати рівноцінними, тому що вони не мають\r\nєдини\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "696f0372-df0b-4c4b-b0b0-09df5abb52f8",
+      "timestamp": "2026-03-14T00:28:20.805Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Prioritizing Resource Utilization",
+          "description": "I am now focusing on determining which resource to access next in order to address the core problem. I will begin by analyzing the available information and proceed step-by-step to the next stage. My efforts are concentrated on navigating the process efficiently.",
+          "timestamp": "2026-03-14T00:28:17.970Z"
+        },
+        {
+          "subject": "Commencing Search Refinement",
+          "description": "Now, I'm refining my search parameters to pinpoint the most relevant historical context. I'm strategically employing specialized resources to uncover specific terminology and examples, focusing on legal genres. This targeted approach aims to extract primary source material for a deeper understanding.",
+          "timestamp": "2026-03-14T00:28:20.514Z"
+        }
+      ],
+      "tokens": {
+        "input": 28066,
+        "output": 72,
+        "cached": 0,
+        "thoughts": 267,
+        "tool": 0,
+        "total": 28405
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773448100717_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "limit": 5,
+            "query": "універсал відомо чиню"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773448100717_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"універсал відомо чиню\"\n\n### Result 1 (score: 0.4654)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0714`\n- **Text**:\nНа першому місці ** стоїть авторитет Арістотеля, який\r\nу багатьох місцях висловлюється про універсали у тому розумінні, що вони можуть\r\nзбігатися не лише з назвами, а й з речами. Так він каже («Про тлумачення» розд.\r\n5), що одні речі є універсальні, інші — одиничні, Далі, він («Друга аналітика»,\r\nкн. II, розд. 2) зазначає, що універсальне більш відоме, ніж одиничні речі, і\r\nперші пізнаються розумам, а другі — відчуттям. Крім того («Метафізика», кн.\r\nVII, розд. 14), полемізуючи з Платоном відносн\n\n### Result 2 (score: 0.4547)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c1392`\n- **Text**:\nВідомо чиню при ласці моїй із зичливим поздоровленням\r\nосавулам, панам сотникам і молодцям полків, як кінного так і пішого, які стоять\r\nпід полковником Палієм, котрий чинить непослух на розпорядження його\r\nкоролівської милості та мої. Посилав я спочатку, минулої кампанії, мої\r\nуніверсали, щоб ви приходили на послуги його королівської милості і Річі\r\nПосполитій під Сороки, а потім до шанцю під Кам’янець, де вас чекало належне\r\nзадоволення та нагорода. Оскільки жодного разу не послухали ви мого\r\nр\n\n### Result 3 (score: 0.4487)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2871`\n- **Text**:\nТому вже другий раз відписуючи п. \r\nректорові, видаю сей універсал, остерігаючи, в нім, що мині се доручено королем \r\nй. м., а ніяким (иншим) універсалам віри не давайте, хочби вони були з печатю і \r\nпідписом короля й. м.: бо він їх мусить видавати боячися шляхти. Робім як \r\nнайскорше, що мусимо робити, а на св. Яна підемо на Краків. Я вже всюди \r\nпорозсилав універсали до хлопів, і вони радо ставляться — і в Новотарґськім \r\nпанстві всі, п. Станислав Маршалок буде там їх полковником. Прошу тільки\n\n### Result 4 (score: 0.4348)\n- **Work**: Щербак — Українське козацтво: формування соціального стану (1999)\n- **Author**: Щербак В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3d7a3a6b_c0338`\n- **Text**:\nУ листі Станіслава Конецпольського до Владислава IV\r\nвід 14 серпня 1637 р. йшлося про масове розповсюдження \"по містах і\r\nмістечках\" Подніпров’я універсалів Павлюка і його найближчих соратників.\r\nВ них містилися заклики вступати до козацького війська, а також погрози шляхті\r\nрозправою у випадках переслідування козаків, навіть не вписаних до реєстру 154.\r\nХарактерним був універсал Карпа Скидана від 24 жовтня 1637 p адресований\r\n\"всьому поспільству\" українському. В ньому, зокрема, говорилось:\r\n\"Ог\n\n### Result 5 (score: 0.4325)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2433`\n- **Text**:\nДоходять до мене теперішніми \r\nчасами вісти, що київські ченці хочуть заїхати, не знаю з яких поводів, ніби то \r\nза універсалами вмпана, Максимівку пана Яскульского, стражника військового, \r\nслуги мого. Дивно мині дуже, що вмпан рачив ті універсали дати за проханнєм їх \r\n(тих ченців). Ченці мають на то сойм, там з ними має бути розправа про ліпшість \r\nправа 35), а ґвалтом нехай нічого не заїздять, бо собі можуть \r\nзашкодити. Тому раджу вм. панові дати його слузі (Яскульского) універсала на \r\nМак\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:21.244Z",
+          "resultDisplay": "Found 5 results for: \"універсал відомо чиню\"\n\n### Result 1 (score: 0.4654)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0714`\n- **Text**:\nНа першому місці ** стоїть авторитет Арістотеля, який\r\nу багатьох місцях висловлюється про універсали у тому розумінні, що вони можуть\r\nзбігатися не лише з назвами, а й з речами. Так він каже («Про тлумачення» розд.\r\n5), що одні речі є універсальні, інші — одиничні, Далі, він («Друга аналітика»,\r\nкн. II, розд. 2) зазначає, що універсальне більш відоме, ніж одиничні речі, і\r\nперші пізнаються розумам, а другі — відчуттям. Крім того («Метафізика», кн.\r\nVII, розд. 14), полемізуючи з Платоном відносн\n\n### Result 2 (score: 0.4547)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c1392`\n- **Text**:\nВідомо чиню при ласці моїй із зичливим поздоровленням\r\nосавулам, панам сотникам і молодцям полків, як кінного так і пішого, які стоять\r\nпід полковником Палієм, котрий чинить непослух на розпорядження його\r\nкоролівської милості та мої. Посилав я спочатку, минулої кампанії, мої\r\nуніверсали, щоб ви приходили на послуги його королівської милості і Річі\r\nПосполитій під Сороки, а потім до шанцю під Кам’янець, де вас чекало належне\r\nзадоволення та нагорода. Оскільки жодного разу не послухали ви мого\r\nр\n\n### Result 3 (score: 0.4487)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2871`\n- **Text**:\nТому вже другий раз відписуючи п. \r\nректорові, видаю сей універсал, остерігаючи, в нім, що мині се доручено королем \r\nй. м., а ніяким (иншим) універсалам віри не давайте, хочби вони були з печатю і \r\nпідписом короля й. м.: бо він їх мусить видавати боячися шляхти. Робім як \r\nнайскорше, що мусимо робити, а на св. Яна підемо на Краків. Я вже всюди \r\nпорозсилав універсали до хлопів, і вони радо ставляться — і в Новотарґськім \r\nпанстві всі, п. Станислав Маршалок буде там їх полковником. Прошу тільки\n\n### Result 4 (score: 0.4348)\n- **Work**: Щербак — Українське козацтво: формування соціального стану (1999)\n- **Author**: Щербак В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3d7a3a6b_c0338`\n- **Text**:\nУ листі Станіслава Конецпольського до Владислава IV\r\nвід 14 серпня 1637 р. йшлося про масове розповсюдження \"по містах і\r\nмістечках\" Подніпров’я універсалів Павлюка і його найближчих соратників.\r\nВ них містилися заклики вступати до козацького війська, а також погрози шляхті\r\nрозправою у випадках переслідування козаків, навіть не вписаних до реєстру 154.\r\nХарактерним був універсал Карпа Скидана від 24 жовтня 1637 p адресований\r\n\"всьому поспільству\" українському. В ньому, зокрема, говорилось:\r\n\"Ог\n\n### Result 5 (score: 0.4325)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2433`\n- **Text**:\nДоходять до мене теперішніми \r\nчасами вісти, що київські ченці хочуть заїхати, не знаю з яких поводів, ніби то \r\nза універсалами вмпана, Максимівку пана Яскульского, стражника військового, \r\nслуги мого. Дивно мині дуже, що вмпан рачив ті універсали дати за проханнєм їх \r\n(тих ченців). Ченці мають на то сойм, там з ними має бути розправа про ліпшість \r\nправа 35), а ґвалтом нехай нічого не заїздять, бо собі можуть \r\nзашкодити. Тому раджу вм. панові дати його слузі (Яскульского) універсала на \r\nМак\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773448100759_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "лист данина жалуваний",
+            "genre": "legal",
+            "limit": 5
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773448100759_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"лист данина жалуваний\"\n\n### Result 1 (score: 0.4930)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0203`\n- **Text**:\nлисту 9.1, 10.2, 41.1, 42.1, 43.1, 44.1, 49.1, 59.1, 62.1, 64.1, 66.2,\r\n72.1, 80.1, 81.1, 82.1, 83.1; листү 65.1; лысту 70.1\n\nлисты 9.1, 17.3, 38.1, 45.2, 48.1, 83.1\n\nлистъ 6.1, 9.2, 11.2, 12.1, 14.1, 24.2, 42.3, 43.1, 44.1, 49.2, 51.2,\r\n53.3, 55.1, 60.2, 62.1, 71.3, 72.1, 73.1, 78.2, 80.1, 83.1; листь 31.1, 62.1, 80.1;\r\nлисто 41.2; лист 24.1; лист(ъ) 31.1\n\nлистѣ 45.1\n\nлитвина 58.1\n\nлитовскаго див. литовского\n\nлитовски 83.1; литовскии̇́ 59.1; литовьскиӥ 24.1, 64.1;\r\nлитов(с)ки̋ 79.1; литовскій \n\n### Result 2 (score: 0.4855)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0035`\n- **Text**:\nТежъ хтобы листы наши отвороные въ жалобЂ своей до\r\nкого принесъ, будь до князя, або до пана, або до державецъ, або земенинъ до\r\nземенина, а хто бы колвекъ зъ нихъ оный листъ отворенный прочетши у себе\r\nдержалъ и копею зъ него знявшы подъ печатью вознаго оному не хотЂлъ вернути до\r\nтрехъ дней; тогды таковый за противность свою намъ Господару у вину упадываетъ у\r\nдванадцать рублей грошей, а сторонЂ такожъ маеть заплатити. А вЂдьже листы\r\nотвороные мають обычаемъ слушнымъ даваны быти черезъ возног\n\n### Result 3 (score: 0.4838)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0242`\n- **Text**:\nЯ НН. одступивши свое власное належное юрыздыцыи\r\nправа и повЂту, а теперешнему записови моему доброволному и всимъ его\r\nкондыцыямъ съ добрами и потомками моими подаючисе, сознавамы и ознаймуе тымъ\r\nлистомъ записомъ моимъ добровольнымъ вливковымъ кому о томъ вЂдать належы\r\nтеперь и на потомъ завжды. Ижъ я маючи часто молестоване отъ малжонка моего\r\nтеперешнего его милости пана Н. а бымъ вси суммы добра и права мои, которыи\r\nкольвекъ мнЂ належать, на его милость влила, забЂгаючи я теды тому абымъ\n\n### Result 4 (score: 0.4812)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0131`\n- **Text**:\n25 1, 2, 5, 6, 8,\r\n14, 20, 23, 26, 29, 36, 37, 39, 40, 43, 53 истьцу; 7, 11, 13, 19, 22, 27, 35,\r\n44, 45, 50, 51, 52 истцу; 8, 25 исцю; 15, 24, 41, 47 исцу; 17 истьцу; 10, 12,\r\n28, 42, 55 истцю; 33 истцоу;\n\n26 1 — 3, 5 — 9,\r\n11, 13, 14, 17 — 21, 23 — 27, 31, 37, 38, 40, 41, 43, 46, 48-53 лицемъ; 36,\r\n39 ліцемъ;\n\n27 13 вьзяти;\n\n23 36 німъ;\n\n29 2, 8 погібло; 3,\r\n7, 9, 14, 16 — 19, 21, 22, 25, 27, 28, 31, 35, 36, 43, 50, 51, 55 погыбло;\n\n30 37 и; 45, 54, 55\r\n— а;\n\n31 1, 2, 9, 11, 12,\r\n14, 16, 18. 2\n\n### Result 5 (score: 0.4747)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0238`\n- **Text**:\nЯ Н. одступившы свое властное собЂ потомкомъ и\r\nдобрамъ моимъ належное юрысдыцый, а подъ той листъ добровольный записъ мой собе\r\nсамого потомки и добра мои вси лежачые рухомые и сумы пенезей добровольнЂ\r\nподдавшы, зезнавамъ тымъ листомъ добровольнымъ записомъ моимъ, кому бы то\r\nвЂдать належало теперъ и на потомъ завжды, ижъ зосталомъ виненъ урожоной ей\r\nмилости паней Н. малжонцЂ моей истотней сумы пенезей Н. на долгу позычоного, въ\r\nкаждый золотой по 30 грошей Польскихъ личечи, которое сумы пене\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:21.244Z",
+          "resultDisplay": "Found 5 results for: \"лист данина жалуваний\"\n\n### Result 1 (score: 0.4930)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0203`\n- **Text**:\nлисту 9.1, 10.2, 41.1, 42.1, 43.1, 44.1, 49.1, 59.1, 62.1, 64.1, 66.2,\r\n72.1, 80.1, 81.1, 82.1, 83.1; листү 65.1; лысту 70.1\n\nлисты 9.1, 17.3, 38.1, 45.2, 48.1, 83.1\n\nлистъ 6.1, 9.2, 11.2, 12.1, 14.1, 24.2, 42.3, 43.1, 44.1, 49.2, 51.2,\r\n53.3, 55.1, 60.2, 62.1, 71.3, 72.1, 73.1, 78.2, 80.1, 83.1; листь 31.1, 62.1, 80.1;\r\nлисто 41.2; лист 24.1; лист(ъ) 31.1\n\nлистѣ 45.1\n\nлитвина 58.1\n\nлитовскаго див. литовского\n\nлитовски 83.1; литовскии̇́ 59.1; литовьскиӥ 24.1, 64.1;\r\nлитов(с)ки̋ 79.1; литовскій \n\n### Result 2 (score: 0.4855)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0035`\n- **Text**:\nТежъ хтобы листы наши отвороные въ жалобЂ своей до\r\nкого принесъ, будь до князя, або до пана, або до державецъ, або земенинъ до\r\nземенина, а хто бы колвекъ зъ нихъ оный листъ отворенный прочетши у себе\r\nдержалъ и копею зъ него знявшы подъ печатью вознаго оному не хотЂлъ вернути до\r\nтрехъ дней; тогды таковый за противность свою намъ Господару у вину упадываетъ у\r\nдванадцать рублей грошей, а сторонЂ такожъ маеть заплатити. А вЂдьже листы\r\nотвороные мають обычаемъ слушнымъ даваны быти черезъ возног\n\n### Result 3 (score: 0.4838)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0242`\n- **Text**:\nЯ НН. одступивши свое власное належное юрыздыцыи\r\nправа и повЂту, а теперешнему записови моему доброволному и всимъ его\r\nкондыцыямъ съ добрами и потомками моими подаючисе, сознавамы и ознаймуе тымъ\r\nлистомъ записомъ моимъ добровольнымъ вливковымъ кому о томъ вЂдать належы\r\nтеперь и на потомъ завжды. Ижъ я маючи часто молестоване отъ малжонка моего\r\nтеперешнего его милости пана Н. а бымъ вси суммы добра и права мои, которыи\r\nкольвекъ мнЂ належать, на его милость влила, забЂгаючи я теды тому абымъ\n\n### Result 4 (score: 0.4812)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0131`\n- **Text**:\n25 1, 2, 5, 6, 8,\r\n14, 20, 23, 26, 29, 36, 37, 39, 40, 43, 53 истьцу; 7, 11, 13, 19, 22, 27, 35,\r\n44, 45, 50, 51, 52 истцу; 8, 25 исцю; 15, 24, 41, 47 исцу; 17 истьцу; 10, 12,\r\n28, 42, 55 истцю; 33 истцоу;\n\n26 1 — 3, 5 — 9,\r\n11, 13, 14, 17 — 21, 23 — 27, 31, 37, 38, 40, 41, 43, 46, 48-53 лицемъ; 36,\r\n39 ліцемъ;\n\n27 13 вьзяти;\n\n23 36 німъ;\n\n29 2, 8 погібло; 3,\r\n7, 9, 14, 16 — 19, 21, 22, 25, 27, 28, 31, 35, 36, 43, 50, 51, 55 погыбло;\n\n30 37 и; 45, 54, 55\r\n— а;\n\n31 1, 2, 9, 11, 12,\r\n14, 16, 18. 2\n\n### Result 5 (score: 0.4747)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0238`\n- **Text**:\nЯ Н. одступившы свое властное собЂ потомкомъ и\r\nдобрамъ моимъ належное юрысдыцый, а подъ той листъ добровольный записъ мой собе\r\nсамого потомки и добра мои вси лежачые рухомые и сумы пенезей добровольнЂ\r\nподдавшы, зезнавамъ тымъ листомъ добровольнымъ записомъ моимъ, кому бы то\r\nвЂдать належало теперъ и на потомъ завжды, ижъ зосталомъ виненъ урожоной ей\r\nмилости паней Н. малжонцЂ моей истотней сумы пенезей Н. на долгу позычоного, въ\r\nкаждый золотой по 30 грошей Польскихъ личечи, которое сумы пене\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_verify_words_1773448100804_2",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "універсал",
+              "привілей",
+              "лист",
+              "грамота"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773448100804_2",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 4/4\n\n- **універсал** — FOUND (5 match): універсал(noun), універсал(noun), універсал(noun)\n- **привілей** — FOUND (2 match): привілей(noun), привілей(noun)\n- **лист** — FOUND (2 match): лист(noun), лист(noun)\n- **грамота** — FOUND (1 match): грамота(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:21.244Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 4/4\n\n- **універсал** — FOUND (5 match): універсал(noun), універсал(noun), універсал(noun)\n- **привілей** — FOUND (2 match): привілей(noun), привілей(noun)\n- **лист** — FOUND (2 match): лист(noun), лист(noun)\n- **грамота** — FOUND (1 match): грамота(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "7f427a94-8f7b-464e-82ff-6fcb4e44a927",
+      "timestamp": "2026-03-14T00:28:28.805Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Prioritizing Resource Utilization",
+          "description": "I am now focusing on determining which resource to access next in order to address the core problem. I will begin by analyzing the available information and proceed step-by-step to the next stage. My efforts are concentrated on navigating the process efficiently.",
+          "timestamp": "2026-03-14T00:28:25.951Z"
+        },
+        {
+          "subject": "Examining Document Definitions",
+          "description": "I am now focused on obtaining a clearer understanding of \"Лист\" by analyzing its usage in historical documents. I'm leveraging various tools to pinpoint relevant definitions within the context of the Grand Duchy of Lithuania and the Hetmanate. The aim is to clarify the term's meaning.",
+          "timestamp": "2026-03-14T00:28:27.971Z"
+        },
+        {
+          "subject": "Re-evaluating Information Sources",
+          "description": "I'm now revisiting previous findings, specifically the search results for \"Жалувана грамота\" and \"Лист.\" The goal is to solidify my understanding of \"Лист\" by comparing and contrasting information derived from different sources.",
+          "timestamp": "2026-03-14T00:28:28.672Z"
+        }
+      ],
+      "tokens": {
+        "input": 31539,
+        "output": 22,
+        "cached": 27459,
+        "thoughts": 384,
+        "tool": 0,
+        "total": 31945
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773448108797_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Лист правознавство ВКЛ"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448108797_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Лист правознавство ВКЛ' — 4 results\n\n1. **Чайковський Петро Ілліч** — російський композитор, диригент і педагог. Автор 10 опер, 3 балетів, 7 симфоній (вкл. Манфред), великої кількості романсів та інструментальних творів. Мав частково\n2. **Велике князівство Литовське** —  пол. Wielkie Księstwo Litewskie) — коротка офіційна назва; скорочено — ВКЛ. Велике князівство Литовське, Руське і Жемайтське (ст.-укр. Великое Князство\n3. **Павло Тетеря** — Довідник. — Харків: Основа, 2014. — 128 с. — (Б-ка журн. «Історія та правознавство». Вип. 1 (121)). — С. 36. Тетеря [Архівовано 21 листопада 2016 у Wayback\n4. **Список українських довідкових видань** — Харків: Основа, 2014. — 125 с. ; 21 см. — (Бібліотека журналу «Історія та правознавство»; вип. 1 (121)). — Бібліогр. : 124—125 (29 назв). — ISBN 978-617-00-1998-1"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:28:29.101Z",
+          "resultDisplay": "Wikipedia search: 'Лист правознавство ВКЛ' — 4 results\n\n1. **Чайковський Петро Ілліч** — російський композитор, диригент і педагог. Автор 10 опер, 3 балетів, 7 симфоній (вкл. Манфред), великої кількості романсів та інструментальних творів. Мав частково\n2. **Велике князівство Литовське** —  пол. Wielkie Księstwo Litewskie) — коротка офіційна назва; скорочено — ВКЛ. Велике князівство Литовське, Руське і Жемайтське (ст.-укр. Великое Князство\n3. **Павло Тетеря** — Довідник. — Харків: Основа, 2014. — 128 с. — (Б-ка журн. «Історія та правознавство». Вип. 1 (121)). — С. 36. Тетеря [Архівовано 21 листопада 2016 у Wayback\n4. **Список українських довідкових видань** — Харків: Основа, 2014. — 125 с. ; 21 см. — (Бібліотека журналу «Історія та правознавство»; вип. 1 (121)). — Бібліогр. : 124—125 (29 назв). — ISBN 978-617-00-1998-1",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "0870e09b-a2c3-4c71-aed4-a5ef1bf8691e",
+      "timestamp": "2026-03-14T00:29:12.898Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Види документів\n\n## Key Facts Ledger\n```yaml\nsubject: \"Види документів\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1300\" # Approximate rise of the Ruthenian chancellery in GDL\n  end: \"1840\" # Final abolition of the Lithuanian Statute in Left-Bank Ukraine\n  key_events:\n    - year: 1492\n      event: \"Земський привілей великого князя Олександра, що розширював права шляхти.\"\n    - year: 1566\n      event: \"Видання Другого (Волинського) статуту ВКЛ, де чітко регламентувалося використання «листів» та «записів».\"\n    - year: 1648\n      event: \"Масове розсилання універсалів Богдана Хмельницького із закликом до повстання.\"\n    - year: 1696\n      event: \"Ухвала польського сейму, що заборонила використання руської мови в діловодстві на користь польської.\"\n    - year: 1768\n      event: \"Використання формату універсалу гайдамаками (Коліївщина) для мобілізації селян.\"\nprimary_quotes:\n  - text: \"Відомо чиню всім, а зосібна полковникам, осаулам, сотникам і всім молодцям війська Запорозького, по містах, місточках і селах будучим...\"\n    source: \"Універсал Богдана Хмельницького (за М. Грушевським)\"\n    attribution: \"Богдан Хмельницький\"\n  - text: \"Тежъ хтобы листы наши отвороные въ жалобЂ своей до кого принесъ... а хто бы колвекъ зъ нихъ оный листъ отворенный прочетши у себе держалъ и копею зъ него знявшы подъ печатью вознаго оному не хотЂлъ вернути...\"\n    source: \"Другий (Волинський) статут ВКЛ (1566)\"\n    attribution: \"Законодавство ВКЛ\"\n  - text: \"Я НН. одступивши свое власное належное юрыздыцыи права и повЂту... ознаймуе тымъ листомъ записомъ моимъ добровольнымъ...\"\n    source: \"Другий (Волинський) статут ВКЛ (1566)\"\n    attribution: \"Формула добровільного запису\"\nforbidden_claims:\n  - \"Українські землі не мали власної розвиненої правової та бюрократичної традиції до входження в Російську імперію.\"\n  - \"Козаки були виключно «степовими анархістами», які зневажали писане право.\"\n  - \"Термін «лист» в епоху Ренесансу та Бароко означав виключно приватне листування.\"\n```\n\n## Використані джерела\n1. [Енциклопедія історії України (т. 10) / Універсал](http://resource.history.org.ua) — Визначення універсалів як маніфестів і законодавчих актів Гетьманщини.\n2. [Другий (Волинський) статут ВКЛ 1566 року](http://litopys.org.ua) — Першоджерело юридичної термінології щодо «листів» та судових записів.\n3. [М. Грушевський «Історія України-Руси» (т. 2-3, 7-10)](http://litopys.org.ua) — Аналіз привілеїв литовських князів та текстів універсалів Б. Хмельницького.\n4. [Енциклопедія історії України (т. 5) / Привілей](http://resource.history.org.ua) — Трактування привілеїв як дарованих монархом грамот шляхті та містам (Магдебурзьке право).\n\n## Хронологія\n- **Кінець XIV ст.**: Поширення практики видачі привілеїв у Великому князівстві Литовському (ВКЛ).\n- **1492**: Земський привілей Олександра Ягеллончика, що закріплював права панів-ради.\n- **1529, 1566, 1588**: Видання Литовських статутів, що кодифікували види документів (листи, грамоти, записи).\n- **1648–1657**: Формування Гетьманщини та розквіт «універсалу» як головного нормативно-правового та адміністративного акта козацької держави.\n- **XVIII ст.**: Поступове обмеження дії українського діловодства та заміна його російськими «указами».\n\n## Ключові факти та цитати\n- **Привілей** (від лат. *privilegium*) — законодавчий акт, дарована грамота монарха (короля Польщі чи великого князя Литовського), що надавала пільги, права чи земельні володіння окремим особам, станам (шляхті) або містам (на магдебурзьке право).\n- **Лист** (у давньоукраїнському діловодстві) — це не просто повідомлення, а офіційний документ, акт, грамота. Існували «листи отвороные» (відкриті листи / letters patent), «листи жалувані» (надання маєтностей), «листи-записи» (добровільні угоди, заповіти).\n- **Універсал** (від лат. *universalis* — загальний) — актовий документ адміністративно-політичного характеру, маніфест. У Гетьманщині це був вищий державний акт, який видавався гетьманом (рідше генеральною старшиною чи полковниками) до всього населення або певних станів.\n- Структура козацького універсалу мала чіткі формули: *інтитуляція* (ім'я та титул автора), *адресація* («Відомо чиню всім...»), *нарація* (причина видання), *диспозиція* (сам наказ) і *санкція* (погроза за невиконання).\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": `[!myth-buster]` — Спростування міфу про «дикий степ». Українські землі у складі ВКЛ та пізніше Гетьманщина були суспільствами з надзвичайно розвиненою правовою культурою, де кожна маєтність чи право підтверджувалися розгалуженою системою документів руською мовою.\n- Section \"Вступ\": `[!context]` — Руська канцелярська мова (староукраїнська) була офіційною мовою діловодства Великого князівства Литовського аж до 1696 року. Усі державні акти, привілеї та статути писалися саме нею.\n- Section \"Основний матеріал\": `[!history-bite]` — Слово «лист» у староукраїнській мові найчастіше означало юридичний документ (грамоту, контракт, заповіт), а не просто послання другові. Коли шляхтич отримував землю, він отримував «жалуваний лист».\n- Section \"Основний матеріал\": `[!quote]` — Класичний початок козацького універсалу: «Відомо чиню...». Ця формула була маркером вищої влади, яку перейняли гетьмани від королів та сеймів.\n- Section \"Практика\": `[!culture]` — Фізичний вигляд документів: використання специфічного скоропису (шрифту), воскових і сургучних печаток, а також латинських запозичень (привілей, універсал, декрет), що свідчило про європейський вектор правової культури.\n- Section \"Підсумок\": `[!decolonization]` — Російська імперія цілеспрямовано знищила українську систему діловодства (скасування Литовського статуту, заборона універсалів), замінивши її російськими «указами» та імперською бюрократією, щоб стерти пам'ять про правову автономію України.\n\n## Contested Terms \n| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Козацьке право | Відсутність законів, свавілля, бунт | Розвинена державно-правова система, кодифікована в універсалах та статтях |\n| Руська канцелярія | «Західноруська» (російська) мова ВКЛ | Староукраїнська (руська) канцелярська мова, маркер окремішньої політичної ідентичності |\n| Литовський статут | «Литовсько-руське» іноземне право | Основний кодекс законів України, що діяв на її землях понад 300 років |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Головна ідея:** Введення в атмосферу канцелярій ВКЛ та Гетьманщини. Документ як основа суспільного ладу, інструмент закріплення прав та обов'язків.\n- **Канцелярська мова:** Офіційною мовою документів ВКЛ була староукраїнська (руська канцелярська). Це формувало особливий юридичний стиль.\n- **Значення документа:** Без паперу з печаткою людина не мала прав. Документи берегли, ховали в скринях, переписували в актові книги.\n\n### Основний матеріал\n- **Привілей (Privilegium):** Акт монаршої милості. Давався на безмитну торгівлю, на володіння землею, на магдебурзьке право міст. Привілеї збиралися шляхтою як доказ їхнього «шляхетського» (елітного) статусу.\n- **Лист (Literae):** Широке поняття. «Лист отворенный» (патент), «лист жалуваний» (надання маєтку), «лист оповідний» (повідомлення про злочин). У Литовських статутах термін «лист» вживається сотні разів саме як *юридичний акт*.\n- **Універсал (Universalis):** Вищий нормативно-правовий акт у козацькій державі. Їх видавали гетьмани, звертаючись до «всього поспільства» або конкретних станів. Структура: від кого (Хмельницький), кому («полковникам, сотникам і всім молодцям»), що сталося (нарація), що робити (наказ), і погроза карою за непослух.\n\n### Практика\n- **Етимологія та формули:** Аналіз походження слів (універсал — загальний, привілей — винятковий закон). Аналіз юридичних формул: «Відомо чиню», «Ознаймуємо вам», «Данина», «Добровільний запис».\n- **Читання (Paleography Lab connection):** Підготовка до наступного модуля зі скоропису. Документи писалися складним курсивом (скорописом) з виносними літерами та титлами.\n- Робота з текстом: Розпізнавання типів документів за їхніми вступними словами та адресатами.\n\n### Підсумок\n- **Синтез:** Види документів є віддзеркаленням еволюції української державності: від монарших привілеїв ВКЛ до автономних державних універсалів Гетьманщини.\n- **Деколонізація:** Знищення цієї європейської правової термінології та документообігу (перехід на «укази» і «губернські правлєнія») було цілеспрямованим актом позбавлення України її державно-правової пам'яті.\n- **Перехід:** Ці документи треба вміти читати в оригіналі — перехід до модуля Paleography Lab (Skoropys).\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Beginning Retrieval Operations",
+          "description": "I'm focused on moving forward with the retrieval process. I'm initiating the first query to gather the necessary data. I am actively working on the query and getting ready for the next one, which depends on the results of the initial step.",
+          "timestamp": "2026-03-14T00:28:33.813Z"
+        },
+        {
+          "subject": "Drafting Initial Content",
+          "description": "I am now focused on starting to write the document, constructing the initial sections of the research notes. I'm focusing on the introduction and will then move on to analyzing the primary sources to fulfill the outline.",
+          "timestamp": "2026-03-14T00:28:36.457Z"
+        },
+        {
+          "subject": "Refining Content Structure",
+          "description": "I'm now outlining the document's structure to match the provided specifications. I'm breaking down the main sections, ensuring the organization supports the analysis of various document types. I'll include the necessary elements, like a timeline and key quotes, as I progress with each section.",
+          "timestamp": "2026-03-14T00:28:39.118Z"
+        },
+        {
+          "subject": "Compiling Initial Research Data",
+          "description": "I'm now prioritizing the compilation of initial information for the first section of the document. I am creating the structure for the introduction and gathering the necessary details to construct it properly, focusing on the provided outline.",
+          "timestamp": "2026-03-14T00:28:41.310Z"
+        },
+        {
+          "subject": "Constructing Initial Hooks",
+          "description": "I am now beginning to craft the initial hooks to grab the reader's attention. I'm carefully constructing the introductory elements, drawing from the source information provided. I'll need to make sure each hook aligns with the core themes of the document.",
+          "timestamp": "2026-03-14T00:28:44.364Z"
+        },
+        {
+          "subject": "Preparing Document Sections",
+          "description": "I am now focused on completing the document's central sections, beginning with the introduction. I'm actively using the provided data, including the hooks and quotations to fill it out. I'll need to then move on to the primary source analysis.",
+          "timestamp": "2026-03-14T00:28:47.378Z"
+        },
+        {
+          "subject": "Beginning Document Synthesis",
+          "description": "I'm now putting everything together to begin creating the final output document, including the hooks, quotes, and timeline. I'll need to interweave these elements throughout the different sections.",
+          "timestamp": "2026-03-14T00:28:47.427Z"
+        }
+      ],
+      "tokens": {
+        "input": 31934,
+        "output": 2949,
+        "cached": 0,
+        "thoughts": 1443,
+        "tool": 0,
+        "total": 36326
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

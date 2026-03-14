@@ -1,0 +1,161 @@
+discovered_at: '2026-03-14T02:08:35.170169+00:00'
+query_keywords:
+- Проста мова
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Why he mixed vernacular with CS
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=_6CnSraFlwo
+  channel: Історія Мови
+  title: 'Language of Russia: summer'
+  relevance_score: 0.4
+  relevance_note: The video discusses the historical usage and evolution of the word
+    'літо' from Kyivan Rus' to the Hetmanate period. While relevant to general language
+    history, it does not directly address the concept of 'Проста мова' (plain language),
+    its stylistic elements, or the mixing of different language registers, which appear
+    to be the module's core focus. It's tangentially related by being about language
+    but has a different specific focus.
+  transcript_excerpt: мова Київської Русі пори року по весні приходить літо і літо
+    звучало так літо літо... А у Гетьманщині козаки сказали б цю саму фразу так в
+    коробці буде літо в коробці буде літо
+  embed_suggestion: After Основний матеріал -- if this section includes content on
+    language evolution or historical context of word usage, it could serve as an example
+    of linguistic change.
+- url: https://www.youtube.com/watch?v=r_Db1KAfyNQ
+  channel: Історія Мови
+  title: 'Russian language: winter'
+  relevance_score: 0.4
+  relevance_note: The video discusses the historical usage and evolution of the word
+    'зима' from Kyivan Rus' to the Hetmanate period, noting its similarity to modern
+    usage. While relevant to general language history, it does not directly address
+    the concept of 'Проста мова' (plain language), its stylistic elements, or the
+    mixing of different language registers, which appear to be the module's core focus.
+    It's tangentially related by being about language but has a different specific
+    focus.
+  transcript_excerpt: мова Давньої Русі або Київської Русі Як приємно казати пори
+    року зима звучало як зіма зіма писалося так... А на Гетьманщині ту саму фразу
+    сказали б так зима льодом озеро криє фактично так само як і сучасній мові
+  embed_suggestion: After Основний матеріал -- if this section includes content on
+    language evolution or historical context of word usage, it could serve as an example
+    of linguistic continuity.
+- url: https://www.youtube.com/watch?v=7gLc_yf1IvM
+  channel: Let's Learn Ukrainian
+  title: 'Practice ALL Ukrainian Cases with me! | #LetsLearnUkrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0195
+  text: "188\nМОВЛЕННЄВИЙ ПРОСТІР\nТекст\nПригадайте!\nТекст — це певне повідомлення;\
+    \ сукупність речень, пов’я-\nзаних між собою за змістом.\nТема — це те, про що\
+    \ йдеться в тексті. Найчастіше тему \nвідображає заголовок тексту.\nПідтема (мікротема)\
+    \ — це частина загальної теми тексту, \nщо зазвичай розкривається в одному абзаці.\n\
+    Основна думка тексту — це те, заради чого був створений \nпевний текст, що хотів\
+    \ донести автор до своїх читачів.\nКлючові слова — це окремі слова чи словосполучення,\
+    \ \nякі визначають тему та "
+  section_title: Сторінка 191
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-zabolotnyi-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrajinska-mova-zabolotnij-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  text: "3. Скласти план і відповідно до нього систематизувати матеріал. 4. Узагальнити\
+    \ основні положення. 5. Скласти усно текст повідомлення, намагаючись висловити\
+    \ й \nаргументувати власну думку. 6. За потреби записати текст повідомлення повністю\
+    \ або частково \nта переказати усно текст удома."
+  section_title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5190073251724243
+  chunk_id: fc2291b5_c5177
+  text: "М. як наука має вел. значення для розроблення термінології,\r\nу наук. коментуванні\
+    \ мовних текстів, машинному перекладі; воно дає і теор.\r\nвисновки для розв’язання\
+    \ проблеми взаємостосунків матеріального та ідеального.\r\nПроблема взаємозв’язку\
+    \ мови й мислення, мовних і логічних величин вивчається\r\nодночасно М. і філософією.\
+    \ Осн. види мовозн. методів — описовий, зіставний\r\n(конфронтативний, контрастивний),\
+    \ типол., істор. (порівняльно-істор.,\r\nкомпаративний) і нормативно-стилістичний."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5169346332550049
+  chunk_id: 4800ab33_c0156
+  text: "4. Оскільки мету пізнають з предмета, то мета промови\r\nта сама, що й мета\
+    \ дослідження, бо до чого прямує дослідження, до того самого,\r\nненаче до мети,\
+    \ прямує і промова. Бо дослідження, це неначе якась сліпа, але\r\nцікава винахідливість\
+    \ думки, що тільки доповнюється, шукає, але не може знайти.\r\nОтже, промова веде\
+    \ дослідження до досліджуваної речі, одне і друге перебувають\r\nв (одних) і тих\
+    \ самих межах, бо коли ми досліджуємо, чи щось добре чи погане,\r\nфальшиве чи\
+    \ істинне, справедливе чи несправедли"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5156512260437012
+  chunk_id: 4800ab33_c0700
+  text: "Немало є таких, які висловлюють думку у багатьох\r\nсловах, щоб зробити її\
+    \ яснішою і менш двозначною. Багато є таких, хто вважає,\r\nщо таким об’єктом\
+    \ є спрямування операцій розуму до певного порядку з метою\r\nправильного дослідження,\
+    \ але заперечує, що об’єктом є самий спосіб дослідження.\r\nІнші уважають спосіб\
+    \ дослідження за об’єкт, але не спосіб пізнання, /25/ хоч\r\nвсе це здається однаковим\
+    \ і лише пояснюється все іншими й іншими словами.\n\nПісля такого пояснення нашої\
+    \ думки, я стверджую так:\r\nтри умо"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

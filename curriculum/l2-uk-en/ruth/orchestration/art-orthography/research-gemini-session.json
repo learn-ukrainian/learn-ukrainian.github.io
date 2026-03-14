@@ -1,0 +1,688 @@
+{
+  "sessionId": "ed387ba8-c79e-4cee-8561-5c5625753008",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T00:54:00.127Z",
+  "lastUpdated": "2026-03-14T00:56:02.150Z",
+  "messages": [
+    {
+      "id": "0d2424c9-b618-48c9-87dc-cd4cdbfd1b5b",
+      "timestamp": "2026-03-14T00:54:00.127Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-034\nlevel: RUTH\nsequence: 34\nslug: art-orthography\nversion: '2.0'\ntitle: Мистецтво та правопис\nsubtitle: Art & Orthography\nfocus: Visual style of the manuscript\nphase: 2\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Art & Orthography\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Master Calligrapher\nprerequisites:\n- the-resurrection\nconnects_to:\n- prince-ostrozky\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Мистецтво та правопис** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Мистецтво та правопис\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Мистецтво та правопис\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "cee9467b-277c-48f0-b12d-7a694ad5cbdc",
+      "timestamp": "2026-03-14T00:54:08.901Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Momentum",
+          "description": "I'm focused on moving forward methodically. I've been organizing the information, and now I'm shifting to the action phase. I will maintain my focus to complete this properly.",
+          "timestamp": "2026-03-14T00:54:03.952Z"
+        },
+        {
+          "subject": "Executing the Research Plan",
+          "description": "I'm now prioritizing the application of the specialized tools to get the necessary insights. I'm strategically querying for details on visual manuscript styles. It's time to gather the initial information needed to delve into the topic.",
+          "timestamp": "2026-03-14T00:54:06.860Z"
+        },
+        {
+          "subject": "Gathering Foundational Data",
+          "description": "I am now querying Wikipedia, using specific tools to gather initial data. This involves searching for information on the Ostroh Bible and Peresopnytsia Gospel. I'm building a base of knowledge.",
+          "timestamp": "2026-03-14T00:54:08.773Z"
+        }
+      ],
+      "tokens": {
+        "input": 20475,
+        "output": 25,
+        "cached": 16876,
+        "thoughts": 593,
+        "tool": 0,
+        "total": 21093
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449648900_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Пересопницьке євангеліє"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449648900_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Пересопницьке євангеліє' — 5 results\n\n1. **Пересопницьке Євангеліє** — Пересопницького Євангелія сучасною українською мовою. Список видань Пересопницьке Євангеліє (сучасною українською мовою) // Пересопницьке Євангеліє.\n2. **Пересопницьке Євангеліє (срібна монета)** — XVI ст. — Пересопницькому Євангелію. За змістом Пересопницьке Євангеліє — традиційне тетраєвангеліє, що містить чотири канонічні Євангелія, перша старовинна\n3. **Житомирське Євангеліє** — було Пересопницьке Євангеліє. Вважається списком Пересопницького Євангелія та відзначається рядом глос, яких немає в Пересопницькому Євангелії. Читалося\n4. **Луцьке Євангеліє** — XIV століття. Луцьке Євангеліє майже на два століття старше за Пересопницьке Євангеліє і вважається його предтечею. Це одна з найдавніших богослужбових\n5. **Галицьке Євангеліє** — Євангелія від Іоанна від 1283 року. Галицьке Євангеліє (1357)[ru] — рукописне Євангеліє апракос. Євангеліє Пересопницьке Євангеліє Список євангелій-апракосів[ru]"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:09.237Z",
+          "resultDisplay": "Wikipedia search: 'Пересопницьке євангеліє' — 5 results\n\n1. **Пересопницьке Євангеліє** — Пересопницького Євангелія сучасною українською мовою. Список видань Пересопницьке Євангеліє (сучасною українською мовою) // Пересопницьке Євангеліє.\n2. **Пересопницьке Євангеліє (срібна монета)** — XVI ст. — Пересопницькому Євангелію. За змістом Пересопницьке Євангеліє — традиційне тетраєвангеліє, що містить чотири канонічні Євангелія, перша старовинна\n3. **Житомирське Євангеліє** — було Пересопницьке Євангеліє. Вважається списком Пересопницького Євангелія та відзначається рядом глос, яких немає в Пересопницькому Євангелії. Читалося\n4. **Луцьке Євангеліє** — XIV століття. Луцьке Євангеліє майже на два століття старше за Пересопницьке Євангеліє і вважається його предтечею. Це одна з найдавніших богослужбових\n5. **Галицьке Євангеліє** — Євангелія від Іоанна від 1283 року. Галицьке Євангеліє (1357)[ru] — рукописне Євангеліє апракос. Євангеліє Пересопницьке Євангеліє Список євангелій-апракосів[ru]",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "7babd6c5-5020-4be9-8c25-046009d37a92",
+      "timestamp": "2026-03-14T00:54:15.372Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Solution",
+          "description": "I'm focused on moving forward with the task. I'm considering what steps will lead me closer to a successful outcome, aiming to refine the approach. Now, I'm working towards getting things done.",
+          "timestamp": "2026-03-14T00:54:14.585Z"
+        },
+        {
+          "subject": "Beginning Section Analysis",
+          "description": "I'm starting to dissect the chosen text, breaking it down into manageable segments for analysis. I'm focusing on a detailed examination of the initial sections to lay a solid groundwork.",
+          "timestamp": "2026-03-14T00:54:15.153Z"
+        }
+      ],
+      "tokens": {
+        "input": 20901,
+        "output": 25,
+        "cached": 19576,
+        "thoughts": 86,
+        "tool": 0,
+        "total": 21012
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449655372_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Пересопницьке Євангеліє",
+            "mode": "sections"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449655372_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Пересопницьке Євангеліє':\n\n1 Історія створення (index=1)\n2 За межами Волині (index=2)\n3 Матеріали та виконання (index=3)\n4 Мова (index=4)\n  4.1 Особливості мови (index=5)\n5 Видання (index=6)\n  5.1 Видання оригінального тексту староукраїнською мовою (index=7)\n  5.2 Видання перекладу тексту сучасною українською мовою (index=8)\n6 Присяжна книга (index=9)\n7 Див. також (index=10)\n8 Джерела та примітки (index=11)\n9 Посилання (index=12)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:15.382Z",
+          "resultDisplay": "Sections of 'Пересопницьке Євангеліє':\n\n1 Історія створення (index=1)\n2 За межами Волині (index=2)\n3 Матеріали та виконання (index=3)\n4 Мова (index=4)\n  4.1 Особливості мови (index=5)\n5 Видання (index=6)\n  5.1 Видання оригінального тексту староукраїнською мовою (index=7)\n  5.2 Видання перекладу тексту сучасною українською мовою (index=8)\n6 Присяжна книга (index=9)\n7 Див. також (index=10)\n8 Джерела та примітки (index=11)\n9 Посилання (index=12)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "84e3c943-b15d-496a-ab4d-99cd98772f59",
+      "timestamp": "2026-03-14T00:54:19.333Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Gathering Gospel Details",
+          "description": "I am now focused on extracting relevant information from the specified sections. The goal is to collect all the important details needed for the next step.",
+          "timestamp": "2026-03-14T00:54:18.772Z"
+        },
+        {
+          "subject": "Analyzing Section Content",
+          "description": "I am currently working to understand the content of each section. My aim is to make sure I grasp the core concepts so that I can proceed with more informed actions.",
+          "timestamp": "2026-03-14T00:54:19.262Z"
+        }
+      ],
+      "tokens": {
+        "input": 21105,
+        "output": 27,
+        "cached": 19526,
+        "thoughts": 75,
+        "tool": 0,
+        "total": 21207
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449659332_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Пересопницьке Євангеліє",
+            "mode": "section",
+            "section": 1
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449659332_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Пересопницьке Євангеліє — Section 1\n\nІсторія створення\nРобота була розпочата 15 серпня 1556 року в Дворецькому монастирі князів Заславських при церкві Святої Трійці (монастир був у селі Двірці Ізяславського району (нині Шепетівського району) Хмельницької області).\n\nНад євангелієм працювали: чернець Григорій, який керував роботою та здійснив переклад і редакторську правку рукопису, та два писці&nbsp;— Михайло Василієвич, син сяноцького протопопа, яким писано більшу частину тексту, ім'я другого писця залишилося невідомим.\n\nНа думку видатного дослідника української рукописної спадщини Якима Запаска, який проаналізував особливості каліграфії письма пам'ятки і характер художнього виконання мініатюр, до роботи над рукописом Пересопницького Євангелія були причетні ще двоє осіб&nbsp;— художник, автор мініатюр і переписувач, що долучився до роботи над книгою вже в пересопницький період.\n\nЗгідно з інвентарем Пересопницького монастиря від 29 жовтня 1600 року рукопис належав до бібліотеки обителі: «Евангелие, тетръ писаное, атласом зеленым крытое, на нем сребра белого бляшек пятъ.»"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:19.640Z",
+          "resultDisplay": "# Пересопницьке Євангеліє — Section 1\n\nІсторія створення\nРобота була розпочата 15 серпня 1556 року в Дворецькому монастирі князів Заславських при церкві Святої Трійці (монастир був у селі Двірці Ізяславського району (нині Шепетівського району) Хмельницької області).\n\nНад євангелієм працювали: чернець Григорій, який керував роботою та здійснив переклад і редакторську правку рукопису, та два писці&nbsp;— Михайло Василієвич, син сяноцького протопопа, яким писано більшу частину тексту, ім'я другого писця залишилося невідомим.\n\nНа думку видатного дослідника української рукописної спадщини Якима Запаска, який проаналізував особливості каліграфії письма пам'ятки і характер художнього виконання мініатюр, до роботи над рукописом Пересопницького Євангелія були причетні ще двоє осіб&nbsp;— художник, автор мініатюр і переписувач, що долучився до роботи над книгою вже в пересопницький період.\n\nЗгідно з інвентарем Пересопницького монастиря від 29 жовтня 1600 року рукопис належав до бібліотеки обителі: «Евангелие, тетръ писаное, атласом зеленым крытое, на нем сребра белого бляшек пятъ.»",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9d09a215-4ad7-49c5-b364-b071b6c0f4ee",
+      "timestamp": "2026-03-14T00:54:23.774Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Focusing on Section Access",
+          "description": "I am now focusing on accessing the specified sections. My progress involves extracting the information from sections three and four, which should provide the needed details. I am making good headway in achieving this.",
+          "timestamp": "2026-03-14T00:54:23.190Z"
+        },
+        {
+          "subject": "Retrieving Section Content",
+          "description": "I am now retrieving the content of sections three and four. I'm focusing on acquiring the necessary data. The process is going smoothly.",
+          "timestamp": "2026-03-14T00:54:23.692Z"
+        }
+      ],
+      "tokens": {
+        "input": 21489,
+        "output": 27,
+        "cached": 19517,
+        "thoughts": 91,
+        "tool": 0,
+        "total": 21607
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449663772_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Пересопницьке Євангеліє",
+            "mode": "section",
+            "section": 3
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449663772_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Пересопницьке Євангеліє — Section 3\n\nМатеріали та виконання\nВажливим аспектом цінності книги є художнє оформлення. Її орнаментація, створена в народному українському стилі, розміщення тексту, виписування кожної літери чітким гарним уставом свідчить про високий рівень майстерності українських переписувачів.\n\nЄвангеліє написане пізнім уставом на пергаменті чорним чорнилом і циноброю (червоною фарбою). У рукописі є ще «дробне» письмо, яким виписані всі приписки, післямови тощо. Містить покажчик читання за місяцями.\n\nОбкладинка виконана з обрамлених в зелений оксамит дубових дощечок.\n\nУ 2011&nbsp;мистецтвознавець і художник Лев Скоп у своїй монографії аргументував своє наукове відкриття про авторство мініатюр і орнаментального оздоблення «Пересопницького Євангелія», що на думку Л. Скопа належить майстрові Федуску зі Самбора."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:24.154Z",
+          "resultDisplay": "# Пересопницьке Євангеліє — Section 3\n\nМатеріали та виконання\nВажливим аспектом цінності книги є художнє оформлення. Її орнаментація, створена в народному українському стилі, розміщення тексту, виписування кожної літери чітким гарним уставом свідчить про високий рівень майстерності українських переписувачів.\n\nЄвангеліє написане пізнім уставом на пергаменті чорним чорнилом і циноброю (червоною фарбою). У рукописі є ще «дробне» письмо, яким виписані всі приписки, післямови тощо. Містить покажчик читання за місяцями.\n\nОбкладинка виконана з обрамлених в зелений оксамит дубових дощечок.\n\nУ 2011&nbsp;мистецтвознавець і художник Лев Скоп у своїй монографії аргументував своє наукове відкриття про авторство мініатюр і орнаментального оздоблення «Пересопницького Євангелія», що на думку Л. Скопа належить майстрові Федуску зі Самбора.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "906c54a6-7793-4ff6-9d08-416568a81211",
+      "timestamp": "2026-03-14T00:54:28.073Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task",
+          "description": "I am now focused on completing the task. I've begun making progress towards the next stage.",
+          "timestamp": "2026-03-14T00:54:27.304Z"
+        },
+        {
+          "subject": "Initiating Language Analysis",
+          "description": "Now I am going to concentrate on the language section. I'm moving toward the next stage of the process, using the information I have at hand.",
+          "timestamp": "2026-03-14T00:54:28.004Z"
+        }
+      ],
+      "tokens": {
+        "input": 21792,
+        "output": 27,
+        "cached": 19483,
+        "thoughts": 94,
+        "tool": 0,
+        "total": 21913
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449668072_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Пересопницьке Євангеліє",
+            "section": 4,
+            "mode": "section"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449668072_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Пересопницьке Євангеліє — Section 4\n\nМова\nСторінка з ініціалом\nСторінка з орнаментними прикрасами\nПам'ятка писана староукраїнською літературно-писемною мовою уставом та півуставом з елементами скоропису. Це найраніший із відомих перекладів євангельського тексту українською мовою середини XVI&nbsp;ст., який дійшов до нашого часу. Євангеліє було перекладено з церковнослов'янської мови болгарської редакції.\n\nПереклад відрізняється за якістю: ближче до церковнослов'янського оригіналу перекладено Євангелія від Матвія і Марка, а ближче до народної мови&nbsp;— Євангеліє від Луки і, меншою мірою, від Йоана. Мова Передмови Феофілакта Болгарського до Євангелія від Матвія залишилася переважно церковнослов'янською, проте мовознавець Юрій Шевельов називав його «майже суто народнім своєю мовою».\n\nОсобливості мови\nНароднорозмовну лексику введено до тексту переважно за допомогою глос. Вони, як правило, ставляться поряд із словами оригіналу, але обрамляються «прямокутниками»; виписані «дробним» письмом. Це, здебільшого, старослов'янські слова (наприклад, «чресла»&nbsp;— стегна, «бдѣти»&nbsp;— не спати), але є українські глоси до українських же слів. Вони свідчать про пошуки наддіалектного слова, вироблення загальноукраїнської лексичної норми («стрѣху»&nbsp;— дах, «через збожя»&nbsp;— через оранку тощо).\n\nЛише кілька українських відповідників винесено на береги рукопису (маргінальні глоси). Найчастіше український лексичний відповідник або пояснення подано в рамці безпосередньо після незрозумілого чи малозрозумілого слова. В Євангелії від Луки найбільше глос&nbsp;— 89, а в Євангелії від Матвія найменше&nbsp;— усього 14; в Євангелії від Марка&nbsp;— 24, в Євангелії від Йоана&nbsp;— 30, проте часто (не завжди) вони супроводжуються українськими лексичними відповідниками.\n\nНа графіці рукопису позначився другий південнослов'янський вплив. Рукопис багато орнаментований: різнокольорові з золотом високохудожні мініатюри, заставки, ініціали, кінцівки з українськими мотивами.\n\nПам'ятка містить унікальний матеріал для вивчення історії української мови на всіх її рівнях та взаємодії народнорозмовних і книжних елементів в українській літературно-писемній мові XVI&nbsp;ст. У ній чітко проступають риси живої народної мови. На фонетичному рівні це наявність народнорозмовної фонеми і переднього ряду високого підняття, українські рефлекси ятя, перехід о, е в і в новозакритому складі тощо. На морфологічному рівні засвідчено велику кількість варіантів за рахунок закінчень, властивих живомовній практиці. Синтаксична структура виразно українська."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:28.083Z",
+          "resultDisplay": "# Пересопницьке Євангеліє — Section 4\n\nМова\nСторінка з ініціалом\nСторінка з орнаментними прикрасами\nПам'ятка писана староукраїнською літературно-писемною мовою уставом та півуставом з елементами скоропису. Це найраніший із відомих перекладів євангельського тексту українською мовою середини XVI&nbsp;ст., який дійшов до нашого часу. Євангеліє було перекладено з церковнослов'янської мови болгарської редакції.\n\nПереклад відрізняється за якістю: ближче до церковнослов'янського оригіналу перекладено Євангелія від Матвія і Марка, а ближче до народної мови&nbsp;— Євангеліє від Луки і, меншою мірою, від Йоана. Мова Передмови Феофілакта Болгарського до Євангелія від Матвія залишилася переважно церковнослов'янською, проте мовознавець Юрій Шевельов називав його «майже суто народнім своєю мовою».\n\nОсобливості мови\nНароднорозмовну лексику введено до тексту переважно за допомогою глос. Вони, як правило, ставляться поряд із словами оригіналу, але обрамляються «прямокутниками»; виписані «дробним» письмом. Це, здебільшого, старослов'янські слова (наприклад, «чресла»&nbsp;— стегна, «бдѣти»&nbsp;— не спати), але є українські глоси до українських же слів. Вони свідчать про пошуки наддіалектного слова, вироблення загальноукраїнської лексичної норми («стрѣху»&nbsp;— дах, «через збожя»&nbsp;— через оранку тощо).\n\nЛише кілька українських відповідників винесено на береги рукопису (маргінальні глоси). Найчастіше український лексичний відповідник або пояснення подано в рамці безпосередньо після незрозумілого чи малозрозумілого слова. В Євангелії від Луки найбільше глос&nbsp;— 89, а в Євангелії від Матвія найменше&nbsp;— усього 14; в Євангелії від Марка&nbsp;— 24, в Євангелії від Йоана&nbsp;— 30, проте часто (не завжди) вони супроводжуються українськими лексичними відповідниками.\n\nНа графіці рукопису позначився другий південнослов'янський вплив. Рукопис багато орнаментований: різнокольорові з золотом високохудожні мініатюри, заставки, ініціали, кінцівки з українськими мотивами.\n\nПам'ятка містить унікальний матеріал для вивчення історії української мови на всіх її рівнях та взаємодії народнорозмовних і книжних елементів в українській літературно-писемній мові XVI&nbsp;ст. У ній чітко проступають риси живої народної мови. На фонетичному рівні це наявність народнорозмовної фонеми і переднього ряду високого підняття, українські рефлекси ятя, перехід о, е в і в новозакритому складі тощо. На морфологічному рівні засвідчено велику кількість варіантів за рахунок закінчень, властивих живомовній практиці. Синтаксична структура виразно українська.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "01e5877a-2139-43c9-9d9b-918e1e15db1e",
+      "timestamp": "2026-03-14T00:54:33.875Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward. I'm actively analyzing and preparing for the subsequent stage, meticulously organizing the essential components to ensure seamless execution. The goal is clear, and I'm dedicated to achieving it.",
+          "timestamp": "2026-03-14T00:54:32.596Z"
+        },
+        {
+          "subject": "Initiating Wikipedia Search",
+          "description": "I'm now directing my efforts towards gathering information. My focus is on initiating a specific search to uncover relevant data. I'm preparing to delve deeper into the subject matter.",
+          "timestamp": "2026-03-14T00:54:33.766Z"
+        }
+      ],
+      "tokens": {
+        "input": 22658,
+        "output": 22,
+        "cached": 19549,
+        "thoughts": 153,
+        "tool": 0,
+        "total": 22833
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449673875_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Острозька Біблія",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449673875_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Острозька Біблія\n**URL**: https://uk.wikipedia.org/wiki/%D0%9E%D1%81%D1%82%D1%80%D0%BE%D0%B7%D1%8C%D0%BA%D0%B0_%D0%91%D1%96%D0%B1%D0%BB%D1%96%D1%8F\n\nОстрозька Біблія — перше повне видання Біблії (як Нового, так і Старого Завіту) церковнослов'янською мовою. Видання було підготовано гуртком учених при Острозькій академії та видано в Острозі протягом 1580 і 1581 років заходами князя Костянтин-Василя Острозького. Надрукована друкарем Іваном Федоровим на папері з філігранями Буської папірні і містить 628 аркушів з численними заставками, кінцівками та ініціалами.\nОстрозька Біблія відіграла важливу роль у боротьбі проти наступу католицької церкви на православ'я.[джерело?]\n\n\n== Контекст ==\nОстрозька Біблія з'явилася у час активної видавничої діяльності, коли представники різних конфесій вперше друкували власні версії Біблії різними європейськими мовами. На противагу протестантським переклададам Біблії періоду Реформації, католицька церква розпочала друк власних перекладів Біблії у рамках Контрреформації.\nОдним із безпосередніх стимулів для публікації православної Біблії в Острозі стала публікація католицької Біблії Леополіти (1561), першої друкованої Біблії перекладеної польською мовою. Через два роки польською мовою була надрукована протестантська Берестейська Біблія (1563).\n\n\n== Історія пам'ятки ==\nВидавець зібрав церковнослов'янські та грецькі списки з монастирів усього православного Сходу. Зокрема Діонісій Раллі Палеолог за вказівкою папи Григорія XIII близько 1578–1579 рр. привіз з Рима до Острога список Біблії. Із Москви було привезено копію повної рукописної Геннадіївської Біблії (1499). Зібрані списки звіряли з грецькою Септуаґінтою, редагували або наново перекладали. \nНа відміну від Геннадієвської Біблії, у видання не включили коментарі, передмови та додаткові статті католицьких схоластів.\nТекст О.Б. готувався до друку, звірявся та узгоджувався за різними списками, редагувався та доповнювався членами острозького літературно-видавничого осередку впродовж декількох років. При цьому використовувалися не тільки церковнослов'янські, а й грецькі, латинські, єврейські джерела та західноєвропейські видання біблійного тексту. Через те, що друкування О.Б. не було завершене в намічений термін, є варіанти видання з післямовами 1580 р. та 1581 р.\nО.Б. містить, окрім канонічного біблійного тексту, передмову від імені Костянтина Острозького, ще одну передмову й два вірші ректора Острозької академії Герасима Смотрицького та коротку післямову Івана Федорова.\nДеякі екзепляри Острозької Біблії невдовзі після її друку опинилися у Західній Європі. Так, князь Костянтин-Василь Острозький подарував один примірник Папі Римському Григорію XIII. Московський цар Іван Грозний подарував екземпляр англійському послу Джерому Горсею. Відомий примірник, що належав шведському королю Густаву II Адольфу.\nЗ уніфікованим правописом Острозька Біблія була передрукована 1663 року в Москві, а з подальшими текстовими виправленнями гуртка під проводом богослова Єпіфанія Славинецького, а згодом Я. Блотніцького та В. Лящевського, стала основою Синодальної (Єлисаветинської) Біблії 1751 і 1756 рр. (справлене видання, з якого передруковані усі наступні). Над текстом О.Б. працював П. Беринда і з неї виписував матеріал для свого «Лексикону» 1627 р. Редакційно-перекладацька робота над О.Б. свідчить про високу мовну культуру в Україні в кінці XVI ст. У перередагуванні О.Б. брав участь і Лопатинський Теофілакт.\n\n\n== Відмінності між екземплярами ==\nХоча на титульному листі всіх екземплярів Острозької Біблії вказано 1581 рік, в літературі поширилась думка, що існувало два видання — 1580 та 1581 років. Ця теза базувалася на тому, що в різних екземплярах по-різному датовані післямови: 12 липня 1580 і 12 серпня 1581. Проте дослідження радянської бібліографині Антоніни Зьорнової, на базі порівняння декількох десятків екземплярів Острозької Біблії, показало, що було одне видання — 1581 року. За цією версією, початково планувалося закінчити друк 12 липня 1580 року, що і було вказано Федоровим у післямові. Коли стало зрозуміло, що друк не завершиться до цієї дати, друкарі почали друкувати аркуші із новою очікуваною датою завершення роботи — 12 серпня 1581. При комплектації екземплярів старий аркуш був замінений новим лише у частині тиражу.\nОкрім дати післямови, в екземплярах Острозької Біблії є й інші відмінності: як в оформленні, так і в тексті. Це пояснюють тим, що протягом видруку в набір вносили зміни і виправлення. При цьому варіативні аркуші при комлектуванні екземплярів підбирали в різних комбінаціях, яких відомо 29. Із них 7 комбінацій зустрічаються у значній кількості екземплярів.\n\n\n== Поліграфічні та мистецькі особливості ==\nЗа обсягом це надзвичайно велике видання, проте завдяки майстерності набору та застосуванню дрібного шрифту книга не видається такою масивною чи незграбною. Надрукована О.Б. форматом в аркуш, двома шпальтами і складається з 1256 сторінок. Текст організований у декілька рахунків у відповідності зі змістом. На аркуші вміщено 50 рядків тексту. При друкуванні О.Б. використано 6 різних за розмірами та графікою шрифтів (4 кириличних та 2 грецьких), спеціально виготовлених для цієї книги.\nДля основного тексту використано дрібний півустав з елементами скоропису.[джерело?]\nЗа підрахунками книгознавців, О.Б. містить 3 240 000 друкованих знаків. Ілюстративне оформлення видання вирізняється стриманістю, продуманістю композиції, художнім смаком. Видання розпочинається із титульного аркуша у гравійованій рамці, на звороті титулу уміщено герб Костянтина Острозького, у кінці книги — друкарську марку Івана Федоровича. Потекстових ілюстрацій немає, однак при оформленні О.Б. широко використовувалися традиційні для кириличних книг елементи декоративного оформлення — заставки, кінцівки, ініціали, численні композиції з виливних прикрас. У виданні уміщено 81 заставку з 16 дощок, 70 кінцівок із 17 дощок, 1384 гравійованих ініціали, а також численні композиції з виливних прикрас.\n\n\n== Тираж і збережені примірники ==\n\nТираж видання на книжці не зазначений, однак фахівці вважають, що О.Б. була надрукована у безпрецедентно великій, як на свій час, кількості примірників: 1500—2000. На сьогодні відомо більше 350 збережених примірників пам'ятки. \nПримірники О.Б. є у збірках бібліотек України — у Києві, Львові, Харкові, Одесі, Острозі, Ужгороді, Сімферополі, а також у Росії, Білорусі, Польщі, Великій Британії, Болгарії та ін. країнах.\n\n\n=== Колекція НБУВ ===\nУ Національній бібліотеці України імені В. І. Вернадського (НБУВ) зберігається 18 примірників О.Б.: 16 — у відділі стародруків та рідкісних видань, 2 — у відділі бібліотечних зібрань та історичних колекцій. Підбірка Острозьких Біблій НБУВ є однією з найбільших у світі. Значна кількість примірників дає широкі можливості для порівняльних досліджень, виявлення та зіставлення варіантів набору, відмінностей художнього оформлення, аналізу використаного паперу, вивчення текстологічної роботи читачів, провенієнцій тощо.\nУ НБУВ зберігають примірники О.Б., що в різний час належали до збірок Київської духовної академії, Київського університету св. Володимира, Києво-Печерської лаври, Києво-Софійського собору, Києво-Видубецького, Київського Пустинно-Микільського, Харківського Преображенського, Милецького Миколаївського, Жировицького Успенського монастирів, Волинської духовної семінарії, Кременецького ліцею.\nНа деяких примірниках О.Б. збірки НБУВ містяться цінні власницькі записи, що належать видатному українському граверу Олександру Тарасевичу, архімандриту Києво-Печерської лаври Іоанникію Сенютовичу тощо. Примірник, що належав останньому польському королю Станіславу Августу Понятовському, має дві післямови — 1580 р. та 1581 р. У складі одного із примірників уміщено т. зв. «віленські аркуші», що додруковувалися до неповних примірників О.Б. бл. 1595 р., і на сьогоднішній день є рідкісними.\n\n\n== Перевидання ==\n\n\n=== Факсимільне перевидання церковнослов'янською ===\nОстрозька Біблія = Библіа, сиріч книги Ветхаго и Новаго Завіта по языку словенску. М: Московская старообрядческая печатня, 1914. 669 арк.\nЦе видання не було ні науковим, ні факсимільним; у ньому не було дотримано оригінальної орфографії О. Б.\nОстрізька Біблія. = The Ostroh Bible 1581. Видання Колеґії св. Андрея в Вінніпезі. Winnipeg, 1983.\nКомиссия по сохранению и изданию памятников письменности при Советском фонде культуры. М.-Л.: Слово-Арт, 1988.\n\n\n=== Переклади українською ===\nБибліа, сиріч книги Ветхаго и Новаго Завіта по языку словенску. Пер. з церковнослов'янської: Рафаїл Турконяк. Львів: Благодійний фонд «Книга»; Київ: Українське Біблійне Товариство. 2006. 1956 стор. ISBN 966-7136-37-X (прим.: текст паралельно церковнослов'янською та українською) (pdf ebook версія)\n(передрук) Библіа, сиріч книги Ветхаго и Новаго Завіта по языку словенску. Пер. з церковнослов'янської: Рафаїл Турконяк. Львів: ФОП Мойса С. В.; Львів: Благодійний фонд «Книга»; Київ: Українське Біблійне Товариство. 2010. 1058 стор. ISBN 978-966-8641-51-0 (2-ге вид.) (прим.: текст лише українською)\n\n\n=== Оцифрована версія ===\nУ 2021 році оцифровану версію Острозької Біблії оприлюднили в інтернеті. Оцифрування книги присвятили 440 річниці її створення. Відсканована версія доступна на сайті заповідника, її можна переглядати та завантажити. Працівники установи оцифрували примірник, що експонують в Музеї книги та друкарства Острога.\n\n\n== Див. також ==\nОстрозька друкарня\nОстрозька Академія\nБіблія Гутенберга\nБіблія Франциска Скорини\n\n\n== Джерела та примітки ==\n\nВіртуальні виставки: Острозька Біблія — скарб української науки і культури. 09.12.2006\nОстрозька Біблія 1581 р.\nОстрозька біблія // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 167. (церк.-сл.)\nГусева А. А. Издания кирилловского шрифта второй половины XVI в.: Св. кат. — Кн. 1–2. — М.: Индрик, 2003. — Кн. 1. — С. 588—590, № 83.\nЗапаско Я. П. Мистецька спадщина Івана Федорова. — Львів: Вища шк., 1974. — С. 35–40.\nІсаєвич Я. Д. Літературна спадщина Івана Федорова. — К.: Вища шк., 1989. — С. 129—140, іл.\nІсаєвич Я. Д. Першодрукар Іван Федоров і виникнення друкарства на Україні. — Львів: Вища шк., 1975. — С. 92–106.\nКовальчук Г. І. Острозька Біблія // Історичний календар. 2001. — Вип. 7. — К., 2001. — С. 323—325.\nКралюк П. М. Острозька Біблія в контексті української та європейської культур / Кралюк П. М., Торконяк Р. (о. Рафаїл), Пасічник І. Д. — Острог: Острозька академія, 2006. — 123 с.\nНемировский Е. Л. Начало книгопечатания на Украине: Иван Федоров. — М.: Книга, 1974. — С. 134—149.\nНемировский Е. Л. Острожская Библия: Как находили и вводили в оборот самое знаменитое издание Ивана Федорова // Федоровские чтения. — М.: Наука, 2005. — С. 89–166.\n Я. Д. Ісаєвич. Острозька Біблія // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2010. — Т. 7 : Мл — О. — С. 685. — ISBN 978-966-00-1061-1.\nГайдай Л. Історія України в особах, термінах, назвах і поняттях. — Луцьк: Вежа, 2000.\nДовідник з історії України / За ред. І. Підкови та Р. Шуста. — К.: Генеза, 1993.\nІсторико-культурне значення Острозької Біблії / Л. -Д. Розумна, Л. Льода // Зап. Львів. наук. б-ки ім. В.Стефаника. — 2002. — Вип. 9/10. — С. 3-10. — Бібліогр.: 14 назв.\nРад. енциклопедія історії України. — К., 1971. — Т. 3.\nКовалів Вітольд-Йосиф О. Острозька Біблія очима католика. Моя перша зустріч з Острозькою Біблією // Наукові записки: Виховання молодого покоління на принципах християнської моралі в процесі духовного відродження України / Остроз. акад. — Острог, 1999. — Т. 2. — Ч. 2. — С. 338—341.\nКралюк П. Контекст передмов до Острозької Біблії // Наукові записки: Виховання молодого покоління на принципах християнської моралі в процесі духовного відродження України / Остроз. акад. — Острог, 2000. — Т. 3. — С. 32–37.\nКралюк П. Острозька Біблія як форпост православно-слов'янського світу // День. — 2003. — 3 жовт.\nБондар Н. П. Острожская Библия с «виленскими листами» из собрания НБУВ // Книга и мировая цивилизация: Материалы 11 Междунар. книговед. научн. конференц. по проблемам книговедения (Москва, 20–21 апреля 2004 г.). — М.: Наука, 2004. — В 4-х т. — Т. 2. — С. 355—359.\nБондар Н. П. Острозькі видання у колекції кириличних видань НБУВ // Бібліотечний вісник. — 1998. — № 4. — С. 22.\nБондар Н. П. Примірники Острозької Біблії у фондах Національної бібліотеки України ім. В. І. Вернадського // Український археографічний щорічник. Нова сер. — Вип. 8–9. — Київ; Нью-Йорк: М. П. Коць, 2004. — С. 139—154.\nБондар Н. П. Унікальний примірник Острозької Біблії 1581 р. з фондів НБУВ // Волинська книга: Історія, дослідження, колекціонування: Наук. зб. — Вип. 1. — Острог, 2005. — С. 39–44.\nБондар Н. П. Ілюстровані примірники Острозької Біблії 1581 р. із зібрання НБУВ як джерело дослідження перших естампних східнослов'янських гравюр // Рукописна і стародрукована книга: Міжнародна наукова конференція, Львів 23–25 квітня 2004. — Львів, 2006 — С. 11–18.\nКовальчук Г. І., Бондар Н. П., Кисельов Р. Є. Острозькій Біблії — 420 // Бібліотечний вісник. — 2001. — № 6. — С. 48–51.\nШамрай М. А. Маргіналії в стародруках кириличного шрифту 15–17 ст. з фонду Національної бібліотеки України імені В. І. Вернадського. — К., 2005. — С. 66–69, № 66–73а.\nШамрай М. А. Острожская Библия в фондах ЦНБ АН УССР // Федоровские чтения. 1981. — М.: Наука, 1985. — С. 205—208.\nШамрай М. А. Провенієнції у виданнях Острозької та Дерманської друкарень (За матеріалами фонду Відділу стародруків ЦНБ АН України) // Український археографічний щорічник. Нова серія. — К.: Наук. думка, 1993. — Вип. 2. — С. 48–53.\nJarosława Bondarczuk. Biblia Ostrogska (1581) // Wołanie z Wołynia. — № 4 (23) z lipca-sierpnia 1998. — S. 47–48. (пол.)\nAndrzej Kempfi. Biblia Ostrogska. W czterechsetlecie wydania 1581—1981 // Zeszyty Historyczne. — Paryż. — t. 59–1982. — S. 230—236. (пол.)\n\n\n== Посилання ==\nОстрожська Біблія // Українська Релігієзнавча Енциклопедія\nОригінал церковнослов'янською\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF, част. 1, Формат PDF, част. 2 (НБУВ, е-бібліотека Україніка) (церк.-сл.)\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF (ОННБ, е-бібліотека Скарби України) (церк.-сл.)\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF (НАНУ, е-бібліотека history.org.ua) (церк.-сл.)\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581)]: Формат PDF (е-бібліотека archive.org) (церк.-сл.)\nОстрозька Біблія (1581) // Бібліотека Гарвардського університету (церк.-сл.)\nОстрозька Біблія, 1581 р. // Музей книги та друкарства України\nПереклад українською\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF (прим. текст паралельно церковнослов'янською та українською)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:33.888Z",
+          "resultDisplay": "# Острозька Біблія\n**URL**: https://uk.wikipedia.org/wiki/%D0%9E%D1%81%D1%82%D1%80%D0%BE%D0%B7%D1%8C%D0%BA%D0%B0_%D0%91%D1%96%D0%B1%D0%BB%D1%96%D1%8F\n\nОстрозька Біблія — перше повне видання Біблії (як Нового, так і Старого Завіту) церковнослов'янською мовою. Видання було підготовано гуртком учених при Острозькій академії та видано в Острозі протягом 1580 і 1581 років заходами князя Костянтин-Василя Острозького. Надрукована друкарем Іваном Федоровим на папері з філігранями Буської папірні і містить 628 аркушів з численними заставками, кінцівками та ініціалами.\nОстрозька Біблія відіграла важливу роль у боротьбі проти наступу католицької церкви на православ'я.[джерело?]\n\n\n== Контекст ==\nОстрозька Біблія з'явилася у час активної видавничої діяльності, коли представники різних конфесій вперше друкували власні версії Біблії різними європейськими мовами. На противагу протестантським переклададам Біблії періоду Реформації, католицька церква розпочала друк власних перекладів Біблії у рамках Контрреформації.\nОдним із безпосередніх стимулів для публікації православної Біблії в Острозі стала публікація католицької Біблії Леополіти (1561), першої друкованої Біблії перекладеної польською мовою. Через два роки польською мовою була надрукована протестантська Берестейська Біблія (1563).\n\n\n== Історія пам'ятки ==\nВидавець зібрав церковнослов'янські та грецькі списки з монастирів усього православного Сходу. Зокрема Діонісій Раллі Палеолог за вказівкою папи Григорія XIII близько 1578–1579 рр. привіз з Рима до Острога список Біблії. Із Москви було привезено копію повної рукописної Геннадіївської Біблії (1499). Зібрані списки звіряли з грецькою Септуаґінтою, редагували або наново перекладали. \nНа відміну від Геннадієвської Біблії, у видання не включили коментарі, передмови та додаткові статті католицьких схоластів.\nТекст О.Б. готувався до друку, звірявся та узгоджувався за різними списками, редагувався та доповнювався членами острозького літературно-видавничого осередку впродовж декількох років. При цьому використовувалися не тільки церковнослов'янські, а й грецькі, латинські, єврейські джерела та західноєвропейські видання біблійного тексту. Через те, що друкування О.Б. не було завершене в намічений термін, є варіанти видання з післямовами 1580 р. та 1581 р.\nО.Б. містить, окрім канонічного біблійного тексту, передмову від імені Костянтина Острозького, ще одну передмову й два вірші ректора Острозької академії Герасима Смотрицького та коротку післямову Івана Федорова.\nДеякі екзепляри Острозької Біблії невдовзі після її друку опинилися у Західній Європі. Так, князь Костянтин-Василь Острозький подарував один примірник Папі Римському Григорію XIII. Московський цар Іван Грозний подарував екземпляр англійському послу Джерому Горсею. Відомий примірник, що належав шведському королю Густаву II Адольфу.\nЗ уніфікованим правописом Острозька Біблія була передрукована 1663 року в Москві, а з подальшими текстовими виправленнями гуртка під проводом богослова Єпіфанія Славинецького, а згодом Я. Блотніцького та В. Лящевського, стала основою Синодальної (Єлисаветинської) Біблії 1751 і 1756 рр. (справлене видання, з якого передруковані усі наступні). Над текстом О.Б. працював П. Беринда і з неї виписував матеріал для свого «Лексикону» 1627 р. Редакційно-перекладацька робота над О.Б. свідчить про високу мовну культуру в Україні в кінці XVI ст. У перередагуванні О.Б. брав участь і Лопатинський Теофілакт.\n\n\n== Відмінності між екземплярами ==\nХоча на титульному листі всіх екземплярів Острозької Біблії вказано 1581 рік, в літературі поширилась думка, що існувало два видання — 1580 та 1581 років. Ця теза базувалася на тому, що в різних екземплярах по-різному датовані післямови: 12 липня 1580 і 12 серпня 1581. Проте дослідження радянської бібліографині Антоніни Зьорнової, на базі порівняння декількох десятків екземплярів Острозької Біблії, показало, що було одне видання — 1581 року. За цією версією, початково планувалося закінчити друк 12 липня 1580 року, що і було вказано Федоровим у післямові. Коли стало зрозуміло, що друк не завершиться до цієї дати, друкарі почали друкувати аркуші із новою очікуваною датою завершення роботи — 12 серпня 1581. При комплектації екземплярів старий аркуш був замінений новим лише у частині тиражу.\nОкрім дати післямови, в екземплярах Острозької Біблії є й інші відмінності: як в оформленні, так і в тексті. Це пояснюють тим, що протягом видруку в набір вносили зміни і виправлення. При цьому варіативні аркуші при комлектуванні екземплярів підбирали в різних комбінаціях, яких відомо 29. Із них 7 комбінацій зустрічаються у значній кількості екземплярів.\n\n\n== Поліграфічні та мистецькі особливості ==\nЗа обсягом це надзвичайно велике видання, проте завдяки майстерності набору та застосуванню дрібного шрифту книга не видається такою масивною чи незграбною. Надрукована О.Б. форматом в аркуш, двома шпальтами і складається з 1256 сторінок. Текст організований у декілька рахунків у відповідності зі змістом. На аркуші вміщено 50 рядків тексту. При друкуванні О.Б. використано 6 різних за розмірами та графікою шрифтів (4 кириличних та 2 грецьких), спеціально виготовлених для цієї книги.\nДля основного тексту використано дрібний півустав з елементами скоропису.[джерело?]\nЗа підрахунками книгознавців, О.Б. містить 3 240 000 друкованих знаків. Ілюстративне оформлення видання вирізняється стриманістю, продуманістю композиції, художнім смаком. Видання розпочинається із титульного аркуша у гравійованій рамці, на звороті титулу уміщено герб Костянтина Острозького, у кінці книги — друкарську марку Івана Федоровича. Потекстових ілюстрацій немає, однак при оформленні О.Б. широко використовувалися традиційні для кириличних книг елементи декоративного оформлення — заставки, кінцівки, ініціали, численні композиції з виливних прикрас. У виданні уміщено 81 заставку з 16 дощок, 70 кінцівок із 17 дощок, 1384 гравійованих ініціали, а також численні композиції з виливних прикрас.\n\n\n== Тираж і збережені примірники ==\n\nТираж видання на книжці не зазначений, однак фахівці вважають, що О.Б. була надрукована у безпрецедентно великій, як на свій час, кількості примірників: 1500—2000. На сьогодні відомо більше 350 збережених примірників пам'ятки. \nПримірники О.Б. є у збірках бібліотек України — у Києві, Львові, Харкові, Одесі, Острозі, Ужгороді, Сімферополі, а також у Росії, Білорусі, Польщі, Великій Британії, Болгарії та ін. країнах.\n\n\n=== Колекція НБУВ ===\nУ Національній бібліотеці України імені В. І. Вернадського (НБУВ) зберігається 18 примірників О.Б.: 16 — у відділі стародруків та рідкісних видань, 2 — у відділі бібліотечних зібрань та історичних колекцій. Підбірка Острозьких Біблій НБУВ є однією з найбільших у світі. Значна кількість примірників дає широкі можливості для порівняльних досліджень, виявлення та зіставлення варіантів набору, відмінностей художнього оформлення, аналізу використаного паперу, вивчення текстологічної роботи читачів, провенієнцій тощо.\nУ НБУВ зберігають примірники О.Б., що в різний час належали до збірок Київської духовної академії, Київського університету св. Володимира, Києво-Печерської лаври, Києво-Софійського собору, Києво-Видубецького, Київського Пустинно-Микільського, Харківського Преображенського, Милецького Миколаївського, Жировицького Успенського монастирів, Волинської духовної семінарії, Кременецького ліцею.\nНа деяких примірниках О.Б. збірки НБУВ містяться цінні власницькі записи, що належать видатному українському граверу Олександру Тарасевичу, архімандриту Києво-Печерської лаври Іоанникію Сенютовичу тощо. Примірник, що належав останньому польському королю Станіславу Августу Понятовському, має дві післямови — 1580 р. та 1581 р. У складі одного із примірників уміщено т. зв. «віленські аркуші», що додруковувалися до неповних примірників О.Б. бл. 1595 р., і на сьогоднішній день є рідкісними.\n\n\n== Перевидання ==\n\n\n=== Факсимільне перевидання церковнослов'янською ===\nОстрозька Біблія = Библіа, сиріч книги Ветхаго и Новаго Завіта по языку словенску. М: Московская старообрядческая печатня, 1914. 669 арк.\nЦе видання не було ні науковим, ні факсимільним; у ньому не було дотримано оригінальної орфографії О. Б.\nОстрізька Біблія. = The Ostroh Bible 1581. Видання Колеґії св. Андрея в Вінніпезі. Winnipeg, 1983.\nКомиссия по сохранению и изданию памятников письменности при Советском фонде культуры. М.-Л.: Слово-Арт, 1988.\n\n\n=== Переклади українською ===\nБибліа, сиріч книги Ветхаго и Новаго Завіта по языку словенску. Пер. з церковнослов'янської: Рафаїл Турконяк. Львів: Благодійний фонд «Книга»; Київ: Українське Біблійне Товариство. 2006. 1956 стор. ISBN 966-7136-37-X (прим.: текст паралельно церковнослов'янською та українською) (pdf ebook версія)\n(передрук) Библіа, сиріч книги Ветхаго и Новаго Завіта по языку словенску. Пер. з церковнослов'янської: Рафаїл Турконяк. Львів: ФОП Мойса С. В.; Львів: Благодійний фонд «Книга»; Київ: Українське Біблійне Товариство. 2010. 1058 стор. ISBN 978-966-8641-51-0 (2-ге вид.) (прим.: текст лише українською)\n\n\n=== Оцифрована версія ===\nУ 2021 році оцифровану версію Острозької Біблії оприлюднили в інтернеті. Оцифрування книги присвятили 440 річниці її створення. Відсканована версія доступна на сайті заповідника, її можна переглядати та завантажити. Працівники установи оцифрували примірник, що експонують в Музеї книги та друкарства Острога.\n\n\n== Див. також ==\nОстрозька друкарня\nОстрозька Академія\nБіблія Гутенберга\nБіблія Франциска Скорини\n\n\n== Джерела та примітки ==\n\nВіртуальні виставки: Острозька Біблія — скарб української науки і культури. 09.12.2006\nОстрозька Біблія 1581 р.\nОстрозька біблія // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 167. (церк.-сл.)\nГусева А. А. Издания кирилловского шрифта второй половины XVI в.: Св. кат. — Кн. 1–2. — М.: Индрик, 2003. — Кн. 1. — С. 588—590, № 83.\nЗапаско Я. П. Мистецька спадщина Івана Федорова. — Львів: Вища шк., 1974. — С. 35–40.\nІсаєвич Я. Д. Літературна спадщина Івана Федорова. — К.: Вища шк., 1989. — С. 129—140, іл.\nІсаєвич Я. Д. Першодрукар Іван Федоров і виникнення друкарства на Україні. — Львів: Вища шк., 1975. — С. 92–106.\nКовальчук Г. І. Острозька Біблія // Історичний календар. 2001. — Вип. 7. — К., 2001. — С. 323—325.\nКралюк П. М. Острозька Біблія в контексті української та європейської культур / Кралюк П. М., Торконяк Р. (о. Рафаїл), Пасічник І. Д. — Острог: Острозька академія, 2006. — 123 с.\nНемировский Е. Л. Начало книгопечатания на Украине: Иван Федоров. — М.: Книга, 1974. — С. 134—149.\nНемировский Е. Л. Острожская Библия: Как находили и вводили в оборот самое знаменитое издание Ивана Федорова // Федоровские чтения. — М.: Наука, 2005. — С. 89–166.\n Я. Д. Ісаєвич. Острозька Біблія // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2010. — Т. 7 : Мл — О. — С. 685. — ISBN 978-966-00-1061-1.\nГайдай Л. Історія України в особах, термінах, назвах і поняттях. — Луцьк: Вежа, 2000.\nДовідник з історії України / За ред. І. Підкови та Р. Шуста. — К.: Генеза, 1993.\nІсторико-культурне значення Острозької Біблії / Л. -Д. Розумна, Л. Льода // Зап. Львів. наук. б-ки ім. В.Стефаника. — 2002. — Вип. 9/10. — С. 3-10. — Бібліогр.: 14 назв.\nРад. енциклопедія історії України. — К., 1971. — Т. 3.\nКовалів Вітольд-Йосиф О. Острозька Біблія очима католика. Моя перша зустріч з Острозькою Біблією // Наукові записки: Виховання молодого покоління на принципах християнської моралі в процесі духовного відродження України / Остроз. акад. — Острог, 1999. — Т. 2. — Ч. 2. — С. 338—341.\nКралюк П. Контекст передмов до Острозької Біблії // Наукові записки: Виховання молодого покоління на принципах християнської моралі в процесі духовного відродження України / Остроз. акад. — Острог, 2000. — Т. 3. — С. 32–37.\nКралюк П. Острозька Біблія як форпост православно-слов'янського світу // День. — 2003. — 3 жовт.\nБондар Н. П. Острожская Библия с «виленскими листами» из собрания НБУВ // Книга и мировая цивилизация: Материалы 11 Междунар. книговед. научн. конференц. по проблемам книговедения (Москва, 20–21 апреля 2004 г.). — М.: Наука, 2004. — В 4-х т. — Т. 2. — С. 355—359.\nБондар Н. П. Острозькі видання у колекції кириличних видань НБУВ // Бібліотечний вісник. — 1998. — № 4. — С. 22.\nБондар Н. П. Примірники Острозької Біблії у фондах Національної бібліотеки України ім. В. І. Вернадського // Український археографічний щорічник. Нова сер. — Вип. 8–9. — Київ; Нью-Йорк: М. П. Коць, 2004. — С. 139—154.\nБондар Н. П. Унікальний примірник Острозької Біблії 1581 р. з фондів НБУВ // Волинська книга: Історія, дослідження, колекціонування: Наук. зб. — Вип. 1. — Острог, 2005. — С. 39–44.\nБондар Н. П. Ілюстровані примірники Острозької Біблії 1581 р. із зібрання НБУВ як джерело дослідження перших естампних східнослов'янських гравюр // Рукописна і стародрукована книга: Міжнародна наукова конференція, Львів 23–25 квітня 2004. — Львів, 2006 — С. 11–18.\nКовальчук Г. І., Бондар Н. П., Кисельов Р. Є. Острозькій Біблії — 420 // Бібліотечний вісник. — 2001. — № 6. — С. 48–51.\nШамрай М. А. Маргіналії в стародруках кириличного шрифту 15–17 ст. з фонду Національної бібліотеки України імені В. І. Вернадського. — К., 2005. — С. 66–69, № 66–73а.\nШамрай М. А. Острожская Библия в фондах ЦНБ АН УССР // Федоровские чтения. 1981. — М.: Наука, 1985. — С. 205—208.\nШамрай М. А. Провенієнції у виданнях Острозької та Дерманської друкарень (За матеріалами фонду Відділу стародруків ЦНБ АН України) // Український археографічний щорічник. Нова серія. — К.: Наук. думка, 1993. — Вип. 2. — С. 48–53.\nJarosława Bondarczuk. Biblia Ostrogska (1581) // Wołanie z Wołynia. — № 4 (23) z lipca-sierpnia 1998. — S. 47–48. (пол.)\nAndrzej Kempfi. Biblia Ostrogska. W czterechsetlecie wydania 1581—1981 // Zeszyty Historyczne. — Paryż. — t. 59–1982. — S. 230—236. (пол.)\n\n\n== Посилання ==\nОстрожська Біблія // Українська Релігієзнавча Енциклопедія\nОригінал церковнослов'янською\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF, част. 1, Формат PDF, част. 2 (НБУВ, е-бібліотека Україніка) (церк.-сл.)\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF (ОННБ, е-бібліотека Скарби України) (церк.-сл.)\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF (НАНУ, е-бібліотека history.org.ua) (церк.-сл.)\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581)]: Формат PDF (е-бібліотека archive.org) (церк.-сл.)\nОстрозька Біблія (1581) // Бібліотека Гарвардського університету (церк.-сл.)\nОстрозька Біблія, 1581 р. // Музей книги та друкарства України\nПереклад українською\nОстрозька Біблія = Библіа, сиріч книгы Ветхаго и Новаго Завіта по язіку словенску (1581): Формат PDF (прим. текст паралельно церковнослов'янською та українською)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "93561457-d542-4d51-bc4d-8605a068bc18",
+      "timestamp": "2026-03-14T00:54:41.370Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Deep Search Iterations",
+          "description": "\\n\\n\n\nI'm now focused on the deep search stage. I've initiated the first query and I am now awaiting the results. My primary objective at this stage is to refine my search based on the initial findings, ensuring the responses align with the ultimate goal. I anticipate several iterations to achieve the desired output.",
+          "timestamp": "2026-03-14T00:54:39.955Z"
+        },
+        {
+          "subject": "Querying for Relevant Data",
+          "description": "\\n\\n\n\nI'm starting the first round of deep searches. I've formulated my initial query and sent it out. I'll analyze the outcomes to guide my subsequent searches. My intention is to explore the details of each search result to get the data that will help complete the task.",
+          "timestamp": "2026-03-14T00:54:41.264Z"
+        }
+      ],
+      "tokens": {
+        "input": 28494,
+        "output": 24,
+        "cached": 0,
+        "thoughts": 166,
+        "tool": 0,
+        "total": 28684
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449681369_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Пересопницьке євангеліє"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449681369_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Пересопницьке євангеліє\"\n\n### Result 1 (score: 0.5715)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0359`\n- **Text**:\nПереклади Св. Письма. Нові впливи й нові обставини\r\nжиття, зокрема свіже зацікавлення релігійними справами та питаннями, виявилися\r\nв ряді перекладів книг Св. Письма на мову, наближену до народної — так звану\r\n«посполиту». До найцінніших перекладів належить Пересопницька Євангелія з\r\n1556 — 1561 рр. Назва її походить від монастиря в Пересопниці на Волині.\r\nПереклад завершив Михайло Василевич, син сяницького протопопа, за допомогою\r\nархімандрита Григорія та з доручення княгині Анастасії Заславськ\n\n### Result 2 (score: 0.5704)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1124`\n- **Text**:\nНайяскравішою серед церковних пам’яток, де виразно\r\nприсутня українська мова, є Пересопницьке Євангеліє 1556 — 1561 рр. — найраніший\r\nповний текст перекладу канонічного Євангелія з церковнослов’янської українською\r\nкнижною мовою, здійснений \"ку читаню и посполитымъ людемъ ко доброму\r\nвыразумленю\" 6. Майже одночасно з пересопницьким кодексом виникла\r\nціла низка інших пам’яток з елементами розмовної мови: Житомирське Євангеліє\r\n1571 р., Євангеліє 1581 р. (переклад виконав Валентин Негалевський у с\n\n### Result 3 (score: 0.5365)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0181`\n- **Text**:\nПерес. Єв. — Пересопницька Євангелія 1556-1561 рр. ПД\r\n(від Луки повністю, решта в уривках): Житецкий П., Тр. Арх. З в Киеве 1874,\r\nт. 2. Киев, 1878 +. Д: Житецкий П., ИОРЯС 10, 4,\r\n1905; Каманин И., ЧОНЛ 22, 1912; Грузинский А., ЖМНП 38-39, 1012;\r\nОгієнко І. Українська Пересопницька Євангелія 1556 р. (Тарнів), 1921;\r\nОгієнко І. Путь правди, 1930, 1 (Варшава); Janów J., SI 5,1926\r\nі SprLTN 6, 1926; Плющ П., Вісник Київського університету, 1965,\r\n7 і З історії української та інших слов’янських мо\n\n### Result 4 (score: 0.5349)\n- **Work**: Іван Франко. Борислав (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `6738449c_c0109`\n- **Text**:\nЛежить Василь Півторак і не рушається. Холодний поміст, бачиться йому, дихає під ним, підноситься і опадає, як груди велета. Холодний поміст, бачиться йому, висисає з його тіла нестерпиму паль, лагодить своїм холодом гарячку, тамує дихавичний кашель, йому легше, що раз, то легше. Молитви ніякі не йдуть йому на голову, та й чи до молитви йому тепер?.. Йому перемигнуло перед душею ціле життя, та не тото життя, яке розуміється в зібранні всіх пригід, нещасть і завірюх, але життя чисто ростинне, вег\n\n### Result 5 (score: 0.5281)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0466`\n- **Text**:\nАдже в тій мірі нічого іншого не прагнув так вельми,\r\nяк того, щоб стадо Христове, викуплене чесною кров’ю Господа нашого Ісуса\r\nХриста, могло охолодитися й оживитись у тому негаразді, а той, котрий, можучи\r\nте учинити, із вічною славою та із спасінням своїм, та й не вчинить, дасть\r\nвідповідь нелицемірному судці на страшному його суді!\n\nТаж-бо маю я надію на милосердя Боже, що, бачачи\r\nумисла вашої княжої милості до хвали своєї ревнивого, зволить схилити до такого\r\nдоброго діла, аби був також уч\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:41.893Z",
+          "resultDisplay": "Found 5 results for: \"Пересопницьке євангеліє\"\n\n### Result 1 (score: 0.5715)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0359`\n- **Text**:\nПереклади Св. Письма. Нові впливи й нові обставини\r\nжиття, зокрема свіже зацікавлення релігійними справами та питаннями, виявилися\r\nв ряді перекладів книг Св. Письма на мову, наближену до народної — так звану\r\n«посполиту». До найцінніших перекладів належить Пересопницька Євангелія з\r\n1556 — 1561 рр. Назва її походить від монастиря в Пересопниці на Волині.\r\nПереклад завершив Михайло Василевич, син сяницького протопопа, за допомогою\r\nархімандрита Григорія та з доручення княгині Анастасії Заславськ\n\n### Result 2 (score: 0.5704)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1124`\n- **Text**:\nНайяскравішою серед церковних пам’яток, де виразно\r\nприсутня українська мова, є Пересопницьке Євангеліє 1556 — 1561 рр. — найраніший\r\nповний текст перекладу канонічного Євангелія з церковнослов’янської українською\r\nкнижною мовою, здійснений \"ку читаню и посполитымъ людемъ ко доброму\r\nвыразумленю\" 6. Майже одночасно з пересопницьким кодексом виникла\r\nціла низка інших пам’яток з елементами розмовної мови: Житомирське Євангеліє\r\n1571 р., Євангеліє 1581 р. (переклад виконав Валентин Негалевський у с\n\n### Result 3 (score: 0.5365)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0181`\n- **Text**:\nПерес. Єв. — Пересопницька Євангелія 1556-1561 рр. ПД\r\n(від Луки повністю, решта в уривках): Житецкий П., Тр. Арх. З в Киеве 1874,\r\nт. 2. Киев, 1878 +. Д: Житецкий П., ИОРЯС 10, 4,\r\n1905; Каманин И., ЧОНЛ 22, 1912; Грузинский А., ЖМНП 38-39, 1012;\r\nОгієнко І. Українська Пересопницька Євангелія 1556 р. (Тарнів), 1921;\r\nОгієнко І. Путь правди, 1930, 1 (Варшава); Janów J., SI 5,1926\r\nі SprLTN 6, 1926; Плющ П., Вісник Київського університету, 1965,\r\n7 і З історії української та інших слов’янських мо\n\n### Result 4 (score: 0.5349)\n- **Work**: Іван Франко. Борислав (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `6738449c_c0109`\n- **Text**:\nЛежить Василь Півторак і не рушається. Холодний поміст, бачиться йому, дихає під ним, підноситься і опадає, як груди велета. Холодний поміст, бачиться йому, висисає з його тіла нестерпиму паль, лагодить своїм холодом гарячку, тамує дихавичний кашель, йому легше, що раз, то легше. Молитви ніякі не йдуть йому на голову, та й чи до молитви йому тепер?.. Йому перемигнуло перед душею ціле життя, та не тото життя, яке розуміється в зібранні всіх пригід, нещасть і завірюх, але життя чисто ростинне, вег\n\n### Result 5 (score: 0.5281)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0466`\n- **Text**:\nАдже в тій мірі нічого іншого не прагнув так вельми,\r\nяк того, щоб стадо Христове, викуплене чесною кров’ю Господа нашого Ісуса\r\nХриста, могло охолодитися й оживитись у тому негаразді, а той, котрий, можучи\r\nте учинити, із вічною славою та із спасінням своїм, та й не вчинить, дасть\r\nвідповідь нелицемірному судці на страшному його суді!\n\nТаж-бо маю я надію на милосердя Боже, що, бачачи\r\nумисла вашої княжої милості до хвали своєї ревнивого, зволить схилити до такого\r\nдоброго діла, аби був також уч\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8e65d2dd-d126-45ba-8a5f-56b7f0cc1d09",
+      "timestamp": "2026-03-14T00:54:47.740Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Seeking Relevant Quotes",
+          "description": "I am now focused on retrieving the most pertinent quotes from the source material. I need to make sure I'm zeroing in on the correct excerpts to advance my analysis. The search parameters are refined, and I am cross-referencing to ensure accuracy.",
+          "timestamp": "2026-03-14T00:54:46.828Z"
+        },
+        {
+          "subject": "Identifying Key Concepts",
+          "description": "I'm presently working to extract key concepts from the gathered quotes. My aim is to synthesize the information, looking for patterns and recurring themes within the material that I've collected. This will help me understand the core ideas.",
+          "timestamp": "2026-03-14T00:54:47.614Z"
+        }
+      ],
+      "tokens": {
+        "input": 30011,
+        "output": 43,
+        "cached": 27170,
+        "thoughts": 130,
+        "tool": 0,
+        "total": 30184
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449687699_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "правопис устав каліграфія"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449687699_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"правопис устав каліграфія\"\n\n### Result 1 (score: 0.5395)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0000`\n- **Text**:\n[Український правопис. — К.: Наукова думка, 2015. — 288 с.]\n\nПокажчик\n\nУКРАЇНСЬКИЙ ПРАВОПИС\n\nСхвалений\n\nНаціональною академією наук України,\n\nМіністерством освіти і науки, молоді та спорту України,\n\nМіністерством культури України\n\nКИЇВ\nНАУКОВА ДУМКА\n2015\n\nЗМІСТ\n\nПЕРЕДМОВА . . . . . . . . . . . . . . . . . . . . 3\n\nІ. ПРАВОПИС ОСНОВИ СЛОВА\n\nЛІТЕРНІ ПОЗНАЧЕННЯ ЗВУКІВ . . . . . . . . . . . . . . . . . . . . 7\n\nГОЛОСНІ . . . . . . . . . . . . . . . . . . . . 7\n\n§ 1. Ненаголошений О . . . . . . . . .\n\n### Result 2 (score: 0.5157)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0835`\n- **Text**:\nСьогоднішнє слов. письмо, зване гражданкою,\r\nяким користуються серби, болгари і сх. слов’яни, походить від кириличного\r\nписьма, складеного одним із учнів св. Кирила — Климентом і названого кирилицею\r\nна честь його вчителя. Можливо, що перед тим уже було письмо на Україні (»черти\r\nі різи«), але від нього не лишилося жадної традиції. Найстаріші зразки\r\nуставного письма на Україні репрезентовані Остромировим Євангелієм 1056 p.,\r\n»Ізборниками Святослава« з 1073 і 1076 pp. та Галицьким Євангелієм з 1\n\n### Result 3 (score: 0.5082)\n- **Work**: Літопис Самовидця (1702)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `b167837e_c0048`\n- **Text**:\nУ решті випадків ми\r\nвідтворюємо написання за орфографією рукопису Іскрицького: был, ходил,\r\nІлвов, полков, подишол, где, албо, его, людех, кгди, померл. Таке написання\r\nпояснюється тим, що алфавітна система давньоукраїнської літературної мови, як і\r\nінших мов, не відповідала звуковій. Тому таке слово, як козацкіе, могло\r\nчитатися: козацкі, козацкії, козацкіє, козацькі, казацькі, кузацькі; або\r\nкозацкое — як козацке, казаков — як козаків і т. д.\n\nВелика літера вживається\r\nвідповідно до сучасного\n\n### Result 4 (score: 0.5046)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0621`\n- **Text**:\nДругий автограф дійшов до нас в рукописному зібранні М. І.\r\nКовалинського. Раніше він належав відділу рукописів ДБЛ, де зберігався за\r\nшифром М. 1488/г, а зараз зберігається у відділі рукописів ІЛ (ф. 86, № 9).\r\nАвтограф міститься в одній оправі з автографами інших двох творів Сковороди, на\r\nарк. 1/67 — 56/122. Нумерація аркушів внутрішня і загальна. Частина аркушів\r\nавтографа має цифрову філігрань «1781» (правда, останню цифру можна прочитати і\r\nяк «4»), арк. 71 та 74 мають цифрову філігрань «1\n\n### Result 5 (score: 0.5045)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0014`\n- **Text**:\nПравопис — система, що саморозвивається. Тому цей\r\nпроцес необхідно відстежувати, упорядковувати, коригувати. Невипадково всі\r\nкраїни рано чи пізно стикаються з необхідністю відкоригувати правопис, оскільки\r\nвідбуваються зміни у суспільстві, у мовній системі; мова, як живий організм,\r\nнарощується новими словами, видозмінюється і, ясна річ, набуває нових\r\nвластивостей, які обов’язково треба побачити й зафіксувати.\n\nРазом із тим слід пам’ятати, що мова повинна не\r\nроз’єднувати людей, а навпаки, об\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:48.502Z",
+          "resultDisplay": "Found 5 results for: \"правопис устав каліграфія\"\n\n### Result 1 (score: 0.5395)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0000`\n- **Text**:\n[Український правопис. — К.: Наукова думка, 2015. — 288 с.]\n\nПокажчик\n\nУКРАЇНСЬКИЙ ПРАВОПИС\n\nСхвалений\n\nНаціональною академією наук України,\n\nМіністерством освіти і науки, молоді та спорту України,\n\nМіністерством культури України\n\nКИЇВ\nНАУКОВА ДУМКА\n2015\n\nЗМІСТ\n\nПЕРЕДМОВА . . . . . . . . . . . . . . . . . . . . 3\n\nІ. ПРАВОПИС ОСНОВИ СЛОВА\n\nЛІТЕРНІ ПОЗНАЧЕННЯ ЗВУКІВ . . . . . . . . . . . . . . . . . . . . 7\n\nГОЛОСНІ . . . . . . . . . . . . . . . . . . . . 7\n\n§ 1. Ненаголошений О . . . . . . . . .\n\n### Result 2 (score: 0.5157)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0835`\n- **Text**:\nСьогоднішнє слов. письмо, зване гражданкою,\r\nяким користуються серби, болгари і сх. слов’яни, походить від кириличного\r\nписьма, складеного одним із учнів св. Кирила — Климентом і названого кирилицею\r\nна честь його вчителя. Можливо, що перед тим уже було письмо на Україні (»черти\r\nі різи«), але від нього не лишилося жадної традиції. Найстаріші зразки\r\nуставного письма на Україні репрезентовані Остромировим Євангелієм 1056 p.,\r\n»Ізборниками Святослава« з 1073 і 1076 pp. та Галицьким Євангелієм з 1\n\n### Result 3 (score: 0.5082)\n- **Work**: Літопис Самовидця (1702)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `b167837e_c0048`\n- **Text**:\nУ решті випадків ми\r\nвідтворюємо написання за орфографією рукопису Іскрицького: был, ходил,\r\nІлвов, полков, подишол, где, албо, его, людех, кгди, померл. Таке написання\r\nпояснюється тим, що алфавітна система давньоукраїнської літературної мови, як і\r\nінших мов, не відповідала звуковій. Тому таке слово, як козацкіе, могло\r\nчитатися: козацкі, козацкії, козацкіє, козацькі, казацькі, кузацькі; або\r\nкозацкое — як козацке, казаков — як козаків і т. д.\n\nВелика літера вживається\r\nвідповідно до сучасного\n\n### Result 4 (score: 0.5046)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0621`\n- **Text**:\nДругий автограф дійшов до нас в рукописному зібранні М. І.\r\nКовалинського. Раніше він належав відділу рукописів ДБЛ, де зберігався за\r\nшифром М. 1488/г, а зараз зберігається у відділі рукописів ІЛ (ф. 86, № 9).\r\nАвтограф міститься в одній оправі з автографами інших двох творів Сковороди, на\r\nарк. 1/67 — 56/122. Нумерація аркушів внутрішня і загальна. Частина аркушів\r\nавтографа має цифрову філігрань «1781» (правда, останню цифру можна прочитати і\r\nяк «4»), арк. 71 та 74 мають цифрову філігрань «1\n\n### Result 5 (score: 0.5045)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0014`\n- **Text**:\nПравопис — система, що саморозвивається. Тому цей\r\nпроцес необхідно відстежувати, упорядковувати, коригувати. Невипадково всі\r\nкраїни рано чи пізно стикаються з необхідністю відкоригувати правопис, оскільки\r\nвідбуваються зміни у суспільстві, у мовній системі; мова, як живий організм,\r\nнарощується новими словами, видозмінюється і, ясна річ, набуває нових\r\nвластивостей, які обов’язково треба побачити й зафіксувати.\n\nРазом із тим слід пам’ятати, що мова повинна не\r\nроз’єднувати людей, а навпаки, об\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773449687739_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Острозька біблія передмова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449687739_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Острозька біблія передмова\"\n\n### Result 1 (score: 0.5920)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1163`\n- **Text**:\nУ вміщеному перед текстом вірші про герб князя\r\nОстрозького видана в Острозі книга порівнюється зі зброєю (\"острЂйшее меча\r\nобоюдуострое слово\" — цитата з Апостола), яка допоможе подолати\r\n\"еретиков полки умовредная\". Далі єретики іменуються хижими вовками.\r\nВірш про герб був своєрідною присвятою-зверненням до видавця. У більшості\r\nнаступних видань після вірша вміщувалася прозова присвята меценатові, а тоді\r\nвже повчальна передмова до читача. Проте в Острозі сам меценат був видавцем,\r\nтому заміс\n\n### Result 2 (score: 0.5787)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0215`\n- **Text**:\nУ вірші про герб князя\r\nОстрозького видана в Острозі книга порівнюється зі зброєю (\"острЂйшее меча\r\nобоюдуострое слово\" — цитата з Апостола), яка допоможе подолати\r\n\"еретиков полки умовредная\". Далі єретики іменуються хижими вовками 180.\r\nВірш про герб був своєрідною присвятою-зверненням до видавця. Цей вірш\r\nзапочаткував в українському книговиданні емблемну поезію, якій властива\r\nнайтісніша взаємодія тексту і символічного зображення 181. Вірші\r\n\"на гербі\" та цілі збірки емблемних, зокрема герал\n\n### Result 3 (score: 0.5573)\n- **Work**: Огієнко — Історія українського друкарства (1925) (1994)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `4238a06c_c0246`\n- **Text**:\nІ в Острозі, з наказу князя,\r\nвирішили приступити до негайного їх друку, постановили випустити їх окремою\r\nкнижкою. Книжка ця мала служити для практичного вжитку не тільки в церкві, але\r\nй при тодішніх постійних релігійних змаганнях, а тому вирішено складати її в\r\nзручнім форматі. Здається, до цеї праці приступили в 1580 р., на початку його;\r\nтак можна розуміти заяву друкаря Хведоровича в післямові: «Начата і совершена\r\nбысть сія книга Новаго Завета повеленієм благочестиваго князя Констянтина\r\nК\n\n### Result 4 (score: 0.5525)\n- **Work**: Дзюба, Павленко — Літопис культурного життя X-XVII ст. (2001)\n- **Author**: Дзюба О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e0892426_c0254`\n- **Text**:\n1580-1581 роки. В\r\nОстрозі Іваном Федоровим видано знамениту «Острозьку Біблію» — перше\r\nповне видання Біблії церковнослов'янською мовою, що належить до найвидатніших\r\nпам'яток давнього українського друкарства: в основу її покладено текст\r\nГеннадіївської біблії 1499 року. Крім того, члени Острозького наукового гуртка\r\nзвірили текст Біблії з грецьким перекладом із староєврейської (так званої\r\nСептуагінти). Частина текстів була заново перекладена з грецької мови,\r\nцерковнослов'янські тексти звірял\n\n### Result 5 (score: 0.5458)\n- **Work**: Огієнко — Історія українського друкарства (1925) (1994)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `4238a06c_c0249`\n- **Text**:\nУкраїнському народові випала\r\nвелика честь і заслуга — дати слов’янству першу повну друковану Біблію.\r\nОстріжська Біблія розійшлася по всьому слов’янському світові, і скрізь вона\r\nмала правдиву заслужену пошану. Остріжська Біблія лягла в основу теї Біблії,\r\nякої вживає ввесь православний слов’янський світ і сьогодні.\n\nЗначно пізніше, десь по 1660\r\nр., задумали видрукувати повну Біблію й на Москві, «скудости ради велія сих\r\nбожественных книг зде, в Велицей Россіи» [* Передмова до московської Бібл\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:48.502Z",
+          "resultDisplay": "Found 5 results for: \"Острозька біблія передмова\"\n\n### Result 1 (score: 0.5920)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1163`\n- **Text**:\nУ вміщеному перед текстом вірші про герб князя\r\nОстрозького видана в Острозі книга порівнюється зі зброєю (\"острЂйшее меча\r\nобоюдуострое слово\" — цитата з Апостола), яка допоможе подолати\r\n\"еретиков полки умовредная\". Далі єретики іменуються хижими вовками.\r\nВірш про герб був своєрідною присвятою-зверненням до видавця. У більшості\r\nнаступних видань після вірша вміщувалася прозова присвята меценатові, а тоді\r\nвже повчальна передмова до читача. Проте в Острозі сам меценат був видавцем,\r\nтому заміс\n\n### Result 2 (score: 0.5787)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0215`\n- **Text**:\nУ вірші про герб князя\r\nОстрозького видана в Острозі книга порівнюється зі зброєю (\"острЂйшее меча\r\nобоюдуострое слово\" — цитата з Апостола), яка допоможе подолати\r\n\"еретиков полки умовредная\". Далі єретики іменуються хижими вовками 180.\r\nВірш про герб був своєрідною присвятою-зверненням до видавця. Цей вірш\r\nзапочаткував в українському книговиданні емблемну поезію, якій властива\r\nнайтісніша взаємодія тексту і символічного зображення 181. Вірші\r\n\"на гербі\" та цілі збірки емблемних, зокрема герал\n\n### Result 3 (score: 0.5573)\n- **Work**: Огієнко — Історія українського друкарства (1925) (1994)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `4238a06c_c0246`\n- **Text**:\nІ в Острозі, з наказу князя,\r\nвирішили приступити до негайного їх друку, постановили випустити їх окремою\r\nкнижкою. Книжка ця мала служити для практичного вжитку не тільки в церкві, але\r\nй при тодішніх постійних релігійних змаганнях, а тому вирішено складати її в\r\nзручнім форматі. Здається, до цеї праці приступили в 1580 р., на початку його;\r\nтак можна розуміти заяву друкаря Хведоровича в післямові: «Начата і совершена\r\nбысть сія книга Новаго Завета повеленієм благочестиваго князя Констянтина\r\nК\n\n### Result 4 (score: 0.5525)\n- **Work**: Дзюба, Павленко — Літопис культурного життя X-XVII ст. (2001)\n- **Author**: Дзюба О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e0892426_c0254`\n- **Text**:\n1580-1581 роки. В\r\nОстрозі Іваном Федоровим видано знамениту «Острозьку Біблію» — перше\r\nповне видання Біблії церковнослов'янською мовою, що належить до найвидатніших\r\nпам'яток давнього українського друкарства: в основу її покладено текст\r\nГеннадіївської біблії 1499 року. Крім того, члени Острозького наукового гуртка\r\nзвірили текст Біблії з грецьким перекладом із староєврейської (так званої\r\nСептуагінти). Частина текстів була заново перекладена з грецької мови,\r\nцерковнослов'янські тексти звірял\n\n### Result 5 (score: 0.5458)\n- **Work**: Огієнко — Історія українського друкарства (1925) (1994)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `4238a06c_c0249`\n- **Text**:\nУкраїнському народові випала\r\nвелика честь і заслуга — дати слов’янству першу повну друковану Біблію.\r\nОстріжська Біблія розійшлася по всьому слов’янському світові, і скрізь вона\r\nмала правдиву заслужену пошану. Остріжська Біблія лягла в основу теї Біблії,\r\nякої вживає ввесь православний слов’янський світ і сьогодні.\n\nЗначно пізніше, десь по 1660\r\nр., задумали видрукувати повну Біблію й на Москві, «скудости ради велія сих\r\nбожественных книг зде, в Велицей Россіи» [* Передмова до московської Бібл\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "eec0f33a-1ce6-404f-a351-d78d05224c0a",
+      "timestamp": "2026-03-14T00:54:55.582Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Finding Specific Information",
+          "description": "I'm now focusing on the next stage. I'll need to use my resources to get the specific details. I'm preparing to formulate a refined query, so I can dig even deeper and gather more precise information.",
+          "timestamp": "2026-03-14T00:54:53.869Z"
+        },
+        {
+          "subject": "Pinpointing Key Aspects",
+          "description": "I am preparing to zero in on specifics. I'll need to formulate more detailed search criteria so I can obtain crucial elements required. I'll refine my search parameters further, concentrating on the most critical concepts for my analysis.",
+          "timestamp": "2026-03-14T00:54:55.443Z"
+        }
+      ],
+      "tokens": {
+        "input": 32885,
+        "output": 58,
+        "cached": 27492,
+        "thoughts": 179,
+        "tool": 0,
+        "total": 33122
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449695532_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "українські рукописи мініатюри орнамент 16 століття"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449695532_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"українські рукописи мініатюри орнамент 16 століття\"\n\n### Result 1 (score: 0.6292)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0831`\n- **Text**:\nОсобливе місце в історії української книжкової\r\nмініатюри першої половини XVI ст. посідають три ілюстровані рукописи, мабуть,\r\nхолмського походження: Служебник (Москва, Державний історичний музей),\r\nЄвангеліє (Новгород, Історико-художній музей) та мініатюри, вшиті до Холмського\r\nЄвангелія XIII ст. (НБР). Останнє Євангеліє доводить холмську належність\r\nмініатюр. Обидва кодекси XVI ст. зберегли записи переписувача \"Андрійчини\r\nмногогрішного\". У літературі його розглядають і як мініатюриста 27,\r\nпр\n\n### Result 2 (score: 0.5661)\n- **Work**: Українська культура (лекції за ред. Антоновича) (1993)\n- **Author**: Антонович Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `2971c499_c0602`\n- **Text**:\nСправедливо славляться багатством своїх орнаментів\r\nрукописні книги з одинадцятого століття, між якими на першому місці стоять,\r\nочевидно, Остромирове Євангеліє та Ізборник Святослава.\n\nМотиви плетеного, рослинного та геометричного\r\nорнаменту вживалися у великому масштабі для оздоб церков та палат. Ці орнаменти\r\nі тепер можна бачити найбільше в церкві св. Софії у Києві.\n\nВишивок і ткання з того часу не збереглося, але про\r\nорнамент і тканий, і вишиваний можна міркувати по зображеннях, що зберегл\n\n### Result 3 (score: 0.5424)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0477`\n- **Text**:\nРазом з текстами літературних пам’яток давня\r\nукраїнська книжка успадкувала від візантійської й основні засади виготовлення\r\nкодексів, які, зрештою, були спільними для всієї Європи.\n\nМатеріалом для виготовлення кодексів до середини XIV\r\nст. майже винятково служив пергамент. Від середини XIV ст. в Україні з’явилися\r\nперші книжки на папері, імпортованому з Франції та Італії.\n\nПанівним типом письма в рукописних пам’ятках XIII ст.\r\nбув устав. В останній чверті XIV ст. дедалі частіше книжки переписув\n\n### Result 4 (score: 0.5412)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1317`\n- **Text**:\nНебогато, але автентичне маємо натомість в \r\n мінятюрі. Найважнїйшими памятками сього роду зістали ся три рукописи XI в. — \r\n Остромирове евангелиє 1057 р., Сьвятославів Ізборник 1073 р. що містять кілька \r\n дуже інтересних полїхромічних і золочених мінятюр (між ними славнозвістний \r\n образок родини кн. Сьвятослава, Ярославича) і Трірська псалтир, що має окрім \r\n своїх первістних, нїмецьких мінятюр, пять додаткових, руських, зроблених десь \r\n в 1070-80-х рр. (дві з них мають фіґури Ярополка Ізяс\n\n### Result 5 (score: 0.5347)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0547`\n- **Text**:\nВажливу роль в оформленні\r\nкниги і далі відігравали заставки — орнаментальні композиції, що вміщувалися\r\nперед початком розділів. Спершу в заставках були дуже поширені орнаментальні\r\nмотиви, взяті із західних ренесансних ініціалів, втім, у деяких заставках\r\nдослідники вбачають властивий українській рукописній книзі рослинний орнамент,\r\nв якому традиції народного мистецтва поєднуються з елементами західного\r\nренесансного декору. У другій половині XVII і у XVIII ст. улюбленими стають\r\nзаставки, де\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:56.099Z",
+          "resultDisplay": "Found 5 results for: \"українські рукописи мініатюри орнамент 16 століття\"\n\n### Result 1 (score: 0.6292)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0831`\n- **Text**:\nОсобливе місце в історії української книжкової\r\nмініатюри першої половини XVI ст. посідають три ілюстровані рукописи, мабуть,\r\nхолмського походження: Служебник (Москва, Державний історичний музей),\r\nЄвангеліє (Новгород, Історико-художній музей) та мініатюри, вшиті до Холмського\r\nЄвангелія XIII ст. (НБР). Останнє Євангеліє доводить холмську належність\r\nмініатюр. Обидва кодекси XVI ст. зберегли записи переписувача \"Андрійчини\r\nмногогрішного\". У літературі його розглядають і як мініатюриста 27,\r\nпр\n\n### Result 2 (score: 0.5661)\n- **Work**: Українська культура (лекції за ред. Антоновича) (1993)\n- **Author**: Антонович Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `2971c499_c0602`\n- **Text**:\nСправедливо славляться багатством своїх орнаментів\r\nрукописні книги з одинадцятого століття, між якими на першому місці стоять,\r\nочевидно, Остромирове Євангеліє та Ізборник Святослава.\n\nМотиви плетеного, рослинного та геометричного\r\nорнаменту вживалися у великому масштабі для оздоб церков та палат. Ці орнаменти\r\nі тепер можна бачити найбільше в церкві св. Софії у Києві.\n\nВишивок і ткання з того часу не збереглося, але про\r\nорнамент і тканий, і вишиваний можна міркувати по зображеннях, що зберегл\n\n### Result 3 (score: 0.5424)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0477`\n- **Text**:\nРазом з текстами літературних пам’яток давня\r\nукраїнська книжка успадкувала від візантійської й основні засади виготовлення\r\nкодексів, які, зрештою, були спільними для всієї Європи.\n\nМатеріалом для виготовлення кодексів до середини XIV\r\nст. майже винятково служив пергамент. Від середини XIV ст. в Україні з’явилися\r\nперші книжки на папері, імпортованому з Франції та Італії.\n\nПанівним типом письма в рукописних пам’ятках XIII ст.\r\nбув устав. В останній чверті XIV ст. дедалі частіше книжки переписув\n\n### Result 4 (score: 0.5412)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1317`\n- **Text**:\nНебогато, але автентичне маємо натомість в \r\n мінятюрі. Найважнїйшими памятками сього роду зістали ся три рукописи XI в. — \r\n Остромирове евангелиє 1057 р., Сьвятославів Ізборник 1073 р. що містять кілька \r\n дуже інтересних полїхромічних і золочених мінятюр (між ними славнозвістний \r\n образок родини кн. Сьвятослава, Ярославича) і Трірська псалтир, що має окрім \r\n своїх первістних, нїмецьких мінятюр, пять додаткових, руських, зроблених десь \r\n в 1070-80-х рр. (дві з них мають фіґури Ярополка Ізяс\n\n### Result 5 (score: 0.5347)\n- **Work**: Ісаєвич — Українське книговидання (2002)\n- **Author**: Ісаєвич Я.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b715df49_c0547`\n- **Text**:\nВажливу роль в оформленні\r\nкниги і далі відігравали заставки — орнаментальні композиції, що вміщувалися\r\nперед початком розділів. Спершу в заставках були дуже поширені орнаментальні\r\nмотиви, взяті із західних ренесансних ініціалів, втім, у деяких заставках\r\nдослідники вбачають властивий українській рукописній книзі рослинний орнамент,\r\nв якому традиції народного мистецтва поєднуються з елементами західного\r\nренесансного декору. У другій половині XVII і у XVIII ст. улюбленими стають\r\nзаставки, де\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773449695581_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "проста мова правопис граматика Смотрицький"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449695581_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"проста мова правопис граматика Смотрицький\"\n\n### Result 1 (score: 0.6366)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0024`\n- **Text**:\n«Граматика» Смотрицького призначена була передусім\r\nдля викладачів. Вона велика обсягом, насичена визначеннями, прикладами,\r\nпоясненнями винятків із правил, увагами. У передмові до неї\r\n(«Учитεлεмь школнымъ...») автор звертається й до учнів. Скорочення «Д\r\n: С : и/Т : З : З :» в заголовку передмови можна розкрити як «...Авторъ:\r\nД[идаскалωмъ] С[ловεнскимъ] и/Т[щатεлεмъ] З[доровьА]\r\nЗ[ычитъ]». Отже, Смотрицький задумав її як підручник. Звертаючись у передмові\r\nдо вчителів, Смотрицький пише про ве\n\n### Result 2 (score: 0.6298)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0160`\n- **Text**:\n«Граматика» Смотрицького була призначена передусім для\r\nвикладачів. Вона велика обсягом, насичена визначеннями, прикладами, поясненнями\r\nвинятків із правил, увагами. У передмові до неї («Учителемъ школънымъ...»)\r\nавтор згертається й до учнів. Скорочення «Д :С : и / Т: З : З: в заголовку\r\nпередмови можна розкрити як «Авторъ: Д[идаскалωмъ] С[ловенскимъ] и\r\nТ[щателемъ] З[доровьА] З[ычитъ]». Отже, автор задумав її як підручник.\r\nЗвертаючись у передмові до вчителів, він пише про велике значення грама\n\n### Result 3 (score: 0.6297)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0034`\n- **Text**:\n\"Граматика\" М.Смотрицького була покликана\r\nзміцнити норми церковнослов’янської мови. Автор писав у передмові, зверненій\r\nнасамперед до вчителів шкіл: \"ВЂдаєтє абовЂмъ, которыи стє сА ґрєцкои\r\nлюбъ латїнскои гра/м/матїки худозству учили што ωна єсть ку понАтю ıак\r\nıазыка чистости такъ и правогω а сочинногω вєдлугь власности\r\nдїалєктовъ и мовєнА и писанА, и писмъ вырозуменА. ВшєлАкїй пожитокъ который\r\nко/л/вєкъ прєрєчоныхъ ıазыкωвъ rpa/м/матїки чинити звыклы,\r\nбе/з/вонтпєнА и СлавєнскаА въ своємъ \n\n### Result 4 (score: 0.6215)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0028`\n- **Text**:\nСмотрицький перший в історії нашого мовознавства дав\r\nповний курс граматики (що «єсть изв Ђстноε художєство бл̃гω и\r\nгл̃ати и писати оучащεε») в її тодішніх основних частинах:\r\n«Орθоґрафїа, Етvмолоґїа, Сvнтаξїс, Просωдїа». Під впливом праці\r\nЛ. Зизанія він розпочинає виклад граматики в формі запитань і відповідей. Але\r\nцей спосіб подачі матеріалу застосовано лише на початку пам'ятки (від\r\nзагального визначення завдань граматики до визначення кількості літер).\n\nВизначивши завдання кожної із склад\n\n### Result 5 (score: 0.6192)\n- **Work**: Огієнко — Українська церква (1993)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `daf03296_c0313`\n- **Text**:\nУ граматиці Смотрицького\r\nзнаходимо ось такі терміни, що залишились в московській граматиці ще й досі: «орфография,\r\nетимология, синтаксис, гласная, согласная, ударение, слог, единосложный,\r\nмногосложный, запятая, двоеточие, точка, имя, местоимение, глагол, причастие,\r\nнаречие, предлог, союз, междометие, склоняемая часть, несклоняемая, имя\r\nсобственное, нарицательное, существительное, собирательное, прилагательное,\r\nчислительное, вопросительное, притяжательное, усеченное, степени уравнения:\r\nпол\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:54:56.099Z",
+          "resultDisplay": "Found 5 results for: \"проста мова правопис граматика Смотрицький\"\n\n### Result 1 (score: 0.6366)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0024`\n- **Text**:\n«Граматика» Смотрицького призначена була передусім\r\nдля викладачів. Вона велика обсягом, насичена визначеннями, прикладами,\r\nпоясненнями винятків із правил, увагами. У передмові до неї\r\n(«Учитεлεмь школнымъ...») автор звертається й до учнів. Скорочення «Д\r\n: С : и/Т : З : З :» в заголовку передмови можна розкрити як «...Авторъ:\r\nД[идаскалωмъ] С[ловεнскимъ] и/Т[щатεлεмъ] З[доровьА]\r\nЗ[ычитъ]». Отже, Смотрицький задумав її як підручник. Звертаючись у передмові\r\nдо вчителів, Смотрицький пише про ве\n\n### Result 2 (score: 0.6298)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0160`\n- **Text**:\n«Граматика» Смотрицького була призначена передусім для\r\nвикладачів. Вона велика обсягом, насичена визначеннями, прикладами, поясненнями\r\nвинятків із правил, увагами. У передмові до неї («Учителемъ школънымъ...»)\r\nавтор згертається й до учнів. Скорочення «Д :С : и / Т: З : З: в заголовку\r\nпередмови можна розкрити як «Авторъ: Д[идаскалωмъ] С[ловенскимъ] и\r\nТ[щателемъ] З[доровьА] З[ычитъ]». Отже, автор задумав її як підручник.\r\nЗвертаючись у передмові до вчителів, він пише про велике значення грама\n\n### Result 3 (score: 0.6297)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0034`\n- **Text**:\n\"Граматика\" М.Смотрицького була покликана\r\nзміцнити норми церковнослов’янської мови. Автор писав у передмові, зверненій\r\nнасамперед до вчителів шкіл: \"ВЂдаєтє абовЂмъ, которыи стє сА ґрєцкои\r\nлюбъ латїнскои гра/м/матїки худозству учили што ωна єсть ку понАтю ıак\r\nıазыка чистости такъ и правогω а сочинногω вєдлугь власности\r\nдїалєктовъ и мовєнА и писанА, и писмъ вырозуменА. ВшєлАкїй пожитокъ который\r\nко/л/вєкъ прєрєчоныхъ ıазыкωвъ rpa/м/матїки чинити звыклы,\r\nбе/з/вонтпєнА и СлавєнскаА въ своємъ \n\n### Result 4 (score: 0.6215)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0028`\n- **Text**:\nСмотрицький перший в історії нашого мовознавства дав\r\nповний курс граматики (що «єсть изв Ђстноε художєство бл̃гω и\r\nгл̃ати и писати оучащεε») в її тодішніх основних частинах:\r\n«Орθоґрафїа, Етvмолоґїа, Сvнтаξїс, Просωдїа». Під впливом праці\r\nЛ. Зизанія він розпочинає виклад граматики в формі запитань і відповідей. Але\r\nцей спосіб подачі матеріалу застосовано лише на початку пам'ятки (від\r\nзагального визначення завдань граматики до визначення кількості літер).\n\nВизначивши завдання кожної із склад\n\n### Result 5 (score: 0.6192)\n- **Work**: Огієнко — Українська церква (1993)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `daf03296_c0313`\n- **Text**:\nУ граматиці Смотрицького\r\nзнаходимо ось такі терміни, що залишились в московській граматиці ще й досі: «орфография,\r\nетимология, синтаксис, гласная, согласная, ударение, слог, единосложный,\r\nмногосложный, запятая, двоеточие, точка, имя, местоимение, глагол, причастие,\r\nнаречие, предлог, союз, междометие, склоняемая часть, несклоняемая, имя\r\nсобственное, нарицательное, существительное, собирательное, прилагательное,\r\nчислительное, вопросительное, притяжательное, усеченное, степени уравнения:\r\nпол\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "86213768-536c-4c9b-8a91-b138fd129df6",
+      "timestamp": "2026-03-14T00:55:02.444Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Initiating Word Verification",
+          "description": "I'm now moving forward, aiming to validate the term. I will use the verification functions to start making progress toward the final goal, ensuring accuracy in my processing.",
+          "timestamp": "2026-03-14T00:55:01.307Z"
+        },
+        {
+          "subject": "Checking Term Accuracy",
+          "description": "I'm focused on the next step: verifying the target terms. I'm employing the verification functions to start this phase. Accuracy is key, so I'll be confirming each word carefully to proceed correctly.",
+          "timestamp": "2026-03-14T00:55:02.225Z"
+        }
+      ],
+      "tokens": {
+        "input": 35784,
+        "output": 38,
+        "cached": 27742,
+        "thoughts": 131,
+        "tool": 0,
+        "total": 35953
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773449702440_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "устав",
+              "півустав",
+              "скоропис",
+              "в'язь",
+              "заставка",
+              "мініатюра",
+              "глоса",
+              "орнамент",
+              "рукопис"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773449702440_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 9 words\n\nFound: 9/9\n\n- **устав** — FOUND (5 match): устав(noun), устав(noun), устава(noun)\n- **півустав** — FOUND (2 match): півустав(noun), півустав(noun)\n- **скоропис** — FOUND (2 match): скоропис(noun), скоропис(noun)\n- **в'язь** — FOUND (3 match): в'язь(noun), в'язь(noun), в'язь(noun)\n- **заставка** — FOUND (1 match): заставка(noun)\n- **мініатюра** — FOUND (1 match): мініатюра(noun)\n- **глоса** — FOUND (1 match): глоса(noun)\n- **орнамент** — FOUND (2 match): орнамент(noun), орнамент(noun)\n- **рукопис** — FOUND (2 match): рукопис(noun), рукопис(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:55:02.459Z",
+          "resultDisplay": "Batch verification: 9 words\n\nFound: 9/9\n\n- **устав** — FOUND (5 match): устав(noun), устав(noun), устава(noun)\n- **півустав** — FOUND (2 match): півустав(noun), півустав(noun)\n- **скоропис** — FOUND (2 match): скоропис(noun), скоропис(noun)\n- **в'язь** — FOUND (3 match): в'язь(noun), в'язь(noun), в'язь(noun)\n- **заставка** — FOUND (1 match): заставка(noun)\n- **мініатюра** — FOUND (1 match): мініатюра(noun)\n- **глоса** — FOUND (1 match): глоса(noun)\n- **орнамент** — FOUND (2 match): орнамент(noun), орнамент(noun)\n- **рукопис** — FOUND (2 match): рукопис(noun), рукопис(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9d3977da-4f68-49af-8a87-f087ad253b55",
+      "timestamp": "2026-03-14T00:56:02.149Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Мистецтво та правопис\n\n## Key Facts Ledger\n```yaml\nsubject: \"Мистецтво та правопис\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1556\" \n  end: \"1619\"\n  key_events:\n    - year: 1556\n      event: \"Початок роботи над Пересопницьким Євангелієм у Дворецькому монастирі.\"\n    - year: 1561\n      event: \"Завершення Пересопницького Євангелія (писець Михайло Василієвич).\"\n    - year: 1581\n      event: \"Видання Острозької Біблії — першого повного видання Біблії церковнослов'янською мовою.\"\n    - year: 1619\n      event: \"Вихід друком «Граматики словенської» Мелетія Смотрицького.\"\nprimary_quotes:\n  - text: \"ку читаню и посполитымъ людемъ ко доброму выразумленю\"\n    source: \"Пересопницьке Євангеліє, 1556–1561\"\n    attribution: \"Михайло Василієвич / Архімандрит Григорій\"\n  - text: \"острЂйшее меча обоюдуострое слово\"\n    source: \"Передмова до Острозької Біблії, 1581\"\n    attribution: \"Герасим Смотрицький\"\n  - text: \"єсть извЂстноε художєство бл̃гω и гл̃ати и писати оучащεε\"\n    source: \"Граматики Словенскія правилноє Сvнтаґма, 1619\"\n    attribution: \"Мелетій Смотрицький\"\nforbidden_claims:\n  - \"Твердження, що кириличне друкарство, каліграфія та правопис прийшли в Україну з Москви.\"\n  - \"Називання мови староукраїнських рукописів XVI ст. «давньоруською» або «західноруською» (це староукраїнська мова / проста мова).\"\n  - \"Зменшення ролі українських діячів (Смотрицького, Беринди) у формуванні східнослов'янського правопису.\"\n```\n\n## Використані джерела\n1. [Історія української культури. Т.2. XIII-XVII ст. (2001)](litopys.org.ua) — фундаментальна праця з історії рукописної книги, мініатюри та мови періоду.\n2. [Огієнко І. Історія українського друкарства (1925)](litopys.org.ua) — аналіз Острозької Біблії та діяльності друкарень.\n3. [Смотрицький М. Граматіки Словенскія... (1619)](litopys.org.ua) — першоджерело про становлення правопису та граматичної термінології.\n4. [Вікіпедія: Пересопницьке Євангеліє](uk.wikipedia.org) — деталі щодо матеріалів, виконання, каліграфії (устав, півустав) та мовних особливостей (глоси).\n\n## Хронологія\n- 1556: Початок перекладу і переписування Пересопницького Євангелія на Волині.\n- 1561: Завершення роботи над Пересопницьким Євангелієм — шедевром української рукописної книги та мови.\n- 1574: Іван Федорович видає у Львові «Апостол» та «Буквар» (перші датовані друковані книги в Україні).\n- 1581: В Острозі виходить Острозька Біблія, набрана дрібним півуставом, що імітував найкращі рукописні зразки.\n- 1619: Мелетій Смотрицький видає в Єв'ї свою «Граматику», яка на понад століття стає головним підручником орфографії та мовознавства у Східній Європі.\n\n## Ключові факти та цитати\n- **Естетика рукопису**: Рукописні книги (як Пересопницьке Євангеліє) писалися на пергаменті *пізнім уставом* та *півуставом*. Візуальна структура включала *заставки* (орнаментальні композиції перед розділами), *кінцівки*, *мініатюри* (сюжетні ілюстрації) та *ініціали* (буквиці). В українських рукописах візантійська традиція органічно поєдналася з місцевими народними рослинними орнаментами.\n- **Глоси та мова**: Пересопницьке Євангеліє містить *глоси* — переклади церковнослов'янських слів живою українською розмовною мовою (наприклад, «бдѣти» — не спати, «чресла» — стегна). Це свідчить про свідоме творення \"простої мови\" для широкого загалу.\n- **Правопис**: Мелетій Смотрицький у своїй «Граматиці» 1619 року вперше системно описав орфографію, етимологію та синтаксис. Він ввів пунктуаційні знаки (кома, точка, двокрапка) та терміни, що використовуються досі (голосні, приголосні, наголос, склад).\n- **Шрифти**: Для друку Острозької Біблії було використано 6 різних шрифтів (4 кириличних, 2 грецьких), виготовлених спеціально для неї. Основний текст набрано дрібним півуставом з елементами скоропису.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": `[!context]` — Перехід від рукопису до друкованої книги не знищив мистецтво каліграфії. Навпаки, рукописні книги (як Пересопницьке Євангеліє) стали предметами розкоші, шедеврами візуального мистецтва та сакральними національними символами, на яких сьогодні складають присягу Президенти України.\n- Section \"Основний матеріал\": `[!quote]` — Формулювання мети перекладу Пересопницького Євангелія: «ку читаню и посполитымъ людемъ ко доброму выразумленю». Це доводить, що мова і правопис адаптувалися саме для розуміння українським народом, а не лише елітою чи духовенством.\n- Section \"Основний матеріал\": `[!culture]` — Візуальні елементи давньої книги (мініатюра, заставка, ініціал) не були просто прикрасами. Це була складна «візуальна теологія». Українські майстри додавали до суворих візантійських канонів живі народні мотиви — квіти, листя, плетіння, що робило українські рукописи унікальними на тлі всього православного світу.\n- Section \"Практика\": `[!history-bite]` — Саме українець Мелетій Смотрицький у 1619 році ввів у мовознавчий обіг Східної Європи такі терміни, як «орфографія», «синтаксис», «кома», «двокрапка», якими ми користуємося і сьогодні.\n- Section \"Практика\": `[!myth-buster]` — Російська пропаганда століттями стверджувала про вторинність української мови. Проте насправді Москва вчилася граматиці в українців. «Граматика» Смотрицького була перевидана в Москві у 1648 році (без дозволу автора) і стала там безальтернативним підручником на понад 100 років, заклавши основи їхнього власного правопису.\n- Section \"Підсумок\": `[!decolonization]` — Українська каліграфічна та правописна традиція розвивалася поліцентрично (Острог, Львів, Київ, Вільно) та у тісному контакті з європейським Відродженням. Вона була абсолютно незалежною від московського впливу і, навпаки, експортувала свої здобутки на північ.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Слов'янське друкарство, правопис і \"правильна\" каліграфія є надбанням виключно великоросійської культури, а Іван Федоров (Федорович) — московський першодрукар, який приніс світло знань на \"окраїни\".\n- **Ukrainian reality**: Друкарство в Україні існувало ще до Федоровича (львівські традиції), а сам він зміг реалізувати свій найвизначніший проєкт (Острозьку Біблію) лише завдяки потужному інтелектуальному та фінансовому клімату Волині (гурток князя Острозького). Український правопис (Смотрицький) та лексикографія (Беринда) стали інтелектуальним донором для Московії. Мистецтво українського рукопису (в'язь, устав, орнаментика) має глибоке європейське та місцеве коріння.\n\n## Contested Terms\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Мова текстів XVI ст. | «Західноруська» / «Давньоруська» | Староукраїнська / «Проста мова» (Middle Ukrainian) |\n| Внесок М. Смотрицького | «Основоположник російської граматики» | Творець української редакції церковнослов'янської мови, праці якого запозичила Москва |\n| Кирилична традиція | Монолітна, москвоцентрична | Поліцентрична (Київ-Острог-Вільно-Львів), європеїзована |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Головна ідея**: Книга в Україні XVI–XVII ст. як синтез слова, каліграфії та образотворчого мистецтва.\n- **Матеріали**: Еволюція від пергаменту до імпортованого європейського паперу (з водяними знаками — філігранями). Розкішні оправи (дерево, оксамит, срібне куття).\n- **Каліграфічні стилі**:\n  - *Устав*: найдавніше, геометричне, урочисте письмо. Кожна літера виписується окремо.\n  - *Півустав*: дрібніший, швидший, трохи нахилений шрифт. Саме він став основою для перших друкованих кириличних шрифтів (зокрема Острозької Біблії).\n  - *Скоропис*: швидке, неперервне письмо для діловодства з багатьма виносними літерами.\n  - *В'язь*: декоративне орнаментальне письмо для заголовків, де букви з'єднуються у неперервний візерунок.\n- **Візуальна архітектура**: Сторінка формувалася за строгими канонами. Текст оздоблювався *мініатюрами* (повноцінні ілюстрації, часто портрети євангелістів), *заставками* (орнаментальні смуги перед текстом), *кінцівками* (після тексту) та *ініціалами* (буквицями — великими розмальованими першими літерами абзацу).\n\n### Основний матеріал\n- **Головна ідея**: Аналіз першоджерел — Пересопницького Євангелія та Острозької Біблії через призму мистецтва і мови.\n- **Пересопницьке Євангеліє (1556–1561)**:\n  - *Створення*: Дворецький та Пересопницький монастирі на Волині. Фундатори — княгиня Анастасія Заславська. Писець — Михайло Василієвич.\n  - *Мистецтво*: Писане пізнім уставом/півуставом на пергаменті чорнилом та кіновар'ю (червоною фарбою). Видатні мініатюри євангелістів, виконані з впливом ренесансних і місцевих народних (рослинних) мотивів.\n  - *Правопис і мова*: Феномен *глос* — народних відповідників до церковнослов'янських слів. Глоси виділялися прямокутниками. Це свідчить про свідоме вироблення загальноукраїнської лексичної та правописної норми.\n- **Острозька Біблія (1581)**:\n  - Хоча це друкована книга, вона зберегла естетику рукопису. Понад 3 мільйони знаків, ідеальна верстка двома шпальтами. 81 заставка, 70 кінцівок, 1384 ініціали.\n  - Уніфікація тексту і правопису науковим гуртком Острозької академії. Робота з десятками списків (грецькими, латинськими, чеськими).\n\n### Практика\n- **Головна ідея**: Від візуального мистецтва до строгих правил — стандартизація мови.\n- **Мелетій Смотрицький та його «Граматика» (1619)**:\n  - Перехід від хаотичного правопису до системи. Смотрицький створив «Граматики Словенскія правилноє Сvнтаґма».\n  - *Орфографія*: введення чітких правил вживання літер.\n  - *Пунктуація*: системне використання розділових знаків (кома, точка, двокрапка).\n  - *Вправи для модуля*: (тут закладається основа для генерації вправ у фазі Activities) Читання уривків староукраїнською мовою (транскрипція), розпізнавання глос та їх етимології (etymology-trace), ідентифікація граматичних категорій за Смотрицьким (grammar-identify).\n- Контраст між сакральною книжною мовою (де кожна літера мала містичне значення) та живою \"простою мовою\".\n\n### Підсумок\n- **Головна ідея**: Синтез та перехід до наступної теми.\n- Мистецтво рукопису та формування правопису не були ізольованими процесами. Це був прояв зрілості української ранньомодерної нації, яка прагнула мати власні стандартизовані священні тексти своєю (або наближеною до своєї) мовою, оформлені на найвищому європейському рівні.\n- Цей культурний вибух вимагав колосальних ресурсів, політичної волі та захисту. Саме це забезпечив князь Костянтин Василь Острозький, що є прямим містком до наступного модуля (`prince-ostrozky`), де вивчатиметься його роль як найбільшого мецената і захисника православної культури.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on executing the subsequent phase. I'm evaluating the next steps required to fulfill the objectives. I'm working to confirm that everything is aligned for continued progression.",
+          "timestamp": "2026-03-14T00:55:06.254Z"
+        },
+        {
+          "subject": "Drafting Research Sections",
+          "description": "I'm currently engaged in structuring the research notes into the planned sections. I'm considering the best way to incorporate the historical and cultural context into each section. Specifically, I'm focusing on \"Основний матеріал\" and how to link the module's key themes effectively.",
+          "timestamp": "2026-03-14T00:55:08.788Z"
+        },
+        {
+          "subject": "Outlining the Core Content",
+          "description": "I am now focusing on the content of the \"Основний матеріал\" section, specifically how to best organize and present the historical data and cultural context. I intend to detail the significance of calligraphic styles and visual elements. The most pressing need is to connect these key points into a coherent narrative.",
+          "timestamp": "2026-03-14T00:55:11.365Z"
+        },
+        {
+          "subject": "Refining Content Structure",
+          "description": "I'm now prioritizing the synthesis of research data to align with the section outlines, particularly within \"Основний матеріал.\" I'm identifying the most crucial data points regarding calligraphic styles, visual elements, and related historical documents to make the key points. Specifically, I'm focusing on ensuring clear presentation.",
+          "timestamp": "2026-03-14T00:55:13.627Z"
+        },
+        {
+          "subject": "Focusing on Section Content",
+          "description": "I am now focusing on the content of the \"Основний матеріал\" section, using the key facts to ensure accuracy. I'm working to integrate the timeline and decolonization aspects to enrich the narrative. The priority is to build a detailed and compelling argument.",
+          "timestamp": "2026-03-14T00:55:16.160Z"
+        },
+        {
+          "subject": "Analyzing Research Data",
+          "description": "I am now focused on refining the research data, synthesizing it for each section. I'm prioritizing the integration of the historical context. My immediate task is ensuring clear and coherent presentation to provide a detailed narrative.",
+          "timestamp": "2026-03-14T00:55:18.830Z"
+        },
+        {
+          "subject": "Preparing Note Synthesis",
+          "description": "I am now focused on integrating all research into the specified sections. I have finalized the data needed for each section, detailing the key facts. The main goal now is to synthesize everything, specifically ensuring a coherent structure.",
+          "timestamp": "2026-03-14T00:55:21.468Z"
+        },
+        {
+          "subject": "Creating Section Outlines",
+          "description": "I am now structuring the notes into the planned sections, readying each part of the research. I am going to organize the historical and cultural background, especially \"Основний матеріал,\" to properly introduce the module's key concepts.",
+          "timestamp": "2026-03-14T00:55:23.861Z"
+        },
+        {
+          "subject": "Preparing Content Synthesis",
+          "description": "I'm now integrating the collected research, focusing on the key facts, events, and quotes. I'm prioritizing the creation of a clear outline for each section, detailing the key elements. My goal is to synthesize the data into a coherent narrative.",
+          "timestamp": "2026-03-14T00:55:27.043Z"
+        },
+        {
+          "subject": "Generating Final Content",
+          "description": "I am now focused on generating the content for each section, integrating research data into a clear and comprehensive format. I will ensure the final output reflects all the key points.",
+          "timestamp": "2026-03-14T00:55:28.749Z"
+        }
+      ],
+      "tokens": {
+        "input": 36052,
+        "output": 3714,
+        "cached": 34566,
+        "thoughts": 2410,
+        "tool": 0,
+        "total": 42176
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

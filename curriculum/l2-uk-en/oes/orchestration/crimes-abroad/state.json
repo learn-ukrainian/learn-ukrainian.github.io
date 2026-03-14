@@ -1,0 +1,27 @@
+{
+  "track": "oes",
+  "slug": "crimes-abroad",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-14T02:14:16Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-14T02:14:16Z",
+      "task_id": "v5-crimes-abroad-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

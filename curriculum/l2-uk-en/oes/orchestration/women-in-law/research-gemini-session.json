@@ -1,0 +1,422 @@
+{
+  "sessionId": "5162ffc2-a2d3-43c8-8206-0e752a2e2786",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:55:20.357Z",
+  "lastUpdated": "2026-03-14T01:56:56.550Z",
+  "messages": [
+    {
+      "id": "a5beed53-94c3-442f-b5cc-0924d9439a8a",
+      "timestamp": "2026-03-14T01:55:20.357Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-064\nlevel: OES\nsequence: 64\nslug: women-in-law\nversion: '2.0'\ntitle: Жінки у праві\nsubtitle: Women in Law\nfocus: Gender roles & legal rights\nphase: 3\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Women in Law\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Widow's Advocate\nprerequisites:\n- inheritance-law\nconnects_to:\n- guardianship\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Жінки у праві** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Жінки у праві\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Жінки у праві\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "e768771e-6372-42ae-a51c-c60a9ed12f33",
+      "timestamp": "2026-03-14T01:55:27.763Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward. I'm actively considering what to do to reach the next stage.",
+          "timestamp": "2026-03-14T01:55:24.124Z"
+        },
+        {
+          "subject": "Proceeding With Research",
+          "description": "I'm now prioritizing the first stage, which involves gathering information. I will initiate the search, and then check results and make a plan for the following steps.",
+          "timestamp": "2026-03-14T01:55:27.630Z"
+        }
+      ],
+      "tokens": {
+        "input": 20462,
+        "output": 23,
+        "cached": 0,
+        "thoughts": 315,
+        "tool": 0,
+        "total": 20800
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453327739_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Жінка в Київській Русі"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453327739_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Жінка в Київській Русі' — 5 results\n\n1. **Київська Русь** — столітті в Київській Русі існувало близько 50 монастирів, із них 17 — у самому Києві. Церква справляла величезний вплив на культуру Київської Русі. Спорудження\n2. **Монети Київської Русі** — на Русь через торговий шлях «із варяг у греки». Прикордонні регіони Київської Русі також отримували монети від прилеглих країн. Через завоювання Русі монголами\n3. **Єфросинія Полоцька** — черниця та просвітниця, ігуменя. Перша жінка-черниця в Київській Русі, одна з найосвіченіших жінок ХІІ століття. Православна та католицька свята. Донька\n4. **Київська митрополія** — Вселенського патріархату Константинополя після утворення в 988 році в результаті хрещення Русі Володимиром Святославичем до 6 січня 2019 року, коли нею\n5. **Володимир Святославич** — -рус. Володимѣръ Свѧтославичъ; 960/963 — 1015) — великий князь київський (979—1015), князь новгородський (970—988). Хреститель Русі. Син київського князя"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:28.039Z",
+          "resultDisplay": "Wikipedia search: 'Жінка в Київській Русі' — 5 results\n\n1. **Київська Русь** — столітті в Київській Русі існувало близько 50 монастирів, із них 17 — у самому Києві. Церква справляла величезний вплив на культуру Київської Русі. Спорудження\n2. **Монети Київської Русі** — на Русь через торговий шлях «із варяг у греки». Прикордонні регіони Київської Русі також отримували монети від прилеглих країн. Через завоювання Русі монголами\n3. **Єфросинія Полоцька** — черниця та просвітниця, ігуменя. Перша жінка-черниця в Київській Русі, одна з найосвіченіших жінок ХІІ століття. Православна та католицька свята. Донька\n4. **Київська митрополія** — Вселенського патріархату Константинополя після утворення в 988 році в результаті хрещення Русі Володимиром Святославичем до 6 січня 2019 року, коли нею\n5. **Володимир Святославич** — -рус. Володимѣръ Свѧтославичъ; 960/963 — 1015) — великий князь київський (979—1015), князь новгородський (970—988). Хреститель Русі. Син київського князя",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2f589e02-8eff-4a80-b924-d13fc49abf5e",
+      "timestamp": "2026-03-14T01:55:37.465Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Refining the Search Strategy",
+          "description": "I am now focused on refining my search approach. My next step is to ensure that I am on the right track towards gathering relevant information, by iteratively adjusting the search terms to increase precision. I'll evaluate the initial results and adjust the subsequent searches to home in on the pertinent data.",
+          "timestamp": "2026-03-14T01:55:33.949Z"
+        },
+        {
+          "subject": "Implementing the Queries",
+          "description": "I am currently working on executing the planned queries to gather data. I'm focusing on obtaining diverse sources, including both historical texts and contextual information. The goal is to accumulate enough material to form a comprehensive understanding of the topic, and the plan is to utilize multiple search criteria.",
+          "timestamp": "2026-03-14T01:55:37.069Z"
+        }
+      ],
+      "tokens": {
+        "input": 20852,
+        "output": 82,
+        "cached": 0,
+        "thoughts": 274,
+        "tool": 0,
+        "total": 21208
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453337329_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Руська правда жінка"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453337329_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Руська правда жінка' — 5 results\n\n1. **Руська правда (Павло Пестель)** — «Руська правда» (оригінальна назва рос. «Русская Правда или Заповедная Государственная Грамота Великого Народа Российского, служащая заветом для усовершенствования\n2. **Галицько-Руська матиця** — ТОВАРИСТВА «ГАЛИЦЬКО-РУСЬКА МАТИЦЯ» (1848—1870) [Архівовано 14 вересня 2016 у Wayback Machine.]. Стеблій Ф. І. Галицько-Руська матиця // Енциклопедія\n3. **Салічна правда** — зародження у франків ранньофеодальної держави. Руська Правда Правда Ярославичів Англосаксонські правди Баварська правда Родинний принцип успадкування Вікісховище\n4. **Українська Бесіда** — також: Руська бесіда «Українська Бесіда» (до 1928 р. — «Руська Бесіда») — товариство клубного типу 1861–1939 рр. у Галичині. Перше товариство «Руська бесіда»\n5. **Руська Рада** — Руська Рада (Русская Рада у Львові) — громадсько-політична організація, заснована 1870 з метою продовжувати традиції Головної Руської Ради 1848; швидко"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:38.872Z",
+          "resultDisplay": "Wikipedia search: 'Руська правда жінка' — 5 results\n\n1. **Руська правда (Павло Пестель)** — «Руська правда» (оригінальна назва рос. «Русская Правда или Заповедная Государственная Грамота Великого Народа Российского, служащая заветом для усовершенствования\n2. **Галицько-Руська матиця** — ТОВАРИСТВА «ГАЛИЦЬКО-РУСЬКА МАТИЦЯ» (1848—1870) [Архівовано 14 вересня 2016 у Wayback Machine.]. Стеблій Ф. І. Галицько-Руська матиця // Енциклопедія\n3. **Салічна правда** — зародження у франків ранньофеодальної держави. Руська Правда Правда Ярославичів Англосаксонські правди Баварська правда Родинний принцип успадкування Вікісховище\n4. **Українська Бесіда** — також: Руська бесіда «Українська Бесіда» (до 1928 р. — «Руська Бесіда») — товариство клубного типу 1861–1939 рр. у Галичині. Перше товариство «Руська бесіда»\n5. **Руська Рада** — Руська Рада (Русская Рада у Львові) — громадсько-політична організація, заснована 1870 з метою продовжувати традиції Головної Руської Ради 1848; швидко",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773453337371_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Руська правда вдова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453337371_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Руська правда вдова\"\n\n### Result 1 (score: 0.5254)\n- **Work**: Панас Мирний. П'яниця (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `8b6531c6_c0024`\n- **Text**:\n— Гм, — мугикнув Петро Микитович і якось сумно спустив голову вниз, — у нас там була одна поміщиця Красовська, удова, не молода вже. Не знаю, чи був у неї коли чоловік, чи не було, бо вона про його ніколи не згадувала, а проте все вдова та й вдова. Так її всі і в місті звали. Завжди, бувало, набере низку паничів та й водиться з ними. Я, ти ж мене знаєш! Зараз одбив від неї всю ту шушваль, що швендяла коло неї та оббивала пороги: все ж, бач, секретар у поліції, молодий і — не взяв мене враг — пок\n\n### Result 2 (score: 0.5208)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1231`\n- **Text**:\nДуже поважне і самостійне становище вдови в \r\n давнїм руськім праві, як я сказав уже, кидає ясне сьвітло на дїйсне, фактичне \r\n становище жінки в родинї, покрите de jure повновластию чоловіка за його житя.\n\nКоли вдова не виходила замуж вдруге по \r\n смерти чоловіка, право признавало її повновластною головою родини, на місцї її \r\n чоловіка. Опікун давав ся дїтям тільки тодї, як мати їх виходила знову замуж \r\n (таким опікуном звичайно був хтось з близших свояків небіжчика, але міг ним \r\n бути й віт\n\n### Result 3 (score: 0.5193)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1232`\n- **Text**:\nТаке становище вдови в родинї, як \r\n представляє його Руська Правда, потверджуєть ся иньшими джерелами, і не може \r\n бути сумнїву, що маємо тут до дїла з типовим представленнєм фактичних \r\n відносин. Практику, що вдова діставала від чоловіка якусь свою частину з \r\n спадщини, ілюструє княжа практика; нпр. Володимир Василькович передає по собі \r\n князївство Мстиславу Даниловичу, а своїй княгинї дає „городъ свой Кобрынь, и \r\n съ людьми, и з данею: како при мнЂ даяли, тако и по мнЂ ать дають княгинЂ\n\n### Result 4 (score: 0.5187)\n- **Work**: Іван Франко. Для домашнього огнища (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a093edb6_c0008`\n- **Text**:\n— Вдова? Ненавиджу вдів. Вдови — сови, се птахи, що ворожать лихо. Чи хоче вдова йти додому? — запитав, обертаючися до Юлії.\n\n— Думаю, що пан капітан... — почала Юлія, все ще вагаючися, чи має пришпилити капелюх до голови, чи покласти його на столі.\n\n— Але ж з паном богом! з паном богом! — перервав їй капітан, а потім, зірвавшися з софи, чемно поміг їй надіти плащ, взути калоші, віднайшов її парасольку і, стискаючи в своїх могучих долонях її дрібну ручку, мовив поважно:\n\n— Даруйте, пані, отсе жа\n\n### Result 5 (score: 0.5029)\n- **Work**: Тарас Шевченко. Сова (1814)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `2e08aa56_c0001`\n- **Text**:\nДіждалася вдова долі,\n\nЗросту того сина.\n\nІ письменний, і вродливий —\n\nКвіточка дитина!\n\nЯк у бога за дверима,\n\nВдова панувала;\n\nА дівчата лицялися\n\nІ рушники дбали.\n\nПолюбила багатая —\n\nНе поцілувала,\n\nВишивала шовком хустку —\n\nНе подарувала.\n\nКрались злидні із-за моря\n\nВ удовину хату.\n\nТа й підкрались… Стали хлопців\n\nВ кайдани кувати\n\nТа повезли до прийому\n\nБитими шляхами.\n\nПішла й вдова з матерями\n\nЗ дрібними сльозами.\n\nДе на ніч ставали,\n\nСторожу давали,\n\nСтару вдову до обозу\n\nТа й не допуск\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:38.872Z",
+          "resultDisplay": "Found 5 results for: \"Руська правда вдова\"\n\n### Result 1 (score: 0.5254)\n- **Work**: Панас Мирний. П'яниця (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `8b6531c6_c0024`\n- **Text**:\n— Гм, — мугикнув Петро Микитович і якось сумно спустив голову вниз, — у нас там була одна поміщиця Красовська, удова, не молода вже. Не знаю, чи був у неї коли чоловік, чи не було, бо вона про його ніколи не згадувала, а проте все вдова та й вдова. Так її всі і в місті звали. Завжди, бувало, набере низку паничів та й водиться з ними. Я, ти ж мене знаєш! Зараз одбив від неї всю ту шушваль, що швендяла коло неї та оббивала пороги: все ж, бач, секретар у поліції, молодий і — не взяв мене враг — пок\n\n### Result 2 (score: 0.5208)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1231`\n- **Text**:\nДуже поважне і самостійне становище вдови в \r\n давнїм руськім праві, як я сказав уже, кидає ясне сьвітло на дїйсне, фактичне \r\n становище жінки в родинї, покрите de jure повновластию чоловіка за його житя.\n\nКоли вдова не виходила замуж вдруге по \r\n смерти чоловіка, право признавало її повновластною головою родини, на місцї її \r\n чоловіка. Опікун давав ся дїтям тільки тодї, як мати їх виходила знову замуж \r\n (таким опікуном звичайно був хтось з близших свояків небіжчика, але міг ним \r\n бути й віт\n\n### Result 3 (score: 0.5193)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1232`\n- **Text**:\nТаке становище вдови в родинї, як \r\n представляє його Руська Правда, потверджуєть ся иньшими джерелами, і не може \r\n бути сумнїву, що маємо тут до дїла з типовим представленнєм фактичних \r\n відносин. Практику, що вдова діставала від чоловіка якусь свою частину з \r\n спадщини, ілюструє княжа практика; нпр. Володимир Василькович передає по собі \r\n князївство Мстиславу Даниловичу, а своїй княгинї дає „городъ свой Кобрынь, и \r\n съ людьми, и з данею: како при мнЂ даяли, тако и по мнЂ ать дають княгинЂ\n\n### Result 4 (score: 0.5187)\n- **Work**: Іван Франко. Для домашнього огнища (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a093edb6_c0008`\n- **Text**:\n— Вдова? Ненавиджу вдів. Вдови — сови, се птахи, що ворожать лихо. Чи хоче вдова йти додому? — запитав, обертаючися до Юлії.\n\n— Думаю, що пан капітан... — почала Юлія, все ще вагаючися, чи має пришпилити капелюх до голови, чи покласти його на столі.\n\n— Але ж з паном богом! з паном богом! — перервав їй капітан, а потім, зірвавшися з софи, чемно поміг їй надіти плащ, взути калоші, віднайшов її парасольку і, стискаючи в своїх могучих долонях її дрібну ручку, мовив поважно:\n\n— Даруйте, пані, отсе жа\n\n### Result 5 (score: 0.5029)\n- **Work**: Тарас Шевченко. Сова (1814)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `2e08aa56_c0001`\n- **Text**:\nДіждалася вдова долі,\n\nЗросту того сина.\n\nІ письменний, і вродливий —\n\nКвіточка дитина!\n\nЯк у бога за дверима,\n\nВдова панувала;\n\nА дівчата лицялися\n\nІ рушники дбали.\n\nПолюбила багатая —\n\nНе поцілувала,\n\nВишивала шовком хустку —\n\nНе подарувала.\n\nКрались злидні із-за моря\n\nВ удовину хату.\n\nТа й підкрались… Стали хлопців\n\nВ кайдани кувати\n\nТа повезли до прийому\n\nБитими шляхами.\n\nПішла й вдова з матерями\n\nЗ дрібними сльозами.\n\nДе на ніч ставали,\n\nСторожу давали,\n\nСтару вдову до обозу\n\nТа й не допуск\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773453337411_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "дочка спадщина Руська правда"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453337411_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"дочка спадщина Руська правда\"\n\n### Result 1 (score: 0.5477)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1657`\n- **Text**:\n»Руська Правда« не містить спеціяльних статтей, що\r\nпрямо вказували б на родинне право, за винятком хібащо першої статті, яка\r\nговорить про родичів, зв’язаних правом і обов’язком кривавої помсти. »Руська\r\nПравда« відрізняє дітей законних від незаконних, розуміючи під останніми дітей\r\nвід наложниці-невільниці. Жінка по смерті чоловіка вступає в повне управління\r\nзагальнородинного майна при недорослих дітях абож нарівні з синами одержує\r\nпевну частину майна (виділ) згідно з волею чоловіка чи за за\n\n### Result 2 (score: 0.5166)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1658`\n- **Text**:\nДістають спадок тільки члени родини як за заповітом,\r\nтак і по закону (звичаю). За відсутности членів родини, спадок переходить\r\nдержаві в особі князя. Сторонніх осіб ні закон, ні заповідач до спадкування не\r\nпокликають. Заповідач виявляє скорше не свою волю, а волю родини щодо розподілу\r\nспадку між законними спадкоємцями. Заповіт укладався переважно словесно. Писана\r\nформа вживалася рідко. Право лишити »ряд« — заповіт належало батькові і матері\r\nу відношенні до дітей та чоловікові »на виділ« жі\n\n### Result 3 (score: 0.5011)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1667`\n- **Text**:\nСпадкове право стало\r\nдосить реґляментованим. Супроти доби »Руської Правди« зазнали модифікації такі\r\nнорми спадкового права: тепер заповідач вільний обрати собі за спадкоємця особу\r\nй з-поза кола законних спадкоємців, коли йдеться про рухоме майно й\r\nнерухомість, самим заповідачем набуту. Але він зв’язаний колом законних\r\nспадкоємців, коли предметом заповіту були батьківські чи материнські маєтки.\r\nСкласти заповіт могла лише особа, не обмежена в правах. До числа осіб,\r\nпозбавлених права скласти\n\n### Result 4 (score: 0.4988)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0205`\n- **Text**:\nЯкби було встановлено, що між цими двома поняттями\r\nнемає різниці, то тлумачення Цитовича, мабуть, не могло бути запереченим. Але з\r\nаналізу статей Руської Правди, що трактують спадщину, виявляється, що «задница»\r\nі «часть» — два юридичні поняття, які не збігаються між собою. Особливо\r\nвиявляється різниця між цими поняттями в ст. 123: «Аже жена сядеть по мужи, то\r\nдати ей части, а оу своих детей взяти части..., а задница ее мужня не надобе».\r\nОтже жінка не бере участі в поділі «задницы», тобто в\n\n### Result 5 (score: 0.4752)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0208`\n- **Text**:\nА що стосується дочки моєї Ганни, яку мав із першою\r\nмоєю дружиною Мариною Збаразькою, то їй, віддаючи цілком мою повинну\r\nбатьківську ласку та милість, хоча її, через незичливість матері її, ніколи\r\nочима своїми не бачив, записую заповітом своїм після смерті моєї тисячу кіп\r\nгрошей литовських у той спосіб: коли їй милосердний Бог дасть у подружжя\r\nдоброго чоловіка, її милість, пані дядина моя, пані Олександрова Загоровська,\r\nмає їй дати на той час, зібравши із пашні, зі ставів та з інших пожитк\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:38.872Z",
+          "resultDisplay": "Found 5 results for: \"дочка спадщина Руська правда\"\n\n### Result 1 (score: 0.5477)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1657`\n- **Text**:\n»Руська Правда« не містить спеціяльних статтей, що\r\nпрямо вказували б на родинне право, за винятком хібащо першої статті, яка\r\nговорить про родичів, зв’язаних правом і обов’язком кривавої помсти. »Руська\r\nПравда« відрізняє дітей законних від незаконних, розуміючи під останніми дітей\r\nвід наложниці-невільниці. Жінка по смерті чоловіка вступає в повне управління\r\nзагальнородинного майна при недорослих дітях абож нарівні з синами одержує\r\nпевну частину майна (виділ) згідно з волею чоловіка чи за за\n\n### Result 2 (score: 0.5166)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1658`\n- **Text**:\nДістають спадок тільки члени родини як за заповітом,\r\nтак і по закону (звичаю). За відсутности членів родини, спадок переходить\r\nдержаві в особі князя. Сторонніх осіб ні закон, ні заповідач до спадкування не\r\nпокликають. Заповідач виявляє скорше не свою волю, а волю родини щодо розподілу\r\nспадку між законними спадкоємцями. Заповіт укладався переважно словесно. Писана\r\nформа вживалася рідко. Право лишити »ряд« — заповіт належало батькові і матері\r\nу відношенні до дітей та чоловікові »на виділ« жі\n\n### Result 3 (score: 0.5011)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1667`\n- **Text**:\nСпадкове право стало\r\nдосить реґляментованим. Супроти доби »Руської Правди« зазнали модифікації такі\r\nнорми спадкового права: тепер заповідач вільний обрати собі за спадкоємця особу\r\nй з-поза кола законних спадкоємців, коли йдеться про рухоме майно й\r\nнерухомість, самим заповідачем набуту. Але він зв’язаний колом законних\r\nспадкоємців, коли предметом заповіту були батьківські чи материнські маєтки.\r\nСкласти заповіт могла лише особа, не обмежена в правах. До числа осіб,\r\nпозбавлених права скласти\n\n### Result 4 (score: 0.4988)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0205`\n- **Text**:\nЯкби було встановлено, що між цими двома поняттями\r\nнемає різниці, то тлумачення Цитовича, мабуть, не могло бути запереченим. Але з\r\nаналізу статей Руської Правди, що трактують спадщину, виявляється, що «задница»\r\nі «часть» — два юридичні поняття, які не збігаються між собою. Особливо\r\nвиявляється різниця між цими поняттями в ст. 123: «Аже жена сядеть по мужи, то\r\nдати ей части, а оу своих детей взяти части..., а задница ее мужня не надобе».\r\nОтже жінка не бере участі в поділі «задницы», тобто в\n\n### Result 5 (score: 0.4752)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0208`\n- **Text**:\nА що стосується дочки моєї Ганни, яку мав із першою\r\nмоєю дружиною Мариною Збаразькою, то їй, віддаючи цілком мою повинну\r\nбатьківську ласку та милість, хоча її, через незичливість матері її, ніколи\r\nочима своїми не бачив, записую заповітом своїм після смерті моєї тисячу кіп\r\nгрошей литовських у той спосіб: коли їй милосердний Бог дасть у подружжя\r\nдоброго чоловіка, її милість, пані дядина моя, пані Олександрова Загоровська,\r\nмає їй дати на той час, зібравши із пашні, зі ставів та з інших пожитк\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773453337465_3",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "дружина права Руська правда"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453337465_3",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"дружина права Руська правда\"\n\n### Result 1 (score: 0.5360)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1657`\n- **Text**:\n»Руська Правда« не містить спеціяльних статтей, що\r\nпрямо вказували б на родинне право, за винятком хібащо першої статті, яка\r\nговорить про родичів, зв’язаних правом і обов’язком кривавої помсти. »Руська\r\nПравда« відрізняє дітей законних від незаконних, розуміючи під останніми дітей\r\nвід наложниці-невільниці. Жінка по смерті чоловіка вступає в повне управління\r\nзагальнородинного майна при недорослих дітях абож нарівні з синами одержує\r\nпевну частину майна (виділ) згідно з волею чоловіка чи за за\n\n### Result 2 (score: 0.4889)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0008`\n- **Text**:\nАле Руська Правда має величезне значіння і для\r\nісторика пізнішої доби: Володимира Великого, Ярослава, Ярославичів, Володимира\r\nМономаха і т.д. Руська Правда в цім відношенні є живе дзеркало, що відбиває в\r\nсобі цілу низку чисто соціяльних взаємин різних народних верств та шарів. Ні\r\nодин історик без Руської Правди не зрозуміє так глибоко соціяльної структури\r\nнаселення від найдавніших часів його історичного життя. З цього становища\r\nРуська Правда є найвидатніша пам’ятка, що так яскраво змальову\n\n### Result 3 (score: 0.4835)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1220`\n- **Text**:\nНасамперед, не зовсїм ясний параґраф про \r\n убийство жінки: „Коли хто забє жінку (жену = женщину), то судити його также як \r\n за убийство чоловіка. Наколи буде вона винувата, то платить ся піввири — 20 \r\n грив.” 5), Друга половина сього параґрафу, очевидно, говорить про \r\n убийство жінки її чоловіком; перша не ясно чи говорить теж про убийство своєї \r\n жінки чоловіком чи женщини взагалї, але се не богато зміняє. Отже право, \r\n взагалї признаючи голову жінки рівноцїнною з чоловічою, робить полекш\n\n### Result 4 (score: 0.4801)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0185`\n- **Text**:\nСлово „дружина” — у д.-р. письм. звичайне: Єванг. XII в. Лук. II, 44, „мнЂвшя же и въ дружинЂ” =\r\nεν τη συνοδία, Гал. Єв.\r\nII, 60; ще — в Истор. Палее, Попов, Кн. быт. неб. и земли 1881 p., с. 160;\r\n„Слово Адама\": того есми, дружино, мнози дни жадали”, ПСтРЛ. III, с. 11; у\r\nФлавія: „и ту постави лЂпшюю хитрейшую дружину”, кн. I, Арх. рук., арк. 359д;\r\n„Антипатрова же дружина естьствомъ быша жестъсерди”, арк. 368с; „на\r\nАлександрову дружину подходяшеть” арк. 368д; „съ своее дружинЂ” арк.\r\n367е; „\n\n### Result 5 (score: 0.4714)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0007`\n- **Text**:\nСкладається теж щиру подяку Українській Канадській\r\nФундації ім. Тараса Шевченка, і Департаментові Політичних Студій Манітобського\r\nУніверситету, за їхню фінансову допомогу цьому виданні.\n\nЮрій Книш\n\nВінніпеґ. 1 січня 1993 р.\n\nПЕРЕДМОВА АВТОРА\n\nКоли я приступав до студіювання Руської Правди з\r\nчисто філологічного становища, я керувався багатьма мотивами і спонуками. Але\r\nнайголовніший із них був той, що Руська Правда є пам’ятка величезної\r\nвсесловянської культурної ваги. Цей твір назверх вигляда\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:38.872Z",
+          "resultDisplay": "Found 5 results for: \"дружина права Руська правда\"\n\n### Result 1 (score: 0.5360)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1657`\n- **Text**:\n»Руська Правда« не містить спеціяльних статтей, що\r\nпрямо вказували б на родинне право, за винятком хібащо першої статті, яка\r\nговорить про родичів, зв’язаних правом і обов’язком кривавої помсти. »Руська\r\nПравда« відрізняє дітей законних від незаконних, розуміючи під останніми дітей\r\nвід наложниці-невільниці. Жінка по смерті чоловіка вступає в повне управління\r\nзагальнородинного майна при недорослих дітях абож нарівні з синами одержує\r\nпевну частину майна (виділ) згідно з волею чоловіка чи за за\n\n### Result 2 (score: 0.4889)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0008`\n- **Text**:\nАле Руська Правда має величезне значіння і для\r\nісторика пізнішої доби: Володимира Великого, Ярослава, Ярославичів, Володимира\r\nМономаха і т.д. Руська Правда в цім відношенні є живе дзеркало, що відбиває в\r\nсобі цілу низку чисто соціяльних взаємин різних народних верств та шарів. Ні\r\nодин історик без Руської Правди не зрозуміє так глибоко соціяльної структури\r\nнаселення від найдавніших часів його історичного життя. З цього становища\r\nРуська Правда є найвидатніша пам’ятка, що так яскраво змальову\n\n### Result 3 (score: 0.4835)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1220`\n- **Text**:\nНасамперед, не зовсїм ясний параґраф про \r\n убийство жінки: „Коли хто забє жінку (жену = женщину), то судити його также як \r\n за убийство чоловіка. Наколи буде вона винувата, то платить ся піввири — 20 \r\n грив.” 5), Друга половина сього параґрафу, очевидно, говорить про \r\n убийство жінки її чоловіком; перша не ясно чи говорить теж про убийство своєї \r\n жінки чоловіком чи женщини взагалї, але се не богато зміняє. Отже право, \r\n взагалї признаючи голову жінки рівноцїнною з чоловічою, робить полекш\n\n### Result 4 (score: 0.4801)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0185`\n- **Text**:\nСлово „дружина” — у д.-р. письм. звичайне: Єванг. XII в. Лук. II, 44, „мнЂвшя же и въ дружинЂ” =\r\nεν τη συνοδία, Гал. Єв.\r\nII, 60; ще — в Истор. Палее, Попов, Кн. быт. неб. и земли 1881 p., с. 160;\r\n„Слово Адама\": того есми, дружино, мнози дни жадали”, ПСтРЛ. III, с. 11; у\r\nФлавія: „и ту постави лЂпшюю хитрейшую дружину”, кн. I, Арх. рук., арк. 359д;\r\n„Антипатрова же дружина естьствомъ быша жестъсерди”, арк. 368с; „на\r\nАлександрову дружину подходяшеть” арк. 368д; „съ своее дружинЂ” арк.\r\n367е; „\n\n### Result 5 (score: 0.4714)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0007`\n- **Text**:\nСкладається теж щиру подяку Українській Канадській\r\nФундації ім. Тараса Шевченка, і Департаментові Політичних Студій Манітобського\r\nУніверситету, за їхню фінансову допомогу цьому виданні.\n\nЮрій Книш\n\nВінніпеґ. 1 січня 1993 р.\n\nПЕРЕДМОВА АВТОРА\n\nКоли я приступав до студіювання Руської Правди з\r\nчисто філологічного становища, я керувався багатьма мотивами і спонуками. Але\r\nнайголовніший із них був той, що Руська Правда є пам’ятка величезної\r\nвсесловянської культурної ваги. Цей твір назверх вигляда\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2f429066-7fb1-438e-b551-69ffa98c21d7",
+      "timestamp": "2026-03-14T01:55:45.814Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with query",
+          "description": "I'm now formulating the first query to gather initial information. I'll utilize the knowledge retrieval process to get the basic facts.",
+          "timestamp": "2026-03-14T01:55:42.870Z"
+        },
+        {
+          "subject": "Formulating initial queries",
+          "description": "I'm developing a set of queries designed to extract relevant details about the roles and rights of women. The initial strategy is to explore different search terms to maximize the chance of uncovering insightful data. I am focusing on the Ukrainian context and will leverage multiple search functions.",
+          "timestamp": "2026-03-14T01:55:45.449Z"
+        }
+      ],
+      "tokens": {
+        "input": 25461,
+        "output": 80,
+        "cached": 0,
+        "thoughts": 198,
+        "tool": 0,
+        "total": 25739
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453345679_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Жінки в Україні",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453345679_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Жінки в Україні' — 5 results\n\n1. **Жінки в Україні** — просуванні (60 % жінок мають вищу освіту, але 80 % безробітних — жінки); жінки складають більшість із понад 45 % населення України (45 млн), що зазнає\n2. **Насильство проти жінок в Україні** — проти жінок в Україні — вкорінена соціальна проблема, як і в більшості країн світу. За звітом ООН від 2013 року, близько 45 % населення України зазнає\n3. **Фемінізм в Україні** — самостійним: жінки об&#039;єднувалися переважно задля спільної освітянської, літературної та доброчинної діяльності. Перша жіноча організація в Україні — Товариство\n4. **Жінки у війні на сході України** — також: Жінки в Збройних силах України, Жінки в російсько-українській війні (з 2014) та Жінки під час російського вторгнення в Україну 2022 року Жінки у війні\n5. **Історія жіночої освіти в Україні** — Навчання дівчат і жінок в Україні від підготовчної школи до академії містить проблеми гендерної рівності в доступі, якості, розподілом за сферами та академічному"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:52.681Z",
+          "resultDisplay": "Wikipedia search: 'Жінки в Україні' — 5 results\n\n1. **Жінки в Україні** — просуванні (60 % жінок мають вищу освіту, але 80 % безробітних — жінки); жінки складають більшість із понад 45 % населення України (45 млн), що зазнає\n2. **Насильство проти жінок в Україні** — проти жінок в Україні — вкорінена соціальна проблема, як і в більшості країн світу. За звітом ООН від 2013 року, близько 45 % населення України зазнає\n3. **Фемінізм в Україні** — самостійним: жінки об&#039;єднувалися переважно задля спільної освітянської, літературної та доброчинної діяльності. Перша жіноча організація в Україні — Товариство\n4. **Жінки у війні на сході України** — також: Жінки в Збройних силах України, Жінки в російсько-українській війні (з 2014) та Жінки під час російського вторгнення в Україну 2022 року Жінки у війні\n5. **Історія жіночої освіти в Україні** — Навчання дівчат і жінок в Україні від підготовчної школи до академії містить проблеми гендерної рівності в доступі, якості, розподілом за сферами та академічному",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773453345723_1",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "mode": "frequency",
+            "query": "віно"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773453345723_1",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**віно**: frequency = 520, relative = 0.26 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:52.681Z",
+          "resultDisplay": "**віно**: frequency = 520, relative = 0.26 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773453345766_2",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "посаг",
+            "mode": "frequency"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773453345766_2",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**посаг**: frequency = 1,414, relative = 0.70 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:52.682Z",
+          "resultDisplay": "**посаг**: frequency = 1,414, relative = 0.70 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773453345813_3",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "жінки майнові права Київська Русь"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453345813_3",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"жінки майнові права Київська Русь\"\n\n### Result 1 (score: 0.5242)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1670`\n- **Text**:\nУкр. цивільне право під московською окупацією. Після скасування окупаційною владою чинних на терені Гетьманщини\r\nмаґдебурзького права і Литовського Статуту як джерел кодифікованого\r\nмісцевого права деякі норми місцевого, найбільш живучого, цивільного права все\r\nж таки були перенесені до »Своду законов« Російської імперії й були обов’язкові\r\nдля населення Чернігівської й Полтавської губерній аж до 1920 р. До цих норм\r\nналежали, зокрема, такі: кредитор міг правити забезпечений на заставленому\r\nпро\n\n### Result 2 (score: 0.5176)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0278`\n- **Text**:\n33 Левицкий О. И. О\r\nсемейных отношениях... — С. 553 — 554.\n\n34 Див., напр.,\r\nвіновний лист 1584 р. // Актова книга Житомирського міського уряду кінця XVI\r\nст. (1582 — 1588 рр.). — Док. № 87. С. 154 — 155.\n\n35 Там само. — С.\r\n155.\n\n36 АЮЗР. — Ч. 8, т.\r\n3. — Док. № 15.\n\nЗа інституціями звичаєвого права, докладно\r\nрегламентованими у всіх трьох редакціях Литовського статуту, невінована жінка\r\nна випадок смерті чоловіка позбавлялася права вимагати повернення свого\r\nприданого. Проте якщо вона була шл\n\n### Result 3 (score: 0.5087)\n- **Work**: Войтович — Князівські династії Східної Європи (2000)\n- **Author**: Войтович Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `6573f12d_c1070`\n- **Text**:\nСуспільство Київської Русі було суспільством\r\nфеодальним, основні відносини якого базувалися на наявності феодів чи ленів,\r\nтобто земельних володінь або фіксованих доходів з них (грошових чи\r\nнатуральних), наданих сюзереном своєму васалові у спадкове володіння за умови\r\nвиконання останнім певних служб на користь сеньйора (військової, з управління\r\nпевними територіями, судочинаства чи придворної). Особисті земельні володіння\r\nверхівки цього суспільства, в тому числі князів, були незначним і не ск\n\n### Result 4 (score: 0.5057)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0270`\n- **Text**:\nПроте, як свідчать тогочасні документи, в реальному\r\nжитті, у колі сім’ї українська жінка займала порівняно високе і навіть\r\nсамостійне становище. Той самий Литовський статут, з одного боку, обмежував\r\nгромадянські права жінки, а з другого — визнавав за нею всі особисті права.\r\nВизначний історик Орест Левицький підкреслював, спираючись на документи, що\r\nжінка вищих станів мала необмежене право купувати й продавати рухоме й нерухоме\r\nмайно; вона вступала в юридичні зобов’язання; вела судові позов\n\n### Result 5 (score: 0.5023)\n- **Work**: Історія української культури. Т.1. Київська Русь (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `294b54e7_c0546`\n- **Text**:\nЖіночими прикрасами були скроневі кільця, шийні\r\nгривни, намиста з різного роду підвісками, сережки, колти, персні й каблучки та\r\nрізноманітні браслети, широко представлені як у складі скарбів, так і в\r\nматеріалах поховань. Прикраси для заможних та знатних жінок виготовляли із\r\nзолота та срібла, а для простих селянок та городянок — із кольорових сплавів\r\nта скла. Велику кількість різнокольорових скляних браслетів, каблучок та\r\nнамиста знайдено під час розкопок міст. У матеріалах селищ скляних пр\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:55:52.682Z",
+          "resultDisplay": "Found 5 results for: \"жінки майнові права Київська Русь\"\n\n### Result 1 (score: 0.5242)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1670`\n- **Text**:\nУкр. цивільне право під московською окупацією. Після скасування окупаційною владою чинних на терені Гетьманщини\r\nмаґдебурзького права і Литовського Статуту як джерел кодифікованого\r\nмісцевого права деякі норми місцевого, найбільш живучого, цивільного права все\r\nж таки були перенесені до »Своду законов« Російської імперії й були обов’язкові\r\nдля населення Чернігівської й Полтавської губерній аж до 1920 р. До цих норм\r\nналежали, зокрема, такі: кредитор міг правити забезпечений на заставленому\r\nпро\n\n### Result 2 (score: 0.5176)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0278`\n- **Text**:\n33 Левицкий О. И. О\r\nсемейных отношениях... — С. 553 — 554.\n\n34 Див., напр.,\r\nвіновний лист 1584 р. // Актова книга Житомирського міського уряду кінця XVI\r\nст. (1582 — 1588 рр.). — Док. № 87. С. 154 — 155.\n\n35 Там само. — С.\r\n155.\n\n36 АЮЗР. — Ч. 8, т.\r\n3. — Док. № 15.\n\nЗа інституціями звичаєвого права, докладно\r\nрегламентованими у всіх трьох редакціях Литовського статуту, невінована жінка\r\nна випадок смерті чоловіка позбавлялася права вимагати повернення свого\r\nприданого. Проте якщо вона була шл\n\n### Result 3 (score: 0.5087)\n- **Work**: Войтович — Князівські династії Східної Європи (2000)\n- **Author**: Войтович Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `6573f12d_c1070`\n- **Text**:\nСуспільство Київської Русі було суспільством\r\nфеодальним, основні відносини якого базувалися на наявності феодів чи ленів,\r\nтобто земельних володінь або фіксованих доходів з них (грошових чи\r\nнатуральних), наданих сюзереном своєму васалові у спадкове володіння за умови\r\nвиконання останнім певних служб на користь сеньйора (військової, з управління\r\nпевними територіями, судочинаства чи придворної). Особисті земельні володіння\r\nверхівки цього суспільства, в тому числі князів, були незначним і не ск\n\n### Result 4 (score: 0.5057)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0270`\n- **Text**:\nПроте, як свідчать тогочасні документи, в реальному\r\nжитті, у колі сім’ї українська жінка займала порівняно високе і навіть\r\nсамостійне становище. Той самий Литовський статут, з одного боку, обмежував\r\nгромадянські права жінки, а з другого — визнавав за нею всі особисті права.\r\nВизначний історик Орест Левицький підкреслював, спираючись на документи, що\r\nжінка вищих станів мала необмежене право купувати й продавати рухоме й нерухоме\r\nмайно; вона вступала в юридичні зобов’язання; вела судові позов\n\n### Result 5 (score: 0.5023)\n- **Work**: Історія української культури. Т.1. Київська Русь (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `294b54e7_c0546`\n- **Text**:\nЖіночими прикрасами були скроневі кільця, шийні\r\nгривни, намиста з різного роду підвісками, сережки, колти, персні й каблучки та\r\nрізноманітні браслети, широко представлені як у складі скарбів, так і в\r\nматеріалах поховань. Прикраси для заможних та знатних жінок виготовляли із\r\nзолота та срібла, а для простих селянок та городянок — із кольорових сплавів\r\nта скла. Велику кількість різнокольорових скляних браслетів, каблучок та\r\nнамиста знайдено під час розкопок міст. У матеріалах селищ скляних пр\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "62b95fc8-c0b0-4b09-96a2-66c73f1e1d62",
+      "timestamp": "2026-03-14T01:56:09.879Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the Next Steps",
+          "description": "I am now focusing on determining how to advance the process. I am making sure I can complete the steps that come next to finish the procedure as thoroughly as possible. My goal is to ensure that the process can successfully move forward and not get stuck.",
+          "timestamp": "2026-03-14T01:55:58.839Z"
+        },
+        {
+          "subject": "Refining the Approach",
+          "description": "I am now assessing whether I can proceed and checking for any potential roadblocks. My aim is to ensure the process remains on track and continues to develop smoothly. I'm focusing on making certain that the following steps are feasible and won't hinder progress.",
+          "timestamp": "2026-03-14T01:56:03.952Z"
+        },
+        {
+          "subject": "Re-evaluating the Structure",
+          "description": "I'm considering whether I can break down the available information effectively into the provided sections. My goal is to determine how to organize the data, ensuring a logical flow within the module structure. I'm focusing on aligning the historical context with the section headings to ensure clarity.",
+          "timestamp": "2026-03-14T01:56:07.587Z"
+        },
+        {
+          "subject": "Organizing Information for Synthesis",
+          "description": "I am now focusing on organizing the information. I'm strategizing how to best fit the data into the defined sections for a structured module. My aim is to ensure the content is logically arranged to build a comprehensive overview, matching the topic's parameters. I am preparing to implement the content across each part.",
+          "timestamp": "2026-03-14T01:56:09.688Z"
+        }
+      ],
+      "tokens": {
+        "input": 27288,
+        "output": 26,
+        "cached": 13570,
+        "thoughts": 752,
+        "tool": 0,
+        "total": 28066
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453369878_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Руська правда спадщина дочка смерд боярин"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453369878_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Руська правда спадщина дочка смерд боярин\"\n\n### Result 1 (score: 0.4533)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0471`\n- **Text**:\n2 Гробниця з останками Михайла Всеволодовича\r\n нині стоїть в Архангельському соборі в Москві. У Михайла, крім відомих з Іп.\r\n Ростислава та Романа (Старого, за Любецьким синодиком; за цим же синодиком, його жоною була Анна, названа\r\n також Анастасією), були, за даними «Бархатної книги», сини Мстислав, Симеон\r\n (Семен) та Юрій (Георгій), жона якого невідома. У Лавр. виступає Михайлова\r\n дочка Марія, жона Василька Костянтиновича, який мав від неї двох синів —\r\n Бориса та Гліба. Існує «Житіє Феодул\n\n### Result 2 (score: 0.4533)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0096`\n- **Text**:\n2 Гробниця з останками Михайла Всеволодовича\r\n нині стоїть в Архангельському соборі в Москві. У Михайла, крім відомих з Іп.\r\n Ростислава та Романа (Старого, за Любецьким синодиком; за цим же синодиком, його жоною була Анна, названа\r\n також Анастасією), були, за даними «Бархатної книги», сини Мстислав, Симеон\r\n (Семен) та Юрій (Георгій), жона якого невідома. У Лавр. виступає Михайлова\r\n дочка Марія, жона Василька Костянтиновича, який мав від неї двох синів —\r\n Бориса та Гліба. Існує «Житіє Феодул\n\n### Result 3 (score: 0.4476)\n- **Work**: Марія Матіос. Москалиця (1959)\n- **Author**: Матіос М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `3a0f4c58_c0025`\n- **Text**:\n— Правда-а-а-а... — видихнула дитина, затуляючи обома долонями безкровний ротик і незмигно дивлячись на Северину. — Але я нікому не скажу! — швидко заговорила знову. — Нікому — нікому... хіба лише мамі...\n\n...Відтоді москалиця стала ще й гадючою мамою.\n\nА гадина, як усім відомо в Панській Долині, походить від диявола, що добре видно по її зубах. Так що, сказали в селі, в москалиці тепер — ціла щезникова ферма.\n\nНечисте місце!\n\nКраще туди не ходити.\n\nНавіть по ліки.\n\n...Чи то так помогла гадюка, \n\n### Result 4 (score: 0.4416)\n- **Work**: Володимир Сосюра. Третя рота (1898)\n- **Author**: Сосюра В.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `a28fdbf4_c0004`\n- **Text**:\nДід після своєї смерті не залишив батькові спадщини. В заповіті було написано: \"Сыну Николаю ничего не завещаю\".\n\nУ батька була сестра, тьотя Ніна. Вона мала начальну освіту, а далі не вчилась. Дід її дуже любив, а батька теж, звичайно, любив, але іншою, суворою і мужньою любов'ю. Він бачив, що татко талановитий і сам проб'є собі дорогу. А тьотя була непристосована до життя і боялась його. У неї була нещасна любов, і вона так і залишилась до смерті старою дівчиною. Гроші вона сховала в матрац, і\n\n### Result 5 (score: 0.4320)\n- **Work**: Марія Матіос. Москалиця (1959)\n- **Author**: Матіос М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `3a0f4c58_c0001`\n- **Text**:\nАле безкості сільські язики таки задовго до церковної книги припечатали новонародженій дитині її довічне ім'я — москалиця. Нібито так само прямо, але вже вголос, нагадуючи про минулорічний постій у Катрінчиній хаті трьох чорноволосих вояків-русаків, після відступу яких двері з ґанку в сіни добу хилиталися, відчинені навстіж, а сирітська дівчина не показувалася на подвір'ї від четверга до суботи.\n\nКоли серед білої суботи Катрінка стала коло криниці в роздертій білій сорочці з густими бурими пляма\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:56:10.127Z",
+          "resultDisplay": "Found 5 results for: \"Руська правда спадщина дочка смерд боярин\"\n\n### Result 1 (score: 0.4533)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0471`\n- **Text**:\n2 Гробниця з останками Михайла Всеволодовича\r\n нині стоїть в Архангельському соборі в Москві. У Михайла, крім відомих з Іп.\r\n Ростислава та Романа (Старого, за Любецьким синодиком; за цим же синодиком, його жоною була Анна, названа\r\n також Анастасією), були, за даними «Бархатної книги», сини Мстислав, Симеон\r\n (Семен) та Юрій (Георгій), жона якого невідома. У Лавр. виступає Михайлова\r\n дочка Марія, жона Василька Костянтиновича, який мав від неї двох синів —\r\n Бориса та Гліба. Існує «Житіє Феодул\n\n### Result 2 (score: 0.4533)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0096`\n- **Text**:\n2 Гробниця з останками Михайла Всеволодовича\r\n нині стоїть в Архангельському соборі в Москві. У Михайла, крім відомих з Іп.\r\n Ростислава та Романа (Старого, за Любецьким синодиком; за цим же синодиком, його жоною була Анна, названа\r\n також Анастасією), були, за даними «Бархатної книги», сини Мстислав, Симеон\r\n (Семен) та Юрій (Георгій), жона якого невідома. У Лавр. виступає Михайлова\r\n дочка Марія, жона Василька Костянтиновича, який мав від неї двох синів —\r\n Бориса та Гліба. Існує «Житіє Феодул\n\n### Result 3 (score: 0.4476)\n- **Work**: Марія Матіос. Москалиця (1959)\n- **Author**: Матіос М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `3a0f4c58_c0025`\n- **Text**:\n— Правда-а-а-а... — видихнула дитина, затуляючи обома долонями безкровний ротик і незмигно дивлячись на Северину. — Але я нікому не скажу! — швидко заговорила знову. — Нікому — нікому... хіба лише мамі...\n\n...Відтоді москалиця стала ще й гадючою мамою.\n\nА гадина, як усім відомо в Панській Долині, походить від диявола, що добре видно по її зубах. Так що, сказали в селі, в москалиці тепер — ціла щезникова ферма.\n\nНечисте місце!\n\nКраще туди не ходити.\n\nНавіть по ліки.\n\n...Чи то так помогла гадюка, \n\n### Result 4 (score: 0.4416)\n- **Work**: Володимир Сосюра. Третя рота (1898)\n- **Author**: Сосюра В.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `a28fdbf4_c0004`\n- **Text**:\nДід після своєї смерті не залишив батькові спадщини. В заповіті було написано: \"Сыну Николаю ничего не завещаю\".\n\nУ батька була сестра, тьотя Ніна. Вона мала начальну освіту, а далі не вчилась. Дід її дуже любив, а батька теж, звичайно, любив, але іншою, суворою і мужньою любов'ю. Він бачив, що татко талановитий і сам проб'є собі дорогу. А тьотя була непристосована до життя і боялась його. У неї була нещасна любов, і вона так і залишилась до смерті старою дівчиною. Гроші вона сховала в матрац, і\n\n### Result 5 (score: 0.4320)\n- **Work**: Марія Матіос. Москалиця (1959)\n- **Author**: Матіос М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `3a0f4c58_c0001`\n- **Text**:\nАле безкості сільські язики таки задовго до церковної книги припечатали новонародженій дитині її довічне ім'я — москалиця. Нібито так само прямо, але вже вголос, нагадуючи про минулорічний постій у Катрінчиній хаті трьох чорноволосих вояків-русаків, після відступу яких двері з ґанку в сіни добу хилиталися, відчинені навстіж, а сирітська дівчина не показувалася на подвір'ї від четверга до суботи.\n\nКоли серед білої суботи Катрінка стала коло криниці в роздертій білій сорочці з густими бурими пляма\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4ae23a3f-ec67-4ef7-983e-d008f219ac75",
+      "timestamp": "2026-03-14T01:56:56.550Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Жінки у праві\n\n## Key Facts Ledger\n```yaml\nsubject: \"Жінки у праві\"\ntype: \"phenomenon\"\ndates:\n  start: \"1016\" # Earliest versions of Ruska Pravda\n  end: \"1529\" # Transition into Lithuanian Statutes (First Statute)\n  key_events:\n    - year: 1016\n      event: \"Поява перших статей «Руської Правди», які заклали основи майнового права.\"\n    - year: 1153\n      event: \"Редакція Простої Руської Правди (приблизно), де чітко артикулюються права вдів і дочок на спадок.\"\n    - year: 1529\n      event: \"Перший Литовський Статут, який кодифікував звичаєве право Київської Русі щодо автономії жінки.\"\nprimary_quotes:\n  - text: \"Аже жена сядеть по мужи, то дати ей части, а оу своих детей взяти части..., а задница ее мужня не надобе.\"\n    source: \"Руська Правда, ст. 123\"\n    attribution: \"Давньоруський законодавець\"\n  - text: \"Дуже поважне і самостійне становище вдови в давнім руськім праві... кидає ясне світло на дійсне, фактичне становище жінки в родині.\"\n    source: \"Історія України-Руси, т.2-3\"\n    attribution: \"Михайло Грушевський\"\n  - text: \"Коли вдова не виходила замуж вдруге по смерти чоловіка, право признавало її повновластною головою родини, на місці її чоловіка.\"\n    source: \"Історія України-Руси, т.2-3\"\n    attribution: \"Михайло Грушевський\"\nforbidden_claims:\n  - \"Твердження, що жінки в Київській Русі були повністю безправними і вважалися 'власністю' чоловіка (це екстраполяція московського 'Домострою').\"\n  - \"Ототожнення понять 'задниця' (спадок загалом) та 'віно'/'посаг' (особисте майно жінки).\"\n```\n\n## Використані джерела\n1. [Енциклопедія українознавства (1955)] — Огляд родинного та спадкового права згідно з «Руською Правдою».\n2. [Грушевський М. Історія України-Руси, т.2-3 (1898)] — Аналіз становища вдови та жінки в родині.\n3. [Юшков С. Нариси з історії виникнення... (1939)] — Юридичний аналіз понять «задниця» і «часть» у «Руській Правді».\n4. [Історія української культури. Т.2. XIII-XVII ст. (2001)] — Розвиток правового становища жінки від Київської Русі до Литовських статутів.\n\n## Хронологія\n- **1016**: Укладання найдавнішої частини «Руської Правди» Ярославом Мудрим, що зафіксувала базові норми суспільства.\n- **ХІІ ст.**: Розширена редакція «Руської Правди» чітко розмежовує поняття загального спадку («задниця») та вдовиної частки.\n- **ХІІ-ХІІІ ст.**: Формування стійкого звичаєвого права, за яким вдова стає повноправною головою родини («повновластною головою») до повноліття дітей.\n- **Кінець XIV ст.**: Початок інкорпорації норм руського права у законодавство Великого князівства Литовського.\n- **1529**: Перший Литовський Статут юридично закріплює за жінками вищих станів необмежене право купувати, продавати майно та виступати в суді, що є прямим спадком давньоруської традиції.\n\n## Ключові факти та цитати\n- «Руська Правда» відрізняє дітей законних від незаконних (від наложниці-невільниці).\n- Жінка після смерті чоловіка вступала в повне управління загальнородинним майном при недорослих дітях, або нарівні з синами одержувала певну частину майна («виділ», «часть»).\n- Особисте майно жінки («віно», «посаг») не включалося до загального спадку («задниця») чоловіка.\n- За відсутності синів у боярському/дружинному середовищі дочки мали право на спадкування нерухомості (на відміну від смердів, де спадок переходив князю, але дочкам виділялася частина на посаг).\n- Вбивство жінки, за «Руською Правдою», каралося так само суворо, як і вбивство чоловіка (хоча якщо вона була «винувата», платилася піввіра — 20 гривень).\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": `[!myth-buster]` — Спростування міфу про \"забиту слов'янську жінку\". Московський \"Домострой\" не має жодного відношення до правової реальності Київської Русі, де жінка мала суб'єктність.\n- Section \"Вступ\": `[!context]` — Порівняння правового статусу жінки в Русі та тогочасній Західній Європі (де права жінок часто були значно вужчими).\n- Section \"Основний матеріал\": `[!quote]` — Цитата зі ст. 123 «Руської Правди» про «задницю» та вдовину частку.\n- Section \"Основний матеріал\": `[!history-bite]` — Етимологія слова «задниця» у давньоруському праві: це не лайливе слово, а суто юридичний термін, що означав спадок (те, що залишається \"позаду\" після смерті людини).\n- Section \"Практика\": `[!culture]` — Поняття «віно» та «посаг» — як формувався стартовий капітал жінки, який залишався недоторканним для чоловіка і його родичів.\n- Section \"Підсумок\": `[!legacy]` — Як норми «Руської Правди» еволюціонували у Литовські Статути, зберігши за українською жінкою право на незалежну судову тяганину та управління маєтками аж до XVIII століття.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Російська та радянська історіографія часто маргіналізували жіночу історію Русі, зводячи її лише до образів кількох княгинь (як-от Ольга), водночас переносячи патріархальні деспотичні норми пізньомосковського суспільства на весь \"східнослов'янський\" простір.\n- **Ukrainian reality**: Українська правова традиція, починаючи від «Руської Правди» і до Литовських Статутів, гарантувала жінці (особливо вдові) статус самостійного юридичного суб'єкта. Вона управляла господарством, володіла майном, укладала угоди та була \"повновладною головою родини\". Це демонструє глибоку цивілізаційну прірву між правовою культурою Русі-України та Московії.\n\n## Contested Terms (if applicable)\n| Concept | Imperial/Modern Misconception | Ukrainian historical/legal framing |\n|---------|-----------------|-------------------|\n| Задниця | Лайливе/вульгарне слово | Юридичний термін (спадок, майно померлого) |\n| Вдова | Безправна, жалюгідна особа | Самостійний суб'єкт права, голова родини |\n| Домострой | \"Спільна спадщина\" східних слов'ян | Суто московський феномен, чужий руському праву |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Фокус**: Деконструкція міфу про безправність жінки. Загальний огляд статусу жінки в суспільстві Київської Русі.\n- **Ключові концепти**: Жінка як суб'єкт права. Захист життя жінки (віра за вбивство жінки була рівною або пропорційною).\n- **Деколонізація**: Чітке розмежування між правовим полем Русі (де жінка могла володіти майном) та пізнішими наративами імперії, які намагалися уніфікувати історію під патріархальний деспотизм.\n\n### Основний матеріал\n- **Фокус**: Аналіз текстів «Руської Правди» (зокрема статті 123).\n- **Майнові права**: Розбір концепцій «задниця» (загальний спадок) та «часть»/«виділ» (частка вдови).\n- **Статус вдови**: За Грушевським, вдова — \"повновластна голова родини\". Якщо вона не виходила заміж вдруге, вона ставала опікуном дітей та управителькою всього майна чоловіка.\n- **Права дочок**: Дочки бояр/дружинників могли успадковувати землю (нерухомість) за відсутності синів. Дочки смердів отримували лише частину на посаг.\n\n### Практика\n- **Фокус**: Робота з термінологією та першоджерелами. \n- **Терміни для засвоєння**: Віно, посаг, задниця, виділ, віра, опіка. \n- **Практичний аспект**: Розуміння того, як формувався жіночий капітал. «Посаг» — майно від батьків, «віно» — майновий запис від чоловіка, що забезпечував дружину на випадок його смерті. Це майно було недоторканним.\n\n### Підсумок\n- **Фокус**: Спадкоємність правової традиції та місток до наступного модуля (\"guardianship\").\n- **Еволюція**: Норми «Руської Правди» щодо прав жінок не зникли після падіння Києва, а органічно перейшли в звичаєве право, а згодом — у Литовські Статути, де жінка вищих станів мала \"необмежене право купувати й продавати рухоме й нерухоме майно\".\n- **Зв'язок**: Перехід до теми опіки (як вдова ставала опікуном недорослих дітей та як призначалися інші опікуни у разі її повторного шлюбу).\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Determining the Next Steps",
+          "description": "\\n\\n\nI'm focusing on the upcoming actions. Considering the information I have, I'm now contemplating what needs to be done next and how to proceed to reach the desired state. I will carefully consider the available data and strategize the most effective way forward.",
+          "timestamp": "2026-03-14T01:56:15.257Z"
+        },
+        {
+          "subject": "Formulating a Strategy",
+          "description": "\\n\\n\nI'm now carefully reviewing all the information that has been gathered. I'm formulating an approach to synthesize the findings, ensuring all critical aspects are addressed and that the analysis is comprehensive. I will organize the data to ensure clarity and coherence.",
+          "timestamp": "2026-03-14T01:56:18.869Z"
+        },
+        {
+          "subject": "Composing the Response",
+          "description": "\\n\\n\nNow that the research is complete, I'm ready to craft the response. I'm focusing on structuring the information into the required format, incorporating the decolonial perspective and engagement hooks. I intend to ensure the response meets all the given specifications.",
+          "timestamp": "2026-03-14T01:56:22.844Z"
+        }
+      ],
+      "tokens": {
+        "input": 28675,
+        "output": 2674,
+        "cached": 20075,
+        "thoughts": 598,
+        "tool": 0,
+        "total": 31947
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 51 — E2E
+PASS: pipeline lit-essay 55
 
   Module:   grabowicz-myth-shevchenko
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T19:26:08Z
+  Date:     2026-03-14T02:10:17Z

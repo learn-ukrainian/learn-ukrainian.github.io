@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 29 — E2E
+PASS: pipeline lit-essay 35
 
   Module:   hrytsak-history-ukraine
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:14:04Z
+  Date:     2026-03-14T01:19:40Z

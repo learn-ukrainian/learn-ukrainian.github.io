@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 90 — E2E
+PASS: pipeline ruth 90
 
   Module:   orlyk-latin-comparison
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T13:31:19Z
+  Date:     2026-03-14T07:08:28Z

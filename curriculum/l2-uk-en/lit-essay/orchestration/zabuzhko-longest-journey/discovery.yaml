@@ -1,0 +1,259 @@
+discovered_at: '2026-03-14T01:13:15.545499+00:00'
+query_keywords:
+- Zabuzhko Longest Journey
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Zabuzhko Longest Journey у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.75
+  relevance_note: The video discusses the re-evaluation of historical narratives,
+    particularly regarding the Holocaust and Stalin's regime, in the context of decolonization
+    and current events in Ukraine. This strongly reinforces the 'Деколонізаційна перспектива'
+    and 'історіографія' aspects of the module, offering contemporary relevance to
+    the themes often explored by Zabuzhko.
+  transcript_excerpt: сьогодні виклик такий взагалі це виклик для академічної освітньої
+    середовища України як викладати історію Другої світової війни Як викладати зокрема
+    історію Голокосту в цих умовах коли москові творить такі злочини на нашій землі
+    то взагалі виклик такий про зміну йдеться про зміну парадигми дослідження говоріння
+    і осмислення Другої Світової
+  embed_suggestion: After Деколонізаційна перспектива -- The video offers a contemporary
+    example of historical re-evaluation and decolonization efforts in Ukraine, mirroring
+    themes in Zabuzhko's work.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: The video explores how the Tereșchenko family was 'tabooed' in Soviet
+    historiography, directly illustrating the suppression of Ukrainian historical
+    figures and narratives. This provides a concrete example related to the module's
+    'Деколонізаційна перспектива' and 'історіографія' themes.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива -- Provides a concrete historical
+    example of suppressed narratives and distorted historiography, which is a core
+    aspect of decolonization often addressed in Zabuzhko's writing.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.45
+  relevance_note: This video details the business history and influence of the Tereșchenko
+    family within the Russian Empire. While it is Ukrainian history, its focus is
+    primarily on economic and social history rather than the literary, decolonization,
+    or national identity themes central to the Zabuzhko module.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: After Вступ та контекст -- Could serve as general historical background
+    regarding prominent Ukrainian families, but its direct relevance to Zabuzhko's
+    work or decolonization themes is more tangential.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0485
+  text: '. . . . . . . . . . . . . . . . 245
+
+    По дорозі в Казку  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . 245
+
+    Теорія літератури. Драматичний етюд . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 247
+
+    Короткий словник літературознавчих термінів . . . . . . . . . . . . . . . . .
+    . . . . . . . 249'
+  section_title: Сторінка 255
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0399
+  text: "(За К. Макґоніґал)\n \n \nВизначте, яким способом пов’язані речення в тексті —\
+    \ послідовним \n(ланцюговим) чи паралельним. Які ключові слова визначають тему\
+    \ тексту? А як ви формуєте силу волі? Що ще, крім сили волі, допомагає в до-\n\
+    сягненні мети? 645 Доберіть із художньої літератури уривок тексту про цікаву осо-\n\
+    бистість. Визначте тему й мікротеми, стиль мовлення тексту. Знайдіть за-\nсоби\
+    \ зв’язку речень у тексті (синоніми, займенники, повторювані слова, \nсполучники\
+    \ тощо). Схарактеризуйте текст за йог"
+  section_title: Сторінка 226
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5615509748458862
+  chunk_id: 3588aaff_c0551
+  text: "4. У тому-таки вступному розділі, де подається\r\nкороткий огляд попередньої\
+    \ української науки про літературу, Чижевський також\r\nвважає за потрібне спробувати\
+    \ десь на шести сторінках викласти ази поетики. Для\r\nангломовних читачів це\
+    \ може видатися ексцентричним або вищою мірою недоречним.\r\nОдначе така спроба\
+    \ цілком відповідає тим настановам, про які йшлося вище.\r\nПочавши з двох параграфів,\
+    \ присвячених мові (де він згадує, приміром, архаїзми,\r\nнеологізми, жаргон тощо),\
+    \ продовживши короткими визначен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5520268678665161
+  chunk_id: 3588aaff_c0637
+  text: "9. У світлі відзначених проблем підхід Чижевського\r\nзнову-таки повинен\
+    \ видатися до певної міри звуженим, зокрема в тенденції зробити\r\nлітературний\
+    \ процес і контекст вторинними щодо формальних критеріїв. Найбільш\r\nзвуженим\
+    \ є, мабуть, трактування українського романтизму переважно з погляду\r\nприписуваного\
+    \ йому руху до повноти, позаяк це зводить не тільки історію\r\nлітератури, але\
+    \ й саму літературу до \"першопричини\", до телеології.\r\nПрагнення вдосконалювати\
+    \ мову та виразність літератури — лише один і"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5473711490631104
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

@@ -1,0 +1,655 @@
+{
+  "sessionId": "e096f8aa-b539-4acf-aa27-6b1ac0c83248",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T02:47:08.870Z",
+  "lastUpdated": "2026-03-14T02:48:48.078Z",
+  "messages": [
+    {
+      "id": "8e1fb5c9-fc6b-4c8f-b49b-7694ef5e21ad",
+      "timestamp": "2026-03-14T02:47:08.870Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-085\nlevel: OES\nsequence: 85\nslug: slovo-mythology\nversion: '2.0'\ntitle: 'Слово: Міфологія'\nsubtitle: 'Slovo: Mythology'\nfocus: Veles, Div, Troyan — Pagan stratum\nphase: 4\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - 'Introduction to Slovo: Mythology'\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Volkhv (Pagan Priest)\nprerequisites:\n- slovo-hapax-legomena\nconnects_to:\n- slovo-authenticity-debate\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Слово: Міфологія** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Слово: Міфологія\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Слово: Міфологія\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "726f84d5-69c6-406c-a57b-94f12de8eb20",
+      "timestamp": "2026-03-14T02:47:17.986Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning the Process",
+          "description": "I'm focused on moving forward with the task. I'm now trying to establish the first step, ensuring I'm proceeding in a logical manner. The intent is to initiate the work and make progress.",
+          "timestamp": "2026-03-14T02:47:13.271Z"
+        },
+        {
+          "subject": "Refining the Initial Approach",
+          "description": "I'm now structuring my initial actions to get the task underway. I will begin by acquiring foundational information, leveraging appropriate methods. I aim to then identify the key terms for deep analysis, laying the groundwork for more advanced investigation.",
+          "timestamp": "2026-03-14T02:47:16.948Z"
+        },
+        {
+          "subject": "Executing Initial Queries",
+          "description": "I'm now starting to gather information for the first step. The goal is to start extracting essential context. I'll be querying the databases to initiate the information-gathering phase, to discover essential details.",
+          "timestamp": "2026-03-14T02:47:17.791Z"
+        }
+      ],
+      "tokens": {
+        "input": 20499,
+        "output": 28,
+        "cached": 0,
+        "thoughts": 426,
+        "tool": 0,
+        "total": 20953
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456437983_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Слово о полку Ігоревім міфологія"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456437983_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Слово о полку Ігоревім міфологія' — 5 results\n\n1. **Слово о полку Ігоревім** — «Сло́во о полку́ І́горевім» (д.-рус. Слово о плъку Игоревѣ), також «Сло́во про І́горів похі́д» — пам&#039;ятка києворуського письменства, героїчна поема кінця\n2. **Троян** — 4, 107 (730) (рос.) Троян в «Слове» // Енциклопедія «Слово о полку Ігоревім»[ru]. Т. 5. г. СПб.: Дмитрий Буланин, 1995 г. (рос.)   Портал «Міфологія»\n3. **Волх** — персонажу асоціюють з Всеславом Брячиславичем, згадка про котрого у «Слові о полку Ігоревім» містить: та подальшому розвитку різносюжетних билин у народному\n4. **Хорс** — встановлена, можливо, він його син; як великий бог Сонця згадується у «Слові о полку Ігоревім»; у Володимировому (Київському) пантеоні стоїть поруч з іншими головними\n5. **Ткач Микола Михайлович** — реконструкція «Слово о полку Ігоревім» вийшла в Україні окремою книгою спочатку під назвою «Пахощі Боянових слів», а згодом «Слово о полку Ігоревім: графічна"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:18.580Z",
+          "resultDisplay": "Wikipedia search: 'Слово о полку Ігоревім міфологія' — 5 results\n\n1. **Слово о полку Ігоревім** — «Сло́во о полку́ І́горевім» (д.-рус. Слово о плъку Игоревѣ), також «Сло́во про І́горів похі́д» — пам&#039;ятка києворуського письменства, героїчна поема кінця\n2. **Троян** — 4, 107 (730) (рос.) Троян в «Слове» // Енциклопедія «Слово о полку Ігоревім»[ru]. Т. 5. г. СПб.: Дмитрий Буланин, 1995 г. (рос.)   Портал «Міфологія»\n3. **Волх** — персонажу асоціюють з Всеславом Брячиславичем, згадка про котрого у «Слові о полку Ігоревім» містить: та подальшому розвитку різносюжетних билин у народному\n4. **Хорс** — встановлена, можливо, він його син; як великий бог Сонця згадується у «Слові о полку Ігоревім»; у Володимировому (Київському) пантеоні стоїть поруч з іншими головними\n5. **Ткач Микола Михайлович** — реконструкція «Слово о полку Ігоревім» вийшла в Україні окремою книгою спочатку під назвою «Пахощі Боянових слів», а згодом «Слово о полку Ігоревім: графічна",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "361a48f9-5118-44a5-ad56-c36916d5a79f",
+      "timestamp": "2026-03-14T02:47:24.772Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the Next Steps",
+          "description": "I am now focusing on determining how to proceed. I'm considering what steps will get me closer to the objective. I am now evaluating the best path to move forward and formulating a plan.",
+          "timestamp": "2026-03-14T02:47:23.120Z"
+        },
+        {
+          "subject": "Executing the Plan",
+          "description": "I'm now starting to execute the plan. I'm focusing on retrieving information and using the tools to do so. My aim is to extract the necessary information to move towards completion.",
+          "timestamp": "2026-03-14T02:47:24.654Z"
+        }
+      ],
+      "tokens": {
+        "input": 20926,
+        "output": 61,
+        "cached": 16421,
+        "thoughts": 125,
+        "tool": 0,
+        "total": 21112
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456444734_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Слово о полку Ігоревім",
+            "mode": "sections"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456444734_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Слово о полку Ігоревім':\n\n1 Жанр (index=1)\n2 Історія знахідки (index=2)\n3 Історична основа і зміст поеми (index=3)\n4 Мова і поетика (index=4)\n5 Дискусії щодо автентичності (index=5)\n  5.1 Питання про авторство (index=6)\n  5.2 Версія про автентичність (index=7)\n  5.3 Скептицизм щодо автентичності (index=8)\n6 «Слово о полку Ігоревім» у мистецтві (index=9)\n  6.1 У малярстві (index=10)\n7 Переклади і переспіви (index=11)\n8 Текст твору (index=12)\n9 Див. також (index=13)\n10 Примітки (index=14)\n11 Джерела (index=15)\n12 Література (index=16)\n13 Посилання (index=17)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:28.140Z",
+          "resultDisplay": "Sections of 'Слово о полку Ігоревім':\n\n1 Жанр (index=1)\n2 Історія знахідки (index=2)\n3 Історична основа і зміст поеми (index=3)\n4 Мова і поетика (index=4)\n5 Дискусії щодо автентичності (index=5)\n  5.1 Питання про авторство (index=6)\n  5.2 Версія про автентичність (index=7)\n  5.3 Скептицизм щодо автентичності (index=8)\n6 «Слово о полку Ігоревім» у мистецтві (index=9)\n  6.1 У малярстві (index=10)\n7 Переклади і переспіви (index=11)\n8 Текст твору (index=12)\n9 Див. також (index=13)\n10 Примітки (index=14)\n11 Джерела (index=15)\n12 Література (index=16)\n13 Посилання (index=17)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456444772_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Слово о полку Ігоревім язичництво міфологія Велес Див Троян"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456444772_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Слово о полку Ігоревім язичництво міфологія Велес Див Троян\"\n\n### Result 1 (score: 0.6638)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.6183)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 3 (score: 0.6006)\n- **Work**: Півторак — Походження українців, росіян, білорусів та їхніх мов (2001)\n- **Author**: Півторак Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ffcfbeb9_c0061`\n- **Text**:\n29 Ніколаєва Т.,\r\nЩербій Є. Народний одяг //\r\nКультура і побут населення України. — К., 1991. — С. 59, 99.\n\n30 Залізняк Л. Від склавинів до української нації. — С.\r\n133-134.\n\nАдже козацтво\r\nпродовжило військові традиції київських князів, у яких уже були культ меча,\r\nконя і шаблі, малинові стяги, вшанування верховних покровителів — святого Юрія,\r\nСвятої Покрови тощо. Навіть \r\nукраїнські кобзарі\r\n пізнього \r\nсередньовіччя мали своїх попередників у Київській Русі — таких, як віщий\r\nспівець Боян і й\n\n### Result 4 (score: 0.5995)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0277`\n- **Text**:\nТо по дереві поскочить\n\nДумкою до верховіть,\n\nПо полях майне зелених\n\nСіроманцем-вовком хижим\n\nІ орлом крилатим, сизим\n\nПопід хмари підлетить.\n\nЯк, було, минулі чвари\n\nЗгадував, тоді в погоню\n\nВипускав він ген під хмари\n\nДесять бистрих соколів\n\nНа лебідок білих зграю:\n\nА котру котрий здогонить,\n\nТа найперша починає\n\nДля князів похвальний спів:\n\nДля старого Ярослава,\n\nДля хороброго Мстислава,\n\nЩо перед полком поганих\n\nЗаколов Редедю-хана\n\nІ касогів переміг,\n\nІ про красного Романа\n\nСвятославича сп\n\n### Result 5 (score: 0.5973)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0186`\n- **Text**:\nОлексій Коваленко. Слово о полку Ігоревім. \r\nДрукується за виданням: «Слово о полку Ігоревім. Поетичний переспів\r\nОлексія Коваленка», Дніпропетровське книжкове видавництво, 1960, 92 стор.\r\nВперше переспів опубліковано в альманасі «Вогні Придніпров’я», Дніпропетровське\r\nобласне газетно-журнальне вид-во, 1954, стор. 161 — 170. Для нашого видання\r\nперекладач вніс деякі поправки й зміни.\n\nПавло Тичина\n\nТоді\n\nпо Руській землі\n\nрідко ратай де погейкував,\n\nа найчастіше гайвороння крякало,\n\nтрупища помі\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:28.140Z",
+          "resultDisplay": "Found 5 results for: \"Слово о полку Ігоревім язичництво міфологія Велес Див Троян\"\n\n### Result 1 (score: 0.6638)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.6183)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 3 (score: 0.6006)\n- **Work**: Півторак — Походження українців, росіян, білорусів та їхніх мов (2001)\n- **Author**: Півторак Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ffcfbeb9_c0061`\n- **Text**:\n29 Ніколаєва Т.,\r\nЩербій Є. Народний одяг //\r\nКультура і побут населення України. — К., 1991. — С. 59, 99.\n\n30 Залізняк Л. Від склавинів до української нації. — С.\r\n133-134.\n\nАдже козацтво\r\nпродовжило військові традиції київських князів, у яких уже були культ меча,\r\nконя і шаблі, малинові стяги, вшанування верховних покровителів — святого Юрія,\r\nСвятої Покрови тощо. Навіть \r\nукраїнські кобзарі\r\n пізнього \r\nсередньовіччя мали своїх попередників у Київській Русі — таких, як віщий\r\nспівець Боян і й\n\n### Result 4 (score: 0.5995)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0277`\n- **Text**:\nТо по дереві поскочить\n\nДумкою до верховіть,\n\nПо полях майне зелених\n\nСіроманцем-вовком хижим\n\nІ орлом крилатим, сизим\n\nПопід хмари підлетить.\n\nЯк, було, минулі чвари\n\nЗгадував, тоді в погоню\n\nВипускав він ген під хмари\n\nДесять бистрих соколів\n\nНа лебідок білих зграю:\n\nА котру котрий здогонить,\n\nТа найперша починає\n\nДля князів похвальний спів:\n\nДля старого Ярослава,\n\nДля хороброго Мстислава,\n\nЩо перед полком поганих\n\nЗаколов Редедю-хана\n\nІ касогів переміг,\n\nІ про красного Романа\n\nСвятославича сп\n\n### Result 5 (score: 0.5973)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0186`\n- **Text**:\nОлексій Коваленко. Слово о полку Ігоревім. \r\nДрукується за виданням: «Слово о полку Ігоревім. Поетичний переспів\r\nОлексія Коваленка», Дніпропетровське книжкове видавництво, 1960, 92 стор.\r\nВперше переспів опубліковано в альманасі «Вогні Придніпров’я», Дніпропетровське\r\nобласне газетно-журнальне вид-во, 1954, стор. 161 — 170. Для нашого видання\r\nперекладач вніс деякі поправки й зміни.\n\nПавло Тичина\n\nТоді\n\nпо Руській землі\n\nрідко ратай де погейкував,\n\nа найчастіше гайвороння крякало,\n\nтрупища помі\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8e5ded9f-2d68-4dd7-85b1-997e3d1bba3a",
+      "timestamp": "2026-03-14T02:47:36.081Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Initiating quote retrieval",
+          "description": "I'm now zeroing in on the information I need. I'm actively working on retrieving the necessary quotes. My focus is on ensuring the accuracy of the final output.",
+          "timestamp": "2026-03-14T02:47:31.680Z"
+        },
+        {
+          "subject": "Gathering literary evidence",
+          "description": "I'm now narrowing my search to obtain the specific quotes. I'm focusing on the keywords within the literary text. My objective is to pinpoint precise textual evidence.",
+          "timestamp": "2026-03-14T02:47:34.900Z"
+        }
+      ],
+      "tokens": {
+        "input": 22749,
+        "output": 154,
+        "cached": 19908,
+        "thoughts": 242,
+        "tool": 0,
+        "total": 23145
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456455094_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Слово о полку Ігоревім",
+            "mode": "section",
+            "section": 4
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456455094_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Слово о полку Ігоревім — Section 4\n\nМова і поетика\nВ.Перов]]\nОсновою мови «Слова» є народнопоетична стихія, тогочасна жива розмовна мова. Більшість дослідників припускають, що автор «Слова…» був або киянин, або чернігівець, інші (Орлов, Юґов) доводять, що він мусив бути галичанином («карпаторус»).\n\nЗв'язок з народною поетикою, літописом і воєнними повістями свідчить про глибоке народне коріння «Слова…». Помітний і генетичний зв'язок «Слова…» та українських народних дум, але цей аспект історії українського фольклору ще потребує поглибленого аналізу..\n\nРосійський мовознавець К. Калайдович, писав у 1818 році: «Спосіб вираження „Пісні“ і самі слова: кресити, болоньє, смага, година, невідомі великоросіянам, але й нині ними користуються в Україні, показують, що автор належав до нинішньої Малоросії.»\n\nУ «Слові…» засвідчено такі живомовні українські риси, як, наприклад, відбито повноголосся (ворота, голова, голосъ, полонені, хороброе), закінчення -ові, -еві (-єві) в давальному відмінку іменників чоловічого роду (Дунаєві, Игореві, Романові, королеві), кличний відмінок іменників (Бояне, дружино, княже, Всеволоде, господине), форми дієслів теперішнього часу з м'якими закінченнями -ть (велить, плачуть, ржуть) і багато інших.\n\nУ «Слові…» трапляється значна кількість діалектизмів (близько 150), таких, як болоня, велми, гораздъ, жалощи, зегзиця, зоря, клекътъ, ковылиє, лада, смага, тутнути, чрьленыи, щекоть та інші. Є у «Слові…» поодинокі грецизми (панолома).\n\nАвтор «Слова…» був добре знайомий з регіональними діалектами, у тому числі, очевидно, і з галицькими. Порівняти, наприклад, такі регіоналізми: лисицы брешуть «гавкають», мечи гримлють, ничить трава жалощами; а чи диво ся, братие, стару помолодити? яруги цвѣлити «дратувати» (північноукраїнське)..\n\nОсобливо багаті епітети «Слова…», порівняння та метафори, метонімії й гіперболи. Автор персоніфікує природу, робить її живою істотою, яка або співчуває, або шкодить людині. Досконалість поетичних образів доводить, що, побіч літописів, мусила існувати й багата народна і дружинна поезія зі складною та високорозвиненою поетикою.\n\nТакож в «Слові…» поширені тюркізми (кащей, чага, харалуг тощо), що вказує на наявність тісних відносин між стародавньою Руссю та тюрками Великого Степу, зокрема Причорноморських степів.\n\nУспіхів у відновленні первинного тексту «Слова» і знятті «темнот» досяг також український дослідник Маркін В. М."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:37.291Z",
+          "resultDisplay": "# Слово о полку Ігоревім — Section 4\n\nМова і поетика\nВ.Перов]]\nОсновою мови «Слова» є народнопоетична стихія, тогочасна жива розмовна мова. Більшість дослідників припускають, що автор «Слова…» був або киянин, або чернігівець, інші (Орлов, Юґов) доводять, що він мусив бути галичанином («карпаторус»).\n\nЗв'язок з народною поетикою, літописом і воєнними повістями свідчить про глибоке народне коріння «Слова…». Помітний і генетичний зв'язок «Слова…» та українських народних дум, але цей аспект історії українського фольклору ще потребує поглибленого аналізу..\n\nРосійський мовознавець К. Калайдович, писав у 1818 році: «Спосіб вираження „Пісні“ і самі слова: кресити, болоньє, смага, година, невідомі великоросіянам, але й нині ними користуються в Україні, показують, що автор належав до нинішньої Малоросії.»\n\nУ «Слові…» засвідчено такі живомовні українські риси, як, наприклад, відбито повноголосся (ворота, голова, голосъ, полонені, хороброе), закінчення -ові, -еві (-єві) в давальному відмінку іменників чоловічого роду (Дунаєві, Игореві, Романові, королеві), кличний відмінок іменників (Бояне, дружино, княже, Всеволоде, господине), форми дієслів теперішнього часу з м'якими закінченнями -ть (велить, плачуть, ржуть) і багато інших.\n\nУ «Слові…» трапляється значна кількість діалектизмів (близько 150), таких, як болоня, велми, гораздъ, жалощи, зегзиця, зоря, клекътъ, ковылиє, лада, смага, тутнути, чрьленыи, щекоть та інші. Є у «Слові…» поодинокі грецизми (панолома).\n\nАвтор «Слова…» був добре знайомий з регіональними діалектами, у тому числі, очевидно, і з галицькими. Порівняти, наприклад, такі регіоналізми: лисицы брешуть «гавкають», мечи гримлють, ничить трава жалощами; а чи диво ся, братие, стару помолодити? яруги цвѣлити «дратувати» (північноукраїнське)..\n\nОсобливо багаті епітети «Слова…», порівняння та метафори, метонімії й гіперболи. Автор персоніфікує природу, робить її живою істотою, яка або співчуває, або шкодить людині. Досконалість поетичних образів доводить, що, побіч літописів, мусила існувати й багата народна і дружинна поезія зі складною та високорозвиненою поетикою.\n\nТакож в «Слові…» поширені тюркізми (кащей, чага, харалуг тощо), що вказує на наявність тісних відносин між стародавньою Руссю та тюрками Великого Степу, зокрема Причорноморських степів.\n\nУспіхів у відновленні первинного тексту «Слова» і знятті «темнот» досяг також український дослідник Маркін В. М.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456455146_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Велес",
+            "mode": "summary"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456455146_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Велес\n**Description**: у слов'янській міфології бог-опікун багатства, покровитель торгівлі, володар підземного світу\n**URL**: https://uk.wikipedia.org/wiki/%D0%92%D0%B5%D0%BB%D0%B5%D1%81\n\nВе́лес, Во́лос, Во́лот — один із головних слов'янських язичницьких богів. У слов'янській міфології бог-опікун багатства, зокрема худоби, покровитель торгівлі, музики, мистецтва, поезії, антагоніст Перуна, володар підземного світу. Культ Велеса був вираженіший у північних слов'ян. Цей бог не входив до пантеону Володимира на Старокиївській горі, натомість капище Велеса розміщувалося на Подолі біля торгової пристані Почайни. Після запровадження християнства Велеса частково замістив святий Власій (Уласій), частково святий Юрій."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:37.291Z",
+          "resultDisplay": "# Велес\n**Description**: у слов'янській міфології бог-опікун багатства, покровитель торгівлі, володар підземного світу\n**URL**: https://uk.wikipedia.org/wiki/%D0%92%D0%B5%D0%BB%D0%B5%D1%81\n\nВе́лес, Во́лос, Во́лот — один із головних слов'янських язичницьких богів. У слов'янській міфології бог-опікун багатства, зокрема худоби, покровитель торгівлі, музики, мистецтва, поезії, антагоніст Перуна, володар підземного світу. Культ Велеса був вираженіший у північних слов'ян. Цей бог не входив до пантеону Володимира на Старокиївській горі, натомість капище Велеса розміщувалося на Подолі біля торгової пристані Почайни. Після запровадження християнства Велеса частково замістив святий Власій (Уласій), частково святий Юрій.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456455186_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Троян (міфологія)"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456455186_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Троян (міфологія)'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:37.291Z",
+          "resultDisplay": "Wikipedia article not found: 'Троян (міфологія)'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456455958_3",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Велесов внук Боян Слово о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456455958_3",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Велесов внук Боян Слово о полку Ігоревім\"\n\n### Result 1 (score: 0.6587)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 2 (score: 0.6577)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c0751`\n- **Text**:\nБОЯН — давньорус.\r\nспівець-дружинник 2-ї пол. 11 — поч. 12 ст., уславлений у «Слові о полку\r\nІгоревім». Ім’я Б. виявлено також в одному з написів у Софійському соборі в\r\nКиєві. Автор «Слова» називає Б. «віщим співцем», «внуком Велеса» (давньорус.\r\nбога поезії, покровителя поетів), «соловієм давнього часу, який летить тропою\r\nТрояна», тобто шляхом пророчого, божественного натхнення. Зі «Слова» відома\r\nтематика творів Б.: він оспівував князів — «старого Ярослава» (Мудрого, 978 —\r\n1054), «хороброго\n\n### Result 3 (score: 0.6379)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0234`\n- **Text**:\n«Слово о полку Ігоревім»\r\nпочинається своєрідним вступом-заспівом. Далі йдуть три частини. У першій автор\r\nрозповідає про похід, бій і поразку Ігоря. У другій — звертається до\r\nкнязів-сучасників об’єднатися й виступити \"за землю Рускую, за раны\r\nИгоревы, буего Святъславлича\". У третій частині змальовано втечу Ігоря з\r\nполону Завершується твір хвалою руським князям і дружині. Кожна частина містить\r\nбагато закликів, роздумів, спогадів, окликів.\n\nУ заспіві автор міркує: як\r\nйому повести мову про по\n\n### Result 4 (score: 0.6368)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 5 (score: 0.6168)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0011`\n- **Text**:\nОригінальний текст «Слова о полку Ігоревім»\r\nпідготовлено за виданням 1800 p., яке взято за основу, та за Катерининською\r\nкопією (за фототипічними їх виданнями). При цьому враховано й критично\r\nпереоцінено найновіші публікації тексту з відповідними поправками та\r\nкон’єктурами у виданнях: А. С. Орлов, «Слово о полку Игореве». Изд. 2-е, Изд-во\r\nАН СССР, М. — Л., 1946; «Слово о полку Игореве». Под ред. В. П.\r\nАдриановой-Перетц, Изд-во АН СССР, М. — Л., 1950 (Литературные памятники);\r\n«Слово о полку\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:37.291Z",
+          "resultDisplay": "Found 5 results for: \"Велесов внук Боян Слово о полку Ігоревім\"\n\n### Result 1 (score: 0.6587)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 2 (score: 0.6577)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c0751`\n- **Text**:\nБОЯН — давньорус.\r\nспівець-дружинник 2-ї пол. 11 — поч. 12 ст., уславлений у «Слові о полку\r\nІгоревім». Ім’я Б. виявлено також в одному з написів у Софійському соборі в\r\nКиєві. Автор «Слова» називає Б. «віщим співцем», «внуком Велеса» (давньорус.\r\nбога поезії, покровителя поетів), «соловієм давнього часу, який летить тропою\r\nТрояна», тобто шляхом пророчого, божественного натхнення. Зі «Слова» відома\r\nтематика творів Б.: він оспівував князів — «старого Ярослава» (Мудрого, 978 —\r\n1054), «хороброго\n\n### Result 3 (score: 0.6379)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0234`\n- **Text**:\n«Слово о полку Ігоревім»\r\nпочинається своєрідним вступом-заспівом. Далі йдуть три частини. У першій автор\r\nрозповідає про похід, бій і поразку Ігоря. У другій — звертається до\r\nкнязів-сучасників об’єднатися й виступити \"за землю Рускую, за раны\r\nИгоревы, буего Святъславлича\". У третій частині змальовано втечу Ігоря з\r\nполону Завершується твір хвалою руським князям і дружині. Кожна частина містить\r\nбагато закликів, роздумів, спогадів, окликів.\n\nУ заспіві автор міркує: як\r\nйому повести мову про по\n\n### Result 4 (score: 0.6368)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 5 (score: 0.6168)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0011`\n- **Text**:\nОригінальний текст «Слова о полку Ігоревім»\r\nпідготовлено за виданням 1800 p., яке взято за основу, та за Катерининською\r\nкопією (за фототипічними їх виданнями). При цьому враховано й критично\r\nпереоцінено найновіші публікації тексту з відповідними поправками та\r\nкон’єктурами у виданнях: А. С. Орлов, «Слово о полку Игореве». Изд. 2-е, Изд-во\r\nАН СССР, М. — Л., 1946; «Слово о полку Игореве». Под ред. В. П.\r\nАдриановой-Перетц, Изд-во АН СССР, М. — Л., 1950 (Литературные памятники);\r\n«Слово о полку\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456456039_4",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Див кличе Слово о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456456039_4",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Див кличе Слово о полку Ігоревім\"\n\n### Result 1 (score: 0.6449)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0250`\n- **Text**:\n«Слово о полку Ігоревім»\r\nналежить до шедеврів світової літератури, які не старіють, а молодіють у віках.\r\nВоно учить нас любити свою Вітчизну свій народ, ненавидіти всяке гноблення,\r\nвідстоювати мир і добро між людьми. Воно сповнює нас законною гордістю за своє\r\nминуле, свою історію, за свій народ, що створив безсмертні пам’ятки самобутньої\r\nй високої культури.\n\nЛеонід Махновець\n\nII\n\nВідзначення в 1985-1987\r\nроках 800-річчя «Слова о полку Ігоревім» активізувало українських учених,\r\nстимулювало \n\n### Result 2 (score: 0.6161)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 3 (score: 0.5976)\n- **Work**: Грушевський — Історія української літератури, т.2 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `9896ad09_c0246`\n- **Text**:\nПоява «Слова» і\r\nстудії над ним. Від\r\nпершого київського розцвіту, переходячи до золотого віку старого нашого\r\nписьменства, я вважаю найбільш доцільним почати від тої центральної пам'ятки,\r\nщо золотить усю сю добу — від «Слова о полку Ігоревім». Роблю се не з огляду на\r\nвисокі літературні прикмети, які так підносять його над усіма іншими\r\nпам'ятками, а з інших мотивів: тому що не стоїть воно в ланцюгу аналогічних\r\nдохованих до нас пам'яток, а навпаки, заховавшись само одно, щасливим\r\nприпадком, \n\n### Result 4 (score: 0.5971)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 5 (score: 0.5936)\n- **Work**: Богдан Лепкий. Каяла (1872)\n- **Author**: Лепкий Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e269804f_c0020`\n- **Text**:\nМов заворожена, стояла Ярославна на сходах княжого терему. Дивилася перед себе, понад вали та башти, але Дивилася тим поглядом, що світ мов крізь занавісу бачить.\n\nЗате інші образи просувалися поперед її заплакані очі. Ось до Галича приїжджає молодий гарний князь з далекої, маловідомої землі. З батьком на лови їздить, вечори перебалакують удвох. На Великдень христосується з нею. Які палкі його уста!.. А в м'ясниці весілля. Галицькі горді бояри й гостева дружина... А по весіллі їдуть до його стол\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:37.291Z",
+          "resultDisplay": "Found 5 results for: \"Див кличе Слово о полку Ігоревім\"\n\n### Result 1 (score: 0.6449)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0250`\n- **Text**:\n«Слово о полку Ігоревім»\r\nналежить до шедеврів світової літератури, які не старіють, а молодіють у віках.\r\nВоно учить нас любити свою Вітчизну свій народ, ненавидіти всяке гноблення,\r\nвідстоювати мир і добро між людьми. Воно сповнює нас законною гордістю за своє\r\nминуле, свою історію, за свій народ, що створив безсмертні пам’ятки самобутньої\r\nй високої культури.\n\nЛеонід Махновець\n\nII\n\nВідзначення в 1985-1987\r\nроках 800-річчя «Слова о полку Ігоревім» активізувало українських учених,\r\nстимулювало \n\n### Result 2 (score: 0.6161)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 3 (score: 0.5976)\n- **Work**: Грушевський — Історія української літератури, т.2 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `9896ad09_c0246`\n- **Text**:\nПоява «Слова» і\r\nстудії над ним. Від\r\nпершого київського розцвіту, переходячи до золотого віку старого нашого\r\nписьменства, я вважаю найбільш доцільним почати від тої центральної пам'ятки,\r\nщо золотить усю сю добу — від «Слова о полку Ігоревім». Роблю се не з огляду на\r\nвисокі літературні прикмети, які так підносять його над усіма іншими\r\nпам'ятками, а з інших мотивів: тому що не стоїть воно в ланцюгу аналогічних\r\nдохованих до нас пам'яток, а навпаки, заховавшись само одно, щасливим\r\nприпадком, \n\n### Result 4 (score: 0.5971)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 5 (score: 0.5936)\n- **Work**: Богдан Лепкий. Каяла (1872)\n- **Author**: Лепкий Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e269804f_c0020`\n- **Text**:\nМов заворожена, стояла Ярославна на сходах княжого терему. Дивилася перед себе, понад вали та башти, але Дивилася тим поглядом, що світ мов крізь занавісу бачить.\n\nЗате інші образи просувалися поперед її заплакані очі. Ось до Галича приїжджає молодий гарний князь з далекої, маловідомої землі. З батьком на лови їздить, вечори перебалакують удвох. На Великдень христосується з нею. Які палкі його уста!.. А в м'ясниці весілля. Галицькі горді бояри й гостева дружина... А по весіллі їдуть до його стол\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456456080_5",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "віки Трояна Трояні Слово о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456456080_5",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"віки Трояна Трояні Слово о полку Ігоревім\"\n\n### Result 1 (score: 0.6591)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.6020)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 3 (score: 0.5932)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0313`\n- **Text**:\n[За виданням: Слово о полку Ігоревім та його поетичні переклади й переспіви в українській літературі.\r\nВидання підготував Олекса Мишанич. Акта, 2003. — С. 481-514.]\n\nМитрополит Іларіон (Іван\r\nОгієнко). СЛОВО ПРО ІГОРІВ\r\nПОХІД. Перекладено 1945 р. в Австрії. Надруковано в першому виданні\r\nлітературноі монографії «Слово про Ігорів похід» (Вінніпеґ, 1949).\n\nПодається за виданням:\r\nМитрополит Іларіон. Слово про Ігорів Похід: Літературна монографія. —\r\nВінніпеґ: Видання Товариства «Волинь», 1967. — С\n\n### Result 4 (score: 0.5909)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0011`\n- **Text**:\nОригінальний текст «Слова о полку Ігоревім»\r\nпідготовлено за виданням 1800 p., яке взято за основу, та за Катерининською\r\nкопією (за фототипічними їх виданнями). При цьому враховано й критично\r\nпереоцінено найновіші публікації тексту з відповідними поправками та\r\nкон’єктурами у виданнях: А. С. Орлов, «Слово о полку Игореве». Изд. 2-е, Изд-во\r\nАН СССР, М. — Л., 1946; «Слово о полку Игореве». Под ред. В. П.\r\nАдриановой-Перетц, Изд-во АН СССР, М. — Л., 1950 (Литературные памятники);\r\n«Слово о полку\n\n### Result 5 (score: 0.5745)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0234`\n- **Text**:\n«Слово о полку Ігоревім»\r\nпочинається своєрідним вступом-заспівом. Далі йдуть три частини. У першій автор\r\nрозповідає про похід, бій і поразку Ігоря. У другій — звертається до\r\nкнязів-сучасників об’єднатися й виступити \"за землю Рускую, за раны\r\nИгоревы, буего Святъславлича\". У третій частині змальовано втечу Ігоря з\r\nполону Завершується твір хвалою руським князям і дружині. Кожна частина містить\r\nбагато закликів, роздумів, спогадів, окликів.\n\nУ заспіві автор міркує: як\r\nйому повести мову про по\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:37.291Z",
+          "resultDisplay": "Found 5 results for: \"віки Трояна Трояні Слово о полку Ігоревім\"\n\n### Result 1 (score: 0.6591)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.6020)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 3 (score: 0.5932)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0313`\n- **Text**:\n[За виданням: Слово о полку Ігоревім та його поетичні переклади й переспіви в українській літературі.\r\nВидання підготував Олекса Мишанич. Акта, 2003. — С. 481-514.]\n\nМитрополит Іларіон (Іван\r\nОгієнко). СЛОВО ПРО ІГОРІВ\r\nПОХІД. Перекладено 1945 р. в Австрії. Надруковано в першому виданні\r\nлітературноі монографії «Слово про Ігорів похід» (Вінніпеґ, 1949).\n\nПодається за виданням:\r\nМитрополит Іларіон. Слово про Ігорів Похід: Літературна монографія. —\r\nВінніпеґ: Видання Товариства «Волинь», 1967. — С\n\n### Result 4 (score: 0.5909)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0011`\n- **Text**:\nОригінальний текст «Слова о полку Ігоревім»\r\nпідготовлено за виданням 1800 p., яке взято за основу, та за Катерининською\r\nкопією (за фототипічними їх виданнями). При цьому враховано й критично\r\nпереоцінено найновіші публікації тексту з відповідними поправками та\r\nкон’єктурами у виданнях: А. С. Орлов, «Слово о полку Игореве». Изд. 2-е, Изд-во\r\nАН СССР, М. — Л., 1946; «Слово о полку Игореве». Под ред. В. П.\r\nАдриановой-Перетц, Изд-во АН СССР, М. — Л., 1950 (Литературные памятники);\r\n«Слово о полку\n\n### Result 5 (score: 0.5745)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0234`\n- **Text**:\n«Слово о полку Ігоревім»\r\nпочинається своєрідним вступом-заспівом. Далі йдуть три частини. У першій автор\r\nрозповідає про похід, бій і поразку Ігоря. У другій — звертається до\r\nкнязів-сучасників об’єднатися й виступити \"за землю Рускую, за раны\r\nИгоревы, буего Святъславлича\". У третій частині змальовано втечу Ігоря з\r\nполону Завершується твір хвалою руським князям і дружині. Кожна частина містить\r\nбагато закликів, роздумів, спогадів, окликів.\n\nУ заспіві автор міркує: як\r\nйому повести мову про по\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "cd6c5586-2555-4f29-b6b0-c282f67a9f94",
+      "timestamp": "2026-03-14T02:47:45.315Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on formulating the next steps to move closer to the goal. I am currently reviewing the available options and contemplating the best way forward. I am examining the most promising approaches and anticipating potential obstacles.",
+          "timestamp": "2026-03-14T02:47:42.864Z"
+        },
+        {
+          "subject": "Refining Search Strategies",
+          "description": "I'm now zeroing in on more precise search terms to find the original text fragments. I'm modifying my queries to focus on specific phrases and mythological figures mentioned in the work. The goal is to isolate the key quotes within the available text.",
+          "timestamp": "2026-03-14T02:47:45.021Z"
+        }
+      ],
+      "tokens": {
+        "input": 28543,
+        "output": 114,
+        "cached": 0,
+        "thoughts": 224,
+        "tool": 0,
+        "total": 28881
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456465139_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Язичництво в Слові о полку Ігоревім",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456465139_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Язичництво в Слові о полку Ігоревім' — 5 results\n\n1. **Влес (з Влес-Книги)** — Росії). Адже «Велеса» зазвичай трактують як «бога худоби» (хоча в «Слові о полку Ігоревім» є поняття «онук Велеса», яким названо великого поета-барда Бояна)\n2. **Бож** — правитель давніх часів (у «Слові о Полку Ігоревім» згадуються готські пісні «про час Бусів»). Готський історик хроніст Йордан згадує в своєму трактаті «Історія\n3. **Дажбог** — тому в «Слові о полку Ігоревім» руські князі названі «Дажбожими внуками». Володимир Петрухін оцінював згадку руських князів у «Слові о полку Ігоревім» як\n4. **Рибаков Борис Олександрович** — «„Слово о полку Ігоревім“ і його сучасники» (1971) та «Руські літописці і автор „Слова про полку Ігоревім“» (1972) встановлюють автора «Слово о полку Ігоревім»\n5. **Слов'янська міфологія** — Новгородець та інші) й вставки в перекладну літературу, зокрема в апокрифи. Особливе місце посідає «Слово о полку Ігоревім», в якому відбився значний пласт"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:48.116Z",
+          "resultDisplay": "Wikipedia search: 'Язичництво в Слові о полку Ігоревім' — 5 results\n\n1. **Влес (з Влес-Книги)** — Росії). Адже «Велеса» зазвичай трактують як «бога худоби» (хоча в «Слові о полку Ігоревім» є поняття «онук Велеса», яким названо великого поета-барда Бояна)\n2. **Бож** — правитель давніх часів (у «Слові о Полку Ігоревім» згадуються готські пісні «про час Бусів»). Готський історик хроніст Йордан згадує в своєму трактаті «Історія\n3. **Дажбог** — тому в «Слові о полку Ігоревім» руські князі названі «Дажбожими внуками». Володимир Петрухін оцінював згадку руських князів у «Слові о полку Ігоревім» як\n4. **Рибаков Борис Олександрович** — «„Слово о полку Ігоревім“ і його сучасники» (1971) та «Руські літописці і автор „Слова про полку Ігоревім“» (1972) встановлюють автора «Слово о полку Ігоревім»\n5. **Слов'янська міфологія** — Новгородець та інші) й вставки в перекладну літературу, зокрема в апокрифи. Особливе місце посідає «Слово о полку Ігоревім», в якому відбився значний пласт",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456465191_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Боянъ бо вѣщій"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456465191_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Боянъ бо вѣщій\"\n\n### Result 1 (score: 0.5186)\n- **Work**: Гнат Хоткевич. Тарасик (1877)\n- **Author**: Хоткевич Г.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `8a6de40c_c0059`\n- **Text**:\n— Ні-за-що не битимуть! — запевняв категорично.\n\nА другий за підбрехача.\n\n— Не то що не битимуть, а ще й скажуть: от молодець!\n\nНа жаль, не все так трапляється на нашій планеті, як ми сподіваємося — і декому таки добре влетіло сьогодні. Насамперед просто вже тому, що не вдалося вловити ні одної п’явки. Правда, присмокталися, було, одна до ноги малого Степана, але він почав ревти. Йому кричать:\n\n— Бий!.. Бий, вона одпаде.\n\nАле Степанко виставив ногу з п’явкою наверх води й тільки ревів. Хтось із \n\n### Result 2 (score: 0.5154)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0071`\n- **Text**:\nРано в звони у святой Софії,\n\nТо він звони чув аж у Києві.\n\nХоч і віща душа в другім тілі,\n\nАле часто й він страдав нещастя.\n\nТому віщий Боян мудрим умом\n\nТими свій заспів зачав словами:\n\nАні хитрий, ані осторояший,\n\nНі маючий око соколине\n\nНе уйде господнього засуда!\n\nО, сумуй і плач ти, Руська земле,\n\nПогадавши про времена перві\n\nТа про первих князів найдавнійших!\n\nДе ж хто здужав того Владимира\n\nПриковати ід київським горам;\n\n. . . . . . . . . . . . . . . . . . . . . . . . .\r\n.\n\n. . . . . . .\n\n### Result 3 (score: 0.5140)\n- **Work**: Олесь Гончар. Прапороносці (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `53e7ebcf_c0077`\n- **Text**:\nЯкийсь боєць з батіжком у руці пробіг мимо, занепокоєно розпитуючись, чи не бачили його коней.\n\n— Запряжені? — спитав Хома Хаєцький.\n\n— Запряжені.\n\n— Гніді?\n\n— Гніді.\n\n— Не бачили.\n\nВсіх опанував бадьорий, збуджений настрій, як після тяжкого бою, коли всі раптом зустрічаються живими. Улоговина поволі провітрювалась від їдкого диму, і гори наче розступались. За ними, сірими, похмурими, яскрава блакить неба виступала ще ніжнішою.\n\n— А які тут соняшники ростуть — па-атку мій! — заспівав Хаєцький. —\n\n### Result 4 (score: 0.5120)\n- **Work**: Іван Нечуй-Левицький. Українські гумористи та штукарі (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `ca86308c_c0049`\n- **Text**:\nМолодиця починає плакати. Чоловік обертається до Антона вже без жартів.\n\n— А ти, вражий сину, чого чепляєшся до моєї жінки?\n\nВиграївець хапається однією рукою за свою шапку. То був знак, що в його аж руки сверблять, щоб битись. Антін ще не дометикувався до того, щоб говорити про дівчат по-італіянській, але на червоному виду та в страшних лютих чорних очах виграївця він прочитав страшне чужоземське слово — wendetta (помста). Він втямив умить, що треба втікати.\n\n— Потривай же ти, чортова супостать\n\n### Result 5 (score: 0.5117)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0055`\n- **Text**:\nТа хоть віща душа у красному тілі ся била,\n\nТо однаково він багато бід перепацив.\n\nТому ж і віщий той Боян ще переже приповідав ’му:\n\n«Хитрий ні, ні багач, ні навіть та птаха щаслива\n\nНе втечеся, о ні, господнього суду ніколи!»...\n\nЯк же о не стогнать тій Руській землі, згадавши\n\nДавні свої часи і давніх князів! Владимира\n\nТого давнього бо не мож прикувати би було\n\nДо тих київських гір; впісля єго стяги попались\n\nРюрикові одні, а другі Давиду, тепер же\n\nЇх рогами товар розносить хащами, мричами,\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:48.116Z",
+          "resultDisplay": "Found 5 results for: \"Боянъ бо вѣщій\"\n\n### Result 1 (score: 0.5186)\n- **Work**: Гнат Хоткевич. Тарасик (1877)\n- **Author**: Хоткевич Г.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `8a6de40c_c0059`\n- **Text**:\n— Ні-за-що не битимуть! — запевняв категорично.\n\nА другий за підбрехача.\n\n— Не то що не битимуть, а ще й скажуть: от молодець!\n\nНа жаль, не все так трапляється на нашій планеті, як ми сподіваємося — і декому таки добре влетіло сьогодні. Насамперед просто вже тому, що не вдалося вловити ні одної п’явки. Правда, присмокталися, було, одна до ноги малого Степана, але він почав ревти. Йому кричать:\n\n— Бий!.. Бий, вона одпаде.\n\nАле Степанко виставив ногу з п’явкою наверх води й тільки ревів. Хтось із \n\n### Result 2 (score: 0.5154)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0071`\n- **Text**:\nРано в звони у святой Софії,\n\nТо він звони чув аж у Києві.\n\nХоч і віща душа в другім тілі,\n\nАле часто й він страдав нещастя.\n\nТому віщий Боян мудрим умом\n\nТими свій заспів зачав словами:\n\nАні хитрий, ані осторояший,\n\nНі маючий око соколине\n\nНе уйде господнього засуда!\n\nО, сумуй і плач ти, Руська земле,\n\nПогадавши про времена перві\n\nТа про первих князів найдавнійших!\n\nДе ж хто здужав того Владимира\n\nПриковати ід київським горам;\n\n. . . . . . . . . . . . . . . . . . . . . . . . .\r\n.\n\n. . . . . . .\n\n### Result 3 (score: 0.5140)\n- **Work**: Олесь Гончар. Прапороносці (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `53e7ebcf_c0077`\n- **Text**:\nЯкийсь боєць з батіжком у руці пробіг мимо, занепокоєно розпитуючись, чи не бачили його коней.\n\n— Запряжені? — спитав Хома Хаєцький.\n\n— Запряжені.\n\n— Гніді?\n\n— Гніді.\n\n— Не бачили.\n\nВсіх опанував бадьорий, збуджений настрій, як після тяжкого бою, коли всі раптом зустрічаються живими. Улоговина поволі провітрювалась від їдкого диму, і гори наче розступались. За ними, сірими, похмурими, яскрава блакить неба виступала ще ніжнішою.\n\n— А які тут соняшники ростуть — па-атку мій! — заспівав Хаєцький. —\n\n### Result 4 (score: 0.5120)\n- **Work**: Іван Нечуй-Левицький. Українські гумористи та штукарі (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `ca86308c_c0049`\n- **Text**:\nМолодиця починає плакати. Чоловік обертається до Антона вже без жартів.\n\n— А ти, вражий сину, чого чепляєшся до моєї жінки?\n\nВиграївець хапається однією рукою за свою шапку. То був знак, що в його аж руки сверблять, щоб битись. Антін ще не дометикувався до того, щоб говорити про дівчат по-італіянській, але на червоному виду та в страшних лютих чорних очах виграївця він прочитав страшне чужоземське слово — wendetta (помста). Він втямив умить, що треба втікати.\n\n— Потривай же ти, чортова супостать\n\n### Result 5 (score: 0.5117)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0055`\n- **Text**:\nТа хоть віща душа у красному тілі ся била,\n\nТо однаково він багато бід перепацив.\n\nТому ж і віщий той Боян ще переже приповідав ’му:\n\n«Хитрий ні, ні багач, ні навіть та птаха щаслива\n\nНе втечеся, о ні, господнього суду ніколи!»...\n\nЯк же о не стогнать тій Руській землі, згадавши\n\nДавні свої часи і давніх князів! Владимира\n\nТого давнього бо не мож прикувати би було\n\nДо тих київських гір; впісля єго стяги попались\n\nРюрикові одні, а другі Давиду, тепер же\n\nЇх рогами товар розносить хащами, мричами,\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456465232_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Дивъ кличеть"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456465232_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Дивъ кличеть\"\n\n### Result 1 (score: 0.5492)\n- **Work**: Остап Вишня. Лицем до села (1889)\n- **Author**: Вишня О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ff7be0d1_c0045`\n- **Text**:\nДзвонять чавуни, дзвонять коси, деренчать гребінки…\n\n— А тіки за цю гребінку?\n\n— А ви, кумо, гребінку купуєте? 1\n\n— Еге ж!\n\n— Бери, тьотю, от єту гребінку!\n\n— Малувата вона… Мені таки таку, щоб і вошу вбити, щоб таки і прясти…\n\n— Бери оцю! Цією тигру вбити можна!\n\n— Та ще щоб і плавкенька була…\n\n— Єта сорок!\n\n— Та хай вам!\n\n— Бери меншу, дешевша буде!\n\nБіля кїс діди… Дзвонять, дзвонять, дзвонять… Стружать одну об одну…\n\n— Якісь вони не такі…\n\n— А яких вам треба? І знову:\n\n— Дзень! Дзень! Дзень! \n\n### Result 2 (score: 0.5277)\n- **Work**: Андрій Малишко. Кармалюк (1912)\n- **Author**: Малишко А.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `db7df7d6_c0009`\n- **Text**:\nЦимбали б'ють, жаліблива скрипиця\n\nДзвенить плачем, як бідна сирота.\n\n— Цимбали б'ють? Ні — молот вибиває,\n\nА то он — жар виблискує з горна.\n\nНе смійсь, Устиме, сил моїх немає,\n\nЯ закивав тебе, —моя вина!\n\n— Чою кричить горбата лиховида,\n\nВін офііцер? Ха-ха! Він офіцер?\n\nУстиме, стій! —\n\nКоваль поблід із виду,\n\nСльозу солону кулаком розтер.\n\n— Вернись назад, ну що тобі, я прошу,\n\nХіба що много пройдено доріг?\n\nТи глузував: \"Життя ковальське — гроші\".\n\nНе говорив? Я знаю, думать міг.\n\nЯ розкую ка\n\n### Result 3 (score: 0.5261)\n- **Work**: Богдан Лепкий. Казка мого життя (1872)\n- **Author**: Лепкий Б.\n- **Genre/Period**: fable / modern\n- **Chunk ID**: `e5666118_c0115`\n- **Text**:\nТа це не так легко, як кому здається, бо дзвонів багато, а від кожного окремий шнур. Одними треба собі руки обкрутити, в другі, як у стремена, всунути ноги, підноситися й присідати, вважаючи, щоб не баламкати як-будь, лиш дійсно дзвонити. Як добре дзвониш, то дзвони говорять: \"Христос воскрес, Христос воскрес\" або \"Рад світ увесь\", \"Рад світ увесь\"; а як не вмієш, то щось таке виходить, буцім \"шмантя, дрантя, шмантя, дрантя!\", сором один, та й тільки! Як добре дзвониш, то люди хвалять, а як зле,\n\n### Result 4 (score: 0.5218)\n- **Work**: Олесь Гончар. Кресафт (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `95576d7f_c0000`\n- **Text**:\nНа польовому току, де ворохи зерна поналивані, сказали Кухаренкові, що його викликають у район. Важко стояв серед току, вуса висіли аж до землі, такий був похнюплений. Легкова в ремонті, міг би взяти одну з вантажних, що возили зерно на елеватор, але соромно брати вантажну для такої поїздки. Під рукою була бригадирова однокінна бідарка — нею й поїхав.\n\nПонад колючою посадкою їде. Білий полудень навкруги, сорока скаче по верхах і весь чає крикливо скрекоче до Кухаренка, мовби хоче вискрекотати йо\n\n### Result 5 (score: 0.5214)\n- **Work**: Панас Мирний. Повія (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `e4abf0c5_c0110`\n- **Text**:\nКрамариха завела \"Христос воскресе!\"; другі підхопили. Жіночі голоси тонко-тонко виводили; чоловічі, мов жуки, гули; один Колісник гукав товстого баса, аж вікна бряжчали, за що його кума раз по раз садила кулаком у спину. Колісник мов і не чув тих духопеликів — співав; зате на кінці так придавив, що кума не здержалася і з усього маху стусонула Колісника межи плечі; той векнув. Усі зареготалися, а Колісник, повернувши назад себе руку, ущипнув куму. Та скрикнула, поточилася на стіл... Пляшки й чар\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:48.116Z",
+          "resultDisplay": "Found 5 results for: \"Дивъ кличеть\"\n\n### Result 1 (score: 0.5492)\n- **Work**: Остап Вишня. Лицем до села (1889)\n- **Author**: Вишня О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ff7be0d1_c0045`\n- **Text**:\nДзвонять чавуни, дзвонять коси, деренчать гребінки…\n\n— А тіки за цю гребінку?\n\n— А ви, кумо, гребінку купуєте? 1\n\n— Еге ж!\n\n— Бери, тьотю, от єту гребінку!\n\n— Малувата вона… Мені таки таку, щоб і вошу вбити, щоб таки і прясти…\n\n— Бери оцю! Цією тигру вбити можна!\n\n— Та ще щоб і плавкенька була…\n\n— Єта сорок!\n\n— Та хай вам!\n\n— Бери меншу, дешевша буде!\n\nБіля кїс діди… Дзвонять, дзвонять, дзвонять… Стружать одну об одну…\n\n— Якісь вони не такі…\n\n— А яких вам треба? І знову:\n\n— Дзень! Дзень! Дзень! \n\n### Result 2 (score: 0.5277)\n- **Work**: Андрій Малишко. Кармалюк (1912)\n- **Author**: Малишко А.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `db7df7d6_c0009`\n- **Text**:\nЦимбали б'ють, жаліблива скрипиця\n\nДзвенить плачем, як бідна сирота.\n\n— Цимбали б'ють? Ні — молот вибиває,\n\nА то он — жар виблискує з горна.\n\nНе смійсь, Устиме, сил моїх немає,\n\nЯ закивав тебе, —моя вина!\n\n— Чою кричить горбата лиховида,\n\nВін офііцер? Ха-ха! Він офіцер?\n\nУстиме, стій! —\n\nКоваль поблід із виду,\n\nСльозу солону кулаком розтер.\n\n— Вернись назад, ну що тобі, я прошу,\n\nХіба що много пройдено доріг?\n\nТи глузував: \"Життя ковальське — гроші\".\n\nНе говорив? Я знаю, думать міг.\n\nЯ розкую ка\n\n### Result 3 (score: 0.5261)\n- **Work**: Богдан Лепкий. Казка мого життя (1872)\n- **Author**: Лепкий Б.\n- **Genre/Period**: fable / modern\n- **Chunk ID**: `e5666118_c0115`\n- **Text**:\nТа це не так легко, як кому здається, бо дзвонів багато, а від кожного окремий шнур. Одними треба собі руки обкрутити, в другі, як у стремена, всунути ноги, підноситися й присідати, вважаючи, щоб не баламкати як-будь, лиш дійсно дзвонити. Як добре дзвониш, то дзвони говорять: \"Христос воскрес, Христос воскрес\" або \"Рад світ увесь\", \"Рад світ увесь\"; а як не вмієш, то щось таке виходить, буцім \"шмантя, дрантя, шмантя, дрантя!\", сором один, та й тільки! Як добре дзвониш, то люди хвалять, а як зле,\n\n### Result 4 (score: 0.5218)\n- **Work**: Олесь Гончар. Кресафт (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `95576d7f_c0000`\n- **Text**:\nНа польовому току, де ворохи зерна поналивані, сказали Кухаренкові, що його викликають у район. Важко стояв серед току, вуса висіли аж до землі, такий був похнюплений. Легкова в ремонті, міг би взяти одну з вантажних, що возили зерно на елеватор, але соромно брати вантажну для такої поїздки. Під рукою була бригадирова однокінна бідарка — нею й поїхав.\n\nПонад колючою посадкою їде. Білий полудень навкруги, сорока скаче по верхах і весь чає крикливо скрекоче до Кухаренка, мовби хоче вискрекотати йо\n\n### Result 5 (score: 0.5214)\n- **Work**: Панас Мирний. Повія (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `e4abf0c5_c0110`\n- **Text**:\nКрамариха завела \"Христос воскресе!\"; другі підхопили. Жіночі голоси тонко-тонко виводили; чоловічі, мов жуки, гули; один Колісник гукав товстого баса, аж вікна бряжчали, за що його кума раз по раз садила кулаком у спину. Колісник мов і не чув тих духопеликів — співав; зате на кінці так придавив, що кума не здержалася і з усього маху стусонула Колісника межи плечі; той векнув. Усі зареготалися, а Колісник, повернувши назад себе руку, ущипнув куму. Та скрикнула, поточилася на стіл... Пляшки й чар\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456465271_3",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "вѣчи Трояни"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456465271_3",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"вѣчи Трояни\"\n\n### Result 1 (score: 0.5346)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0191`\n- **Text**:\nрища въ тропу Трояню. — У\r\n«Слові» ще тричі зустрічається присвійний прикметник «Троянь»: «были вЂчи\r\nТрояни», «на землю Трояню», «на седьмомъ вЂцЂ Трояни». Частина вчених думає, що\r\nтут взагалі мовиться не про Трояна, а про Бояна. Інші гадають, що тут ідеться\r\nпро Ульпія Траяна — римського імператора (98 — 117 р. н. е.), невтомного\r\nзавойовника і будівника, чиїм іменем названо різні ворота, вали, дороги, мости\r\nна Балканському півострові. Ще інші тлумачать слово Троян у метафоричному\r\nплані: «т\n\n### Result 2 (score: 0.5296)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0425`\n- **Text**:\nТроянці на морі. Співають пісень про Сагайдачного,\r\nпро Січ. Прибувають до Кумської землі, де Еней зустрічає жахливу Сивіллу, що\r\nворожить йому дальшу життєву долю. З нею заходить у пекло, якого образ складає\r\nтретю частину поеми. Харон перевозить його через ріку Стікс. Еней оглядає\r\nпекло, бачить різних грішників і в часі мандрівки зустрічає Дідону й батька\r\nАнхіза, після чого знову пускається в море. Троянці оминають щасливо острів\r\nцариці-чарівниці Цирцеї, приїжджають у край Латина, вчаться л\n\n### Result 3 (score: 0.5190)\n- **Work**: Дзюба, Павленко — Літопис культурного життя X-XVII ст. (2001)\n- **Author**: Дзюба О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e0892426_c0061`\n- **Text**:\nРиму та Візантії.\r\nУвагу давньоруських книжників привертали оповідання, засновані на грецьких\r\nміфах (про боротьбу богів з гігантами, про Зевса* і Крона*, Семелу*, Іо*,\r\nПерсея*, Едіпа*, Гармонію* і Діоніса*, Орфея*, Леду*, Дедала* та Ікара*, Тесея*\r\nй Аріадну*), оповідання про Троянську війну, про македонських царів і початок\r\nРиму, наступників Олександра Македонського, Юлія Цезаря*. В трьох книгах (з\r\nвісімнадцяти) Хроніки Малали викладаються античні міфи, а ще в одній детально\r\nрозповідається\n\n### Result 4 (score: 0.5142)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0376`\n- **Text**:\nНа седьмомъ вЂцЂ Трояни] Про Трояна — див. попереду. Здогади про\r\n„седьмой в. Тр.” численні й різноманітні, віки ці вираховувано, а Тр.\r\nзастосовувано, як прізвище, навіть до руських князів. На нашу думку,\r\nвираховувати, що визначають ці „7 віків”, — річ даремнісінька. Отож ми\r\nпристаємо на думку Владімірова (330), що вбачав тут умовне, епічне визначення\r\nчасу, пор. в „Пісні про Нібелунґів\": „тянулся пир веселый вплоть до\r\nседьмого дня” (авент. II); „вот на седьмое утро”, „лишь в семь недель око\n\n### Result 5 (score: 0.5136)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0586`\n- **Text**:\n29 \r\nТаипелем от Рода \r\n (Тлеполем від Родосу) — персонаж грецької\r\nміфології; син Геракла; загинув у Троянській війні від руки вождя лікійців\r\nСарпедона.\n\n30\r\n ...Евфианин же Ахиллей... (Ахілл,\r\nАхіллес) — персонаж грецької міфології; один із головних героїв Троянської\r\nвійни, під час якої загинув від стріли, що влучила у єдине вразливе місце його\r\nтіла — п'яту. Походив із фессалійської держави Фтії; звідси: «євфинянин» — спотворене\r\nвід «фтіянин».\n\n31\r\n ... карыиликаоны, миси и меоны и фруги.\r\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:48.116Z",
+          "resultDisplay": "Found 5 results for: \"вѣчи Трояни\"\n\n### Result 1 (score: 0.5346)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0191`\n- **Text**:\nрища въ тропу Трояню. — У\r\n«Слові» ще тричі зустрічається присвійний прикметник «Троянь»: «были вЂчи\r\nТрояни», «на землю Трояню», «на седьмомъ вЂцЂ Трояни». Частина вчених думає, що\r\nтут взагалі мовиться не про Трояна, а про Бояна. Інші гадають, що тут ідеться\r\nпро Ульпія Траяна — римського імператора (98 — 117 р. н. е.), невтомного\r\nзавойовника і будівника, чиїм іменем названо різні ворота, вали, дороги, мости\r\nна Балканському півострові. Ще інші тлумачать слово Троян у метафоричному\r\nплані: «т\n\n### Result 2 (score: 0.5296)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0425`\n- **Text**:\nТроянці на морі. Співають пісень про Сагайдачного,\r\nпро Січ. Прибувають до Кумської землі, де Еней зустрічає жахливу Сивіллу, що\r\nворожить йому дальшу життєву долю. З нею заходить у пекло, якого образ складає\r\nтретю частину поеми. Харон перевозить його через ріку Стікс. Еней оглядає\r\nпекло, бачить різних грішників і в часі мандрівки зустрічає Дідону й батька\r\nАнхіза, після чого знову пускається в море. Троянці оминають щасливо острів\r\nцариці-чарівниці Цирцеї, приїжджають у край Латина, вчаться л\n\n### Result 3 (score: 0.5190)\n- **Work**: Дзюба, Павленко — Літопис культурного життя X-XVII ст. (2001)\n- **Author**: Дзюба О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e0892426_c0061`\n- **Text**:\nРиму та Візантії.\r\nУвагу давньоруських книжників привертали оповідання, засновані на грецьких\r\nміфах (про боротьбу богів з гігантами, про Зевса* і Крона*, Семелу*, Іо*,\r\nПерсея*, Едіпа*, Гармонію* і Діоніса*, Орфея*, Леду*, Дедала* та Ікара*, Тесея*\r\nй Аріадну*), оповідання про Троянську війну, про македонських царів і початок\r\nРиму, наступників Олександра Македонського, Юлія Цезаря*. В трьох книгах (з\r\nвісімнадцяти) Хроніки Малали викладаються античні міфи, а ще в одній детально\r\nрозповідається\n\n### Result 4 (score: 0.5142)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0376`\n- **Text**:\nНа седьмомъ вЂцЂ Трояни] Про Трояна — див. попереду. Здогади про\r\n„седьмой в. Тр.” численні й різноманітні, віки ці вираховувано, а Тр.\r\nзастосовувано, як прізвище, навіть до руських князів. На нашу думку,\r\nвираховувати, що визначають ці „7 віків”, — річ даремнісінька. Отож ми\r\nпристаємо на думку Владімірова (330), що вбачав тут умовне, епічне визначення\r\nчасу, пор. в „Пісні про Нібелунґів\": „тянулся пир веселый вплоть до\r\nседьмого дня” (авент. II); „вот на седьмое утро”, „лишь в семь недель око\n\n### Result 5 (score: 0.5136)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0586`\n- **Text**:\n29 \r\nТаипелем от Рода \r\n (Тлеполем від Родосу) — персонаж грецької\r\nміфології; син Геракла; загинув у Троянській війні від руки вождя лікійців\r\nСарпедона.\n\n30\r\n ...Евфианин же Ахиллей... (Ахілл,\r\nАхіллес) — персонаж грецької міфології; один із головних героїв Троянської\r\nвійни, під час якої загинув від стріли, що влучила у єдине вразливе місце його\r\nтіла — п'яту. Походив із фессалійської держави Фтії; звідси: «євфинянин» — спотворене\r\nвід «фтіянин».\n\n31\r\n ... карыиликаоны, миси и меоны и фруги.\r\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456465313_4",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Див (міфологія)"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456465313_4",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Деви\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%94%D0%B5%D0%B2%D0%B8\n\nДе́ви, дайва (авест.), диви (фарсі), в іранській міфології — злі духи, що протистоять благим духам — Ахура. Уявлення про девів сходять до епохи індо-іранської і індоєвропейської спільності; у давньоіндійській міфології деви — божества, а асури — демони. Деви, проти яких спрямований «антидевівський напис» Ксеркса, іранського царя V ст. до н. е., шанувалися, мабуть, в одній з областей Ірану як боги: Ксеркс знищив їх святилище і насадив культ Аурамазди (Ахурамазди). «Видевдат» — звід законів і релігійних приписів проти девів."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:47:48.116Z",
+          "resultDisplay": "# Деви\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%94%D0%B5%D0%B2%D0%B8\n\nДе́ви, дайва (авест.), диви (фарсі), в іранській міфології — злі духи, що протистоять благим духам — Ахура. Уявлення про девів сходять до епохи індо-іранської і індоєвропейської спільності; у давньоіндійській міфології деви — божества, а асури — демони. Деви, проти яких спрямований «антидевівський напис» Ксеркса, іранського царя V ст. до н. е., шанувалися, мабуть, в одній з областей Ірану як боги: Ксеркс знищив їх святилище і насадив культ Аурамазди (Ахурамазди). «Видевдат» — звід законів і релігійних приписів проти девів.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "707766e6-02e7-4fe0-a2c8-4e8ed85aef6c",
+      "timestamp": "2026-03-14T02:47:55.199Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Querying for insights",
+          "description": "I'm now zeroing in on the frequencies of the words. I have to make sure to meet the criteria that were outlined. Let's see if this query tool provides the necessary information. Then I will see what to do with them.",
+          "timestamp": "2026-03-14T02:47:52.610Z"
+        },
+        {
+          "subject": "Verifying the Findings",
+          "description": "I'm checking the results from the word frequency tool, to ensure I've got a handle on the key terms. Accuracy is paramount, so I'm cross-referencing to validate the initial findings. The goal is to accurately represent the data.",
+          "timestamp": "2026-03-14T02:47:54.983Z"
+        }
+      ],
+      "tokens": {
+        "input": 33626,
+        "output": 79,
+        "cached": 27810,
+        "thoughts": 278,
+        "tool": 0,
+        "total": 33983
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773456475072_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "Велес",
+              "Див",
+              "Троян",
+              "Боян",
+              "віщий"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773456475072_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 5 words\n\nFound: 4/5\n\n- **Велес** — FOUND (1 match): Велес(noun)\n- **Див** — NOT FOUND\n- **Троян** — FOUND (10 match): Троян(noun), Троян(noun), Троян(noun)\n- **Боян** — FOUND (1 match): Боян(noun)\n- **віщий** — FOUND (3 match): віщий(adj), віщий(adj), віщий(adj)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:48:01.499Z",
+          "resultDisplay": "Batch verification: 5 words\n\nFound: 4/5\n\n- **Велес** — FOUND (1 match): Велес(noun)\n- **Див** — NOT FOUND\n- **Троян** — FOUND (10 match): Троян(noun), Троян(noun), Троян(noun)\n- **Боян** — FOUND (1 match): Боян(noun)\n- **віщий** — FOUND (3 match): віщий(adj), віщий(adj), віщий(adj)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773456475114_1",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "mode": "frequency",
+            "query": "Велес"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773456475114_1",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**Велес**: frequency = 1,178, relative = 0.58 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:48:01.499Z",
+          "resultDisplay": "**Велес**: frequency = 1,178, relative = 0.58 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773456475156_2",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "mode": "frequency",
+            "query": "Див"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773456475156_2",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**Див**: frequency = 9,428, relative = 4.66 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:48:01.499Z",
+          "resultDisplay": "**Див**: frequency = 9,428, relative = 4.66 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456475196_3",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Див кличе"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456475196_3",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Див кличе' — 5 results\n\n1. **Намет (геральдика)** — сторонах щита (див. герби Гончарових, Карамзіних і ін); якщо герб має щитотримачів, то намет розташовується лише по верхній стороні щита (див. герби графів\n2. **Море (значення)** — «Море всередині» (ісп. Mar adentro) — фільм Алехандро Аменабара. «Море кличе» — радянський фільм, знятий в 1955 році режисером Володимиром Брауном на\n3. **Дива на обертасах** — загрози» на фото з&#039;являється Шер Хан. «Аладдін» (1994—1995): в епізоді «Коли кличе хаос» є сцена, де Джин перетворюється на фігуру, схожу та одягнену як Балу\n4. **Дивні дива (2 сезон)** — кота. Тоді хлопець розуміє, що Дартан&#039;ян — це дитинча демоґорґона. Він кличе Стіва допомогти убити чудовисько, але воно тим часом тікає. Вілл розповідає\n5. **Перегуда Олександр Йосипович** — світанок» (1956)) «Педагогічна поема» (1956) «Безвісти зниклий» (1956) «Море кличе» (1956) «Круті сходи» «Мальва» (1957) «Партизанська іскра» (1957) «Киянка»"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:48:01.499Z",
+          "resultDisplay": "Wikipedia search: 'Див кличе' — 5 results\n\n1. **Намет (геральдика)** — сторонах щита (див. герби Гончарових, Карамзіних і ін); якщо герб має щитотримачів, то намет розташовується лише по верхній стороні щита (див. герби графів\n2. **Море (значення)** — «Море всередині» (ісп. Mar adentro) — фільм Алехандро Аменабара. «Море кличе» — радянський фільм, знятий в 1955 році режисером Володимиром Брауном на\n3. **Дива на обертасах** — загрози» на фото з&#039;являється Шер Хан. «Аладдін» (1994—1995): в епізоді «Коли кличе хаос» є сцена, де Джин перетворюється на фігуру, схожу та одягнену як Балу\n4. **Дивні дива (2 сезон)** — кота. Тоді хлопець розуміє, що Дартан&#039;ян — це дитинча демоґорґона. Він кличе Стіва допомогти убити чудовисько, але воно тим часом тікає. Вілл розповідає\n5. **Перегуда Олександр Йосипович** — світанок» (1956)) «Педагогічна поема» (1956) «Безвісти зниклий» (1956) «Море кличе» (1956) «Круті сходи» «Мальва» (1957) «Партизанська іскра» (1957) «Киянка»",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "fdaaeb63-fff6-4cfa-bae9-563cc86d9a1a",
+      "timestamp": "2026-03-14T02:48:48.078Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Слово: Міфологія\n\n## Key Facts Ledger\n```yaml\nsubject: \"Слово: Міфологія\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1185\" \n  end: \"~1187\"   \n  key_events:\n    - year: 1185\n      event: \"Похід князя Ігоря на половців, який супроводжується лиховісними міфологічними знаменнями (затемнення, крик Дива)\"\n    - year: 1187\n      event: \"Орієнтовний час написання «Слова о полку Ігоревім», у якому зафіксовано унікальний дохристиянський міфологічний пласт\"\nprimary_quotes:\n  - text: \"Віщий Боян... внук Велеса\"\n    source: \"«Слово о полку Ігоревім», 1187\"\n    attribution: \"Невідомий автор про співця Бояна\"\n  - text: \"Были вЂчи Трояни, минула лЂта Ярославля...\"\n    source: \"«Слово о полку Ігоревім», 1187\"\n    attribution: \"Невідомий автор (епічне визначення часу)\"\n  - text: \"Дивъ кличеть връху древа...\"\n    source: \"«Слово о полку Ігоревім», 1187\"\n    attribution: \"Невідомий автор [needs verification]\"\nforbidden_claims:\n  - \"Твердження, що міфологічний пласт «Слова» є свідченням суто російського (великоросійського) фольклору.\"\n  - \"Тлумачення мови пам'ятки як давньоросійської без згадок про її виразні українські фонетичні та морфологічні риси (повноголосся, кличний відмінок, закінчення давального відмінка -ові/-еві).\"\n  - \"Розгляд Велеса, Дива чи Трояна виключно через призму пізнішої московської історіографії, ігноруючи місцевий київський контекст.\"\n```\n\n## Використані джерела\n1. [Вікіпедія: Слово о полку Ігоревім](https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім) — базовий контекст про мову, поетику та автентичність.\n2. [Вікіпедія: Велес](https://uk.wikipedia.org/wiki/Велес) — інформація про функції слов'янського бога Велеса та його зв'язок із поезією.\n3. [Українська літературна енциклопедія (1995)] — стаття про співця Бояна та його титулування «внуком Велеса».\n4. [Володимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926] — тлумачення згадок про Трояна як умовне, епічне визначення часу.\n\n## Хронологія\n- ~1185: Похід Ігоря Святославича, супроводжуваний зловісними знаками природи.\n- ~1187: Створення тексту «Слова...», що акумулює в собі залишки потужного язичницького міфологічного світогляду часів двовір'я.\n- 1800: Перше друковане видання тексту, що викликало хвилю дискусій навколо розшифрування міфологічних «темних місць» (Див, Троян, Карна, Жля).\n- 1818: К. Калайдович звертає увагу на слова (болоньє, смага, година), які невідомі росіянам, але якими послуговуються в Україні, доводячи українське коріння пам'ятки.\n- 1926: В. Перетц видає фундаментальну працю, розглядаючи «Слово» саме як пам'ятку феодальної України-Руси.\n\n## Ключові факти та цитати\n- **Велес / Волос**: Бог-опікун багатства, мистецтва і поезії, володар підземного світу. Автор «Слова» називає свого попередника, віщого співця Бояна, «внуком Велеса» (Велесов внуче).\n- **Див**: Зловісна міфологічна істота (можливо, демонічний птах), яка сидить на дереві й віщує біду, попереджаючи «землю незнаєму» про похід русичів («Дивъ кличеть връху древа»).\n- **Троян**: Одна з найбільших загадок тексту. Згадується чотири рази: «тропа Трояня», «вічі Трояні», «на землю Трояню», «на седьмомъ віці Трояні». Дослідники вважають це або спогадом про римського імператора Траяна, який воював на Балканах і Придунав'ї, або іменем язичницького божества чи міфічного предка.\n- **Мовні риси**: У тексті зафіксовано живомовні українські риси: кличний відмінок (Бояне, княже, господине), давальний на -ові/-еві (Игореві, Романові), специфічну лексику (смага, болоня, яруги).\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!context] — Пояснення феномену «двовір'я» в Україні-Русі XII століття, де християнські догми співіснували з міцним язичницьким світоглядом, персоніфікацією природи.\n- Section \"Вступ\": [!decolonization] — Термін «давньоруський» в імперській науці часто означав «російський». Ми ж говоримо про спадщину києворуського, українського письменства (що доводить лексика і фонетика пам'ятки).\n- Section \"Основний матеріал\": [!quote] — Цитата про Бояна: «віщий Боян... внук Велеса» як свідчення розуміння Велеса як покровителя не лише худоби, а й мистецтва/поезії.\n- Section \"Основний матеріал\": [!history-bite] — Загадка «Дива», який кличе на верхівці дерева. У східних (іранських) міфологіях «деви» — злі духи; тут це зловісний демон або птах-віщун половецького степу.\n- Section \"Основний матеріал\": [!culture] — «Вічі Трояні» (віки Трояна). Хто такий Троян? Бог, князь чи римський імператор Траян, пам'ять про якого лишилася у слов'янських племен?\n- Section \"Практика\": [!myth-buster] — Спростування міфу про те, що «Слово» не має стосунку до української мови. Наявність кличного відмінка (Бояне!), закінчень давального відмінка (-ові, -еві) чітко локалізує текст.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: «Слово о полку Ігоревім» є пам'яткою «общерусской» (читай — великоросійської) літератури, а його міфологічний пантеон (Велес, Дажбог, Стрибог) належить загальноросійській культурі. Мовні особливості нівелювалися або оголошувалися пізнішими описками переписувачів.\n- **Ukrainian reality**: Пам'ятка є органічною частиною києворуського (староукраїнського) літературного процесу. Ії міфологія та поетика мають генетичний зв'язок з українськими народними думами, а лексика («смага», «болоньє», «година»), кличний відмінок і форми на -ові/-еві є прямими свідченнями української мовної стихії XII століття.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Мова «Слова» | Древнерусский язык (як фундамент російської) | Староукраїнська (києворуська) літературна мова з виразними рисами живого народного мовлення |\n| Троян, Велес | Загальнослов'янські/російські божества | Елементи пантеону і фольклору племен України-Руси (зокрема полян, сіверян) |\n| Культурна належність| Общерусское достояние | Шедевр українського середньовіччя (України-Руси за М. Грушевським та В. Перетцом) |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Контекст**: «Слово о полку Ігоревім» (~1187 р.) — перлина епічної поезії України-Руси. Окрім політичного заклику до єдності, поема вражає своїм пантеїстичним, язичницьким світовідчуттям.\n- **Феномен двовір'я**: Хоча Русь уже 200 років як прийняла християнство, автор і герої «Слова» живуть у світі, де природа є живою, а язичницькі боги активно втручаються в долю людей. Природа персоніфікована (вона співчуває русичам і шкодить їм).\n- **Деколонізація**: З самого моменту відкриття (1800 р.) російська наука намагалася монополізувати «Слово». Проте вже у 1818 р. К. Калайдович, а згодом М. Максимович, М. Грушевський та В. Перетц переконливо довели українське походження пам'ятки на основі її діалектизмів (гавкають, болоньє, яруги), фонетики та граматики.\n\n### Основний матеріал\n- **Велес (Волос)**: Згадується через постать легендарного співця Бояна (XI ст.), якого автор називає «віщим» та «внуком Велеса». Це вказує на те, що Велес у києворуській традиції був не лише «скотім богом» (богом багатства і стад), а й покровителем мудрості, магії, поезії та мистецтва.\n- **Див**: Загадковий персонаж, згаданий як віщун нещастя. «Дивъ кличеть връху древа» — під час наступу Ігоря цей демон чи птах будить незнані землі, попереджаючи половців про наближення русичів. Етимологічно може бути пов'язаний з іранськими «девами» (злими духами), враховуючи контакти Русі з кочовиками степу.\n- **Троян**: Найбільш дискусійний образ. Фрази «вічі Трояні», «тропа Трояня». В. Перетц та В. Владіміров вважали «сьомий вік Трояна» умовним, епічним визначенням часу, схожим на звороти в західноєвропейському епосі. Інші дослідники вбачають тут відгомін культу римського імператора Траяна, що залишив грандіозні споруди (Траянові вали) у Причорномор'ї та на Дунаї, і чий образ міфологізувався у слов'ян.\n- **Інші божества**: У поемі також згадані Стрибог (вітри — його внуки), Дажбог (русичі — його внуки), Карна і Жля (персоніфіковані духи скорботи).\n\n### Практика\n- **Граматика та мовні риси**: Міфологічні фрагменти насичені граматикою, що збереглася в українській мові.\n  - **Кличний відмінок**: Автор звертається до співця «Бояне!», до князів «княже», «господине», «Всеволоде».\n  - **Давальний відмінок на -ові/-еві**: Форми «Игореві», «Романові», «Дунаєві».\n  - **Повноголосся**: ворота, голова, голосъ.\n  - **Лексика**: «смага» (спрага), «болоньє» (заливний луг), «ріка Стугна» тощо.\n- Практичні завдання повинні фокусуватися на ідентифікації цих питомо українських маркерів у староукраїнському тексті, а також на транскрипції та етимологічному аналізі (напр., розборі слова «віщий»).\n\n### Підсумок\n- **Значення**: Міфологічний шар «Слова о полку Ігоревім» не є простою стилізацією, він відображає автентичне світобачення мешканців України-Руси XII століття.\n- **Спадкоємність**: Образна система «Слова» (персоніфікація природи, звертання до сил стихій, як у плачі Ярославни) має пряме продовження в українських народних думах та історичних піснях.\n- **Перехід до наступного модуля**: Розуміння глибини та автентичності міфологічної поетики «Слова» є ключем до дискусії про його справжність. Багатий і неповторний язичницький словник поеми не міг бути підробкою XVIII століття, що стане темою наступного модуля «Slovo: Authenticity Debate».\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Producing a Synthesis",
+          "description": "I am now focused on generating a synthesis using the available data. I will organize the key facts into a logical format, ensuring each point is clearly articulated. This process will involve carefully analyzing the retrieved information.",
+          "timestamp": "2026-03-14T02:48:07.252Z"
+        },
+        {
+          "subject": "Formulating Key Facts",
+          "description": "I am now focused on extracting and categorizing the core facts. I'm choosing 'phenomenon' to best represent the subject matter. The next step is to select and categorize relevant quotes and identify potentially misleading claims to include in the synthesis.",
+          "timestamp": "2026-03-14T02:48:11.644Z"
+        },
+        {
+          "subject": "Constructing the Outline",
+          "description": "I am now focused on solidifying the structure of the synthesis. The outline's sections are defined, and I will now concentrate on the order of the subsections and their intended arguments. I'll make sure each point flows logically from the last.",
+          "timestamp": "2026-03-14T02:48:14.558Z"
+        },
+        {
+          "subject": "Defining Synthesis Structure",
+          "description": "I am now focused on defining the subsections of the synthesis. I'll arrange the elements to ensure a coherent presentation. The goal is to construct a well-structured narrative, ready for each point's logical arrangement.",
+          "timestamp": "2026-03-14T02:48:15.798Z"
+        }
+      ],
+      "tokens": {
+        "input": 34300,
+        "output": 3422,
+        "cached": 27612,
+        "thoughts": 764,
+        "tool": 0,
+        "total": 38486
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

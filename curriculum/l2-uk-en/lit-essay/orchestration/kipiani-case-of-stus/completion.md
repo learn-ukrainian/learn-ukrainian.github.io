@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 42 — E2E
+PASS: pipeline lit-essay 48
 
   Module:   kipiani-case-of-stus
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T14:38:35Z
+  Date:     2026-03-14T01:54:46Z

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 34 — E2E
+PASS: pipeline lit-essay 40
 
   Module:   portnikov-conclusion
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:18:42Z
+  Date:     2026-03-14T01:31:01Z

@@ -1,0 +1,242 @@
+discovered_at: '2026-03-14T02:20:17.441602+00:00'
+query_keywords:
+- Vira Ageyeva Canon
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Vira Ageyeva Canon у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.9
+  relevance_note: This video directly addresses how Soviet historiography suppressed
+    prominent Ukrainian figures (Tereşchenko family), which is a core example of the
+    decolonization perspective central to Vira Ageyeva's work and the module's 'історіографія'
+    and 'Деколонізаційна перспектива' sections.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива — directly illustrates the impact
+    of Soviet historiography and the need for decolonization of historical narratives.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.5
+  relevance_note: While about the Tereşchenko family, whose history was suppressed,
+    this video focuses primarily on their business and economic influence. This provides
+    historical context but is less directly related to Vira Ageyeva's specific literary
+    analysis or cultural decolonization efforts within the arts/literature.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.2
+  relevance_note: The video discusses historiography and decolonization of historical
+    narratives (Holocaust, Stalinist crimes), which aligns with broad themes. However,
+    its specific focus is not directly on Vira Ageyeva's literary criticism or her
+    specific contributions to cultural decolonization.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
+    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
+    яка от є складовою українського культури
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0446
+  text: "Читачі не одразу, а лише по-\nступово одержують нову й важливу інформацію\
+    \ \nпро персонажів та з’ясовують мотиви їхніх учин-\nків. Авторка розкриває «правду»\
+    \ кожного зі сво-\nїх героїв, художньо осмислює їхню залежність \nвід звичаєвого\
+    \ права, стереотипів селянської \nморалі, та почасти — від соціальних умов. \x03\
+    \nВихідний день \n(Àнäріé Êоöка, 1970-ті)\nÐоçкриваþчи ïоäі¿ ïевноãо часовоãо\
+    \ віäтинкó, ïисьменниöя çаëóчаº катеãорі¿ \nминóëоãо, сьоãоäенноãо і ïриéäеøньоãо,\
+    \ ùо наäаº ¿¿ творам не ïросто ôіëосоô-\nс"
+  section_title: Сторінка 236
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0139
+  text: "Скористайтеся довідковою літературою, матеріалами мережі інтернет і зна-\n\
+    йдіть цікаві факти про письменника . Ознайомте із цими фактами одноклас-\nників\
+    \ та однокласниць (у формі виступу на уроці з повідомленням, на своїй \nсторінці\
+    \ у соціальній мережі, у дружньому спілкуванні) . Òаëановитиé і ріçнобічниé вчениé,\
+    \ неçрівнянниé ерóäит, оäин іç наé-\nяскравіøиõ óкра¿нськиõ інтеëектóаëів XX сторіччя\
+    \ Äомонтович, оäнак, \nó сво¿õ романаõ äемонстрóº обмеæеність і несамоäостатність\
+    \ інтеëек-\nтóаëьноãо ïоøóкó "
+  section_title: Сторінка 76
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5768019556999207
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5619370341300964
+  chunk_id: 172f2637_c0087
+  text: '4. Грубою помилкою було б негайно ідентифікувати ці висновки зі світоглядом
+    автора. Частіше їх доводиться іден­тифікувати з світоглядом редактора, а то й
+    видавця, а часто й просто Мар''ї Алексєвни. Світогляд автора знаходиться ста­ранною
+    аналітичною роботою над усіма його творами і су­часною йому творчістю інших. В
+    данім оповіданні куточок світогляду визирає з-під відношення автора до кволих
+    лю­дей.
+
+
+    5. Знайти справжній світогляд автора, аналізуючи тільки його твори, — справа дуже
+    нелегка, а поде'
+  work: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+  year: 1895
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=25044
+- score: 0.5513269901275635
+  chunk_id: 87c07f1b_c0434
+  text: "В розділі є посилання на такі праці: Франка\r\nІв. Слово о Лазареві; воскресении:\
+    \ Староруська поема на апокрифічні теми //\r\nЗНТШ. 1900. Т. 35 — 36. С. 18 —\
+    \ 19, 1 — 57; Перетц В. Н. Историко-литературные\r\nисследования и материалы.\
+    \ СПб., 1902. Т. 3., ч. 1; Калайдович К. Ф. Записки\r\nважные и мелочные // Летописи\
+    \ рус. лит. и древностей Н. С. Тихонравова. М.,\r\n1861. Т. 3. С. 82 — 110; Пыпин\
+    \ А. Н. Ложные и отреченные книги русской\r\nстарины, собр. А. П. Пыпиным // Памятники\
+    \ старинной русской литературы, "
+  work: Грушевський — Історія української літератури, т.3-6
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush3.htm

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 9 — E2E
+PASS: pipeline oes 9
 
   Module:   pronouns-self-other
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:40:15Z
+  Date:     2026-03-14T07:12:07Z

@@ -1,0 +1,144 @@
+discovered_at: '2026-03-14T02:29:59.313807+00:00'
+query_keywords:
+- Руїна
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Describing chaos — Vocabulary of war/destruction
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=dz54wX9CTLw
+  channel: Історія Мови
+  title: '[ANCIENT MANUSCRIPTS] 17th century Duma about the Cossack Netyaga'
+  relevance_score: 0.8
+  relevance_note: The video presents a 17th-century Cossack duma, a primary historical
+    and linguistic source from the broader era of The Ruin (mid-17th to late 17th
+    century). It provides cultural context and period-specific language relevant to
+    understanding the module's topic, even though the duma itself may predate the
+    specific events of the Ruin.
+  transcript_excerpt: Дума про козака Нетягу - це пам'ятка ранньої козацької поезії.
+    І оскільки вона збереглася у рукописному збірнику 1680-х років, то вона унікальна.
+  embed_suggestion: After Основний матеріал -- It offers an authentic historical document
+    from the Cossack era, reinforcing the module's historical context and providing
+    examples of language from the period.
+- url: https://www.youtube.com/watch?v=qB-TeZVY1AA
+  channel: Ukrainian Lessons
+  title: ULP 2-73 | Курс з історії України Ч. 3 “Українське козацтво” | Ukrainian
+    History Course Part 3 “U...
+  relevance_score: 0.7
+  relevance_note: This is part of a Ukrainian history course specifically focused
+    on 'Українське козацтво' (Ukrainian Cossacks). The Ruin is a major period within
+    Cossack history, so this video provides essential foundational context for the
+    module, even if it doesn't delve directly into the specifics of The Ruin.
+  transcript_excerpt: частина третя нашого курсу з історії буде про козаків ви знаєте
+    хто такі козаки з
+  embed_suggestion: After Вступ -- It serves as a good high-level introduction to
+    the Cossack period, setting the stage for the specific topic of The Ruin.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0450
+  text: "Хід заняття\n\t 1. Опрацюйте наведений матеріал і дайте відповіді на запитання.\
+    \ 2. Зробіть висновки відповідно до мети заняття."
+  section_title: Сторінка 249
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  text: "3. Скласти план і відповідно до нього систематизувати матеріал. 4. Узагальнити\
+    \ основні положення. 5. Скласти усно текст повідомлення, намагаючись висловити\
+    \ й \nаргументувати власну думку. 6. За потреби записати текст повідомлення повністю\
+    \ або частково \nта переказати усно текст удома."
+  section_title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.49633750319480896
+  chunk_id: 4800ab33_c1148
+  text: "10. Отже, зробимо такий короткий висновок із вчення\r\nпро всі елементи.\
+    \ По-перше, існують два начала, або елементи (однаково, яку з\r\nцих назв вживати),\
+    \ а саме, матерія і форма. Матерія є спільною й однаковою в\r\nусіх тілах, проте\
+    \ форми є різними, деякі з них можна назвати первинними, а\r\nсаме, чотири форми,\
+    \ які в сполуці з матерією становлять чотири прості тіла.\r\nІснують й інші [елементи],\
+    \ які варто назвати вторинними. Поєднуючись з первинними,\r\nвони утворюють два\
+    \ інші стани: сіль і сірку (якщо рту"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.4753651022911072
+  chunk_id: feaa5fa7_c1825
+  text: "У вищому, тимопсихічному, шарі виявляється вплив\r\nсприймання т. зв. »краєвидного\
+    \ мотиву« географічного середовища за\r\nпосередництвом процесів вчування. »Вчування«\
+    \ (Ліппс) є складний психічний\r\nпроцес нашої внутрішньої психічної активности,\
+    \ насамперед уяви, що супроводить\r\nсприймання всіх форм, отже і форм географічного\
+    \ рельєфу. В остаточному висліді\r\nформи, »в фізіономічному підході« до зовнішнього\
+    \ світу стають немов »виразами«\r\nжиттьово-психічних сил, які їх формують і таким\
+    \ чином набирають фіз"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.4751497805118561
+  chunk_id: 4800ab33_c0244
+  text: "Крім того, знай, що вживання місць різне у\r\nвизначеному і в невизначеному\
+    \ питаннях. Невизначене питання може вигідно\r\nкористуватися всіма місцями, крім\
+    \ обставин і другорядних даних, а визначене\r\nпитання, хоч йому можуть дуже допомагати\
+    \ інші місця, однак підтверджується\r\nдругорядними даними. \\181\\\n\nРозділ\
+    \ п’ятий\n\nСПЕЦІАЛЬНІ ВКАЗІВКИ, ЯК ТРЕБА ДОБУВАТИ ДОКАЗИ ІЗ\r\nЗГАДАНИХ МІСЦЬ\n\
+    \nМетою цього мистецтва є обгрунтування або\r\nспростування істинності чи хибності\
+    \ певного судження, щоб все, як то кажуть\r\n"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 207 — E2E
+PASS: pipeline lit 203
 
   Module:   war-poetry-2014-2022
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T16:41:34Z
+  Date:     2026-03-14T07:08:21Z

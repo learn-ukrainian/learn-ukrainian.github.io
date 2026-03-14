@@ -1,0 +1,213 @@
+discovered_at: '2026-03-14T01:58:55.558307+00:00'
+query_keywords:
+- 'Радомир Мокрик: Бунт проти імперії'
+- Шістдесятники як предтечі незалежності
+- Клуб Творчої Молоді
+- КТМ
+- Конфлікт з системою
+- Стилістика тексту
+- Дослідити феномен шістдесятництва через книгу Радомира Мокрика
+- Зрозуміти механізми культурного опору тоталітаризму
+- literature
+- хрущовська
+- відлига
+- шістдесятництво
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=jKUAht_j0SA
+  channel: Суспільне Культура
+  title: «Шістдесятники підготували ґрунт для політичної думки України» — інтерв'ю
+    з Радомиром Мокриком
+  relevance_score: 1.0
+  relevance_note: This is a full interview with Radomyr Mokryk about his book 'Бунт
+    проти імперії,' which is the exact subject of the module. It provides comprehensive
+    background and context directly from the author.
+  transcript_excerpt: сьогодні ми будемо говорити з радомиром мокриком це історик
+    а також автор новинки так яка називається будпроти імперії ... А ти описуєш покоління
+    шістдесятників їхню діяльність Так це діяльність переросла вже потім дисидентський
+    рух
+  embed_suggestion: After section Вступ — Новий погляд на шістдесятників -- Serves
+    as an excellent in-depth introduction to the module's core content, delivered
+    by the author.
+- url: https://www.youtube.com/watch?v=wYGfLi9fEGc
+  channel: Суспільне Культура
+  title: '«Без опору шістдесятників політичного дисиденства би не було» — Радомир
+    Мокрик #shorts'
+  relevance_score: 0.9
+  relevance_note: Directly features the author, Radomyr Mokryk, discussing the 'шістдесятники'
+    and their 'бунт' (rebellion), which aligns perfectly with the module's topic,
+    author, and key themes of cultural resistance against the system.
+  transcript_excerpt: Ну от без цього культурного опору і бунту шістдесятників політичного
+    дисидентства не було б так.
+  embed_suggestion: After section Підсумок -- Reinforces the central message of the
+    module with a direct quote from the author.
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0145
+  text: "Розділ ІІ. Україна в умовах десталінізації\n78\nЗверніть увагу\nХарактеристика\
+    \ діяльності \n«шістдесятників»: \n\x83\x83 активна громадянська позиція \nта прагнення\
+    \ свободи творчості; \n\x83\x83 критика офіційної ідеології \nта боротьба за національну\
+    \ \nсамобутність України; захист \nукраїнської мови й культури; \n\x83\x83 новаторство\
+    \ в мистецтві \nта літературі. «Шістдесятники» мали значний вплив \nна суспільне\
+    \ життя України, хоча їхня \nдіяльність часто зазнавала утисків із \nбоку влади.\
+    \ Деякі представники \n«шістдесятників» с"
+  section_title: Сторінка 80
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0311
+  text: "189\nДовідка\nслова. Саме в цю епоху заявили про себе багато молодих талановитих\
+    \ письмен-\nників: В. Симоненко, Гр. Тютюнник, Л. Костенко, І. Драч, М. Він­гра­новський,\
+    \ \nВал. Шевчук, Б. Олійник, В. Дрозд, Є. Гуцало, І. Жиленко, Д. Павличко, І.\
+    \ Ка-\nлинець та ін. Їх називають шістдесятниками, оскільки розквіт їхньої творчості\
+    \ \nприпав на другу половину 50-х — 60-і роки ХХ ст. Кожному шістдесятнику властивий\
+    \ неповторний стиль, проте  їх об’єднував \nспільний світогляд та естетичні настанови:\
+    \ культ свобо"
+  section_title: Сторінка 189
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0144
+  text: "Назва  \nоргані­\nзації \nРоки  \nдіяльності  \nта місто  \nзаснування\n\
+    Заснов­\nники\nІдеї\nФорми \nборотьби\n3\t\n«Шістдесятництво». У  постсталінський\
+    \ період \nпід впливом лібералізації суспільного життя серед \nінтелігенції з’явилася\
+    \ творча молодь, яка прагнула \nвийти за межі нав’язаного владою соціалістичного\
+    \ \nреалізму. Відображенням цього став рух «шістдесят-\nників». Критичне ставлення\
+    \ до радянської тоталітарної \nдійсності, притаманне «шістдесятникам», формува-\n\
+    лося під впливом гуманістичних цінностей зах"
+  section_title: Сторінка 79
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0151
+  text: "Працюємо з  хронологією\n1959—\n1961  рр. Діяльність Української \nробітничо-селянської\
+    \ спілки. 1960  р. Заснування київського клубу \nтворчої молоді «Сучасник». 1962 \
+    \ р. Заснування львівського клубу \nтворчої молоді «Пролісок». Навчальний фільм\n\
+    rnk.com.ua/109552\nПерегляньте відеоролик «Чому \nВ. Путін боїться В. Чорновола\
+    \ \nі  М. Плахотнюка» і  виконайте \nзавдання до  нього. тощо. Найбільше зазнали\
+    \ переслідувань \nза «формалістичні викрутаси» І. Дзюба, \nІ. Драч, Ліна Костенко,\
+    \ І. Світличний, \nЄ. Сверст"
+  section_title: Сторінка 83
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0290
+  text: "Його автор \nписав: «Я пропоную… одну­єдину річ: свободу — свободу чесного\
+    \ публічного \nобговорення національного питання, свободу національного вибору,\
+    \ свободу \nнаціонального самопізнання і саморозвитку». Невдовзі «шістдесятники»\
+    \ скла-\nли помітну моральну опозицію радянській владі, яка, відчувши загрозу,\
+    \ від-\nреагувала наступом на свободу слова. Перші арешти й судові процеси над\
+    \ українськими дисидентами (від лат. dissidens — незгодний) припали на 1965 рік.\
+    \ Їх звинуватили в «антирадянській \nагітац"
+  section_title: Сторінка 150
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5609448552131653
+  chunk_id: ce21b6f1_c0004
+  text: Ідім далі. Ч. автор, очевидно, в своїй статті декуди змішав літературу з державою,
+    т. є. урядом та жандармами, а іменно там, де говорить про гніт Московщини на Українщину.
+    Що тут винна московська література (розуміємо під літературою її найпередовішу,
+    найчеснішу часть, про котру тільки й може у нас бути бесіда; доноси різних Каткових
+    та глагольствія слов'янофілів ми сюди не вчислюємо і наслідувати їх нікому не
+    радимо)? А коли московська література на вас, українську інтелігенцію, мала який
+    вплив
+  work: Іван Франко. Літературно-критичні статті
+  author: Франко І.
+  year: 1856
+  genre: letters
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=648
+- score: 0.5459999442100525
+  chunk_id: fc2291b5_c5226
+  text: "«МОЛОДА УКРАЇНА» — громад.-політ.,\r\nкультурно-просвіт. літ. рух у 70 —\
+    \ 90-х pp. 19 ст. Вперше назвав так його І.\r\nФранко, вирізнивши «М. У.» з-поміж\
+    \ інших тогочас. сусп.-культур. течій і\r\nнапрямів на західноукр. землях. Представлений\
+    \ молодим поколінням укр. культур.\r\nдіячів радикального напряму на чолі з М.\
+    \ Драгомановим, І. Франком. Серед\r\nпровідних учасників — також О. Кониський,\
+    \ Б. Грінченко, А. Кримський, Г.\r\nХоткевич. Найвиразнішим літ. явищем «М. У.»\
+    \ стала художня школа І. Франка, до\r\nякої "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5398117303848267
+  chunk_id: 6890007d_c0013
+  text: "60 — 70-ті роки взагалі були найпліднішим періодом у діяльності\r\nКостомарова.\
+    \ Поряд із В. Білозерським і П. Кулішем він бере активну участь в\r\nорганізації\
+    \ й виробленні програми /11/ першого українського журналу\r\n«Основа». На його\
+    \ «вівторках», де збиралися визначні представники науки і\r\nлітератури Росії\
+    \ й України, велися дискусії з приводу звільнення селян,\r\nобговорювалися політичні,\
+    \ філософські й естетичні питання. Як палка, діяльна\r\nнатура Микола Костомаров\
+    \ у своїх наукових пошуках виходив на к"
+  work: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+  year: 1847
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/kostomar/kos.htm

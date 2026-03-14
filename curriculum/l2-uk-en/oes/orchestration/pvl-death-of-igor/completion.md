@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 29 — E2E
+PASS: pipeline oes 28
 
   Module:   pvl-death-of-igor
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T08:21:26Z
+  Date:     2026-03-14T07:12:19Z

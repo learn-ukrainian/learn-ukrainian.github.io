@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 73 — E2E
+PASS: pipeline ruth 71
 
   Module:   panegyric-style
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T11:43:32Z
+  Date:     2026-03-14T07:08:21Z

@@ -1,0 +1,437 @@
+{
+  "sessionId": "e4e096ba-27ea-40d2-acf6-76e57b7fe490",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:34:33.148Z",
+  "lastUpdated": "2026-03-14T01:36:20.650Z",
+  "messages": [
+    {
+      "id": "9c71d58b-5980-44e4-97b6-1e8eeb6adbfc",
+      "timestamp": "2026-03-14T01:34:33.148Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-055\nlevel: OES\nsequence: 55\nslug: cheliadin-slaves\nversion: '2.0'\ntitle: Челядь (невільники)\nsubtitle: The Cheliadin (Slaves)\nfocus: Social hierarchy intro\nphase: 2\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to The Cheliadin (Slaves)\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Slave Market Clerk\nprerequisites:\n- theft-property\nconnects_to:\n- restitution\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Челядь (невільники)** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Челядь (невільники)\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Челядь (невільники)\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "54d0744c-89b6-4f2b-ad8d-b8a5100772c6",
+      "timestamp": "2026-03-14T01:34:40.303Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the Next Step",
+          "description": "I'm now focused on the next stage. Considering the overall direction, I'm thinking about the most efficient path forward. It's about ensuring I'm on track and making headway.",
+          "timestamp": "2026-03-14T01:34:38.394Z"
+        },
+        {
+          "subject": "Beginning Research Phase",
+          "description": "I am commencing my research, diving deep into the subject matter. My current priority is to establish a strong foundational understanding. I am preparing to employ my tools to delve into the initial phase of information gathering.",
+          "timestamp": "2026-03-14T01:34:40.188Z"
+        }
+      ],
+      "tokens": {
+        "input": 20480,
+        "output": 18,
+        "cached": 16877,
+        "thoughts": 198,
+        "tool": 0,
+        "total": 20696
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452080301_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Челядь"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452080301_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Челядь' — 5 results\n\n1. **Челядь** — Че́лядь, челя́дник, челяди́нець — «у збірному значенні населення феодальної вотчини у давньоруській державі, що перебувало в різних формах залежності\n2. **Рядовичі** — сплачували данину, виконували дрібні господарські доручення. Входили до складу челяді. За соціальним та юридичним становищем були близькими до закупів. За «Руською\n3. **Дворові люди (служебне населення)** — люди, також служебне населення, дворові селяни — князівська та боярська челядь; «посаджені» в княжих господарствах невільні люди, що могли добровільно\n4. **Білоцерківська битва (1596)** — міста і направився просто в козацький табір, залишивши в фортеці тільки челядь і найманих угорців. В той самий час вилазку проти урядових сил задумали\n5. **Крилаті гусари** — складу почту входила челядь. Челядь (зброєносці-джури) поділялася на челядь почтову і вільну (пол. luźna czeladź). Почтова челядь мала право брати участь"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:40.527Z",
+          "resultDisplay": "Wikipedia search: 'Челядь' — 5 results\n\n1. **Челядь** — Че́лядь, челя́дник, челяди́нець — «у збірному значенні населення феодальної вотчини у давньоруській державі, що перебувало в різних формах залежності\n2. **Рядовичі** — сплачували данину, виконували дрібні господарські доручення. Входили до складу челяді. За соціальним та юридичним становищем були близькими до закупів. За «Руською\n3. **Дворові люди (служебне населення)** — люди, також служебне населення, дворові селяни — князівська та боярська челядь; «посаджені» в княжих господарствах невільні люди, що могли добровільно\n4. **Білоцерківська битва (1596)** — міста і направився просто в козацький табір, залишивши в фортеці тільки челядь і найманих угорців. В той самий час вилазку проти урядових сил задумали\n5. **Крилаті гусари** — складу почту входила челядь. Челядь (зброєносці-джури) поділялася на челядь почтову і вільну (пол. luźna czeladź). Почтова челядь мала право брати участь",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5fa83d57-0f81-40ec-98f7-d0e5440e7d97",
+      "timestamp": "2026-03-14T01:34:45.234Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Research on Topic",
+          "description": "I'm now starting to investigate the target subject matter, gathering initial information using a specific information-retrieval tool. My plan is to zero in on relevant facts and begin to understand the topic better.",
+          "timestamp": "2026-03-14T01:34:44.458Z"
+        },
+        {
+          "subject": "Continuing Extraction and Analysis",
+          "description": "I'm presently focused on retrieving key details from the initial document, concentrating on the most pertinent data. I will then move to a more thorough analysis, comparing different sources.",
+          "timestamp": "2026-03-14T01:34:45.159Z"
+        }
+      ],
+      "tokens": {
+        "input": 20835,
+        "output": 18,
+        "cached": 19863,
+        "thoughts": 89,
+        "tool": 0,
+        "total": 20942
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452085233_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Челядь",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452085233_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Челядь\n**URL**: https://uk.wikipedia.org/wiki/%D0%A7%D0%B5%D0%BB%D1%8F%D0%B4%D1%8C\n\nЧе́лядь, челя́дник, челяди́нець — «у збірному значенні населення феодальної вотчини у давньоруській державі, що перебувало в різних формах залежності від феодала (холопи, закупи, смерди та ін.)». В «історичному значенні — це дворові люди, що жили й працювали в поміщицькій садибі, панська прислуга. Люди, які займали невисоке службове або громадське становище». В «застарілому, діалектному значенні — молодь»; в «діалектному значенні — члени однієї родини». Первісно «челядь» означало сім'я, і влада домовладики суспільства над дітьми часто була безмежною і включала право на їх життя.\nТакі ж норми поширюються на всіх, хто входить до складу «великої сім'ї» — челяді: челядином був і син, і невільник, і той, хто проживав у сім'ї на якихось інших умовах. Характерно, що «отрок» і «дітський» в давньоруській державі означало невільного челядина в княжому дворі і мало водночас якийсь стосунок до власної дитини. Статус людини, яка позбавлена власної волі, — це і статус молодшого члена сім'ї, і статус раба.\nУ давній Русі челяддю є залежне населення — особи, що втратили своє господарство і працювали на феодала. Їх продавали, дарували, передавали у спадщину. До челяді належали закупи, смерди, холопи тощо. До IX ст. термін вживався для означення рабів у стані патріархального рабства; у IX-X ст. — щодо рабів, які стали об'єктами купівлі-продажу. Згодом (з XI ст.) — збірна назва населення феодальної вотчини, яке перебувало в різних формах залежності від землевласника (холопи, закупи, смерди тощо).\nЗа козацьких часів і пізніше челяддю називали слуг та інших постійних членів господарства. Кріпаків-челядників зазвичай звали дворовими людьми.\n\n\n== Етимологія ==\nСлово челядь походить від прасл.: *čel'adь, де утворене від кореня *čelь (присутнього також у *čelověkъ та *čelo і спорідненого з коліно, покоління) та збірного суфікса -jadь. Менш обґрунтована версія виводить його від *l'udъ і підсилювального префікса *če-.\n\n\n== Інші значення ==\nЧелядь — застаріле позначення молоді: «А на нашій та вулиці Насипано жита, От як вийде челядь гулять. — Так як перемита» (народна пісня)\nНа Закарпатті цей термін до тепер активно вживається, також похідне від нього челядник.\nЧелядь (однина — «челяди́на») — діалектне позначення жіночої статі, дівчат, жінок: «Вівчарі скидали з себе одежу та трусили над ними воші або, зібравшись докупи, зголоднілі за літо без „челядини“, вели безконечні масні розмови» (М. М. Коцюбинський), «Скоріше, Христе, одягайся; уже наша челядь у зборі!» (Панас Мирний). У цьому значенні також вживався вираз «біла челядь»: «Поли турки воювали, білу челядь забирали»\nЧелядь — весільні гості молодої\n\n\n== Див. також ==\nХолопи\nРядовичі\nСмерди\nЗакупи\nІзгої\nКріпацтво\n\n\n== Примітки ==\n\n\n== Література ==\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nЧелядь [Архівовано 20 квітня 2021 у Wayback Machine.] // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2004. — Т. 6 : Т — Я. — 768 с. — ISBN 966-7492-06-0.\nЧелядь // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1967. — Т. 8, кн. XVI : Літери Уш — Я. — С. 2045. — 1000 екз."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:45.420Z",
+          "resultDisplay": "# Челядь\n**URL**: https://uk.wikipedia.org/wiki/%D0%A7%D0%B5%D0%BB%D1%8F%D0%B4%D1%8C\n\nЧе́лядь, челя́дник, челяди́нець — «у збірному значенні населення феодальної вотчини у давньоруській державі, що перебувало в різних формах залежності від феодала (холопи, закупи, смерди та ін.)». В «історичному значенні — це дворові люди, що жили й працювали в поміщицькій садибі, панська прислуга. Люди, які займали невисоке службове або громадське становище». В «застарілому, діалектному значенні — молодь»; в «діалектному значенні — члени однієї родини». Первісно «челядь» означало сім'я, і влада домовладики суспільства над дітьми часто була безмежною і включала право на їх життя.\nТакі ж норми поширюються на всіх, хто входить до складу «великої сім'ї» — челяді: челядином був і син, і невільник, і той, хто проживав у сім'ї на якихось інших умовах. Характерно, що «отрок» і «дітський» в давньоруській державі означало невільного челядина в княжому дворі і мало водночас якийсь стосунок до власної дитини. Статус людини, яка позбавлена власної волі, — це і статус молодшого члена сім'ї, і статус раба.\nУ давній Русі челяддю є залежне населення — особи, що втратили своє господарство і працювали на феодала. Їх продавали, дарували, передавали у спадщину. До челяді належали закупи, смерди, холопи тощо. До IX ст. термін вживався для означення рабів у стані патріархального рабства; у IX-X ст. — щодо рабів, які стали об'єктами купівлі-продажу. Згодом (з XI ст.) — збірна назва населення феодальної вотчини, яке перебувало в різних формах залежності від землевласника (холопи, закупи, смерди тощо).\nЗа козацьких часів і пізніше челяддю називали слуг та інших постійних членів господарства. Кріпаків-челядників зазвичай звали дворовими людьми.\n\n\n== Етимологія ==\nСлово челядь походить від прасл.: *čel'adь, де утворене від кореня *čelь (присутнього також у *čelověkъ та *čelo і спорідненого з коліно, покоління) та збірного суфікса -jadь. Менш обґрунтована версія виводить його від *l'udъ і підсилювального префікса *če-.\n\n\n== Інші значення ==\nЧелядь — застаріле позначення молоді: «А на нашій та вулиці Насипано жита, От як вийде челядь гулять. — Так як перемита» (народна пісня)\nНа Закарпатті цей термін до тепер активно вживається, також похідне від нього челядник.\nЧелядь (однина — «челяди́на») — діалектне позначення жіночої статі, дівчат, жінок: «Вівчарі скидали з себе одежу та трусили над ними воші або, зібравшись докупи, зголоднілі за літо без „челядини“, вели безконечні масні розмови» (М. М. Коцюбинський), «Скоріше, Христе, одягайся; уже наша челядь у зборі!» (Панас Мирний). У цьому значенні також вживався вираз «біла челядь»: «Поли турки воювали, білу челядь забирали»\nЧелядь — весільні гості молодої\n\n\n== Див. також ==\nХолопи\nРядовичі\nСмерди\nЗакупи\nІзгої\nКріпацтво\n\n\n== Примітки ==\n\n\n== Література ==\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nЧелядь [Архівовано 20 квітня 2021 у Wayback Machine.] // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2004. — Т. 6 : Т — Я. — 768 с. — ISBN 966-7492-06-0.\nЧелядь // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1967. — Т. 8, кн. XVI : Літери Уш — Я. — С. 2045. — 1000 екз.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "15832a12-c5b8-4acc-8bd7-277d69e25bf7",
+      "timestamp": "2026-03-14T01:34:50.700Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Extraction Process",
+          "description": "I'm focused on moving forward with finding information. It's time to put the search plan into action, I'm ready to begin extracting data to progress the task.",
+          "timestamp": "2026-03-14T01:34:49.009Z"
+        },
+        {
+          "subject": "Starting the First Search",
+          "description": "I'm initiating the first query. The plan is to get the ball rolling by retrieving some foundational sources. I will get this step done now.",
+          "timestamp": "2026-03-14T01:34:50.510Z"
+        }
+      ],
+      "tokens": {
+        "input": 22192,
+        "output": 51,
+        "cached": 20008,
+        "thoughts": 139,
+        "tool": 0,
+        "total": 22382
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773452090597_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "челядь"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452090597_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"челядь\"\n\n### Result 1 (score: 0.5497)\n- **Work**: Богдан Лепкий. Казка мого життя (1872)\n- **Author**: Лепкий Б.\n- **Genre/Period**: fable / modern\n- **Chunk ID**: `e5666118_c0070`\n- **Text**:\n— А не забудьте там про часник! — кличе мама з кухні.\n\nКладуть часник під обрус на чотирьох кінцях стола, бо він має велику силу, його ароми бояться усякі недуги. Поміж тарілки кидають гіллячки темно-зеленої соснини. Та ще з ялинкою клопіт. Хоч вона буцімто й не наша, лиш з далекої півночі прийшла, але так вдомашнилася в нас, що тяжко знайти священичу хату, де її не вбирали б.\n\nОсь і ялинка готова. Така пишна й розкішна, хоч малюй. А що буде, як по вечері всі свічечки на ній засвітять! Розкіш од\n\n### Result 2 (score: 0.5417)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2517`\n- **Text**:\nВ XV в. і на початку XVI несвобідні ще були досить \r\n знані в в. кн. Литовськім, як звичайно принадлежність двірського господарства, \r\n княжого й панського. Тому що великодвірське господарство було розвинено \r\n головно в білоруських і чисто литовських краях, і невільників бачимо тут \r\n далеко більше нїж на Українї. В наших землях згадки про них рідші, і нїде не \r\n стрічаємо більше як по кілька, де маємо докладнїйші числа, тим часом як в \r\n дворах білоруських і литовських бачимо челяди часом по к\n\n### Result 3 (score: 0.5331)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0258`\n- **Text**:\n1 Чмелик Р. П. Сім’я та сімейний побут // Українське народознавство / За заг. ред. С. П. Павлюка, Г.\r\nЙ. Горинь, Р. Ф. Кирчіва. — Львів, 1994. — С. 209.\n\nВеликі сім’ї мали більший шанс на успіх своєї\r\nекономічної діяльності, подолання труднощів повсякденного життя. Невипадково,\r\nпід владою батька родини до складу сім’ї зараховували також слуг, невільну\r\nчелядь. Слово \"челядь\" на Прикарпатті та Закарпатті довго зберігалося\r\nна позначення членів родини, а не лише слуг. Слово \"отрок\" могло\r\nозначат\n\n### Result 4 (score: 0.5330)\n- **Work**: Іван Карпенко-Карий. Сава Чалий (1845)\n- **Author**: Карпенко-Карий І.\n- **Genre/Period**: drama / modern\n- **Chunk ID**: `89b9ccd0_c0029`\n- **Text**:\nСередина куреня. Вигляд конуса; дерева підрізано і верхи їх зведено докупи, потім зав'язано. Зверху навалено хворосту, трави, листя; замість стола великий круглий пеньок, замість стільців малі пеньки навколо. В глибині ліжко з дровеняк, заслано воловою шкурою, в головах сідло.\n\nЯВА І\n\nЧалий і Шмигельський.\n\nЧалий сидить біля стола, схиливши голову на руки, Шмигельський стоїть. Мовчать.\n\nЧалий. Все пропало!.. Немає згоди, немає одностайності між нами. Одна біда повинна б всіх єднать докупи, а ми \n\n### Result 5 (score: 0.5315)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3554`\n- **Text**:\nПоправкою до їх незавидного становища супроти \r\n сконсолїдованої корпорації майстрів служила орґанїзація т. з. „господи” і \r\n брацтв цехових „товаришів” — челядників. В Нїмеччинї вони з'являють ся в XIV \r\n в., в Галичинї бачимо їх уже в XV в. (устава для челядників львівського \r\n ткацького цеху з 1469 р., устава господи шевської челяди в Короснї 1483 \r\n р.) 17) Челядники мають свою хату — т. зв. „господу” (нїм. Herberg); \r\n її господар — з майстрів, т. зв. „батько господи”, являєть ся їх репрези\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:52.350Z",
+          "resultDisplay": "Found 5 results for: \"челядь\"\n\n### Result 1 (score: 0.5497)\n- **Work**: Богдан Лепкий. Казка мого життя (1872)\n- **Author**: Лепкий Б.\n- **Genre/Period**: fable / modern\n- **Chunk ID**: `e5666118_c0070`\n- **Text**:\n— А не забудьте там про часник! — кличе мама з кухні.\n\nКладуть часник під обрус на чотирьох кінцях стола, бо він має велику силу, його ароми бояться усякі недуги. Поміж тарілки кидають гіллячки темно-зеленої соснини. Та ще з ялинкою клопіт. Хоч вона буцімто й не наша, лиш з далекої півночі прийшла, але так вдомашнилася в нас, що тяжко знайти священичу хату, де її не вбирали б.\n\nОсь і ялинка готова. Така пишна й розкішна, хоч малюй. А що буде, як по вечері всі свічечки на ній засвітять! Розкіш од\n\n### Result 2 (score: 0.5417)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2517`\n- **Text**:\nВ XV в. і на початку XVI несвобідні ще були досить \r\n знані в в. кн. Литовськім, як звичайно принадлежність двірського господарства, \r\n княжого й панського. Тому що великодвірське господарство було розвинено \r\n головно в білоруських і чисто литовських краях, і невільників бачимо тут \r\n далеко більше нїж на Українї. В наших землях згадки про них рідші, і нїде не \r\n стрічаємо більше як по кілька, де маємо докладнїйші числа, тим часом як в \r\n дворах білоруських і литовських бачимо челяди часом по к\n\n### Result 3 (score: 0.5331)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0258`\n- **Text**:\n1 Чмелик Р. П. Сім’я та сімейний побут // Українське народознавство / За заг. ред. С. П. Павлюка, Г.\r\nЙ. Горинь, Р. Ф. Кирчіва. — Львів, 1994. — С. 209.\n\nВеликі сім’ї мали більший шанс на успіх своєї\r\nекономічної діяльності, подолання труднощів повсякденного життя. Невипадково,\r\nпід владою батька родини до складу сім’ї зараховували також слуг, невільну\r\nчелядь. Слово \"челядь\" на Прикарпатті та Закарпатті довго зберігалося\r\nна позначення членів родини, а не лише слуг. Слово \"отрок\" могло\r\nозначат\n\n### Result 4 (score: 0.5330)\n- **Work**: Іван Карпенко-Карий. Сава Чалий (1845)\n- **Author**: Карпенко-Карий І.\n- **Genre/Period**: drama / modern\n- **Chunk ID**: `89b9ccd0_c0029`\n- **Text**:\nСередина куреня. Вигляд конуса; дерева підрізано і верхи їх зведено докупи, потім зав'язано. Зверху навалено хворосту, трави, листя; замість стола великий круглий пеньок, замість стільців малі пеньки навколо. В глибині ліжко з дровеняк, заслано воловою шкурою, в головах сідло.\n\nЯВА І\n\nЧалий і Шмигельський.\n\nЧалий сидить біля стола, схиливши голову на руки, Шмигельський стоїть. Мовчать.\n\nЧалий. Все пропало!.. Немає згоди, немає одностайності між нами. Одна біда повинна б всіх єднать докупи, а ми \n\n### Result 5 (score: 0.5315)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c3554`\n- **Text**:\nПоправкою до їх незавидного становища супроти \r\n сконсолїдованої корпорації майстрів служила орґанїзація т. з. „господи” і \r\n брацтв цехових „товаришів” — челядників. В Нїмеччинї вони з'являють ся в XIV \r\n в., в Галичинї бачимо їх уже в XV в. (устава для челядників львівського \r\n ткацького цеху з 1469 р., устава господи шевської челяди в Короснї 1483 \r\n р.) 17) Челядники мають свою хату — т. зв. „господу” (нїм. Herberg); \r\n її господар — з майстрів, т. зв. „батько господи”, являєть ся їх репрези\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452090660_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "челядин"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452090660_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"челядин\"\n\n### Result 1 (score: 0.5162)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c2331`\n- **Text**:\nВ. О. Кудін.\n\n### Result 2 (score: 0.4976)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0115`\n- **Text**:\nЦілком природно припускати, що холопи, живучи в своїх\r\nдворах, зі своїми родинами — жінками і дітьми, поступово почали освоювати\r\nпереданий їм їхніми господарями інвентар, заводячи своє господарство — собину\r\nі поступово стали відбувати вже регламентовані повинності, тобто почали\r\nзближатися з іншими залежними людьми. Немає ніякого сумніву, що на становище\r\nхолопів повинен був вплинути і типово феодальний характер земельних володінь,\r\nде вони сиділи, типово феодальна система панування і підлегло\n\n### Result 3 (score: 0.4896)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0253`\n- **Text**:\n20 10 — его;\n\n21 4, 10 у;\n\n22 2, 6, 8, 9, 11 боудет(ь,\r\nъ);\n\n23 2, 5, 6, 9\r\nкоупилъ;\n\n24 9 дорозѣ;\n\n25 4, 10 у;\n\n26 1 + будеть;\n\n27 1 — то;\n\n28 2, 5, 9 коупивъ;\r\n7, 9, 10 купивъ;\n\n29 1, 4, 5, 7, 8,\r\n10 ему;\n\n30 1 конь; 2, 6, 9,\r\n11 коуны;\n\n31 2, 6, 8 + и;\n\n32 1, 4, 5, 7, 10\r\nсему;\n\n33 8 платить;\n\n34 1, 5 — 7, 10\r\nбудеть;\n\n35 4, 10 у;\n\n36 1, 2, 4, 6 — 10\r\nпогибло;\n\n37 1, 4, 6, 7\r\nпродажу; 5, 8, 10 продажю;\n\n38 6 челядінномъ; 8\r\nчелядіиномъ; 11 челединомъ;\n\n39 4 изводе; 6, 8\r\nсводѣ; 6, 8 + и извод\n\n### Result 4 (score: 0.4768)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0374`\n- **Text**:\nВІДЕНЬ\n\n### Result 5 (score: 0.4742)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:52.350Z",
+          "resultDisplay": "Found 5 results for: \"челядин\"\n\n### Result 1 (score: 0.5162)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c2331`\n- **Text**:\nВ. О. Кудін.\n\n### Result 2 (score: 0.4976)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0115`\n- **Text**:\nЦілком природно припускати, що холопи, живучи в своїх\r\nдворах, зі своїми родинами — жінками і дітьми, поступово почали освоювати\r\nпереданий їм їхніми господарями інвентар, заводячи своє господарство — собину\r\nі поступово стали відбувати вже регламентовані повинності, тобто почали\r\nзближатися з іншими залежними людьми. Немає ніякого сумніву, що на становище\r\nхолопів повинен був вплинути і типово феодальний характер земельних володінь,\r\nде вони сиділи, типово феодальна система панування і підлегло\n\n### Result 3 (score: 0.4896)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0253`\n- **Text**:\n20 10 — его;\n\n21 4, 10 у;\n\n22 2, 6, 8, 9, 11 боудет(ь,\r\nъ);\n\n23 2, 5, 6, 9\r\nкоупилъ;\n\n24 9 дорозѣ;\n\n25 4, 10 у;\n\n26 1 + будеть;\n\n27 1 — то;\n\n28 2, 5, 9 коупивъ;\r\n7, 9, 10 купивъ;\n\n29 1, 4, 5, 7, 8,\r\n10 ему;\n\n30 1 конь; 2, 6, 9,\r\n11 коуны;\n\n31 2, 6, 8 + и;\n\n32 1, 4, 5, 7, 10\r\nсему;\n\n33 8 платить;\n\n34 1, 5 — 7, 10\r\nбудеть;\n\n35 4, 10 у;\n\n36 1, 2, 4, 6 — 10\r\nпогибло;\n\n37 1, 4, 6, 7\r\nпродажу; 5, 8, 10 продажю;\n\n38 6 челядінномъ; 8\r\nчелядіиномъ; 11 челединомъ;\n\n39 4 изводе; 6, 8\r\nсводѣ; 6, 8 + и извод\n\n### Result 4 (score: 0.4768)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0374`\n- **Text**:\nВІДЕНЬ\n\n### Result 5 (score: 0.4742)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452090699_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "холоп"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452090699_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"холоп\"\n\n### Result 1 (score: 0.5250)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0151`\n- **Text**:\nОстанний цикль статтей (110-121) трактує про\r\nхолопство; що спричинюється до холопства (ст. 110), коли не зможе відробити\r\nборг (із закупа), про втечу холопа і різні пільги під час його розшуків, про\r\nпереховування втікачів-холопів; які наслідки коли другою стороною при договорі —\r\nхолоп; про крадіж втікачем-холопом, і т.д. Про ранно відпалу статтю 122-гу вже\r\nговорилося (див. ст. 93).\n\nВсі додані статті Широкої Правди розподілюються у дві\r\nкатегорії: одні доповнюють або розяснують статті що пер\n\n### Result 2 (score: 0.5212)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0115`\n- **Text**:\nЦілком природно припускати, що холопи, живучи в своїх\r\nдворах, зі своїми родинами — жінками і дітьми, поступово почали освоювати\r\nпереданий їм їхніми господарями інвентар, заводячи своє господарство — собину\r\nі поступово стали відбувати вже регламентовані повинності, тобто почали\r\nзближатися з іншими залежними людьми. Немає ніякого сумніву, що на становище\r\nхолопів повинен був вплинути і типово феодальний характер земельних володінь,\r\nде вони сиділи, типово феодальна система панування і підлегло\n\n### Result 3 (score: 0.5087)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0290`\n- **Text**:\nПершою групою були холопи. У склад її ввійшли\r\nнасамперед так звані «обельні», або повні холопи, далі до них примикала\r\nрізноманітна дворова челядь, що служила за рядом, зокрема за наймом («челядины —\r\nнаймиты» «Правосудия Митрополичья»), закупи і всілякі залежні групи, що не мали\r\nособливої назви, але перебували в кріпосній залежності від феодалів. Таким\r\nчином, холопи в XI — XIII ст. — це особлива група населення, значною мірою\r\nвідмінна від холопства більш раннього періоду. В цій групі об’єдн\n\n### Result 4 (score: 0.4952)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0156`\n- **Text**:\nЗакупництво як вид повного холопства виявляється і в\r\nстатті про послушенство. В цій статті встановлюється загальна норма: «А\r\nпослушество на холопа не вскладают», причому не сказано, що це — холопи\r\n«обельні», а говориться про холопів взагалі. Але з цього загального правила\r\nроблять виняток: у разі відсутності послухів з вільних, «по нуже», можна\r\nпритягати як послуха боярського дворового тіуна, і в незначних справах, а\r\n«также по нуже» можна притягати й закупів. Отже за змістом цієї статті зак\n\n### Result 5 (score: 0.4908)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0294`\n- **Text**:\n121 [126] Ѻже 22 кто не вѣдаѧ\r\nчюжь 23 холопъ 24 оусрѧщеть 25 или 26\r\nповести 27 дѣєтъ 28 или 29 держитъ 30\r\nи 31 оу 32 себѧ 33, а ѿтыдеть 34\r\nѿ 35 него, то ити 36 ротѣ, ӕко не вѣдалъ\r\n37 єсмь 38, ѡжо 39 єсть холопъ, а платежа\r\nв томъ нѣтү 40.\n\n122 [127] Ѡже 41 гдѣ 42\r\nхолопъ вылжеть конѧ 43, а ѡнъ боудет(ь) 44 не\r\nвѣдаѧ 45 вдалъ 46, то г(осподи)нү 47\r\nвыкүпати 48 и 49, или 50 лишитсѧ 51\r\nєгѡ; вѣдаӕ ли боудеть 52 далъ, то күнъ 53\r\nлишенү 54 ємоу 55 быти 56.\n\n123 [128] Ѡже 57 кто 53\r\nпоустить 59 \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:52.350Z",
+          "resultDisplay": "Found 5 results for: \"холоп\"\n\n### Result 1 (score: 0.5250)\n- **Work**: Білецький — Руська Правда й історія її тексту (1993)\n- **Author**: Білецький О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `ac24b59d_c0151`\n- **Text**:\nОстанний цикль статтей (110-121) трактує про\r\nхолопство; що спричинюється до холопства (ст. 110), коли не зможе відробити\r\nборг (із закупа), про втечу холопа і різні пільги під час його розшуків, про\r\nпереховування втікачів-холопів; які наслідки коли другою стороною при договорі —\r\nхолоп; про крадіж втікачем-холопом, і т.д. Про ранно відпалу статтю 122-гу вже\r\nговорилося (див. ст. 93).\n\nВсі додані статті Широкої Правди розподілюються у дві\r\nкатегорії: одні доповнюють або розяснують статті що пер\n\n### Result 2 (score: 0.5212)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0115`\n- **Text**:\nЦілком природно припускати, що холопи, живучи в своїх\r\nдворах, зі своїми родинами — жінками і дітьми, поступово почали освоювати\r\nпереданий їм їхніми господарями інвентар, заводячи своє господарство — собину\r\nі поступово стали відбувати вже регламентовані повинності, тобто почали\r\nзближатися з іншими залежними людьми. Немає ніякого сумніву, що на становище\r\nхолопів повинен був вплинути і типово феодальний характер земельних володінь,\r\nде вони сиділи, типово феодальна система панування і підлегло\n\n### Result 3 (score: 0.5087)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0290`\n- **Text**:\nПершою групою були холопи. У склад її ввійшли\r\nнасамперед так звані «обельні», або повні холопи, далі до них примикала\r\nрізноманітна дворова челядь, що служила за рядом, зокрема за наймом («челядины —\r\nнаймиты» «Правосудия Митрополичья»), закупи і всілякі залежні групи, що не мали\r\nособливої назви, але перебували в кріпосній залежності від феодалів. Таким\r\nчином, холопи в XI — XIII ст. — це особлива група населення, значною мірою\r\nвідмінна від холопства більш раннього періоду. В цій групі об’єдн\n\n### Result 4 (score: 0.4952)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0156`\n- **Text**:\nЗакупництво як вид повного холопства виявляється і в\r\nстатті про послушенство. В цій статті встановлюється загальна норма: «А\r\nпослушество на холопа не вскладают», причому не сказано, що це — холопи\r\n«обельні», а говориться про холопів взагалі. Але з цього загального правила\r\nроблять виняток: у разі відсутності послухів з вільних, «по нуже», можна\r\nпритягати як послуха боярського дворового тіуна, і в незначних справах, а\r\n«также по нуже» можна притягати й закупів. Отже за змістом цієї статті зак\n\n### Result 5 (score: 0.4908)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0294`\n- **Text**:\n121 [126] Ѻже 22 кто не вѣдаѧ\r\nчюжь 23 холопъ 24 оусрѧщеть 25 или 26\r\nповести 27 дѣєтъ 28 или 29 держитъ 30\r\nи 31 оу 32 себѧ 33, а ѿтыдеть 34\r\nѿ 35 него, то ити 36 ротѣ, ӕко не вѣдалъ\r\n37 єсмь 38, ѡжо 39 єсть холопъ, а платежа\r\nв томъ нѣтү 40.\n\n122 [127] Ѡже 41 гдѣ 42\r\nхолопъ вылжеть конѧ 43, а ѡнъ боудет(ь) 44 не\r\nвѣдаѧ 45 вдалъ 46, то г(осподи)нү 47\r\nвыкүпати 48 и 49, или 50 лишитсѧ 51\r\nєгѡ; вѣдаӕ ли боудеть 52 далъ, то күнъ 53\r\nлишенү 54 ємоу 55 быти 56.\n\n123 [128] Ѡже 57 кто 53\r\nпоустить 59 \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5ab2cd2a-5e03-4f55-9aef-f652237977a7",
+      "timestamp": "2026-03-14T01:34:57.139Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Querying Wikipedia for Info",
+          "description": "I'm now seeking additional information to help refine my response. Focusing on the current task, I'm checking different sources.",
+          "timestamp": "2026-03-14T01:34:55.938Z"
+        },
+        {
+          "subject": "Continuing Information Gathering",
+          "description": "\\n\\n\nI'm actively broadening my research. I'm exploring the nuances of the subject, aiming to gather specific data to create a detailed answer. My focus is on achieving a comprehensive response.",
+          "timestamp": "2026-03-14T01:34:56.857Z"
+        }
+      ],
+      "tokens": {
+        "input": 26238,
+        "output": 63,
+        "cached": 20501,
+        "thoughts": 103,
+        "tool": 0,
+        "total": 26404
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773452097048_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "невільник"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452097048_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"невільник\"\n\n### Result 1 (score: 0.5614)\n- **Work**: Іван Франко. Невільники (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `45cbe8f7_c0000`\n- **Text**:\nЛежу я безсонний. Ніч темна,\n\nІ дощ цюпотить у вікно…\n\nБог зна що верзеться наяві,\n\nА думка усе про одно.\n\nУсе про ту волю святую,\n\nЩо, страчена, так дорога,\n\nТак чудно хороша! На серце\n\nЗнов сум цілоденний ляга.\n\nРозпука обхоплює душу\n\nІ чорні думки шевелить:\n\n\"Ні, воля — то сон, а на світі\n\nНіхто не зазнав і не вздрить.\n\nГляди у вікно лиш щоденно,\n\nДе вулиці видно цяту, —\n\nТам люди проходять усякі,\n\nТи їх придивися життю!\n\nОсь бідний, обдертий зарібник\n\nГолоден стоїть, як туман, —\n\nСе черева с\n\n### Result 2 (score: 0.5290)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1161`\n- **Text**:\nТа війни й набіги тільки загострювали й \r\n прискоряли процес, що розвивав ся й без них, хоч і в повільнїйшім темпі. Раз \r\n холопська праця стала пожаданою, завистною річю для тієї „нарочитої чади”, що \r\n мала в своїх руках силу й полїтичну й економічну, — се саме вже ставало \r\n причиною повільного переходу свобідних в катеґорію невільних. Можливо, як \r\n оповідає Маврикій, що сусїднї з Візантиєю Словяне в його часи пускали \r\n добровільно своїх невільників: в їх на-пів кочовничім побутї вони особл\n\n### Result 3 (score: 0.5262)\n- **Work**: Оксана Забужко. Музей покинутих секретів (1960)\n- **Author**: Забужко О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `b11039d7_c0081`\n- **Text**:\nЧоловік із затислим під пахвою портфелем щодуху біжить хідником, попід стінами будинків із наглухо зачиненими брамами й віконницями в партерах; уздовж порожньої вранішньої вулиці за ним зрадницьки двиготить — здається, на ціле середмістя — луна власного тупоту, дарма що черевики має непідбиті; бруківка під ногами ковзка й мокра, прихвачена нестопленою вранішньою ожеледдю, \"Вважай!\" — озивається йому під черепом Голос, той самий, що завжди остерігає його під небезпечну хвилину, часом прямо наказу\n\n### Result 4 (score: 0.5259)\n- **Work**: Олесь Гончар. Бригантина (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e65da2c9_c0224`\n- **Text**:\n— Цей ось ентузіаст, який пуд ромашки зібрав, хіба він меншу пережив радість, ніж той, хто байдикує цілими днями, бродяжить безглуздо, неробою живе? Жити неробою — то ж найбільша ганьба!\n\nІ це поціляло якраз у нещасних інопланетників, так наче той старий капітан і крізь темряву бачив, як вони злодійкувато прищухли, затаїлись у виноградних кущах за зоною табору. Довго їм після цього ще вчуватиметься слово капітанове, стьобке, тавруюче, бо ніби ж саме їх і малося на увазі.\n\nПотім табір вкладатимет\n\n### Result 5 (score: 0.5250)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1136`\n- **Text**:\nПравні дороги до невільництва Руська Правда \r\n вказує такі: Купно при сьвідках і в присутности самого холопа, хоч би за \r\n найменьшу цїну (хотя и до полугривны); женячка з невільницею без застереження \r\n своєї свободи (безъ ряду); вступленнє без застереження своєї свободи в \r\n двірську службу — тивуном або ключником, каже Рус. Правда, але треба розуміти \r\n мабуть ширше — про всяку двірську службу 42). Далї, сюди-ж належить \r\n те, що ми вже знаємо: продажа збанкрутованого купця по конкурсу, право\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:35:00.667Z",
+          "resultDisplay": "Found 5 results for: \"невільник\"\n\n### Result 1 (score: 0.5614)\n- **Work**: Іван Франко. Невільники (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `45cbe8f7_c0000`\n- **Text**:\nЛежу я безсонний. Ніч темна,\n\nІ дощ цюпотить у вікно…\n\nБог зна що верзеться наяві,\n\nА думка усе про одно.\n\nУсе про ту волю святую,\n\nЩо, страчена, так дорога,\n\nТак чудно хороша! На серце\n\nЗнов сум цілоденний ляга.\n\nРозпука обхоплює душу\n\nІ чорні думки шевелить:\n\n\"Ні, воля — то сон, а на світі\n\nНіхто не зазнав і не вздрить.\n\nГляди у вікно лиш щоденно,\n\nДе вулиці видно цяту, —\n\nТам люди проходять усякі,\n\nТи їх придивися життю!\n\nОсь бідний, обдертий зарібник\n\nГолоден стоїть, як туман, —\n\nСе черева с\n\n### Result 2 (score: 0.5290)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1161`\n- **Text**:\nТа війни й набіги тільки загострювали й \r\n прискоряли процес, що розвивав ся й без них, хоч і в повільнїйшім темпі. Раз \r\n холопська праця стала пожаданою, завистною річю для тієї „нарочитої чади”, що \r\n мала в своїх руках силу й полїтичну й економічну, — се саме вже ставало \r\n причиною повільного переходу свобідних в катеґорію невільних. Можливо, як \r\n оповідає Маврикій, що сусїднї з Візантиєю Словяне в його часи пускали \r\n добровільно своїх невільників: в їх на-пів кочовничім побутї вони особл\n\n### Result 3 (score: 0.5262)\n- **Work**: Оксана Забужко. Музей покинутих секретів (1960)\n- **Author**: Забужко О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `b11039d7_c0081`\n- **Text**:\nЧоловік із затислим під пахвою портфелем щодуху біжить хідником, попід стінами будинків із наглухо зачиненими брамами й віконницями в партерах; уздовж порожньої вранішньої вулиці за ним зрадницьки двиготить — здається, на ціле середмістя — луна власного тупоту, дарма що черевики має непідбиті; бруківка під ногами ковзка й мокра, прихвачена нестопленою вранішньою ожеледдю, \"Вважай!\" — озивається йому під черепом Голос, той самий, що завжди остерігає його під небезпечну хвилину, часом прямо наказу\n\n### Result 4 (score: 0.5259)\n- **Work**: Олесь Гончар. Бригантина (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e65da2c9_c0224`\n- **Text**:\n— Цей ось ентузіаст, який пуд ромашки зібрав, хіба він меншу пережив радість, ніж той, хто байдикує цілими днями, бродяжить безглуздо, неробою живе? Жити неробою — то ж найбільша ганьба!\n\nІ це поціляло якраз у нещасних інопланетників, так наче той старий капітан і крізь темряву бачив, як вони злодійкувато прищухли, затаїлись у виноградних кущах за зоною табору. Довго їм після цього ще вчуватиметься слово капітанове, стьобке, тавруюче, бо ніби ж саме їх і малося на увазі.\n\nПотім табір вкладатимет\n\n### Result 5 (score: 0.5250)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1136`\n- **Text**:\nПравні дороги до невільництва Руська Правда \r\n вказує такі: Купно при сьвідках і в присутности самого холопа, хоч би за \r\n найменьшу цїну (хотя и до полугривны); женячка з невільницею без застереження \r\n своєї свободи (безъ ряду); вступленнє без застереження своєї свободи в \r\n двірську службу — тивуном або ключником, каже Рус. Правда, але треба розуміти \r\n мабуть ширше — про всяку двірську службу 42). Далї, сюди-ж належить \r\n те, що ми вже знаємо: продажа збанкрутованого купця по конкурсу, право\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773452097091_1",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "челядь",
+            "mode": "frequency",
+            "limit": 10
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773452097091_1",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**челядь**: frequency = 2,454, relative = 1.21 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:35:00.667Z",
+          "resultDisplay": "**челядь**: frequency = 2,454, relative = 1.21 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_verify_words_1773452097136_2",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "челядь",
+              "челядин",
+              "холоп",
+              "обічний"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773452097136_2",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 3/4\n\n- **челядь** — FOUND (2 match): челядь(noun), челядь(noun)\n- **челядин** — FOUND (1 match): челядин(noun)\n- **холоп** — FOUND (1 match): холоп(noun)\n- **обічний** — NOT FOUND"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:35:00.667Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 3/4\n\n- **челядь** — FOUND (2 match): челядь(noun), челядь(noun)\n- **челядин** — FOUND (1 match): челядин(noun)\n- **холоп** — FOUND (1 match): холоп(noun)\n- **обічний** — NOT FOUND",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "456df9c5-865d-49b9-94de-8ee3dfc54678",
+      "timestamp": "2026-03-14T01:35:09.542Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Step",
+          "description": "I'm focusing now on formulating the most effective strategy. My aim is to make efficient forward progress. I am currently evaluating the specific actions needed to advance towards the ultimate goal of the task, working to make sure my approach is optimal and efficient.",
+          "timestamp": "2026-03-14T01:35:08.014Z"
+        },
+        {
+          "subject": "Analyzing Additional Information",
+          "description": "I'm now focused on digging deeper into the provided information. My priority is to confirm the relationships between key terms. I'm leveraging tools designed to extract specific details to ensure precision in my understanding.",
+          "timestamp": "2026-03-14T01:35:09.350Z"
+        }
+      ],
+      "tokens": {
+        "input": 27817,
+        "output": 18,
+        "cached": 0,
+        "thoughts": 181,
+        "tool": 0,
+        "total": 28016
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452109540_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Холопи",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452109540_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Холопи\n**URL**: https://uk.wikipedia.org/wiki/%D0%A5%D0%BE%D0%BB%D0%BE%D0%BF%D0%B8\n\nХолопи — назва невільних людей у Русі, вживана поряд з назвою «челядь». Холопами називали чоловіків, а жінок — рабами. Холопи — населення, що перебувало у повній власності князя.\nЗа «Руською Правдою», холоп був скоріше об'єктом, ніж суб'єктом права: за вбивство холопа вбивця платив лише продажу, а не виру, яка платилася за вбивство вільної людини. Відповідальність за злочин, вчинений холопом, падала на його пана.\nХолопами ставали внаслідок:\n\nполону,\nзлочину, вчиненого закупом,\nнеспроможності заплатити борг,\nшлюбу з невільним,\nпродажу при свідках,\nнародження від невільних батьків.\nВільна особа могла також добровільно приймати холопство через одруження з рабою, продати себе і прийняти службу тивуна або ключника у князів і бояр. Становище і вартість останніх, як і холопів, що знали ремесло, були куди кращі, ніж звичайних холопів («рядовичів»). Холопом, як об'єктом права, вільно розпоряджалися їх пани-власники, включно до продажу. Проте холопи могли мати власне майно. Під впливом церкви становище холопів дещо змінилося. Церква сприяла викупові холопів, а також опікувалася деякими їх групами (див. Невільництво в Україні). Повних холопів т. зв. «обельних» холопів слід відрізняти від напіввільних людей, гол. закупів.\n\n\n== Московська держава ==\nУ Московській державі більшість холопів у XIV—XV вв. стала кріпаками, але інститут холопів існував далі, зокрема як форма кабального холопства (служба за борг у кредитора).Наказ від 25 квітня 1597 р. постановив кабальним людям зі своїми дружинами і дітьми залишатися в кабалах до смерті їх панів, а панам дозволив викупних грошей не приймати. У селянських договорах стало передбачатися \"вільно мене звідусіль до себе узяти» і «жити в селянстві вічно і нікуди не втекти», селянин сам назавжди відмовлявся від права виходу за неустойку, до XVII століття ця неустойка стала загальним заключним умовою позичкових записів і склала «кріпосну»запис або \"вічність селянську\". Закон XVII століття не встановлював ні терміну фортеці, ні розмірів повинною, нормою було «поміщицьке всяку справу робити і оброк платити...», «поміщика в усьому слушати, ріллю на нього пахати...». Особиста селянська фортеця» за договором «перетворювалася на спадкове укріплення»за законом\". Укладення 1649 р порівнює фортеці холоп'ю і селянську (казенний тяглець), і в подальшому кріпосна розвивається в бік холопства. Юридично холопство було скасовано Петром 1 у 1723 році.\n\n\n== Річ Посполита ==\nУ Речі Посполитій «хлопи» не були холопами (рабами), а тільки категорією залежного від пана (шляхтича) селянства. За новітніх часів польська назва «хлоп» була поширена на селянство взагалі.\n\n\n== Див. також ==\nЧелядь\nРядовичі\nСмерди\nЗакупи\nІзгої\nКріпаки\nХалупники\n\n\n== Література ==\nВ. Маркусь. Холопи // Енциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1984. — Кн. 2, [т. 10] : Хмельницький Борис — Яцків. — С. 3623. — ISBN 5-7707-4049-3.\n\n\n== Посилання ==\nХолопи // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2004. — Т. 6 : Т — Я. — 768 с. — ISBN 966-7492-06-0.\nХолопи // Історія війн і збройних конфліктів в Україні: Енциклопедичний довідник / Ред. кол.: О. І. Гуржій (відп. ред.), А. В. Атрохов та ін.; Авт.-упоряд.: О. І. Гуржій та ін. — К.: Вид. гуманіт. л-ри, 2004. — С. 451. — ISBN 966-96500-2-Х.\nХолопи // Микола Костомаров: Віхи життя і творчості: Енциклопедичний довідник / В. А. Смолій, Ю. А. Пінчук, О. В. Ясь; Вступ, ст. і заг. ред. В. А. Смолія. — К.: Вища шк., 2005. — С. 512. — ISBN 966-642-295-6."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:35:09.569Z",
+          "resultDisplay": "# Холопи\n**URL**: https://uk.wikipedia.org/wiki/%D0%A5%D0%BE%D0%BB%D0%BE%D0%BF%D0%B8\n\nХолопи — назва невільних людей у Русі, вживана поряд з назвою «челядь». Холопами називали чоловіків, а жінок — рабами. Холопи — населення, що перебувало у повній власності князя.\nЗа «Руською Правдою», холоп був скоріше об'єктом, ніж суб'єктом права: за вбивство холопа вбивця платив лише продажу, а не виру, яка платилася за вбивство вільної людини. Відповідальність за злочин, вчинений холопом, падала на його пана.\nХолопами ставали внаслідок:\n\nполону,\nзлочину, вчиненого закупом,\nнеспроможності заплатити борг,\nшлюбу з невільним,\nпродажу при свідках,\nнародження від невільних батьків.\nВільна особа могла також добровільно приймати холопство через одруження з рабою, продати себе і прийняти службу тивуна або ключника у князів і бояр. Становище і вартість останніх, як і холопів, що знали ремесло, були куди кращі, ніж звичайних холопів («рядовичів»). Холопом, як об'єктом права, вільно розпоряджалися їх пани-власники, включно до продажу. Проте холопи могли мати власне майно. Під впливом церкви становище холопів дещо змінилося. Церква сприяла викупові холопів, а також опікувалася деякими їх групами (див. Невільництво в Україні). Повних холопів т. зв. «обельних» холопів слід відрізняти від напіввільних людей, гол. закупів.\n\n\n== Московська держава ==\nУ Московській державі більшість холопів у XIV—XV вв. стала кріпаками, але інститут холопів існував далі, зокрема як форма кабального холопства (служба за борг у кредитора).Наказ від 25 квітня 1597 р. постановив кабальним людям зі своїми дружинами і дітьми залишатися в кабалах до смерті їх панів, а панам дозволив викупних грошей не приймати. У селянських договорах стало передбачатися \"вільно мене звідусіль до себе узяти» і «жити в селянстві вічно і нікуди не втекти», селянин сам назавжди відмовлявся від права виходу за неустойку, до XVII століття ця неустойка стала загальним заключним умовою позичкових записів і склала «кріпосну»запис або \"вічність селянську\". Закон XVII століття не встановлював ні терміну фортеці, ні розмірів повинною, нормою було «поміщицьке всяку справу робити і оброк платити...», «поміщика в усьому слушати, ріллю на нього пахати...». Особиста селянська фортеця» за договором «перетворювалася на спадкове укріплення»за законом\". Укладення 1649 р порівнює фортеці холоп'ю і селянську (казенний тяглець), і в подальшому кріпосна розвивається в бік холопства. Юридично холопство було скасовано Петром 1 у 1723 році.\n\n\n== Річ Посполита ==\nУ Речі Посполитій «хлопи» не були холопами (рабами), а тільки категорією залежного від пана (шляхтича) селянства. За новітніх часів польська назва «хлоп» була поширена на селянство взагалі.\n\n\n== Див. також ==\nЧелядь\nРядовичі\nСмерди\nЗакупи\nІзгої\nКріпаки\nХалупники\n\n\n== Література ==\nВ. Маркусь. Холопи // Енциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1984. — Кн. 2, [т. 10] : Хмельницький Борис — Яцків. — С. 3623. — ISBN 5-7707-4049-3.\n\n\n== Посилання ==\nХолопи // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2004. — Т. 6 : Т — Я. — 768 с. — ISBN 966-7492-06-0.\nХолопи // Історія війн і збройних конфліктів в Україні: Енциклопедичний довідник / Ред. кол.: О. І. Гуржій (відп. ред.), А. В. Атрохов та ін.; Авт.-упоряд.: О. І. Гуржій та ін. — К.: Вид. гуманіт. л-ри, 2004. — С. 451. — ISBN 966-96500-2-Х.\nХолопи // Микола Костомаров: Віхи життя і творчості: Енциклопедичний довідник / В. А. Смолій, Ю. А. Пінчук, О. В. Ясь; Вступ, ст. і заг. ред. В. А. Смолія. — К.: Вища шк., 2005. — С. 512. — ISBN 966-642-295-6.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "17d35449-7d19-4766-bdaa-8c57ad8abbeb",
+      "timestamp": "2026-03-14T01:36:20.650Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Челядь (невільники)\n\n## Key Facts Ledger\n```yaml\nsubject: \"Челядь (невільники)\"\ntype: \"phenomenon\"\ndates:\n  start: \"~800\"\n  end: \"~1800\"\n  key_events:\n    - year: 1016\n      event: \"Перші кодифікації статусу челяді та холопів у «Руській Правді» (Коротка редакція).\"\n    - year: 1113\n      event: \"Розширена редакція «Руської Правди» Володимира Мономаха детально регламентує джерела холопства та боргове рабство (закупи).\"\n    - year: 1400\n      event: \"Трансформація поняття: челядь поступово стає збірною назвою для дворових слуг і залежного населення у Великому князівстві Литовському.\"\n    - year: 1800\n      event: \"Збереження терміна «челядь» у діалектах на позначення молоді, дівчат або членів родини (особливо на Західній Україні).\"\nprimary_quotes:\n  - text: \"А послушество на холопа не вскладают...\"\n    source: \"Руська Правда (Про послушенство)\"\n    attribution: \"Законодавчий звід Київської Русі\"\n  - text: \"Ѡже гдѣ холопъ вылжеть конѧ, а ѡнъ боудеть не вѣдаѧ вдалъ, то господину выкүпати и, или лишитсѧ єгѡ...\"\n    source: \"Руська Правда (Широка редакція, ст. 122 за Юшковим)\"\n    attribution: \"Законодавчий звід Київської Русі\"\n  - text: \"челядины — наймиты\"\n    source: \"Правосуддя Митрополиче\"\n    attribution: \"Церковно-юридичний пам'ятник\"\nforbidden_claims:\n  - \"Ототожнення ранньоруського інституту челяді (патріархального рабства) з пізнім російським/московським кріпацтвом.\"\n  - \"Радянський наратив про те, що всі залежні верстви були виключно жертвами феодальної експлуатації (ігнорування факту самопродажу в холопи заради виживання).\"\n  - \"Ствердження, що термін «челядь» мав виключно негативне/рабське забарвлення впродовж усієї історії.\"\n```\n\n## Використані джерела\n1. [Wikipedia: Челядь](https://uk.wikipedia.org/wiki/%D0%A7%D0%B5%D0%BB%D1%8F%D0%B4%D1%8C) — Базова термінологія, етимологія, еволюція поняття від патріархального рабства до діалектизмів.\n2. [Wikipedia: Холопи](https://uk.wikipedia.org/wiki/%D0%A5%D0%BE%D0%BB%D0%BE%D0%BF%D0%B8) — Правовий статус невільників за «Руською Правдою», джерела холопства.\n3. Серафим Юшков «Нариси з історії виникнення і початкового розвитку феодалізму в Київській Русі» (1939) — [RAG: search_literary] Детальний аналіз статусу холопів, закупів, челяді та їх еволюції; аналіз статей Широкої Правди.\n4. «Руська Правда» (академічне видання під ред. С. Юшкова, 1935) — [RAG: search_literary] Першоджерело юридичних норм щодо челяді та холопів.\n5. Михайло Грушевський «Історія України-Руси», т. 2-3 — [RAG: search_literary] Правові шляхи до невільництва (купівля, одруження, служба без договору), перехід до категорії дворової челяді.\n\n## Хронологія\n- **До IX ст.**: Термін «челядь» означає членів великої патріархальної сім'ї, куди входили і кровні родичі, і раби. Влада домовладики над ними була безмежною.\n- **IX–X ст.**: Челядь і холопи стають об'єктами масової купівлі-продажу; работоргівля стає однією з ключових статей експорту Русі.\n- **XI–XII ст.**: «Руська Правда» чітко кодифікує статус холопа як об'єкта права (за його вбивство платиться не «вира», а штраф-«продажа»).\n- **XIV–XV ст.**: У Великому князівстві Литовському термін «челядь» стає збірною назвою для населення феодальної вотчини (дворові люди, слуги).\n- **XVIII–XX ст.**: В українській мові (особливо в західних говорах) «челядь» втрачає значення неволі і починає означати просто «молодь», «дівчата» («біла челядь») або весільних гостей.\n\n## Ключові факти та цитати\n- Слово «челядь» (прасл. *čel'adь) споріднене зі словом «чоловік» і «коліно» (покоління). Первісно воно означало «сім'ю» в широкому розумінні. Статус молодшого члена сім'ї і статус раба в ранньому суспільстві були юридично близькими.\n- Слова «отрок» і «дітський» у давньоруській державі могли означати як власну дитину, так і невільного челядина у княжому дворі.\n- Жінка-невільниця називалася «раба» або «роба». Одруження вільного чоловіка з рабою без спеціального договору автоматично перетворювало його на холопа.\n- **Джерела холопства за Руською Правдою**: полон, народження від невільних, продаж себе (навіть за півгривні), неспроможність виплатити борг (банкрутство), вступ на посаду тіуна чи ключника без збереження волі, втеча закупа.\n- За вбивство чужого холопа сплачувався штраф, і власник холопа отримував компенсацію за знищене майно, оскільки холоп не був суб'єктом права.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!history-bite] — Етимологічний парадокс: слово «челядь», яке ми асоціюємо з прислугою або невільниками, походить від кореня, що означає «сім'я» та «покоління». Раби і діти були частиною однієї патріархальної структури.\n- Section \"Вступ\": [!culture] — У сучасних карпатських діалектах і в народних піснях слово «челядь» або «челядина» означає просто молодь або жіноцтво (напр., «біла челядь»), повністю втративши відтінок рабства.\n- Section \"Основний матеріал\": [!quote] — Цитата з «Руської Правди» про те, що холоп не може бути свідком у суді («А послушество на холопа не вскладают»), ілюструє його статус об'єкта, а не суб'єкта права.\n- Section \"Основний матеріал\": [!myth-buster] — Поширена помилка вважати, що вільні люди ставали рабами лише насильно. На Русі існував законний самопродаж в холопи (навіть за «півгривні») заради порятунку від голоду, або при вступі на престижну, але невільну посаду княжого ключника.\n- Section \"Практика\": [!context] — Пояснення граматичних особливостей слова «челядь» (збірний іменник) на тлі його історичної еволюції від ранньої Русі до козацької доби.\n- Section \"Підсумок\": [!decolonization] — Радянська історіографія часто згладжувала різницю між справжніми рабами (холопами) і напіввільними селянами (закупами), щоб підігнати історію Русі під марксистську схему «феодалізму», стираючи специфічну правову культуру Києва на користь московських лекал.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Інститут холопства та челяді розглядався виключно через призму класової боротьби як ранній етап кріпацтва (загального безправ'я мас перед царем/державою). Радянська школа (напр., Б. Греков) намагалася довести, що Русь була суто феодальною, применшуючи роль класичного рабовласництва.\n- **Ukrainian reality**: Соціальна структура Руси-України була складною правовою системою, ближчою до європейських та скандинавських практик («варварські правди»). Холопи були чітко відокремленою юридичною категорією (chattel slaves), а не просто «дуже бідними селянами». Існувала потужна правова культура договорів («ряд»), яка дозволяла захистити свою свободу навіть при одруженні з невільницею. Ця культура індивідуального контракту є фундаментальною відмінністю від пізнішого московського масового кріпацтва-холопства, де навіть найвищі бояри називали себе «холопами государевими».\n\n## Contested Terms\n| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Челядь | Синонім слова \"раби\", експлуатовані класи. | Збірне поняття, що еволюціонувало від \"патріархальної сім'ї\" до дворових слуг; має багатий мовний спадок (молодь, жіноцтво). |\n| Холоп | Праобраз російського кріпака; пізніше — будь-який підданий царя. | Об'єкт права в Київській Русі; людина, що повністю втратила волю (часто добровільно за договором чи через борг), не ототожнюється з усім населенням. |\n| Закуп | Те саме, що холоп (жертва феодала). | Напіввільна людина; суб'єкт права, що тимчасово відпрацьовує борг (купу) і зберігає базові права. |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Фокус**: Походження слова та поняття патріархальної сім'ї.\n- **Факти**: Етимологія від праслов'янського *čel'adь (корінь *čelь - покоління, родина). \n- **Соціальний вимір**: Первісно влада «домовладики» поширювалася однаково і на дітей, і на рабів. Тому «отрок» (слуга) міг мати семантичний зв'язок з дитиною.\n- **Еволюція**: До 9 ст. це патріархальне рабство. У 9-10 ст. челядь стає товаром. З 11 ст. це збірна назва для залежних людей вотчини. У козацькі часи та в говорах — слуги, молодь, жінки.\n\n### Основний матеріал\n- **Фокус**: Аналіз першоджерел (Руська Правда) та правовий статус.\n- **Холопство**: Холопи — чоловіки, раби — жінки. Вони були об'єктами права. \n- **Шляхи потрапляння в холопство**: Полон, злочин закупа (втеча), банкрутство, одруження з рабою без «ряду» (договору), вступ на посаду тіуна/ключника без ряду, самопродаж.\n- **Правові обмеження**: За вбивство холопа вбивця платить лише «продажу» (штраф князю) і компенсує вартість пану. Холоп не міг бути свідком («А послушество на холопа не вскладают»), за винятком крайньої потреби (тіун боярський). Відповідальність за злочин холопа несе його пан.\n\n### Практика\n- **Фокус**: Вправи на транскрипцію, етимологічний аналіз, ідентифікацію граматики.\n- **Лексика для вправ**: челядь (збірний іменник, жіночий рід), холоп, закуп, ряд (договір), отрок, тіун, ключник.\n- **Граматика**: Особливості відмінювання збірних іменників на -дь (челядь, молодь), їхнє узгодження.\n\n### Підсумок\n- **Фокус**: Узагальнення теми та місток до наступної.\n- **Синтез**: Челядь була невід'ємною частиною соціально-економічної машини Русі. Здатність суспільства того часу чітко розрізняти відтінки несвободи (повний холоп, закуп, рядович) свідчить про високий рівень правової культури.\n- **Місток (Connects to: restitution)**: Оскільки холопи розглядалися як власність (майно), питання крадіжки челядина або його втечі напряму пов'язане з поняттям реституції (повернення майна) в давньоруському праві, що буде темою наступного модуля.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Drafting the Research Document",
+          "description": "\\n\\n\n\nI'm now focusing on synthesizing the gathered information. My primary goal is to structure the document, ensuring clarity and coherence. I intend to integrate the various data points I have, weaving them into a cohesive narrative. The next step is to create a compelling conclusion.",
+          "timestamp": "2026-03-14T01:35:15.417Z"
+        },
+        {
+          "subject": "Composing the Introduction",
+          "description": "\\n\\n\n\nMy current focus is crafting the introduction. I'm aiming to provide a concise overview of the topic, setting the stage for the detailed analysis to follow. The challenge lies in accurately representing the historical context. I will then integrate this overview into the main body of the research.",
+          "timestamp": "2026-03-14T01:35:19.806Z"
+        },
+        {
+          "subject": "Structuring the Research Notes",
+          "description": "\\n\\n\n\nMy current focus is organizing the gathered research notes. The aim is to create a structured outline, ensuring all key facts are logically arranged for drafting the document. I will refine the framework to ensure a clear progression of ideas for the introduction and the subsequent sections.",
+          "timestamp": "2026-03-14T01:35:23.610Z"
+        },
+        {
+          "subject": "Arranging Research Points",
+          "description": "\\n\\n\n\nMy current focus is organizing the gathered research materials to create a clear structure for the document. I am outlining the key facts, ensuring a logical flow, especially noting the historical timeline. The next step will be to integrate primary quotes and analyze decolonization aspects.",
+          "timestamp": "2026-03-14T01:35:28.701Z"
+        },
+        {
+          "subject": "Finalizing Document Organization",
+          "description": "\\n\\n\n\nMy current focus is finalizing the document's structure, ensuring the logical flow of ideas and inclusion of key facts. I'm aiming for a clear introduction, thorough primary source analysis, and a strong conclusion. The next step is to prepare the final touches for the introductory part, after which, I'll incorporate the chosen quotes, ensuring they are correctly attributed.",
+          "timestamp": "2026-03-14T01:35:33.617Z"
+        },
+        {
+          "subject": "Crafting the Outline",
+          "description": "\\n\\n\n\nMy current focus is crafting a detailed outline. The intention is to structure the document, ensuring all key facts are logically arranged for drafting the document. I aim to create sections for introduction, primary source analysis, and a conclusion, followed by preparing the necessary metadata.",
+          "timestamp": "2026-03-14T01:35:35.118Z"
+        }
+      ],
+      "tokens": {
+        "input": 29269,
+        "output": 3415,
+        "cached": 27489,
+        "thoughts": 1388,
+        "tool": 0,
+        "total": 34072
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

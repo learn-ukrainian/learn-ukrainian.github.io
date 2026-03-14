@@ -1,0 +1,501 @@
+{
+  "sessionId": "babb3f25-a5a0-426e-b32c-abb3ca4556d5",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:39:50.900Z",
+  "lastUpdated": "2026-03-14T01:41:47.382Z",
+  "messages": [
+    {
+      "id": "4cceb015-0f1f-4e31-a116-b96d5b09944c",
+      "timestamp": "2026-03-14T01:39:50.900Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-053\nlevel: RUTH\nsequence: 53\nslug: syntax-agreement\nversion: '2.0'\ntitle: 'Синтаксис I: Узгодження'\nsubtitle: Syntax I\nfocus: Agreement and government rules\nphase: 2\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Syntax I\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Grammar Prefect\nprerequisites:\n- the-verb-conjugation\nconnects_to:\n- syntax-complex\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Синтаксис I: Узгодження** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Синтаксис I: Узгодження\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Синтаксис I: Узгодження\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "c3aa7084-fea0-4a50-9fc0-4828edd94047",
+      "timestamp": "2026-03-14T01:40:00.665Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to next stage",
+          "description": "\\n\\n\n\nI'm now focused on moving forward with the next stage. I am now working on ensuring I am fulfilling the goals, and making forward progress.",
+          "timestamp": "2026-03-14T01:39:54.841Z"
+        },
+        {
+          "subject": "Starting Research on Topic",
+          "description": "\\n\\n\n\nI'm starting the research process, and focusing on gathering information about Middle Ukrainian syntax. My focus is on the agreement rules within the language, as outlined in the module. I'm prioritizing relevant information to build a solid foundation for the module.",
+          "timestamp": "2026-03-14T01:39:57.585Z"
+        },
+        {
+          "subject": "Commencing Wikipedia Searches",
+          "description": "\\n\\n\n\nI'm starting the initial investigation by using the Wikipedia tools to find more specific information. This is to get the background of the syntax and agreement in Middle Ukrainian. After this is complete, I will move on to the literary searches.",
+          "timestamp": "2026-03-14T01:40:00.272Z"
+        }
+      ],
+      "tokens": {
+        "input": 20485,
+        "output": 99,
+        "cached": 0,
+        "thoughts": 605,
+        "tool": 0,
+        "total": 21189
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452400366_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Староукраїнська мова",
+            "mode": "summary"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452400366_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Староукраїнська мова\n**Description**: мова, що була поширена в XIV–XVIII ст. на територіях сучасної України, Білорусі і частини Польщі\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0\n\nСтароукраї́нська мо́ва — українська мова XIV—XVIII століть. Тогочасна назва — руська мова. Побутувала на українських теренах Литви, Польщі, Молдови та Війська Запорозького. Використовувалася як літературна мова у дипломатії, юриспруденції, конфесійній, художній, науковій літературі тощо. До XVI століття була однією з офіційних мов канцелярій Литви та Молдови, де згодом витіснена польською, латиною та молдовською. У XVIII столітті, в Центральній Україні, під впливом заборон указами Найсвятішого Синоду РПЦ, вийшла з ужитку. Відтоді церковну літературу видавали лише церковнослов'янською мовою. На Заході України староукраїнська мова зберігалася до початку ХІХ століття, а на Сході України трималася лише в усній та рукописній формі."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:03.478Z",
+          "resultDisplay": "# Староукраїнська мова\n**Description**: мова, що була поширена в XIV–XVIII ст. на територіях сучасної України, Білорусі і частини Польщі\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0\n\nСтароукраї́нська мо́ва — українська мова XIV—XVIII століть. Тогочасна назва — руська мова. Побутувала на українських теренах Литви, Польщі, Молдови та Війська Запорозького. Використовувалася як літературна мова у дипломатії, юриспруденції, конфесійній, художній, науковій літературі тощо. До XVI століття була однією з офіційних мов канцелярій Литви та Молдови, де згодом витіснена польською, латиною та молдовською. У XVIII столітті, в Центральній Україні, під впливом заборон указами Найсвятішого Синоду РПЦ, вийшла з ужитку. Відтоді церковну літературу видавали лише церковнослов'янською мовою. На Заході України староукраїнська мова зберігалася до початку ХІХ століття, а на Сході України трималася лише в усній та рукописній формі.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773452400405_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "summary",
+            "query": "Граматика Мелетія Смотрицького"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452400405_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Граматика Мелетія Смотрицького\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0_%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D1%8F_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE\n\n«Граматика слов'янська» — перший у славістиці повний курс церковнослов'янської мови в українській редакції. Складена письменником-полемістом і церковним діячем Мелетієм Смотрицьким. Вийшла друком 1619 року в місті Єв'є. Пам'ятка української мови."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:03.478Z",
+          "resultDisplay": "# Граматика Мелетія Смотрицького\n**Description**: \n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0_%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D1%8F_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE\n\n«Граматика слов'янська» — перший у славістиці повний курс церковнослов'янської мови в українській редакції. Складена письменником-полемістом і церковним діячем Мелетієм Смотрицьким. Вийшла друком 1619 року в місті Єв'є. Пам'ятка української мови.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773452400624_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Граматика слов'янська (Іван Ужевич)",
+            "mode": "summary"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452400624_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Граматика слов'янська (Іван Ужевич)'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:03.478Z",
+          "resultDisplay": "Wikipedia article not found: 'Граматика слов'янська (Іван Ужевич)'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773452400663_3",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Узгодження (лінгвістика)",
+            "mode": "summary"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452400663_3",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Узгодження (лінгвістика)'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:03.478Z",
+          "resultDisplay": "Wikipedia article not found: 'Узгодження (лінгвістика)'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4d15c66c-5036-4d52-8bfe-4545bc2aa733",
+      "timestamp": "2026-03-14T01:40:10.926Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing to the Next Step",
+          "description": "I'm now focused on the next stage. It involves generating the necessary outputs by meticulously following the procedure. I am carefully assessing how best to approach the following stage.",
+          "timestamp": "2026-03-14T01:40:08.169Z"
+        },
+        {
+          "subject": "Searching for Key Terms",
+          "description": "I'm currently engaged in a detailed search to pinpoint relevant information. I'm exploring various search options to gather crucial data, and I'm also preparing to analyze the extracted results.",
+          "timestamp": "2026-03-14T01:40:10.105Z"
+        }
+      ],
+      "tokens": {
+        "input": 21322,
+        "output": 95,
+        "cached": 19580,
+        "thoughts": 220,
+        "tool": 0,
+        "total": 21637
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452410382_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Граматика Мелетія Смотрицького",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452410382_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Граматика Мелетія Смотрицького\n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0_%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D1%8F_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE\n\n«Граматика слов'янська» (точна назва — «ΓΡΑΜΜΑΤΙΚΗ Славє́нскиѧ пра́вилноє Сѵ́нтаґма») — перший у славістиці повний курс церковнослов'янської мови в українській редакції. Складена письменником-полемістом і церковним діячем Мелетієм Смотрицьким. Вийшла друком 1619 року в місті Єв'є (нині — місто Вевіс, Литва). Пам'ятка української мови.\n«Грамматіка» Мелетія Смотрицького була основним підручником церковнослов'янської мови не лише в Україні, але й у всіх слов'янських країнах, де церковнослов'янська мова виконувала роль священно-богослужбової. Завдяки «Грамматіці…» Смотрицького українська філологія стала помітною галуззю європейського мовознавства старожитньої епохи.\n\n\n== Значення ==\nУ «Граматиці…» було здійснено кодифікацію церковнослов'янської мови східнослов'янської редакції. За її нормами поступово було впорядковано всі церковнослов'янські тексти. Через друковані церковнослов'янські тексти норми набули загального поширення й понині функціонують у конфесійному вжитку. Вперше було виразно відділено церковнослов'янську мову від живих слов'янських, проте східнослов'янський характер норм Смотрицького доброчинно вплинув на усталення орфографії й пунктуації староукраїнської літературної мови. До 1-ї чверті XIX ст. «Граматика…» Смотрицького була основним підручником церковнослов'янської мови, він витримав багато видань.\nНа його основі укладено анонімну «Грамматїку или писменницу языка Словеньского», надрукована 1638 року в місті Крем'янці (тепер Тернопільська область). Певний вплив Смотрицького помітний і на книзі «Грамматыка словенская» Івана Ужевича (1643), анонімній граматиці, надрукованій 1773 року в Почаєві, церковнослов'янській «Грамматіці» Я. Блоницького (1763), а також на «Грамматиці» А. Коцака (1778), праці «Grammatica slavo-ruthena» М. Лучкая (1830), праці хорватського лінгвіста Ю. Крижанича «Граматично изказанје» (1666), російській граматиці Г. В. Лудольфа (1696), книзі «Россійская грамматика» М. Ломоносова (1755), на працях основоположника сучасної славістики Й. Добровського.\nКнига Мелетія Смотрицького справила вплив на розвиток граматичної думки в Сербії, Болгарії, Румунії. «Грамматіка…» була відома в країнах Європи і поза ареалом функціонування церковнослов'янської мови в перекладах на латинську, що свідчить про загальноєвропейське її визнання.\n\n\n== Новаторство ==\nМелетій Смотрицький:\n\nПершим в історії вітчизняної лінгвістики дав повний курс церковнослов'янської мови в прийнятих тоді частинах: орфографія, етимологія (тобто морфологія), синтаксис, просодія. У розділі про орфографію в давнину давали й опис фонетики та орфоепії.\nВвів в українську графіку нову літеру на позначення дзвінкого проривного задньоязикового приголосного — ґ, узаконив вживання букви й.\nВстановив правила вживання літер на позначення голосних і приголосних, вживання великої букви, розділових знаків, правила перенесення тощо. Багато з його правил орфографії та пунктуації зберігають чинність у сучасній українській літературній мові.\nВиділив вісім частин мови: ім'я, містоимениє, глагол, причастиє, нарічиє, предлог, союз, междометиє. Як частину мови «междометиє» в українському мовознавстві визначив уперше, вийнявши з переліку й опису частин мови невластивий слов'янській системі артикль. Йому належить і термін «междометиє».\nПершим виділив як категорію дієприслівник, названий ним «дієпричастиєм».\nВідкрив у слов'янській відміні місцевий відмінок, який назвав «сказательний падеж».\nІменники поділив на п'ять «склонений» — відмін, котрі в основних рисах у шкільних граматиках зберігаються донині.\nВперше описав відмінювання прикметників і числівників.\nЗапропонований ним принцип поділу дієслів на дієвідміни зберігся у східнослов'янських граматиках і в наш час.\nПершим дав докладний опис розрядів незмінних частин мови й вигуків, виклав синтаксис церковнослов'янської мови.\nЗбагатив слов'янську мовознавчу термінологію.\nОписана М. Смотрицьким морфологічна система близька до старослов'янської пізнього періоду, але в ній є певна кількість українських елементів.\n\n\n== Зміст ==\n\nУ розділі «О стасті» (Ѡ Стра́сти) Смотрицький розглядає правила вживання надрядкових знаків, яких він виділяє чотири: єрик (єрикъ), паєрк (паєркъ), злитна (слитнаѧ) і м'яка (мѧгкаѧ). Знаки «єрик» і «паєрк» заміняють твердий і м'який знаки; крім того «єрик» заміняє «о» у деяких випадках. Знак «злитна» над «и» сформував літеру «й» (наприклад, мой, май, змій). Знак «м'яка» позначає пом'якшення приголосної (наприклад, пол΄ный/́полный, суд΄ба).\n\n\n== Див. також ==\n«Грамматіка словенска» (1596) Лаврентія Зизанія.\n\n\n== Примітки ==\n\n\n== Джерела та література ==\nНімчук В. В. Граматика Мелетія Смотрицького // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2004. — Т. 2 : Г — Д. — С. 185. — ISBN 966-00-0405-2.\nГрамматіки славє́нскиѧ пра́вилноє Сѵ́нтаґма // Історія українського правопису XVI—XX століття. Хрестоматія / НАН України, Інститут української мови; Упоряд.: В. В. Німчук, Н. В. Пуряєва; Передмова В. В. Німчука; Комент. та приміт. Н. В. Пуряєвої — Київ: Наукова думка, 2004. — С. 32—38. — ISBN 966-00-0261-0.\n\n\n== Посилання ==\nМелетій Смотрицький. Грамматіки Славенския правилное Сѵнтаґма. — Єв'є, 1619\nМелетій Смотрицький. Граматика слов'янська (1619) [Архівовано 8 червня 2019 у Wayback Machine.]. Підготовка факсимільного видання В. В. Німчука. — Київ: «Наукова думка» (Пам'ятки української мови), 1979. (у PDF форматі)\nГраматика словенська: додаток [Архівовано 8 червня 2019 у Wayback Machine.] / Підготовка факсимільного видання та дослідження пам'ятки В. В. Німчука; Академія наук Української РСР, Інститут мовознавства ім. О. О. Потебні. — Київ: Наукова думка, 1980. — 55 с. — (Пам'ятки української мови).\n«Граматіки Славенскія правилноє синтаґма» [Архівовано 3 лютого 2022 у Wayback Machine.] // Німчук В. В. Мовознавство на Україні в XIV—XVII ст.: монографія. — Київ: Наукова думка, 1985. — С. 89—145. — 223 с.\nМакарушка, Евстахій (1908). Граматика Мелетія Смотрицкого (Критично-історична студия). Львів: З друкарнї Наукового товариства імени Шевченка під зарядом К. Беднарского / Передрук зі Звіту приватної женьскої гімназиї СС. Василиянок у Львові. Архів оригіналу за 29 листопада 2020. Процитовано 4 вересня 2020."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:12.029Z",
+          "resultDisplay": "# Граматика Мелетія Смотрицького\n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0_%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D1%8F_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE\n\n«Граматика слов'янська» (точна назва — «ΓΡΑΜΜΑΤΙΚΗ Славє́нскиѧ пра́вилноє Сѵ́нтаґма») — перший у славістиці повний курс церковнослов'янської мови в українській редакції. Складена письменником-полемістом і церковним діячем Мелетієм Смотрицьким. Вийшла друком 1619 року в місті Єв'є (нині — місто Вевіс, Литва). Пам'ятка української мови.\n«Грамматіка» Мелетія Смотрицького була основним підручником церковнослов'янської мови не лише в Україні, але й у всіх слов'янських країнах, де церковнослов'янська мова виконувала роль священно-богослужбової. Завдяки «Грамматіці…» Смотрицького українська філологія стала помітною галуззю європейського мовознавства старожитньої епохи.\n\n\n== Значення ==\nУ «Граматиці…» було здійснено кодифікацію церковнослов'янської мови східнослов'янської редакції. За її нормами поступово було впорядковано всі церковнослов'янські тексти. Через друковані церковнослов'янські тексти норми набули загального поширення й понині функціонують у конфесійному вжитку. Вперше було виразно відділено церковнослов'янську мову від живих слов'янських, проте східнослов'янський характер норм Смотрицького доброчинно вплинув на усталення орфографії й пунктуації староукраїнської літературної мови. До 1-ї чверті XIX ст. «Граматика…» Смотрицького була основним підручником церковнослов'янської мови, він витримав багато видань.\nНа його основі укладено анонімну «Грамматїку или писменницу языка Словеньского», надрукована 1638 року в місті Крем'янці (тепер Тернопільська область). Певний вплив Смотрицького помітний і на книзі «Грамматыка словенская» Івана Ужевича (1643), анонімній граматиці, надрукованій 1773 року в Почаєві, церковнослов'янській «Грамматіці» Я. Блоницького (1763), а також на «Грамматиці» А. Коцака (1778), праці «Grammatica slavo-ruthena» М. Лучкая (1830), праці хорватського лінгвіста Ю. Крижанича «Граматично изказанје» (1666), російській граматиці Г. В. Лудольфа (1696), книзі «Россійская грамматика» М. Ломоносова (1755), на працях основоположника сучасної славістики Й. Добровського.\nКнига Мелетія Смотрицького справила вплив на розвиток граматичної думки в Сербії, Болгарії, Румунії. «Грамматіка…» була відома в країнах Європи і поза ареалом функціонування церковнослов'янської мови в перекладах на латинську, що свідчить про загальноєвропейське її визнання.\n\n\n== Новаторство ==\nМелетій Смотрицький:\n\nПершим в історії вітчизняної лінгвістики дав повний курс церковнослов'янської мови в прийнятих тоді частинах: орфографія, етимологія (тобто морфологія), синтаксис, просодія. У розділі про орфографію в давнину давали й опис фонетики та орфоепії.\nВвів в українську графіку нову літеру на позначення дзвінкого проривного задньоязикового приголосного — ґ, узаконив вживання букви й.\nВстановив правила вживання літер на позначення голосних і приголосних, вживання великої букви, розділових знаків, правила перенесення тощо. Багато з його правил орфографії та пунктуації зберігають чинність у сучасній українській літературній мові.\nВиділив вісім частин мови: ім'я, містоимениє, глагол, причастиє, нарічиє, предлог, союз, междометиє. Як частину мови «междометиє» в українському мовознавстві визначив уперше, вийнявши з переліку й опису частин мови невластивий слов'янській системі артикль. Йому належить і термін «междометиє».\nПершим виділив як категорію дієприслівник, названий ним «дієпричастиєм».\nВідкрив у слов'янській відміні місцевий відмінок, який назвав «сказательний падеж».\nІменники поділив на п'ять «склонений» — відмін, котрі в основних рисах у шкільних граматиках зберігаються донині.\nВперше описав відмінювання прикметників і числівників.\nЗапропонований ним принцип поділу дієслів на дієвідміни зберігся у східнослов'янських граматиках і в наш час.\nПершим дав докладний опис розрядів незмінних частин мови й вигуків, виклав синтаксис церковнослов'янської мови.\nЗбагатив слов'янську мовознавчу термінологію.\nОписана М. Смотрицьким морфологічна система близька до старослов'янської пізнього періоду, але в ній є певна кількість українських елементів.\n\n\n== Зміст ==\n\nУ розділі «О стасті» (Ѡ Стра́сти) Смотрицький розглядає правила вживання надрядкових знаків, яких він виділяє чотири: єрик (єрикъ), паєрк (паєркъ), злитна (слитнаѧ) і м'яка (мѧгкаѧ). Знаки «єрик» і «паєрк» заміняють твердий і м'який знаки; крім того «єрик» заміняє «о» у деяких випадках. Знак «злитна» над «и» сформував літеру «й» (наприклад, мой, май, змій). Знак «м'яка» позначає пом'якшення приголосної (наприклад, пол΄ный/́полный, суд΄ба).\n\n\n== Див. також ==\n«Грамматіка словенска» (1596) Лаврентія Зизанія.\n\n\n== Примітки ==\n\n\n== Джерела та література ==\nНімчук В. В. Граматика Мелетія Смотрицького // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2004. — Т. 2 : Г — Д. — С. 185. — ISBN 966-00-0405-2.\nГрамматіки славє́нскиѧ пра́вилноє Сѵ́нтаґма // Історія українського правопису XVI—XX століття. Хрестоматія / НАН України, Інститут української мови; Упоряд.: В. В. Німчук, Н. В. Пуряєва; Передмова В. В. Німчука; Комент. та приміт. Н. В. Пуряєвої — Київ: Наукова думка, 2004. — С. 32—38. — ISBN 966-00-0261-0.\n\n\n== Посилання ==\nМелетій Смотрицький. Грамматіки Славенския правилное Сѵнтаґма. — Єв'є, 1619\nМелетій Смотрицький. Граматика слов'янська (1619) [Архівовано 8 червня 2019 у Wayback Machine.]. Підготовка факсимільного видання В. В. Німчука. — Київ: «Наукова думка» (Пам'ятки української мови), 1979. (у PDF форматі)\nГраматика словенська: додаток [Архівовано 8 червня 2019 у Wayback Machine.] / Підготовка факсимільного видання та дослідження пам'ятки В. В. Німчука; Академія наук Української РСР, Інститут мовознавства ім. О. О. Потебні. — Київ: Наукова думка, 1980. — 55 с. — (Пам'ятки української мови).\n«Граматіки Славенскія правилноє синтаґма» [Архівовано 3 лютого 2022 у Wayback Machine.] // Німчук В. В. Мовознавство на Україні в XIV—XVII ст.: монографія. — Київ: Наукова думка, 1985. — С. 89—145. — 223 с.\nМакарушка, Евстахій (1908). Граматика Мелетія Смотрицкого (Критично-історична студия). Львів: З друкарнї Наукового товариства імени Шевченка під зарядом К. Беднарского / Передрук зі Звіту приватної женьскої гімназиї СС. Василиянок у Львові. Архів оригіналу за 29 листопада 2020. Процитовано 4 вересня 2020.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773452410852_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Ужевич граматика",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452410852_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Ужевич граматика' — 5 results\n\n1. **Ужевич Іван Петрович** — припускає (1967), що Ужевич був виходцем з українсько-білоруського прикордоння, можливо, з Підляшшя або північної Холмщини. У граматиці розкриваються також\n2. **Граматики української мови** — 1967; Наконечний М. Ф. Перша граматика «нової» літературної мови. «Мовознавство», 1968, № 5; Кудрицький Є. М. Іван Ужевич — український граматист XVII\n3. **Кудрицький Євген Михайлович** —  Сковороди» (1965), «Іван Ужевич — український граматист XVII століття і його праця» (1970). Підготував до видання «Граматику словенську» Івана Ужевича\n4. **Ватрослав Ягич** — пам&#039;ятки, яким присвятив низку праць — «Галицьке Євангеліє 1144», «Іван Ужевич — граматик 17 ст.» та ін. Значну увагу приділяв вивченню української мови і літератури\n5. **Українське мовознавство** — Україні. У XVI—XVII століттях в Україні з&#039;явилися перші праці, присвячені граматиці та лексикографії. У друкарні Івана Федорова були опубліковані його «Буквар»"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:12.029Z",
+          "resultDisplay": "Wikipedia search: 'Ужевич граматика' — 5 results\n\n1. **Ужевич Іван Петрович** — припускає (1967), що Ужевич був виходцем з українсько-білоруського прикордоння, можливо, з Підляшшя або північної Холмщини. У граматиці розкриваються також\n2. **Граматики української мови** — 1967; Наконечний М. Ф. Перша граматика «нової» літературної мови. «Мовознавство», 1968, № 5; Кудрицький Є. М. Іван Ужевич — український граматист XVII\n3. **Кудрицький Євген Михайлович** —  Сковороди» (1965), «Іван Ужевич — український граматист XVII століття і його праця» (1970). Підготував до видання «Граматику словенську» Івана Ужевича\n4. **Ватрослав Ягич** — пам&#039;ятки, яким присвятив низку праць — «Галицьке Євангеліє 1144», «Іван Ужевич — граматик 17 ст.» та ін. Значну увагу приділяв вивченню української мови і літератури\n5. **Українське мовознавство** — Україні. У XVI—XVII століттях в Україні з&#039;явилися перші праці, присвячені граматиці та лексикографії. У друкарні Івана Федорова були опубліковані його «Буквар»",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773452410889_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Узгодження мовознавство"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452410889_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Узгодження мовознавство' — 5 results\n\n1. **Узгодження** — Узго́дження — тип підрядного зв&#039;язку між головним і залежним словами у словосполученні, коли форма залежного слова відповідає формі головного, тобто узгоджується\n2. **Рід (мовознавство)** — мотивований ідеєю статі); Синтаксичний (сутність категорії роду зводиться до узгодження). На думку О. О. Потебні, рід — це непостійна категорія, що «на нього\n3. **Особа (мовознавство)** — узгодження дієслова за особою. Серед рідкісних випадків — категорія особи у прийменників (кельтські, семітські мови). Докладніше: Число (мовознавство)\n4. **Ахваська мова** — «в-охе-д-о» я взяв (його) — де в- показник узгодження з іменником чоловічого роду в номінативі, -д- показник узгодження з агенсом 1-ї особи. «в-охе-ри» ти взяв\n5. **Давньоперська мова** — Прикметники, як і іменники, змінюються за родом, числом і відмінком. Узгодження з іменником є повним: dātam rāstam «правильний закон», hainā vazarkā «велике"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:12.029Z",
+          "resultDisplay": "Wikipedia search: 'Узгодження мовознавство' — 5 results\n\n1. **Узгодження** — Узго́дження — тип підрядного зв&#039;язку між головним і залежним словами у словосполученні, коли форма залежного слова відповідає формі головного, тобто узгоджується\n2. **Рід (мовознавство)** — мотивований ідеєю статі); Синтаксичний (сутність категорії роду зводиться до узгодження). На думку О. О. Потебні, рід — це непостійна категорія, що «на нього\n3. **Особа (мовознавство)** — узгодження дієслова за особою. Серед рідкісних випадків — категорія особи у прийменників (кельтські, семітські мови). Докладніше: Число (мовознавство)\n4. **Ахваська мова** — «в-охе-д-о» я взяв (його) — де в- показник узгодження з іменником чоловічого роду в номінативі, -д- показник узгодження з агенсом 1-ї особи. «в-охе-ри» ти взяв\n5. **Давньоперська мова** — Прикметники, як і іменники, змінюються за родом, числом і відмінком. Узгодження з іменником є повним: dātam rāstam «правильний закон», hainā vazarkā «велике",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452410925_3",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "синтаксис узгодження староукраїнська",
+            "limit": 5
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452410925_3",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"синтаксис узгодження староукраїнська\"\n\n### Result 1 (score: 0.5408)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0023`\n- **Text**:\nЗіставне висвітлення багатьох граматичних явищ староукраїнської\r\nлітературної мови, якій ця праця присвячена, переконує в тому, що автор був\r\nдобре обізнаний не тільки з відповідною літературою, яка вийшла з-під пера\r\nукраїнських культурних діячів і педагогів кін. XVI — поч. XVII ст., зокрема із\r\nзнаменитою книгою М.Смотрицького \"Грамматіки СлавєнскиА правилноє Сvнтаґма\"\r\n/1619/, а й з граматиками мов інших слов\"янських народів та з граматикою\r\nлатинської мови. І.Ужевич, як і інші вчені його час\n\n### Result 2 (score: 0.5363)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0347`\n- **Text**:\nСтароукраїнська лінгвістика, як і мовознавство інших\r\nнародностей Європи XVI — XVII ст., розвивалася в рамках навчальних посібників,\r\nщо зумовило специфічні особливості її розвитку і висувало на перший план нормативний\r\nаспект. Кінцеву кодифікацію церковнослов’янської мови здійснив М. Смотрицький\r\nна основі її східнослов’янської редакції. Поєднання в «Граматиці» М.\r\nСмотрицького специфічних східнослов’янських і південнослов’янських компонентів\r\nзробило її норми прийнятними для всіх народів, які \n\n### Result 3 (score: 0.5298)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0792`\n- **Text**:\nГоловним чинником зв’язку і єдности речення, отже, є граматичний\r\nзв’язок /339/ членів речення між собою парами (узгодження, керування,\r\nприлягання) і рядами (за допомогою єднальних, розділових і протиставних\r\nсполучників, а також — в усіх трьох випадках — безсполучниково). В\r\nграматичних парах із зв’язком керування для сучасної укр. літературної\r\nмови типова тенденція до поширення прийменникових зв’язків. У ряді випадків\r\nприйменникові конструкції майже цілком витиснули старіші безприйменникові\n\n### Result 4 (score: 0.5248)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0372`\n- **Text**:\nЦі підсумки увиразнюють неадекватність поняття\r\nсхіднослов’янської мовної єдності для належного пояснення історичної еволюції\r\nукраїнської фонологічної системи та її складових частин. Українська мова ніколи\r\nне була пов’язана з південнослов’янськими щільніше, ніж із сусідніми\r\nсхіднослов’янськими (усупереч позиції С. Смаль-Стоцького та ін.). Із цими\r\nостанніми українська мова поділяла такі важливі давні звукозміни (чи їхні\r\nрезультати), як постання повноголосу та деназалізацію ę з\r\nперетворенням\n\n### Result 5 (score: 0.5247)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0796`\n- **Text**:\nСинтаксична система: Корш Ф. Способы\r\nотносительного подчинения. М. 1877; Miklosich F. Subjektlose Sätze.\r\nВідень 1883; Потебня А. Из записок по русской грамматике. I — II. Х.\r\n1888; III. Х. 1899; IV. П. 1941; Тимченко Є. Функции генетива в\r\nюжно-русской области. В. 1913; Номінатив і датив в укр. мові. К. 1925; Льокатив\r\nв укр. мові. К. 1925; Вокатив і інструменталь в укр. мові. К. 1926; Акузатив в\r\nукр. мові. К. 1928; Сулима М. Українська фраза Х. 1926; Гладкий\r\nМ. Наша газетна мова. К. 1928; М\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:12.029Z",
+          "resultDisplay": "Found 5 results for: \"синтаксис узгодження староукраїнська\"\n\n### Result 1 (score: 0.5408)\n- **Work**: Східнослов'янські граматики XVI-XVII ст. (статті) (1982)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e3af9049_c0023`\n- **Text**:\nЗіставне висвітлення багатьох граматичних явищ староукраїнської\r\nлітературної мови, якій ця праця присвячена, переконує в тому, що автор був\r\nдобре обізнаний не тільки з відповідною літературою, яка вийшла з-під пера\r\nукраїнських культурних діячів і педагогів кін. XVI — поч. XVII ст., зокрема із\r\nзнаменитою книгою М.Смотрицького \"Грамматіки СлавєнскиА правилноє Сvнтаґма\"\r\n/1619/, а й з граматиками мов інших слов\"янських народів та з граматикою\r\nлатинської мови. І.Ужевич, як і інші вчені його час\n\n### Result 2 (score: 0.5363)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0347`\n- **Text**:\nСтароукраїнська лінгвістика, як і мовознавство інших\r\nнародностей Європи XVI — XVII ст., розвивалася в рамках навчальних посібників,\r\nщо зумовило специфічні особливості її розвитку і висувало на перший план нормативний\r\nаспект. Кінцеву кодифікацію церковнослов’янської мови здійснив М. Смотрицький\r\nна основі її східнослов’янської редакції. Поєднання в «Граматиці» М.\r\nСмотрицького специфічних східнослов’янських і південнослов’янських компонентів\r\nзробило її норми прийнятними для всіх народів, які \n\n### Result 3 (score: 0.5298)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0792`\n- **Text**:\nГоловним чинником зв’язку і єдности речення, отже, є граматичний\r\nзв’язок /339/ членів речення між собою парами (узгодження, керування,\r\nприлягання) і рядами (за допомогою єднальних, розділових і протиставних\r\nсполучників, а також — в усіх трьох випадках — безсполучниково). В\r\nграматичних парах із зв’язком керування для сучасної укр. літературної\r\nмови типова тенденція до поширення прийменникових зв’язків. У ряді випадків\r\nприйменникові конструкції майже цілком витиснули старіші безприйменникові\n\n### Result 4 (score: 0.5248)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0372`\n- **Text**:\nЦі підсумки увиразнюють неадекватність поняття\r\nсхіднослов’янської мовної єдності для належного пояснення історичної еволюції\r\nукраїнської фонологічної системи та її складових частин. Українська мова ніколи\r\nне була пов’язана з південнослов’янськими щільніше, ніж із сусідніми\r\nсхіднослов’янськими (усупереч позиції С. Смаль-Стоцького та ін.). Із цими\r\nостанніми українська мова поділяла такі важливі давні звукозміни (чи їхні\r\nрезультати), як постання повноголосу та деназалізацію ę з\r\nперетворенням\n\n### Result 5 (score: 0.5247)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0796`\n- **Text**:\nСинтаксична система: Корш Ф. Способы\r\nотносительного подчинения. М. 1877; Miklosich F. Subjektlose Sätze.\r\nВідень 1883; Потебня А. Из записок по русской грамматике. I — II. Х.\r\n1888; III. Х. 1899; IV. П. 1941; Тимченко Є. Функции генетива в\r\nюжно-русской области. В. 1913; Номінатив і датив в укр. мові. К. 1925; Льокатив\r\nв укр. мові. К. 1925; Вокатив і інструменталь в укр. мові. К. 1926; Акузатив в\r\nукр. мові. К. 1928; Сулима М. Українська фраза Х. 1926; Гладкий\r\nМ. Наша газетна мова. К. 1928; М\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "59c842bb-cbc3-449b-9c9b-75d070df1a7a",
+      "timestamp": "2026-03-14T01:40:21.814Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to next stage",
+          "description": "I'm now zeroing in on the subsequent stage. I'm focusing on the plan to get things moving. My next step will be based on what I have so far.",
+          "timestamp": "2026-03-14T01:40:17.081Z"
+        },
+        {
+          "subject": "Finding agreement examples",
+          "description": "I'm now hunting for examples of grammatical agreement from primary sources. I'm focusing on finding excerpts with dual number and subject-verb agreement. My goal is to gather the necessary resources to progress.",
+          "timestamp": "2026-03-14T01:40:21.043Z"
+        },
+        {
+          "subject": "Collecting dual-number examples",
+          "description": "I'm now zeroing in on dual-number examples. I plan to identify excerpts featuring dual number agreement in old Ukrainian texts. I will use the available tools to acquire suitable data for this next step.",
+          "timestamp": "2026-03-14T01:40:21.061Z"
+        }
+      ],
+      "tokens": {
+        "input": 26071,
+        "output": 108,
+        "cached": 16779,
+        "thoughts": 337,
+        "tool": 0,
+        "total": 26516
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773452421415_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Смотрицький синтаксис сочиненіє",
+            "limit": 5
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452421415_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Смотрицький синтаксис сочиненіє\"\n\n### Result 1 (score: 0.5938)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0219`\n- **Text**:\nЦитатний матеріал книги М. Смотрицького має в\r\nосновному гуманістичне спрямування, моралістично-дидактичний зміст. Прикладів,\r\nпридуманих автором, небагато. Штучні правила (як і приклади) виявляються тільки\r\nв параграфі про вживання «причастодЂтія», введеного в морфологію: Ите(л)но\r\nми єсть во градъ ко онсици. Більшість сформульованих правил про узгодження,\r\nкерування, функції відмінків зберігають і сучасні наші граматики, адже\r\nсинтаксис простого речення церковнослов’янської (й старослов’янсько\n\n### Result 2 (score: 0.5723)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0300`\n- **Text**:\nСмотричь, оу Смотричи місто на Поділлі 24 — Я.\r\nГоловацький, «Памятники», 1867, стор. 18; М. Стрийковський, «Kronika», стор.7, 104;\r\nЗНТШ, 1895, т. VII, стор. 2, 3; 1896, т. IX, стор. 47; 1899, т. XXXI — XXXII, стор.\r\n50 — 52; КС, 1884, X, стор. 10, 271, 310, 394; 1891, X, стор. 110, 403; С.\r\nГолубєв, «П. Могила», стор. 92; «Архив ЮЗР», ч. VII, т. II, 1890, стор. 185,\r\n178 — 181, 186, 523; П. Батюшков, «Подолия», стор. 61, 85, 238; В.\r\nЛяскоронський, «Боплан», I, стор. 12; А. Прохаска, «Codex», \n\n### Result 3 (score: 0.5713)\n- **Work**: Хрестоматія давньої української літератури (Білецький) (1952)\n- **Author**: Білецький О.\n- **Genre/Period**: anthology / modern\n- **Chunk ID**: `59fd4e79_c0058`\n- **Text**:\nО родЂ стіха сафійска. —\r\nСтіх сафійскій пятма степенми состоит, первым трохеем, вторим спондіем, третим\r\nдактилем, четвертым и пятым трохеем. Ему же стихов родови по коемждо третем\r\nстісЂ прилагается стіх адонскій, двома степенми состоящь, первым дактилем,\r\nвторым спондіем, яко:\n\nMyco Татр сарматск богу тріедину\n\nДолжную дай честь поклона со имны,\n\nЧистую славян его, давшему ти\n\nМЂрою пЂти.\n\n[Додаток у московському виданні 1721 р. до відділу\r\nпро віршування].\n\nСія здЂ о художествЂ піитичестЂм в\n\n### Result 4 (score: 0.5565)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0225`\n- **Text**:\nСинтаксис Смотрицького доповнює його морфологію.\r\nТільки тут, наприклад, він пише про те, що для «СлавАнъ» характерніш є\r\nвживання неозначеної форми з дієсловами «хощу, или имамъ, во Будущагω\r\nвремене показанїє яксо, хощу, или имамъ чести: в(ъ)мЂсто / прочту». Саме в\r\nрозділі «Ω сочиненїи НарЂчіА», яке пов’язується з іменником і дієсловом\r\nспособом прилягання («НарЂчіА примещут(ъ)сА Имене(м) / Глаголωмъ»),\r\nучений пише, що прислівники бе(з), кромЂ, развЂ, внЂ, впутрь, свЂне, близь,\r\nдалече, окре\n\n### Result 5 (score: 0.5560)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0403`\n- **Text**:\n2. Далі існує полемічний трактат (див. розділ IV). Його\r\nстиль помалу стає складнішим, виклад думок відходить часто на другий плян, а на\r\nпершому — дотеп, лайка та іншого характеру звороти до почуття та волі, а не до\r\nрозуму читача. Найхарактеристичніший твір цього складного емоціонального стилю —\r\n„Тренос“ Мелетія Смотрицького (польською мовою). Це „лямент“ української\r\nцеркви, яка й викладає, як правдива мати, арґументи проти унії та за\r\nправославну віру. Вже така рамка викладу — бароккова. В \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:22.668Z",
+          "resultDisplay": "Found 5 results for: \"Смотрицький синтаксис сочиненіє\"\n\n### Result 1 (score: 0.5938)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0219`\n- **Text**:\nЦитатний матеріал книги М. Смотрицького має в\r\nосновному гуманістичне спрямування, моралістично-дидактичний зміст. Прикладів,\r\nпридуманих автором, небагато. Штучні правила (як і приклади) виявляються тільки\r\nв параграфі про вживання «причастодЂтія», введеного в морфологію: Ите(л)но\r\nми єсть во градъ ко онсици. Більшість сформульованих правил про узгодження,\r\nкерування, функції відмінків зберігають і сучасні наші граматики, адже\r\nсинтаксис простого речення церковнослов’янської (й старослов’янсько\n\n### Result 2 (score: 0.5723)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0300`\n- **Text**:\nСмотричь, оу Смотричи місто на Поділлі 24 — Я.\r\nГоловацький, «Памятники», 1867, стор. 18; М. Стрийковський, «Kronika», стор.7, 104;\r\nЗНТШ, 1895, т. VII, стор. 2, 3; 1896, т. IX, стор. 47; 1899, т. XXXI — XXXII, стор.\r\n50 — 52; КС, 1884, X, стор. 10, 271, 310, 394; 1891, X, стор. 110, 403; С.\r\nГолубєв, «П. Могила», стор. 92; «Архив ЮЗР», ч. VII, т. II, 1890, стор. 185,\r\n178 — 181, 186, 523; П. Батюшков, «Подолия», стор. 61, 85, 238; В.\r\nЛяскоронський, «Боплан», I, стор. 12; А. Прохаска, «Codex», \n\n### Result 3 (score: 0.5713)\n- **Work**: Хрестоматія давньої української літератури (Білецький) (1952)\n- **Author**: Білецький О.\n- **Genre/Period**: anthology / modern\n- **Chunk ID**: `59fd4e79_c0058`\n- **Text**:\nО родЂ стіха сафійска. —\r\nСтіх сафійскій пятма степенми состоит, первым трохеем, вторим спондіем, третим\r\nдактилем, четвертым и пятым трохеем. Ему же стихов родови по коемждо третем\r\nстісЂ прилагается стіх адонскій, двома степенми состоящь, первым дактилем,\r\nвторым спондіем, яко:\n\nMyco Татр сарматск богу тріедину\n\nДолжную дай честь поклона со имны,\n\nЧистую славян его, давшему ти\n\nМЂрою пЂти.\n\n[Додаток у московському виданні 1721 р. до відділу\r\nпро віршування].\n\nСія здЂ о художествЂ піитичестЂм в\n\n### Result 4 (score: 0.5565)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0225`\n- **Text**:\nСинтаксис Смотрицького доповнює його морфологію.\r\nТільки тут, наприклад, він пише про те, що для «СлавАнъ» характерніш є\r\nвживання неозначеної форми з дієсловами «хощу, или имамъ, во Будущагω\r\nвремене показанїє яксо, хощу, или имамъ чести: в(ъ)мЂсто / прочту». Саме в\r\nрозділі «Ω сочиненїи НарЂчіА», яке пов’язується з іменником і дієсловом\r\nспособом прилягання («НарЂчіА примещут(ъ)сА Имене(м) / Глаголωмъ»),\r\nучений пише, що прислівники бе(з), кромЂ, развЂ, внЂ, впутрь, свЂне, близь,\r\nдалече, окре\n\n### Result 5 (score: 0.5560)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0403`\n- **Text**:\n2. Далі існує полемічний трактат (див. розділ IV). Його\r\nстиль помалу стає складнішим, виклад думок відходить часто на другий плян, а на\r\nпершому — дотеп, лайка та іншого характеру звороти до почуття та волі, а не до\r\nрозуму читача. Найхарактеристичніший твір цього складного емоціонального стилю —\r\n„Тренос“ Мелетія Смотрицького (польською мовою). Це „лямент“ української\r\nцеркви, яка й викладає, як правдива мати, арґументи проти унії та за\r\nправославну віру. Вже така рамка викладу — бароккова. В \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452421454_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "limit": 5,
+            "query": "Ужевич узгодження прикметника з іменником"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452421454_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Ужевич узгодження прикметника з іменником\"\n\n### Result 1 (score: 0.6252)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0332`\n- **Text**:\nВдалою є третя частина граматики І. Ужевича — «Синтаксис»,\r\nдетально опрацьована в паризькому варіанті (54 — 69 зв.) (за цим варіантом її\r\nаналізуємо). Вона скорочено викладена в арраському (75 — 81 зв.) рукописі, на\r\nпочатку якого вчений підкреслює, що розглядає «лише ті правила, що розходяться\r\nз латинською конструкцією». Але в арраському манускрипті багатьох специфічних слов’янських\r\nконструкцій, описаних у першій версії праці, не враховано. На початку розділу\r\nІ. Ужевич говорить про узгоджен\n\n### Result 2 (score: 0.5959)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0282`\n- **Text**:\nУслід за М. Смотрицьким І. Ужевич виділяє чотири\r\nвідміни іменників, хоч порядок їх він дещо змінив. До І відміни відносить\r\nіменники з флексією -а (у М. Смотрицького з -а, -А, -и), до II —\r\nіменники чоловічого роду з закінченням -ъ й середнього з флексією -о (у\r\nМ. Смотрицького чоловічого роду на -ъ й середнього на -о, -е, -А),\r\nдо III відміни — іменники чоловічого роду на -ь та -й, а також\r\nсереднього роду на -є та А (у М. Смотрицького іменники\r\nчоловічого й спільного родів на -ь та -й, середн\n\n### Result 3 (score: 0.5927)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0025`\n- **Text**:\nЗупинимося на першому питанні. Нечітка, наприклад,\r\nспроба І. Ужевича окреслити категорію виду дуже нагадує трактовку цієї ж граматичної\r\nкатегорії у М. Смотрицького (див. виноску 27). Далі, поділяючи дієслова на дві\r\nдієвідміни, І. Ужевич, очевидно, продовжує традицію Л. Зизанія і М.\r\nСмотрицького. Можна також думати, що механічний підхід 30 нашого\r\nавтора до класифікації дієслів за кінцевим складом кожного з них у теперішньому\r\nчасі 1-ї особи однини дійсного способу (31б — 45б і 581 — 701\r\nтеж\n\n### Result 4 (score: 0.5831)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0268`\n- **Text**:\nУ пам’ятці зовсім не засвідчується перехід\r\nетимологічного о в і в новозакритому складі. Приклад, який на\r\nдумку деяких дослідників: відбиває о > і — розки(ш)не (Ужевич,\r\nXXIV), — недостовірний, бо в опублікованому факсиміле паризького рукопису (51)\r\nвиразно читається: розмайте, розли(ч)не «multifatiam» (тобто «різними\r\nспособами, по-різному, різноманітно»). Характерно, що в «Граматиці\r\nслов’янській» немає звичайного в пам’ятках із території наддністрянських\r\nговорів поплутання літер ы та и(і). \n\n### Result 5 (score: 0.5796)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0019`\n- **Text**:\n«Активні дієслова, — зазначає в іншому місці автор,\r\n— які в латинів керують двома знахідними відмінками, а саме особи і речі, як\r\nнаприклад: «Docso te grammaticam», у слов’ян вимагають родового відмінка речі:\r\n«үчү тεбε кграматики» (58а). Констатуючи в слов’янській\r\nмові відсутність дієприкметників майбутнього часу активного стану на -rus,\r\nІ. Ужевич пояснює, що в цьому випадку слов’янська мова користується описовим\r\nзворотом з формою майбутнього часу та сполучниками жε, ижъ,\r\nяк-от: сподЂваюсА\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:22.668Z",
+          "resultDisplay": "Found 5 results for: \"Ужевич узгодження прикметника з іменником\"\n\n### Result 1 (score: 0.6252)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0332`\n- **Text**:\nВдалою є третя частина граматики І. Ужевича — «Синтаксис»,\r\nдетально опрацьована в паризькому варіанті (54 — 69 зв.) (за цим варіантом її\r\nаналізуємо). Вона скорочено викладена в арраському (75 — 81 зв.) рукописі, на\r\nпочатку якого вчений підкреслює, що розглядає «лише ті правила, що розходяться\r\nз латинською конструкцією». Але в арраському манускрипті багатьох специфічних слов’янських\r\nконструкцій, описаних у першій версії праці, не враховано. На початку розділу\r\nІ. Ужевич говорить про узгоджен\n\n### Result 2 (score: 0.5959)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0282`\n- **Text**:\nУслід за М. Смотрицьким І. Ужевич виділяє чотири\r\nвідміни іменників, хоч порядок їх він дещо змінив. До І відміни відносить\r\nіменники з флексією -а (у М. Смотрицького з -а, -А, -и), до II —\r\nіменники чоловічого роду з закінченням -ъ й середнього з флексією -о (у\r\nМ. Смотрицького чоловічого роду на -ъ й середнього на -о, -е, -А),\r\nдо III відміни — іменники чоловічого роду на -ь та -й, а також\r\nсереднього роду на -є та А (у М. Смотрицького іменники\r\nчоловічого й спільного родів на -ь та -й, середн\n\n### Result 3 (score: 0.5927)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0025`\n- **Text**:\nЗупинимося на першому питанні. Нечітка, наприклад,\r\nспроба І. Ужевича окреслити категорію виду дуже нагадує трактовку цієї ж граматичної\r\nкатегорії у М. Смотрицького (див. виноску 27). Далі, поділяючи дієслова на дві\r\nдієвідміни, І. Ужевич, очевидно, продовжує традицію Л. Зизанія і М.\r\nСмотрицького. Можна також думати, що механічний підхід 30 нашого\r\nавтора до класифікації дієслів за кінцевим складом кожного з них у теперішньому\r\nчасі 1-ї особи однини дійсного способу (31б — 45б і 581 — 701\r\nтеж\n\n### Result 4 (score: 0.5831)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0268`\n- **Text**:\nУ пам’ятці зовсім не засвідчується перехід\r\nетимологічного о в і в новозакритому складі. Приклад, який на\r\nдумку деяких дослідників: відбиває о > і — розки(ш)не (Ужевич,\r\nXXIV), — недостовірний, бо в опублікованому факсиміле паризького рукопису (51)\r\nвиразно читається: розмайте, розли(ч)не «multifatiam» (тобто «різними\r\nспособами, по-різному, різноманітно»). Характерно, що в «Граматиці\r\nслов’янській» немає звичайного в пам’ятках із території наддністрянських\r\nговорів поплутання літер ы та и(і). \n\n### Result 5 (score: 0.5796)\n- **Work**: Ужевич — Паризький рукопис (переклад 1970) (1970)\n- **Author**: Ужевич І.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `66b781b7_c0019`\n- **Text**:\n«Активні дієслова, — зазначає в іншому місці автор,\r\n— які в латинів керують двома знахідними відмінками, а саме особи і речі, як\r\nнаприклад: «Docso te grammaticam», у слов’ян вимагають родового відмінка речі:\r\n«үчү тεбε кграматики» (58а). Констатуючи в слов’янській\r\nмові відсутність дієприкметників майбутнього часу активного стану на -rus,\r\nІ. Ужевич пояснює, що в цьому випадку слов’янська мова користується описовим\r\nзворотом з формою майбутнього часу та сполучниками жε, ижъ,\r\nяк-от: сподЂваюсА\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452421769_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "двоїна узгодження дієслова",
+            "limit": 5
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452421769_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"двоїна узгодження дієслова\"\n\n### Result 1 (score: 0.5734)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0311`\n- **Text**:\nДалі в паризькому рукописі вміщено параграф «Про відмінювання\r\nдієслів», у якому спочатку дається парадигма дієслова быти усіх часів і\r\nспособів (23 — 24 зв.). За ним — невелике зауваження «Про двоїну» (24 зв.),\r\nде автор наголошує, що двоїною дуже часто користується «свята» слов’янська\r\n(тобто церковнослов’янська) мова (быховЂ або бЂхове «ми двоє\r\nбули», быста «ви двоє були»), а також польська (былахва та быласва\r\n«ми двоє були», быласта «ви двоє були»). Граматист підкреслює, що\r\nдехто вважає, \n\n### Result 2 (score: 0.5694)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0107`\n- **Text**:\nАвтор переробки в кількох місцях підкреслює\r\nблизькість граматичних систем церковнослов'янської та української мов і цим\r\nніби виправдовує скорочення «Граматики» М. Смотрицького: «Кіим жє способомъ сіи\r\nоуравнεнїА стεпεни дЂютсА? насъ из(ъ) млада оумЂющихъ Азыкъ\r\nРускїй, нЂсть нужда поучати...» (15); «И намъ оубо из(ъ) млада оумЂющимъ ω(т)\r\nискуства та спрАгати, нЂсть нужды ω томъ подробну испитовати...» (53). В\r\nіменних парадигмах форми двоїни дано тільки при іменниках першої відміни. Після\r\nфо\n\n### Result 3 (score: 0.5661)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0313`\n- **Text**:\nПершу дієвідміну І. Ужевича (42 зв. — 46 зв.)\r\nскладають дієслова, які в 1-й ос. теперішнього часу дійсного способу перед\r\nзакінченням мають голосний звук, наприклад кую, малюю. До другої автор\r\nвідносить дієслова, що в тих же умовах перед закінченням мають приголосний,\r\nнаприклад пишу, вару «варю». Принцип віднесення до II дієвідміни явно\r\nневдалий, бо такі дієслова мають неоднаковий набір флексій і фактично\r\nвідмінюються за різними зразками (пишу — пишуть; варю — варять). Тому\r\nдоводиться визн\n\n### Result 4 (score: 0.5641)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0063`\n- **Text**:\nДругий невеликий розділ «Букваря» — «По прозодїи, а\r\nєже. дващи въ єдіны(х) лежащеє. се єсть, повелителнаА. и сказателнаА» — подає\r\nв алфавітному порядку пари слів, що відрізняються тільки наголосом. Тут справді\r\nпереважають дієслова у формі 2-ї особи наказового й дійсного способу: говорите\r\n— говорите, любите — любите та ін., але сюди введено й деякі\r\nіменникові пари, наприклад: жилúще — жúлище, навіть\r\nсполуку і рóдъ, що протиставляється імені íродъ.\n\nУ цій частині відбивається український, в \n\n### Result 5 (score: 0.5542)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0032`\n- **Text**:\n2. У групах приголосних -зкн-, -скн-\r\nвипадає к при творенні дієслів із суфіксом -ну-: бризк —\r\nбризнути, брязк — брязнути, блиск — блиснути, писк — писнути,\r\nплюск — плюснути, тріск — тріснути; але: випуск — випускний, виск\r\n— вискнути, риск — рискнути. /25/\n\n-С(Л)Н-\n\n3. У групі приголосних -слн- випадає л:\r\nмасло — масний, мисль — умисний, навмисне; ремесло — ремісник.\n\nПодвоєння та подовження приголосних\n\n§ 20.\n\nПодвоєння приголосних при їх збігу\n\n1. Подвоєні приголосні маємо при збігу однако\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:22.668Z",
+          "resultDisplay": "Found 5 results for: \"двоїна узгодження дієслова\"\n\n### Result 1 (score: 0.5734)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0311`\n- **Text**:\nДалі в паризькому рукописі вміщено параграф «Про відмінювання\r\nдієслів», у якому спочатку дається парадигма дієслова быти усіх часів і\r\nспособів (23 — 24 зв.). За ним — невелике зауваження «Про двоїну» (24 зв.),\r\nде автор наголошує, що двоїною дуже часто користується «свята» слов’янська\r\n(тобто церковнослов’янська) мова (быховЂ або бЂхове «ми двоє\r\nбули», быста «ви двоє були»), а також польська (былахва та быласва\r\n«ми двоє були», быласта «ви двоє були»). Граматист підкреслює, що\r\nдехто вважає, \n\n### Result 2 (score: 0.5694)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0107`\n- **Text**:\nАвтор переробки в кількох місцях підкреслює\r\nблизькість граматичних систем церковнослов'янської та української мов і цим\r\nніби виправдовує скорочення «Граматики» М. Смотрицького: «Кіим жє способомъ сіи\r\nоуравнεнїА стεпεни дЂютсА? насъ из(ъ) млада оумЂющихъ Азыкъ\r\nРускїй, нЂсть нужда поучати...» (15); «И намъ оубо из(ъ) млада оумЂющимъ ω(т)\r\nискуства та спрАгати, нЂсть нужды ω томъ подробну испитовати...» (53). В\r\nіменних парадигмах форми двоїни дано тільки при іменниках першої відміни. Після\r\nфо\n\n### Result 3 (score: 0.5661)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0313`\n- **Text**:\nПершу дієвідміну І. Ужевича (42 зв. — 46 зв.)\r\nскладають дієслова, які в 1-й ос. теперішнього часу дійсного способу перед\r\nзакінченням мають голосний звук, наприклад кую, малюю. До другої автор\r\nвідносить дієслова, що в тих же умовах перед закінченням мають приголосний,\r\nнаприклад пишу, вару «варю». Принцип віднесення до II дієвідміни явно\r\nневдалий, бо такі дієслова мають неоднаковий набір флексій і фактично\r\nвідмінюються за різними зразками (пишу — пишуть; варю — варять). Тому\r\nдоводиться визн\n\n### Result 4 (score: 0.5641)\n- **Work**: Німчук — Мовознавство на Україні XIV-XVII ст. (1985)\n- **Author**: Німчук В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5c8b6fe8_c0063`\n- **Text**:\nДругий невеликий розділ «Букваря» — «По прозодїи, а\r\nєже. дващи въ єдіны(х) лежащеє. се єсть, повелителнаА. и сказателнаА» — подає\r\nв алфавітному порядку пари слів, що відрізняються тільки наголосом. Тут справді\r\nпереважають дієслова у формі 2-ї особи наказового й дійсного способу: говорите\r\n— говорите, любите — любите та ін., але сюди введено й деякі\r\nіменникові пари, наприклад: жилúще — жúлище, навіть\r\nсполуку і рóдъ, що протиставляється імені íродъ.\n\nУ цій частині відбивається український, в \n\n### Result 5 (score: 0.5542)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0032`\n- **Text**:\n2. У групах приголосних -зкн-, -скн-\r\nвипадає к при творенні дієслів із суфіксом -ну-: бризк —\r\nбризнути, брязк — брязнути, блиск — блиснути, писк — писнути,\r\nплюск — плюснути, тріск — тріснути; але: випуск — випускний, виск\r\n— вискнути, риск — рискнути. /25/\n\n-С(Л)Н-\n\n3. У групі приголосних -слн- випадає л:\r\nмасло — масний, мисль — умисний, навмисне; ремесло — ремісник.\n\nПодвоєння та подовження приголосних\n\n§ 20.\n\nПодвоєння приголосних при їх збігу\n\n1. Подвоєні приголосні маємо при збігу однако\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_verify_words_1773452421812_3",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "сочиненіє",
+              "синтаксис",
+              "узгодження"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773452421812_3",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 3 words\n\nFound: 2/3\n\n- **сочиненіє** — NOT FOUND\n- **синтаксис** — FOUND (2 match): синтаксис(noun), синтаксис(noun)\n- **узгодження** — FOUND (7 match): узгодження(noun), узгодження(noun), узгодження(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:40:22.668Z",
+          "resultDisplay": "Batch verification: 3 words\n\nFound: 2/3\n\n- **сочиненіє** — NOT FOUND\n- **синтаксис** — FOUND (2 match): синтаксис(noun), синтаксис(noun)\n- **узгодження** — FOUND (7 match): узгодження(noun), узгодження(noun), узгодження(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9baf977e-2396-45ac-ac00-07605a5c599e",
+      "timestamp": "2026-03-14T01:41:47.381Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Синтаксис I: Узгодження\n\n## Key Facts Ledger\n```yaml\nsubject: \"Синтаксис I: Узгодження\"\ntype: \"phenomenon\"\ndates:\n  start: \"1619-01-01\"\n  end: \"1643-12-31\"\n  key_events:\n    - year: 1619\n      event: \"Вихід друком «Граматики слов'янської» Мелетія Смотрицького (м. Єв'є), де вперше системно описано синтаксис і правила узгодження.\"\n    - year: 1638\n      event: \"Видання анонімної «Грамматїки или писменници языка Словеньского» в Кременці, що наслідувала синтаксичні норми Смотрицького.\"\n    - year: 1643\n      event: \"Створення Паризького манускрипту «Граматики словенської» Івана Ужевича з детальним розділом «Синтаксис».\"\n    - year: 1645\n      event: \"Створення Арраського манускрипту граматики Ужевича з фокусом на відмінності українського/слов'янського синтаксису від латинського.\"\nprimary_quotes:\n  - text: \"НарЂчіА примещут(ъ)сА Имене(м) / Глаголωмъ\"\n    source: \"Граматика слов'янська, 1619\"\n    attribution: \"Мелетій Смотрицький\"\n  - text: \"быховЂ або бЂхове («ми двоє були»), быста («ви двоє були»)\"\n    source: \"Граматика словенская (Паризький рукопис), 1643\"\n    attribution: \"Іван Ужевич\"\n  - text: \"үчү тεбε кграматики\"\n    source: \"Граматика словенская, 1643\"\n    attribution: \"Іван Ужевич\"\nforbidden_claims:\n  - \"Староукраїнська мова не мала розробленої синтаксичної системи або була повністю тотожною тогочасній московській писемній традиції.\"\n  - \"Правила узгодження були хаотичними й ненормативними до появи російських граматик XVIII століття (зокрема М. Ломоносова).\"\n  - \"Двоїна була лише згасаючим архаїзмом церковнослов'янщини і не фіксувалася в граматиках як активна форма узгодження.\"\n```\n\n## Використані джерела\n1. [Граматика Мелетія Смотрицького](https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0_%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D1%8F_%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE) — Енциклопедична довідка про першу системну кодифікацію церковнослов'янської та староукраїнської мов.\n2. В. Німчук, «Мовознавство на Україні XIV-XVII ст.» (1985) — Ґрунтовне дослідження правил синтаксису, керування та узгодження в староукраїнських граматиках.\n3. І. Ужевич, «Граматика словенская» (переклад і дослідження Паризького рукопису 1643 р.) — Аналіз узгодження прикметників, дієслів та використання двоїни.\n4. М. Смотрицький, «Грамматіки Словенскія правилноє Сѵнтаґма» (1619) — Першоджерело граматичних термінів «синтаксис» (Сѵнтаґма) та «сочиненіє».\n\n## Хронологія\n- 1619: Мелетій Смотрицький видає у місті Єв'є «Граматику слов'янську», де вперше в східнослов'янському мовознавстві подає окремий розділ «Синтаксис» (або «Сѵнтаґма»), визначаючи правила узгодження та керування.\n- 1638: Анонімна «Грамматїка...», надрукована в Кременці, поширює правила синтаксису Смотрицького серед ширшого кола українських школярів.\n- 1643: Іван Ужевич створює «Граматику слов'янську» (Паризький рукопис), третя частина якої («Синтаксис») детально присвячена правилам узгодження та їх порівнянню з латиною.\n- 1645: Арраський рукопис праці Ужевича, де синтаксичні правила скорочено виключно до тих, що демонструють самобутність слов'янських конструкцій на тлі латинської мови.\n\n## Ключові факти та цитати\n- Смотрицький вперше виділив синтаксис у самостійний розділ. Він використовував терміни «Сѵнтаґма» та «сочиненіє» для позначення правил побудови словосполучень і речень. Його правила узгодження та керування в основних рисах зберігаються і в сучасних українських граматиках.\n- У розділі «О сочиненіи НарЂчіА» Смотрицький визначає синтаксичний зв'язок прилягання: «НарЂчіА примещут(ъ)сА Имене(м) / Глаголωмъ» (Прислівники приєднуються до імен або дієслів).\n- Іван Ужевич розглядав синтаксис через призму контрастивного аналізу з латинською мовою. Він відзначав, що активні дієслова, які в латині керують двома знахідними відмінками (особи і речі), в українській (слов'янській) мові вимагають знахідного для особи і родового для речі: «үчү тεбε кграматики».\n- Двоїна була важливою складовою граматичного узгодження у XVII ст. Ужевич фіксує узгодження підмета і дієслова-присудка у формах двоїни: *быховЂ* або *бЂхове* («ми двоє були»), *быста* («ви двоє були»).\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!context] — Пояснення термінів «Сѵнтаґма» та «сочиненіє» в граматиці Смотрицького (1619). Зазначення того, що виділення синтаксису в окрему наукову дисципліну було інноваційним кроком для східнослов'янського простору.\n- Section \"Вступ\": [!myth-buster] — Спростування імперського міфу, ніби російська граматика Ломоносова (1755) була першою системною працею. Насправді Ломоносов майже повністю скопіював структуру і правила узгодження Смотрицького, назвавши його книгу «вратами своєї вченості».\n- Section \"Основний матеріал\": [!quote] — Використання цитати Ужевича щодо керування дієслів: «үчү тεбε кграматики» як яскравого прикладу відмінностей синтаксису від латинської матриці.\n- Section \"Основний матеріал\": [!history-bite] — Той факт, що Ужевич писав свою граматику при Сорбонні латинською мовою для іноземців, змусив його глибоко аналізувати саме ті синтаксичні конструкції (як-от відсутність дієприкметників майбутнього часу активного стану), які робили тогочасну українську мову унікальною.\n- Section \"Практика\": [!decolonization] — Повернення до усвідомлення двоїни («быховЂ», «быста») не як маргінального явища, а як питомої синтаксичної категорії, що вимагала жорсткого узгодження між іменником, числівником та дієсловом, і яка була примусово вилучена в СРСР у 1933 році.\n- Section \"Підсумок\": [!culture] — «Граматика» Смотрицького з її детальним синтаксисом була не просто лінгвістичним довідником, а потужною культурною зброєю. Нормалізація мови підносила її престиж і допомагала православним українцям та білорусам протистояти культурній асиміляції в Речі Посполитій.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Староукраїнська літературна мова розглядалася в російській історіографії як провінційний \"западнорусский письменный язык\", а її синтаксис вважався нерозвиненим і хаотичним етапом, що передував \"справжній\" нормалізації Ломоносовим. Двоїна маргіналізувалася як \"залишок церковнослов'янщини\", що не має стосунку до живої мови.\n- **Ukrainian reality**: Українські вчені XVII ст. (Смотрицький, Ужевич) першими у Східній Європі створили фундаментальні синтаксичні кодифікації, які на півтора століття випередили російські аналоги, стали еталоном для всього православного слов'янства і відкрили багатство українського синтаксису (включно із живою двоїною) для європейської наукової спільноти.\n\n## Contested Terms\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Мова граматик XVII ст. | Западнорусский язык, юго-западное наречие | Староукраїнська літературна мова / руська мова |\n| Синтаксис Смотрицького | Общерусское достояние | Видатне досягнення українського мовознавства |\n| Двоїна | Церковнослов'янський архаїзм | Питома синтаксична категорія української мови |\n\n## Відеоресурси\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Поняття синтаксису в XVII ст.**: Терміни «Сѵнтаґма» та «сочиненіє». Окреслення мети синтаксису як науки про правильне поєднання («узгодження») слів у реченні.\n- **Мелетій Смотрицький (1619)**: Його «Граматика слов'янська» стала революційною, оскільки першою в історії східнослов'янської лінгвістики подала повний курс граматики з окремим, ґрунтовно опрацьованим розділом про синтаксис.\n- **Культурний контекст**: Високий рівень розвитку латино-польської освіти вимагав від українських вчених кодифікувати власну писемну мову (церковнослов'янську української редакції та книжну українську) на такому ж високому науковому рівні для захисту національно-релігійної ідентичності.\n\n### Основний матеріал\n- **Правила узгодження та керування**: Смотрицький сформулював принципи, які працюють досі. Він описав синтаксичні функції відмінків, принципи узгодження іменників з прикметниками, а також зв'язок прилягання («НарЂчіА примещут(ъ)сА Имене(м) / Глаголωмъ»).\n- **Іван Ужевич та його «Граматика» (1643)**: Третя частина Паризького рукопису — «Синтаксис». Ужевич свідомо виділяв конструкції, що відрізнялися від латини, фіксуючи самобутність українського узгодження.\n- **Синтаксис двоїни**: Узгодження за числом включало не лише однину і множину, але й двоїну. Приклади Ужевича: *быховЂ* («ми двоє були»), *быста* («ви двоє були»), що демонструє чітке морфологічно-синтаксиче узгодження підмета і присудка.\n- **Керування відмінками**: Специфіка керування у слов'янських мовах на противагу латині. Дієслова навчання вимагають знахідного та родового відмінків («үчү тεбε кграматики»), а не подвійного знахідного.\n\n### Практика\n- **Аналітичні завдання**: Розбір цитат з граматик Смотрицького та Ужевича. Ідентифікація форм узгодження та керування.\n- **Робота з двоїною**: Вправи на реконструкцію правильного синтаксичного узгодження з використанням форм двоїни (іменник + дієслово) на основі історичних парадигм.\n- **Порівняльний синтаксис**: Порівняння моделей «сочиненія» XVII століття із сучасними правилами українського синтаксису (що збереглося, а що трансформувалося). Транскрипція та етимологічний розбір ключових термінів.\n\n### Підсумок\n- **Еволюційне значення**: Синтаксис узгодження староукраїнського періоду демонструє високий рівень розвитку, структурної складності та кодифікованості мови.\n- **Європейський вимір**: Українські вчені XVII ст. інтегрували вивчення нашої мови у загальноєвропейський лінгвістичний контекст (праця Ужевича при Сорбонні).\n- **Перехідний місточок**: Розуміння принципів узгодження та керування є базисом (Синтаксис I), який дозволяє перейти до вивчення будови складних речень та способів підрядності (Синтаксис II: Складне речення) у наступному модулі.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Commencing Research Note Generation",
+          "description": "\\n\\n\n\nI'm now writing the research notes for the module. I am proceeding, confident in the information gathered. Progress is underway!",
+          "timestamp": "2026-03-14T01:40:29.182Z"
+        },
+        {
+          "subject": "Crafting Module Summary",
+          "description": "\\n\\n\n\nI'm synthesizing the gathered data into a cohesive module summary. The primary focus is on accurately and concisely presenting the key findings. I am now finalizing the key details to make sure the information is represented completely and accurately.",
+          "timestamp": "2026-03-14T01:40:33.444Z"
+        },
+        {
+          "subject": "Initiating Note Elaboration",
+          "description": "\\n\\n\n\nI'm now detailing the research notes, drawing from the key facts ledger. My focus is on enriching the content for each section, making sure to present the material in an engaging and accessible style. I am making good progress.",
+          "timestamp": "2026-03-14T01:40:37.131Z"
+        },
+        {
+          "subject": "Refining Content Elaboration",
+          "description": "\\n\\n\n\nI'm now enriching the text, focusing on the key quotes and events I've gathered. I am now working through the key facts, making sure to incorporate the quotes and their attributions seamlessly. Progress is steady and I am close to completion.",
+          "timestamp": "2026-03-14T01:40:40.134Z"
+        },
+        {
+          "subject": "Composing the Initial Research Notes",
+          "description": "\\n\\n\n\nI'm now arranging the structure of the module notes, preparing to build out the sections. My focus is on synthesizing all key data points, making sure to meet the content length requirements of this stage. I am now working toward the final steps to prepare the text.",
+          "timestamp": "2026-03-14T01:40:44.093Z"
+        },
+        {
+          "subject": "Initiating Note Compilation",
+          "description": "\\n\\n\n\nI'm now putting together the complete research notes, based on my prior preparation. My focus is on synthesizing all of the gathered details, making sure they are accurately represented within the prescribed format. I'm moving forward with a solid foundation.",
+          "timestamp": "2026-03-14T01:40:46.346Z"
+        },
+        {
+          "subject": "Constructing Research Sections",
+          "description": "\\n\\n\n\nI'm now putting together the complete research notes, based on my prior preparation. My focus is on synthesizing all of the gathered details, making sure they are accurately represented within the prescribed format. I'm now proceeding with the planned sections of the notes, and creating the necessary structure.",
+          "timestamp": "2026-03-14T01:40:49.560Z"
+        },
+        {
+          "subject": "Organizing Section Content",
+          "description": "\\n\\n\n\nI'm now determining the structure for each section, including the introduction and the main content. I am now incorporating the key facts into the notes in preparation for their complete generation.",
+          "timestamp": "2026-03-14T01:40:52.478Z"
+        },
+        {
+          "subject": "Preparing Text Generation",
+          "description": "\\n\\n\n\nI'm now creating the required text sections. The objective is to compile the research notes using the available facts and data. I'm proceeding in line with the instructions, ensuring all required details are incorporated.",
+          "timestamp": "2026-03-14T01:40:55.152Z"
+        },
+        {
+          "subject": "Preparing Detailed Notes Generation",
+          "description": "\\n\\n\n\nI'm now generating the detailed notes, structured according to the section plan. The focus is on integrating all key facts and quotes into the final draft, while making sure the information matches the requirements. I am working towards a polished output.",
+          "timestamp": "2026-03-14T01:40:58.460Z"
+        },
+        {
+          "subject": "Assembling the Initial Text",
+          "description": "\\n\\n\n\nI'm now writing the first draft of the module notes, preparing to build out the sections with the gathered details. My goal is to synthesize the information, while ensuring that the content adheres to the given format.",
+          "timestamp": "2026-03-14T01:41:01.917Z"
+        },
+        {
+          "subject": "Formulating Final Output",
+          "description": "\\n\\n\n\nI'm now in the final stage of compiling the information and preparing the text for output. I am incorporating all of the required details, and double checking the structure to ensure the notes are complete. The focus is on precision and clarity, as I prepare the finalized text.",
+          "timestamp": "2026-03-14T01:41:05.216Z"
+        },
+        {
+          "subject": "Producing the Complete Notes",
+          "description": "\\n\\n\n\nI'm now writing the research notes, focusing on the planned structure and key facts ledger. My goal is to produce the text in the required format. I'm now completing the final stage of assembling the notes for output.",
+          "timestamp": "2026-03-14T01:41:05.234Z"
+        }
+      ],
+      "tokens": {
+        "input": 30727,
+        "output": 3536,
+        "cached": 0,
+        "thoughts": 2955,
+        "tool": 0,
+        "total": 37218
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

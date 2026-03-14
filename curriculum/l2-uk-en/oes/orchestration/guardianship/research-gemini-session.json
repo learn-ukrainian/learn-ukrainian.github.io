@@ -1,0 +1,629 @@
+{
+  "sessionId": "5e2e03d2-7690-4986-8435-f7ac3224d2db",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:57:32.973Z",
+  "lastUpdated": "2026-03-14T02:00:06.989Z",
+  "messages": [
+    {
+      "id": "e60bf333-ec40-420e-806e-eb63e0533b3c",
+      "timestamp": "2026-03-14T01:57:32.973Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-065\nlevel: OES\nsequence: 65\nslug: guardianship\nversion: '2.0'\ntitle: Опіка\nsubtitle: Guardianship\nfocus: Welfare concepts\nphase: 3\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Guardianship\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Family Arbiter\nprerequisites:\n- women-in-law\nconnects_to:\n- monomakh-statute-usury\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Опіка** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Опіка\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Опіка\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "20cc2e25-a0d8-4636-9fd9-a2c72fdc95e3",
+      "timestamp": "2026-03-14T01:57:42.725Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Focusing on Next Action",
+          "description": "I'm now zeroing in on the subsequent stage. I must ensure the process unfolds correctly. My approach involves a precise sequential execution, and I will be ready to report on the outcome soon.",
+          "timestamp": "2026-03-14T01:57:38.619Z"
+        },
+        {
+          "subject": "Proceeding with Search Refinement",
+          "description": "My immediate plan involves refining the initial searches. I'll leverage the knowledge gained and adapt my search terms to ensure relevance. The goal is to obtain more precise information from the literary search tools, focused on legal texts, and then integrate the results.",
+          "timestamp": "2026-03-14T01:57:42.604Z"
+        }
+      ],
+      "tokens": {
+        "input": 20454,
+        "output": 21,
+        "cached": 0,
+        "thoughts": 377,
+        "tool": 0,
+        "total": 20852
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453462723_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Опіка Руська правда",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453462723_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Опіка Руська правда' — 5 results\n\n1. **Руська Правда** — мови найбільшою мірою відобразила «Руська правда». «Руська правда» — найвизначніший збірник стародавнього руського права, важливе джерело для дослідження\n2. **Салічна правда** — зародження у франків ранньофеодальної держави. Руська Правда Правда Ярославичів Англосаксонські правди Баварська правда Родинний принцип успадкування Вікісховище\n3. **Театр Української Бесіди** — Стадника». 3 березня 1864 року у Львові відбулося відкриття товариства «Руська Бесіда» виставою «Маруся» (за Григорієм Квіткою-Основ&#039;яненком) у переробці\n4. **Товариство святого Рафаїла для охорони руських емігрантів з Галичини і Буковини** — то та, що єї дісталисьте у Львові з «Товариства св. Рафаїла» для опіки над руськими еміґрантами, чи як єї не маєте, та, що єї дістанете в портовім містї\n5. **Історія виникнення прийомних сімей в Україні** — опіку людей, які потребували соціальної допомоги, зокрема дітей-сиріт. Пізніше Ярослав Мудрий уклав перший український збірник законів «Руська правда»"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:57:43.008Z",
+          "resultDisplay": "Wikipedia search: 'Опіка Руська правда' — 5 results\n\n1. **Руська Правда** — мови найбільшою мірою відобразила «Руська правда». «Руська правда» — найвизначніший збірник стародавнього руського права, важливе джерело для дослідження\n2. **Салічна правда** — зародження у франків ранньофеодальної держави. Руська Правда Правда Ярославичів Англосаксонські правди Баварська правда Родинний принцип успадкування Вікісховище\n3. **Театр Української Бесіди** — Стадника». 3 березня 1864 року у Львові відбулося відкриття товариства «Руська Бесіда» виставою «Маруся» (за Григорієм Квіткою-Основ&#039;яненком) у переробці\n4. **Товариство святого Рафаїла для охорони руських емігрантів з Галичини і Буковини** — то та, що єї дісталисьте у Львові з «Товариства св. Рафаїла» для опіки над руськими еміґрантами, чи як єї не маєте, та, що єї дістанете в портовім містї\n5. **Історія виникнення прийомних сімей в Україні** — опіку людей, які потребували соціальної допомоги, зокрема дітей-сиріт. Пізніше Ярослав Мудрий уклав перший український збірник законів «Руська правда»",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "ae370119-4632-4a23-b16f-2344007f6ee1",
+      "timestamp": "2026-03-14T01:57:48.769Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Gathering Relevant Details",
+          "description": "I am now focused on extracting relevant information to address the next phase. I will utilize the identified resources to gather the necessary details. I'll make sure to extract all crucial data.",
+          "timestamp": "2026-03-14T01:57:46.456Z"
+        },
+        {
+          "subject": "Querying Literary Sources",
+          "description": "I am now proceeding with my next step. My focus is on using the search tools to find relevant excerpts. I am concentrating my search efforts on the terms related to family law concepts.",
+          "timestamp": "2026-03-14T01:57:48.636Z"
+        }
+      ],
+      "tokens": {
+        "input": 20835,
+        "output": 42,
+        "cached": 19726,
+        "thoughts": 186,
+        "tool": 0,
+        "total": 21063
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453468724_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "опіка сирота вдова",
+            "genre": "legal"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453468724_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"опіка сирота вдова\"\n\n### Result 1 (score: 0.4408)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0140`\n- **Text**:\nУставуемъ, которая вдова зостанеть по мужу своемъ зъ\r\nдЂтьми недорослыми, а хотЂла бы на вдовьемъ столцы сЂдети и дЂти въ опецЂ своей\r\nмЂти, а будеть ли оселость добрую мЂти або вено отъ мужа своего оправеное;\r\nтогды таковая вдова маеть на вдовьемъ столцы на всихъ имЂньяхъ зъ дЂтьми\r\nсЂдЂти, если бы опекуны уставленые отъ мужа ее не были. А естли бы оселости\r\nдобрые або вЂна отписаного не мЂла, тогды маеть дати по собЂ рукоемство доброе\r\nлюсей оселыхъ, таковая ку опецЂ маеть быти припущона. А гд\n\n### Result 2 (score: 0.4168)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0137`\n- **Text**:\nОбачившы есьмо то, ижъ которые вдовы безплодные\r\nсЂдятъ навдовьемъ столцы, многіе се шкоды отъ нихъ дЂлають Речи Посполитой, а\r\nто тымъ обычаемъ ижъ службы земскіе отъ ихъ не бывають служоны, такъ яко бы\r\nмЂли быти, и тежъ ближнимъ много имЂнья утрачають; уставуемъ такъ, ижъ которая\r\nвдова безплодная, а будетъ ли венована отъ мужа своего, тогды маеть осЂсти\r\nтолько на вЂнЂ своемъ, а имЂнья мають на ближнимъ спасти; а естли бы небыла\r\nвенована отъ мужа своего, тогды маеть на третей части имЂнья с\n\n### Result 3 (score: 0.4115)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0025`\n- **Text**:\nПублікуеться за копією XIX ст., що зберігається в рукописному\r\nвідділі Державної бібліотеки СРСР ім. В. І. Леніна, ф. Румянцева, № 256, папка\r\n№ 70 — 72, арк. 1 — 2. Розглянута О. Востоковим в «Описании», стор. 117, № LXX.\n\n### Result 4 (score: 0.4101)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0061`\n- **Text**:\n56. Оже кто оубьѥть женоу, то\r\nтѣмь же судомь соудити, ӕко же и моужа; ѡже будеть виноватъ,\r\nто полъ виръı, 20 гр(и)в(е)нъ.\n\n57. А въ холопѣ и въ робѣ виръı\r\nнѣтоуть, нъ ѡже боудеть без винъı оубьѥнъ, за холопъ\r\nоурокъ заплатити, или за робоу, а кнѧзю 12 гривнѣ продаже.\n\nО задници.\n\n58. Аже оумреть смердъ, то задница\r\nкнѧзю; аже боудоуть дъчери оу него дома, то даӕти часть на\r\nнѣ; аже боудоуть замоужемъ, то не дати имъ части.\n\nО задници боӕрьстѣи и о дружиннѣ(и).\r\nА се ѡ заднѣцѣ А).\n\n59. Аже въ \n\n### Result 5 (score: 0.4101)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0145`\n- **Text**:\nА. Прохаска, «Codex»: Se iaz kniaź Welikij Borys\r\nAleksandrowicz Tferskij, wział jeśmi lubow takowu i z swoim\r\nhospodynom z diedom Welikim kniaziem Witowtom Litowskim i mnohich Russkich zeml\r\nHosudarem, byti mi snim za odyn pry jeho storonie i posoblati mi jemu na\r\nwsiakoho newyimaia; a hospodynu moiemu diedu Welikomu kniaziu Witowtu, mene\r\nWelikoho Kniazia Borysa Alexandrowicza swoieho wnuka boroniti ot wsiakoho,\r\ndumoiu i pomoczyiu a w zemli i w wody i wo wse moie Welikoie Kniażenie\r\nTwerskoie\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:57:49.148Z",
+          "resultDisplay": "Found 5 results for: \"опіка сирота вдова\"\n\n### Result 1 (score: 0.4408)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0140`\n- **Text**:\nУставуемъ, которая вдова зостанеть по мужу своемъ зъ\r\nдЂтьми недорослыми, а хотЂла бы на вдовьемъ столцы сЂдети и дЂти въ опецЂ своей\r\nмЂти, а будеть ли оселость добрую мЂти або вено отъ мужа своего оправеное;\r\nтогды таковая вдова маеть на вдовьемъ столцы на всихъ имЂньяхъ зъ дЂтьми\r\nсЂдЂти, если бы опекуны уставленые отъ мужа ее не были. А естли бы оселости\r\nдобрые або вЂна отписаного не мЂла, тогды маеть дати по собЂ рукоемство доброе\r\nлюсей оселыхъ, таковая ку опецЂ маеть быти припущона. А гд\n\n### Result 2 (score: 0.4168)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0137`\n- **Text**:\nОбачившы есьмо то, ижъ которые вдовы безплодные\r\nсЂдятъ навдовьемъ столцы, многіе се шкоды отъ нихъ дЂлають Речи Посполитой, а\r\nто тымъ обычаемъ ижъ службы земскіе отъ ихъ не бывають служоны, такъ яко бы\r\nмЂли быти, и тежъ ближнимъ много имЂнья утрачають; уставуемъ такъ, ижъ которая\r\nвдова безплодная, а будетъ ли венована отъ мужа своего, тогды маеть осЂсти\r\nтолько на вЂнЂ своемъ, а имЂнья мають на ближнимъ спасти; а естли бы небыла\r\nвенована отъ мужа своего, тогды маеть на третей части имЂнья с\n\n### Result 3 (score: 0.4115)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0025`\n- **Text**:\nПублікуеться за копією XIX ст., що зберігається в рукописному\r\nвідділі Державної бібліотеки СРСР ім. В. І. Леніна, ф. Румянцева, № 256, папка\r\n№ 70 — 72, арк. 1 — 2. Розглянута О. Востоковим в «Описании», стор. 117, № LXX.\n\n### Result 4 (score: 0.4101)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0061`\n- **Text**:\n56. Оже кто оубьѥть женоу, то\r\nтѣмь же судомь соудити, ӕко же и моужа; ѡже будеть виноватъ,\r\nто полъ виръı, 20 гр(и)в(е)нъ.\n\n57. А въ холопѣ и въ робѣ виръı\r\nнѣтоуть, нъ ѡже боудеть без винъı оубьѥнъ, за холопъ\r\nоурокъ заплатити, или за робоу, а кнѧзю 12 гривнѣ продаже.\n\nО задници.\n\n58. Аже оумреть смердъ, то задница\r\nкнѧзю; аже боудоуть дъчери оу него дома, то даӕти часть на\r\nнѣ; аже боудоуть замоужемъ, то не дати имъ части.\n\nО задници боӕрьстѣи и о дружиннѣ(и).\r\nА се ѡ заднѣцѣ А).\n\n59. Аже въ \n\n### Result 5 (score: 0.4101)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0145`\n- **Text**:\nА. Прохаска, «Codex»: Se iaz kniaź Welikij Borys\r\nAleksandrowicz Tferskij, wział jeśmi lubow takowu i z swoim\r\nhospodynom z diedom Welikim kniaziem Witowtom Litowskim i mnohich Russkich zeml\r\nHosudarem, byti mi snim za odyn pry jeho storonie i posoblati mi jemu na\r\nwsiakoho newyimaia; a hospodynu moiemu diedu Welikomu kniaziu Witowtu, mene\r\nWelikoho Kniazia Borysa Alexandrowicza swoieho wnuka boroniti ot wsiakoho,\r\ndumoiu i pomoczyiu a w zemli i w wody i wo wse moie Welikoie Kniażenie\r\nTwerskoie\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773453468768_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "sections",
+            "query": "Руська Правда"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453468768_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Руська Правда':\n\n1 Руська правда (index=1)\n2 Коротка «Руська правда» (index=2)\n3 Розширена правда (index=3)\n4 Скорочена «Руська правда» (index=4)\n  4.1 «Правда Ярослава» (index=5)\n5 Характеристика й значення (index=6)\n6 Див. також (index=7)\n7 Примітки (index=8)\n8 Джерела та література (index=9)\n9 Посилання (index=10)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:57:49.148Z",
+          "resultDisplay": "Sections of 'Руська Правда':\n\n1 Руська правда (index=1)\n2 Коротка «Руська правда» (index=2)\n3 Розширена правда (index=3)\n4 Скорочена «Руська правда» (index=4)\n  4.1 «Правда Ярослава» (index=5)\n5 Характеристика й значення (index=6)\n6 Див. також (index=7)\n7 Примітки (index=8)\n8 Джерела та література (index=9)\n9 Посилання (index=10)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "df743d77-7fad-49dd-b120-cd625df2dbc3",
+      "timestamp": "2026-03-14T01:57:55.090Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing The Task",
+          "description": "\\n\\n\n\nI'm now focusing on gathering the necessary information. It's time to obtain the 'Характеристика й значення' section. Then I will determine the next steps for gathering relevant information on the topic.",
+          "timestamp": "2026-03-14T01:57:53.355Z"
+        },
+        {
+          "subject": "Initiating the Search",
+          "description": "\\n\\n\n\nI've begun the search process, starting with a Wikipedia search to find relevant information. I'm also going to check a literary search to get some additional information to help with the process. I am determining the best way to get all the required information.",
+          "timestamp": "2026-03-14T01:57:54.949Z"
+        }
+      ],
+      "tokens": {
+        "input": 22444,
+        "output": 45,
+        "cached": 0,
+        "thoughts": 168,
+        "tool": 0,
+        "total": 22657
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773453475049_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Сімейне право Київської Русі"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453475049_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Сімейне право Київської Русі' — 5 results\n\n1. **Київська Русь** — столітті в Київській Русі існувало близько 50 монастирів, із них 17 — у самому Києві. Церква справляла величезний вплив на культуру Київської Русі. Спорудження\n2. **Руське право** — Ру́ське пра́во — у широкому розумінні правна культура, система права Київської Русі зі слов&#039;янськими та перебраними джерелами права, яка діяла на українських\n3. **Міжусобна війна на Русі (1146—1154)** — Південної Русі, поки його остаточно не зломила татарська навала. — Пресняков А. Е. Княжое право в Древней Руси. Лекции по русской истории. Киевская Русь — М\n4. **Звичаєве право** — відомі договори Русі із Візантією (911, 944, 971 рр.), що ґрунтувалися на «законі руському» (неписаному звичаєвому праві Київської Русі), нормативно закріплювали\n5. **Клуб Сімейного Дозвілля** — Українські землі від королівства Русі до війська запорозького. Князі і гетьмани усієї Русі. «Через шаблю маєм право». Злети і падіння козацької держави"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:57:55.516Z",
+          "resultDisplay": "Wikipedia search: 'Сімейне право Київської Русі' — 5 results\n\n1. **Київська Русь** — столітті в Київській Русі існувало близько 50 монастирів, із них 17 — у самому Києві. Церква справляла величезний вплив на культуру Київської Русі. Спорудження\n2. **Руське право** — Ру́ське пра́во — у широкому розумінні правна культура, система права Київської Русі зі слов&#039;янськими та перебраними джерелами права, яка діяла на українських\n3. **Міжусобна війна на Русі (1146—1154)** — Південної Русі, поки його остаточно не зломила татарська навала. — Пресняков А. Е. Княжое право в Древней Руси. Лекции по русской истории. Киевская Русь — М\n4. **Звичаєве право** — відомі договори Русі із Візантією (911, 944, 971 рр.), що ґрунтувалися на «законі руському» (неписаному звичаєвому праві Київської Русі), нормативно закріплювали\n5. **Клуб Сімейного Дозвілля** — Українські землі від королівства Русі до війська запорозького. Князі і гетьмани усієї Русі. «Через шаблю маєм право». Злети і падіння козацької держави",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773453475089_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "genre": "legal",
+            "query": "сироти Руська Правда"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453475089_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"сироти Руська Правда\"\n\n### Result 1 (score: 0.3948)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0016`\n- **Text**:\nСерафим Юшков. Руська Правда (тексти на основі 7 списків та 5 редакцій). Київ, 1935.\n\nЛеонід Білецький. Руська Правда й історія її тексту. Вінніпег, 1993.\n\nА се есть правда рускаа. Новгородський перший літопис молодшого ізводу.\n\nАндрій Яковлів. Українське право. (Лекції «Українська культура»)\n\nПереклад тексту Архівної комісії.\n\nНа інших сайтах:\n\nТретій Статут Великого князівства Литовського 1588.\n\nСудебник Казимира 1468 року (zip)\n\n1-й Литовський статут 1529 року (zip)\n\nУстава на волоки 1557 рок\n\n### Result 2 (score: 0.3803)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0000`\n- **Text**:\nШрифт\n\nУКРАЇНСЬКА АКАДЕМІЯ НАУК\n\nІНСТИТУТ ІСТОРІЇ МАТЕРІАЛЬНОЇ КУЛЬТУРИ\n\nРУСЬКА ПРАВДА\n\nТексти на основі 7 списків та 5 редакцій\n\nСклав та підготував до друку проф. С.\r\nЮшков\n\nВИДАВНИЦТВО УКРАЇНСЬКОЇ АКАДЕМІЇ НАУК\n\nКИЇВ — 1935\n\nДрукується з розпорядження Української Академії Наук \nНеодмінний секретар акад. О. В. Палладін.\n\nЗМІСТ.\n\nПр. С. В. Юшков. Передмова (Археографічна)\n\nПр. С. В. Юшков. Предисловие (Археографическое)\n\nТексти Руської Правди:\n\nІ. редакція (Академічний список)\n\nII. редакція:\n\nА\n\n### Result 3 (score: 0.3759)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0148`\n- **Text**:\nТежъ дЂти не маючы лЂтъ, будучы до права позвани,\r\nодно въ чотырохъ речахъ повинни будуть отповЂдати. Первей, кгды отецъ ихъ або\r\nматка за доброго здоровья которое имЂнье лежачое въ пенязехъ заставнымъ\r\nобычаемъ держали, або якъ кольвекъ суму на томъ имЂнью было имъ описано, а\r\nблизкіе бы тое имЂнье отъ тыхъ дЂтей выкупити хотЂли, и для того бы были\r\nпозвани ку обранью пенезей; тогды будуть повинни пенези взяти черезъ опекуна\r\nабо тежъ черезъ пріятелей кровныхъ, а имЂнье пустити. Другое, кгды бы\n\n### Result 4 (score: 0.3748)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0210`\n- **Text**:\nТежъ уставуемъ, естьли бы хто в голодъ челядь свою\r\nневолную выгналъ або выбилъ зъ дому своего прочъ, не хотечи ее кормити и\r\nпереховывати; таковые вжо не мають быти невольными, але вольными. А вЂдьже тымъ\r\nобычаемъ, ижъ коли тую челядь выбьеть, тогды се они оповЂдати мають врядникомъ\r\nвъ повЂтЂ або вряду мЂстскому бурмистромъ або мЂщаномъ, ижъ ихъ выбилъ а\r\nкормити не хотЂлъ; а тые, которимъ се оповЂдають, мають обослати того пана, чія\r\nчелядь, естьли зознаеть, же для голоду выгналъ ихъ изъ дом\n\n### Result 5 (score: 0.3721)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0147`\n- **Text**:\nАРТЫКУЛЪ 5.\n\nЕсли бы опекунъ што несправою або недбалостъю своею дЂтемъ упустилъ.\n\nКгды бы тежъ опекунъ, такъ прирожоный яко и\r\nвстановленый отъ отца, або тежъ зъ уряду приданый, якимъ омЂшканьемъ або\r\nнедбалостью своею дЂтемъ въ молодости лЂтъ ихъ што впустилъ; тогды дЂти,\r\nдоросшы лЂтъ своихъ зуполныхъ, могуть своего правомъ поискивати на томъ, хто бы\r\nимЂнье держалъ, абы одно доросши лЂтъ своихъ зуполныхъ давности земское не\r\nомешкали.\n\nАРТЫКУЛЪ 6.\n\nОпекунъ можеть дЂтиное кривды доходити у пр\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:57:55.516Z",
+          "resultDisplay": "Found 5 results for: \"сироти Руська Правда\"\n\n### Result 1 (score: 0.3948)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0016`\n- **Text**:\nСерафим Юшков. Руська Правда (тексти на основі 7 списків та 5 редакцій). Київ, 1935.\n\nЛеонід Білецький. Руська Правда й історія її тексту. Вінніпег, 1993.\n\nА се есть правда рускаа. Новгородський перший літопис молодшого ізводу.\n\nАндрій Яковлів. Українське право. (Лекції «Українська культура»)\n\nПереклад тексту Архівної комісії.\n\nНа інших сайтах:\n\nТретій Статут Великого князівства Литовського 1588.\n\nСудебник Казимира 1468 року (zip)\n\n1-й Литовський статут 1529 року (zip)\n\nУстава на волоки 1557 рок\n\n### Result 2 (score: 0.3803)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0000`\n- **Text**:\nШрифт\n\nУКРАЇНСЬКА АКАДЕМІЯ НАУК\n\nІНСТИТУТ ІСТОРІЇ МАТЕРІАЛЬНОЇ КУЛЬТУРИ\n\nРУСЬКА ПРАВДА\n\nТексти на основі 7 списків та 5 редакцій\n\nСклав та підготував до друку проф. С.\r\nЮшков\n\nВИДАВНИЦТВО УКРАЇНСЬКОЇ АКАДЕМІЇ НАУК\n\nКИЇВ — 1935\n\nДрукується з розпорядження Української Академії Наук \nНеодмінний секретар акад. О. В. Палладін.\n\nЗМІСТ.\n\nПр. С. В. Юшков. Передмова (Археографічна)\n\nПр. С. В. Юшков. Предисловие (Археографическое)\n\nТексти Руської Правди:\n\nІ. редакція (Академічний список)\n\nII. редакція:\n\nА\n\n### Result 3 (score: 0.3759)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0148`\n- **Text**:\nТежъ дЂти не маючы лЂтъ, будучы до права позвани,\r\nодно въ чотырохъ речахъ повинни будуть отповЂдати. Первей, кгды отецъ ихъ або\r\nматка за доброго здоровья которое имЂнье лежачое въ пенязехъ заставнымъ\r\nобычаемъ держали, або якъ кольвекъ суму на томъ имЂнью было имъ описано, а\r\nблизкіе бы тое имЂнье отъ тыхъ дЂтей выкупити хотЂли, и для того бы были\r\nпозвани ку обранью пенезей; тогды будуть повинни пенези взяти черезъ опекуна\r\nабо тежъ черезъ пріятелей кровныхъ, а имЂнье пустити. Другое, кгды бы\n\n### Result 4 (score: 0.3748)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0210`\n- **Text**:\nТежъ уставуемъ, естьли бы хто в голодъ челядь свою\r\nневолную выгналъ або выбилъ зъ дому своего прочъ, не хотечи ее кормити и\r\nпереховывати; таковые вжо не мають быти невольными, але вольными. А вЂдьже тымъ\r\nобычаемъ, ижъ коли тую челядь выбьеть, тогды се они оповЂдати мають врядникомъ\r\nвъ повЂтЂ або вряду мЂстскому бурмистромъ або мЂщаномъ, ижъ ихъ выбилъ а\r\nкормити не хотЂлъ; а тые, которимъ се оповЂдають, мають обослати того пана, чія\r\nчелядь, естьли зознаеть, же для голоду выгналъ ихъ изъ дом\n\n### Result 5 (score: 0.3721)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0147`\n- **Text**:\nАРТЫКУЛЪ 5.\n\nЕсли бы опекунъ што несправою або недбалостъю своею дЂтемъ упустилъ.\n\nКгды бы тежъ опекунъ, такъ прирожоный яко и\r\nвстановленый отъ отца, або тежъ зъ уряду приданый, якимъ омЂшканьемъ або\r\nнедбалостью своею дЂтемъ въ молодости лЂтъ ихъ што впустилъ; тогды дЂти,\r\nдоросшы лЂтъ своихъ зуполныхъ, могуть своего правомъ поискивати на томъ, хто бы\r\nимЂнье держалъ, абы одно доросши лЂтъ своихъ зуполныхъ давности земское не\r\nомешкали.\n\nАРТЫКУЛЪ 6.\n\nОпекунъ можеть дЂтиное кривды доходити у пр\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "b96ed9a2-4694-43ea-b67b-2dc2b29224a4",
+      "timestamp": "2026-03-14T01:58:02.623Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Focusing on Step Completion",
+          "description": "\\n\\n\n\nI'm now zeroing in on the next step. I'll make sure to execute it efficiently. I'll utilize the knowledge acquired to get this process rolling.",
+          "timestamp": "2026-03-14T01:57:59.441Z"
+        },
+        {
+          "subject": "Proceeding with Queries",
+          "description": "\\n\\n\n\nI'm starting the searches now. The initial focus is on the specific topic. I'm leveraging various search functions to get the information I need.",
+          "timestamp": "2026-03-14T01:58:02.492Z"
+        }
+      ],
+      "tokens": {
+        "input": 24385,
+        "output": 46,
+        "cached": 20014,
+        "thoughts": 238,
+        "tool": 0,
+        "total": 24669
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453482580_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "задниця вдова Руська Правда",
+            "genre": "legal"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453482580_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"задниця вдова Руська Правда\"\n\n### Result 1 (score: 0.4655)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0284`\n- **Text**:\n83 2, 5, 6, 8, 9\r\nмогоуть.\n\nА) 3 впр. р дьщери.\n\nѠ смердьєи 1\r\n задници 2.\n\n99 [103] Ѡжо 3 смердъ\r\nоумр(е)ть 4 безъ 5 дѣти 6, то аадница\r\n7 кнѧзю; ѡже 6 боудуть 9 оу 10\r\nнего дьщери 11 А) дома, то даӕти 12 часть на\r\nнѧ, аже 13 ли 14 боудүть 15 за\r\nмүжьми 16, то не дати 17 части 18.\n\nѠ 19\r\n боӕрьстѣи 20 задници 21\r\nи ѡ людстѣ 22.\n\n100 [104] А иже в боӕрехь 23\r\nили же 24 въ боӕрьстѣи 25 дроужинѣ 26,\r\nто за кнѧзѧ задница 27 не идеть, но 28\r\nѡже 29 не боудеть 30 с(ы)н(о)въ 31, а въ\r\nдщери 32 възмоут\n\n### Result 2 (score: 0.4588)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0288`\n- **Text**:\n108 [112] Аще 13 же и ѡтчимъ\r\n14 прииметь 15 съ 16 задницею 17\r\nдѣтеи 18, и то такоже єсть рѧд(ъ), ӕкоже 19\r\nрѧдилъ.\n\n109 А дворъ без дѣлү 20\r\nѡтень 21 всѧкои А) меншемоу 22 Б)\r\nс(ы)нови 23.\n\nѠ В) женѣ 24.\n\n110 [113] Аще 25 жена\r\nѡборчетсѧ 26 сидѣти 27 помужѣ 28,\r\nа ростѧрѧєть 29 добытокъ, а 30 поидеть за\r\nмоужь 31, то платити 32 ємоу 33 все 34\r\nдѣтемъ 35; не 36 хотѣти 37 ли 38\r\nєи 39 начьнүть 40 дѣти 41 ни 42\r\nна дворѣ 43, а ѡна начнеть 44 всѧко сидѣти\r\n45 восхощеть 46 з 47 дѣтми 48,\r\nто 49 сът\n\n### Result 3 (score: 0.4552)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0061`\n- **Text**:\n56. Оже кто оубьѥть женоу, то\r\nтѣмь же судомь соудити, ӕко же и моужа; ѡже будеть виноватъ,\r\nто полъ виръı, 20 гр(и)в(е)нъ.\n\n57. А въ холопѣ и въ робѣ виръı\r\nнѣтоуть, нъ ѡже боудеть без винъı оубьѥнъ, за холопъ\r\nоурокъ заплатити, или за робоу, а кнѧзю 12 гривнѣ продаже.\n\nО задници.\n\n58. Аже оумреть смердъ, то задница\r\nкнѧзю; аже боудоуть дъчери оу него дома, то даӕти часть на\r\nнѣ; аже боудоуть замоужемъ, то не дати имъ части.\n\nО задници боӕрьстѣи и о дружиннѣ(и).\r\nА се ѡ заднѣцѣ А).\n\n59. Аже въ \n\n### Result 4 (score: 0.4344)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0139`\n- **Text**:\nУставуемъ, естьли бы которая вдова замужъ пошла, и\r\nдЂти въ мужа першое жоны нашла и съ тымъ мужемъ другихъ дЂтей набыла, тогды по\r\nсмерти мужней зъ обоима детьми того мужа своего во имЂнью ровную часть и въ\r\nскарбЂ маеть мЂти; а естли бы дЂтей не мЂла, тогды зъ дЂтьми мужа своего першое\r\nжоны его ровную часть только во имЂньяхъ лежачихъ будеть мЂти, але въ скарбехъ\r\nи въ рухомыхъ речахъ мЂти не маеть, окромъ внесенья своего, и тежъ естли бы што\r\nзъ ласки ей мужъ записалъ нЂкоторую часть имЂнья \n\n### Result 5 (score: 0.4327)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0246`\n- **Text**:\nДмитрии̇́, Дмитриї (ω̋лгврдови(ч), Ӧлгирдовичь) великий\r\nкнязь 35, 47 — Я. Головацький, «Памятники», 1867, стор. 23; Ф. Леонтович, «Очерк»,\r\nстор. 452, 453; «Акты ЮЗР», т. I, № 2; М. Стрийковський, «Kronika», стор. 74;\r\nМ. Бєльський, «Kronika», стор. 140; Д. Іловайський, «Ист. Росс», стор. 30; А.\r\nПрохаска, «Codex», стор. CIV; М. Любавський, «Очерк», стор. 21; М. Погодін, «Виленск.\r\nвестн.»\n\nДмитровьскии Вѧтславъ пан 22\n\nДм(и)тръ пан, свідок польського короля Казимира 12\n\nДмитръ Матьфѣѥвичь бра\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:02.890Z",
+          "resultDisplay": "Found 5 results for: \"задниця вдова Руська Правда\"\n\n### Result 1 (score: 0.4655)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0284`\n- **Text**:\n83 2, 5, 6, 8, 9\r\nмогоуть.\n\nА) 3 впр. р дьщери.\n\nѠ смердьєи 1\r\n задници 2.\n\n99 [103] Ѡжо 3 смердъ\r\nоумр(е)ть 4 безъ 5 дѣти 6, то аадница\r\n7 кнѧзю; ѡже 6 боудуть 9 оу 10\r\nнего дьщери 11 А) дома, то даӕти 12 часть на\r\nнѧ, аже 13 ли 14 боудүть 15 за\r\nмүжьми 16, то не дати 17 части 18.\n\nѠ 19\r\n боӕрьстѣи 20 задници 21\r\nи ѡ людстѣ 22.\n\n100 [104] А иже в боӕрехь 23\r\nили же 24 въ боӕрьстѣи 25 дроужинѣ 26,\r\nто за кнѧзѧ задница 27 не идеть, но 28\r\nѡже 29 не боудеть 30 с(ы)н(о)въ 31, а въ\r\nдщери 32 възмоут\n\n### Result 2 (score: 0.4588)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0288`\n- **Text**:\n108 [112] Аще 13 же и ѡтчимъ\r\n14 прииметь 15 съ 16 задницею 17\r\nдѣтеи 18, и то такоже єсть рѧд(ъ), ӕкоже 19\r\nрѧдилъ.\n\n109 А дворъ без дѣлү 20\r\nѡтень 21 всѧкои А) меншемоу 22 Б)\r\nс(ы)нови 23.\n\nѠ В) женѣ 24.\n\n110 [113] Аще 25 жена\r\nѡборчетсѧ 26 сидѣти 27 помужѣ 28,\r\nа ростѧрѧєть 29 добытокъ, а 30 поидеть за\r\nмоужь 31, то платити 32 ємоу 33 все 34\r\nдѣтемъ 35; не 36 хотѣти 37 ли 38\r\nєи 39 начьнүть 40 дѣти 41 ни 42\r\nна дворѣ 43, а ѡна начнеть 44 всѧко сидѣти\r\n45 восхощеть 46 з 47 дѣтми 48,\r\nто 49 сът\n\n### Result 3 (score: 0.4552)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0061`\n- **Text**:\n56. Оже кто оубьѥть женоу, то\r\nтѣмь же судомь соудити, ӕко же и моужа; ѡже будеть виноватъ,\r\nто полъ виръı, 20 гр(и)в(е)нъ.\n\n57. А въ холопѣ и въ робѣ виръı\r\nнѣтоуть, нъ ѡже боудеть без винъı оубьѥнъ, за холопъ\r\nоурокъ заплатити, или за робоу, а кнѧзю 12 гривнѣ продаже.\n\nО задници.\n\n58. Аже оумреть смердъ, то задница\r\nкнѧзю; аже боудоуть дъчери оу него дома, то даӕти часть на\r\nнѣ; аже боудоуть замоужемъ, то не дати имъ части.\n\nО задници боӕрьстѣи и о дружиннѣ(и).\r\nА се ѡ заднѣцѣ А).\n\n59. Аже въ \n\n### Result 4 (score: 0.4344)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0139`\n- **Text**:\nУставуемъ, естьли бы которая вдова замужъ пошла, и\r\nдЂти въ мужа першое жоны нашла и съ тымъ мужемъ другихъ дЂтей набыла, тогды по\r\nсмерти мужней зъ обоима детьми того мужа своего во имЂнью ровную часть и въ\r\nскарбЂ маеть мЂти; а естли бы дЂтей не мЂла, тогды зъ дЂтьми мужа своего першое\r\nжоны его ровную часть только во имЂньяхъ лежачихъ будеть мЂти, але въ скарбехъ\r\nи въ рухомыхъ речахъ мЂти не маеть, окромъ внесенья своего, и тежъ естли бы што\r\nзъ ласки ей мужъ записалъ нЂкоторую часть имЂнья \n\n### Result 5 (score: 0.4327)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0246`\n- **Text**:\nДмитрии̇́, Дмитриї (ω̋лгврдови(ч), Ӧлгирдовичь) великий\r\nкнязь 35, 47 — Я. Головацький, «Памятники», 1867, стор. 23; Ф. Леонтович, «Очерк»,\r\nстор. 452, 453; «Акты ЮЗР», т. I, № 2; М. Стрийковський, «Kronika», стор. 74;\r\nМ. Бєльський, «Kronika», стор. 140; Д. Іловайський, «Ист. Росс», стор. 30; А.\r\nПрохаска, «Codex», стор. CIV; М. Любавський, «Очерк», стор. 21; М. Погодін, «Виленск.\r\nвестн.»\n\nДмитровьскии Вѧтславъ пан 22\n\nДм(и)тръ пан, свідок польського короля Казимира 12\n\nДмитръ Матьфѣѥвичь бра\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773453482621_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Спадкування за Руською Правдою"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773453482621_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Спадкування за Руською Правдою'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:02.890Z",
+          "resultDisplay": "Wikipedia article not found: 'Спадкування за Руською Правдою'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "029ffb26-4cd5-42b4-b0ba-2b442ec65cb4",
+      "timestamp": "2026-03-14T01:58:11.876Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the Search",
+          "description": "I'm now zeroing in on the core concepts to guide my search. I'll be sifting through the relevant materials to pull out the most pertinent details. My focus remains fixed on identifying the specific elements related to guardianship within the context I'm exploring.",
+          "timestamp": "2026-03-14T01:58:07.688Z"
+        },
+        {
+          "subject": "Gathering Primary Sources",
+          "description": "I am now focused on extracting relevant primary source materials. I plan to use the search tool to pinpoint specific clauses related to inheritance, orphans, and widows within the *Ruska Pravda* legal text. I aim to uncover direct quotes to support my analysis.",
+          "timestamp": "2026-03-14T01:58:11.740Z"
+        }
+      ],
+      "tokens": {
+        "input": 26372,
+        "output": 55,
+        "cached": 23491,
+        "thoughts": 364,
+        "tool": 0,
+        "total": 26791
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773453491827_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "\"опіка\" \"Київській Русі\" сироти вдови \"Руська правда\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773453491827_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "Web search results for \"\"опіка\" \"Київській Русі\" сироти вдови \"Руська правда\"\":\n\nВ історії Київської Русі інститут опіки над вдовами та сиротами був одним із перших проявів соціального захисту, що знайшов своє відображення у **«Руській Правді»** (особливо в її Просторій редакції XII ст.).\n\nОсь ключові аспекти опікунського права того часу:\n\n### 1. Статус вдови та сиріт[1][2][3][4][5]\n*   **Вдова як голова сім'ї:** Після смерті чоловіка вдова ставала повноправною розпорядницею майна та опікункою своїх дітей.[6] Вона мала право на частину спадщини «на прожиття» і могла вільно нею розпоряджатися.[7][6][8]\n*   **Материзна:** Майно матері-вдови не вважалося родовим (на відміну від батьківської «отчини»), тому вона могла заповісти його будь-кому з дітей, навіть дочці, оминаючи синів.[8]\n*   **Право на виховання:** Мати мала право «дітям волі не давати», тобто виховувати їх на свій розсуд до повноліття.[7]\n\n### 2. Призначення опікуна[1][9][6][10][11][12][2][4]\n*   **Пріоритет матері:** Опіка над малолітніми дітьми та їхнім майном належала насамперед матері.[1][6]\n*   **Зміна опікуна при повторному шлюбі:** Якщо вдова виходила заміж вдруге, вона втрачала статус одноосібної опікунки.[8][2] У такому разі опіка над дітьми та батьківським майном переходила до **найближчих родичів** по батьковій лінії (братів або дядьків).[1]\n*   **Вітчим як опікун:** У деяких випадках вітчим міг стати опікуном, але він ніс сувору матеріальну відповідальність за збереження майна пасинків.[9]\n\n### 3. Обов'язки та відповідальність опікуна[1][9][6][13][2][4]\n*   **Збереження майна:** Головним обов'язком опікуна було прийняти майно сиріт і повернути його в цілісності після їхнього повноліття.\n*   **Матеріальна відповідальність:** Якщо опікун (навіть мати чи вітчим) розтратив або втратив майно підопічних, він був зобов'язаний відшкодувати збитки.[6][9][8] Розмір втрат міг визначатися третейським судом.[9]\n*   **Винагорода:** Опікун мав право користуватися доходами з маєтку підопічних (наприклад, врожаєм чи приплодом худоби) як платою за свої труди та піклування.[9]\n\n### 4. Роль держави та церкви[5]\n*   **Княжа опіка:** Князь виступав гарантом захисту «вбогих, вдів і сиріт».[4] Володимир Мономах у своєму «Повчанні дітям» прямо закликав: *«Не давайте сильним погубити людину... вдовиці заступіться, сироті допоможіть»*.\n*   **Церковний захист:** Після прийняття християнства опіка над вдовами та сиротами частково перейшла під юрисдикцію церкви. Церковні статути (Володимира та Ярослава) відносили вдів і сиріт до категорії «церковних людей», які перебували під особливим захистом єпископа.\n\n### 5. Спадкування[8][10][6][12][9][14]\n*   **Молодший син:** Батьківський двір зазвичай не ділився і переходив до молодшого сина, який мав обов'язок піклуватися про матір-вдову.[6]\n*   **Діти наложниць:** «Руська Правда» встановлювала, що діти від рабині (наложниці) не отримували спадщини, але після смерті батька вони разом із матір'ю отримували **волю**.[8]\n\nТаким чином, «Руська Правда» створила досить розвинену для свого часу систему, яка захищала майнові права дітей-сиріт від зловживань родичів та забезпечувала вдові поважне місце в суспільстві.\n\nSources:\n[1] pidru4niki.com (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG9d32yoaRVCbgwexXn4RjqUwykgosLSauQNl6IFJMEPPtrG8pblGixEHr4hfcTsN17grpMFhsLQE9Bdoy-9mpkkgSZML8vIolYynwXdLMRKAVaYoXE-AWNNdnptLujqLZr9dhsxpq1C8A-Jw==)\n[2] app-journal.in.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF9-QhXazVTwqPawvCRS5kjNWUDumxBqjvSYV3MKLFeKd72u8rfW4_6wv9U0uXMaDi2SFmOVXHscbGfIInyp672LqwhUN0VLB86BFyrBQlRaxf58T7OgHvPoCEpDfXjE8IE6IzsUrt0ygBqa_N1zCab4a3FZCA=)\n[3] mego.info (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHmOljtnuaV-NlozGL6WXx0u3AivnrWj_QrMwuTYVFLJrAk0LWWuJs4M4ztCeoYqh9yUKMuXHspakWFFXfHsJC_OBKcmb4UNcDSxWiAp0tePUmYO4gglR5T31WxBebZyZQzmjDLYwLGyIdIuELrYCUs6Zjc-Sq03I18GF6LDlEULRndpzI-JF4vJOMqxA-FiotjcWzzG2eaUmzR-Y9R8zjb0ycab9MjWxVQd0BSywnGMbLvuMAf7Mui3xi1VOMzaEv7QFdy87d-m61EOdm7T9QLkLiWadhJRtqNunEVA4ZB3i_yaMIueUFRqKx75G188KLHyL1geh0-vWeWBEjC3zZS)\n[4] studentam.net.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFfpIw91dB8GXj9Gk4dWUpsh8oRWpIa6KPVEb58HbpCPJA-sQXTTBikgTqVRUc6x0vaNCpPsfLRH0voqFpej-noiFVY8wnUMS919LSdgxcN9LJ1iF4VL-F_QGvl6KzAwUyw3cid-O307ZzX)\n[5] lntu.edu.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFQz6fuj5L-uivRP29pQzqmn27zvBJbP_-tiaXwQYx5fBWpu2CDhgatskZHG3o0eoEW21mTVJgHIKoAkFoXgeAN7TFnrV9kLbIuaL0wue1u-n7w54NtIjfT1oqjNZzzGoTk-N21btY9I5MiPjVG7vc8TyJ3ERqSe_kKpdAXZFxEC7leBRKjhORGyKlIE-ydq8_pRuEkLk0S-AEwGJ8t8VY_Tl7Vjfyzo3MHQRX14DhI)\n[6] sspu.edu.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGC8uu6fA5Q2K2syxedrPd2A0-quCm2CR1DkEk_LzlU_lhtczzaxvXW6Gl8rGWsmb_2jNWoNnHZy9MBekdZK72ZHXeAV4Du08Kjg3WIzyYOsWTHpE6PGcphbhLK3su29iC6OENjKot0d-6yxhr77Hb_gMvNKeZneIgN5zB2hQQvXg==)\n[7] studfile.net (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEbODJU2qZBd62AH1IFFQH1dOOg_P_2Rk7qJmO-r2O98uSAXmerjwT9n30DBz7JIlu7dwY57myi55SvcszYILeTWbTBZTf2sfq1nP7wU0B2kB8n34Ab5s63rodcQIS2hYGG4SiGLP-w9w==)\n[8] lnu.edu.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEH0WEVNqbu1ZouN8ycif245oKFDPimJh64krcjZfdcnDhiJMwZbNjhSduTVneJptj3HwuVjDB2gvigFBDxCf9uD3QxCuf0GYDAIc516QB1lqpoZj24zmkDT8jbwyvN_6A7mYEXdsiaWZNsKdapZi2Zz9Nqwi-6ruP06pE3rwknKZYCXd9EIgyqI80=)\n[9] udu.edu.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQENDcvXaRq41OdJzzEuCT6j5EFU7FG8ztbqvUBDpGNM5QKHN4SoXKGX3ozO_kJDxLieSJQDKTvszzNMhuGwU6Fh4stlMiYXCleVdOmc6TqzaLp41THcpbhg9CmY00QFs6Yajr4yaIUgMqnYX95-plBrr7jhOJ7oWsprNgPtIRsO7qMussD0NqlLd8OqJSE=)\n[10] history.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQETYLAFoUkyTHfiGAocKxx0ZQ-hoknCOD8j7_kWibNgdltX5HFj7b3gdl5XLtCqs-kQjBM-yjQ-fM7mK4zmYXjyj0ugAHib4d76SEkQkrcJ0QbnFCxR3E0TTbzJkGMESEKmLJfa6mkfyQUK)\n[11] oaji.net (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFL8XJPVal_wu9WFhB8FZ5X2mvDxmHwsHpwxNoaUxBoPTT4kWuQO8L_rtz8onCeW8bgz0XHkAr5Bh0TVdu_wp0SM9Un6I9ga6BkttifbKMEA9WZtLiplIM38sAONEyXudFfkwzE2kXYZfDVxR5U-ts=)\n[12] pravo-izdat.com.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQE0kA3TJbXRgRKJr6xc0ClOGo3lab4ZwmSr5TRXaG9UECi5STP-jSSIGqb_S0ccENmbrzkVGPL15q5e4qPr-fJjrjf5Q40O28V874BSJJWRAOx1mdkzm63KnGLHDYQCmvfsKvl9PnstqCqlCI58DRxeAkqMIvDJB5wi45cjX7GOwIea6J2XD2K1VP2IRFENnkp0SgHlcI8=)\n[13] hnpu.edu.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGZ4iVLAT3C9Z2QknJgfThEAPrnjk2rlf3BM1XjWORXHA2NdzAu8u78-BDRWufbH06YE7Ogn51zczNlge-vxWHAgIeffcptWUjRsoEHHgLPDOp6o3u5q3yNyiQxWebrU3l1Y-QaOyOiZ_pkGwIDKuAdemuunxTD9cIXK-Y=)\n[14] uahistory.co (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFVj3ZnBGccwfbw53sPWBJ03mToFCGp62cok8QsCClLg9Rtat2zILnQUxuiTpKKRtwZNt5RHFhXX_v75Dkjk92ObwCaHOM3SVShLGOunFAbwS9IGqWqn-zMxQba0FLlOGTd0WajZ5gXuXqF2gz-q_BoLAnu4hBNrnQ27reJrDEdU4PAicv8)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:23.630Z",
+          "resultDisplay": "Search results for \"\"опіка\" \"Київській Русі\" сироти вдови \"Руська правда\"\" returned.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773453491876_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "вдова діти Руська Правда",
+            "genre": "legal"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453491876_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"вдова діти Руська Правда\"\n\n### Result 1 (score: 0.4567)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0139`\n- **Text**:\nУставуемъ, естьли бы которая вдова замужъ пошла, и\r\nдЂти въ мужа першое жоны нашла и съ тымъ мужемъ другихъ дЂтей набыла, тогды по\r\nсмерти мужней зъ обоима детьми того мужа своего во имЂнью ровную часть и въ\r\nскарбЂ маеть мЂти; а естли бы дЂтей не мЂла, тогды зъ дЂтьми мужа своего першое\r\nжоны его ровную часть только во имЂньяхъ лежачихъ будеть мЂти, але въ скарбехъ\r\nи въ рухомыхъ речахъ мЂти не маеть, окромъ внесенья своего, и тежъ естли бы што\r\nзъ ласки ей мужъ записалъ нЂкоторую часть имЂнья \n\n### Result 2 (score: 0.4402)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0288`\n- **Text**:\n108 [112] Аще 13 же и ѡтчимъ\r\n14 прииметь 15 съ 16 задницею 17\r\nдѣтеи 18, и то такоже єсть рѧд(ъ), ӕкоже 19\r\nрѧдилъ.\n\n109 А дворъ без дѣлү 20\r\nѡтень 21 всѧкои А) меншемоу 22 Б)\r\nс(ы)нови 23.\n\nѠ В) женѣ 24.\n\n110 [113] Аще 25 жена\r\nѡборчетсѧ 26 сидѣти 27 помужѣ 28,\r\nа ростѧрѧєть 29 добытокъ, а 30 поидеть за\r\nмоужь 31, то платити 32 ємоу 33 все 34\r\nдѣтемъ 35; не 36 хотѣти 37 ли 38\r\nєи 39 начьнүть 40 дѣти 41 ни 42\r\nна дворѣ 43, а ѡна начнеть 44 всѧко сидѣти\r\n45 восхощеть 46 з 47 дѣтми 48,\r\nто 49 сът\n\n### Result 3 (score: 0.4381)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0265`\n- **Text**:\n*Яцко: с Яцкомъ син Фетини 85\n\n*Яцковичь: Яцковичи Миколай а Пашко 11\n\nӔголниковычь Ходько 20\n\nӔковъ Тепѧкови(ч) піп 27\n\nӔнчиньскии Олешко пан 36\n\nӔнъ Тарнувъскии дѣдич панъ, староста рускии 51\n\nӔросла(в) Ізаславови(ч) Поло(ц)ки(и) князь 68\n\nӔрославичь, Ӕрославичъ (Ӕрославски’) Андре’ князь, свідок\r\nЛьва Даниловича 4, 5 — 1. Линниченко, ЖМНПр., стор. 158\n\n*Ӕшко: Ӕшкови Испрувъскому пан 53\n\nӔшко Колочко пан, маршалок короля 17\n\nӔшко Крукиницкии писар 16, 20 — І. Линниченко, ЖМНПр., стор.\r\n150\n\nѧд\n\n### Result 4 (score: 0.4379)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0140`\n- **Text**:\nУставуемъ, которая вдова зостанеть по мужу своемъ зъ\r\nдЂтьми недорослыми, а хотЂла бы на вдовьемъ столцы сЂдети и дЂти въ опецЂ своей\r\nмЂти, а будеть ли оселость добрую мЂти або вено отъ мужа своего оправеное;\r\nтогды таковая вдова маеть на вдовьемъ столцы на всихъ имЂньяхъ зъ дЂтьми\r\nсЂдЂти, если бы опекуны уставленые отъ мужа ее не были. А естли бы оселости\r\nдобрые або вЂна отписаного не мЂла, тогды маеть дати по собЂ рукоемство доброе\r\nлюсей оселыхъ, таковая ку опецЂ маеть быти припущона. А гд\n\n### Result 5 (score: 0.4305)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0141`\n- **Text**:\nУставуемъ, которая бы дЂвка або вдова, будучы стану\r\nшляхецского, маючы имЂнья отчызные або материстые, пошла замужъ за простого\r\nстану человЂка не шляхтича; таковая отъ всихъ имЂней своихъ якъ отчызныхъ такъ\r\nматеристыхъ вЂчности отпадываеть, але тые имЂнья на близкихъ мають прійти, а по\r\nвдовЂ на дЂти и тежъ на близкихъ ее, которые дЂти яко близкіе предсе будуть\r\nповинни таковой дЂвцЂ або вдовЂ за тые имЂнья ее отложыти суму пенезей подлЂ\r\nшацунку статутового, але по половицы, то естъ даючы за\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:23.630Z",
+          "resultDisplay": "Found 5 results for: \"вдова діти Руська Правда\"\n\n### Result 1 (score: 0.4567)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0139`\n- **Text**:\nУставуемъ, естьли бы которая вдова замужъ пошла, и\r\nдЂти въ мужа першое жоны нашла и съ тымъ мужемъ другихъ дЂтей набыла, тогды по\r\nсмерти мужней зъ обоима детьми того мужа своего во имЂнью ровную часть и въ\r\nскарбЂ маеть мЂти; а естли бы дЂтей не мЂла, тогды зъ дЂтьми мужа своего першое\r\nжоны его ровную часть только во имЂньяхъ лежачихъ будеть мЂти, але въ скарбехъ\r\nи въ рухомыхъ речахъ мЂти не маеть, окромъ внесенья своего, и тежъ естли бы што\r\nзъ ласки ей мужъ записалъ нЂкоторую часть имЂнья \n\n### Result 2 (score: 0.4402)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0288`\n- **Text**:\n108 [112] Аще 13 же и ѡтчимъ\r\n14 прииметь 15 съ 16 задницею 17\r\nдѣтеи 18, и то такоже єсть рѧд(ъ), ӕкоже 19\r\nрѧдилъ.\n\n109 А дворъ без дѣлү 20\r\nѡтень 21 всѧкои А) меншемоу 22 Б)\r\nс(ы)нови 23.\n\nѠ В) женѣ 24.\n\n110 [113] Аще 25 жена\r\nѡборчетсѧ 26 сидѣти 27 помужѣ 28,\r\nа ростѧрѧєть 29 добытокъ, а 30 поидеть за\r\nмоужь 31, то платити 32 ємоу 33 все 34\r\nдѣтемъ 35; не 36 хотѣти 37 ли 38\r\nєи 39 начьнүть 40 дѣти 41 ни 42\r\nна дворѣ 43, а ѡна начнеть 44 всѧко сидѣти\r\n45 восхощеть 46 з 47 дѣтми 48,\r\nто 49 сът\n\n### Result 3 (score: 0.4381)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0265`\n- **Text**:\n*Яцко: с Яцкомъ син Фетини 85\n\n*Яцковичь: Яцковичи Миколай а Пашко 11\n\nӔголниковычь Ходько 20\n\nӔковъ Тепѧкови(ч) піп 27\n\nӔнчиньскии Олешко пан 36\n\nӔнъ Тарнувъскии дѣдич панъ, староста рускии 51\n\nӔросла(в) Ізаславови(ч) Поло(ц)ки(и) князь 68\n\nӔрославичь, Ӕрославичъ (Ӕрославски’) Андре’ князь, свідок\r\nЛьва Даниловича 4, 5 — 1. Линниченко, ЖМНПр., стор. 158\n\n*Ӕшко: Ӕшкови Испрувъскому пан 53\n\nӔшко Колочко пан, маршалок короля 17\n\nӔшко Крукиницкии писар 16, 20 — І. Линниченко, ЖМНПр., стор.\r\n150\n\nѧд\n\n### Result 4 (score: 0.4379)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0140`\n- **Text**:\nУставуемъ, которая вдова зостанеть по мужу своемъ зъ\r\nдЂтьми недорослыми, а хотЂла бы на вдовьемъ столцы сЂдети и дЂти въ опецЂ своей\r\nмЂти, а будеть ли оселость добрую мЂти або вено отъ мужа своего оправеное;\r\nтогды таковая вдова маеть на вдовьемъ столцы на всихъ имЂньяхъ зъ дЂтьми\r\nсЂдЂти, если бы опекуны уставленые отъ мужа ее не были. А естли бы оселости\r\nдобрые або вЂна отписаного не мЂла, тогды маеть дати по собЂ рукоемство доброе\r\nлюсей оселыхъ, таковая ку опецЂ маеть быти припущона. А гд\n\n### Result 5 (score: 0.4305)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0141`\n- **Text**:\nУставуемъ, которая бы дЂвка або вдова, будучы стану\r\nшляхецского, маючы имЂнья отчызные або материстые, пошла замужъ за простого\r\nстану человЂка не шляхтича; таковая отъ всихъ имЂней своихъ якъ отчызныхъ такъ\r\nматеристыхъ вЂчности отпадываеть, але тые имЂнья на близкихъ мають прійти, а по\r\nвдовЂ на дЂти и тежъ на близкихъ ее, которые дЂти яко близкіе предсе будуть\r\nповинни таковой дЂвцЂ або вдовЂ за тые имЂнья ее отложыти суму пенезей подлЂ\r\nшацунку статутового, але по половицы, то естъ даючы за\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "0eb8b095-bfb5-4af3-abea-86286973c5dd",
+      "timestamp": "2026-03-14T01:58:31.810Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Defining the Next Action",
+          "description": "I'm now zeroing in on defining the subsequent step, focusing on the specific aspects identified earlier. I am building a clear path forward that directly addresses each component uncovered during the initial exploration. The aim is to thoroughly analyze the implications of these elements.",
+          "timestamp": "2026-03-14T01:58:28.762Z"
+        },
+        {
+          "subject": "Expanding the Search Parameters",
+          "description": "I am now broadening my investigation into the literary sources. The focus is to unearth additional relevant quotes. I'm prioritizing direct mentions of key terms to enrich the resource pool for this project, with the aim of providing comprehensive coverage.",
+          "timestamp": "2026-03-14T01:58:31.717Z"
+        }
+      ],
+      "tokens": {
+        "input": 31525,
+        "output": 25,
+        "cached": 13689,
+        "thoughts": 288,
+        "tool": 0,
+        "total": 31838
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453511808_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "genre": "chronicle",
+            "query": "сирота вдова Мономах"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453511808_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"сирота вдова Мономах\"\n\n### Result 1 (score: 0.4903)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0701`\n- **Text**:\n1 Що перша жона Всеволода Ярославича,\r\n мати Володимира (його хрестильне ім’я — Василій) Мономаха, звалася Марією, про це свідчать найновіші\r\n сфрагістичні дослідження; за гіпотетичними даними Видобицького\r\n синодика, вона мала ім’я Анастасія; це, очевидно її друге ім’я Марія була\r\n дочкою візантійського імператора Константане IX Мономаха не від його тоді\r\n зовсім старої третьої жони Зої, дочки візантійського імператора Константина VIII, а від фаворитки (потім — четвертої жони) Склірини. Померла\n\n### Result 2 (score: 0.4903)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c1076`\n- **Text**:\n1 Що перша жона Всеволода Ярославича,\r\n мати Володимира (його хрестильне ім’я — Василій) Мономаха, звалася Марією, про це свідчать найновіші\r\n сфрагістичні дослідження; за гіпотетичними даними Видобицького\r\n синодика, вона мала ім’я Анастасія; це, очевидно її друге ім’я Марія була\r\n дочкою візантійського імператора Константане IX Мономаха не від його тоді\r\n зовсім старої третьої жони Зої, дочки візантійського імператора Константина VIII, а від фаворитки (потім — четвертої жони) Склірини. Померла\n\n### Result 3 (score: 0.4698)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0026`\n- **Text**:\nУ тім же році\r\n одвели ляховицю до [города] Мурома за Давидовича Всеволода 1.\n\nУ сей же рік\r\n преставилася жона Ярослава Святославича.\n\nУ се ж літо було\r\n бездощів’я. Тоді ж погоріло Подолля все, напередодні святого рождення Іоанна\r\n Хрестителя і Предтечі. А на другий день погоріла Гора і монастирі всі, що їх\r\n [було] на Горі в городі 2, і жиди.\n\n[У] тім же році\r\n було знамення в сонці: надвечір 3 воно [стало] як місяць малий і\r\n мало не померкло [місяця] серпня в одинадцятий день.\n\nУ сей же рік\n\n### Result 4 (score: 0.4698)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0834`\n- **Text**:\nУ тім же році\r\n одвели ляховицю до [города] Мурома за Давидовича Всеволода 1.\n\nУ сей же рік\r\n преставилася жона Ярослава Святославича.\n\nУ се ж літо було\r\n бездощів’я. Тоді ж погоріло Подолля все, напередодні святого рождення Іоанна\r\n Хрестителя і Предтечі. А на другий день погоріла Гора і монастирі всі, що їх\r\n [було] на Горі в городі 2, і жиди.\n\n[У] тім же році\r\n було знамення в сонці: надвечір 3 воно [стало] як місяць малий і\r\n мало не померкло [місяця] серпня в одинадцятий день.\n\nУ сей же рік\n\n### Result 5 (score: 0.4652)\n- **Work**: Синопсис. Київ, 1674 (1674)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `2bf33f78_c0167`\n- **Text**:\nВ давніх рукописних 611 літописах руських\r\nпро того ж великого князя і самодержця рóссійського Володимира Мономаха\r\nй таке знаходимо: він, коли на державу грецьку з великою силою пішов на\r\nЦариград, тоді православно-християнський кесар грецький Олексій Комнин, бачачи,\r\nщо не зможе противитися великій силі рóссійській та великій хоробрості\r\nВолодимировій, послав до нього з миром Неофіта, митрополита Ефесського, єпископа\r\nМилитського, і інших з-поміж сановників своїх. Послав же з ними й хрест з\r\nс\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:32.148Z",
+          "resultDisplay": "Found 5 results for: \"сирота вдова Мономах\"\n\n### Result 1 (score: 0.4903)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0701`\n- **Text**:\n1 Що перша жона Всеволода Ярославича,\r\n мати Володимира (його хрестильне ім’я — Василій) Мономаха, звалася Марією, про це свідчать найновіші\r\n сфрагістичні дослідження; за гіпотетичними даними Видобицького\r\n синодика, вона мала ім’я Анастасія; це, очевидно її друге ім’я Марія була\r\n дочкою візантійського імператора Константане IX Мономаха не від його тоді\r\n зовсім старої третьої жони Зої, дочки візантійського імператора Константина VIII, а від фаворитки (потім — четвертої жони) Склірини. Померла\n\n### Result 2 (score: 0.4903)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c1076`\n- **Text**:\n1 Що перша жона Всеволода Ярославича,\r\n мати Володимира (його хрестильне ім’я — Василій) Мономаха, звалася Марією, про це свідчать найновіші\r\n сфрагістичні дослідження; за гіпотетичними даними Видобицького\r\n синодика, вона мала ім’я Анастасія; це, очевидно її друге ім’я Марія була\r\n дочкою візантійського імператора Константане IX Мономаха не від його тоді\r\n зовсім старої третьої жони Зої, дочки візантійського імператора Константина VIII, а від фаворитки (потім — четвертої жони) Склірини. Померла\n\n### Result 3 (score: 0.4698)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0026`\n- **Text**:\nУ тім же році\r\n одвели ляховицю до [города] Мурома за Давидовича Всеволода 1.\n\nУ сей же рік\r\n преставилася жона Ярослава Святославича.\n\nУ се ж літо було\r\n бездощів’я. Тоді ж погоріло Подолля все, напередодні святого рождення Іоанна\r\n Хрестителя і Предтечі. А на другий день погоріла Гора і монастирі всі, що їх\r\n [було] на Горі в городі 2, і жиди.\n\n[У] тім же році\r\n було знамення в сонці: надвечір 3 воно [стало] як місяць малий і\r\n мало не померкло [місяця] серпня в одинадцятий день.\n\nУ сей же рік\n\n### Result 4 (score: 0.4698)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0834`\n- **Text**:\nУ тім же році\r\n одвели ляховицю до [города] Мурома за Давидовича Всеволода 1.\n\nУ сей же рік\r\n преставилася жона Ярослава Святославича.\n\nУ се ж літо було\r\n бездощів’я. Тоді ж погоріло Подолля все, напередодні святого рождення Іоанна\r\n Хрестителя і Предтечі. А на другий день погоріла Гора і монастирі всі, що їх\r\n [було] на Горі в городі 2, і жиди.\n\n[У] тім же році\r\n було знамення в сонці: надвечір 3 воно [стало] як місяць малий і\r\n мало не померкло [місяця] серпня в одинадцятий день.\n\nУ сей же рік\n\n### Result 5 (score: 0.4652)\n- **Work**: Синопсис. Київ, 1674 (1674)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `2bf33f78_c0167`\n- **Text**:\nВ давніх рукописних 611 літописах руських\r\nпро того ж великого князя і самодержця рóссійського Володимира Мономаха\r\nй таке знаходимо: він, коли на державу грецьку з великою силою пішов на\r\nЦариград, тоді православно-християнський кесар грецький Олексій Комнин, бачачи,\r\nщо не зможе противитися великій силі рóссійській та великій хоробрості\r\nВолодимировій, послав до нього з миром Неофіта, митрополита Ефесського, єпископа\r\nМилитського, і інших з-поміж сановників своїх. Послав же з ними й хрест з\r\nс\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "ae421437-9bd8-447e-bb5e-0439c380c1f1",
+      "timestamp": "2026-03-14T01:58:39.049Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Seeking Relevant Information",
+          "description": "\\n\\n\n\nI'm now focusing on pinpointing the necessary information. The initial search gave some leads, but I need to refine it. My next step involves leveraging a specific search method to extract the precise quote I am looking for. I am confident that it will lead me to the intended result.",
+          "timestamp": "2026-03-14T01:58:37.484Z"
+        },
+        {
+          "subject": "Targeting Quote Extraction",
+          "description": "\\n\\n\n\nMy current strategy is to pinpoint the exact quote. The previous attempts provided promising leads, but a more focused approach is needed. I'm now employing a targeted search, with key phrases, to extract the specific text I'm looking for. This refined method should deliver the desired result promptly.",
+          "timestamp": "2026-03-14T01:58:38.932Z"
+        }
+      ],
+      "tokens": {
+        "input": 32941,
+        "output": 27,
+        "cached": 27369,
+        "thoughts": 139,
+        "tool": 0,
+        "total": 33107
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773453519044_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"убогих\" \"сироті\" Мономах"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773453519044_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"убогих\" \"сироті\" Мономах\"\n\n### Result 1 (score: 0.5379)\n- **Work**: Олександр Олесь. Володимир Мономах (1878)\n- **Author**: Олесь О.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `d8be5f5e_c0000`\n- **Text**:\nАж стає нарешті князем\n\nВолодимир Мономах,\n\nПростий, сміливий, ласкавий\n\nІ бувалий у боях.\n\nЗмалку ще до праці звик він,\n\nДо походів, до негод,\n\nЗнав він голод, знав він лихо,\n\nЗнав державу і народ.\n\nТурбувався за убогих,\n\nЗаступався за селян\n\nІ карав того, хто навіт\n\nТільки пройде через лан.\n\nЗакликав усіх до себе,\n\nХто стрівався на шляху:\n\n\"Гості ширять добру славу,\n\nАле ширять і лиху\".\n\nРано вдосвіта устав він,\n\nВсе оглянув, обійшов,\n\nДопоміг в саду копати,\n\nТрошки дрова поколов.\n\nСуд відправ\n\n### Result 2 (score: 0.5223)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1251`\n- **Text**:\nМономахова Наука малює нам житє буденне, \r\n трудяще; роскішне й веселе житє богача малює епізод одного слова про богатого \r\n й Лазаря, незвичайно інтересний, але на жаль не зовсїм певний що до свого \r\n руського початку (хоч нїчого такого, що б противило ся руському побуту, в нїм \r\n нема). ”Богатий, каже воно, уберав ся в „багор” (пурпур) і паволоку; конї в \r\n нього буди білі, прибрані золотом, сїдла позолочені; перед ним бігли численні \r\n раби його в шовкових убраннях і золотих гривнах, иньші зн\n\n### Result 3 (score: 0.5181)\n- **Work**: Іван Франко. Знайомим і незнайомим (цикл) (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `665a3f61_c0003`\n- **Text**:\nКоли часом на вулиці побачу\n\nВдову убогу, сиротя мізерне,\n\nЩо к мені руку простяга жебрачу,\n\nВ німім благанні очі к мені зверне,\n\nТремтить в лахмітті, босе, на морозі,\n\nСльотою бите й гордуванням ситих, –\n\nОгнем на серце капають ті сльози,\n\nТой жаль голодних, нищих і невкритих.\n\nІ думаєсь мені: \"Недовго, може,\n\nКоли мене важка прийме могила,\n\nІ ти отак підеш на роздорожже\n\nО хліб просить, моя дружино мила!\n\nІ зжовкне, зв’яне те лице, що нині\n\nТак любим сяйвом, щирістю ясніє,\n\nПогаснуть очі, що с\n\n### Result 4 (score: 0.5171)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1344`\n- **Text**:\nОтже сї закони звернені проти надужить \r\n капіталїстів. Припускають, що Мономаху належать також закони про \r\n банкротів 38) і про закупів (людей, що відробляли гроші \r\n працею) 39). Се має свою правдоподібність, бо сї закони наступають \r\n по законї про проценти в великій масї кодексів і мають з ним певні внутрішнї \r\n звязки: вони нормують претенсії до банкротів і ограничують відповідальність \r\n закупів перед їх кредиторами, взагалї беруть їх в оборону від несправедливих \r\n претенсий кредитора — \n\n### Result 5 (score: 0.5154)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0031`\n- **Text**:\n1 Задля цікавого\r\nстилю я наведу її в оригіналі (Іпат., с. 208): «Преставися благовЂрный князь —\r\nхристолюбивый и великый [«князь всея Руси», мабуть, пізніший додаток]\r\nВолодимерь Мономахъ, иже просвЂти Рускую землю акы солнце лучи пущая. Єгоже\r\nслухъ произиде по всЂмъ странамъ, найпаче же бЂ страшенъ поганымъ, братолюбець\r\nи нищелюбець и добрый страдалець за Рускую землю. Сего преставлениє бысть мая\r\nвъ девятыйнадесять. И спрятавше тЂло єго положиша у Святой СофьЂ, у отца\r\nВсеволода. СвятителЂ \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:39.401Z",
+          "resultDisplay": "Found 5 results for: \"\"убогих\" \"сироті\" Мономах\"\n\n### Result 1 (score: 0.5379)\n- **Work**: Олександр Олесь. Володимир Мономах (1878)\n- **Author**: Олесь О.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `d8be5f5e_c0000`\n- **Text**:\nАж стає нарешті князем\n\nВолодимир Мономах,\n\nПростий, сміливий, ласкавий\n\nІ бувалий у боях.\n\nЗмалку ще до праці звик він,\n\nДо походів, до негод,\n\nЗнав він голод, знав він лихо,\n\nЗнав державу і народ.\n\nТурбувався за убогих,\n\nЗаступався за селян\n\nІ карав того, хто навіт\n\nТільки пройде через лан.\n\nЗакликав усіх до себе,\n\nХто стрівався на шляху:\n\n\"Гості ширять добру славу,\n\nАле ширять і лиху\".\n\nРано вдосвіта устав він,\n\nВсе оглянув, обійшов,\n\nДопоміг в саду копати,\n\nТрошки дрова поколов.\n\nСуд відправ\n\n### Result 2 (score: 0.5223)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1251`\n- **Text**:\nМономахова Наука малює нам житє буденне, \r\n трудяще; роскішне й веселе житє богача малює епізод одного слова про богатого \r\n й Лазаря, незвичайно інтересний, але на жаль не зовсїм певний що до свого \r\n руського початку (хоч нїчого такого, що б противило ся руському побуту, в нїм \r\n нема). ”Богатий, каже воно, уберав ся в „багор” (пурпур) і паволоку; конї в \r\n нього буди білі, прибрані золотом, сїдла позолочені; перед ним бігли численні \r\n раби його в шовкових убраннях і золотих гривнах, иньші зн\n\n### Result 3 (score: 0.5181)\n- **Work**: Іван Франко. Знайомим і незнайомим (цикл) (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `665a3f61_c0003`\n- **Text**:\nКоли часом на вулиці побачу\n\nВдову убогу, сиротя мізерне,\n\nЩо к мені руку простяга жебрачу,\n\nВ німім благанні очі к мені зверне,\n\nТремтить в лахмітті, босе, на морозі,\n\nСльотою бите й гордуванням ситих, –\n\nОгнем на серце капають ті сльози,\n\nТой жаль голодних, нищих і невкритих.\n\nІ думаєсь мені: \"Недовго, може,\n\nКоли мене важка прийме могила,\n\nІ ти отак підеш на роздорожже\n\nО хліб просить, моя дружино мила!\n\nІ зжовкне, зв’яне те лице, що нині\n\nТак любим сяйвом, щирістю ясніє,\n\nПогаснуть очі, що с\n\n### Result 4 (score: 0.5171)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1344`\n- **Text**:\nОтже сї закони звернені проти надужить \r\n капіталїстів. Припускають, що Мономаху належать також закони про \r\n банкротів 38) і про закупів (людей, що відробляли гроші \r\n працею) 39). Се має свою правдоподібність, бо сї закони наступають \r\n по законї про проценти в великій масї кодексів і мають з ним певні внутрішнї \r\n звязки: вони нормують претенсії до банкротів і ограничують відповідальність \r\n закупів перед їх кредиторами, взагалї беруть їх в оборону від несправедливих \r\n претенсий кредитора — \n\n### Result 5 (score: 0.5154)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0031`\n- **Text**:\n1 Задля цікавого\r\nстилю я наведу її в оригіналі (Іпат., с. 208): «Преставися благовЂрный князь —\r\nхристолюбивый и великый [«князь всея Руси», мабуть, пізніший додаток]\r\nВолодимерь Мономахъ, иже просвЂти Рускую землю акы солнце лучи пущая. Єгоже\r\nслухъ произиде по всЂмъ странамъ, найпаче же бЂ страшенъ поганымъ, братолюбець\r\nи нищелюбець и добрый страдалець за Рускую землю. Сего преставлениє бысть мая\r\nвъ девятыйнадесять. И спрятавше тЂло єго положиша у Святой СофьЂ, у отца\r\nВсеволода. СвятителЂ \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "53048042-c43b-49b4-ae9c-aa1a5562672f",
+      "timestamp": "2026-03-14T01:58:47.008Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Analysis",
+          "description": "I'm focused on moving forward with this task. I'm now carefully reviewing my current state to ensure I'm correctly set up for the next stage of this process. It's important to make certain that I proceed on the right track.",
+          "timestamp": "2026-03-14T01:58:45.660Z"
+        },
+        {
+          "subject": "Initiating Targeted Search",
+          "description": "I'm zeroing in on the specific quote now. The web search is the key to uncover the quote I need, and then I'll cross-reference it with the terminology checker to validate its authenticity. I must ensure I'm using the right approach.",
+          "timestamp": "2026-03-14T01:58:46.798Z"
+        }
+      ],
+      "tokens": {
+        "input": 34436,
+        "output": 53,
+        "cached": 0,
+        "thoughts": 170,
+        "tool": 0,
+        "total": 34659
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773453526897_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "\"Повчання Володимира Мономаха\" \"сироті\" \"вдовицю\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773453526897_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "Web search results for \"\"Повчання Володимира Мономаха\" \"сироті\" \"вдовицю\"\":\n\nЦі слова є частиною знаменитого **«Повчання» Володимира Мономаха** (початок XII століття), яке збереглося у складі Лаврентіївського списку «Повісті минулих літ».\n\nЦе один із найважливіших етичних заповітів давньоруської літератури, де князь дає настанови своїм дітям та всім нащадкам щодо справедливого правління та християнського життя.\n\n### Ключова цитата:\n> «А найголовніше — убогих не забувайте, а скільки можете, по змозі годуйте і подайте [милостиню] **сироті**, і **вдовицю** оправдуйте самі, а не давайте сильним погубити людину».\n\n### Значення цих слів у контексті твору:\n1.  **Соціальна справедливість:** Мономах наголошує, що обов'язок правителя — захищати найменш захищені верстви населення (сиріт та вдів), які в тогочасному суспільстві часто ставали жертвами свавілля «сильних» (бояр чи заможних людей).\n2.  **Милосердя як основа влади:** Князь закликає не просто дотримуватися закону, а виявляти особисту турботу («оправдуйте самі»), не перекладаючи відповідальність на тіунів чи намісників.[1][2]\n3.  **Християнські цінності:** Ці настанови перегукуються з біблійними текстами (зокрема з Книги пророка Ісаї: *«Заступайтесь за обиженого, давайте розраду сироті, оправдайте вдовицю»*), які Мономах цитує у своєму творі.[2]\n4.  **Гуманізм:** Поруч із цими словами стоїть інша важлива заповідь князя: *«Ні правого, ні винуватого не вбивайте...»*, що було надзвичайно прогресивним для середньовічної епохи.\n\nЦі слова стали символом ідеального образу «доброго князя», який дбає про лад у державі через справедливість і людяність.\n\nSources:\n[1] litopys.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFWkNpAQhok7lgfRwYq40OxiDQPSus-uxMNuR1Jg3gxhRny28MI5sdeYslUPamBy4uhQtdLTbPifG33JriolnAejNFB29sYO0Leasj0-ND5CR6S_EMq36eqc2JhpCf4ylc=)\n[2] ltd.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNeELjP79jZJKQfQKJUodbQ71zIp7LJdxjqq2i4mm9bFsnlJ_rI6DiK_bXv7t8HHPBlK41hRUOygKRIQDhDe1dwAmpDWDYzJH2Pt_AFH5z_zHT6tFoJksc1ENYjdGgyRM1zhy6a3spvxo-UOHkFTD-PhVLIxPQ2ok2)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:53.789Z",
+          "resultDisplay": "Search results for \"\"Повчання Володимира Мономаха\" \"сироті\" \"вдовицю\"\" returned.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_verify_words_1773453527007_1",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "опіка",
+              "задниця",
+              "вдова",
+              "сирота"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773453527007_1",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 3/4\n\n- **опіка** — FOUND (1 match): опіка(noun)\n- **задниця** — NOT FOUND\n- **вдова** — FOUND (3 match): вдова(noun), вдовий(adj), вдовий(adj)\n- **сирота** — FOUND (2 match): сирота(noun), сирота(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:58:53.789Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 3/4\n\n- **опіка** — FOUND (1 match): опіка(noun)\n- **задниця** — NOT FOUND\n- **вдова** — FOUND (3 match): вдова(noun), вдовий(adj), вдовий(adj)\n- **сирота** — FOUND (2 match): сирота(noun), сирота(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "aae4dd4d-4936-4ae2-98ea-2b3b66f80fae",
+      "timestamp": "2026-03-14T02:00:06.989Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Опіка\n\n## Key Facts Ledger\n```yaml\nsubject: \"Опіка\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1016\"\n  key_events:\n    - year: 1016\n      event: \"Початок формування «Руської Правди» Ярославом Мудрим, де вперше кодифікуються правові норми спадкування та опіки.\"\n    - year: 1117\n      event: \"Володимир Мономах пише «Повчання дітям», де формулює державницьку етику захисту вдів та сиріт.\"\n    - year: 1154\n      event: \"Остаточне формування Простої редакції «Руської Правди», що деталізує майнові права вдів та інститут вітчима як опікуна.\"\nprimary_quotes:\n  - text: \"А найголовніше — убогих не забувайте, а скільки можете, по змозі годуйте і подайте [милостиню] сироті, і вдовицю оправдуйте самі, а не давайте сильним погубити людину.\"\n    source: \"Повчання Володимира Мономаха, Лаврентіївський літопис\"\n    attribution: \"Володимир Мономах (~1117)\"\n  - text: \"Аще жена ѡборчетсѧ сидѣти помужѣ, а ростѧрѧєть добытокъ, а поидеть за моужь, то платити ємоу все дѣтемъ.\"\n    source: \"Руська Правда (Простора редакція), стаття 110 [113]\"\n    attribution: \"Збірник стародавнього руського права\"\n  - text: \"Аже оумреть смердъ, то задница кнѧзю; аже боудоуть дъчери оу него дома, то даӕти часть на нѣ; аже боудоуть замоужемъ, то не дати имъ части.\"\n    source: \"Руська Правда (Простора редакція), стаття 58\"\n    attribution: \"Збірник стародавнього руського права\"\nforbidden_claims:\n  - \"Соціальний захист та інститути опіки з'явилися на українських землях лише в епоху Російської імперії або СРСР (популярний радянський міф).\"\n  - \"Жінка-вдова в Київській Русі була абсолютно безправною і ставала власністю родичів чоловіка (перенесення пізніших московських реалій типу «Домострою» на руський ґрунт).\"\n```\n\n## Використані джерела\n1. [Руська Правда (Юшков, 1935)](http://litopys.org.ua) — Тексти на основі 7 списків та 5 редакцій (Простора редакція), статті про «задницю» та права жінок.\n2. [Повчання Володимира Мономаха](http://litopys.org.ua) — Лаврентіївський літопис, етичні та християнські засади княжої влади щодо убогих.\n3. [Історія України-Руси, т.1, т.2-3 (М. Грушевський)](http://litopys.org.ua) — Аналіз майнових прав, банкрутства та соціального захисту в Київській державі.\n4. [Історія виникнення прийомних сімей в Україні](https://uk.wikipedia.org) — Еволюція опікунства від часів Ярослава Мудрого.\n\n## Хронологія\n- ~988: Хрещення Русі. Опіка над маргіналізованими групами (вдови, сироти, каліки) частково переходить під юрисдикцію Церкви (вони стають «церковними людьми»).\n- 1016: Створення найдавнішої частини «Руської Правди», початок переходу від звичаєвого права (кровна помста) до писаного майнового права.\n- ~1117: Створення «Повчання» Володимира Мономаха — маніфест державної опіки над слабкими.\n- Початок XII ст.: Формування Простої редакції «Руської Правди», що детально регламентує право вдови на «материзну» та роль вітчима (отчима) як опікуна спадщини.\n\n## Ключові факти та цитати\n- **Статус вдови:** У Київській Русі вдова після смерті чоловіка автоматично ставала повноправною розпорядницею майна (якщо не виходила заміж вдруге) та головною опікункою своїх дітей. Мати мала право виховувати їх на власний розсуд («дітям волі не давати»).\n- **Материзна:** Специфічний вид власності. Майно матері-вдови не вважалося родовим майном чоловіка («отчиною»). Вона могла вільно ним розпоряджатися і заповідати будь-кому з дітей, у тому числі дочкам, оминаючи синів.\n- **Втрата опіки:** Якщо вдова вирішувала вийти заміж вдруге, вона втрачала статус одноосібної опікунки. Право опіки переходило до найближчих родичів чоловіка по батьковій лінії, або вітчим («отчим») міг прийняти опіку, але під сувору матеріальну відповідальність («платити ємоу все дѣтемъ»).\n- **Церковний захист:** Згідно з церковними уставами Володимира Великого та Ярослава Мудрого, вдови та сироти були підсудні церковному суду, який мав захищати їх від світського свавілля.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!myth-buster] — Спростування радянського міфу про те, що соціальний захист винайшли більшовики. Вже у XII столітті Володимир Мономах вимагав від держави опікуватися сиротами на найвищому рівні.\n- Section \"Вступ\": [!context] — Пояснення переходу від жорсткого родового устрою, де слабкі гинули, до християнської парадигми милосердя, де князь виступає гарантом виживання для «вбогих і сиріт».\n- Section \"Основний матеріал\": [!decolonization] — Порівняння становища жінки. На противагу московському «Домострою», де жінка була безправною, руська вдова ставала головою родини («сиділа по мужу») і контролювала фінанси.\n- Section \"Основний матеріал\": [!culture] — Термін «задниця» у текстах Руської Правди (від слова «залишати позаду») означав спадщину. З часом відбувся семантичний зсув, що є чудовим прикладом еволюції мови.\n- Section \"Практика\": [!quote] — Аналіз цитати Мономаха: «...вдовицю оправдуйте самі...». Чому князь наголошує на слові «самі»? Щоб тіуни та судді не брали хабарів у майнових спорах.\n- Section \"Підсумок\": [!history-bite] — Захист майна від вітчима. Руська Правда містила чіткий механізм аудиту: якщо вітчим розтратив спадок дітей, він мусив усе відшкодувати.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth:** Зображення суспільства Київської Русі як абсолютно дикого, жорстокого, де панувало право сильного, а перші проблиски «гуманізму» прийшли або в імперську епоху, або внаслідок радянської системи соціального забезпечення. Також стирання правової різниці між руським (українським) та московським жіночим досвідом.\n- **Ukrainian reality:** Високий рівень правової культури ранньосередньовічної України-Русі. Вдова мала значну економічну автономію («материзна»). Захист прав дітей (навіть від власних вітчимів чи матерів, що повторно виходили заміж) був кодифікований у найвищому законі держави. Держава (в особі князя) розглядала опіку як свою етичну та політичну функцію.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Задниця (спадщина) | Часто перекладалося адаптовано російською як \"наследство\", гублячи автентичну давньоруську термінологію для уникнення \"незручностей\". | Використання оригінального терміну для дослідження етимології та збереження автентичного звучання давньоруської правової мови. |\n| Соціальний захист | Прив'язка виключно до модерних часів та радянської держави. | Опіка над вдовами та сиротами як інтегральна частина княжої (державної) політики Русі, зафіксована у кодексах. |\n\n## Відеоресурси\n- (нічого не знайдено — для опіки в Київській Русі релевантні історичні розбори краще шукати фазі discover)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Концепт опіки у середньовіччі:** У світі, де виживання залежало від здатності носити зброю та обробляти землю, втрата годувальника (чоловіка/батька) ставила сім'ю на межу знищення. Опіка («опікування») була питанням життя і смерті.\n- **Два джерела захисту:** \n  1. Дев'яте-десяте століття (звичаєве право): Опіку здійснював виключно рід (брати померлого). \n  2. Одинадцяте-дванадцяте століття: Втручається християнська держава. Князь стає верховним арбітром, а Церква бере маргіналів (вдів, сиріт) під свою пряму юрисдикцію (статути Володимира та Ярослава).\n- **Етичний маніфест:** «Повчання» Мономаха (~1117 р.) встановлює ідеал правителя. Він не просто збирає данину, він особисто («самі») чинить суд для вдів, щоб запобігти корупції своїх чиновників («не давайте сильним погубити людину»). Цей наратив необхідно детально розгорнути для обсягу.\n\n### Основний матеріал\n- **Правовий вимір (Руська Правда):** Фокус на статтях Розширеної редакції.\n- **Термінологія спадщини:** Уведення поняття «задниця» (те, що залишається після людини). Якщо смерд помирав без синів, «задниця» йшла князю, але якщо були неодружені доньки, вони отримували частину на придане (ст. 58). Це доводить, що дівчата-сироти не викидалися на вулицю.\n- **Феномен вітчима та повторного шлюбу:** Якщо вдова залишалася «сидіти на дворі» (не виходила заміж), вона ставала повноправним опікуном. Вона мала право на частину майна і на свою «материзну».\n- **Стаття 110 [113]:** Суворе правило опіки. Якщо вдова виходить заміж («поидеть за моужь») і при цьому втрачає чи розтрачує майно дітей («ростѧрѧєть добытокъ»), вона (або її новий чоловік-вітчим) зобов'язані все відшкодувати дітям до копійки.\n- **Гендерна оптика:** Наголосити на економічній правоздатності жінки-опікунки в Київській Русі. Вона не була річчю, вона виступала суб'єктом права, могла позиватися до суду і складати заповіт.\n\n### Практика\n- **Аналіз першоджерел:** Робота з уривками з «Руської Правди». Завдання на розуміння: студенти мають прочитати староукраїнський текст (адаптовану кирилицю) і пояснити юридичний зміст ситуації з вдовою.\n- **Етимологічна розвідка (Etymology-trace):** Прослідкувати походження слова «задниця» (спадщина) від праслов'янського кореня *zadъ (те, що позаду). Показати семантичний зсув у сучасній мові. Інші слова: вітчим («отчим»), материзна.\n- **Граматичний фокус:** Розбір давньоруських синтаксичних конструкцій умовного способу (напр., «Аще жена ѡборчетсѧ... то платити ємоу»).\n- **Транскрипція:** Відпрацювання читання специфічних літер з цитати Мономаха.\n\n### Підсумок\n- **Еволюція права:** Опіка з родинної традиції еволюціонувала у чітко регламентований державний та церковний інститут.\n- **Деколонізаційний фінал:** Закони України-Русі XII століття демонструють високий рівень правової відповідальності перед дітьми-сиротами, що різко контрастує з міфами про \"дике середньовіччя\".\n- **Місток до наступного модуля:** Опіка тісно пов'язана з майновими правами. Захист найбідніших (вдів) перекликається з іншою реформою Мономаха — Статутом про рези (відсотки), який захищав боржників від лихварів (наступний модуль `monomakh-statute-usury`). Сироти і боржники — дві категорії, які держава взялася захищати законом.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Synthesizing Research Notes",
+          "description": "I'm now focused on compiling the research notes in the specified format, ensuring all details are accurately represented. The findings will be organized according to subject, type, and relevant dates.",
+          "timestamp": "2026-03-14T01:59:00.141Z"
+        },
+        {
+          "subject": "Refining the Key Facts",
+          "description": "I'm now focusing on the Key Facts Ledger, meticulously selecting quotes and structuring the subject details. I'm taking care to avoid specific claims identified as inaccurate, while concentrating on elements that can be expanded on.",
+          "timestamp": "2026-03-14T01:59:05.507Z"
+        },
+        {
+          "subject": "Mapping Out the Sections",
+          "description": "I'm presently building out the sections, which will be the basis for the main body of the research notes. These sections will focus on the various aspects of the subject, with the aim to create a detailed and well-structured document.",
+          "timestamp": "2026-03-14T01:59:09.398Z"
+        },
+        {
+          "subject": "Developing Section Content",
+          "description": "I am now focusing on expanding the content of the sections, by using the established outline, ensuring it's rich with quotes and key details. My goal is to pack the material densely enough to enable the generation of the needed word count. I'm focusing on defining and contextualizing legal concepts.",
+          "timestamp": "2026-03-14T01:59:13.592Z"
+        },
+        {
+          "subject": "Creating a Detailed Outline",
+          "description": "I am now structuring the document, using the pre-planned sections as a guide, and am expanding each area with relevant details. I am paying close attention to legal terms and primary sources to build a solid foundation.",
+          "timestamp": "2026-03-14T01:59:16.627Z"
+        },
+        {
+          "subject": "Crafting Section Summaries",
+          "description": "I am now focusing on outlining the sections. I am carefully constructing summaries that capture the main points and highlight the crucial information. I will then use these to structure the content, ensuring a clear and organized presentation of all the important topics.",
+          "timestamp": "2026-03-14T01:59:19.546Z"
+        },
+        {
+          "subject": "Refining Section Summaries",
+          "description": "I am now focusing on structuring the key facts, quotes, and forbidden claims, refining them for inclusion in the document. This involves organizing primary sources and historical events.",
+          "timestamp": "2026-03-14T01:59:20.642Z"
+        }
+      ],
+      "tokens": {
+        "input": 35404,
+        "output": 3420,
+        "cached": 27435,
+        "thoughts": 1543,
+        "tool": 0,
+        "total": 40367
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

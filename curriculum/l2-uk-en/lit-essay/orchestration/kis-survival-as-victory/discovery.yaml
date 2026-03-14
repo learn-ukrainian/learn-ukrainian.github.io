@@ -1,0 +1,193 @@
+discovered_at: '2026-03-14T01:56:47.434009+00:00'
+query_keywords:
+- 'Оксана Кісь: Вижити значить перемогти'
+- Антропологія жіночого досвіду ГУЛАГу
+- Тілесність і Гендер у неволі
+- Стратегії виживання
+- Аналіз тексту
+- Проаналізувати жіночий досвід репресій через призму антропології
+- Оцінити літературну та наукову вартість праці Оксани Кісь
+- literature
+- гендерна
+- антропологія
+- тілесність
+- віктимізація
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0128
+  text: "•\t Як долати життєві труднощі, коли «кожна \nпере­шкода видається вищою\
+    \ за Говерлу»? •\t Як головна героїня, прикута до крісла ко­ліс­\nного, переможе\
+    \ страх і знайде свою любов? 1. Про Оксану Радушинську \nта її повість «Метелики\
+    \ в \nкрижаних панцирах». § 26–28."
+  section_title: Сторінка 101
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  text: "Скористайтеся додатковими \nджерелами інформації. Мета  \nдіяльності \nФорми\
+    \  \nборотьби \nЛідери \nРезультати \nдіяльності"
+  section_title: Сторінка 144
+  grade: 11
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0301
+  text: "Розкриття теми \nпов’язане з  ключовою проблемою жіночої \nемансипації  —\
+    \ поліпшення становища жінки \nв  суспільстві. У  творі боротьба за  жіночу сво-\n\
+    боду представлена передусім проблемою вибо-\nру жінкою життєвого шляху й такого\
+    \ супутника \nжиття, який би відповідав її духовним потребам. Обстоювання самостійного\
+    \ вибору най-\nбільш помітно виявляється у  психологічній \nплощині. Наперед висувається\
+    \ складна й драма-\nтична динаміка почуттів і переживань головної \nгероїні Олени\
+    \ Ляуфлер, яка над усе мрі"
+  section_title: Сторінка 163
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0130
+  text: "2. Знайомство  \nвночі  й очна  \nставка…\nПсихологічна  повість  Оксани\
+    \  Радушинської  «Метелики  в  крижаних  панцирах»"
+  section_title: Сторінка 102
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0008
+  text: ". 135\nТема, проблематика, образи. . . . . . . . . . . . . 136\nЧитацький\
+    \ практикум. Зачарована Десна. . . 137\nОлесь Гончар . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . 142\nОсобистість і світ  \n(«Щоденник») . . . . . .\
+    \ . . . . . . . . . . . . . . . . . 143\nЧитацький практикум. Щоденник. . . .\
+    \ . . . . . 144\nПро війну і про кохання  \n(«Модри Камень»). . . . . . . . .\
+    \ . . . . . . . . . . . 147"
+  section_title: Сторінка 4
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5938180685043335
+  chunk_id: b8c5834c_c0033
+  text: '"Випручуйся, жiнко вербова.
+
+
+    Ловись за повiтря.
+
+
+    Корiнням вглибай крiзь пiски до
+
+
+    щирця, до мокви.
+
+
+    ГУЛАГ — це коли забивають порожню пiвлiтру
+
+
+    Тобi помiж ноги — по чiм переходять на "Ви".
+
+
+    Ми всi — таборовi. Сто рокiв тривать
+
+
+    цьому спадку.
+
+
+    Шукаєм любови — знаходим судомнi корчi.
+
+
+    ГУЛАГ — це коли ти голосиш: "Мiй смутку,
+
+
+    мiй падку!" —'
+  work: Оксана Забужко. Польові дослідження з українського сексу
+  author: Забужко О.
+  year: 1960
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=2744
+- score: 0.5524977445602417
+  chunk_id: feaa5fa7_c3176
+  text: "Українці в сов. армії: Національная политика\r\nВКП(б) в цифрах. М. 1930;\
+    \ Golovine N. The Russian Army in the World War.\r\nНью Гевн 1931; Wallenberg\
+    \ E. The Red Army — a study in the growth of\r\nSoviet imperialism. Лондон 1940;\
+    \ Berchin M.-Ben-Horin E. The Red Army.\r\nНью-Йорк 1942; Cole D. The Red Army.\
+    \ Лондон 1943; White D. The\r\ngrowth of the Red Army. Прінстон 1944; Kalinow\
+    \ D. Sowjetmarschälle\r\nhaben das Wort. Гамбург 1950; Кисіль В. Охорона кордонів\
+    \ СССР. Перемога,\r\nІ. Мюнхен 1951.\n\nОНОКС: Карпатсь"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5356684923171997
+  chunk_id: fc2291b5_c3679
+  text: "Літ.: Острик М. Простір\r\nшукань. «Літературна Україна», 1972, 18 липня;\
+    \ Степанов Ф. Животрепетність.\r\n«Дніпро», 1972, № 8; Федоровська Л. Душі неприспані\
+    \ тривоги. «Жовтень», 1980, №\r\n7; Чернов А. Солнечный марш. «Радуга», 1982,\
+    \ № 10.\n\nТ. Ю. Салига."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

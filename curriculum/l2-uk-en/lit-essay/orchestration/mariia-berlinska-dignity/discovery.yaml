@@ -1,0 +1,275 @@
+discovered_at: '2026-03-14T01:45:18.892594+00:00'
+query_keywords:
+- Mariia Berlinska Dignity
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Mariia Berlinska Dignity у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.9
+  relevance_note: This video directly reinforces the module's 'Деколонізаційна перспектива'
+    by discussing the need to change the paradigm of understanding World War II and
+    the Holocaust in the context of current Russian crimes. This aligns strongly with
+    Mariia Berlinska's work on countering Russian narratives and promoting Ukrainian
+    dignity.
+  transcript_excerpt: сьогодні виклик такий взагалі це виклик для академічної освітньої
+    середовища України як викладати історію Другої світової війни Як викладати зокрема
+    історію Голокосту в цих умовах коли москові творить такі злочини на нашій землі
+    то взагалі виклик такий про зміну йдеться про зміну парадигми дослідження говоріння
+    і осмислення Другої Світової ми вже приречені порівнювати злочинами путінського
+    режиму
+  embed_suggestion: After Деколонізаційна перспектива
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: This video provides a concrete historical example of Soviet historiography
+    suppressing and devaluing Ukrainian elite figures like the Tereșcenko family.
+    This directly illustrates the 'історіографія' and 'наратив' concepts within the
+    'Деколонізаційна перспектива' section, which is central to Mariia Berlinska's
+    advocacy.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.4
+  relevance_note: While about an important Ukrainian historical family, the focus
+    on their business and economic influence is tangentially related to the module's
+    core themes of Mariia Berlinska's work, which emphasizes decolonization, narrative,
+    and dignity through activism rather than purely economic history.
+  transcript_excerpt: Колись десь звідси розпочалася історія багатства роду Терещенків.
+    Микола, старший син Артемія, з дитинства допомагав батькові торгувати зерном.
+    Саме тут він навчився робити гроші.
+  embed_suggestion: Not suitable for direct embedding. Tangential to module's core
+    themes.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=15SaxKl6PuY
+  channel: Harvard Ukrainian Research Institute
+  title: Seminar in Ukrainian Studies - Ostap Sereda
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0139
+  text: "Матеріал цього розділу відкриває перед вами широкі можливості для усві-\n\
+    домлення гуманізму як основи світоглядних переконань розвиненої особистості, \n\
+    оптимізму й  життєствердження як важливих духовних цінностей буття; розумін-\n\
+    ня благотворного впливу на людину краси природи; усвідомлення рівності жінок \n\
+    і чоловіків у всіх сферах суспільного життя як необхідної умови розв’язання ак-\n\
+    туальних політичних, соціально-культурних та психологічних проблем.\nОпрацьовуючи\
+    \ матеріал розділу, ви маєте змогу н"
+  section_title: Сторінка 75
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0004
+  text: '4    Зміст
+
+    Борис Грінченко. . . . . . . . . . . . . . . . . . . . . . 65
+
+    Проблема моралі («Без хліба»). . . . . . . . . 66
+
+    На захист людської гідності . («Сам собі пан»). . . . . . . . . . . . . . . .
+    . . . . . 67
+
+    Громадянська лірика. . . . . . . . . . . . . . . . . . 68
+
+    Читацький практикум. До праці. . . . . . . . . . . . . . . . . . . . . . . 68
+
+    Доки? . . . . . . . . . . . . . . . . . . . . . . . . . 69
+
+    До народу. . . . . . . . . . . . . . . . . . . . . . 69
+
+    Філософські роздуми («Моє щастя»).'
+  section_title: Сторінка 4
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5430604815483093
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5369501709938049
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5354063510894775
+  chunk_id: feaa5fa7_c0944
+  text: "Історіографія: Василенко Н. К истории\r\nмалорусской историографии и малорусского\
+    \ /406/ общественного строя. КСт., XI\r\n— XII. 1894; Лазаревский А. Прежние изыскатели\
+    \ малорусс. старины. КСт.\r\n1891 — 97 і окремо: Очерки, заметки и документы по\
+    \ истории Малороссии, I — V.\r\nК. 1891 — 98; Иконников В. Опыт русской историографии,\
+    \ П. К. 1908; Грушевский\r\nМ. Развитие украинских изучений. Украинский народ\
+    \ в его прошлом и настоящем, І.\r\nП. 1914; Дорошенко Д. Огляд укр. історіографії.\
+    \ Прага 1923; Багалій\r\nД. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

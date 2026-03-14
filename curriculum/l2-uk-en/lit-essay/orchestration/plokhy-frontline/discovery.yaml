@@ -1,0 +1,250 @@
+discovered_at: '2026-03-14T01:39:10.199152+00:00'
+query_keywords:
+- Plokhy Frontline
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Plokhy Frontline у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.8
+  relevance_note: The video discusses the changing paradigm of historical study in
+    Ukraine, comparing genocides and analyzing the challenges of teaching history
+    in current conditions, which is highly relevant to the module's 'Деколонізаційна
+    перспектива' and 'історіографія' focus, themes often explored in Plokhy's work.
+  transcript_excerpt: сьогодні виклик такий взагалі це виклик для академічної освітньої
+    середовища України як викладати історію Другої світової війни Як викладати зокрема
+    історію Голокосту в цих умовах коли москові творить такі злочини на нашій землі
+    то взагалі виклик такий про зміну йдеться про зміну парадигми дослідження говоріння
+    і осмислення Другої Світової ми вже приречені порівнювати злочинами путінського
+    режиму.
+  embed_suggestion: After section Деколонізаційна перспектива -- The video directly
+    discusses the decolonization of historical narratives and the role of historiography
+    in contemporary Ukraine.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: This video illustrates how Soviet 'історіографія' (historiography)
+    suppressed and 'discarded' Ukrainian figures like the Terechenko family. This
+    directly exemplifies the 'Деколонізаційна перспектива' by showing the manipulation
+    of historical narrative, a key aspect of the module.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- The video provides
+    a concrete example of the historical manipulation that the decolonization perspective
+    aims to address.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.5
+  relevance_note: The video is a historical documentary about the Terechenko family's
+    business and social impact. While it covers Ukrainian history, its specific focus
+    on entrepreneurship and family lineage is less directly connected to the module's
+    primary themes of Plokhy's broader historical analysis, historiography, and decolonization
+    perspective compared to the other candidates. It's more tangentially related general
+    historical context.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: After section Вступ та контекст -- It provides general historical
+    context about a prominent Ukrainian family, which can serve as a background for
+    understanding broader historical forces.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0243
+  text: "який? Зміст\nподії і вчинки \nперсонажів\nпричини ознак \nі дій\nознаки особи,\
+    \ \nпредмета\nБудова\nзав’язка — роз-\nвиток подій — \nкульмінація — \nрозв’язка\n\
+    теза — аргумен-\nти — висновок\nзагальне уяв-\nлення про пред-\nмет — окремі \n\
+    його ознаки — \nвисновок\nСТИЛІ МОВЛЕННЯ\nОзнаки\nстилю\nОфіційно-\nділовий\n\
+    Науковий\nПубліци-\nстичний\nРозмовно-\nпобутовий\nХудожній\nСфера \nвикори-\n\
+    стання\nділові \nстосунки\nосвіта, \nнаука, \nтехніка\nпобут\nхудожня \nлітература\n\
+    Призна-\nчення \nурегу-\nлювання \nслужбових \nстосунків\nповідом-\nлен"
+  section_title: Сторінка 226
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0508
+  text: "281\nПлани-схеми для самостійної роботи з  підручником і  додатковою літературою\n\
+    Плани-схеми для самостійної роботи з  підручником  \nі  додатковою літературою\n\
+    Як скласти план\n\t 1. Уважно прочитайте текст, до якого вам треба скласти план.\
+    \ 2. Виберіть із нього лише той матеріал, який відповідає темі плану. 3. Поділіть\
+    \ текст на логічно завершені частини, знайдіть у  кожній із них \nголовну думку,\
+    \ чітко сформулюйте та запишіть їх. 4. Дайте назви частинам тексту. 5. Перед тим\
+    \ як записати план у зошит, "
+  section_title: Сторінка 281
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrmova-zabolotnyi-2017_s0288
+  text: "Визначте тему й основну думку тексту. Доберіть свій заголовок, який би переда-\n\
+    вав основну думку прослуханого. 3. Поміркуйте, які мікротеми розкрито в тексті.\
+    \ Укажіть тематичні речення. 4. Визначте види й засоби міжфразного зв’язку в кожному\
+    \ абзаці. 5. Випишіть ключові слова й словосполучення з першого та другого абзаців\
+    \ тексту. Користуючись записами, перекажіть усно цю частину. * Ðàðèòåò – öіííà\
+    \ ðіäêіñíà ðі÷. 430 \nÇîëîòà ïåêòîðàëü\nç êóðãàíó Òîâñòà Ìîãèëà\n(Äíіïðîïåòðîâùèíà)"
+  section_title: Сторінка 199
+  grade: 9
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0288
+  text: "Визначте тему й основну думку тексту. Доберіть свій заголовок, який би переда-\n\
+    вав основну думку прослуханого. 3. Поміркуйте, які мікротеми розкрито в тексті.\
+    \ Укажіть тематичні речення. 4. Визначте види й засоби міжфразного зв’язку в кожному\
+    \ абзаці. 5. Випишіть ключові слова й словосполучення з першого та другого абзаців\
+    \ тексту. Користуючись записами, перекажіть усно цю частину. * Ðàðèòåò – öіííà\
+    \ ðіäêіñíà ðі÷. 430 \nÇîëîòà ïåêòîðàëü\nç êóðãàíó Òîâñòà Ìîãèëà\n(Äíіïðîïåòðîâùèíà)"
+  section_title: Сторінка 199
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6038402318954468
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5762438178062439
+  chunk_id: fc2291b5_c2280
+  text: "Літ.: Франко І. Із\r\nсекретів поетичної творчості В кн.: Франко І. Зібрання\
+    \ творів, т. 31. К., 1981;\r\nТеория литературы. Основные проблемы в историческом\
+    \ освещенни, кн. 3. М., 1965;\r\nЛихачев Д. Нестилизационные подражания. В кн.:\
+    \ Лихачев Д. Поэтика древнерусской\r\nлитературы. М., 1979; Храпченко М. Б. Творческая\
+    \ индивидуальность писателя и\r\nразвитие литературы. В кн.: Храпченко М. Б. Собрание\
+    \ сочинений, т. 3. М., 1981.\n\nМ. П. Бондар."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5660147666931152
+  chunk_id: fc2291b5_c2893
+  text: "Літ.: Федоренко Н. В\r\nрусле времени и творчества (К 25-летию журнала «Иностранная\r\
+    \nлитература»)«Иностранная литература», 1980, № 7; «Иностранная литература». 1955\r\
+    \n— 1974. Указатель содержания журнала. М., 1975; «Иностранная литература». 1975\r\
+    \n— 1984. Указатель содержания журнала. М., 1985.\n\nС. Д. Павличко.\n\nІНСТРУМЕНТОВКА\
+    \ —\r\nзвукова організація худож. мови. Найчастіше термін вживається в віршознавстві.\r\
+    \nОсн. елементи 1. — повтори приголосних (алітерація) і\r\nголосних звуків (асонанс),\
+    \ слів (анаф"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

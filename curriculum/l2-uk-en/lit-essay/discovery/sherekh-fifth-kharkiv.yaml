@@ -1,0 +1,247 @@
+discovered_at: '2026-03-14T00:47:09.247257+00:00'
+query_keywords:
+- Sherekh Fifth Kharkiv
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Sherekh Fifth Kharkiv у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: This video directly addresses the Soviet suppression of Ukrainian
+    historical figures and the distortion of history by Soviet historiography. This
+    strongly reinforces the module's 'Деколонізаційна перспектива' and the theme of
+    challenging imposed narratives, which is central to the work of figures like Sherekh
+    (Yuri Shevelov).
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section 'Деколонізаційна перспектива' – it provides a concrete
+    example of Soviet historical revisionism that ties into the module's themes of
+    decolonization and national identity.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.5
+  relevance_note: This video discusses the historical impact of the Tereshchenko family,
+    focusing on their business and economic influence. While it's about prominent
+    Ukrainian figures, its connection to the literary analysis or decolonization *perspective*
+    of 'Sherekh Fifth Kharkiv' is more tangential than direct. It provides general
+    historical context but not specific reinforcement for the module's core literary
+    or critical themes.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: After section 'Вступ та контекст' – it offers a broader historical
+    context of influential Ukrainian families, which can complement an introduction
+    to a significant literary figure.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.2
+  relevance_note: The video discusses general historical topics (Holocaust, Holodomor,
+    Stalinist regime, current Russian crimes) and challenges in teaching history,
+    which is too broad and not directly focused on the literary figure 'Sherekh Fifth
+    Kharkiv' or their specific literary analysis and decolonization perspective.
+  transcript_excerpt: Як викладати історію Другої світової війни Як викладати зокрема
+    історію Голокосту в цих умовах коли москові творить такі злочини на нашій землі
+    то взагалі виклик такий про зміну йдеться про зміну парадигми дослідження говоріння
+    і осмислення Другої Світової
+  embed_suggestion: This video is not relevant enough to be embedded.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0288
+  text: "Визначте тему й основну думку тексту. Доберіть свій заголовок, який би переда-\n\
+    вав основну думку прослуханого. 3. Поміркуйте, які мікротеми розкрито в тексті.\
+    \ Укажіть тематичні речення. 4. Визначте види й засоби міжфразного зв’язку в кожному\
+    \ абзаці. 5. Випишіть ключові слова й словосполучення з першого та другого абзаців\
+    \ тексту. Користуючись записами, перекажіть усно цю частину. * Ðàðèòåò – öіííà\
+    \ ðіäêіñíà ðі÷. 430 \nÇîëîòà ïåêòîðàëü\nç êóðãàíó Òîâñòà Ìîãèëà\n(Äíіïðîïåòðîâùèíà)"
+  section_title: Сторінка 199
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrmova-zabolotnyi-2017_s0288
+  text: "Визначте тему й основну думку тексту. Доберіть свій заголовок, який би переда-\n\
+    вав основну думку прослуханого. 3. Поміркуйте, які мікротеми розкрито в тексті.\
+    \ Укажіть тематичні речення. 4. Визначте види й засоби міжфразного зв’язку в кожному\
+    \ абзаці. 5. Випишіть ключові слова й словосполучення з першого та другого абзаців\
+    \ тексту. Користуючись записами, перекажіть усно цю частину. * Ðàðèòåò – öіííà\
+    \ ðіäêіñíà ðі÷. 430 \nÇîëîòà ïåêòîðàëü\nç êóðãàíó Òîâñòà Ìîãèëà\n(Äíіïðîïåòðîâùèíà)"
+  section_title: Сторінка 199
+  grade: 9
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0007
+  text: "Зміст    5 \nХудожня організація. . . . . . . . . . . . . . . . . 135\n\
+    Читацький практикум. Intermezzo . . . . . . . . . . . . . . . . . . . . 136\n\
+    Повість «Тіні забутих предків» . . . . . . . . . 141\nІсторія створення. . . .\
+    \ . . . . . . . . . . . . . . . 141\nНеоромантична основа. . . . . . . . . . .\
+    \ . . . . 141\nАвторський погляд. . . . . . . . . . . . . . . . . . 142\nТема\
+    \ кохання . . . . . . . . . . . . . . . . . . . . . . 142\nЛюдина, природа, магія.\
+    \ . . . . . . . . . . . . . 142\nІван Палійчук та"
+  section_title: Сторінка 5
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5653268694877625
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5429213047027588
+  chunk_id: 172f2637_c0087
+  text: '4. Грубою помилкою було б негайно ідентифікувати ці висновки зі світоглядом
+    автора. Частіше їх доводиться іден­тифікувати з світоглядом редактора, а то й
+    видавця, а часто й просто Мар''ї Алексєвни. Світогляд автора знаходиться ста­ранною
+    аналітичною роботою над усіма його творами і су­часною йому творчістю інших. В
+    данім оповіданні куточок світогляду визирає з-під відношення автора до кволих
+    лю­дей.
+
+
+    5. Знайти справжній світогляд автора, аналізуючи тільки його твори, — справа дуже
+    нелегка, а поде'
+  work: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+  year: 1895
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=25044
+- score: 0.5387755632400513
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

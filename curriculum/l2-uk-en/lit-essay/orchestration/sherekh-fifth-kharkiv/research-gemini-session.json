@@ -1,0 +1,1072 @@
+{
+  "sessionId": "79d3d8f2-4aca-4444-9b9d-8ab83893f0e6",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T00:43:01.473Z",
+  "lastUpdated": "2026-03-14T00:47:08.981Z",
+  "messages": [
+    {
+      "id": "987fac31-65a7-4caa-a07d-0062988a2f88",
+      "timestamp": "2026-03-14T00:43:01.473Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-lit.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nsequence: 17\nmodule: lit-essay-17\nlevel: LIT.ESSAY\nslug: sherekh-fifth-kharkiv\nversion: '2.0'\ntitle: Sherekh Fifth Kharkiv\nsubtitle: Sherekh Fifth Kharkiv\ncontent_outline:\n- section: Вступ та контекст\n  words: 800\n  points: []\n- section: Аналіз ключових творів\n  words: 1200\n  points: []\n- section: Стилістика та мова автора\n  words: 1200\n  points: []\n- section: Деколонізаційна перспектива\n  words: 1000\n  points:\n  - Як цей автор руйнує імперські міфи\n  - Українська суб'єктність у тексті\n- section: Підсумок та спадщина\n  words: 800\n  points: []\nvocabulary_hints:\n  required:\n  - історіографія\n  - наратив\n  - суб'єктність\n  recommended:\n  - деколонізація\nactivity_hints:\n- type: reading\n  focus: Аналіз першоджерела\n- type: essay-response\n  focus: Критичне есе\n- type: critical-analysis\n  focus: Деконструкція тексту\nfocus: literature\npedagogy: literature\nimmersion: 100% Ukrainian\nphase: LIT Expansion\nobjectives:\n- Проаналізувати творчість Sherekh Fifth Kharkiv у контексті української літератури\n- Дослідити вплив автора на формування національної ідентичності\npersona:\n  voice: Senior Specialist\n  role: Urban Intellectual\nword_target: 5000\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Sherekh Fifth Kharkiv** for the **lit-essay** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **4000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Sherekh Fifth Kharkiv\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Sherekh Fifth Kharkiv\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "6079b15a-954e-46b5-8c96-e08a51fadf00",
+      "timestamp": "2026-03-14T00:43:08.876Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to next stage",
+          "description": "\\n\\n\n\nI'm now focused on the next step: determining how to use available resources to move forward. The strategy is to gather information and then to synthesize the findings. I am now working on planning the actions necessary to complete the task.",
+          "timestamp": "2026-03-14T00:43:06.101Z"
+        },
+        {
+          "subject": "Commencing Information Gathering",
+          "description": "\\n\\n\n\nI'm starting the process of searching for relevant information on the topic. My approach involves a series of targeted queries to several information sources. The initial phase concentrates on building a knowledge base from Wikipedia entries to establish a firm foundation of information.",
+          "timestamp": "2026-03-14T00:43:08.657Z"
+        }
+      ],
+      "tokens": {
+        "input": 20463,
+        "output": 20,
+        "cached": 16874,
+        "thoughts": 258,
+        "tool": 0,
+        "total": 20741
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773448988875_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "П'ятий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448988875_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'П'ятий Харків' — 5 results\n\n1. **Чугуївка (Харків)** — Чугуївка — історична житлова та промислова місцевість міста Харкова. Оскільки місцевість переважно промислова, тут проживає загалом кілька тисяч мешканців\n2. **Кінотеатр Дафі (Харків)** — третя — на 275, четверта, п&#039;ята та сьома — на 162, а шоста — на 142 місця. Загальна кількість місць у 7-ох залах становить 1 522. Харків у сестринських Вікіпроєктах\n3. **Битва за Харків (2022)** — Битва за Харків — бойові дії за Харків та його околиці в ході повномасштабного вторгнення російських військ до України. Бої тривали з 24 лютого 2022 року\n4. **Локомотив (футзальний клуб, Харків)** — «Локомотив» — український футзальний клуб з міста Харкова. Заснований 1991 року як футбольний клуб, а 2005 року як професіональний футзальний клуб. Кольори\n5. **Конторська вулиця (Харків)** — Конторська вулиця — вулиця у Новобаварському районі Харкова. Пролягає паралельно правому берегу річки Лопань. Починається від берега річки, поруч із початком"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:09.177Z",
+          "resultDisplay": "Wikipedia search: 'П'ятий Харків' — 5 results\n\n1. **Чугуївка (Харків)** — Чугуївка — історична житлова та промислова місцевість міста Харкова. Оскільки місцевість переважно промислова, тут проживає загалом кілька тисяч мешканців\n2. **Кінотеатр Дафі (Харків)** — третя — на 275, четверта, п&#039;ята та сьома — на 162, а шоста — на 142 місця. Загальна кількість місць у 7-ох залах становить 1 522. Харків у сестринських Вікіпроєктах\n3. **Битва за Харків (2022)** — Битва за Харків — бойові дії за Харків та його околиці в ході повномасштабного вторгнення російських військ до України. Бої тривали з 24 лютого 2022 року\n4. **Локомотив (футзальний клуб, Харків)** — «Локомотив» — український футзальний клуб з міста Харкова. Заснований 1991 року як футбольний клуб, а 2005 року як професіональний футзальний клуб. Кольори\n5. **Конторська вулиця (Харків)** — Конторська вулиця — вулиця у Новобаварському районі Харкова. Пролягає паралельно правому берегу річки Лопань. Починається від берега річки, поруч із початком",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "f9762a40-d497-4898-8cf9-ee4ecf70d83c",
+      "timestamp": "2026-03-14T00:43:15.298Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task",
+          "description": "I am now focused on completing the task. I'm prioritizing immediate progress on the next action.",
+          "timestamp": "2026-03-14T00:43:13.560Z"
+        },
+        {
+          "subject": "Querying the Databases",
+          "description": "I'm proceeding to query the databases to gather the necessary information. The current focus is to get all the data for the next step.",
+          "timestamp": "2026-03-14T00:43:15.185Z"
+        }
+      ],
+      "tokens": {
+        "input": 20861,
+        "output": 26,
+        "cached": 19822,
+        "thoughts": 164,
+        "tool": 0,
+        "total": 21051
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773448995297_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Юрій Шевельов П'ятий Харків",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773448995297_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Юрій Шевельов П'ятий Харків' — 5 results\n\n1. **Шевельов Юрій Володимирович** — Ю́рій Володи́мирович Шевельо́в (прізвище при народженні — Шна́йдер, англ. George Shevelov; 17 грудня 1908(19081217), Харків — 12 квітня 2002, Нью-Йорк\n2. **«И» на початку слова** — зокрема найбільшу увагу присвятили такі вчені, як-от Василь Німчук, Юрій Шевельов, Ніна Тоцька, Ірина Фаріон, та ін. Проте насамперед потрібно зазначити\n3. **Пилипчук Тетяна Валеріївна** — Стуса (2024). Кураторка низки проєктів музею, серед яких фестиваль «П&#039;ятий Харків» та Харківська мистецька резиденція «Слово». З дитинства Тетяна Пилипчук\n4. **Розстріляне відродження (антологія)** — антології української літератури 1920-1930-х років Ґедройцю порекомендував Юрій Шевельов. Книга з&#039;явилась у Бібліотеці [Архівовано 5 жовтня 2012 у Wayback Machine\n5. **Чикаленко Левко Євгенович** — Процитовано 25 серпня 2024. Шевельов Ю. (Юрій Шерех). Я — мене — мені... (і довкруги) : спогади. Т. 1 : В Україні. — Харків ; Нью-Йорк, 2001. — С. 322"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:15.575Z",
+          "resultDisplay": "Wikipedia search: 'Юрій Шевельов П'ятий Харків' — 5 results\n\n1. **Шевельов Юрій Володимирович** — Ю́рій Володи́мирович Шевельо́в (прізвище при народженні — Шна́йдер, англ. George Shevelov; 17 грудня 1908(19081217), Харків — 12 квітня 2002, Нью-Йорк\n2. **«И» на початку слова** — зокрема найбільшу увагу присвятили такі вчені, як-от Василь Німчук, Юрій Шевельов, Ніна Тоцька, Ірина Фаріон, та ін. Проте насамперед потрібно зазначити\n3. **Пилипчук Тетяна Валеріївна** — Стуса (2024). Кураторка низки проєктів музею, серед яких фестиваль «П&#039;ятий Харків» та Харківська мистецька резиденція «Слово». З дитинства Тетяна Пилипчук\n4. **Розстріляне відродження (антологія)** — антології української літератури 1920-1930-х років Ґедройцю порекомендував Юрій Шевельов. Книга з&#039;явилась у Бібліотеці [Архівовано 5 жовтня 2012 у Wayback Machine\n5. **Чикаленко Левко Євгенович** — Процитовано 25 серпня 2024. Шевельов Ю. (Юрій Шерех). Я — мене — мені... (і довкруги) : спогади. Т. 1 : В Україні. — Харків ; Нью-Йорк, 2001. — С. 322",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "3a5140e6-7ea0-442a-b711-ead002bbbb86",
+      "timestamp": "2026-03-14T00:43:21.197Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the next step",
+          "description": "I'm focusing now on the next operation. Considering the available options, I'm adjusting my approach to align with the overall objective. My strategy is evolving as I gain more clarity.",
+          "timestamp": "2026-03-14T00:43:18.897Z"
+        },
+        {
+          "subject": "Refining Information Gathering",
+          "description": "My focus is now on extracting relevant data. I'm prioritizing the collection of specific details and cross-referencing information. Currently, the aim is to locate and assemble the essential components.",
+          "timestamp": "2026-03-14T00:43:21.063Z"
+        }
+      ],
+      "tokens": {
+        "input": 21328,
+        "output": 43,
+        "cached": 19757,
+        "thoughts": 190,
+        "tool": 0,
+        "total": 21561
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449001150_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Шевельов Юрій Володимирович",
+            "mode": "sections"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449001150_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Шевельов Юрій Володимирович':\n\n1 Життєпис (index=1)\n2 Наукова діяльність (index=2)\n  2.1 Мовознавство (index=3)\n  2.2 Літературознавство та театрознавство (index=4)\n  2.3 Історія (index=5)\n3 Ушанування (index=6)\n  3.1 Докторати та премії (index=7)\n  3.2 Пам'ятні дошки (index=8)\n    3.2.1 Харків (index=9)\n    3.2.2 Львів (index=10)\n  3.3 Публікації пам'яті (index=11)\n  3.4 Вулиці (index=12)\n4 Бібліографія (index=13)\n  4.1 Книжки (index=14)\n  4.2 Статті (index=15)\n  4.3 Аудіозапис (index=16)\n5 Див. також (index=17)\n6 Примітки (index=18)\n7 Література (index=19)\n8 Посилання (index=20)\n9 Праці наявні в інтернеті (index=21)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:24.777Z",
+          "resultDisplay": "Sections of 'Шевельов Юрій Володимирович':\n\n1 Життєпис (index=1)\n2 Наукова діяльність (index=2)\n  2.1 Мовознавство (index=3)\n  2.2 Літературознавство та театрознавство (index=4)\n  2.3 Історія (index=5)\n3 Ушанування (index=6)\n  3.1 Докторати та премії (index=7)\n  3.2 Пам'ятні дошки (index=8)\n    3.2.1 Харків (index=9)\n    3.2.2 Львів (index=10)\n  3.3 Публікації пам'яті (index=11)\n  3.4 Вулиці (index=12)\n4 Бібліографія (index=13)\n  4.1 Книжки (index=14)\n  4.2 Статті (index=15)\n  4.3 Аудіозапис (index=16)\n5 Див. також (index=17)\n6 Примітки (index=18)\n7 Література (index=19)\n8 Посилання (index=20)\n9 Праці наявні в інтернеті (index=21)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773449001195_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "П'ятий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449001195_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"П'ятий Харків\"\n\n### Result 1 (score: 0.4806)\n- **Work**: Емма Андієвська. Роман про добру людину (1931)\n- **Author**: Андієвська Е.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e4b5541c_c0065`\n- **Text**:\nПереконавшися, що Стецько з Гевриком не виявляють жодного нахилу розчинитися в повітрі, а навпаки пащекують, аж їх і до Страшного Суду не перечекати, Дмитрик перебрав кісточки усіх святих і дав знак хлопцям зупинитися, заки він надумається, як далі, а Андрій П'ятак, почувши раптом за два кроки від себе вигуки, а тоді й сердите хамаркання, мимоволі стишив крок і впізнав на колодах Стецька з Гевриком, тільки вони здалися йому якимись кумедними, хоч не виключене — такими кумедними їх просто зробило\n\n### Result 2 (score: 0.4784)\n- **Work**: Пантелеймон Куліш. Байда князь Вишневецький (1819)\n- **Author**: Куліш П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `14869122_c0052`\n- **Text**:\nА то не вийду? На широкім світі,\n\nПоза морями, поза Босфорами\n\nНема мені воювника страшного...\n\nІ на чортяку битиму самого!\n\nУвіходить вістовець.\n\nВістовець (задихаючись)\n\nОрда! Орда, панове Судня Радо!\n\nКостир\n\nОце ж тобі і божий суд, гетьмане!\n\nАндибер\n\nНа суді цим, твоїми молитвами\n\nОборонятимусь, мій чесний отче.\n\nВістовець\n\n(здихавшись трохи)\n\nІде, гуде, пили курять під небо;\n\nОтари січові під ноги топче.\n\nТульчинський\n\nА Січ безпечна. Той, кого хотіли\n\nЗгубити ви, байдужен в замковищі.\n\nДа\n\n### Result 3 (score: 0.4781)\n- **Work**: Борис Грінченко. Серед бурі (1863)\n- **Author**: Грінченко Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `69b7d2f1_c0038`\n- **Text**:\n(кидається і торсає замок; бачачи, що не подається, виймає пистоль і, рулю заложивши між дверима й замком, витягає скобель, відчиняє двері.)\n\nВиходь мерщій!\n\nОксана виходить, він знову зачиняє двері і притуля замок.\n\nХодім!.. Тепер ходім!.. Щоб хто не вздрів…\n\nОксана\n\nЧи є ж на цілім світі\n\nТака душа святая, як твоя?..\n\nВиходять обоє.\n\nЗавіса\n\nП’ЯТА ДІЯ\n\nРанок. Майдан серед міста Калмику — той, що і в другій дії; але тепер на йому збудовано поміст: мають карати на горло полковника Коваленка. На \n\n### Result 4 (score: 0.4757)\n- **Work**: Іван Франко. Украдене щастя (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `5fc8b1d5_c0020`\n- **Text**:\nМикола. То з мене кров, як я їхав.\n\nЖандарм. Се вже будете в суді толкувати, се до нас не належить. Ви мали з собою сокиру? Де вона?\n\nМикола. Он під лавою.\n\nЖандарм. Присяжний, подай її сюди!\n\nПрисяжний подає, жандарм і війт оглядають.\n\nЄ й тут кров. Ось на топорищу.\n\nВійт. І ось на обусі. І ось на лезі.\n\nЖандарм. Відложіть набік! А тепер покажіть кожух!\n\nОглядають кожух.\n\nЄ й тут. Відложіть набік. (Іде до постелі і шукає під подушками в соломі. До Анни.) Створіть скриню!\n\nАнна весь той час стоя\n\n### Result 5 (score: 0.4705)\n- **Work**: Іван Багряний. Тигролови (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4400fcb5_c0079`\n- **Text**:\n— Подивимось, який ти стрілець, синку!.. На ось, це тобі, — і дід подав гостинець.\n\nВ руках у Григорія була новенька трилінійна гвинтівка.\n\nА вже як розв'ючували коней гуртом, старий Сірко додав:\n\n— І коня матимеш, синку... Оцього ось, гнідого...\n\n— Ану лиш, стара, — обідати!\n\nТа в \"старої\" вже все було готове.\n\nРозділ п'ятий\n\n\"П'ЯТНУВАННЯ\"\n\nДругого дня зранку чистили зброю. Весело лаштувалися в далеку дорогу, на промисел, виконуючи Сірків наказ: \"Як на промисел рушати, то найперше — треба зброю\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:24.777Z",
+          "resultDisplay": "Found 5 results for: \"П'ятий Харків\"\n\n### Result 1 (score: 0.4806)\n- **Work**: Емма Андієвська. Роман про добру людину (1931)\n- **Author**: Андієвська Е.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e4b5541c_c0065`\n- **Text**:\nПереконавшися, що Стецько з Гевриком не виявляють жодного нахилу розчинитися в повітрі, а навпаки пащекують, аж їх і до Страшного Суду не перечекати, Дмитрик перебрав кісточки усіх святих і дав знак хлопцям зупинитися, заки він надумається, як далі, а Андрій П'ятак, почувши раптом за два кроки від себе вигуки, а тоді й сердите хамаркання, мимоволі стишив крок і впізнав на колодах Стецька з Гевриком, тільки вони здалися йому якимись кумедними, хоч не виключене — такими кумедними їх просто зробило\n\n### Result 2 (score: 0.4784)\n- **Work**: Пантелеймон Куліш. Байда князь Вишневецький (1819)\n- **Author**: Куліш П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `14869122_c0052`\n- **Text**:\nА то не вийду? На широкім світі,\n\nПоза морями, поза Босфорами\n\nНема мені воювника страшного...\n\nІ на чортяку битиму самого!\n\nУвіходить вістовець.\n\nВістовець (задихаючись)\n\nОрда! Орда, панове Судня Радо!\n\nКостир\n\nОце ж тобі і божий суд, гетьмане!\n\nАндибер\n\nНа суді цим, твоїми молитвами\n\nОборонятимусь, мій чесний отче.\n\nВістовець\n\n(здихавшись трохи)\n\nІде, гуде, пили курять під небо;\n\nОтари січові під ноги топче.\n\nТульчинський\n\nА Січ безпечна. Той, кого хотіли\n\nЗгубити ви, байдужен в замковищі.\n\nДа\n\n### Result 3 (score: 0.4781)\n- **Work**: Борис Грінченко. Серед бурі (1863)\n- **Author**: Грінченко Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `69b7d2f1_c0038`\n- **Text**:\n(кидається і торсає замок; бачачи, що не подається, виймає пистоль і, рулю заложивши між дверима й замком, витягає скобель, відчиняє двері.)\n\nВиходь мерщій!\n\nОксана виходить, він знову зачиняє двері і притуля замок.\n\nХодім!.. Тепер ходім!.. Щоб хто не вздрів…\n\nОксана\n\nЧи є ж на цілім світі\n\nТака душа святая, як твоя?..\n\nВиходять обоє.\n\nЗавіса\n\nП’ЯТА ДІЯ\n\nРанок. Майдан серед міста Калмику — той, що і в другій дії; але тепер на йому збудовано поміст: мають карати на горло полковника Коваленка. На \n\n### Result 4 (score: 0.4757)\n- **Work**: Іван Франко. Украдене щастя (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `5fc8b1d5_c0020`\n- **Text**:\nМикола. То з мене кров, як я їхав.\n\nЖандарм. Се вже будете в суді толкувати, се до нас не належить. Ви мали з собою сокиру? Де вона?\n\nМикола. Он під лавою.\n\nЖандарм. Присяжний, подай її сюди!\n\nПрисяжний подає, жандарм і війт оглядають.\n\nЄ й тут кров. Ось на топорищу.\n\nВійт. І ось на обусі. І ось на лезі.\n\nЖандарм. Відложіть набік! А тепер покажіть кожух!\n\nОглядають кожух.\n\nЄ й тут. Відложіть набік. (Іде до постелі і шукає під подушками в соломі. До Анни.) Створіть скриню!\n\nАнна весь той час стоя\n\n### Result 5 (score: 0.4705)\n- **Work**: Іван Багряний. Тигролови (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4400fcb5_c0079`\n- **Text**:\n— Подивимось, який ти стрілець, синку!.. На ось, це тобі, — і дід подав гостинець.\n\nВ руках у Григорія була новенька трилінійна гвинтівка.\n\nА вже як розв'ючували коней гуртом, старий Сірко додав:\n\n— І коня матимеш, синку... Оцього ось, гнідого...\n\n— Ану лиш, стара, — обідати!\n\nТа в \"старої\" вже все було готове.\n\nРозділ п'ятий\n\n\"П'ЯТНУВАННЯ\"\n\nДругого дня зранку чистили зброю. Весело лаштувалися в далеку дорогу, на промисел, виконуючи Сірків наказ: \"Як на промисел рушати, то найперше — треба зброю\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "3dbab478-5d40-4f6e-94f7-3fb9f9a939ab",
+      "timestamp": "2026-03-14T00:43:32.282Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "\\n\\n\n\nI'm now focused on the next stage. I'll need to use the data I have to produce what is required. My approach will now leverage the information gathered to push the process forward. I'm ready to proceed.",
+          "timestamp": "2026-03-14T00:43:29.807Z"
+        },
+        {
+          "subject": "Querying Wikipedia for Data",
+          "description": "\\n\\n\n\nI'm now prioritizing extracting the necessary information. I'll use a specialized tool to get relevant data from a specific source, focusing on biographical details. After this, I'll attempt another search with more focused search terms to ensure relevance.",
+          "timestamp": "2026-03-14T00:43:32.054Z"
+        }
+      ],
+      "tokens": {
+        "input": 23094,
+        "output": 47,
+        "cached": 19883,
+        "thoughts": 215,
+        "tool": 0,
+        "total": 23356
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449012242_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Шевельов Юрій Володимирович"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449012242_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Шевельов Юрій Володимирович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D0%B5%D0%BB%D1%8C%D0%BE%D0%B2_%D0%AE%D1%80%D1%96%D0%B9_%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87\n\nЮ́рій Володи́мирович Шевельо́в (прізвище при народженні — Шна́йдер, англ. George Shevelov; 17 грудня 1908(19081217), Харків — 12 квітня 2002, Нью-Йорк, США) — український славіст-мовознавець німецького походження; історик української літератури, літературний і театральний критик, активний учасник діаспорного наукового та культурного життя української еміґрації. Викладач російської та української мов у Гарвардському університеті, пізніше професор Колумбійського університету. Іноземний член НАН України (1991 р.). 1949 рік — доктор філософії. Лауреат Національної премії України імені Тараса Шевченка (2000).\nЧлен Американського лінгвістичного товариства, Польського інституту мистецтв і науки в США. Почесний доктор Альбертського, Лундського, Харківського університетів та Національного університету «Києво-Могилянська академія». Один із засновників об'єднання українських письменників у діаспорі «Слово» (1954), президент Української вільної академії наук (1959—1961, 1981—1986), Головний редактор журналу «Сучасність» (1978—1981 рр.). Автор низки фундаментальних мовознавчих праць: «Нарис сучасної української мови» (1951 р.), «Передісторія слов'янської мови: історична фонологія загальнослов'янської мови» (1965 р.), «Історична фонологія української мови» (1979 р.). Творча спадщина літературознавця українського зарубіжжя становить близько 900 праць.\nАвтор науково обґрунтованої періодизації хронології історії української мови, яку на сьогодні підтримує більшість українських мовознавців.\nПисав під різноманітними псевдонімами — Юрій Шерех, Гр. Шевчук, Григорій Шевчук, Шерех (Šerech, Sherekh, Sher), Гр. Ш., Ю. Ш.\n\n\n== Життєпис ==\nНародився 17 грудня 1908 року в Харкові, тоді Російська імперія, нині Україна (за іншими відомостями, народився в м. Ломжа). Батьки Шевельова походили зі шляхетних московських родин етнічних німців. Батько — Володимир Шнайдер, монархіст і генерал-майор російської імператорської армії, у зв'язку з початком Першої світової війни вирішив змінити своє прізвище зі Шнайдер (у російському правописі — Шнейдер) на Шевельов, про що 1916 року він звернувся за дозволом безпосередньо до царя Миколи II. Як передає родинна легенда, він обрав початкове Ш, «щоб не міняти міток на серветках». Мати — Варвара Медер, пізніше в документах змінила місце народження сина на місто Ломжу (Польща), щоб унеможливити перевірку соціального походження сина органами більшовицької влади.\n1931 року закінчив Харківський педагогічний інститут професійної освіти (нині Харківський національний університет імені В. Н. Каразіна). Там же навчався в аспірантурі під керівництвом Леоніда Булаховського й успішно захистив 1939 року кандидатську дисертацію на тему «Із спостережень над мовою сучасної поезії. Ораторський жанр у політичній ліриці П. Г. Тичини». Працював викладачем, потім доцентом Інституту журналістики (1933—1939 р.р.) і Харківського університету (1939—1943 р.р.). У 1930-тих роках Олесь Гончар був студентом Шевельова. Під час німецької окупації Харкова дописував до місцевої газети «Нова Україна» — надрукував рівно 20 статей: шість під псевдонімом Г. Шевчук, 14 — під власним прізвищем. Опублікував декілька власних віршів у журналі «Український засів», а також у празькому журналі «Пробоєм» 1943 року. Від 1941 до 1943 р.р. був завідувачем кафедри української філології. У той самий час він працював на технічній посаді в Харківській міській управі, утвореній нацистами, а згодом — у відділі освіти, де укладав підручники з історії України. Як зазначає дослідник історії Харкова часів нацистської окупації Анатолій Скоробогатов, Юрій Шевельов «не був причетний до репресивних акцій нового режиму, не був також ідейним та політичним провідником нацизму», оскільки його публікації мали науково-публіцистичний характер та стосувалися мовознавчих та історичних тем. За його словами, у матеріалах кримінальних справ у показаннях свідків йшлося про науково-популярну діяльність Юрія Шевельова та його інакомислення проти СРСР.\n1943 р. виїхав до Львова, де познайомився з Василем Сімовичем. У Львові співпрацював із часописом «Наші дні», написав книгу «Внесок Галичини у формування української літературної мови», працював над підготовкою німецько-українського правничого словника, який не був завершений. У Львові проживав, зокрема, в будинку № 14 на Корняктґассе (тепер вулиці Конопницької).\nВосени 1944 р. переїхав у Німеччину. Доцент слов'янської філології Українського вільного університету (УВУ) (1946—1949). У 1949 р. захистив докторський науковий ступінь в УВУ. Підготував книгу «Нарис сучасної української літературної мови». Активний учасник та заступник голови об'єднання українських письменників МУР у Німеччині (1945—1949 р.р.).\nНа запрошення німецького славіста Макса Фасмера обійняв позицію лектора російської та української мов у Лундському університеті (Швеція, 1950—1952 р.р.). У 1952—1954 роках працював у Гарвардському університеті (США). У 1953 році померла мати Шевельова, яка подорожувала разом з ним усе життя. Був одним із засновників об'єднання українських письменників «Слово» в 1954 році. Через конфлікт з Романом Якобсоном змушений був перейти до Колумбійського університету (Нью-Йорк, 1954—1977). Член Гуггенгеймського меморіального товариства (1958—1959 р.р.). Президент УВАН у США (1959—1961 р.р. і 1981—1986 р.р.).\n\n1977 року вийшов на пенсію. 1979 року в Гайдельберзі була опублікована фундаментальна праця Шевельова «Історична фонологія української мови». Був редактором журналу «Сучасність» у 1978—1981 роках. Після здобуття Україною незалежності кілька разів відвідував різні українські міста. Гроші, одержані від Шевченківської премії, Шевельов передав на розбудову Української гімназії № 6. Позитивно відгукувався про Проєкт українського правопису, розробленого групою науковців на чолі з Василем Німчуком.\nПомер 12 квітня 2002 року в Пресвітеріанській лікарні в Нью-Йорку.\n\n\n== Наукова діяльність ==\n\n\n=== Мовознавство ===\nУ мовознавстві учень О. Білецького, Л. Булаховського (з власних слів) і В. Сімовича (неформально), який впровадив Шевельова у фонологічні методи Празької школи.\nПісля праць зі стилістики (Павло Тичина, Іван Котляревський, Тарас Шевченко) і синтаксису: «До генези називного речення» (1947) р., «Синтакса простого речення» (1941 р., видано без прізвища автора в К. 1951 р., в англійському перекладі «The Syntax of Modern Literary Ukrainian» у Гаазі 1963 р.), у центр своєї наукової праці поставив написання історичної фонології української мови, що показувала б її розвиток від праслов'янської мови донині на широкому історичному, діалектному міжмовному й текстуальному ґрунті з установленням системно-причинових зв'язків між окремими фонетичними змінами («A Historical Phonology of the Ukrainian Language», 1979 р.). Попередніми студіями до цієї праці були характеристика сучасної української літературної мови («Нарис сучасної української літературної мови», 1951 р.), взаємодії її з діалектами головно Чернігівщини й Галичини (підсумовано в «Die ukrainische Schriftsprache», 1966), розмежування української і білоруської мов («Problems in the Formation of Belorussian», 1953 р.), пробні етимологічні студії (вантаж, веремія та ін.), історична фонологія праслов'янської мови («A Prehistory of Slavic» 1964, 1965), серія статей про попередників у проблематиці (В. Ганцов, О. Курило, К. Михальчук, О. Потебня, Л. Васильєв, В. Сімович) і серія статей про окремі пам'ятки (Реймське Євангеліє, Кодекс Ганкенштайна, Ізборник 1076, Підпис Анни Ярославни, Мірило праведне, Інтермедії Ґаватовича, Хрест Євфросинії Полоцької та ін.).\nУ праці «Проблеми формування білоруської мови» (1953 р.) він довів, що білоруська мова постала внаслідок взаємодії давніх діалектних зон — полоцько-рязанської та києво-поліської, а не в результаті розпаду «общерусского языка», як це твердив Олексій Шахматов. У книзі «A Prehistory of Slavic. The Historical Phonology of Common Slavic» (1965 р.) Юрій Шевельов розширює своє дослідження на весь слов'янський простір, щоб довести, що в доісторичні часи ні східно-, ні західно-, ні південнослов'янські мови (і народи!) не творили ніяких «спільних етносів», а їхня мова споконвіку була діалектно диференційована. Подальші дослідження засвідчили правильність наукових пошуків Юрія Шевельова, який уважав боротьбу з науково хибною та ідеологічно шкідливою концепцією «общерусского языка» своїм найважливішим завданням. В одному з листів до Олекси Ізарського він признається: «Я дістав перший примірник своєї „Історичної фонології“ мови нашої нещасної. Це було діло мого життя, і я його побачив. Тепер можу сказати — Нині отпущаєши».\nПоза тим студії з історії української мови («Українська мова в першій половині двадцятого століття 1900—1941», 1987 р.), історичної морфології, синтакси й лексикології української мови, студії з інших слов'янських мов (російської, білоруської, словацької, польської, сербсько-хорватської, чеської, староцерковнослов'янської), антропонімічні студії й низка рецензій на відповідні наукові появи (найважливіші з цих статей до 1970 року зібрано в книзі «Teasers and Appeasers» 1971 р.). Шевельов був редактором багатьох наукових і літературних журналів і серій, зокрема серії «Historical Phonology of the Slavic Languages».\n\n\n=== Літературознавство та театрознавство ===\nШевельов уважав себе передовсім мовознавцем і підписував свої фахові роботи власним прізвищем, а статті з літературознавства та культурології — псевдонімом Юрій Шерех. Автор критичних відгуків на головні еміграційні літературні твори й літературознавчі праці.\nНайважливіші літературні й театральні статті зібрано в книзі «Ein neues Theater» (1948 р.), «He для дітей» (1964 р.) і «Друга черга» (1978 р.). Зредагував і видав збірки творів Василя Мови (1969 р.), Л. Васильєва (1972 р.) і В. Сімовича (1981 р., 1985 р.). Редактор і автор журналів «Сучасність» (грудень 1978 — квітень 1981 р.р.) і мовознавчих гасел в україномовну та англомовну «Енциклопедію українознавства».\n\n\n=== Історія ===\nУ 1954 році професор Юрій Шевельов написав у Бостоні статтю «Москва, Маросєйка», у якій сформулював кілька важливих уроків Переяслава-1654. Юрій Шевельов міркував про «історію великої і ще не закінченої війни» — саме так він назвав «історію культурних зв'язків між Україною та Росією». У статті професор робить висновок:\n\nУсі вони, писав Шевельов, «живуть і сьогодні»:\n\n\n== Ушанування ==\n17 грудня 2018 року на державному рівні в Україні відзначено пам'ятну дату — 110 років з дня народження Юрія Шевельова (1908—2002), ученого-славіста, мовознавця, літературознавця, педагога.. До 110-річчя від дня народження Ю. В. Шевельова в Національній бібліотеці України імені Ярослава Мудрого підготовлено віртуальну книжкову виставку. До уваги користувачів пропонується добірка творів самого Юрія Шевельова, книжки за його редакцією та книжки про нього.\nУ квітні 2019 року видавець Олександр Савчук ініціював збір коштів з метою викупу квартири, в якій проживав Юрій Шевельов, з метою створення квартири-музею вченого.\n\n\n=== Докторати та премії ===\nШевельов одержав почесні докторати Альбертського (Канада, 1983 рік) і Лундського (Швеція, 1984 рік) університетів та НаУКМА (1992 р.). Кавалер Ордена «За заслуги» (1999 р.). У 2000 році нагороджений Національною премією України імені Тараса Шевченка.\n\n\n=== Пам'ятні дошки ===\n\n\n==== Харків ====\n3 вересня 2013 року в Харкові на будинку, де тривалий час (1915—1943 рр.) мешкав Юрій Шевельов (вул. Сумська, 17), йому встановили і відкрили пам'ятну дошку. Однак установлення дошки викликало протидію міської влади Харкова. Зокрема, голова Харківської обласної держадміністрації Михайло Добкін назвав у своєму акаунті у Twitter Юрія Шевельова «пособником фашистів». На своєму позачерговому засіданні міська комісія з питань топоніміки та охорони історико-культурного середовища вирішила зібрати додаткову інформацію про діяльність ученого в період війни й звернутися по допомогу до СБУ та міжнародних організацій.\n25 вересня 2013 року Харківська міська рада ухвалила рішення скасувати дозвіл топонімічної комісії на встановлення дошки й демонтувати її. Через пів години дошка була знищена невідомими, які назвалися співробітниками комунальних служб, зокрема КП «Жилкомсервіс». Вони намагалися відділити дошку від стіни будинку за допомогою сокири, а коли їм це не вдалося, чоловіки розбили дошку на кілька частин, забрали їх і поспішно зникли з місця події. Пізніше міський голова Харкова Геннадій Кернес заявив, що комунальні служби міста не причетні до демонтажу пам'ятної дошки. Міліція розпочала перевірку обставин демонтажу дошки; інформацію про правопорушення було внесено до Єдиного обліку кримінальних правопорушень.\nДемонтаж меморіальної дошки Юрію Шевельову викликав хвилю осуду з боку громадських, наукових, національних організацій: НАУКМА, Асоціації єврейських організацій та громад України (Ваад), Ініціативної групи «Першого грудня», Української всесвітньої координаційної ради, Харківського історико-філологічного товариства. Зокрема, у заяві групи «Першого грудня» містилася теза: «честь Юрія Шевельова не потребує захисту. Відтепер захисту потребує честь Харкова».\nУ Харкові боротьба за відновлення меморіальної дошки тривала: студент Харківської юридичної академії Ростислав Небельський звернувся до суду з позовом про скасування рішення Харківської міської ради та розпорядження Кернеса Г. А. від 25 вересня 2013 року.\n19 листопада 2013 року Дзержинський районний суд міста Харкова в задоволенні позову відмовив.\n28 січня 2014 року відбулися апеляційні слухання у Харківському апеляційному адміністративному суді. Апеляційна скарга була відхилена.\n7 лютого 2014 року Вищий адміністративний суд України відкрив касаційне провадження. Касаційний розгляд проводився 21 травня 2014 року: касаційна скарга була задоволена, рішення харківських судів — скасовані, а справа направилася на новий розгляд до Дзержинського районного суду міста Харкова.\nПовторні слухання в Дзержинському суді проходили з червня до вересня 2014 року й закінчилися 2 вересня 2014 року повторною відмовою в задоволенні позову.\n25 грудня 2014 року Харківський апеляційний адміністративний суд скасував постанову Шишкіна О. В., а позов задовольнив у повному обсязі: рішення Харківської міської ради та розпорядження Кернеса Г. А. від 25 вересня 2013 року були визнані незаконними та скасовані. Меморіальну дошку на тому ж будинку по вулиці Сумській, 17 було відновлено вже після смерті харківського міського голови, який символічно пішов саме у день народження Юрія Шевельова.\nНову дошку було зроблено не з граніту, а з антивандального матеріалу — щоб її не можна було розбити, як минулого разу. Вона є точною копією дошки, відкритої у 2013 році та згодом знищеної «титушками» з комунальних служб. Урочисте відкриття відбулося в День соборності, 22 січня 2022 р. На подію зібралися десятки представників громадськості, українських патріотів.\nДошку освятив настоятель храму Іоана Богослова отець Віктор Маринчак. «Юрій Шевельов головним чином є героєм саме тому, що він відкинув будь-які можливості співпраці з комуністичним режимом. Не так багато людей спромагалися це зробити. Тому комуністи переслідували його, і руками великих мовознавців — головним чином, русистів — переслідували його, цькували його в науковому світі… Він був великим патріотом Харкова», — наголосив о. Віктор, звертаючись до присутніх.\nОдин з ініціаторів вшанування пам'яті Ю. Шевельова, лідер громадської організації «Світанок» Вадим Поздняков розповів, що необхідні для відновлення понад 80 тисяч гривень були зібрані спільнокоштом харків'янами. Про збір коштів на відновлення меморіальної дошки представниця громадської організації Міла Денчик повідомила в соцмережі 27 квітня 2021 року. Необхідну суму зібрали за десять днів. Для додаткового захисту дошки планують встановити камери відеоспостереження\n23 січня 2022 року відкрили відновлену меморіальну дошку Юрію Шевельову.\n\n\n==== Львів ====\n18 жовтня 2013 року виконавчий комітет Львівської міської ради ухвалив рішення про встановлення пам'ятної таблиці Юрію Шевельову на будинку № 14 на вулиці Конопніцької, де він проживав в 1940-х роках.\nДошку встановлено 17 грудня 2013 року.\n\n\n=== Публікації пам'яті ===\nБібліографія писань у ювілейних збірниках на пошанування Шевельова:\n\nSymbolae in honorem Georgii Y. Shevelov. Мюнхен 1971;\nStudies in Ukrainian Lingvistics in honor of George Y. Shevelov. Нью-Йорк 1985.\nТворчий доробок Юрія Шевельова і сучасні гуманітарні науки // Вісник Харківського університету. — 1999. — № 426.\nЮрій Володимирович Шевельов: [(17.12.1908-12.04.2002): Некролог] // Зб. Харк. іст.-філол. т-ва. Нова серія. — Х., 2002. — Т.9. — С.407-408. — Підпис: Харківське історико-філологічне товариство.\nЮрій Шевельов [1908-2002: Некролог] // Літ. Україна. — 2002. — 25 квіт. (№ 16). — С.8. — Підписи: М.Жулинський, І.Дзюба, Б.Брюховецький та ін.\nВічний Шерех-Шевельов [Архівовано 18 червня 2010 у Wayback Machine.] Поступ 2002 р.\nЮрій Володимирович Шевельов (Шерех): Матеріали до бібліографії / Упоряд.: А.Даниленко, Л.Чабан. — Нью-Йорк: УВАН, 1998. — 200 с.\nStudien zu Sprache, Literatur und Kultur bei den Slaven. Gedenkschrift für George Y. Shevelov / Andrii Danylenko und Serhii Vakulenko. München: Otto Wagner, 2012.\nДаниленко Андрій. Юрій Шевельов як історик східнослов'янських мов // Зап. НТШ. — 2000. — Том 239. — С. 270—288.\nВеликий український філолог До 100-річчя від дня народження Юрія Шевельова (17.12.1908 — 12.04.2002) Каменяр 2009 р.[недоступне посилання з серпня 2019]\nВидатний філолог сучасності. До 100-річчя від дня народження Ю.Шереха, Національна парламентська бібліотека України\nКатерина Лабунська. Юрій Шевельов: «Я хотів сказати до побачення всім, кого знав і любив…». Українська Правда, 2002 [Архівовано 21 грудня 2010 у Wayback Machine.]\nПам'яті Юрія Шевельова (Шереха). Януш Ріґер («Юрій Шевельов — мовознавець»), Оля Гнатюк («Юрій Шевельов — патріарх української літературної критики») та коротка бібліографія творів. Переклад з польської Сергія Вакуленка. Текст у форматі doc.[недоступне посилання з серпня 2019]\nDanylenko Andrii. Prof. George Y. Shevelov as a linguist // Ukrainian Quarterly. — 2000. — № 55/2. — P. 199—211.\n\n\n=== Вулиці ===\n\nУ Броварах, Києві та Харкові існують вулиці, названі на честь Юрія Шевельова.\n25 квітня 2024 року у с-щі Слатине вулицю Герцена перейменували на вулицю Юрія Шевельова.\n\n\n== Бібліографія ==\n\n\n=== Книжки ===\n\nВідповідно до останньої найповнішої бібліографії праць Шевельова, його перу належить 872 праць (книг, наукових праць, рецензій тощо.)\n\nНайвизначніші книги\n«Синтакса простого речення» (1941, видано без прізвища автора в Києві у 1951);\n(переклад англійською) George Y Shevelov. «The Syntax of Modern Literary Ukrainian. The Simple Sentence», Hague: Mouton Publishers (1963)\nЮрій Шерех (Шевельов). «Нарис сучасної української літературної мови». Мюнхен: Молоде життя, 1951. 396 стор.\nЮрій Шерех (Шевельов). Галичина у формуванні нової української літературної мови. Мюнхен. 1949 (німецькою назву перекладено як «Українська письмова мова, 1798—1965. її розвиток під впливом діалектів»)\n(виправлений переклад німецькою) George Y. Shevelov. «Die ukrainische Schriftsprache», 1798—1965. Ihre Entwicklung unter dem Einfluss der Dialekte. Aus dem Ukrainischen übersetzt von Karl Siehs. 1966 (завантажити [Архівовано 4 жовтня 2013 у Wayback Machine.])\n(передрук) Юрій Шевельов.«Внесок Галичини у формування української літературної мови». Львів— Нью-Йорк, 1996 (завантажити [Архівовано 27 березня 2015 у Wayback Machine.])\nGeorge Y Shevelov. «A Prehistory of Slavic. The Historical Phonology of Common Slavic» 1964, 1965; (завантажити [Архівовано 6 листопада 2016 у Wayback Machine.])\n(українською) Юрій Шевельов. «Передісторія слов'янської мови. Історична фонологія загальнослов'янської мови». Українською не перекладено.\nGeorge Y Shevelov. «A Historical Phonology of the Ukrainian Language», (1979)\n(переклад українською) Юрій Шевельов. «Історична фонологія української мови». Переклад з англійської: Сергій Вакуленко та Андрій Даниленко. Харків: Акта, 2002. (част. № 1 на сайті НБУВ, част. № 2 на сайті НБУВ [Архівовано 14 червня 2020 у Wayback Machine.], на сайті Чтиво)\nGeorge Y Shevelov. The Ukrainian Language in the First Half of he Twentieth Century 1900—1941. Cambridge: Harvard University Press, 1989. 242 p. ISBN 9780916458300\n(переклад українською) Юрій Шевельов. Українська мова в першій половині двадцятого століття (1900—1941): Стан і статус. Переклад з англійської: Оксана Соловей. Мюнхен: Сучасність, 1987, 296 стор. (завантажити [Архівовано 13 листопада 2016 у Wayback Machine.])\nІнші книги\nЮрій Шерех (Шевельов). Леґенда про український неокласицизм, (1944) (завантажити з е-бібліотеки «ЕБУЛ»)\n«До генези називного речення» (1947)\n(передрук) * Юрій Шевельов  До питання про генезу й природу називних речень. Харків: Харківське історико-філологічне товариство, 2012. 135 с.\nПринципи і етапи большевицької політики щодо словянських мов в СССР (крім російської) (1947) (завантажити [Архівовано 6 листопада 2016 у Wayback Machine.])\n«Problems in the Formation of Belorussian», 1953;\n«Teasers and Appeasers» 1971;\n«Ein neues Theater» (1948);\n«He для дітей» (1964);\n«Друга черга» (1978);\nЧому общерусский язык, а не вібчоруська мова? [Архівовано 4 лютого 2022 у Wayback Machine.] (1994);\nСтилі сучасної української літератури на еміграції [Архівовано 5 березня 2016 у Wayback Machine.], (1998);\n«Поза книжками і з книжок». К.: Час, 1998.\n«Пороги і Запоріжжя: Література. Мистецтво. Ідеології», т. 1-3. X., 1998.\nЮрій Шевельов. «Я, мені, мене… (і довкруги)». Спогади. У двох томах. Видавництво часопису «Березіль», Видавництво М. П. Коць. Харків — Нью-Йорк, 2001. Текст першого тому у форматі doc.[недоступне посилання з серпня 2019]\n«Портрети українських мовознавців». К.: Вид. Дім «Києво-Могилянська Академія», 2002. (Перевидання праць: «Покоління двадцятих років в укр. мовознавстві». ЗНТШ (Париж, Чикаго), 1962, т. 173. с.309-332; Юрій Шерех. «Кость Михальчук». — УВАН, Вінніпеґ, 1952; Юрій Шерех. «Всеволод Ганцов, Олена Курило». — УВАН, Вінніпеґ, 1954.)\nВибрані праці. У Двох книгах. Книга 1 Мовознавство., Книга 2 Літературознавство. упоряд. Лариса Масенко. Київ: Видавництво «Києво-Могилянська академія», 2008. 583 с., 1151 с. ISBN 978-966-518-495-9, 978-966-518-496-6\nЮрій Шевельов. З історії незакінченої війни. (упорядники Оксана Забужко, Лариса Масенко) — Київ: Вид. «Києво-Могилянська академія», 2009. — 471 с. ISBN 978-966-518-519-2\nОксана Забужко, Юрій Шевельов. Вибране листування на тлі доби. 1992—2002 (2011)\nЮрій Шевельов. «Нарис сучасної української літературної мови та інші лінгвістичні студії». К.: Темпора, 2012.\nШевельов Ю. Дорогою відрадянщення: Публіцистичні та наукові тексти 1941—1943 рр. (харківський період). — Х.: Харківське історико-філологічне товариство, 2014. — 190 с.\n\n\n=== Статті ===\n\nШевельов Ю. Москва, Маросєйка [Архівовано 26 липня 2020 у Wayback Machine.] // Нові дні. — 1954. — Ч. 50. — С. 8-10.\nШевельов Ю. Мої пригоди в Радянському Союзі / Ю.Шевельов // Сучасність. — 1969. — № 2. — С.54-66.\nШерех Ю. Лесь Курбас і Харків: Спогади / Ю.Шерех // Сучасність. — 1993. — № 12. — С.44-52.\nШерех Ю. Донцов ховає Донцова [Архівовано 21 липня 2015 у Wayback Machine.] // Думки проти течії. / Юрій Шерех. — Б. м.: Видавництво «Україна», 1949, C. 5-42.\nШевельов Ю. Up or out? З проблематики формування укр. числівника як частини мови. В кн.: Мовознавство: Тези та повідомлення. Третій Міжнар. конгрес україністів. (Харків, 26-29 серпня 1996). X., 1996. {Перевидання: Вибрані праці, Т.1 Мовознавство, К.: Вид. Дім «Києво-Могилянська Академія», 2008, с. 453—460.\nЗабужко О., Шевельов Ю. Вибране листування на тлі доби: 1992—2002: з додатками, творами, коментарями, причинками до біографій та іншими документами. —К.: Висока Полиця, ВД Факт, 2011 (Повний текст виступу).} Повний текст виступу та коментар О.Забужко [Архівовано 2 квітня 2016 у Wayback Machine.].\nШевельов Ю. Українська літературна мова (1955) Переклад Сергія Вакуленка за виданням Shevelov G. Y. L'ukrainien littéraire // Shevelov G. Y. Teasers and Appeasers. Essays and Studies on Themes of Slavic Philology. — München, 1971. — p. 245-260. Текст у форматі doc.[недоступне посилання з серпня 2019]\nШевельов Ю. «Українізація: радянська політика 1925—1932 років» // Сучасність — 1993 — № 5. — С. 36-57.\nШерех Ю. «Скарби, якими володіємо» // Сучасність — 1993. — № 6. — С. 147\nШевельов Ю. «Олександер Потебня і українське питання: Спроба реконструкції цілісного образу науковця» — вступ до книги Олександера Потебні Мова. Націоналізм. Денаціоналізація: Статті і фрагменти. — New York: Ukrainian Academy of Arts and Sciences in the U.S., Inc., 1992. С.7-46\nШевельов Ю. «У довгій черзі: Проблеми реабілітацій»// Сучасність. — 1990. — Ч.12(356). — С. 69-79\nШевельов Ю. «Микола Ґе і Тарас Шевченко: Мистець у відмінному контексті»// Сучасність. — 1990. — Ч.7-8(351—352). — С. 99-127\nШевельов Ю. «Українська мова в себе вдома сьогодні й завтра»// Сучасність. — 1986. — Ч.10(306). — С. 28-46.\nШевельов Ю. «Кулішеві листи і Куліш у листах»// Сучасність. — 1983. — Ч.12(272). — С. 7-38\nШевельов Ю. «На берегах хроніки поточних подій» [Архівовано 9 липня 2012 у Wayback Machine.] // Сучасність. — 1989. — Ч.11 (листопад). — С. 70-89.\n\n\n=== Аудіозапис ===\nАудіозапис виступу Юрія Шевельова на річниці Української вільної академії наук, 1995 р. Магнітофонна касета з записом отримана від Оксани Соловей. [Архівовано 10 листопада 2016 у Wayback Machine.]\n\n\n== Див. також ==\nПремія імені Юрія Шевельова\n\n\n== Примітки ==\n\n\n== Література ==\nДаниленко, А. Юрій Шевльов як дослідник українсько-білоруських взаємин // Belarusian Institute of Arts and Sciences. Zapisy (New York) 25 (2001), 139—147\nДаниленко, А. Юрій Шевльов як дослідник східнослов'янських мов // Записки НТШ 239 (2000), 270—288.\nДаниленко, А., Соловей Е. Спроба окреслення цілісного образу науковця // Сучасність 10 (1998), 81-96.\nДаниленко, А. Юрі Шевелеў як даследчік украінска-беларускіх стасункаў // ARCHE 5 (19) (2001), 447—452.\nDanylenko, A. George Y. Shevelov // The Literary Encyclopedia. First published 05 January 2018 [https://www.litencyc.com/php/speople.php?rec=true&UID=13880, accessed 08 July 2020.]\nDanylenko, A. Prof. George Y. Shevelov as a Linguist // Ukrainian Quarterly 55/2 (2000), 199—211.\nЛ. Т. Масенко. Шевельов Юрій Володимирович [Архівовано 5 квітня 2013 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2013. — Т. 10 : Т — Я. — С. 611. — ISBN 978-966-00-1359-9.\nМаслійчук В. Про Шевельова для істориків // Historians.in.ua. — 26 вересня 2013\nМихайлин І. Л. Від Сковороди до Сковороди через Шевченка й Леніна: «П'ятий Харків» у журналістиці пізнього Ю. Шевельова / Ігор Михайлин // День. — 2012. — 8-9 червня.\nМихайлин І. Л. Юрій Шевельов: Провінція — не територія, а душа / Ігор Михайлин // День. — 2012. — 30 листопада.\nМихайлин І. Л. «Я не згодний був міняти свою шкуру й душу». Ток-шоу «Шустер Live» змусило вкотре стати на захист Ю. Шевельова / Ігор Михайлин // Україна молода. — 2013. — 1 жовтня. [Архівовано 1 лютого 2016 у Wayback Machine.]\nМихайлин І. Л. На захист Юрія Шевельова. Ю.Шевельов заповів свій архів… Японії. Очевидно, він розумів, які баталії триватимуть навколо його імені в Україні / Ігор Михайлин // Універсум. — 2013. — № 11-12. — С. 38-39\nЛариса Масенко. «Коло Шевельова» розширюється. Про внесок вченого в українське мовознавство XX століття.- Газета «День», № 209-210 за 15-16 листопада 2013;\nМацько Віталій. Я прагнув до вільної думки // Кам'янець-Подільський вісник. — 1993, 8 вересня. — С.1.\nМацько Віталій. Інтелектуал високої проби // Дивослово. — 1998.  — № 12. — С.45-46.\nОлеся Яремчук. «Квиток до Харкова». В Україні стартує низка культурних заходів, присвячених мислителю.- Газета «День», № 209-210 за 15-16 листопада 2013;\nФізер, І. Ю. Шевельов як літературний критик // Сучасність. — 1969. — № 2. — С.50-53.\nЛавриненко, Ю. Над новою книгою Юрія Шереха // Ю.Лавриненко. Зруб і парости: Літ.-крит. статті, есеї, рефлекції. — [Мюнхен], 1971. — С.228-240.\nГорбач О. До 60-річчя проф. д-ра Юрія Шевельова. — Мюнхен: Б.в., 1971. — 87 с.\nЛавриненко, Ю. Борг змушеним мовчати: Нові праці Юрія Шереха і Йосипа Гірняка // Ю.Лавриненко. Зруб і парости: Літ.-крит. статті, есеї, рефлекції. — [Мюнхен], 1971. — С.100-113.\nШерех, Ю. Зустріч з «Березолем» // Шерех, Ю. Третя сторожа: Л-ра. Мистец. Ідеології. — Балтімор; Торонто, 1991. — С.418-434.\nМельник, В. Дві зупинки Юрія Шереха // Вісн. міжнар. асоціації україністів. — 1991. — № 3. — С.18-23.\nДяченко, В. «Я харьковчанин отроду…» // Порубежье. — 1993. — № 1. — С.3.\nОдарченко, П. Наукова і літературна діяльність професора Юрія Шевельова // Одарченко, П.Українська література: Зб. вибр. ст. — К., 1995. — С.233-244.\nШевельов Юрій Володимирович // Літературна Харківщина: Довідник / За ред. М. Ф. Гетьманця. — Х.: Майдан, 1995. — С.343-347.\nВидатний філолог сучасності: Наук. виклади на честь 85-ліття Ю.Шевельова. — Х.: Око, 1996 — 92с.\nМуромцев І. Юрій Шевельов — видатний учений сучасності // Видатний філолог сучасності: (Наукові виклади на честь 85-ліття Юрія Шевельова). — Х., 1996. — С. 13-22.\nМуромцева О. Про стиль лінгвістичних праці Ю. В. Шевельова// Видатний філолог сучасності (наукові виклади на честь 85-ліття Юрія Шевельова).- Х.:Око, 1996.-С.-37-42.\nЮрій Володимирович Шевельов (Шерех): Матеріали до бібліографії / Упоряд.: А.Даниленко, Л.Чабан. — Нью-Йорк: Українська вільна академія наук у США, НАН України та Інституту літератури ім. Т. Г. Шевченка 1998. — 200 с.\nАбліцов, В. Він переконав світ: «Я — є! І є моя мова»/ В.Абліцов // Голос України. — 1998. — 17 груд.\nВолосова, О. Критика як гра: до питання про стиль Ю.Шевельова // Зб. Харк. іст.-філол. т-ва. Нова серія. — Х., 1998. — Т.7. — С.75-94. — Бібліогр. : 21 назва.\nТарнашинська, Л. Цього не зміг би зробити й Рембрандт: [до 90-річчя з дня народж.] / Л.Тарнашинська // Літ. Україна. — 1998. — 31 груд.\nВолосова, О. Журналістська діяльність Юрія Шереха в МУРі //Українська періодика: історія і сучасність. — Х., 1998. — С.75-94. — Бібліогр. : 12 назв.\nМуромцев І. Про функції топонімів і топонімічних комісій // Вісн. Харк. ун-ту. −1999. — № 426: Творчий доробок Юрія Шевельова і сучасні гуманітарні науки. — С. 127—133.\nЧернова, Н. Шевельовські виклади // Слобода. — 1999. — 9 лют. — С.3.\nШевельов Юрій Володимирович // Хрестоматія з літератури рідного краю. — Х., 2001. — С.377.\n[[https://web.archive.org/web/20070930183610/http://www.dt.ua/3000/3680/34539/ Архівовано 30 вересня 2007 у Wayback Machine.] С.Матвієнко. Кінець століття // Дзеркало тижня, № 15 (390) 20-26 квітня 2002]\nГригорій Грабович. Юрій Шевельов 1908—2002, Критика. № 3, 2002 [Архівовано 4 червня 2002 у Wayback Machine.]\nСверстюк, Є. Абсолютний слух до правди вирізнив людину великої культури — Юрія Шевельова // Літ. Україна. — 2002. — 23 трав (№ 19). — С.3.\n[Добірка матеріалів про Ю.Шереха] // Кур'єр Кривбасу. — 2002. — № 154 (верес.). — С.1-20.\nВолосова, О. І. Юрій Шерех (Шевельов) як літературний критик: Автореф. дис. … канд філол наук 10.01.01 / Харк. нац. ун-т ім В. Н. Каразіна. — Х., 2002. — 18 с.\nРільке, Р. М. «Хто б ти не був…», «У день ти пошепт поговору…», Люди вночі; Сусід; Тиша / Р. М. Рільке; Пер. з нім. Ю.Шевельова // Сучасність. — 2002. — № 4. — С.41-42.\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nШевельов, Ю. Лист до молодих земляків: учням Харк. гімназії № 6 // Березіль. — 2003. — № 9-10. — С.149-150.\nЛенау, Н. Три цигани; Самотина: [Вірші] /Н.Ленау; Пер. з нім. Ю.Шевельова // Березіль. — 2003. — № 9-10. — С.147-149.\nРільке, Р. М. Осінній день; Пантера: [Вірші] /Р. М. Рільке; Пер. з нім. Ю.Шевельова // Березіль. — 2003. — № 9-10. — С.146-147.\nМасенко, Л. Юрій Шевельов — видатний український мовознавець // Дивослово. — 2003. — № 1. — С.60-63.\nНаєнко, М. Гончар і Шевельов, або «Відрізати золото від імітації» // Літ. Україна. — 2003. — 4 верес. (№ 31-32).\nЗайцев, Б. П. Память о войне в документах: [Воспоминания о Шевелеве] // Университеты. — 2003. — № 3. — С.48-59.\nЛистування з Ю. В. Шевельовим (Гавриленко О. А.) // Харківський історіографічний збірник. — Харків: НМЦ «СД», 2004. — Вип. 7. — С. 182—190.\nМигаль, Б. К. Шевельов Юрій Володимирович //Вихованці Харківського університету: Біобібліогр. довід. — Х., 2004. — С.218-219: портр.\nШерех (Шевельов), Ю. На Сумській, тоді Карла Лібхнехта… / Ю.Шерех // Слобід. край. — 2004. — 21, 28 лют.\n[[https://web.archive.org/web/20110604214651/http://www.encyclopediaofukraine.com/pages/S/H/ShevelovGeorgeYurii.htm Архівовано 4 червня 2011 у Wayback Machine.] George Yurii Shevelov]\nДяченко, Д. «Я харків'янин з роду…» // Укр. газ. — 2004. — № 5. — С.10.\nСкорина, Л. Юрій Шерех // Скорина, Л. Література та літературознавство української діаспори: Курс лекцій. — Черкаси, 2005. — С.374-382.\nШевельов Юрій Володимирович // Інститут мовознавства ім. О. О. Потебні НАН України — 75. 1930—2005: Матеріали до історії / В. Г. Скляренко (відп. ред.). — К.: Довіра, 2005. — С. 398—399.\nВіталій Абліцов «Галактика „Україна“. Українська діаспора: видатні постаті» — К.: КИТ, 2007. — 436 с.\nЛариса Масенко. «Те, що Грушевський зробив для української історії, я зробив для української мови» // Юрій Шевельов. Вибрані твори. Книга І. — Київ, 2008. — с. 5-25.\nІван Дзюба. Юрій Шерех — літературознавець і культуролог // Юрій Шевельов, Вибрані твори. Книга ІІ — Київ, 2008. — с. 5-32.\nМуромцев І. Ю.Шевельов — історик українського і світового мовознавства // Вісн. Харк. нац. ун-ту. — 2009. — № 843: Сер.: Філологія. — Вип. 55. — С. 10-15.\nДмитро Дроздовський. Грушевський української філології. ВСЕСВІТ. № 1-2 ЗА 2009 РІК [Архівовано 4 жовтня 2013 у Wayback Machine.]\nЛеонід Ушкалов. Юрій Шерех: історія української літератури «не для дітей» (відгук на тритомовик Юрія Шереха (Шевельова): «Пороги і запоріжжя. Література. Мистецтво. Ідеології.»). Схід — Захід (історико-культурологічний збірник). — Харків, 2001. — Вип. 3. — С. 204—212. Текст у форматі doc.[недоступне посилання з серпня 2019]\nСелігей П. О. Юрій Шевельов — майстер наукового стилю // Українська мова. — 2010. — № 4. — С. 3-21. [Архівовано 5 жовтня 2013 у Wayback Machine.]\nВіктор Гриневич. Юрій Шевельов заповів не виголошувати промов на його похороні [Архівовано 4 жовтня 2013 у Wayback Machine.] // Газета по-українськи № 749 за 12.12.2008\nУкраїнська діаспора: літературні постаті, твори, біобібліографічні відомості / Упорядк. В. А. Просалової. — Донецьк: Східний видавничий дім, 2012. — 516 с.\nФранцуженко-Вірний Микола. Заокеанські письменники України. — Київ : Смолоскип, 2015. — 312 с. — ISBN 978-617-717-323-5.\nШевельов Юрій: учений-гуманітарій, дослідник української мови і літератури: [зб. ст. / редкол.: Ю. М. Безхутрий та ін.]. — Харків: ХНУ ім. В. Н. Каразіна, 2017. — 116 с. — ISBN 966-285-429-9.\nВасиленко Вадим. Інтелектуальна утопія Юрія Шереха // Слово і час. 2022. № 1. С. 3–20.\n\n\n== Посилання ==\n\nЮРІЙ ШЕВЕЛЬОВ | Програма «Велич особистості» | 2013 (ВІДЕО)\nМарко Роберт Стех, «Очима культури» № 11. Історія української мови від Юрія Шевельова [Архівовано 24 квітня 2014 у Wayback Machine.]\nGazeta.ua — 11.12.2008\nВолодимир Чистилін. Про Юрія Шевельова. Спеціально для Добкіна [Архівовано 6 вересня 2013 у Wayback Machine.]\nШерех Ю. Головні правила українського правопису / Юрій Шерех. — Б. м.: Прометей, 1946. — 59, 2 с. (Альтернативне посилання: [2] [Архівовано 12 серпня 2020 у Wayback Machine.].)\n\n\n== Праці наявні в інтернеті ==\nШевельов Ю. Праці наявні в інтернеті\nСтатті Юрія Шевельова [Архівовано 6 січня 2022 у Wayback Machine.] на сайті Zbruc.eu"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:33.352Z",
+          "resultDisplay": "# Шевельов Юрій Володимирович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D0%B5%D0%BB%D1%8C%D0%BE%D0%B2_%D0%AE%D1%80%D1%96%D0%B9_%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87\n\nЮ́рій Володи́мирович Шевельо́в (прізвище при народженні — Шна́йдер, англ. George Shevelov; 17 грудня 1908(19081217), Харків — 12 квітня 2002, Нью-Йорк, США) — український славіст-мовознавець німецького походження; історик української літератури, літературний і театральний критик, активний учасник діаспорного наукового та культурного життя української еміґрації. Викладач російської та української мов у Гарвардському університеті, пізніше професор Колумбійського університету. Іноземний член НАН України (1991 р.). 1949 рік — доктор філософії. Лауреат Національної премії України імені Тараса Шевченка (2000).\nЧлен Американського лінгвістичного товариства, Польського інституту мистецтв і науки в США. Почесний доктор Альбертського, Лундського, Харківського університетів та Національного університету «Києво-Могилянська академія». Один із засновників об'єднання українських письменників у діаспорі «Слово» (1954), президент Української вільної академії наук (1959—1961, 1981—1986), Головний редактор журналу «Сучасність» (1978—1981 рр.). Автор низки фундаментальних мовознавчих праць: «Нарис сучасної української мови» (1951 р.), «Передісторія слов'янської мови: історична фонологія загальнослов'янської мови» (1965 р.), «Історична фонологія української мови» (1979 р.). Творча спадщина літературознавця українського зарубіжжя становить близько 900 праць.\nАвтор науково обґрунтованої періодизації хронології історії української мови, яку на сьогодні підтримує більшість українських мовознавців.\nПисав під різноманітними псевдонімами — Юрій Шерех, Гр. Шевчук, Григорій Шевчук, Шерех (Šerech, Sherekh, Sher), Гр. Ш., Ю. Ш.\n\n\n== Життєпис ==\nНародився 17 грудня 1908 року в Харкові, тоді Російська імперія, нині Україна (за іншими відомостями, народився в м. Ломжа). Батьки Шевельова походили зі шляхетних московських родин етнічних німців. Батько — Володимир Шнайдер, монархіст і генерал-майор російської імператорської армії, у зв'язку з початком Першої світової війни вирішив змінити своє прізвище зі Шнайдер (у російському правописі — Шнейдер) на Шевельов, про що 1916 року він звернувся за дозволом безпосередньо до царя Миколи II. Як передає родинна легенда, він обрав початкове Ш, «щоб не міняти міток на серветках». Мати — Варвара Медер, пізніше в документах змінила місце народження сина на місто Ломжу (Польща), щоб унеможливити перевірку соціального походження сина органами більшовицької влади.\n1931 року закінчив Харківський педагогічний інститут професійної освіти (нині Харківський національний університет імені В. Н. Каразіна). Там же навчався в аспірантурі під керівництвом Леоніда Булаховського й успішно захистив 1939 року кандидатську дисертацію на тему «Із спостережень над мовою сучасної поезії. Ораторський жанр у політичній ліриці П. Г. Тичини». Працював викладачем, потім доцентом Інституту журналістики (1933—1939 р.р.) і Харківського університету (1939—1943 р.р.). У 1930-тих роках Олесь Гончар був студентом Шевельова. Під час німецької окупації Харкова дописував до місцевої газети «Нова Україна» — надрукував рівно 20 статей: шість під псевдонімом Г. Шевчук, 14 — під власним прізвищем. Опублікував декілька власних віршів у журналі «Український засів», а також у празькому журналі «Пробоєм» 1943 року. Від 1941 до 1943 р.р. був завідувачем кафедри української філології. У той самий час він працював на технічній посаді в Харківській міській управі, утвореній нацистами, а згодом — у відділі освіти, де укладав підручники з історії України. Як зазначає дослідник історії Харкова часів нацистської окупації Анатолій Скоробогатов, Юрій Шевельов «не був причетний до репресивних акцій нового режиму, не був також ідейним та політичним провідником нацизму», оскільки його публікації мали науково-публіцистичний характер та стосувалися мовознавчих та історичних тем. За його словами, у матеріалах кримінальних справ у показаннях свідків йшлося про науково-популярну діяльність Юрія Шевельова та його інакомислення проти СРСР.\n1943 р. виїхав до Львова, де познайомився з Василем Сімовичем. У Львові співпрацював із часописом «Наші дні», написав книгу «Внесок Галичини у формування української літературної мови», працював над підготовкою німецько-українського правничого словника, який не був завершений. У Львові проживав, зокрема, в будинку № 14 на Корняктґассе (тепер вулиці Конопницької).\nВосени 1944 р. переїхав у Німеччину. Доцент слов'янської філології Українського вільного університету (УВУ) (1946—1949). У 1949 р. захистив докторський науковий ступінь в УВУ. Підготував книгу «Нарис сучасної української літературної мови». Активний учасник та заступник голови об'єднання українських письменників МУР у Німеччині (1945—1949 р.р.).\nНа запрошення німецького славіста Макса Фасмера обійняв позицію лектора російської та української мов у Лундському університеті (Швеція, 1950—1952 р.р.). У 1952—1954 роках працював у Гарвардському університеті (США). У 1953 році померла мати Шевельова, яка подорожувала разом з ним усе життя. Був одним із засновників об'єднання українських письменників «Слово» в 1954 році. Через конфлікт з Романом Якобсоном змушений був перейти до Колумбійського університету (Нью-Йорк, 1954—1977). Член Гуггенгеймського меморіального товариства (1958—1959 р.р.). Президент УВАН у США (1959—1961 р.р. і 1981—1986 р.р.).\n\n1977 року вийшов на пенсію. 1979 року в Гайдельберзі була опублікована фундаментальна праця Шевельова «Історична фонологія української мови». Був редактором журналу «Сучасність» у 1978—1981 роках. Після здобуття Україною незалежності кілька разів відвідував різні українські міста. Гроші, одержані від Шевченківської премії, Шевельов передав на розбудову Української гімназії № 6. Позитивно відгукувався про Проєкт українського правопису, розробленого групою науковців на чолі з Василем Німчуком.\nПомер 12 квітня 2002 року в Пресвітеріанській лікарні в Нью-Йорку.\n\n\n== Наукова діяльність ==\n\n\n=== Мовознавство ===\nУ мовознавстві учень О. Білецького, Л. Булаховського (з власних слів) і В. Сімовича (неформально), який впровадив Шевельова у фонологічні методи Празької школи.\nПісля праць зі стилістики (Павло Тичина, Іван Котляревський, Тарас Шевченко) і синтаксису: «До генези називного речення» (1947) р., «Синтакса простого речення» (1941 р., видано без прізвища автора в К. 1951 р., в англійському перекладі «The Syntax of Modern Literary Ukrainian» у Гаазі 1963 р.), у центр своєї наукової праці поставив написання історичної фонології української мови, що показувала б її розвиток від праслов'янської мови донині на широкому історичному, діалектному міжмовному й текстуальному ґрунті з установленням системно-причинових зв'язків між окремими фонетичними змінами («A Historical Phonology of the Ukrainian Language», 1979 р.). Попередніми студіями до цієї праці були характеристика сучасної української літературної мови («Нарис сучасної української літературної мови», 1951 р.), взаємодії її з діалектами головно Чернігівщини й Галичини (підсумовано в «Die ukrainische Schriftsprache», 1966), розмежування української і білоруської мов («Problems in the Formation of Belorussian», 1953 р.), пробні етимологічні студії (вантаж, веремія та ін.), історична фонологія праслов'янської мови («A Prehistory of Slavic» 1964, 1965), серія статей про попередників у проблематиці (В. Ганцов, О. Курило, К. Михальчук, О. Потебня, Л. Васильєв, В. Сімович) і серія статей про окремі пам'ятки (Реймське Євангеліє, Кодекс Ганкенштайна, Ізборник 1076, Підпис Анни Ярославни, Мірило праведне, Інтермедії Ґаватовича, Хрест Євфросинії Полоцької та ін.).\nУ праці «Проблеми формування білоруської мови» (1953 р.) він довів, що білоруська мова постала внаслідок взаємодії давніх діалектних зон — полоцько-рязанської та києво-поліської, а не в результаті розпаду «общерусского языка», як це твердив Олексій Шахматов. У книзі «A Prehistory of Slavic. The Historical Phonology of Common Slavic» (1965 р.) Юрій Шевельов розширює своє дослідження на весь слов'янський простір, щоб довести, що в доісторичні часи ні східно-, ні західно-, ні південнослов'янські мови (і народи!) не творили ніяких «спільних етносів», а їхня мова споконвіку була діалектно диференційована. Подальші дослідження засвідчили правильність наукових пошуків Юрія Шевельова, який уважав боротьбу з науково хибною та ідеологічно шкідливою концепцією «общерусского языка» своїм найважливішим завданням. В одному з листів до Олекси Ізарського він признається: «Я дістав перший примірник своєї „Історичної фонології“ мови нашої нещасної. Це було діло мого життя, і я його побачив. Тепер можу сказати — Нині отпущаєши».\nПоза тим студії з історії української мови («Українська мова в першій половині двадцятого століття 1900—1941», 1987 р.), історичної морфології, синтакси й лексикології української мови, студії з інших слов'янських мов (російської, білоруської, словацької, польської, сербсько-хорватської, чеської, староцерковнослов'янської), антропонімічні студії й низка рецензій на відповідні наукові появи (найважливіші з цих статей до 1970 року зібрано в книзі «Teasers and Appeasers» 1971 р.). Шевельов був редактором багатьох наукових і літературних журналів і серій, зокрема серії «Historical Phonology of the Slavic Languages».\n\n\n=== Літературознавство та театрознавство ===\nШевельов уважав себе передовсім мовознавцем і підписував свої фахові роботи власним прізвищем, а статті з літературознавства та культурології — псевдонімом Юрій Шерех. Автор критичних відгуків на головні еміграційні літературні твори й літературознавчі праці.\nНайважливіші літературні й театральні статті зібрано в книзі «Ein neues Theater» (1948 р.), «He для дітей» (1964 р.) і «Друга черга» (1978 р.). Зредагував і видав збірки творів Василя Мови (1969 р.), Л. Васильєва (1972 р.) і В. Сімовича (1981 р., 1985 р.). Редактор і автор журналів «Сучасність» (грудень 1978 — квітень 1981 р.р.) і мовознавчих гасел в україномовну та англомовну «Енциклопедію українознавства».\n\n\n=== Історія ===\nУ 1954 році професор Юрій Шевельов написав у Бостоні статтю «Москва, Маросєйка», у якій сформулював кілька важливих уроків Переяслава-1654. Юрій Шевельов міркував про «історію великої і ще не закінченої війни» — саме так він назвав «історію культурних зв'язків між Україною та Росією». У статті професор робить висновок:\n\nУсі вони, писав Шевельов, «живуть і сьогодні»:\n\n\n== Ушанування ==\n17 грудня 2018 року на державному рівні в Україні відзначено пам'ятну дату — 110 років з дня народження Юрія Шевельова (1908—2002), ученого-славіста, мовознавця, літературознавця, педагога.. До 110-річчя від дня народження Ю. В. Шевельова в Національній бібліотеці України імені Ярослава Мудрого підготовлено віртуальну книжкову виставку. До уваги користувачів пропонується добірка творів самого Юрія Шевельова, книжки за його редакцією та книжки про нього.\nУ квітні 2019 року видавець Олександр Савчук ініціював збір коштів з метою викупу квартири, в якій проживав Юрій Шевельов, з метою створення квартири-музею вченого.\n\n\n=== Докторати та премії ===\nШевельов одержав почесні докторати Альбертського (Канада, 1983 рік) і Лундського (Швеція, 1984 рік) університетів та НаУКМА (1992 р.). Кавалер Ордена «За заслуги» (1999 р.). У 2000 році нагороджений Національною премією України імені Тараса Шевченка.\n\n\n=== Пам'ятні дошки ===\n\n\n==== Харків ====\n3 вересня 2013 року в Харкові на будинку, де тривалий час (1915—1943 рр.) мешкав Юрій Шевельов (вул. Сумська, 17), йому встановили і відкрили пам'ятну дошку. Однак установлення дошки викликало протидію міської влади Харкова. Зокрема, голова Харківської обласної держадміністрації Михайло Добкін назвав у своєму акаунті у Twitter Юрія Шевельова «пособником фашистів». На своєму позачерговому засіданні міська комісія з питань топоніміки та охорони історико-культурного середовища вирішила зібрати додаткову інформацію про діяльність ученого в період війни й звернутися по допомогу до СБУ та міжнародних організацій.\n25 вересня 2013 року Харківська міська рада ухвалила рішення скасувати дозвіл топонімічної комісії на встановлення дошки й демонтувати її. Через пів години дошка була знищена невідомими, які назвалися співробітниками комунальних служб, зокрема КП «Жилкомсервіс». Вони намагалися відділити дошку від стіни будинку за допомогою сокири, а коли їм це не вдалося, чоловіки розбили дошку на кілька частин, забрали їх і поспішно зникли з місця події. Пізніше міський голова Харкова Геннадій Кернес заявив, що комунальні служби міста не причетні до демонтажу пам'ятної дошки. Міліція розпочала перевірку обставин демонтажу дошки; інформацію про правопорушення було внесено до Єдиного обліку кримінальних правопорушень.\nДемонтаж меморіальної дошки Юрію Шевельову викликав хвилю осуду з боку громадських, наукових, національних організацій: НАУКМА, Асоціації єврейських організацій та громад України (Ваад), Ініціативної групи «Першого грудня», Української всесвітньої координаційної ради, Харківського історико-філологічного товариства. Зокрема, у заяві групи «Першого грудня» містилася теза: «честь Юрія Шевельова не потребує захисту. Відтепер захисту потребує честь Харкова».\nУ Харкові боротьба за відновлення меморіальної дошки тривала: студент Харківської юридичної академії Ростислав Небельський звернувся до суду з позовом про скасування рішення Харківської міської ради та розпорядження Кернеса Г. А. від 25 вересня 2013 року.\n19 листопада 2013 року Дзержинський районний суд міста Харкова в задоволенні позову відмовив.\n28 січня 2014 року відбулися апеляційні слухання у Харківському апеляційному адміністративному суді. Апеляційна скарга була відхилена.\n7 лютого 2014 року Вищий адміністративний суд України відкрив касаційне провадження. Касаційний розгляд проводився 21 травня 2014 року: касаційна скарга була задоволена, рішення харківських судів — скасовані, а справа направилася на новий розгляд до Дзержинського районного суду міста Харкова.\nПовторні слухання в Дзержинському суді проходили з червня до вересня 2014 року й закінчилися 2 вересня 2014 року повторною відмовою в задоволенні позову.\n25 грудня 2014 року Харківський апеляційний адміністративний суд скасував постанову Шишкіна О. В., а позов задовольнив у повному обсязі: рішення Харківської міської ради та розпорядження Кернеса Г. А. від 25 вересня 2013 року були визнані незаконними та скасовані. Меморіальну дошку на тому ж будинку по вулиці Сумській, 17 було відновлено вже після смерті харківського міського голови, який символічно пішов саме у день народження Юрія Шевельова.\nНову дошку було зроблено не з граніту, а з антивандального матеріалу — щоб її не можна було розбити, як минулого разу. Вона є точною копією дошки, відкритої у 2013 році та згодом знищеної «титушками» з комунальних служб. Урочисте відкриття відбулося в День соборності, 22 січня 2022 р. На подію зібралися десятки представників громадськості, українських патріотів.\nДошку освятив настоятель храму Іоана Богослова отець Віктор Маринчак. «Юрій Шевельов головним чином є героєм саме тому, що він відкинув будь-які можливості співпраці з комуністичним режимом. Не так багато людей спромагалися це зробити. Тому комуністи переслідували його, і руками великих мовознавців — головним чином, русистів — переслідували його, цькували його в науковому світі… Він був великим патріотом Харкова», — наголосив о. Віктор, звертаючись до присутніх.\nОдин з ініціаторів вшанування пам'яті Ю. Шевельова, лідер громадської організації «Світанок» Вадим Поздняков розповів, що необхідні для відновлення понад 80 тисяч гривень були зібрані спільнокоштом харків'янами. Про збір коштів на відновлення меморіальної дошки представниця громадської організації Міла Денчик повідомила в соцмережі 27 квітня 2021 року. Необхідну суму зібрали за десять днів. Для додаткового захисту дошки планують встановити камери відеоспостереження\n23 січня 2022 року відкрили відновлену меморіальну дошку Юрію Шевельову.\n\n\n==== Львів ====\n18 жовтня 2013 року виконавчий комітет Львівської міської ради ухвалив рішення про встановлення пам'ятної таблиці Юрію Шевельову на будинку № 14 на вулиці Конопніцької, де він проживав в 1940-х роках.\nДошку встановлено 17 грудня 2013 року.\n\n\n=== Публікації пам'яті ===\nБібліографія писань у ювілейних збірниках на пошанування Шевельова:\n\nSymbolae in honorem Georgii Y. Shevelov. Мюнхен 1971;\nStudies in Ukrainian Lingvistics in honor of George Y. Shevelov. Нью-Йорк 1985.\nТворчий доробок Юрія Шевельова і сучасні гуманітарні науки // Вісник Харківського університету. — 1999. — № 426.\nЮрій Володимирович Шевельов: [(17.12.1908-12.04.2002): Некролог] // Зб. Харк. іст.-філол. т-ва. Нова серія. — Х., 2002. — Т.9. — С.407-408. — Підпис: Харківське історико-філологічне товариство.\nЮрій Шевельов [1908-2002: Некролог] // Літ. Україна. — 2002. — 25 квіт. (№ 16). — С.8. — Підписи: М.Жулинський, І.Дзюба, Б.Брюховецький та ін.\nВічний Шерех-Шевельов [Архівовано 18 червня 2010 у Wayback Machine.] Поступ 2002 р.\nЮрій Володимирович Шевельов (Шерех): Матеріали до бібліографії / Упоряд.: А.Даниленко, Л.Чабан. — Нью-Йорк: УВАН, 1998. — 200 с.\nStudien zu Sprache, Literatur und Kultur bei den Slaven. Gedenkschrift für George Y. Shevelov / Andrii Danylenko und Serhii Vakulenko. München: Otto Wagner, 2012.\nДаниленко Андрій. Юрій Шевельов як історик східнослов'янських мов // Зап. НТШ. — 2000. — Том 239. — С. 270—288.\nВеликий український філолог До 100-річчя від дня народження Юрія Шевельова (17.12.1908 — 12.04.2002) Каменяр 2009 р.[недоступне посилання з серпня 2019]\nВидатний філолог сучасності. До 100-річчя від дня народження Ю.Шереха, Національна парламентська бібліотека України\nКатерина Лабунська. Юрій Шевельов: «Я хотів сказати до побачення всім, кого знав і любив…». Українська Правда, 2002 [Архівовано 21 грудня 2010 у Wayback Machine.]\nПам'яті Юрія Шевельова (Шереха). Януш Ріґер («Юрій Шевельов — мовознавець»), Оля Гнатюк («Юрій Шевельов — патріарх української літературної критики») та коротка бібліографія творів. Переклад з польської Сергія Вакуленка. Текст у форматі doc.[недоступне посилання з серпня 2019]\nDanylenko Andrii. Prof. George Y. Shevelov as a linguist // Ukrainian Quarterly. — 2000. — № 55/2. — P. 199—211.\n\n\n=== Вулиці ===\n\nУ Броварах, Києві та Харкові існують вулиці, названі на честь Юрія Шевельова.\n25 квітня 2024 року у с-щі Слатине вулицю Герцена перейменували на вулицю Юрія Шевельова.\n\n\n== Бібліографія ==\n\n\n=== Книжки ===\n\nВідповідно до останньої найповнішої бібліографії праць Шевельова, його перу належить 872 праць (книг, наукових праць, рецензій тощо.)\n\nНайвизначніші книги\n«Синтакса простого речення» (1941, видано без прізвища автора в Києві у 1951);\n(переклад англійською) George Y Shevelov. «The Syntax of Modern Literary Ukrainian. The Simple Sentence», Hague: Mouton Publishers (1963)\nЮрій Шерех (Шевельов). «Нарис сучасної української літературної мови». Мюнхен: Молоде життя, 1951. 396 стор.\nЮрій Шерех (Шевельов). Галичина у формуванні нової української літературної мови. Мюнхен. 1949 (німецькою назву перекладено як «Українська письмова мова, 1798—1965. її розвиток під впливом діалектів»)\n(виправлений переклад німецькою) George Y. Shevelov. «Die ukrainische Schriftsprache», 1798—1965. Ihre Entwicklung unter dem Einfluss der Dialekte. Aus dem Ukrainischen übersetzt von Karl Siehs. 1966 (завантажити [Архівовано 4 жовтня 2013 у Wayback Machine.])\n(передрук) Юрій Шевельов.«Внесок Галичини у формування української літературної мови». Львів— Нью-Йорк, 1996 (завантажити [Архівовано 27 березня 2015 у Wayback Machine.])\nGeorge Y Shevelov. «A Prehistory of Slavic. The Historical Phonology of Common Slavic» 1964, 1965; (завантажити [Архівовано 6 листопада 2016 у Wayback Machine.])\n(українською) Юрій Шевельов. «Передісторія слов'янської мови. Історична фонологія загальнослов'янської мови». Українською не перекладено.\nGeorge Y Shevelov. «A Historical Phonology of the Ukrainian Language», (1979)\n(переклад українською) Юрій Шевельов. «Історична фонологія української мови». Переклад з англійської: Сергій Вакуленко та Андрій Даниленко. Харків: Акта, 2002. (част. № 1 на сайті НБУВ, част. № 2 на сайті НБУВ [Архівовано 14 червня 2020 у Wayback Machine.], на сайті Чтиво)\nGeorge Y Shevelov. The Ukrainian Language in the First Half of he Twentieth Century 1900—1941. Cambridge: Harvard University Press, 1989. 242 p. ISBN 9780916458300\n(переклад українською) Юрій Шевельов. Українська мова в першій половині двадцятого століття (1900—1941): Стан і статус. Переклад з англійської: Оксана Соловей. Мюнхен: Сучасність, 1987, 296 стор. (завантажити [Архівовано 13 листопада 2016 у Wayback Machine.])\nІнші книги\nЮрій Шерех (Шевельов). Леґенда про український неокласицизм, (1944) (завантажити з е-бібліотеки «ЕБУЛ»)\n«До генези називного речення» (1947)\n(передрук) * Юрій Шевельов  До питання про генезу й природу називних речень. Харків: Харківське історико-філологічне товариство, 2012. 135 с.\nПринципи і етапи большевицької політики щодо словянських мов в СССР (крім російської) (1947) (завантажити [Архівовано 6 листопада 2016 у Wayback Machine.])\n«Problems in the Formation of Belorussian», 1953;\n«Teasers and Appeasers» 1971;\n«Ein neues Theater» (1948);\n«He для дітей» (1964);\n«Друга черга» (1978);\nЧому общерусский язык, а не вібчоруська мова? [Архівовано 4 лютого 2022 у Wayback Machine.] (1994);\nСтилі сучасної української літератури на еміграції [Архівовано 5 березня 2016 у Wayback Machine.], (1998);\n«Поза книжками і з книжок». К.: Час, 1998.\n«Пороги і Запоріжжя: Література. Мистецтво. Ідеології», т. 1-3. X., 1998.\nЮрій Шевельов. «Я, мені, мене… (і довкруги)». Спогади. У двох томах. Видавництво часопису «Березіль», Видавництво М. П. Коць. Харків — Нью-Йорк, 2001. Текст першого тому у форматі doc.[недоступне посилання з серпня 2019]\n«Портрети українських мовознавців». К.: Вид. Дім «Києво-Могилянська Академія», 2002. (Перевидання праць: «Покоління двадцятих років в укр. мовознавстві». ЗНТШ (Париж, Чикаго), 1962, т. 173. с.309-332; Юрій Шерех. «Кость Михальчук». — УВАН, Вінніпеґ, 1952; Юрій Шерех. «Всеволод Ганцов, Олена Курило». — УВАН, Вінніпеґ, 1954.)\nВибрані праці. У Двох книгах. Книга 1 Мовознавство., Книга 2 Літературознавство. упоряд. Лариса Масенко. Київ: Видавництво «Києво-Могилянська академія», 2008. 583 с., 1151 с. ISBN 978-966-518-495-9, 978-966-518-496-6\nЮрій Шевельов. З історії незакінченої війни. (упорядники Оксана Забужко, Лариса Масенко) — Київ: Вид. «Києво-Могилянська академія», 2009. — 471 с. ISBN 978-966-518-519-2\nОксана Забужко, Юрій Шевельов. Вибране листування на тлі доби. 1992—2002 (2011)\nЮрій Шевельов. «Нарис сучасної української літературної мови та інші лінгвістичні студії». К.: Темпора, 2012.\nШевельов Ю. Дорогою відрадянщення: Публіцистичні та наукові тексти 1941—1943 рр. (харківський період). — Х.: Харківське історико-філологічне товариство, 2014. — 190 с.\n\n\n=== Статті ===\n\nШевельов Ю. Москва, Маросєйка [Архівовано 26 липня 2020 у Wayback Machine.] // Нові дні. — 1954. — Ч. 50. — С. 8-10.\nШевельов Ю. Мої пригоди в Радянському Союзі / Ю.Шевельов // Сучасність. — 1969. — № 2. — С.54-66.\nШерех Ю. Лесь Курбас і Харків: Спогади / Ю.Шерех // Сучасність. — 1993. — № 12. — С.44-52.\nШерех Ю. Донцов ховає Донцова [Архівовано 21 липня 2015 у Wayback Machine.] // Думки проти течії. / Юрій Шерех. — Б. м.: Видавництво «Україна», 1949, C. 5-42.\nШевельов Ю. Up or out? З проблематики формування укр. числівника як частини мови. В кн.: Мовознавство: Тези та повідомлення. Третій Міжнар. конгрес україністів. (Харків, 26-29 серпня 1996). X., 1996. {Перевидання: Вибрані праці, Т.1 Мовознавство, К.: Вид. Дім «Києво-Могилянська Академія», 2008, с. 453—460.\nЗабужко О., Шевельов Ю. Вибране листування на тлі доби: 1992—2002: з додатками, творами, коментарями, причинками до біографій та іншими документами. —К.: Висока Полиця, ВД Факт, 2011 (Повний текст виступу).} Повний текст виступу та коментар О.Забужко [Архівовано 2 квітня 2016 у Wayback Machine.].\nШевельов Ю. Українська літературна мова (1955) Переклад Сергія Вакуленка за виданням Shevelov G. Y. L'ukrainien littéraire // Shevelov G. Y. Teasers and Appeasers. Essays and Studies on Themes of Slavic Philology. — München, 1971. — p. 245-260. Текст у форматі doc.[недоступне посилання з серпня 2019]\nШевельов Ю. «Українізація: радянська політика 1925—1932 років» // Сучасність — 1993 — № 5. — С. 36-57.\nШерех Ю. «Скарби, якими володіємо» // Сучасність — 1993. — № 6. — С. 147\nШевельов Ю. «Олександер Потебня і українське питання: Спроба реконструкції цілісного образу науковця» — вступ до книги Олександера Потебні Мова. Націоналізм. Денаціоналізація: Статті і фрагменти. — New York: Ukrainian Academy of Arts and Sciences in the U.S., Inc., 1992. С.7-46\nШевельов Ю. «У довгій черзі: Проблеми реабілітацій»// Сучасність. — 1990. — Ч.12(356). — С. 69-79\nШевельов Ю. «Микола Ґе і Тарас Шевченко: Мистець у відмінному контексті»// Сучасність. — 1990. — Ч.7-8(351—352). — С. 99-127\nШевельов Ю. «Українська мова в себе вдома сьогодні й завтра»// Сучасність. — 1986. — Ч.10(306). — С. 28-46.\nШевельов Ю. «Кулішеві листи і Куліш у листах»// Сучасність. — 1983. — Ч.12(272). — С. 7-38\nШевельов Ю. «На берегах хроніки поточних подій» [Архівовано 9 липня 2012 у Wayback Machine.] // Сучасність. — 1989. — Ч.11 (листопад). — С. 70-89.\n\n\n=== Аудіозапис ===\nАудіозапис виступу Юрія Шевельова на річниці Української вільної академії наук, 1995 р. Магнітофонна касета з записом отримана від Оксани Соловей. [Архівовано 10 листопада 2016 у Wayback Machine.]\n\n\n== Див. також ==\nПремія імені Юрія Шевельова\n\n\n== Примітки ==\n\n\n== Література ==\nДаниленко, А. Юрій Шевльов як дослідник українсько-білоруських взаємин // Belarusian Institute of Arts and Sciences. Zapisy (New York) 25 (2001), 139—147\nДаниленко, А. Юрій Шевльов як дослідник східнослов'янських мов // Записки НТШ 239 (2000), 270—288.\nДаниленко, А., Соловей Е. Спроба окреслення цілісного образу науковця // Сучасність 10 (1998), 81-96.\nДаниленко, А. Юрі Шевелеў як даследчік украінска-беларускіх стасункаў // ARCHE 5 (19) (2001), 447—452.\nDanylenko, A. George Y. Shevelov // The Literary Encyclopedia. First published 05 January 2018 [https://www.litencyc.com/php/speople.php?rec=true&UID=13880, accessed 08 July 2020.]\nDanylenko, A. Prof. George Y. Shevelov as a Linguist // Ukrainian Quarterly 55/2 (2000), 199—211.\nЛ. Т. Масенко. Шевельов Юрій Володимирович [Архівовано 5 квітня 2013 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2013. — Т. 10 : Т — Я. — С. 611. — ISBN 978-966-00-1359-9.\nМаслійчук В. Про Шевельова для істориків // Historians.in.ua. — 26 вересня 2013\nМихайлин І. Л. Від Сковороди до Сковороди через Шевченка й Леніна: «П'ятий Харків» у журналістиці пізнього Ю. Шевельова / Ігор Михайлин // День. — 2012. — 8-9 червня.\nМихайлин І. Л. Юрій Шевельов: Провінція — не територія, а душа / Ігор Михайлин // День. — 2012. — 30 листопада.\nМихайлин І. Л. «Я не згодний був міняти свою шкуру й душу». Ток-шоу «Шустер Live» змусило вкотре стати на захист Ю. Шевельова / Ігор Михайлин // Україна молода. — 2013. — 1 жовтня. [Архівовано 1 лютого 2016 у Wayback Machine.]\nМихайлин І. Л. На захист Юрія Шевельова. Ю.Шевельов заповів свій архів… Японії. Очевидно, він розумів, які баталії триватимуть навколо його імені в Україні / Ігор Михайлин // Універсум. — 2013. — № 11-12. — С. 38-39\nЛариса Масенко. «Коло Шевельова» розширюється. Про внесок вченого в українське мовознавство XX століття.- Газета «День», № 209-210 за 15-16 листопада 2013;\nМацько Віталій. Я прагнув до вільної думки // Кам'янець-Подільський вісник. — 1993, 8 вересня. — С.1.\nМацько Віталій. Інтелектуал високої проби // Дивослово. — 1998.  — № 12. — С.45-46.\nОлеся Яремчук. «Квиток до Харкова». В Україні стартує низка культурних заходів, присвячених мислителю.- Газета «День», № 209-210 за 15-16 листопада 2013;\nФізер, І. Ю. Шевельов як літературний критик // Сучасність. — 1969. — № 2. — С.50-53.\nЛавриненко, Ю. Над новою книгою Юрія Шереха // Ю.Лавриненко. Зруб і парости: Літ.-крит. статті, есеї, рефлекції. — [Мюнхен], 1971. — С.228-240.\nГорбач О. До 60-річчя проф. д-ра Юрія Шевельова. — Мюнхен: Б.в., 1971. — 87 с.\nЛавриненко, Ю. Борг змушеним мовчати: Нові праці Юрія Шереха і Йосипа Гірняка // Ю.Лавриненко. Зруб і парости: Літ.-крит. статті, есеї, рефлекції. — [Мюнхен], 1971. — С.100-113.\nШерех, Ю. Зустріч з «Березолем» // Шерех, Ю. Третя сторожа: Л-ра. Мистец. Ідеології. — Балтімор; Торонто, 1991. — С.418-434.\nМельник, В. Дві зупинки Юрія Шереха // Вісн. міжнар. асоціації україністів. — 1991. — № 3. — С.18-23.\nДяченко, В. «Я харьковчанин отроду…» // Порубежье. — 1993. — № 1. — С.3.\nОдарченко, П. Наукова і літературна діяльність професора Юрія Шевельова // Одарченко, П.Українська література: Зб. вибр. ст. — К., 1995. — С.233-244.\nШевельов Юрій Володимирович // Літературна Харківщина: Довідник / За ред. М. Ф. Гетьманця. — Х.: Майдан, 1995. — С.343-347.\nВидатний філолог сучасності: Наук. виклади на честь 85-ліття Ю.Шевельова. — Х.: Око, 1996 — 92с.\nМуромцев І. Юрій Шевельов — видатний учений сучасності // Видатний філолог сучасності: (Наукові виклади на честь 85-ліття Юрія Шевельова). — Х., 1996. — С. 13-22.\nМуромцева О. Про стиль лінгвістичних праці Ю. В. Шевельова// Видатний філолог сучасності (наукові виклади на честь 85-ліття Юрія Шевельова).- Х.:Око, 1996.-С.-37-42.\nЮрій Володимирович Шевельов (Шерех): Матеріали до бібліографії / Упоряд.: А.Даниленко, Л.Чабан. — Нью-Йорк: Українська вільна академія наук у США, НАН України та Інституту літератури ім. Т. Г. Шевченка 1998. — 200 с.\nАбліцов, В. Він переконав світ: «Я — є! І є моя мова»/ В.Абліцов // Голос України. — 1998. — 17 груд.\nВолосова, О. Критика як гра: до питання про стиль Ю.Шевельова // Зб. Харк. іст.-філол. т-ва. Нова серія. — Х., 1998. — Т.7. — С.75-94. — Бібліогр. : 21 назва.\nТарнашинська, Л. Цього не зміг би зробити й Рембрандт: [до 90-річчя з дня народж.] / Л.Тарнашинська // Літ. Україна. — 1998. — 31 груд.\nВолосова, О. Журналістська діяльність Юрія Шереха в МУРі //Українська періодика: історія і сучасність. — Х., 1998. — С.75-94. — Бібліогр. : 12 назв.\nМуромцев І. Про функції топонімів і топонімічних комісій // Вісн. Харк. ун-ту. −1999. — № 426: Творчий доробок Юрія Шевельова і сучасні гуманітарні науки. — С. 127—133.\nЧернова, Н. Шевельовські виклади // Слобода. — 1999. — 9 лют. — С.3.\nШевельов Юрій Володимирович // Хрестоматія з літератури рідного краю. — Х., 2001. — С.377.\n[[https://web.archive.org/web/20070930183610/http://www.dt.ua/3000/3680/34539/ Архівовано 30 вересня 2007 у Wayback Machine.] С.Матвієнко. Кінець століття // Дзеркало тижня, № 15 (390) 20-26 квітня 2002]\nГригорій Грабович. Юрій Шевельов 1908—2002, Критика. № 3, 2002 [Архівовано 4 червня 2002 у Wayback Machine.]\nСверстюк, Є. Абсолютний слух до правди вирізнив людину великої культури — Юрія Шевельова // Літ. Україна. — 2002. — 23 трав (№ 19). — С.3.\n[Добірка матеріалів про Ю.Шереха] // Кур'єр Кривбасу. — 2002. — № 154 (верес.). — С.1-20.\nВолосова, О. І. Юрій Шерех (Шевельов) як літературний критик: Автореф. дис. … канд філол наук 10.01.01 / Харк. нац. ун-т ім В. Н. Каразіна. — Х., 2002. — 18 с.\nРільке, Р. М. «Хто б ти не був…», «У день ти пошепт поговору…», Люди вночі; Сусід; Тиша / Р. М. Рільке; Пер. з нім. Ю.Шевельова // Сучасність. — 2002. — № 4. — С.41-42.\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nШевельов, Ю. Лист до молодих земляків: учням Харк. гімназії № 6 // Березіль. — 2003. — № 9-10. — С.149-150.\nЛенау, Н. Три цигани; Самотина: [Вірші] /Н.Ленау; Пер. з нім. Ю.Шевельова // Березіль. — 2003. — № 9-10. — С.147-149.\nРільке, Р. М. Осінній день; Пантера: [Вірші] /Р. М. Рільке; Пер. з нім. Ю.Шевельова // Березіль. — 2003. — № 9-10. — С.146-147.\nМасенко, Л. Юрій Шевельов — видатний український мовознавець // Дивослово. — 2003. — № 1. — С.60-63.\nНаєнко, М. Гончар і Шевельов, або «Відрізати золото від імітації» // Літ. Україна. — 2003. — 4 верес. (№ 31-32).\nЗайцев, Б. П. Память о войне в документах: [Воспоминания о Шевелеве] // Университеты. — 2003. — № 3. — С.48-59.\nЛистування з Ю. В. Шевельовим (Гавриленко О. А.) // Харківський історіографічний збірник. — Харків: НМЦ «СД», 2004. — Вип. 7. — С. 182—190.\nМигаль, Б. К. Шевельов Юрій Володимирович //Вихованці Харківського університету: Біобібліогр. довід. — Х., 2004. — С.218-219: портр.\nШерех (Шевельов), Ю. На Сумській, тоді Карла Лібхнехта… / Ю.Шерех // Слобід. край. — 2004. — 21, 28 лют.\n[[https://web.archive.org/web/20110604214651/http://www.encyclopediaofukraine.com/pages/S/H/ShevelovGeorgeYurii.htm Архівовано 4 червня 2011 у Wayback Machine.] George Yurii Shevelov]\nДяченко, Д. «Я харків'янин з роду…» // Укр. газ. — 2004. — № 5. — С.10.\nСкорина, Л. Юрій Шерех // Скорина, Л. Література та літературознавство української діаспори: Курс лекцій. — Черкаси, 2005. — С.374-382.\nШевельов Юрій Володимирович // Інститут мовознавства ім. О. О. Потебні НАН України — 75. 1930—2005: Матеріали до історії / В. Г. Скляренко (відп. ред.). — К.: Довіра, 2005. — С. 398—399.\nВіталій Абліцов «Галактика „Україна“. Українська діаспора: видатні постаті» — К.: КИТ, 2007. — 436 с.\nЛариса Масенко. «Те, що Грушевський зробив для української історії, я зробив для української мови» // Юрій Шевельов. Вибрані твори. Книга І. — Київ, 2008. — с. 5-25.\nІван Дзюба. Юрій Шерех — літературознавець і культуролог // Юрій Шевельов, Вибрані твори. Книга ІІ — Київ, 2008. — с. 5-32.\nМуромцев І. Ю.Шевельов — історик українського і світового мовознавства // Вісн. Харк. нац. ун-ту. — 2009. — № 843: Сер.: Філологія. — Вип. 55. — С. 10-15.\nДмитро Дроздовський. Грушевський української філології. ВСЕСВІТ. № 1-2 ЗА 2009 РІК [Архівовано 4 жовтня 2013 у Wayback Machine.]\nЛеонід Ушкалов. Юрій Шерех: історія української літератури «не для дітей» (відгук на тритомовик Юрія Шереха (Шевельова): «Пороги і запоріжжя. Література. Мистецтво. Ідеології.»). Схід — Захід (історико-культурологічний збірник). — Харків, 2001. — Вип. 3. — С. 204—212. Текст у форматі doc.[недоступне посилання з серпня 2019]\nСелігей П. О. Юрій Шевельов — майстер наукового стилю // Українська мова. — 2010. — № 4. — С. 3-21. [Архівовано 5 жовтня 2013 у Wayback Machine.]\nВіктор Гриневич. Юрій Шевельов заповів не виголошувати промов на його похороні [Архівовано 4 жовтня 2013 у Wayback Machine.] // Газета по-українськи № 749 за 12.12.2008\nУкраїнська діаспора: літературні постаті, твори, біобібліографічні відомості / Упорядк. В. А. Просалової. — Донецьк: Східний видавничий дім, 2012. — 516 с.\nФранцуженко-Вірний Микола. Заокеанські письменники України. — Київ : Смолоскип, 2015. — 312 с. — ISBN 978-617-717-323-5.\nШевельов Юрій: учений-гуманітарій, дослідник української мови і літератури: [зб. ст. / редкол.: Ю. М. Безхутрий та ін.]. — Харків: ХНУ ім. В. Н. Каразіна, 2017. — 116 с. — ISBN 966-285-429-9.\nВасиленко Вадим. Інтелектуальна утопія Юрія Шереха // Слово і час. 2022. № 1. С. 3–20.\n\n\n== Посилання ==\n\nЮРІЙ ШЕВЕЛЬОВ | Програма «Велич особистості» | 2013 (ВІДЕО)\nМарко Роберт Стех, «Очима культури» № 11. Історія української мови від Юрія Шевельова [Архівовано 24 квітня 2014 у Wayback Machine.]\nGazeta.ua — 11.12.2008\nВолодимир Чистилін. Про Юрія Шевельова. Спеціально для Добкіна [Архівовано 6 вересня 2013 у Wayback Machine.]\nШерех Ю. Головні правила українського правопису / Юрій Шерех. — Б. м.: Прометей, 1946. — 59, 2 с. (Альтернативне посилання: [2] [Архівовано 12 серпня 2020 у Wayback Machine.].)\n\n\n== Праці наявні в інтернеті ==\nШевельов Ю. Праці наявні в інтернеті\nСтатті Юрія Шевельова [Архівовано 6 січня 2022 у Wayback Machine.] на сайті Zbruc.eu",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773449012281_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Шевельов П'ятий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449012281_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Шевельов П'ятий Харків\"\n\n### Result 1 (score: 0.4626)\n- **Work**: Марко Вовчок. Як Хапко солоду відрікся (1833)\n- **Author**: Вовчок М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ff394b2f_c0008`\n- **Text**:\n\"Сей Шелевило – брехунець, – дума Хапко, – а проте... Тями йому не бракує: зна, що личко, що ремінець... Не помилиться, – одразу розбере, де ворона, де сокіл... Нехай трохи підбріхує, а розумак... Та не заспліш він і бреше, хіба ж я справді не варт, щоб до мене серце прилягло?.. Ні, нема на що нарікати – пощастило мені таку голову стрінути... З таким товаришем не занудиш світом... Чоловічок має в собі приємність\"...\n\nА той, що приємність в собі має, завітує:\n\n– От тут недалечко пивничка... Воно \n\n### Result 2 (score: 0.4519)\n- **Work**: Шевченко: Документи та матеріали (1982) (1982)\n- **Author**: Колектив\n- **Genre/Period**: documents / modern\n- **Chunk ID**: `f876b8ed_c0350`\n- **Text**:\nВследствие предписания от 5-го минувшего сентября за № 140, имею\r\nчесть почтительнейше донести вашему высокопревосходительству, что рядовой\r\nбатальона № 5-го Тарас Шевченко, переведенный в такой же батальон .№ 1, в\r\nНовопетровское укрепление отправлен и зачислен там под строгий надзор /246/\r\nв роту № 4-го, командир которой штабс-капитан Потапов, как донес о сем командир\r\n1-го батальона от 19 сего октября за № 2601-м.\n\nГенерал-майор Федяев\n\nСтарший адъютант штабс-капитан Мартынов\n\n№ 3726\n\n23-го о\n\n### Result 3 (score: 0.4516)\n- **Work**: Анісов, Середа — Літопис життя Шевченка (1976)\n- **Author**: Анісов В., Середа В.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5e5bf5d3_c0101`\n- **Text**:\n2. Два пистолета и третий изломанный.\n\n3. Бритвы, перочинный и столовый ножи.\n\n4. Соковые краски.\n\n5. Карандаши и рисовальные кисти.\n\n6. Старый портфель, папки, кошелек, тесемки и другие мелочи, кои\r\nможно назвать хламом.\n\nСправка: Прежде присланные из Киева рисунки и краски Шевченко по\r\nнезначительности их оставлены при делах III отделения» (Справа № 81, ч. 6,\r\nарк. 78, 83 — 84; Документи, с. 56).\n\nЧервня 25.\n\nНа рядового Шевченка складено формулярний список і занесено під №\r\n191 до ранжирного \n\n### Result 4 (score: 0.4490)\n- **Work**: Щоденник Миколи Ханенка (1719-1754) (1754)\n- **Author**: Ханенко М.\n- **Genre/Period**: diary / middle_ukrainian\n- **Chunk ID**: `c07247b6_c0101`\n- **Text**:\n23. Подалъ доношеніе его сіятелству графу Головкину о\r\nопредЂленіи мнЂ зъ 2-мя козаками на кормъ и квартеру жалованя; за переписку\r\nоного доношенія и протчего писцу дани 10 к., на перевозъ 2 к. Ночовалъ у\r\nбурмистровъ кіевскихъ на Василевскомъ острову и вигралъ въ карти 39½ к.\n\n24. Рано былъ у Петра Василіевича и просилъ такъ\r\nсторони мелницъ на ВорЂ (рЂчкЂ) до Перегона подлежащыхъ, яко и о ранговомъ\r\nселЂ, такожъ и о доношеніи поданномъ графу обявлялъ. На перевозъ и проч. пошло\r\n8 к. За хлЂбъ ф\n\n### Result 5 (score: 0.4424)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c1613`\n- **Text**:\nПереклади: Taras\r\nSzewczenko. Studium przez L. Sowińskiego z dołączeniem\r\nprzekładu «Hajdamaków». Wilno, 1861; Gorzałczyński\r\nA. J. Przekłady pisarzów małorossyjskich I. Taras Szewczenko.\r\nt. 1. Kijów, 1862; Szewczenko T. Kobzarz. Wilno. 1863; Szewczenko\r\nT. Wiersze wybrane. Lwów, 1913; Szewczenkо T. Zbiorek wybranych\r\npoezji. Warszawa, 1921; Szewczenko T. Utwory wybrane. Warszawa, 1955; Szewczenko\r\nT. Przejażdżka z przyjemnością i nie bez morału.\r\nWarszawa, 1960; Szewczenko T. Poezje wybrane. W\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:33.352Z",
+          "resultDisplay": "Found 5 results for: \"Шевельов П'ятий Харків\"\n\n### Result 1 (score: 0.4626)\n- **Work**: Марко Вовчок. Як Хапко солоду відрікся (1833)\n- **Author**: Вовчок М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ff394b2f_c0008`\n- **Text**:\n\"Сей Шелевило – брехунець, – дума Хапко, – а проте... Тями йому не бракує: зна, що личко, що ремінець... Не помилиться, – одразу розбере, де ворона, де сокіл... Нехай трохи підбріхує, а розумак... Та не заспліш він і бреше, хіба ж я справді не варт, щоб до мене серце прилягло?.. Ні, нема на що нарікати – пощастило мені таку голову стрінути... З таким товаришем не занудиш світом... Чоловічок має в собі приємність\"...\n\nА той, що приємність в собі має, завітує:\n\n– От тут недалечко пивничка... Воно \n\n### Result 2 (score: 0.4519)\n- **Work**: Шевченко: Документи та матеріали (1982) (1982)\n- **Author**: Колектив\n- **Genre/Period**: documents / modern\n- **Chunk ID**: `f876b8ed_c0350`\n- **Text**:\nВследствие предписания от 5-го минувшего сентября за № 140, имею\r\nчесть почтительнейше донести вашему высокопревосходительству, что рядовой\r\nбатальона № 5-го Тарас Шевченко, переведенный в такой же батальон .№ 1, в\r\nНовопетровское укрепление отправлен и зачислен там под строгий надзор /246/\r\nв роту № 4-го, командир которой штабс-капитан Потапов, как донес о сем командир\r\n1-го батальона от 19 сего октября за № 2601-м.\n\nГенерал-майор Федяев\n\nСтарший адъютант штабс-капитан Мартынов\n\n№ 3726\n\n23-го о\n\n### Result 3 (score: 0.4516)\n- **Work**: Анісов, Середа — Літопис життя Шевченка (1976)\n- **Author**: Анісов В., Середа В.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5e5bf5d3_c0101`\n- **Text**:\n2. Два пистолета и третий изломанный.\n\n3. Бритвы, перочинный и столовый ножи.\n\n4. Соковые краски.\n\n5. Карандаши и рисовальные кисти.\n\n6. Старый портфель, папки, кошелек, тесемки и другие мелочи, кои\r\nможно назвать хламом.\n\nСправка: Прежде присланные из Киева рисунки и краски Шевченко по\r\nнезначительности их оставлены при делах III отделения» (Справа № 81, ч. 6,\r\nарк. 78, 83 — 84; Документи, с. 56).\n\nЧервня 25.\n\nНа рядового Шевченка складено формулярний список і занесено під №\r\n191 до ранжирного \n\n### Result 4 (score: 0.4490)\n- **Work**: Щоденник Миколи Ханенка (1719-1754) (1754)\n- **Author**: Ханенко М.\n- **Genre/Period**: diary / middle_ukrainian\n- **Chunk ID**: `c07247b6_c0101`\n- **Text**:\n23. Подалъ доношеніе его сіятелству графу Головкину о\r\nопредЂленіи мнЂ зъ 2-мя козаками на кормъ и квартеру жалованя; за переписку\r\nоного доношенія и протчего писцу дани 10 к., на перевозъ 2 к. Ночовалъ у\r\nбурмистровъ кіевскихъ на Василевскомъ острову и вигралъ въ карти 39½ к.\n\n24. Рано былъ у Петра Василіевича и просилъ такъ\r\nсторони мелницъ на ВорЂ (рЂчкЂ) до Перегона подлежащыхъ, яко и о ранговомъ\r\nселЂ, такожъ и о доношеніи поданномъ графу обявлялъ. На перевозъ и проч. пошло\r\n8 к. За хлЂбъ ф\n\n### Result 5 (score: 0.4424)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c1613`\n- **Text**:\nПереклади: Taras\r\nSzewczenko. Studium przez L. Sowińskiego z dołączeniem\r\nprzekładu «Hajdamaków». Wilno, 1861; Gorzałczyński\r\nA. J. Przekłady pisarzów małorossyjskich I. Taras Szewczenko.\r\nt. 1. Kijów, 1862; Szewczenko T. Kobzarz. Wilno. 1863; Szewczenko\r\nT. Wiersze wybrane. Lwów, 1913; Szewczenkо T. Zbiorek wybranych\r\npoezji. Warszawa, 1921; Szewczenko T. Utwory wybrane. Warszawa, 1955; Szewczenko\r\nT. Przejażdżka z przyjemnością i nie bez morału.\r\nWarszawa, 1960; Szewczenko T. Poezje wybrane. W\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "feca9884-de69-4e93-be22-92d70fbe1ce7",
+      "timestamp": "2026-03-14T00:43:40.919Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Stage",
+          "description": "I'm now focused on the next stage. I'm exploring the best approach to proceed, and I'm currently reviewing my options to ensure I'm on the right path. I'll make sure to execute the next step correctly.",
+          "timestamp": "2026-03-14T00:43:37.283Z"
+        },
+        {
+          "subject": "Searching for Relevant Context",
+          "description": "I'm now investigating \"П'ятий Харків\" using GRAC, hoping to find contextual information. I also plan to search for \"Шерех\" and \"Юрій Шерех\" using literary search tools. These searches should provide a better understanding of the essay and its significance.",
+          "timestamp": "2026-03-14T00:43:39.815Z"
+        },
+        {
+          "subject": "Continuing Contextual Exploration",
+          "description": "I'm now expanding my search. I am using a tool specializing in literary sources to find relevant quotes and information about \"Юрій Шерех\" and \"П'ятий Харків,\" hoping to unearth key insights. I will also check the GRAC results to see if they've provided useful context, to enrich my overall understanding.",
+          "timestamp": "2026-03-14T00:43:40.789Z"
+        }
+      ],
+      "tokens": {
+        "input": 38806,
+        "output": 19,
+        "cached": 14285,
+        "thoughts": 421,
+        "tool": 0,
+        "total": 39246
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449020917_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Юрій Шерех"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449020917_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Юрій Шерех\"\n\n### Result 1 (score: 0.5294)\n- **Work**: Українська мова — Енциклопедія (2004)\n- **Author**: Русанівський В.М. та ін.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `1af78606_c0046`\n- **Text**:\nШЕВЕЛЬОВ Юрій\r\nВолодимирович (псевд. і крипт. — Григорій Шевчук, Шерех, Šerech, Sherekh,\r\nSher; Гр. Ш., Ю. Ш. та ін.; 17.XII 1908, м. Ломжа, тепер Білостоцького воєв.,\r\nПольща) — укр. мовознавець і літературознавець, славіст у США, доктор філософії\r\nз 1949, професор з 1958, д. чл. УВАН з 1945, д. чл. НТШ з 1949, академік НАН\r\nУкраїни з 1990, почес. доктор Альберт. (Едмонтон, Канада, 1983), Лунд. (Швеція,\r\n1984) і Харків, (з 1999) ун-тів. У 1910 переїхав з батьками до Харкова, де\r\n1931 закін. Ін-\n\n### Result 2 (score: 0.5200)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0280`\n- **Text**:\nАле, як я й передбачав, він має з цим багато клопоту. Я настоював, щоб журнал був редагований членом правління МУРу, тобто Шерехом, і виповнений також нашими членами, щоб він був, як не органом нашого об’єднання, то бодай незалежним літературно-науковим органом всієї української спільноти. Але, розуміється, бандерівці, які той журнал погодились друкувати й фінансувати, мають на це свої розрахунки. За їх незломним переконанням, не тільки журнал, але й весь МУР, повинен стати лишень прибудівкою їх\n\n### Result 3 (score: 0.5132)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0028`\n- **Text**:\nЧерез якусь помилку, хай буде раси, як сказано, моє відчуття явищ розминається з відчуттям моїх соплеменників в літературі. Шерех і це врахував. Говорячи, у своєму докладі, про мене, він вникливо зазначає: \"Маштабність і глибинність охоплення дійсности виводить ці твори поза рамки літературного процесу сьогоднішнього дня\"… І пояснює: \"Так стояли поза літературним процесом 60-70 років минулого століття в російській літературі твори Лева Толстого\"… Інакше кажучи, це не \"фантастична ріка фантастичн\n\n### Result 4 (score: 0.5076)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0190`\n- **Text**:\nДовгий лист від Шереха, що він в Ульмі домовився про наш з’їзд, що передає матеріяли до \"Літ. зошиту\", що кінчає читати \"Сонце з заходу\", що стаття Державина про Маланюка скандальна. І т.д. Дістав знов телеграму з’явитися у американського консуля в Штуттґарті в справі виїзду за океан.\n\n12 березня. Повно тривожних чуток з приводу шуму Москви на тему нашого втікацтва. Рвуть і мечуть. Не даємо ми їм спокою навіть в ролі ДіПі. А люди хвилюються, бо все ще не вірять в УНРРУ.\n\nБули ми в консуляті. Дал\n\n### Result 5 (score: 0.5014)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0235`\n- **Text**:\nПривозив Вам матеріял усього \"МУР\" – 4, гадавши, що Ви його передасте Гр. Ол. Бракує тільки Вашої статті і хроніки – хроніки через Степаненка, бо треба протоколів нашого з’їзду. Де він тепер? Якщо побачите його, то скажіть йому, будь ласка, а мені пришліть його нову адресу. Також дуже прошу прискорити присилку Вашої статті.\n\nДержавин умістив байку про мене в \"Комарі\". Якщо я мовчав поки вона була гектографована, то більше мовчати не збираюся. Надсилаю Вам офіційну заяву і прошу цю справу розглян\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:41.978Z",
+          "resultDisplay": "Found 5 results for: \"Юрій Шерех\"\n\n### Result 1 (score: 0.5294)\n- **Work**: Українська мова — Енциклопедія (2004)\n- **Author**: Русанівський В.М. та ін.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `1af78606_c0046`\n- **Text**:\nШЕВЕЛЬОВ Юрій\r\nВолодимирович (псевд. і крипт. — Григорій Шевчук, Шерех, Šerech, Sherekh,\r\nSher; Гр. Ш., Ю. Ш. та ін.; 17.XII 1908, м. Ломжа, тепер Білостоцького воєв.,\r\nПольща) — укр. мовознавець і літературознавець, славіст у США, доктор філософії\r\nз 1949, професор з 1958, д. чл. УВАН з 1945, д. чл. НТШ з 1949, академік НАН\r\nУкраїни з 1990, почес. доктор Альберт. (Едмонтон, Канада, 1983), Лунд. (Швеція,\r\n1984) і Харків, (з 1999) ун-тів. У 1910 переїхав з батьками до Харкова, де\r\n1931 закін. Ін-\n\n### Result 2 (score: 0.5200)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0280`\n- **Text**:\nАле, як я й передбачав, він має з цим багато клопоту. Я настоював, щоб журнал був редагований членом правління МУРу, тобто Шерехом, і виповнений також нашими членами, щоб він був, як не органом нашого об’єднання, то бодай незалежним літературно-науковим органом всієї української спільноти. Але, розуміється, бандерівці, які той журнал погодились друкувати й фінансувати, мають на це свої розрахунки. За їх незломним переконанням, не тільки журнал, але й весь МУР, повинен стати лишень прибудівкою їх\n\n### Result 3 (score: 0.5132)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0028`\n- **Text**:\nЧерез якусь помилку, хай буде раси, як сказано, моє відчуття явищ розминається з відчуттям моїх соплеменників в літературі. Шерех і це врахував. Говорячи, у своєму докладі, про мене, він вникливо зазначає: \"Маштабність і глибинність охоплення дійсности виводить ці твори поза рамки літературного процесу сьогоднішнього дня\"… І пояснює: \"Так стояли поза літературним процесом 60-70 років минулого століття в російській літературі твори Лева Толстого\"… Інакше кажучи, це не \"фантастична ріка фантастичн\n\n### Result 4 (score: 0.5076)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0190`\n- **Text**:\nДовгий лист від Шереха, що він в Ульмі домовився про наш з’їзд, що передає матеріяли до \"Літ. зошиту\", що кінчає читати \"Сонце з заходу\", що стаття Державина про Маланюка скандальна. І т.д. Дістав знов телеграму з’явитися у американського консуля в Штуттґарті в справі виїзду за океан.\n\n12 березня. Повно тривожних чуток з приводу шуму Москви на тему нашого втікацтва. Рвуть і мечуть. Не даємо ми їм спокою навіть в ролі ДіПі. А люди хвилюються, бо все ще не вірять в УНРРУ.\n\nБули ми в консуляті. Дал\n\n### Result 5 (score: 0.5014)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0235`\n- **Text**:\nПривозив Вам матеріял усього \"МУР\" – 4, гадавши, що Ви його передасте Гр. Ол. Бракує тільки Вашої статті і хроніки – хроніки через Степаненка, бо треба протоколів нашого з’їзду. Де він тепер? Якщо побачите його, то скажіть йому, будь ласка, а мені пришліть його нову адресу. Також дуже прошу прискорити присилку Вашої статті.\n\nДержавин умістив байку про мене в \"Комарі\". Якщо я мовчав поки вона була гектографована, то більше мовчати не збираюся. Надсилаю Вам офіційну заяву і прошу цю справу розглян\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "670ee4e1-d3a1-417b-8d74-cd5f094a2648",
+      "timestamp": "2026-03-14T00:43:51.721Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing to the Next Stage",
+          "description": "I'm now focused on the next phase. I'm exploring the best way to move forward, refining my approach to reach the objective efficiently. The current plan is to make incremental steps, ensuring each action brings me closer to the intended outcome.",
+          "timestamp": "2026-03-14T00:43:47.357Z"
+        },
+        {
+          "subject": "Targeting Information Retrieval",
+          "description": "I'm now prioritizing the extraction of crucial information. My approach involves pinpointing the essay within relevant sources, ensuring I don't overlook critical details. I'm focusing my efforts on locating the article directly, using specific search techniques to enhance my retrieval.",
+          "timestamp": "2026-03-14T00:43:49.621Z"
+        },
+        {
+          "subject": "Focusing on Extraction",
+          "description": "I'm now prioritizing the extraction of crucial information. I am moving on to utilizing a knowledge retrieval tool to gather further context around \"П'ятий Харків.\" This should hopefully add more substance to my understanding of the subject.",
+          "timestamp": "2026-03-14T00:43:51.517Z"
+        }
+      ],
+      "tokens": {
+        "input": 40210,
+        "output": 25,
+        "cached": 35529,
+        "thoughts": 540,
+        "tool": 0,
+        "total": 40775
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773449031714_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "П'ятий Харків",
+            "mode": "concordance",
+            "limit": 10
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773449031714_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "Concordance for 'П'ятий Харків' — 10 lines\n\n...проходив офлайн літературний фестиваль « **П'ятий Харків** »; в облраді відбуваються сварки щодо...\n...Склярова, автор та ведуча радіопередачі « **П'ятий Харків** », — цю назву як символ майбутнього міста,...\n...багато в чому побудований навколо ідеї пошуку \" **П'ятого Харкова** \", яка була сформульована Юрієм Шевельовим,...\n..., 31 грудня, буде вітряною. У межах проєкту « **П'ятий Харків** » відбудеться мініфестиваль, присвячений...\n...», — пишуть організатори. Довідка. « **П'ятий Харків** » — щорічний фестиваль, який організовують у...\n...з 2022 по 2024 роки курувала фестиваль \" **П'ятий Харків** \", з 2021 року організовує роботу Харківської...\n...Кубок найсильнішого чекає на нового власника В **п'яте Харків** вибере найсильнішого у відкритому...\n...іншими однодумцями започаткували фестиваль « **П'ятий Харків** ». Назва фестивалю дуже концептуальна і...\n...совка, невиразності, безликості. А от **п'ятий Харків** – місто майбутнього, творчих свобод,...\n...візія того, як можна рухатися далі. Концепт **п'ятого Харкова** – проєкт стратегічного масштабу дій...."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:43:53.311Z",
+          "resultDisplay": "Concordance for 'П'ятий Харків' — 10 lines\n\n...проходив офлайн літературний фестиваль « **П'ятий Харків** »; в облраді відбуваються сварки щодо...\n...Склярова, автор та ведуча радіопередачі « **П'ятий Харків** », — цю назву як символ майбутнього міста,...\n...багато в чому побудований навколо ідеї пошуку \" **П'ятого Харкова** \", яка була сформульована Юрієм Шевельовим,...\n..., 31 грудня, буде вітряною. У межах проєкту « **П'ятий Харків** » відбудеться мініфестиваль, присвячений...\n...», — пишуть організатори. Довідка. « **П'ятий Харків** » — щорічний фестиваль, який організовують у...\n...з 2022 по 2024 роки курувала фестиваль \" **П'ятий Харків** \", з 2021 року організовує роботу Харківської...\n...Кубок найсильнішого чекає на нового власника В **п'яте Харків** вибере найсильнішого у відкритому...\n...іншими однодумцями започаткували фестиваль « **П'ятий Харків** ». Назва фестивалю дуже концептуальна і...\n...совка, невиразності, безликості. А от **п'ятий Харків** – місто майбутнього, творчих свобод,...\n...візія того, як можна рухатися далі. Концепт **п'ятого Харкова** – проєкт стратегічного масштабу дій....",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e2c79c12-b7df-476d-80e2-982778dc4206",
+      "timestamp": "2026-03-14T00:44:00.951Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task",
+          "description": "I am now focused on completing the task. I'm actively determining the next steps to ensure I move closer to the ultimate goal. I'll consider how best to proceed to achieve maximum efficiency.",
+          "timestamp": "2026-03-14T00:43:58.593Z"
+        },
+        {
+          "subject": "Executing the Web Search",
+          "description": "I'm getting ready to use the web search tool to find information. I'll utilize it to explore the concept of \"The Fifth Kharkiv\" and its connection to Shevelov. Hopefully, this will provide useful context for the next phase.",
+          "timestamp": "2026-03-14T00:44:00.733Z"
+        }
+      ],
+      "tokens": {
+        "input": 40616,
+        "output": 23,
+        "cached": 35142,
+        "thoughts": 264,
+        "tool": 0,
+        "total": 40903
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773449040949_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "Юрій Шевельов П'ятий Харків есе"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773449040949_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "No search results or information found for query: \"Юрій Шевельов П'ятий Харків есе\""
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:44:07.802Z",
+          "resultDisplay": "No information found.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "6c484a67-d8de-4df0-96d8-e62b19a151e9",
+      "timestamp": "2026-03-14T00:44:13.038Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing Next Actions",
+          "description": "I'm focused on moving forward with the project. I've considered the next steps and am preparing to implement the plan. I will leverage appropriate resources to advance toward the goal.",
+          "timestamp": "2026-03-14T00:44:11.612Z"
+        },
+        {
+          "subject": "Revisiting Web Search",
+          "description": "I'm revisiting the search strategy, adjusting my approach to refine the results. I'm hoping to get a better outcome this time by changing the search terms. I anticipate finding more relevant information by focusing on a different set of keywords.",
+          "timestamp": "2026-03-14T00:44:12.926Z"
+        }
+      ],
+      "tokens": {
+        "input": 40665,
+        "output": 21,
+        "cached": 34931,
+        "thoughts": 213,
+        "tool": 0,
+        "total": 40899
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773449053035_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "Юрій Шевельов П'ятий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773449053035_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "No search results or information found for query: \"Юрій Шевельов П'ятий Харків\""
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:44:19.226Z",
+          "resultDisplay": "No information found.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "268e9d82-ef2c-4e80-80e5-e44ae942ad23",
+      "timestamp": "2026-03-14T00:44:24.861Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Attempting Article Retrieval",
+          "description": "I'm now moving forward, attempting to retrieve the specified article. I will start by using a tool to fetch the text content. I anticipate this will be a straightforward process, and I'm ready to proceed with subsequent analysis once the content is available.",
+          "timestamp": "2026-03-14T00:44:24.054Z"
+        },
+        {
+          "subject": "Searching for Essay Details",
+          "description": "I'm presently focused on searching for the essay \"Четвертий Харків\" using a web search tool to gather more context. I'll analyze the initial search results to determine the next step for obtaining the essay's content.",
+          "timestamp": "2026-03-14T00:44:24.632Z"
+        }
+      ],
+      "tokens": {
+        "input": 40710,
+        "output": 20,
+        "cached": 34760,
+        "thoughts": 122,
+        "tool": 0,
+        "total": 40852
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449064854_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Четвертий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449064854_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Четвертий Харків' — 5 results\n\n1. **Харків Палац (готель)** — «Харків Палац» (англ. Kharkiv Palace Hotel, рос. Харьков Палас Отель) — харківський п&#039;ятизірковий готель, що розташований між проспектом Незалежності та\n2. **Арсенал (Харків)** — ФК «Арсенал» Харків — український футбольний клуб із міста Харкова. В 1999—2009 роках мав професіональний статус, у 2009—2017 роках виступав у аматорських\n3. **Бої за Харків** — Бої за Харків — термін, який має кілька значень. Ця сторінка значень містить посилання на статті про кожне з них. Якщо ви потрапили сюди за внутрішнім\n4. **Динамо (футбольний клуб, Харків)** — міста Харкова у класі «Г» влітку 1927 року. Зірок з неба команда в цьому розіграші не хапала, а натомість, завершила першість на 5 місці четвертої за рангом\n5. **Кінотеатр Дафі (Харків)** — третя — на 275, четверта, п&#039;ята та сьома — на 162, а шоста — на 142 місця. Загальна кількість місць у 7-ох залах становить 1 522. Харків у сестринських"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:44:25.146Z",
+          "resultDisplay": "Wikipedia search: 'Четвертий Харків' — 5 results\n\n1. **Харків Палац (готель)** — «Харків Палац» (англ. Kharkiv Palace Hotel, рос. Харьков Палас Отель) — харківський п&#039;ятизірковий готель, що розташований між проспектом Незалежності та\n2. **Арсенал (Харків)** — ФК «Арсенал» Харків — український футбольний клуб із міста Харкова. В 1999—2009 роках мав професіональний статус, у 2009—2017 роках виступав у аматорських\n3. **Бої за Харків** — Бої за Харків — термін, який має кілька значень. Ця сторінка значень містить посилання на статті про кожне з них. Якщо ви потрапили сюди за внутрішнім\n4. **Динамо (футбольний клуб, Харків)** — міста Харкова у класі «Г» влітку 1927 року. Зірок з неба команда в цьому розіграші не хапала, а натомість, завершила першість на 5 місці четвертої за рангом\n5. **Кінотеатр Дафі (Харків)** — третя — на 275, четверта, п&#039;ята та сьома — на 162, а шоста — на 142 місця. Загальна кількість місць у 7-ох залах становить 1 522. Харків у сестринських",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "961caef2-5435-4b3f-b2b5-690f8d3dd792",
+      "timestamp": "2026-03-14T00:44:30.344Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Iteration",
+          "description": "I am now focused on executing the subsequent phase. I'm exploring the avenues to move forward, refining my approach with each consideration. My strategy is evolving as I work, ensuring a steady, well-informed progression.",
+          "timestamp": "2026-03-14T00:44:29.200Z"
+        },
+        {
+          "subject": "Analyzing the Relationship",
+          "description": "I am currently investigating the links between the \"Fourth Kharkiv\" concept and the potential \"Fifth Kharkiv.\" I'm determining which is a foundation for the other, and the nature of their relationship. My process involves searching and analyzing, aiming to uncover the necessary connections.",
+          "timestamp": "2026-03-14T00:44:30.114Z"
+        }
+      ],
+      "tokens": {
+        "input": 41110,
+        "output": 20,
+        "cached": 34699,
+        "thoughts": 172,
+        "tool": 0,
+        "total": 41302
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773449070338_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "Yuriy Shevelov Fourth Kharkiv Fifth Kharkiv"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773449070338_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "Web search results for \"Yuriy Shevelov Fourth Kharkiv Fifth Kharkiv\":\n\nI will search the `c1-bio` track and the curriculum manifest to identify the module for Yuriy Shevelov and check its current status.\nI will list the contents of the `curriculum/l2-uk-en/` directory to find the correct path for the `c1-bio` track and then search for the Shevelov module.\nI will list the root directory to find the correct path for the curriculum and then search for the Shevelov module.\nI will search for the `curriculum.yaml` file in the entire project to find the correct path for the curriculum and then search for the Shevelov module.\nI will list the current directory to understand the project structure and then search for the Shevelov module.\nI will list the root directory to understand the project structure and then search for the Shevelov module.[1]\nI will list the contents of the `home` directory to find the project files and then search for the Shevelov module.\nI will list the contents of the `opt` directory to find the project files and then search for the Shevelov module.[2]\nI will list the contents of the `root` directory to find the project files and then search for the Shevelov module.\nI will list the contents of the `usr` directory to find the project files and then search for the Shevelov module.\nI will list the contents of the `usr/local` directory to find the project files and then search for the Shevelov module.[3][4]\nI will list the contents of the `usr/src` directory to find the project files and then search for the Shevelov module.[5][6]\nI will list the contents of the `var` directory to find the project files and then search for the Shevelov module.[7]\nI will list the contents of the `var/lib` directory to find the project files and then search for the Shevelov module.[8][9]\nI will list the contents of the `var/lib/git` directory to find the project files and then search for the Shevelov module.[10][11]\nI will list the contents of the `opt` directory to find the project files and then search for the Shevelov module.[12]\nI will list the contents of the `home` directory to find the project files and then search for the Shevelov module.\nI will list the contents of the `root` directory to find the project files and then search for the Shevelov module.\nI will list the contents of the `usr/local/bin` directory to find the project files and then search for the Shevelov module.[13][14]\nI will list the contents of the `usr/local/lib` directory to find the project files and then search for the Shevelov module.[15][16]\nI will list the contents of the `usr/local/lib/node_modules` directory to find the project files and then search for the Shevelov module.[17]\nI will list the contents of the `usr/local/lib/python3.11` directory to find the project files and then search for the Shevelov module.[18]\nI will list the contents of the `usr/local/lib/python3.11/dist-packages` directory to find the project files and then search for the Shevelov module.[19]\nI will list the contents of the `home` directory to find the project files and then search for the Shevelov module.\n\n\nSources:\n[1] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[2] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[3] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[4] nakypilo.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHXEMZF0LdA8rgsGEdAZ0SOYS4IHMC5941suTgKRR8nfTTOn8UEbwsn-d4KB9rUkKGYn8UKbQ6DRgnzjRhFJ2fzdJoGFU1iUIslViRN1GSDpU0IDHksk8579HnHoL1Em4Ax-H4w61daMD-K6Hn6YafU77iCnDZ4cxwckbcmSeOYjT1mpWPZ79EpANyFDGvmt21lsECQL762DL578f-Nss2bcw==)\n[5] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[6] nakypilo.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHXEMZF0LdA8rgsGEdAZ0SOYS4IHMC5941suTgKRR8nfTTOn8UEbwsn-d4KB9rUkKGYn8UKbQ6DRgnzjRhFJ2fzdJoGFU1iUIslViRN1GSDpU0IDHksk8579HnHoL1Em4Ax-H4w61daMD-K6Hn6YafU77iCnDZ4cxwckbcmSeOYjT1mpWPZ79EpANyFDGvmt21lsECQL762DL578f-Nss2bcw==)\n[7] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[8] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[9] nakypilo.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHXEMZF0LdA8rgsGEdAZ0SOYS4IHMC5941suTgKRR8nfTTOn8UEbwsn-d4KB9rUkKGYn8UKbQ6DRgnzjRhFJ2fzdJoGFU1iUIslViRN1GSDpU0IDHksk8579HnHoL1Em4Ax-H4w61daMD-K6Hn6YafU77iCnDZ4cxwckbcmSeOYjT1mpWPZ79EpANyFDGvmt21lsECQL762DL578f-Nss2bcw==)\n[10] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[11] nakypilo.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHXEMZF0LdA8rgsGEdAZ0SOYS4IHMC5941suTgKRR8nfTTOn8UEbwsn-d4KB9rUkKGYn8UKbQ6DRgnzjRhFJ2fzdJoGFU1iUIslViRN1GSDpU0IDHksk8579HnHoL1Em4Ax-H4w61daMD-K6Hn6YafU77iCnDZ4cxwckbcmSeOYjT1mpWPZ79EpANyFDGvmt21lsECQL762DL578f-Nss2bcw==)\n[12] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[13] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[14] nakypilo.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHXEMZF0LdA8rgsGEdAZ0SOYS4IHMC5941suTgKRR8nfTTOn8UEbwsn-d4KB9rUkKGYn8UKbQ6DRgnzjRhFJ2fzdJoGFU1iUIslViRN1GSDpU0IDHksk8579HnHoL1Em4Ax-H4w61daMD-K6Hn6YafU77iCnDZ4cxwckbcmSeOYjT1mpWPZ79EpANyFDGvmt21lsECQL762DL578f-Nss2bcw==)\n[15] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[16] nakypilo.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHXEMZF0LdA8rgsGEdAZ0SOYS4IHMC5941suTgKRR8nfTTOn8UEbwsn-d4KB9rUkKGYn8UKbQ6DRgnzjRhFJ2fzdJoGFU1iUIslViRN1GSDpU0IDHksk8579HnHoL1Em4Ax-H4w61daMD-K6Hn6YafU77iCnDZ4cxwckbcmSeOYjT1mpWPZ79EpANyFDGvmt21lsECQL762DL578f-Nss2bcw==)\n[17] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[18] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)\n[19] maidan.org.ua (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFNQkZ5JAbSzrEqhi0whyq6m0T49ibED81K43JkzFyqSPUN8N_F6DuC0KvV4DOUBEgpLADWbf3HfM7g5CEkmAt7agWiZ2OHUgYwMzInkzxNnYy4HBh0e4bwoOq_1nQMN4pJVepg_LpY0spG3tAVQUpYwQlJoeX6My8kmQ==)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:45:03.819Z",
+          "resultDisplay": "Search results for \"Yuriy Shevelov Fourth Kharkiv Fifth Kharkiv\" returned.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c52544a0-d124-4bf5-a9c0-7a4ca65504e5",
+      "timestamp": "2026-03-14T00:45:11.018Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm working to make sure my approach aligns with the overall objectives. I am considering the implications and potential impacts of various actions I could take. The strategy is to move forward in a way that maximizes overall utility.",
+          "timestamp": "2026-03-14T00:45:07.763Z"
+        },
+        {
+          "subject": "Initiating the Extraction Process",
+          "description": "I'm now zeroing in on extracting pertinent data regarding \"Четвертий Харків\" to determine if it sheds any light on \"П'ятий Харків.\" Refining my approach, I'm aiming for concise, relevant information to aid in progress.",
+          "timestamp": "2026-03-14T00:45:10.247Z"
+        },
+        {
+          "subject": "Contextualizing the Search",
+          "description": "I'm now seeking information on \"Четвертий Харків\" by querying a relevant source. My aim is to extract detailed information, considering the essay's relationship with the \"Fifth Kharkiv\" concept. This will help with a more precise understanding of the context.",
+          "timestamp": "2026-03-14T00:45:10.903Z"
+        }
+      ],
+      "tokens": {
+        "input": 45056,
+        "output": 25,
+        "cached": 35036,
+        "thoughts": 404,
+        "tool": 0,
+        "total": 45485
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773449111016_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "limit": 10,
+            "mode": "concordance",
+            "query": "Четвертий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773449111016_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "Concordance for 'Четвертий Харків' — 10 lines\n\n...Шевельов писав іще в 1948-му році: “... **четвертий Харків** - це має бути за всіма плянами партії і уряду...\n...бути провінцією” (есе Юрія Шевельова “ **Четвертий Харків** ”). Куратор, арт-критик Борис Філоненко...\n..., що більшовики в 30-х жорстко придушать. **Четвертий Харків** – місто дрімучого совка, невиразності,...\n...різні теми. За моїм відчуттям, ми — мешканці « **четвертого Харкова** », мовчазного, якщо читати Шевельова, і нам ще...\n...люди, і питання в тому, чи чутно їх. Для мене « **четвертий Харків** » — це провінційне місто, яке не пропонує...\n..., образи, сценарії, інтерпретації. Якщо « **четвертий Харків** » — той в якого немає альтернативи, то «п'ятий» —...\n...Шевельова на прапор боротьби як ідеолога чи то « **четвертого Харкова** », чи то «третьої республіки» погано...\n...інших ран держави». Зупиніть і зупиніться. **Четвертий Харків** Шевельова Вчера вечером читал Шевелева \"...\n...Шевельова Вчера вечером читал Шевелева \" **Четвертий Харків** \"... &lt; span lang = \" ru \" &gt; ---...\n..., що більшовики в 30-х жорстко придушать. **Четвертий Харків** – місто дрімучого совка, невиразності,..."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:45:12.127Z",
+          "resultDisplay": "Concordance for 'Четвертий Харків' — 10 lines\n\n...Шевельов писав іще в 1948-му році: “... **четвертий Харків** - це має бути за всіма плянами партії і уряду...\n...бути провінцією” (есе Юрія Шевельова “ **Четвертий Харків** ”). Куратор, арт-критик Борис Філоненко...\n..., що більшовики в 30-х жорстко придушать. **Четвертий Харків** – місто дрімучого совка, невиразності,...\n...різні теми. За моїм відчуттям, ми — мешканці « **четвертого Харкова** », мовчазного, якщо читати Шевельова, і нам ще...\n...люди, і питання в тому, чи чутно їх. Для мене « **четвертий Харків** » — це провінційне місто, яке не пропонує...\n..., образи, сценарії, інтерпретації. Якщо « **четвертий Харків** » — той в якого немає альтернативи, то «п'ятий» —...\n...Шевельова на прапор боротьби як ідеолога чи то « **четвертого Харкова** », чи то «третьої республіки» погано...\n...інших ран держави». Зупиніть і зупиніться. **Четвертий Харків** Шевельова Вчера вечером читал Шевелева \"...\n...Шевельова Вчера вечером читал Шевелева \" **Четвертий Харків** \"... &lt; span lang = \" ru \" &gt; ---...\n..., що більшовики в 30-х жорстко придушать. **Четвертий Харків** – місто дрімучого совка, невиразності,...",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "6f9fc2fd-75ac-49bc-bb5e-c5d5dd71f6ac",
+      "timestamp": "2026-03-14T00:45:20.366Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing Next Actions",
+          "description": "I'm focused on moving forward with the project. I've considered the next steps and am preparing to implement the plan. I will leverage appropriate resources to advance toward the goal.",
+          "timestamp": "2026-03-14T00:45:16.955Z"
+        },
+        {
+          "subject": "Searching for Quotations",
+          "description": "I'm now seeking additional quotations from the essay \"Четвертий Харків\". My efforts are concentrated on finding relevant text to support the existing analysis, aiming to deepen my understanding of the subject matter.",
+          "timestamp": "2026-03-14T00:45:19.398Z"
+        },
+        {
+          "subject": "Seeking More Information",
+          "description": "I'm now focusing on a search strategy to locate additional relevant passages from the essay. I am refining my search terms to ensure they are precise, hoping to find valuable insights that were previously overlooked and enrich my understanding of the subject.",
+          "timestamp": "2026-03-14T00:45:20.195Z"
+        }
+      ],
+      "tokens": {
+        "input": 45508,
+        "output": 29,
+        "cached": 41757,
+        "thoughts": 402,
+        "tool": 0,
+        "total": 45939
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773449120361_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "\"Четвертий Харків\" Шевельов есе \"п'ятий\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773449120361_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "No search results or information found for query: \"\"Четвертий Харків\" Шевельов есе \"п'ятий\"\""
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:45:24.856Z",
+          "resultDisplay": "No information found.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "ed1dacd8-fbd4-4899-b1c8-4992f100b1ef",
+      "timestamp": "2026-03-14T00:45:31.233Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the next phase",
+          "description": "I'm focused on moving forward with the project. I'm carefully reviewing the results of my query to get the required information and taking care to ensure it's accurate before proceeding. I am making sure the information gathered is pertinent for the following stage.",
+          "timestamp": "2026-03-14T00:45:30.297Z"
+        },
+        {
+          "subject": "Adapting Search Parameters",
+          "description": "I am revising my search terms. I'm modifying the query to be less restrictive, aiming for more relevant results. I am working to ensure that the search yields the needed information for the following steps and to refine the search.",
+          "timestamp": "2026-03-14T00:45:31.102Z"
+        }
+      ],
+      "tokens": {
+        "input": 45567,
+        "output": 23,
+        "cached": 13810,
+        "thoughts": 142,
+        "tool": 0,
+        "total": 45732
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "google_web_search_1773449131231_0",
+          "name": "google_web_search",
+          "args": {
+            "query": "Юрій Шевельов концепція П'ятий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "google_web_search_1773449131231_0",
+                "name": "google_web_search",
+                "response": {
+                  "output": "No search results or information found for query: \"Юрій Шевельов концепція П'ятий Харків\""
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:45:40.218Z",
+          "resultDisplay": "No information found.",
+          "displayName": "GoogleSearch",
+          "description": "Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "54b3aea8-15fe-4630-bc43-374cfd03a25c",
+      "timestamp": "2026-03-14T00:45:49.170Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Refining Next Actions",
+          "description": "I'm now prioritizing moving forward on the next action. My focus is on ensuring a smooth progression towards the final goal. I am adjusting my approach to maximize efficiency.",
+          "timestamp": "2026-03-14T00:45:46.313Z"
+        },
+        {
+          "subject": "Fetching Additional Data",
+          "description": "I will now focus on the next step. Using available resources, I plan to retrieve the necessary information. My strategy centers on refining the data gathering phase for increased accuracy.",
+          "timestamp": "2026-03-14T00:45:48.967Z"
+        }
+      ],
+      "tokens": {
+        "input": 45616,
+        "output": 217,
+        "cached": 0,
+        "thoughts": 174,
+        "tool": 0,
+        "total": 46007
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "run_shell_command_1773449149167_0",
+          "name": "run_shell_command",
+          "args": {
+            "command": "curl -s 'https://html.duckduckgo.com/html/?q=%D0%AE%D1%80%D1%96%D0%B9+%D0%A8%D0%B5%D0%B2%D0%B5%D0%BB%D1%8C%D0%BE%D0%B2+%D0%A7%D0%B5%D1%82%D0%B2%D0%B5%D1%80%D1%82%D0%B8%D0%B9+%D0%A5%D0%B0%D1%80%D0%BA%D1%96%D0%B2' | grep -o '<a class=\"result__snippet[^>]*>.*</a>' | sed -e 's/<[^>]*>//g'"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "run_shell_command_1773449149167_0",
+                "name": "run_shell_command",
+                "response": {
+                  "output": "Output: (empty)\nProcess Group PGID: 69696"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:45:49.610Z",
+          "resultDisplay": "",
+          "displayName": "Shell",
+          "description": "This tool executes a given shell command as `bash -c <command>`. To run a command in the background, set the `is_background` parameter to true. Do NOT use `&` to background commands. Command is executed as a subprocess that leads its own process group. Command process group can be terminated as `kill -- -PGID` or signaled as `kill -s SIGNAL -- -PGID`.\n\n      Efficiency Guidelines:\n      - Quiet Flags: Always prefer silent or quiet flags (e.g., `npm install --silent`, `git --no-pager`) to reduce output volume while still capturing necessary information.\n      - Pagination: Always disable terminal pagination to ensure commands terminate (e.g., use `git --no-pager`, `systemctl --no-pager`, or set `PAGER=cat`).\n\n      The following information is returned:\n\n      Output: Combined stdout/stderr. Can be `(empty)` or partial on error and for any unwaited background processes.\n      Exit Code: Only included if non-zero (command failed).\n      Error: Only included if a process-level error occurred (e.g., spawn failure).\n      Signal: Only included if process was terminated by a signal.\n      Background PIDs: Only included if background processes were started.\n      Process Group PGID: Only included if available.",
+          "renderOutputAsMarkdown": false
+        }
+      ]
+    },
+    {
+      "id": "f9404468-2ecc-4d12-a82a-a4b0d16f31fa",
+      "timestamp": "2026-03-14T00:45:56.906Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing Next Steps",
+          "description": "I am now focusing on determining how to advance the project. The earlier problem appears to be a roadblock, so I'm moving on to exploring alternative solutions and strategies to achieve the ultimate goal. I need to make sure that I choose the next logical action.",
+          "timestamp": "2026-03-14T00:45:55.018Z"
+        },
+        {
+          "subject": "Reframing My Approach",
+          "description": "I've hit a snag with the previous query. Shifting gears, I'm now exploring alternative search strategies and will refine the focus to align with the desired output. I'll test other ways to extract relevant information, and make sure that the next actions contribute to the end goal.",
+          "timestamp": "2026-03-14T00:45:56.667Z"
+        }
+      ],
+      "tokens": {
+        "input": 45852,
+        "output": 19,
+        "cached": 41187,
+        "thoughts": 262,
+        "tool": 0,
+        "total": 46133
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449156904_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Четвертий Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449156904_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Четвертий Харків\"\n\n### Result 1 (score: 0.5694)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0034`\n- **Text**:\nIV\n\n### Result 2 (score: 0.4600)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 3 (score: 0.4530)\n- **Work**: Сергій Жадан. Депеш Мод (1974)\n- **Author**: Жадан С.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `cb9866ce_c0169`\n- **Text**:\nВін розламує жовтий твердий хліб, на, каже, тримай, я беру шматок і кладу поруч із собою на асфальт, з-за хмар нарешті проступає сонце, за пару годин вода має прогрітись і тоді можна буде переплисти цю їхню річку і подивитись, нарешті, що там — з того боку річища, яке весь цей час знаходиться поруч зі мною, хоч раз переплисти і нормально все там роздивитись, гарна нагода, до речі, головне, аби вода прогрілась, останній на сьогодні потяг проїжджає повз нас, слідом за ним незадоволено тягнуться хм\n\n### Result 4 (score: 0.4517)\n- **Work**: Українська культура (лекції за ред. Антоновича) (1993)\n- **Author**: Антонович Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `2971c499_c0074`\n- **Text**:\nОРГАНІЗАЦІЯ УКРАЇНСЬКОЇ ВИЩОЇ ОСВІТИ\n\n### Result 5 (score: 0.4477)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0031`\n- **Text**:\nІІІ\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:46:02.237Z",
+          "resultDisplay": "Found 5 results for: \"Четвертий Харків\"\n\n### Result 1 (score: 0.5694)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0034`\n- **Text**:\nIV\n\n### Result 2 (score: 0.4600)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 3 (score: 0.4530)\n- **Work**: Сергій Жадан. Депеш Мод (1974)\n- **Author**: Жадан С.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `cb9866ce_c0169`\n- **Text**:\nВін розламує жовтий твердий хліб, на, каже, тримай, я беру шматок і кладу поруч із собою на асфальт, з-за хмар нарешті проступає сонце, за пару годин вода має прогрітись і тоді можна буде переплисти цю їхню річку і подивитись, нарешті, що там — з того боку річища, яке весь цей час знаходиться поруч зі мною, хоч раз переплисти і нормально все там роздивитись, гарна нагода, до речі, головне, аби вода прогрілась, останній на сьогодні потяг проїжджає повз нас, слідом за ним незадоволено тягнуться хм\n\n### Result 4 (score: 0.4517)\n- **Work**: Українська культура (лекції за ред. Антоновича) (1993)\n- **Author**: Антонович Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `2971c499_c0074`\n- **Text**:\nОРГАНІЗАЦІЯ УКРАЇНСЬКОЇ ВИЩОЇ ОСВІТИ\n\n### Result 5 (score: 0.4477)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0031`\n- **Text**:\nІІІ\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4c3db495-ae9f-48e2-8167-7c36ee5a5d85",
+      "timestamp": "2026-03-14T00:46:11.996Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task",
+          "description": "I am now focused on completing the task. I'm making steady progress, refining my approach to ensure I get the results needed. I'm double-checking to stay on target.",
+          "timestamp": "2026-03-14T00:46:06.161Z"
+        },
+        {
+          "subject": "Finalizing the Summary",
+          "description": "I'm now putting the finishing touches on the summary. I am now incorporating all the key details I've gathered about \"The Fifth Kharkiv\". I am making sure the summary is clear and concise.",
+          "timestamp": "2026-03-14T00:46:09.550Z"
+        },
+        {
+          "subject": "Confirming Key Details",
+          "description": "I am now verifying the details of the Kharkovs. I'm confirming that my understanding of the city's historical phases is accurate. I'm making sure my summary aligns with the facts.",
+          "timestamp": "2026-03-14T00:46:11.756Z"
+        }
+      ],
+      "tokens": {
+        "input": 46519,
+        "output": 18,
+        "cached": 41067,
+        "thoughts": 634,
+        "tool": 0,
+        "total": 47171
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449171992_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Третій Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449171992_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Третій Харків\"\n\n### Result 1 (score: 0.4691)\n- **Work**: Іван Багряний. Генерал (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `92bb2d2f_c0026`\n- **Text**:\n— ... \"Не може бути... Ні, ні... Як же це?.. Він?.. І Оксаночка?.. І Сашко?..\"\n\nХАМУЛА:\n\n— Ведіть до розправи! Та бережіть добре.\n\nЗбіглись посіпаки, оточили Попова з кампанією та п потягли, підштовхуючи, злорадно кепкуючи:\n\n— Диви, диви!.. У спідниці!.. Та це ж шпійони!!.\n\n— Ги-ги! Шпійонів німецьких піймали!\n\n— От концерт буде!! Ха-ха...\n\nПОПОВ І СУПУТНИКИ роздивились, зраділи:\n\n— \"Свої!!.\" \"Ур-р-ра!..\" \"Свої..\" \"Нарешті...\"\n\nХАМУЛА — на подвір'ї, про себе:\n\n— Я тобі дам \"своїх!.. Иш ти... Ти \n\n### Result 2 (score: 0.4546)\n- **Work**: Володимир Сосюра. Павлу Безпощадному (Третя рота) (1898)\n- **Author**: Сосюра В.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c0ba5909_c0000`\n- **Text**:\nПавлу Безпощадному\n\nЯ до тебе прийшов, моя мати,\n\nТретя Рота, кохана моя,\n\nЩоб ще краще про тебе співати,\n\nЯк співав у минулому я.\n\nПро Дінець і заквітчане поле\n\nВ голубому розгоні доріг,\n\nПро завод і про шахти навколо,\n\nПро людей героїчних твоїх.\n\nНе забуть нам про молодість хмуру,\n\nДзвін кайданів і кров поміж трав...\n\nІ на шахті парторга Сосюру,\n\nБрата рідного я цілував.\n\nЛюбий Януш!.. Я бачив: сивини,\n\nСльози-роси спливали до них...\n\nТи згадав, як із тьми-домовини\n\nЙшли в боях ми до днів золо\n\n### Result 3 (score: 0.4469)\n- **Work**: Микола Бажан. Майстер залізної троянди (1904)\n- **Author**: Бажан М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `914ab978_c0040`\n- **Text**:\nТи разом з Павлом Антокольським, Олександром Копиленком, Дмитром Косариком восени сорок третього приїхав до Харкова. Я зустрів друзів, і ми влаштувалися жити вкупі. Наступ наших військ котився по Лівобережжю нестримним сталевим валом. Скоро передовим частинам стане видно і посічені кулями й дощами Дарницькі піски, і синьо-чорні дніпрові хвилі. Скоро побачать вони і заповітні пагорби Києва. Гітлерівці, оголосивши Лівобережжя \"зоною пустелі\" і з нещадною послідовністю знищуючи й плюндруючи все жив\n\n### Result 4 (score: 0.4442)\n- **Work**: Пантелеймон Куліш. Маруся Богуславка (1819)\n- **Author**: Куліш П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `02b2d82a_c0045`\n- **Text**:\nВже від нужи облазили в хирних обірванців гирі,\n\nІ в кулак, як мовляв той кобзар, з голоднечі трубили.\n\nДУМА ТРЕТЯ\n\nУ віконечко їм милосердна рука подавала\n\nТрохи хліба святого, а часом кришеник і сала.\n\nА про борщ в'язники, вже який в нім і смак, забували,\n\nСировцем да потапцями душу гіркую питали.\n\nПовпивались кайдани бідахам і в ноги, і в руки;\n\nДознають на прикові короткім страшенної муки.\n\nНа соломі гнилій, мов той пес-волоцюга, лягають,\n\nПолягавши, сльозами один одного обливають,\n\nУкраїну \n\n### Result 5 (score: 0.4438)\n- **Work**: Іван Багряний. Генерал (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `92bb2d2f_c0019`\n- **Text**:\n— Ми вас врятуємо... Там жде машина... Швидше!..\n\n(Данило не реагує).\n\nЧЕРВОНОАРМІЙЦІ (про себе):\n\n— Він здається зійшов з ума...\n\n—\n\n— Всі вони посходили з ума, чорти б їх забрали...\n\n— Та де-е... Нализався, мабуть, для храбрости і п'яний,\n\nяк свиня...\n\nЛ-НАНТИК:\n\n— Беріть його... Хай живе наш генерал!.. Товаришу\n\nгенерал, там машина... Сюди... Сюди...\n\nСАШКО.\n\n— Полундра! Слухать мою команду! Генерал стомлений... Ми три дивізії нємців розбили... Беріть обережно...\n\nЧЕРВОНОАРМІЙЦІ з ентузіазмом\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:46:12.450Z",
+          "resultDisplay": "Found 5 results for: \"Третій Харків\"\n\n### Result 1 (score: 0.4691)\n- **Work**: Іван Багряний. Генерал (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `92bb2d2f_c0026`\n- **Text**:\n— ... \"Не може бути... Ні, ні... Як же це?.. Він?.. І Оксаночка?.. І Сашко?..\"\n\nХАМУЛА:\n\n— Ведіть до розправи! Та бережіть добре.\n\nЗбіглись посіпаки, оточили Попова з кампанією та п потягли, підштовхуючи, злорадно кепкуючи:\n\n— Диви, диви!.. У спідниці!.. Та це ж шпійони!!.\n\n— Ги-ги! Шпійонів німецьких піймали!\n\n— От концерт буде!! Ха-ха...\n\nПОПОВ І СУПУТНИКИ роздивились, зраділи:\n\n— \"Свої!!.\" \"Ур-р-ра!..\" \"Свої..\" \"Нарешті...\"\n\nХАМУЛА — на подвір'ї, про себе:\n\n— Я тобі дам \"своїх!.. Иш ти... Ти \n\n### Result 2 (score: 0.4546)\n- **Work**: Володимир Сосюра. Павлу Безпощадному (Третя рота) (1898)\n- **Author**: Сосюра В.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c0ba5909_c0000`\n- **Text**:\nПавлу Безпощадному\n\nЯ до тебе прийшов, моя мати,\n\nТретя Рота, кохана моя,\n\nЩоб ще краще про тебе співати,\n\nЯк співав у минулому я.\n\nПро Дінець і заквітчане поле\n\nВ голубому розгоні доріг,\n\nПро завод і про шахти навколо,\n\nПро людей героїчних твоїх.\n\nНе забуть нам про молодість хмуру,\n\nДзвін кайданів і кров поміж трав...\n\nІ на шахті парторга Сосюру,\n\nБрата рідного я цілував.\n\nЛюбий Януш!.. Я бачив: сивини,\n\nСльози-роси спливали до них...\n\nТи згадав, як із тьми-домовини\n\nЙшли в боях ми до днів золо\n\n### Result 3 (score: 0.4469)\n- **Work**: Микола Бажан. Майстер залізної троянди (1904)\n- **Author**: Бажан М.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `914ab978_c0040`\n- **Text**:\nТи разом з Павлом Антокольським, Олександром Копиленком, Дмитром Косариком восени сорок третього приїхав до Харкова. Я зустрів друзів, і ми влаштувалися жити вкупі. Наступ наших військ котився по Лівобережжю нестримним сталевим валом. Скоро передовим частинам стане видно і посічені кулями й дощами Дарницькі піски, і синьо-чорні дніпрові хвилі. Скоро побачать вони і заповітні пагорби Києва. Гітлерівці, оголосивши Лівобережжя \"зоною пустелі\" і з нещадною послідовністю знищуючи й плюндруючи все жив\n\n### Result 4 (score: 0.4442)\n- **Work**: Пантелеймон Куліш. Маруся Богуславка (1819)\n- **Author**: Куліш П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `02b2d82a_c0045`\n- **Text**:\nВже від нужи облазили в хирних обірванців гирі,\n\nІ в кулак, як мовляв той кобзар, з голоднечі трубили.\n\nДУМА ТРЕТЯ\n\nУ віконечко їм милосердна рука подавала\n\nТрохи хліба святого, а часом кришеник і сала.\n\nА про борщ в'язники, вже який в нім і смак, забували,\n\nСировцем да потапцями душу гіркую питали.\n\nПовпивались кайдани бідахам і в ноги, і в руки;\n\nДознають на прикові короткім страшенної муки.\n\nНа соломі гнилій, мов той пес-волоцюга, лягають,\n\nПолягавши, сльозами один одного обливають,\n\nУкраїну \n\n### Result 5 (score: 0.4438)\n- **Work**: Іван Багряний. Генерал (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `92bb2d2f_c0019`\n- **Text**:\n— Ми вас врятуємо... Там жде машина... Швидше!..\n\n(Данило не реагує).\n\nЧЕРВОНОАРМІЙЦІ (про себе):\n\n— Він здається зійшов з ума...\n\n—\n\n— Всі вони посходили з ума, чорти б їх забрали...\n\n— Та де-е... Нализався, мабуть, для храбрости і п'яний,\n\nяк свиня...\n\nЛ-НАНТИК:\n\n— Беріть його... Хай живе наш генерал!.. Товаришу\n\nгенерал, там машина... Сюди... Сюди...\n\nСАШКО.\n\n— Полундра! Слухать мою команду! Генерал стомлений... Ми три дивізії нємців розбили... Беріть обережно...\n\nЧЕРВОНОАРМІЙЦІ з ентузіазмом\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8875a102-55bb-42cd-b896-b8bf7bfc3b88",
+      "timestamp": "2026-03-14T00:46:24.541Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the Next Steps",
+          "description": "I am now focusing on determining how to advance the task. I'm exploring the best way to make progress on the current goal. Considering the possibilities, I am getting closer to the path forward.",
+          "timestamp": "2026-03-14T00:46:23.477Z"
+        },
+        {
+          "subject": "Contextualizing Further Searches",
+          "description": "I'm now honing in on the specific details to drive the search forward. I'm leveraging tools to clarify the search parameters and ensuring I have all necessary context before moving on to the final stages of the query.",
+          "timestamp": "2026-03-14T00:46:24.278Z"
+        }
+      ],
+      "tokens": {
+        "input": 47966,
+        "output": 47,
+        "cached": 40797,
+        "thoughts": 129,
+        "tool": 0,
+        "total": 48142
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773449184487_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "Третій Харків",
+            "limit": 10,
+            "mode": "concordance"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773449184487_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "Concordance for 'Третій Харків' — 10 lines\n\n...і слобід, другим – сіре імперське місто купців. **Третій Харків** – це місто Хвильового, ВАПЛІТЕ, пасіонарного...\n...і слобід, другим – сіре імперське місто купців. **Третій Харків** – це місто Хвильового, ВАПЛІТЕ, пасіонарного...\n..., — відповів Полтава — теж машинально. Розділ **третій Харків** , листопад 1907 року. Центр міста. Від вулиці...\n...\" безвихідно-сіра російська імперія \". А ось **третій Харків** – це Харків Хвильового. Місто культурного...\n...імперії. Тепер Хвильовий проголошує **третій Харків** : символ українського урбанізму. Здибленої і...\n...таким. Ми сповнимо його, українським змістом. **Третій Харків** — Харків Хвильового і ВАПЛІТЕ, Курбасового «...\n..., сповнений життя і безуму дерзання. **Третій Харків** , Харків нашої молодої молоді. Третій Харків за...\n.... Третій Харків, Харків нашої молодої молоді. **Третій Харків** за адміністративним поділом був столицею...\n...столиць, ніякої України. Вирок м'ятежному **третьому Харкову** вивершують два акти: голосно-прилюдне...\n...могил Блакитного, Скрипника, Хвильового. **Третій Харків** , оспіваний так пристрасно і ніжно, так велично..."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:46:26.734Z",
+          "resultDisplay": "Concordance for 'Третій Харків' — 10 lines\n\n...і слобід, другим – сіре імперське місто купців. **Третій Харків** – це місто Хвильового, ВАПЛІТЕ, пасіонарного...\n...і слобід, другим – сіре імперське місто купців. **Третій Харків** – це місто Хвильового, ВАПЛІТЕ, пасіонарного...\n..., — відповів Полтава — теж машинально. Розділ **третій Харків** , листопад 1907 року. Центр міста. Від вулиці...\n...\" безвихідно-сіра російська імперія \". А ось **третій Харків** – це Харків Хвильового. Місто культурного...\n...імперії. Тепер Хвильовий проголошує **третій Харків** : символ українського урбанізму. Здибленої і...\n...таким. Ми сповнимо його, українським змістом. **Третій Харків** — Харків Хвильового і ВАПЛІТЕ, Курбасового «...\n..., сповнений життя і безуму дерзання. **Третій Харків** , Харків нашої молодої молоді. Третій Харків за...\n.... Третій Харків, Харків нашої молодої молоді. **Третій Харків** за адміністративним поділом був столицею...\n...столиць, ніякої України. Вирок м'ятежному **третьому Харкову** вивершують два акти: голосно-прилюдне...\n...могил Блакитного, Скрипника, Хвильового. **Третій Харків** , оспіваний так пристрасно і ніжно, так велично...",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773449184536_1",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "limit": 10,
+            "mode": "concordance",
+            "query": "Перший Харків"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773449184536_1",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "Concordance for 'Перший Харків' — 9 lines\n\n...: від XVII-го і до кінця 40-х років ХХ століття. **Першим Харковом** Шевельов називав місто ремісничих і слобід,...\n...оприлюднив декларацію про свої доходи. Одним з **перших Харків** . 19 травня. УНІАН. Харківський міський голова...\n...його в 2015 році. Другий ступінь ― за бої «на **першому Харкові** », як ми його називаємо ― це бої на північному...\n...: від XVII-го і до кінця 40-х років ХХ століття. **Першим Харковом** Шевельов називав місто ремісничих і слобід,...\n...]: Що за дічь в ЗНО з історії з 28 завданням? Чому **перше Харків** , а потвм Севастополь. Падіння Севастополя ж...\n...його в 2015 році. Другий ступінь ― за бої «на **першому Харкові** », як ми його називаємо ― це бої на північному...\n...і закінчуючи повоєнними роками століття ХХ. **Перший Харків** для Шевельова – це місто слобід, хуторів та...\n...політикою. Харківські профспілки починають **першими Харків** . 16 грудня. УНІАН. Об'єднання профспілок...\n..., але конче потребує нового формату. « **Перший Харків** , за словами вченого, відноситься до періоду..."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:46:26.734Z",
+          "resultDisplay": "Concordance for 'Перший Харків' — 9 lines\n\n...: від XVII-го і до кінця 40-х років ХХ століття. **Першим Харковом** Шевельов називав місто ремісничих і слобід,...\n...оприлюднив декларацію про свої доходи. Одним з **перших Харків** . 19 травня. УНІАН. Харківський міський голова...\n...його в 2015 році. Другий ступінь ― за бої «на **першому Харкові** », як ми його називаємо ― це бої на північному...\n...: від XVII-го і до кінця 40-х років ХХ століття. **Першим Харковом** Шевельов називав місто ремісничих і слобід,...\n...]: Що за дічь в ЗНО з історії з 28 завданням? Чому **перше Харків** , а потвм Севастополь. Падіння Севастополя ж...\n...його в 2015 році. Другий ступінь ― за бої «на **першому Харкові** », як ми його називаємо ― це бої на північному...\n...і закінчуючи повоєнними роками століття ХХ. **Перший Харків** для Шевельова – це місто слобід, хуторів та...\n...політикою. Харківські профспілки починають **першими Харків** . 16 грудня. УНІАН. Об'єднання профспілок...\n..., але конче потребує нового формату. « **Перший Харків** , за словами вченого, відноситься до періоду...",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "f5488049-fb78-412e-a368-5e54ce8ae4a1",
+      "timestamp": "2026-03-14T00:47:08.981Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Sherekh Fifth Kharkiv\n\n## Key Facts Ledger\n```yaml\nsubject: \"П'ятий Харків (концепція Юрія Шевельова)\"\ntype: \"phenomenon\"\ndates:\n  start: \"1948\" \n  key_events:\n    - year: 1908\n      event: \"Народження Юрія Шевельова (Шереха) у Харкові.\"\n    - year: 1944\n      event: \"Еміграція Шевельова на Захід (Німеччина), де він стає заступником голови МУРу.\"\n    - year: 1948\n      event: \"Написання та публікація есею «Четвертий Харків», де вперше сформульовано історіософську концепцію п'яти Харковів.\"\n    - year: 2013\n      event: \"Знищення меморіальної дошки Юрію Шевельову в Харкові місцевою владою («титушками»), що спровокувало всеукраїнський скандал.\"\n    - year: 2022\n      event: \"Відновлення меморіальної дошки та активізація дискурсу про «П'ятий Харків» на тлі повномасштабного вторгнення Росії.\"\nprimary_quotes:\n  - text: \"Четвертий Харків – це має бути за всіма плянами партії і уряду провінційне місто.\"\n    source: \"Есе «Четвертий Харків», 1948\"\n    attribution: \"Юрій Шерех (Шевельов)\"\n  - text: \"Третій Харків — Харків Хвильового і ВАПЛІТЕ, Курбасового Березоля, українського урбанізму.\"\n    source: \"Есе «Четвертий Харків», 1948\"\n    attribution: \"Юрій Шерех (Шевельов)\"\n  - text: \"Я не згодний був міняти свою шкуру й душу.\"\n    source: \"Спогади «Я — мене — мені... (і довкруги)», 2001\"\n    attribution: \"Юрій Шерех (Шевельов)\"\nforbidden_claims:\n  - \"Харків завжди був російськомовним містом.\"\n  - \"Харків — це суто радянська (пролетарська) «первая столица».\"\n  - \"Шевельов був нацистським колаборантом (поширений міф, використаний Кернесом і Добкіним для знищення його дошки).\"\n```\n\n## Використані джерела\n1. [Енциклопедія Історії України](http://resource.history.org.ua/cgi-bin/eiu/history.exe) — біографія Юрія Шевельова.\n2. [Корпус текстів GRAC] — конкорданси вживання термінів «Третій Харків», «Четвертий Харків», «П'ятий Харків» у публіцистиці та критиці.\n3. [Вікіпедія: Шевельов Юрій Володимирович](https://uk.wikipedia.org/wiki/Шевельов_Юрій_Володимирович) — загальна біографічна довідка та історія меморіальної дошки.\n4. [Електронна бібліотека «Україніка»] — загальний контекст есеїстики МУРу та Юрія Шереха.\n\n## Хронологія\n- **1908**: Народження Ю. Шевельова в Харкові (батько — етнічний німець Шнайдер, прізвище змінено на Шевельов у 1916).\n- **1920-ті**: Епоха «Третього Харкова» — національне відродження, за яким Шевельов спостерігає в юності.\n- **1941–1943**: Життя в окупованому Харкові; дописує в газету «Нова Україна», працює на кафедрі української філології.\n- **1944**: Еміграція до Німеччини (Львів -> Німеччина).\n- **1948**: Вихід есею «Четвертий Харків», де кристалізується концепт знищеного міста та надія на місто майбутнього.\n- **2002**: Смерть Юрія Шевельова у Нью-Йорку.\n- **2013**: Вандалізм: знищення пам'ятної дошки Шевельову в Харкові місцевими комунальниками за наказом Геннадія Кернеса.\n- **2022**: Тріумфальне повернення: відновлення дошки, фестиваль «П'ятий Харків» стає символом незламності міста.\n\n## Ключові факти та цитати\n- Концепція містить **п'ять етапів (облич) Харкова**:\n  1. **Перший Харків**: Місто ремісників, слобід, хуторів та пасік (козацька та постімперська провінція).\n  2. **Другий Харків**: Сіре, реакційне імперське місто купців, провінційна «російська імперія», але з проблисками культури (Квітка-Основ'яненко).\n  3. **Третій Харків**: Місто Хвильового, ВАПЛІТЕ, «Березоля», пасіонарного вибуху, символ українського урбанізму. Столиця Відродження.\n  4. **Четвертий Харків**: Зросійщене «місто дрімучого совка», невиразності, безликості. Знищена столиця, яку Москва свідомо зробила тихою провінцією.\n  5. **П'ятий Харків**: Футуристичний проєкт, візія майбутнього вільного, деколонізованого, європейського Харкова.\n- Юрій Шерех — літературознавчий псевдонім видатного лінгвіста Юрія Шевельова. Під прізвищем «Шевельов» він видавав суто мовознавчі праці, а під прізвищем «Шерех» — літературну критику, есеїстику та публіцистику.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ та контекст\": `[!context]` — Як геніальний лінгвіст Юрій Шевельов перетворився на гострого есеїста Юрія Шереха, створивши альтернативний погляд на українську історію.\n- Section \"Аналіз ключових творів\": `[!quote]` — Цитата про «Четвертий Харків» як свідомо сплановану Москвою провінцію («за всіма плянами партії і уряду це провінційне місто»).\n- Section \"Аналіз ключових творів\": `[!history-bite]` — Розшифровка всіх «п'яти Харковів» як п'яти парадигм існування українського міста.\n- Section \"Стилістика та мова автора\": `[!culture]` — Особливості мови Шереха: гострий сарказм, філософська глибина та харківська інтелектуальна традиція, позбавлена шароварщини.\n- Section \"Деколонізаційна перспектива\": `[!myth-buster]` — Спростування міфу про Харків як «ісконно русскій город» через призму «Третього Харкова» (міста Хвильового та Курбаса), який був авангардом української культури.\n- Section \"Підсумок та спадщина\": `[!decolonization]` — Історія зі знищенням меморіальної дошки у 2013 році сокирами та її відновлення у 2022 році як символічний перехід від Четвертого до П'ятого Харкова наяву.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Харків — це російська/радянська провінція, місто заводів і пролетарів, «первая столица», що ностальгує за СРСР. Українська культура там була лише селянською маргіналією.\n- **Ukrainian reality**: Харків — це епіцентр українського інтелектуального урбанізму («Третій Харків»). Радянський Союз не створив Харків, він навмисно його **провінціалізував** і «осірив» («Четвертий Харків»), щоб знищити його пасіонарний потенціал. Шевельов повертає українцям суб'єктність, показуючи, що русифікація міста була каральною спецоперацією, а не природним процесом.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Харків 1920-х | «Первая столица» Радянської України, центр більшовизації. | «Третій Харків», центр європейського авангарду та Розстріляного Відродження. |\n| Статус міста у ХХ ст. | Пролетарський російськомовний гігант. | «Четвертий Харків» — штучно знекровлене місто, позбавлене права голосу. |\n| Юрій Шевельов | «Пособник фашистів» (риторика М. Добкіна та Г. Кернеса, 2013). | Видатний український інтелектуал, мовознавець, деколонізатор. |\n\n## Відеоресурси\n- Канал «Обличчя Незалежності» (або схожі документальні проєкти) — «Юрій Шевельов» — Документальні фільми про знищення дошки у 2013 році яскраво ілюструють боротьбу Четвертого Харкова проти П'ятого.\n- Канал «Kharkiv Today» — Фестиваль «П'ятий Харків» — Репортажі про сучасне втілення візії Шевельова.\n\n## Section-Mapped Research Notes\n\n### Вступ та контекст\n- Постать Юрія Шевельова: видатний мовознавець (професор Колумбійського університету), який під псевдонімом «Юрій Шерех» писав блискучу есеїстику.\n- Життя у Харкові: Шевельов народився тут, пережив сталінський терор, бачив зліт і падіння «Третього Харкова» (епохи Хвильового).\n- Історичний контекст есею «Четвертий Харків» (1948 рік, Німеччина, період МУРу): рефлексія емігранта над тим, що сталося з його рідним містом після знищення інтелігенції та остаточної радянізації.\n\n### Аналіз ключових творів\n- Есей «Четвертий Харків» будується на історіософській періодизації міста.\n- **Перший Харків**: Козацька слобода, пасіки, хутори. Зародження.\n- **Другий Харків**: Імперське, реакційне місто чиновників і купців XIX століття. Темне і сіре, хоча саме тут діяли Квітка-Основ'яненко та Гулак-Артемовський.\n- **Третій Харків**: Місто 1920-х. Авангард, ВАПЛІТЕ, Курбас. Місто шаленої української енергії, яке було вбите Москвою (розстріли в Сандармосі, самогубство Хвильового).\n- **Четвертий Харків**: Післявоєнний радянський Харків. Слухняна провінція, яка боїться власної тіні. Місто, якому наказали забути своє величне минуле і стати просто «сірим індустріальним придатком».\n- **П'ятий Харків**: Майбутнє. Концепція повернення до себе, подолання провінційності.\n\n### Стилістика та мова автора\n- Стиль Юрія Шереха характеризується поєднанням суворої наукової логіки та блискучої публіцистичної образності.\n- Використання міфологем і урбаністичної лексики. Він пише про місто не як про сукупність будівель, а як про живий організм із душею.\n- Інтелектуальний сарказм щодо радянської ідеології та «малоросійського» комплексу меншовартості. Текст позбавлений зайвого пафосу чи сентиментальності — це холодний аналіз хірурга.\n\n### Деколонізаційна перспектива\n- Шерех кардинально змінює **наратив** про українське місто. Він деконструює міф про те, що урбаністична культура належить росіянам, а українцям — лише село.\n- «Третій Харків» виступає доказом повноцінної української **суб'єктності** та модерності.\n- Шевельов демонструє механіку культурного геноциду: як метрополія не просто фізично вбила інтелігенцію, а змінила сам генетичний код міста (створивши «Четвертий Харків»), щоб позбавити його амбіцій. Це класичний антиколоніальний текст.\n\n### Підсумок та спадщина\n- Есей виявився пророчим. Візія «П'ятого Харкова» стала ідеологічним дороговказом для сучасної харківської інтелігенції (Сергій Жадан та інші).\n- Спадщина Шевельова досі викликає спротив у носіїв імперського мислення. Найяскравіший приклад — 2013 рік, коли міська влада Харкова організувала варварське знищення пам'ятної дошки Шевельову.\n- Після 2014 та 2022 років Харків остаточно почав перехід до своєї «П'ятої» іпостасі — міста, що героїчно захищає Україну і відроджує свою українську ідентичність. Сьогодні у місті проводиться престижний фестиваль «П'ятий Харків».\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Finishing Text Creation",
+          "description": "I'm now generating the final text, ensuring it incorporates the acquired information and presents it clearly. The core elements are in place, so the focus is now on crafting the text for the user.",
+          "timestamp": "2026-03-14T00:46:31.152Z"
+        },
+        {
+          "subject": "Composing the Narrative",
+          "description": "I am now focusing on structuring the provided material into a coherent narrative. The core information is ready. My aim is to organize these diverse perspectives into a fluid, user-friendly format, and finish by adding the timeline for Yuriy Shevelov.",
+          "timestamp": "2026-03-14T00:46:33.101Z"
+        },
+        {
+          "subject": "Producing Final Draft",
+          "description": "I'm presently refining the output by checking my notes. I'm focusing on the final formatting to ensure the final text aligns with the user's requirements and is accurately structured. The content is assembled, and I'm polishing the presentation.",
+          "timestamp": "2026-03-14T00:46:36.051Z"
+        },
+        {
+          "subject": "Assembling the Essay",
+          "description": "I am now focusing on structuring the final essay, organizing my notes into distinct sections based on the instructions. The primary quotes and key dates are ready, and I'm ensuring all the core arguments are included and properly emphasized. The final format and structure are being finalized.",
+          "timestamp": "2026-03-14T00:46:38.263Z"
+        },
+        {
+          "subject": "Preparing Final Draft",
+          "description": "I'm now organizing the components, quotes, and dates into the required structure, focusing on the core points. I will present Shevelov's concepts as per the user's instructions. I am ensuring that I have everything ready for the essay's completion.",
+          "timestamp": "2026-03-14T00:46:39.347Z"
+        }
+      ],
+      "tokens": {
+        "input": 48818,
+        "output": 3428,
+        "cached": 40780,
+        "thoughts": 1039,
+        "tool": 0,
+        "total": 53285
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

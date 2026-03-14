@@ -1,0 +1,244 @@
+discovered_at: '2026-03-13T23:45:06.093159+00:00'
+query_keywords:
+- Essay Origins Polemics
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Essay Origins Polemics у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: The video directly addresses how certain figures and narratives
+    were 'tabooed' and 'discarded' in Soviet historiography, which is highly relevant
+    to the module's 'Деколонізаційна перспектива' section and the concept of polemics
+    in historical or literary essays.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива -- The discussion of how Soviet
+    historiography suppressed certain narratives directly illustrates the need for
+    a decolonial perspective in understanding Ukrainian historical and literary discourse.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.3
+  relevance_note: The video discusses historical interpretation and the challenges
+    of teaching history in current times, which is tangentially related to the broader
+    context of historiography. However, it's specific to the Holocaust and modern
+    conflicts, not directly to 'Essay Origins Polemics' or literary analysis.
+  transcript_excerpt: Як викладати історію Другої світової війни Як викладати зокрема
+    історію Голокосту в цих умовах коли москові творить такі злочини на нашій землі.
+  embed_suggestion: No clear fit, the specific historical topic is too narrow for
+    the module's focus on essay origins and literary polemics.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: This video focuses on the biography and business innovations of
+    Mykola Tereșchenko. While it's about a historical Ukrainian figure, it does not
+    relate to the origins of essays, literary polemics, or the analysis of authorship/style.
+  transcript_excerpt: Микола Терещенко народився 14 жовтня року. Його батько тоді
+    тільки починав робити перші успіхи в комерції.
+  embed_suggestion: No clear fit, the video's focus on economic history and biography
+    is not directly aligned with the module's topic.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0038
+  text: "29\nСлово і  контекст. Залежність значень слова від контексту. Слововживання\
+    \ § 5 \x1F\n45. Прочитайте уривок зі спілкування на форумі веб-сайта «Юним  мовознавцям».\n\
+    Грамотій\nДата: Четвер, 25.10.2018, 14:25 | Повідомлення # 15\nГрупа: Користувачі\n\
+    Повідомлень: 15\nСтатус: Offline\nНа уроці української мови трапилося завдання,\
+    \ ко-\nтре загнало в глухий кут. Потрібно було пояснити \nлексичне значення слова\
+    \ основний. Але ж пояснити \nзначення слова можна і як «найважливіший, голов-\n\
+    ний», і як «такий, що є основ"
+  section_title: Сторінка 29
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0232
+  text: "Практична риторика\n168\n327. Напишіть есе «На кожне “так” є  своє “ні”».\
+    \ Витлумачте в  ньому неод-\nнаковість понять (на вибір): питання  — проб лема,\
+    \ правда  — істина, толе-\nрантність  — безапеляційність. Скористайтеся поданою\
+    \ на форзаці підручника \nпам’яткою «Як написати есе». Різно5види суперечки: публічний\
+    \ діалог, дебати\n328. Прочитайте. Сформулюйте за змістом прочитаного три проб\
+    \ лемних запи-\nтання. Вислухайте відповіді, за потреби зробіть доповнення, ілюструючи\
+    \ їх при-\nкладами із сучасного ж"
+  section_title: Сторінка 168
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0190
+  text: "§ 30  Особливості вживання прийменників  \n183\nВправа 263\n1   Розгляньте\
+    \ інфографіку  Розкажіть, як на ній відображено важливість на-\nвчання \nШкола\n\
+    Училище, університет, навчальні курси, самоосвіта\nПрофесії\n2  Напишіть есе на\
+    \ одну з  тем \n• Навчання — інвестиція в майбутнє чи марнування \nчасу?\n• Для\
+    \ чого потрібно навчатися?\n• Як я уявляю себе в майбутньому?\n              \
+    \     Підручник \n \n         видавництво \"Ранок\""
+  section_title: Сторінка 186
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5873205661773682
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5830493569374084
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5627155303955078
+  chunk_id: 5e7696fa_c0499
+  text: "Правду кажучи, всі три наукових напрями мають за\r\nсобою резонні основи\
+    \ і вже через те не повинні виключати себе взаїмно, але\r\nкожний має бути прикладаний\
+    \ на своєму місці. Перший і третій напрями помагають\r\nнам схопити початок оповідання\
+    \ і процес першого його формування, а другий може\r\nпояснити дальші перерібки\
+    \ оповідання та його міжнародний рух, який у багатьох\r\nвипадках занадто очевидний,\
+    \ аби його можна було відкидати. Задля того, аби не\r\nзахопитися доктринерством\
+    \ школи і не впасти в натягання,"
+  work: Грушевський — Історія української літератури
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush1.htm

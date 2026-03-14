@@ -1,0 +1,250 @@
+discovered_at: '2026-03-14T02:09:36.259474+00:00'
+query_keywords:
+- Grabowicz Myth Shevchenko
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Grabowicz Myth Shevchenko у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: The video directly addresses how Soviet 'історіографія' (historiography)
+    suppressed and distorted the narrative of the Tereşchenko family. This strongly
+    reinforces the module's 'Деколонізаційна перспектива' and concepts of 'наратив'
+    and 'історіографія' in challenging established myths, which is central to Grabowicz's
+    work on Shevchenko.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.5
+  relevance_note: The video discusses the re-evaluation of historical narratives in
+    Ukraine concerning the Holocaust, Holodomor, and current Russian aggression, aligning
+    with the module's 'Деколонізаційна перспектива' by providing broader context on
+    historical re-evaluation.
+  transcript_excerpt: Ми вже приречені порівнювати злочинами путінського режиму і
+    тому ця агресія зараз впливає на все на нашу діяльність на життя на роботу але
+    важливо ворог вже хотів щоб ми всі були в темряві не працювали не жили да А ми
+    в тому і с
+  embed_suggestion: After Деколонізаційна перспектива
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.1
+  relevance_note: This video focuses on the business and economic history of the Tereşchenko
+    family, which is unrelated to the literary analysis, historical myths, or decolonization
+    perspectives relevant to the 'Grabowicz Myth Shevchenko' module. While in Ukrainian,
+    its topic is not relevant.
+  transcript_excerpt: Глухівський ринок стоїть на тому ж місці, що й 150 років тому.
+    Колись десь звідси розпочалася історія багатства роду Терещенків.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=15SaxKl6PuY
+  channel: Harvard Ukrainian Research Institute
+  title: Seminar in Ukrainian Studies - Ostap Sereda
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/taras-shevchenko/
+  title: Taras Shevchenko — Ukraine's National Poet
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - shevchenko
+  - literature
+  - history
+  - poetry
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0040
+  text: 'дім «Києво-Могилянська академія», 2014. Пахаренко В. Основи теорії літератури.
+    — К. : Генеза, 2007. — 296 с. Стус В. Феномен доби (Сходження на Голгофу слави)
+    —  К. : Кліо, 2015. — 104 с. Домашнє завдання'
+  section_title: Сторінка 28
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0433
+  text: "Су÷асна українська література . юрій Андрухович  229\nопрацьовуємо прочитане\n\
+    1. як у статті підручника схарактеризовано есеїстику? як це налаштовує нас \n\
+    на сприймання есею ю . Андруховича про т . шевченка? 2. Схарактеризуйте своє уявлення\
+    \ про твір ю . Андруховича, яке склалося у вас \nпісля прочитання статті підручника,\
+    \ через асоціації (три слова або слово-\nсполучення) . що вас зацікавило в цій\
+    \ розповіді, що спонукає до прочитання \nесею? Чого ви очікуєте від есею ю . Андруховича\
+    \ «Shevchenko is OK"
+  section_title: Сторінка 229
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0007
+  text: Але в минулого можна багато чого навчитися. Читайте, думайте, аналізуйте —
+    і вам відкриються таємниці історії.
+  section_title: Сторінка 3
+  grade: 8
+  author: hlibovska
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5728091597557068
+  chunk_id: 5739d24f_c0537
+  text: "35) Для орієнтовавня в старшій лїтературі дуже \r\n добре служить Крек-2\
+    \ с. 378 і далї. 3 старшого згадаю: Jagić Mythologische \r\n Skizzen — Archiv\
+    \ für sl. Ph. IV i V. Brückner Mythologische Studien, ibid. VI, \r\n IX і особл.\
+    \ XV. Фамицынъ Божества древнихъ Славянъ, 1884. Кирпичниковъ Что мы \r\n знаемъ\
+    \ достовЂрнаго о личныхъ божествахъ Славянъ, Ж. М. Н. П. 1885, IX. Сырку \r\n\
+    \ — Славянско-румынскіе отрывки — Ж. М. Н. П. 1887, V. Шенпингъ Наши письменные\
+    \ \r\n источники о языческихъ богахъ русской миθологіи"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.5600449442863464
+  chunk_id: 3588aaff_c0285
+  text: "53 Мої застереження\r\nщодо цього терміна й теорії, що за ним стоїть, подані\
+    \ в працях: Grabowicz G.\r\nToward a History of Ukrainian Literature; Grabowicz\
+    \ G. Some Further\r\nObservations on ’Non-historical Nations’ and ’Incomplete’\
+    \ Literatures: a Repiy.\r\n— У різних місцях.\n\n54 Пор.: Волинський\r\nП. К.\
+    \ Теоретична боротьба в українській літературі (перша половина XIX\r\nст.). —\
+    \ К., 1959. — C. 141-210 та ін. — Вищезгадана Шевченкова критика\r\nКотляревського\
+    \ — виняток, що підтверджує правило."
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.557166576385498
+  chunk_id: 3588aaff_c0000
+  text: "[Григорій Грабович. До історії української літератури: Дослідження, есе,\
+    \ полеміка. — К., 1997. — 608 с.]\n\nГригорій ГРАБОВИЧ\n\nДО ІСТОРІЇ УКРАЇНСЬКОЇ\
+    \ ЛІТЕРАТУРИ: \nДослідження, есе, полеміка\n\nКИЇВ — 1997\n\nЗМІСТ\n\nПередмова\n\
+    \nІ. НА ТЕОРЕТИЧНОМУ РИШТОВАННІ\n\nДеякі теоретичні проблеми українського літературознавства\n\
+    \nФункції жанру і стилю у становленні української літератури\n\nПитання кризи\
+    \ й перелому в самоусвідомленні української літератури\n\nТеорія та історія: \"\
+    горизонт сподівань\" і рання рецепція нової"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

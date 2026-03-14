@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 47 — E2E
+PASS: pipeline oes 46
 
   Module:   battle-of-kalka
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T10:03:32Z
+  Date:     2026-03-14T07:12:29Z

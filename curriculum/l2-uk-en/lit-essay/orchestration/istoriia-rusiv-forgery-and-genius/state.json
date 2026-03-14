@@ -1,0 +1,27 @@
+{
+  "track": "lit-essay",
+  "slug": "istoriia-rusiv-forgery-and-genius",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-13T23:49:28Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-13T23:49:28Z",
+      "task_id": "v5-istoriia-rusiv-forgery-and-genius-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

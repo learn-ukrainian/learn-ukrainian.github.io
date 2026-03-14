@@ -1,0 +1,285 @@
+discovered_at: '2026-03-14T01:02:59.575488+00:00'
+query_keywords:
+- Lysiah Rudnytsky History
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Lysiah Rudnytsky History у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: This video directly illustrates the manipulation of historical narratives
+    by Soviet historiography, a key theme in the decolonization of Ukrainian history
+    that Lysiak-Rudnytsky actively addressed. It provides a concrete example relevant
+    to the module's 'історіографія' and 'Деколонізаційна перспектива' sections.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали. Тобо ніде ні підприємства трещенків, ні їхні маєтки, будинки
+    по Глухову ніколи не згадували взагалі це слово сполучення, що це Терещенків.
+  embed_suggestion: After section Деколонізаційна перспектива -- provides a clear
+    example of Soviet suppression of Ukrainian historical figures, aligning with Rudnytsky's
+    work on challenging imperial narratives.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.4
+  relevance_note: The video discusses historical interpretation and the role of historians,
+    touching upon broad concepts of historiography. However, it does not specifically
+    relate to Lysiak-Rudnytsky's works or his unique perspective on Ukrainian intellectual
+    history.
+  transcript_excerpt: Дякую наш інституція науково-освітня неурядового що дуже важливо
+    співпрацю з університетом З академії наук ми створений 2002 року в статуті українського
+    центру учні історії Голокосту нашого абревіатуру у цвік Да в статуті записано
+    що головна мета діяльності нашого інституції це збереження пам'яті про долю українського
+    єврейського уроки Другої Світової двома шляхами дослідженням цієї теми та викладанням.
+  embed_suggestion: After section Деколонізаційна перспектива -- Could serve as a
+    general example of historical discourse, but the connection to Rudnytsky's specific
+    contributions is weak.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: The video is a biographical account of the Terestchenko family's
+    business and contributions. While it's Ukrainian history, it does not connect
+    to Lysiak-Rudnytsky's intellectual contributions, his specific works, or the themes
+    of historiography and decolonization central to this module.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable -- The content is historical but not directly relevant
+    to the module's focus on Lysiak-Rudnytsky's work or themes.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/taras-shevchenko/
+  title: Taras Shevchenko — Ukraine's National Poet
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - shevchenko
+  - literature
+  - history
+  - poetry
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-istoriya-schupak-2022_s0003
+  text: '5
+
+    ЗМІСТ
+
+    ВСТУП
+
+    § 1. Історія — пам’ять про минуле . .  .  .  .  .  .  .  .  .  . . . . . . . .
+    . . . 7
+
+    РОЗДІЛ 1. НАУКИ, ЩО ВИВЧАЮТЬ МИНУЛЕ
+
+    § 2. Історія — наука про розвиток людства . .  .  .  .  .  . . . . . . . 12
+
+    § 3. Джерела історичної інформації . .  .  .  .  .  .  .  .  . . . . . . . . .
+    . 19
+
+    § 4. Науки-помічниці історії. .  .  .  .  .  .  .  .  .  .  .  . . . . . . . .
+    . . . . . 27
+
+    § 5. Археологічні скарби минулого. .  .  .  .  .  .  .  .  . . . . . . . . . .
+    . 32
+
+    § 6. Писемні пам’ятки, фоль'
+  section_title: Сторінка 5
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0002
+  text: "3\nШановні восьмикласники та восьмикласниці! Перш ніж розпочати роботу з \
+    \ підручником, необхідно \nознайомитися з його змістом і структурою. Матеріал\
+    \ у ньо-\nму об’єднано в  п’ять розділів, кожен із яких містить кіль-\nка параграфів,\
+    \ що, у  свою чергу, поділяються на пункти. Ви вже знаєте, що історія, як і  будь-яка\
+    \ інша наука, \nмає власну термінологію, і  її необхідно розуміти. Підруч-\nник\
+    \ містить дати основних подій, визначення понять і тер-\nмінів, інформацію про\
+    \ видатних історичних діячів. Слова "
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0334
+  text: "222\nЗміст\nЗміст\nПередмова . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3\n\
+    \t\n§ 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . 4\nРозділ І. ВЕЛИКЕ РОЗСЕЛЕННЯ\
+    \ СЛОВ’ЯНСТВА. ЗМІНА \nНАСЕЛЕННЯ ПРИЧОРНОМОРСЬКИХ СТЕПІВ\n\t\n§ 2. Слов’янство\
+    \ у V—VІІ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . 9\n\t\n§ 3. Слов’янські племена на те"
+  section_title: Сторінка 223
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5938024520874023
+  chunk_id: c44f1207_c2231
+  text: "З давнїйшого належать сюди особливо Енґля \r\n Geschichte der Ukraine, Нарушевича\
+    \ Historya narodu Polskiego, Карамзїна \r\n Исторія государства Россійскаго, курси\
+    \ Зубрицького, Смірнова й Шараневича \r\n (див. т. III прим. 2), Стаднїцкого Synowie\
+    \ Gedymina т. II, Саrо Geschichte \r\n Polens, т. II, Бєльовского примітки в Monumenta\
+    \ Pol. II c. 621 і далї, \r\n Райфенкуґля Gründung der r.-kathol. Bistümer in\
+    \ der territ. Halicz und \r\n Wladimir (розд. Ш).\n\nАле не тільки сї, а й більше\
+    \ нові роботи як \r\n Антонович"
+  work: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur20308.htm
+- score: 0.5932978391647339
+  chunk_id: 3588aaff_c0674
+  text: "Спостереження професора Рудницького слід тепло\r\nвітати, надто ж з огляду\
+    \ на той невеселий факт (який до певної міри нагадує\r\nбрак ширшої, фахової дискусії\
+    \ про \"Історію\" Чижевського за його\r\nжиття), що це перший ґрунтовний відгук\
+    \ на мою критику 1. Те, що до\r\nрозмови приєднується історик, а не літературознавець,\
+    \ визначає, певна річ,\r\nцентр уваги цих спостережень. Їх можна також розглядати\
+    \ як подальший коментар\r\nпро відносний ступінь діяльності у цих двох галузях.\
+    \ Порушена проблема, одначе,\r\nстосує"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5875246524810791
+  chunk_id: feaa5fa7_c0944
+  text: "Історіографія: Василенко Н. К истории\r\nмалорусской историографии и малорусского\
+    \ /406/ общественного строя. КСт., XI\r\n— XII. 1894; Лазаревский А. Прежние изыскатели\
+    \ малорусс. старины. КСт.\r\n1891 — 97 і окремо: Очерки, заметки и документы по\
+    \ истории Малороссии, I — V.\r\nК. 1891 — 98; Иконников В. Опыт русской историографии,\
+    \ П. К. 1908; Грушевский\r\nМ. Развитие украинских изучений. Украинский народ\
+    \ в его прошлом и настоящем, І.\r\nП. 1914; Дорошенко Д. Огляд укр. історіографії.\
+    \ Прага 1923; Багалій\r\nД. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

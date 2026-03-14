@@ -1,0 +1,27 @@
+{
+  "track": "lit-essay",
+  "slug": "grabowicz-poet-prophet",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-14T01:06:30Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-14T01:06:30Z",
+      "task_id": "v5-grabowicz-poet-prophet-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

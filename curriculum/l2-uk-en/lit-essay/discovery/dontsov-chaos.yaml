@@ -1,0 +1,254 @@
+discovered_at: '2026-03-14T00:29:40.420792+00:00'
+query_keywords:
+- Dontsov Chaos
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Dontsov Chaos у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: The video explicitly details how the Tereshchenko family was suppressed
+    and demonized in Soviet historiography, directly illustrating the concept of 'історіографія'
+    and the need for a 'деколонізаційна перспектива' mentioned in the module. This
+    provides a concrete example of the historical narrative manipulation that figures
+    like Dontsov would react against.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- it offers a compelling
+    case study of historical revisionism and the suppression of Ukrainian heritage
+    under Soviet rule, directly supporting the decolonization theme.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.7
+  relevance_note: The video discusses Soviet-era crimes (Holocaust, Holodomor, Stalin's
+    actions) and Russian aggression, providing critical historical context relevant
+    to the module's 'Деколонізаційна перспектива' section. It reinforces themes of
+    historical re-evaluation in the face of totalitarian regimes, aligning with the
+    broader context of Dontsov's ideas.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
+    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
+    яка от є складовою української культури.
+  embed_suggestion: After section Деколонізаційна перспектива -- as it directly expands
+    on the historical context of decolonization by discussing Soviet and Russian crimes
+    against Ukraine.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.4
+  relevance_note: This video focuses on the business history and philanthropy of the
+    Tereshchenko family. While part of Ukrainian history, its thematic focus on entrepreneurship
+    is tangential to the specific ideological, literary analysis, or decolonization
+    themes associated with 'Dontsov Chaos'.
+  transcript_excerpt: Микола Терещенко народився 14 жовтня року. Його батько тоді
+    тільки починав робити перші успіхи в комерції. Закінчивши кілька років училища,
+    юний Микола опановував тонкощі торгівлі.
+  embed_suggestion: After section Вступ та контекст -- if a broader historical background
+    on Ukrainian figures and their contributions in the late 19th/early 20th century
+    is being established, though its direct relevance to Dontsov's specific ideas
+    is limited.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0330
+  text: ". . . . . . . . . . . . . . . . . . . . . . 193\n§ 45 \nВимоги до вживання\
+    \ синтаксичних одиниць у різних стилях  . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . 202\n \nЗапитання і завдання для самоконтролю . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 205"
+  section_title: Сторінка 222
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0288
+  text: "Визначте тему й основну думку тексту. Доберіть свій заголовок, який би переда-\n\
+    вав основну думку прослуханого. 3. Поміркуйте, які мікротеми розкрито в тексті.\
+    \ Укажіть тематичні речення. 4. Визначте види й засоби міжфразного зв’язку в кожному\
+    \ абзаці. 5. Випишіть ключові слова й словосполучення з першого та другого абзаців\
+    \ тексту. Користуючись записами, перекажіть усно цю частину. * Ðàðèòåò – öіííà\
+    \ ðіäêіñíà ðі÷. 430 \nÇîëîòà ïåêòîðàëü\nç êóðãàíó Òîâñòà Ìîãèëà\n(Äíіïðîïåòðîâùèíà)"
+  section_title: Сторінка 199
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5918240547180176
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5741396546363831
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5672778487205505
+  chunk_id: 3588aaff_c0106
+  text: "Основним і водночас вельми проблематичним джерелом\r\nосмислення тогочасного\
+    \ контексту рецепції української літератури є розгорнута\r\nбібліографічно-описова\
+    \ довідка В. Сиповського, \"Україна в російському\r\nписьменстві: 1800-1850\"\
+     108,\n\n108 Сиповський\r\nВасиль. Україна в російському письменстві: 1800-1850.\
+    \ — К., 1928.\n\nПерше, що тут вражає, — це сам фактаж, його розміри:\r\nяк видно\
+    \ зі змісту, йдеться про майже п’ятсот творів. І де навіть тоді, коли\r\nавтор\
+    \ зосереджується на красному письменстві, специфі"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

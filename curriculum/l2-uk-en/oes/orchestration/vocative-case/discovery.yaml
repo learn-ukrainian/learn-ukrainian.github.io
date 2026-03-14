@@ -1,0 +1,265 @@
+discovered_at: '2026-03-13T23:54:26.587624+00:00'
+query_keywords:
+- Кличний відмінок
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Addressing saints and thieves (Андрониче!)
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=IGagwEUqZW0
+  channel: Ukrainian Lessons
+  title: ULP 2-69 | “Білі мухи” | Ukrainian Children’s Poem + Vocative case in Ukrainian
+  relevance_score: 1.0
+  relevance_note: Video title and transcript explicitly state that it will be teaching
+    the 'vocative Case in Ukrainian', making it directly and perfectly relevant to
+    the module.
+  transcript_excerpt: а також ми будемо вивчати сьомий відмінок в українській мові
+    кличний відмінок.
+  embed_suggestion: After section Основний матеріал - this video directly teaches
+    the vocative case and would serve as an excellent primary resource.
+- url: https://www.youtube.com/watch?v=c7TSk96cH4k
+  channel: Історія Мови
+  title: Features of ancient language. The accusative case as a subject
+  relevance_score: 0.9
+  relevance_note: Video explicitly discusses 'кличний відмінок' (vocative case) and
+    provides examples from ancient Ukrainian language, directly supporting the module's
+    core topic.
+  transcript_excerpt: кличний відмінок в ролі підмета приклади у розмовній етапичній
+    мові Давньої Русі та Гетьманщини... ось заплаче молодий козаче по своїй дівчині
+    митлинський замість звичайного ой заплаче молодий козак або ось інший приклад
+    кучерявий дубе на яр похилився
+  embed_suggestion: After section Основний матеріал - provides historical context
+    and additional examples of vocative case usage.
+- url: https://www.youtube.com/watch?v=GL1-z6IGg9A
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Where do you work? Reflective verbs, Diminutives,
+    Locative & Vocative cases'
+  relevance_score: 0.9
+  relevance_note: Video explicitly lists 'vocative case' as one of the grammar points
+    to be covered in the lesson, making it highly relevant.
+  transcript_excerpt: Today we will learn several grammar points such as verbs to
+    work... as well as vocative case.
+  embed_suggestion: After section Основний матеріал - provides direct instruction
+    on the vocative case within a broader beginner context.
+- url: https://www.youtube.com/watch?v=A49aZdwMz6k
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Hobbies | Ukrainian music | Palatalization, Verb
+    + infinitive, Noun cases'
+  relevance_score: 0.3
+  relevance_note: Video is a Ukrainian lesson for beginners covering general grammar
+    points, but it mentions dative and instrumental cases, not the vocative case.
+  transcript_excerpt: today we will learn some new grammar points such as verb plus
+    infinitive construction... and we will touch a bit dative and instrumental cases.
+  embed_suggestion: None - not specifically relevant to the vocative case.
+- url: https://www.youtube.com/watch?v=X157csox9sk
+  channel: Історія Мови
+  title: '#old Ukrainian 17th century "Perestoroga" 1605 #shorts'
+  relevance_score: 0.1
+  relevance_note: Video is a reading of an Old Ukrainian text, but does not discuss
+    or explain grammar points, specifically the vocative case. It is historically
+    interesting but not pedagogically relevant to the topic.
+  transcript_excerpt: Дні, котрий господар Волоський наступуватимів за волею цесарською
+    на господарство Волосько, упросив того протосингело же без за нього прирук купцум.
+  embed_suggestion: None - not relevant to the module's topic.
+- url: https://www.youtube.com/watch?v=tcTUfYZTy8M
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #8. Vocative Case (Кличний відмінок)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=YTqVxLihICc
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Cases #5: Locative Case Practice (Місцевий відмінок в українській
+    мові)'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0227
+  text: "Розділ 7\nЧислівник\nЩо на нас чекає в цьому розділі?\n• Поміркуємо, для\
+    \ чого в мові потрібні числівники.\n• Розглянемо, які є розряди числівників за\
+    \ значенням \nі за будовою.\n• Дізнаємося, як правильно відмінювати числівники.\n\
+    • Навчимося поєднувати числівники з іменниками.\nА також поспілкуємося про те,\
+    \ наскільки важлива ма-\nтематика в нашому житті."
+  section_title: Сторінка 220
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0187
+  text: 'СЛОВО. ЗНАЧЕННЯ СЛОВА
+
+    Повторення й узагальнення вивченого про слово...................... 42
+
+    Урок розвитку писемного мовлення
+
+    Робота з деформованим текстом: переставляння
+
+    частин тексту, додавання кінцівки .................................................
+    43
+
+    Будова слова. Спільнокореневі слова. Форми с л о в а ................44
+
+    Частини мови. Узагальнення й повторення вивченого..............46
+
+    ІМЕННИК
+
+    Іменник як частина мови. Повторення вивченого...................................................'
+  section_title: Сторінка 188
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrayinska-mova-varzatska-2021-1_s0036
+  text: "38\n73. \n1. Розгляньте таблицю. Зверніть увагу на назви від-\nмінків. На\
+    \ які питання відповідає кожен з них? Чим \nвідрізняється кличний відмінок від\
+    \ інших відмінків?\nВІДМІНЮВАННЯ ІМЕННИКІВ\nНазва  \nвідмінка\nПитання та \nдопоміжні\
+    \ \nслова\nВідмінювання  \nіменників\nв однині\nу множині\nНазивний \n(Н.)\nхто?\
+    \ що? \n(є)\nучень\nшкола\nучні\nшколи\nРодовий \n(Р.)\nкого? чого? \n(немає)\n\
+    учня\nшколи\nучнів\nшкіл\nДавальний\n(Д.)\nкому? чому? \n(даю)\nучневі (­ю)\n\
+    школі\nучням\nшколам\nЗнахідний\n(З.)\nкого? що? \n(бачу)\nучня\nшколу\nучнів"
+  section_title: Сторінка 38
+  grade: 4
+  author: varzatska
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0450
+  text: "Хід заняття\n\t 1. Опрацюйте наведений матеріал і дайте відповіді на запитання.\
+    \ 2. Зробіть висновки відповідно до мети заняття."
+  section_title: Сторінка 249
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5298596024513245
+  chunk_id: 5554668f_c0326
+  text: 'виелімінувати — виключити, вилучити
+
+
+    виємка; за виємкою — за винятком
+
+
+    вижидаючий — очікувальний
+
+
+    визначати — означати
+
+
+    викінчити — закінчити, завершити
+
+
+    виповнити — виконати
+
+
+    виповняти — виконувати
+
+
+    виявлювати(ся) — показувати(ся), розкривати(ся)
+
+
+    виявлятися — з’являтися
+
+
+    вияснення — з’ясування
+
+
+    виясняти — з’ясовувати
+
+
+    відживати — оживати
+
+
+    відміна — зміна; різниця
+
+
+    відмінити — змінити
+
+
+    відмінитися — змінитися
+
+
+    відмітний — відмінний
+
+
+    відноситися — ставитися
+
+
+    відректи — відмовити
+
+
+    вмисне — навмис'
+  work: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+  year: 1894
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/drag/drag2.htm
+- score: 0.5267575979232788
+  chunk_id: 1cbe8821_c0004
+  text: '§ 51. Орудний відмінок . . . . . . . . . . . . . . . . . . . . 87
+
+
+    § 52. Місцевий відмінок . . . . . . . . . . . . . . . . . . . . 88
+
+
+    § 53. Кличний відмінок . . . . . . . . . . . . . . . . . . . . 89
+
+
+    Б. Множина . . . . . . . . . . . . . . . . . . . . 90
+
+
+    § 54. Називний відмінок . . . . . . . . . . . . . . . . . . . . 90
+
+
+    § 55. Родовий відмінок . . . . . . . . . . . . . . . . . . . . 91
+
+
+    § 56. Давальний відмінок . . . . . . . . . . . . . . . . . . . . 92
+
+
+    § 57. Знахідний відмінок . . . . . . . '
+  work: Український правопис 2015
+  author: НАН України
+  year: 2015
+  genre: reference
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pravopys/pravopys2015.htm
+- score: 0.5095006823539734
+  chunk_id: 4800ab33_c1546
+  text: "Окремі задачі вимірювання, які будуть викладені в усіх\r\nнаступних розділах,\
+    \ ми розглядаємо як загальні. Проте ми розподілимо їх на ряд\r\nінших — часткових,\
+    \ або спеціальних задач, по-перше, тому, що одне й те саме\r\nпитання можна розв’язати\
+    \ за допомогою різних інструментів; по-друге, що за\r\nдопомогою того самого інструмента\
+    \ можна здійснювати \\184\\ вимірювання\r\nпо-різному. Хоча всі ці вимірювання\
+    \ нічим не відрізняються одне від одного щодо\r\nформального об’єкта (адже всі\
+    \ вони мають за об’єкт лінію), "
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

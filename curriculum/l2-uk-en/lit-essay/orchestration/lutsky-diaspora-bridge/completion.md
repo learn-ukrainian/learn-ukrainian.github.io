@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 50 — E2E
+PASS: pipeline lit-essay 54
 
   Module:   lutsky-diaspora-bridge
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T14:55:03Z
+  Date:     2026-03-14T02:07:48Z

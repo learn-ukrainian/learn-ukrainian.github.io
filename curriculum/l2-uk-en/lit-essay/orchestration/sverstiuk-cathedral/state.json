@@ -1,0 +1,27 @@
+{
+  "track": "lit-essay",
+  "slug": "sverstiuk-cathedral",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-14T01:01:10Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-14T01:01:10Z",
+      "task_id": "v5-sverstiuk-cathedral-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

@@ -1,0 +1,258 @@
+discovered_at: '2026-03-14T00:07:14.182003+00:00'
+query_keywords:
+- Drahomanov Shevchenko
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Drahomanov Shevchenko у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+  channel: Суспільне Культура
+  title: 'What books will help you better understand the history of Ukraine? | Podcast
+    "Bookstore" #19'
+  relevance_score: 0.8
+  relevance_note: The video discusses the importance of understanding Ukrainian history
+    and historiography, and how to counter aggressive narratives. This aligns well
+    with the 'Деколонізаційна перспектива' and 'історіографія' aspects of the Drahomanov
+    Shevchenko module, providing essential context for their works.
+  transcript_excerpt: Я знаю таку особливість нашого теперішнього буття що нам з вами
+    друзі дуже часто доводиться перебувати в певних діалогах іноді доволі агресивних
+    Коли нам пропонують різні люди свої версії української історії і нам з вами друзі
+    було би добре мати хорошу бібліотечку для того щоб мати такі класні Круті аргументи.
+  embed_suggestion: After section Вступ та контекст -- This video provides a foundational
+    understanding of Ukrainian history and historiography relevant to the module's
+    decolonization perspective.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.5
+  relevance_note: This video focuses on the Tereşchenko family and how their legacy
+    was suppressed by Soviet historiography. While it touches upon 'історіографія'
+    and the decolonization of historical narratives, the specific subject (Tereşchenko)
+    is not Drahomanov or Shevchenko, making it only tangentially related.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- Provides a concrete
+    example of how Soviet historiography suppressed certain Ukrainian figures, illustrating
+    the decolonization aspect of historical narratives.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: The video is about the business and financial history of the Tereşchenko
+    family. This topic is not directly related to the literary works, stylistics,
+    or decolonization perspective of Drahomanov and Shevchenko.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: N/A - Not relevant enough to embed in this module.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/taras-shevchenko/
+  title: Taras Shevchenko — Ukraine's National Poet
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - shevchenko
+  - literature
+  - history
+  - poetry
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0334
+  text: "222\nЗміст\nЗміст\nПередмова . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3\n\
+    \t\n§ 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . 4\nРозділ І. ВЕЛИКЕ РОЗСЕЛЕННЯ\
+    \ СЛОВ’ЯНСТВА. ЗМІНА \nНАСЕЛЕННЯ ПРИЧОРНОМОРСЬКИХ СТЕПІВ\n\t\n§ 2. Слов’янство\
+    \ у V—VІІ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . 9\n\t\n§ 3. Слов’янські племена на те"
+  section_title: Сторінка 223
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5722321271896362
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5679583549499512
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5632553100585938
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm

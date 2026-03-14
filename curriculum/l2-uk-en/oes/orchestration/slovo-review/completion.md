@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 90 — E2E
+PASS: pipeline oes 87
 
   Module:   slovo-review
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T12:33:56Z
+  Date:     2026-03-14T07:07:53Z

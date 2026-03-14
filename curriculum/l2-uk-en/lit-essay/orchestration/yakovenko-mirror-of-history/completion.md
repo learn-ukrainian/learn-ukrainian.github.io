@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 31 — E2E
+PASS: pipeline lit-essay 37
 
   Module:   yakovenko-mirror-of-history
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:13:00Z
+  Date:     2026-03-14T01:23:55Z

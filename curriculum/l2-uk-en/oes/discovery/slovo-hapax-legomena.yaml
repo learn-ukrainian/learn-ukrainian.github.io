@@ -1,0 +1,178 @@
+discovered_at: '2026-03-14T02:46:19.057668+00:00'
+query_keywords:
+- 'Слово: Унікальні слова'
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Striltsy, Shereshiry, Karnu/Zhylya
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=oqoavKHls5E
+  channel: Історія Мови
+  title: '[HISTORY OF THE WORD] Gazda'
+  relevance_score: 1.0
+  relevance_note: The video directly discusses the history and uniqueness of the Ukrainian
+    word 'газда', perfectly aligning with the module's theme of 'Унікальні слова'.
+  transcript_excerpt: Є одне унікальне слово, яке було запозичене іншою мовою з давньої
+    слов'янської, може і з давньоукраїнської. І це слово це і є газда.
+  embed_suggestion: After section 'Основний матеріал' -- it provides a detailed example
+    of a unique word's etymology, enriching the theoretical content.
+- url: https://www.youtube.com/watch?v=80BHdlUSiPA
+  channel: Історія Мови
+  title: 'Because "BO" is a unique conjunction! #language #history'
+  relevance_score: 0.95
+  relevance_note: The video focuses on the conjunction 'бо' as a 'унікальний сполучник',
+    explaining its ancient roots and unique distribution, which directly relates to
+    the concept of unique words in Ukrainian.
+  transcript_excerpt: Є в нашій українській мові коротенький сполучник, бо, а означає
+    він причину. Так от, цей сполучник, бо він унікальний.
+  embed_suggestion: After section 'Основний матеріал' -- it offers another excellent,
+    specific example of a unique Ukrainian linguistic element, complementing the main
+    theory.
+- url: https://www.youtube.com/watch?v=hezv0hJkno0
+  channel: Speak Ukrainian
+  title: 'Ukrainian podcast #5 Ukrainian cuisine/Українська кухня. SLOW UKRAINIAN
+    + SUBTITLES'
+  relevance_score: 0.1
+  relevance_note: The video is about Ukrainian cuisine and traditional dishes. While
+    in Ukrainian, its content is entirely unrelated to the module's topic of unique
+    words or etymology.
+  transcript_excerpt: Українська кухня різноманітна та унікальна. Вона має багату
+    історію та славиться у слов'янських країнах.
+  embed_suggestion: None -- the topic is irrelevant to the module.
+- url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  channel: Ukrainian Lessons
+  title: 'Ukrainian Alphabet: How to pronounce С in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=7u9UhXF0zTI
+  channel: Speak Ukrainian
+  title: 'Ukrainian podcast #4: Kyiv/Київ. SLOW UKRAINIAN'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0399
+  text: "(За К. Макґоніґал)\n \n \nВизначте, яким способом пов’язані речення в тексті —\
+    \ послідовним \n(ланцюговим) чи паралельним. Які ключові слова визначають тему\
+    \ тексту? А як ви формуєте силу волі? Що ще, крім сили волі, допомагає в до-\n\
+    сягненні мети? 645 Доберіть із художньої літератури уривок тексту про цікаву осо-\n\
+    бистість. Визначте тему й мікротеми, стиль мовлення тексту. Знайдіть за-\nсоби\
+    \ зв’язку речень у тексті (синоніми, займенники, повторювані слова, \nсполучники\
+    \ тощо). Схарактеризуйте текст за йог"
+  section_title: Сторінка 226
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0137
+  text: 'Значення слова............................................................................48
+
+    Спостереження за значенням слова.....................................................48
+
+    Тематичні групи слів...............................................................................51
+
+    Слова, близькі за значенням..................................................................54
+
+    Слова, протилежні за значенням...........................................................55
+
+    Багатозначні слова...........'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  text: "3. Скласти план і відповідно до нього систематизувати матеріал. 4. Узагальнити\
+    \ основні положення. 5. Скласти усно текст повідомлення, намагаючись висловити\
+    \ й \nаргументувати власну думку. 6. За потреби записати текст повідомлення повністю\
+    \ або частково \nта переказати усно текст удома."
+  section_title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0091
+  text: "86\nЛексикологія.  Підсумовуємо й узагальнюємо\nПІДСУМОВУЄМО Й  УЗАГАЛЬНЮЄМО\n\
+    Запитання для самоперевірки\n1.\t Чим різняться однозначні й  багатозначні слова?\n\
+    2.\t Як виникають переносні значення слова?\n3.\t Що таке синоніми? Для чого вони\
+    \ потрібні в  мові?\n4.\t У чому особливість антонімів?\n5.\t Чим омоніми відрізняються\
+    \ від багатозначних слів? А  від паронімів?\n6.\t Які слова називають запозиченими?\
+    \ За якими правилами їх треба ­писати?\n7.\t Розкажіть про активну й  пасивну\
+    \ лексику.\n8.\t Які є  групи слів"
+  section_title: Сторінка 86
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5519167184829712
+  chunk_id: fc2291b5_c5169
+  text: "Слова можуть застосовуватися окремо одне від одного\r\n(для називання відповідних\
+    \ об’єктів з метою їх ідентифікації чи для формування\r\nкоротких висловлювань\
+    \ — однослівних речень), або комбінуватися з ін. словами\r\nдля побудови більш\
+    \ докладних висловів — поширених простих чи складних речень.\r\nУ кожній М. речення\
+    \ будуються за певними усталеними в ній синтакс. моделями.\r\nЗалежно від своїх\
+    \ семант. і синтакс. функцій у структурі речень слова можуть\r\nнабувати різних\
+    \ формальних ознак, за якими вони групую"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5466290712356567
+  chunk_id: 9896ad09_c0264
+  text: "Зміст «Слова».\r\n Наукова праця над «Словом», що\r\nвелась силами учених\
+    \ майже цілого слов'янського світу протягом століття, дає\r\nдуже гарний образ\
+    \ щирої духовної кооперації, об'єднаної єдиною любов'ю\r\nсловесної краси. Ні\
+    \ одна інша слов'янська пам'ятка не може похвалитись такою\r\nвеликою і гарною\
+    \ літературою, такими многосторонніми, глибокими працями. І\r\nвсе-таки в результаті\
+    \ більш ніж ціловікової праці «Слово» являється в значній\r\nмірі збором загадок,\
+    \ котрі все ще не можна рішити певно і твердо. Йо"
+  work: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush2.htm
+- score: 0.5333253145217896
+  chunk_id: fc2291b5_c5177
+  text: "М. як наука має вел. значення для розроблення термінології,\r\nу наук. коментуванні\
+    \ мовних текстів, машинному перекладі; воно дає і теор.\r\nвисновки для розв’язання\
+    \ проблеми взаємостосунків матеріального та ідеального.\r\nПроблема взаємозв’язку\
+    \ мови й мислення, мовних і логічних величин вивчається\r\nодночасно М. і філософією.\
+    \ Осн. види мовозн. методів — описовий, зіставний\r\n(конфронтативний, контрастивний),\
+    \ типол., істор. (порівняльно-істор.,\r\nкомпаративний) і нормативно-стилістичний."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

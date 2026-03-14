@@ -1,0 +1,460 @@
+{
+  "sessionId": "a63757a3-efad-474b-8fac-691a450fa844",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:12:07.548Z",
+  "lastUpdated": "2026-03-14T01:13:37.451Z",
+  "messages": [
+    {
+      "id": "b6a5573b-f841-4e18-8302-38c619005a64",
+      "timestamp": "2026-03-14T01:12:07.548Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-044\nlevel: OES\nsequence: 44\nslug: sviatoslav-vsevolodovych\nversion: '2.0'\ntitle: Святослав Всеволодович\nsubtitle: Sviatoslav Vsevolodovych\nfocus: '\"Golden Word\" context'\nphase: 2\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Sviatoslav Vsevolodovych\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Kyiv Grand Prince\nprerequisites:\n- ihor-campaign-chronicle\nconnects_to:\n- roman-mstyslavych\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Святослав Всеволодович** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Святослав Всеволодович\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Святослав Всеволодович\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "7e6d7a7a-e27f-4ddd-a701-c2fe8e2e50d1",
+      "timestamp": "2026-03-14T01:12:14.542Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Stage",
+          "description": "I'm focusing now on the next operation. Considering the current status, I'm analyzing the subsequent steps required to fulfill the goal. I'm carefully formulating the specific action plan, ensuring all elements align for seamless execution.",
+          "timestamp": "2026-03-14T01:12:12.603Z"
+        },
+        {
+          "subject": "Initiating the Search",
+          "description": "I'm starting the research process now, after the initial stage. I'm moving forward to gather crucial information about the subject, focusing my efforts on locating relevant data for the task. The next action is to query for necessary details.",
+          "timestamp": "2026-03-14T01:12:14.324Z"
+        }
+      ],
+      "tokens": {
+        "input": 20504,
+        "output": 24,
+        "cached": 16880,
+        "thoughts": 217,
+        "tool": 0,
+        "total": 20745
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773450734541_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Святослав Всеволодович"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773450734541_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Святослав Всеволодович' — 5 results\n\n1. **Святослав Всеволодович** — Святослав Всеволодович (д.-рус. Ст҃ославъ Всеволодичь; хрещене ім&#039;я Михайло, також відомий як Святослав III, мав прізвиська Мудрий та Грізний, після 1116 —\n2. **Святослав Всеволодович (князь владимирський)** — Незважаючи на поразку Всеволодовичів, переможці залишили Святославу Юр&#039;єв. При Юрії Всеволодовичу Святослав брав участь у багатьох військових походах: проти волзьких\n3. **Святослав Всеволодович (князь Трубчевський)** — Святослав Всеволодович (у хрещенні Онуфрій;?-після 1232) - князь трубчевський (до 1196 -після 1232 ), син князя Всеволода Святославича, князя путивльського\n4. **Святослав Ольгович** — небожу Святославу Всеволодовичу всупереч звичному на Русі родовому порядку спадкування, за яким Чернігів мав отримати Святослав Ольгович. Але Святослав Всеволодович\n5. **Святослав Всеволодович (значення)** — його так, щоб воно вказувало безпосередньо на відповідну статтю. Святослав Всеволодович (1116—1194) — князь Сіверський (1157—1164), Чернігівський (1164—1177)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:14.840Z",
+          "resultDisplay": "Wikipedia search: 'Святослав Всеволодович' — 5 results\n\n1. **Святослав Всеволодович** — Святослав Всеволодович (д.-рус. Ст҃ославъ Всеволодичь; хрещене ім&#039;я Михайло, також відомий як Святослав III, мав прізвиська Мудрий та Грізний, після 1116 —\n2. **Святослав Всеволодович (князь владимирський)** — Незважаючи на поразку Всеволодовичів, переможці залишили Святославу Юр&#039;єв. При Юрії Всеволодовичу Святослав брав участь у багатьох військових походах: проти волзьких\n3. **Святослав Всеволодович (князь Трубчевський)** — Святослав Всеволодович (у хрещенні Онуфрій;?-після 1232) - князь трубчевський (до 1196 -після 1232 ), син князя Всеволода Святославича, князя путивльського\n4. **Святослав Ольгович** — небожу Святославу Всеволодовичу всупереч звичному на Русі родовому порядку спадкування, за яким Чернігів мав отримати Святослав Ольгович. Але Святослав Всеволодович\n5. **Святослав Всеволодович (значення)** — його так, щоб воно вказувало безпосередньо на відповідну статтю. Святослав Всеволодович (1116—1194) — князь Сіверський (1157—1164), Чернігівський (1164—1177)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c843d48e-4b17-40b8-b371-366f0f4b913f",
+      "timestamp": "2026-03-14T01:12:20.205Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the Article's Title",
+          "description": "\\n\\n\nI'm zeroing in on the article title now. Using the information gathered, I am narrowing the options to ensure that the chosen article is the most relevant, to provide the best possible results.",
+          "timestamp": "2026-03-14T01:12:18.324Z"
+        },
+        {
+          "subject": "Fetching Article Sections",
+          "description": "\\n\\n\nOkay, I'm now moving forward and will read the identified article's sections. I will now gather the sections to extract the relevant context. I'm focusing specifically on the parts related to the \"Golden Word\" and its connection to Sviatoslav.",
+          "timestamp": "2026-03-14T01:12:20.087Z"
+        }
+      ],
+      "tokens": {
+        "input": 20967,
+        "output": 24,
+        "cached": 19872,
+        "thoughts": 177,
+        "tool": 0,
+        "total": 21168
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773450740204_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Святослав Всеволодович",
+            "mode": "sections"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773450740204_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Святослав Всеволодович':\n\n1 Біографія (index=1)\n2 Новий двір і Святослав Всеволодович (index=2)\n3 Князювання в Києві (index=3)\n4 Сім'я (index=4)\n5 Родовід (index=5)\n6 Примітки (index=6)\n7 Джерела (index=7)\n8 Посилання (index=8)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:21.701Z",
+          "resultDisplay": "Sections of 'Святослав Всеволодович':\n\n1 Біографія (index=1)\n2 Новий двір і Святослав Всеволодович (index=2)\n3 Князювання в Києві (index=3)\n4 Сім'я (index=4)\n5 Родовід (index=5)\n6 Примітки (index=6)\n7 Джерела (index=7)\n8 Посилання (index=8)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "f33a8b82-36c8-45f5-bc99-60bc508f7b28",
+      "timestamp": "2026-03-14T01:12:27.380Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Task Completion",
+          "description": "I am now focused on executing the specific task, utilizing the appropriate instruments. I will work towards accomplishing the next step in the process, ensuring the generation of the desired output.",
+          "timestamp": "2026-03-14T01:12:25.993Z"
+        },
+        {
+          "subject": "Initiating Data Acquisition",
+          "description": "I'm currently engaged in gathering information. I've begun the process of retrieving the necessary data to build a solid foundation for the task ahead. My goal is to extract pertinent details and establish a thorough understanding.",
+          "timestamp": "2026-03-14T01:12:27.263Z"
+        }
+      ],
+      "tokens": {
+        "input": 21100,
+        "output": 24,
+        "cached": 19737,
+        "thoughts": 131,
+        "tool": 0,
+        "total": 21255
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773450747379_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Святослав Всеволодович"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773450747379_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Святослав Всеволодович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%B2%D1%8F%D1%82%D0%BE%D1%81%D0%BB%D0%B0%D0%B2_%D0%92%D1%81%D0%B5%D0%B2%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%B2%D0%B8%D1%87\n\nСвятослав Всеволодович (д.-рус. Ст҃ославъ Всеволодичь; хрещене ім'я Михайло, також відомий як Святослав III, мав прізвиська Мудрий та Грізний, після 1116 — 25 липня 1194) — руський князь з династії Рюриковичів, гілки Ольговичів. Князь новгородський (1141), турівський (1142, 1154—1155), волинський (1141—1146), буський (1146), сновський (?) (1151—1154), стародубський (?) (1155—1157), сіверський (1157—1164), чернігівський (1164—1177), Великий князь Київський з короткочасними перервами (1173—1194).\nСтарший син і спадкоємець великого князя київського Всеволода Ольговича та Марії, доньки Мстислава Великого. Організатор та учасник антиполовецької коаліції руських князів, зокрема Орельської операції (1184). Цілковита ліквідація половецької загрози не вдалася через нескоординовані виступи окремих князів. Також відомий як правитель якому вдалося загальмувати розпад Київської держави і досягти стабілізації під кінець XII ст.\n\n\n== Біографія ==\n\n1141 року батько Святослава, ставши великим князем київським, надав йому Турів, а потім Володимир, де він княжив до 1146 року. З 1146-го року, коли в Києві вокняжився Ізяслав Мстиславич, Святослава вигнано з Волині натомість він отримав 5 міст і Межибіжжя. У війні за Київ між Ізяславом і Юрієм Долгоруким (1148—1152) Святослав підтримував останнього. По смерті Долгорукого (1157) Київ посів Ізяслав Давидович надавши Святославу Всеволодовичу Новгород-Сіверський.\n1164-го у Чернігові помер Святослав Ольгович, Святослав посів його місце. Він перевів до Новгорода-Сіверського свого брата Олега Святославича і пообіцяв нагородити його братів Ігоря Святославича і Всеволода Святославича, але обіцянку не виконав. Коли ображені Святославичі у 1166-му спробували силою здобути обіцяне напустив на них половецьку орду. У 1170-х рр. прагнув оволодіти Києвом, і досяг свого влітку 1176, але 1180-го його вигнав Рюрик Ростиславич. Конфлікт із Рюриком був залагоджений компромісом: 1181 Святослав став київським князем, поступившись Ростиславичу Київською землею. У Південній Русі почав правити дуумвірат глав князівських кланів Ольговичів і Ростиславичів смоленських, що дещо послабило міжкнязівські усобиці. Разом із Рюриком Ростиславичем очолював успішні походи на половців у 1184 та 1185 роках.\n\n\n== Новий двір і Святослав Всеволодович ==\n\nВ кінці 12 століття в літопису два рази згадується Новий двір: перший раз під 1194 роком, у зв'язку з перебуванням в ньому Святослава Всеволодовича, другий раз під 1197 роком, у зв'язку з будівництвом Рюриком Ростиславичем на цьому дворі Василівської церкви. Короткість літописного повідомлення призвела до появи низки досить суперечливих версій щодо того, кто і коли побудував цей двір, і де він розташовувався.\nМ. В. Закревський вважав, що Новий двір являв собою перебудований біля 1194 року Великий Ярославів двір, який він тим самим заменив. М. І. Петров вважав, що Новий двір був побудований Святославом Всеволодовичем біля Великого Ярославового двору. Д. І. Іловайський розміщував Новий двір біля Кирилівського монастиря, його підтримав В. К. Щероцький, пізніше — П. П. Толочко й І. І. Мовчан. П. О. Раппопорт висунув версію, що Новий двір знаходився у Копиревому кінці (сучасний Кудрявець), на місце де зараз знаходиться Національна академія мистецтв України. До цієї гіпотези приєднався також Ю. С. Асєєв, який обґрунтував її імовірним розташуванням у цьому місці родового монастиря Ольговичів — Симоновського (гадая Новий двір також родовим для Ольговичів), та ототожнивши знайдені там же фундаменти церкви з Василівською церквою Нового двору. С. І. Климовський вважає, ще Новий двір був споруджений Ярославом Мудрим біля Софійського собору. До цього двору він відносить: фундаменти палацу 10-11 століття знайдені під будинком № 33 по Володимирській вулиці; залишки дерев'яної споруди знайдені 2001 року по вулиці Рейтарській, 4 (на думку Климовського — будівля гридниці); залишки мурів на південь від Софійського собору; фундаменти церкви на розі Володимирській та Ірининській вулиць (зазвичай вважається Ірининською церквою, за С. І. Климовським — Василівська церква Нового двору). За підрахунками С. І. Климовського довжина двору з заходу на схід складала близько 300 м, ширина, що найменше, 150 м, що дає у підсумку площу 4,5 га, тобто більше площі Великого Ярославового двору.\n\n\n== Князювання в Києві ==\n6 вересня 1173 — 18/19 грудня 1173\nберезень 1174 — квітень 1174\n20 липня 1176 — кінець липня 1176\nсерепень 1176 — січень 1181\nліто 1181 — 25 липня 1194\n\n\n== Сім'я ==\nДружина: Марія Васильківна, донька Полоцького князя, померла 1190 року.\nДіти:\n\nОлег (?—1204) — князь стародубський (1190—1198 рр.), сіверський (1198—1202 рр.) і чернігівський (1202—1204 рр.)\nВсеволод Чермний (?—1215) — князь чернігівський, великий князь київський (1206, 1207, 1210—1212)\nВолодимир (?—1201) — князь вщижський(?) і новгородський (1180—1181).\nГліб (?—1217) — князь чернігівський.\nМстислав (?—1223) — князь чернігівський (1216(?)—1223), загинув у битві на Калці.\nдочка — дружина рязанського князя Романа Глібовича.\nБолеслава — з 1167 одружена з галицьким княжичем Володимиром Ярославичем. За версією дослідника Юрія Сбітнева, Болеслава була автором «Слова о полку Ігоревім».\nдочка — одружена з трипільським князем Мстиславом Володимировичем.\n\n\n== Родовід ==\n\n\n== Примітки ==\n\n\n== Джерела ==\nКлимовський С. І. «Новий княжий двір» та Ірининська церква Києва: проблема локалізації // Історико-географічні дослідження в Україні: Збірник наукових праць. — НАН України. Інститут історії України, 2003. — Вип. 6. — ISSN 2616-5295.\nМовчан І. І. Давньокиївська околиця / Відп. ред. П. П. Толочко. — К. : Наукова думка, 1993. — ISBN 5-12-004026-8.\n\n\n== Посилання ==\nСвятослав Всеволодович // Шевченківська енциклопедія : у 6 т. / Гол. ред. М. Г. Жулинський. — Київ : Ін-т літератури ім. Т. Г. Шевченка, 2015. — Т. 5 : Пе—С. — С. 693.\n Вікісховище має мультимедійні дані за темою: Святослав Всеволодович"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:27.643Z",
+          "resultDisplay": "# Святослав Всеволодович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%B2%D1%8F%D1%82%D0%BE%D1%81%D0%BB%D0%B0%D0%B2_%D0%92%D1%81%D0%B5%D0%B2%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%B2%D0%B8%D1%87\n\nСвятослав Всеволодович (д.-рус. Ст҃ославъ Всеволодичь; хрещене ім'я Михайло, також відомий як Святослав III, мав прізвиська Мудрий та Грізний, після 1116 — 25 липня 1194) — руський князь з династії Рюриковичів, гілки Ольговичів. Князь новгородський (1141), турівський (1142, 1154—1155), волинський (1141—1146), буський (1146), сновський (?) (1151—1154), стародубський (?) (1155—1157), сіверський (1157—1164), чернігівський (1164—1177), Великий князь Київський з короткочасними перервами (1173—1194).\nСтарший син і спадкоємець великого князя київського Всеволода Ольговича та Марії, доньки Мстислава Великого. Організатор та учасник антиполовецької коаліції руських князів, зокрема Орельської операції (1184). Цілковита ліквідація половецької загрози не вдалася через нескоординовані виступи окремих князів. Також відомий як правитель якому вдалося загальмувати розпад Київської держави і досягти стабілізації під кінець XII ст.\n\n\n== Біографія ==\n\n1141 року батько Святослава, ставши великим князем київським, надав йому Турів, а потім Володимир, де він княжив до 1146 року. З 1146-го року, коли в Києві вокняжився Ізяслав Мстиславич, Святослава вигнано з Волині натомість він отримав 5 міст і Межибіжжя. У війні за Київ між Ізяславом і Юрієм Долгоруким (1148—1152) Святослав підтримував останнього. По смерті Долгорукого (1157) Київ посів Ізяслав Давидович надавши Святославу Всеволодовичу Новгород-Сіверський.\n1164-го у Чернігові помер Святослав Ольгович, Святослав посів його місце. Він перевів до Новгорода-Сіверського свого брата Олега Святославича і пообіцяв нагородити його братів Ігоря Святославича і Всеволода Святославича, але обіцянку не виконав. Коли ображені Святославичі у 1166-му спробували силою здобути обіцяне напустив на них половецьку орду. У 1170-х рр. прагнув оволодіти Києвом, і досяг свого влітку 1176, але 1180-го його вигнав Рюрик Ростиславич. Конфлікт із Рюриком був залагоджений компромісом: 1181 Святослав став київським князем, поступившись Ростиславичу Київською землею. У Південній Русі почав правити дуумвірат глав князівських кланів Ольговичів і Ростиславичів смоленських, що дещо послабило міжкнязівські усобиці. Разом із Рюриком Ростиславичем очолював успішні походи на половців у 1184 та 1185 роках.\n\n\n== Новий двір і Святослав Всеволодович ==\n\nВ кінці 12 століття в літопису два рази згадується Новий двір: перший раз під 1194 роком, у зв'язку з перебуванням в ньому Святослава Всеволодовича, другий раз під 1197 роком, у зв'язку з будівництвом Рюриком Ростиславичем на цьому дворі Василівської церкви. Короткість літописного повідомлення призвела до появи низки досить суперечливих версій щодо того, кто і коли побудував цей двір, і де він розташовувався.\nМ. В. Закревський вважав, що Новий двір являв собою перебудований біля 1194 року Великий Ярославів двір, який він тим самим заменив. М. І. Петров вважав, що Новий двір був побудований Святославом Всеволодовичем біля Великого Ярославового двору. Д. І. Іловайський розміщував Новий двір біля Кирилівського монастиря, його підтримав В. К. Щероцький, пізніше — П. П. Толочко й І. І. Мовчан. П. О. Раппопорт висунув версію, що Новий двір знаходився у Копиревому кінці (сучасний Кудрявець), на місце де зараз знаходиться Національна академія мистецтв України. До цієї гіпотези приєднався також Ю. С. Асєєв, який обґрунтував її імовірним розташуванням у цьому місці родового монастиря Ольговичів — Симоновського (гадая Новий двір також родовим для Ольговичів), та ототожнивши знайдені там же фундаменти церкви з Василівською церквою Нового двору. С. І. Климовський вважає, ще Новий двір був споруджений Ярославом Мудрим біля Софійського собору. До цього двору він відносить: фундаменти палацу 10-11 століття знайдені під будинком № 33 по Володимирській вулиці; залишки дерев'яної споруди знайдені 2001 року по вулиці Рейтарській, 4 (на думку Климовського — будівля гридниці); залишки мурів на південь від Софійського собору; фундаменти церкви на розі Володимирській та Ірининській вулиць (зазвичай вважається Ірининською церквою, за С. І. Климовським — Василівська церква Нового двору). За підрахунками С. І. Климовського довжина двору з заходу на схід складала близько 300 м, ширина, що найменше, 150 м, що дає у підсумку площу 4,5 га, тобто більше площі Великого Ярославового двору.\n\n\n== Князювання в Києві ==\n6 вересня 1173 — 18/19 грудня 1173\nберезень 1174 — квітень 1174\n20 липня 1176 — кінець липня 1176\nсерепень 1176 — січень 1181\nліто 1181 — 25 липня 1194\n\n\n== Сім'я ==\nДружина: Марія Васильківна, донька Полоцького князя, померла 1190 року.\nДіти:\n\nОлег (?—1204) — князь стародубський (1190—1198 рр.), сіверський (1198—1202 рр.) і чернігівський (1202—1204 рр.)\nВсеволод Чермний (?—1215) — князь чернігівський, великий князь київський (1206, 1207, 1210—1212)\nВолодимир (?—1201) — князь вщижський(?) і новгородський (1180—1181).\nГліб (?—1217) — князь чернігівський.\nМстислав (?—1223) — князь чернігівський (1216(?)—1223), загинув у битві на Калці.\nдочка — дружина рязанського князя Романа Глібовича.\nБолеслава — з 1167 одружена з галицьким княжичем Володимиром Ярославичем. За версією дослідника Юрія Сбітнева, Болеслава була автором «Слова о полку Ігоревім».\nдочка — одружена з трипільським князем Мстиславом Володимировичем.\n\n\n== Родовід ==\n\n\n== Примітки ==\n\n\n== Джерела ==\nКлимовський С. І. «Новий княжий двір» та Ірининська церква Києва: проблема локалізації // Історико-географічні дослідження в Україні: Збірник наукових праць. — НАН України. Інститут історії України, 2003. — Вип. 6. — ISSN 2616-5295.\nМовчан І. І. Давньокиївська околиця / Відп. ред. П. П. Толочко. — К. : Наукова думка, 1993. — ISBN 5-12-004026-8.\n\n\n== Посилання ==\nСвятослав Всеволодович // Шевченківська енциклопедія : у 6 т. / Гол. ред. М. Г. Жулинський. — Київ : Ін-т літератури ім. Т. Г. Шевченка, 2015. — Т. 5 : Пе—С. — С. 693.\n Вікісховище має мультимедійні дані за темою: Святослав Всеволодович",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "d84bcc92-2f38-45a8-9926-b98cfd8756df",
+      "timestamp": "2026-03-14T01:12:35.442Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Process",
+          "description": "I'm focused on moving forward with the project. I've formulated a strategy for how to complete the next stage. My aim is to make further gains on the current challenge.",
+          "timestamp": "2026-03-14T01:12:32.953Z"
+        },
+        {
+          "subject": "Gathering Primary Sources",
+          "description": "I am now actively retrieving information. I'm querying for source materials, which I'll then analyze. I've initiated several searches related to the topic at hand, and anticipate that these searches will help me build upon prior information.",
+          "timestamp": "2026-03-14T01:12:35.243Z"
+        }
+      ],
+      "tokens": {
+        "input": 23558,
+        "output": 68,
+        "cached": 0,
+        "thoughts": 227,
+        "tool": 0,
+        "total": 23853
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773450755363_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Святослав Всеволодович"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450755363_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Святослав Всеволодович\"\n\n### Result 1 (score: 0.5741)\n- **Work**: Синопсис. Київ, 1674 (1674)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `2bf33f78_c0363`\n- **Text**:\nСвятослав\r\n Всеволодович\n\n18(19).12.1173\n\nЯрослав\r\n Ізяславич\n\nКінець\r\n 1173\n\nДруга\r\n половина лютого 1174\n\nСвятослав\r\n Всеволодович\n\nДруга\r\n половина лютого 1174\n\nПочаток\r\n березня 1174\n\n(12\r\n днів)\n\nЯрослав\r\n Ізяславич\n\nПочаток\r\n березня 1174\n\nКінець\r\n 1174\n\nРоман\r\n Ростиславич\n\nКінець\r\n 1174\n\n19(?).07.1176\n\nСвятослав\r\n Всеволодович\n\nКінець\r\n липня 1176\n\nРоман,\r\n Мстислав, Рюрик Ростиславичі\n\nКінець\r\n липня 1176\n\nПочаток\r\n серпня 1176\n\nСвятослав\r\n Всеволодович\n\nПочаток\r\n серпня 1176\n\nКінець\r\n \n\n### Result 2 (score: 0.5467)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0763`\n- **Text**:\nСвятослав-Михайло Всеволодович (IX), п. (27). VII 1194, с. Всеволода Ольговича (VIII), кн. туровський,\r\nкн. володим.-волинський, кн. божський, межибожський, котельницький та ще\r\nдвох городів, кн. туровський, пінський, сновський та ще трьох городів, кн.\r\nновгород-сіверський, кн. чернігівський, в. кн. київський (15 (16). XI 1154 —\r\n(8.XII) 1154, разом з Вячеславом Володимировичем (VIII), кн.\r\nчернігівський, в. кн. київський (6.IX 1173 — 18 (19). XII 1173), кн.\r\nчернігівський, в. кн. київський (дру\n\n### Result 3 (score: 0.5467)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0388`\n- **Text**:\nСвятослав-Михайло Всеволодович (IX), п. (27). VII 1194, с. Всеволода Ольговича (VIII), кн. туровський,\r\nкн. володим.-волинський, кн. божський, межибожський, котельницький та ще\r\nдвох городів, кн. туровський, пінський, сновський та ще трьох городів, кн.\r\nновгород-сіверський, кн. чернігівський, в. кн. київський (15 (16). XI 1154 —\r\n(8.XII) 1154, разом з Вячеславом Володимировичем (VIII), кн.\r\nчернігівський, в. кн. київський (6.IX 1173 — 18 (19). XII 1173), кн.\r\nчернігівський, в. кн. київський (дру\n\n### Result 4 (score: 0.5281)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0047`\n- **Text**:\nІ послав\r\n [Всеволод] до них [воєводу] Івана Войтишича, прохаючи в них ліпших мужів. І,\r\n взявши їх, той привів [їх] до Всеволода. І мав намір [Всеволод] послати сина\r\n свого Святослава [в Новгород], та почув, що встали новгородці на вічі і б’ють\r\n приятелів Святославових із-за його насильства. І, сприяючи йому, [Святославу\r\n Ольговичу], кум його, тисяцький, [сказав]: «Княже, хотять тебе схопити». Він\r\n тоді, убоявшись, утік із жоною [Катериною] і з дружиною на Полоцьк, до Смоленська.\n\n6 У Новго\n\n### Result 5 (score: 0.5281)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0855`\n- **Text**:\nІ послав\r\n [Всеволод] до них [воєводу] Івана Войтишича, прохаючи в них ліпших мужів. І,\r\n взявши їх, той привів [їх] до Всеволода. І мав намір [Всеволод] послати сина\r\n свого Святослава [в Новгород], та почув, що встали новгородці на вічі і б’ють\r\n приятелів Святославових із-за його насильства. І, сприяючи йому, [Святославу\r\n Ольговичу], кум його, тисяцький, [сказав]: «Княже, хотять тебе схопити». Він\r\n тоді, убоявшись, утік із жоною [Катериною] і з дружиною на Полоцьк, до Смоленська.\n\n6 У Новго\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:36.234Z",
+          "resultDisplay": "Found 5 results for: \"Святослав Всеволодович\"\n\n### Result 1 (score: 0.5741)\n- **Work**: Синопсис. Київ, 1674 (1674)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `2bf33f78_c0363`\n- **Text**:\nСвятослав\r\n Всеволодович\n\n18(19).12.1173\n\nЯрослав\r\n Ізяславич\n\nКінець\r\n 1173\n\nДруга\r\n половина лютого 1174\n\nСвятослав\r\n Всеволодович\n\nДруга\r\n половина лютого 1174\n\nПочаток\r\n березня 1174\n\n(12\r\n днів)\n\nЯрослав\r\n Ізяславич\n\nПочаток\r\n березня 1174\n\nКінець\r\n 1174\n\nРоман\r\n Ростиславич\n\nКінець\r\n 1174\n\n19(?).07.1176\n\nСвятослав\r\n Всеволодович\n\nКінець\r\n липня 1176\n\nРоман,\r\n Мстислав, Рюрик Ростиславичі\n\nКінець\r\n липня 1176\n\nПочаток\r\n серпня 1176\n\nСвятослав\r\n Всеволодович\n\nПочаток\r\n серпня 1176\n\nКінець\r\n \n\n### Result 2 (score: 0.5467)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0763`\n- **Text**:\nСвятослав-Михайло Всеволодович (IX), п. (27). VII 1194, с. Всеволода Ольговича (VIII), кн. туровський,\r\nкн. володим.-волинський, кн. божський, межибожський, котельницький та ще\r\nдвох городів, кн. туровський, пінський, сновський та ще трьох городів, кн.\r\nновгород-сіверський, кн. чернігівський, в. кн. київський (15 (16). XI 1154 —\r\n(8.XII) 1154, разом з Вячеславом Володимировичем (VIII), кн.\r\nчернігівський, в. кн. київський (6.IX 1173 — 18 (19). XII 1173), кн.\r\nчернігівський, в. кн. київський (дру\n\n### Result 3 (score: 0.5467)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0388`\n- **Text**:\nСвятослав-Михайло Всеволодович (IX), п. (27). VII 1194, с. Всеволода Ольговича (VIII), кн. туровський,\r\nкн. володим.-волинський, кн. божський, межибожський, котельницький та ще\r\nдвох городів, кн. туровський, пінський, сновський та ще трьох городів, кн.\r\nновгород-сіверський, кн. чернігівський, в. кн. київський (15 (16). XI 1154 —\r\n(8.XII) 1154, разом з Вячеславом Володимировичем (VIII), кн.\r\nчернігівський, в. кн. київський (6.IX 1173 — 18 (19). XII 1173), кн.\r\nчернігівський, в. кн. київський (дру\n\n### Result 4 (score: 0.5281)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0047`\n- **Text**:\nІ послав\r\n [Всеволод] до них [воєводу] Івана Войтишича, прохаючи в них ліпших мужів. І,\r\n взявши їх, той привів [їх] до Всеволода. І мав намір [Всеволод] послати сина\r\n свого Святослава [в Новгород], та почув, що встали новгородці на вічі і б’ють\r\n приятелів Святославових із-за його насильства. І, сприяючи йому, [Святославу\r\n Ольговичу], кум його, тисяцький, [сказав]: «Княже, хотять тебе схопити». Він\r\n тоді, убоявшись, утік із жоною [Катериною] і з дружиною на Полоцьк, до Смоленська.\n\n6 У Новго\n\n### Result 5 (score: 0.5281)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0855`\n- **Text**:\nІ послав\r\n [Всеволод] до них [воєводу] Івана Войтишича, прохаючи в них ліпших мужів. І,\r\n взявши їх, той привів [їх] до Всеволода. І мав намір [Всеволод] послати сина\r\n свого Святослава [в Новгород], та почув, що встали новгородці на вічі і б’ють\r\n приятелів Святославових із-за його насильства. І, сприяючи йому, [Святославу\r\n Ольговичу], кум його, тисяцький, [сказав]: «Княже, хотять тебе схопити». Він\r\n тоді, убоявшись, утік із жоною [Катериною] і з дружиною на Полоцьк, до Смоленська.\n\n6 У Новго\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450755402_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "золоте слово Святослава"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450755402_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"золоте слово Святослава\"\n\n### Result 1 (score: 0.6499)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0341`\n- **Text**:\nБояри вияснили Святославові сон так, що це два соколи\r\nзлетіли з батьківського престолу пошукати города Тмуторокані. Але соколам\r\nпідтято крила та самих їх закуто в залізні пута. Разом із двома сонцями\r\nпомеркли й два молодих місяці. Тоді князь Святослав промовив золоте слово. Дорікав\r\nкнязям Ігореві і Всеволодові, що нерозважно, на власну руку, не повідомивши\r\nінших князів, пішли походом. Не добули собі вони слави, тільки сором нанесли\r\nйого сивині. Святослав радий би сам попробувати ще сил у н\n\n### Result 2 (score: 0.6439)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0305`\n- **Text**:\nЗнялася хула́ вже на хва́лу,\n\nІ гу́ркнула Ну́жда\r\nна волю,\n\nДив кинувсь на землю помалу,\n\nІ тягне з собою Недолю...\n\nЙ співають на березі моря\n\nОн го́тські вродливі\r\nдівчата,\n\nІ дзвонять бреньки́м\r\nруським злотом, —\n\nО Русь, у недолі\r\nрозп’я́та! —\n\nЙ співають вони про час\r\nБу́са,\n\nЯк впала глава́ його\r\nруса,\n\nІ лю́ляють мсту\r\nШарока́ння, —\n\nДля Руси кривавая баня!..\n\nА ми вже, дружи́на,\n\nЖадли́ві весілля, —\n\nЯк та деревина\n\nНа вітрі без\r\nгі́лля!..\n\nVIII. ЗОЛОТЕ СЛОВО КН.\r\nСВЯТОСЛАВА.\n\nТоді Свято\n\n### Result 3 (score: 0.6293)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0282`\n- **Text**:\nЗ батьківського столу, два\r\nсоколи смілі,\n\nДо Тмутороканя шлях повів їх\r\nздому\n\nАбо злат-шоломом зачерпнути\r\nДону.\n\nТа шаблями крильця половчин\r\nпідрізав\n\nІ самих їх спутав путами з\r\nзаліза.\n\nСтала бо година в третій\r\nдень невидна\n\nІ померкли сонця світлії\r\nобидва,\n\nДва стовпи багряні згасли й\r\nутопились\n\nВ морі й молоді два місяці\r\nзатьмились,\n\nСвятослав з Олегом. На ріці\r\nКаялі\n\nТемінь світ покрила. Половці\r\nзухвалі\n\nПо країні Руській\r\nрозпростерлись, дикі,\n\nМов те барсів плем’я:\r\nбуйство всім\n\n### Result 4 (score: 0.6109)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0272`\n- **Text**:\nСе бо готьския красния діви\r\nвоспіша на брезі синєму морю: звоня руським златом, поють время Бусово, леліють\r\nместь Шароканю. А ми уже, дружина, жадни веселія!\"\n\nТогда великий Святослав\r\nізрони злато слово, c слезами смішено, і рече: \"О моя синовчя, Ігорю і\r\nВсеволоде! Рано єста начала Половецкую землю мечи цвілити, а собі слави іскати.\r\nНо нечестно одолісте, нечестно бо кровь поганую проліясте. Ваю храбрая сердца в\r\nжестоцім харалузі скована, а в буєсти закалена. Се ли створисте моєй сребреней\r\n\n### Result 5 (score: 0.6078)\n- **Work**: Історія української культури. Т.1. Київська Русь (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `294b54e7_c0038`\n- **Text**:\nНайдавнішими безсумнівно датованими і недвозначно\r\nтлумаченими давньоруськими писемними пам’ятками, відомими сьогодні, є написи\r\n(легенди) на золотих і срібних монетах великого князя київського Володимира\r\nСвятославича, карбованих наприкінці X (після 988 р.) й самому початку XI ст. (не\r\nпізніше 1015 р.), та на срібних монетах його синів Ярослава (карбовані в\r\nНовгороді до 1019 р.) і Святополка (карбовані в Києві між 1015—1019 рр.). Ці\r\nкоротенькі тексти мають виняткове значення як документи про \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:36.234Z",
+          "resultDisplay": "Found 5 results for: \"золоте слово Святослава\"\n\n### Result 1 (score: 0.6499)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0341`\n- **Text**:\nБояри вияснили Святославові сон так, що це два соколи\r\nзлетіли з батьківського престолу пошукати города Тмуторокані. Але соколам\r\nпідтято крила та самих їх закуто в залізні пута. Разом із двома сонцями\r\nпомеркли й два молодих місяці. Тоді князь Святослав промовив золоте слово. Дорікав\r\nкнязям Ігореві і Всеволодові, що нерозважно, на власну руку, не повідомивши\r\nінших князів, пішли походом. Не добули собі вони слави, тільки сором нанесли\r\nйого сивині. Святослав радий би сам попробувати ще сил у н\n\n### Result 2 (score: 0.6439)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0305`\n- **Text**:\nЗнялася хула́ вже на хва́лу,\n\nІ гу́ркнула Ну́жда\r\nна волю,\n\nДив кинувсь на землю помалу,\n\nІ тягне з собою Недолю...\n\nЙ співають на березі моря\n\nОн го́тські вродливі\r\nдівчата,\n\nІ дзвонять бреньки́м\r\nруським злотом, —\n\nО Русь, у недолі\r\nрозп’я́та! —\n\nЙ співають вони про час\r\nБу́са,\n\nЯк впала глава́ його\r\nруса,\n\nІ лю́ляють мсту\r\nШарока́ння, —\n\nДля Руси кривавая баня!..\n\nА ми вже, дружи́на,\n\nЖадли́ві весілля, —\n\nЯк та деревина\n\nНа вітрі без\r\nгі́лля!..\n\nVIII. ЗОЛОТЕ СЛОВО КН.\r\nСВЯТОСЛАВА.\n\nТоді Свято\n\n### Result 3 (score: 0.6293)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0282`\n- **Text**:\nЗ батьківського столу, два\r\nсоколи смілі,\n\nДо Тмутороканя шлях повів їх\r\nздому\n\nАбо злат-шоломом зачерпнути\r\nДону.\n\nТа шаблями крильця половчин\r\nпідрізав\n\nІ самих їх спутав путами з\r\nзаліза.\n\nСтала бо година в третій\r\nдень невидна\n\nІ померкли сонця світлії\r\nобидва,\n\nДва стовпи багряні згасли й\r\nутопились\n\nВ морі й молоді два місяці\r\nзатьмились,\n\nСвятослав з Олегом. На ріці\r\nКаялі\n\nТемінь світ покрила. Половці\r\nзухвалі\n\nПо країні Руській\r\nрозпростерлись, дикі,\n\nМов те барсів плем’я:\r\nбуйство всім\n\n### Result 4 (score: 0.6109)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0272`\n- **Text**:\nСе бо готьския красния діви\r\nвоспіша на брезі синєму морю: звоня руським златом, поють время Бусово, леліють\r\nместь Шароканю. А ми уже, дружина, жадни веселія!\"\n\nТогда великий Святослав\r\nізрони злато слово, c слезами смішено, і рече: \"О моя синовчя, Ігорю і\r\nВсеволоде! Рано єста начала Половецкую землю мечи цвілити, а собі слави іскати.\r\nНо нечестно одолісте, нечестно бо кровь поганую проліясте. Ваю храбрая сердца в\r\nжестоцім харалузі скована, а в буєсти закалена. Се ли створисте моєй сребреней\r\n\n### Result 5 (score: 0.6078)\n- **Work**: Історія української культури. Т.1. Київська Русь (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `294b54e7_c0038`\n- **Text**:\nНайдавнішими безсумнівно датованими і недвозначно\r\nтлумаченими давньоруськими писемними пам’ятками, відомими сьогодні, є написи\r\n(легенди) на золотих і срібних монетах великого князя київського Володимира\r\nСвятославича, карбованих наприкінці X (після 988 р.) й самому початку XI ст. (не\r\nпізніше 1015 р.), та на срібних монетах його синів Ярослава (карбовані в\r\nНовгороді до 1019 р.) і Святополка (карбовані в Києві між 1015—1019 рр.). Ці\r\nкоротенькі тексти мають виняткове значення як документи про \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450755441_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Орельська операція 1184"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450755441_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Орельська операція 1184\"\n\n### Result 1 (score: 0.4349)\n- **Work**: Олесь Гончар. Людина і зброя (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `36657397_c0133`\n- **Text**:\nНаказав негайно викликати сюди на КП командирів рот і політруків, він сам пояснить їм завдання, підніме їхній бойовий дух. Ходив з кутка в куток, як лев, у цій кам'яній клітці КП і все тлумачив Краснопольському, що не такий чорт страшний, як його малюють, що там, за річкою, їх як кіт наплакав, а коли командири та політруки один по одному посходились, заповнивши підвал, могутній голос Дев'ятого залунав ще дужче, а сірі скалки його очей, глибоко запалих під надбрівними кістками, збуджено розблищал\n\n### Result 2 (score: 0.4324)\n- **Work**: Олесь Гончар. Перекоп (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `f680c94f_c0015`\n- **Text**:\nОбидва раптом насторожились. На протилежнім боці, де перед цим фронтовики, стоячи по двоє, по троє по причілках, спокійно розмовляли й курили, враз зчинився якийсь рух: зашамотались туди-сюди шапки, позвикали одна за одною, вже тільки ріжечки їх вид-ніються із засідок та дула гвинтівок стирчать на шлях. \"Ідуть, ідуть\",— почулись приглушені голоси десь поблизу за повіткою.\n\nОленчук виглянув на шлях. В'їжджають! Заповнюють край села всю вулицю. Пустивши поводи, їдуть повільною ступою, розглядаючис\n\n### Result 3 (score: 0.4321)\n- **Work**: Олесь Гончар. Полігон (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `09289c3b_c0021`\n- **Text**:\nДесь із глибини темряви чути дзеленчання дзвіночка. Наближається отара. Чабан Горпищенко веде її, не інакше, бо це тільки він зважується заглибитись з отарою так далеко в землі полігонні, та й полігонне начальство до нього не таке прискіпливе, адже у старого син льотчик і сам він людина заслужена й розторопна. Під час останніх важливих навчань, коли тут навіть один із маршалів був, він швидко з Горпищенком здружився, для них обох — для чабана і для маршала,— певне, було про що довірливо погомоні\n\n### Result 4 (score: 0.4301)\n- **Work**: Олександр Довженко. Повість полум'яних літ (1894)\n- **Author**: Довженко О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `b4b5d072_c0024`\n- **Text**:\n— Молодець! Оце я розумію, оце боєць! Під хлороформом, з-під ножа подає сигнали! — казав хірург, обробляючи пораненого Орлюка, якому все це примарилось.\n\n— Живи, любий мій! Живи хоч сто років... Бинт?\n\n— Приймаю командування! — вигукнув Орлюк, випірнувши на мить у буття й знову непритомніючи.\n\n— Ні, вибачте! Тут уже я командую! Так. Тримайте! Так... — бурчав хірург. — Давайте, хто там далі!\n\n— Приймаю командування! За мною, вперед! — Орлюк піднімав солдатів в атаку.\n\nОкопувався під кулями, працю\n\n### Result 5 (score: 0.4292)\n- **Work**: Іван Багряний. Огненне коло (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `31d74ca7_c0089`\n- **Text**:\nТут вони побачили видовище, від якого терпне все й нерви відмовляють в послухові... І тут, власне, їх було розбито дощенту...\n\nДо Гавареччини кількома дорогами й так навпростець, під бомбами стікалися звідусіль велетенські обози цілої дивізії, кинені напризволяще,— санітарні валки, господарчі відділи, боєпостачання, машини Червоного Хреста, підводи з раненими... Вони збилися під лісом, наповнили увесь ліс і все навколо і ще йшли й ішли, плавом пливли... Бідолашні, беззбройні й безборонні люди, с\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:36.234Z",
+          "resultDisplay": "Found 5 results for: \"Орельська операція 1184\"\n\n### Result 1 (score: 0.4349)\n- **Work**: Олесь Гончар. Людина і зброя (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `36657397_c0133`\n- **Text**:\nНаказав негайно викликати сюди на КП командирів рот і політруків, він сам пояснить їм завдання, підніме їхній бойовий дух. Ходив з кутка в куток, як лев, у цій кам'яній клітці КП і все тлумачив Краснопольському, що не такий чорт страшний, як його малюють, що там, за річкою, їх як кіт наплакав, а коли командири та політруки один по одному посходились, заповнивши підвал, могутній голос Дев'ятого залунав ще дужче, а сірі скалки його очей, глибоко запалих під надбрівними кістками, збуджено розблищал\n\n### Result 2 (score: 0.4324)\n- **Work**: Олесь Гончар. Перекоп (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `f680c94f_c0015`\n- **Text**:\nОбидва раптом насторожились. На протилежнім боці, де перед цим фронтовики, стоячи по двоє, по троє по причілках, спокійно розмовляли й курили, враз зчинився якийсь рух: зашамотались туди-сюди шапки, позвикали одна за одною, вже тільки ріжечки їх вид-ніються із засідок та дула гвинтівок стирчать на шлях. \"Ідуть, ідуть\",— почулись приглушені голоси десь поблизу за повіткою.\n\nОленчук виглянув на шлях. В'їжджають! Заповнюють край села всю вулицю. Пустивши поводи, їдуть повільною ступою, розглядаючис\n\n### Result 3 (score: 0.4321)\n- **Work**: Олесь Гончар. Полігон (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `09289c3b_c0021`\n- **Text**:\nДесь із глибини темряви чути дзеленчання дзвіночка. Наближається отара. Чабан Горпищенко веде її, не інакше, бо це тільки він зважується заглибитись з отарою так далеко в землі полігонні, та й полігонне начальство до нього не таке прискіпливе, адже у старого син льотчик і сам він людина заслужена й розторопна. Під час останніх важливих навчань, коли тут навіть один із маршалів був, він швидко з Горпищенком здружився, для них обох — для чабана і для маршала,— певне, було про що довірливо погомоні\n\n### Result 4 (score: 0.4301)\n- **Work**: Олександр Довженко. Повість полум'яних літ (1894)\n- **Author**: Довженко О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `b4b5d072_c0024`\n- **Text**:\n— Молодець! Оце я розумію, оце боєць! Під хлороформом, з-під ножа подає сигнали! — казав хірург, обробляючи пораненого Орлюка, якому все це примарилось.\n\n— Живи, любий мій! Живи хоч сто років... Бинт?\n\n— Приймаю командування! — вигукнув Орлюк, випірнувши на мить у буття й знову непритомніючи.\n\n— Ні, вибачте! Тут уже я командую! Так. Тримайте! Так... — бурчав хірург. — Давайте, хто там далі!\n\n— Приймаю командування! За мною, вперед! — Орлюк піднімав солдатів в атаку.\n\nОкопувався під кулями, працю\n\n### Result 5 (score: 0.4292)\n- **Work**: Іван Багряний. Огненне коло (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `31d74ca7_c0089`\n- **Text**:\nТут вони побачили видовище, від якого терпне все й нерви відмовляють в послухові... І тут, власне, їх було розбито дощенту...\n\nДо Гавареччини кількома дорогами й так навпростець, під бомбами стікалися звідусіль велетенські обози цілої дивізії, кинені напризволяще,— санітарні валки, господарчі відділи, боєпостачання, машини Червоного Хреста, підводи з раненими... Вони збилися під лісом, наповнили увесь ліс і все навколо і ще йшли й ішли, плавом пливли... Бідолашні, беззбройні й безборонні люди, с\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2c991f07-e02b-4954-a1a0-a21c55679a8a",
+      "timestamp": "2026-03-14T01:12:42.062Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning the next task",
+          "description": "I am now proceeding toward the next action. I am beginning to formulate the next step.",
+          "timestamp": "2026-03-14T01:12:40.845Z"
+        },
+        {
+          "subject": "Verifying key vocabulary",
+          "description": "I am now focused on confirming the critical vocabulary I have identified. I am preparing to validate these terms to ensure their accuracy before moving forward.",
+          "timestamp": "2026-03-14T01:12:41.870Z"
+        }
+      ],
+      "tokens": {
+        "input": 28084,
+        "output": 31,
+        "cached": 0,
+        "thoughts": 164,
+        "tool": 0,
+        "total": 28279
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773450762061_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "Святослав",
+              "Всеволодович",
+              "Каяла",
+              "Орельська",
+              "половці"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773450762061_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 5 words\n\nFound: 3/5\n\n- **Святослав** — FOUND (3 match): Святослав(noun), Святослава(noun), Святослава(noun)\n- **Всеволодович** — FOUND (1 match): Всеволодович(noun)\n- **Каяла** — NOT FOUND\n- **Орельська** — NOT FOUND\n- **половці** — FOUND (4 match): половець(noun), половець(noun), половець(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:42.072Z",
+          "resultDisplay": "Batch verification: 5 words\n\nFound: 3/5\n\n- **Святослав** — FOUND (3 match): Святослав(noun), Святослава(noun), Святослава(noun)\n- **Всеволодович** — FOUND (1 match): Всеволодович(noun)\n- **Каяла** — NOT FOUND\n- **Орельська** — NOT FOUND\n- **половці** — FOUND (4 match): половець(noun), половець(noun), половець(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9de7594e-e097-41fb-ad85-e3c399ee7fd5",
+      "timestamp": "2026-03-14T01:12:49.257Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Investigation",
+          "description": "I'm focused on moving forward with this task. I'm strategizing how to best integrate my findings to make progress toward the final goal, and I'm organizing the information in a logical manner. The end result is within reach.",
+          "timestamp": "2026-03-14T01:12:47.693Z"
+        },
+        {
+          "subject": "Refining the Focus",
+          "description": "I am now concentrating on making the next step a success. I'm taking the previous results and fine-tuning them to ensure a more thorough outcome. This process requires a strategic approach to refine the information.",
+          "timestamp": "2026-03-14T01:12:49.101Z"
+        }
+      ],
+      "tokens": {
+        "input": 28239,
+        "output": 34,
+        "cached": 27210,
+        "thoughts": 219,
+        "tool": 0,
+        "total": 28492
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773450769214_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "Каяла"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773450769214_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**Каяла**: frequency = 76, relative = 0.04 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:55.397Z",
+          "resultDisplay": "**Каяла**: frequency = 76, relative = 0.04 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773450769256_1",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "Оріль"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773450769256_1",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**Оріль**: frequency = 191, relative = 0.09 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:12:55.397Z",
+          "resultDisplay": "**Оріль**: frequency = 191, relative = 0.09 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c4bedc3b-93fb-4713-8c19-086bf7c6d617",
+      "timestamp": "2026-03-14T01:13:37.450Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Святослав Всеволодович\n\n## Key Facts Ledger\n```yaml\nsubject: \"Святослав Всеволодович\"\ntype: \"biography\"\nvital_status: \"deceased\"\ndates:\n  start: \"~1116\"\n  end: \"1194-07-25\"\n  key_events:\n    - year: 1141\n      event: \"Став князем турівським, а потім володимирським.\"\n    - year: 1164\n      event: \"Посів престол у Чернігові після смерті Святослава Ольговича.\"\n    - year: 1176\n      event: \"Досяг мети оволодіти Києвом, ставши Великим князем Київським.\"\n    - year: 1181\n      event: \"Сформував дуумвірат з Рюриком Ростиславичем у Південній Русі, що послабило усобиці.\"\n    - year: 1184\n      event: \"Очолив успішну антиполовецьку коаліцію (Орельська операція), полонивши хана Кобяка.\"\n    - year: 1185\n      event: \"Промовив «золоте слово» після поразки походу Ігоря Святославича, закликаючи до єдності.\"\n    - year: 1194\n      event: \"Помер 25 липня, залишивши по собі стабілізовану на певний час Київську державу.\"\nprimary_quotes:\n  - text: \"Тогда великий Святослав ізрони злато слово, c слезами смішено, і рече: «О моя синовчя, Ігорю і Всеволоде! Рано єста начала Половецкую землю мечи цвілити, а собі слави іскати. Но нечестно одолісте, нечестно бо кровь поганую проліясте. Ваю храбрая сердца в жестоцім харалузі скована, а в буєсти закалена...»\"\n    source: \"«Слово о полку Ігоревім»\"\n    attribution: \"Невідомий автор (слова приписуються Святославу Всеволодовичу)\"\n  - text: \"Бояри вияснили Святославові сон так, що це два соколи злетіли з батьківського престолу пошукати города Тмуторокані. Але соколам підтято крила та самих їх закуто в залізні пута.\"\n    source: \"Історія української культури (1937)\"\n    attribution: \"Іван Крип'якевич\"\nforbidden_claims:\n  - \"Твердження, що після 1169 року Київ втратив будь-яке значення і центр Русі перемістився до Володимиро-Суздальського князівства (імперський міф).\"\n  - \"Називання Святослава «російським» князем або перенесення його спадщини на московську традицію.\"\n  - \"Зведення «Золотого слова» виключно до літературної вигадки без реального політичного підґрунтя.\"\n```\n\n## Використані джерела\n1. [Вікіпедія: Святослав Всеволодович](https://uk.wikipedia.org/wiki/Святослав_Всеволодович) — основні біографічні відомості, хронологія князювання.\n2. [«Слово о полку Ігоревім» (РAG-пошук)] — першоджерело «Золотого слова», літературний та історичний контекст.\n3. [Історія української культури, 1937 (Іван Крип'якевич)] — аналіз сну Святослава та політичного значення його заклику до князів.\n4. [Київський літопис (РAG-пошук)] — літописні згадки про князювання Святослава та його місце у генеалогії Ольговичів.\n\n## Хронологія\n- ~1116: Народження Святослава, старшого сина великого князя київського Всеволода Ольговича.\n- 1141: Початок князювання (Турів, потім Володимир-Волинський).\n- 1164: Перехід на князювання до Чернігова, столиці Ольговичів.\n- 1181: Утворення політичного компромісу (дуумвірату) з Рюриком Ростиславичем: Святослав залишається у Києві, Рюрик отримує Київську землю. Це стабілізує регіон.\n- 1184: Організація Орельської операції — великого і успішного об'єднаного походу руських князів проти половців.\n- 1185: Сепаратний, невдалий похід Ігоря Святославича, що стає приводом для «Золотого слова» Святослава у Києві.\n- 1194 (25 липня): Смерть Святослава Всеволодовича.\n\n## Ключові факти та цитати\n- Святославу Всеволодовичу вдалося те, що здавалося неможливим у кінці XII століття: він загальмував розпад Київської держави і досяг відносної політичної стабілізації.\n- Разом із Рюриком Ростиславичем він створив ефективний політичний тандем (дуумвірат), який консолідував сили Південної Русі.\n- Його авторитет як старшого князя та організатора успішної боротьби з половцями (зокрема перемоги 1184 року) ліг в основу ідеалізованого образу мудрого правителя у «Слові о полку Ігоревім».\n- «Золоте слово», хоч і є художнім переосмисленням, відображає реальну політичну платформу київського князя: засудження князівського егоїзму (сепаратизму) та заклик до загальноруської єдності перед лицем степової загрози.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!history-bite] — Замість нескінченної війни на винищення, Святослав Всеволодович пішов на безпрецедентний компроміс: він створив своєрідний «дуумвірат» з Рюриком Ростиславичем. Святослав сидів у Києві, а Рюрик контролював решту Київської землі, що принесло регіону довгоочікувану стабільність.\n- Section \"Вступ\": [!decolonization] — Російська імперська історіографія часто стверджує, що після спустошення Києва Андрієм Боголюбським у 1169 році місто остаточно занепало. Проте успішне правління Святослава та його потужна антиполовецька коаліція 1180-х років доводять: Київ залишався беззаперечним ідеологічним і політичним центром Русі-України.\n- Section \"Основний матеріал\": [!context] — Похід Ігоря Святославича у 1185 році, який завершився катастрофою, відбувся всього через рік після блискучої перемоги об'єднаних сил під проводом Святослава на річці Оріль (1184), де було полонено хана Кобяка. Саме цей контраст робить докори Святослава такими гострими.\n- Section \"Основний матеріал\": [!quote] — Цитата «Золотого слова»: «Тогда великий Святослав ізрони злато слово, c слезами смішено, і рече... Но нечестно одолісте, нечестно бо кровь поганую проліясте.» Ця промова є ідейним стрижнем найвідомішої пам'ятки давньоукраїнської літератури.\n- Section \"Практика\": [!culture] — У «Слові о полку Ігоревім» сон Святослава перед проголошенням «Золотого слова» сповнений містичних і тривожних символів: чорне покривало, синє вино, отруєне горем, та перли, які символізують сльози. Це глибоко вкорінено в українську фольклорну традицію.\n- Section \"Підсумок\": [!myth-buster] — «Золоте слово» часто трактують як плач безсилого старого. Насправді ж це маніфест сильного лідера, який вже довів свою здатність перемагати (у 1184 році) і вимагав від молодших князів політичної дисципліни та підпорядкування національним інтересам.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Зведення постаті Святослава до суто літературного персонажа «Слова...» або трактування його як одного з останніх князів вже «вмираючого» Києва, який нібито передавав естафету Суздалю.\n- **Ukrainian reality**: Святослав — дієвий український (руський) суверен, який зумів зупинити відцентрові тенденції, створити дипломатичну модель дуумвірату та організувати найуспішніший контрнаступ на Степ. Його «Золоте слово» — це не просто література, а відображення реальної київської державотворчої доктрини, яка протиставлялася сепаратизму.\n\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Занепад Києва | Після 1169 р. Київ деградує, центр — у Суздалі. | Київ залишається політичним і сакральним центром за Святослава. |\n| Політика князів | Хаотичні усобиці без мети. | Спроби консолідації, створення дуумвірату (Святослав і Рюрик). |\n| «Золоте слово» | Літературна вставка невідомого автора. | Відображення реальної державної ідеології об'єднання Русі. |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Фокус**: Життєпис Святослава Всеволодовича до моменту його утвердження в Києві.\n- **Факти**: Народження близько 1116 року. Син Всеволода Ольговича. Зміна столів (Турів, Волинь, Новгород-Сіверський, Чернігів). Боротьба за Київ.\n- **Політичне новаторство**: Замість виснажливої боротьби за єдиновладдя, створення дуумвірату з Рюриком Ростиславичем (з 1181). Святослав як репрезентант стабільності в епоху феодальної роздробленості.\n- **Спростування міфів**: Акцент на тому, що Київ залишався «магнітом» для князів, а правління Святослава було періодом відновлення сили Русі.\n\n### Основний матеріал\n- **Фокус**: Аналіз першоджерел, кампанії проти половців та безпосередньо «Золотого слова».\n- **Військовий контекст**: Тріумфальна Орельська операція 1184 року під проводом Святослава. Перемога над половцями і полонення хана Кобяка. Ця перемога стала еталоном.\n- **Авантюра Ігоря**: Самостійний похід Ігоря Святославича 1185 року (який прагнув особистої слави і заздрив успіху Святослава). Розгром на річці Каялі.\n- **Аналіз «Золотого слова»**: Сон Святослава у Києві (символізм). Текст «Золотого слова» зі сльозами. Його головний меседж: засудження егоїзму («себе слави іскати») та заклик до об'єднання зусиль («вступити в стремено за землю Руськую»).\n- **Граматичний аспект**: Використовувати цитати для майбутнього аналізу давньоукраїнської лексики та форм (напр., двоїна у звертанні «Ігорю і Всеволоде», форми минулого часу).\n\n### Практика\n- **Фокус**: Підготовка матеріалів для вправ, заснованих на тексті «Золотого слова» та літописних згадках.\n- **Етимологія та лексика**: Розбір слів і виразів (харалуг, буєсть, цвілити). Транскрипція давньоукраїнських уривків сучасною фонетикою.\n- **Граматика**: Ідентифікація граматичних конструкцій у промові Святослава (наказовий спосіб, звертання, час).\n\n### Підсумок\n- **Фокус**: Оцінка спадщини Святослава Всеволодовича та підготовка переходу до наступного модуля (Роман Мстиславич).\n- **Спадщина**: Святослав як символ останньої спроби зберегти загальноруську єдність з центром у Києві перед монгольською навалою. Його успіхи довели, що об'єднання було можливим.\n- **Перекидання містка**: Після смерті Святослава (1194) і послаблення київського центру, естафета державотворення та консолідації земель переходить на захід, до Галицько-Волинського князівства, де набирає сили Роман Мстиславич.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Completion",
+          "description": "I am now focused on pushing forward toward the next stage of the operation. This task requires careful arrangement, and the next steps are becoming clearer, enabling me to advance further. I am working through the process and will complete this task.",
+          "timestamp": "2026-03-14T01:12:59.646Z"
+        },
+        {
+          "subject": "Structuring the Output",
+          "description": "I am currently working on organizing the research materials into the specified format. My efforts are directed towards assembling the final content blocks, making sure they align with the pre-determined outline, and arranging them within the designated delimiters. I am focused on the layout.",
+          "timestamp": "2026-03-14T01:13:02.716Z"
+        },
+        {
+          "subject": "Preparing Final Formatting",
+          "description": "I'm now implementing the final formatting as specified. My current focus is to add the necessary markers at the beginning and the end of the research section and include the friction block. Following that, the biographies should be included as requested, and I will prepare the final output.",
+          "timestamp": "2026-03-14T01:13:04.944Z"
+        },
+        {
+          "subject": "Refining the Research Output",
+          "description": "I am now focusing on crafting the final research output. Specifically, I'm working to accurately include the formatted blocks, incorporating the biography of Sviatoslav with the correct details and vital status, and integrating the provided hooks. I am focused on the layout and accuracy.",
+          "timestamp": "2026-03-14T01:13:07.981Z"
+        },
+        {
+          "subject": "Crafting Final Output",
+          "description": "I'm now carefully integrating the gathered content. I'm taking the final steps to arrange the blocks and the biography, and make sure that all the essential elements, including delimiters, dates, hooks, and quote, are included as requested. I'm focusing on ensuring accuracy.",
+          "timestamp": "2026-03-14T01:13:09.899Z"
+        }
+      ],
+      "tokens": {
+        "input": 28326,
+        "output": 3340,
+        "cached": 27007,
+        "thoughts": 1213,
+        "tool": 0,
+        "total": 32879
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

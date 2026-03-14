@@ -1,0 +1,812 @@
+{
+  "sessionId": "3ee7c8e3-a5ce-4cb7-a6f9-14132719896d",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T02:32:59.369Z",
+  "lastUpdated": "2026-03-14T02:35:10.734Z",
+  "messages": [
+    {
+      "id": "d3d4bfe7-7cb1-4fbe-a714-a9bbcccfbc3f",
+      "timestamp": "2026-03-14T02:32:59.370Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-076\nlevel: RUTH\nsequence: 76\nslug: poetic-history\nversion: '2.0'\ntitle: Поетична історія\nsubtitle: Poetic History\nfocus: Verse in chronicles\nphase: 4\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Poetic History\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Epic Bard\nprerequisites:\n- glorifying-host\nconnects_to:\n- monumental-style\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Поетична історія** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Поетична історія\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Поетична історія\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "b40d7c4c-034c-4414-bd11-c49f73d0c95c",
+      "timestamp": "2026-03-14T02:33:08.120Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning the Next Action",
+          "description": "I'm focused on moving forward with the project. I've begun to determine the best method to fulfill the task at hand and will initiate the first step as soon as I can. I have the necessary information to proceed.",
+          "timestamp": "2026-03-14T02:33:03.521Z"
+        },
+        {
+          "subject": "Moving to First Search",
+          "description": "I'm starting the search process by gathering general context. I'll utilize a tool designed for retrieving background information to grasp the subject matter. After this, I plan to move forward with a more specific search to identify relevant examples.",
+          "timestamp": "2026-03-14T02:33:07.879Z"
+        },
+        {
+          "subject": "Initiating the Initial Query",
+          "description": "I'm now putting the Wikipedia query into action. The aim is to build a foundational understanding of the subject matter, focusing specifically on verse within chronicles from the targeted historical period. This foundational knowledge will then pave the way for a more targeted literary search.",
+          "timestamp": "2026-03-14T02:33:07.897Z"
+        }
+      ],
+      "tokens": {
+        "input": 20462,
+        "output": 22,
+        "cached": 0,
+        "thoughts": 404,
+        "tool": 0,
+        "total": 20888
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455588118_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Віршований літопис",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455588118_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Віршований літопис' — 5 results\n\n1. **Руно орошенноє** — основної. У вступній частині подається історія Іллінського монастиря так віршований «Догмат Пресвятой Богородици». В основній частині після кожного «Чуда»\n2. **Плиска Максим Никифорович** — історіографії деякий час цей список вважався за окремий твір «Літопис Плиски», або «Флорівський літопис». Складовими збірника також стали історичні твори «Сказаніе\n3. **Мацей Стрийковський** — słońcem świata. Під час свого перебування на пограниччі з Московією написав віршований твір «o zdrowej poradzie» та розвідку «o tiraństwie dzisiejszego wielkiego\n4. **Дівович Семен Данилович** — військовій канцелярії. Саме тут 1762 він створив у формі діалогу великий віршований твір «Разговор Великороссіи с Малороссіей», один із найзначніших творів\n5. **Хроніка Стрийковського** — Густинському літописі, «Хронографі» другої редакції 1617 р., «Хроніці з літописців стародавніх» Софоновича, «Скіфській історії» Лизлова, Літописі Грабянки"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:08.378Z",
+          "resultDisplay": "Wikipedia search: 'Віршований літопис' — 5 results\n\n1. **Руно орошенноє** — основної. У вступній частині подається історія Іллінського монастиря так віршований «Догмат Пресвятой Богородици». В основній частині після кожного «Чуда»\n2. **Плиска Максим Никифорович** — історіографії деякий час цей список вважався за окремий твір «Літопис Плиски», або «Флорівський літопис». Складовими збірника також стали історичні твори «Сказаніе\n3. **Мацей Стрийковський** — słońcem świata. Під час свого перебування на пограниччі з Московією написав віршований твір «o zdrowej poradzie» та розвідку «o tiraństwie dzisiejszego wielkiego\n4. **Дівович Семен Данилович** — військовій канцелярії. Саме тут 1762 він створив у формі діалогу великий віршований твір «Разговор Великороссіи с Малороссіей», один із найзначніших творів\n5. **Хроніка Стрийковського** — Густинському літописі, «Хронографі» другої редакції 1617 р., «Хроніці з літописців стародавніх» Софоновича, «Скіфській історії» Лизлова, Літописі Грабянки",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "db07491e-da4f-4c95-9577-4c2b5afd8415",
+      "timestamp": "2026-03-14T02:33:14.561Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the search process",
+          "description": "I'm now focused on expanding the search. I will ensure comprehensive results by checking the output from the tool used and determining if additional queries or tool uses are needed to find even more relevant information. My next step will be to refine the search.",
+          "timestamp": "2026-03-14T02:33:13.404Z"
+        },
+        {
+          "subject": "Executing the Search Refinement",
+          "description": "Now I am going to refine the search. I'm focusing on the first query term and will use the search tool. Based on these results, I will assess whether to run more searches or proceed to the next stage.",
+          "timestamp": "2026-03-14T02:33:14.416Z"
+        }
+      ],
+      "tokens": {
+        "input": 20840,
+        "output": 46,
+        "cached": 0,
+        "thoughts": 132,
+        "tool": 0,
+        "total": 21018
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455594514_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "вірші літопис Величка"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455594514_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"вірші літопис Величка\"\n\n### Result 1 (score: 0.5964)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0353`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\nлітописця українського барока, Самійла Величка; частини його, щоправда,\r\nстрачено, так що «Літопис» його доходить до 1700 p., хоч автор, здається,\r\nдоводив його до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го\r\nтомів «Літопису» деякі основи свого історичного світогляду та своєї історичної\r\n«методології». Джерела Величка не менш різноманітні, аніж грабянківські (так\r\nсаме Пуфендорф), а вплив стилістики римських істориків у нього ще зна\n\n### Result 2 (score: 0.5819)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0398`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\n„літописця“ українського барокка, Самійла Величка; частини його, щоправда,\r\nвтрачені, так що „Літопис“ його доходить до 1700 р., хоч автор, здається, довів\r\nйого до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го томів\r\nЛітопису деякі основи свого історичного світогляду та своєї історичної\r\n„методології“. Джерела Величка не менш різноманітні, аніж Граб’янкові (так само\r\n/303/ Пуфендорф, з поетів Тассо), а вплив стилістики римських істор\n\n### Result 3 (score: 0.5814)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0356`\n- **Text**:\nВЕЛИЧаю з матКОю тя ВсеСладКІЙ Христе!\n\nабо:\n\nИ О смерти пАмятай,\n\nи На судъ будь чуткий.\n\nВЕЛьмИ Час бЂжитъ сКОро,\n\nВ бЂгу Своимъ прудКИЙ,\n\nабо навіть у зворотному порядку (слова: „настрой\r\nнавпак цинобру“ — радять читати в зворотному порядку писані червоною циноброю\r\nлітери):\n\nНАстрОИ навспакъ цинобру, если угадаешъ,\n\nгоршИИ Кто з Сихъ, ВОлКъ ЧИ ЛЕВъ, то мене познаешъ.\n\nЗдається, кожне слово він може умістити в вірш; так\r\nвін, великий шанувальник св. Діви, уміщує ім’я „Марія“ в т. зв. „леонінс\n\n### Result 4 (score: 0.5681)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0045`\n- **Text**:\nТаким чином, Літопис Самійла Величка є не тільки\r\nрезультатом діяльності однієї людини. Це й Літопис, й історичний, і художній, і\r\nпубліцистичний твір, збірка документів автентичних і художніх стилізацій під\r\nдокумент, антологія художніх творів різних авторів. А насамперед — то витвір\r\nдуху самого С. Величка, велична пам’ятка, якій немає рівних у тогочасній нашій\r\nкультурі. Поруч з І. Вишенським, Л. Барановичем, Ф. Прокоповичем, Г.\r\nСковородою, І. Фальківським С. Величко — монументальна літерату\n\n### Result 5 (score: 0.5524)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0166`\n- **Text**:\nМова літопису С. Величка наближається до\r\nцерковнослов’янської, але не зливається з нею. У ній дуже багато природних\r\nукраїнських слів на позначення осіб (господаръ, злодюга, ледащица,\r\nполоняникь, товарышъ, брехунъ, паливода), прикмет (своєволный, цекавый,\r\nнестатечний), дій і процесів (розмовляти, одержати, простовати,\r\nдяковати, повстати), абстрактних понять (здирство, утискы, зъбитки,\r\nпомста, зрада, намова, ганба, пиха, каране, оборона, ухвала, ратунокь, жаль,\r\nповага, шкода), реалій (обухъ\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:15.542Z",
+          "resultDisplay": "Found 5 results for: \"вірші літопис Величка\"\n\n### Result 1 (score: 0.5964)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0353`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\nлітописця українського барока, Самійла Величка; частини його, щоправда,\r\nстрачено, так що «Літопис» його доходить до 1700 p., хоч автор, здається,\r\nдоводив його до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го\r\nтомів «Літопису» деякі основи свого історичного світогляду та своєї історичної\r\n«методології». Джерела Величка не менш різноманітні, аніж грабянківські (так\r\nсаме Пуфендорф), а вплив стилістики римських істориків у нього ще зна\n\n### Result 2 (score: 0.5819)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0398`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\n„літописця“ українського барокка, Самійла Величка; частини його, щоправда,\r\nвтрачені, так що „Літопис“ його доходить до 1700 р., хоч автор, здається, довів\r\nйого до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го томів\r\nЛітопису деякі основи свого історичного світогляду та своєї історичної\r\n„методології“. Джерела Величка не менш різноманітні, аніж Граб’янкові (так само\r\n/303/ Пуфендорф, з поетів Тассо), а вплив стилістики римських істор\n\n### Result 3 (score: 0.5814)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0356`\n- **Text**:\nВЕЛИЧаю з матКОю тя ВсеСладКІЙ Христе!\n\nабо:\n\nИ О смерти пАмятай,\n\nи На судъ будь чуткий.\n\nВЕЛьмИ Час бЂжитъ сКОро,\n\nВ бЂгу Своимъ прудКИЙ,\n\nабо навіть у зворотному порядку (слова: „настрой\r\nнавпак цинобру“ — радять читати в зворотному порядку писані червоною циноброю\r\nлітери):\n\nНАстрОИ навспакъ цинобру, если угадаешъ,\n\nгоршИИ Кто з Сихъ, ВОлКъ ЧИ ЛЕВъ, то мене познаешъ.\n\nЗдається, кожне слово він може умістити в вірш; так\r\nвін, великий шанувальник св. Діви, уміщує ім’я „Марія“ в т. зв. „леонінс\n\n### Result 4 (score: 0.5681)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0045`\n- **Text**:\nТаким чином, Літопис Самійла Величка є не тільки\r\nрезультатом діяльності однієї людини. Це й Літопис, й історичний, і художній, і\r\nпубліцистичний твір, збірка документів автентичних і художніх стилізацій під\r\nдокумент, антологія художніх творів різних авторів. А насамперед — то витвір\r\nдуху самого С. Величка, велична пам’ятка, якій немає рівних у тогочасній нашій\r\nкультурі. Поруч з І. Вишенським, Л. Барановичем, Ф. Прокоповичем, Г.\r\nСковородою, І. Фальківським С. Величко — монументальна літерату\n\n### Result 5 (score: 0.5524)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0166`\n- **Text**:\nМова літопису С. Величка наближається до\r\nцерковнослов’янської, але не зливається з нею. У ній дуже багато природних\r\nукраїнських слів на позначення осіб (господаръ, злодюга, ледащица,\r\nполоняникь, товарышъ, брехунъ, паливода), прикмет (своєволный, цекавый,\r\nнестатечний), дій і процесів (розмовляти, одержати, простовати,\r\nдяковати, повстати), абстрактних понять (здирство, утискы, зъбитки,\r\nпомста, зрада, намова, ганба, пиха, каране, оборона, ухвала, ратунокь, жаль,\r\nповага, шкода), реалій (обухъ\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773455594560_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "історична поезія бароко"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455594560_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"історична поезія бароко\"\n\n### Result 1 (score: 0.5928)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0415`\n- **Text**:\n7. Нарешті, бароккова література — зокрема вірш та\r\nдрама — дуже спричинилася до розвитку народної поезії. Барокко було у цілому\r\nсвіті з цього погляду дуже плідне. Не кажучи вже про напівмітичних авторів\r\n(Маруся Чураївна) народних пісень з часів барокка, можемо конкретно бачити, як\r\nнародна пісня переймає елементи стилістики бароккової вірші, хоч з другого\r\nбоку, барокко само має певний нахил до народної поезії і черпає з її скарбниці\r\nзасоби вже тому, що одна з цінностей поезії для барокковог\n\n### Result 2 (score: 0.5849)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0311`\n- **Text**:\n3. Тематично ще більш різноманітна світська віршована\r\nпоезія барока. Тут знайдемо і близьку до реліґійної меланхолійну лірику, і\r\nлірику еротичну (від меланхолійної до соромицької), і політичну.\n\nТематика меланхолійної лірики традиційна — це\r\n«вічні» теми лірики: туга за щастям, за молодістю, скарги на долю, — іноді\r\nіндивідуальні ноти переходять у філософічну рефлексію. Найхарактеристичніші\r\nрізні «пісні світові»:\n\nА хто на світі без долі вродиться,\n\nТому світ марне, як коло, точиться.\n\nЛіта м\n\n### Result 3 (score: 0.5818)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0842`\n- **Text**:\nЯк побачимо, українське барокко, незважаючи на\r\nнесприятливі умови розвитку, дало велику літературу, що охопила майже всі можливі\r\nв ті часи літературні гатунки. Незважаючи на це, барокко надзвичайно хутко\r\nвідійшло в минуле. Реформа Котляревського відразу зробила мову, якою писали в\r\nдобу барокко, перестарілою. Літературна доба, що на Заході знову відкрила\r\nбарокко й оцінила його, була романтика. Але українська романтика, однією з\r\nголовних цілей якої була саме боротьба за нову літературну мову\n\n### Result 4 (score: 0.5642)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0336`\n- **Text**:\nНе треба, одначе, забувати, що бароккове мистецтво,\r\nта бароккова поезія зокрема, призначені не для іншого часу, а саме для „людей\r\nбарокка“. Чужий для нас стиль бароккової поезії, яким і ми можемо\r\nзахоплюватися, як витонченим, консеквентним та розкішним, був для „людини\r\nбарокка“ дійсно зворушливим, захоплював її, промовляв до її естетичного\r\nпочуття, а через це й до її розуму та серця. Любов до натуралізму, до\r\nзображення природи також і в її „низьких“ елементах, до конкретного, за яким барок\n\n### Result 5 (score: 0.5637)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0537`\n- **Text**:\nПервыми из них были А. П. Сумароков (1718 —\r\n1777), а затем М. М. Херасков (1733 — 1807). Резкая полемика Сумарокова\r\nпротив Ломоносова не должна более рассматриваться как проявление личной вражды\r\nи зависти. Нет! Это серьезные возражения (хотя бы и в «легкомысленной» форме\r\nпародий) классициста против устарелого и нехудожественного барокко! Пересмотр\r\nэтой полемики — также одна из задач изучения барокко в русской литературе.\n\nЯ не могу кончить этих замечаний, умолчав о\r\n«рецидивах барокко» посл\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:15.542Z",
+          "resultDisplay": "Found 5 results for: \"історична поезія бароко\"\n\n### Result 1 (score: 0.5928)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0415`\n- **Text**:\n7. Нарешті, бароккова література — зокрема вірш та\r\nдрама — дуже спричинилася до розвитку народної поезії. Барокко було у цілому\r\nсвіті з цього погляду дуже плідне. Не кажучи вже про напівмітичних авторів\r\n(Маруся Чураївна) народних пісень з часів барокка, можемо конкретно бачити, як\r\nнародна пісня переймає елементи стилістики бароккової вірші, хоч з другого\r\nбоку, барокко само має певний нахил до народної поезії і черпає з її скарбниці\r\nзасоби вже тому, що одна з цінностей поезії для барокковог\n\n### Result 2 (score: 0.5849)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0311`\n- **Text**:\n3. Тематично ще більш різноманітна світська віршована\r\nпоезія барока. Тут знайдемо і близьку до реліґійної меланхолійну лірику, і\r\nлірику еротичну (від меланхолійної до соромицької), і політичну.\n\nТематика меланхолійної лірики традиційна — це\r\n«вічні» теми лірики: туга за щастям, за молодістю, скарги на долю, — іноді\r\nіндивідуальні ноти переходять у філософічну рефлексію. Найхарактеристичніші\r\nрізні «пісні світові»:\n\nА хто на світі без долі вродиться,\n\nТому світ марне, як коло, точиться.\n\nЛіта м\n\n### Result 3 (score: 0.5818)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0842`\n- **Text**:\nЯк побачимо, українське барокко, незважаючи на\r\nнесприятливі умови розвитку, дало велику літературу, що охопила майже всі можливі\r\nв ті часи літературні гатунки. Незважаючи на це, барокко надзвичайно хутко\r\nвідійшло в минуле. Реформа Котляревського відразу зробила мову, якою писали в\r\nдобу барокко, перестарілою. Літературна доба, що на Заході знову відкрила\r\nбарокко й оцінила його, була романтика. Але українська романтика, однією з\r\nголовних цілей якої була саме боротьба за нову літературну мову\n\n### Result 4 (score: 0.5642)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0336`\n- **Text**:\nНе треба, одначе, забувати, що бароккове мистецтво,\r\nта бароккова поезія зокрема, призначені не для іншого часу, а саме для „людей\r\nбарокка“. Чужий для нас стиль бароккової поезії, яким і ми можемо\r\nзахоплюватися, як витонченим, консеквентним та розкішним, був для „людини\r\nбарокка“ дійсно зворушливим, захоплював її, промовляв до її естетичного\r\nпочуття, а через це й до її розуму та серця. Любов до натуралізму, до\r\nзображення природи також і в її „низьких“ елементах, до конкретного, за яким барок\n\n### Result 5 (score: 0.5637)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0537`\n- **Text**:\nПервыми из них были А. П. Сумароков (1718 —\r\n1777), а затем М. М. Херасков (1733 — 1807). Резкая полемика Сумарокова\r\nпротив Ломоносова не должна более рассматриваться как проявление личной вражды\r\nи зависти. Нет! Это серьезные возражения (хотя бы и в «легкомысленной» форме\r\nпародий) классициста против устарелого и нехудожественного барокко! Пересмотр\r\nэтой полемики — также одна из задач изучения барокко в русской литературе.\n\nЯ не могу кончить этих замечаний, умолчав о\r\n«рецидивах барокко» посл\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "93cbe304-a510-4eec-84e5-8e500eb0a53c",
+      "timestamp": "2026-03-14T02:33:24.123Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing my research.",
+          "description": "I'm now focused on the next phase. I'm moving ahead with the plan and refining my approach to make sure the information is the most relevant. I am evaluating how to organize the gathered information effectively.",
+          "timestamp": "2026-03-14T02:33:19.238Z"
+        },
+        {
+          "subject": "Organizing gathered knowledge.",
+          "description": "I am presently working to sort the information I found. I'm focusing on how the verses fit into the broader context, making sure the most important facts are easily accessible. My goal is a comprehensive look at the poetic elements.",
+          "timestamp": "2026-03-14T02:33:22.660Z"
+        },
+        {
+          "subject": "Fetching historical verses.",
+          "description": "I'm now seeking out relevant verses and poetic elements within historical texts. I'll focus on the works of key figures and the broader context of Ukrainian Baroque poetry. My next step is pinpointing specific poems within the chronicles.",
+          "timestamp": "2026-03-14T02:33:23.870Z"
+        }
+      ],
+      "tokens": {
+        "input": 23651,
+        "output": 48,
+        "cached": 20091,
+        "thoughts": 367,
+        "tool": 0,
+        "total": 24066
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455604069_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Козацькі літописи"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455604069_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Козацькі літописи\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%B7%D0%B0%D1%86%D1%8C%D0%BA%D1%96_%D0%BB%D1%96%D1%82%D0%BE%D0%BF%D0%B8%D1%81%D0%B8\n\nКоза́цькі літо́писи — історико-літературні твори 2-ї половини XVII — середини XVIII століття, присвячені козацьким війнам. Цінні джерела для дослідження вітчизняної історії і важливі пам'ятки літератури. Мова більшості літописів — літературна, близька до народнорозмовної.\n\n\n== Історія ==\nОсобливе значення серед літописів 2-ї половини XVII — початку XVIII століття мають історичні твори, присвячені козацьким війнам. Звідси виникла їх умовна назва — «козацькі», «козацько-старшинські» літописи, хоч від літописів у традиційному розумінні вони значно відрізняються.\nДо наших днів дійшли три найвизначніші козацькі літописи:\n\nСамовидця (про події 1648—1702 років, імовірний автор — Роман Ракушка-Романовський);\nГрабянки (1710, про події від виникнення козацтва до 1709);\nСамійла Величка (1720, про події в Україні 1648—1700 років).\nВ усіх цих літописах не лише докладно розповідається про Визвольну війну українського народу 1648—1654 років, а й подається економічна, політична і культурна характеристика країни, факти з історії Московського царства, Речі Посполитої, Угорського королівства, Швеції, Молдовського князівства, Османської імперії та інших держав.\n\n\n== «Літопис самовидця» ==\nУ XIX ст. літопис Самовидця широко використовували майже всі українські історики, що досліджували історію України другої половини XVII ст. Це зумовлене значною мірою тим, що в першій половині XIX ст. ще не були опубліковані достовірніші за літописи історичні документи. До того ж літописи давали суцільний виклад подій про Україну.\nПісля того, як 1846 року літопис Самовидця був опублікований, про нього з'явились окремі дослідження, а історичні праці містили посилання на це джерело.\nЛітопис Самовидця дійшов до нас без імені автора і місця його написання. Чи ці дані загублені пізнішими переписувачами, чи автор волів приховати своє прізвище, це питання розв'язати важко. Довгий час в історичній літературі точилася полеміка про те, хто ж був автором літопису Самовидця? Від розв'язання питання про авторство літопису залежало ряд інших питань з історії XVII ст., зачеплених у літописі, зокрема про соціальні погляди літописця, про ідейну цілеспрямованість твору, про оцінку ряду фактів, висвітлених Самовидцем як особою свого часу тощо.\nЛітопис Самовидця є одним з зразків української літературної мови XVII ст. Незважаючи на архаїзми, різні місцеві діалектизми, полонізми та інші мовні та стилістичні особливості, які пояснюються умовами часу, твір Самовидця яскраво свідчить, що в українській літературній мові XVII ст. була міцна основа живої народної мови.\n\n\n== «Літопис Григорія Грабянки» ==\nДругим за часом написання вважається «Літопис Григорія Грабянки», козацького старшини, який у 1730 р. став гадяцьким полковником. За ним закріпилася назва «козацького літопису». Але така назва досить умовна, бо цей твір є складною, багатоплановою композицією, в якій поєднуються характеристики історичних діячів, описи подій — битв, повстань, змов тощо; окремі документи, тлумачення тих чи інших періодів життя України, яка надто далека від традиційної літописної форми. Літопис був написаний церковнослов'янською мовою, завершений 1710 р. Допускають, що автор мав на меті зробити твір доступним для всього слов'янського світу, щоб звоювати його прихильність до української автономістичної ідеї в межах Московського царства.\nЗміст літопису передає його поширений заголовок «Події превеликої, з вини поляків кривавої й небувалої брані Богдана Хмельницького, гетьмана запорозького з поляками, за найясніших королів польських Владислава, потім І Казиміра, яка в 1648 році почала виправлятися за літ десять по смерті Хмельницького незакінченої. Із різних літописців з діаріуша на тій війні списаного В місті Гадячу, працею Григорія Граб'янки зібрано і стверджено самобутніх старожилів свідченнями Року 1710».\nЗагалом літопис обіймає час від стародавності до 1709 р., падіння І. Мазепи і вибору на гетьманство І. Скоропадського. Але головна й найбільша частина твору присвячена війні під проводом Б. Хмельницького, текст про цю війну займає 123 сторінки (з усіх 157). Наприкінці подається лише реєстр подій без подробиць. На початку йде роз'яснення, що козацький народ походить від скіфів-хозарів. Далі коротко передано Історію Русі й завоювання поляками, перетворення з царства в князівство, а останнього — у воєводство. Розповідається про Петра Конашевича-Сагайдачного, а з періоду після Б. Хмельницького — про Івана Брюховецького, І. Самойловича. Гетьман Б. Хмельницький зображений національним героєм.\n\n\n== «Літопис Самійла Величка» ==\nЛітопис козацького канцеляриста Самійла Васильовича Величка — найбільший за обсягом історичний твір свого часу, надрукований у Києві 1848—1864 рр. Унікальність цього наймонументальнішого твору історико-мемуарної прози XVII–XVIII ст. полягає в тому, що це не тільки літопис, а й історичний, публіцистичний і художній твір.\nЛітопис Самійла Величка дійшов до нас не повністю: у ньому наявні дефекти на початку, в середині (1649—1652 рр.) і в кінці. Прогалину (відсутність кінця першої, другої, третьої, четвертої та п'ятої частин першого тому) видавці заповнили матеріалом із другого твору Величка — «Космографії», яку він продиктував, уже осліпнувши на схилі літ. Свій Літопис Величко довів до 1700 р., але в переліку подій автор згадує й пізніші роки (наприклад, 1723 р.), у третьому томі згадуються події 1700—1720 рр. Літописець також обіцяє розповісти й про події, що супроводжували відлучення його від служби в Генеральній канцелярії. Більшість вчених вважає, що сталося це наприкінці 1708 р., коли був страчений Кочубей. Але історик М. Марченко вважав цю причину непереконливою: на його думку, Самійло Величко потрапив у немилість через Мазепу, за гетьманування якого був писарем. Однак до діяльності Мазепи Величко не мав безпосереднього відношення, бо тоді з літописцем розправились б значно жорстокіше. Був надрукований Величків твір за списком Погодіна, придбаним у відомого збирача рукописів Лаптєва. Під час друку був відшуканий ще один, пізніший список — у бібліотеці М. О. Судієнка, придбаний останнім від нащадків Г. Полетики, Саме в цьому списку дослідниками й були відшукані певні місця, яких не вистачало в основному списку. Перша спроба відновлення загубленої частини твору Величка здійснена П. Г. Клепацьким у праці «Літопис Самійла Величка».\n\n\n== Див. також ==\nЛітописи\n\n\n== Джерела та література ==\nЮ. А. Мицик. Козацькі літописи [Архівовано 17 Серпня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2007. — Т. 4 : Ка — Ком. — С. 425. — ISBN 978-966-00-0692-8.\n\n\n== Посилання ==\nКозацькі літописи // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 1 : А — Л. — С. 495-496.\nДобірка українських літописів на сайті «Ізборник» [Архівовано 10 Грудня 2012 у Wayback Machine.]"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:24.491Z",
+          "resultDisplay": "# Козацькі літописи\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%B7%D0%B0%D1%86%D1%8C%D0%BA%D1%96_%D0%BB%D1%96%D1%82%D0%BE%D0%BF%D0%B8%D1%81%D0%B8\n\nКоза́цькі літо́писи — історико-літературні твори 2-ї половини XVII — середини XVIII століття, присвячені козацьким війнам. Цінні джерела для дослідження вітчизняної історії і важливі пам'ятки літератури. Мова більшості літописів — літературна, близька до народнорозмовної.\n\n\n== Історія ==\nОсобливе значення серед літописів 2-ї половини XVII — початку XVIII століття мають історичні твори, присвячені козацьким війнам. Звідси виникла їх умовна назва — «козацькі», «козацько-старшинські» літописи, хоч від літописів у традиційному розумінні вони значно відрізняються.\nДо наших днів дійшли три найвизначніші козацькі літописи:\n\nСамовидця (про події 1648—1702 років, імовірний автор — Роман Ракушка-Романовський);\nГрабянки (1710, про події від виникнення козацтва до 1709);\nСамійла Величка (1720, про події в Україні 1648—1700 років).\nВ усіх цих літописах не лише докладно розповідається про Визвольну війну українського народу 1648—1654 років, а й подається економічна, політична і культурна характеристика країни, факти з історії Московського царства, Речі Посполитої, Угорського королівства, Швеції, Молдовського князівства, Османської імперії та інших держав.\n\n\n== «Літопис самовидця» ==\nУ XIX ст. літопис Самовидця широко використовували майже всі українські історики, що досліджували історію України другої половини XVII ст. Це зумовлене значною мірою тим, що в першій половині XIX ст. ще не були опубліковані достовірніші за літописи історичні документи. До того ж літописи давали суцільний виклад подій про Україну.\nПісля того, як 1846 року літопис Самовидця був опублікований, про нього з'явились окремі дослідження, а історичні праці містили посилання на це джерело.\nЛітопис Самовидця дійшов до нас без імені автора і місця його написання. Чи ці дані загублені пізнішими переписувачами, чи автор волів приховати своє прізвище, це питання розв'язати важко. Довгий час в історичній літературі точилася полеміка про те, хто ж був автором літопису Самовидця? Від розв'язання питання про авторство літопису залежало ряд інших питань з історії XVII ст., зачеплених у літописі, зокрема про соціальні погляди літописця, про ідейну цілеспрямованість твору, про оцінку ряду фактів, висвітлених Самовидцем як особою свого часу тощо.\nЛітопис Самовидця є одним з зразків української літературної мови XVII ст. Незважаючи на архаїзми, різні місцеві діалектизми, полонізми та інші мовні та стилістичні особливості, які пояснюються умовами часу, твір Самовидця яскраво свідчить, що в українській літературній мові XVII ст. була міцна основа живої народної мови.\n\n\n== «Літопис Григорія Грабянки» ==\nДругим за часом написання вважається «Літопис Григорія Грабянки», козацького старшини, який у 1730 р. став гадяцьким полковником. За ним закріпилася назва «козацького літопису». Але така назва досить умовна, бо цей твір є складною, багатоплановою композицією, в якій поєднуються характеристики історичних діячів, описи подій — битв, повстань, змов тощо; окремі документи, тлумачення тих чи інших періодів життя України, яка надто далека від традиційної літописної форми. Літопис був написаний церковнослов'янською мовою, завершений 1710 р. Допускають, що автор мав на меті зробити твір доступним для всього слов'янського світу, щоб звоювати його прихильність до української автономістичної ідеї в межах Московського царства.\nЗміст літопису передає його поширений заголовок «Події превеликої, з вини поляків кривавої й небувалої брані Богдана Хмельницького, гетьмана запорозького з поляками, за найясніших королів польських Владислава, потім І Казиміра, яка в 1648 році почала виправлятися за літ десять по смерті Хмельницького незакінченої. Із різних літописців з діаріуша на тій війні списаного В місті Гадячу, працею Григорія Граб'янки зібрано і стверджено самобутніх старожилів свідченнями Року 1710».\nЗагалом літопис обіймає час від стародавності до 1709 р., падіння І. Мазепи і вибору на гетьманство І. Скоропадського. Але головна й найбільша частина твору присвячена війні під проводом Б. Хмельницького, текст про цю війну займає 123 сторінки (з усіх 157). Наприкінці подається лише реєстр подій без подробиць. На початку йде роз'яснення, що козацький народ походить від скіфів-хозарів. Далі коротко передано Історію Русі й завоювання поляками, перетворення з царства в князівство, а останнього — у воєводство. Розповідається про Петра Конашевича-Сагайдачного, а з періоду після Б. Хмельницького — про Івана Брюховецького, І. Самойловича. Гетьман Б. Хмельницький зображений національним героєм.\n\n\n== «Літопис Самійла Величка» ==\nЛітопис козацького канцеляриста Самійла Васильовича Величка — найбільший за обсягом історичний твір свого часу, надрукований у Києві 1848—1864 рр. Унікальність цього наймонументальнішого твору історико-мемуарної прози XVII–XVIII ст. полягає в тому, що це не тільки літопис, а й історичний, публіцистичний і художній твір.\nЛітопис Самійла Величка дійшов до нас не повністю: у ньому наявні дефекти на початку, в середині (1649—1652 рр.) і в кінці. Прогалину (відсутність кінця першої, другої, третьої, четвертої та п'ятої частин першого тому) видавці заповнили матеріалом із другого твору Величка — «Космографії», яку він продиктував, уже осліпнувши на схилі літ. Свій Літопис Величко довів до 1700 р., але в переліку подій автор згадує й пізніші роки (наприклад, 1723 р.), у третьому томі згадуються події 1700—1720 рр. Літописець також обіцяє розповісти й про події, що супроводжували відлучення його від служби в Генеральній канцелярії. Більшість вчених вважає, що сталося це наприкінці 1708 р., коли був страчений Кочубей. Але історик М. Марченко вважав цю причину непереконливою: на його думку, Самійло Величко потрапив у немилість через Мазепу, за гетьманування якого був писарем. Однак до діяльності Мазепи Величко не мав безпосереднього відношення, бо тоді з літописцем розправились б значно жорстокіше. Був надрукований Величків твір за списком Погодіна, придбаним у відомого збирача рукописів Лаптєва. Під час друку був відшуканий ще один, пізніший список — у бібліотеці М. О. Судієнка, придбаний останнім від нащадків Г. Полетики, Саме в цьому списку дослідниками й були відшукані певні місця, яких не вистачало в основному списку. Перша спроба відновлення загубленої частини твору Величка здійснена П. Г. Клепацьким у праці «Літопис Самійла Величка».\n\n\n== Див. також ==\nЛітописи\n\n\n== Джерела та література ==\nЮ. А. Мицик. Козацькі літописи [Архівовано 17 Серпня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2007. — Т. 4 : Ка — Ком. — С. 425. — ISBN 978-966-00-0692-8.\n\n\n== Посилання ==\nКозацькі літописи // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 1 : А — Л. — С. 495-496.\nДобірка українських літописів на сайті «Ізборник» [Архівовано 10 Грудня 2012 у Wayback Machine.]",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773455604121_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "вірші Самійло Величко літопис"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455604121_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"вірші Самійло Величко літопис\"\n\n### Result 1 (score: 0.6324)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0045`\n- **Text**:\nТаким чином, Літопис Самійла Величка є не тільки\r\nрезультатом діяльності однієї людини. Це й Літопис, й історичний, і художній, і\r\nпубліцистичний твір, збірка документів автентичних і художніх стилізацій під\r\nдокумент, антологія художніх творів різних авторів. А насамперед — то витвір\r\nдуху самого С. Величка, велична пам’ятка, якій немає рівних у тогочасній нашій\r\nкультурі. Поруч з І. Вишенським, Л. Барановичем, Ф. Прокоповичем, Г.\r\nСковородою, І. Фальківським С. Величко — монументальна літерату\n\n### Result 2 (score: 0.6245)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0353`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\nлітописця українського барока, Самійла Величка; частини його, щоправда,\r\nстрачено, так що «Літопис» його доходить до 1700 p., хоч автор, здається,\r\nдоводив його до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го\r\nтомів «Літопису» деякі основи свого історичного світогляду та своєї історичної\r\n«методології». Джерела Величка не менш різноманітні, аніж грабянківські (так\r\nсаме Пуфендорф), а вплив стилістики римських істориків у нього ще зна\n\n### Result 3 (score: 0.6178)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0046`\n- **Text**:\nСам же Самійло Величко не дочекався, як уже було\r\nсказано, виходу свого твору в світ. Він згорів у сутінках XVIII ст., але його\r\nдумки, його віра й натхнення лишилися навіки. Вони пройшли через спопеляючі хвилі\r\nчасу як дорогий нетлінний скарб. І цього вже досить, бо коли твір несе в собі\r\n«велику музику», як писав свого часу Василь Стефаник, він гідний свого\r\nпризначення.\n\nВАЛЕРІЙ ШЕВЧУК\n\nПРИМІТКИ\n\n1 Летопись Самоила\r\nВеличка.— К., 1855.— Т. III.— С. 90.\n\n2 Величко С. Сказаніє\r\nо войнЂ козацкой\n\n### Result 4 (score: 0.6142)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c0950`\n- **Text**:\nВЕЛИЧКО Самійло (Самоїл)\r\nВасильович (1670, Полтавщина — після 1728) — укр. історіограф і письменник.\r\nНар. в козацькій сім’ї. Вчився в Києво-Могилянській колегії. Був канцеляристом\r\nу генерального військ. писаря, потім генерального судді В. Кочубея, служив у\r\nвійськ. канцелярії. В 1708 усунутий І. Мазепою з посади. Після Полтавської\r\nбитви жив у маєтках Кочубеїв у с. Диканьці, а згодом у с. Жуках під Полтавою.\r\nАвтор літопису, який охоплює події на Україні 1648 — 1700. Літопис, очевидно, не\r\nза\n\n### Result 5 (score: 0.6075)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0398`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\n„літописця“ українського барокка, Самійла Величка; частини його, щоправда,\r\nвтрачені, так що „Літопис“ його доходить до 1700 р., хоч автор, здається, довів\r\nйого до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го томів\r\nЛітопису деякі основи свого історичного світогляду та своєї історичної\r\n„методології“. Джерела Величка не менш різноманітні, аніж Граб’янкові (так само\r\n/303/ Пуфендорф, з поетів Тассо), а вплив стилістики римських істор\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:24.491Z",
+          "resultDisplay": "Found 5 results for: \"вірші Самійло Величко літопис\"\n\n### Result 1 (score: 0.6324)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0045`\n- **Text**:\nТаким чином, Літопис Самійла Величка є не тільки\r\nрезультатом діяльності однієї людини. Це й Літопис, й історичний, і художній, і\r\nпубліцистичний твір, збірка документів автентичних і художніх стилізацій під\r\nдокумент, антологія художніх творів різних авторів. А насамперед — то витвір\r\nдуху самого С. Величка, велична пам’ятка, якій немає рівних у тогочасній нашій\r\nкультурі. Поруч з І. Вишенським, Л. Барановичем, Ф. Прокоповичем, Г.\r\nСковородою, І. Фальківським С. Величко — монументальна літерату\n\n### Result 2 (score: 0.6245)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0353`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\nлітописця українського барока, Самійла Величка; частини його, щоправда,\r\nстрачено, так що «Літопис» його доходить до 1700 p., хоч автор, здається,\r\nдоводив його до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го\r\nтомів «Літопису» деякі основи свого історичного світогляду та своєї історичної\r\n«методології». Джерела Величка не менш різноманітні, аніж грабянківські (так\r\nсаме Пуфендорф), а вплив стилістики римських істориків у нього ще зна\n\n### Result 3 (score: 0.6178)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0046`\n- **Text**:\nСам же Самійло Величко не дочекався, як уже було\r\nсказано, виходу свого твору в світ. Він згорів у сутінках XVIII ст., але його\r\nдумки, його віра й натхнення лишилися навіки. Вони пройшли через спопеляючі хвилі\r\nчасу як дорогий нетлінний скарб. І цього вже досить, бо коли твір несе в собі\r\n«велику музику», як писав свого часу Василь Стефаник, він гідний свого\r\nпризначення.\n\nВАЛЕРІЙ ШЕВЧУК\n\nПРИМІТКИ\n\n1 Летопись Самоила\r\nВеличка.— К., 1855.— Т. III.— С. 90.\n\n2 Величко С. Сказаніє\r\nо войнЂ козацкой\n\n### Result 4 (score: 0.6142)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c0950`\n- **Text**:\nВЕЛИЧКО Самійло (Самоїл)\r\nВасильович (1670, Полтавщина — після 1728) — укр. історіограф і письменник.\r\nНар. в козацькій сім’ї. Вчився в Києво-Могилянській колегії. Був канцеляристом\r\nу генерального військ. писаря, потім генерального судді В. Кочубея, служив у\r\nвійськ. канцелярії. В 1708 усунутий І. Мазепою з посади. Після Полтавської\r\nбитви жив у маєтках Кочубеїв у с. Диканьці, а згодом у с. Жуках під Полтавою.\r\nАвтор літопису, який охоплює події на Україні 1648 — 1700. Літопис, очевидно, не\r\nза\n\n### Result 5 (score: 0.6075)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0398`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\n„літописця“ українського барокка, Самійла Величка; частини його, щоправда,\r\nвтрачені, так що „Літопис“ його доходить до 1700 р., хоч автор, здається, довів\r\nйого до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го томів\r\nЛітопису деякі основи свого історичного світогляду та своєї історичної\r\n„методології“. Джерела Величка не менш різноманітні, аніж Граб’янкові (так само\r\n/303/ Пуфендорф, з поетів Тассо), а вплив стилістики римських істор\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "af84bc0c-a4c0-4d92-bde2-914b3d933841",
+      "timestamp": "2026-03-14T02:33:41.704Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Investigation",
+          "description": "I'm focused on moving forward with this task. I'll need to figure out how to retrieve the information I need. My next step involves looking into the specifics of this \"Віршований літопис.\"",
+          "timestamp": "2026-03-14T02:33:37.721Z"
+        },
+        {
+          "subject": "Identifying Key Information",
+          "description": "I'm now zeroing in on the specific details that will allow me to progress. I'm going to look for information on the historical verse. I'm also going to check on some references to better understand how to proceed.",
+          "timestamp": "2026-03-14T02:33:41.406Z"
+        }
+      ],
+      "tokens": {
+        "input": 27615,
+        "output": 57,
+        "cached": 13591,
+        "thoughts": 327,
+        "tool": 0,
+        "total": 27999
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455621660_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Разговор Великороссіи с Малороссіей",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455621660_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Разговор Великороссіи с Малороссіей'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:42.390Z",
+          "resultDisplay": "Wikipedia article not found: 'Разговор Великороссіи с Малороссіей'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773455621702_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Дівович Разговор Великороссіи с Малороссіей"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455621702_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Дівович Разговор Великороссіи с Малороссіей\"\n\n### Result 1 (score: 0.7440)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0794`\n- **Text**:\n\"Разговор Великороссіи c Малороссіей\" давно\r\nі добре відомий в історії української літератури та громадської думки. Ще\r\nІ.Бецький хотів видати його в \"Молодику\", але російська цензура не\r\nдозволила. Твір опублікував 1882 р. проф. Микола Петров, який тоді ж установив документально\r\nі авторство Дівовича 1. В цьому творі, в добрій, як на той час,\r\nвіршованій формі, у властивому тій епосі стилі діялогу, подана широка\r\nісторично-політична дискусія між: Росією, з одного боку, і Україною — з\r\nдругого. \n\n### Result 2 (score: 0.7018)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0306`\n- **Text**:\nБлагодарствую, что\r\nпротолковала ты мне.\n\nСемен\r\nДІВОВИЧ\n\nРазговор\r\nВеликороссии с Малороссиею. — Вперше надруковано: Петров Н. Разговор Великороссии с\r\nМалороссиею (Литературный памятник второй половины XVIII века). — «Киевская\r\nстарина», 1882, т. I, с. 325 — 365; 1882, т. III, с. 138 — 146.\n\nДіалог «Разговор Великороссии с Малороссиею» — один із найпомітніших поетичних творів\r\nдругої половини XVIII ст. на історичну тему. Його «сочинил в честь, славу и\r\nзащищение всей Малороссии генеральной кан\n\n### Result 3 (score: 0.6762)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0795`\n- **Text**:\nЩе в 1881 р. М.Петров слушно зауважив, що \"по\r\nтенденцій и тону наш \"Разговор\" (\"Разговор Великороссіи c\r\nМалороссіей\") имЂет нЂкоторое сходство c извЂстным историческим памфлетом —\r\nИсторіей Русов Псевдо-Конисскаго... и, может быть, послужил одним из источников\r\nдля этой Исторіи\". Справді, в \"Исторіи Русов\" є чимало спільного\r\nз \"Разговором\": загальна національно-державницька концепція, кінцева\r\nтеза, де Україна, звертаючися до Росії, каже:\n\n\"Не тебЂ, государю твоєму поддалась . ..\n\nНе думай, ч\n\n### Result 4 (score: 0.6578)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c1992`\n- **Text**:\nДІВОВИЧ Семен (pp. і мм.\r\nн. та см. невід.) — укр. письменник серед. 18 ст. Навчався у Київській\r\nакадемії і Петерб. ун-ті Був перекладачем Генеральної військової канцелярії\r\nв Глухові. 1762 написав у формі діалога великий віршований твір\r\n«Разговор Великороссіи с Малороссіею» — один з найпомітніших в укр. л-рі 2-ї пол.\r\n18 ст. на істор. тему. Викладаючи історію боротьби козацтва проти\r\nтур.-татарських і польсько-шляхетських нападників, автор доводив, що укр.\r\nкозацька старшина заслуговує на так\n\n### Result 5 (score: 0.6439)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0793`\n- **Text**:\nПосилаючи Лобисевича й Дівовича до Петербурзького\r\nуніверситету, гетьман, звичайно, зважав на їх здібності і мав щодо них свій\r\nрозрахунок, дбаючи про розвиток культури та освіти на Україні. Отож він\r\nвступився за них і, скасувавши наказ про їх виключення, наказав 12. IX. 1760 р.\r\n\"немедленно, дав им на прогоны, не в зачет их жалованья, надлежащія\r\nденьги\", надіслати обох до нього, до Глухова. Там С.Дівович і залишився.\n\n9. II. 1761 року Семен Дівович був призначений\r\nперекладачем при Генеральні\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:42.390Z",
+          "resultDisplay": "Found 5 results for: \"Дівович Разговор Великороссіи с Малороссіей\"\n\n### Result 1 (score: 0.7440)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0794`\n- **Text**:\n\"Разговор Великороссіи c Малороссіей\" давно\r\nі добре відомий в історії української літератури та громадської думки. Ще\r\nІ.Бецький хотів видати його в \"Молодику\", але російська цензура не\r\nдозволила. Твір опублікував 1882 р. проф. Микола Петров, який тоді ж установив документально\r\nі авторство Дівовича 1. В цьому творі, в добрій, як на той час,\r\nвіршованій формі, у властивому тій епосі стилі діялогу, подана широка\r\nісторично-політична дискусія між: Росією, з одного боку, і Україною — з\r\nдругого. \n\n### Result 2 (score: 0.7018)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0306`\n- **Text**:\nБлагодарствую, что\r\nпротолковала ты мне.\n\nСемен\r\nДІВОВИЧ\n\nРазговор\r\nВеликороссии с Малороссиею. — Вперше надруковано: Петров Н. Разговор Великороссии с\r\nМалороссиею (Литературный памятник второй половины XVIII века). — «Киевская\r\nстарина», 1882, т. I, с. 325 — 365; 1882, т. III, с. 138 — 146.\n\nДіалог «Разговор Великороссии с Малороссиею» — один із найпомітніших поетичних творів\r\nдругої половини XVIII ст. на історичну тему. Його «сочинил в честь, славу и\r\nзащищение всей Малороссии генеральной кан\n\n### Result 3 (score: 0.6762)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0795`\n- **Text**:\nЩе в 1881 р. М.Петров слушно зауважив, що \"по\r\nтенденцій и тону наш \"Разговор\" (\"Разговор Великороссіи c\r\nМалороссіей\") имЂет нЂкоторое сходство c извЂстным историческим памфлетом —\r\nИсторіей Русов Псевдо-Конисскаго... и, может быть, послужил одним из источников\r\nдля этой Исторіи\". Справді, в \"Исторіи Русов\" є чимало спільного\r\nз \"Разговором\": загальна національно-державницька концепція, кінцева\r\nтеза, де Україна, звертаючися до Росії, каже:\n\n\"Не тебЂ, государю твоєму поддалась . ..\n\nНе думай, ч\n\n### Result 4 (score: 0.6578)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c1992`\n- **Text**:\nДІВОВИЧ Семен (pp. і мм.\r\nн. та см. невід.) — укр. письменник серед. 18 ст. Навчався у Київській\r\nакадемії і Петерб. ун-ті Був перекладачем Генеральної військової канцелярії\r\nв Глухові. 1762 написав у формі діалога великий віршований твір\r\n«Разговор Великороссіи с Малороссіею» — один з найпомітніших в укр. л-рі 2-ї пол.\r\n18 ст. на істор. тему. Викладаючи історію боротьби козацтва проти\r\nтур.-татарських і польсько-шляхетських нападників, автор доводив, що укр.\r\nкозацька старшина заслуговує на так\n\n### Result 5 (score: 0.6439)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0793`\n- **Text**:\nПосилаючи Лобисевича й Дівовича до Петербурзького\r\nуніверситету, гетьман, звичайно, зважав на їх здібності і мав щодо них свій\r\nрозрахунок, дбаючи про розвиток культури та освіти на Україні. Отож він\r\nвступився за них і, скасувавши наказ про їх виключення, наказав 12. IX. 1760 р.\r\n\"немедленно, дав им на прогоны, не в зачет их жалованья, надлежащія\r\nденьги\", надіслати обох до нього, до Глухова. Там С.Дівович і залишився.\n\n9. II. 1761 року Семен Дівович був призначений\r\nперекладачем при Генеральні\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e32e594c-d6d4-42f1-940b-4c1d5f0073c0",
+      "timestamp": "2026-03-14T02:33:48.779Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Next Phase",
+          "description": "I am now focused on charting a course to the subsequent stage of the task. The plan is coming together; I'm strategizing how to best execute the next steps to ensure I move ahead effectively.",
+          "timestamp": "2026-03-14T02:33:47.695Z"
+        },
+        {
+          "subject": "Extracting Key Details",
+          "description": "I'm presently zeroing in on obtaining crucial information. My focus is on gathering the required data so I can advance the undertaking. The strategy now involves identifying and collecting the essential pieces needed to proceed.",
+          "timestamp": "2026-03-14T02:33:48.628Z"
+        }
+      ],
+      "tokens": {
+        "input": 29133,
+        "output": 50,
+        "cached": 13575,
+        "thoughts": 131,
+        "tool": 0,
+        "total": 29314
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773455628736_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Разговор Великоросії з Малоросією",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455628736_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Разговор Великоросії з Малоросією'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:49.980Z",
+          "resultDisplay": "Wikipedia article not found: 'Разговор Великоросії з Малоросією'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773455628777_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Дівович Семен Данилович"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455628777_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Дівович Семен Данилович\n**URL**: https://uk.wikipedia.org/wiki/%D0%94%D1%96%D0%B2%D0%BE%D0%B2%D0%B8%D1%87_%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD_%D0%94%D0%B0%D0%BD%D0%B8%D0%BB%D0%BE%D0%B2%D0%B8%D1%87\n\nДівович Семен Данилович (*1730-ті, Семенівка — †після 1763, м. см. невід.) — український письменник, автор відомого полемічного твору «Разговор Великороссіи с Малороссіей», перекладач при Генеральній військовій канцелярії за правління гетьмана Кирила Розумовського. Вихованець Києво-Могилянської академії.\n\n\n== Біографія ==\nНавчався у Києво-Могилянській академії в 1740-х рр. по класу риторики, а з 1754 — в Санкт-Петербурзькому університеті. Але після конфлікту з М. Ломоносовим, який неприязно ставився до українців, його разом із О. Лобисевичем було виключено.\nГетьман Кирило Розумовський скасував наказ про виключення, проте в університет вони не захотіли повернутися і поїхали до Глухова, де 9 лютого 1761 Дівовича призначено перекладачем при Генеральній військовій канцелярії. Саме тут 1762 він створив у формі діалогу великий віршований твір «Разговор Великороссіи с Малороссіей», один із найзначніших творів на історичну тематику в української літературі 2-ї половини XVIII століття.\n1763 призначено архіваріусом Малоросійського генерального архіву, але незабаром він помер.\n\n\n== Розмова Великоросії з Малоросією ==\n\nУ політичному памфлеті «Розмова Великоросії з Малоросією» Семеном Дівовичем чітко висловлено ідею державної самостійності України, її окремої та самодостатньої політичної культури, цілком відмінної від Московії, яку автор називає Великоросія. Цей твір Дівович написав на основі «Краткого описания Малороссии» літопису Григорія Грабянки. Свою роботу над твором завершив у Глухові 21 вересня 1762 року.\nІмовірно, Дівович написав його не без впливу гетьмана, можливо навіть за його дорученням . У «Разговоре…» автор викладає героїчні дії козацтва, починаючи від польського черкаського старости (прикордонного) Вацлава Лянцкоронського, який очолив козаків у війні з турками і татарами ще 1516. Особливу увагу приділяє Хмельниччині, багато говорить про утиски й насильства «начальних людей». Твір написано з позиції козацької старшини, в ньому переконливо доводиться, що українська старшина має ті ж права на привілеї, що й московське дворянство. Дослідники не раз відзначали, що тоном і тенденцією віршований діалог має певні аналогії з «Історією Русів», особливо в плані загальної національно-державної концепції. Очевидно, «Разговор…» був добре відомий авторові «Історії Русів». Поема написана в традиціях літератури, що її культивовано було в Києво-Могилянській академії, про що свідчать силабічні вірші, літературна форма (розмова чи діалог), а також переробка сьомої елегії Овідія з його книги «Tristium» («Скорботні пісні») при описі смерті Богдана Хмельницького.\n\n\n== Джерела та література ==\nГ. П. Герасимова. Дівович Семен Данилович [Архівовано 23 червня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2004. — Т. 2 : Г — Д. — С. 399. — ISBN 966-00-0405-2.\nН. П. Разговор Великороссии с Малороссией. ИВ, 1881, № 5;\nОглоблин О. Семен та Олекса Дівовичі. В кн.: Оглоблин О. Люди старої України. Мюнхен, 1959.\n\n\n== Посилання ==\n\nДівович Семен [Архівовано 4 травня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1958. — Т. 2 : Д — Є, кн. 3. — С. 348-349. — 1000 екз.\nДівович Семен // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:49.980Z",
+          "resultDisplay": "# Дівович Семен Данилович\n**URL**: https://uk.wikipedia.org/wiki/%D0%94%D1%96%D0%B2%D0%BE%D0%B2%D0%B8%D1%87_%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD_%D0%94%D0%B0%D0%BD%D0%B8%D0%BB%D0%BE%D0%B2%D0%B8%D1%87\n\nДівович Семен Данилович (*1730-ті, Семенівка — †після 1763, м. см. невід.) — український письменник, автор відомого полемічного твору «Разговор Великороссіи с Малороссіей», перекладач при Генеральній військовій канцелярії за правління гетьмана Кирила Розумовського. Вихованець Києво-Могилянської академії.\n\n\n== Біографія ==\nНавчався у Києво-Могилянській академії в 1740-х рр. по класу риторики, а з 1754 — в Санкт-Петербурзькому університеті. Але після конфлікту з М. Ломоносовим, який неприязно ставився до українців, його разом із О. Лобисевичем було виключено.\nГетьман Кирило Розумовський скасував наказ про виключення, проте в університет вони не захотіли повернутися і поїхали до Глухова, де 9 лютого 1761 Дівовича призначено перекладачем при Генеральній військовій канцелярії. Саме тут 1762 він створив у формі діалогу великий віршований твір «Разговор Великороссіи с Малороссіей», один із найзначніших творів на історичну тематику в української літературі 2-ї половини XVIII століття.\n1763 призначено архіваріусом Малоросійського генерального архіву, але незабаром він помер.\n\n\n== Розмова Великоросії з Малоросією ==\n\nУ політичному памфлеті «Розмова Великоросії з Малоросією» Семеном Дівовичем чітко висловлено ідею державної самостійності України, її окремої та самодостатньої політичної культури, цілком відмінної від Московії, яку автор називає Великоросія. Цей твір Дівович написав на основі «Краткого описания Малороссии» літопису Григорія Грабянки. Свою роботу над твором завершив у Глухові 21 вересня 1762 року.\nІмовірно, Дівович написав його не без впливу гетьмана, можливо навіть за його дорученням . У «Разговоре…» автор викладає героїчні дії козацтва, починаючи від польського черкаського старости (прикордонного) Вацлава Лянцкоронського, який очолив козаків у війні з турками і татарами ще 1516. Особливу увагу приділяє Хмельниччині, багато говорить про утиски й насильства «начальних людей». Твір написано з позиції козацької старшини, в ньому переконливо доводиться, що українська старшина має ті ж права на привілеї, що й московське дворянство. Дослідники не раз відзначали, що тоном і тенденцією віршований діалог має певні аналогії з «Історією Русів», особливо в плані загальної національно-державної концепції. Очевидно, «Разговор…» був добре відомий авторові «Історії Русів». Поема написана в традиціях літератури, що її культивовано було в Києво-Могилянській академії, про що свідчать силабічні вірші, літературна форма (розмова чи діалог), а також переробка сьомої елегії Овідія з його книги «Tristium» («Скорботні пісні») при описі смерті Богдана Хмельницького.\n\n\n== Джерела та література ==\nГ. П. Герасимова. Дівович Семен Данилович [Архівовано 23 червня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2004. — Т. 2 : Г — Д. — С. 399. — ISBN 966-00-0405-2.\nН. П. Разговор Великороссии с Малороссией. ИВ, 1881, № 5;\nОглоблин О. Семен та Олекса Дівовичі. В кн.: Оглоблин О. Люди старої України. Мюнхен, 1959.\n\n\n== Посилання ==\n\nДівович Семен [Архівовано 4 травня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1958. — Т. 2 : Д — Є, кн. 3. — С. 348-349. — 1000 екз.\nДівович Семен // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "d2ef194e-9eff-4dfe-936c-1890a38cf12c",
+      "timestamp": "2026-03-14T02:33:59.299Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing Step Forward",
+          "description": "I'm focused on moving forward with the project. I've pinpointed the next move and am making sure I'm set for it. I am actively preparing for the subsequent phase of the task.",
+          "timestamp": "2026-03-14T02:33:56.438Z"
+        },
+        {
+          "subject": "Identifying Relevant Texts",
+          "description": "I'm now zeroing in on the specific historical and literary texts that are key to this phase. My attention is directed towards locating and extracting relevant quotations from those texts. I am working to narrow down the scope of the search to focus on the key materials.",
+          "timestamp": "2026-03-14T02:33:59.175Z"
+        }
+      ],
+      "tokens": {
+        "input": 30578,
+        "output": 53,
+        "cached": 27226,
+        "thoughts": 321,
+        "tool": 0,
+        "total": 30952
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455639255_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"Разговор Великороссии с Малороссиею\" текст"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455639255_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"Разговор Великороссии с Малороссиею\" текст\"\n\n### Result 1 (score: 0.6474)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0794`\n- **Text**:\n\"Разговор Великороссіи c Малороссіей\" давно\r\nі добре відомий в історії української літератури та громадської думки. Ще\r\nІ.Бецький хотів видати його в \"Молодику\", але російська цензура не\r\nдозволила. Твір опублікував 1882 р. проф. Микола Петров, який тоді ж установив документально\r\nі авторство Дівовича 1. В цьому творі, в добрій, як на той час,\r\nвіршованій формі, у властивому тій епосі стилі діялогу, подана широка\r\nісторично-політична дискусія між: Росією, з одного боку, і Україною — з\r\nдругого. \n\n### Result 2 (score: 0.6047)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0306`\n- **Text**:\nБлагодарствую, что\r\nпротолковала ты мне.\n\nСемен\r\nДІВОВИЧ\n\nРазговор\r\nВеликороссии с Малороссиею. — Вперше надруковано: Петров Н. Разговор Великороссии с\r\nМалороссиею (Литературный памятник второй половины XVIII века). — «Киевская\r\nстарина», 1882, т. I, с. 325 — 365; 1882, т. III, с. 138 — 146.\n\nДіалог «Разговор Великороссии с Малороссиею» — один із найпомітніших поетичних творів\r\nдругої половини XVIII ст. на історичну тему. Його «сочинил в честь, славу и\r\nзащищение всей Малороссии генеральной кан\n\n### Result 3 (score: 0.5640)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0795`\n- **Text**:\nЩе в 1881 р. М.Петров слушно зауважив, що \"по\r\nтенденцій и тону наш \"Разговор\" (\"Разговор Великороссіи c\r\nМалороссіей\") имЂет нЂкоторое сходство c извЂстным историческим памфлетом —\r\nИсторіей Русов Псевдо-Конисскаго... и, может быть, послужил одним из источников\r\nдля этой Исторіи\". Справді, в \"Исторіи Русов\" є чимало спільного\r\nз \"Разговором\": загальна національно-державницька концепція, кінцева\r\nтеза, де Україна, звертаючися до Росії, каже:\n\n\"Не тебЂ, государю твоєму поддалась . ..\n\nНе думай, ч\n\n### Result 4 (score: 0.5620)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0392`\n- **Text**:\n«Малороссія — эта колыбель русской общественной\r\nжизни — съ своими правами, понятіями, языкомъ и всемъ, чЂмъ можно было\r\nотличить малоруса, — скоро будетъ принадлежать исторіи минувшихъ дней. Великая\r\nРоссія съ своими правами, языкомъ, co всемъ, что составляло отличіе великоруса\r\nвъ старину, — все останется, какъ бы далеко ни зашелъ народъ въ образованности\r\nотъ своихъ предковъ. СлЂдовательно, элементъ малорусскій нуженъ былъ только на\r\nвремя, а теперь кончилъ то, что могъ произвести для дальнЂй\n\n### Result 5 (score: 0.5595)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0149`\n- **Text**:\nЛитературным языком малороссиян должен быть язык их\r\nобразованного общества — язык русский. Если в Малороссии и может явиться\r\nвеликий поэт, то не иначе, как под условием, чтоб он был русским поэтом, сыном\r\nРоссии, горячо принимающим к сердцу ее интересы, страдающим ее страданием, радующимся\r\nее радостию. Племя может иметь только народные песни, но не может иметь поэтов,\r\nа тем менее великих поэтов: великие поэты являются только у великих наций, а\r\nчто за нация без великого и самобытного политич\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:59.677Z",
+          "resultDisplay": "Found 5 results for: \"\"Разговор Великороссии с Малороссиею\" текст\"\n\n### Result 1 (score: 0.6474)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0794`\n- **Text**:\n\"Разговор Великороссіи c Малороссіей\" давно\r\nі добре відомий в історії української літератури та громадської думки. Ще\r\nІ.Бецький хотів видати його в \"Молодику\", але російська цензура не\r\nдозволила. Твір опублікував 1882 р. проф. Микола Петров, який тоді ж установив документально\r\nі авторство Дівовича 1. В цьому творі, в добрій, як на той час,\r\nвіршованій формі, у властивому тій епосі стилі діялогу, подана широка\r\nісторично-політична дискусія між: Росією, з одного боку, і Україною — з\r\nдругого. \n\n### Result 2 (score: 0.6047)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0306`\n- **Text**:\nБлагодарствую, что\r\nпротолковала ты мне.\n\nСемен\r\nДІВОВИЧ\n\nРазговор\r\nВеликороссии с Малороссиею. — Вперше надруковано: Петров Н. Разговор Великороссии с\r\nМалороссиею (Литературный памятник второй половины XVIII века). — «Киевская\r\nстарина», 1882, т. I, с. 325 — 365; 1882, т. III, с. 138 — 146.\n\nДіалог «Разговор Великороссии с Малороссиею» — один із найпомітніших поетичних творів\r\nдругої половини XVIII ст. на історичну тему. Його «сочинил в честь, славу и\r\nзащищение всей Малороссии генеральной кан\n\n### Result 3 (score: 0.5640)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0795`\n- **Text**:\nЩе в 1881 р. М.Петров слушно зауважив, що \"по\r\nтенденцій и тону наш \"Разговор\" (\"Разговор Великороссіи c\r\nМалороссіей\") имЂет нЂкоторое сходство c извЂстным историческим памфлетом —\r\nИсторіей Русов Псевдо-Конисскаго... и, может быть, послужил одним из источников\r\nдля этой Исторіи\". Справді, в \"Исторіи Русов\" є чимало спільного\r\nз \"Разговором\": загальна національно-державницька концепція, кінцева\r\nтеза, де Україна, звертаючися до Росії, каже:\n\n\"Не тебЂ, государю твоєму поддалась . ..\n\nНе думай, ч\n\n### Result 4 (score: 0.5620)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0392`\n- **Text**:\n«Малороссія — эта колыбель русской общественной\r\nжизни — съ своими правами, понятіями, языкомъ и всемъ, чЂмъ можно было\r\nотличить малоруса, — скоро будетъ принадлежать исторіи минувшихъ дней. Великая\r\nРоссія съ своими правами, языкомъ, co всемъ, что составляло отличіе великоруса\r\nвъ старину, — все останется, какъ бы далеко ни зашелъ народъ въ образованности\r\nотъ своихъ предковъ. СлЂдовательно, элементъ малорусскій нуженъ былъ только на\r\nвремя, а теперь кончилъ то, что могъ произвести для дальнЂй\n\n### Result 5 (score: 0.5595)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0149`\n- **Text**:\nЛитературным языком малороссиян должен быть язык их\r\nобразованного общества — язык русский. Если в Малороссии и может явиться\r\nвеликий поэт, то не иначе, как под условием, чтоб он был русским поэтом, сыном\r\nРоссии, горячо принимающим к сердцу ее интересы, страдающим ее страданием, радующимся\r\nее радостию. Племя может иметь только народные песни, но не может иметь поэтов,\r\nа тем менее великих поэтов: великие поэты являются только у великих наций, а\r\nчто за нация без великого и самобытного политич\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773455639296_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "поезія літопис Величка"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455639296_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"поезія літопис Величка\"\n\n### Result 1 (score: 0.5686)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0353`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\nлітописця українського барока, Самійла Величка; частини його, щоправда,\r\nстрачено, так що «Літопис» його доходить до 1700 p., хоч автор, здається,\r\nдоводив його до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го\r\nтомів «Літопису» деякі основи свого історичного світогляду та своєї історичної\r\n«методології». Джерела Величка не менш різноманітні, аніж грабянківські (так\r\nсаме Пуфендорф), а вплив стилістики римських істориків у нього ще зна\n\n### Result 2 (score: 0.5623)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0045`\n- **Text**:\nТаким чином, Літопис Самійла Величка є не тільки\r\nрезультатом діяльності однієї людини. Це й Літопис, й історичний, і художній, і\r\nпубліцистичний твір, збірка документів автентичних і художніх стилізацій під\r\nдокумент, антологія художніх творів різних авторів. А насамперед — то витвір\r\nдуху самого С. Величка, велична пам’ятка, якій немає рівних у тогочасній нашій\r\nкультурі. Поруч з І. Вишенським, Л. Барановичем, Ф. Прокоповичем, Г.\r\nСковородою, І. Фальківським С. Величко — монументальна літерату\n\n### Result 3 (score: 0.5506)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0398`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\n„літописця“ українського барокка, Самійла Величка; частини його, щоправда,\r\nвтрачені, так що „Літопис“ його доходить до 1700 р., хоч автор, здається, довів\r\nйого до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го томів\r\nЛітопису деякі основи свого історичного світогляду та своєї історичної\r\n„методології“. Джерела Величка не менш різноманітні, аніж Граб’янкові (так само\r\n/303/ Пуфендорф, з поетів Тассо), а вплив стилістики римських істор\n\n### Result 4 (score: 0.5439)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0043`\n- **Text**:\nЦікаво розглянути й невелику антологію віршів, які\r\nвмістив С. Величко у свій твір. У першому томі їх мало, тільки один (а може,\r\nлише уривок) — це епітафія на смерть Іскри. Вона коротка, написана мовою,\r\nблизькою до Величкової, і має навіть Величкову мораль — засуджує міжусобиці.\r\nАвтор не називається. У другому томі вміщено ряд поетичних творів: якийсь\r\nрозсудливий малоросійський поет, очевидно І. Величковський, пише хвалу чернігівській\r\nчудотворній іконі; неназваний автор (Л. Баранович) склад\n\n### Result 5 (score: 0.5425)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0046`\n- **Text**:\nСам же Самійло Величко не дочекався, як уже було\r\nсказано, виходу свого твору в світ. Він згорів у сутінках XVIII ст., але його\r\nдумки, його віра й натхнення лишилися навіки. Вони пройшли через спопеляючі хвилі\r\nчасу як дорогий нетлінний скарб. І цього вже досить, бо коли твір несе в собі\r\n«велику музику», як писав свого часу Василь Стефаник, він гідний свого\r\nпризначення.\n\nВАЛЕРІЙ ШЕВЧУК\n\nПРИМІТКИ\n\n1 Летопись Самоила\r\nВеличка.— К., 1855.— Т. III.— С. 90.\n\n2 Величко С. Сказаніє\r\nо войнЂ козацкой\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:33:59.677Z",
+          "resultDisplay": "Found 5 results for: \"поезія літопис Величка\"\n\n### Result 1 (score: 0.5686)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0353`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\nлітописця українського барока, Самійла Величка; частини його, щоправда,\r\nстрачено, так що «Літопис» його доходить до 1700 p., хоч автор, здається,\r\nдоводив його до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го\r\nтомів «Літопису» деякі основи свого історичного світогляду та своєї історичної\r\n«методології». Джерела Величка не менш різноманітні, аніж грабянківські (так\r\nсаме Пуфендорф), а вплив стилістики римських істориків у нього ще зна\n\n### Result 2 (score: 0.5623)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0045`\n- **Text**:\nТаким чином, Літопис Самійла Величка є не тільки\r\nрезультатом діяльності однієї людини. Це й Літопис, й історичний, і художній, і\r\nпубліцистичний твір, збірка документів автентичних і художніх стилізацій під\r\nдокумент, антологія художніх творів різних авторів. А насамперед — то витвір\r\nдуху самого С. Величка, велична пам’ятка, якій немає рівних у тогочасній нашій\r\nкультурі. Поруч з І. Вишенським, Л. Барановичем, Ф. Прокоповичем, Г.\r\nСковородою, І. Фальківським С. Величко — монументальна літерату\n\n### Result 3 (score: 0.5506)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0398`\n- **Text**:\n4. Найвизначніший та найбільший твір третього\r\n„літописця“ українського барокка, Самійла Величка; частини його, щоправда,\r\nвтрачені, так що „Літопис“ його доходить до 1700 р., хоч автор, здається, довів\r\nйого до 1720 р. Величко навіть розвиває в передмовах до 1-го та 2-го томів\r\nЛітопису деякі основи свого історичного світогляду та своєї історичної\r\n„методології“. Джерела Величка не менш різноманітні, аніж Граб’янкові (так само\r\n/303/ Пуфендорф, з поетів Тассо), а вплив стилістики римських істор\n\n### Result 4 (score: 0.5439)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0043`\n- **Text**:\nЦікаво розглянути й невелику антологію віршів, які\r\nвмістив С. Величко у свій твір. У першому томі їх мало, тільки один (а може,\r\nлише уривок) — це епітафія на смерть Іскри. Вона коротка, написана мовою,\r\nблизькою до Величкової, і має навіть Величкову мораль — засуджує міжусобиці.\r\nАвтор не називається. У другому томі вміщено ряд поетичних творів: якийсь\r\nрозсудливий малоросійський поет, очевидно І. Величковський, пише хвалу чернігівській\r\nчудотворній іконі; неназваний автор (Л. Баранович) склад\n\n### Result 5 (score: 0.5425)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0046`\n- **Text**:\nСам же Самійло Величко не дочекався, як уже було\r\nсказано, виходу свого твору в світ. Він згорів у сутінках XVIII ст., але його\r\nдумки, його віра й натхнення лишилися навіки. Вони пройшли через спопеляючі хвилі\r\nчасу як дорогий нетлінний скарб. І цього вже досить, бо коли твір несе в собі\r\n«велику музику», як писав свого часу Василь Стефаник, він гідний свого\r\nпризначення.\n\nВАЛЕРІЙ ШЕВЧУК\n\nПРИМІТКИ\n\n1 Летопись Самоила\r\nВеличка.— К., 1855.— Т. III.— С. 90.\n\n2 Величко С. Сказаніє\r\nо войнЂ козацкой\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c958e024-97e7-4a7d-a550-47a0e58c1a41",
+      "timestamp": "2026-03-14T02:34:06.225Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing next steps",
+          "description": "I am now focused on evaluating the provided output, searching for the most relevant information and planning to extract the core points to form the next answer. I am making sure the information gleaned aligns with the original intent.",
+          "timestamp": "2026-03-14T02:34:03.858Z"
+        },
+        {
+          "subject": "Continuing information extraction",
+          "description": "I am now focused on using the appropriate tools to find more context around a specific piece of information. I will search for relevant poetic works to continue gathering information.",
+          "timestamp": "2026-03-14T02:34:06.056Z"
+        }
+      ],
+      "tokens": {
+        "input": 33378,
+        "output": 71,
+        "cached": 0,
+        "thoughts": 275,
+        "tool": 0,
+        "total": 33724
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_get_chunk_context_1773455646167_0",
+          "name": "mcp_rag_get_chunk_context",
+          "args": {
+            "chunk_id": "a27d9879_c0043"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_get_chunk_context_1773455646167_0",
+                "name": "mcp_rag_get_chunk_context",
+                "response": {
+                  "output": "Invalid chunk_id format: a27d9879_c0043"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:34:06.414Z",
+          "resultDisplay": "Invalid chunk_id format: a27d9879_c0043",
+          "displayName": "get_chunk_context (rag MCP Server)",
+          "description": "Get surrounding text chunks for context. Given a chunk_id from search results, returns the chunk and its neighbors from the same textbook.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773455646220_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Вірші на жалісний погреб шляхетного лицаря Петра Конашевича-Сагайдачного",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455646220_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Вірші на жалісний погреб шляхетного лицаря Петра Конашевича-Сагайдачного'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:34:06.414Z",
+          "resultDisplay": "Wikipedia article not found: 'Вірші на жалісний погреб шляхетного лицаря Петра Конашевича-Сагайдачного'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "67a4c921-7a8f-495b-bb37-5e0631b22e02",
+      "timestamp": "2026-03-14T02:34:13.061Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Searching for information",
+          "description": "I am now focused on using the Wikipedia search tool to find information related to the topic. I aim to gather relevant details to inform the next step.",
+          "timestamp": "2026-03-14T02:34:11.399Z"
+        },
+        {
+          "subject": "Finding relevant text",
+          "description": "I'm now zeroing in on using the search tool for literary texts, to dig up \"Сакович Вірші\". This should help flesh out the relevant context.",
+          "timestamp": "2026-03-14T02:34:12.824Z"
+        }
+      ],
+      "tokens": {
+        "input": 33513,
+        "output": 45,
+        "cached": 27204,
+        "thoughts": 179,
+        "tool": 0,
+        "total": 33737
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455653015_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Сакович вірші на жалісний погреб"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455653015_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Сакович вірші на жалісний погреб\"\n\n### Result 1 (score: 0.5732)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0362`\n- **Text**:\n12 Див.: Грушевський Михайло. Історія України-Руси. — Нью Йорк, 1956. — Т. 7. — С. 416-417 і passim.\n\n13 Грушевський, одначе, більш стриманий; див.: Там само. — С. 400-401 і passim.\n\n14 Своєю чергою М.\r\nГрушевський називає твір \"перш(им) testimonium diligentiae брацької\r\nшколи\" (там само. — С. 413). Див. також: Колосова В. Твір Касіяна\r\nСаковича \"Вірші на жалосний погреб Петра Сагайдачного\" // Радянське\r\nлітературознавство. — 1965. — №12. — С. 32-44.\n\n(У цій легкій синкретичності можна бачити й \n\n### Result 2 (score: 0.5705)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0360`\n- **Text**:\n\"ВЂршЂ на жалосный погреб зацного рыцера Петра\r\nКонашевича Сагайдачного. Гетмана войска его Королевской Милости\r\nзапорозкого\", що їх написав Касіян Сакович, тодішній ректор Київської\r\nбратської школи, і що їх виголосили його спудеї на похороні гетьмана \"въ\r\nнедЂлю проводную року Божого тисяча шестсот двадцать второго\", — такий\r\nтекст, що надзвичайно чітко, в один ключовий момент української історії моделює\r\nі ту саму ідеологію, про яку говоримо, з її суспільними й концепційними\r\nпідбудовами (або\n\n### Result 3 (score: 0.5656)\n- **Work**: Литвинов — Ренесансний гуманізм в Україні (2000)\n- **Author**: Литвинов В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e86cf6ca_c0605`\n- **Text**:\n151. Сакович Касіян. Вірші\r\nна жалісний погреб шляхетного лицаря Петра Конашевича-Сагайдачного //\r\nУкраїнські гуманісти епохи Відродження (Антологія).\n\n152. Сакович Касіян. Вірші\r\nна жалісний погреб... Петра Конашевича-Сагайдачного // Українська поезія XVII\r\nст.\n\n153. Сакович Касіян. ВЂршЂ\r\nна жалосный погреб зацного рыцера Петра Конашевича-Сагайдачного // Українська\r\nпоезія: Кінець XVI — початок XVII ст. (Упоряд. В.П. Колосова, В.І. Крекотень).\r\n— К., 1978.\n\n154. [Сакович К.]. Трактат\r\nпро душу\n\n### Result 4 (score: 0.5502)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1324`\n- **Text**:\nНаступним зразком декламації серед тих, що дійшли до\r\nнас, є \"ВЂршЂ на жалосный погреб зацного рыцера Петра\r\nКонашевича-Сагайдачного, гетмана Войска єго Королевской милости\r\nЗапорозкого\" Касіяна Саковича, ректора Київської братської школи, виданий\r\nдрукарнею Києво-Печерської лаври 1622 р. до дня похорону гетьмана. Цей твір\r\nвитримано у жанрі \"ляменту\" з елементами декламації, його поетична форма\r\nсвідчила про зародження в українській літературі нового літературного стилю — бароко.\r\nНа титульному\n\n### Result 5 (score: 0.5454)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0351`\n- **Text**:\nВірші на жалосний\r\nпогреб... Петра Конашевича Сагайдачного... — \r\nУрочиста декламація, яку було написано Касіяном\r\nСаковичем на смерть гетьмана Петра Конашевича-Сагайдачного, що сталася у квітні\r\n1622 р. від ран, одержаних під час Хотинської битви. Декламацію\n\nпроголосили двадцять учнів\r\nкиївської братської школи. Того ж року ця композиція, доповнена описом герба\r\nЗапорізького війська, передмовою та зверненням «До чительника», вийшла окремою\r\nкнижкою з друкарні Києво-Печерської лаври.\n\nПодається\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:34:15.566Z",
+          "resultDisplay": "Found 5 results for: \"Сакович вірші на жалісний погреб\"\n\n### Result 1 (score: 0.5732)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0362`\n- **Text**:\n12 Див.: Грушевський Михайло. Історія України-Руси. — Нью Йорк, 1956. — Т. 7. — С. 416-417 і passim.\n\n13 Грушевський, одначе, більш стриманий; див.: Там само. — С. 400-401 і passim.\n\n14 Своєю чергою М.\r\nГрушевський називає твір \"перш(им) testimonium diligentiae брацької\r\nшколи\" (там само. — С. 413). Див. також: Колосова В. Твір Касіяна\r\nСаковича \"Вірші на жалосний погреб Петра Сагайдачного\" // Радянське\r\nлітературознавство. — 1965. — №12. — С. 32-44.\n\n(У цій легкій синкретичності можна бачити й \n\n### Result 2 (score: 0.5705)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0360`\n- **Text**:\n\"ВЂршЂ на жалосный погреб зацного рыцера Петра\r\nКонашевича Сагайдачного. Гетмана войска его Королевской Милости\r\nзапорозкого\", що їх написав Касіян Сакович, тодішній ректор Київської\r\nбратської школи, і що їх виголосили його спудеї на похороні гетьмана \"въ\r\nнедЂлю проводную року Божого тисяча шестсот двадцать второго\", — такий\r\nтекст, що надзвичайно чітко, в один ключовий момент української історії моделює\r\nі ту саму ідеологію, про яку говоримо, з її суспільними й концепційними\r\nпідбудовами (або\n\n### Result 3 (score: 0.5656)\n- **Work**: Литвинов — Ренесансний гуманізм в Україні (2000)\n- **Author**: Литвинов В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e86cf6ca_c0605`\n- **Text**:\n151. Сакович Касіян. Вірші\r\nна жалісний погреб шляхетного лицаря Петра Конашевича-Сагайдачного //\r\nУкраїнські гуманісти епохи Відродження (Антологія).\n\n152. Сакович Касіян. Вірші\r\nна жалісний погреб... Петра Конашевича-Сагайдачного // Українська поезія XVII\r\nст.\n\n153. Сакович Касіян. ВЂршЂ\r\nна жалосный погреб зацного рыцера Петра Конашевича-Сагайдачного // Українська\r\nпоезія: Кінець XVI — початок XVII ст. (Упоряд. В.П. Колосова, В.І. Крекотень).\r\n— К., 1978.\n\n154. [Сакович К.]. Трактат\r\nпро душу\n\n### Result 4 (score: 0.5502)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1324`\n- **Text**:\nНаступним зразком декламації серед тих, що дійшли до\r\nнас, є \"ВЂршЂ на жалосный погреб зацного рыцера Петра\r\nКонашевича-Сагайдачного, гетмана Войска єго Королевской милости\r\nЗапорозкого\" Касіяна Саковича, ректора Київської братської школи, виданий\r\nдрукарнею Києво-Печерської лаври 1622 р. до дня похорону гетьмана. Цей твір\r\nвитримано у жанрі \"ляменту\" з елементами декламації, його поетична форма\r\nсвідчила про зародження в українській літературі нового літературного стилю — бароко.\r\nНа титульному\n\n### Result 5 (score: 0.5454)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0351`\n- **Text**:\nВірші на жалосний\r\nпогреб... Петра Конашевича Сагайдачного... — \r\nУрочиста декламація, яку було написано Касіяном\r\nСаковичем на смерть гетьмана Петра Конашевича-Сагайдачного, що сталася у квітні\r\n1622 р. від ран, одержаних під час Хотинської битви. Декламацію\n\nпроголосили двадцять учнів\r\nкиївської братської школи. Того ж року ця композиція, доповнена описом герба\r\nЗапорізького війська, передмовою та зверненням «До чительника», вийшла окремою\r\nкнижкою з друкарні Києво-Печерської лаври.\n\nПодається\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773455653059_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Сакович Касіян"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773455653059_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Касіян Сакович\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D1%81%D1%96%D1%8F%D0%BD_%D0%A1%D0%B0%D0%BA%D0%BE%D0%B2%D0%B8%D1%87\n\nКасіян Калі́кст Сако́вич гербу Корвін (бл. 1578 — 1647, Краків) — руський (український) шляхтич, церковний діяч і письменник-полеміст, ректор Київської братської школи у 1620—1624 роках. Представник боярського роду Саковичів. Писав книжною українською та польською мовами.\n\n\n== Біографія ==\n\n\n=== Дитинство, юність, православний період життя ===\nНародився близько 1578 року в священничій родині в містечку Потеличі (Белзька земля; інша назва Подтеличі) неподалік Рави-Руської. Згідно з К. Несецьким, походив з литовського роду Саковичів гербу Корвін.\nНавчався в Замойській академії у Любліні, у Краківській академії. Був домашнім виховником Адама Киселя. Видав друком працю «Проблеми або питання природи людини…», яку присвятив Лаврентієві Древинському. Також до «Проблем…» додав «Передмови до актів весільних та погребових» (їх повторно виголосив у 1626 році у Ярославі).\nУ 1620–1624 роках, бувши ченцем, став ректором Київської братської школи. У 1624 році на прохання Лаврентія Древинського переїхав до Любліна, де протягом року був проповідником церкви місцевого православного братства.\n\n\n=== Унійний і католицький періоди ===\nУ Любліні в 1625 році став греко-католиком, як вдівець став монахом-василіянином. Ймовірною причиною цього були приязні стосунки з князем Олександром Заславським. У 1626 році став архимандритом Хрестовоздвиженського монастиря у Дубному. В 1634 році єпископ Єремія Почаповський позбавив його сану архимандрита.\n13 вересня 1640 року написав брошуру під назвою «Календар старий, у якому явні та очевидні помилки…», присвячену Данилові Єло-Малинському. Того ж року врочисто зачитав її у Вільні.\nУ 1640 році (за даними о. Садока Баронча, склав повноваження на Луцькому синоді 1631 року) перейшов на латинський обряд за дозволом Папи Урбана VIII і вступив до ченців-авґустиніанів монастиря св. Катажини у Кракові. Потім вів мандрівне життя. Помер, за даними Стебельського, 1647 року в Кракові.\n\n\n== Доробок ==\nК. Сакович був обдарований визначним письменницьким хистом. Перший твір із філософської тематикою «Проблеми» видрукував польською мовою у Кракові 1620 року. 1622 року в Києві видав написані тодішньою книжною «руською» мовою «Вірші на жалісний погреб шляхетного рицаря Петра Конашевича-Сагайдачного» за зразками силабічної барокової поезії.\nБрав участь у друкуванні «Апології» Мелетія Смотрицького (Львів, 1628); за це був відлучений від церкви на Київському православному соборі під час служби 14/24 серпня 1628 року всіма єпископами-учасниками.\nКасіян переклав з польської мови популярний твір «Дезидерій або стежка до любові Божої» (кат. Espill de vida religiosa), яку приписують каталонському письменнику Мікелю Комалада, про що згадується п'ятому польському перевиданні (1625), де сказано, що Сакович також переклав твір «на нашу просту русинську мову», тобто на українську і мав намір опублікувати цей переклад для користі своєї нації, але так і не встиг виконати задумане, позаяк мусив терміново виїхати до Польщі.\nЗ інших його творів найважливіші:\n\n«Kalendarz stary … і responzy na zarzuty starokalendarzan» (1642)\n«Epanorthosis albo Perspektywa …» (1642) з полемічним наставленням проти юліанського календаря і проти літургійних обрядів тодішньої Православної і Греко-католицької церков, що не залишилися без відповіді з боку православних — Петра Могили («Litos albo kamień…», 1644) і греко-католиків — Пахомія Войни-Оранського та Івана Дубовича.\n\n\n== Примітки ==\n\n\n== Джерела ==\n\nБичко А., Бичко Б. Світлотінь Касіяна (Калліста) Саковича. — К. : Український центр духовної культури, 2005. — 168 с.\nКасіян Сакович // Возняк М. Історія української літератури. У двох книгах / вид. 2-ге, виправлене. — Львів : Світ, 1992. — Кн.1. — С. 533—545.\nДзюба О. М. Сакович Касіян [Архівовано 3 квітня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 424. — ISBN 978-966-00-1290-5.\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nBarącz S. Kassyan Sakowicz [Архівовано 24 грудня 2014 у Wayback Machine.]. (пол.)\nNiesiecki K. Korona Polska przy Złotey Wolności Starożytnemi Wszystkich Kathedr, Prowincyi y Rycerstwa Kleynotami Heroicznym Męstwem y odwagą, Naywyższemi Honorami a naypierwey Cnotą, Pobożnością y Swiątobliwością Ozdobiona… [Архівовано 15 квітня 2015 у Wayback Machine.] — T. 4. — Lwów : w drukarni Collegium Lwowskiego Societatis Jesu, 1743. — 820 s. — S. 3—4. (пол.)\nSzegda M. Sakowicz (Isakowicz) Kalikst, imię zakonne Kasjan (ok. 1587—1647) // Polski Słownik Biograficzny. — Wrocław — Warszawa — Kraków : Zakład Narodowy Imienia Ossolińskich, Wydawnictwo Polskiej Akademii Nauk, 1993. — T. XXXIV/…. — Zeszyt 14…. — S. 343—345. (пол.).\nВойтов Б. І. Рецепція ренесансних ідей у релігійно-філософських поглядах Касіяна Саковича [Архівовано 15 квітня 2021 у Wayback Machine.] (2020)\n\n\n== Література ==\nСакович, Касіян // Філософський енциклопедичний словник / В. І. Шинкарук (гол. редкол.) та ін ; Інститут філософії імені Григорія Сковороди НАН України. — Київ : Абрис, 2002. — С. 561. — 742 с. — 1000 екз. — ББК 87я2. — ISBN 966-531-128-X.\n\n\n== Посилання ==\nСакович Касіян. Вірші на жалісний погреб шляхетного рицаря Петра Конашевича — Сагайдачного. — Київ, Друкарня лаври, 1622\nСакович Касіян [Архівовано 15 квітня 2021 у Wayback Machine.] // Українська Релігієзнавча Енциклопедія\nСакович Касіян // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nСакович Касіян // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1964. — Т. 7, кн. XIII : Літери Риз — Се. — С. 1661-1662. — 1000 екз.\nКасіян Сакович. Українська поезія XVI—XVII ст. [Архівовано 15 липня 2020 у Wayback Machine.]\nКасіян Сакович [Архівовано 20 вересня 2019 у Wayback Machine.] // Українська література XVII ст.: Синкретична писемність. Поезія. Драматургія. Белетристика / Упоряд., приміт. В. І. Крекотня. — Київ: «Наукова думка», 1987."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:34:15.566Z",
+          "resultDisplay": "# Касіян Сакович\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D1%81%D1%96%D1%8F%D0%BD_%D0%A1%D0%B0%D0%BA%D0%BE%D0%B2%D0%B8%D1%87\n\nКасіян Калі́кст Сако́вич гербу Корвін (бл. 1578 — 1647, Краків) — руський (український) шляхтич, церковний діяч і письменник-полеміст, ректор Київської братської школи у 1620—1624 роках. Представник боярського роду Саковичів. Писав книжною українською та польською мовами.\n\n\n== Біографія ==\n\n\n=== Дитинство, юність, православний період життя ===\nНародився близько 1578 року в священничій родині в містечку Потеличі (Белзька земля; інша назва Подтеличі) неподалік Рави-Руської. Згідно з К. Несецьким, походив з литовського роду Саковичів гербу Корвін.\nНавчався в Замойській академії у Любліні, у Краківській академії. Був домашнім виховником Адама Киселя. Видав друком працю «Проблеми або питання природи людини…», яку присвятив Лаврентієві Древинському. Також до «Проблем…» додав «Передмови до актів весільних та погребових» (їх повторно виголосив у 1626 році у Ярославі).\nУ 1620–1624 роках, бувши ченцем, став ректором Київської братської школи. У 1624 році на прохання Лаврентія Древинського переїхав до Любліна, де протягом року був проповідником церкви місцевого православного братства.\n\n\n=== Унійний і католицький періоди ===\nУ Любліні в 1625 році став греко-католиком, як вдівець став монахом-василіянином. Ймовірною причиною цього були приязні стосунки з князем Олександром Заславським. У 1626 році став архимандритом Хрестовоздвиженського монастиря у Дубному. В 1634 році єпископ Єремія Почаповський позбавив його сану архимандрита.\n13 вересня 1640 року написав брошуру під назвою «Календар старий, у якому явні та очевидні помилки…», присвячену Данилові Єло-Малинському. Того ж року врочисто зачитав її у Вільні.\nУ 1640 році (за даними о. Садока Баронча, склав повноваження на Луцькому синоді 1631 року) перейшов на латинський обряд за дозволом Папи Урбана VIII і вступив до ченців-авґустиніанів монастиря св. Катажини у Кракові. Потім вів мандрівне життя. Помер, за даними Стебельського, 1647 року в Кракові.\n\n\n== Доробок ==\nК. Сакович був обдарований визначним письменницьким хистом. Перший твір із філософської тематикою «Проблеми» видрукував польською мовою у Кракові 1620 року. 1622 року в Києві видав написані тодішньою книжною «руською» мовою «Вірші на жалісний погреб шляхетного рицаря Петра Конашевича-Сагайдачного» за зразками силабічної барокової поезії.\nБрав участь у друкуванні «Апології» Мелетія Смотрицького (Львів, 1628); за це був відлучений від церкви на Київському православному соборі під час служби 14/24 серпня 1628 року всіма єпископами-учасниками.\nКасіян переклав з польської мови популярний твір «Дезидерій або стежка до любові Божої» (кат. Espill de vida religiosa), яку приписують каталонському письменнику Мікелю Комалада, про що згадується п'ятому польському перевиданні (1625), де сказано, що Сакович також переклав твір «на нашу просту русинську мову», тобто на українську і мав намір опублікувати цей переклад для користі своєї нації, але так і не встиг виконати задумане, позаяк мусив терміново виїхати до Польщі.\nЗ інших його творів найважливіші:\n\n«Kalendarz stary … і responzy na zarzuty starokalendarzan» (1642)\n«Epanorthosis albo Perspektywa …» (1642) з полемічним наставленням проти юліанського календаря і проти літургійних обрядів тодішньої Православної і Греко-католицької церков, що не залишилися без відповіді з боку православних — Петра Могили («Litos albo kamień…», 1644) і греко-католиків — Пахомія Войни-Оранського та Івана Дубовича.\n\n\n== Примітки ==\n\n\n== Джерела ==\n\nБичко А., Бичко Б. Світлотінь Касіяна (Калліста) Саковича. — К. : Український центр духовної культури, 2005. — 168 с.\nКасіян Сакович // Возняк М. Історія української літератури. У двох книгах / вид. 2-ге, виправлене. — Львів : Світ, 1992. — Кн.1. — С. 533—545.\nДзюба О. М. Сакович Касіян [Архівовано 3 квітня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 424. — ISBN 978-966-00-1290-5.\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nBarącz S. Kassyan Sakowicz [Архівовано 24 грудня 2014 у Wayback Machine.]. (пол.)\nNiesiecki K. Korona Polska przy Złotey Wolności Starożytnemi Wszystkich Kathedr, Prowincyi y Rycerstwa Kleynotami Heroicznym Męstwem y odwagą, Naywyższemi Honorami a naypierwey Cnotą, Pobożnością y Swiątobliwością Ozdobiona… [Архівовано 15 квітня 2015 у Wayback Machine.] — T. 4. — Lwów : w drukarni Collegium Lwowskiego Societatis Jesu, 1743. — 820 s. — S. 3—4. (пол.)\nSzegda M. Sakowicz (Isakowicz) Kalikst, imię zakonne Kasjan (ok. 1587—1647) // Polski Słownik Biograficzny. — Wrocław — Warszawa — Kraków : Zakład Narodowy Imienia Ossolińskich, Wydawnictwo Polskiej Akademii Nauk, 1993. — T. XXXIV/…. — Zeszyt 14…. — S. 343—345. (пол.).\nВойтов Б. І. Рецепція ренесансних ідей у релігійно-філософських поглядах Касіяна Саковича [Архівовано 15 квітня 2021 у Wayback Machine.] (2020)\n\n\n== Література ==\nСакович, Касіян // Філософський енциклопедичний словник / В. І. Шинкарук (гол. редкол.) та ін ; Інститут філософії імені Григорія Сковороди НАН України. — Київ : Абрис, 2002. — С. 561. — 742 с. — 1000 екз. — ББК 87я2. — ISBN 966-531-128-X.\n\n\n== Посилання ==\nСакович Касіян. Вірші на жалісний погреб шляхетного рицаря Петра Конашевича — Сагайдачного. — Київ, Друкарня лаври, 1622\nСакович Касіян [Архівовано 15 квітня 2021 у Wayback Machine.] // Українська Релігієзнавча Енциклопедія\nСакович Касіян // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nСакович Касіян // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1964. — Т. 7, кн. XIII : Літери Риз — Се. — С. 1661-1662. — 1000 екз.\nКасіян Сакович. Українська поезія XVI—XVII ст. [Архівовано 15 липня 2020 у Wayback Machine.]\nКасіян Сакович [Архівовано 20 вересня 2019 у Wayback Machine.] // Українська література XVII ст.: Синкретична писемність. Поезія. Драматургія. Белетристика / Упоряд., приміт. В. І. Крекотня. — Київ: «Наукова думка», 1987.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "6c6b5127-80f7-4451-82c7-7040b0570d20",
+      "timestamp": "2026-03-14T02:34:29.522Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Gathering Relevant Details",
+          "description": "I am now focused on compiling information and structuring the results. I'm going to leverage my search capabilities to locate pertinent data points and then consolidate them for analysis. I aim for a comprehensive overview before proceeding to the next stage.",
+          "timestamp": "2026-03-14T02:34:21.108Z"
+        },
+        {
+          "subject": "Compiling Source Analysis",
+          "description": "I'm currently engaged in analyzing the primary sources to extract key details and themes relevant to each section, structuring them into a coherent narrative. My aim is to organize these findings systematically. I'm focusing on the life of Sahaydachny.",
+          "timestamp": "2026-03-14T02:34:23.825Z"
+        },
+        {
+          "subject": "Charting Grammatical Structures",
+          "description": "I'm presently focused on analyzing the poetic structures and grammatical nuances found within the primary texts. I am currently working to understand the syllabic verse forms and Church Slavonic influences. My next step will be to explore Middle Ukrainian syntax.",
+          "timestamp": "2026-03-14T02:34:26.515Z"
+        },
+        {
+          "subject": "Synthesizing Source Materials",
+          "description": "I'm now integrating information from my research, summarizing key points from different primary sources and organizing them by section. I am working to synthesize information from various sources to produce a cohesive overview that includes relevant primary source quotes. My plan is to highlight linguistic features, such as verse structures, and grammar issues.",
+          "timestamp": "2026-03-14T02:34:29.353Z"
+        }
+      ],
+      "tokens": {
+        "input": 37423,
+        "output": 58,
+        "cached": 27567,
+        "thoughts": 855,
+        "tool": 0,
+        "total": 38336
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773455669460_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Не тебЂ, государю твоєму поддалась"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455669460_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Не тебЂ, государю твоєму поддалась\"\n\n### Result 1 (score: 0.5497)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0645`\n- **Text**:\n«До сего часу не смЂлъ я тебЂ прежде времени\r\nнамЂреніа моего и тайны тоей объявлятъ, якая тебЂ вчерась по случаю открилася,\r\nне для того, чтобъ я о твоей къ себЂ вЂрности имЂлъ якое подозрЂніе, понеже\r\nникогда не могу такой быть о твоей почтивости опиніи, дабы ты за толикую мою къ\r\nтебЂ милость, любовъ и благодЂяніе, неблагодарствіемъ мнЂ платилъ и предателемъ\r\nмоимъ былъ; но разсуждая, что ты хотя человЂкъ разумний и совести не\r\nподозрЂнной, однакъ еще молодый, и несовершенную въ таковыхъ цирк\n\n### Result 2 (score: 0.5394)\n- **Work**: Іван Франко. Не спитавши броду (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a6f16582_c0114`\n- **Text**:\n— Пані! Густю! Богом клянусь, що се неправда! —в смертельній тривозі скрикнув Борис. — Ніколи на світі, одним поглядом, одним спогадом не дурив я тебе, не фальшивив перед тобою!\n\n— Не клянись, бо я знаю! Коли б ти не любив її, то ти б на перше її слово не покидав мене, не таскався до неї!\n\n— Доле моя! Не рви мого серця, Густю! Хіба ж я охотно їду до неї! Адже ж твоя мати силою проганяє мене з дому!\n\n— То що з того? То йди до свого батька, але не до неї!\n\n— Я ж так і думаю, Густочко! Ненависна во\n\n### Result 3 (score: 0.5243)\n- **Work**: Шевченко — Повне зібрання творів, т.1 (1961)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `9976239a_c0406`\n- **Text**:\nТа не хочу». — «Экой чудак!\n\nЯ всі входи знаю,\n\nЯ тут служу, коли хочеш,\n\nВ дворец попытаюсь\n\nВвесты тебе. Только, знаєш,\n\nМы, брат, просвищенны, —\n\nНе поскупись полтинкою...»\n\nЦур тобі, мерзенний\n\nКаламарю... І зробився\n\nЯ знову незримий\n\nТа й пропхався у палати.\n\nБоже мій єдиний!!\n\nТак от де рай! Уже нащо\n\nЗолотом облиті\n\nБлюдолизи; аж ось і сам,\n\nВисокий, сердитий,\n\nВиступає; обок його\n\nЦариця- небога,\n\nМов опеньок засушений,\n\nТонка, довгонога,\n\nТа ще, на лихо, сердешне\n\nХита головою.\n\nТак оц\n\n### Result 4 (score: 0.5239)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0289`\n- **Text**:\nНет, нет! но как сей[?], так\r\nта к тому принадлежит.\n\nКто те почему-нибудь во владении\r\nдержит.\n\nТак мы с тобою равны и одно\r\nсоставляем,\n\nОдному, не двум государям\r\nприсягаем, —\n\nПочему почитаю тебя равну\r\nсебе.\n\nНе говори: как обществу,\r\nподдалась и тебе!\n\nСамодержец твой и мой шлет\r\nтебя и меня.\n\nОдин он отзывает из походу\r\nвеля,\n\nА не ты республикою\r\nповелеваешь мною.\n\nНичем неумаленна царем и\r\nпред тобою,\n\nОставленна также я при своих\r\nчинах всех,\n\nОбнадежена и впредь милостию\r\nо тех,\n\nА ты\n\n### Result 5 (score: 0.5211)\n- **Work**: Леся Українка. Поезії (збірка) (1871)\n- **Author**: Українка Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `56f3e222_c0051`\n- **Text**:\nТи добра жінка, слів терпких нема\n\nу тебе для таких, що \"впали низько\",\n\nхоч злидні перетерпіла й сама,\n\nхоч і тобі була спокуса близька.\n\nТи щира жінка. Тим своє чоло\n\nти хилиш низько, про таких згадавши,\n\nщо продаються; знаєш, як було\n\nїм гірко й солодко, в неволю впавши.\n\nБо продалась і ти. Не за срібло\n\nі не за ласощі, не за дарунки,\n\nале за те пестливеє тепло,\n\nза любі речі та за поцілунки…\n\nСе ж голод серця гнав тебе за тим,\n\nу кого в очах діаманти ясні,\n\nчий сміх тобі здавався золотим,\n\nа\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:34:30.085Z",
+          "resultDisplay": "Found 5 results for: \"Не тебЂ, государю твоєму поддалась\"\n\n### Result 1 (score: 0.5497)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0645`\n- **Text**:\n«До сего часу не смЂлъ я тебЂ прежде времени\r\nнамЂреніа моего и тайны тоей объявлятъ, якая тебЂ вчерась по случаю открилася,\r\nне для того, чтобъ я о твоей къ себЂ вЂрности имЂлъ якое подозрЂніе, понеже\r\nникогда не могу такой быть о твоей почтивости опиніи, дабы ты за толикую мою къ\r\nтебЂ милость, любовъ и благодЂяніе, неблагодарствіемъ мнЂ платилъ и предателемъ\r\nмоимъ былъ; но разсуждая, что ты хотя человЂкъ разумний и совести не\r\nподозрЂнной, однакъ еще молодый, и несовершенную въ таковыхъ цирк\n\n### Result 2 (score: 0.5394)\n- **Work**: Іван Франко. Не спитавши броду (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `a6f16582_c0114`\n- **Text**:\n— Пані! Густю! Богом клянусь, що се неправда! —в смертельній тривозі скрикнув Борис. — Ніколи на світі, одним поглядом, одним спогадом не дурив я тебе, не фальшивив перед тобою!\n\n— Не клянись, бо я знаю! Коли б ти не любив її, то ти б на перше її слово не покидав мене, не таскався до неї!\n\n— Доле моя! Не рви мого серця, Густю! Хіба ж я охотно їду до неї! Адже ж твоя мати силою проганяє мене з дому!\n\n— То що з того? То йди до свого батька, але не до неї!\n\n— Я ж так і думаю, Густочко! Ненависна во\n\n### Result 3 (score: 0.5243)\n- **Work**: Шевченко — Повне зібрання творів, т.1 (1961)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `9976239a_c0406`\n- **Text**:\nТа не хочу». — «Экой чудак!\n\nЯ всі входи знаю,\n\nЯ тут служу, коли хочеш,\n\nВ дворец попытаюсь\n\nВвесты тебе. Только, знаєш,\n\nМы, брат, просвищенны, —\n\nНе поскупись полтинкою...»\n\nЦур тобі, мерзенний\n\nКаламарю... І зробився\n\nЯ знову незримий\n\nТа й пропхався у палати.\n\nБоже мій єдиний!!\n\nТак от де рай! Уже нащо\n\nЗолотом облиті\n\nБлюдолизи; аж ось і сам,\n\nВисокий, сердитий,\n\nВиступає; обок його\n\nЦариця- небога,\n\nМов опеньок засушений,\n\nТонка, довгонога,\n\nТа ще, на лихо, сердешне\n\nХита головою.\n\nТак оц\n\n### Result 4 (score: 0.5239)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0289`\n- **Text**:\nНет, нет! но как сей[?], так\r\nта к тому принадлежит.\n\nКто те почему-нибудь во владении\r\nдержит.\n\nТак мы с тобою равны и одно\r\nсоставляем,\n\nОдному, не двум государям\r\nприсягаем, —\n\nПочему почитаю тебя равну\r\nсебе.\n\nНе говори: как обществу,\r\nподдалась и тебе!\n\nСамодержец твой и мой шлет\r\nтебя и меня.\n\nОдин он отзывает из походу\r\nвеля,\n\nА не ты республикою\r\nповелеваешь мною.\n\nНичем неумаленна царем и\r\nпред тобою,\n\nОставленна также я при своих\r\nчинах всех,\n\nОбнадежена и впредь милостию\r\nо тех,\n\nА ты\n\n### Result 5 (score: 0.5211)\n- **Work**: Леся Українка. Поезії (збірка) (1871)\n- **Author**: Українка Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `56f3e222_c0051`\n- **Text**:\nТи добра жінка, слів терпких нема\n\nу тебе для таких, що \"впали низько\",\n\nхоч злидні перетерпіла й сама,\n\nхоч і тобі була спокуса близька.\n\nТи щира жінка. Тим своє чоло\n\nти хилиш низько, про таких згадавши,\n\nщо продаються; знаєш, як було\n\nїм гірко й солодко, в неволю впавши.\n\nБо продалась і ти. Не за срібло\n\nі не за ласощі, не за дарунки,\n\nале за те пестливеє тепло,\n\nза любі речі та за поцілунки…\n\nСе ж голод серця гнав тебе за тим,\n\nу кого в очах діаманти ясні,\n\nчий сміх тобі здавався золотим,\n\nа\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773455669516_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Вірші на жалісний погреб Сагайдачного текст уривок"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773455669516_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Вірші на жалісний погреб Сагайдачного текст уривок\"\n\n### Result 1 (score: 0.5793)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0351`\n- **Text**:\nВірші на жалосний\r\nпогреб... Петра Конашевича Сагайдачного... — \r\nУрочиста декламація, яку було написано Касіяном\r\nСаковичем на смерть гетьмана Петра Конашевича-Сагайдачного, що сталася у квітні\r\n1622 р. від ран, одержаних під час Хотинської битви. Декламацію\n\nпроголосили двадцять учнів\r\nкиївської братської школи. Того ж року ця композиція, доповнена описом герба\r\nЗапорізького війська, передмовою та зверненням «До чительника», вийшла окремою\r\nкнижкою з друкарні Києво-Печерської лаври.\n\nПодається\n\n### Result 2 (score: 0.5481)\n- **Work**: Литвинов — Ренесансний гуманізм в Україні (2000)\n- **Author**: Литвинов В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e86cf6ca_c0605`\n- **Text**:\n151. Сакович Касіян. Вірші\r\nна жалісний погреб шляхетного лицаря Петра Конашевича-Сагайдачного //\r\nУкраїнські гуманісти епохи Відродження (Антологія).\n\n152. Сакович Касіян. Вірші\r\nна жалісний погреб... Петра Конашевича-Сагайдачного // Українська поезія XVII\r\nст.\n\n153. Сакович Касіян. ВЂршЂ\r\nна жалосный погреб зацного рыцера Петра Конашевича-Сагайдачного // Українська\r\nпоезія: Кінець XVI — початок XVII ст. (Упоряд. В.П. Колосова, В.І. Крекотень).\r\n— К., 1978.\n\n154. [Сакович К.]. Трактат\r\nпро душу\n\n### Result 3 (score: 0.5456)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0362`\n- **Text**:\n12 Див.: Грушевський Михайло. Історія України-Руси. — Нью Йорк, 1956. — Т. 7. — С. 416-417 і passim.\n\n13 Грушевський, одначе, більш стриманий; див.: Там само. — С. 400-401 і passim.\n\n14 Своєю чергою М.\r\nГрушевський називає твір \"перш(им) testimonium diligentiae брацької\r\nшколи\" (там само. — С. 413). Див. також: Колосова В. Твір Касіяна\r\nСаковича \"Вірші на жалосний погреб Петра Сагайдачного\" // Радянське\r\nлітературознавство. — 1965. — №12. — С. 32-44.\n\n(У цій легкій синкретичності можна бачити й \n\n### Result 4 (score: 0.5416)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1306`\n- **Text**:\nВ одній з найвизначніших пам’яток — \"Віршах на\r\nпогреб Петра Конашевича-Сагайдачного\" Касіяна Саковича (1622) 41\r\n— прочитується концепція розвитку поезії, що орієнтувалася на античні зразки,\r\nусвідомлення потреби писати \"простою мовою\" і прославити своїх\r\nгероїв. Своєрідний синтез ляменту і панегірика, модифікація одного і другого\r\nжанру засвідчили нові естетичні погляди, що були результатом праці кількох\r\nдесятиліть. І якщо дотримуватися погляду, що образ національного героя виказує\r\nпевний рі\n\n### Result 5 (score: 0.5367)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0360`\n- **Text**:\n\"ВЂршЂ на жалосный погреб зацного рыцера Петра\r\nКонашевича Сагайдачного. Гетмана войска его Королевской Милости\r\nзапорозкого\", що їх написав Касіян Сакович, тодішній ректор Київської\r\nбратської школи, і що їх виголосили його спудеї на похороні гетьмана \"въ\r\nнедЂлю проводную року Божого тисяча шестсот двадцать второго\", — такий\r\nтекст, що надзвичайно чітко, в один ключовий момент української історії моделює\r\nі ту саму ідеологію, про яку говоримо, з її суспільними й концепційними\r\nпідбудовами (або\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:34:30.085Z",
+          "resultDisplay": "Found 5 results for: \"Вірші на жалісний погреб Сагайдачного текст уривок\"\n\n### Result 1 (score: 0.5793)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0351`\n- **Text**:\nВірші на жалосний\r\nпогреб... Петра Конашевича Сагайдачного... — \r\nУрочиста декламація, яку було написано Касіяном\r\nСаковичем на смерть гетьмана Петра Конашевича-Сагайдачного, що сталася у квітні\r\n1622 р. від ран, одержаних під час Хотинської битви. Декламацію\n\nпроголосили двадцять учнів\r\nкиївської братської школи. Того ж року ця композиція, доповнена описом герба\r\nЗапорізького війська, передмовою та зверненням «До чительника», вийшла окремою\r\nкнижкою з друкарні Києво-Печерської лаври.\n\nПодається\n\n### Result 2 (score: 0.5481)\n- **Work**: Литвинов — Ренесансний гуманізм в Україні (2000)\n- **Author**: Литвинов В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e86cf6ca_c0605`\n- **Text**:\n151. Сакович Касіян. Вірші\r\nна жалісний погреб шляхетного лицаря Петра Конашевича-Сагайдачного //\r\nУкраїнські гуманісти епохи Відродження (Антологія).\n\n152. Сакович Касіян. Вірші\r\nна жалісний погреб... Петра Конашевича-Сагайдачного // Українська поезія XVII\r\nст.\n\n153. Сакович Касіян. ВЂршЂ\r\nна жалосный погреб зацного рыцера Петра Конашевича-Сагайдачного // Українська\r\nпоезія: Кінець XVI — початок XVII ст. (Упоряд. В.П. Колосова, В.І. Крекотень).\r\n— К., 1978.\n\n154. [Сакович К.]. Трактат\r\nпро душу\n\n### Result 3 (score: 0.5456)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0362`\n- **Text**:\n12 Див.: Грушевський Михайло. Історія України-Руси. — Нью Йорк, 1956. — Т. 7. — С. 416-417 і passim.\n\n13 Грушевський, одначе, більш стриманий; див.: Там само. — С. 400-401 і passim.\n\n14 Своєю чергою М.\r\nГрушевський називає твір \"перш(им) testimonium diligentiae брацької\r\nшколи\" (там само. — С. 413). Див. також: Колосова В. Твір Касіяна\r\nСаковича \"Вірші на жалосний погреб Петра Сагайдачного\" // Радянське\r\nлітературознавство. — 1965. — №12. — С. 32-44.\n\n(У цій легкій синкретичності можна бачити й \n\n### Result 4 (score: 0.5416)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1306`\n- **Text**:\nВ одній з найвизначніших пам’яток — \"Віршах на\r\nпогреб Петра Конашевича-Сагайдачного\" Касіяна Саковича (1622) 41\r\n— прочитується концепція розвитку поезії, що орієнтувалася на античні зразки,\r\nусвідомлення потреби писати \"простою мовою\" і прославити своїх\r\nгероїв. Своєрідний синтез ляменту і панегірика, модифікація одного і другого\r\nжанру засвідчили нові естетичні погляди, що були результатом праці кількох\r\nдесятиліть. І якщо дотримуватися погляду, що образ національного героя виказує\r\nпевний рі\n\n### Result 5 (score: 0.5367)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0360`\n- **Text**:\n\"ВЂршЂ на жалосный погреб зацного рыцера Петра\r\nКонашевича Сагайдачного. Гетмана войска его Королевской Милости\r\nзапорозкого\", що їх написав Касіян Сакович, тодішній ректор Київської\r\nбратської школи, і що їх виголосили його спудеї на похороні гетьмана \"въ\r\nнедЂлю проводную року Божого тисяча шестсот двадцать второго\", — такий\r\nтекст, що надзвичайно чітко, в один ключовий момент української історії моделює\r\nі ту саму ідеологію, про яку говоримо, з її суспільними й концепційними\r\nпідбудовами (або\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "0854cac1-7467-4bc6-af08-e395f4b312f8",
+      "timestamp": "2026-03-14T02:34:37.128Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Interpretation",
+          "description": "I'm now zeroing in on interpreting the provided text. I'm focusing on dissecting the phrases to better understand their meanings and how they fit together. My current aim is to grasp the overall message and implications within the context of the quote.",
+          "timestamp": "2026-03-14T02:34:34.655Z"
+        },
+        {
+          "subject": "Initiating Vocabulary Check",
+          "description": "I am now beginning the process of verifying vocabulary from the provided text. The goal is to identify and clarify unfamiliar words or phrases to facilitate deeper comprehension. This will aid in a more precise interpretation.",
+          "timestamp": "2026-03-14T02:34:36.983Z"
+        }
+      ],
+      "tokens": {
+        "input": 40329,
+        "output": 34,
+        "cached": 34237,
+        "thoughts": 282,
+        "tool": 0,
+        "total": 40645
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773455677125_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "літописець",
+              "вірш",
+              "лямент",
+              "панегірик",
+              "епітафія",
+              "зацний"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773455677125_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 6 words\n\nFound: 6/6\n\n- **літописець** — FOUND (1 match): літописець(noun)\n- **вірш** — FOUND (2 match): вірш(noun), вірш(noun)\n- **лямент** — FOUND (2 match): лямент(noun), лямент(noun)\n- **панегірик** — FOUND (2 match): панегірик(noun), панегірик(noun)\n- **епітафія** — FOUND (1 match): епітафія(noun)\n- **зацний** — FOUND (3 match): зацний(adj), зацний(adj), зацний(adj)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:34:37.145Z",
+          "resultDisplay": "Batch verification: 6 words\n\nFound: 6/6\n\n- **літописець** — FOUND (1 match): літописець(noun)\n- **вірш** — FOUND (2 match): вірш(noun), вірш(noun)\n- **лямент** — FOUND (2 match): лямент(noun), лямент(noun)\n- **панегірик** — FOUND (2 match): панегірик(noun), панегірик(noun)\n- **епітафія** — FOUND (1 match): епітафія(noun)\n- **зацний** — FOUND (3 match): зацний(adj), зацний(adj), зацний(adj)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "ff88355b-fdb2-41e1-a3f6-82e97ee8a5c9",
+      "timestamp": "2026-03-14T02:35:10.734Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Поетична історія\n\n## Key Facts Ledger\n```yaml\nsubject: \"Поетична історія\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1620\"\n  end: \"~1790\"\n  key_events:\n    - year: 1622\n      event: \"Видання «Віршів на жалісний погреб Петра Конашевича-Сагайдачного» Касіяна Саковича\"\n    - year: 1710\n      event: \"Завершення Літопису Григорія Грабянки (поєднання прози і поезії)\"\n    - year: 1720\n      event: \"Написання Літопису Самійла Величка, який вміщує багату антологію історичних віршів\"\n    - year: 1762\n      event: \"Створення Семеном Дівовичем політико-історичного віршованого трактату «Разговор Великороссіи с Малороссіей»\"\nprimary_quotes:\n  - text: \"Не тебЂ, государю твоєму поддалась... А не ты республикою повелеваешь мною. Ничем неумаленна царем и пред тобою.\"\n    source: \"«Разговор Великороссіи с Малороссіей», 1762\"\n    attribution: \"Семен Дівович (вкладає в уста уособленої Малоросії/України)\"\n  - text: \"ВЂршЂ на жалосный погреб зацного рыцера Петра Конашевича Сагайдачного. Гетмана войска его Королевской Милости запорозкого...\"\n    source: \"«Вірші на жалісний погреб...», 1622\"\n    attribution: \"Касіян Сакович\"\nforbidden_claims:\n  - \"Українська історична думка зародилася лише в ХІХ столітті в епоху романтизму.\"\n  - \"Козацька література обмежувалася виключно усною народною творчістю (думами та піснями) без високої інтелектуальної традиції.\"\n  - \"Твори на кшталт «Разговора...» були проявом сепаратизму окремих осіб, а не відображенням загальної ідеології козацької старшини.\"\n```\n\n## Використані джерела\n1. [Літопис Самійла Величка](http://litopys.org.ua) — фундаментальний козацький літопис з багатою антологією вставних віршів (епітафій, панегіриків).\n2. [Чижевський Д. Історія української літератури](http://litopys.org.ua) — базове дослідження українського літературного бароко та його історичної поезії.\n3. [Оглоблін О. Гетьман Мазепа та його доба](http://litopys.org.ua) — аналіз політичного значення поеми «Разговор Великороссіи с Малороссіей» Семена Дівовича.\n4. [Енциклопедія історії України (Козацькі літописи, Дівович, Сакович)](http://resource.history.org.ua) — академічне підтвердження дат, біографій та історичного контексту появи віршованих літописів.\n\n## Хронологія\n- 1622: Касіян Сакович ректор Київської братської школи пише лямент-панегірик на смерть П. Сагайдачного, закладаючи традицію барокової історичної поезії.\n- 1720: Самійло Величко інтегрує епітафії та панегірики (напр., на смерть Іскри, вірші І. Величковського та Л. Барановича) у свій монументальний прозовий літопис.\n- 1762: Семен Дівович завершує в Глухові створення «Разговора Великороссіи с Малороссіей», що став маніфестом українського автономізму у віршованій формі.\n- 1780-ті: Поширення списків історичних віршів серед козацької старшини, що підготувало ґрунт для появи «Історії Русів».\n\n## Ключові факти та цитати\n- В епоху бароко межа між поезією та історією була розмитою. Історія розглядалася не просто як фіксація фактів, а як простір для риторики, моралізаторства та прославлення героїв («зацних рицарів»).\n- «Вірші на жалісний погреб...» Саковича були не просто текстом, а театралізованою декламацією — їх зачитували 20 спудеїв Київської братської школи під час похорону.\n- Літопис Самійла Величка є не лише історіографічним, а й художнім твором, своєрідною антологією поезії, де автор використовує вірші для посилення емоційного та дидактичного ефекту.\n- Твір Семена Дівовича — це історичний диспут у формі силабічного вірша. Малоросія (Україна) доводить Великоросії (Московії), що має з нею рівні права, спираючись на власну військову та політичну історію.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!context] — У добу бароко історія не мислилася без поезії; історичний факт мусив мати естетичне, риторичне оформлення, щоб впливати на емоції читача.\n- Section \"Основний матеріал\": [!history-bite] — Твір Саковича про Сагайдачного був справжнім перформансом: 20 школярів виходили по черзі і декламували частини поеми, перетворюючи історію на живу дію.\n- Section \"Основний матеріал\": [!quote] — Цитата С. Дівовича «А не ты республикою повелеваешь мною», яка демонструє блискучу юридичну та історичну аргументацію козацької еліти XVIII століття.\n- Section \"Практика\": [!culture] — Трансформація жанру «ляменту» (плачу за померлим) у політичний маніфест, де оплакування героя перетворюється на оспівування військової слави всього війська Запорозького.\n- Section \"Підсумок\": [!decolonization] — Поетична історія спростовує імперський міф про відсутність в українців власної державницької свідомості до ХІХ століття. Тексти Дівовича та Величка доводять безперервність інтелектуальної традиції захисту своїх прав.\n- Section \"Підсумок\": [!myth-buster] — Спростування міфу про те, що термін «Малоросія» завжди мав принизливий відтінок; у текстах бароко (як у Дівовича) це була офіційна назва рівноправної держави.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth:** Українська література XVII-XVIII століть — це лише релігійні тексти або примітивні народні пісні, а серйозна історична думка була можлива лише російською мовою в імперських центрах.\n- **Ukrainian reality:** Українська еліта створила потужну школу барокової поетичної історіографії. Від Саковича до Дівовича українські інтелектуали послідовно артикулювали європейські ідеї політичних прав («вольностей»), республіканізму та рівноправності з використанням витончених форм силабічної поезії.\n\n## Contested Terms\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| Малоросія | Провінція Російської імперії, «менша» частина Росії. | Офіційна назва Української козацької держави (Гетьманщини) у XVIII ст., яка мислилася елітою як рівноправна суверенна одиниця (Республіка) у союзі з монархом, а не з іншою країною. |\n| Козацькі літописи | Ненадійні, художньо прикрашені «оповідки» сепаратистів. | Високоінтелектуальні твори, що поєднують історію, політологію, філософію та барокову поезію, репрезентуючи державницьку ідеологію. |\n| Силабічний вірш | «Застаріла» та «штучна» форма, яку витіснив російський силабо-тонізм. | Органічна для українського бароко загальноєвропейська форма віршування, здатна передавати найскладніші політичні та філософські концепти. |\n\n## Відеоресурси\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Поняття поетичної історії:** В українській літературі Середньовіччя та Раннього модерну історія фіксувалася не лише в прозаїчних літописах, а й у віршованій формі. Поезія була інструментом запам'ятовування, уславлення та тлумачення історичних подій.\n- **Впливи та естетика:** Спираючись на ренесансні та барокові європейські зразки (наприклад, хроніку Мацея Стрийковського), українські автори поєднували фактаж із витонченою риторикою, античною міфологією та християнською мораллю.\n- **Жанрове розмаїття:** Історична поезія включала ляменти (плачі), панегірики (хвалебні оди), епітафії та політичні діалоги-трактати.\n\n### Основний матеріал\n- **Касіян Сакович і початки епіки:** Його твір на смерть Сагайдачного (1622) став етапним. Через похвалу гетьману автор створив віршований літопис Хотинської війни та козацьких походів. Використано силабічний вірш.\n- **Поезія в Козацьких літописах:** Літопис Самійла Величка — монументальний синтез мистецтв. Величко не лише описує події, але й рясно цитує або пише вірші (зокрема Івана Величковського, Лазаря Барановича) для емоційного підсилення тексту, моральних висновків про руйнівні наслідки міжусобиць.\n- **Семен Дівович «Разговор Великороссіи с Малороссіей» (1762):** Вершина політичної поезії. Твір написаний як діалог двох персоніфікованих країн. Малоросія (Україна) досконало знає свою історію від часів Русі та перших козацьких гетьманів. Вона аргументовано доводить свою окремішність, військову доблесть і відмовляється бути підлеглою Великоросії: «Не тебЂ, государю твоєму поддалась».\n\n### Практика\n- **Аналіз тексту Дівовича та Саковича:** Дослідження специфічної лексики (полонізми, старослов'янізми, латинізми), що формувала книжну українську мову (руську мову) XVII-XVIII століть (наприклад: *зацний*, *рицер*, *лямент*).\n- **Синтаксис і морфологія:** Особливості силабічного вірша (13 складова лінія з цезурою після 7-го складу). Розбір староукраїнських граматичних форм, характерних для літописного стилю.\n- **Ідеологічний розбір:** Читання уривків як політичних маніфестів, аналіз риторичних фігур, що використовуються для обґрунтування прав Війська Запорозького.\n\n### Підсумок\n- **Значення поетичної історії:** Вона стала мостом між середньовічним літописанням та новою українською літературою. Віршовані тексти зберегли історичну пам'ять нації після скасування Гетьманщини.\n- **Вплив на наступні покоління:** Традиція, закладена Саковичем і доведена до досконалості Дівовичем, стала ідеологічним фундаментом для «Історії Русів» та згодом — для творчості романтиків (Шевченка, Костомарова).\n- **Перехід до наступного модуля:** Усвідомлення власної героїчної історії втілилося не лише в слові, але й в архітектурі та мистецтві доби Мазепи («Монументальний стиль»).\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Creating Research Notes",
+          "description": "I am now proceeding to produce the research notes. The notes will be formatted according to the specifications. I am focused on compiling the key facts and synthesizing them effectively.",
+          "timestamp": "2026-03-14T02:34:41.039Z"
+        },
+        {
+          "subject": "Drafting the Summary",
+          "description": "I am now focusing on drafting the summary. I am reviewing the collected data and will condense the most pertinent information into a concise summary. I aim to encapsulate the essence of the subject matter efficiently.",
+          "timestamp": "2026-03-14T02:34:42.914Z"
+        },
+        {
+          "subject": "Synthesizing Core Concepts",
+          "description": "I am now focusing on distilling the gathered data into core concepts. I'm prioritizing the key facts, events, and quotes, aiming for a succinct and insightful presentation of the \"Поетична історія.\" My goal is to synthesize the essence of the historical period, incorporating various perspectives.",
+          "timestamp": "2026-03-14T02:34:46.304Z"
+        },
+        {
+          "subject": "Producing the Research Notes",
+          "description": "I am now focusing on generating the research notes. I am formatting the output based on the established structure, using the prepared materials to provide a clear and organized presentation of the subject matter. My goal is to synthesize the information to produce a coherent summary.",
+          "timestamp": "2026-03-14T02:34:46.323Z"
+        }
+      ],
+      "tokens": {
+        "input": 40530,
+        "output": 3178,
+        "cached": 34034,
+        "thoughts": 678,
+        "tool": 0,
+        "total": 44386
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

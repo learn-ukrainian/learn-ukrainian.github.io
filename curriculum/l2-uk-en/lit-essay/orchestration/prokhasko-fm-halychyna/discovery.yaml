@@ -1,0 +1,246 @@
+discovered_at: '2026-03-14T01:25:20.361376+00:00'
+query_keywords:
+- Prokhasko Fm Halychyna
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Prokhasko Fm Halychyna у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.5
+  relevance_note: This video directly addresses how Soviet historiography suppressed
+    the narrative of the Terechenko family, making it a strong historical example
+    for the 'Деколонізаційна перспектива' section and the concept of re-evaluating
+    historical 'історіографія'.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива -- This video explicitly demonstrates
+    the suppression and subsequent re-evaluation of historical narratives, providing
+    a concrete example relevant to the theme of decolonization.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.4
+  relevance_note: The video discusses the re-evaluation of historical narratives and
+    the impact of totalitarian regimes on history, aligning with the module's 'Деколонізаційна
+    перспектива' section by providing general context on decolonizing historical thought
+    in Ukraine.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
+    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
+    яка от є складовою українського культури.
+  embed_suggestion: After Деколонізаційна перспектива -- The video offers a broader
+    historical context on challenging established narratives, which can serve as a
+    background for Prokhasko's literary decolonization perspective.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: The video details the business history of the Terechenko family,
+    which is a general historical account. While in Ukrainian, its focus is less on
+    historiographical processes or decolonization and more on factual biography, making
+    it less relevant to the module's specific literary analysis and decolonization
+    themes.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not strongly relevant. If used, possibly in Вступ та контекст
+    -- As a general background on prominent historical Ukrainian figures, providing
+    a broad cultural reference point.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0007
+  text: "Зміст    5 \nХудожня організація. . . . . . . . . . . . . . . . . 135\n\
+    Читацький практикум. Intermezzo . . . . . . . . . . . . . . . . . . . . 136\n\
+    Повість «Тіні забутих предків» . . . . . . . . . 141\nІсторія створення. . . .\
+    \ . . . . . . . . . . . . . . . 141\nНеоромантична основа. . . . . . . . . . .\
+    \ . . . . 141\nАвторський погляд. . . . . . . . . . . . . . . . . . 142\nТема\
+    \ кохання . . . . . . . . . . . . . . . . . . . . . . 142\nЛюдина, природа, магія.\
+    \ . . . . . . . . . . . . . 142\nІван Палійчук та"
+  section_title: Сторінка 5
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0020
+  text: "РОЗДІЛ 1\n22\n1. Об’єднайтеся в дослідницькі групи й за допомогою «Пам’ятки\
+    \ для \nдослідження історичного джерела» виконайте дослідження запропоно-\nваних\
+    \ вчителем/вчителькою або поданих авторами на с. 21 історичних \nджерел.\n2. По\
+    \ завершенні роботи поясніть, якими рисами характеру, на вашу \nдумку, має володіти\
+    \ історик/історикиня.\n  Діємо: практичні завдання\nПам’ятка для дослідження історичного\
+    \ джерела\n1. Уважно розгляньте джерело історичної інформації і вста-\nновіть,\
+    \ до якого виду історичних джерел "
+  section_title: Сторінка 22
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-mova-zabolotnij-2017_s0288
+  text: "Визначте тему й основну думку тексту. Доберіть свій заголовок, який би переда-\n\
+    вав основну думку прослуханого. 3. Поміркуйте, які мікротеми розкрито в тексті.\
+    \ Укажіть тематичні речення. 4. Визначте види й засоби міжфразного зв’язку в кожному\
+    \ абзаці. 5. Випишіть ключові слова й словосполучення з першого та другого абзаців\
+    \ тексту. Користуючись записами, перекажіть усно цю частину. * Ðàðèòåò – öіííà\
+    \ ðіäêіñíà ðі÷. 430 \nÇîëîòà ïåêòîðàëü\nç êóðãàíó Òîâñòà Ìîãèëà\n(Äíіïðîïåòðîâùèíà)"
+  section_title: Сторінка 199
+  grade: 9
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5673905611038208
+  chunk_id: fc2291b5_c2893
+  text: "Літ.: Федоренко Н. В\r\nрусле времени и творчества (К 25-летию журнала «Иностранная\r\
+    \nлитература»)«Иностранная литература», 1980, № 7; «Иностранная литература». 1955\r\
+    \n— 1974. Указатель содержания журнала. М., 1975; «Иностранная литература». 1975\r\
+    \n— 1984. Указатель содержания журнала. М., 1985.\n\nС. Д. Павличко.\n\nІНСТРУМЕНТОВКА\
+    \ —\r\nзвукова організація худож. мови. Найчастіше термін вживається в віршознавстві.\r\
+    \nОсн. елементи 1. — повтори приголосних (алітерація) і\r\nголосних звуків (асонанс),\
+    \ слів (анаф"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5608747005462646
+  chunk_id: feaa5fa7_c0944
+  text: "Історіографія: Василенко Н. К истории\r\nмалорусской историографии и малорусского\
+    \ /406/ общественного строя. КСт., XI\r\n— XII. 1894; Лазаревский А. Прежние изыскатели\
+    \ малорусс. старины. КСт.\r\n1891 — 97 і окремо: Очерки, заметки и документы по\
+    \ истории Малороссии, I — V.\r\nК. 1891 — 98; Иконников В. Опыт русской историографии,\
+    \ П. К. 1908; Грушевский\r\nМ. Развитие украинских изучений. Украинский народ\
+    \ в его прошлом и настоящем, І.\r\nП. 1914; Дорошенко Д. Огляд укр. історіографії.\
+    \ Прага 1923; Багалій\r\nД. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5560804009437561
+  chunk_id: 87c07f1b_c0434
+  text: "В розділі є посилання на такі праці: Франка\r\nІв. Слово о Лазареві; воскресении:\
+    \ Староруська поема на апокрифічні теми //\r\nЗНТШ. 1900. Т. 35 — 36. С. 18 —\
+    \ 19, 1 — 57; Перетц В. Н. Историко-литературные\r\nисследования и материалы.\
+    \ СПб., 1902. Т. 3., ч. 1; Калайдович К. Ф. Записки\r\nважные и мелочные // Летописи\
+    \ рус. лит. и древностей Н. С. Тихонравова. М.,\r\n1861. Т. 3. С. 82 — 110; Пыпин\
+    \ А. Н. Ложные и отреченные книги русской\r\nстарины, собр. А. П. Пыпиным // Памятники\
+    \ старинной русской литературы, "
+  work: Грушевський — Історія української літератури, т.3-6
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush3.htm

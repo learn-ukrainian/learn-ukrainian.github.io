@@ -1,0 +1,176 @@
+discovered_at: '2026-03-14T04:49:32.316054+00:00'
+query_keywords:
+- Українські грамоти XIV століття
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Oldest surviving Ukrainian administrative documents — legal language predating the
+  Lithuanian Statutes
+- грамота
+- акт
+- дарча
+- свідок
+- присяга
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=AKlc7XfUhug
+  channel: Історія Мови
+  title: '[ANCIENT CERTIFICATES] Charter about Mogorich – Halych, 1194.'
+  relevance_score: 0.9
+  relevance_note: Video directly discusses 14th-century charters ('грамоті XIV століття')
+    and provides a specific historical example ('могорич у XIV століттях'), aligning
+    perfectly with the module's core topic.
+  transcript_excerpt: А ще ми згадаємо і про другий зафіксований могорич у грамоті
+    XIV століття.
+  embed_suggestion: After Основний матеріал -- provides a detailed example of a 14th-century
+    charter discussed in the main content.
+- url: https://www.youtube.com/watch?v=Xev8Sog2BlY
+  channel: Історія Мови
+  title: '[LANGUAGE OF ANCIENT LETTER] Signature of Anna Yaroslavna'
+  relevance_score: 0.8
+  relevance_note: While focusing on an 11th-century charter, the video discusses the
+    language and significance of ancient Ukrainian 'грамоти', which directly reinforces
+    the module's understanding of these documents, even if from an earlier period.
+  transcript_excerpt: Сьогодні ми говоримо про кириличний підпис Анни Ярославни, української
+    князівни, доньки Ярослава Мудрого. Цей підпис натрапляємо на грамоті, на грамоті,
+    яку вона підписала абатству святого Крипена у 1063 році.
+  embed_suggestion: After Вступ -- provides valuable historical context and a foundational
+    understanding of ancient charters before diving into the 14th-century specifics.
+- url: https://www.youtube.com/watch?v=Rfg2SfkuZrs
+  channel: Speak Ukrainian
+  title: Усе про стародавню історію України для НМТ
+  relevance_score: 0.4
+  relevance_note: The video provides a general overview of ancient Ukrainian history
+    for test preparation, which is tangentially related to the module's historical
+    context but lacks specific focus on 14th-century charters or legal documents.
+  transcript_excerpt: Сьогодні ми будемо говорити про стародавню історію України.
+  embed_suggestion: After Вступ -- offers very broad historical context, but its direct
+    relevance to 'грамоти' is minimal.
+- url: https://www.youtube.com/watch?v=1MOcJ3YEjQI
+  channel: Speak Ukrainian
+  title: Вся історія України за 30 хвилин. Реальна історія з Акімом Галімовим
+  relevance_score: 0.4
+  relevance_note: This video presents a very broad 'history of Ukraine in 30 minutes',
+    covering a vast timeline from ancient archaeological findings to the Kyivan Rus'.
+    Its focus is too general to be highly relevant to 14th-century charters.
+  transcript_excerpt: Мене звати акім галімов І це реальна історія історію будь-якої
+    країни починають від найстаріших археологічних знахідок на Закарпатті у Стоянці
+    Королево знайдено найдавніше людське поселення всієї центральної і Східної Європи
+    зі знаряддями праці первісної людини з каменю і кісток вік цього поселення сягає
+    близько мільйона років.
+  embed_suggestion: After Вступ -- provides a high-level historical backdrop, but
+    does not delve into the specific topic of the module.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0023
+  text: "18\nВступ. Українська мова в житті українців. Українська мова в житті українців\n\
+    ЯК НАПИСАТИ ТЕКСТ-РОЗДУМ\n1. Обміркуйте тему, на яку ви хочете написати текст.\n\
+    2. Висловте свою думку щодо теми.\n3. Наведіть переконливі докази на її захист.\n\
+    4. Сформулюйте висновки.\n2. Випишіть прізвища поетів, яких згадано в  тексті\
+    \ .\n3. Знайдіть хибну інформацію в реченні . Випишіть правдиву інформацію про\
+    \ \nте, як можна популяризувати українську мову .\nЗа інформацією зі статті, Данило\
+    \ активно популяризує \nукраїнську"
+  section_title: Сторінка 18
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0009
+  text: "6\n§ 1. Вступ \uFEFF\nІСТОРИЧНІ ДЖЕРЕЛА\nТип\nПриклади\nРечові джерела\n\
+    Залишки будівель, поховання, \nзнаряддя праці, побутові речі, \nзброя, прикраси\
+    \ тощо\nУсні (фольклорні) \nджерела\nЛегенди, билини, перекази, казки, \nнародні\
+    \ пісні тощо\nПисемні джерела\nЛітописи, документи, спогади \nсвідків подій тощо\n\
+    Мовні джерела\nВідомості з  історії розвитку мови\nЕтнографічні \nджерела\nНародні\
+    \ повір’я, обряди\nФото-, фоно- та \nкінодокументи, \n3D-моделі, \nреконструкції\n\
+    Зображення подій, діячів і  діячок, \nпам’яток, записи пр"
+  section_title: Сторінка 7
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  text: "3. Скласти план і відповідно до нього систематизувати матеріал. 4. Узагальнити\
+    \ основні положення. 5. Скласти усно текст повідомлення, намагаючись висловити\
+    \ й \nаргументувати власну думку. 6. За потреби записати текст повідомлення повністю\
+    \ або частково \nта переказати усно текст удома."
+  section_title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0000
+  text: "Захарійчук М. Д., Мовчун А. І. \nПідручник для 4 класу\nзагальноосвітніх\
+    \ навчальних закладів \nУКРАЇНСЬКА\nМОВА"
+  section_title: Сторінка 1
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5834912061691284
+  chunk_id: c8772648_c0000
+  text: "[Грамоти XIV ст. / Упорядк., вст. ст., ком. i слов.-покаж. М. М. Пещак —\
+    \ К., 1974. — С. 5-7.]\n\nШрифт\n\nПЕРЕДМОВА\n\nXIV сторіччя залишило немало грамот\
+    \ різних східнослов’янських і\r\nсуміжних з ними земель. У цьому виданні їх вміщено\
+    \ 84. Підставою для визначення\r\nдокумента як пам’ятки з більш чи менш вираженими\
+    \ ознаками української мови\r\nпослужили історичні й мовознавчі наукові праці,\
+    \ в яких є аргументи для цього.\r\nЗрозуміло, що ці аргументи не можна вважати\
+    \ рівноцінними, тому що вони не мають\r\nєдини"
+  work: Грамоти XIV ст.
+  author: Різні
+  year: 1350
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/gramxiv/grb01.htm
+- score: 0.5445681810379028
+  chunk_id: 3085192c_c0000
+  text: "Головна сторінка\n\nЗАВАНТАЖИТИ ФАЙЛ (DjVu, ~4M)\n\nУкраїнські грамоти XV\
+    \ ст. / Підготовка тексту, вступна стаття і коментарі В. М. Русанівського. — К.:\
+    \ Наукова думка, 1965. — 164 с.\n\nПам’ятки української мови.\n\nУ цьому випуску\
+    \ зібрані українські грамоти XV ст., які раніше або\r\nзовсім не публікувалися,\
+    \ або були опубліковані у виданнях, що не призначалися\r\nдля мовознавчих досліджень\
+    \ Грамоти згруповані за їх територіальним походженням:\r\nокремо подані грамоти\
+    \ центральної України, Західного Полісся, Гал"
+  work: Українські грамоти XV ст.
+  author: Колектив
+  year: 1965
+  genre: legal
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/djvu/gramoty_xv.htm
+- score: 0.5282524824142456
+  chunk_id: 850100d0_c0173
+  text: "Гр. (див. також Закарп. гр., Молд. гр., Одрех. гр.). П: \r\nРозов В. Українські\
+    \ грамоти, 1. XIV в. і перша половина XV в. К.,\r\n1928 +; Пещак М. Грамоти XIV\
+    \ ст. К., 1974 (за винятком передрукованих із\r\nРозова, -); Русанівський В. Українські\
+    \ грамоти XV ст. К., 1965 +\r\n(щоправда, численні тексти подано в пізніших списках),\
+    \ також Мовозн., 1974,\r\n6; Archiwum książąt Lubartowiczów Sanguszków w\r\nSlawucie\
+    \ l (1366-1506). Lwów, 1890; 4 (1535-1547). Lwów,\r\n1890; 6 (1549-1577). Lwów,\
+    \ 1910; 7 (1554-1572). Lwów"
+  work: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevelov/shev.htm

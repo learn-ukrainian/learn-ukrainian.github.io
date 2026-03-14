@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 55 — E2E
+PASS: pipeline ruth 53
 
   Module:   syntax-agreement
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T10:58:13Z
+  Date:     2026-03-14T07:08:13Z

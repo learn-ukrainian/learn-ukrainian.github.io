@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 40 — E2E
+PASS: pipeline oes 39
 
   Module:   death-of-monomakh
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T09:05:49Z
+  Date:     2026-03-14T07:12:26Z

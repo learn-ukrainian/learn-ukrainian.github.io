@@ -1,0 +1,27 @@
+{
+  "track": "ruth",
+  "slug": "monumental-style",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-14T02:37:50Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-14T02:37:50Z",
+      "task_id": "v5-monumental-style-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

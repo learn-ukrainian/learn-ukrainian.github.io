@@ -1,0 +1,265 @@
+discovered_at: '2026-03-14T00:22:26.687314+00:00'
+query_keywords:
+- Lypynsky Letters Brothers
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Lypynsky Letters Brothers у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.7
+  relevance_note: This video details the rise and influence of the Tereshchenko family,
+    a significant Ukrainian entrepreneurial dynasty. This provides valuable historical
+    context about Ukrainian elites and their role in society, which is highly relevant
+    to understanding the historical and social background that influenced Lypynsky's
+    conservative ideology and his analysis of Ukrainian statehood and national identity.
+    It enriches the module's 'Вступ та контекст' and 'суб'єктність' (agency) themes.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: After section Вступ та контекст -- provides rich historical context
+    of prominent Ukrainian families and their influence, relevant to understanding
+    the broader historical landscape that shaped Lypynsky's thought.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.6
+  relevance_note: The video explores the suppression of the Tereshchenko family's
+    legacy by Soviet historiography. This directly ties into the module's 'історіографія'
+    vocabulary and 'Деколонізаційна перспектива' section by demonstrating how Ukrainian
+    historical figures were marginalized, a theme relevant to Lypynsky's work on Ukrainian
+    nation-building.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- discusses how Soviet
+    historiography suppressed Ukrainian figures, providing a concrete example for
+    decolonization efforts.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.3
+  relevance_note: The video discusses the historiography of World War II, the Holocaust,
+    Holodomor, and Russian crimes. While related to historical narrative and historiography
+    (module vocabulary), its specific focus on 20th-century genocides and contemporary
+    historical challenges is distant from Lypynsky's primary period and works.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
+    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
+    яка от є складовою українського культури.
+  embed_suggestion: Not applicable -- topic too far removed from Lypynsky's focus.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+  title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - alphabet
+  - cyrillic
+  - letters
+  - sounds
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0111
+  text: "110\nПовторюємо разом\nТекст\n \nЯк­що два й біль­ше ре­чень поєдна­ні \n\
+    за зміс­том, — це текст. Текст має \nзаголовок.\n\t Розглянь схему тексту. З виділених\
+    \ слів тек-\nсту створи речення, які б відповідали схемам. \nДобери заголовок\
+    \ до створеного тексту.\n.\n.\n.\n.\n.\n\t Розкажи, що ти знаєш про персонажів\
+    \ про-\nчитаних казок. \n\t Назви свого улюбленого персонажа. \nPidruchnyk.com.ua"
+  section_title: Сторінка 112
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0002
+  text: "3\nШановні восьмикласники та восьмикласниці! Перш ніж розпочати роботу з \
+    \ підручником, необхідно \nознайомитися з його змістом і структурою. Матеріал\
+    \ у ньо-\nму об’єднано в  п’ять розділів, кожен із яких містить кіль-\nка параграфів,\
+    \ що, у  свою чергу, поділяються на пункти. Ви вже знаєте, що історія, як і  будь-яка\
+    \ інша наука, \nмає власну термінологію, і  її необхідно розуміти. Підруч-\nник\
+    \ містить дати основних подій, визначення понять і тер-\nмінів, інформацію про\
+    \ видатних історичних діячів. Слова "
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 5-klas-istoriya-schupak-2022_s0024
+  text: "РОЗДІЛ 1\n26\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    1.\t Самооцінювання. Оцініть свої успіхи в опануванні теми «Джерела істо-\nричної\
+    \ інформації» — уявно поєднайте кожне із запитань для самокон-\nтролю з відповідним\
+    \ смайликом успіху. Дайте відповіді на запитання.\nЩо таке історичні джерела?\n\
+    Які є види історичних джерел?\nЧому важливо визначати \nдостовірність джерел?\n\
+    Як можна досліджувати \nісторичні джерела?\n?\nПрекрасно\nДобре\nпопрацювати\n\
+    Треба \nНічого не\nзрозуміло\n2.\t Виконайте онл"
+  section_title: Сторінка 26
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5617805123329163
+  chunk_id: 3588aaff_c0106
+  text: "Основним і водночас вельми проблематичним джерелом\r\nосмислення тогочасного\
+    \ контексту рецепції української літератури є розгорнута\r\nбібліографічно-описова\
+    \ довідка В. Сиповського, \"Україна в російському\r\nписьменстві: 1800-1850\"\
+     108,\n\n108 Сиповський\r\nВасиль. Україна в російському письменстві: 1800-1850.\
+    \ — К., 1928.\n\nПерше, що тут вражає, — це сам фактаж, його розміри:\r\nяк видно\
+    \ зі змісту, йдеться про майже п’ятсот творів. І де навіть тоді, коли\r\nавтор\
+    \ зосереджується на красному письменстві, специфі"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5517147779464722
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5485437512397766
+  chunk_id: 2bf33f78_c0376
+  text: "193. Sysyn Frank, Concepts of Nationhood in\r\nUkrainian History Writing,\
+    \ 1620-1690 // History, Culture, and Nation: An Examination of Seventeenth-Century\
+    \ Ukrainian History\r\nWriting. — Harvard, 1988.\n\n194. Sysyn Frank. The Cultural,\
+    \ Social and\r\nPolitical Context of Ukrainian History-Writing: 1620-1690 // History,\
+    \ Culture,\r\nand Nation: An Examination of Seventeenth-Century Ukrainian History\
+    \ Writing. —\r\nHarvard, 1988.\n\n195. Słownik Polsko-Rossyyski przez Stanisława\
+    \ Müllera. — Wilno, 1829.\n\n196. Собо"
+  work: Синопсис. Київ, 1674
+  author: Невідомий
+  year: 1674
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/synopsis/syn.htm

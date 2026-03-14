@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 48 — E2E
+PASS: pipeline oes 47
 
   Module:   fall-of-kyiv
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T10:05:23Z
+  Date:     2026-03-14T07:12:30Z

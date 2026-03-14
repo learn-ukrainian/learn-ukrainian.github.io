@@ -1,0 +1,141 @@
+discovered_at: '2026-03-14T05:16:08.600877+00:00'
+query_keywords:
+- Українська бароко поезія XVI-XVII ст.
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Syllabic verse, panegyrics, and laments — Ukrainian competing with Latin and Polish
+  as a literary language
+- бароко
+- вірш
+- силабічний
+- панегірик
+- акровірш
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=6FVAHppswqA
+  channel: Історія Мови
+  title: (3) The language of the Hetmanate of the 17th century. The Chronicle of Samovydts
+    about Khmelnytsky
+  relevance_score: 0.55
+  relevance_note: The video discusses the language of the Hetmanate in the 17th century
+    and a historical chronicle (Samovydets' Chronicle), providing context for the
+    linguistic environment of the period. While not directly about Baroque poetry,
+    it offers relevant background for the module's theme of Ukrainian competing as
+    a literary language in that era.
+  transcript_excerpt: мова Гетьманщини самовидець про Хмельницького мовою того часу
+  embed_suggestion: After Вступ (Introduction) — to provide historical and linguistic
+    context for the module's topic.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0419
+  text: 'А ще він писав казки, п’єси та веселі повісті й анекдоти. Перші
+
+    поетичні твори митця — це ліричні вірші з жовнірського життя. Основні мотиви —
+    туга за рідною домівкою, біль серця, роз-
+
+    лученого з коханою, жаль за марно втраченими роками. Поезія
+
+    Українська поезія другої половини ХІХ ст. 317'
+  section_title: Сторінка 317
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0404
+  text: "Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.\
+    \ — \n№ 6. — С. 90–100. Домашнє завдання"
+  section_title: Сторінка 248
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0356
+  text: "ОПРАЦЮВАВШИ ПАРАГРАФ, \nВИ  ДІЗНАЄТЕСЬ:\n\x84\n\x84\nпро основні здобутки\
+    \ української \nкультури другої половини  \nХVІІ  — першої половини XVIІI  ст.;\
+    \ \n\x84\n\x84\nімена видатних представників \nукраїнської культури. КУЛЬТУРА\
+    \ БАРОКО\nВигадливе поєднання \n­деталей, ліній, прикрас\nІнтерес до почуттів\
+    \ і вчинків \nлюдини\nУвага до символів \nТеатральність, парадність\nОсобливості\n\
+    Тестові завдання\nrnk.com.ua/109607"
+  section_title: Сторінка 218
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-istoria-ukr-galimov-2025_s0361
+  text: "§ 31. Українська культура в другій половині XVII — першій половині XVIII ст.\
+    \ «Козацьке бароко»\n221\nЛІТЕРАТУРА  \nдругої половини ХVІІ ст. Зберігався зв’язок\
+    \  \nлітератури з  релігійним \nсвітоглядом\nМистецтво слова поступово \nставало\
+    \ самостійним напрямом \nтворчості\nВиразно проявлялася світська \nй  естетична\
+    \ роль літератури, \nвиникали нові форми й  способи \nхудожньо-словесного ­зображення\n\
+    Письменники зосереджували \nосновну увагу на людині, а  також \nна її зв’язку\
+    \ з  Богом, \nутверджувалися нові жанри"
+  section_title: Сторінка 221
+  grade: 8
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0002
+  text: "М\nО\nЛ\nД\nА В\nІ Я\nВ\nА\nЛ\nА\nХ І\nЯ\nР\nУ\nМ\nУ\nН\nІ Я\nА В С Т Р І\
+    \ Й С Ь К А\nІ М П Е Р І Я\nУ\nГ\nО\nР\nЩ\nИ Н\nА\nО С М А Н С Ь К А\nІ М П Е\
+    \ Р І Я\nР\nО\nС\nІ\nЙ\nС\nЬ\nК\nА\n \nІ\nМ\nП\nЕ\nР\nІ\nЯ\nМОДЕРНА  УКРАЇНСЬКА\
+    \  ПРОЗА\nВСТУП. РЕАЛІСТИЧНА \nУКРАЇНСЬКА ПРОЗА\nУКРАЇНСЬКА  ЛІТЕРАТУРА  ДРУГОЇ\
+    \  ПОЛОВИНИ  ХІХ ст. В  КОНТЕКСТІ  РОЗВИТКУ  ТОДІШНЬОГО   \nСУСПІЛЬСТВА, КУЛЬТУРИ\
+    \  Й  МИСТЕЦТВА"
+  section_title: Сторінка 3
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5804388523101807
+  chunk_id: 004505f2_c0182
+  text: "16 Архив Юго-Западной\r\nРоссии. — Т. III. — Ч. 1, 3.\n\n17 Текст див.:\r\
+    \nМарсове поле. — Кн. І. — С. 168 — 179.\n\n18 Грушевський М. Історія\r\nУкраїни-Руси.\
+    \ — Т. VII. — С. 561.\n\n19 История Русов. — М.,\r\n1846. — С. 64 — 65.\n\n20\
+    \ Цей текст див.:\r\nУкраїнська поезія XVI ст. — К., 1987. — С. 87-101.\n\n21\
+    \ Шевчук В. Відродження\r\nі реформація в українській культурі XV — XVII століть.\
+    \ — ж. «Філософська і\r\nсоціологічна думка». — 1989. — № 4. — С. 73-86.\n\n22\
+    \ Антологія\r\nукраїнської поезії. — T. I. — C. 61.\n\n23 Вишен"
+  work: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+  year: 1600
+  genre: polemic
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/suspil/sus.htm
+- score: 0.5755171775817871
+  chunk_id: 41d0facc_c0089
+  text: '[Чижевський Дмитро. Українське літературне бароко. — К., 2003. — С. 86-106.]
+
+
+    4. Невідомий український поет 18-го віку'
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm
+- score: 0.5678479671478271
+  chunk_id: fbf8bdff_c0415
+  text: "7. Нарешті, бароккова література — зокрема вірш та\r\nдрама — дуже спричинилася\
+    \ до розвитку народної поезії. Барокко було у цілому\r\nсвіті з цього погляду\
+    \ дуже плідне. Не кажучи вже про напівмітичних авторів\r\n(Маруся Чураївна) народних\
+    \ пісень з часів барокка, можемо конкретно бачити, як\r\nнародна пісня переймає\
+    \ елементи стилістики бароккової вірші, хоч з другого\r\nбоку, барокко само має\
+    \ певний нахил до народної поезії і черпає з її скарбниці\r\nзасоби вже тому,\
+    \ що одна з цінностей поезії для барокковог"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm

@@ -1,0 +1,181 @@
+discovered_at: '2026-03-14T01:23:32.698000+00:00'
+query_keywords:
+- 'Наталя Яковенко: Дзеркала історії'
+- Методологія як мистецтво
+- Шляхта і Козаки
+- Стилістика авторки
+- Деколонізація методу
+- Проаналізувати методологічні підходи Наталі Яковенко
+- Дослідити мовну стилістику наукового тексту
+- literature
+- наратив
+- дискурс
+- ідентичність
+- топос
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0275
+  text: "2. Поміркуйте, які обставини робили становище відродженого гетьманства\n\
+    Діємо: практичні завдання\nДумки істориків\nНаталя Я к о в є н к о , українська\
+    \ історикиня, \nпро обставини відновлення гетьманства\nхитким. 206\nЇЖ І"
+  section_title: Сторінка 206
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  text: "Використана  література\nІванюк С. Міфи про Миколу Куліша / Сергій Іванюк\
+    \ // Наукові записки Національного \nуніверситету «Києво-Могилянська академія».\
+    \ — 1998. — Т. 4. — С. 75–83. — (Серія \n«Філологія»). Кузякіна Н. Траєкторія\
+    \ доль / Наталя Кузякіна. — К. : Темпора, 2010. Куліш А. Спогади про Миколу Куліша\
+    \ // Куліш М. Твори: В 2 т. — К., 1990. — Т. 2. — \nС. 695–753. Наєнко М. Художня\
+    \ література України / М. Наєнко. — К., 2007. — С. 845–857. Панченко В. Арки і\
+    \ шибениці (драматургія Миколи Куліша) /"
+  section_title: Сторінка 126
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0180
+  text: "\x03\n\x83 У вигляді схеми, таблиці, конспекту, коміксів тощо занотуйте інформацію\
+    \ про \nтвір ю . яновського «Майстер корабля»: жанрові та стильові особливості,\
+    \ теми \nта проблеми, мотиви, персонажі, основні сюжетні колізії . щоб отримати\
+    \ повніше уявлення про творчість Þ. ßновського, прочи-\nтайте його твори «Ãоллівуд\
+    \ на áерезі ×орного моря», «Áайгород», \n«×отири шаáлі», «Äитинство», «Подвійне\
+    \ коло» . Запрошуємо до бібліотеки"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0446
+  text: "Читачі не одразу, а лише по-\nступово одержують нову й важливу інформацію\
+    \ \nпро персонажів та з’ясовують мотиви їхніх учин-\nків. Авторка розкриває «правду»\
+    \ кожного зі сво-\nїх героїв, художньо осмислює їхню залежність \nвід звичаєвого\
+    \ права, стереотипів селянської \nморалі, та почасти — від соціальних умов. \x03\
+    \nВихідний день \n(Àнäріé Êоöка, 1970-ті)\nÐоçкриваþчи ïоäі¿ ïевноãо часовоãо\
+    \ віäтинкó, ïисьменниöя çаëóчаº катеãорі¿ \nминóëоãо, сьоãоäенноãо і ïриéäеøньоãо,\
+    \ ùо наäаº ¿¿ творам не ïросто ôіëосоô-\nс"
+  section_title: Сторінка 236
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0030
+  text: '2. Закувала зозуленька. Антологія української народної поетичної творчос-
+
+    ті. – К., 1998. 3. Королюк Н. Маленькі історії про українських композиторів XVIII–ХХ
+    ст. – К.,
+
+    1998. 4. Мишанич О. Система жанрів в українському фольклорі // Українознавство:
+
+    Посібник. – К., 1994. 5. Нудьга Г. Слово і пісня. – К., 1994. Г
+
+    6. Погребенник Ф. Наша дума, наша пісня... Нариси-дослідження. – К., 1991. 7.
+    Руснак І. Український фольклор у школі // Українська мова й література в
+
+    середніх школах, гімназіях, ліцеях т'
+  section_title: Сторінка 21
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6126635074615479
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5710839033126831
+  chunk_id: feaa5fa7_c0505
+  text: "Література (загальна): Волков\r\nФ. Этнографические особенности украинского\
+    \ народа (Укр. народ в его прошлом и\r\nнастоящем. П. 1916, 455 — 647) і укр.\
+    \ переклад: Вовк Х. Студії з Укр.\r\nетнографії та антропології. Прага 1927, ст.\
+    \ 34 — 214; Zelenin D.\r\nRussische (Ostslav.) Volkskunde. Берлін-Ляйпціґ 1927,\
+    \ Fischer A. Rusini.\r\nZarysy etnografji Rusi. Л. 1928; Moszyński K. Kultura\
+    \ ludowa\r\nSłowian. I. Kultura materjalna. Кр. 1929; Magnino C. Il compressa\r\
+    \netnico dei Carpati. Рим 1933; Kuziela Z. Das ukrai"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5636312961578369
+  chunk_id: fc2291b5_c2306
+  text: "Тв.: Укр. перекл. — Шляхта 1831 року. В кн.: Антологія польської поезії,\
+    \ т. 1. К.,\r\n1979; Рос. перекл. — Шляхта в 1831 году. В кн.: Польская поэзия,\
+    \ т. 1.\r\nМ., 1963.\n\nІ. М. Лозинський."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

@@ -1,0 +1,219 @@
+discovered_at: '2026-03-14T00:42:27.174017+00:00'
+query_keywords:
+- Malaniuk Little Russianism
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Malaniuk Little Russianism у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=sfBH9YbvtLA
+  channel: Harvard Ukrainian Research Institute
+  title: 'The Twilight of an Empire: The Russo-Ukrainian War in the Eyes of a Historian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0119
+  text: "Маланюк? що, на думку письменника, \nє чинниками формування «малоросійства»?\
+    \ Запрошуємо до дискусії\n7. Чи властиве «маëоросіéство» нашим сучасникам? В електронному\
+    \ додатку до підручника ви знайдете повний текст твору \nª. Маланþка «Малоросійство»\
+    \ . Прочитайте його . Дайте відповіді на запи-\nтання, виконайте завдання . читацький\
+    \ практикум"
+  section_title: Сторінка 65
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0116
+  text: "64  Еміграційна література . Євген Маланюк\nВиявляємо літературну компетентність\n\
+    1. яке враження справила на вас поезія? які емоції викликала? 2. Визначте провідний\
+    \ мотив вірша . Схарактеризуйте композицію твору . 3. Уважно прочитайте першу\
+    \ частину поезії . Дайте відповіді на запитання . \x03\n\x83 які образи створює\
+    \ поет у першій строфі? \x03\n\x83 які мотиви набувають звучання завдяки цим образам?\
+    \ \x03\n\x83 яка картина зринає у вашій уяві під впливом цих образів? Опишіть\
+    \ її . \x03\n\x83 яким у першій строфі постає лірич"
+  section_title: Сторінка 64
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0004
+  text: ". . . . . . . . 51\nЖанр, художня організація, персонажі. . . . . 52\nЕміграційна\
+    \ література. . . . . . . . . . . . 56\nЄвген Маланюк. . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 58\nОсвідчення («Один вечір») . . . . . . . . . . . .\
+    \ . . 59\nЧитацький практикум. Один вечір. . . . . . . . . 60\nПро творче покликання\
+    \  \n(«Напис на книзі віршів»). . . . . . . . . . . . . . . 61\nЧитацький практикум.\
+    \ Напис на книзі  \nвіршів. . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 61\nНостальгія  \n(«Під чужим не"
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6148562431335449
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5944802165031433
+  chunk_id: f648356f_c0060
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 44-58.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm
+- score: 0.5932579040527344
+  chunk_id: f648356f_c0037
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 21-44.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm

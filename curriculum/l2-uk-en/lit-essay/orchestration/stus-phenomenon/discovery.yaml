@@ -1,0 +1,259 @@
+discovered_at: '2026-03-14T00:58:08.299819+00:00'
+query_keywords:
+- Stus Phenomenon
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Stus Phenomenon у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: This video discusses the Soviet suppression of the Tereșchenko family's
+    legacy and the manipulation of historiography, which directly relates to the 'Деколонізаційна
+    перспектива' section and the module's vocabulary term 'історіографія'. It provides
+    a concrete example of how the Soviet regime attempted to erase or discredit prominent
+    Ukrainian figures, a theme highly relevant to Stus as a dissident.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива – Directly illustrates Soviet
+    suppression of Ukrainian figures and manipulation of historiography, a core theme
+    for understanding Stus's experience.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.4
+  relevance_note: The video discusses Stalinist crimes and the Holocaust, offering
+    a broader historical context of Soviet repression, but does not directly focus
+    on Stus or his literary/cultural repression. It is tangentially related to the
+    'Деколонізаційна перспектива' section by providing context on Soviet era crimes.
+  transcript_excerpt: Ми кажемо про Голодомор, про злочини Сталіна, російські злочини.
+    Доля євреїв України – це частина нашої історії.
+  embed_suggestion: After Деколонізаційна перспектива – Provides general historical
+    context of Soviet crimes against humanity relevant to decolonization narratives,
+    although not specific to cultural figures.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.1
+  relevance_note: The video focuses on the pre-Soviet business and philanthropic history
+    of the Tereșchenko family. It does not relate to Stus, his literary work, or the
+    themes of Soviet suppression or decolonization central to the module.
+  transcript_excerpt: Про їхні скарби ходили легенди. Та якою була ціна цих статків?
+  embed_suggestion: None – Content is unrelated to Stus Phenomenon.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0263
+  text: "184\nЗМІСТ\n§ 37–39. Обставина. Види обставин за значенням і способи їхнього\
+    \ вираження. Порівняльний зворот  . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82\n§ 40. Розвиток\
+    \ мовлення. Стислий письмовий переказ розповідного тексту  \nз елементами опису\
+    \ місцевості в художньому стилі . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 88\n§ 41. Типи односкладних речень . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  text: '. . . . . . . . . . . . . 149
+
+    § 45. Стилістичне використання синонімів, антонімів і паронімів. . . . . . . .
+    . . . . . . . . . . 154
+
+    § 46. Стилістичні особливості слів іншомовного походження. . . . . . . . . . .
+    . . . . . . . . . . . 159
+
+    § 47. Стилістичне забарвлення лексики. Книжна й розмовна лексика. . . . . . .
+    . . . . . . . 163
+
+    § 48. Стилістична роль неологізмів і застарілої лексики . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 168
+
+    § 49. Стилістичні можливості фразеологізмів. . . . .'
+  section_title: Сторінка 207
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5765681266784668
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5698612332344055
+  chunk_id: 5e7696fa_c0069
+  text: "Вияснюються, для сього, впливи сучасного життя — культурних,\r\nполітичних\
+    \ чи соціальних змїн. які відбивались на напрямі й характері\r\nлітературних творів.\n\
+    \nПредмет трактується або по епохам, або по родам\r\nлітературних творів. Більшу\
+    \ або меншу увагу при сім звертається на\r\nіндивідуальність автора. Центр ваги\
+    \ переноситься або на його твори, які\r\nсистематизуються й розглядаються разом\
+    \ з аналогічними творами інших авторів тої\r\nж доби, щоб краще вияснити еволюцію\
+    \ певних форм і літературної творчості. "
+  work: Грушевський — Історія української літератури
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush1.htm
+- score: 0.5697097182273865
+  chunk_id: 5e7696fa_c0064
+  text: "Твори заслуговують увагу своєю характеристичністю,\r\nколи своїм змістом\
+    \ чи формою характеризують словесну творчість свого часу,\r\nестетичні вимоги\
+    \ й провідні ідеї громадянства. Інші бувають важкі історично —\r\nсвоїми впливами\
+    \ на дальший розвій словесної творчості або на розвій суспільного\r\nжиття взагалі.\
+    \ Треті, нарешті, звертають на себе увагу своєю високою артистичністю:\r\nвисоким\
+    \ задоволенням, яке вони дають естетичному почуттю, щасливо розв’язуючи\r\nсвоє\
+    \ завдання — передати естетичне почуття творц"
+  work: Грушевський — Історія української літератури
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush1.htm

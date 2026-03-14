@@ -1,0 +1,244 @@
+discovered_at: '2026-03-14T02:07:06.238277+00:00'
+query_keywords:
+- Lutsky Diaspora Bridge
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Lutsky Diaspora Bridge у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: This video directly addresses how Soviet historiography suppressed
+    Ukrainian figures and narratives ('табуйоване прізвище'), which aligns strongly
+    with the module's 'Деколонізаційна перспектива' and 'історіографія' vocabulary.
+    It provides a concrete example of the historical context a diaspora writer like
+    Lutsky would contend with.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- Offers a direct example
+    of Soviet historical revisionism and the suppression of Ukrainian identities,
+    which is crucial for understanding decolonization in a literary context.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.4
+  relevance_note: The video discusses broader Ukrainian history, the Holocaust, and
+    decolonization from a historical perspective, touching on the concept of Ukrainian
+    culture. While relevant to general Ukrainian context, it doesn't directly address
+    the literary analysis or diaspora bridge themes of the module.
+  transcript_excerpt: Ми не кажемо про чужих Ми кажемо про іншу культуру яка от є
+    складовою українського культури і тому це діяльність ми видаємо книжки проводимо
+    навчальний семінар.
+  embed_suggestion: After section Вступ та контекст -- Provides a broader historical
+    context regarding Ukrainian identity and historical narratives, but is not directly
+    related to literary analysis.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.3
+  relevance_note: The video focuses on the economic and business history of the Tereshchenko
+    family. While historical and Ukrainian, its specific thematic focus on business
+    innovations and wealth accumulation is not directly relevant to the literary analysis,
+    style, or decolonization themes of the module on Lutsky Diaspora Bridge.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару.
+  embed_suggestion: Not suitable for this module as the primary focus is on economic
+    history, which is not aligned with the module's literary themes.
+- url: https://www.youtube.com/watch?v=15SaxKl6PuY
+  channel: Harvard Ukrainian Research Institute
+  title: Seminar in Ukrainian Studies - Ostap Sereda
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0334
+  text: "222\nЗміст\nЗміст\nПередмова . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3\n\
+    \t\n§ 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . 4\nРозділ І. ВЕЛИКЕ РОЗСЕЛЕННЯ\
+    \ СЛОВ’ЯНСТВА. ЗМІНА \nНАСЕЛЕННЯ ПРИЧОРНОМОРСЬКИХ СТЕПІВ\n\t\n§ 2. Слов’янство\
+    \ у V—VІІ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . 9\n\t\n§ 3. Слов’янські племена на те"
+  section_title: Сторінка 223
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0135
+  text: "136\nЗнаю…\n Нàзви казок, які прочитав/прочитала у цьому розділі.\n Хто\
+    \ автор/авторка прочитаних байки і п’єси?\n Як потрібно поводитися з незнайомими\
+    \ людьми?\nРозумію, можу пояснити…\n Для чого пишуться байки?\n Чому прочитані\
+    \ казки можна назвати чарівними?\n Чому Мауглі мав повернутися до людей?\n Які\
+    \ особливості побудови п’єси?\nВмію…\n Визначати головну думку в прочитаних творах.\n\
+     Знаходити висновок (мораль) байки.\n Визначати, які вчинки дійових осіб позитивні,\
+    \ а які — \nнегативні.\n Брати уча"
+  section_title: Сторінка 136
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.557246208190918
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5395551323890686
+  chunk_id: f79fbc43_c0476
+  text: "Yeltsin. Boris. The Struggle for Russia. Translated by\r\nCatherine A. Fitzpatrick.\
+    \ New York: Random House, 1995.\n\nYergin, Daniel and Thane Gustafson. Russia\
+    \ 2010 and What It\r\nMeans for the World. New York: Vintage. 1995.\n\nЗограф,\
+    \ Н. Ю. Антропологические исследования мужского\r\nвеликорусского населения Владимирской,\
+    \ Ярославской и Костромской губерний. Москва,\r\n1890.\n\nЗотов, Игорь \"Александр\
+    \ Солженицын, Альбер Камю и кризис\r\nвоображения\", Огонек, №29 (4408) (июль\
+    \ 1995).\n\nЗуев Ф. Г., и др. История По"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5382519960403442
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

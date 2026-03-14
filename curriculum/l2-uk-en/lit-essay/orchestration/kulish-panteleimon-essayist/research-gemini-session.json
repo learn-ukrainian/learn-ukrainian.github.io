@@ -1,0 +1,287 @@
+{
+  "sessionId": "228ec878-f9dc-4272-8a42-9dad4b61796f",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T23:52:52.759Z",
+  "lastUpdated": "2026-03-13T23:53:23.707Z",
+  "messages": [
+    {
+      "id": "fd911d9d-7b05-48c5-aebc-40fbbe3ac1b4",
+      "timestamp": "2026-03-13T23:52:52.759Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-008\nlevel: RUTH\nsequence: 8\nslug: stylistic-contrast-gospel\nversion: '2.0'\ntitle: Стилістичний контраст\nsubtitle: Stylistic Contrast\nfocus: Peresopnytsia Gospel vs Chancery style\nphase: 1\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Stylistic Contrast\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\n- type: parallel-text\n  focus: ''\n  items: 1\n- type: register-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Biblical Philologist\nprerequisites:\n- courts-basic\nconnects_to:\n- administrative-reform\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Стилістичний контраст** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Стилістичний контраст\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Стилістичний контраст\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "9e55bb7f-270d-4293-b7db-56fa6f139a59",
+      "timestamp": "2026-03-13T23:52:59.361Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Solution",
+          "description": "I'm now focused on the next step. I have a clear plan, and I'm ready to proceed with it to get closer to the final outcome. I'm feeling confident about making steady progress.",
+          "timestamp": "2026-03-13T23:52:56.269Z"
+        },
+        {
+          "subject": "Starting Wikipedia Search",
+          "description": "I'm beginning the Wikipedia queries to gather information on the \"Пересопницьке євангеліє\" and related topics, aiming to establish a foundation for understanding the context of stylistic contrasts in the relevant language. This should set the stage for detailed analysis later on.",
+          "timestamp": "2026-03-13T23:52:59.235Z"
+        }
+      ],
+      "tokens": {
+        "input": 20508,
+        "output": 23,
+        "cached": 0,
+        "thoughts": 291,
+        "tool": 0,
+        "total": 20822
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445979359_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Пересопницьке Євангеліє"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445979359_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Пересопницьке Євангеліє\n**Description**: рукопис\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D1%81%D0%BE%D0%BF%D0%BD%D0%B8%D1%86%D1%8C%D0%BA%D0%B5_%D0%84%D0%B2%D0%B0%D0%BD%D0%B3%D0%B5%D0%BB%D1%96%D1%94\n\nПересо́пницьке Єва́нгеліє — визначна рукописна пам'ятка староукраїнської мови та мистецтва XVI століття. Один з перших українських перекладів біблійного, канонічного тексту (четвероєвангелія) на староукраїнську літературну мову, здійснений 1556–1561 рр. Михайлом Василевичем із Сянока та архімандритом Пересопницького монастиря Григорієм у селі Двірці та у Пересопниці на Волині."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:52:59.413Z",
+          "resultDisplay": "# Пересопницьке Євангеліє\n**Description**: рукопис\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D1%81%D0%BE%D0%BF%D0%BD%D0%B8%D1%86%D1%8C%D0%BA%D0%B5_%D0%84%D0%B2%D0%B0%D0%BD%D0%B3%D0%B5%D0%BB%D1%96%D1%94\n\nПересо́пницьке Єва́нгеліє — визначна рукописна пам'ятка староукраїнської мови та мистецтва XVI століття. Один з перших українських перекладів біблійного, канонічного тексту (четвероєвангелія) на староукраїнську літературну мову, здійснений 1556–1561 рр. Михайлом Василевичем із Сянока та архімандритом Пересопницького монастиря Григорієм у селі Двірці та у Пересопниці на Волині.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "780bd8f6-1463-4b7d-89aa-71fd1210eb88",
+      "timestamp": "2026-03-13T23:53:04.565Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Next Phase",
+          "description": "I am now focused on executing the next step in this process. I'm working diligently, and anticipate a swift transition into the subsequent phase after this is complete. My primary objective is to make forward progress.",
+          "timestamp": "2026-03-13T23:53:03.207Z"
+        },
+        {
+          "subject": "Gathering Wikipedia Data",
+          "description": "Now I am retrieving sections from the Wikipedia article. Following that, I will immediately move on to searching for primary sources. I am focused on efficiently completing this phase of information gathering.",
+          "timestamp": "2026-03-13T23:53:04.337Z"
+        }
+      ],
+      "tokens": {
+        "input": 20830,
+        "output": 25,
+        "cached": 19794,
+        "thoughts": 144,
+        "tool": 0,
+        "total": 20999
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445984564_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "sections",
+            "query": "Пересопницьке Євангеліє"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445984564_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Пересопницьке Євангеліє':\n\n1 Історія створення (index=1)\n2 За межами Волині (index=2)\n3 Матеріали та виконання (index=3)\n4 Мова (index=4)\n  4.1 Особливості мови (index=5)\n5 Видання (index=6)\n  5.1 Видання оригінального тексту староукраїнською мовою (index=7)\n  5.2 Видання перекладу тексту сучасною українською мовою (index=8)\n6 Присяжна книга (index=9)\n7 Див. також (index=10)\n8 Джерела та примітки (index=11)\n9 Посилання (index=12)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:53:04.778Z",
+          "resultDisplay": "Sections of 'Пересопницьке Євангеліє':\n\n1 Історія створення (index=1)\n2 За межами Волині (index=2)\n3 Матеріали та виконання (index=3)\n4 Мова (index=4)\n  4.1 Особливості мови (index=5)\n5 Видання (index=6)\n  5.1 Видання оригінального тексту староукраїнською мовою (index=7)\n  5.2 Видання перекладу тексту сучасною українською мовою (index=8)\n6 Присяжна книга (index=9)\n7 Див. також (index=10)\n8 Джерела та примітки (index=11)\n9 Посилання (index=12)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5b0eaeba-ac76-4da9-a47c-96084d2d747f",
+      "timestamp": "2026-03-13T23:53:09.534Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "I am now focusing on the next stage of this process. I will utilize the available resources to move forward, focusing on the steps to achieve the end result. It's time to generate the necessary results.",
+          "timestamp": "2026-03-13T23:53:08.347Z"
+        },
+        {
+          "subject": "Executing the Research Phase",
+          "description": "I'm presently focused on the investigation, drawing upon my information sources to construct the necessary output. My immediate objective is to gather the relevant information, and move toward the final deliverable. I intend to use the knowledge gathered to achieve this.",
+          "timestamp": "2026-03-13T23:53:09.431Z"
+        }
+      ],
+      "tokens": {
+        "input": 21034,
+        "output": 27,
+        "cached": 19697,
+        "thoughts": 115,
+        "tool": 0,
+        "total": 21176
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445989533_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "section": 4,
+            "mode": "section",
+            "query": "Пересопницьке Євангеліє"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445989533_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Пересопницьке Євангеліє — Section 4\n\nМова\nСторінка з ініціалом\nСторінка з орнаментними прикрасами\nПам'ятка писана староукраїнською літературно-писемною мовою уставом та півуставом з елементами скоропису. Це найраніший із відомих перекладів євангельського тексту українською мовою середини XVI&nbsp;ст., який дійшов до нашого часу. Євангеліє було перекладено з церковнослов'янської мови болгарської редакції.\n\nПереклад відрізняється за якістю: ближче до церковнослов'янського оригіналу перекладено Євангелія від Матвія і Марка, а ближче до народної мови&nbsp;— Євангеліє від Луки і, меншою мірою, від Йоана. Мова Передмови Феофілакта Болгарського до Євангелія від Матвія залишилася переважно церковнослов'янською, проте мовознавець Юрій Шевельов називав його «майже суто народнім своєю мовою».\n\nОсобливості мови\nНароднорозмовну лексику введено до тексту переважно за допомогою глос. Вони, як правило, ставляться поряд із словами оригіналу, але обрамляються «прямокутниками»; виписані «дробним» письмом. Це, здебільшого, старослов'янські слова (наприклад, «чресла»&nbsp;— стегна, «бдѣти»&nbsp;— не спати), але є українські глоси до українських же слів. Вони свідчать про пошуки наддіалектного слова, вироблення загальноукраїнської лексичної норми («стрѣху»&nbsp;— дах, «через збожя»&nbsp;— через оранку тощо).\n\nЛише кілька українських відповідників винесено на береги рукопису (маргінальні глоси). Найчастіше український лексичний відповідник або пояснення подано в рамці безпосередньо після незрозумілого чи малозрозумілого слова. В Євангелії від Луки найбільше глос&nbsp;— 89, а в Євангелії від Матвія найменше&nbsp;— усього 14; в Євангелії від Марка&nbsp;— 24, в Євангелії від Йоана&nbsp;— 30, проте часто (не завжди) вони супроводжуються українськими лексичними відповідниками.\n\nНа графіці рукопису позначився другий південнослов'янський вплив. Рукопис багато орнаментований: різнокольорові з золотом високохудожні мініатюри, заставки, ініціали, кінцівки з українськими мотивами.\n\nПам'ятка містить унікальний матеріал для вивчення історії української мови на всіх її рівнях та взаємодії народнорозмовних і книжних елементів в українській літературно-писемній мові XVI&nbsp;ст. У ній чітко проступають риси живої народної мови. На фонетичному рівні це наявність народнорозмовної фонеми і переднього ряду високого підняття, українські рефлекси ятя, перехід о, е в і в новозакритому складі тощо. На морфологічному рівні засвідчено велику кількість варіантів за рахунок закінчень, властивих живомовній практиці. Синтаксична структура виразно українська."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:53:10.016Z",
+          "resultDisplay": "# Пересопницьке Євангеліє — Section 4\n\nМова\nСторінка з ініціалом\nСторінка з орнаментними прикрасами\nПам'ятка писана староукраїнською літературно-писемною мовою уставом та півуставом з елементами скоропису. Це найраніший із відомих перекладів євангельського тексту українською мовою середини XVI&nbsp;ст., який дійшов до нашого часу. Євангеліє було перекладено з церковнослов'янської мови болгарської редакції.\n\nПереклад відрізняється за якістю: ближче до церковнослов'янського оригіналу перекладено Євангелія від Матвія і Марка, а ближче до народної мови&nbsp;— Євангеліє від Луки і, меншою мірою, від Йоана. Мова Передмови Феофілакта Болгарського до Євангелія від Матвія залишилася переважно церковнослов'янською, проте мовознавець Юрій Шевельов називав його «майже суто народнім своєю мовою».\n\nОсобливості мови\nНароднорозмовну лексику введено до тексту переважно за допомогою глос. Вони, як правило, ставляться поряд із словами оригіналу, але обрамляються «прямокутниками»; виписані «дробним» письмом. Це, здебільшого, старослов'янські слова (наприклад, «чресла»&nbsp;— стегна, «бдѣти»&nbsp;— не спати), але є українські глоси до українських же слів. Вони свідчать про пошуки наддіалектного слова, вироблення загальноукраїнської лексичної норми («стрѣху»&nbsp;— дах, «через збожя»&nbsp;— через оранку тощо).\n\nЛише кілька українських відповідників винесено на береги рукопису (маргінальні глоси). Найчастіше український лексичний відповідник або пояснення подано в рамці безпосередньо після незрозумілого чи малозрозумілого слова. В Євангелії від Луки найбільше глос&nbsp;— 89, а в Євангелії від Матвія найменше&nbsp;— усього 14; в Євангелії від Марка&nbsp;— 24, в Євангелії від Йоана&nbsp;— 30, проте часто (не завжди) вони супроводжуються українськими лексичними відповідниками.\n\nНа графіці рукопису позначився другий південнослов'янський вплив. Рукопис багато орнаментований: різнокольорові з золотом високохудожні мініатюри, заставки, ініціали, кінцівки з українськими мотивами.\n\nПам'ятка містить унікальний матеріал для вивчення історії української мови на всіх її рівнях та взаємодії народнорозмовних і книжних елементів в українській літературно-писемній мові XVI&nbsp;ст. У ній чітко проступають риси живої народної мови. На фонетичному рівні це наявність народнорозмовної фонеми і переднього ряду високого підняття, українські рефлекси ятя, перехід о, е в і в новозакритому складі тощо. На морфологічному рівні засвідчено велику кількість варіантів за рахунок закінчень, властивих живомовній практиці. Синтаксична структура виразно українська.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5c854581-f05d-496e-a823-39a165c05203",
+      "timestamp": "2026-03-13T23:53:16.158Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the next phase",
+          "description": "I'm focused on moving forward with the project. I'm considering the best way to get to the next goal. I am currently deciding on the course of action to make the desired progress.",
+          "timestamp": "2026-03-13T23:53:14.772Z"
+        },
+        {
+          "subject": "Planning Further Action",
+          "description": "I am now focused on executing the plan, and am preparing to begin the search for the relevant sources. The primary goal is to gather the necessary quotes. My next action is to prepare the search terms to get the required information.",
+          "timestamp": "2026-03-13T23:53:16.075Z"
+        }
+      ],
+      "tokens": {
+        "input": 21900,
+        "output": 24,
+        "cached": 19743,
+        "thoughts": 144,
+        "tool": 0,
+        "total": 22068
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445996157_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Пересопницьке Євангеліє"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445996157_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Пересопницьке Євангеліє\"\n\n### Result 1 (score: 0.5386)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0359`\n- **Text**:\nПереклади Св. Письма. Нові впливи й нові обставини\r\nжиття, зокрема свіже зацікавлення релігійними справами та питаннями, виявилися\r\nв ряді перекладів книг Св. Письма на мову, наближену до народної — так звану\r\n«посполиту». До найцінніших перекладів належить Пересопницька Євангелія з\r\n1556 — 1561 рр. Назва її походить від монастиря в Пересопниці на Волині.\r\nПереклад завершив Михайло Василевич, син сяницького протопопа, за допомогою\r\nархімандрита Григорія та з доручення княгині Анастасії Заславськ\n\n### Result 2 (score: 0.5307)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1124`\n- **Text**:\nНайяскравішою серед церковних пам’яток, де виразно\r\nприсутня українська мова, є Пересопницьке Євангеліє 1556 — 1561 рр. — найраніший\r\nповний текст перекладу канонічного Євангелія з церковнослов’янської українською\r\nкнижною мовою, здійснений \"ку читаню и посполитымъ людемъ ко доброму\r\nвыразумленю\" 6. Майже одночасно з пересопницьким кодексом виникла\r\nціла низка інших пам’яток з елементами розмовної мови: Житомирське Євангеліє\r\n1571 р., Євангеліє 1581 р. (переклад виконав Валентин Негалевський у с\n\n### Result 3 (score: 0.5178)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0000`\n- **Text**:\nВід автора\n\n### Result 4 (score: 0.5164)\n- **Work**: Патерик Києво-Печерський (1462)\n- **Author**: Невідомий\n- **Genre/Period**: religious / old_east_slavic\n- **Chunk ID**: `3b9d3966_c0274`\n- **Text**:\nПримітки\n\n### Result 5 (score: 0.5076)\n- **Work**: Іван Франко. Борислав (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `6738449c_c0109`\n- **Text**:\nЛежить Василь Півторак і не рушається. Холодний поміст, бачиться йому, дихає під ним, підноситься і опадає, як груди велета. Холодний поміст, бачиться йому, висисає з його тіла нестерпиму паль, лагодить своїм холодом гарячку, тамує дихавичний кашель, йому легше, що раз, то легше. Молитви ніякі не йдуть йому на голову, та й чи до молитви йому тепер?.. Йому перемигнуло перед душею ціле життя, та не тото життя, яке розуміється в зібранні всіх пригід, нещасть і завірюх, але життя чисто ростинне, вег\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:53:16.852Z",
+          "resultDisplay": "Found 5 results for: \"Пересопницьке Євангеліє\"\n\n### Result 1 (score: 0.5386)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0359`\n- **Text**:\nПереклади Св. Письма. Нові впливи й нові обставини\r\nжиття, зокрема свіже зацікавлення релігійними справами та питаннями, виявилися\r\nв ряді перекладів книг Св. Письма на мову, наближену до народної — так звану\r\n«посполиту». До найцінніших перекладів належить Пересопницька Євангелія з\r\n1556 — 1561 рр. Назва її походить від монастиря в Пересопниці на Волині.\r\nПереклад завершив Михайло Василевич, син сяницького протопопа, за допомогою\r\nархімандрита Григорія та з доручення княгині Анастасії Заславськ\n\n### Result 2 (score: 0.5307)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c1124`\n- **Text**:\nНайяскравішою серед церковних пам’яток, де виразно\r\nприсутня українська мова, є Пересопницьке Євангеліє 1556 — 1561 рр. — найраніший\r\nповний текст перекладу канонічного Євангелія з церковнослов’янської українською\r\nкнижною мовою, здійснений \"ку читаню и посполитымъ людемъ ко доброму\r\nвыразумленю\" 6. Майже одночасно з пересопницьким кодексом виникла\r\nціла низка інших пам’яток з елементами розмовної мови: Житомирське Євангеліє\r\n1571 р., Євангеліє 1581 р. (переклад виконав Валентин Негалевський у с\n\n### Result 3 (score: 0.5178)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0000`\n- **Text**:\nВід автора\n\n### Result 4 (score: 0.5164)\n- **Work**: Патерик Києво-Печерський (1462)\n- **Author**: Невідомий\n- **Genre/Period**: religious / old_east_slavic\n- **Chunk ID**: `3b9d3966_c0274`\n- **Text**:\nПримітки\n\n### Result 5 (score: 0.5076)\n- **Work**: Іван Франко. Борислав (1856)\n- **Author**: Франко І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `6738449c_c0109`\n- **Text**:\nЛежить Василь Півторак і не рушається. Холодний поміст, бачиться йому, дихає під ним, підноситься і опадає, як груди велета. Холодний поміст, бачиться йому, висисає з його тіла нестерпиму паль, лагодить своїм холодом гарячку, тамує дихавичний кашель, йому легше, що раз, то легше. Молитви ніякі не йдуть йому на голову, та й чи до молитви йому тепер?.. Йому перемигнуло перед душею ціле життя, та не тото життя, яке розуміється в зібранні всіх пригід, нещасть і завірюх, але життя чисто ростинне, вег\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "78d6cae0-b22e-472e-86f9-14217d00d35b",
+      "timestamp": "2026-03-13T23:53:22.533Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the next phase",
+          "description": "I'm focused on moving forward with the project. I'm considering the best strategy to complete the task effectively. My aim is to make efficient progress. I'm currently figuring out the best next actions.",
+          "timestamp": "2026-03-13T23:53:21.394Z"
+        },
+        {
+          "subject": "Proceeding with search terms",
+          "description": "I'm now prioritizing the next step of the process. I am actively working on refining the search terms to best suit the information I need, to gain a deeper understanding. I am aiming to make the search more precise.",
+          "timestamp": "2026-03-13T23:53:22.423Z"
+        }
+      ],
+      "tokens": {
+        "input": 22947,
+        "output": 25,
+        "cached": 19809,
+        "thoughts": 123,
+        "tool": 0,
+        "total": 23095
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773446002531_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "канцелярська мова литовських статутів"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773446002531_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"канцелярська мова литовських статутів\"\n\n### Result 1 (score: 0.6196)\n- **Work**: Огієнко — Історія української літературної мови (1949) (2001)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `0988b006_c0119`\n- **Text**:\nОсь тому наша українська літературна мова, мова\r\nруська, стала помалу навіть офіційною мовою Литовсько-руської держави: цією\r\nмовою писано по канцеляріях урядові акти, суджено по судах, вона була навіть\r\nдомовою мовою деяких литовських князів, нею ж написаний і збірник тодішніх\r\nправних постанов, т. зв. Статут Литовський 1529 року 10, пізніші\r\nвидання 1566 і 1588 років. У цьому Статуті навіть правно забезпечено українську\r\nмову, як мову офіційну держави: \"А писаръ земъский маєтъ поруску литерами\n\n### Result 2 (score: 0.6037)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0082`\n- **Text**:\nБезпосередні традиції ділового стилю давньокиївської\r\nмови, трансформованого на українському (також білоруському) грунті,\r\nпродовжувались і розвивалися у мові ділових документів Великого князівства\r\nЛитовського, де ця мова в силу історичних умов стала офіційною в урядових\r\nканцеляріях. Навіть у XVI ст., коли з підкоренням Литовського князівства\r\nПольщею українська літературна /61/ мова уже не тільки в Галичині, але й на всьому\r\nпросторі її поширення стала зазнавати польського впливу, Литовський \n\n### Result 3 (score: 0.5746)\n- **Work**: Огієнко — Історія української літературної мови (1949) (2001)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `0988b006_c0128`\n- **Text**:\nТого часу польська мова була сильно перемішана з\r\nмовою латинською (це т. зв. макаронічна мова), а тому королівські канцелярії\r\nписали й до українських урядів нечистою мовою. Українці протестували проти того\r\nі їхні посли на Варшавському сеймі року 1590-го провели постанову, щоб для\r\nвоєвідств Волинського, Брацлавського й Київського виправлено їхні правні акти\r\nвід латинщини, про що й прийнято постанову: \"Поправа прав Воєвідств\r\nВолинського, Брацлавського й Київського. Щоб статути для тих Воєвід\n\n### Result 4 (score: 0.5727)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0225`\n- **Text**:\n12. Канцелярські акти,\r\nграмоти, судові книги. Приблизно ще два десятиріччя по Люблинській унії\r\nтрадиційної руської канцелярської мови й надалі уживано в офіційному діловодстві,\r\nнаприклад у житомирських ратушних книгах (1582-1584 рр.), а також у приватних\r\nдокументах, наприклад у заповіті Василя Загоровського (Володимир-Волинський,\r\n1577 р.). Однак потім у цих функціях її заступили польщизна та латина.\r\nУкраїнська мова з більш або менш помітним церковнослов’янським забарвленням\r\nбула в ужитку \n\n### Result 5 (score: 0.5696)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0574`\n- **Text**:\nЦей статут водночас завершив кодифікацію литовського\r\nзаконодавства. Першу спробу такої кодифікації здійснив Казимир IV (1440-1492) у\r\n1468 році. Казимирів Судебник був замінений так званим Першим Литовським\r\nстатутом, затвердженим Віленським Сеймом у 1528-1529 рр. У 1566 р. з'явилася\r\nнова редакція, звана Другим статутом. Усі три видання статуту спиралися на\r\nдавньоруське право, чинне в руських князівствах. Певна річ, у кожному виданні\r\nставав дедалі помітнішим вплив польського законодавства. Ц\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:53:23.706Z",
+          "resultDisplay": "Found 5 results for: \"канцелярська мова литовських статутів\"\n\n### Result 1 (score: 0.6196)\n- **Work**: Огієнко — Історія української літературної мови (1949) (2001)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `0988b006_c0119`\n- **Text**:\nОсь тому наша українська літературна мова, мова\r\nруська, стала помалу навіть офіційною мовою Литовсько-руської держави: цією\r\nмовою писано по канцеляріях урядові акти, суджено по судах, вона була навіть\r\nдомовою мовою деяких литовських князів, нею ж написаний і збірник тодішніх\r\nправних постанов, т. зв. Статут Литовський 1529 року 10, пізніші\r\nвидання 1566 і 1588 років. У цьому Статуті навіть правно забезпечено українську\r\nмову, як мову офіційну держави: \"А писаръ земъский маєтъ поруску литерами\n\n### Result 2 (score: 0.6037)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0082`\n- **Text**:\nБезпосередні традиції ділового стилю давньокиївської\r\nмови, трансформованого на українському (також білоруському) грунті,\r\nпродовжувались і розвивалися у мові ділових документів Великого князівства\r\nЛитовського, де ця мова в силу історичних умов стала офіційною в урядових\r\nканцеляріях. Навіть у XVI ст., коли з підкоренням Литовського князівства\r\nПольщею українська літературна /61/ мова уже не тільки в Галичині, але й на всьому\r\nпросторі її поширення стала зазнавати польського впливу, Литовський \n\n### Result 3 (score: 0.5746)\n- **Work**: Огієнко — Історія української літературної мови (1949) (2001)\n- **Author**: Огієнко І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `0988b006_c0128`\n- **Text**:\nТого часу польська мова була сильно перемішана з\r\nмовою латинською (це т. зв. макаронічна мова), а тому королівські канцелярії\r\nписали й до українських урядів нечистою мовою. Українці протестували проти того\r\nі їхні посли на Варшавському сеймі року 1590-го провели постанову, щоб для\r\nвоєвідств Волинського, Брацлавського й Київського виправлено їхні правні акти\r\nвід латинщини, про що й прийнято постанову: \"Поправа прав Воєвідств\r\nВолинського, Брацлавського й Київського. Щоб статути для тих Воєвід\n\n### Result 4 (score: 0.5727)\n- **Work**: Шевельов — Історична фонологія української мови (2002)\n- **Author**: Шевельов Ю.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `850100d0_c0225`\n- **Text**:\n12. Канцелярські акти,\r\nграмоти, судові книги. Приблизно ще два десятиріччя по Люблинській унії\r\nтрадиційної руської канцелярської мови й надалі уживано в офіційному діловодстві,\r\nнаприклад у житомирських ратушних книгах (1582-1584 рр.), а також у приватних\r\nдокументах, наприклад у заповіті Василя Загоровського (Володимир-Волинський,\r\n1577 р.). Однак потім у цих функціях її заступили польщизна та латина.\r\nУкраїнська мова з більш або менш помітним церковнослов’янським забарвленням\r\nбула в ужитку \n\n### Result 5 (score: 0.5696)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0574`\n- **Text**:\nЦей статут водночас завершив кодифікацію литовського\r\nзаконодавства. Першу спробу такої кодифікації здійснив Казимир IV (1440-1492) у\r\n1468 році. Казимирів Судебник був замінений так званим Першим Литовським\r\nстатутом, затвердженим Віленським Сеймом у 1528-1529 рр. У 1566 р. з'явилася\r\nнова редакція, звана Другим статутом. Усі три видання статуту спиралися на\r\nдавньоруське право, чинне в руських князівствах. Певна річ, у кожному виданні\r\nставав дедалі помітнішим вплив польського законодавства. Ц\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    }
+  ],
+  "kind": "main"
+}

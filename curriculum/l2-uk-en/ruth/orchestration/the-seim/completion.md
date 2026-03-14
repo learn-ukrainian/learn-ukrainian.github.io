@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 10 — E2E
+PASS: pipeline ruth 10
 
   Module:   the-seim
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T01:00:22Z
+  Date:     2026-03-14T07:07:54Z

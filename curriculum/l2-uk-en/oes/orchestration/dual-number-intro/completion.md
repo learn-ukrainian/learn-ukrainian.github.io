@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py oes 21 — E2E
+PASS: pipeline oes 21
 
   Module:   dual-number-intro
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-20T03:04:00Z
+  Verdict:  PASS
+  Date:     2026-03-14T07:12:16Z

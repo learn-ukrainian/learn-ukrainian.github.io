@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 34 — E2E
+PASS: pipeline ruth 33
 
   Module:   the-resurrection
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T09:18:25Z
+  Date:     2026-03-14T07:08:05Z

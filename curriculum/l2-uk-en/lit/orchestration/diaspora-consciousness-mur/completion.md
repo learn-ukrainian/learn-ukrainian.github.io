@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 215 — E2E
+PASS: pipeline lit 211
 
   Module:   diaspora-consciousness-mur
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T12:30:55Z
+  Date:     2026-03-14T07:08:24Z

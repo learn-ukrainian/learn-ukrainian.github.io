@@ -1,0 +1,255 @@
+discovered_at: '2026-03-14T00:39:57.816945+00:00'
+query_keywords:
+- Yefremov Literary Criticism
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати літературну критику Єфремова у контексті канонізації
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: This video discusses the Soviet regime's suppression and 'tabooing'
+    of the Tereshchenko family's history, directly illustrating how historical and
+    cultural narratives are manipulated and erased. This is highly relevant to the
+    module's 'Деколонізаційна перспектива' and 'контексті канонізації' sections within
+    literary criticism.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section 'Деколонізаційна перспектива' -- This video provides
+    a concrete historical example of how narratives are suppressed and manipulated,
+    directly illustrating the need for a decolonization perspective in literary criticism.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.2
+  relevance_note: While broadly historical and cultural in a Ukrainian context, the
+    video focuses on the Holocaust and Stalin's crimes, which is not directly related
+    to Yefremov's literary criticism or its specific themes, even considering decolonization.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
+    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
+    яка от є складовою українського культури.
+  embed_suggestion: Not suitable for direct embedding.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.1
+  relevance_note: This video focuses on the economic and business history of the Tereshchenko
+    family, which is not relevant to Yefremov's literary criticism or related themes
+    of narrative, canonization, or decolonization.
+  transcript_excerpt: Микола Терещенко народився 14 жовтня року. Його батько тоді
+    тільки починав робити перші успіхи в комерції.
+  embed_suggestion: Not suitable for direct embedding.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0336
+  text: "Озвучте текст рецензії в класі. Намагайтеся зацікавити одноліт-\nків. пам’ятка\n\
+    \x90отуêµося ¸исати ре¾ензіâ\n1. Прочитайте книжку (перегляньте кіноôільм, відвідайте\
+    \ виставу, \nконцертну програму), на яку писатимете рецензію. 2. Визначте теми,\
+    \ Áо розвиває автор (авторка) твору. 3. Прокоментуйте назву твору. À\n\x8E"
+  section_title: Сторінка 215
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0026
+  text: 'У повідомленні проаналізуйте твори, укажіть жанри,
+
+    види народної творчості, які вплинули на творчість або на конкретний твір поета.
+    Неодмінно залучіть інформацію про фольклористичну діяльність зазначених пись-
+
+    менників, літературно-критичні статті, довідкову літературу, відомості з Інтернету.
+    Роботу слід оцінювати за такими критеріями:
+
+     новизна, ексклюзивність інформації;'
+  section_title: Сторінка 19
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0139
+  text: "Скористайтеся довідковою літературою, матеріалами мережі інтернет і зна-\n\
+    йдіть цікаві факти про письменника . Ознайомте із цими фактами одноклас-\nників\
+    \ та однокласниць (у формі виступу на уроці з повідомленням, на своїй \nсторінці\
+    \ у соціальній мережі, у дружньому спілкуванні) . Òаëановитиé і ріçнобічниé вчениé,\
+    \ неçрівнянниé ерóäит, оäин іç наé-\nяскравіøиõ óкра¿нськиõ інтеëектóаëів XX сторіччя\
+    \ Äомонтович, оäнак, \nó сво¿õ романаõ äемонстрóº обмеæеність і несамоäостатність\
+    \ інтеëек-\nтóаëьноãо ïоøóкó "
+  section_title: Сторінка 76
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6024131774902344
+  chunk_id: 3588aaff_c0514
+  text: "Усі ці критичні зауваги, хоч які б не були гострі (це\r\nнавіть типове для\
+    \ тієї доби: можна згадати, наприклад, польського\r\nлітературознавця терпкого\
+    \ слова Олександра Брюкнера), проте виростають із\r\nгрунту принципових, очевидно,\
+    \ не тільки особистих міркувань. Але так само, як\r\nЄфремов був послідовний і\
+    \ принциповий у своїй критиці, так і ми маємо обов’язок\r\nкритично й принципово\
+    \ перевірити та виважити і його концепцію історії\r\nлітератури (української зокрема),\
+    \ і його практику. Це, ясна річ, велике "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5868813991546631
+  chunk_id: 3588aaff_c0106
+  text: "Основним і водночас вельми проблематичним джерелом\r\nосмислення тогочасного\
+    \ контексту рецепції української літератури є розгорнута\r\nбібліографічно-описова\
+    \ довідка В. Сиповського, \"Україна в російському\r\nписьменстві: 1800-1850\"\
+     108,\n\n108 Сиповський\r\nВасиль. Україна в російському письменстві: 1800-1850.\
+    \ — К., 1928.\n\nПерше, що тут вражає, — це сам фактаж, його розміри:\r\nяк видно\
+    \ зі змісту, йдеться про майже п’ятсот творів. І де навіть тоді, коли\r\nавтор\
+    \ зосереджується на красному письменстві, специфі"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5848408937454224
+  chunk_id: 172f2637_c0087
+  text: '4. Грубою помилкою було б негайно ідентифікувати ці висновки зі світоглядом
+    автора. Частіше їх доводиться іден­тифікувати з світоглядом редактора, а то й
+    видавця, а часто й просто Мар''ї Алексєвни. Світогляд автора знаходиться ста­ранною
+    аналітичною роботою над усіма його творами і су­часною йому творчістю інших. В
+    данім оповіданні куточок світогляду визирає з-під відношення автора до кволих
+    лю­дей.
+
+
+    5. Знайти справжній світогляд автора, аналізуючи тільки його твори, — справа дуже
+    нелегка, а поде'
+  work: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+  year: 1895
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=25044

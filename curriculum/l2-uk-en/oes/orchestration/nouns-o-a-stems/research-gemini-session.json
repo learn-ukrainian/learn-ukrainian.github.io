@@ -1,0 +1,553 @@
+{
+  "sessionId": "b79bbf68-9620-4799-851e-f11cca398d9b",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T23:50:22.901Z",
+  "lastUpdated": "2026-03-13T23:52:21.695Z",
+  "messages": [
+    {
+      "id": "13eb1d9d-1144-4c33-865e-c8798817498d",
+      "timestamp": "2026-03-13T23:50:22.901Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-007\nlevel: OES\nsequence: 7\nslug: nouns-o-a-stems\nversion: '2.0'\ntitle: 'Іменники I: О-основи та А-основи'\nsubtitle: 'Nouns I: O-stems & A-stems'\nfocus: Basic declension in common names\nphase: 1\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - 'Introduction to Nouns I: O-stems & A-stems'\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Grammarian\nprerequisites:\n- greetings-invocations\nconnects_to:\n- vocative-case\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Іменники I: О-основи та А-основи** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Іменники I: О-основи та А-основи\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Іменники I: О-основи та А-основи\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "af6f4620-8dec-44ed-8d35-52d2a08839e9",
+      "timestamp": "2026-03-13T23:50:32.013Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with Queries",
+          "description": "I'm now formulating the first question to begin the process, preparing to extract information relevant to the task. It's time to gather the needed resources to make further progress.",
+          "timestamp": "2026-03-13T23:50:26.917Z"
+        },
+        {
+          "subject": "Formulating the Initial Question",
+          "description": "I'm now starting with the first query. The plan is to get an initial grasp of the subject by exploring related topics. This is the foundation upon which I can start to gather key information.",
+          "timestamp": "2026-03-13T23:50:30.889Z"
+        },
+        {
+          "subject": "Commencing the Wikipedia Search",
+          "description": "I'm now putting the first Wikipedia search query together to kick off this investigation. The aim is to get a basic understanding of the core concepts before proceeding. This initial query should provide a good jumping-off point for more detailed exploration.",
+          "timestamp": "2026-03-13T23:50:31.930Z"
+        }
+      ],
+      "tokens": {
+        "input": 20538,
+        "output": 26,
+        "cached": 0,
+        "thoughts": 441,
+        "tool": 0,
+        "total": 21005
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445832013_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "О-основи давньоруська мова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445832013_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'О-основи давньоруська мова' — 5 results\n\n1. **Давньоруська мова** — теорії про давньоруську мовну єдність; наддіалектної писемної мови, якою користувались у Русі (давньоруська (давньокиївська) писемно-літературна мова). Науковці\n2. **Російська мова** — української мов (VI—XIV сторіччя; деякі дослідники вважають термін «давньоруська мова» некоректним, пов&#039;язуючи формування східнослов&#039;янських мов з розпадом\n3. **Старослов'янська мова** — старослов&#039;янською мовою Гла́вьна страни́ца Староцерковнослов&#039;янська Вікіпедія Церковнослов&#039;янська мова Ізвод Давньоруська мова Пам&#039;ятки української мови Міжслов&#039;янська\n4. **Старобілоруська мова** — Праіндоєвропейська мова Прабалтослов&#039;янська мова Праслов&#039;янська мова Давньоруська мова Руська (старобілоруська) мова Народно-діалектна старобілоруська мова виникла\n5. **Українська мова** — української мови. Праіндоєвропейська мова Прабалтослов&#039;янська мова Праслов&#039;янська мова Давньоруська мова Руська (староукраїнська) мова Українська мова Хоча класифікація"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:50:32.317Z",
+          "resultDisplay": "Wikipedia search: 'О-основи давньоруська мова' — 5 results\n\n1. **Давньоруська мова** — теорії про давньоруську мовну єдність; наддіалектної писемної мови, якою користувались у Русі (давньоруська (давньокиївська) писемно-літературна мова). Науковці\n2. **Російська мова** — української мов (VI—XIV сторіччя; деякі дослідники вважають термін «давньоруська мова» некоректним, пов&#039;язуючи формування східнослов&#039;янських мов з розпадом\n3. **Старослов'янська мова** — старослов&#039;янською мовою Гла́вьна страни́ца Староцерковнослов&#039;янська Вікіпедія Церковнослов&#039;янська мова Ізвод Давньоруська мова Пам&#039;ятки української мови Міжслов&#039;янська\n4. **Старобілоруська мова** — Праіндоєвропейська мова Прабалтослов&#039;янська мова Праслов&#039;янська мова Давньоруська мова Руська (старобілоруська) мова Народно-діалектна старобілоруська мова виникла\n5. **Українська мова** — української мови. Праіндоєвропейська мова Прабалтослов&#039;янська мова Праслов&#039;янська мова Давньоруська мова Руська (староукраїнська) мова Українська мова Хоча класифікація",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "20baf5b9-43fa-4f7c-92bd-e44132d98cab",
+      "timestamp": "2026-03-13T23:50:38.435Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the Morphology",
+          "description": "I am now focused on generating the necessary information about the inflection of nouns. I am working towards formulating the right queries for the next stage of the task.",
+          "timestamp": "2026-03-13T23:50:37.298Z"
+        },
+        {
+          "subject": "Searching for Inflections",
+          "description": "I am now formulating searches to retrieve the necessary morphological data. I'm exploring various search terms to ensure comprehensive coverage of the inflection patterns for nouns. My current focus is to refine the queries to elicit the most relevant information.",
+          "timestamp": "2026-03-13T23:50:38.206Z"
+        }
+      ],
+      "tokens": {
+        "input": 20980,
+        "output": 28,
+        "cached": 19705,
+        "thoughts": 95,
+        "tool": 0,
+        "total": 21103
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445838435_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Історична граматика української мови іменник"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445838435_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Історична граматика української мови іменник' — 5 results\n\n1. **Граматика** — мовознавства, котрий вивчає граматичну будову мови. Граматика як будова мови — це характерна для конкретної мови сукупність правил, за якими слова об&#039;єднуються\n2. **Іменник у праслов'янській мові** — граматика української мови. — К., 1962. — С. 172—199. Крижанівська О. І. Історія української мови. Історична фонетика. Історична граматика. — К., 2010. — С\n3. **Граматика української мови** — інші є незмінюваними. Іменник – це частина мови, яка називає предмет і відповідає на питання хто? що? В українській мові іменники мають такі граматичні\n4. **Граматика Мелетія Смотрицького** — «Граматика слов&#039;янська» (точна назва — «ΓΡΑΜΜΑΤΙΚΗ Славє́нскиѧ пра́вилноє Сѵ́нтаґма») — перший у славістиці повний курс церковнослов&#039;янської мови в українській\n5. **Історія української мови** —  І. Походження української мови та основні етапи її становлення // Історія української мови: Історична фонетика. Історична граматика: навчальний посібник"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:50:38.791Z",
+          "resultDisplay": "Wikipedia search: 'Історична граматика української мови іменник' — 5 results\n\n1. **Граматика** — мовознавства, котрий вивчає граматичну будову мови. Граматика як будова мови — це характерна для конкретної мови сукупність правил, за якими слова об&#039;єднуються\n2. **Іменник у праслов'янській мові** — граматика української мови. — К., 1962. — С. 172—199. Крижанівська О. І. Історія української мови. Історична фонетика. Історична граматика. — К., 2010. — С\n3. **Граматика української мови** — інші є незмінюваними. Іменник – це частина мови, яка називає предмет і відповідає на питання хто? що? В українській мові іменники мають такі граматичні\n4. **Граматика Мелетія Смотрицького** — «Граматика слов&#039;янська» (точна назва — «ΓΡΑΜΜΑΤΙΚΗ Славє́нскиѧ пра́вилноє Сѵ́нтаґма») — перший у славістиці повний курс церковнослов&#039;янської мови в українській\n5. **Історія української мови** —  І. Походження української мови та основні етапи її становлення // Історія української мови: Історична фонетика. Історична граматика: навчальний посібник",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5f9134f9-8f31-40cf-8b2a-93263a8f658a",
+      "timestamp": "2026-03-13T23:50:43.965Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Research Process",
+          "description": "I'm now formulating a plan to advance to the next stage. It involves focusing on the core concepts before diving into finer details. I'll utilize the tools to gather necessary background information. My focus is on ensuring the accuracy of the overall approach before proceeding.",
+          "timestamp": "2026-03-13T23:50:41.962Z"
+        },
+        {
+          "subject": "Starting to Gather Data",
+          "description": "I'm starting the data collection by focusing on relevant topics to understand the subject in more depth. My next move is to gather and analyze the initial findings to form a clearer picture. It's crucial to ensure that the gathered data is well-organized before taking further action.",
+          "timestamp": "2026-03-13T23:50:43.753Z"
+        }
+      ],
+      "tokens": {
+        "input": 21402,
+        "output": 26,
+        "cached": 19686,
+        "thoughts": 197,
+        "tool": 0,
+        "total": 21625
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445843965_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Іменник у праслов'янській мові"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445843965_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Іменник у праслов'янській мові\n**URL**: https://uk.wikipedia.org/wiki/%D0%86%D0%BC%D0%B5%D0%BD%D0%BD%D0%B8%D0%BA_%D1%83_%D0%BF%D1%80%D0%B0%D1%81%D0%BB%D0%BE%D0%B2%27%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D1%96%D0%B9_%D0%BC%D0%BE%D0%B2%D1%96\n\n\n=== Граматичні категорії ===\n\n\n== Рід ==\nРід є однією з найсуттєвіших морфологічних ознак іменника. Історія формування цієї категорії глибока і тривала. Первісно розрізняли два роди: особовий (соціально активний) і речовий (соціально пасивний), поступово на основі першого сформувався розподіл іменників на три роди.\nПитання про первісне значення і час виникнення категорії роду в індоєвропейських, зокрема в слов‘янських, мовах остаточно в мовознавчій науці не розв‘язане. Так, Г.Пауль вважав, що підставою для виникнення граматичного роду є біологічна стать людей і тварин. К.Бругман заперечував значення розрізнення статі для мови і був переконаний, що категорія роду виступає лише змертвілою оболонкою, позбавленою свого внутрішнього змісту. О.Потебня виникнення граматичного роду відносить до первісної стадії творення мови.\nВ історії української мови, за свідченням пам‘яток писемності, система граматичних значень роду сформувалася давно. Проте лінгвісти, окреслюючи давні, очевидно, ще праіндоєвропейські мовні стани, припускають, що категорія роду в минулому реалізувалася через двочленну опозицію форм — протиставлення не чоловічого — жіночого роду, а особистісного — речовинного, що нагадує протиставлення лексико-семантичної категорії назв істот — неістот, яке існує в сучасній мові. Речовинний рід започаткував середній рід, а з особистісного поступово розвинулося протиставлення чоловічого — жіночого роду.\nКатегорія роду поступово витісняє, а пізніше й руйнує типи відмінювання іменників за детермінативним принципом, фактично за допомогою цієї категорії сформувалися нові типи відмінювання — протосучасні відміни.\n\n\n== Число ==\nКатегорія числа як граматична універсалія виражає кількість предметів та явищ, вона є категорією самостійною, синтаксично незалежною. Староукраїнська мова, успадкувавши з праіндоєвропейської однину, множину й двоїну, трансформувала цю категорію: відбулося руйнування двоїни та заміна її форм множиною. Двоїна вживалася тоді, коли йшлося про два предмети (іменники поєднувалися з числівниками два, дві, обидва, обидві) або іменники позначали парні предмети (рука, нога, плече). В однині й множині іменники мали сім відмінкових форм, а в двоїні тільки три: називний — знахідний — кличний, родовий — місцевий, давальний — орудний. Занепад категорії двоїни — найістотніший процес розвитку категорії числа в історії нашої мови, однак сучасна українська мова досі зберігає залишки двоїни як в літературній її формі (плечима, дверима, грошима), так і діалектній (дві нозі, дві руці, дві жмени). На сучасному етапі розвитку індоєвропейських мов не всі мови втратили двоїну: словенська, верхньо- і нижньолужицька та литовська мови її зберегли.\n\n\n== Відмінок ==\nСтароукраїнська мова успадкувала від праслов‘янської сім відмінків (називний, родовий, давальний, знахідний, орудний, місцевий і кличний). Називний відмінок виконує номінативну функцію і є незалежною відмінковою формою. Непрямі відмінки (родовий, давальний, орудний і місцевий) — синтаксично залежні.\n\n\n== Основи іменника ==\nВідмінювання іменників представлене в найдавніших наших пам'ятках як чітко структурована і сформована система, успадкована від спільнослов'янської мови, в якій розподіл іменників за типами відмінювання здійснювався за типом основ. У праіндоєвропейській мові іменник складався з:\n\nкореня, в якому було закладене лексичне значення слова.\nосновотворчого суфікса (детермінатива), що був показником належності слова до певного класу імен.\nзакінчення, що служило засобом синтаксичних відношень у реченні: рук — а — мъ.\nДетермінативи — це кінцеві структурні форманти основи, які визначали особливості структури іменників та їх відмінювання, вони могли закінчуватися на голосний і на приголосний. Існували такі типи відмінювання іменників за типом детермінатива: *-ā/-јā, *-ŏ/-јŏ, *-ŭ, *-ū (*- ъv), *ĭ, *-n, *-r, *-s, *-t. Детермінативи матеріально могли змінюватися (окремі з них зникали, інші — перерозподілялись). Поділ іменників за детермінативами існував незалежно від поділу іменників за родами: іменники з основами на *-ŏ/-јŏ були чоловічого і середнього родів, іменники з основами на *ĭ — жіночого і чоловічого, до основ на приголосний входили іменники чоловічого, жіночого і середнього родів.\n\n\n=== Відмінювання іменників за детермінативами ===\n\n\n==== На голосний ====\nІменники на *-ā /*-јā. Це були іменники чоловічого, жіночого і спільного родів, в називному відмінку однини вони мали переважно закінчення-а/-йа, рідше — флексію -и: рука, рыба, земля, судия, староста, сирота, пустини, княгини.\nІменники на *-ŏ /*-јŏ. Це були іменники чоловічого й середнього родів, в називному відмінку однини іменники чоловічого роду закінчувалися на -ъ чи- ь, а іменники середнього роду на -о, -е: столъ, край, конь, князь; село, поле, знание, житие.\nІменники на *ŭ чоловічого роду в називному відмінку однини мали закінчення ъ і складали кількісно незначну групу. Сюди з меншою або більшою мірою достовірності можна віднести такі слова: сынъ, волъ, полъ, вьрхъ, медъ, домъ, ледъ, чинъ, садъ, рядъ, разъ, пиръ, солодъ, миръ, станъ, низъ, долъ.\nІменники на *-ĭ чоловічого і жіночого роду. В називному відмінку одники вони закінчувалися на -ь: гость, гусь, рать, печь. Іменники чоловічого роду на *-ĭ за початковою формою подібні до іменникі чоловічого роду на *-јŏ. Потрібно пам‘ятати, що іменники, які мали фіналь бь, пь, вь, дь, ть, сь, належали до основ на *-і. Крім того, сюди увійшли такі слова: звѣрь, огнь, угль.\nІменники *-ū (*-ъv) жіночого роду: букы, цьркы — род.в. букве, церкве.\n\n\n==== На пригоосний ====\nІменники на *-еn чоловічого і середнього родів: кремень, ремень, племя, тѣмя.\nІменники на *-t середнього роду: теля, дитя.\nІменники на *-s середнього роду: небо, слово, ухо, чюдо.\nІменники на *-r жіночого роду: мати, дъчи\n\n\n=== Типи основ іменники ===\nСучасні відміни іменників сформувалися на ґрунті давніх типів основ.\n\n\n==== Перша відміна ====\nіменники з основою на *-ā/-jā: жена, доуша, оуноша;\nіменники з основою на *-ū, які уподібнилися за морфемним оформленням і словозміною до іменників з основою на *-ā/-jā: боукы, свекры;\nіменник з основою на *-r: дъчи (дочка);\nіменників з основою на *-ĭ, які уподібнилися до іменників з основою на *-ā/-jā: мишь — миша, пѣснь — пѣсня, долонь — долоня.\n\n\n==== Друга відміна ====\nіменники з основою на *-ŏ /*-јŏ: городъ, краи, поле, село;\nіменники з основою на *-ŭ: сынъ, волъ;\nіменники з основою на *-ĭ чоловічого роду: зять, гость, гусь;\nіменники з основою на *-n чоловічого роду: корень, камы;\nіменники з основою на *-s середнього роду: тѣло, слово, небо.\n\n\n==== Третя відміна ====\nіменники з основою на *-ĭ: ночь, чьсть;\nіменники з основою на *-r: мати;\nіменники з основою на *-ū: кровь, любовь.\n\n\n==== Четверта відміна ====\nіменники з основою на *-n середнього роду: имя, сѣмя;\nіменники з основою на *-t: теля, дитя.\n\n\n== Відмінювання іменників ==\nІменники з основами на *-ā/-jā та *-ŏ /*-јŏ відмінювалися за твердим і м‘яким варіантами. Мішаної групи в праслов‘янській мові не було через те, що шиплячі приголосні в той час були м‘якими, тому й відмінювалися за м‘яким взірцем парадигми.\nКличний відмінок вживався в іменниках чоловічого й жіночого роду однини. В множині і двоїні він збігався із формою називного відмінка. Кличний відмінок іменників середнього роду в усіх числових формах збігався із називним і знахідним.\n\n\n=== Зразки відмінювання іменників ===\n\n\n==== Іменники з основою на *-ā/-jā ====\nОднина Множина Двоїна\nН. рука земля рукы землѣ Н. З. К. руцѣ земли\nР. рукы землѣ рукъ земль Р. М. руку землю\nД. руцѣ земли рукамъ землямъ Д. О. рукама земляма\nЗ. руку землю рукы землѣ\nО. рукою землею руками землями\nМ. руцѣ земли рукахъ земляхъ\nК. руко земле рукы землѣ\n\n\n==== Іменники з основою на *-ŏ/-jŏ ====\nОднина\nН. плодъ село конь поле\nР. плода села коня поля\nД. плоду селу коню полю\nЗ. плодъ село конь поле\nО. плодъмь селъмь коньмь польмь\nМ. плодѣ селѣ кони поли\nК. плоде село коню поле\nМножина\nН. плоди села кони поля\nР. плодъ селъ конь поль\nД. плодомъ селомъ конемъ полемъ\nЗ. плоды села конѣ поля\nО. плоды селы кони поли\nМ. плодѣхъ селѣхъ конихъ полихъ\nК. плоди села кони поля\nДвоїна\nН. З. К. плода селѣ коня поли\nР. М. плоду селу коню полю\nД. О. плодома селома конема полема\n\n\n==== Іменники з основою на* -ŭ ====\nОднина Множина Двоїна\nН.. боукы боукъви Н. З.К боукъви (-ѣ)\nР. боукъве боукъвъ Р. М. боукъву\nД. боукъви боукъвамъ Д. О. боукъвама\nЗ. боукъвь боукъви\nО. боукъвью(-ию) боукъвами\nМ. боукъве боукъвахъ\nК. боукы\n\n\n==== Іменники з основою на *- ĭ ====\nОднина\nН. печь чьсть зять\nР. печи чьсти зяти\nД. печи чьсти зяти\nЗ. печь чьсть зять (зятя)\nО. печью (-ию) чьстью (-ию) зятьмь\nМ. печи чьсти зяти\nК. печи чьсти зяти\nМножина\nН. печи чьсти зяти (зятье)\nР. печьи (-ии) чьстьи (-ии) зятьи зятии\nД. печьмъ чьстьмъ зятьмъ\nЗ. печи чьсти зяти\nО. печьми чьстьми зятьми\nМ. печьхъ чьстьхъ зятьхъ\nК. печи чьсти зятье (зяти)\nДвоїна\nН. З. К. печи чьсти зяти\nР. М. печью (печию) чьсть (чьстию) зятью (зятию)\nД. О. печьма чьстьма зятьма\n\n\n==== Іменники з основою на приголосний(*-r, *-n, *-t, *-s) ====\nОднина\nН. мати имя теля небо\nР. матере имене теляте небесе\nД. матери имени теляти небеси\nЗ. матерь имя теля небо\nО. матерью (материю) именьмь телятьмь небесьмь\nМ. матери имене теляте небесе\nК. мати имя теля небо\nМножина\nН. матере имена телята небеса\nР. матеръ именъ телятъ небесъ\nД. матерьмъ именьмъ телятьмъ небесьмъ\nЗ. матери имена телята небеса\nО. матерьми имены теляты небесы\nМ. матерьхъ именьхъ телятьхъ небесьхъ\nК мати имени телята небеса\nДвоїна\nН. З. К.матери имени (-ѣ) теляти (-ѣ) небеси (-ѣ)\nР. М.матерью (-ию) имену теляту небесу\nД. О.матерьма именьма телятьма небесьма\nУ найдавніших староукраїнських пам‘ятках спостерігаємо змішування типів відмінювання іменників. Основною причиною було групування імен за показником роду, що витіснило детермінативний принцим відмінювання давніх іменників, під впливом належності слів до одного роду виникають і нові схеми відмінювання. Таким чином суфікси- детермінативи втрачають основоположне значення для парадигми іменника.\nФонетичні зміни також вплинули на зміни в структурі іменника, перерозподіл у їх морфемній будові, що теж сприяло занепадові детермінативів. Закон відкритого складу, наприклад, спричинився до зникнення приголосних у кінці слів, внаслідок чого ъ, ь почали виконувати функції закінчень. Тому слова, які належали до різних типів відмінювання (наприклад, сынъ — *-ŭ, братъ — *-ŏ), згрупувалися не тільки родовою належністю, але й на основі подібної морфемної будови. Таким чином, різні за детермінативною належністю іменники опинилися в рамках однієї відміни, що виразно маємо у сучасній українській мові. Поступово зникла двоїна, спростилася система відмінювання іменників у формі множини. Усе це сприяло спрощенню складної системи відмінювання іменника за типами основ і уніфікації парадигми іменника та перерозподіл його на чотири відміни.\n\n\n== Приклади іменників ==\nИм, мєдъ, мѣдь, озеро, хоругы, цѣна, корь, змии, вьрхъ, звѣрь, учитєль, олєнь, стєпь, конь, гость, житиѥ, любы, мълънии, кръвь, сєло, ловьць, лѣто, чьсть, бєрегъ, тополь, жєрєб, дружина, тьсть, коло, голубь, сєстра, гърло, лицє, путь, наставьникъ, локъть, тєл, суди, око, дьнь, стру, сънъ, дѣт, букы, полє, мысль, гоньць, рємень, мышь, мати, пътица, чюдо, мълва, пєчать, козьл, дъчи, вол, пѣснь, слово, камы, свєкры, насыпь, овьсъ, волъ, оухо, гъртань, владыка, боль.\n\n\n== Примітки ==\n\n\n== Література ==\nІсторія української мови. Морфологія. — К., 1978. — С. 26–126.\nЖовтобрюх М. А., Волох С. П., Самійленко С. П. та ін. Історична граматика української мови. — К., 1980. — С. 107—150.\nБезпалько О. П., Бойчук М. К., Жовтобрюх М. А. та ін. Історична граматика української мови. — К., 1962. — С. 172—199.\nКрижанівська О. І. Історія української мови. Історична фонетика. Історична граматика. — К., 2010. — С. 72 –100.\nПавленко Л. П. Історична граматика української мови. –Луцьк, 2010. — С. 64–87.\nЗоряна Купчинська, Володимир Пілецький. Історична граматика української мови. Навчальний посібник для студентів філологічних факультетів. — Львів, 2014. — С. 54 –67."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:50:44.327Z",
+          "resultDisplay": "# Іменник у праслов'янській мові\n**URL**: https://uk.wikipedia.org/wiki/%D0%86%D0%BC%D0%B5%D0%BD%D0%BD%D0%B8%D0%BA_%D1%83_%D0%BF%D1%80%D0%B0%D1%81%D0%BB%D0%BE%D0%B2%27%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D1%96%D0%B9_%D0%BC%D0%BE%D0%B2%D1%96\n\n\n=== Граматичні категорії ===\n\n\n== Рід ==\nРід є однією з найсуттєвіших морфологічних ознак іменника. Історія формування цієї категорії глибока і тривала. Первісно розрізняли два роди: особовий (соціально активний) і речовий (соціально пасивний), поступово на основі першого сформувався розподіл іменників на три роди.\nПитання про первісне значення і час виникнення категорії роду в індоєвропейських, зокрема в слов‘янських, мовах остаточно в мовознавчій науці не розв‘язане. Так, Г.Пауль вважав, що підставою для виникнення граматичного роду є біологічна стать людей і тварин. К.Бругман заперечував значення розрізнення статі для мови і був переконаний, що категорія роду виступає лише змертвілою оболонкою, позбавленою свого внутрішнього змісту. О.Потебня виникнення граматичного роду відносить до первісної стадії творення мови.\nВ історії української мови, за свідченням пам‘яток писемності, система граматичних значень роду сформувалася давно. Проте лінгвісти, окреслюючи давні, очевидно, ще праіндоєвропейські мовні стани, припускають, що категорія роду в минулому реалізувалася через двочленну опозицію форм — протиставлення не чоловічого — жіночого роду, а особистісного — речовинного, що нагадує протиставлення лексико-семантичної категорії назв істот — неістот, яке існує в сучасній мові. Речовинний рід започаткував середній рід, а з особистісного поступово розвинулося протиставлення чоловічого — жіночого роду.\nКатегорія роду поступово витісняє, а пізніше й руйнує типи відмінювання іменників за детермінативним принципом, фактично за допомогою цієї категорії сформувалися нові типи відмінювання — протосучасні відміни.\n\n\n== Число ==\nКатегорія числа як граматична універсалія виражає кількість предметів та явищ, вона є категорією самостійною, синтаксично незалежною. Староукраїнська мова, успадкувавши з праіндоєвропейської однину, множину й двоїну, трансформувала цю категорію: відбулося руйнування двоїни та заміна її форм множиною. Двоїна вживалася тоді, коли йшлося про два предмети (іменники поєднувалися з числівниками два, дві, обидва, обидві) або іменники позначали парні предмети (рука, нога, плече). В однині й множині іменники мали сім відмінкових форм, а в двоїні тільки три: називний — знахідний — кличний, родовий — місцевий, давальний — орудний. Занепад категорії двоїни — найістотніший процес розвитку категорії числа в історії нашої мови, однак сучасна українська мова досі зберігає залишки двоїни як в літературній її формі (плечима, дверима, грошима), так і діалектній (дві нозі, дві руці, дві жмени). На сучасному етапі розвитку індоєвропейських мов не всі мови втратили двоїну: словенська, верхньо- і нижньолужицька та литовська мови її зберегли.\n\n\n== Відмінок ==\nСтароукраїнська мова успадкувала від праслов‘янської сім відмінків (називний, родовий, давальний, знахідний, орудний, місцевий і кличний). Називний відмінок виконує номінативну функцію і є незалежною відмінковою формою. Непрямі відмінки (родовий, давальний, орудний і місцевий) — синтаксично залежні.\n\n\n== Основи іменника ==\nВідмінювання іменників представлене в найдавніших наших пам'ятках як чітко структурована і сформована система, успадкована від спільнослов'янської мови, в якій розподіл іменників за типами відмінювання здійснювався за типом основ. У праіндоєвропейській мові іменник складався з:\n\nкореня, в якому було закладене лексичне значення слова.\nосновотворчого суфікса (детермінатива), що був показником належності слова до певного класу імен.\nзакінчення, що служило засобом синтаксичних відношень у реченні: рук — а — мъ.\nДетермінативи — це кінцеві структурні форманти основи, які визначали особливості структури іменників та їх відмінювання, вони могли закінчуватися на голосний і на приголосний. Існували такі типи відмінювання іменників за типом детермінатива: *-ā/-јā, *-ŏ/-јŏ, *-ŭ, *-ū (*- ъv), *ĭ, *-n, *-r, *-s, *-t. Детермінативи матеріально могли змінюватися (окремі з них зникали, інші — перерозподілялись). Поділ іменників за детермінативами існував незалежно від поділу іменників за родами: іменники з основами на *-ŏ/-јŏ були чоловічого і середнього родів, іменники з основами на *ĭ — жіночого і чоловічого, до основ на приголосний входили іменники чоловічого, жіночого і середнього родів.\n\n\n=== Відмінювання іменників за детермінативами ===\n\n\n==== На голосний ====\nІменники на *-ā /*-јā. Це були іменники чоловічого, жіночого і спільного родів, в називному відмінку однини вони мали переважно закінчення-а/-йа, рідше — флексію -и: рука, рыба, земля, судия, староста, сирота, пустини, княгини.\nІменники на *-ŏ /*-јŏ. Це були іменники чоловічого й середнього родів, в називному відмінку однини іменники чоловічого роду закінчувалися на -ъ чи- ь, а іменники середнього роду на -о, -е: столъ, край, конь, князь; село, поле, знание, житие.\nІменники на *ŭ чоловічого роду в називному відмінку однини мали закінчення ъ і складали кількісно незначну групу. Сюди з меншою або більшою мірою достовірності можна віднести такі слова: сынъ, волъ, полъ, вьрхъ, медъ, домъ, ледъ, чинъ, садъ, рядъ, разъ, пиръ, солодъ, миръ, станъ, низъ, долъ.\nІменники на *-ĭ чоловічого і жіночого роду. В називному відмінку одники вони закінчувалися на -ь: гость, гусь, рать, печь. Іменники чоловічого роду на *-ĭ за початковою формою подібні до іменникі чоловічого роду на *-јŏ. Потрібно пам‘ятати, що іменники, які мали фіналь бь, пь, вь, дь, ть, сь, належали до основ на *-і. Крім того, сюди увійшли такі слова: звѣрь, огнь, угль.\nІменники *-ū (*-ъv) жіночого роду: букы, цьркы — род.в. букве, церкве.\n\n\n==== На пригоосний ====\nІменники на *-еn чоловічого і середнього родів: кремень, ремень, племя, тѣмя.\nІменники на *-t середнього роду: теля, дитя.\nІменники на *-s середнього роду: небо, слово, ухо, чюдо.\nІменники на *-r жіночого роду: мати, дъчи\n\n\n=== Типи основ іменники ===\nСучасні відміни іменників сформувалися на ґрунті давніх типів основ.\n\n\n==== Перша відміна ====\nіменники з основою на *-ā/-jā: жена, доуша, оуноша;\nіменники з основою на *-ū, які уподібнилися за морфемним оформленням і словозміною до іменників з основою на *-ā/-jā: боукы, свекры;\nіменник з основою на *-r: дъчи (дочка);\nіменників з основою на *-ĭ, які уподібнилися до іменників з основою на *-ā/-jā: мишь — миша, пѣснь — пѣсня, долонь — долоня.\n\n\n==== Друга відміна ====\nіменники з основою на *-ŏ /*-јŏ: городъ, краи, поле, село;\nіменники з основою на *-ŭ: сынъ, волъ;\nіменники з основою на *-ĭ чоловічого роду: зять, гость, гусь;\nіменники з основою на *-n чоловічого роду: корень, камы;\nіменники з основою на *-s середнього роду: тѣло, слово, небо.\n\n\n==== Третя відміна ====\nіменники з основою на *-ĭ: ночь, чьсть;\nіменники з основою на *-r: мати;\nіменники з основою на *-ū: кровь, любовь.\n\n\n==== Четверта відміна ====\nіменники з основою на *-n середнього роду: имя, сѣмя;\nіменники з основою на *-t: теля, дитя.\n\n\n== Відмінювання іменників ==\nІменники з основами на *-ā/-jā та *-ŏ /*-јŏ відмінювалися за твердим і м‘яким варіантами. Мішаної групи в праслов‘янській мові не було через те, що шиплячі приголосні в той час були м‘якими, тому й відмінювалися за м‘яким взірцем парадигми.\nКличний відмінок вживався в іменниках чоловічого й жіночого роду однини. В множині і двоїні він збігався із формою називного відмінка. Кличний відмінок іменників середнього роду в усіх числових формах збігався із називним і знахідним.\n\n\n=== Зразки відмінювання іменників ===\n\n\n==== Іменники з основою на *-ā/-jā ====\nОднина Множина Двоїна\nН. рука земля рукы землѣ Н. З. К. руцѣ земли\nР. рукы землѣ рукъ земль Р. М. руку землю\nД. руцѣ земли рукамъ землямъ Д. О. рукама земляма\nЗ. руку землю рукы землѣ\nО. рукою землею руками землями\nМ. руцѣ земли рукахъ земляхъ\nК. руко земле рукы землѣ\n\n\n==== Іменники з основою на *-ŏ/-jŏ ====\nОднина\nН. плодъ село конь поле\nР. плода села коня поля\nД. плоду селу коню полю\nЗ. плодъ село конь поле\nО. плодъмь селъмь коньмь польмь\nМ. плодѣ селѣ кони поли\nК. плоде село коню поле\nМножина\nН. плоди села кони поля\nР. плодъ селъ конь поль\nД. плодомъ селомъ конемъ полемъ\nЗ. плоды села конѣ поля\nО. плоды селы кони поли\nМ. плодѣхъ селѣхъ конихъ полихъ\nК. плоди села кони поля\nДвоїна\nН. З. К. плода селѣ коня поли\nР. М. плоду селу коню полю\nД. О. плодома селома конема полема\n\n\n==== Іменники з основою на* -ŭ ====\nОднина Множина Двоїна\nН.. боукы боукъви Н. З.К боукъви (-ѣ)\nР. боукъве боукъвъ Р. М. боукъву\nД. боукъви боукъвамъ Д. О. боукъвама\nЗ. боукъвь боукъви\nО. боукъвью(-ию) боукъвами\nМ. боукъве боукъвахъ\nК. боукы\n\n\n==== Іменники з основою на *- ĭ ====\nОднина\nН. печь чьсть зять\nР. печи чьсти зяти\nД. печи чьсти зяти\nЗ. печь чьсть зять (зятя)\nО. печью (-ию) чьстью (-ию) зятьмь\nМ. печи чьсти зяти\nК. печи чьсти зяти\nМножина\nН. печи чьсти зяти (зятье)\nР. печьи (-ии) чьстьи (-ии) зятьи зятии\nД. печьмъ чьстьмъ зятьмъ\nЗ. печи чьсти зяти\nО. печьми чьстьми зятьми\nМ. печьхъ чьстьхъ зятьхъ\nК. печи чьсти зятье (зяти)\nДвоїна\nН. З. К. печи чьсти зяти\nР. М. печью (печию) чьсть (чьстию) зятью (зятию)\nД. О. печьма чьстьма зятьма\n\n\n==== Іменники з основою на приголосний(*-r, *-n, *-t, *-s) ====\nОднина\nН. мати имя теля небо\nР. матере имене теляте небесе\nД. матери имени теляти небеси\nЗ. матерь имя теля небо\nО. матерью (материю) именьмь телятьмь небесьмь\nМ. матери имене теляте небесе\nК. мати имя теля небо\nМножина\nН. матере имена телята небеса\nР. матеръ именъ телятъ небесъ\nД. матерьмъ именьмъ телятьмъ небесьмъ\nЗ. матери имена телята небеса\nО. матерьми имены теляты небесы\nМ. матерьхъ именьхъ телятьхъ небесьхъ\nК мати имени телята небеса\nДвоїна\nН. З. К.матери имени (-ѣ) теляти (-ѣ) небеси (-ѣ)\nР. М.матерью (-ию) имену теляту небесу\nД. О.матерьма именьма телятьма небесьма\nУ найдавніших староукраїнських пам‘ятках спостерігаємо змішування типів відмінювання іменників. Основною причиною було групування імен за показником роду, що витіснило детермінативний принцим відмінювання давніх іменників, під впливом належності слів до одного роду виникають і нові схеми відмінювання. Таким чином суфікси- детермінативи втрачають основоположне значення для парадигми іменника.\nФонетичні зміни також вплинули на зміни в структурі іменника, перерозподіл у їх морфемній будові, що теж сприяло занепадові детермінативів. Закон відкритого складу, наприклад, спричинився до зникнення приголосних у кінці слів, внаслідок чого ъ, ь почали виконувати функції закінчень. Тому слова, які належали до різних типів відмінювання (наприклад, сынъ — *-ŭ, братъ — *-ŏ), згрупувалися не тільки родовою належністю, але й на основі подібної морфемної будови. Таким чином, різні за детермінативною належністю іменники опинилися в рамках однієї відміни, що виразно маємо у сучасній українській мові. Поступово зникла двоїна, спростилася система відмінювання іменників у формі множини. Усе це сприяло спрощенню складної системи відмінювання іменника за типами основ і уніфікації парадигми іменника та перерозподіл його на чотири відміни.\n\n\n== Приклади іменників ==\nИм, мєдъ, мѣдь, озеро, хоругы, цѣна, корь, змии, вьрхъ, звѣрь, учитєль, олєнь, стєпь, конь, гость, житиѥ, любы, мълънии, кръвь, сєло, ловьць, лѣто, чьсть, бєрегъ, тополь, жєрєб, дружина, тьсть, коло, голубь, сєстра, гърло, лицє, путь, наставьникъ, локъть, тєл, суди, око, дьнь, стру, сънъ, дѣт, букы, полє, мысль, гоньць, рємень, мышь, мати, пътица, чюдо, мълва, пєчать, козьл, дъчи, вол, пѣснь, слово, камы, свєкры, насыпь, овьсъ, волъ, оухо, гъртань, владыка, боль.\n\n\n== Примітки ==\n\n\n== Література ==\nІсторія української мови. Морфологія. — К., 1978. — С. 26–126.\nЖовтобрюх М. А., Волох С. П., Самійленко С. П. та ін. Історична граматика української мови. — К., 1980. — С. 107—150.\nБезпалько О. П., Бойчук М. К., Жовтобрюх М. А. та ін. Історична граматика української мови. — К., 1962. — С. 172—199.\nКрижанівська О. І. Історія української мови. Історична фонетика. Історична граматика. — К., 2010. — С. 72 –100.\nПавленко Л. П. Історична граматика української мови. –Луцьк, 2010. — С. 64–87.\nЗоряна Купчинська, Володимир Пілецький. Історична граматика української мови. Навчальний посібник для студентів філологічних факультетів. — Львів, 2014. — С. 54 –67.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "46cc12cd-c871-4743-8468-97726a9eec2d",
+      "timestamp": "2026-03-13T23:50:53.478Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "\\n\\n\n\nI'm focused on moving forward to the next step. I'm strategizing how to best approach the upcoming task to achieve the desired outcome efficiently. The priority is executing the next action.",
+          "timestamp": "2026-03-13T23:50:47.788Z"
+        },
+        {
+          "subject": "Implementing Literary Searches",
+          "description": "\\n\\n\n\nI'm now in the process of conducting literary searches, aiming to uncover relevant quotes. The focus is on employing the tool multiple times to gather a diverse set of examples. I am prioritizing the selection of appropriate search queries, considering different noun declensions and their historical context. My objective is to extract and analyze quotations that will serve as illustrative data.",
+          "timestamp": "2026-03-13T23:50:51.553Z"
+        },
+        {
+          "subject": "Extracting Chronicle Data",
+          "description": "\\n\\n\n\nI'm now zeroing in on chronicle excerpts for the literary search. My approach is to formulate targeted queries to find specific examples of relevant words within the defined genre. I'm focusing on \"городъ\" within the \"chronicle\" context to uncover suitable quotations.",
+          "timestamp": "2026-03-13T23:50:53.352Z"
+        }
+      ],
+      "tokens": {
+        "input": 26135,
+        "output": 19,
+        "cached": 20273,
+        "thoughts": 518,
+        "tool": 0,
+        "total": 26672
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445853476_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "городъ",
+            "genre": "chronicle"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445853476_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"городъ\"\n\n### Result 1 (score: 0.5401)\n- **Work**: Добірка літописів (Київська археографічна комісія) (1888)\n- **Author**: Колектив\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `879e5b8c_c0403`\n- **Text**:\nВоронковъ, мЂстечко Полтавской губ., Переяславскаго у., на р. ИквЂ, 37, 96.\n\nВорскла, рЂка, лЂвый притокъ ДнЂпра, 39.\n\nВроцлавъ, (Бреславъ), городъ въ Силезіи, 73.\n\nВыборгъ, городъ въ Финляндіи, 50.\n\nВышгородъ, село Кіевской губ. и у., на ДнЂпрЂ, 78.\n\nВышеградъ, городъ въ Венгріи, 218.\n\nВЂна, столица Австріи, 32, 240.\n\nВязьма, уЂздный городъ Смоленской губ., на р. ВязьмЂ, 14.\n\nГ.\n\nГадячъ, уЂздный городъ Полтавской губ., на р. ПслЂ, 18, 48, 51, 54.\n\nГайворонъ, село Черниговской губ., Глуховскаго \n\n### Result 2 (score: 0.5333)\n- **Work**: Добірка літописів (Київська археографічна комісія) (1888)\n- **Author**: Колектив\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `879e5b8c_c0410`\n- **Text**:\nМеречъ, мЂстечко Виленской губ., Трокскаго у., на р. НЂманЂ, 9, 220.\n\nМерло, рЂка, лЂвый притокъ Ворсклы, 7, 32.\n\nМертвоводъ, рЂка, лЂвый притокъ Южнаго Буга, 66.\n\nМикулинцы, мЂстечко въ Галиціи, Тарнопольскаго повЂта, на р. СеретЂ, 204, 232, 245.\n\nМинскъ, губернскій городъ, на р. Свислочи, 44, 45, 227.\n\nМиргородчина, область, 38.\n\nМиргородъ, уЂздный городъ Полтавской губ., на р. ХоролЂ, 18.\n\nМитава, губернскій городъ Курляндской губ., на р. Аа, 59, 226.\n\nМишуринъ Рогъ, село Екатеринославской гу\n\n### Result 3 (score: 0.5245)\n- **Work**: Добірка літописів (Київська археографічна комісія) (1888)\n- **Author**: Колектив\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `879e5b8c_c0400`\n- **Text**:\nБахчисарай, городъ въ Крыму, 64.\n\nБедзъ, городъ въ Галиціи, Сокальскаго повЂта, на р. Жолокіи, 76.\n\nБендеры (прежде Тегинь), уЂздный городъ въ Бессарабіи, на р. ДнЂстрЂ, 49, 51, 68, 206, 266, 271, 272.\n\nБердичевъ, уЂздный городъ Кіевской губ., на р. Гнилопяти, 36, 127, 268, 270.\n\nБережаны, повЂтовый городъ въ Галиціи, на р. Золотой ЛипЂ, 270.\n\nБерезовъ, городъ въ Сибири, на р. Оби, 52.\n\nБерестечко, мЂстечко Волынской губ., Дубенскаго у., на р. Стыри, 11, 16, 156—159.\n\nБерестовая, рЂка, правый пр\n\n### Result 4 (score: 0.5192)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0028`\n- **Text**:\nи 30 Кривичи. всѧ 31 землѧ наша велика и ѡбилна . а\r\nнарѧда в неи нѣтъ . да поидѣте кнѧжитъ 32 и\r\nволодѣти 33 нами 34. и изъбращасѧ .\r\nг҃ . 35 братьӕ 36. с родъı своими. [и] І\r\nпоӕша по 37 собѣ всю Русь . и придоша 38\r\nстарѣишии 39 Рюрикъ [сѣде Новѣгородѣ] К.\r\nа другии Синеоусъ 40 на Бѣлѣѡзерѣ . а третии\r\nИзборьстѣ 41. Труворъ . [и] І ѿ 42\r\nтѣхъ [Варѧгъ] Л прозвасѧ Рускаӕ землѧ\r\nНовугородьци ти 43 суть людьє 44 Нооугородьци 45\r\nѿ рода Варѧжьска . преже бо бѣша Словѣни 46.\r\nпо дву 47 же лѣту . Си\n\n### Result 5 (score: 0.5165)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0529`\n- **Text**:\nпригороди 34 стануть . а здѣ городъ\r\nстаръıи Ростовъ . и Суждаль . и вси болѧре хотѧще свою правду\r\nпоставити . не хотѧху створити 35 правдъı\r\nБж҃ьӕ . но 36 како нам̑ любо рекоша також̑ створим̑ .\r\nВолодимерь є пригородъ нашь . противѧщесѧ Бу҃ и\r\nст҃ѣи Бц҃ѣ 37. и правдѣ\r\nБж҃ьѣ 38. слушающе злъıх̑ члв҃къ\r\nразвратниковъ . не хотѧщих̑ намъ добра зави/л.128/стью . граду сему и\r\nживущим̑ 39 в немь . постави бо преже градо-сь 40\r\nвеликии 41 Володимеръ . и потомъ кнѧзь Андрѣи . сего же\r\nМихаила [и брат\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:50:54.210Z",
+          "resultDisplay": "Found 5 results for: \"городъ\"\n\n### Result 1 (score: 0.5401)\n- **Work**: Добірка літописів (Київська археографічна комісія) (1888)\n- **Author**: Колектив\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `879e5b8c_c0403`\n- **Text**:\nВоронковъ, мЂстечко Полтавской губ., Переяславскаго у., на р. ИквЂ, 37, 96.\n\nВорскла, рЂка, лЂвый притокъ ДнЂпра, 39.\n\nВроцлавъ, (Бреславъ), городъ въ Силезіи, 73.\n\nВыборгъ, городъ въ Финляндіи, 50.\n\nВышгородъ, село Кіевской губ. и у., на ДнЂпрЂ, 78.\n\nВышеградъ, городъ въ Венгріи, 218.\n\nВЂна, столица Австріи, 32, 240.\n\nВязьма, уЂздный городъ Смоленской губ., на р. ВязьмЂ, 14.\n\nГ.\n\nГадячъ, уЂздный городъ Полтавской губ., на р. ПслЂ, 18, 48, 51, 54.\n\nГайворонъ, село Черниговской губ., Глуховскаго \n\n### Result 2 (score: 0.5333)\n- **Work**: Добірка літописів (Київська археографічна комісія) (1888)\n- **Author**: Колектив\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `879e5b8c_c0410`\n- **Text**:\nМеречъ, мЂстечко Виленской губ., Трокскаго у., на р. НЂманЂ, 9, 220.\n\nМерло, рЂка, лЂвый притокъ Ворсклы, 7, 32.\n\nМертвоводъ, рЂка, лЂвый притокъ Южнаго Буга, 66.\n\nМикулинцы, мЂстечко въ Галиціи, Тарнопольскаго повЂта, на р. СеретЂ, 204, 232, 245.\n\nМинскъ, губернскій городъ, на р. Свислочи, 44, 45, 227.\n\nМиргородчина, область, 38.\n\nМиргородъ, уЂздный городъ Полтавской губ., на р. ХоролЂ, 18.\n\nМитава, губернскій городъ Курляндской губ., на р. Аа, 59, 226.\n\nМишуринъ Рогъ, село Екатеринославской гу\n\n### Result 3 (score: 0.5245)\n- **Work**: Добірка літописів (Київська археографічна комісія) (1888)\n- **Author**: Колектив\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `879e5b8c_c0400`\n- **Text**:\nБахчисарай, городъ въ Крыму, 64.\n\nБедзъ, городъ въ Галиціи, Сокальскаго повЂта, на р. Жолокіи, 76.\n\nБендеры (прежде Тегинь), уЂздный городъ въ Бессарабіи, на р. ДнЂстрЂ, 49, 51, 68, 206, 266, 271, 272.\n\nБердичевъ, уЂздный городъ Кіевской губ., на р. Гнилопяти, 36, 127, 268, 270.\n\nБережаны, повЂтовый городъ въ Галиціи, на р. Золотой ЛипЂ, 270.\n\nБерезовъ, городъ въ Сибири, на р. Оби, 52.\n\nБерестечко, мЂстечко Волынской губ., Дубенскаго у., на р. Стыри, 11, 16, 156—159.\n\nБерестовая, рЂка, правый пр\n\n### Result 4 (score: 0.5192)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0028`\n- **Text**:\nи 30 Кривичи. всѧ 31 землѧ наша велика и ѡбилна . а\r\nнарѧда в неи нѣтъ . да поидѣте кнѧжитъ 32 и\r\nволодѣти 33 нами 34. и изъбращасѧ .\r\nг҃ . 35 братьӕ 36. с родъı своими. [и] І\r\nпоӕша по 37 собѣ всю Русь . и придоша 38\r\nстарѣишии 39 Рюрикъ [сѣде Новѣгородѣ] К.\r\nа другии Синеоусъ 40 на Бѣлѣѡзерѣ . а третии\r\nИзборьстѣ 41. Труворъ . [и] І ѿ 42\r\nтѣхъ [Варѧгъ] Л прозвасѧ Рускаӕ землѧ\r\nНовугородьци ти 43 суть людьє 44 Нооугородьци 45\r\nѿ рода Варѧжьска . преже бо бѣша Словѣни 46.\r\nпо дву 47 же лѣту . Си\n\n### Result 5 (score: 0.5165)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0529`\n- **Text**:\nпригороди 34 стануть . а здѣ городъ\r\nстаръıи Ростовъ . и Суждаль . и вси болѧре хотѧще свою правду\r\nпоставити . не хотѧху створити 35 правдъı\r\nБж҃ьӕ . но 36 како нам̑ любо рекоша також̑ створим̑ .\r\nВолодимерь є пригородъ нашь . противѧщесѧ Бу҃ и\r\nст҃ѣи Бц҃ѣ 37. и правдѣ\r\nБж҃ьѣ 38. слушающе злъıх̑ члв҃къ\r\nразвратниковъ . не хотѧщих̑ намъ добра зави/л.128/стью . граду сему и\r\nживущим̑ 39 в немь . постави бо преже градо-сь 40\r\nвеликии 41 Володимеръ . и потомъ кнѧзь Андрѣи . сего же\r\nМихаила [и брат\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "b4e4bf6e-5a1a-4946-9b14-28acc40d5e7d",
+      "timestamp": "2026-03-13T23:50:59.528Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Extraction",
+          "description": "I am now focused on extracting relevant information to fulfill the objective. I'm actively working through the relevant sources to gather the necessary details. I'm carefully reviewing the results to get closer to the final answer.",
+          "timestamp": "2026-03-13T23:50:58.007Z"
+        },
+        {
+          "subject": "Initiating Search Refinement",
+          "description": "My current task involves refining the search queries. I'm focusing on \"жена\" and \"сестра\" to uncover A-stem examples. Analyzing the initial results has given me a better sense of how to formulate subsequent searches to pinpoint the required information.",
+          "timestamp": "2026-03-13T23:50:59.299Z"
+        }
+      ],
+      "tokens": {
+        "input": 27965,
+        "output": 19,
+        "cached": 0,
+        "thoughts": 163,
+        "tool": 0,
+        "total": 28147
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445859526_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "сестра",
+            "genre": "chronicle"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445859526_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"сестра\"\n\n### Result 1 (score: 0.5501)\n- **Work**: Литовсько-білоруські літописи та хроніки (1980)\n- **Author**: ПСРЛ\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `3bd1f572_c0765`\n- **Text**:\nА Так в рукописи Б\r\nТак в рукописи; в C град В Так в рукописи ВВ Так\r\nв рукописи; д. б. сестрою\n\n### Result 2 (score: 0.5089)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0262`\n- **Text**:\nшю . всѧ братьӕ вземше тѣло єго. и\r\nположиша и в пещерѣ А проводивьше 1 сь пѣс̑ми\r\n. и сь свѣщами чс̑тьно на хвалу Гс̑у нашему Іс̑су Хс̑у Стефану же\r\nпредержащю манастырь . и бл҃жноє стадо ӕже бѣ совокупилъ\r\nФедосии 2 таки черноризьци 3 . аки свѣтила в\r\nРуськои земли . сиӕху ѡво бо 4 бѧху постьници .\r\nѡвии 5 же на бдѣниє . ѡвии 6 же 7\r\nна кланѧниє . коленьноє 8 . ѡвии 9 на пощениє\r\n. чересъ 10 дн҃ь . и чересъ 10 два дн҃и .\r\nѡвии 11 же ӕдѧху . хлѣбъ с 12 водою\r\n. инии же зельє варено . а друзии в\n\n### Result 3 (score: 0.4953)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0516`\n- **Text**:\nсобѣ на\r\nспс̑ние ѡни же не възберегоша 45. Изѧславъ же реклъ\r\nбѧше . послоу своемоу ѡже 46 ти сѧ не имоуть по\r\nлюбви хрс̑та 47 цѣловати . скажи же имъ како есме 48\r\nслъıшали . и реч̑ имъ Изѧславьл И посолъ 49\r\nаже 50 оустоите 51 оу 52 крс̑тьном̑\r\nцѣлованьи . и 53 ӕзъ 53 ва Б 54\r\nбрата ӕвлѧю тако ми вошло во 55 оуши . ѡже 56\r\nмѧ 57 ведете мѧ льстью 58 . а ко 59\r\nСт҃ославоу есте хрс̑тъ 60 цѣловали . къ Ѡлговичю .\r\nӕко на семъ [II, 32] пути вамъ любо мѧ ӕти . любо оубити въ Игорѧ\r\nмѣсто . а есть ли\n\n### Result 4 (score: 0.4943)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c1042`\n- **Text**:\nѡч҃е 1 сӕкого А\r\n2 нъı 3 веремени не боудеть пакъı . а поѣди\r\n4 не стрѧпаӕ . совокоупивъ 5 братью свою .\r\nнъıнѣ возмемь 6 чс̑ть свою . се же слъıшавъ\r\nӔрославъ . и вси Ѡлговичи и 7 ѡбрадовашасѧ .\r\nи поѣхаша ко Смоленьскоу 8 . изъѣздомъ 9 [II,\r\n148] се же слъıшавъ 10 Рюрикъ . и посла изо Вроучего\r\nперекъı к немоу . со крс̑тьнъıми 11 грамотами . река емоу\r\n. ажь 12 еси поѣхалъ 13. брата моего оубить 14\r\n. и ѡбрадовалсѧ еси семоу то оуже состоупилъсѧ 15\r\nеси рѧдоу 16 и крс̑тнаго целованиӕ Б 17\r\n. а\n\n### Result 5 (score: 0.4888)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0246`\n- **Text**:\nаще васъ ѿпущю 42 то зло ми будеть ѿ Ба҃ Д.\r\nаще ли васъ погублю то мьзда Е ми будеть . ѿ Ба҃ и реч̑\r\nӔнь к повозникомъ 43 З. ци кому васъ родинъ 44\r\nоубьєнъ ѿ сею . ѡни же рѣша мнѣ мт҃и . а другому\r\nсестра . иному родичь . ѡнъ же реч̑ имъ . мьстите своихъ . ѡни же\r\nпоимше 45 ӕ избиша 46 . и 47 и\r\nповѣсиша ӕ на дрѣвѣ 48 . ѿмѣстьѥ\r\n49 приимша ѿ Ба҃ . по правдѣ Ӕневи же\r\nидущю домовь . вь другую нощь . медвѣдь влѣзъ 50 оугрызъ\r\n51 ӕ 52 . и снѣде кудеснику . и тако\r\nпогубнуста 53 И. наоучениємь дьӕ\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:51:00.165Z",
+          "resultDisplay": "Found 5 results for: \"сестра\"\n\n### Result 1 (score: 0.5501)\n- **Work**: Литовсько-білоруські літописи та хроніки (1980)\n- **Author**: ПСРЛ\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `3bd1f572_c0765`\n- **Text**:\nА Так в рукописи Б\r\nТак в рукописи; в C град В Так в рукописи ВВ Так\r\nв рукописи; д. б. сестрою\n\n### Result 2 (score: 0.5089)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0262`\n- **Text**:\nшю . всѧ братьӕ вземше тѣло єго. и\r\nположиша и в пещерѣ А проводивьше 1 сь пѣс̑ми\r\n. и сь свѣщами чс̑тьно на хвалу Гс̑у нашему Іс̑су Хс̑у Стефану же\r\nпредержащю манастырь . и бл҃жноє стадо ӕже бѣ совокупилъ\r\nФедосии 2 таки черноризьци 3 . аки свѣтила в\r\nРуськои земли . сиӕху ѡво бо 4 бѧху постьници .\r\nѡвии 5 же на бдѣниє . ѡвии 6 же 7\r\nна кланѧниє . коленьноє 8 . ѡвии 9 на пощениє\r\n. чересъ 10 дн҃ь . и чересъ 10 два дн҃и .\r\nѡвии 11 же ӕдѧху . хлѣбъ с 12 водою\r\n. инии же зельє варено . а друзии в\n\n### Result 3 (score: 0.4953)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0516`\n- **Text**:\nсобѣ на\r\nспс̑ние ѡни же не възберегоша 45. Изѧславъ же реклъ\r\nбѧше . послоу своемоу ѡже 46 ти сѧ не имоуть по\r\nлюбви хрс̑та 47 цѣловати . скажи же имъ како есме 48\r\nслъıшали . и реч̑ имъ Изѧславьл И посолъ 49\r\nаже 50 оустоите 51 оу 52 крс̑тьном̑\r\nцѣлованьи . и 53 ӕзъ 53 ва Б 54\r\nбрата ӕвлѧю тако ми вошло во 55 оуши . ѡже 56\r\nмѧ 57 ведете мѧ льстью 58 . а ко 59\r\nСт҃ославоу есте хрс̑тъ 60 цѣловали . къ Ѡлговичю .\r\nӕко на семъ [II, 32] пути вамъ любо мѧ ӕти . любо оубити въ Игорѧ\r\nмѣсто . а есть ли\n\n### Result 4 (score: 0.4943)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c1042`\n- **Text**:\nѡч҃е 1 сӕкого А\r\n2 нъı 3 веремени не боудеть пакъı . а поѣди\r\n4 не стрѧпаӕ . совокоупивъ 5 братью свою .\r\nнъıнѣ возмемь 6 чс̑ть свою . се же слъıшавъ\r\nӔрославъ . и вси Ѡлговичи и 7 ѡбрадовашасѧ .\r\nи поѣхаша ко Смоленьскоу 8 . изъѣздомъ 9 [II,\r\n148] се же слъıшавъ 10 Рюрикъ . и посла изо Вроучего\r\nперекъı к немоу . со крс̑тьнъıми 11 грамотами . река емоу\r\n. ажь 12 еси поѣхалъ 13. брата моего оубить 14\r\n. и ѡбрадовалсѧ еси семоу то оуже состоупилъсѧ 15\r\nеси рѧдоу 16 и крс̑тнаго целованиӕ Б 17\r\n. а\n\n### Result 5 (score: 0.4888)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0246`\n- **Text**:\nаще васъ ѿпущю 42 то зло ми будеть ѿ Ба҃ Д.\r\nаще ли васъ погублю то мьзда Е ми будеть . ѿ Ба҃ и реч̑\r\nӔнь к повозникомъ 43 З. ци кому васъ родинъ 44\r\nоубьєнъ ѿ сею . ѡни же рѣша мнѣ мт҃и . а другому\r\nсестра . иному родичь . ѡнъ же реч̑ имъ . мьстите своихъ . ѡни же\r\nпоимше 45 ӕ избиша 46 . и 47 и\r\nповѣсиша ӕ на дрѣвѣ 48 . ѿмѣстьѥ\r\n49 приимша ѿ Ба҃ . по правдѣ Ӕневи же\r\nидущю домовь . вь другую нощь . медвѣдь влѣзъ 50 оугрызъ\r\n51 ӕ 52 . и снѣде кудеснику . и тако\r\nпогубнуста 53 И. наоучениємь дьӕ\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e475db75-19ac-4607-b249-a81d2d358812",
+      "timestamp": "2026-03-13T23:51:05.337Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Verifying Quote Accuracy",
+          "description": "I'm now checking the accuracy of the extracted quote. My goal is to ensure the text matches its original source and that there are no errors. This step is crucial for maintaining the integrity of the information. I'm leveraging tools to pinpoint and rectify any discrepancies.",
+          "timestamp": "2026-03-13T23:51:03.765Z"
+        },
+        {
+          "subject": "Searching for More Text",
+          "description": "I'm expanding my search for relevant text, focusing on the words \"село\" and \"жена.\" The aim is to gather additional quotes, which will aid in a more comprehensive analysis of the subject. I'm utilizing my search tools to locate and extract these examples.",
+          "timestamp": "2026-03-13T23:51:05.117Z"
+        }
+      ],
+      "tokens": {
+        "input": 29589,
+        "output": 18,
+        "cached": 27069,
+        "thoughts": 204,
+        "tool": 0,
+        "total": 29811
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445865335_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "жена",
+            "genre": "chronicle"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445865335_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"жена\"\n\n### Result 1 (score: 0.5192)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0996`\n- **Text**:\n«Велик бо господь, і велика сила його, і розумові\r\n його нема числа» 10. Бо злом є жіноча принада. Як ото сказав\r\n Соломон, покаявшись, про жінок: «Не слухай злої жони, бо мед капле із уст її,\r\n жони-любодійки; часину тільки насолоджує вона гортань твою, а потім знайдеш\r\n [це] гіркішим од жовчі; ті, що туляться до неї, [підуть із] смертю в пекло;\r\n по путі бо життя не ходить вона, блудна бо стезя її і нерозважна» 11.\r\n Се так сказав Соломон про перелюбниць.\n\nА про добрих жінок він сказав: «Дорож\n\n### Result 2 (score: 0.5192)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0621`\n- **Text**:\n«Велик бо господь, і велика сила його, і розумові\r\n його нема числа» 10. Бо злом є жіноча принада. Як ото сказав\r\n Соломон, покаявшись, про жінок: «Не слухай злої жони, бо мед капле із уст її,\r\n жони-любодійки; часину тільки насолоджує вона гортань твою, а потім знайдеш\r\n [це] гіркішим од жовчі; ті, що туляться до неї, [підуть із] смертю в пекло;\r\n по путі бо життя не ходить вона, блудна бо стезя її і нерозважна» 11.\r\n Се так сказав Соломон про перелюбниць.\n\nА про добрих жінок він сказав: «Дорож\n\n### Result 3 (score: 0.5077)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0178`\n- **Text**:\n[и] Б\r\nвъскладше 29 хлѣбъı . мѧса 30\r\nръıбъı . ѡвощь 31 розноличнъıи . медъ 32\r\nвъ бчелках̑ 33. а въ другъıх̑ квасъ . возити по городу\r\nвъпрашающим̑ 34. кде болнии В и 35 нищь 36\r\nне могъı 37 ходити . тѣмъ 38 раздаваху 39\r\nна потребу . се 40 же пакъı творѧше людем̑ своимъ по\r\nвсѧ недѣлѧ . оустави на дворѣ въ гридьницѣ пиръ\r\nтворити . и 35 приходити болѧром̑ и гридем̑ . и\r\nсъцьскъıмъ 41. и десѧцьскъıм̑ 42.\r\nи нарочитъıмъ мужем̑ 43 при кнѧзи . и безъ\r\nкнѧзѧ . бъıваше 44 множ̑ство ѿ мѧсъ .\r\nѿ 45 ск\n\n### Result 4 (score: 0.4998)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0558`\n- **Text**:\nа возмем̑ до конца свою славу и чть\r\n. а не вѣдуще 30 Бж҃ьӕ строѥньӕ . а\r\nѡстатокъ 31 бьєнъıх̑ тѣх̑ . бѣжаша\r\nдружинѣ 32 своєи . гдѣ 33 бѧху переже 34\r\nвѣсть послали . и сказаша имъ свою погъıбель . ѡни же\r\nслъıшавше поидоша к ним̑ . а по друзи послашасѧ 35. и\r\nснѧшасѧ с ними стрѣлци и бишасѧ . г҃ . дн҃и\r\n. стрѣлци 36 а копьи сѧ не снимали 37. а\r\nдружинъı ѡжидаючи 38. а 22 к водѣ не\r\nдадуче 39 имъ ити . и приспѣ 40 к ним̑ дружина\r\nвсѧ . многоє множство . наши же видѣвше ихъ оужасошасѧ 41.\r\nи вел\n\n### Result 5 (score: 0.4960)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0098`\n- **Text**:\nна конѣць погибе . сь же бѣ\r\nневеглас̑ 27. на 28 конѣць ѡбрѣте\r\nспс̑ниє . велии бо Гс̑ь 29 и вельӕ крѣпость єг̑ . и\r\nразуму єго нѣс̑ числа . зло бо єс̑ жєньскаӕ прєлѣсть .\r\nӕкож̑ реч̑ Соломонъ . покаӕвсѧ ѡ женахъ . не внимати\r\nзлѣ . женѣ . мєдъ бо каплєть ѿ оустъ єӕ . жены любодѣица\r\n. во времѧ наслажаєть 30 твои гортань . послѣдѣ же\r\nгорьчѣє 31 жєлчи ѡбрѧщєши .\r\nприлѣплѧющаӕсѧ єи . см҃ртью въ адъ . на пути\r\nбо животъныӕ нє находит̑ . блудна бо 32 тєчєньӕ єӕ\r\n. и нє бл҃горазумна . се же реч̑ Сол\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:51:05.681Z",
+          "resultDisplay": "Found 5 results for: \"жена\"\n\n### Result 1 (score: 0.5192)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0996`\n- **Text**:\n«Велик бо господь, і велика сила його, і розумові\r\n його нема числа» 10. Бо злом є жіноча принада. Як ото сказав\r\n Соломон, покаявшись, про жінок: «Не слухай злої жони, бо мед капле із уст її,\r\n жони-любодійки; часину тільки насолоджує вона гортань твою, а потім знайдеш\r\n [це] гіркішим од жовчі; ті, що туляться до неї, [підуть із] смертю в пекло;\r\n по путі бо життя не ходить вона, блудна бо стезя її і нерозважна» 11.\r\n Се так сказав Соломон про перелюбниць.\n\nА про добрих жінок він сказав: «Дорож\n\n### Result 2 (score: 0.5192)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0621`\n- **Text**:\n«Велик бо господь, і велика сила його, і розумові\r\n його нема числа» 10. Бо злом є жіноча принада. Як ото сказав\r\n Соломон, покаявшись, про жінок: «Не слухай злої жони, бо мед капле із уст її,\r\n жони-любодійки; часину тільки насолоджує вона гортань твою, а потім знайдеш\r\n [це] гіркішим од жовчі; ті, що туляться до неї, [підуть із] смертю в пекло;\r\n по путі бо життя не ходить вона, блудна бо стезя її і нерозважна» 11.\r\n Се так сказав Соломон про перелюбниць.\n\nА про добрих жінок він сказав: «Дорож\n\n### Result 3 (score: 0.5077)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0178`\n- **Text**:\n[и] Б\r\nвъскладше 29 хлѣбъı . мѧса 30\r\nръıбъı . ѡвощь 31 розноличнъıи . медъ 32\r\nвъ бчелках̑ 33. а въ другъıх̑ квасъ . возити по городу\r\nвъпрашающим̑ 34. кде болнии В и 35 нищь 36\r\nне могъı 37 ходити . тѣмъ 38 раздаваху 39\r\nна потребу . се 40 же пакъı творѧше людем̑ своимъ по\r\nвсѧ недѣлѧ . оустави на дворѣ въ гридьницѣ пиръ\r\nтворити . и 35 приходити болѧром̑ и гридем̑ . и\r\nсъцьскъıмъ 41. и десѧцьскъıм̑ 42.\r\nи нарочитъıмъ мужем̑ 43 при кнѧзи . и безъ\r\nкнѧзѧ . бъıваше 44 множ̑ство ѿ мѧсъ .\r\nѿ 45 ск\n\n### Result 4 (score: 0.4998)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0558`\n- **Text**:\nа возмем̑ до конца свою славу и чть\r\n. а не вѣдуще 30 Бж҃ьӕ строѥньӕ . а\r\nѡстатокъ 31 бьєнъıх̑ тѣх̑ . бѣжаша\r\nдружинѣ 32 своєи . гдѣ 33 бѧху переже 34\r\nвѣсть послали . и сказаша имъ свою погъıбель . ѡни же\r\nслъıшавше поидоша к ним̑ . а по друзи послашасѧ 35. и\r\nснѧшасѧ с ними стрѣлци и бишасѧ . г҃ . дн҃и\r\n. стрѣлци 36 а копьи сѧ не снимали 37. а\r\nдружинъı ѡжидаючи 38. а 22 к водѣ не\r\nдадуче 39 имъ ити . и приспѣ 40 к ним̑ дружина\r\nвсѧ . многоє множство . наши же видѣвше ихъ оужасошасѧ 41.\r\nи вел\n\n### Result 5 (score: 0.4960)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0098`\n- **Text**:\nна конѣць погибе . сь же бѣ\r\nневеглас̑ 27. на 28 конѣць ѡбрѣте\r\nспс̑ниє . велии бо Гс̑ь 29 и вельӕ крѣпость єг̑ . и\r\nразуму єго нѣс̑ числа . зло бо єс̑ жєньскаӕ прєлѣсть .\r\nӕкож̑ реч̑ Соломонъ . покаӕвсѧ ѡ женахъ . не внимати\r\nзлѣ . женѣ . мєдъ бо каплєть ѿ оустъ єӕ . жены любодѣица\r\n. во времѧ наслажаєть 30 твои гортань . послѣдѣ же\r\nгорьчѣє 31 жєлчи ѡбрѧщєши .\r\nприлѣплѧющаӕсѧ єи . см҃ртью въ адъ . на пути\r\nбо животъныӕ нє находит̑ . блудна бо 32 тєчєньӕ єӕ\r\n. и нє бл҃горазумна . се же реч̑ Сол\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c918204a-3ddd-4d56-a297-2274d6b47c09",
+      "timestamp": "2026-03-13T23:51:12.190Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Organizing Found Quotes",
+          "description": "I'm now in the process of organizing the quotes I've found. My current focus is to get everything structured in a way that allows me to then easily use my tools. The goal is to make sure I don't lose anything during the process.",
+          "timestamp": "2026-03-13T23:51:10.841Z"
+        },
+        {
+          "subject": "Classifying the terms",
+          "description": "I'm cataloging the terms by their grammatical declension type. My aim is to prepare the data for further analysis. This classification will enable the use of specific verification and frequency tools.",
+          "timestamp": "2026-03-13T23:51:12.075Z"
+        }
+      ],
+      "tokens": {
+        "input": 31295,
+        "output": 21,
+        "cached": 27188,
+        "thoughts": 169,
+        "tool": 0,
+        "total": 31485
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773445872190_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "город",
+              "село",
+              "жена",
+              "земля",
+              "печть"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773445872190_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 5 words\n\nFound: 3/5\n\n- **город** — FOUND (2 match): город(noun), город(noun)\n- **село** — FOUND (3 match): село(noun), село(noun), село(noun)\n- **жена** — NOT FOUND\n- **земля** — FOUND (1 match): земля(noun)\n- **печть** — NOT FOUND"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:51:12.201Z",
+          "resultDisplay": "Batch verification: 5 words\n\nFound: 3/5\n\n- **город** — FOUND (2 match): город(noun), город(noun)\n- **село** — FOUND (3 match): село(noun), село(noun), село(noun)\n- **жена** — NOT FOUND\n- **земля** — FOUND (1 match): земля(noun)\n- **печть** — NOT FOUND",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4be850b6-c7bb-4be6-8e01-25067b5dc8fc",
+      "timestamp": "2026-03-13T23:51:29.303Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Readying the Initial Draft",
+          "description": "\\n\\n\n\nI'm starting the writing process. It seems that I am to begin forming an initial draft, gathering the pertinent information, and organizing my thoughts to answer the query effectively.",
+          "timestamp": "2026-03-13T23:51:17.003Z"
+        },
+        {
+          "subject": "Constructing the Timeline",
+          "description": "\\n\\n\n\nMy current focus is on compiling the timeline. I'm pinpointing key moments in the language's development, specifically focusing on declension changes. I'm also ensuring the historical context reflects the Ukrainian perspective.",
+          "timestamp": "2026-03-13T23:51:20.261Z"
+        },
+        {
+          "subject": "Refining the Research Plan",
+          "description": "\\n\\n\n\nMy current focus is on gathering information from a variety of sources. I'm focusing on key milestones in language evolution, specifically changes in declensions. I am also working on finding notable quotes that exemplify the language's usage.",
+          "timestamp": "2026-03-13T23:51:22.252Z"
+        },
+        {
+          "subject": "Developing the Narrative Structure",
+          "description": "\\n\\n\n\nMy current focus is on organizing the available information. I'm focusing on incorporating the decolonization perspective by highlighting proto-Ukrainian characteristics. I'm also preparing to integrate quotes and hooks.",
+          "timestamp": "2026-03-13T23:51:25.885Z"
+        },
+        {
+          "subject": "Gathering the Foundation",
+          "description": "\\n\\n\n\nMy current focus is on gathering all essential materials to build a strong base for the task. I am working on creating a comprehensive research plan, gathering information from several distinct sources, and creating a detailed timeline of key developments. I'm also preparing for the incorporation of relevant primary quotes and compelling hooks to engage the reader.",
+          "timestamp": "2026-03-13T23:51:29.169Z"
+        }
+      ],
+      "tokens": {
+        "input": 31410,
+        "output": 17,
+        "cached": 27054,
+        "thoughts": 1189,
+        "tool": 0,
+        "total": 32616
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773445889294_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "mode": "frequency",
+            "query": "город"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773445889294_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**город**: frequency = 16,979, relative = 8.39 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:51:32.386Z",
+          "resultDisplay": "**город**: frequency = 16,979, relative = 8.39 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5500eba8-d426-40c7-9716-f12d16de4e39",
+      "timestamp": "2026-03-13T23:52:21.694Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Іменники I: О-основи та А-основи\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Іменники I: О-основи та А-основи\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1050\"\n  end: \"~1350\"\n  key_events:\n    - year: 1056\n      event: \"Створення Остромирового Євангелія — фіксація давніх форм о- та а-основ на письмі\"\n    - year: 1113\n      event: \"Укладання «Повісті временних літ» — відображення живої та книжної норми відмінювання іменників\"\n    - year: 1150\n      event: \"Початок занепаду редукованих (ъ, ь), що кардинально змінило структуру о-основ\"\n    - year: 1250\n      event: \"Активне змішування типів основ у пам'ятках через фонетичні зміни (закон відкритого складу)\"\n    - year: 1350\n      event: \"Остаточний перехід від детермінативного принципу до родового (формування сучасних відмін)\"\nprimary_quotes:\n  - text: \"а здѣ городъ старъıи Ростовъ . и Суждаль\"\n    source: \"Повість временних літ (Лаврентіївський список), 1113\"\n    attribution: \"Нестор Літописець\"\n  - text: \"ци кому васъ родинъ оубьєнъ ѿ сею . ѡни же рѣша мнѣ мт҃и . а другому сестра . иному родичь\"\n    source: \"Повість временних літ (Іпатський список), 1113\"\n    attribution: \"Нестор Літописець\"\n  - text: \"не внимати злѣ . женѣ . мєдъ бо каплєть ѿ оустъ єӕ\"\n    source: \"Повість временних літ (Іпатський список), 1113\"\n    attribution: \"Нестор Літописець\"\nforbidden_claims:\n  - \"Стверджувати, що давньоруська система відмінювання є ідентичною сучасній російській.\"\n  - \"Називати мову Русі-України 'древнерусским языком' у контексті виключної спадщини РФ.\"\n```\n\n## Використані джерела\n1. [Wikipedia: Іменник у праслов'янській мові](https://uk.wikipedia.org/wiki/%D0%86%D0%BC%D0%B5%D0%BD%D0%BD%D0%B8%D0%BA_%D1%83_%D0%BF%D1%80%D0%B0%D1%81%D0%BB%D0%BE%D0%B2%27%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D1%96%D0%B9_%D0%BC%D0%BE%D0%B2%D1%96) — Опис формування давніх типів основ (*-ā/-jā, *-ŏ/-jŏ) та їхньої структури.\n2. Повість временних літ (Лаврентіївський список), 1113 — Першоджерело для аналізу іменників о-основ (городъ, село).\n3. Повість временних літ (Іпатський список), 1113 — Першоджерело для аналізу іменників а-основ (сестра, жена).\n4. Словник VESUM та корпус GRAC — Верифікація українських рефлексів давніх основ та їхньої частотності.\n\n## Хронологія\n- **~IX ст.**: Формування прасхіднослов'янських особливостей у системі відмінювання, що успадкувала індоєвропейські детермінативи.\n- **1056–1057**: Створення Остромирового Євангелія — фіксація давніх форм о- та а-основ на письмі.\n- **1113**: Укладання «Повісті временних літ» — відображення живої мови та книжної норми відмінювання іменників на *-ŏ, *-ā.\n- **XII–XIII ст.**: Початок занепаду редукованих (ъ, ь), що кардинально змінило морфемну структуру о-основ.\n- **XIV ст.**: Перебудова системи відмінювання: перехід від детермінативного принципу (за типом основи) до родового принципу (формування сучасних відмін).\n\n## Ключові факти та цитати\n- Давньоруська (давньокиївська) система відмінювання базувалася не на граматичному роді, а на **детермінативах** (основотворчих суфіксах).\n- **О-основи** (*-ŏ/-jŏ) включали іменники чоловічого та середнього роду (напр., *городъ, *конь; *село, *поле).\n- **А-основи** (*-ā/-jā) включали переважно іменники жіночого, а також чоловічого роду (напр., *жена, *сестра, *земля, *воєвода).\n- Давні іменники мали 7 відмінків (включно з повноцінним кличним) та 3 числа (однина, двоїна, множина).\n- Цитати з літописів наочно демонструють ці форми у прямому вжитку: «а здѣ городъ старъıи Ростовъ...», «а другому сестра».\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!myth-buster] — Міф: Давньоруська морфологія — це просто стара російська. Факт: Вона зберігала двоїну та праслов'янські основи, а її трансформація (наприклад, занепад редукованих у о-основах) призвела безпосередньо до унікальних українських фонетичних рис (*stolъ > стіл), тоді як російська втратила багато з цих автентичних елементів (наприклад, кличний відмінок).\n- Section \"Вступ\": [!decolonization] — Термін \"Давньоруська\" означає \"Old Rusian\", де Русь = Україна. Система основ *-ŏ та *-ā — це питома спадщина Київської держави, яка органічно трансформувалась у сучасні українські І та ІІ відміни.\n- Section \"Основний матеріал\": [!context] — Парадокс основ: О-основи включали чоловічий і середній рід, тоді як А-основи — здебільшого жіночий. Це відображає давню індоєвропейську логіку, де тип основи (детермінатив) був важливішим за біологічний чи граматичний рід.\n- Section \"Основний матеріал\": [!quote] — Аналіз першоджерела: \"а здѣ городъ старъıи Ростовъ...\" як приклад твердого варіанту О-основи.\n- Section \"Практика\": [!history-bite] — Занепад редукованих (ъ, ь) у XII столітті перетворив закінчення О-основ (наприклад, -ъ у слові городъ) на нульові. Це створило закриті склади, що запустило знаменитий український перехід [о], [е] в [і] (конь -> кінь).\n- Section \"Підсумок\": [!culture] — Лексика О- та А-основ охоплює найбазовіші концепти людського буття: *жена (жінка), *сестра, *село (поселення), *городъ (місто). Ці слова пронесли свою кореневу суть крізь тисячоліття.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Розглядає \"древнерусский язык\" як пряму основу виключно сучасної російської, маргіналізуючи українську. Ігнорується той факт, що фонетичні та морфологічні наслідки руйнування старих основ (наприклад, занепад редукованих, поява ікавізму, збереження кличного відмінка) стали базою саме для української мови.\n- **Ukrainian reality**: Давньокиївська (давньоруська) мова є безпосереднім предком української. Трансформація системи детермінативів (перехід від *-ŏ/-ā-основ до сучасних родових відмін) відбувалася в тісному зв'язку з формуванням питомо українських мовних рис. Збереження кличного відмінка, який був сильним у А- та О-основах (жено, друже), є яскравим доказом безперервності традиції.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Давньоруська мова | Древнерусский язык (як \"загальноросійський\" предок) | Давньокиївська / Давньоруська мова (як питомий етап розвитку української) |\n| Система основ | Спільна \"російська\" історична граматика | Питома індоєвропейська спадщина Русі-України, основа українських I-II відмін |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Фокус**: Походження системи відмінювання від праіндоєвропейської та праслов'янської мов.\n- **Ключові концепції**: Поняття «детермінатива» (основотворчого суфікса). Пояснення, що іменники групувалися не за родом, а за кінцевим звуком основи.\n- **Огляд**: Представлення двох наймасовіших типів: О-основи (*-ŏ/-jŏ) та А-основи (*-ā/-jā).\n- **Хуки**: Використати `[!myth-buster]` про морфологічну спадкоємність з українською мовою та `[!decolonization]` щодо термінології \"Русь\".\n\n### Основний матеріал\n- **О-основи (*-ŏ/-jŏ)**: Включають іменники чоловічого (закінчення -ъ, -ь у Н.в.) та середнього роду (-о, -е). Тверда група (городъ, село) та м'яка група (конь, поле).\n- **А-основи (*-ā/-jā)**: Включають іменники жіночого та чоловічого роду із закінченнями -а, -я (жена, сестра, земля, судїя).\n- **Граматичні категорії**: Наявність 7 відмінків (зокрема кличного) та 3 чисел (однина, множина, двоїна).\n- **Аналіз джерел**: Інтеграція цитат з літописів («городъ старъıи», «сестра») для демонстрації живого вжитку.\n- **Хуки**: Включити `[!context]` про специфіку розподілу родів в основах та `[!quote]` з Лаврентіївського списку.\n\n### Практика\n- **Напрям завдань**: Ідентифікація О-основ та А-основ у давніх текстах (наприклад, розрізнення чоловічого роду на -а від жіночого роду на -а).\n- **Етимологічний слід**: Простежити, як давні іменники О- та А-основ трансформувалися у сучасні іменники І та ІІ відміни.\n- **Хуки**: Використати `[!history-bite]` про занепад редукованих (ъ, ь), що перетворив давні О-основи на слова з нульовим закінченням (городъ -> город) і запустив ікавізм (конь -> кінь).\n\n### Підсумок\n- **Синтез**: О-основи та А-основи були найпродуктивнішими типами відмінювання, які зрештою поглинули інші, менші типи основ, сформувавши ядро сучасної української морфології (І та ІІ відміни).\n- **Місток до наступного модуля**: Підкреслити значення кличного відмінка, форми якого (напр., 'жено', 'княже') були яскраво виражені в цих основах і збереглися донині (на відміну від російської).\n- **Хуки**: Інтегрувати `[!culture]` про базовий лексичний фонд, який дійшов до нас завдяки цим основам.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Commencing Final Output",
+          "description": "I'm now ready to generate the final response. My preparations are complete. The output phase is commencing.",
+          "timestamp": "2026-03-13T23:51:36.014Z"
+        },
+        {
+          "subject": "Crafting the Final Result",
+          "description": "The final structured output is now being built. All gathered information is integrated to construct the Markdown and the Friction Report, adhering closely to the provided instructions for format and content. I am now proceeding with the final stage.",
+          "timestamp": "2026-03-13T23:51:38.794Z"
+        },
+        {
+          "subject": "Initiating Output Generation",
+          "description": "I'm now structuring the output block, incorporating all the gathered findings. The Markdown format, including delimiters, and the Friction Report will be produced to fulfill the task requirements. The generation process has advanced significantly.",
+          "timestamp": "2026-03-13T23:51:40.515Z"
+        },
+        {
+          "subject": "Assembling Final Report",
+          "description": "I'm now carefully integrating all gathered information to precisely create the Markdown output, as instructed. The delimiters and the Friction Report will be included as the final stages are underway. The focus is to precisely fulfill the prompt's requests.",
+          "timestamp": "2026-03-13T23:51:43.622Z"
+        },
+        {
+          "subject": "Generating the Output Structure",
+          "description": "I am now structuring the final output. The Markdown with delimiters and the Friction Report are being crafted. I'm focusing on incorporating all gathered facts precisely, adhering to the required format.",
+          "timestamp": "2026-03-13T23:51:45.121Z"
+        },
+        {
+          "subject": "Preparing the Final Composition",
+          "description": "I am now proceeding with the creation of the final output, focusing on crafting the Markdown structure. All the necessary elements are being precisely integrated to match the prompt's specifications. The final phase has commenced.",
+          "timestamp": "2026-03-13T23:51:47.636Z"
+        },
+        {
+          "subject": "Constructing the Output Block",
+          "description": "I am now beginning to build the output, structuring it to include the specified Markdown format and Friction Report. All collected data will be meticulously integrated. My focus remains on achieving precise adherence to all instructions for the final output.",
+          "timestamp": "2026-03-13T23:51:49.862Z"
+        },
+        {
+          "subject": "Initiating Final Assembly",
+          "description": "I am now beginning to meticulously construct the final output. The plan is to create the Markdown structure, integrating all verified information, along with the Friction Report. Precise adherence to the formatting guidelines remains my primary focus.",
+          "timestamp": "2026-03-13T23:51:51.820Z"
+        },
+        {
+          "subject": "Commencing Output Construction",
+          "description": "I am now proceeding with the creation of the final output, starting with the Markdown format. All the compiled information will be meticulously arranged. Precise adherence to instructions is central to this stage.",
+          "timestamp": "2026-03-13T23:51:54.302Z"
+        },
+        {
+          "subject": "Constructing the Final Output",
+          "description": "I am now structuring the entire response, ready to build the Markdown file with all the collected information and the Friction Report. My primary focus now is to ensure complete and precise fulfillment of the given specifications.",
+          "timestamp": "2026-03-13T23:51:56.792Z"
+        },
+        {
+          "subject": "Commencing Finalization",
+          "description": "I'm now generating the final Markdown output. I am incorporating all the collected information, including the Friction Report and ensuring the structure precisely follows instructions. The complete answer is in production.",
+          "timestamp": "2026-03-13T23:51:58.306Z"
+        }
+      ],
+      "tokens": {
+        "input": 31455,
+        "output": 3176,
+        "cached": 26244,
+        "thoughts": 2749,
+        "tool": 0,
+        "total": 37380
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

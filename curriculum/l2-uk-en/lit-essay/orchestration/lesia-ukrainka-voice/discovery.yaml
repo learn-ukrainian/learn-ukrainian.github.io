@@ -1,0 +1,257 @@
+discovered_at: '2026-03-14T00:16:05.330331+00:00'
+query_keywords:
+- Lesia Ukrainka Voice
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Lesia Ukrainka Voice у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0010
+  text: "Яê виãлядало тоãочасне \nвбрання? На яêих сімейних цінностях виховóвали дітей?\
+    \ Яêою бóла роль жінêи ó \nсім’ї та сóспільстві? 2. Підãотóйте віртóальнó еêсêóрсію\
+    \ «Уêраїнсьêа родина». Джерела інформації: бібліотеêа, Інтернет-ресóрси, місцевий\
+    \ êраєзнавчий мóзей, \nвóлиці вашоãо села/міста (зверніть óваãó на назви вóлиць.\
+    \ Чи пов’язані вони з \nдіячами або подіями тоãо часó? Спостереження запишіть),\
+    \ ваші óчителі історії. Завдання 3. Виêонайте презентацію своїх проеêтів перед\
+    \ óчнями êласó. Бажаємо óспіхó!"
+  section_title: Сторінка 7
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0116
+  text: 'Практична риторика
+
+    82
+
+    — Укладіть словничок популярних у вашій місцевості слів, що вжи-
+
+    вають із діалектним наголосом. До кожного такого слова додайте відпо-
+
+    відник літературної вимови. Напишіть до словничка стислу передмову-за-
+
+    клик дотримувати орфоепічних норм.
+
+    — Складіть план інформаційного виступу на тему: «Можливості укра-
+
+    їнського наголосу». Оберіть журі, яке визначить найкращий з усіх складе-
+
+    них планів та обґрунтує свій вибір. Обравши стиль, відповід-
+
+    ний темі, колективно складіть за цим '
+  section_title: Сторінка 82
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5769813656806946
+  chunk_id: 7808b51b_c0078
+  text: "1 Гумецкая Л.Л. K\r\nвопросу об определении значения слова в словаре староукраинского\
+    \ языка XIV—XV\r\nвв. // Вопросы исторической лексикологии и лексикографии восточнославянских\r\
+    \nязыков. — М., 1974. — C. 56."
+  work: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/rusaniv/ru.htm
+- score: 0.5763722658157349
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5641376972198486
+  chunk_id: feaa5fa7_c0944
+  text: "Історіографія: Василенко Н. К истории\r\nмалорусской историографии и малорусского\
+    \ /406/ общественного строя. КСт., XI\r\n— XII. 1894; Лазаревский А. Прежние изыскатели\
+    \ малорусс. старины. КСт.\r\n1891 — 97 і окремо: Очерки, заметки и документы по\
+    \ истории Малороссии, I — V.\r\nК. 1891 — 98; Иконников В. Опыт русской историографии,\
+    \ П. К. 1908; Грушевский\r\nМ. Развитие украинских изучений. Украинский народ\
+    \ в его прошлом и настоящем, І.\r\nП. 1914; Дорошенко Д. Огляд укр. історіографії.\
+    \ Прага 1923; Багалій\r\nД. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

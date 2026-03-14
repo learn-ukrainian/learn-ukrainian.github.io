@@ -1,0 +1,283 @@
+discovered_at: '2026-03-14T01:05:52.242528+00:00'
+query_keywords:
+- Grabowicz Poet Prophet
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Grabowicz Poet Prophet у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: This video directly addresses the suppression of Ukrainian historical
+    figures (Terechenko family) by Soviet historiography. This aligns well with Grabowicz's
+    work on decolonization and critical re-evaluation of historical narratives, making
+    it highly relevant to the module's themes of historiography and decolonization.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section 'Деколонізаційна перспектива' – it provides a concrete
+    example of Soviet historical suppression relevant to Grabowicz's critique.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.4
+  relevance_note: The video continues the historical narrative of the Terechenko family,
+    focusing on their business and economic influence. While historical context can
+    be valuable, the specific focus on business innovations is only tangentially related
+    to Grabowicz's academic and literary focus.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: After section 'Вступ та контекст' – could serve as general historical
+    background if an argument is made for the economic context of Grabowicz's intellectual
+    environment.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.2
+  relevance_note: The video discusses the Holocaust and Soviet-era crimes, which is
+    a general historical topic. While it relates to broader decolonization themes
+    in Ukraine, it is not directly connected to Grabowicz, his literary analysis,
+    or his specific work on historical narratives.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії.
+  embed_suggestion: Not recommended for direct embedding due to low relevance. Could
+    be considered as very broad background for 'Деколонізаційна перспектива' if module
+    scope is expanded significantly.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/taras-shevchenko/
+  title: Taras Shevchenko — Ukraine's National Poet
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - shevchenko
+  - literature
+  - history
+  - poetry
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0422
+  text: '3. Прочитайте вірші П. Грабовського «Надія», «Справжні герої»,
+
+    «До Н. К. С.». Знайдіть у мережі Інтернет матеріал про ці твори,
+
+    опрацюйте його й заповніть літературний паспорт кожної з цих
+
+    поезій.
+
+    НАДІЯ
+
+    Не зітхай так безнадійно,
+
+    Скорбних уст не замикай,
+
+    Рук не складуй ще подвійно,
+
+    З лану битви не тікай,
+
+    Глянь на луг — не вся травиця
+
+    Ще потоптана упрах;
+
+    Глянь на люди — чесні лиця
+
+    Ще не всі обвіяв страх.
+
+    Ще великі перепони
+
+    Злу поставлено кругом,
+
+    Не безкарно рвуться стони
+
+    Під ворожим батогом.
+
+    Встан'
+  section_title: Сторінка 319
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0070
+  text: "Плуæника, його пое му «Ãалілей», роман \n«Íедуга» . Обговоріть з однокласниками\
+    \ та однокласницями, які нові \nособ ливості творчості поета ви відкрили . Запрошуємо\
+    \ до бібліотеки"
+  section_title: Сторінка 37
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0207
+  text: "Створіть рекламний допис для \nсоцмережі, розкривши в ньому цінність згаданої\
+    \ роботи (5–7 речень; за бажанням). Подумайте й розкажіть\n•\t\nЩо, на вашу думку,\
+    \ має оспівувати поет — красу як таку чи проблеми на злобу дня? •\t\nЯкий художній\
+    \ образ П. Грабовського вам найбільше запам’ятався? Чим саме? •\t\nНаділіть П.\
+    \ Грабовського кількома прикметниками-характеристиками. 3. Завдання."
+  section_title: Сторінка 122
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0026
+  text: 'У повідомленні проаналізуйте твори, укажіть жанри,
+
+    види народної творчості, які вплинули на творчість або на конкретний твір поета.
+    Неодмінно залучіть інформацію про фольклористичну діяльність зазначених пись-
+
+    менників, літературно-критичні статті, довідкову літературу, відомості з Інтернету.
+    Роботу слід оцінювати за такими критеріями:
+
+     новизна, ексклюзивність інформації;'
+  section_title: Сторінка 19
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5515141487121582
+  chunk_id: 3588aaff_c0077
+  text: "61 Ibidem. — S. 181.\n\n62 Ibidem. — S.\r\n181-183.\n\nХоч Ґеріка аргумент\
+    \ наставлений передусім на індивідуальний\r\nтвір, його іманентність, його \"\
+    правду\", та його естетичне й етичне\r\nдіяння, його критичні зауваження мають\
+    \ неабияку цінність для кращого пізнання\r\nсамого поняття горизонту і, що найважливіше\
+    \ для нас, його історичної\r\nконкретизації.\n\nОсновним компонентом в обох цих\
+    \ планах —\r\nгерменевтичному й емпіричному — є сам читач. У своїх герменевтичних\
+    \ антитезах\r\nҐерік підкреслює, що Яусс змушений п"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5500235557556152
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.547423779964447
+  chunk_id: c6aa97a6_c0124
+  text: "2. Інвокація — це звернення про допомогу до\r\nбожества, або до святих, або\
+    \ до покровителів цього мистецтва, завдяки яким\r\nоспівуємо предмет. Як наприклад:\
+    \ до покровителів поетичного мистецтва — муз,\r\nАполлона або, якщо пишемо про\
+    \ військові справи — то до Марса, Беллони, а якщо\r\nпро пастуші — то до Церери,\
+    \ а якщо про сільськогосподарські — то до Сільвана.\r\nПроте краще зробить християнський\
+    \ поет, якщо звернеться до того, від кого\r\nприходить всяка допомога, тобто до\
+    \ трисвятого найбільшого бога, єдин"
+  work: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+  year: 1973
+  genre: rhetoric
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/dovg/dovg.htm

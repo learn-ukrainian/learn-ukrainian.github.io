@@ -1,0 +1,159 @@
+discovered_at: '2026-03-14T00:03:33.538438+00:00'
+query_keywords:
+- 'Дієслова III: Перфект'
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- '"Вкрав єси..." — Origin of modern past tense'
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=LAaXoF8Pb1E
+  channel: Історія Мови
+  title: 'Різниця між церковнослов''янською і давньоруською: минулий час'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=r9uCbwEcwz8
+  channel: Історія Мови
+  title: 'Old Church Slavonic vs Old East Slavic: Past Tenses'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=RzTV4GYRghA
+  channel: Ukrainian with Olha
+  title: 'Ukrainian for beginners: Cooking, Daily meals, Cake recipe 🍰 Instrumental
+    case | Imperfect verbs'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=YnWlncQJg8o
+  channel: Let's Learn Ukrainian
+  title: 'Perfective and Imperfective: Verb Aspects in Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Bs7EJFMsAJY
+  channel: Let's Learn Ukrainian
+  title: 'Verbs of Motion: Unidirectional, Multidirectional | Perfective, Imperfective
+    |Conjugation #Ukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0114
+  text: "107\n \nРозділ 3   \nДІЄПРИСЛІВНИК\nЩо на нас чекає в  цьому розділі?\n•\
+    \ З’ясуємо, чому дієприслівник є особливою формою діє-\nслова. \n• Визначимо,\
+    \ які граматичні категорії він має. \n• З’ясуємо найтиповіші помилки щодо вживання\
+    \ дієпри-\nслівників і навчимося їх уникати. \nПоговоримо про важливість упорядкування.\n\
+    \                   Підручник \n \n         видавництво \"Ранок\""
+  section_title: Сторінка 110
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0028
+  text: "§ 3  Діє слово: загальне значення, морфологічні ознаки, синтаксична роль\
+    \  \n21\n§ 3  Діє слово: загальне значення, \nморфологічні ознаки, синтаксична\
+    \ роль\nВправа 13 \n1  Роздивіться малюнки на початку розділу й  розкажіть, що\
+    \ на них зобра-\nжено  \n2   Коли ви розповідали, що роблять люди на світли-\n\
+    нах, які слова використали? До якої частини мови \nвони належать? Поміркуйте,\
+    \ чому вона має таку \nназву \n3   Пригадайте, на які питання відповідають діє\
+    \ слова \n4   Роздивіться ілюстрацію до діє слова  Які о"
+  section_title: Сторінка 24
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-mova-zabolotnij-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrmova-zabolotnyi-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5299578309059143
+  chunk_id: 4800ab33_c0700
+  text: "Немало є таких, які висловлюють думку у багатьох\r\nсловах, щоб зробити її\
+    \ яснішою і менш двозначною. Багато є таких, хто вважає,\r\nщо таким об’єктом\
+    \ є спрямування операцій розуму до певного порядку з метою\r\nправильного дослідження,\
+    \ але заперечує, що об’єктом є самий спосіб дослідження.\r\nІнші уважають спосіб\
+    \ дослідження за об’єкт, але не спосіб пізнання, /25/ хоч\r\nвсе це здається однаковим\
+    \ і лише пояснюється все іншими й іншими словами.\n\nПісля такого пояснення нашої\
+    \ думки, я стверджую так:\r\nтри умо"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5279022455215454
+  chunk_id: 4800ab33_c1044
+  text: "3. Проте, справді, коли б мова йшла не про кінцеву\r\nщодо сили мету, а про\
+    \ найвищу розумну основу, що є внутрішньою і притаманною\r\nсамому світу, або\
+    \ найвищу після бога, або найвіддаленіщу в самій основі\r\nприроди, нам не залишається\
+    \ нічого іншого, як прийняти за таку мету людину, і\r\nкінцевою метою, до якої\
+    \ есе відноситься. А до людини ж відносяться всі ті речі,\r\nякі тільки існують,\
+    \ як взяті у цій матеріальній масі («Все, — говорить псалм,"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5243059396743774
+  chunk_id: 4800ab33_c1148
+  text: "10. Отже, зробимо такий короткий висновок із вчення\r\nпро всі елементи.\
+    \ По-перше, існують два начала, або елементи (однаково, яку з\r\nцих назв вживати),\
+    \ а саме, матерія і форма. Матерія є спільною й однаковою в\r\nусіх тілах, проте\
+    \ форми є різними, деякі з них можна назвати первинними, а\r\nсаме, чотири форми,\
+    \ які в сполуці з матерією становлять чотири прості тіла.\r\nІснують й інші [елементи],\
+    \ які варто назвати вторинними. Поєднуючись з первинними,\r\nвони утворюють два\
+    \ інші стани: сіль і сірку (якщо рту"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

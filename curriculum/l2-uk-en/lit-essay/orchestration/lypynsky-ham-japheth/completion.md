@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 10 — E2E
+PASS: pipeline lit-essay 15
 
   Module:   lypynsky-ham-japheth
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:48:04Z
+  Date:     2026-03-14T00:26:10Z

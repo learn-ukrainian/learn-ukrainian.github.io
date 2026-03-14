@@ -1,0 +1,179 @@
+discovered_at: '2026-03-14T00:42:13.558274+00:00'
+query_keywords:
+- Отче наш
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Liturgical vs Vernacular forms
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=aJ2Ldu2TaKA
+  channel: Speak Ukrainian
+  title: 25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW
+  relevance_score: 0.1
+  relevance_note: The video teaches basic conversational Ukrainian phrases (greetings,
+    'please', 'thank you'), which are completely unrelated to the module's topic of
+    'Отче наш' (Our Father prayer), its liturgical context, or its forms.
+  transcript_excerpt: And today I will teach you 25 common Ukrainian phrases that
+    every Ukrainian learner must know. So let's get started. And of course we are
+    going to start with the phrases like привіт or вітаю.
+  embed_suggestion: Not suitable for embedding in this module due to irrelevance.
+- url: https://www.youtube.com/watch?v=By6anjulJfs
+  channel: Історія Мови
+  title: 'Церковнослов''янська vs Давньоруська: "вижду въ нощи" і "вижю въ ночи"'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=agqM08-0P-o
+  channel: Історія Мови
+  title: 'Old Church Slavonic vs Old East Slavic: Body Parts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=YMJ5SZxwPRs
+  channel: Let's Learn Ukrainian
+  title: '10 Super Common Ukrainian Phrases with the word "GOD" | Ukrainian Expressions
+    #letslearnukrainian'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ySf4WaTtoQ0
+  channel: Let's Learn Ukrainian
+  title: Learn Ukrainian Poetry | Мені однаково, Тарас Шевченко
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ijifommq7W0
+  channel: Speak Ukrainian
+  title: ОТЧЕ НАШ - The Lord’s Prayer in Ukrainian language
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0303
+  text: '29
+
+    Плекаймо слово................................................................................................................32
+
+    § 4. Смислові зв’язки між компонентами складносурядного речення.........33
+
+    Плекаймо слово................................................................................................................37
+
+    § 5. Розділові знаки в складносурядному реченні.....................................................37
+
+    Розвиток мовлення. Переказ тексту наукового стилю............'
+  section_title: Сторінка 237
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0003
+  text: "4\nЧИТАЄМО Й РОЗПОВІДАЄМО \nЧИТАЄМО Й РОЗПОВІДАЄМО \nПРО СВОЇ ЗАХОПЛЕННЯ\n\
+    ПРО СВОЇ ЗАХОПЛЕННЯ\n \nОзнайомтеся з новим підручником. Знайдіть у змісті \n\
+    перший розділ. Які твори вміщені в ньому? Які автори творів \nвам знайомі? Яка\
+    \ назва видалася вам особливо цікавою?\nЧитайте вдумливо:\n\nвизначайте тему\
+    \ твору, де й коли відбувалась описана \nподія;\n\nне залишайте поза увагою\
+    \ незрозуміле;\n\nвизначте, який це вид твору; \n\nхто дійові особи, які в\
+    \ них почуття, вчинки;\n\nпрогнозуйте розвиток сюжету;\n\nмір"
+  section_title: Сторінка 4
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0222
+  text: "221\nТЕМА 4. ІСТОТНІ ОЗНАКИ ТЕКСТУ. ПЛАН ТЕКСТУ\nТекст – це група речень,\
+    \ об’єднаних між собою темою, \nосновною думкою та граматично.\nІстотні ознаки\
+    \ тексту:\nнаявність теми й основної думки\nнаявність двох і більше речень\nпов’язаність\
+    \ речень за змістом\nпослідовність та завершеність викладу\nграматичний зв’язок\
+    \ між реченнями\nОсновна думка тексту – це те голов­не, що автор ствер-\nджує,\
+    \ до чого він закликає, чого навчає.\nТема тексту – це те, про що в ньому йдеться.\n\
+    Тему тексту розкривають за допомогою м"
+  section_title: Сторінка 224
+  grade: 5
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5057844519615173
+  chunk_id: f82cfba8_c0316
+  text: "Кгди му щодня новії в серцю\r\nродять болі.\n\nРечій альбо персони, в\r\n\
+    которих коханнє\n\nСвоє мівав по бозі, любоє\r\nуфаннє,\n\nКгвалтовная, наглая,\
+    \ по мусу\r\nутрата,\n\nОтця, матки, синачка\r\nєдиного, брата.\n\nТам, где мило,\
+    \ всіх очі, где\r\nболячо, руки,\n\nХто вимовить, якії терпять\r\nматки муки,\n\
+    \nКгди ся з плодом в утробах\r\nнедозрілим коять,\n\nХотячи їх вивести в живот,\r\
+    \nживот ронять.\n\nБольший нам жаль, строжший\r\nболь, тяжейшая мука,\n\nВ одной\
+    \ отця особі зо всіми\r\nрозлука.\n\nЗ отцем стада, з маткою\r\nсирот, вдов "
+  work: Українська література XVII ст.
+  author: Антологія
+  year: 1650
+  genre: anthology
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/old17/old17.htm
+- score: 0.5047633051872253
+  chunk_id: 5c054efc_c0067
+  text: "Складність розуміння Сковородою другого ступеня пізнання — пізнання\r\nсутності\
+    \ за допомогою засобів раціонального абстрактного мислення — зумовлена\r\nтим,\
+    \ що, як він гадає, при цьому змінюється не тільки спосіб, а й сам об’єкт,\r\n\
+    тобто \\48\\що з переходом від явища до розгляду сутності людська думка вже\r\n\
+    пізнає не матеріальне, а ідеальне, трансцендентне. Пізнання цього і є головним\r\
+    \nзавданням філософської науки. Що ж до чуттєвого пізнання, то за його допомогою\r\
+    \nпізнається лише певна «обличительная т"
+  work: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+  year: 1973
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/skovoroda/skov.htm
+- score: 0.504693329334259
+  chunk_id: fad0e4cd_c0212
+  text: "Матеріялізм хоче рішити в інших формах те саме завдання, яке вже,\r\nяк виявилося,\
+    \ не був в силах рішити «абсолютний ідеалізм». Він, як і ідеалізм,\r\nє переконаний,\
+    \ що пізнанню все приступне, що для пізнання усе є прозоре, немає\r\nнічого непроникального.\
+    \ В цьому відношенню матеріялізм виявляє характер епохи,\r\nщо хоче з’ясувати,\
+    \ вивести усе навіть і в душевному житті із знаття, викинувши\r\nіз душевного\
+    \ життя «духовні інстинкти» і «вимоги серця» — почування, поезію,\r\nрелігійність.\
+    \ В той час, як ідеаліз"
+  work: Чижевський — Нариси з історії філософії на Україні
+  author: Чижевський Д.
+  year: 1992
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyph/chyph.htm

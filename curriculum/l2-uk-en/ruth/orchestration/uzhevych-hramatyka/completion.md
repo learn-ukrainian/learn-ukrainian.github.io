@@ -2,9 +2,9 @@ PASS: pipeline ruth 103
 
   Module:   uzhevych-hramatyka
   Track:    ruth
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T21:14:01Z
+  Date:     2026-03-14T07:08:34Z

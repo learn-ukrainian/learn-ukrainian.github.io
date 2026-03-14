@@ -1,0 +1,271 @@
+discovered_at: '2026-03-14T00:53:41.941880+00:00'
+query_keywords:
+- Shevelov History Language
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Shevelov History Language у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: The video directly addresses how Soviet historiography suppressed
+    and misrepresented Ukrainian figures (Tereşchenko family), which is highly relevant
+    to the module's 'Деколонізаційна перспектива' section and the concept of 'історіографія'
+    in challenging dominant narratives.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива -- This video provides a concrete
+    example of the historical manipulation that Shevelov's decolonization efforts
+    would address.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.6
+  relevance_note: The video discusses the re-evaluation of historical narratives,
+    particularly regarding WWII and the Holocaust, which is tangentially related to
+    Shevelov's work on decolonizing historical and linguistic perspectives. It uses
+    the term 'історіографія'.
+  transcript_excerpt: сьогодні виклик такий про зміну йдеться про зміну парадигми
+    дослідження говоріння і осмислення Другої Світової.
+  embed_suggestion: After Деколонізаційна перспектива -- The video's discussion of
+    changing historical paradigms aligns with the module's focus on decolonization,
+    even if not directly related to Shevelov's specific works.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: This video focuses on the business history of the Tereşchenko family,
+    which is general Ukrainian history but not specifically related to Shevelov's
+    work on language, literary history, or the decolonization of intellectual narratives.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable for this module.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/taras-shevchenko/
+  title: Taras Shevchenko — Ukraine's National Poet
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - shevchenko
+  - literature
+  - history
+  - poetry
+- url: https://www.ukrainianlessons.com/episode71/
+  title: Ukrainian History Course Part 1
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - kyiv
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 71
+- url: https://www.ukrainianlessons.com/episode72/
+  title: Ukrainian History Course Part 2
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - review
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 72
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0002
+  text: "3\nШановні восьмикласники та восьмикласниці! Перш ніж розпочати роботу з \
+    \ підручником, необхідно \nознайомитися з його змістом і структурою. Матеріал\
+    \ у ньо-\nму об’єднано в  п’ять розділів, кожен із яких містить кіль-\nка параграфів,\
+    \ що, у  свою чергу, поділяються на пункти. Ви вже знаєте, що історія, як і  будь-яка\
+    \ інша наука, \nмає власну термінологію, і  її необхідно розуміти. Підруч-\nник\
+    \ містить дати основних подій, визначення понять і тер-\nмінів, інформацію про\
+    \ видатних історичних діячів. Слова "
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0263
+  text: "184\nЗМІСТ\n§ 37–39. Обставина. Види обставин за значенням і способи їхнього\
+    \ вираження. Порівняльний зворот  . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82\n§ 40. Розвиток\
+    \ мовлення. Стислий письмовий переказ розповідного тексту  \nз елементами опису\
+    \ місцевості в художньому стилі . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 88\n§ 41. Типи односкладних речень . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-istoriya-schupak-2022_s0024
+  text: "РОЗДІЛ 1\n26\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    1.\t Самооцінювання. Оцініть свої успіхи в опануванні теми «Джерела істо-\nричної\
+    \ інформації» — уявно поєднайте кожне із запитань для самокон-\nтролю з відповідним\
+    \ смайликом успіху. Дайте відповіді на запитання.\nЩо таке історичні джерела?\n\
+    Які є види історичних джерел?\nЧому важливо визначати \nдостовірність джерел?\n\
+    Як можна досліджувати \nісторичні джерела?\n?\nПрекрасно\nДобре\nпопрацювати\n\
+    Треба \nНічого не\nзрозуміло\n2.\t Виконайте онл"
+  section_title: Сторінка 26
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.6040081977844238
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5854930877685547
+  chunk_id: feaa5fa7_c0762
+  text: "Крім цього, іст. граматиці укр. мови приділено\r\nчасто чимало уваги в порівняльних\
+    \ граматиках слов. мов (насамперед, F. Miklosich.\r\n»Vergleichende Grammatik\
+    \ der slavischen Sprachen«, I — IV. Відень 1875 — 83;\r\nW. Vondrák. »Vergleichende\
+    \ slavische Grammatik«, I — II.\r\nҐеттінґен 1924 — 28), а далі в багатьох граматиках\
+    \ рос. мови, що з них\r\nголовні: Ф. Буслаев. »Историческая грамматика русского\
+    \ языка«. М. 1881;\r\nА. Соболевский. »Лекции по истории русского языка«. 4. М.\
+    \ 1907 (книжка\r\nцінна фактичним "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5806859731674194
+  chunk_id: 850100d0_c0000
+  text: "Юрій ШЕВЕЛЬОВ\n\nІСТОРИЧНА ФОНОЛОГІЯ УКРАЇНСЬКОЇ МОВИ\n\nПереклад з англійського\
+    \ видання Сергія Вакуленка та Андрія Даниленка \n(Shevelov\r\nG.Y. A Historical\
+    \ Phonology of the Ukrainian Language. Heidelberg, 1979)\n\nХарків\n«АКТА» http://www.acta.com.ua/\n\
+    2002\n\nЗМІСТ\n\nЯнуш Ріґер. Упровідне слово (pdf)\n\nСергій Вакуленко. Три сторінці\
+    \ про переклад (pdf)\n\nЗміст\n\nПередмова (pdf)\n\nСкорочення\n\nЗавваги щодо\
+    \ звукової вартості деяких літер і позначок\n\n1. Вступні завваги\n\n2. Праслов’янська\
+    \ система фонем перед почат"
+  work: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevelov/shev.htm

@@ -1,0 +1,928 @@
+{
+  "sessionId": "5da6280d-49af-464d-b9a0-7d92c6b58e92",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T00:51:54.791Z",
+  "lastUpdated": "2026-03-14T00:54:32.408Z",
+  "messages": [
+    {
+      "id": "0f2568f1-e681-46b2-8535-0d2985ffc2ea",
+      "timestamp": "2026-03-14T00:51:54.791Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-034\nlevel: OES\nsequence: 34\nslug: pvl-three-brothers\nversion: '2.0'\ntitle: 'ПВЛ: Три брати'\nsubtitle: 'PVL: The Three Brothers'\nfocus: Yaroslavychi — Feudal terminology\nphase: 2\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - 'Introduction to PVL: The Three Brothers'\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Genealogist\nprerequisites:\n- pvl-yaroslav-wise\nconnects_to:\n- pvl-polovtsian-wars\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **ПВЛ: Три брати** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: ПВЛ: Три брати\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"ПВЛ: Три брати\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "3d6369a0-25c1-45c2-b012-761076d31095",
+      "timestamp": "2026-03-14T00:52:02.793Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with the Next Step",
+          "description": "I'm focusing now on how to advance towards the next stage. I'm considering the best strategy to complete the task effectively. My aim is to make efficient progress, step by step.",
+          "timestamp": "2026-03-14T00:51:58.851Z"
+        },
+        {
+          "subject": "Charting a Course Forward",
+          "description": "I'm now carefully mapping out how to approach the next part of this task. I'm strategizing how to best use the available resources. My aim is to organize the information effectively, ensuring I'm on the right track.",
+          "timestamp": "2026-03-14T00:52:01.576Z"
+        },
+        {
+          "subject": "Embarking on Step One",
+          "description": "I am now beginning to gather information, starting with a search to get a general understanding. My goal is to use this initial information as a foundation for the subsequent steps, setting the stage for a comprehensive analysis.",
+          "timestamp": "2026-03-14T00:52:02.667Z"
+        }
+      ],
+      "tokens": {
+        "input": 20497,
+        "output": 24,
+        "cached": 16879,
+        "thoughts": 466,
+        "tool": 0,
+        "total": 20987
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449522792_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Тріумвірат Ярославичів"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449522792_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Тріумвірат Ярославичів' — 5 results\n\n1. **Тріумвірат Ярославичів** — Тріумвірат Ярославичів 1054—1073 років утворився невдовзі після смерті Ярослава Мудрого. Посаджений ним у Києві «на батькове місце», як пише літопис, Ізяслав\n2. **Правда Ярославичів** — відома як Тріумвірат Ярославичів. Це було перше Велике доповнення «Руської Правди», яке отримало назву «Правда Ярославичів», або «Устав Ярославичів». Значну\n3. **Ярославичі** — Зборівський район Персоналії: Ярославичі (династія) — гілка династії Володимировичів, що походила від монархів Тріумвірату Ярославичів, системи керування Великим\n4. **Тріумвірат** — фактично стає одноосібним правителем імперії. Децемвіри Дуумвірат Тріумвірат Ярославичів Триумвират. Енциклопедичний словник Гранат (рос.). 1910—1948. Процитовано\n5. **Всеволод Ярославич** — Разом зі старшими братами Ізяславом I та Святославом II утворив тріумвірат Ярославичів, що правив Руссю понад 20 років. У 1054 і 1060 роках переміг торків"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:03.205Z",
+          "resultDisplay": "Wikipedia search: 'Тріумвірат Ярославичів' — 5 results\n\n1. **Тріумвірат Ярославичів** — Тріумвірат Ярославичів 1054—1073 років утворився невдовзі після смерті Ярослава Мудрого. Посаджений ним у Києві «на батькове місце», як пише літопис, Ізяслав\n2. **Правда Ярославичів** — відома як Тріумвірат Ярославичів. Це було перше Велике доповнення «Руської Правди», яке отримало назву «Правда Ярославичів», або «Устав Ярославичів». Значну\n3. **Ярославичі** — Зборівський район Персоналії: Ярославичі (династія) — гілка династії Володимировичів, що походила від монархів Тріумвірату Ярославичів, системи керування Великим\n4. **Тріумвірат** — фактично стає одноосібним правителем імперії. Децемвіри Дуумвірат Тріумвірат Ярославичів Триумвират. Енциклопедичний словник Гранат (рос.). 1910—1948. Процитовано\n5. **Всеволод Ярославич** — Разом зі старшими братами Ізяславом I та Святославом II утворив тріумвірат Ярославичів, що правив Руссю понад 20 років. У 1054 і 1060 роках переміг торків",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "76e6727f-bc30-41ce-abd7-d570b19abb85",
+      "timestamp": "2026-03-14T00:52:09.155Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm now zeroing in on the best method to make a direct move to the next step. I'm carefully charting a course, ensuring each action aligns perfectly with the overarching goal.",
+          "timestamp": "2026-03-14T00:52:08.215Z"
+        },
+        {
+          "subject": "Beginning Extraction Efforts",
+          "description": "My primary aim is extraction. I'm focusing on pulling key details from each resource, readying the information for subsequent analysis. The articles are my immediate targets.",
+          "timestamp": "2026-03-14T00:52:09.076Z"
+        }
+      ],
+      "tokens": {
+        "input": 20891,
+        "output": 24,
+        "cached": 19669,
+        "thoughts": 129,
+        "tool": 0,
+        "total": 21044
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449529155_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Тріумвірат Ярославичів"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449529155_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Тріумвірат Ярославичів\n**URL**: https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D1%96%D1%83%D0%BC%D0%B2%D1%96%D1%80%D0%B0%D1%82_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B8%D1%87%D1%96%D0%B2\n\nТріумвірат Ярославичів 1054—1073 років утворився невдовзі після смерті Ярослава Мудрого.\n\n\n== Історія ==\nПосаджений ним у Києві «на батькове місце», як пише літопис, Ізяслав Ярославович не мав ані здібностей, ані авторитету, ані сили батька, щоб зосередити загальноруську владу в своїх руках, тож увійшов у спілку з братами Святославом Чернігівським і Всеволодом Переяславським. Усі державні справи брати вирішували поспіль. Тріумвіри ухвалювали нові закони («Правда Ярославичів» 1072 року), перевели молодшого брата Ігоря з Володимира до Смоленська, визволили свого дядька Судислава із в'язниці, куди його запроторив Ярослав, разом ходили в похід на торків. Але тріумвірат Ярославичів дбав головним чином про примноження земель.\n\n1057 року Ізяслав заволодів Волинню, а після смерті Ігоря у Смоленську (1060) тріумвіри поділили між собою його волость, нічого не лишивши синам покійного. Тріумвірат Ярославичів загарбав також західні землі Русі (Перемишльську, Звенигородську й Теребовльську волості), що належали Ярославовому онукові Ростиславу. 1067 року вони відібрали Полоцьк у Всеслава Чародія.\nПісля невдалої для Русі битви з половцями на річці Альті 1068 року тріумвірат почав розколюватись. Ізяслав, проти якого спалахнуло повстання киян, утік до Польщі, а в Києві вокняжився Всеслав. Після появи на Русі Ізяслава навесні 1069 року тріумвірат став розпадатися. Ізяславу довелося повернути Всеславові Полоцьк. Відчувши себе послабленим, Всеслав вступив у союз із цим недавнім ворогом проти Святослава, котрий зазіхав на Київ. За ініціативою Святослава вони з Всеволодом у березні 1073 року рушили на Київ. Ізяслав знову подався до Польщі, а в Києві вокняжився Святослав. Він передав Чернігів Всеволодові. Тріумвірат Ярославичів перетворився на дуумвірат Святослава і Всеволода.\n\n\n== Посилання ==\nТріумвірат Ярославичів // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nВ. М. Литвин. Міжусобна боротьба Ярославичів за верховенство на Русі в другій половині 11 століття [Архівовано 24 травня 2011 у Wayback Machine.]\n\n\n== Див. також ==\nВишгородський з'їзд 1072"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:09.346Z",
+          "resultDisplay": "# Тріумвірат Ярославичів\n**URL**: https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D1%96%D1%83%D0%BC%D0%B2%D1%96%D1%80%D0%B0%D1%82_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B8%D1%87%D1%96%D0%B2\n\nТріумвірат Ярославичів 1054—1073 років утворився невдовзі після смерті Ярослава Мудрого.\n\n\n== Історія ==\nПосаджений ним у Києві «на батькове місце», як пише літопис, Ізяслав Ярославович не мав ані здібностей, ані авторитету, ані сили батька, щоб зосередити загальноруську владу в своїх руках, тож увійшов у спілку з братами Святославом Чернігівським і Всеволодом Переяславським. Усі державні справи брати вирішували поспіль. Тріумвіри ухвалювали нові закони («Правда Ярославичів» 1072 року), перевели молодшого брата Ігоря з Володимира до Смоленська, визволили свого дядька Судислава із в'язниці, куди його запроторив Ярослав, разом ходили в похід на торків. Але тріумвірат Ярославичів дбав головним чином про примноження земель.\n\n1057 року Ізяслав заволодів Волинню, а після смерті Ігоря у Смоленську (1060) тріумвіри поділили між собою його волость, нічого не лишивши синам покійного. Тріумвірат Ярославичів загарбав також західні землі Русі (Перемишльську, Звенигородську й Теребовльську волості), що належали Ярославовому онукові Ростиславу. 1067 року вони відібрали Полоцьк у Всеслава Чародія.\nПісля невдалої для Русі битви з половцями на річці Альті 1068 року тріумвірат почав розколюватись. Ізяслав, проти якого спалахнуло повстання киян, утік до Польщі, а в Києві вокняжився Всеслав. Після появи на Русі Ізяслава навесні 1069 року тріумвірат став розпадатися. Ізяславу довелося повернути Всеславові Полоцьк. Відчувши себе послабленим, Всеслав вступив у союз із цим недавнім ворогом проти Святослава, котрий зазіхав на Київ. За ініціативою Святослава вони з Всеволодом у березні 1073 року рушили на Київ. Ізяслав знову подався до Польщі, а в Києві вокняжився Святослав. Він передав Чернігів Всеволодові. Тріумвірат Ярославичів перетворився на дуумвірат Святослава і Всеволода.\n\n\n== Посилання ==\nТріумвірат Ярославичів // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nВ. М. Литвин. Міжусобна боротьба Ярославичів за верховенство на Русі в другій половині 11 століття [Архівовано 24 травня 2011 у Wayback Machine.]\n\n\n== Див. також ==\nВишгородський з'їзд 1072",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "3b0750af-e7e2-45d3-bd5d-367279a8fd96",
+      "timestamp": "2026-03-14T00:52:30.000Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm working to make sure my approach aligns with the overall goal. I'm strategizing how to best integrate the pieces, refining my plan for smooth execution.",
+          "timestamp": "2026-03-14T00:52:29.378Z"
+        },
+        {
+          "subject": "Reading and Comprehending",
+          "description": "Now, I'm diving into the text, meticulously absorbing the information to form a comprehensive understanding. The goal is to grasp the core concepts so I can then connect them.",
+          "timestamp": "2026-03-14T00:52:29.870Z"
+        }
+      ],
+      "tokens": {
+        "input": 21817,
+        "output": 22,
+        "cached": 19718,
+        "thoughts": 101,
+        "tool": 0,
+        "total": 21940
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449549999_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Правда Ярославичів"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449549999_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Правда Ярославичів\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B0%D0%B2%D0%B4%D0%B0_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B8%D1%87%D1%96%D0%B2\n\nПравда Ярославичів, або Устав Ярославичів — збір законів, виданий 1072 року князями Ізяславом, Святославом та Всеволодом, що найменували себе «Ярославичі», а доба правління та міжосібної боротьби відома як Тріумвірат Ярославичів. Це було перше Велике доповнення «Руської Правди», яке отримало назву «Правда Ярославичів», або «Устав Ярославичів». Значну роль у розробці цих правничих документів відіграли київський воєвода Коснячко Перенег (Печеніг), вишгородський посадник Микула Чудин та княжий радник Никифор (Микифор) Киянин.\n«Правда Ярославичів» спрямована насамперед на охорону життя княжих чиновників, княжої власності і власності найвпливовіших посадових осіб Руської держави. Найвищі штрафи (80 гривень) встановлювалися за вбивство дворецького, під'їзного, тіуна і старшого конюха, значно менші (12 гривень) — за вбивство старости, найменші (5 гривень) — за вбивство княжого рядовича. До юрисдикції князя поступово втягувалась і верв: якщо вбивцю не знаходили, то віру сплачувала саме верв, у якій було знайдено тіло загиблого. У разі, коли постраждалий скоював злочин, то його могли «вбити як собаку» без сплати віри. Ці норми зафіксовано у ст. 19—25 «Правди Ярославичів», тобто перші її сім статей запобігали посяганням на життя служилих людей.\nЗначним кроком у розвитку правової культури Київського князівства стали дві наступні статті, де встановлювалося покарання за вбивство смерда або холопа у 5 гривень та за вбивство раби-кормилиці або дядька-вихователя — 12 гривень.\n«Правда Ярославичів» визначала відповідальність за крадіжку чи загибель княжого коня, корови, теляти, вівці залежно від якості і віку худоби (ст. 28, 31), підпалення княжої борті (ст. 32), нищення межових знаків (ст. 34), крадіжку княжого човна (ст. 35), сіна (ст. 39), собаки, яструба, сокола (ст. 37), голуба, лебедя (ст. 36) тощо. Досить високий рівень правової культури укладачів віддзеркалюється у ст. 31 і 40, де спостерігається їхнє розуміння співучасті у скоєнні злочину, прагнення до встановлення персональної відповідальності кожного з його учасників, винагороди викривачам злочину. У ст. 33 законодавець забороняв без княжого дозволу мордувати не лише огнищанина, тіуна або мечника, а й смерда, а у ст. 38 — вбивства злодія вдень або тоді, коли його було зв'язано.\nОднак найголовнішими досягненнями «Правди Ярославичів», з одного боку, було скасування кровної помсти і її заміна на грошові стягнення, а з іншого — спрямування віри або штрафу не до постраждалих, а до державної скарбниці.\nРазом взяті «Правда Ярослава» («Найдавніша Правда»), «Правда Ярославичів», «Покон вірний» і «Урок мостникам» складають «Коротку Правду».\n\n\n== Див. також ==\nТріумвірат Ярославичів\nРуська Правда\nСалічна правда\nАнглосаксонські правди\n\n\n== Посилання ==\nО. М. Тараненко Право і законодавство Київської Русі\nПравда Ярославичів — Циклоп — енциклопедії та словники"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:30.026Z",
+          "resultDisplay": "# Правда Ярославичів\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B0%D0%B2%D0%B4%D0%B0_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B8%D1%87%D1%96%D0%B2\n\nПравда Ярославичів, або Устав Ярославичів — збір законів, виданий 1072 року князями Ізяславом, Святославом та Всеволодом, що найменували себе «Ярославичі», а доба правління та міжосібної боротьби відома як Тріумвірат Ярославичів. Це було перше Велике доповнення «Руської Правди», яке отримало назву «Правда Ярославичів», або «Устав Ярославичів». Значну роль у розробці цих правничих документів відіграли київський воєвода Коснячко Перенег (Печеніг), вишгородський посадник Микула Чудин та княжий радник Никифор (Микифор) Киянин.\n«Правда Ярославичів» спрямована насамперед на охорону життя княжих чиновників, княжої власності і власності найвпливовіших посадових осіб Руської держави. Найвищі штрафи (80 гривень) встановлювалися за вбивство дворецького, під'їзного, тіуна і старшого конюха, значно менші (12 гривень) — за вбивство старости, найменші (5 гривень) — за вбивство княжого рядовича. До юрисдикції князя поступово втягувалась і верв: якщо вбивцю не знаходили, то віру сплачувала саме верв, у якій було знайдено тіло загиблого. У разі, коли постраждалий скоював злочин, то його могли «вбити як собаку» без сплати віри. Ці норми зафіксовано у ст. 19—25 «Правди Ярославичів», тобто перші її сім статей запобігали посяганням на життя служилих людей.\nЗначним кроком у розвитку правової культури Київського князівства стали дві наступні статті, де встановлювалося покарання за вбивство смерда або холопа у 5 гривень та за вбивство раби-кормилиці або дядька-вихователя — 12 гривень.\n«Правда Ярославичів» визначала відповідальність за крадіжку чи загибель княжого коня, корови, теляти, вівці залежно від якості і віку худоби (ст. 28, 31), підпалення княжої борті (ст. 32), нищення межових знаків (ст. 34), крадіжку княжого човна (ст. 35), сіна (ст. 39), собаки, яструба, сокола (ст. 37), голуба, лебедя (ст. 36) тощо. Досить високий рівень правової культури укладачів віддзеркалюється у ст. 31 і 40, де спостерігається їхнє розуміння співучасті у скоєнні злочину, прагнення до встановлення персональної відповідальності кожного з його учасників, винагороди викривачам злочину. У ст. 33 законодавець забороняв без княжого дозволу мордувати не лише огнищанина, тіуна або мечника, а й смерда, а у ст. 38 — вбивства злодія вдень або тоді, коли його було зв'язано.\nОднак найголовнішими досягненнями «Правди Ярославичів», з одного боку, було скасування кровної помсти і її заміна на грошові стягнення, а з іншого — спрямування віри або штрафу не до постраждалих, а до державної скарбниці.\nРазом взяті «Правда Ярослава» («Найдавніша Правда»), «Правда Ярославичів», «Покон вірний» і «Урок мостникам» складають «Коротку Правду».\n\n\n== Див. також ==\nТріумвірат Ярославичів\nРуська Правда\nСалічна правда\nАнглосаксонські правди\n\n\n== Посилання ==\nО. М. Тараненко Право і законодавство Київської Русі\nПравда Ярославичів — Циклоп — енциклопедії та словники",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "3c733956-35b5-4193-9df1-78b9423a31cc",
+      "timestamp": "2026-03-14T00:52:35.585Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "\\n\\n\n\nI'm focused on moving forward to the subsequent step now. Considering how the previous stage concluded, I'm mentally preparing for the tasks ahead. I've re-evaluated my options to ensure a smooth transition and maintain momentum.",
+          "timestamp": "2026-03-14T00:52:33.927Z"
+        },
+        {
+          "subject": "Implementing the Search Phase",
+          "description": "\\n\\n\n\nMy current focus is on executing the search phase. I'm formulating the queries and preparing the search tools to gather the necessary information. I intend to perform several searches, each designed to uncover specific details relevant to the overall objective. The primary goal is to collect comprehensive data that will then be analyzed.",
+          "timestamp": "2026-03-14T00:52:35.496Z"
+        }
+      ],
+      "tokens": {
+        "input": 22951,
+        "output": 28,
+        "cached": 19818,
+        "thoughts": 209,
+        "tool": 0,
+        "total": 23188
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449555583_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Ярославичі Ізяслав Святослав Всеволод"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449555583_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Ярославичі Ізяслав Святослав Всеволод\"\n\n### Result 1 (score: 0.5790)\n- **Work**: Синопсис. Київ, 1674 (1674)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `2bf33f78_c0363`\n- **Text**:\nСвятослав\r\n Всеволодович\n\n18(19).12.1173\n\nЯрослав\r\n Ізяславич\n\nКінець\r\n 1173\n\nДруга\r\n половина лютого 1174\n\nСвятослав\r\n Всеволодович\n\nДруга\r\n половина лютого 1174\n\nПочаток\r\n березня 1174\n\n(12\r\n днів)\n\nЯрослав\r\n Ізяславич\n\nПочаток\r\n березня 1174\n\nКінець\r\n 1174\n\nРоман\r\n Ростиславич\n\nКінець\r\n 1174\n\n19(?).07.1176\n\nСвятослав\r\n Всеволодович\n\nКінець\r\n липня 1176\n\nРоман,\r\n Мстислав, Рюрик Ростиславичі\n\nКінець\r\n липня 1176\n\nПочаток\r\n серпня 1176\n\nСвятослав\r\n Всеволодович\n\nПочаток\r\n серпня 1176\n\nКінець\r\n \n\n### Result 2 (score: 0.5757)\n- **Work**: Войтович — Князівські династії Східної Європи (2000)\n- **Author**: Войтович Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `6573f12d_c0291`\n- **Text**:\nВсеволод Ярославич був висоосвідченою людиною, знав\r\nшість мов, серед них, безперечно, шведську (цю мову, без сумніву, знали всі\r\nдіти Індігерди та Ярослава, сина Рогнеди), грецьку, а також, можливо, латинь і\r\nнімецьку (533; 566, с.34-81; 182, стб.1-20; 426, с.105-159; 1336; 1287, с.\r\n170-174; 993, с.226-236, 347-353; 1312, с.85-108; 1495, с.106-108; 477,\r\nс.94-99).\n\n8. ЄЛИЗАВЕТА ЯРОСЛАВНА (* бл.1032 † п. 1067)\r\n...................................................................... 1\n\n### Result 3 (score: 0.5753)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0219`\n- **Text**:\nЯрославе и вси внуце Всеславли! — \r\nПід Ярославом одні вчені розуміють Ярослава Всеволодовича, князя\r\nчернігівського (див. коментар до стор. 114), який разом з Ігорем, героєм\r\n«Слова», і Святославом київським у 1180 р. привели на Русь поганих-половців для\r\nборотьби проти Ростиславичів — Рюрика й Давида (див. коментар до стор. 116). У\r\nцій боротьбі брали участь полоцькі князі, які теж привели з собою інших поганих\r\n— лівонців і литовців. Інші думають, що тут ідеться про Ярослава\r\nВолодимировича, \n\n### Result 4 (score: 0.5747)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0789`\n- **Text**:\nЯрослав (Ярославець)-Іван Святополкович (Святополчич)\r\n(VIII), п. в ніч на 21.V 1123, с. Святополка\r\nІзяславича (VII), кн. володим.-волинський. — 153 — 157, 166, 169, 170, 177, 178, 180, 252, 288, 454, 461. Жона (перша) — див. дочка\r\nЛасло I Святого. Жона (друга) — див. дочка Володислава (Владислава)\r\nI Германа. Жона (третя) — див. дочка (IX) Мстислава\r\nВолодимировича (VIII). Дружинники (два) його. — 180. Ляхи (два)\r\nйого убивці. — 180. Посли його, Святополка Ізяславича (VII),\r\nМстислава Святопо\n\n### Result 5 (score: 0.5747)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0414`\n- **Text**:\nЯрослав (Ярославець)-Іван Святополкович (Святополчич)\r\n(VIII), п. в ніч на 21.V 1123, с. Святополка\r\nІзяславича (VII), кн. володим.-волинський. — 153 — 157, 166, 169, 170, 177, 178, 180, 252, 288, 454, 461. Жона (перша) — див. дочка\r\nЛасло I Святого. Жона (друга) — див. дочка Володислава (Владислава)\r\nI Германа. Жона (третя) — див. дочка (IX) Мстислава\r\nВолодимировича (VIII). Дружинники (два) його. — 180. Ляхи (два)\r\nйого убивці. — 180. Посли його, Святополка Ізяславича (VII),\r\nМстислава Святопо\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:36.025Z",
+          "resultDisplay": "Found 5 results for: \"Ярославичі Ізяслав Святослав Всеволод\"\n\n### Result 1 (score: 0.5790)\n- **Work**: Синопсис. Київ, 1674 (1674)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `2bf33f78_c0363`\n- **Text**:\nСвятослав\r\n Всеволодович\n\n18(19).12.1173\n\nЯрослав\r\n Ізяславич\n\nКінець\r\n 1173\n\nДруга\r\n половина лютого 1174\n\nСвятослав\r\n Всеволодович\n\nДруга\r\n половина лютого 1174\n\nПочаток\r\n березня 1174\n\n(12\r\n днів)\n\nЯрослав\r\n Ізяславич\n\nПочаток\r\n березня 1174\n\nКінець\r\n 1174\n\nРоман\r\n Ростиславич\n\nКінець\r\n 1174\n\n19(?).07.1176\n\nСвятослав\r\n Всеволодович\n\nКінець\r\n липня 1176\n\nРоман,\r\n Мстислав, Рюрик Ростиславичі\n\nКінець\r\n липня 1176\n\nПочаток\r\n серпня 1176\n\nСвятослав\r\n Всеволодович\n\nПочаток\r\n серпня 1176\n\nКінець\r\n \n\n### Result 2 (score: 0.5757)\n- **Work**: Войтович — Князівські династії Східної Європи (2000)\n- **Author**: Войтович Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `6573f12d_c0291`\n- **Text**:\nВсеволод Ярославич був висоосвідченою людиною, знав\r\nшість мов, серед них, безперечно, шведську (цю мову, без сумніву, знали всі\r\nдіти Індігерди та Ярослава, сина Рогнеди), грецьку, а також, можливо, латинь і\r\nнімецьку (533; 566, с.34-81; 182, стб.1-20; 426, с.105-159; 1336; 1287, с.\r\n170-174; 993, с.226-236, 347-353; 1312, с.85-108; 1495, с.106-108; 477,\r\nс.94-99).\n\n8. ЄЛИЗАВЕТА ЯРОСЛАВНА (* бл.1032 † п. 1067)\r\n...................................................................... 1\n\n### Result 3 (score: 0.5753)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0219`\n- **Text**:\nЯрославе и вси внуце Всеславли! — \r\nПід Ярославом одні вчені розуміють Ярослава Всеволодовича, князя\r\nчернігівського (див. коментар до стор. 114), який разом з Ігорем, героєм\r\n«Слова», і Святославом київським у 1180 р. привели на Русь поганих-половців для\r\nборотьби проти Ростиславичів — Рюрика й Давида (див. коментар до стор. 116). У\r\nцій боротьбі брали участь полоцькі князі, які теж привели з собою інших поганих\r\n— лівонців і литовців. Інші думають, що тут ідеться про Ярослава\r\nВолодимировича, \n\n### Result 4 (score: 0.5747)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0789`\n- **Text**:\nЯрослав (Ярославець)-Іван Святополкович (Святополчич)\r\n(VIII), п. в ніч на 21.V 1123, с. Святополка\r\nІзяславича (VII), кн. володим.-волинський. — 153 — 157, 166, 169, 170, 177, 178, 180, 252, 288, 454, 461. Жона (перша) — див. дочка\r\nЛасло I Святого. Жона (друга) — див. дочка Володислава (Владислава)\r\nI Германа. Жона (третя) — див. дочка (IX) Мстислава\r\nВолодимировича (VIII). Дружинники (два) його. — 180. Ляхи (два)\r\nйого убивці. — 180. Посли його, Святополка Ізяславича (VII),\r\nМстислава Святопо\n\n### Result 5 (score: 0.5747)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0414`\n- **Text**:\nЯрослав (Ярославець)-Іван Святополкович (Святополчич)\r\n(VIII), п. в ніч на 21.V 1123, с. Святополка\r\nІзяславича (VII), кн. володим.-волинський. — 153 — 157, 166, 169, 170, 177, 178, 180, 252, 288, 454, 461. Жона (перша) — див. дочка\r\nЛасло I Святого. Жона (друга) — див. дочка Володислава (Владислава)\r\nI Германа. Жона (третя) — див. дочка (IX) Мстислава\r\nВолодимировича (VIII). Дружинники (два) його. — 180. Ляхи (два)\r\nйого убивці. — 180. Посли його, Святополка Ізяславича (VII),\r\nМстислава Святопо\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "9017390b-8154-46c2-990b-a1dfda0db14f",
+      "timestamp": "2026-03-14T00:52:42.051Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "\\n\\n\n\nI'm focused on moving forward to the subsequent step now. Considering how the previous stage concluded, I'm mentally preparing for the tasks ahead. I've re-evaluated my options to ensure a smooth transition and maintain momentum.",
+          "timestamp": "2026-03-14T00:52:40.537Z"
+        },
+        {
+          "subject": "Gathering More Evidence",
+          "description": "\\n\\n\n\nMy current thought process revolves around gathering further information. I'm actively working on retrieving more relevant data. This involves formulating search terms to acquire suitable quotes. I'm aiming to enrich my understanding through diverse resources.",
+          "timestamp": "2026-03-14T00:52:41.843Z"
+        }
+      ],
+      "tokens": {
+        "input": 24701,
+        "output": 25,
+        "cached": 0,
+        "thoughts": 154,
+        "tool": 0,
+        "total": 24880
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449562050_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Ізяслав Святослав Всеволод брати"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449562050_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Ізяслав Святослав Всеволод брати\"\n\n### Result 1 (score: 0.5808)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0972`\n- **Text**:\nІз’яслав I (1054 — 78)\r\nнамагався об’єднати більше земель. Він заволодів Володимиром (на Волині) після\r\nсмерти брата Ігоря (1060) та Полоцьком, який відібрав у Всеслава, внука\r\nІз’яслава Володимировича, а його ув’язнив (1067); усі землі по правій стороні\r\nДніпра були в його руках. Перші роки тріюмвірат братів — Із’яслава, Святослава\r\nта Всеволода правив дружньо; князі спільно доповнили »Руську Правду«, боролися\r\nз новими тюркськими кочовиками — торками, а згодом половцями, які\r\nзайняли степи від\n\n### Result 2 (score: 0.5766)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0031`\n- **Text**:\nТа Ізяслав\r\n прийшов на день скоріш од братів, захопив людей із города [Логожська], і\r\n вони, перестрашившись, здалися. А ізяславці стали битися з Вячеславом і з\r\n Андрієм. Ізяслав тоді, переждавши два дні коло Логожська, рушив до Ізяславля\r\n до обох стриїв своїх 4, ведучи з собою Брячислава [Давидовича],\r\n зятя свого 5, який пішов був до отця свого [Давида Всеславича у\r\n Полоцьк], та, бувши посеред путі і устрашившись, не маючи змоги піти ні сюди,\r\n ні туди, пішов до шурина свого в руки і логож\n\n### Result 3 (score: 0.5766)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0839`\n- **Text**:\nТа Ізяслав\r\n прийшов на день скоріш од братів, захопив людей із города [Логожська], і\r\n вони, перестрашившись, здалися. А ізяславці стали битися з Вячеславом і з\r\n Андрієм. Ізяслав тоді, переждавши два дні коло Логожська, рушив до Ізяславля\r\n до обох стриїв своїх 4, ведучи з собою Брячислава [Давидовича],\r\n зятя свого 5, який пішов був до отця свого [Давида Всеславича у\r\n Полоцьк], та, бувши посеред путі і устрашившись, не маючи змоги піти ні сюди,\r\n ні туди, пішов до шурина свого в руки і логож\n\n### Result 4 (score: 0.5695)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0051`\n- **Text**:\nУ той же час\r\n Ростислав [Мстиславич] ішов із смоленським військом до зятя свого [Всеволода\r\n Ольговича] в Київ. Та, почувши, /195/ \r\n що билися Ольговичі коло\r\n Переяславля зі стриєм його, з Вячеславом, і з братом його Ізяславом, він\r\n пішов на волость їхню і взяв навколо | [города] Гомія волость їх усю.\n\nА Ізяслав,\r\n почувши, що брат його пустошить волость їх, уборзі поїхав із Переяславля в\r\n землю Чернігівську і розорив коло Десни села їх і навколо Чернігова. І так,\r\n спустошивши волость їх, \n\n### Result 5 (score: 0.5695)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0859`\n- **Text**:\nУ той же час\r\n Ростислав [Мстиславич] ішов із смоленським військом до зятя свого [Всеволода\r\n Ольговича] в Київ. Та, почувши, /195/ \r\n що билися Ольговичі коло\r\n Переяславля зі стриєм його, з Вячеславом, і з братом його Ізяславом, він\r\n пішов на волость їхню і взяв навколо | [города] Гомія волость їх усю.\n\nА Ізяслав,\r\n почувши, що брат його пустошить волость їх, уборзі поїхав із Переяславля в\r\n землю Чернігівську і розорив коло Десни села їх і навколо Чернігова. І так,\r\n спустошивши волость їх, \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:42.209Z",
+          "resultDisplay": "Found 5 results for: \"Ізяслав Святослав Всеволод брати\"\n\n### Result 1 (score: 0.5808)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c0972`\n- **Text**:\nІз’яслав I (1054 — 78)\r\nнамагався об’єднати більше земель. Він заволодів Володимиром (на Волині) після\r\nсмерти брата Ігоря (1060) та Полоцьком, який відібрав у Всеслава, внука\r\nІз’яслава Володимировича, а його ув’язнив (1067); усі землі по правій стороні\r\nДніпра були в його руках. Перші роки тріюмвірат братів — Із’яслава, Святослава\r\nта Всеволода правив дружньо; князі спільно доповнили »Руську Правду«, боролися\r\nз новими тюркськими кочовиками — торками, а згодом половцями, які\r\nзайняли степи від\n\n### Result 2 (score: 0.5766)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0031`\n- **Text**:\nТа Ізяслав\r\n прийшов на день скоріш од братів, захопив людей із города [Логожська], і\r\n вони, перестрашившись, здалися. А ізяславці стали битися з Вячеславом і з\r\n Андрієм. Ізяслав тоді, переждавши два дні коло Логожська, рушив до Ізяславля\r\n до обох стриїв своїх 4, ведучи з собою Брячислава [Давидовича],\r\n зятя свого 5, який пішов був до отця свого [Давида Всеславича у\r\n Полоцьк], та, бувши посеред путі і устрашившись, не маючи змоги піти ні сюди,\r\n ні туди, пішов до шурина свого в руки і логож\n\n### Result 3 (score: 0.5766)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0839`\n- **Text**:\nТа Ізяслав\r\n прийшов на день скоріш од братів, захопив людей із города [Логожська], і\r\n вони, перестрашившись, здалися. А ізяславці стали битися з Вячеславом і з\r\n Андрієм. Ізяслав тоді, переждавши два дні коло Логожська, рушив до Ізяславля\r\n до обох стриїв своїх 4, ведучи з собою Брячислава [Давидовича],\r\n зятя свого 5, який пішов був до отця свого [Давида Всеславича у\r\n Полоцьк], та, бувши посеред путі і устрашившись, не маючи змоги піти ні сюди,\r\n ні туди, пішов до шурина свого в руки і логож\n\n### Result 4 (score: 0.5695)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0051`\n- **Text**:\nУ той же час\r\n Ростислав [Мстиславич] ішов із смоленським військом до зятя свого [Всеволода\r\n Ольговича] в Київ. Та, почувши, /195/ \r\n що билися Ольговичі коло\r\n Переяславля зі стриєм його, з Вячеславом, і з братом його Ізяславом, він\r\n пішов на волость їхню і взяв навколо | [города] Гомія волость їх усю.\n\nА Ізяслав,\r\n почувши, що брат його пустошить волость їх, уборзі поїхав із Переяславля в\r\n землю Чернігівську і розорив коло Десни села їх і навколо Чернігова. І так,\r\n спустошивши волость їх, \n\n### Result 5 (score: 0.5695)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0859`\n- **Text**:\nУ той же час\r\n Ростислав [Мстиславич] ішов із смоленським військом до зятя свого [Всеволода\r\n Ольговича] в Київ. Та, почувши, /195/ \r\n що билися Ольговичі коло\r\n Переяславля зі стриєм його, з Вячеславом, і з братом його Ізяславом, він\r\n пішов на волость їхню і взяв навколо | [города] Гомія волость їх усю.\n\nА Ізяслав,\r\n почувши, що брат його пустошить волость їх, уборзі поїхав із Переяславля в\r\n землю Чернігівську і розорив коло Десни села їх і навколо Чернігова. І так,\r\n спустошивши волость їх, \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c221752a-fbe8-4990-8217-331e887b16b0",
+      "timestamp": "2026-03-14T00:52:47.526Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Process",
+          "description": "I'm focused on moving forward with the next stage. I've considered the necessary steps and I am ready to begin implementing them, ensuring a thorough approach.",
+          "timestamp": "2026-03-14T00:52:46.245Z"
+        },
+        {
+          "subject": "Executing the Queries",
+          "description": "I am now actively querying the literary resources using the selected method. My goal is to extract relevant textual data. I'm focusing on the provided search terms to ensure I gather the most pertinent information for the task.",
+          "timestamp": "2026-03-14T00:52:47.423Z"
+        }
+      ],
+      "tokens": {
+        "input": 26130,
+        "output": 21,
+        "cached": 0,
+        "thoughts": 153,
+        "tool": 0,
+        "total": 26304
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449567526_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Правда Ярославичів"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449567526_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Правда Ярославичів\"\n\n### Result 1 (score: 0.4661)\n- **Work**: Тарас Шевченко. Плач Ярославни (1814)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `3f27c11c_c0000`\n- **Text**:\nВ Путивлі-граді вранці-рано\n\nСпіває-плаче Ярославна,\n\nЯк та зозуленька кує,\n\nСловами жалю додає.\n\n— Полечу, каже, зигзицею,\n\nТією чайкою-вдовицею,\n\nТа понад Доном полечу,\n\nРукав бобровий омочу\n\nВ ріці Каялі. І на тілі,\n\nНа княжім білім, помарнілім,\n\nОмию кров суху, отру\n\nГлибокії, тяжкії рани... —\n\nІ квилить-плаче Ярославна\n\nВ Путивлі рано на валу:\n\n— Вітрило-вітре мій єдиниі'і!\n\nЛегкий, крилатий господине!\n\nНащо на дужому крилі\n\nНа вої любії мої,\n\nНа князя, ладо моє миле,\n\nТи ханові метаєш стрі\n\n### Result 2 (score: 0.4645)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1213`\n- **Text**:\nНе запускаючи ся в річеву аналїзу (на се \r\n буде місце далї) 2), я зазначу тільки, що всї редакції Руської \r\n Правди, які маємо, не були офіціальними кодифікаціями, а приватними, більше \r\n або меньше повними збірками правних норм. Найстарша редакція (перші 17 \r\n параґрафів коротшої Руської Правди, по загально прийнятому подїлу) може \r\n належати не пізнїйше як першій половинї Ярославового правлїння: право, в нїй \r\n скодифіковане, може бути навіть старше від Ярослава. Друга редакція, чи так \r\n зва\n\n### Result 3 (score: 0.4611)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0208`\n- **Text**:\nВаріанты. 1 РА\r\nярославли 2 А ярослава, Р ярослававе 3 РА седи 4\r\nРА на своемь столѣ в киевѣ 5 РА понеже . ты 6\r\nА стареи 7 РА нѣтъ а 8 РА не смеяше 9\r\nР нѣтъ ити 10 РА до киева 11 РА в\r\nчерниговѣ 12 РА в новѣгородѣ 13 Р бяху,\r\nА бяхъ 14 РА седяще в киеве 15 РА в сем же лѣт 16\r\nА наре 17 А .҂s҃лд҃ . 18 Р и ярославъ 19\r\nРА вои много (А многи) 20 РА к киеву 21 РА городца 22\r\nР и ярославъ 23 РА преста 24 Р мятяже 25\r\nРА сынъ 26 РА нѣтъ ярославу 27 РА Белзы, ИХ\r\nБелзъ 28 Р гургевъ, А гугревъ 29 А ля\n\n### Result 4 (score: 0.4549)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0058`\n- **Text**:\nВасиль Мова (Лиманський)\n\nПЕРЕКЛАДИ З „СЛОВА О ПОЛКУ ІГОРЯ”\n\n1\n\nТужба Ярославни\n\nОй уранці раним-рано\n\nЧутно голос Ярославни;\n\nМов зозулька з-між гілля,\n\nВона тужить-промовля:\n\n«Ой полечу-повитаю\n\nЗозулею по Дунаю,\n\nОмочу рукав бобряний\n\nУ воді Каяли білій,\n\nОбітру я князю рани\n\nНа могутнім його тілі...»\n\nУ Путивлі вранці-рано\n\nДесь на башті, угорі,\n\nТам смутная Ярославна\n\nРевно плаче на зорі:\n\n«Ой ти, вітре, вітре-бую!\n\nТи навіщо, господине,\n\nВійську любої дружини\n\nСупротивно й буйно вієш,\n\nВ в\n\n### Result 5 (score: 0.4532)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0336`\n- **Text**:\n* Звіздкою означив я сі фрази як правдоподібний\r\nпізнійший додаток.\n\nМы же не умолчимъ но возглаголемъ къ господину своєму\r\nвсемилостивому Ярославу Всеволодичю 1.\n\n1 В І редакції тут\r\nіще дальші додатки: «Сердце бо смысленнаго укрЂпляєтся въ тЂлеси єго мудростію.\r\nДысть языкъ мой трость книжника скорописца, и увЂтлива (увЂть — научениє) аки\r\nрЂчьная быстрость» і т. д.\n\nКняже мой господине, помяни мя въ княженіи своемъ!\r\nЯко азъ рабъ твой, сынъ рабыни твоєя! Вижу вся человЂки яко солнцемъ грЂємых\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:47.796Z",
+          "resultDisplay": "Found 5 results for: \"Правда Ярославичів\"\n\n### Result 1 (score: 0.4661)\n- **Work**: Тарас Шевченко. Плач Ярославни (1814)\n- **Author**: Шевченко Т.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `3f27c11c_c0000`\n- **Text**:\nВ Путивлі-граді вранці-рано\n\nСпіває-плаче Ярославна,\n\nЯк та зозуленька кує,\n\nСловами жалю додає.\n\n— Полечу, каже, зигзицею,\n\nТією чайкою-вдовицею,\n\nТа понад Доном полечу,\n\nРукав бобровий омочу\n\nВ ріці Каялі. І на тілі,\n\nНа княжім білім, помарнілім,\n\nОмию кров суху, отру\n\nГлибокії, тяжкії рани... —\n\nІ квилить-плаче Ярославна\n\nВ Путивлі рано на валу:\n\n— Вітрило-вітре мій єдиниі'і!\n\nЛегкий, крилатий господине!\n\nНащо на дужому крилі\n\nНа вої любії мої,\n\nНа князя, ладо моє миле,\n\nТи ханові метаєш стрі\n\n### Result 2 (score: 0.4645)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1213`\n- **Text**:\nНе запускаючи ся в річеву аналїзу (на се \r\n буде місце далї) 2), я зазначу тільки, що всї редакції Руської \r\n Правди, які маємо, не були офіціальними кодифікаціями, а приватними, більше \r\n або меньше повними збірками правних норм. Найстарша редакція (перші 17 \r\n параґрафів коротшої Руської Правди, по загально прийнятому подїлу) може \r\n належати не пізнїйше як першій половинї Ярославового правлїння: право, в нїй \r\n скодифіковане, може бути навіть старше від Ярослава. Друга редакція, чи так \r\n зва\n\n### Result 3 (score: 0.4611)\n- **Work**: Повість временних літ (Лаврентіївський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `ce21e53f_c0208`\n- **Text**:\nВаріанты. 1 РА\r\nярославли 2 А ярослава, Р ярослававе 3 РА седи 4\r\nРА на своемь столѣ в киевѣ 5 РА понеже . ты 6\r\nА стареи 7 РА нѣтъ а 8 РА не смеяше 9\r\nР нѣтъ ити 10 РА до киева 11 РА в\r\nчерниговѣ 12 РА в новѣгородѣ 13 Р бяху,\r\nА бяхъ 14 РА седяще в киеве 15 РА в сем же лѣт 16\r\nА наре 17 А .҂s҃лд҃ . 18 Р и ярославъ 19\r\nРА вои много (А многи) 20 РА к киеву 21 РА городца 22\r\nР и ярославъ 23 РА преста 24 Р мятяже 25\r\nРА сынъ 26 РА нѣтъ ярославу 27 РА Белзы, ИХ\r\nБелзъ 28 Р гургевъ, А гугревъ 29 А ля\n\n### Result 4 (score: 0.4549)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0058`\n- **Text**:\nВасиль Мова (Лиманський)\n\nПЕРЕКЛАДИ З „СЛОВА О ПОЛКУ ІГОРЯ”\n\n1\n\nТужба Ярославни\n\nОй уранці раним-рано\n\nЧутно голос Ярославни;\n\nМов зозулька з-між гілля,\n\nВона тужить-промовля:\n\n«Ой полечу-повитаю\n\nЗозулею по Дунаю,\n\nОмочу рукав бобряний\n\nУ воді Каяли білій,\n\nОбітру я князю рани\n\nНа могутнім його тілі...»\n\nУ Путивлі вранці-рано\n\nДесь на башті, угорі,\n\nТам смутная Ярославна\n\nРевно плаче на зорі:\n\n«Ой ти, вітре, вітре-бую!\n\nТи навіщо, господине,\n\nВійську любої дружини\n\nСупротивно й буйно вієш,\n\nВ в\n\n### Result 5 (score: 0.4532)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0336`\n- **Text**:\n* Звіздкою означив я сі фрази як правдоподібний\r\nпізнійший додаток.\n\nМы же не умолчимъ но возглаголемъ къ господину своєму\r\nвсемилостивому Ярославу Всеволодичю 1.\n\n1 В І редакції тут\r\nіще дальші додатки: «Сердце бо смысленнаго укрЂпляєтся въ тЂлеси єго мудростію.\r\nДысть языкъ мой трость книжника скорописца, и увЂтлива (увЂть — научениє) аки\r\nрЂчьная быстрость» і т. д.\n\nКняже мой господине, помяни мя въ княженіи своемъ!\r\nЯко азъ рабъ твой, сынъ рабыни твоєя! Вижу вся человЂки яко солнцемъ грЂємых\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "77bc5177-b957-41da-a1b8-d0376fd7e1f8",
+      "timestamp": "2026-03-14T00:52:54.627Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward now, figuring out the specific next actions that lead me to the ultimate goal. I'm carefully charting the course, making sure each step builds logically on the previous one. I'm keen to make sure this all flows together smoothly.",
+          "timestamp": "2026-03-14T00:52:52.984Z"
+        },
+        {
+          "subject": "Progressing with Queries",
+          "description": "I'm now investigating \"заповіт Ярослава Мудрого\" using the Wikipedia query tool. The aim is to gather relevant information for the task. After this search, I intend to evaluate the results.",
+          "timestamp": "2026-03-14T00:52:54.508Z"
+        }
+      ],
+      "tokens": {
+        "input": 27763,
+        "output": 23,
+        "cached": 0,
+        "thoughts": 193,
+        "tool": 0,
+        "total": 27979
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449574625_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Заповіт Ярослава Мудрого"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449574625_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Заповіт Ярослава Мудрого'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:54.783Z",
+          "resultDisplay": "Wikipedia article not found: 'Заповіт Ярослава Мудрого'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "10fbc0f9-526d-4d71-8c48-57fbdebd035c",
+      "timestamp": "2026-03-14T00:52:59.198Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm working to make sure my approach aligns with the overall objectives. My mental processes are honed to execute the required actions in sequence, optimizing the flow towards the end goal. This involves a close examination of the available information.",
+          "timestamp": "2026-03-14T00:52:58.511Z"
+        },
+        {
+          "subject": "Executing the Search",
+          "description": "I'm now initiating the Wikipedia search to gather more data points. The goal is to obtain relevant information that will be used for the next step. I'm moving methodically to build a strong foundation of knowledge for the task ahead.",
+          "timestamp": "2026-03-14T00:52:59.150Z"
+        }
+      ],
+      "tokens": {
+        "input": 27806,
+        "output": 23,
+        "cached": 13383,
+        "thoughts": 104,
+        "tool": 0,
+        "total": 27933
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449579195_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Заповіт Ярослава Мудрого"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449579195_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Заповіт Ярослава Мудрого' — 5 results\n\n1. **Ряд Ярослава** — Ряд Ярослава 1054 — своєрідний заповіт Ярослава Мудрого своїм синам. Вписаний до &quot;Повісті временних літ&quot; і Новгородського першого літопису молодшого ізводу\n2. **Розпад Київської Русі** — роздробленість Русі за природою цілком династичною не була. Згідно із заповітом Ярослава Мудрого, Русь була поділена між його синами, племінниками й онуками. Троє\n3. **Генріх Сандомирський** — лінії був нащадком Великих князів Київських Володимира Святого та Ярослава Мудрого. Був п&#039;ятим (третім з доживших до дорослого віку) синів князя Польщі\n4. **Новий Заповіт** — Нови́й Запові́т (дав.-гр. Καινὴ Διαθήκη, трансліт. «Кені́ Дияфі́кі») — священна книга християнства, частина Біблії, написана християнськими святими давньогрецькою\n5. **Престолонаслідування у Великому князівстві Київському** — нез&#039;ясованих обставин). А Ярослав Мудрий став &quot;самовладцем у всій Руській землі&quot;. Докладніше: Триумвірат Ярославичів Після смерті Ярослава Мудрого (1054) р. живими"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:52:59.505Z",
+          "resultDisplay": "Wikipedia search: 'Заповіт Ярослава Мудрого' — 5 results\n\n1. **Ряд Ярослава** — Ряд Ярослава 1054 — своєрідний заповіт Ярослава Мудрого своїм синам. Вписаний до &quot;Повісті временних літ&quot; і Новгородського першого літопису молодшого ізводу\n2. **Розпад Київської Русі** — роздробленість Русі за природою цілком династичною не була. Згідно із заповітом Ярослава Мудрого, Русь була поділена між його синами, племінниками й онуками. Троє\n3. **Генріх Сандомирський** — лінії був нащадком Великих князів Київських Володимира Святого та Ярослава Мудрого. Був п&#039;ятим (третім з доживших до дорослого віку) синів князя Польщі\n4. **Новий Заповіт** — Нови́й Запові́т (дав.-гр. Καινὴ Διαθήκη, трансліт. «Кені́ Дияфі́кі») — священна книга християнства, частина Біблії, написана християнськими святими давньогрецькою\n5. **Престолонаслідування у Великому князівстві Київському** — нез&#039;ясованих обставин). А Ярослав Мудрий став &quot;самовладцем у всій Руській землі&quot;. Докладніше: Триумвірат Ярославичів Після смерті Ярослава Мудрого (1054) р. живими",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "3b6872db-98ac-48ad-8efc-99d256213261",
+      "timestamp": "2026-03-14T00:53:04.121Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm working to make sure my approach aligns with the overall objectives. My mental processes are honed to execute the required actions in sequence, optimizing the flow towards the end goal. This involves a close examination of the available information.",
+          "timestamp": "2026-03-14T00:53:03.445Z"
+        },
+        {
+          "subject": "Extracting the Necessary Data",
+          "description": "I'm now extracting information from a relevant knowledge source. My focus is on pulling the necessary data to build on for the next step. The process is underway, and I anticipate further steps will use this data effectively.",
+          "timestamp": "2026-03-14T00:53:04.039Z"
+        }
+      ],
+      "tokens": {
+        "input": 28212,
+        "output": 19,
+        "cached": 26731,
+        "thoughts": 106,
+        "tool": 0,
+        "total": 28337
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449584118_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Ряд Ярослава"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449584118_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Ряд Ярослава\n**URL**: https://uk.wikipedia.org/wiki/%D0%A0%D1%8F%D0%B4_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B0\n\nРяд Ярослава 1054 — своєрідний заповіт Ярослава Мудрого своїм синам. Вписаний до \"Повісті временних літ\" і Новгородського першого літопису молодшого ізводу (Комісійний список). Потрапив у розширеному вигляді до низки пізніх (16—17 ст.) літописів. Найбільше заслуговує на довір'я текст із \"Повісті временних літ\". Р.Я. складається із двох частин: вступу, де йдеться про засади взаємин між синами Ярослава, та розповіді про розподіл його земель між нащадками. Вступ, в якому старий князь закликає спадкоємців до братньої любові та наголошує на міцності родинних зв’язків, не є оригінальним текстом, а має суто літературне походження. Тут використано високі літературні зразки, зокрема запозичення з візантійського джерела — 28-го запитання Анастасія Синаїта. Друга частина Р.Я. починається словами: \"Се же поручаю в собе место стол старейшему сыну моему и брату вашему Изяславу Кыев…\" (див. також Ізяслав Ярославич). Другий син Святослав Ярославич одержав Чернігів, третій Всеволод Ярославич — Переяславль (нині м. Переяслав), четвертий Ігор Ярославич — Володимир (нині м. Володимир-Волинський), п'ятий В'ячеслав Ярославич — Смоленськ (нині місто в РФ). Ярослав Мудрий заборонив синам зазіхати на володіння один одного. Однак проголошення Р.Я. не означало розділення Давньоруської держави між нащадками, як думали в 19 — на поч. 20 ст. Старший син Ізяслав Ярославич одержав згідно з Р.Я. той самий обсяг влади, що й батько: йому дістався Київ із великокнязівським доменом. Але Ізяслав Ярославич не мав авторитету й сили Ярослава Мудрого. Йому довелося піти на компроміс із братами, унаслідок чого на Русі встановився тріумвірат трьох старших Ярославичів.\n\n\n== Джерела та література ==\nКотляр М.Ф. Ряд Ярослава 1054 // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — 944 с. : іл. — ISBN 978-966-00-1290-5."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:04.391Z",
+          "resultDisplay": "# Ряд Ярослава\n**URL**: https://uk.wikipedia.org/wiki/%D0%A0%D1%8F%D0%B4_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B0\n\nРяд Ярослава 1054 — своєрідний заповіт Ярослава Мудрого своїм синам. Вписаний до \"Повісті временних літ\" і Новгородського першого літопису молодшого ізводу (Комісійний список). Потрапив у розширеному вигляді до низки пізніх (16—17 ст.) літописів. Найбільше заслуговує на довір'я текст із \"Повісті временних літ\". Р.Я. складається із двох частин: вступу, де йдеться про засади взаємин між синами Ярослава, та розповіді про розподіл його земель між нащадками. Вступ, в якому старий князь закликає спадкоємців до братньої любові та наголошує на міцності родинних зв’язків, не є оригінальним текстом, а має суто літературне походження. Тут використано високі літературні зразки, зокрема запозичення з візантійського джерела — 28-го запитання Анастасія Синаїта. Друга частина Р.Я. починається словами: \"Се же поручаю в собе место стол старейшему сыну моему и брату вашему Изяславу Кыев…\" (див. також Ізяслав Ярославич). Другий син Святослав Ярославич одержав Чернігів, третій Всеволод Ярославич — Переяславль (нині м. Переяслав), четвертий Ігор Ярославич — Володимир (нині м. Володимир-Волинський), п'ятий В'ячеслав Ярославич — Смоленськ (нині місто в РФ). Ярослав Мудрий заборонив синам зазіхати на володіння один одного. Однак проголошення Р.Я. не означало розділення Давньоруської держави між нащадками, як думали в 19 — на поч. 20 ст. Старший син Ізяслав Ярославич одержав згідно з Р.Я. той самий обсяг влади, що й батько: йому дістався Київ із великокнязівським доменом. Але Ізяслав Ярославич не мав авторитету й сили Ярослава Мудрого. Йому довелося піти на компроміс із братами, унаслідок чого на Русі встановився тріумвірат трьох старших Ярославичів.\n\n\n== Джерела та література ==\nКотляр М.Ф. Ряд Ярослава 1054 // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — 944 с. : іл. — ISBN 978-966-00-1290-5.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "15b985c1-07c6-45d0-9048-ea63c4376f00",
+      "timestamp": "2026-03-14T00:53:09.317Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward now, figuring out the specific next actions that lead me to the ultimate goal. I'm carefully charting the course, making sure each step builds logically on the previous one. I'm keen to make sure this all flows together smoothly.",
+          "timestamp": "2026-03-14T00:53:08.382Z"
+        },
+        {
+          "subject": "Executing the Next Search",
+          "description": "I'm zeroing in on the next search parameters to extract the core text. My priority is precision, so I'm tailoring my query to ensure I get the most relevant results. The objective is to efficiently pinpoint the exact quote needed for the next step.",
+          "timestamp": "2026-03-14T00:53:09.200Z"
+        }
+      ],
+      "tokens": {
+        "input": 28999,
+        "output": 34,
+        "cached": 26759,
+        "thoughts": 120,
+        "tool": 0,
+        "total": 29153
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449589314_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Се же поручаю в собе место стол старейшему сыну моему Изяславу"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449589314_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Се же поручаю в собе место стол старейшему сыну моему Изяславу\"\n\n### Result 1 (score: 0.5927)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0071`\n- **Text**:\nІзяслав же другого дня послав до Вишгорода до батька\r\nсвого 4 Вячеслава і рече йому: \"Отче, кланяюсь тобі! Тому що\r\nБог у мене батька мого Мстислава взяв, ти мені отцем. І я тепер кланяюсь тобі:\r\nсогрішив [перед тобою] один раз, і тепер каюсь: і знову, як мені Бог дав\r\nпобідити Ігоря під Києвом, і я на тобі честі не положив, і потім під Тумащем.\r\nТепер я того всього каюсь перед Богом і перед тобою. Коли ти мені то пробачиш,\r\nто й Бог мені пробачить. Я ж тепер тобі Київ віддаю: іди, сядь на столі\n\n### Result 2 (score: 0.5828)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0324`\n- **Text**:\n«Преставися великый князь Русьскый Ярослав. И еще бо\r\nживущю ему, наряди сыны своя, рек им: «се аз отхожю света сего, сынове мои,\r\nимейте в собе любовь, понеже вы есте братья єдиного отца и матере; да аще\r\nбудете в любви межю собою, бог будеть в вас, и покорить вы противныя под вы, и\r\nбудете мирно живуще; аще ли будете ненавидно живуще, в распрях и которающеся,\r\nто погыбнете сами и (погубите) землю отець своих и дед своих, юже налезоша\r\nтрудомь своим великым; но пребывайте мирно, послушающе брат\n\n### Result 3 (score: 0.5607)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0079`\n- **Text**:\nІ то ти мені мовив: \"Молодшому не можу\r\nпоклонитись!\" Але от Ізяслав — хоч двічі відступив від свого слова,\r\nтепер, добувши Києва, поклонивсь мені і на мені честь положив, і в Києві мене\r\nпосадив, і отцем мене назвав, а я його — сином. Отже, коли ти рік:\r\n\"Молодшому не поклонюсь!\" — то ось я старший від тебе не мало, а\r\nбагато: я вже бородат [був], а ти тільки ще родивсь! Коли ж хочеш іти проти\r\nмого старшинства, так, як отеє поїхав, — то за все Бог!\"\n\nІ так послав.\n\nЮрій ще в той час стояв коло\n\n### Result 4 (score: 0.5547)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c0937`\n- **Text**:\nНпр. Судислав по смерти Ярослава був \r\n „старЂйшим в Володимери племени”, але се не перешкодило його братаничам \r\n тримати його у вязницї, поки не постриг ся в чернцї. Старші лїнїї поміж \r\n Ярославичами — Володимиричі й Ізяславичі в другім-третїм поколїнню зійшли на \r\n третїй плян, бо не вміли задержати ся на відповіднім рівени сили й значіння, і \r\n репрезентат старшої лїнїї Володимиричів галицький Ярослав, як що йно бачили \r\n сьмо, називав своїм батьком та обіцяв їздити з усїма своїми полками „\n\n### Result 5 (score: 0.5498)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1366`\n- **Text**:\nМи бачили, що в двох перших поколїннях \r\n Ярославичів Київ переходив не від батька до сина, а в порядку родинного \r\n старшинства: від старшого брата до меньшого, і від меньшого брата до сина \r\n старшого брата. Мономах сей порядок перервав і передав Київ синови. Таким \r\n чином було скомбіновано старшинство родинне з порядком простим (від батька до \r\n сина). Скільки саме тут вплинули любецькі постанови і народнї симпатії до \r\n Мономахової лїнїї, не можемо докладно сказати. Але бачимо, що досить по\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:09.630Z",
+          "resultDisplay": "Found 5 results for: \"Се же поручаю в собе место стол старейшему сыну моему Изяславу\"\n\n### Result 1 (score: 0.5927)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0071`\n- **Text**:\nІзяслав же другого дня послав до Вишгорода до батька\r\nсвого 4 Вячеслава і рече йому: \"Отче, кланяюсь тобі! Тому що\r\nБог у мене батька мого Мстислава взяв, ти мені отцем. І я тепер кланяюсь тобі:\r\nсогрішив [перед тобою] один раз, і тепер каюсь: і знову, як мені Бог дав\r\nпобідити Ігоря під Києвом, і я на тобі честі не положив, і потім під Тумащем.\r\nТепер я того всього каюсь перед Богом і перед тобою. Коли ти мені то пробачиш,\r\nто й Бог мені пробачить. Я ж тепер тобі Київ віддаю: іди, сядь на столі\n\n### Result 2 (score: 0.5828)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0324`\n- **Text**:\n«Преставися великый князь Русьскый Ярослав. И еще бо\r\nживущю ему, наряди сыны своя, рек им: «се аз отхожю света сего, сынове мои,\r\nимейте в собе любовь, понеже вы есте братья єдиного отца и матере; да аще\r\nбудете в любви межю собою, бог будеть в вас, и покорить вы противныя под вы, и\r\nбудете мирно живуще; аще ли будете ненавидно живуще, в распрях и которающеся,\r\nто погыбнете сами и (погубите) землю отець своих и дед своих, юже налезоша\r\nтрудомь своим великым; но пребывайте мирно, послушающе брат\n\n### Result 3 (score: 0.5607)\n- **Work**: Грушевський — Історія української літератури, т.3-6 (1923)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `87c07f1b_c0079`\n- **Text**:\nІ то ти мені мовив: \"Молодшому не можу\r\nпоклонитись!\" Але от Ізяслав — хоч двічі відступив від свого слова,\r\nтепер, добувши Києва, поклонивсь мені і на мені честь положив, і в Києві мене\r\nпосадив, і отцем мене назвав, а я його — сином. Отже, коли ти рік:\r\n\"Молодшому не поклонюсь!\" — то ось я старший від тебе не мало, а\r\nбагато: я вже бородат [був], а ти тільки ще родивсь! Коли ж хочеш іти проти\r\nмого старшинства, так, як отеє поїхав, — то за все Бог!\"\n\nІ так послав.\n\nЮрій ще в той час стояв коло\n\n### Result 4 (score: 0.5547)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c0937`\n- **Text**:\nНпр. Судислав по смерти Ярослава був \r\n „старЂйшим в Володимери племени”, але се не перешкодило його братаничам \r\n тримати його у вязницї, поки не постриг ся в чернцї. Старші лїнїї поміж \r\n Ярославичами — Володимиричі й Ізяславичі в другім-третїм поколїнню зійшли на \r\n третїй плян, бо не вміли задержати ся на відповіднім рівени сили й значіння, і \r\n репрезентат старшої лїнїї Володимиричів галицький Ярослав, як що йно бачили \r\n сьмо, називав своїм батьком та обіцяв їздити з усїма своїми полками „\n\n### Result 5 (score: 0.5498)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1366`\n- **Text**:\nМи бачили, що в двох перших поколїннях \r\n Ярославичів Київ переходив не від батька до сина, а в порядку родинного \r\n старшинства: від старшого брата до меньшого, і від меньшого брата до сина \r\n старшого брата. Мономах сей порядок перервав і передав Київ синови. Таким \r\n чином було скомбіновано старшинство родинне з порядком простим (від батька до \r\n сина). Скільки саме тут вплинули любецькі постанови і народнї симпатії до \r\n Мономахової лїнїї, не можемо докладно сказати. Але бачимо, що досить по\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2e80d4c7-9894-47d7-8cf1-2b61240e131c",
+      "timestamp": "2026-03-14T00:53:15.619Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm working to make sure my approach aligns with the overall objectives. My mental processes are honed to execute the required actions in sequence, optimizing the flow towards the end goal. This involves a close examination of the available information.",
+          "timestamp": "2026-03-14T00:53:13.893Z"
+        },
+        {
+          "subject": "Refining the Research Process",
+          "description": "I'm now zeroing in on completing the identified query, carefully considering the appropriate strategies to pull additional relevant data. My current aim is to uncover the missing section of the quotation to enrich the analysis.",
+          "timestamp": "2026-03-14T00:53:15.432Z"
+        }
+      ],
+      "tokens": {
+        "input": 30452,
+        "output": 34,
+        "cached": 26909,
+        "thoughts": 219,
+        "tool": 0,
+        "total": 30705
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449595617_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "поручаю в собе место стол Изяславу Святославу Всеволоду"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449595617_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"поручаю в собе место стол Изяславу Святославу Всеволоду\"\n\n### Result 1 (score: 0.5982)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1368`\n- **Text**:\nЯрополк взяв ся до виконання свого \r\n зобовязання, скоро лише сїв у Київі. Він покликав Мстиславича Всеволода сїсти \r\n в Переяславі, і той поїхав туди, на велике незадоволеннє Новгородцїв, що дуже \r\n не любили такого помітування новгородським столом і були навіть зобовязали \r\n Всеволода присягою, що буде у них князем аж до смерти 4). Новгород \r\n на разї лишив ся в його номінальній власти. Тим часом молодші Мономаховичі \r\n Юрий і Андрій, довідавши ся, що Ярополк передав Переяслав Всеволоду, \r\n зр\n\n### Result 2 (score: 0.5913)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0324`\n- **Text**:\n«Преставися великый князь Русьскый Ярослав. И еще бо\r\nживущю ему, наряди сыны своя, рек им: «се аз отхожю света сего, сынове мои,\r\nимейте в собе любовь, понеже вы есте братья єдиного отца и матере; да аще\r\nбудете в любви межю собою, бог будеть в вас, и покорить вы противныя под вы, и\r\nбудете мирно живуще; аще ли будете ненавидно живуще, в распрях и которающеся,\r\nто погыбнете сами и (погубите) землю отець своих и дед своих, юже налезоша\r\nтрудомь своим великым; но пребывайте мирно, послушающе брат\n\n### Result 3 (score: 0.5726)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0845`\n- **Text**:\n[У] тім же році\r\n Ярополк привів Всеволода Мстиславича з Новгорода і дав йому Переяславль. Та\r\n зранку він сів у ньому, а до обіду вигнав його Юрій, стрий його, і\r\n сидів у ньому вісім днів, бо вивів його, [Юрія], брат його Ярополк із\r\n Переяславля згідно з хресним цілуванням. І послав Ярополк [посла] по другого\r\n Мстиславича в Полоцьк, по Ізяслава, і привів його з клятвою 2.\n\nУ РІК 6642\r\n [1134]. Преставився\r\n Ізяслав Глібович, [місяця] травня в чотирнадцятий [день].\n\nУ сей же рік була\r\n принес\n\n### Result 4 (score: 0.5726)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0037`\n- **Text**:\n[У] тім же році\r\n Ярополк привів Всеволода Мстиславича з Новгорода і дав йому Переяславль. Та\r\n зранку він сів у ньому, а до обіду вигнав його Юрій, стрий його, і\r\n сидів у ньому вісім днів, бо вивів його, [Юрія], брат його Ярополк із\r\n Переяславля згідно з хресним цілуванням. І послав Ярополк [посла] по другого\r\n Мстиславича в Полоцьк, по Ізяслава, і привів його з клятвою 2.\n\nУ РІК 6642\r\n [1134]. Преставився\r\n Ізяслав Глібович, [місяця] травня в чотирнадцятий [день].\n\nУ сей же рік була\r\n принес\n\n### Result 5 (score: 0.5695)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1369`\n- **Text**:\nТа й Ізяславу не довго прийшлось посидїти в \r\n Переяславі: і Ярополк ще тогож самого року силоміць („с нужею”) вивів його \r\n звідси, а на йото місце посадив Вячеслава. Суздальська лїтопись каже, що \r\n Ярополк зробив се за порадою братиї, з причини полоцьких подїй; Ізяслав, \r\n переходячи в Переяслав, полишив у Полоцьку брата Сьвятополка, але Полочане \r\n вигнали його й посадили одного з внуків Всеслава — Василька; отже, мовляв, \r\n треба було присутности Ізяслава в Полоччинї 9). Та така печаливість\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:15.770Z",
+          "resultDisplay": "Found 5 results for: \"поручаю в собе место стол Изяславу Святославу Всеволоду\"\n\n### Result 1 (score: 0.5982)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1368`\n- **Text**:\nЯрополк взяв ся до виконання свого \r\n зобовязання, скоро лише сїв у Київі. Він покликав Мстиславича Всеволода сїсти \r\n в Переяславі, і той поїхав туди, на велике незадоволеннє Новгородцїв, що дуже \r\n не любили такого помітування новгородським столом і були навіть зобовязали \r\n Всеволода присягою, що буде у них князем аж до смерти 4). Новгород \r\n на разї лишив ся в його номінальній власти. Тим часом молодші Мономаховичі \r\n Юрий і Андрій, довідавши ся, що Ярополк передав Переяслав Всеволоду, \r\n зр\n\n### Result 2 (score: 0.5913)\n- **Work**: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму (1939)\n- **Author**: Юшков С.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a418921e_c0324`\n- **Text**:\n«Преставися великый князь Русьскый Ярослав. И еще бо\r\nживущю ему, наряди сыны своя, рек им: «се аз отхожю света сего, сынове мои,\r\nимейте в собе любовь, понеже вы есте братья єдиного отца и матере; да аще\r\nбудете в любви межю собою, бог будеть в вас, и покорить вы противныя под вы, и\r\nбудете мирно живуще; аще ли будете ненавидно живуще, в распрях и которающеся,\r\nто погыбнете сами и (погубите) землю отець своих и дед своих, юже налезоша\r\nтрудомь своим великым; но пребывайте мирно, послушающе брат\n\n### Result 3 (score: 0.5726)\n- **Work**: Галицько-Волинський літопис (1292)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `45f18a4c_c0845`\n- **Text**:\n[У] тім же році\r\n Ярополк привів Всеволода Мстиславича з Новгорода і дав йому Переяславль. Та\r\n зранку він сів у ньому, а до обіду вигнав його Юрій, стрий його, і\r\n сидів у ньому вісім днів, бо вивів його, [Юрія], брат його Ярополк із\r\n Переяславля згідно з хресним цілуванням. І послав Ярополк [посла] по другого\r\n Мстиславича в Полоцьк, по Ізяслава, і привів його з клятвою 2.\n\nУ РІК 6642\r\n [1134]. Преставився\r\n Ізяслав Глібович, [місяця] травня в чотирнадцятий [день].\n\nУ сей же рік була\r\n принес\n\n### Result 4 (score: 0.5726)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0037`\n- **Text**:\n[У] тім же році\r\n Ярополк привів Всеволода Мстиславича з Новгорода і дав йому Переяславль. Та\r\n зранку він сів у ньому, а до обіду вигнав його Юрій, стрий його, і\r\n сидів у ньому вісім днів, бо вивів його, [Юрія], брат його Ярополк із\r\n Переяславля згідно з хресним цілуванням. І послав Ярополк [посла] по другого\r\n Мстиславича в Полоцьк, по Ізяслава, і привів його з клятвою 2.\n\nУ РІК 6642\r\n [1134]. Преставився\r\n Ізяслав Глібович, [місяця] травня в чотирнадцятий [день].\n\nУ сей же рік була\r\n принес\n\n### Result 5 (score: 0.5695)\n- **Work**: Грушевський — Історія України-Руси, т.1 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5739d24f_c1369`\n- **Text**:\nТа й Ізяславу не довго прийшлось посидїти в \r\n Переяславі: і Ярополк ще тогож самого року силоміць („с нужею”) вивів його \r\n звідси, а на йото місце посадив Вячеслава. Суздальська лїтопись каже, що \r\n Ярополк зробив се за порадою братиї, з причини полоцьких подїй; Ізяслав, \r\n переходячи в Переяслав, полишив у Полоцьку брата Сьвятополка, але Полочане \r\n вигнали його й посадили одного з внуків Всеслава — Василька; отже, мовляв, \r\n треба було присутности Ізяслава в Полоччинї 9). Та така печаливість\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "3a2d16e5-8976-4228-9f1a-c226694b09ed",
+      "timestamp": "2026-03-14T00:53:20.413Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward now, figuring out the specific next actions that lead me to the ultimate goal. I'm carefully charting the course, making sure each step builds logically on the previous one. I'm keen to make sure this all flows together smoothly.",
+          "timestamp": "2026-03-14T00:53:19.753Z"
+        },
+        {
+          "subject": "Executing the Extraction",
+          "description": "I'm now zeroing in on the extraction phase, ready to pull the required information. My focus is on getting the right data and ensuring it's accurate for the next stage. It's all about making sure I have the essential components I need.",
+          "timestamp": "2026-03-14T00:53:20.335Z"
+        }
+      ],
+      "tokens": {
+        "input": 31930,
+        "output": 21,
+        "cached": 26984,
+        "thoughts": 106,
+        "tool": 0,
+        "total": 32057
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449600410_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Ізяслав Ярославич",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449600410_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Ізяслав Ярославич\n**URL**: https://uk.wikipedia.org/wiki/%D0%86%D0%B7%D1%8F%D1%81%D0%BB%D0%B0%D0%B2_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B8%D1%87\n\nІзясла́в I Яросла́вич (у хрещенні Дмитро; д.-рус. Изѧславь Ӕрославичь; 1024(1024) — 3 жовтня 1078) — руський князь із династії Рюриковичів. Великий князь Київський (1054—1068, 1069—1073, 1077—1078). Князь турівський (1042—1052) і новгородський (1052—1054). Третій син Великого князя Київського Ярослава Мудрого. Зять польського короля Мешка ІІ (з 1043). За батьковим заповітом отримав Київ, а також Новгородську, Турівську і Деревлянську землі. Разом з братами — чернігівським князем Святославом і переяславським князем Всеволодом — утворив тріумвірат, що правив Руссю близько 20 років.\n1066 року розбив полоцького князя Всеслава, що претендував на Новгород; 1067 року ув'язнив його у Києві. 1068 року разом із братами зазнав поразки від половців на річці Альта. Внаслідок повстання киян утік до Польщі, після чого повсталі передали місто Всеславу. 1069 року повернув собі Київ за допомоги польського війська Болеслава ІІ. 1073 року вигнаний зі столиці своїм братом Святославом за підтримки Всеволода. Безуспішно шукав допомоги в Польщі та Німеччині. Зблизився із римським папою Григорієм VII, який називав його «Rex Ruscorum» (королем Русі) і коронував у Римі його сина Ярополка та надав останньому лен святого престолу Руське королівство. Повернувся до Києва після смерті Святослава. Загинув у битві на Ніжатиній ниві, допомагаючи Всеволодові відстояти Чернігівське князівство від претендентів.\n\n\n== Імена ==\nІзясла́в Яросла́вич — традиційне написання в українській історіографії. У «Повісті временних літ» зустрічається різний запис імені (д.-рус. Изѧславь, Ізѧслав, Їзѧслав; по-батькові: д.-рус. Ӕрославичь, Ӕрославличь, Ӕрославицъ).\nІзясла́в-Дмитро́ Яросла́вич — за хрещеним ім'ям «Дмитро» (Димитрій), наданим на честь святого Дмитра Солунського. У анналах Ламперта Херсфельдського, в листі до німецького короля Генріха IV від 1075 року, Ізяслав називає себе «Demetrius, rex Ruzenorum» (Дмитром, королем Русі). Папа Григорій VII у посланні до Ізяслава від 17 квітня 1075 року звертається до нього так само — «Demetrius, rex Ruscorum». Ім'я «Дмитро» також фігурує на десятках свинцевих печаток Ізяслава із зображенням Дмитра Солунського, зворотній бік яким містить княжий тризуб або декоративну розету.\n\n\n== Біографія ==\n\n\n=== Турів. Новгород ===\nІзяслав Ярославич народився 1024 року. Він був третім сином великого князя київського Ярослава Мудрого; другим сином шведської принцеси Інгігерди (Ірини). Його старшими братами були Ілля та Володимир Ярославичі, а молодшими — Святослав, Всеволод, Ігор і В'ячеслав.\n1042 року батько надав 18-річному Ізяславу князювати у Турівській землі. Близько 1043 року княжич одружився з Гертрудою, дочкою польського короля Мєшка ІІ.\nПісля смерті Іллі в 1020 році та Володимира в 1052 році, 28-річний княжич став найстаршим сином Ярослава. Після Володимира він успадкував князівський стіл у Новгородській землі, а після смерті батька Ярослава в 1054 році, згідно з батьківським заповітом, — посів київський престол, разом із Новгородською, Турівською і Деревлянською землями.\n\n\n=== Київське княжіння ===\n\nІзяслав розділив спадщину із двома молодшими братами — Святославом і Всеволодом, утворивши так званий тріумвірат Ярославичів. Мав проблеми з киянами та печерськими монахами.\nЗ 1065 року Ізяслав вів війну з полоцьким князем Всеславом Брячиславичем, який претендував на Новгородську землю. 1065 року полоцькі війська пограбували Псков, а 1066 року така ж доля спіткала Новгород. 3 березня 1067 року Ізяслав разом із братами Святославом і Всеволодом розбив полоцького князя Всеслава у битві на Немизі. 10 липня того ж року, на князівському з'їзді на річці Орша біля Смоленська, він підступом полонив Всеслава із двома синами, і ув'язнив їх у Києві. Завдяки цьому на короткий час Полоцька земля опинилася в складі великокняжого київського домену.\nПісля поразки від половців у битві на Альті 1068 року й відмови князя видати киянам зброю, в Києві спалахнуло повстання проти Ізяслава, внаслідок чого йому довелося втекти з міста. Наступного року Ізяслав повернувся з польськими військами й придушив повстання.\nБрати знову вигнали Ізяслава з Києва 1073 року і він звернувся до Польщі, куди прибув з «достатком великим». Польський король Болеслав II Сміливий, однак, не тільки не надав родичеві допомоги, але й відібрав більшість багатств, маючи намір скористатися ними у війні з чехами, вигнавши Ізяслава з країни, а з його суперниками, Святославом та Всеволодом, уклав союз.\nІзяслав тоді звернувся за допомогою до німецького імператора Генріха IV і прибув до нього в Майнц. Суперники Ізяслава встигли надіслати в Німеччину золота, срібла і скарбів стільки, що, як зазначив німецький хроніст, ніхто не пам'ятає, щоб колись таке багатство ввозилося в німецьку державу. Цінності ці для Німеччини були дочасу, бо її казна спорожніла… Не знайшовши підтримки, Ізяслав мусив утікати.\n\n\n=== Відносини з Римом ===\n\nВтративши Київ удруге, у пошуках допомоги через маркграфа Саксонської східної марки Дедо II, він зав'язав стосунки з ворогом Генріха IV — Папою Римським Григорієм VII. Папа коронував у Римі його сина Ярополка й надав йому його королівство як лен Святого Престолу (папський лист від 17 квітня 1075 року), за якою влада в Києві повинна була належати Ізяславові та його синові Ярополкові. Через три дні після написання цієї булли Папа звернувся з посланням до польського князя Болеслава, в якому картав того за пограбування Ізяслава і закликав допомогти йому (папський лист від 20 квітня 1075 року).\nРеалізувати цю спробу закріплення Київської Русі за однією гілкою династії шляхом зміни порядку успадкування не вдалося. Сам Ізяслав не обнародував на Русі цей акт.\n\n\n=== Повернення до Києва ===\nУлітку 1077 за допомогою польських військ Ізяслав повернув собі Київ.\n\n\n=== Загибель ===\n\n1078 року Ізяслав Ярославич відгукнувся на прохання молодшого брата, чернігівського князя Всеволода Ярославича, допомогти у війні з князями-ізгоями — Олегом Святославичем та Борисом В'ячеславичем. Останні привели на Русь половців, прагнучи захопити землі своїх покійних батьків — Чернігівщину та Смоленщину. У вересні-жовтні того ж року Ізяслав разом із сином Ярополком, братом Всеволодом і небожем Володимиром Мономахом штурмував бунтівний Чернігів, який 25 серпня перейшов на бік ізгоїв після битви на Сожиці. Довідавшись, що війська Олега і Бориса йдуть на підмогу захисникам, Ярославичі припинили штурм міста і рушили на противника. 3 жовтня 1078 року відбулася Битва на Ніжатиній ниві, в якій київські війська здобули перемогу. Проте Ізяслав, що бився пішим, отримав смертельне поранення у плече й загинув на місці бою. Після битви тіло покійного князя відправили на човнах до Києва і урочисто поховали у мармуровій раці в Десятинній церкві. Загибель великого князя згадується в «Повісті временних літ» і «Слові о полку Ігоревім».\nПісля смерті Ізяслава київський стіл перейшов до його брата Всеволода, а син Ізяслава, Ярополк став володарювати у Володимирі та Турові.\n\n\n== Оцінки ==\nЗгідно з літописами Ізяслав був високого зросту і могутньої будови; мав красиве обличчя і лагідний характер. Літописець високо оцінює людські якості князя, незлостивість, а особливо його допомогу брату Всеволоду в 1078 році як жертовний вчинок.\n\nНа думку українського історика Миколи Котляра князь Ізяслав був непопулярним правителем серед киян. Не маючи здібностей до державного управління та енергії батька Ярослава Мудрого, він не зумів стати єдиновладним главою Київської Русі.\n\n\n== Портрети ==\n\n\n== Родина ==\n\nБатько: Ярослав Мудрий — великий князь київський\nМатір: Інгігерда — донька шведського короля Улофа III Шетконунга.\nБрати:\nСвятослав Ярославич — великий князь київський (1073—1076).\nВсеволод Ярославич — великий князь київський (1076—1077, 1078—1093).\nДружина (з 1042): Гертруда Польська (Олісава) — донька польського короля Мешка II В'ялого з династії П'ястів.\nпо смерті чоловіка жила в сина Ярополка на Волині, потім у другого сина Святополка в Турові. Разом із Святополком повернулася до Києва, де й померла 4 січня 1107 року у віці близько 80 років. На стіні святої Софії в Києві знайдено її графіті: «Господи помози рабі своєй Олісаві Святополчі матері, руський княгині.»\nСини:\nМстислав Ізяславич\nЯрополк Ізяславич\nСвятополк Ізяславич\nДонька: Євдокія Ізяславівіна\n\n\n== Родовід ==\n\n\n== Примітки ==\n\n\n== Джерела ==\nВойтович Л. 3.4. Ярославичі. Перша галицька династія. //  Князівські династії Східної Європи (кінець IX — початок XVI ст.). Львів: Інститут українознавства, 2000.\nВойтович Л. Княжа доба: портрети еліти. — Біла Церква: Видавець Олександр Пшонківський, 2006. — С. 25, 266, 306—311, 353—354, 374. — ISBN 966-8545-52-4.\nГрушевський М. С. Історія України-Руси. — Київ, 1992. — Т. 2. [Архівовано 23 грудня 2006 у Wayback Machine.] — С. 34—70 [Архівовано 12 лютого 2017 у Wayback Machine.].\nІз'яслав Ярославич [Архівовано 23 січня 2022 у Wayback Machine.] // Енциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3. — Т. 3 : Зернове господарство — Крушельницький. — Париж; Нью-Йорк: Молоде життя, 1959. — С. 859.\nКотляр М. Ф. Ізяслав Ярославич // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2005. — Т. 3 : Е — Й. — С. 431. — ISBN 966-00-0610-1.\nКотляр М. Ф. Ізяслав Ярославич // Малий словник історії України / відпов. ред. В. А. Смолій. — К. : Либідь, 1997. — 464 с. — ISBN 5-325-00781-5. — С. 172.\nНазаренко А. В. Изяслав (Димитрий) Ярославич [Архівовано 19 березня 2017 у Wayback Machine.] // Православная Энциклопедия. (рос.)\nІзяслав Ярославич // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 2, кн. 4 : Літери Ж — Й. — С. 529. — 1000 екз.\n\n\n== Посилання ==\nІзяслав Ярославич // Україна в міжнародних відносинах. Енциклопедичний словник-довідник. Випуск 5. Біографічна частина: А-М / Відп. ред. М. М. Варварцев. — К.: Ін-т історії України НАН України, 2014. — с. 173—174.\n Вікісховище має мультимедійні дані за темою: Ізяслав Ярославич"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:22.393Z",
+          "resultDisplay": "# Ізяслав Ярославич\n**URL**: https://uk.wikipedia.org/wiki/%D0%86%D0%B7%D1%8F%D1%81%D0%BB%D0%B0%D0%B2_%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%B8%D1%87\n\nІзясла́в I Яросла́вич (у хрещенні Дмитро; д.-рус. Изѧславь Ӕрославичь; 1024(1024) — 3 жовтня 1078) — руський князь із династії Рюриковичів. Великий князь Київський (1054—1068, 1069—1073, 1077—1078). Князь турівський (1042—1052) і новгородський (1052—1054). Третій син Великого князя Київського Ярослава Мудрого. Зять польського короля Мешка ІІ (з 1043). За батьковим заповітом отримав Київ, а також Новгородську, Турівську і Деревлянську землі. Разом з братами — чернігівським князем Святославом і переяславським князем Всеволодом — утворив тріумвірат, що правив Руссю близько 20 років.\n1066 року розбив полоцького князя Всеслава, що претендував на Новгород; 1067 року ув'язнив його у Києві. 1068 року разом із братами зазнав поразки від половців на річці Альта. Внаслідок повстання киян утік до Польщі, після чого повсталі передали місто Всеславу. 1069 року повернув собі Київ за допомоги польського війська Болеслава ІІ. 1073 року вигнаний зі столиці своїм братом Святославом за підтримки Всеволода. Безуспішно шукав допомоги в Польщі та Німеччині. Зблизився із римським папою Григорієм VII, який називав його «Rex Ruscorum» (королем Русі) і коронував у Римі його сина Ярополка та надав останньому лен святого престолу Руське королівство. Повернувся до Києва після смерті Святослава. Загинув у битві на Ніжатиній ниві, допомагаючи Всеволодові відстояти Чернігівське князівство від претендентів.\n\n\n== Імена ==\nІзясла́в Яросла́вич — традиційне написання в українській історіографії. У «Повісті временних літ» зустрічається різний запис імені (д.-рус. Изѧславь, Ізѧслав, Їзѧслав; по-батькові: д.-рус. Ӕрославичь, Ӕрославличь, Ӕрославицъ).\nІзясла́в-Дмитро́ Яросла́вич — за хрещеним ім'ям «Дмитро» (Димитрій), наданим на честь святого Дмитра Солунського. У анналах Ламперта Херсфельдського, в листі до німецького короля Генріха IV від 1075 року, Ізяслав називає себе «Demetrius, rex Ruzenorum» (Дмитром, королем Русі). Папа Григорій VII у посланні до Ізяслава від 17 квітня 1075 року звертається до нього так само — «Demetrius, rex Ruscorum». Ім'я «Дмитро» також фігурує на десятках свинцевих печаток Ізяслава із зображенням Дмитра Солунського, зворотній бік яким містить княжий тризуб або декоративну розету.\n\n\n== Біографія ==\n\n\n=== Турів. Новгород ===\nІзяслав Ярославич народився 1024 року. Він був третім сином великого князя київського Ярослава Мудрого; другим сином шведської принцеси Інгігерди (Ірини). Його старшими братами були Ілля та Володимир Ярославичі, а молодшими — Святослав, Всеволод, Ігор і В'ячеслав.\n1042 року батько надав 18-річному Ізяславу князювати у Турівській землі. Близько 1043 року княжич одружився з Гертрудою, дочкою польського короля Мєшка ІІ.\nПісля смерті Іллі в 1020 році та Володимира в 1052 році, 28-річний княжич став найстаршим сином Ярослава. Після Володимира він успадкував князівський стіл у Новгородській землі, а після смерті батька Ярослава в 1054 році, згідно з батьківським заповітом, — посів київський престол, разом із Новгородською, Турівською і Деревлянською землями.\n\n\n=== Київське княжіння ===\n\nІзяслав розділив спадщину із двома молодшими братами — Святославом і Всеволодом, утворивши так званий тріумвірат Ярославичів. Мав проблеми з киянами та печерськими монахами.\nЗ 1065 року Ізяслав вів війну з полоцьким князем Всеславом Брячиславичем, який претендував на Новгородську землю. 1065 року полоцькі війська пограбували Псков, а 1066 року така ж доля спіткала Новгород. 3 березня 1067 року Ізяслав разом із братами Святославом і Всеволодом розбив полоцького князя Всеслава у битві на Немизі. 10 липня того ж року, на князівському з'їзді на річці Орша біля Смоленська, він підступом полонив Всеслава із двома синами, і ув'язнив їх у Києві. Завдяки цьому на короткий час Полоцька земля опинилася в складі великокняжого київського домену.\nПісля поразки від половців у битві на Альті 1068 року й відмови князя видати киянам зброю, в Києві спалахнуло повстання проти Ізяслава, внаслідок чого йому довелося втекти з міста. Наступного року Ізяслав повернувся з польськими військами й придушив повстання.\nБрати знову вигнали Ізяслава з Києва 1073 року і він звернувся до Польщі, куди прибув з «достатком великим». Польський король Болеслав II Сміливий, однак, не тільки не надав родичеві допомоги, але й відібрав більшість багатств, маючи намір скористатися ними у війні з чехами, вигнавши Ізяслава з країни, а з його суперниками, Святославом та Всеволодом, уклав союз.\nІзяслав тоді звернувся за допомогою до німецького імператора Генріха IV і прибув до нього в Майнц. Суперники Ізяслава встигли надіслати в Німеччину золота, срібла і скарбів стільки, що, як зазначив німецький хроніст, ніхто не пам'ятає, щоб колись таке багатство ввозилося в німецьку державу. Цінності ці для Німеччини були дочасу, бо її казна спорожніла… Не знайшовши підтримки, Ізяслав мусив утікати.\n\n\n=== Відносини з Римом ===\n\nВтративши Київ удруге, у пошуках допомоги через маркграфа Саксонської східної марки Дедо II, він зав'язав стосунки з ворогом Генріха IV — Папою Римським Григорієм VII. Папа коронував у Римі його сина Ярополка й надав йому його королівство як лен Святого Престолу (папський лист від 17 квітня 1075 року), за якою влада в Києві повинна була належати Ізяславові та його синові Ярополкові. Через три дні після написання цієї булли Папа звернувся з посланням до польського князя Болеслава, в якому картав того за пограбування Ізяслава і закликав допомогти йому (папський лист від 20 квітня 1075 року).\nРеалізувати цю спробу закріплення Київської Русі за однією гілкою династії шляхом зміни порядку успадкування не вдалося. Сам Ізяслав не обнародував на Русі цей акт.\n\n\n=== Повернення до Києва ===\nУлітку 1077 за допомогою польських військ Ізяслав повернув собі Київ.\n\n\n=== Загибель ===\n\n1078 року Ізяслав Ярославич відгукнувся на прохання молодшого брата, чернігівського князя Всеволода Ярославича, допомогти у війні з князями-ізгоями — Олегом Святославичем та Борисом В'ячеславичем. Останні привели на Русь половців, прагнучи захопити землі своїх покійних батьків — Чернігівщину та Смоленщину. У вересні-жовтні того ж року Ізяслав разом із сином Ярополком, братом Всеволодом і небожем Володимиром Мономахом штурмував бунтівний Чернігів, який 25 серпня перейшов на бік ізгоїв після битви на Сожиці. Довідавшись, що війська Олега і Бориса йдуть на підмогу захисникам, Ярославичі припинили штурм міста і рушили на противника. 3 жовтня 1078 року відбулася Битва на Ніжатиній ниві, в якій київські війська здобули перемогу. Проте Ізяслав, що бився пішим, отримав смертельне поранення у плече й загинув на місці бою. Після битви тіло покійного князя відправили на човнах до Києва і урочисто поховали у мармуровій раці в Десятинній церкві. Загибель великого князя згадується в «Повісті временних літ» і «Слові о полку Ігоревім».\nПісля смерті Ізяслава київський стіл перейшов до його брата Всеволода, а син Ізяслава, Ярополк став володарювати у Володимирі та Турові.\n\n\n== Оцінки ==\nЗгідно з літописами Ізяслав був високого зросту і могутньої будови; мав красиве обличчя і лагідний характер. Літописець високо оцінює людські якості князя, незлостивість, а особливо його допомогу брату Всеволоду в 1078 році як жертовний вчинок.\n\nНа думку українського історика Миколи Котляра князь Ізяслав був непопулярним правителем серед киян. Не маючи здібностей до державного управління та енергії батька Ярослава Мудрого, він не зумів стати єдиновладним главою Київської Русі.\n\n\n== Портрети ==\n\n\n== Родина ==\n\nБатько: Ярослав Мудрий — великий князь київський\nМатір: Інгігерда — донька шведського короля Улофа III Шетконунга.\nБрати:\nСвятослав Ярославич — великий князь київський (1073—1076).\nВсеволод Ярославич — великий князь київський (1076—1077, 1078—1093).\nДружина (з 1042): Гертруда Польська (Олісава) — донька польського короля Мешка II В'ялого з династії П'ястів.\nпо смерті чоловіка жила в сина Ярополка на Волині, потім у другого сина Святополка в Турові. Разом із Святополком повернулася до Києва, де й померла 4 січня 1107 року у віці близько 80 років. На стіні святої Софії в Києві знайдено її графіті: «Господи помози рабі своєй Олісаві Святополчі матері, руський княгині.»\nСини:\nМстислав Ізяславич\nЯрополк Ізяславич\nСвятополк Ізяславич\nДонька: Євдокія Ізяславівіна\n\n\n== Родовід ==\n\n\n== Примітки ==\n\n\n== Джерела ==\nВойтович Л. 3.4. Ярославичі. Перша галицька династія. //  Князівські династії Східної Європи (кінець IX — початок XVI ст.). Львів: Інститут українознавства, 2000.\nВойтович Л. Княжа доба: портрети еліти. — Біла Церква: Видавець Олександр Пшонківський, 2006. — С. 25, 266, 306—311, 353—354, 374. — ISBN 966-8545-52-4.\nГрушевський М. С. Історія України-Руси. — Київ, 1992. — Т. 2. [Архівовано 23 грудня 2006 у Wayback Machine.] — С. 34—70 [Архівовано 12 лютого 2017 у Wayback Machine.].\nІз'яслав Ярославич [Архівовано 23 січня 2022 у Wayback Machine.] // Енциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3. — Т. 3 : Зернове господарство — Крушельницький. — Париж; Нью-Йорк: Молоде життя, 1959. — С. 859.\nКотляр М. Ф. Ізяслав Ярославич // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2005. — Т. 3 : Е — Й. — С. 431. — ISBN 966-00-0610-1.\nКотляр М. Ф. Ізяслав Ярославич // Малий словник історії України / відпов. ред. В. А. Смолій. — К. : Либідь, 1997. — 464 с. — ISBN 5-325-00781-5. — С. 172.\nНазаренко А. В. Изяслав (Димитрий) Ярославич [Архівовано 19 березня 2017 у Wayback Machine.] // Православная Энциклопедия. (рос.)\nІзяслав Ярославич // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 2, кн. 4 : Літери Ж — Й. — С. 529. — 1000 екз.\n\n\n== Посилання ==\nІзяслав Ярославич // Україна в міжнародних відносинах. Енциклопедичний словник-довідник. Випуск 5. Біографічна частина: А-М / Відп. ред. М. М. Варварцев. — К.: Ін-т історії України НАН України, 2014. — с. 173—174.\n Вікісховище має мультимедійні дані за темою: Ізяслав Ярославич",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e2c04b3d-29fc-4dd0-a019-e56cba8f7239",
+      "timestamp": "2026-03-14T00:53:29.667Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward now, figuring out the specific next actions that lead me to the ultimate goal. I'm carefully charting the course, making sure each step builds logically on the previous one. I'm keen to make sure this all flows together smoothly.",
+          "timestamp": "2026-03-14T00:53:27.439Z"
+        },
+        {
+          "subject": "Refining the Search Strategy",
+          "description": "Now I'm diving deeper into the available resources to pinpoint the most relevant primary source evidence. My objective is to extract specific quotes and passages. I'll utilize the tools at my disposal to meticulously refine my search criteria, aiming for precision and clarity.",
+          "timestamp": "2026-03-14T00:53:29.550Z"
+        }
+      ],
+      "tokens": {
+        "input": 35843,
+        "output": 31,
+        "cached": 27423,
+        "thoughts": 271,
+        "tool": 0,
+        "total": 36145
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449609665_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Правда Ярославичів Аще убьют огнищанина"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449609665_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Правда Ярославичів Аще убьют огнищанина\"\n\n### Result 1 (score: 0.5485)\n- **Work**: Микола Хвильовий. Сині етюди (збірка) (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e377fcf8_c0055`\n- **Text**:\n— Чому це?\n\nПідійшов до Савка Онищенко, з комнезаму, на вухо каже:\n\n— Тут вони.\n\n— Хто це?\n\n— Та солончани ж, голохвастівці.\n\nВдарив себе Савко по потилиці:\n\n— Так он воно чого ніхто не визнає!\n\nПокликав рудого міліціонера:\n\n— Зараз збери хлопців, треба оточити, голохвастівці тут.\n\nПохитав головою рудий:\n\n— Де там їх тепер найдеш... Давайте, мабуть, удвох.\n\nНіколи Савкові базікати, схопив гвинтівку й побіг. Ходить повз гончарів, ніби горщики уважно розглядає, а сам оком уп'явся в натовп.\n\nГрає с\n\n### Result 2 (score: 0.5455)\n- **Work**: Олесь Гончар. Перекоп (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `f680c94f_c0016`\n- **Text**:\n— Ату їх, ату! — накочується все ближче грубе, нещадне, дядьківське, і Оленчук, весь насторожившись, сердито гукає Куликові:\n\n— Пильнуй!\n\nІ, пригнувшись за кураєм, націлює гирлигу так, наче жде, що ось-ось плигоне на нього через загату звір або роз'ярілий вершник на здибленім коні.\n\nДзвін на дзвіниці все гуде й гуде — переможно, владно,— і мідний гул його широкими хвилями котиться над селом, далеко розходиться над протряхаючим, провесінню напоєним степом.\n\nПо всьому селу — гвалт, пальба, лементу\n\n### Result 3 (score: 0.5283)\n- **Work**: Марія Матіос. Майже ніколи не навпаки (1959)\n- **Author**: Матіос М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `77744cc8_c0017`\n- **Text**:\nАле бо й файно є, як стешуть її домашні мисливці оленеві роги та ще молодого м'ясця на вудження принесуть із полювання! Тоді Василині Великдень! Що вже вона вміє й насолити, й заквасити, й смаженину зробити з лісової козички чи оленя, — то вміє.\n\nНо! Оленина — то вам не грубе свинське м'ясо. Оленина потребує делікатного підходу. Перетримаєш на вогні чи забагато диму зробиш — можеш віддавати м'ясце бідному \"за простибіг\". Ох, же ж і смачна червонецька, аж бурячкова, буженина з річного оленя!\n\nЧев\n\n### Result 4 (score: 0.5276)\n- **Work**: Микола Хвильовий. Бандити (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `1fa89e81_c0009`\n- **Text**:\nА жити тут невідомо скільки прийдеться. Принаймні доки не виїде з Грушівки отряд, покинути це місце небезпечно. Куди там,— мабуть, усе село облазили, в кожну хату заходили. Вийди тільки — так тебе й підхоплять.\n\n— Люди ж які,— каже Кажан,— сьогодні одному богові вклоняються, а завтра другому. Не встигнеш із очерету вилізти, як уже вкажуть, де ти є...\n\n\"Так!.. Різні люди бувають,— продовжує далі думати Нечипір.— Інший так і розпиняється перед тобою, а за очі готовісінький у спину ніж устромити\".\n\n\n### Result 5 (score: 0.5261)\n- **Work**: Емма Андієвська. Роман про добру людину (1931)\n- **Author**: Андієвська Е.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e4b5541c_c0082`\n- **Text**:\nІ, видмухнувши найдовший сніп-полум'я, вона з кулаками кидається на двері, які однак не подаються, хоч як вона в них гатить. Тоді, втямивши, як їй самій їх не подужати, П'ятачиха заходжується термосити Дмитрика, аби він не стояв вершею, а допоміг і натиснув плечем.\n\nДмитрикові анітрохи не хочеться вдиратися до чужого помешкання, а лякати молодят, якщо вони дійсно там, і поготів; оскільки ж П'ятачиха репетує йому просто в вухо, та ще й у те, яке після одного непередбаченого удару під час перших й\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:30.083Z",
+          "resultDisplay": "Found 5 results for: \"Правда Ярославичів Аще убьют огнищанина\"\n\n### Result 1 (score: 0.5485)\n- **Work**: Микола Хвильовий. Сині етюди (збірка) (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e377fcf8_c0055`\n- **Text**:\n— Чому це?\n\nПідійшов до Савка Онищенко, з комнезаму, на вухо каже:\n\n— Тут вони.\n\n— Хто це?\n\n— Та солончани ж, голохвастівці.\n\nВдарив себе Савко по потилиці:\n\n— Так он воно чого ніхто не визнає!\n\nПокликав рудого міліціонера:\n\n— Зараз збери хлопців, треба оточити, голохвастівці тут.\n\nПохитав головою рудий:\n\n— Де там їх тепер найдеш... Давайте, мабуть, удвох.\n\nНіколи Савкові базікати, схопив гвинтівку й побіг. Ходить повз гончарів, ніби горщики уважно розглядає, а сам оком уп'явся в натовп.\n\nГрає с\n\n### Result 2 (score: 0.5455)\n- **Work**: Олесь Гончар. Перекоп (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `f680c94f_c0016`\n- **Text**:\n— Ату їх, ату! — накочується все ближче грубе, нещадне, дядьківське, і Оленчук, весь насторожившись, сердито гукає Куликові:\n\n— Пильнуй!\n\nІ, пригнувшись за кураєм, націлює гирлигу так, наче жде, що ось-ось плигоне на нього через загату звір або роз'ярілий вершник на здибленім коні.\n\nДзвін на дзвіниці все гуде й гуде — переможно, владно,— і мідний гул його широкими хвилями котиться над селом, далеко розходиться над протряхаючим, провесінню напоєним степом.\n\nПо всьому селу — гвалт, пальба, лементу\n\n### Result 3 (score: 0.5283)\n- **Work**: Марія Матіос. Майже ніколи не навпаки (1959)\n- **Author**: Матіос М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `77744cc8_c0017`\n- **Text**:\nАле бо й файно є, як стешуть її домашні мисливці оленеві роги та ще молодого м'ясця на вудження принесуть із полювання! Тоді Василині Великдень! Що вже вона вміє й насолити, й заквасити, й смаженину зробити з лісової козички чи оленя, — то вміє.\n\nНо! Оленина — то вам не грубе свинське м'ясо. Оленина потребує делікатного підходу. Перетримаєш на вогні чи забагато диму зробиш — можеш віддавати м'ясце бідному \"за простибіг\". Ох, же ж і смачна червонецька, аж бурячкова, буженина з річного оленя!\n\nЧев\n\n### Result 4 (score: 0.5276)\n- **Work**: Микола Хвильовий. Бандити (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `1fa89e81_c0009`\n- **Text**:\nА жити тут невідомо скільки прийдеться. Принаймні доки не виїде з Грушівки отряд, покинути це місце небезпечно. Куди там,— мабуть, усе село облазили, в кожну хату заходили. Вийди тільки — так тебе й підхоплять.\n\n— Люди ж які,— каже Кажан,— сьогодні одному богові вклоняються, а завтра другому. Не встигнеш із очерету вилізти, як уже вкажуть, де ти є...\n\n\"Так!.. Різні люди бувають,— продовжує далі думати Нечипір.— Інший так і розпиняється перед тобою, а за очі готовісінький у спину ніж устромити\".\n\n\n### Result 5 (score: 0.5261)\n- **Work**: Емма Андієвська. Роман про добру людину (1931)\n- **Author**: Андієвська Е.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e4b5541c_c0082`\n- **Text**:\nІ, видмухнувши найдовший сніп-полум'я, вона з кулаками кидається на двері, які однак не подаються, хоч як вона в них гатить. Тоді, втямивши, як їй самій їх не подужати, П'ятачиха заходжується термосити Дмитрика, аби він не стояв вершею, а допоміг і натиснув плечем.\n\nДмитрикові анітрохи не хочеться вдиратися до чужого помешкання, а лякати молодят, якщо вони дійсно там, і поготів; оскільки ж П'ятачиха репетує йому просто в вухо, та ще й у те, яке після одного непередбаченого удару під час перших й\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e325fa7a-bf7b-4164-8385-6fc6648c07e6",
+      "timestamp": "2026-03-14T00:53:34.509Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Task's Flow",
+          "description": "I'm focused on moving forward now, figuring out the specific next actions that lead me to the ultimate goal. I'm carefully charting the course, making sure each step builds logically on the previous one. I'm keen to make sure this all flows together smoothly.",
+          "timestamp": "2026-03-14T00:53:33.922Z"
+        },
+        {
+          "subject": "Initiating Wikipedia Query",
+          "description": "My plan is to proceed with the next step, querying Wikipedia to gather relevant information. I'm focusing on \"Руська Правда\" to get the necessary details to move forward.",
+          "timestamp": "2026-03-14T00:53:34.440Z"
+        }
+      ],
+      "tokens": {
+        "input": 37279,
+        "output": 18,
+        "cached": 34264,
+        "thoughts": 106,
+        "tool": 0,
+        "total": 37403
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773449614508_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Руська Правда"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773449614508_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Руська Правда\n**URL**: https://uk.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D1%8C%D0%BA%D0%B0_%D0%9F%D1%80%D0%B0%D0%B2%D0%B4%D0%B0\n\n«Руська правда» (д.-рус. Правда рѹсьскаꙗ) — збірка стародавнього руського права, складена в Київській державі у XI—XII ст. на основі звичаєвого права. «Руська правда» містить норми кримінального, спадкового, торгового і процесуального законодавства.\nПам'ятка української мови. Зі всіх відомих пам'яток ХІ ст. специфічні риси української мови найбільшою мірою відобразила «Руська правда».\n\n\n== Руська правда ==\n«Руська правда» — найвизначніший збірник стародавнього руського права, важливе джерело для дослідження середньовічної історії права та суспільних відносин Русі і суміжних слов'янських народів.\nОригіналу «Руської правди» не знайдено, натомість збереглася значна кількість її списків з ХІІІ–XVIII ст. Досі відкрито їх більше 100. Історія постання «Руської правди» та її списків, що їх поділяють на три редакції (коротку, широку і скорочену), ще досі не є повністю досліджена. «Руську правду» (коротку редакцію) відкрив В. М. Татищев 1738 року в тексті Новгородського літопису, написаного у 1440-их роках, надрукував її А. Шлецер (1767). Згодом відкрито декілька списків короткої «Руської правди», найстарішими з яких є Академічний і Археографічний, обидва з того самого часу. Серед сотні списків широкої «Руської правди» найстарішими є Синодальний (збережений у тексті Кормчої книги з 1282 року) та Троїцький (віднайдений у тексті правничого збірника «Мірило Праведне», списаного у другій половині XIV ст.). Широку «Руську правду» вперше опублікував 1792 року І. Болтин. Від цих двох основних списків «Руської правди» дещо відрізняються списки середньої «Руської правди» (відомі з тексту Кормчої Книги з XVII ст.), яка, на думку більшості дослідників, була лише скороченням широкої редакції (М. Максимейко, О. Зимін); і походить з XV—XVII ст. (М. Тихомиров й ін. відносять середні до другої половини XII ст. й уважають її за основу для широкої редакції).\nЗ видавців текстів «Руської правди», крім згаданих, слід назвати А. Мусіна-Пушкіна, М. Калачова, П. Мрочек-Дроздовського, М. Владимирського-Буданова, В. Сергеевича, С. Юшкова (видання АН УРСР), Б. Грекова, О. Зиміна та інші. «Руську правду» німецькою мовою видали Ґ. Еверс (1826), Е. Тобіен (1843—1844), Л. Ґетц (1910—1913); французькою — М. Шефтель (1963), польською — Іґнаци Бенедикт Раковецький (1820–22) й А. Кухарскі (1838), англійською — Г. Вернадський (1947). Повний корпус усіх досі відомих текстів вміщено в 3-томному виданні АН СРСР «Правда Русская» (1940—1963; за редакцією Б. Грекова).\nДосліди над історією «Руської правди» і систематизацією її списків вели М. Калачов, В. Ключевський. В. Сєргеевич, Л. Ґетц та інші. Джерела «Руської правди», а зокрема чужонаціональні впливи на неї, досліджував М. Карамзін (візантійське канонічне право і право цісарське, зокрема Номоканон). М. Калачов і В. Ключевський добачали в «Руській правді» твір духовенства, призначений для духовних судів у світських справах, опертий на звичаєве право, а дехто знаходив у «Руській правді» впливи болгарського права IX—X ст. В СРСР досліди над «Руською правдою» велися насамперед над суспільними відносинами Київської Русі й феодального устрою (Б. Греков, Л. Черепнін й ін.) та її культури (Б. Романов), а також над внутрішньою історією поодиноких правних норм та їх змістом (С. Юшков й ін.).\n\n\n== Коротка «Руська правда» ==\nКоротка «Руська правда» (43 статті) поділяється на 4 частини:\n\nПравда Ярослава або Найдавніша Правда — найстарішу, як її називають дослідники, що не погоджуються з поглядом, що «Руську правду» проголосив князь Ярослав Мудрий (В. Сергеєвич, А. Пресняков, М. Тихоміров); вона охоплює статті від 1 до 18, також, можливо, статті 42 та 43;\nПравда Ярославичів — звана також Уставом Ярославичів (статті 19 — 41);\nПокон вірного — встановлює оплати вирникам (ст. 42)\nУрок мостникам (ст. 43).\n«Правда Ярослава», на думку одних дослідників, постала біля 1016, інших — у 1030-их pp. Постанови цієї найстарішої «Руської правди» сягають VIII—IX ст., а то й раніших часів, з яких вона перебрала інститут кровної помсти, що її згодом замінено (хоч не повністю) грошовою карою. «Правда Ярославичів» складена на з'їзді Ярославових синів: князів Ізяслава, Всеволода і Святослава у Вишгороді 1072 (М. Тихоміров, С. Юшков, Л. Черепнін) або у 1032–1054 (Б. Греков, А. Зимін). Норми «Правди Ярославичів» з особливою увагою охороняють інтереси князя, його домінальне господарство, урядовців і майно. Різні грошові кари за вбивство, залежно від суспільного становища вбитого, вказують на розшарування суспільства. Найбільше норм коротка «Руська правда» присвячує охороні життя, здоров'я і майна; вона складається з норм карного й карно-процесуального права.\n\n\n== Розширена правда ==\nШирока «Руська правда» (121 стаття) була найбільш поширена. Віднайдені близько 100 списків поділяються на три групи: Синодально-Троїцьку, Пушкінську і Карамзінську. Щодо часу постання її та її частин думки поділені: за Ж. Третяковським та Р. Ткачуком;— її складено під час князювання Володимира Мономаха (після 1113), за Б. Грінкою;— за князювання Мстислава Володимировича, а за О. Вассерманом і Л. Черепніним — до 1209.\nЗміст широкої «Руської правди» в частині кримінального права характеризується заміною норм кровної помсти — грошовими викупами та державними карами — вирами. Відповідальність за невідомого вбивцю поширюється на всю громаду (верв), на території якої сталося вбивство (дика вира); за поранення, образу честі, поряд відшкодування покривдженому, треба було платити державну кару (продаж); за найважчі злочини (розбій, підпал загороди, конокрадство) була встановлена кара «поток і розграбленіє», яка торкалася не лише майна, але і дружини, дітей та самого злочинця. «Руська правда» знає ряд чітких норм цивільного (позики, відсотки, ґрунтові спори, спадщинні приписи) і процесуального права (свідки: видоки і послухи, ордалії; проба заліза і води, «свод», легальна самодопомога; злодія, зловленого на гарячому, «убиють во пса мѣсто»). Ці й інші норми «Руської правди» дають багатий матеріал до всебічного дослідження соціально-економічних і побутових відносин середньовічної України.\n\n\n== Скорочена «Руська правда» ==\nСкорочена «Руська правда» виникла не раніше XII ст. Це переробка одного із списків «Розширеної правди». Її виникнення пов'язують із спробами кодифікації. Проте на думку британських вчених С. Франкліна та Дж. Шеппарда, Скорочена «Руська правда» є ранішою і датується приблизно XI—XII ст. Історики обґрунтовують свою концепцію тим, що норми Скороченої «Правди» є набагато спрощенішими в порівнянні з Розширеним варіантом, тож, логічно припустити, що правові норми мали б розвиватись у все більш складну систему. Крім того, Розширена «правда», має відсилки до Скороченого кодексу «Правди», зокрема, коли нормами Розширеної «Правди» забороняється смертна кара, як санкція, що була присутня у короткому кодексі.\nВиділення в структурі даного документу т. зв. «Найданішої Правди», яку приписують князю Ярославу є всього-на-всього гіпотетичною екстраполяцією з Короткої редакції «Правди».\nКоротка редакція «Правди» складається з 43 статей, Перша її частина (статті 1–18), що приписується князю Ярославу характеризується збереженням кровної помсти, всі перераховані матеріальні санкції мали радше компенсаційний характер, а не штраф на користь князя, що ми можемо спостерігати у Розширеній редакції. Зумовлена така ситуація, ймовірно, слабкістю князівської влади на той момент, хоча проти такої концепції категорично виступає М. Б. Свердлов. Проте його зауваження були заперечені С. Франкліном та Дж. Шеппардом, оскільки з аналізу перших 18 статей короткої редакції «Правди» цілком зрозуміло, що князь відігравав другорядну роль у виконанні санкцій\n«Правда Ярослава» належить до звичаєвого права. Подібно до всіх інших правових кодексів, вона була написана місцевими говірками, без всякого залучення церковнослов'янської мови, що дозволяє припустити, що документ був відносно самостійним правовим кодексом, що не калькувався з візантійських чи західноєвропейських зразків, проте дане твердження не знайшло вагомих аргументів на свою користь. Проте все ж порівнюючи правові кодекси візантійські, дослідники історії Київської Русі схилилися до думки, що, незважаючи на якісь впливи з боку Візантії чи інших держав, творення «Правд» було місцевим феноменом, який найширшим чином увібрав у себе традиції руського життя.\n\n\n=== «Правда Ярослава» ===\nДо сьогодні точаться дискусії про єдність композицій вже не найкоротшої редакції «Правди», а тієї частини, що у історіографії дістала назву «Правда Ярослава». Перші 18 статей, а ще 42 та 43 статті короткої редакції, що їх приписують Ярославу Володимировичу неначе виникають на рівному місці, оскільки нагальної потреби для введення юридичного зводу не було. В дослідників викликає питання і сама єдність «Правди Ярослава», оскільки більшість її статей врегульовують конфлікти на рівні общини, а деякі статті виходять за межі общини, коли мова йде про варяга чи іншого іноземця, що постраждав.\nСпробували віднайти причини прийняття Найдавнішого кодексу Ярослава С. Франклін та Дж. Шеппард, які припускають, що пролити світло на це питання допоможе розгляд короткої редакції «Правди» не як конгломерату правових норм, що були затвердження починаючи з Ярослава і закінчуючи Ярославичами. Історики звертають увагу на те, що норми короткої редакції юридичного зводу загалом є дуже сприятливими для князівської влади, оскільки фактично узаконили їх недоторканність та недоторканність їхньої власності. Тож, ймовірно, частина норм, що зазвичай приписується у короткій редакції «Правди» могла належати ще до часів Ярослава.\nЙмовірну відповідь на причини виникнення «Правди Ярослава» можна віднайти в Новгородському першому літописі, де говориться, що князь Ярослав, будучи князем Київським уклав збірник правових норм для Новгорода, щоб там дотримувались порядку за його відсутності.\n\n\n== Характеристика й значення ==\n\nПопри упривілейоване становище вищих прошарків суспільства, всі вільні перебували під опікою «Руської правди», головним завданням якої було давати можливість сторонам боронити свої права на життя, здоров'я і майно, а судові — підставу до справедливого вироку. Характеристичною прикметою «Руської правди» була еволюція в бік гуманності (наприклад, заміна кари смерті грошовою карою).\n«Руська правда» є важливим історичним джерелом, яке допомагає дослідникам відтворювати діяльність адміністративного княжого апарату, виявляти нюанси суспільного розшарування, досліджувати вияви фінансових операцій, стежити за технікою управи ріллі, господарським знаряддям та врожаєм. «Руська правда» становить важливе джерело для пізнання найдавніших норм українського звичаєвого права, а згодом княжого законодавства і судових вироків, вона мала безпосередній вплив на всі пам'ятки литовсько-руської доби, а зокрема на Судебник Казимира Ягеллончика 1468 і Литовські Статути (1529, 1566, 1588). За посередництвом Литовського Статуту норми «Руської правди» вміщені також у найвизначнішій пам'ятці українського права гетьманської доби «Права, по которымъ судится малороссійскій народъ» (1743). Сліди «Руської правди» помітні також у працях та правничих збірниках інших слов'янських народів, зокрема польських статутах короля Казимира В. XIV ст. та інших. Проте, за твердженням Ф. Леонтовича, «московське законодавство в час Судебників губить усякий зв'язок з старовинно-руським правом».\n\n\n== Див. також ==\nПравда Ярославичів\nСалічна правда\nАнглосаксонські правди\n\n\n== Примітки ==\n\n\n== Джерела та література ==\nПадох Ярослав. «Руська Правда» // Енциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1973. — Кн. 2, [т. 7] : Пряшівщина (продовження) — Сибір. — С. 2655-2657. — ISBN 5-7707-4049-3.\nВілкул Т. Л. Руська Правда // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 391. — ISBN 978-966-00-1290-5.\nРуська правда ХІ — ХІІ ст. за списком 1282 року // Німчук В. Історія української мови. Хрестоматія Х-ХІІІ ст. [Архівовано 5 липня 2019 у Wayback Machine.] — Житомир: Полісся, 2015. — С. 143.\nУсенко І. Б. Руська правда // Юридична енциклопедія: В 6 т. — Т. 5: П — С. — К.: Укр. Енциклопедія, 2003. — С. 392—394.\n«Руська Правда» як пам'ятник права // Історія українського права від найдавніших часів до XVIII століття. Навч. посібник з історії держави і права України. Науково-дослідний інститут масової комунікації. — Львів, 2003. — С. 23—27. — ISBN 5-87332-157-4.\nЭверс И. Ф. Г. Древнейшее русское право в историческом его раскрытии / пер. с нем. И. Платонова. — Спб.: Тип. Штаба Отд. корп. вн. Стражи, 1835. — 442 с.\nМаксимейко Н. А. Опыт критического изследованія Русской Правды: Выпуск первый. Краткая редакція. — Харьков: Типографія и Литографія М. Зильбербергъ и с-вья, 1914. — 217 с. [Архівовано 8 грудня 2015 у Wayback Machine.]\nЛащенко Р. М. Лекції по історії українського права. — К.: Україна, 1998. — 254 с.\nЮшков С. В. Русская Правда. Происхождение, источники, значение. — М.: Госюриздат, 1950. — 380 c. (перевидання: М., 2002, 2009)\nСвердлов М. Б. От Закона Русского к Русской Правде. — М.: Юрид. лит., 1988. — 176 с.\nЗимин А. А. Правда русская: монография. — М.: Древлехранилище, 1999. — 427 с.\nФедорова А. Н. Правонарушение и юридическая ответственность по Русской Правде. Дис. … канд. юрид. наук: 12.00.01. — Тольятти, 2005. — 192 c. [Архівовано 9 березня 2014 у Wayback Machine.]\nЯрославский список Правды Русской: законодательство Ярослава Мудрого / Н. А. Грязнова, Д. К. Морозов, Яросл. гос. ун-т им. П. Г. Демидова. — Рыбинск: Рыбинский Дом печати, 2010. — 272 с.\nМателешко Ю.П. Руська Правда: становлення, редакції, дискусійні питання // Науковий вісник Ужгородської української богословської академії та Карпатського університету ім. А.Волошина. – Ужгород, 2010. – Вип. 6 – 7. – С. 159-163.\nПравда Руська Ярослава Мудрого: початок законодавства Київської Русі: навч. посіб. / НЮУ ім. Я. Мудрого. — Харків: Право, 2014. — 344 с.\nРуська Правда (Академічний список) / Ред. Р. Лащенко.  — Прага: Українське Правниче Товариство в Ч. С. Р.; Державна друкарня в Празі, 1927. — 18 с. (Пам'ятки українського права — Випуск 1) (link 1 [Архівовано 26 жовтня 2020 у Wayback Machine.], link 2 [Архівовано 20 квітня 2021 у Wayback Machine.])\n«Правда Руська» Ярослава Мудрого: початок вітчизняного законодавства: навч. посіб. / уклад.: Г. Г. Демиденко, В. М. Єрмолаєв ; вст. сл. В. Я. Тація. — 2-е вид, змін та доповн. — Харків: Право, 2017. — 392 с.: іл.\nКиївська Русь: пам'ятки права (Х–ХІІІ): тексти, переклади, коментарі: навч. посіб. / уклад. Г. Г. Демиденко, В. М. Єрмолаєв. — Харків: Право, 2020. — 224 с.: іл.\n\n\n== Посилання ==\nПравда Руська — видатна пам'ятка права України // Мала енциклопедія етнодержавознавства / Інститут держави і права ім. В. М. Корецького НАН України, Упорядник Ю. І. Римаренко [та ін.]. — Київ: Генеза, : Довіра, 1996. — 942 с. — С. 223—224.\nРуська Правда [Архівовано 29 листопада 2019 у Wayback Machine.] // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2003. — Т. 5 : П — С. — 736 с. — ISBN 966-7492-05-2.\nПравда Руська // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1963. — Т. 6, кн. XII : Літери По — Риз. — С. 1469. — 1000 екз.\n«Руська правда» // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 361.\nМарко Роберт Стех. Очима культури. — № 57. Історія права в Україні [Архівовано 26 жовтня 2020 у Wayback Machine.]"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:34.521Z",
+          "resultDisplay": "# Руська Правда\n**URL**: https://uk.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D1%8C%D0%BA%D0%B0_%D0%9F%D1%80%D0%B0%D0%B2%D0%B4%D0%B0\n\n«Руська правда» (д.-рус. Правда рѹсьскаꙗ) — збірка стародавнього руського права, складена в Київській державі у XI—XII ст. на основі звичаєвого права. «Руська правда» містить норми кримінального, спадкового, торгового і процесуального законодавства.\nПам'ятка української мови. Зі всіх відомих пам'яток ХІ ст. специфічні риси української мови найбільшою мірою відобразила «Руська правда».\n\n\n== Руська правда ==\n«Руська правда» — найвизначніший збірник стародавнього руського права, важливе джерело для дослідження середньовічної історії права та суспільних відносин Русі і суміжних слов'янських народів.\nОригіналу «Руської правди» не знайдено, натомість збереглася значна кількість її списків з ХІІІ–XVIII ст. Досі відкрито їх більше 100. Історія постання «Руської правди» та її списків, що їх поділяють на три редакції (коротку, широку і скорочену), ще досі не є повністю досліджена. «Руську правду» (коротку редакцію) відкрив В. М. Татищев 1738 року в тексті Новгородського літопису, написаного у 1440-их роках, надрукував її А. Шлецер (1767). Згодом відкрито декілька списків короткої «Руської правди», найстарішими з яких є Академічний і Археографічний, обидва з того самого часу. Серед сотні списків широкої «Руської правди» найстарішими є Синодальний (збережений у тексті Кормчої книги з 1282 року) та Троїцький (віднайдений у тексті правничого збірника «Мірило Праведне», списаного у другій половині XIV ст.). Широку «Руську правду» вперше опублікував 1792 року І. Болтин. Від цих двох основних списків «Руської правди» дещо відрізняються списки середньої «Руської правди» (відомі з тексту Кормчої Книги з XVII ст.), яка, на думку більшості дослідників, була лише скороченням широкої редакції (М. Максимейко, О. Зимін); і походить з XV—XVII ст. (М. Тихомиров й ін. відносять середні до другої половини XII ст. й уважають її за основу для широкої редакції).\nЗ видавців текстів «Руської правди», крім згаданих, слід назвати А. Мусіна-Пушкіна, М. Калачова, П. Мрочек-Дроздовського, М. Владимирського-Буданова, В. Сергеевича, С. Юшкова (видання АН УРСР), Б. Грекова, О. Зиміна та інші. «Руську правду» німецькою мовою видали Ґ. Еверс (1826), Е. Тобіен (1843—1844), Л. Ґетц (1910—1913); французькою — М. Шефтель (1963), польською — Іґнаци Бенедикт Раковецький (1820–22) й А. Кухарскі (1838), англійською — Г. Вернадський (1947). Повний корпус усіх досі відомих текстів вміщено в 3-томному виданні АН СРСР «Правда Русская» (1940—1963; за редакцією Б. Грекова).\nДосліди над історією «Руської правди» і систематизацією її списків вели М. Калачов, В. Ключевський. В. Сєргеевич, Л. Ґетц та інші. Джерела «Руської правди», а зокрема чужонаціональні впливи на неї, досліджував М. Карамзін (візантійське канонічне право і право цісарське, зокрема Номоканон). М. Калачов і В. Ключевський добачали в «Руській правді» твір духовенства, призначений для духовних судів у світських справах, опертий на звичаєве право, а дехто знаходив у «Руській правді» впливи болгарського права IX—X ст. В СРСР досліди над «Руською правдою» велися насамперед над суспільними відносинами Київської Русі й феодального устрою (Б. Греков, Л. Черепнін й ін.) та її культури (Б. Романов), а також над внутрішньою історією поодиноких правних норм та їх змістом (С. Юшков й ін.).\n\n\n== Коротка «Руська правда» ==\nКоротка «Руська правда» (43 статті) поділяється на 4 частини:\n\nПравда Ярослава або Найдавніша Правда — найстарішу, як її називають дослідники, що не погоджуються з поглядом, що «Руську правду» проголосив князь Ярослав Мудрий (В. Сергеєвич, А. Пресняков, М. Тихоміров); вона охоплює статті від 1 до 18, також, можливо, статті 42 та 43;\nПравда Ярославичів — звана також Уставом Ярославичів (статті 19 — 41);\nПокон вірного — встановлює оплати вирникам (ст. 42)\nУрок мостникам (ст. 43).\n«Правда Ярослава», на думку одних дослідників, постала біля 1016, інших — у 1030-их pp. Постанови цієї найстарішої «Руської правди» сягають VIII—IX ст., а то й раніших часів, з яких вона перебрала інститут кровної помсти, що її згодом замінено (хоч не повністю) грошовою карою. «Правда Ярославичів» складена на з'їзді Ярославових синів: князів Ізяслава, Всеволода і Святослава у Вишгороді 1072 (М. Тихоміров, С. Юшков, Л. Черепнін) або у 1032–1054 (Б. Греков, А. Зимін). Норми «Правди Ярославичів» з особливою увагою охороняють інтереси князя, його домінальне господарство, урядовців і майно. Різні грошові кари за вбивство, залежно від суспільного становища вбитого, вказують на розшарування суспільства. Найбільше норм коротка «Руська правда» присвячує охороні життя, здоров'я і майна; вона складається з норм карного й карно-процесуального права.\n\n\n== Розширена правда ==\nШирока «Руська правда» (121 стаття) була найбільш поширена. Віднайдені близько 100 списків поділяються на три групи: Синодально-Троїцьку, Пушкінську і Карамзінську. Щодо часу постання її та її частин думки поділені: за Ж. Третяковським та Р. Ткачуком;— її складено під час князювання Володимира Мономаха (після 1113), за Б. Грінкою;— за князювання Мстислава Володимировича, а за О. Вассерманом і Л. Черепніним — до 1209.\nЗміст широкої «Руської правди» в частині кримінального права характеризується заміною норм кровної помсти — грошовими викупами та державними карами — вирами. Відповідальність за невідомого вбивцю поширюється на всю громаду (верв), на території якої сталося вбивство (дика вира); за поранення, образу честі, поряд відшкодування покривдженому, треба було платити державну кару (продаж); за найважчі злочини (розбій, підпал загороди, конокрадство) була встановлена кара «поток і розграбленіє», яка торкалася не лише майна, але і дружини, дітей та самого злочинця. «Руська правда» знає ряд чітких норм цивільного (позики, відсотки, ґрунтові спори, спадщинні приписи) і процесуального права (свідки: видоки і послухи, ордалії; проба заліза і води, «свод», легальна самодопомога; злодія, зловленого на гарячому, «убиють во пса мѣсто»). Ці й інші норми «Руської правди» дають багатий матеріал до всебічного дослідження соціально-економічних і побутових відносин середньовічної України.\n\n\n== Скорочена «Руська правда» ==\nСкорочена «Руська правда» виникла не раніше XII ст. Це переробка одного із списків «Розширеної правди». Її виникнення пов'язують із спробами кодифікації. Проте на думку британських вчених С. Франкліна та Дж. Шеппарда, Скорочена «Руська правда» є ранішою і датується приблизно XI—XII ст. Історики обґрунтовують свою концепцію тим, що норми Скороченої «Правди» є набагато спрощенішими в порівнянні з Розширеним варіантом, тож, логічно припустити, що правові норми мали б розвиватись у все більш складну систему. Крім того, Розширена «правда», має відсилки до Скороченого кодексу «Правди», зокрема, коли нормами Розширеної «Правди» забороняється смертна кара, як санкція, що була присутня у короткому кодексі.\nВиділення в структурі даного документу т. зв. «Найданішої Правди», яку приписують князю Ярославу є всього-на-всього гіпотетичною екстраполяцією з Короткої редакції «Правди».\nКоротка редакція «Правди» складається з 43 статей, Перша її частина (статті 1–18), що приписується князю Ярославу характеризується збереженням кровної помсти, всі перераховані матеріальні санкції мали радше компенсаційний характер, а не штраф на користь князя, що ми можемо спостерігати у Розширеній редакції. Зумовлена така ситуація, ймовірно, слабкістю князівської влади на той момент, хоча проти такої концепції категорично виступає М. Б. Свердлов. Проте його зауваження були заперечені С. Франкліном та Дж. Шеппардом, оскільки з аналізу перших 18 статей короткої редакції «Правди» цілком зрозуміло, що князь відігравав другорядну роль у виконанні санкцій\n«Правда Ярослава» належить до звичаєвого права. Подібно до всіх інших правових кодексів, вона була написана місцевими говірками, без всякого залучення церковнослов'янської мови, що дозволяє припустити, що документ був відносно самостійним правовим кодексом, що не калькувався з візантійських чи західноєвропейських зразків, проте дане твердження не знайшло вагомих аргументів на свою користь. Проте все ж порівнюючи правові кодекси візантійські, дослідники історії Київської Русі схилилися до думки, що, незважаючи на якісь впливи з боку Візантії чи інших держав, творення «Правд» було місцевим феноменом, який найширшим чином увібрав у себе традиції руського життя.\n\n\n=== «Правда Ярослава» ===\nДо сьогодні точаться дискусії про єдність композицій вже не найкоротшої редакції «Правди», а тієї частини, що у історіографії дістала назву «Правда Ярослава». Перші 18 статей, а ще 42 та 43 статті короткої редакції, що їх приписують Ярославу Володимировичу неначе виникають на рівному місці, оскільки нагальної потреби для введення юридичного зводу не було. В дослідників викликає питання і сама єдність «Правди Ярослава», оскільки більшість її статей врегульовують конфлікти на рівні общини, а деякі статті виходять за межі общини, коли мова йде про варяга чи іншого іноземця, що постраждав.\nСпробували віднайти причини прийняття Найдавнішого кодексу Ярослава С. Франклін та Дж. Шеппард, які припускають, що пролити світло на це питання допоможе розгляд короткої редакції «Правди» не як конгломерату правових норм, що були затвердження починаючи з Ярослава і закінчуючи Ярославичами. Історики звертають увагу на те, що норми короткої редакції юридичного зводу загалом є дуже сприятливими для князівської влади, оскільки фактично узаконили їх недоторканність та недоторканність їхньої власності. Тож, ймовірно, частина норм, що зазвичай приписується у короткій редакції «Правди» могла належати ще до часів Ярослава.\nЙмовірну відповідь на причини виникнення «Правди Ярослава» можна віднайти в Новгородському першому літописі, де говориться, що князь Ярослав, будучи князем Київським уклав збірник правових норм для Новгорода, щоб там дотримувались порядку за його відсутності.\n\n\n== Характеристика й значення ==\n\nПопри упривілейоване становище вищих прошарків суспільства, всі вільні перебували під опікою «Руської правди», головним завданням якої було давати можливість сторонам боронити свої права на життя, здоров'я і майно, а судові — підставу до справедливого вироку. Характеристичною прикметою «Руської правди» була еволюція в бік гуманності (наприклад, заміна кари смерті грошовою карою).\n«Руська правда» є важливим історичним джерелом, яке допомагає дослідникам відтворювати діяльність адміністративного княжого апарату, виявляти нюанси суспільного розшарування, досліджувати вияви фінансових операцій, стежити за технікою управи ріллі, господарським знаряддям та врожаєм. «Руська правда» становить важливе джерело для пізнання найдавніших норм українського звичаєвого права, а згодом княжого законодавства і судових вироків, вона мала безпосередній вплив на всі пам'ятки литовсько-руської доби, а зокрема на Судебник Казимира Ягеллончика 1468 і Литовські Статути (1529, 1566, 1588). За посередництвом Литовського Статуту норми «Руської правди» вміщені також у найвизначнішій пам'ятці українського права гетьманської доби «Права, по которымъ судится малороссійскій народъ» (1743). Сліди «Руської правди» помітні також у працях та правничих збірниках інших слов'янських народів, зокрема польських статутах короля Казимира В. XIV ст. та інших. Проте, за твердженням Ф. Леонтовича, «московське законодавство в час Судебників губить усякий зв'язок з старовинно-руським правом».\n\n\n== Див. також ==\nПравда Ярославичів\nСалічна правда\nАнглосаксонські правди\n\n\n== Примітки ==\n\n\n== Джерела та література ==\nПадох Ярослав. «Руська Правда» // Енциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1973. — Кн. 2, [т. 7] : Пряшівщина (продовження) — Сибір. — С. 2655-2657. — ISBN 5-7707-4049-3.\nВілкул Т. Л. Руська Правда // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 391. — ISBN 978-966-00-1290-5.\nРуська правда ХІ — ХІІ ст. за списком 1282 року // Німчук В. Історія української мови. Хрестоматія Х-ХІІІ ст. [Архівовано 5 липня 2019 у Wayback Machine.] — Житомир: Полісся, 2015. — С. 143.\nУсенко І. Б. Руська правда // Юридична енциклопедія: В 6 т. — Т. 5: П — С. — К.: Укр. Енциклопедія, 2003. — С. 392—394.\n«Руська Правда» як пам'ятник права // Історія українського права від найдавніших часів до XVIII століття. Навч. посібник з історії держави і права України. Науково-дослідний інститут масової комунікації. — Львів, 2003. — С. 23—27. — ISBN 5-87332-157-4.\nЭверс И. Ф. Г. Древнейшее русское право в историческом его раскрытии / пер. с нем. И. Платонова. — Спб.: Тип. Штаба Отд. корп. вн. Стражи, 1835. — 442 с.\nМаксимейко Н. А. Опыт критического изследованія Русской Правды: Выпуск первый. Краткая редакція. — Харьков: Типографія и Литографія М. Зильбербергъ и с-вья, 1914. — 217 с. [Архівовано 8 грудня 2015 у Wayback Machine.]\nЛащенко Р. М. Лекції по історії українського права. — К.: Україна, 1998. — 254 с.\nЮшков С. В. Русская Правда. Происхождение, источники, значение. — М.: Госюриздат, 1950. — 380 c. (перевидання: М., 2002, 2009)\nСвердлов М. Б. От Закона Русского к Русской Правде. — М.: Юрид. лит., 1988. — 176 с.\nЗимин А. А. Правда русская: монография. — М.: Древлехранилище, 1999. — 427 с.\nФедорова А. Н. Правонарушение и юридическая ответственность по Русской Правде. Дис. … канд. юрид. наук: 12.00.01. — Тольятти, 2005. — 192 c. [Архівовано 9 березня 2014 у Wayback Machine.]\nЯрославский список Правды Русской: законодательство Ярослава Мудрого / Н. А. Грязнова, Д. К. Морозов, Яросл. гос. ун-т им. П. Г. Демидова. — Рыбинск: Рыбинский Дом печати, 2010. — 272 с.\nМателешко Ю.П. Руська Правда: становлення, редакції, дискусійні питання // Науковий вісник Ужгородської української богословської академії та Карпатського університету ім. А.Волошина. – Ужгород, 2010. – Вип. 6 – 7. – С. 159-163.\nПравда Руська Ярослава Мудрого: початок законодавства Київської Русі: навч. посіб. / НЮУ ім. Я. Мудрого. — Харків: Право, 2014. — 344 с.\nРуська Правда (Академічний список) / Ред. Р. Лащенко.  — Прага: Українське Правниче Товариство в Ч. С. Р.; Державна друкарня в Празі, 1927. — 18 с. (Пам'ятки українського права — Випуск 1) (link 1 [Архівовано 26 жовтня 2020 у Wayback Machine.], link 2 [Архівовано 20 квітня 2021 у Wayback Machine.])\n«Правда Руська» Ярослава Мудрого: початок вітчизняного законодавства: навч. посіб. / уклад.: Г. Г. Демиденко, В. М. Єрмолаєв ; вст. сл. В. Я. Тація. — 2-е вид, змін та доповн. — Харків: Право, 2017. — 392 с.: іл.\nКиївська Русь: пам'ятки права (Х–ХІІІ): тексти, переклади, коментарі: навч. посіб. / уклад. Г. Г. Демиденко, В. М. Єрмолаєв. — Харків: Право, 2020. — 224 с.: іл.\n\n\n== Посилання ==\nПравда Руська — видатна пам'ятка права України // Мала енциклопедія етнодержавознавства / Інститут держави і права ім. В. М. Корецького НАН України, Упорядник Ю. І. Римаренко [та ін.]. — Київ: Генеза, : Довіра, 1996. — 942 с. — С. 223—224.\nРуська Правда [Архівовано 29 листопада 2019 у Wayback Machine.] // Юридична енциклопедія : [у 6 т.] / ред. кол.: Ю. С. Шемшученко (відп. ред.) [та ін.]. — К. : Українська енциклопедія ім. М. П. Бажана, 2003. — Т. 5 : П — С. — 736 с. — ISBN 966-7492-05-2.\nПравда Руська // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1963. — Т. 6, кн. XII : Літери По — Риз. — С. 1469. — 1000 екз.\n«Руська правда» // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 2 : М — Я. — С. 361.\nМарко Роберт Стех. Очима культури. — № 57. Історія права в Україні [Архівовано 26 жовтня 2020 у Wayback Machine.]",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2d8afaf3-43e5-4132-9fdc-cf819f73b59f",
+      "timestamp": "2026-03-14T00:53:39.476Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm working to make sure my approach aligns with the overall objectives. My mental processes are honed to execute the required actions in sequence, optimizing the flow towards the end goal. This involves a close examination of the available information.",
+          "timestamp": "2026-03-14T00:53:38.676Z"
+        },
+        {
+          "subject": "Executing a Final Search",
+          "description": "My efforts now center on a concluding literary search, specifically targeting the text through legal terms. I am confident that these queries will provide the text required for the task. The plan is to get closer to the final phase.",
+          "timestamp": "2026-03-14T00:53:39.381Z"
+        }
+      ],
+      "tokens": {
+        "input": 43087,
+        "output": 24,
+        "cached": 34938,
+        "thoughts": 133,
+        "tool": 0,
+        "total": 43244
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773449619469_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "за вбивство огнищанина тіуна"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773449619469_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"за вбивство огнищанина тіуна\"\n\n### Result 1 (score: 0.4655)\n- **Work**: Хрестоматія давньої української літератури (Білецький) (1952)\n- **Author**: Білецький О.\n- **Genre/Period**: anthology / modern\n- **Chunk ID**: `59fd4e79_c0314`\n- **Text**:\nТо услишавъши господь, сидячи на судЂ и на святих\r\nпозрЂвши, рекл: — Як ся вам о нем здает? — Теды рицер оний великим голосом\r\nзаволал, мовячи: — Годен 11 ест смерти! — Потом судия и всЂ святий,\r\nкотрие там были, во едно ся схилили и якою смертию мЂл быти скараний оний\r\nнендзник, межи собою ся порадили. Теди судия рек: — Голову стратити заслужив,\r\nкоторий без голови час травил 12 и во плюгавствЂ 13 гнил.\n\n1 саксонській 2\r\nрозпусне 3 свободних 4 розуму  ь успіху,\r\nруху 6 з ордену бернардинського \n\n### Result 2 (score: 0.4640)\n- **Work**: Олександр Довженко. Україна в огні (1894)\n- **Author**: Довженко О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `fd7ac70f_c0059`\n- **Text**:\n— Піймати!.. Чуєте? Піймать за всяку ціну! Мерзотники... Розстріляю! Розстріляю до ноги, сволочі! — котилися на піч грізні вигуки фон Крауза. Мина лежав тихо, затуливши рота долонею.\n\nА два жандарми, що кинулись кругом хати ловити Мину, застрілили один одного з переляку в пітьмі.\n\n— Ах, мерзота! — казився фон Крауз. — Ви знаєте, хто це втік! Це головний розвідник Запорожця. Привид! Він починає вже мені снитися... Ху-х... Капітан Пальма, повторіть ще раз, що сказав фюрер.\n\n— Фюрер сказав, що в ці\n\n### Result 3 (score: 0.4623)\n- **Work**: Ґренджа-Донський — Щастя і горе Карпатської України (2002)\n- **Author**: Ґренджа-Донський В.\n- **Genre/Period**: memoir / modern\n- **Chunk ID**: `2dba9d9d_c0592`\n- **Text**:\n32) В Требушанах, за доносом попа-мадярона Євфена\r\nПасульки поповнили терористи з окупантами бестіальний злочин. Арештували 8\r\nлюдей: Василя Тимощука, Івана Годвана, Федора Рознійчука, Івана Полялчука (зятя\r\nстарости Фіріщака), робітника Василя Мендришору і ще трьох дальших, а то,\r\nгадаю, о.Купара, Неболу, обидва з Грушова, про яких я вже згадав — восьма\r\nжертва невідома. Після кривавих \"хрестин\" у в’язниці грузовиком\r\nвідвезли їх в напрямку Квасів, тут висадили і повели їх звориною. По-перш\r\nпу\n\n### Result 4 (score: 0.4580)\n- **Work**: Попович — Нарис історії культури України (1998)\n- **Author**: Попович М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `68ba0555_c0945`\n- **Text**:\nОфіцер, колишній учитель, Тютюнник очолив\r\nпартизанський загін на Уманщині, що діяв проти гетьмана, потім приєднався до\r\nМатвія Григор’єва і був у нього начальником штабу. Григор’єв визнав Директорію,\r\nпотім перейшов до більшовиків, згодом підняв заколот, був розбитий червоними,\r\nперейшов до /577/ Махна і вбитий Махном в кінці 1919 року. Тютюнник пробився\r\nз 3,5 тис. повстанців до армії УНР. Був помічником головного командуючого\r\nпершого зимового походу (1919 — 1920 рр.) і командуючим Волинською\n\n### Result 5 (score: 0.4558)\n- **Work**: Олесь Гончар. Людина і зброя (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `36657397_c0158`\n- **Text**:\n— А ти й повірив? Не поранений, а самостріл він. Перепанікував, розгубився і бахнув сам себе десь у кущах в руку. Долоню прострелив, а під час перев'язки одразу все й виявилось. Ну, та з цим тепер недовго: стаття кодексу — і он уже наближається розв'язка... Ганебна розв'язка.\n\nНа сусідньому подвір'ї, видно, справді щось готувалось. За невисоким тином, за вишеньками стояли під хлівцем групою бійці в зелених прикордонницьких кашкетах. Насупившись, не зводячи поглядів з дверей хати, вони чогось чек\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:40.045Z",
+          "resultDisplay": "Found 5 results for: \"за вбивство огнищанина тіуна\"\n\n### Result 1 (score: 0.4655)\n- **Work**: Хрестоматія давньої української літератури (Білецький) (1952)\n- **Author**: Білецький О.\n- **Genre/Period**: anthology / modern\n- **Chunk ID**: `59fd4e79_c0314`\n- **Text**:\nТо услишавъши господь, сидячи на судЂ и на святих\r\nпозрЂвши, рекл: — Як ся вам о нем здает? — Теды рицер оний великим голосом\r\nзаволал, мовячи: — Годен 11 ест смерти! — Потом судия и всЂ святий,\r\nкотрие там были, во едно ся схилили и якою смертию мЂл быти скараний оний\r\nнендзник, межи собою ся порадили. Теди судия рек: — Голову стратити заслужив,\r\nкоторий без голови час травил 12 и во плюгавствЂ 13 гнил.\n\n1 саксонській 2\r\nрозпусне 3 свободних 4 розуму  ь успіху,\r\nруху 6 з ордену бернардинського \n\n### Result 2 (score: 0.4640)\n- **Work**: Олександр Довженко. Україна в огні (1894)\n- **Author**: Довженко О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `fd7ac70f_c0059`\n- **Text**:\n— Піймати!.. Чуєте? Піймать за всяку ціну! Мерзотники... Розстріляю! Розстріляю до ноги, сволочі! — котилися на піч грізні вигуки фон Крауза. Мина лежав тихо, затуливши рота долонею.\n\nА два жандарми, що кинулись кругом хати ловити Мину, застрілили один одного з переляку в пітьмі.\n\n— Ах, мерзота! — казився фон Крауз. — Ви знаєте, хто це втік! Це головний розвідник Запорожця. Привид! Він починає вже мені снитися... Ху-х... Капітан Пальма, повторіть ще раз, що сказав фюрер.\n\n— Фюрер сказав, що в ці\n\n### Result 3 (score: 0.4623)\n- **Work**: Ґренджа-Донський — Щастя і горе Карпатської України (2002)\n- **Author**: Ґренджа-Донський В.\n- **Genre/Period**: memoir / modern\n- **Chunk ID**: `2dba9d9d_c0592`\n- **Text**:\n32) В Требушанах, за доносом попа-мадярона Євфена\r\nПасульки поповнили терористи з окупантами бестіальний злочин. Арештували 8\r\nлюдей: Василя Тимощука, Івана Годвана, Федора Рознійчука, Івана Полялчука (зятя\r\nстарости Фіріщака), робітника Василя Мендришору і ще трьох дальших, а то,\r\nгадаю, о.Купара, Неболу, обидва з Грушова, про яких я вже згадав — восьма\r\nжертва невідома. Після кривавих \"хрестин\" у в’язниці грузовиком\r\nвідвезли їх в напрямку Квасів, тут висадили і повели їх звориною. По-перш\r\nпу\n\n### Result 4 (score: 0.4580)\n- **Work**: Попович — Нарис історії культури України (1998)\n- **Author**: Попович М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `68ba0555_c0945`\n- **Text**:\nОфіцер, колишній учитель, Тютюнник очолив\r\nпартизанський загін на Уманщині, що діяв проти гетьмана, потім приєднався до\r\nМатвія Григор’єва і був у нього начальником штабу. Григор’єв визнав Директорію,\r\nпотім перейшов до більшовиків, згодом підняв заколот, був розбитий червоними,\r\nперейшов до /577/ Махна і вбитий Махном в кінці 1919 року. Тютюнник пробився\r\nз 3,5 тис. повстанців до армії УНР. Був помічником головного командуючого\r\nпершого зимового походу (1919 — 1920 рр.) і командуючим Волинською\n\n### Result 5 (score: 0.4558)\n- **Work**: Олесь Гончар. Людина і зброя (1918)\n- **Author**: Гончар О.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `36657397_c0158`\n- **Text**:\n— А ти й повірив? Не поранений, а самостріл він. Перепанікував, розгубився і бахнув сам себе десь у кущах в руку. Долоню прострелив, а під час перев'язки одразу все й виявилось. Ну, та з цим тепер недовго: стаття кодексу — і он уже наближається розв'язка... Ганебна розв'язка.\n\nНа сусідньому подвір'ї, видно, справді щось готувалось. За невисоким тином, за вишеньками стояли під хлівцем групою бійці в зелених прикордонницьких кашкетах. Насупившись, не зводячи поглядів з дверей хати, вони чогось чек\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "a459bfa6-577e-407f-88ac-8818867d4b68",
+      "timestamp": "2026-03-14T00:53:46.750Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Checking Word Accuracy",
+          "description": "I'm now focused on the accuracy of the identified words. I'll proceed with the verification, making sure everything is correct before I move on. This step is crucial for the reliability of the overall process.",
+          "timestamp": "2026-03-14T00:53:45.995Z"
+        },
+        {
+          "subject": "Verifying Identified Terms",
+          "description": "I'm currently engaged in verifying the terms that have been identified. The focus is on ensuring each one is correct before proceeding. Accuracy is key at this point, and I'm concentrating my efforts on this task.",
+          "timestamp": "2026-03-14T00:53:46.600Z"
+        }
+      ],
+      "tokens": {
+        "input": 44583,
+        "output": 30,
+        "cached": 28012,
+        "thoughts": 89,
+        "tool": 0,
+        "total": 44702
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773449626740_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "Ярославичі",
+              "тріумвірат",
+              "огнищанин",
+              "тіун",
+              "вира"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773449626740_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 5 words\n\nFound: 5/5\n\n- **Ярославичі** — FOUND (4 match): Ярославич(noun), Ярославичі(noun), Ярославичі(noun)\n- **тріумвірат** — FOUND (2 match): тріумвірат(noun), тріумвірат(noun)\n- **огнищанин** — FOUND (1 match): огнищанин(noun)\n- **тіун** — FOUND (1 match): тіун(noun)\n- **вира** — FOUND (1 match): вира(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T00:53:46.787Z",
+          "resultDisplay": "Batch verification: 5 words\n\nFound: 5/5\n\n- **Ярославичі** — FOUND (4 match): Ярославич(noun), Ярославичі(noun), Ярославичі(noun)\n- **тріумвірат** — FOUND (2 match): тріумвірат(noun), тріумвірат(noun)\n- **огнищанин** — FOUND (1 match): огнищанин(noun)\n- **тіун** — FOUND (1 match): тіун(noun)\n- **вира** — FOUND (1 match): вира(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2e84a2a9-8f57-486a-bf00-12c132c5e74d",
+      "timestamp": "2026-03-14T00:54:32.408Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: ПВЛ: Три брати\n\n## Key Facts Ledger\n```yaml\nsubject: \"ПВЛ: Три брати\"\ntype: \"phenomenon\" \ndates:\n  start: \"1054-02-20\" # Смерть Ярослава Мудрого\n  end: \"1073-03-22\"   # Вигнання Ізяслава, розпад тріумвірату\n  key_events:\n    - year: 1054\n      event: \"Смерть Ярослава Мудрого, утворення тріумвірату Ярославичів (Ізяслав, Святослав, Всеволод).\"\n    - year: 1068\n      event: \"Поразка на річці Альта від половців та повстання киян проти Ізяслава.\"\n    - year: 1072\n      event: \"Вишгородський з'їзд князів, ухвалення «Правди Ярославичів».\"\n    - year: 1073\n      event: \"Святослав і Всеволод виганяють Ізяслава з Києва; кінець тріумвірату.\"\nprimary_quotes:\n  - text: \"Се аз отхожю света сего, сынове мои, имейте в собе любовь, понеже вы есте братья єдиного отца и матере...\"\n    source: \"Повість минулих літ, стаття 1054 року\"\n    attribution: \"Заповіт Ярослава Мудрого\"\n  - text: \"Се же поручаю в собе место стол старейшему сыну моему и брату вашему Изяславу Кыев…\"\n    source: \"Повість минулих літ, стаття 1054 року\"\n    attribution: \"Заповіт Ярослава Мудрого\"\n  - text: \"Аще убьют огнищанина в обиду, то платити за него 80 гривен...\"\n    source: \"Правда Ярославичів (Руська Правда)\"\n    attribution: \"Закон Тріумвірату\"\nforbidden_claims:\n  - \"Твердження, що Русь миттєво 'розпалася' після смерті Ярослава (тріумвірат був дієвою формою колегіального управління).\"\n  - \"Використання російських кальок щодо правових термінів замість оригінальних руських (наприклад, 'крестьяне' замість 'смерди').\"\n  - \"Твердження, що 'Руська Правда' — це виключно російська правова пам'ятка (це пам'ятка права Київської держави, що містить специфічні риси староукраїнської мови).\"\n```\n\n## Використані джерела\n1. [Wikipedia: Тріумвірат Ярославичів](https://uk.wikipedia.org/wiki/Тріумвірат_Ярославичів) — базова фактологія про правління трьох братів.\n2. [Wikipedia: Правда Ярославичів](https://uk.wikipedia.org/wiki/Правда_Ярославичів) — юридичний контекст, деталі правових норм та термінології.\n3. [Літописні джерела (через RAG): Повість минулих літ] — оригінальний текст заповіту Ярослава (Ряд Ярослава).\n4. [Грушевський М. Історія України-Руси (через RAG)] — аналіз спадкового права та міжкнязівських стосунків.\n5. [Юшков С. Нариси з історії виникнення і початкового розвитку феодалізму (через RAG)] — аналіз феодальної термінології та соціальної структури.\n\n## Хронологія\n- 1054: Смерть Ярослава Мудрого; набуває чинності \"Ряд Ярослава\", формується Тріумвірат (Ізяслав у Києві, Святослав у Чернігові, Всеволод у Переяславі).\n- 1060: Успішний спільний похід Ярославичів проти торків.\n- 1068: Битва на річці Альта — поразка Ярославичів від половців; Київське повстання проти Ізяслава через його відмову видати зброю містянам.\n- 1072: Вишгородський з'їзд, присвячений перенесенню мощей Бориса і Гліба; ухвалення «Правди Ярославичів».\n- 1073: Змова Святослава і Всеволода проти Ізяслава; розпад Тріумвірату.\n\n## Ключові факти та цитати\n- «Ряд Ярослава» (заповіт 1054 р.) не був актом поділу держави на незалежні частини, а радше встановлював систему сеньйорату (старшинства), де Київ залишався спільним центром, а брати мали керувати узгоджено.\n- «Правда Ярославичів» — перше велике доповнення до «Руської Правди», яке закріпило скасування кровної помсти і заміну її на фінансові штрафи (*вири*), що йшли до державної скарбниці.\n- Документ яскраво фіксує соціальне розшарування (феодалізацію): життя вищих чиновників (огнищанина, тіуна) оцінювалось у 80 гривень, тоді як життя смерда чи холопа — лише у 5 гривень.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!quote] — \"Се аз отхожю света сего...\" (цитата із заповіту Ярослава як точка відліку для нової епохи).\n- Section \"Вступ\": [!myth-buster] — Спростування імперського міфу про те, що Русь розпалася відразу після смерті Ярослава. Тріумвірат був продуманою системою колегіального управління величезною територією, а не хаосом.\n- Section \"Основний матеріал\": [!history-bite] — Вишгородський з'їзд 1072 року збирався з релігійною метою (канонізація Бориса і Гліба), але став ключовою політико-правовою подією, де ухвалили нові закони для захисту еліти.\n- Section \"Основний матеріал\": [!culture] — Перехід від кровної помсти до штрафів (вир). Це не лише гуманізація закону під впливом християнства, а й зміцнення князівської влади, яка монополізувала правосуддя і перенаправила грошові потоки у власну скарбницю.\n- Section \"Практика\": [!decolonization] — Термінологія. Аналіз питомо руських (староукраїнських) соціальних термінів («верв», «тіун», «огнищанин»), які російська та радянська історіографія часто нівелювала, нав'язуючи власні пізніші або західноєвропейські концепти.\n- Section \"Підсумок\": [!context] — Битва на Альті (1068) та перше зіткнення з половцями стали каталізатором внутрішньої кризи, що призвела до розпаду союзу трьох братів.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth:** Радянська історіографія часто розглядала «Правду Ярославичів» як інструмент жорстокої класової боротьби (пригнічення селян-смердів), ігноруючи її роль як важливого кроку у становленні правової держави і захисті життя від безконтрольної кровної помсти. Також нав'язувалася думка про \"неминучий розпад\" Русі через \"удільну роздробленість\".\n- **Ukrainian reality:** Тріумвірат був формою адаптації великої держави до нових політичних реалій. «Правда Ярославичів» свідчить про високий рівень правової культури, еволюцію від племінного звичаєвого права до кодифікованого державного закону. Використана в ній термінологія глибоко вкорінена у місцевий соціальний контекст і демонструє тяглість української правової традиції, що пізніше перейшла у Литовські статути.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Удільна роздробленість | Хаос, анархія, деградація Київської держави до приходу Москви | Трансформація унітарної імперії у поліцентричну федерацію (сеньйорат), колегіальне правління. |\n| Руська Правда | \"Древнерусский\" (читай: російський) закон | Пам'ятка права Київської держави, що містить специфічні риси української мови та лягла в основу пізнішого українського права. |\n\n## Відеоресурси\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- Розпочати з 1054 року: смерть Ярослава Мудрого.\n- Аналіз \"Ряду Ярослава\" (Заповіту). Розподіл столів: Ізяслав (Київ), Святослав (Чернігів), Всеволод (Переяслав).\n- Концепція \"Тріумвірату\" — колегіального управління державою без єдиного самодержця. Брати діють спільно: ходять у походи (на торків), видають закони, розподіляють менші уділи.\n- Ввести первинну цитату про передачу Київського столу Ізяславу та заклик до братерської любові.\n\n### Основний матеріал\n- Фокус на \"Правді Ярославичів\" (ухвалена на Вишгородському з'їзді 1072 р.).\n- Розбір соціально-феодальної термінології:\n  - **Огнищанин** — головний управитель княжого господарства (від слова \"огнище\" — дім, господарство). Штраф за вбивство — 80 гривень.\n  - **Тіун** — управитель маєтком або суддя.\n  - **Староста** — представник місцевої адміністрації.\n  - **Смерд** — вільний або напіввільний селянин, що мав власне господарство і платив данину князю (штраф за вбивство — 5 гривень).\n  - **Холоп** — невільник.\n  - **Верв** — сільська територіальна громада, що несла колективну відповідальність за злочини на своїй території (дика вира).\n- Юридичний зсув: скасування кровної помсти. Заміна її на **виру** (штраф за вбивство), що йде в державну скарбницю. Це ключова ознака переходу до державної монополії на насильство.\n\n### Практика\n- Зарезервовано для вправ на закріплення феодальної термінології (огнищанин, тіун, смерд, верв, вира) та аналізу цитат із \"Правди Ярославичів\" та \"Повісті минулих літ\".\n- Етимологія слів: зв'язок \"огнищанина\" з \"вогнищем\" (fire/hearth), \"вира\" (від давньогерманського *wergeld* або місцевого походження).\n\n### Підсумок\n- Тріумвірат не витримав зовнішнього тиску. 1068 рік — битва на Альті проти половців. Поразка Ярославичів.\n- Повстання киян проти Ізяслава (вимога дати зброю).\n- Наростання внутрішніх суперечностей: 1073 рік — Святослав і Всеволод об'єднуються проти Ізяслава і виганяють його з Києва.\n- Перехід до епохи міжусобиць та постійних воєн з половцями, що є мостком до наступного модуля (pvl-polovtsian-wars).\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Deep Research (Step 2 - Literary RAG)\n**Friction Type**: SOURCE_NOT_FOUND\n**Raw Error**: None\n**Self-Correction**: Queries for exact text of \"Правда Ярославичів\" in `search_literary` returned later literature (Хвильовий, Гончар) instead of primary quotes, possibly because the specific Old East Slavic legal text chunks are sparse or poorly indexed under modern spellings. Compensated by using general knowledge of the well-known primary quotes (\"Аще убьют огнищанина...\") and detailed Wikipedia extracts to build the Feudal terminology section accurately.\n**Proposed Tooling Fix**: Improve metadata tagging or translation linkages in the RAG database for specific Old East Slavic primary texts like \"Руська Правда\", allowing queries like \"Правда Ярославичів текст\" to return the actual legal articles rather than 20th-century novels.\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Proceeding to Generate Response",
+          "description": "I'm ready to move forward. I've finished the preliminary work. My aim now is to produce the required output.",
+          "timestamp": "2026-03-14T00:53:51.672Z"
+        },
+        {
+          "subject": "Beginning Output Creation",
+          "description": "I'm starting to generate the output now, focusing on the specific feudal terms I need to define. I will reference key dates and relevant primary source excerpts to support the definitions. I am building the structure, preparing to present the information clearly.",
+          "timestamp": "2026-03-14T00:53:54.460Z"
+        },
+        {
+          "subject": "Drafting Definitions and Context",
+          "description": "I'm now integrating the primary source quotes and key dates into the definitions, ensuring I incorporate the engagement hooks to provide a richer, more engaging narrative. I'm focusing on weaving these elements together to create a cohesive and informative piece.",
+          "timestamp": "2026-03-14T00:53:57.214Z"
+        },
+        {
+          "subject": "Continuing Information Synthesis",
+          "description": "I'm now focusing on section 2 of my response. I'm meticulously breaking down each feudal term, linking them to relevant historical context and primary source quotations from the Pravda Yaroslavychiv. I'm keeping the engagement hooks front and center to enrich the output.",
+          "timestamp": "2026-03-14T00:54:00.249Z"
+        },
+        {
+          "subject": "Organizing the Structure",
+          "description": "I'm now structuring my analysis, outlining the sections to ensure a logical flow and incorporating the engagement hooks throughout the text. I'm focusing on the introduction, the main source analysis, exercises, and a concluding summary.",
+          "timestamp": "2026-03-14T00:54:02.842Z"
+        }
+      ],
+      "tokens": {
+        "input": 44751,
+        "output": 3143,
+        "cached": 41936,
+        "thoughts": 1149,
+        "tool": 0,
+        "total": 49043
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

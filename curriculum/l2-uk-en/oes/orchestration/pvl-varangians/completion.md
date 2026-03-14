@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 27 — E2E
+PASS: pipeline oes 26
 
   Module:   pvl-varangians
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T08:18:10Z
+  Date:     2026-03-14T07:12:18Z

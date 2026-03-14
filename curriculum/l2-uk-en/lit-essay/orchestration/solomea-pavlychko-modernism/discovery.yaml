@@ -1,0 +1,262 @@
+discovered_at: '2026-03-14T02:13:41.855845+00:00'
+query_keywords:
+- Solomea Pavlychko Modernism
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Solomea Pavlychko Modernism у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.6
+  relevance_note: The video explicitly discusses how the Terestchenko family was 'tabooed'
+    and 'discarded' by 'радянська історіографія'. This directly parallels Solomea
+    Pavlychko's work in challenging and de-Sovietizing Ukrainian cultural studies
+    and historical narratives, making it slightly more relevant than Candidate 1 due
+    to the direct focus on Soviet historiography's impact.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: Після Деколонізаційна перспектива – to illustrate how Soviet historiography
+    distorted the image of historical figures and the ongoing need for re-evaluation,
+    which is central to Pavlychko's decolonization efforts.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.5
+  relevance_note: The video discusses the re-evaluation of historical narratives,
+    specifically regarding Stalinist and Russian crimes and their comparison to the
+    Holocaust, and mentions 'історіографія'. This aligns tangentially with Solomea
+    Pavlychko's 'Деколонізаційна перспектива' and her broader intellectual project
+    of re-evaluating Ukrainian history and culture, although it is not about her or
+    literary modernism directly.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
+    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
+    яка от є складовою українського культури...
+  embed_suggestion: Після Деколонізаційна перспектива – to provide a contemporary
+    example of critical historiography and the re-evaluation of complex historical
+    narratives in Ukraine, linking to Pavlychko's intellectual project.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: While in Ukrainian and about Ukrainian history, this video focuses
+    on the business, economic, and family history of the Terestchenko family. This
+    is too far removed from the core module topic of Solomea Pavlychko's literary
+    modernism, critical theory, or decolonization perspective to be considered relevant.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable for embedding in this module due to low relevance
+    to literary modernism or Solomea Pavlychko's work.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0482
+  text: "255\nЗміст\nМОДЕРНА УКРАЇНСЬКА ПРОЗА\nРанній модернізм  . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 111\nОсобливості українського модернізму . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . 115 \nМихайло Коцюбинський . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 117\n\
+    Теорія літератури. Імпресіонізм. Психологічна новела . . . . . . . . . . . . .\
+    \ . . . 121\nІntermezzo . . . . . . . . . . . . ."
+  section_title: Сторінка 255
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0002
+  text: "М\nО\nЛ\nД\nА В\nІ Я\nВ\nА\nЛ\nА\nХ І\nЯ\nР\nУ\nМ\nУ\nН\nІ Я\nА В С Т Р І\
+    \ Й С Ь К А\nІ М П Е Р І Я\nУ\nГ\nО\nР\nЩ\nИ Н\nА\nО С М А Н С Ь К А\nІ М П Е\
+    \ Р І Я\nР\nО\nС\nІ\nЙ\nС\nЬ\nК\nА\n \nІ\nМ\nП\nЕ\nР\nІ\nЯ\nМОДЕРНА  УКРАЇНСЬКА\
+    \  ПРОЗА\nВСТУП. РЕАЛІСТИЧНА \nУКРАЇНСЬКА ПРОЗА\nУКРАЇНСЬКА  ЛІТЕРАТУРА  ДРУГОЇ\
+    \  ПОЛОВИНИ  ХІХ ст. В  КОНТЕКСТІ  РОЗВИТКУ  ТОДІШНЬОГО   \nСУСПІЛЬСТВА, КУЛЬТУРИ\
+    \  Й  МИСТЕЦТВА"
+  section_title: Сторінка 3
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5781331062316895
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5568049550056458
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5559597015380859
+  chunk_id: 3588aaff_c0714
+  text: "2 Див., наприклад,\r\nпостійну рубрику «Письменники України — жертви сталінських\
+    \ репресій» у\r\n«Літературній Україні» за 1991 рік.\n\n3 Промовистий приклад\r\
+    \n— спроба переоцінки соціалістичного реалізму (див.: Радянське\r\nлітературознавство.\
+    \ — 1989. — № 8. — С. 3-24).\n\n4 Див., наприклад,\r\nкнижку М. Жулинського «Із\
+    \ забуття — в безсмертя» (К., 1990).\n\n5 Див.: Гундорова\r\nТамара. Ранній український\
+    \ модернізм: До проблеми естетичної свідомості //\r\nРадянське літературознавство.\
+    \ — 1989. — № 12. — С. 3-7. /573"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

@@ -1,0 +1,174 @@
+discovered_at: '2026-03-14T03:40:50.115974+00:00'
+query_keywords:
+- Мова Сковороди
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Mix of CS, Ruthenian, and Russian features
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=2UzBSihe1xo
+  channel: Ukrainian Lessons
+  title: ULP 6-221 | Українська поезія. Григорій Сковорода «De libertate» | Ukrainian
+    Lessons Podcast Seas...
+  relevance_score: 0.95
+  relevance_note: The video directly features an episode of Ukrainian Lessons Podcast
+    discussing Hryhorii Skovoroda's poetry ('De libertate'). This is a direct engagement
+    with the module's core topic and provides an excellent resource for students to
+    hear about Skovoroda in Ukrainian.
+  transcript_excerpt: ви слухаєте raini Lens podcast це епізод 221 українська поезія
+    Григорій Сковорода [музика] делібертати Привіт привіт Це Анна і нарешті новий
+    епізод подкасту уроки української давно не [музика] чулися так нам довелося взяти
+    невеличку перерву
+  embed_suggestion: After section Підсумок -- as an additional resource for further
+    exploration of Skovoroda's work and its impact.
+- url: https://www.youtube.com/watch?v=X157csox9sk
+  channel: Історія Мови
+  title: '#old Ukrainian 17th century "Perestoroga" 1605 #shorts'
+  relevance_score: 0.85
+  relevance_note: This short video presents a reading of a 17th-century Ukrainian
+    text. This directly exemplifies the Ruthenian language features that would have
+    influenced Skovoroda's language, providing an authentic audio and textual example
+    of the period's language.
+  transcript_excerpt: Дні, котрий господар Волоський наступуватимів за волею цесарською
+    на господарство Волосько, упросив того протосингело же без за нього прирук купцум,
+    у которых став він довжив на подарки цесарові турецькому і башун протонкел іжмів
+    дорогу през землю волоською, сподіваючися іж навідить його оний господар і піня
+    купю одшлет рочився за нього
+  embed_suggestion: After section Основний матеріал -- to demonstrate the sound and
+    form of 17th-century Ukrainian relevant to Skovoroda's linguistic context.
+- url: https://www.youtube.com/watch?v=r_Db1KAfyNQ
+  channel: Історія Мови
+  title: 'Russian language: winter'
+  relevance_score: 0.8
+  relevance_note: The video discusses the evolution of the Ukrainian language from
+    Kievan Rus' through the Hetmanate, comparing old forms to modern Ukrainian. This
+    provides valuable historical linguistic context relevant to understanding Skovoroda's
+    language, which includes Ruthenian and Russian features.
+  transcript_excerpt: мова Давньої Русі або Київської Русі Як приємно казати пори
+    року зима звучало як зіма зіма писалося так і Ось вам приклад зима ледоми озеро
+    криє зійма ледве озеро криє зима вкриває льодом озеро А на Гетьманщині ту саму
+    фразу сказали б так зима льодом озеро криє фактично так само як і сучасній мові
+  embed_suggestion: After section Основний матеріал -- to illustrate the historical
+    linguistic context of Skovoroda's era.
+- url: https://www.youtube.com/watch?v=PLwCHSzvXl7wf3-eAU3TXglE5pkndJQRj_
+  channel: Ukrainian with Olha
+  title: Documentaries in Ukrainian
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0450
+  text: "Хід заняття\n\t 1. Опрацюйте наведений матеріал і дайте відповіді на запитання.\
+    \ 2. Зробіть висновки відповідно до мети заняття."
+  section_title: Сторінка 249
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0001
+  text: "ДОРОГІ ДРУЗІ!\nУ попередніх класах ви здобули базові знання з української\
+    \ мови, \nякі необхідні для кожної людини: вивчили основні правила орфо­\nграфії,\
+    \ ознайомилися з будовою словосполучення й речення, прави­\nлами вживання розділових\
+    \ знаків, вивчили частини мови, багато \nдізналися про словниковий склад мови,\
+    \ будову слова, способи тво­\nрення слів тощо.\nОсновна мета вивчення мови — розвинути\
+    \ вміння спілкуватися, \nграмотно й чітко висловлювати власні думки, бути тактовним\
+    \ і \nцікавим співрозмовником."
+  section_title: Сторінка 3
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0062
+  text: "64\n20\nОснова слова. Частини основи\nНавчаюся визначати основу слова\nПрочитай\
+    \ і розкажи \nу класі.\nЯ — учителька\nЯ — учитель\nЧастина слова без закінчення\
+    \ на-\nзивається основою. Основа слова \nпередає його основне значення. \n\t \t\
+    \n1   \aПрочитайте вірш Бориса Слюсара. \nТОЧНА  ПРИКМЕТА\n— Скажи мені, Миколо,\n\
+    твій брат прийшов зі школи?\n— Авжеж.\n— Ти точно знаєш? —\nсусідка знов питає.\n\
+    — Прийшов, бо наша кішка\nсховалася під ліжко.\nЯк ви розумієте \nзаголовок?\n\
+    \t\n  \aВипишіть виділені слова, позначте закінчення"
+  section_title: Сторінка 64
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5655149817466736
+  chunk_id: 5c054efc_c0067
+  text: "Складність розуміння Сковородою другого ступеня пізнання — пізнання\r\nсутності\
+    \ за допомогою засобів раціонального абстрактного мислення — зумовлена\r\nтим,\
+    \ що, як він гадає, при цьому змінюється не тільки спосіб, а й сам об’єкт,\r\n\
+    тобто \\48\\що з переходом від явища до розгляду сутності людська думка вже\r\n\
+    пізнає не матеріальне, а ідеальне, трансцендентне. Пізнання цього і є головним\r\
+    \nзавданням філософської науки. Що ж до чуттєвого пізнання, то за його допомогою\r\
+    \nпізнається лише певна «обличительная т"
+  work: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+  year: 1973
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/skovoroda/skov.htm
+- score: 0.5581640005111694
+  chunk_id: 5c054efc_c0075
+  text: "Філософське мислення Г. Сковороди у своїй основі синтетичне. Його\r\nспецифіка\
+    \ значною мірою перебуває в залежності не лише від змісту ідей, що їх\r\nрозвиває\
+    \ філософ, а й від форми і стилю, обраних філософом. Філософські твори\r\nСковороди\
+    \ становлять інтерес як з погляду «чистого змісту», так і з погляду їх\r\nлітературної\
+    \ форми, в секретах якої чимала частка й секретів самого змісту.\r\nРозкриття\
+    \ цього діалектичного зв’язку між певними ідеями і формою, в якій вони\r\nвиявляються,\
+    \ являє собою важливу умову"
+  work: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+  year: 1973
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/skovoroda/skov.htm
+- score: 0.5481852293014526
+  chunk_id: 5c054efc_c0078
+  text: "Сковорода розробляє порівняно незначну кількість ідей, які прагне\r\nосмислити\
+    \ за допомогою тих самих образів. Його вчення складалося поступово,\r\nсвої ідеї\
+    \ він розвиває з величезною послідовністю, з кожним твором\r\nконкретизуючи їх,\
+    \ звертаючи увагу на можливі відтінки думок. При цьому філософ\r\nдалеко не байдужий\
+    \ і до форм самовиразу, він охоче вдається до стилістичних\r\nваріацій своїх думок,\
+    \ полюбляє каламбур та словесну гру. Це й зумовлює значне\r\nмісце в його творах\
+    \ своєрідних стилістичних вправ, р"
+  work: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+  year: 1973
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/skovoroda/skov.htm

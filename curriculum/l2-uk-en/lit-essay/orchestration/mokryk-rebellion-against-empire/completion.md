@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 44 — E2E
+PASS: pipeline lit-essay 50
 
   Module:   mokryk-rebellion-against-empire
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T18:48:35Z
+  Date:     2026-03-14T01:59:37Z

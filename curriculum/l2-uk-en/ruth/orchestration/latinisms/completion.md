@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 21 — E2E
+PASS: pipeline ruth 21
 
   Module:   latinisms
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T08:03:44Z
+  Date:     2026-03-14T07:08:00Z

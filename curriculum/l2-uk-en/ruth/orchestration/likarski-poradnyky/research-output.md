@@ -1,0 +1,13 @@
+
+⏳ Rate limited (attempt 1/5). Waiting 30s...
+
+⏳ Rate limited (attempt 2/5). Waiting 60s...
+
+⏳ Rate limited (attempt 3/5). Waiting 120s...
+
+⏳ Rate limited (attempt 4/5). Waiting 240s...
+
+❌ Rate limited after 5 attempts. Giving up.
+✅ Message sent to Claude (ID: 25232)
+✓ Message 25231 acknowledged
+✓ Message 25232 acknowledged

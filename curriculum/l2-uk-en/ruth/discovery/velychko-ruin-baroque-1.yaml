@@ -1,0 +1,114 @@
+discovered_at: '2026-03-14T02:52:34.085628+00:00'
+query_keywords:
+- Самійло Величко I — Архіваріус Руїни
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Velychko's method, sources, and baroque architectural structure
+error: null
+warning: No videos found across channels
+videos: []
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-burnejko-2017_s0311
+  text: '0
+
+    10
+
+    20
+
+    30
+
+    40
+
+    50
+
+    1907‐1915 рр. Правобережжя
+
+    Південь
+
+    Лівобережжя'
+  section_title: Сторінка 214
+  grade: 9
+  author: burnejko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0058
+  text: "Дружинники князя. Реконструкція\n\e\n\e Опишіть обладунок руських \nвоїнів."
+  section_title: Сторінка 40
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  text: "Третя спроба утвердження незалежності  \nУкраїни у  XX  ст. Історія рідного\
+    \ краю в  контексті загальноукраїнських подій \n1914—1939  рр. Завдання для узагальнення\
+    \ знань і  підготовки  \nдо тематичного оцінювання за розділом  V \n«Західноукраїнські\
+    \ землі в  міжвоєнний період»"
+  section_title: Сторінка 188
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5431016087532043
+  chunk_id: 5794da94_c2744
+  text: "4) Матеріалы с. 88.\n\n5) Воно заховалося в повнім \r\nтексті — Матер. с.\
+    \ 81-6.\n\n6) Акты Ю. З. Р. X с. 16-8."
+  work: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur70108.htm
+- score: 0.5130022764205933
+  chunk_id: f648356f_c0060
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 44-58.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm
+- score: 0.5082526206970215
+  chunk_id: f648356f_c0037
+  text: "Предыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ,\
+    \ или Малой Россіи. — М., 1846. — С. 21-44.]\n\nПредыдущая     \r\nГлавная    \
+    \ \r\nСлЂдующая"
+  work: Історія Русів
+  author: Невідомий
+  year: 1829
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://litopys.org.ua/istrus/istrus01.htm

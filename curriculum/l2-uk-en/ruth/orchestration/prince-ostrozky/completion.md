@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 36 — E2E
+PASS: pipeline ruth 35
 
   Module:   prince-ostrozky
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T19:33:16Z
+  Date:     2026-03-14T07:08:06Z

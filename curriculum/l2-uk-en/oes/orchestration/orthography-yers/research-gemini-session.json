@@ -1,0 +1,460 @@
+{
+  "sessionId": "0376c009-f82b-45e5-89ca-4c15bdeadf55",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T23:42:42.345Z",
+  "lastUpdated": "2026-03-13T23:43:41.005Z",
+  "messages": [
+    {
+      "id": "b5e4de88-880c-4092-a73e-25df337c1255",
+      "timestamp": "2026-03-13T23:42:42.345Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-003\nlevel: RUTH\nsequence: 3\nslug: szlachta-nobility\nversion: '2.0'\ntitle: Шляхта\nsubtitle: The Szlachta\nfocus: Rights and privileges of nobility\nphase: 1\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to The Szlachta\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Heraldry Expert\nprerequisites:\n- sovereign-state\nconnects_to:\n- legal-personhood\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Шляхта** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Шляхта\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Шляхта\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "83f69d14-a426-4015-94fd-74456bedacff",
+      "timestamp": "2026-03-13T23:42:50.489Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Refining Next Actions",
+          "description": "I'm zeroing in on the next action. My analysis is guiding me towards the optimal path forward. I'm focusing on the next immediate step.",
+          "timestamp": "2026-03-13T23:42:47.106Z"
+        },
+        {
+          "subject": "Executing the Next Search",
+          "description": "I'm now prioritizing the Wikipedia search. My goal is to extract the core information. Focusing on the initial research phase.",
+          "timestamp": "2026-03-13T23:42:50.273Z"
+        }
+      ],
+      "tokens": {
+        "input": 20457,
+        "output": 18,
+        "cached": 13499,
+        "thoughts": 295,
+        "tool": 0,
+        "total": 20770
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445370487_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Шляхта"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445370487_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Шляхта' — 5 results\n\n1. **Шляхта** — Шля́хта — верства населення з дрібно-помісної аристократії. Це назва провідної верстви польського станового суспільства, яка відповідала давньому українському\n2. **Українська шляхта** — Украї́нська шля́хта, також рýська шля́хта — вищий суспільно-політичний, привілейований та провідний соціальний стан, котрий є аристократією в Русі-Україні\n3. **Застінкова шляхта** — засцянко́ва) шля́хта також ходачкова, околична (пол. Szlahta zaściankowa, пол. szlachta zagrodowa) — найчисельніша в XV-XIX століттях група шляхти в Речі Посполитій\n4. **Шляхта Гетьманщини** — Шляхта Гетьманщини чи козацька шляхта або шляхта Малоросії, малоросійська шляхта, малоросійське дворянство — привілейований суспільний стан, історичний\n5. **Шляхта на Україні** — Шляхта на Україні (пол. Szlachta na Ukrainie) (Повна назва: Шляхта на Україні: її участь у житті українського народу на тлі його історії) — політичний"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:42:50.830Z",
+          "resultDisplay": "Wikipedia search: 'Шляхта' — 5 results\n\n1. **Шляхта** — Шля́хта — верства населення з дрібно-помісної аристократії. Це назва провідної верстви польського станового суспільства, яка відповідала давньому українському\n2. **Українська шляхта** — Украї́нська шля́хта, також рýська шля́хта — вищий суспільно-політичний, привілейований та провідний соціальний стан, котрий є аристократією в Русі-Україні\n3. **Застінкова шляхта** — засцянко́ва) шля́хта також ходачкова, околична (пол. Szlahta zaściankowa, пол. szlachta zagrodowa) — найчисельніша в XV-XIX століттях група шляхти в Речі Посполитій\n4. **Шляхта Гетьманщини** — Шляхта Гетьманщини чи козацька шляхта або шляхта Малоросії, малоросійська шляхта, малоросійське дворянство — привілейований суспільний стан, історичний\n5. **Шляхта на Україні** — Шляхта на Україні (пол. Szlachta na Ukrainie) (Повна назва: Шляхта на Україні: її участь у житті українського народу на тлі його історії) — політичний",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "086b78a6-98d4-49ee-84de-9742e7cef696",
+      "timestamp": "2026-03-13T23:42:56.775Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning extraction of data",
+          "description": "I'm now diving into the next step, aiming to extract the relevant section's structure. I'm focusing on parsing the layout.",
+          "timestamp": "2026-03-13T23:42:55.624Z"
+        },
+        {
+          "subject": "Initiating structural parsing",
+          "description": "I'm now getting into the detailed extraction of the section structure. I'm focusing intently on identifying the relevant elements to move forward.",
+          "timestamp": "2026-03-13T23:42:56.552Z"
+        }
+      ],
+      "tokens": {
+        "input": 20818,
+        "output": 21,
+        "cached": 19785,
+        "thoughts": 105,
+        "tool": 0,
+        "total": 20944
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445376773_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "sections",
+            "query": "Українська шляхта"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445376773_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Українська шляхта':\n\n1 Витоки шляхти (index=1)\n2 Формування шляхти (index=2)\n3 Градація та права шляхти (index=3)\n4 Боротьба за права (index=4)\n5 Окатоличення шляхти (index=5)\n6 Козацька шляхта (index=6)\n7 У складі Австрійської імперії (index=7)\n8 У складі Російської імперії (index=8)\n9 Див. також (index=9)\n10 Примітки (index=10)\n11 Джерела (index=11)\n12 Література (index=12)\n13 Посилання (index=13)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:42:57.555Z",
+          "resultDisplay": "Sections of 'Українська шляхта':\n\n1 Витоки шляхти (index=1)\n2 Формування шляхти (index=2)\n3 Градація та права шляхти (index=3)\n4 Боротьба за права (index=4)\n5 Окатоличення шляхти (index=5)\n6 Козацька шляхта (index=6)\n7 У складі Австрійської імперії (index=7)\n8 У складі Російської імперії (index=8)\n9 Див. також (index=9)\n10 Примітки (index=10)\n11 Джерела (index=11)\n12 Література (index=12)\n13 Посилання (index=13)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5225bee0-4f90-4041-9277-1814a30f1f6e",
+      "timestamp": "2026-03-13T23:43:03.878Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the analysis",
+          "description": "I'm focused on moving forward with this task. I'll need to gather the relevant information to facilitate the next stage of the operation. I am considering the most efficient way to achieve that.",
+          "timestamp": "2026-03-13T23:43:02.811Z"
+        },
+        {
+          "subject": "Collecting Needed Data",
+          "description": "I need to get the essential information. The information is needed for the next step, and I have determined where to get it. Now I will get the required data.",
+          "timestamp": "2026-03-13T23:43:03.737Z"
+        }
+      ],
+      "tokens": {
+        "input": 21021,
+        "output": 46,
+        "cached": 19718,
+        "thoughts": 91,
+        "tool": 0,
+        "total": 21158
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445383829_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "section",
+            "query": "Українська шляхта",
+            "section": 2
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445383829_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Українська шляхта — Section 2\n\nФормування шляхти\n\nНаприкінці XIV століття майже вся територія України увійшла до складу Литовсько-Руської держави. Влада Великого князя Литовського встановлювалась в українських князівствах доволі мирно. Частково, завдяки угодам з місцевою знаттю, частково&nbsp;— через укладання шлюбів, менше&nbsp;— шляхом завоювань. В усіх випадках приєднання до Литовської держави відбувалось на принципах «старовини не рушаємо», тобто&nbsp;— не порушення старих традицій, відносин та законів. Перехід влади від Рюриковичів до Гедиміновичів був номінальним. Литовська адміністрація користувалась «руською мовою» та «Руською правдою», а місцева аристократія стала частиною правлячого класу нової держави.\n\nНаділяти підлеглих землею та привілеями Великий князь Литовський міг: за вислугу до ласки (тимчасовий бенефіцій), за доживотну вислугу (пожиттєвий бенефіцій) або у вислужену отчину (феод або алод). Роздавалися й державні посади. Наприкінці XIV століття Великий князь почав перетасовувати призначення, щоб усунути систему удільних князів. Нащадки князівських родів, що були переміщені, називались княжатами-повітниками.\n\nТаким чином, в Україні відбувається розшарування між військовою челяддю і «шевальє» (військовою верхівкою). Також боярин відрізнявся від бояра. В українських землях «бояринами» стали називати людей, що належать бояру. Слуги панцерні&nbsp;— боярини становили на Київщині майже третину сільського населення. Вони були під особливим захистом закону, але вважались челяддю.\n\nВільні «шевальє» одержують назву «шляхта». Цей термін прийшов скоріш за все з Чехії, через Польщу та Галичину&nbsp;— від німецького das Geschlecht&nbsp;— рід, покоління. Спочатку в литовсько-руському середовищі слово «пан» означало тільки членів великокнязівської ради і тих шляхтичів, які виступили у військовий похід із власними корогвами, а не в загальному ополченні. Пізніше воно поширилось на всю шляхту і стало формою звертання.\n\nВ Україні, що входила до складу Великого князівства Литовського, основою шляхти стали 20-30 княжих та магнатських родів, в основному нащадків династій Рюриковичів та Гедиміновичів. До найбагатших та найзначніших домів належали: Острозькі, Сангушки, Чорторийські, Збаразькі, Вишневецькі, Заславські, Четвертинські, Корецькі, Гольшанські-Дубровицькі та інші. Саме представники цих родин займали переважну більшість високих посад у Литовській державі.\n\nНаступна верства шляхти, що налічувала кількасот родин в Україні походила, частково від боярства Київської доби, частково від представників місцевої адміністрації. Вони мали маєтки по 10-15 сіл та впливали на місцеве правління. Привілеї більшості знаті, що формувала суспільний стан шляхти, випливала з військової служби Великому князю. Тисячі родин, в тому числі вихідці з селян та міщан, отримували статус шляхтича відбуваючи військову службу у походах, охороні замків, кордонів, знаходячись у збройних загонах князів та магнатів. Нерідко вони мали дуже маленькі наділи землі. Особливо це стосувалось Галичини. Серед дрібної шляхти найбільш відомі роди&nbsp;— Бачинські, Кульчицькі, Крушельницькі, Голинські, Грабовецькі, Яворські, Чайковські, Витвицькі, Терлецькі, Хлопецькі, та інші."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:43:04.361Z",
+          "resultDisplay": "# Українська шляхта — Section 2\n\nФормування шляхти\n\nНаприкінці XIV століття майже вся територія України увійшла до складу Литовсько-Руської держави. Влада Великого князя Литовського встановлювалась в українських князівствах доволі мирно. Частково, завдяки угодам з місцевою знаттю, частково&nbsp;— через укладання шлюбів, менше&nbsp;— шляхом завоювань. В усіх випадках приєднання до Литовської держави відбувалось на принципах «старовини не рушаємо», тобто&nbsp;— не порушення старих традицій, відносин та законів. Перехід влади від Рюриковичів до Гедиміновичів був номінальним. Литовська адміністрація користувалась «руською мовою» та «Руською правдою», а місцева аристократія стала частиною правлячого класу нової держави.\n\nНаділяти підлеглих землею та привілеями Великий князь Литовський міг: за вислугу до ласки (тимчасовий бенефіцій), за доживотну вислугу (пожиттєвий бенефіцій) або у вислужену отчину (феод або алод). Роздавалися й державні посади. Наприкінці XIV століття Великий князь почав перетасовувати призначення, щоб усунути систему удільних князів. Нащадки князівських родів, що були переміщені, називались княжатами-повітниками.\n\nТаким чином, в Україні відбувається розшарування між військовою челяддю і «шевальє» (військовою верхівкою). Також боярин відрізнявся від бояра. В українських землях «бояринами» стали називати людей, що належать бояру. Слуги панцерні&nbsp;— боярини становили на Київщині майже третину сільського населення. Вони були під особливим захистом закону, але вважались челяддю.\n\nВільні «шевальє» одержують назву «шляхта». Цей термін прийшов скоріш за все з Чехії, через Польщу та Галичину&nbsp;— від німецького das Geschlecht&nbsp;— рід, покоління. Спочатку в литовсько-руському середовищі слово «пан» означало тільки членів великокнязівської ради і тих шляхтичів, які виступили у військовий похід із власними корогвами, а не в загальному ополченні. Пізніше воно поширилось на всю шляхту і стало формою звертання.\n\nВ Україні, що входила до складу Великого князівства Литовського, основою шляхти стали 20-30 княжих та магнатських родів, в основному нащадків династій Рюриковичів та Гедиміновичів. До найбагатших та найзначніших домів належали: Острозькі, Сангушки, Чорторийські, Збаразькі, Вишневецькі, Заславські, Четвертинські, Корецькі, Гольшанські-Дубровицькі та інші. Саме представники цих родин займали переважну більшість високих посад у Литовській державі.\n\nНаступна верства шляхти, що налічувала кількасот родин в Україні походила, частково від боярства Київської доби, частково від представників місцевої адміністрації. Вони мали маєтки по 10-15 сіл та впливали на місцеве правління. Привілеї більшості знаті, що формувала суспільний стан шляхти, випливала з військової служби Великому князю. Тисячі родин, в тому числі вихідці з селян та міщан, отримували статус шляхтича відбуваючи військову службу у походах, охороні замків, кордонів, знаходячись у збройних загонах князів та магнатів. Нерідко вони мали дуже маленькі наділи землі. Особливо це стосувалось Галичини. Серед дрібної шляхти найбільш відомі роди&nbsp;— Бачинські, Кульчицькі, Крушельницькі, Голинські, Грабовецькі, Яворські, Чайковські, Витвицькі, Терлецькі, Хлопецькі, та інші.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773445383877_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "section": 3,
+            "mode": "section",
+            "query": "Українська шляхта"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445383877_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Українська шляхта — Section 3\n\nГрадація та права шляхти\n\nТим часом, після шлюбу Великого князя Ягайла з польською королевою Ядвігою 1385 року була укладена Кревська унія. Українські землі, окрім Галичини та Закарпаття, залишились у складі Литовського князівства. Ті українські князі, які залишились на власних отчинах з кінця XIV&nbsp;ст. називались головними княжатами.\n\nОднак, поступово литовська адміністративна та правова система починає будуватися на зразок польської. Воєвода призначався тільки за згодою шляхти, а то й з місцевого середовища. Помічником воєводи і комендантом воєводського замку був каштелян, який правив також центральним повітом воєводства. В центральному апараті були&nbsp;— канцлер, підканцлер, підскарбій (міністр фінансів), гетьман коронний (командувач військами), гетьман польний чи наказний (заступник, виконувач обов'язків гетьмана), підкоморій (відповідав за порядок в замку, пізніше&nbsp;— розбирав конфлікти між шляхтою), маршалок земський (відповідав за роботу Ради панства і сейму), маршалок дворний (начальник служби із шляхти при дворі) та ін. Пізніше всі ці посади могли бути й просто почесними званнями, оскільки в Польщі, Литві та Україні не було окремих дворянських титулів. У провінції в повітах правили старости, які мали право готуватись за державний кошт.\n\nВідповідно до польських законів, шляхта мала право на власність, звільнялась від різноманітних повинностей та мала судову владу над селянами. Згідно з Кошицьким привілеєм 1374 року шляхта отримала виключне право займати посади воєвод, каштелянів, суддів, підкоморіїв та інш. «Віра» за вбивство шляхтича становила 60 гривень, за лицаря рядового&nbsp;— 30 гривень, лицаря останньої категорії&nbsp;— 15 гривень. Кожен шляхетський рід повинен був мати свій герб.\nДрібна шляхта була відносно відкритим суспільним станом, який поповнювався за рахунок неаристократичного елементу з князівського та магнатського ополчення та військових формувань під час численних бойових дій.\n\nПопри великі соціально-економічні відмінності та конфлікти, що мали місце між різними верствами шляхти, в цілому серед них розвивалось відчуття приналежності до одного стану. Обдарована привілеями у 1387, 1413, 1430, 1434 роках польська (а згодом польсько-литовська) шляхта була однією з найбільш захищених шляхетських верств тогочасної Європи. Вільність, рівність, незалежність&nbsp;— ці шляхетські гасла сприймались як вроджені чесноти шляхтича.\nНавіть бідні шляхтичі, що були слугами у великих панів мали «гонор» та дистанціювались від «бидла»&nbsp;— селян та міщан. Через право обирати королів, кожний шляхтич вважав себе рівним до нього, тримав за «пана-брата» і завжди пам'ятали про право на рокош. Кожен з шляхтичів, що засідав на сеймі, мав за собою право вето.\n\nНа відміну від Польщі&nbsp;— шляхетської республіки, всевладдя шляхти в Литві не було. Литовський Великий князь міг переміщати інших князів із володіння на володіння. У 1390-х роках князь Вітовт закріпив цей стан речей та провів ряд реформ. Так, Федір Любартович маєток за маєтком був позбавлений своїх багатих володінь на Волині. Новгород-Сіверське князівство було забране у Володимира Ольгердовича, а Федір Коріятович Подільський був звинувачений у непокорі та вимушений був тікати у вигнання. На місце удільних непокірних князів Вітовт призначав шляхтичів, чи нетитулованих бояр, що володіли землями «з ласки великого князя». Зміни торкнулися й дрібних бояр. Щоб зберегти свої землі, вони повинні були відбувати військову службу.\n\nТака політика викликала серед литовської та української знаті велике невдоволення, яке ставало загрозливим. Зважаючи на це, 1413&nbsp;р. у Городні Ягайло домовився з Вітовтом дарувати литовсько-українським боярам-католикам такі ж широкі права, які мала польська шляхта. Відповідно до Городельської унії 47 родин польської шляхти надали такому ж числу литовських, українських та білоруських боярських родів свої герби. Проте таке зближення польської та литовсько-української знаті посилило розрив між католицькою та православною знаттю ВКЛ. Поділ на католиків та православних, що започаткувався Кревською унією, посилився суспільними й політичними привілеями католиків."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:43:04.361Z",
+          "resultDisplay": "# Українська шляхта — Section 3\n\nГрадація та права шляхти\n\nТим часом, після шлюбу Великого князя Ягайла з польською королевою Ядвігою 1385 року була укладена Кревська унія. Українські землі, окрім Галичини та Закарпаття, залишились у складі Литовського князівства. Ті українські князі, які залишились на власних отчинах з кінця XIV&nbsp;ст. називались головними княжатами.\n\nОднак, поступово литовська адміністративна та правова система починає будуватися на зразок польської. Воєвода призначався тільки за згодою шляхти, а то й з місцевого середовища. Помічником воєводи і комендантом воєводського замку був каштелян, який правив також центральним повітом воєводства. В центральному апараті були&nbsp;— канцлер, підканцлер, підскарбій (міністр фінансів), гетьман коронний (командувач військами), гетьман польний чи наказний (заступник, виконувач обов'язків гетьмана), підкоморій (відповідав за порядок в замку, пізніше&nbsp;— розбирав конфлікти між шляхтою), маршалок земський (відповідав за роботу Ради панства і сейму), маршалок дворний (начальник служби із шляхти при дворі) та ін. Пізніше всі ці посади могли бути й просто почесними званнями, оскільки в Польщі, Литві та Україні не було окремих дворянських титулів. У провінції в повітах правили старости, які мали право готуватись за державний кошт.\n\nВідповідно до польських законів, шляхта мала право на власність, звільнялась від різноманітних повинностей та мала судову владу над селянами. Згідно з Кошицьким привілеєм 1374 року шляхта отримала виключне право займати посади воєвод, каштелянів, суддів, підкоморіїв та інш. «Віра» за вбивство шляхтича становила 60 гривень, за лицаря рядового&nbsp;— 30 гривень, лицаря останньої категорії&nbsp;— 15 гривень. Кожен шляхетський рід повинен був мати свій герб.\nДрібна шляхта була відносно відкритим суспільним станом, який поповнювався за рахунок неаристократичного елементу з князівського та магнатського ополчення та військових формувань під час численних бойових дій.\n\nПопри великі соціально-економічні відмінності та конфлікти, що мали місце між різними верствами шляхти, в цілому серед них розвивалось відчуття приналежності до одного стану. Обдарована привілеями у 1387, 1413, 1430, 1434 роках польська (а згодом польсько-литовська) шляхта була однією з найбільш захищених шляхетських верств тогочасної Європи. Вільність, рівність, незалежність&nbsp;— ці шляхетські гасла сприймались як вроджені чесноти шляхтича.\nНавіть бідні шляхтичі, що були слугами у великих панів мали «гонор» та дистанціювались від «бидла»&nbsp;— селян та міщан. Через право обирати королів, кожний шляхтич вважав себе рівним до нього, тримав за «пана-брата» і завжди пам'ятали про право на рокош. Кожен з шляхтичів, що засідав на сеймі, мав за собою право вето.\n\nНа відміну від Польщі&nbsp;— шляхетської республіки, всевладдя шляхти в Литві не було. Литовський Великий князь міг переміщати інших князів із володіння на володіння. У 1390-х роках князь Вітовт закріпив цей стан речей та провів ряд реформ. Так, Федір Любартович маєток за маєтком був позбавлений своїх багатих володінь на Волині. Новгород-Сіверське князівство було забране у Володимира Ольгердовича, а Федір Коріятович Подільський був звинувачений у непокорі та вимушений був тікати у вигнання. На місце удільних непокірних князів Вітовт призначав шляхтичів, чи нетитулованих бояр, що володіли землями «з ласки великого князя». Зміни торкнулися й дрібних бояр. Щоб зберегти свої землі, вони повинні були відбувати військову службу.\n\nТака політика викликала серед литовської та української знаті велике невдоволення, яке ставало загрозливим. Зважаючи на це, 1413&nbsp;р. у Городні Ягайло домовився з Вітовтом дарувати литовсько-українським боярам-католикам такі ж широкі права, які мала польська шляхта. Відповідно до Городельської унії 47 родин польської шляхти надали такому ж числу литовських, українських та білоруських боярських родів свої герби. Проте таке зближення польської та литовсько-української знаті посилило розрив між католицькою та православною знаттю ВКЛ. Поділ на католиків та православних, що започаткувався Кревською унією, посилився суспільними й політичними привілеями католиків.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8f49c939-4dc7-4f77-bf77-08a2b0f956b9",
+      "timestamp": "2026-03-13T23:43:12.613Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing Research on Topic",
+          "description": "I'm focused on moving forward with the research now, looking for the right information to progress. I'm exploring different search strategies to ensure I gather everything needed for the task ahead. I am now evaluating the quality of information from a variety of sources.",
+          "timestamp": "2026-03-13T23:43:09.846Z"
+        },
+        {
+          "subject": "Gathering Source Material",
+          "description": "I'm deep in the process of extracting the necessary excerpts. I've initiated several searches and am carefully examining the results. The goal now is to identify and compile the most relevant pieces of information from a variety of sources.",
+          "timestamp": "2026-03-13T23:43:12.328Z"
+        }
+      ],
+      "tokens": {
+        "input": 23470,
+        "output": 66,
+        "cached": 20022,
+        "thoughts": 194,
+        "tool": 0,
+        "total": 23730
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445392519_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "права шляхти",
+            "limit": 5
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445392519_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"права шляхти\"\n\n### Result 1 (score: 0.6016)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0320`\n- **Text**:\nДо 1784 р., коли попередній проект Грамоти для\r\nдворянства став загальновідомим, українська знать претендувала на права\r\nпольськолитовської шляхти і не бажала вступати в російське дворянство, оскільки\r\nкористувалася різноманітними привілеями, яких російське дворянство було\r\nпозбавлене 1.\n\n1 Миллер Д. Превращение...\r\n// КС. — 1897. — № 2. — С. 194-196. Докладніше див. про це у кодексі 1786 р.: Экстракт\r\nиз указов... / Под ред. Н.Василенко. — С. 216-231.\n\nЗгідно з Литовським статутом, шляхтич міг \n\n### Result 2 (score: 0.6004)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0242`\n- **Text**:\n8) право шляхти вільно розпоряджатися своїм рухомим і\r\nнерухомим майном;\n\n9) право шляхти на повну власність своїх маєтків,\r\nвключно, наприклад, з корисними копалинами;\n\n10) шляхта звільняється від усіх податків, за\r\nвинятком невеликого земельного податку;\n\n11) шляхта має право на торгівлю на своїх та\r\nіноземних ринках, не сплачуючи жодних тарифів або податків;\n\n12) у випадку смерті іноземця, що проживав у\r\nшляхетському маєтку і не залишив по собі спадкоємців, все його майно успадковує\r\nземлевла\n\n### Result 3 (score: 0.5823)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2452`\n- **Text**:\nВід другої четвертини XVI в. почавши, шляхта \r\n добиваєть ся, щоб розпорядження, які її інтересів дотикають (великість воєнної \r\n служби, плата серебщини і т. и.), не видавали ся без її участи, самою радою з \r\n в. князем, і щоб справи законодатного характера не полагоджували ся без участи \r\n вального сойму. І вона осягає сього. Статут 1566 р. постановляє, що в. князь \r\n не буде нїяких устав чинити инакше як „на вальномъ соймЂ того панства \r\n нашого” 86). Тойже Статут унормував справу роздавання \n\n### Result 4 (score: 0.5781)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0067`\n- **Text**:\nАРТЫКУЛЪ 15.\n\nЛюдей простыхъ надъ шляхту не повышати.\n\nТежъ простыхъ людей надъ шляхту не повышати, на\r\nдостойности ихъ прекладати и врядовъ нашихъ простымъ людемъ давати не маемъ, а\r\nшляхтЂ кождому рыцерскому человЂку тутошнего панства нашого Великого Князства\r\nЛитовского родичу мы Господаръ, зъ ласки нашое господарское за службами за годностями\r\nихъ намъ господару, обЂцуемъ ихъ водлЂ годностей достойностями и вряды\r\nопатровати и въ службахъ нашихъ заховати, яко вЂрныхъ подданыхъ.\n\nАРТЫКУЛЪ 16.\n\n### Result 5 (score: 0.5740)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2432`\n- **Text**:\nНадані привилеями й вироблені практикою \r\n прероґативи й свободи шляхетського стану були зведені й санкціоновані першим \r\n кодексом права в. кн. Литовського — Литовським Статутом, затвердженим 1529 р. \r\n Кодекс сей мав виразні прикмети шляхетського права, то значить — він займаєть \r\n ся головно шляхетською верствою й обороною її інтересів, нормує відносини сеї \r\n верстви до правительства й до иньших верств, самими ж сими иньшими верствами \r\n дуже мало займаєть ся. Се толкуєть ся тим, що селянств\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:43:17.138Z",
+          "resultDisplay": "Found 5 results for: \"права шляхти\"\n\n### Result 1 (score: 0.6016)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0320`\n- **Text**:\nДо 1784 р., коли попередній проект Грамоти для\r\nдворянства став загальновідомим, українська знать претендувала на права\r\nпольськолитовської шляхти і не бажала вступати в російське дворянство, оскільки\r\nкористувалася різноманітними привілеями, яких російське дворянство було\r\nпозбавлене 1.\n\n1 Миллер Д. Превращение...\r\n// КС. — 1897. — № 2. — С. 194-196. Докладніше див. про це у кодексі 1786 р.: Экстракт\r\nиз указов... / Под ред. Н.Василенко. — С. 216-231.\n\nЗгідно з Литовським статутом, шляхтич міг \n\n### Result 2 (score: 0.6004)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0242`\n- **Text**:\n8) право шляхти вільно розпоряджатися своїм рухомим і\r\nнерухомим майном;\n\n9) право шляхти на повну власність своїх маєтків,\r\nвключно, наприклад, з корисними копалинами;\n\n10) шляхта звільняється від усіх податків, за\r\nвинятком невеликого земельного податку;\n\n11) шляхта має право на торгівлю на своїх та\r\nіноземних ринках, не сплачуючи жодних тарифів або податків;\n\n12) у випадку смерті іноземця, що проживав у\r\nшляхетському маєтку і не залишив по собі спадкоємців, все його майно успадковує\r\nземлевла\n\n### Result 3 (score: 0.5823)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2452`\n- **Text**:\nВід другої четвертини XVI в. почавши, шляхта \r\n добиваєть ся, щоб розпорядження, які її інтересів дотикають (великість воєнної \r\n служби, плата серебщини і т. и.), не видавали ся без її участи, самою радою з \r\n в. князем, і щоб справи законодатного характера не полагоджували ся без участи \r\n вального сойму. І вона осягає сього. Статут 1566 р. постановляє, що в. князь \r\n не буде нїяких устав чинити инакше як „на вальномъ соймЂ того панства \r\n нашого” 86). Тойже Статут унормував справу роздавання \n\n### Result 4 (score: 0.5781)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0067`\n- **Text**:\nАРТЫКУЛЪ 15.\n\nЛюдей простыхъ надъ шляхту не повышати.\n\nТежъ простыхъ людей надъ шляхту не повышати, на\r\nдостойности ихъ прекладати и врядовъ нашихъ простымъ людемъ давати не маемъ, а\r\nшляхтЂ кождому рыцерскому человЂку тутошнего панства нашого Великого Князства\r\nЛитовского родичу мы Господаръ, зъ ласки нашое господарское за службами за годностями\r\nихъ намъ господару, обЂцуемъ ихъ водлЂ годностей достойностями и вряды\r\nопатровати и въ службахъ нашихъ заховати, яко вЂрныхъ подданыхъ.\n\nАРТЫКУЛЪ 16.\n\n### Result 5 (score: 0.5740)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2432`\n- **Text**:\nНадані привилеями й вироблені практикою \r\n прероґативи й свободи шляхетського стану були зведені й санкціоновані першим \r\n кодексом права в. кн. Литовського — Литовським Статутом, затвердженим 1529 р. \r\n Кодекс сей мав виразні прикмети шляхетського права, то значить — він займаєть \r\n ся головно шляхетською верствою й обороною її інтересів, нормує відносини сеї \r\n верстви до правительства й до иньших верств, самими ж сими иньшими верствами \r\n дуже мало займаєть ся. Се толкуєть ся тим, що селянств\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773445392561_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "limit": 5,
+            "query": "Литовський статут шляхта"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445392561_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Литовський статут шляхта\"\n\n### Result 1 (score: 0.6080)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0320`\n- **Text**:\nДо 1784 р., коли попередній проект Грамоти для\r\nдворянства став загальновідомим, українська знать претендувала на права\r\nпольськолитовської шляхти і не бажала вступати в російське дворянство, оскільки\r\nкористувалася різноманітними привілеями, яких російське дворянство було\r\nпозбавлене 1.\n\n1 Миллер Д. Превращение...\r\n// КС. — 1897. — № 2. — С. 194-196. Докладніше див. про це у кодексі 1786 р.: Экстракт\r\nиз указов... / Под ред. Н.Василенко. — С. 216-231.\n\nЗгідно з Литовським статутом, шляхтич міг \n\n### Result 2 (score: 0.6048)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2433`\n- **Text**:\nЯк приклад особливої печаливости Статута про \r\n шляхецькі інтереси вкажу нпр. постанову, що як би під час походу шляхтич \r\n наїздив на дім або гумно якогось шляхтича, то має за то „кгвалтъ \r\n платити 41). Нешляхетським майном ся постанова не клопочеть ся!\n\nЛитовський Статут 1566 р., так званий Волинський, \r\n має ще більше характер шляхетського кодекса. Роздїл про шляхетські вільности \r\n доповняєть ся рядом нових постанов. Піднесу в високій мірі характеристичну \r\n подробицю — яка виступає вже і в\n\n### Result 3 (score: 0.6025)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0112`\n- **Text**:\nПісля переходу українських земель зі складу Великого\r\nкнязівства Литовського до Корони на цих землях (Київське, Волинське і\r\nБрацлавське воєводства) чинним залишався Другий Литовський статут, ухвалений,\r\nяк згадувалося, 1566 р., а з 1588 — Третій Литовський статут. Після поширення\r\nвлади Польщі на Чернігівське воєводство 1618 р. дія Литовського статуту\r\nрозповсюдилася і на ці терени. Формально багаті й дрібні шляхтичі були\r\nрівноправними, але найвпливовішою частиною шляхетського стану залишилися\n\n### Result 4 (score: 0.6016)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0905`\n- **Text**:\nКоли йдеться про інтегрованість української шляхти в\r\n\"шляхетський народ Речі Посполитої\", то це не означає, що українська,\r\nпольська й литовська шляхта були тотожними в культурному, ментальному, а також\r\nполітичному відношеннях. У публічній правосвідомості шляхетського загалу\r\nУкраїни було чітке усвідомлення того, що Литовський статут, так само, як\r\nособливі правові умови інкорпораційного акту Люблінської унії 1569 р., служить\r\nзабезпеченню станових свобод та інтересів місцевої шляхти. До Литов\n\n### Result 5 (score: 0.5962)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2432`\n- **Text**:\nНадані привилеями й вироблені практикою \r\n прероґативи й свободи шляхетського стану були зведені й санкціоновані першим \r\n кодексом права в. кн. Литовського — Литовським Статутом, затвердженим 1529 р. \r\n Кодекс сей мав виразні прикмети шляхетського права, то значить — він займаєть \r\n ся головно шляхетською верствою й обороною її інтересів, нормує відносини сеї \r\n верстви до правительства й до иньших верств, самими ж сими иньшими верствами \r\n дуже мало займаєть ся. Се толкуєть ся тим, що селянств\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:43:17.138Z",
+          "resultDisplay": "Found 5 results for: \"Литовський статут шляхта\"\n\n### Result 1 (score: 0.6080)\n- **Work**: Когут — Російський централізм і українська автономія (1996)\n- **Author**: Когут З.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `94271a53_c0320`\n- **Text**:\nДо 1784 р., коли попередній проект Грамоти для\r\nдворянства став загальновідомим, українська знать претендувала на права\r\nпольськолитовської шляхти і не бажала вступати в російське дворянство, оскільки\r\nкористувалася різноманітними привілеями, яких російське дворянство було\r\nпозбавлене 1.\n\n1 Миллер Д. Превращение...\r\n// КС. — 1897. — № 2. — С. 194-196. Докладніше див. про це у кодексі 1786 р.: Экстракт\r\nиз указов... / Под ред. Н.Василенко. — С. 216-231.\n\nЗгідно з Литовським статутом, шляхтич міг \n\n### Result 2 (score: 0.6048)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2433`\n- **Text**:\nЯк приклад особливої печаливости Статута про \r\n шляхецькі інтереси вкажу нпр. постанову, що як би під час походу шляхтич \r\n наїздив на дім або гумно якогось шляхтича, то має за то „кгвалтъ \r\n платити 41). Нешляхетським майном ся постанова не клопочеть ся!\n\nЛитовський Статут 1566 р., так званий Волинський, \r\n має ще більше характер шляхетського кодекса. Роздїл про шляхетські вільности \r\n доповняєть ся рядом нових постанов. Піднесу в високій мірі характеристичну \r\n подробицю — яка виступає вже і в\n\n### Result 3 (score: 0.6025)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0112`\n- **Text**:\nПісля переходу українських земель зі складу Великого\r\nкнязівства Литовського до Корони на цих землях (Київське, Волинське і\r\nБрацлавське воєводства) чинним залишався Другий Литовський статут, ухвалений,\r\nяк згадувалося, 1566 р., а з 1588 — Третій Литовський статут. Після поширення\r\nвлади Польщі на Чернігівське воєводство 1618 р. дія Литовського статуту\r\nрозповсюдилася і на ці терени. Формально багаті й дрібні шляхтичі були\r\nрівноправними, але найвпливовішою частиною шляхетського стану залишилися\n\n### Result 4 (score: 0.6016)\n- **Work**: Історія української культури. Т.2. XIII-XVII ст. (2001)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `484d0ffb_c0905`\n- **Text**:\nКоли йдеться про інтегрованість української шляхти в\r\n\"шляхетський народ Речі Посполитої\", то це не означає, що українська,\r\nпольська й литовська шляхта були тотожними в культурному, ментальному, а також\r\nполітичному відношеннях. У публічній правосвідомості шляхетського загалу\r\nУкраїни було чітке усвідомлення того, що Литовський статут, так само, як\r\nособливі правові умови інкорпораційного акту Люблінської унії 1569 р., служить\r\nзабезпеченню станових свобод та інтересів місцевої шляхти. До Литов\n\n### Result 5 (score: 0.5962)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c2432`\n- **Text**:\nНадані привилеями й вироблені практикою \r\n прероґативи й свободи шляхетського стану були зведені й санкціоновані першим \r\n кодексом права в. кн. Литовського — Литовським Статутом, затвердженим 1529 р. \r\n Кодекс сей мав виразні прикмети шляхетського права, то значить — він займаєть \r\n ся головно шляхетською верствою й обороною її інтересів, нормує відносини сеї \r\n верстви до правительства й до иньших верств, самими ж сими иньшими верствами \r\n дуже мало займаєть ся. Се толкуєть ся тим, що селянств\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773445392612_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "limit": 5,
+            "query": "шляхтич вольності"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445392612_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"шляхтич вольності\"\n\n### Result 1 (score: 0.5060)\n- **Work**: Українські гуманісти епохи Відродження (1550)\n- **Author**: Антологія\n- **Genre/Period**: scholarly / middle_ukrainian\n- **Chunk ID**: `0c2aa77b_c0412`\n- **Text**:\nАле тут пічкур, або\r\nледар, скаже: «Ну й що з того». Або: «І який пожиток пан Тарновський через моря\r\nдо Польщі привіз?». О, ледацюго, слухай же і посоромся слів, якими пишаєшся, не\r\nзнаєш-бо і не відаєш, скільки доброта або чеснота важать. Довідався Ян\r\nТарновський, по світу їздячи і різні народи та розмаїті звичаї людські\r\nспостерігаючи, що значить бути у вільній державі добрим і цнотливим. Потім\r\nспізнав також у мандруванні відмінність між королем і тираном, між свободою і\r\nневолею; звідав, н\n\n### Result 2 (score: 0.5055)\n- **Work**: Попович — Нарис історії культури України (1998)\n- **Author**: Попович М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `68ba0555_c0224`\n- **Text**:\nКінець XVI ст. був для польської шляхти часом повного\r\nторжества її /139/ особливої ідеології. На елекційному сеймі 1575 р.\r\nпоміркований і розумний польський магнат Ян Замойський проголосив промову, в\r\nякій прозвучав справжній панегірик шляхті, і обґрунтував її незвичайне\r\nпокликання. Замойський говорив про три головні засади існування шляхти,\r\nхарактерні для Польщі: шляхта сама обирає собі короля, сама творить собі закони\r\nі має повну владу над своїми селянами. Шляхтич користувався правом суду\n\n### Result 3 (score: 0.4921)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0617`\n- **Text**:\n«Я є шляхтич, але загальна теперішня нужда принаглила\r\nмене вдатися на службу до Хмельницького, однак, хоч не можна мені ухилитися од\r\nнеї з природного свого почуття до вітчизни, викладаю запевну втішну вам\r\nзвістку, що король поспішає до вас на відсіч із великим військом і перебуває\r\nзвідсіля в п’яти милях. З чого Хмельницький з ханом уже тривожаться і, либонь,\r\nштурмують вас нині всією силою, начебто не тратячи серця, і хочуть підійти до\r\nвас з якоюсь зрадою, а насправді бояться. Майтеся отож \n\n### Result 4 (score: 0.4884)\n- **Work**: Українські гуманісти епохи Відродження (1550)\n- **Author**: Антологія\n- **Genre/Period**: scholarly / middle_ukrainian\n- **Chunk ID**: `0c2aa77b_c0317`\n- **Text**:\nТому, щоб усунути з\r\nдержави чвари й суперечки, запропонував усім користуватися благами республіки й\r\nоднаково їх вживати. Робилося усе для того, щоб і добрі були до них допущені, і\r\nлихі звідти не усувалися. Бо в Польщі ніхто більше за короля Сигізмунда не\r\nвиявляв зневаги до нечестивців і негідників. Навпаки, чеснота, скромність і\r\nгідність одержали у Сигізмунда таке почесне місце й ласку, що хоч сам\r\nуспадкував від народження славний рід, однак своєю власною доблестю не раз\r\nпідтверджував сла\n\n### Result 5 (score: 0.4831)\n- **Work**: Українські гуманісти епохи Відродження (1550)\n- **Author**: Антологія\n- **Genre/Period**: scholarly / middle_ukrainian\n- **Chunk ID**: `0c2aa77b_c0093`\n- **Text**:\nБо саме ви — чи не\r\nєдиний з усіх народів, народжений у справді вільній республіці. Адже справжню\r\nсвободу породжує такий лад, коли всі підкоряються праву, а саме право\r\nнепідвладне нікому; отож усі ви рівні між собою, гідністю і однаково вільні. З\r\nвашої республіки прогнано оті гордовиті і підступні звання — герцог, граф,\r\nкнязь; усі ви — шляхтичі — носите спільне ймення лицарів. Тому й не дивно, що\r\nнаші прадіди, не раз, бувало, захищаючи республіку, йшли проти очевидних\r\nнебезпек: вони були р\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:43:17.138Z",
+          "resultDisplay": "Found 5 results for: \"шляхтич вольності\"\n\n### Result 1 (score: 0.5060)\n- **Work**: Українські гуманісти епохи Відродження (1550)\n- **Author**: Антологія\n- **Genre/Period**: scholarly / middle_ukrainian\n- **Chunk ID**: `0c2aa77b_c0412`\n- **Text**:\nАле тут пічкур, або\r\nледар, скаже: «Ну й що з того». Або: «І який пожиток пан Тарновський через моря\r\nдо Польщі привіз?». О, ледацюго, слухай же і посоромся слів, якими пишаєшся, не\r\nзнаєш-бо і не відаєш, скільки доброта або чеснота важать. Довідався Ян\r\nТарновський, по світу їздячи і різні народи та розмаїті звичаї людські\r\nспостерігаючи, що значить бути у вільній державі добрим і цнотливим. Потім\r\nспізнав також у мандруванні відмінність між королем і тираном, між свободою і\r\nневолею; звідав, н\n\n### Result 2 (score: 0.5055)\n- **Work**: Попович — Нарис історії культури України (1998)\n- **Author**: Попович М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `68ba0555_c0224`\n- **Text**:\nКінець XVI ст. був для польської шляхти часом повного\r\nторжества її /139/ особливої ідеології. На елекційному сеймі 1575 р.\r\nпоміркований і розумний польський магнат Ян Замойський проголосив промову, в\r\nякій прозвучав справжній панегірик шляхті, і обґрунтував її незвичайне\r\nпокликання. Замойський говорив про три головні засади існування шляхти,\r\nхарактерні для Польщі: шляхта сама обирає собі короля, сама творить собі закони\r\nі має повну владу над своїми селянами. Шляхтич користувався правом суду\n\n### Result 3 (score: 0.4921)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0617`\n- **Text**:\n«Я є шляхтич, але загальна теперішня нужда принаглила\r\nмене вдатися на службу до Хмельницького, однак, хоч не можна мені ухилитися од\r\nнеї з природного свого почуття до вітчизни, викладаю запевну втішну вам\r\nзвістку, що король поспішає до вас на відсіч із великим військом і перебуває\r\nзвідсіля в п’яти милях. З чого Хмельницький з ханом уже тривожаться і, либонь,\r\nштурмують вас нині всією силою, начебто не тратячи серця, і хочуть підійти до\r\nвас з якоюсь зрадою, а насправді бояться. Майтеся отож \n\n### Result 4 (score: 0.4884)\n- **Work**: Українські гуманісти епохи Відродження (1550)\n- **Author**: Антологія\n- **Genre/Period**: scholarly / middle_ukrainian\n- **Chunk ID**: `0c2aa77b_c0317`\n- **Text**:\nТому, щоб усунути з\r\nдержави чвари й суперечки, запропонував усім користуватися благами республіки й\r\nоднаково їх вживати. Робилося усе для того, щоб і добрі були до них допущені, і\r\nлихі звідти не усувалися. Бо в Польщі ніхто більше за короля Сигізмунда не\r\nвиявляв зневаги до нечестивців і негідників. Навпаки, чеснота, скромність і\r\nгідність одержали у Сигізмунда таке почесне місце й ласку, що хоч сам\r\nуспадкував від народження славний рід, однак своєю власною доблестю не раз\r\nпідтверджував сла\n\n### Result 5 (score: 0.4831)\n- **Work**: Українські гуманісти епохи Відродження (1550)\n- **Author**: Антологія\n- **Genre/Period**: scholarly / middle_ukrainian\n- **Chunk ID**: `0c2aa77b_c0093`\n- **Text**:\nБо саме ви — чи не\r\nєдиний з усіх народів, народжений у справді вільній республіці. Адже справжню\r\nсвободу породжує такий лад, коли всі підкоряються праву, а саме право\r\nнепідвладне нікому; отож усі ви рівні між собою, гідністю і однаково вільні. З\r\nвашої республіки прогнано оті гордовиті і підступні звання — герцог, граф,\r\nкнязь; усі ви — шляхтичі — носите спільне ймення лицарів. Тому й не дивно, що\r\nнаші прадіди, не раз, бувало, захищаючи республіку, йшли проти очевидних\r\nнебезпек: вони були р\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "f14191e5-a702-421c-b9e4-cda61d99297b",
+      "timestamp": "2026-03-13T23:43:25.118Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Refining Next Actions",
+          "description": "I'm focused on moving forward. I'm homing in on the next task, ensuring all the pieces are aligned for a smooth transition. I'm gearing up to execute the plan.",
+          "timestamp": "2026-03-13T23:43:22.133Z"
+        },
+        {
+          "subject": "Confirming Key Concepts",
+          "description": "I'm now assessing the core terms. I will ensure each concept's accuracy. After this verification step, I plan to proceed. I am getting ready for the next move.",
+          "timestamp": "2026-03-13T23:43:24.000Z"
+        },
+        {
+          "subject": "Defining Key Terminology",
+          "description": "My focus is now on the linguistic elements. I'm verifying the key vocabulary and preparing to analyze their usage frequency and grammatical context. These steps will provide a solid base for further analysis, and I will be ready to synthesize.",
+          "timestamp": "2026-03-13T23:43:24.819Z"
+        }
+      ],
+      "tokens": {
+        "input": 27706,
+        "output": 35,
+        "cached": 0,
+        "thoughts": 407,
+        "tool": 0,
+        "total": 28148
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773445405117_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "шляхта",
+              "шляхтич",
+              "привілей",
+              "вольність",
+              "статут",
+              "маєтність",
+              "магнат"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773445405117_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 7 words\n\nFound: 7/7\n\n- **шляхта** — FOUND (1 match): шляхта(noun)\n- **шляхтич** — FOUND (1 match): шляхтич(noun)\n- **привілей** — FOUND (2 match): привілей(noun), привілей(noun)\n- **вольність** — FOUND (2 match): вольність(noun), вольність(noun)\n- **статут** — FOUND (2 match): статут(noun), статут(noun)\n- **маєтність** — FOUND (2 match): маєтність(noun), маєтність(noun)\n- **магнат** — FOUND (1 match): магнат(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:43:25.149Z",
+          "resultDisplay": "Batch verification: 7 words\n\nFound: 7/7\n\n- **шляхта** — FOUND (1 match): шляхта(noun)\n- **шляхтич** — FOUND (1 match): шляхтич(noun)\n- **привілей** — FOUND (2 match): привілей(noun), привілей(noun)\n- **вольність** — FOUND (2 match): вольність(noun), вольність(noun)\n- **статут** — FOUND (2 match): статут(noun), статут(noun)\n- **маєтність** — FOUND (2 match): маєтність(noun), маєтність(noun)\n- **магнат** — FOUND (1 match): магнат(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8e99009d-8c1f-4ae2-b281-baf9b414735f",
+      "timestamp": "2026-03-13T23:43:31.078Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning the search process",
+          "description": "I'm now starting to execute the plan. The next phase of work is underway, and I am focused on my current objective.",
+          "timestamp": "2026-03-13T23:43:30.091Z"
+        },
+        {
+          "subject": "Commencing research on etymology",
+          "description": "I'm delving into the historical context and origins, focusing on the etymology. I've initiated the search and I'm actively gathering information. I'll be scrutinizing the details to build a more complete understanding.",
+          "timestamp": "2026-03-13T23:43:30.962Z"
+        }
+      ],
+      "tokens": {
+        "input": 27913,
+        "output": 23,
+        "cached": 26984,
+        "thoughts": 160,
+        "tool": 0,
+        "total": 28096
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445411071_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "section": 5,
+            "query": "Українська шляхта",
+            "mode": "section"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445411071_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Українська шляхта — Section 5\n\nОкатоличення шляхти\nшляхтич Станіслав Антоній Щука\nПоступово, зміцнюючи свою економічну незалежність, польська шляхта (в переважній більшості католицького обряду, в тому числі й на західних українських теренах) намагалась зменшити й залежність політичну&nbsp;— від короля. Колишні воїни, а тепер землевласники та підприємці, вони прагнули обмежити право короля розв'язувати війни, щоб не брати участь у виснажливих військових кампаніях. 1505 року польський сейм, контрольований шляхтою, схвалив закон «Nihil novi» та встановив т.з. шляхетську республіку («Золоту вольність»). Одночасно шляхта обмежувала й права міст.\n\n1505 року більшість міст було позбавлено права голосу в сеймі. 1565 року&nbsp;— сейм заборонив місцевим купцям подорожувати по товари за кордон, а шляхту звільнив від мита на ввіз та вивіз товарів.\n\nВ Литовському князівстві 1529 та 1566 роках був прийнятий кодекс законів&nbsp;— т.з. «Литовські статути». В них нормувались та закріплювались права не лише шляхти, але й інших станів&nbsp;— міщан, селян та інших.\n\nАле до 1569 року українська шляхта (шляхта православного обряду) Великого князівства Литовського, особливо її нижчі верстви, не користувались такими значними правами, як польська. Обов'язки перед князем були значно більші, ніж перед королем. В той же час польські закони передбачали, що особа, яка перейшла з православ'я на католицизм, автоматично отримує рівні права з польським (католицьким) шляхтичем. Таким чином, склалися всі умови для покатоличення української шляхти. Треба також додати, що зміни віри при цьому не відбувалось, шляхтич як був християнином, так ним і залишався, змінювався тільки обряд. В той же час при переході на службу до царя Московії всіх вихідців з Русі та Литви перехрещували по московському обряду. В Московії вважали не канонічним хрещення обливанням святою водою і примушували занурюватись всім тілом в чан.\n\nУ 1560-х роках Литва вступила у затяжний військовий конфлікт з Московським царством. В результаті виснажливих бойових дій країна опинилась перед загрозою московського вторгнення. Поляки готові були надати допомогу, але хотіли повного об'єднання двох держав.\n\n1569 року в Любліні королем Сигізмундом Августом був скликаний сейм. Побоюючись зростаючого впливу польської шляхти та бажаючи зберегти рештки самоуправління, литовські та українські магнати до останнього опиралися остаточному злиттю з Польщею. Але середня та дрібна шляхта, сподіваючись на здобуття собі широких привілеїв, підтримала поляків. Незадоволені перебігом переговорів, магнати Великого князівства на чолі з князями Кшиштофом Радзивіллом та Костянтином Острозьким залишили сейм. Тоді поляки, за підтримки дрібної шляхти Волині, Підляшшя та Київщини оголосили про приєднання цих земель до Польщі. Після цього українсько-литовські магнати повернулись за стіл переговорів.\n\n1 липня 1569 року була укладена Люблінська унія. Тепер до Польської корони відійшли всі українські землі. Після цього, привілеї, що їх мала польська шляхта почала робити свою справу. У Ярославі, Львові, Кам'янці, Барі, Луцьку, Вінниці та Києві було відкрито єзуїтські колегії, в яких шляхетські діти здобували сучасну європейську освіту. Полонізація проходила такими темпами і мала такі наслідки, що 1610 року був написаний трактат «Тренос, або Плач за Святою Східною Церквою». В ньому провідний православний діяч Мелетій Смотрицький тужив за «втратою для Русі таких діамантів руських князів: Слуцькі, Заславські, Збаразькі Вишневецькі, Сангушки, Чорторийські, Пронські, Ружинські, Соломирецькі, Головчинські, Коропинські, Масальські, Горські, Соколинські, Лукомські, Пузини,Сальські, Олельковичі та інші, яким немає ліку..»\n\nЗрештою, тільки декілька магнатських родів залишились вірними православ'ю та власному народу. Українські традиції підтримували та розвивали, також окремі осередки бідної шляхти.\n\nВ Польщі, де шляхта була найбільш організована, вона становила близько 8-10&nbsp;% населення (середній показник для Європи&nbsp;— близько 2&nbsp;%). На українських землях кількість шляхти в середині XVI століття не перевищувала 5&nbsp;% усього населення. В середині XVII&nbsp;ст., на території Волині та Центральної України, чисельність шляхти становила 38,5&nbsp;— 40 тис. чоловік, або 2,3-2,5&nbsp;% загальної чисельності населення регіону.\n\nВлада, якою користувалась шляхта, була безконтрольною і такою, що порушувала навіть писані закони Речі Посполитої, що викликало все більше неприйняття та обурення у населення.\n\nШляхтичі пишались своїм лицарським походженням, хоробрістю та військовою вправністю. Проте, їх недисциплінованість під час бойових дій паралізувала великі шляхетські з'єднання. Крім того, настав час масових бойових армій, що вимагало наймати вояків з нижчих класів. Більшість дрібної шляхти були без- або малоземельними й наймались на службу до магнатів."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:43:31.334Z",
+          "resultDisplay": "# Українська шляхта — Section 5\n\nОкатоличення шляхти\nшляхтич Станіслав Антоній Щука\nПоступово, зміцнюючи свою економічну незалежність, польська шляхта (в переважній більшості католицького обряду, в тому числі й на західних українських теренах) намагалась зменшити й залежність політичну&nbsp;— від короля. Колишні воїни, а тепер землевласники та підприємці, вони прагнули обмежити право короля розв'язувати війни, щоб не брати участь у виснажливих військових кампаніях. 1505 року польський сейм, контрольований шляхтою, схвалив закон «Nihil novi» та встановив т.з. шляхетську республіку («Золоту вольність»). Одночасно шляхта обмежувала й права міст.\n\n1505 року більшість міст було позбавлено права голосу в сеймі. 1565 року&nbsp;— сейм заборонив місцевим купцям подорожувати по товари за кордон, а шляхту звільнив від мита на ввіз та вивіз товарів.\n\nВ Литовському князівстві 1529 та 1566 роках був прийнятий кодекс законів&nbsp;— т.з. «Литовські статути». В них нормувались та закріплювались права не лише шляхти, але й інших станів&nbsp;— міщан, селян та інших.\n\nАле до 1569 року українська шляхта (шляхта православного обряду) Великого князівства Литовського, особливо її нижчі верстви, не користувались такими значними правами, як польська. Обов'язки перед князем були значно більші, ніж перед королем. В той же час польські закони передбачали, що особа, яка перейшла з православ'я на католицизм, автоматично отримує рівні права з польським (католицьким) шляхтичем. Таким чином, склалися всі умови для покатоличення української шляхти. Треба також додати, що зміни віри при цьому не відбувалось, шляхтич як був християнином, так ним і залишався, змінювався тільки обряд. В той же час при переході на службу до царя Московії всіх вихідців з Русі та Литви перехрещували по московському обряду. В Московії вважали не канонічним хрещення обливанням святою водою і примушували занурюватись всім тілом в чан.\n\nУ 1560-х роках Литва вступила у затяжний військовий конфлікт з Московським царством. В результаті виснажливих бойових дій країна опинилась перед загрозою московського вторгнення. Поляки готові були надати допомогу, але хотіли повного об'єднання двох держав.\n\n1569 року в Любліні королем Сигізмундом Августом був скликаний сейм. Побоюючись зростаючого впливу польської шляхти та бажаючи зберегти рештки самоуправління, литовські та українські магнати до останнього опиралися остаточному злиттю з Польщею. Але середня та дрібна шляхта, сподіваючись на здобуття собі широких привілеїв, підтримала поляків. Незадоволені перебігом переговорів, магнати Великого князівства на чолі з князями Кшиштофом Радзивіллом та Костянтином Острозьким залишили сейм. Тоді поляки, за підтримки дрібної шляхти Волині, Підляшшя та Київщини оголосили про приєднання цих земель до Польщі. Після цього українсько-литовські магнати повернулись за стіл переговорів.\n\n1 липня 1569 року була укладена Люблінська унія. Тепер до Польської корони відійшли всі українські землі. Після цього, привілеї, що їх мала польська шляхта почала робити свою справу. У Ярославі, Львові, Кам'янці, Барі, Луцьку, Вінниці та Києві було відкрито єзуїтські колегії, в яких шляхетські діти здобували сучасну європейську освіту. Полонізація проходила такими темпами і мала такі наслідки, що 1610 року був написаний трактат «Тренос, або Плач за Святою Східною Церквою». В ньому провідний православний діяч Мелетій Смотрицький тужив за «втратою для Русі таких діамантів руських князів: Слуцькі, Заславські, Збаразькі Вишневецькі, Сангушки, Чорторийські, Пронські, Ружинські, Соломирецькі, Головчинські, Коропинські, Масальські, Горські, Соколинські, Лукомські, Пузини,Сальські, Олельковичі та інші, яким немає ліку..»\n\nЗрештою, тільки декілька магнатських родів залишились вірними православ'ю та власному народу. Українські традиції підтримували та розвивали, також окремі осередки бідної шляхти.\n\nВ Польщі, де шляхта була найбільш організована, вона становила близько 8-10&nbsp;% населення (середній показник для Європи&nbsp;— близько 2&nbsp;%). На українських землях кількість шляхти в середині XVI століття не перевищувала 5&nbsp;% усього населення. В середині XVII&nbsp;ст., на території Волині та Центральної України, чисельність шляхти становила 38,5&nbsp;— 40 тис. чоловік, або 2,3-2,5&nbsp;% загальної чисельності населення регіону.\n\nВлада, якою користувалась шляхта, була безконтрольною і такою, що порушувала навіть писані закони Речі Посполитої, що викликало все більше неприйняття та обурення у населення.\n\nШляхтичі пишались своїм лицарським походженням, хоробрістю та військовою вправністю. Проте, їх недисциплінованість під час бойових дій паралізувала великі шляхетські з'єднання. Крім того, настав час масових бойових армій, що вимагало наймати вояків з нижчих класів. Більшість дрібної шляхти були без- або малоземельними й наймались на службу до магнатів.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "35ffbec3-fa1d-4759-b2ac-66acf08325e1",
+      "timestamp": "2026-03-13T23:43:41.005Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Commencing Verification of Data",
+          "description": "I am now beginning the process of cross-verifying the data I have collected. I'm focusing on ensuring the information is accurate. I'm taking steps to confirm the quality of the practice data.",
+          "timestamp": "2026-03-13T23:43:40.136Z"
+        },
+        {
+          "subject": "Confirming Data Accuracy",
+          "description": "Now, I'm analyzing the frequency of specific terms to refine the 'Практика' section. The goal is to generate accurate grammar and etymology focus. My efforts are concentrated on generating this practice data.",
+          "timestamp": "2026-03-13T23:43:40.718Z"
+        }
+      ],
+      "tokens": {
+        "input": 29515,
+        "output": 56,
+        "cached": 27096,
+        "thoughts": 127,
+        "tool": 0,
+        "total": 29698
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

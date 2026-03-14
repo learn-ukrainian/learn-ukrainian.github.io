@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 40 — E2E
+PASS: pipeline lit-essay 46
 
   Module:   chmut-institutions
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T19:11:15Z
+  Date:     2026-03-14T01:48:43Z

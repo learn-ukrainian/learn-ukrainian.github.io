@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 199 — E2E
+PASS: pipeline lit 197
 
   Module:   deresh-cult
   Track:    lit
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T18:00:49Z
+  Date:     2026-03-14T07:08:18Z

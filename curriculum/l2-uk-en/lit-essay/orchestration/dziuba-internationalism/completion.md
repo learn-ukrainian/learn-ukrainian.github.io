@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 20 — E2E
+PASS: pipeline lit-essay 26
 
   Module:   dziuba-internationalism
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:03:04Z
+  Date:     2026-03-14T00:56:53Z

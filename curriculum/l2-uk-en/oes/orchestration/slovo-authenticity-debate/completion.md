@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 89 — E2E
+PASS: pipeline oes 86
 
   Module:   slovo-authenticity-debate
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T12:32:24Z
+  Date:     2026-03-14T07:07:52Z

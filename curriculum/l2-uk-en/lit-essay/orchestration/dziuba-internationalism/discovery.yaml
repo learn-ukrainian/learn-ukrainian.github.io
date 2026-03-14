@@ -1,0 +1,244 @@
+discovered_at: '2026-03-14T00:56:03.421125+00:00'
+query_keywords:
+- Dziuba Internationalism
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Dziuba Internationalism у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: This video provides a concrete example of Soviet historiography's
+    suppression and distortion of Ukrainian historical figures and narratives, which
+    directly illustrates the issues Ivan Dziuba addresses in his critique of Russification
+    and the formation of national identity under Soviet rule.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Вступ та контекст -- to immediately illustrate the
+    historical context and challenges to Ukrainian identity and historiography that
+    Dziuba's work confronted.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.7
+  relevance_note: The video discusses the re-evaluation of Ukrainian history, including
+    the crimes of Stalin and the place of different cultures in Ukrainian identity,
+    which aligns with the decolonization perspective and historiographical themes
+    in Dziuba's work.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії коли
+    українці власне Наша історія ми не кажемо про чужих Ми кажемо про іншу культуру
+    яка от є складовою українського культури.
+  embed_suggestion: After section Деколонізаційна перспектива -- to provide broader
+    context on critically re-evaluating historical narratives and national identity
+    in the face of past and present aggressions.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: The video focuses on the business history of the Tereshchenko family,
+    their wealth, and their role as merchants in the Russian Empire. While it is about
+    Ukrainian history, its specific focus is not related to Ivan Dziuba's critique
+    of Soviet national policy, Russification, or national identity.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable for embedding.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0178
+  text: "Працюємо в малих групах. До уроку \nузагальнення знань за розділом під-\n\
+    готуйте навчальний проєкт за темами \n(на вибір): 1) «Степан Бандера і “бан-\n\
+    дерівщина”: (де)конструкція імпер-\nського міфу»; 2)  «Виклик системі \n(аналіз\
+    \ творів Івана Дзюби “Інтер-\nнаціоналізм чи русифікація?” та \nМихайла Брайчевського\
+    \ “Приєднання \nчи воз­з’єднання?”)»; 3)  «49 смілив-\nців проти режиму (дослідження\
+    \ ді-\nяльності Української громадської \nгрупи сприяння виконанню Гельсін-\n\
+    ських угод)»; 4)  «Стадії боротьби за \nн"
+  section_title: Сторінка 97
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0198
+  text: "Так, І. Дзюба \nпіддав критиці наявну дискримінацію українського \nнароду\
+    \ в  економічній, політичній, культурній, \nмовній та інших сферах, примарну ідею\
+    \ майбут-\nнього злиття націй за комунізму, уявлення про \n«цивілізаторську» роль\
+    \ російського народу щодо \nнародів у  складі СРСР, твердження про добровіль-\n\
+    ність «входження» народів до складу радянської \nімперії в  період її виникнення\
+    \ та розширення. У грудні 1965  р. І. Дзюба звернувся до П. Ше-\nлеста та В. Щербицького\
+    \ з  листом-протестом проти \nпер"
+  section_title: Сторінка 110
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.602331817150116
+  chunk_id: 3d51722e_c0000
+  text: "Іван ДЗЮБА\n\nІНТЕРНАЦІОНАЛІЗМ ЧИ РУСИФІКАЦІЯ?\n\nЗМІСТ\n\nПереднє слово\n\
+    \nВід автора: з відстані чверті століття\n\nЛист до Першого секретаря КПУ\n\n\
+    Інтернаціоналізм чи русифікація?\n\nІ. Можливість помилок і припустимість критики\
+    \ в\r\nнаціональній справі\n\nII. Важливість і місце національного питання\n\n\
+    III. Сили, що підготували ревізію ленінської\r\nнаціональної політики\n\nIV. Майбутнє\
+    \ націй: нації за комунізму\n\nV. Національне почуття, національна свідомість,\r\
+    \nнаціональні обов’язки\n\nVI. Про соціалістичні республі"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.5553370118141174
+  chunk_id: 3d51722e_c0016
+  text: "Тут мені залишається тільки спробувати\r\n\"примирити\" читача з однією особливістю\
+    \ способу викладу. Маю на увазі\r\nнадмір цитат і посилань на класиків марксизму-ленінізму.\
+    \ Свого часу коментатори\r\n\"Інтернаціоналізму чи русифікації?\" пояснювали це\
+    \ тим, що одним із\r\nадресатів праці було партійне керівництво, для якого арґументом\
+    \ могли бути\r\nтільки посилання на класиків марксизму-ленінізму. Це так, але\
+    \ це не все. Адже\r\nдругим адресатом було все-таки тогочасне суспільство. А воно\
+    \ було — в основній\r\nсвоїй"
+  work: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+  year: 1968
+  genre: polemic
+  language_period: modern
+  source_url: http://izbornyk.org.ua/idzuba/dz.htm
+- score: 0.552983820438385
+  chunk_id: feef73b9_c0004
+  text: Працю І. Дзюби "Інтернаціоналізм чи русифікація?" можна розглядати як етап
+    боротьби української інтелігенції з тоталітарним режимом. Та, на жаль, багато
+    зазначених у роботі проблем середини 60-х років минулого століття постають сьогодні
+    ще гострішими. Незважаючи на проголошення України суверенною і незалежною державою,
+    певними силами на сході республіки постійно заперечується саме існування української
+    мови як державної. На порядок денний обласних та місцевих рад раз у раз протягуються
+    питання п
+  work: Іван Дзюба. Біографія Івана Дзюби
+  author: Дзюба І.
+  year: 1931
+  genre: biography
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/bio/printit.php?tid=1781

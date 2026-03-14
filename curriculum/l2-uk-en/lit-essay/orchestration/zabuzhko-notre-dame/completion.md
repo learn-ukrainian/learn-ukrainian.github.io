@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 26 — E2E
+PASS: pipeline lit-essay 32
 
   Module:   zabuzhko-notre-dame
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T19:05:19Z
+  Date:     2026-03-14T01:11:28Z

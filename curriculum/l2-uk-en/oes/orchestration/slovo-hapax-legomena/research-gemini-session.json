@@ -1,0 +1,1068 @@
+{
+  "sessionId": "b4c60fcf-670c-49f9-aa38-d87504a46a3e",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T02:42:13.920Z",
+  "lastUpdated": "2026-03-14T02:46:18.916Z",
+  "messages": [
+    {
+      "id": "238401db-46f1-49d5-a972-71bd1f41b1da",
+      "timestamp": "2026-03-14T02:42:13.920Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-oes.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: oes-084\nlevel: OES\nsequence: 84\nslug: slovo-hapax-legomena\nversion: '2.0'\ntitle: 'Слово: Унікальні слова'\nsubtitle: 'Slovo: Hapax Legomena'\nfocus: Striltsy, Shereshiry, Karnu/Zhylya\nphase: 4\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - 'Introduction to Slovo: Hapax Legomena'\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Senior Paleographer\n  role: Lexicographer\nprerequisites:\n- slovo-poetic-syntax-lab\nconnects_to:\n- slovo-mythology\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Слово: Унікальні слова** for the **oes** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Слово: Унікальні слова\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Слово: Унікальні слова\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "d1d2dde9-4202-422b-987f-ac940d68f97a",
+      "timestamp": "2026-03-14T02:42:23.188Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Step",
+          "description": "I'm focusing now on the next operation. I'm exploring the best approach to finalize the current stage, making sure I cover all the essential aspects. I am double-checking my approach to ensure a smooth transition.",
+          "timestamp": "2026-03-14T02:42:17.733Z"
+        },
+        {
+          "subject": "Refining the Approach",
+          "description": "I'm now carefully selecting and ordering the actions needed to move forward. The core aim is to precisely execute the next stage, checking the flow to ensure accuracy. I'm strategizing the approach to achieve the best outcome.",
+          "timestamp": "2026-03-14T02:42:20.310Z"
+        },
+        {
+          "subject": "Starting the Querying Process",
+          "description": "I've begun the first step: searching Wikipedia for initial information, starting with the provided keywords. The aim is to gather foundational data on the subject matter, using the designated tool to get started. I will move on to the next step once I have collected a good set of results.",
+          "timestamp": "2026-03-14T02:42:22.961Z"
+        }
+      ],
+      "tokens": {
+        "input": 20506,
+        "output": 22,
+        "cached": 0,
+        "thoughts": 638,
+        "tool": 0,
+        "total": 21166
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456143186_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Слово о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456143186_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Слово о полку Ігоревім\n**Description**: пам'ятка києворуського письменства, героїчна поема кінця XII ст.\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%BB%D0%BE%D0%B2%D0%BE_%D0%BE_%D0%BF%D0%BE%D0%BB%D0%BA%D1%83_%D0%86%D0%B3%D0%BE%D1%80%D0%B5%D0%B2%D1%96%D0%BC\n\n«Сло́во о полку́ І́горевім», також «Сло́во про І́горів похі́д» — пам'ятка києворуського письменства, героїчна поема кінця XII ст., одна з найвідоміших пам'яток давньоруської літератури. Пам'ятка української мови. Шедевр світової літератури."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:23.220Z",
+          "resultDisplay": "# Слово о полку Ігоревім\n**Description**: пам'ятка києворуського письменства, героїчна поема кінця XII ст.\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%BB%D0%BE%D0%B2%D0%BE_%D0%BE_%D0%BF%D0%BE%D0%BB%D0%BA%D1%83_%D0%86%D0%B3%D0%BE%D1%80%D0%B5%D0%B2%D1%96%D0%BC\n\n«Сло́во о полку́ І́горевім», також «Сло́во про І́горів похі́д» — пам'ятка києворуського письменства, героїчна поема кінця XII ст., одна з найвідоміших пам'яток давньоруської літератури. Пам'ятка української мови. Шедевр світової літератури.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "58bcfabc-e398-4311-b1fe-a5f21b809f8f",
+      "timestamp": "2026-03-14T02:42:27.946Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning the search",
+          "description": "I'm focused on gathering more information to continue the task. I'm going to find more detailed information for the chosen terms to guide my next steps.",
+          "timestamp": "2026-03-14T02:42:27.900Z"
+        }
+      ],
+      "tokens": {
+        "input": 20782,
+        "output": 28,
+        "cached": 19522,
+        "thoughts": 59,
+        "tool": 0,
+        "total": 20869
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456147945_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "темні місця Слово о полку Ігоревім",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456147945_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'темні місця Слово о полку Ігоревім' — 5 results\n\n1. **Слово о полку Ігоревім** — «Сло́во о полку́ І́горевім» (д.-рус. Слово о плъку Игоревѣ), також «Сло́во про І́горів похі́д» — пам&#039;ятка києворуського письменства, героїчна поема кінця\n2. **Скляренко Віталій Григорович** — до якого він написав близько 2000 статей. Досліджував «темні місця» в «Слові о полку Ігоревім», переважну більшість яких прочитав і осмислив по-новому\n3. **Троян** — Объяснительный перевод «Слова о полку Игореве». Слово о полку Игореве. 800 лет. М., 1986. Скляренко В. Г. «Темні місця» в «Слові о полку Ігоревім». К., Довіра,\n4. **Русичі** — Русичі — поетична назва жителів Київської Русі із «Слова о полку Ігоревім», варіант звичайнішого етноніма «русин», або «русь». Термін «русич» не засвідчений\n5. **Володимир Ярославич (князь галицький)** — «СЛОВО О ПОЛКУ ІГОРЕВІМ…» СЛОВО ПРО ПОХІД ІГОРІВ, ІГОРЯ, СИНА СВЯТОСЛАВА, ВНУКА ОЛЕГОВОГО. Переклад, реконструкція тексту, розшифрування темних місць"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:28.308Z",
+          "resultDisplay": "Wikipedia search: 'темні місця Слово о полку Ігоревім' — 5 results\n\n1. **Слово о полку Ігоревім** — «Сло́во о полку́ І́горевім» (д.-рус. Слово о плъку Игоревѣ), також «Сло́во про І́горів похі́д» — пам&#039;ятка києворуського письменства, героїчна поема кінця\n2. **Скляренко Віталій Григорович** — до якого він написав близько 2000 статей. Досліджував «темні місця» в «Слові о полку Ігоревім», переважну більшість яких прочитав і осмислив по-новому\n3. **Троян** — Объяснительный перевод «Слова о полку Игореве». Слово о полку Игореве. 800 лет. М., 1986. Скляренко В. Г. «Темні місця» в «Слові о полку Ігоревім». К., Довіра,\n4. **Русичі** — Русичі — поетична назва жителів Київської Русі із «Слова о полку Ігоревім», варіант звичайнішого етноніма «русин», або «русь». Термін «русич» не засвідчений\n5. **Володимир Ярославич (князь галицький)** — «СЛОВО О ПОЛКУ ІГОРЕВІМ…» СЛОВО ПРО ПОХІД ІГОРІВ, ІГОРЯ, СИНА СВЯТОСЛАВА, ВНУКА ОЛЕГОВОГО. Переклад, реконструкція тексту, розшифрування темних місць",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "a1fd28c4-0aff-4c4a-80a6-d84260f586cd",
+      "timestamp": "2026-03-14T02:42:31.834Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with search",
+          "description": "I'm now initiating the search process, focusing on the specialized terms. I am confident I'm on the right track and will be making good progress on this task. I anticipate that this step will be critical in achieving the desired results.",
+          "timestamp": "2026-03-14T02:42:31.792Z"
+        }
+      ],
+      "tokens": {
+        "input": 21232,
+        "output": 26,
+        "cached": 19540,
+        "thoughts": 38,
+        "tool": 0,
+        "total": 21296
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773456151832_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "шерешири слово о полку ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456151832_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"шерешири слово о полку ігоревім\"\n\n### Result 1 (score: 0.5460)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 2 (score: 0.5417)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 3 (score: 0.5400)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c1890`\n- **Text**:\n«СЛОВО О ПОЛКУ ІГОРЕВІМ» — найвидатніша пам’ятка літератури Київської Русі. Інтерес до «Слова»\r\nШевченко виявляв протягом усього життя. Ще в поемі «Гамалія», поряд з\r\nметафоричним зображенням битви як жнив і молотьби, чути відгомін рядків\r\n«Слова». Лексеми цього твору вжив Шевченко в четвертому розділі поеми «Царі»,\r\nщоб надати йому давньоруського колориту. Ремінісценції з «Слова» Шевченко\r\nвикористав у повісті «Близнецы». Поет довго виношував задум повністю перекласти\r\n«Слово» і реалізувати йог\n\n### Result 4 (score: 0.5359)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0262`\n- **Text**:\n«Слово о полку Ігоревім»\r\nпосіло поважне місце також в «Історії української літератури» (Нью-Йорк,\r\n1956) відомого філолога і філософа Д. Чижевського. Учений пильно проаналізував\r\nхудожню структуру «Слова», його зміст, композицію, стилістичні засоби, символи,\r\nпоетичну образність, мітологію, мову, ритміку, звукоструктуру, психологічні\r\nзасоби, фольклорні образи, лексику, тобто зробив усебічний філологічний огляд\r\nпам’ятки, уважаючи, що за своїм художнім рівнем вона яскраво виділяється як на\r\nтлі\n\n### Result 5 (score: 0.5287)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0657`\n- **Text**:\nпо шелому 1 бѣ же на шеломѣ 2\r\nнадъ челом̑ А. Пѧнтелѣмонъ 3 златъ . и оудари\r\nи 4 мечемъ . и тако вшибесѧ шеломъ 5 . до лба 6\r\n. Изѧславъ же реч̑ азъ 7 Изѧславъ есмь . кн҃зь\r\nвашь . и снѧ съ себе шеломъ 8 . и позна и 9 . и то\r\nслъıшавше мнози . и 10 въсхъıтиша и 11 руками\r\nсвоими . с радостью ӕко цр҃ѧ и кн҃зѧ 12\r\n. своег̑ 13 . и тако възваша кирелѣисан̑ 14 Б\r\nвси полци . радующесѧ . полкъı ратнъıх̑ побѣдивше . а\r\nкн҃зѧ своег̑ живого ведѧче 15 Изѧславъ же\r\nизнемагаше 16 . велми с 17 ранъ 17 зане \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:34.181Z",
+          "resultDisplay": "Found 5 results for: \"шерешири слово о полку ігоревім\"\n\n### Result 1 (score: 0.5460)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 2 (score: 0.5417)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 3 (score: 0.5400)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c1890`\n- **Text**:\n«СЛОВО О ПОЛКУ ІГОРЕВІМ» — найвидатніша пам’ятка літератури Київської Русі. Інтерес до «Слова»\r\nШевченко виявляв протягом усього життя. Ще в поемі «Гамалія», поряд з\r\nметафоричним зображенням битви як жнив і молотьби, чути відгомін рядків\r\n«Слова». Лексеми цього твору вжив Шевченко в четвертому розділі поеми «Царі»,\r\nщоб надати йому давньоруського колориту. Ремінісценції з «Слова» Шевченко\r\nвикористав у повісті «Близнецы». Поет довго виношував задум повністю перекласти\r\n«Слово» і реалізувати йог\n\n### Result 4 (score: 0.5359)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0262`\n- **Text**:\n«Слово о полку Ігоревім»\r\nпосіло поважне місце також в «Історії української літератури» (Нью-Йорк,\r\n1956) відомого філолога і філософа Д. Чижевського. Учений пильно проаналізував\r\nхудожню структуру «Слова», його зміст, композицію, стилістичні засоби, символи,\r\nпоетичну образність, мітологію, мову, ритміку, звукоструктуру, психологічні\r\nзасоби, фольклорні образи, лексику, тобто зробив усебічний філологічний огляд\r\nпам’ятки, уважаючи, що за своїм художнім рівнем вона яскраво виділяється як на\r\nтлі\n\n### Result 5 (score: 0.5287)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0657`\n- **Text**:\nпо шелому 1 бѣ же на шеломѣ 2\r\nнадъ челом̑ А. Пѧнтелѣмонъ 3 златъ . и оудари\r\nи 4 мечемъ . и тако вшибесѧ шеломъ 5 . до лба 6\r\n. Изѧславъ же реч̑ азъ 7 Изѧславъ есмь . кн҃зь\r\nвашь . и снѧ съ себе шеломъ 8 . и позна и 9 . и то\r\nслъıшавше мнози . и 10 въсхъıтиша и 11 руками\r\nсвоими . с радостью ӕко цр҃ѧ и кн҃зѧ 12\r\n. своег̑ 13 . и тако възваша кирелѣисан̑ 14 Б\r\nвси полци . радующесѧ . полкъı ратнъıх̑ побѣдивше . а\r\nкн҃зѧ своег̑ живого ведѧче 15 Изѧславъ же\r\nизнемагаше 16 . велми с 17 ранъ 17 зане \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "65590be5-e556-481f-884b-3502561a3023",
+      "timestamp": "2026-03-14T02:42:39.263Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Deciphering the Meaning",
+          "description": "\\n\\n\n\nI'm now focused on obtaining the meaning of \"шерешири.\" The task ahead is clear: pinpoint the translation.",
+          "timestamp": "2026-03-14T02:42:37.717Z"
+        },
+        {
+          "subject": "Identifying the Context",
+          "description": "\\n\\n\n\nMy current objective is to gain a deeper understanding of the term \"шерешири.\" I am now focusing on determining its meaning within the specific context. I'll need to examine various sources, and then will begin to consider the relationships between the terms.",
+          "timestamp": "2026-03-14T02:42:38.958Z"
+        }
+      ],
+      "tokens": {
+        "input": 22778,
+        "output": 58,
+        "cached": 16495,
+        "thoughts": 158,
+        "tool": 0,
+        "total": 22994
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456159177_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Шерешири"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456159177_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "No Wikipedia results for: 'Шерешири'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:40.283Z",
+          "resultDisplay": "No Wikipedia results for: 'Шерешири'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456159221_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"шерешири\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456159221_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"шерешири\"\"\n\n### Result 1 (score: 0.4523)\n- **Work**: Біографія Шевченка за спогадами сучасників (1958)\n- **Author**: Різні автори\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `7ba5d6cc_c0211`\n- **Text**:\nТак просидели мы до сумерок и пошли в крепость. Наш путь лежал мимо\r\nквартиры ротного командира, где светился уже яркий огонек и шумно разговаривали\r\nнесколько офицеров; окна были открыты. Хозяин дома увидел нас и зазвал к себе\r\nпопробовать «чихирь», только что привезенный из Астрахани. Здесь я увидел, как\r\nвсе обходились с Т. Г. любезно. Он же был не особенно говорлив, но взглядывал\r\nчеловеком не лишним, и его присутствие между офицерами было заметно. Несмотря\r\nна то, что он был как-то сосредот\n\n### Result 2 (score: 0.4398)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c2274`\n- **Text**:\nВисоко оцінюючи діяльність ученого на ниві слов.\r\nвідродження, називаючи його «любомудром», Шевченко писав: «Слава тобі,\r\nШафарику, // Вовіки і віки! // Що звів єси в одно море // Слав’янськії ріки !».\r\nЗгадував поет Ш. і в посланні «І мертвим, і живим...». У передмові до\r\nнездійсненого видання «Кобзаря» Шевченко говорив про Ш. й В. Караджича як\r\nпро справжніх патріотів, що «не постриглись у німці..., а остались слов’янами,\r\nщирими синами матерей своїх, і славу добрую стяжали». Повернувшись із з\n\n### Result 3 (score: 0.4339)\n- **Work**: Біографія Шевченка за спогадами сучасників (1958)\n- **Author**: Різні автори\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `7ba5d6cc_c0218`\n- **Text**:\nЗдесь-то жил Ф. Е., «добрый человек», к нему-то мы и пришли по\r\nутомительной круче. Хозяин принял нас с радостью, как добрый и притом скучающий\r\nчеловек. Он тотчас приказал делать пельмени; их принялась готовить целая\r\nкоманда казаков. Это кушанье, известное в восточной России, мы запивали не\r\nлафитом, а астраханским чихиром, который несравненно лучше всех, вроде\r\nярославско-соболевских лафитов, потому что был натуральный.\n\nШевченко был в отличном расположении духа. У него сыпались забавные\r\nане\n\n### Result 4 (score: 0.4277)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0260`\n- **Text**:\nДеякі рідкі та запозичені слова, як „шерешири“ (якась\r\nвійськова зброя), „ортма“ — покривало, „харалужний“ — сталевий, „чага“ — невільниця\r\nі т. д. не зустрічаються більше ніде в старій літературі або зустрічаються дуже\r\nрідко, але подібні рідкі слова є в багатьох пам’ятках, зокрема, коли мова йде\r\nпро повсякденне життя (пор., напр., назви страв — І. В. 7). Інші слова, рідкі\r\nв старій літературі, зустрічаємо в різних слов’янських мовах, зокрема в\r\nукраїнській та її діялектах: пор. „потручятися“ \n\n### Result 5 (score: 0.4276)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0292`\n- **Text**:\nшвидкохідний \r\n§ 8, п. 3, ґ, 6\n\nшевців \r\n§ 8, п. 1, а, 3; \r\n§ 67, п. 1, б; шевцева, шевцевого \r\n§ 8, п. 1, а, 3\n\nшевченкіана \r\n§ 38, п. 1, прим. 5\n\nШевченків — Шевченкова, Шевченкове \r\n§ 23, п. 7; Шевченкові поезії \r\n§ 38, п. 26, а\n\nШевченківська премія \r\n§ 38, п. 26, в\n\nШевченківський районний відділ народної освіти міста Києва \r\n§ 38, п. 14, а\n\nшевченківський стиль \r\n§ 38, п. 26, в, прим., а\n\nШевченко \r\n§ 23, п. 7\n\nШексна \r\n§ 109, п. 1\n\nшелест \r\n§ 2, п. 2, а; \r\n§ 8, п. 2, в\n\nШеллі \r\n§ 100, п. \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:40.283Z",
+          "resultDisplay": "Found 5 results for: \"\"шерешири\"\"\n\n### Result 1 (score: 0.4523)\n- **Work**: Біографія Шевченка за спогадами сучасників (1958)\n- **Author**: Різні автори\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `7ba5d6cc_c0211`\n- **Text**:\nТак просидели мы до сумерок и пошли в крепость. Наш путь лежал мимо\r\nквартиры ротного командира, где светился уже яркий огонек и шумно разговаривали\r\nнесколько офицеров; окна были открыты. Хозяин дома увидел нас и зазвал к себе\r\nпопробовать «чихирь», только что привезенный из Астрахани. Здесь я увидел, как\r\nвсе обходились с Т. Г. любезно. Он же был не особенно говорлив, но взглядывал\r\nчеловеком не лишним, и его присутствие между офицерами было заметно. Несмотря\r\nна то, что он был как-то сосредот\n\n### Result 2 (score: 0.4398)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c2274`\n- **Text**:\nВисоко оцінюючи діяльність ученого на ниві слов.\r\nвідродження, називаючи його «любомудром», Шевченко писав: «Слава тобі,\r\nШафарику, // Вовіки і віки! // Що звів єси в одно море // Слав’янськії ріки !».\r\nЗгадував поет Ш. і в посланні «І мертвим, і живим...». У передмові до\r\nнездійсненого видання «Кобзаря» Шевченко говорив про Ш. й В. Караджича як\r\nпро справжніх патріотів, що «не постриглись у німці..., а остались слов’янами,\r\nщирими синами матерей своїх, і славу добрую стяжали». Повернувшись із з\n\n### Result 3 (score: 0.4339)\n- **Work**: Біографія Шевченка за спогадами сучасників (1958)\n- **Author**: Різні автори\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `7ba5d6cc_c0218`\n- **Text**:\nЗдесь-то жил Ф. Е., «добрый человек», к нему-то мы и пришли по\r\nутомительной круче. Хозяин принял нас с радостью, как добрый и притом скучающий\r\nчеловек. Он тотчас приказал делать пельмени; их принялась готовить целая\r\nкоманда казаков. Это кушанье, известное в восточной России, мы запивали не\r\nлафитом, а астраханским чихиром, который несравненно лучше всех, вроде\r\nярославско-соболевских лафитов, потому что был натуральный.\n\nШевченко был в отличном расположении духа. У него сыпались забавные\r\nане\n\n### Result 4 (score: 0.4277)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0260`\n- **Text**:\nДеякі рідкі та запозичені слова, як „шерешири“ (якась\r\nвійськова зброя), „ортма“ — покривало, „харалужний“ — сталевий, „чага“ — невільниця\r\nі т. д. не зустрічаються більше ніде в старій літературі або зустрічаються дуже\r\nрідко, але подібні рідкі слова є в багатьох пам’ятках, зокрема, коли мова йде\r\nпро повсякденне життя (пор., напр., назви страв — І. В. 7). Інші слова, рідкі\r\nв старій літературі, зустрічаємо в різних слов’янських мовах, зокрема в\r\nукраїнській та її діялектах: пор. „потручятися“ \n\n### Result 5 (score: 0.4276)\n- **Work**: Український правопис 2015 (2015)\n- **Author**: НАН України\n- **Genre/Period**: reference / modern\n- **Chunk ID**: `1cbe8821_c0292`\n- **Text**:\nшвидкохідний \r\n§ 8, п. 3, ґ, 6\n\nшевців \r\n§ 8, п. 1, а, 3; \r\n§ 67, п. 1, б; шевцева, шевцевого \r\n§ 8, п. 1, а, 3\n\nшевченкіана \r\n§ 38, п. 1, прим. 5\n\nШевченків — Шевченкова, Шевченкове \r\n§ 23, п. 7; Шевченкові поезії \r\n§ 38, п. 26, а\n\nШевченківська премія \r\n§ 38, п. 26, в\n\nШевченківський районний відділ народної освіти міста Києва \r\n§ 38, п. 14, а\n\nшевченківський стиль \r\n§ 38, п. 26, в, прим., а\n\nШевченко \r\n§ 23, п. 7\n\nШексна \r\n§ 109, п. 1\n\nшелест \r\n§ 2, п. 2, а; \r\n§ 8, п. 2, в\n\nШеллі \r\n§ 100, п. \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456159262_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Карна Жля"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456159262_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Карна Жля' — 1 results\n\n1. **Карна і Желя** — Желя (Жля) і Карна — богині-сестри печалі та жалю у давніх слов&#039;ян, вісниці мертвих. Мають бліді обличчя, відтінене довге чорне волосся. Разом літають"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:40.283Z",
+          "resultDisplay": "Wikipedia search: 'Карна Жля' — 1 results\n\n1. **Карна і Желя** — Желя (Жля) і Карна — богині-сестри печалі та жалю у давніх слов&#039;ян, вісниці мертвих. Мають бліді обличчя, відтінене довге чорне волосся. Разом літають",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "fa387739-3049-4dac-ae71-34b1e38a81db",
+      "timestamp": "2026-03-14T02:42:47.571Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Querying for Relevant Data",
+          "description": "I am now focusing on retrieving the specified article and searching for related information. I'll execute the queries and prepare the relevant data for subsequent analysis, ensuring that the necessary elements are present to proceed effectively.",
+          "timestamp": "2026-03-14T02:42:45.510Z"
+        },
+        {
+          "subject": "Gathering Textual Information",
+          "description": "I'm currently compiling text data from the specified sources. I'll search for the keywords and analyze the relevant passages. My aim is to extract the essential information needed to answer the user's query.",
+          "timestamp": "2026-03-14T02:42:47.354Z"
+        }
+      ],
+      "tokens": {
+        "input": 24396,
+        "output": 91,
+        "cached": 19913,
+        "thoughts": 255,
+        "tool": 0,
+        "total": 24742
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456167441_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Карна і Желя",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456167441_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Карна і Желя\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D1%80%D0%BD%D0%B0_%D1%96_%D0%96%D0%B5%D0%BB%D1%8F\n\nЖеля (Жля) і Карна — богині-сестри печалі та жалю у давніх слов'ян, вісниці мертвих. Мають бліді обличчя, відтінене довге чорне волосся. Разом літають над полем битви та оповіщають хто загине. Після битви сидять, схиливши голову та обнявши руками коліна, оплакують мертвих. Згідно з наявним звичаєм, загиблих воїнів спалювали — Желя розносила їхній попіл у розі; згадується, як Желя, в «Слові о полку Ігоревім». У руках у неї, згідно з повір'ям — піч з жаром як символ смутку.\n\n\n== Джерела ==\nЖля [Архівовано 25 червня 2007 у Wayback Machine.] // Энциклопедия «Слова о полку Игореве»\nРыбаков Б. А. Мифология древних славян // Рождение богов и богинь. Саратов: Надежда, 1993.\n\n\n== Посилання ==\nЖеля [Архівовано 4 травня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 2, кн. 4 : Літери Ж — Й. — С. 439. — 1000 екз.\nКарна [Архівовано 15 вересня 2020 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 3, кн. V : Літери К — Ком. — С. 606. — 1000 екз.\n\n● http://litopys.org.ua/sklar/sk14.htm [Архівовано 26 жовтня 2021 у Wayback Machine.] [Архівовано 26 жовтня 2021 у Wayback Machine.]"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:49.396Z",
+          "resultDisplay": "# Карна і Желя\n**URL**: https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D1%80%D0%BD%D0%B0_%D1%96_%D0%96%D0%B5%D0%BB%D1%8F\n\nЖеля (Жля) і Карна — богині-сестри печалі та жалю у давніх слов'ян, вісниці мертвих. Мають бліді обличчя, відтінене довге чорне волосся. Разом літають над полем битви та оповіщають хто загине. Після битви сидять, схиливши голову та обнявши руками коліна, оплакують мертвих. Згідно з наявним звичаєм, загиблих воїнів спалювали — Желя розносила їхній попіл у розі; згадується, як Желя, в «Слові о полку Ігоревім». У руках у неї, згідно з повір'ям — піч з жаром як символ смутку.\n\n\n== Джерела ==\nЖля [Архівовано 25 червня 2007 у Wayback Machine.] // Энциклопедия «Слова о полку Игореве»\nРыбаков Б. А. Мифология древних славян // Рождение богов и богинь. Саратов: Надежда, 1993.\n\n\n== Посилання ==\nЖеля [Архівовано 4 травня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 2, кн. 4 : Літери Ж — Й. — С. 439. — 1000 екз.\nКарна [Архівовано 15 вересня 2020 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1959. — Т. 3, кн. V : Літери К — Ком. — С. 606. — 1000 екз.\n\n● http://litopys.org.ua/sklar/sk14.htm [Архівовано 26 жовтня 2021 у Wayback Machine.] [Архівовано 26 жовтня 2021 у Wayback Machine.]",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456167483_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"шерешир\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456167483_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"шерешир\"\"\n\n### Result 1 (score: 0.4630)\n- **Work**: Спогади про Шевченка (1982) (1982)\n- **Author**: Колектив\n- **Genre/Period**: memoir / modern\n- **Chunk ID**: `955b1bc8_c0569`\n- **Text**:\nНа ньому було зображено внутрішню частину\r\nкиргизької кибитки. Під склепінням кибитки встановлено російське вікно, що\r\nпропускало сонячне проміння, відбите мікроскопічними пилинками. Ясна річ, вікно\r\nбуло спеціально зроблене для того, щоб той, хто малює, мав зручне освітлення\r\nзгори. Під вікном, за столиком, сидить, освітлений півтонами, як аксесуар, сам\r\nШевченко з рейсфедером у руці (а не з пензлем), і пильно дивиться на «натуру».\r\nНатура ця стояла посеред кибитки — напівоголений чоловік у шкі\n\n### Result 2 (score: 0.4590)\n- **Work**: Кониський — Шевченко-Грушівський: Хроніка життя (1991)\n- **Author**: Кониський О.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `4524f5ee_c0651`\n- **Text**:\n1014 Чалий, с. 142. [Тарас Шевченко. Документи...\r\n— С. 317].\n\n1015 Хата. — 1860. — С. 90.\n\n1016 Записки... — С. 195.\n\n1017 Залеськими. — Ред.\n\n1018 Лист д. Абрамцова. — [ІЛ. — Ф. 77. — № 127. — Арк.\r\n54].\n\nЛебединські варенушники заходилися на честь Шевченка /492/\r\nзварити «кашу». Тарас охоче прийняв запросини на ту «кашу». Після 12-літнього\r\nвигнання з рідного краю він тепер був серед рідної, любої України, серед її\r\nприроди, що саме тоді розповнилася усією своєю красою весняною; серед її люде\n\n### Result 3 (score: 0.4462)\n- **Work**: Анісов, Середа — Літопис життя Шевченка (1976)\n- **Author**: Анісов В., Середа В.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5e5bf5d3_c0164`\n- **Text**:\n«Кладовище Агаспеяр» (позначка рукою Шевченка: «8» та іншою рукою:\r\n«Агаспеяр»);\n\n«Вид на гори Ак-Тау з долини Агаспеяр» (позначка рукою Шевченка:\r\n«9» та іншою рукою: «Агаспеяр»);\n\n«Гори в долині Агаспеяр» (позначка рукою Шевченка: «10» та іншою\r\nрукою: «Агаспеяр»);\n\n«Гора в долині Агаспеяр» (напис олівцем «Агаспеяр») ;\n\n«Сюн-Кукх» (напис рукою Шевченка: «12. СюнКукх»);\n\n«Сюн-Кукх» (позначка рукою Шевченка: «13» та іншою рукою: «Siun\r\nKuhh»);\n\n«Сюн-Кукх» (позначка рукою Шевченка: «16», іншою ру\n\n### Result 4 (score: 0.4426)\n- **Work**: Біографія Шевченка за спогадами сучасників (1958)\n- **Author**: Різні автори\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `7ba5d6cc_c0175`\n- **Text**:\nРассказ Е. Косарева. Н. Д. Н[овицкий] 288, На\r\nСыр-Дарье у ротного командира, «Киевская старина», 1889, март, стор. 567 —\r\n568.\n\n* * *\n\nВ Раиме, в ожидании окончания сбора шкуны, мне пришлось прожить\r\nболее месяца. Постройки в укреплении, такие же как и в Уральском, далеко еще не\r\nбыли сделаны все, и потому я поместился среди площади в кибитке, обращенной\r\nдверьми к полуразрушенной могиле /141/ батыря Раима, от которой получили\r\nназвание урочище и самое укрепление. [Могила считалась у киргизов с\n\n### Result 5 (score: 0.4400)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0062`\n- **Text**:\nНа інформацію Шереха, що газета \"Час\" у Фюрті наміряється проголосити літ-конкурс з нагородами – трьох, двох і одної тисячі марок, з тим, щоб МУР прийняв в тому близьку участь, моя думка така: \"Нам необхідно затримати строгу й консеквентну позагрупову політику. \"Час\" є органом однієї політичної і ексклюзивної групи. Конкурс фінансово замалий, запізно проголошений, замало часу для його реалізації. Я вважаю, що перша премія повинна виносити не менше 15,000 марок… З цих міркувань ухиляю думку про к\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:49.396Z",
+          "resultDisplay": "Found 5 results for: \"\"шерешир\"\"\n\n### Result 1 (score: 0.4630)\n- **Work**: Спогади про Шевченка (1982) (1982)\n- **Author**: Колектив\n- **Genre/Period**: memoir / modern\n- **Chunk ID**: `955b1bc8_c0569`\n- **Text**:\nНа ньому було зображено внутрішню частину\r\nкиргизької кибитки. Під склепінням кибитки встановлено російське вікно, що\r\nпропускало сонячне проміння, відбите мікроскопічними пилинками. Ясна річ, вікно\r\nбуло спеціально зроблене для того, щоб той, хто малює, мав зручне освітлення\r\nзгори. Під вікном, за столиком, сидить, освітлений півтонами, як аксесуар, сам\r\nШевченко з рейсфедером у руці (а не з пензлем), і пильно дивиться на «натуру».\r\nНатура ця стояла посеред кибитки — напівоголений чоловік у шкі\n\n### Result 2 (score: 0.4590)\n- **Work**: Кониський — Шевченко-Грушівський: Хроніка життя (1991)\n- **Author**: Кониський О.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `4524f5ee_c0651`\n- **Text**:\n1014 Чалий, с. 142. [Тарас Шевченко. Документи...\r\n— С. 317].\n\n1015 Хата. — 1860. — С. 90.\n\n1016 Записки... — С. 195.\n\n1017 Залеськими. — Ред.\n\n1018 Лист д. Абрамцова. — [ІЛ. — Ф. 77. — № 127. — Арк.\r\n54].\n\nЛебединські варенушники заходилися на честь Шевченка /492/\r\nзварити «кашу». Тарас охоче прийняв запросини на ту «кашу». Після 12-літнього\r\nвигнання з рідного краю він тепер був серед рідної, любої України, серед її\r\nприроди, що саме тоді розповнилася усією своєю красою весняною; серед її люде\n\n### Result 3 (score: 0.4462)\n- **Work**: Анісов, Середа — Літопис життя Шевченка (1976)\n- **Author**: Анісов В., Середа В.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `5e5bf5d3_c0164`\n- **Text**:\n«Кладовище Агаспеяр» (позначка рукою Шевченка: «8» та іншою рукою:\r\n«Агаспеяр»);\n\n«Вид на гори Ак-Тау з долини Агаспеяр» (позначка рукою Шевченка:\r\n«9» та іншою рукою: «Агаспеяр»);\n\n«Гори в долині Агаспеяр» (позначка рукою Шевченка: «10» та іншою\r\nрукою: «Агаспеяр»);\n\n«Гора в долині Агаспеяр» (напис олівцем «Агаспеяр») ;\n\n«Сюн-Кукх» (напис рукою Шевченка: «12. СюнКукх»);\n\n«Сюн-Кукх» (позначка рукою Шевченка: «13» та іншою рукою: «Siun\r\nKuhh»);\n\n«Сюн-Кукх» (позначка рукою Шевченка: «16», іншою ру\n\n### Result 4 (score: 0.4426)\n- **Work**: Біографія Шевченка за спогадами сучасників (1958)\n- **Author**: Різні автори\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `7ba5d6cc_c0175`\n- **Text**:\nРассказ Е. Косарева. Н. Д. Н[овицкий] 288, На\r\nСыр-Дарье у ротного командира, «Киевская старина», 1889, март, стор. 567 —\r\n568.\n\n* * *\n\nВ Раиме, в ожидании окончания сбора шкуны, мне пришлось прожить\r\nболее месяца. Постройки в укреплении, такие же как и в Уральском, далеко еще не\r\nбыли сделаны все, и потому я поместился среди площади в кибитке, обращенной\r\nдверьми к полуразрушенной могиле /141/ батыря Раима, от которой получили\r\nназвание урочище и самое укрепление. [Могила считалась у киргизов с\n\n### Result 5 (score: 0.4400)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0062`\n- **Text**:\nНа інформацію Шереха, що газета \"Час\" у Фюрті наміряється проголосити літ-конкурс з нагородами – трьох, двох і одної тисячі марок, з тим, щоб МУР прийняв в тому близьку участь, моя думка така: \"Нам необхідно затримати строгу й консеквентну позагрупову політику. \"Час\" є органом однієї політичної і ексклюзивної групи. Конкурс фінансово замалий, запізно проголошений, замало часу для його реалізації. Я вважаю, що перша премія повинна виносити не менше 15,000 марок… З цих міркувань ухиляю думку про к\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456167528_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"гапакс\" слово о полку ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456167528_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"гапакс\" слово о полку ігоревім\"\n\n### Result 1 (score: 0.5149)\n- **Work**: Панас Мирний. Лихо давнє і сьогочасне (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `2b7d54ff_c0002`\n- **Text**:\nТак частенько вичитував Олексій Іванович своїм кріпакам, додаючи до того ще більше снаги черкеським арапником, що вивіз із Капказу, де за молодих літ служив у війську. І такі речі Олексія Ивановича вислухували кріпаки з великою покірливістю. Що більше корило кріпаків — чи речі, чи арапник Олексія Ивановича? Певно, що одно другому допомагало. Бо самі кріпаки хвалилися, що їх пан — могутній пан: і духу великого, та й сили немалої. Раз канчуком вчеше — до печінки дойме, а чи голосом крикне — душа з\n\n### Result 2 (score: 0.5005)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0049`\n- **Text**:\nДосить перечитати літописне\r\nповідання 1185 р. за Іпат. сп., щоб помітити в ньому риси спільні з „Словом”.\r\nСхожість ця навіть не така фактична (адже з поета не фотограф, ба й не\r\nісторіограф), як літературна, стилістична та лексична. Вже початкові подробиці\r\nлітописного оповідання — про те, як кн. Святослав запрошував Ігоря йти проти\r\nПоловців — відгонять епічною манірою. Далі:\n\n„Игорь же возрЂвъ на небо и\r\nвиди солнце... стояще яко мЂсяць”...\n\n„Игорь же рече с братьею\r\nсвоєю: ,оже ны будеть не\n\n### Result 3 (score: 0.4941)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0650`\n- **Text**:\nВаріанты: 1 Х.\r\nП. битися. 2 Х. П. игдеж. 3 Х. П.\r\nгоургіи. 4 Х. П. слящим. 5 Х. П.\r\nпослы. 6 Х. П. межю. 7 Х. П. приб. и. \r\n8 Х. П. пришед. 9 Х. П. дюрдіи.\r\n10 Х. П. за роуста, въ Х. позже подъ оу приписано\r\nть: за роуть ста. 11 Х. П. исполчивь. 12\r\nХ. П. вся, и приб. полкы своя. 13 Х. П. дюрдіи. 14\r\nХ. П. ожидааше. 15 Х. П. толко. 16\r\nХ. П. копіа. 17 Х. П. видѣти. 18\r\nХ. П. дъждь. 19 Х. П. къ. 20\r\nХ. П. я. 21 Х. П. нѣлзе. 22\r\nХ. П. полд(ь)не. 23 Х. П. приб. и. 24 Х. П.\r\nоузрѣшас. 25 Х. П. полц\n\n### Result 4 (score: 0.4920)\n- **Work**: Ліна Костенко. Маруся Чурай (1930)\n- **Author**: Костенко Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `dbe2dd8f_c0013`\n- **Text**:\n\"Вартуй! Вартуй!\" — від Київських воріт.\n\nУже стоять вози під яворами.\n\nПолтавський полк готовий у похід.\n\nГодуйте коней. Неблизька дорога.\n\nБлагословіть в дорогу, матері.\n\nА що там буде, смерть чи перемога,—\n\nПолтавський полк виходить на зорі!\n\nТам бій гримить. Там гине наша воля.\n\nТам треба рук, і зброї, і плечей.\n\nІ що там варт чиясь окрема доля,\n\nтой тихий зойк у безмірі ночей-..\n\nВогненна зірка в небі пролітала,\n\nсичі кричали, вісники біди.\n\nНа сто думок замислена Полтава\n\nвербові гриви хил\n\n### Result 5 (score: 0.4901)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0977`\n- **Text**:\nбоудоущю З 54 же 53 ємоу в Половцехъ . тамо\r\nсѧ 53 налѣзесѧ И 55 . моужь\r\nродомъ Половчинъ І . именемь Лаворъ . и тотъ приимъ 56\r\nмъıсль бл҃гоу . и реч̑ поидоу с тобою в Роусь . Игорь же исперва 57\r\nне имѧшеть 58 ємоу 59 вѣръı . но держаше\r\n60 мъıсль въıсокоу своєӕ оуности 61. мъıшлѧшеть\r\n62 бо . ємше моужь и бѣжати в Роусь . молвѧшеть 63\r\nбо азъ славъı дѣлѧ не бѣжахъ . тогда ѿ\r\nдроужинъı . и нъıнѣ не славнъıмъ поутемь . не имамъ поити 64\r\n. с нимъ бо бѧшеть 65 . тъıсѧчс̑кого К 66\r\nсн҃ъ и конюши\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:49.396Z",
+          "resultDisplay": "Found 5 results for: \"\"гапакс\" слово о полку ігоревім\"\n\n### Result 1 (score: 0.5149)\n- **Work**: Панас Мирний. Лихо давнє і сьогочасне (1849)\n- **Author**: Мирний П.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `2b7d54ff_c0002`\n- **Text**:\nТак частенько вичитував Олексій Іванович своїм кріпакам, додаючи до того ще більше снаги черкеським арапником, що вивіз із Капказу, де за молодих літ служив у війську. І такі речі Олексія Ивановича вислухували кріпаки з великою покірливістю. Що більше корило кріпаків — чи речі, чи арапник Олексія Ивановича? Певно, що одно другому допомагало. Бо самі кріпаки хвалилися, що їх пан — могутній пан: і духу великого, та й сили немалої. Раз канчуком вчеше — до печінки дойме, а чи голосом крикне — душа з\n\n### Result 2 (score: 0.5005)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0049`\n- **Text**:\nДосить перечитати літописне\r\nповідання 1185 р. за Іпат. сп., щоб помітити в ньому риси спільні з „Словом”.\r\nСхожість ця навіть не така фактична (адже з поета не фотограф, ба й не\r\nісторіограф), як літературна, стилістична та лексична. Вже початкові подробиці\r\nлітописного оповідання — про те, як кн. Святослав запрошував Ігоря йти проти\r\nПоловців — відгонять епічною манірою. Далі:\n\n„Игорь же возрЂвъ на небо и\r\nвиди солнце... стояще яко мЂсяць”...\n\n„Игорь же рече с братьею\r\nсвоєю: ,оже ны будеть не\n\n### Result 3 (score: 0.4941)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0650`\n- **Text**:\nВаріанты: 1 Х.\r\nП. битися. 2 Х. П. игдеж. 3 Х. П.\r\nгоургіи. 4 Х. П. слящим. 5 Х. П.\r\nпослы. 6 Х. П. межю. 7 Х. П. приб. и. \r\n8 Х. П. пришед. 9 Х. П. дюрдіи.\r\n10 Х. П. за роуста, въ Х. позже подъ оу приписано\r\nть: за роуть ста. 11 Х. П. исполчивь. 12\r\nХ. П. вся, и приб. полкы своя. 13 Х. П. дюрдіи. 14\r\nХ. П. ожидааше. 15 Х. П. толко. 16\r\nХ. П. копіа. 17 Х. П. видѣти. 18\r\nХ. П. дъждь. 19 Х. П. къ. 20\r\nХ. П. я. 21 Х. П. нѣлзе. 22\r\nХ. П. полд(ь)не. 23 Х. П. приб. и. 24 Х. П.\r\nоузрѣшас. 25 Х. П. полц\n\n### Result 4 (score: 0.4920)\n- **Work**: Ліна Костенко. Маруся Чурай (1930)\n- **Author**: Костенко Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `dbe2dd8f_c0013`\n- **Text**:\n\"Вартуй! Вартуй!\" — від Київських воріт.\n\nУже стоять вози під яворами.\n\nПолтавський полк готовий у похід.\n\nГодуйте коней. Неблизька дорога.\n\nБлагословіть в дорогу, матері.\n\nА що там буде, смерть чи перемога,—\n\nПолтавський полк виходить на зорі!\n\nТам бій гримить. Там гине наша воля.\n\nТам треба рук, і зброї, і плечей.\n\nІ що там варт чиясь окрема доля,\n\nтой тихий зойк у безмірі ночей-..\n\nВогненна зірка в небі пролітала,\n\nсичі кричали, вісники біди.\n\nНа сто думок замислена Полтава\n\nвербові гриви хил\n\n### Result 5 (score: 0.4901)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0977`\n- **Text**:\nбоудоущю З 54 же 53 ємоу в Половцехъ . тамо\r\nсѧ 53 налѣзесѧ И 55 . моужь\r\nродомъ Половчинъ І . именемь Лаворъ . и тотъ приимъ 56\r\nмъıсль бл҃гоу . и реч̑ поидоу с тобою в Роусь . Игорь же исперва 57\r\nне имѧшеть 58 ємоу 59 вѣръı . но держаше\r\n60 мъıсль въıсокоу своєӕ оуности 61. мъıшлѧшеть\r\n62 бо . ємше моужь и бѣжати в Роусь . молвѧшеть 63\r\nбо азъ славъı дѣлѧ не бѣжахъ . тогда ѿ\r\nдроужинъı . и нъıнѣ не славнъıмъ поутемь . не имамъ поити 64\r\n. с нимъ бо бѧшеть 65 . тъıсѧчс̑кого К 66\r\nсн҃ъ и конюши\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456167569_3",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Слово о полку Ігоревім",
+            "mode": "sections"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456167569_3",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Слово о полку Ігоревім':\n\n1 Жанр (index=1)\n2 Історія знахідки (index=2)\n3 Історична основа і зміст поеми (index=3)\n4 Мова і поетика (index=4)\n5 Дискусії щодо автентичності (index=5)\n  5.1 Питання про авторство (index=6)\n  5.2 Версія про автентичність (index=7)\n  5.3 Скептицизм щодо автентичності (index=8)\n6 «Слово о полку Ігоревім» у мистецтві (index=9)\n  6.1 У малярстві (index=10)\n7 Переклади і переспіви (index=11)\n8 Текст твору (index=12)\n9 Див. також (index=13)\n10 Примітки (index=14)\n11 Джерела (index=15)\n12 Література (index=16)\n13 Посилання (index=17)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:49.396Z",
+          "resultDisplay": "Sections of 'Слово о полку Ігоревім':\n\n1 Жанр (index=1)\n2 Історія знахідки (index=2)\n3 Історична основа і зміст поеми (index=3)\n4 Мова і поетика (index=4)\n5 Дискусії щодо автентичності (index=5)\n  5.1 Питання про авторство (index=6)\n  5.2 Версія про автентичність (index=7)\n  5.3 Скептицизм щодо автентичності (index=8)\n6 «Слово о полку Ігоревім» у мистецтві (index=9)\n  6.1 У малярстві (index=10)\n7 Переклади і переспіви (index=11)\n8 Текст твору (index=12)\n9 Див. також (index=13)\n10 Примітки (index=14)\n11 Джерела (index=15)\n12 Література (index=16)\n13 Посилання (index=17)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "1805261a-1464-4c42-9080-ef9cac52c28a",
+      "timestamp": "2026-03-14T02:42:56.616Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing section content",
+          "description": "I'm now focused on understanding the core elements of the specified section. I'm carefully examining the text to gather crucial details.",
+          "timestamp": "2026-03-14T02:42:54.318Z"
+        },
+        {
+          "subject": "Searching for relevant terms",
+          "description": "I am now proceeding with searches for specific phrases and terms within the literary database and on Wikipedia. The goal is to gather relevant information for the task.",
+          "timestamp": "2026-03-14T02:42:56.448Z"
+        }
+      ],
+      "tokens": {
+        "input": 28493,
+        "output": 71,
+        "cached": 0,
+        "thoughts": 189,
+        "tool": 0,
+        "total": 28753
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456176535_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "section",
+            "section": 4,
+            "query": "Слово о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456176535_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Слово о полку Ігоревім — Section 4\n\nМова і поетика\nВ.Перов]]\nОсновою мови «Слова» є народнопоетична стихія, тогочасна жива розмовна мова. Більшість дослідників припускають, що автор «Слова…» був або киянин, або чернігівець, інші (Орлов, Юґов) доводять, що він мусив бути галичанином («карпаторус»).\n\nЗв'язок з народною поетикою, літописом і воєнними повістями свідчить про глибоке народне коріння «Слова…». Помітний і генетичний зв'язок «Слова…» та українських народних дум, але цей аспект історії українського фольклору ще потребує поглибленого аналізу..\n\nРосійський мовознавець К. Калайдович, писав у 1818 році: «Спосіб вираження „Пісні“ і самі слова: кресити, болоньє, смага, година, невідомі великоросіянам, але й нині ними користуються в Україні, показують, що автор належав до нинішньої Малоросії.»\n\nУ «Слові…» засвідчено такі живомовні українські риси, як, наприклад, відбито повноголосся (ворота, голова, голосъ, полонені, хороброе), закінчення -ові, -еві (-єві) в давальному відмінку іменників чоловічого роду (Дунаєві, Игореві, Романові, королеві), кличний відмінок іменників (Бояне, дружино, княже, Всеволоде, господине), форми дієслів теперішнього часу з м'якими закінченнями -ть (велить, плачуть, ржуть) і багато інших.\n\nУ «Слові…» трапляється значна кількість діалектизмів (близько 150), таких, як болоня, велми, гораздъ, жалощи, зегзиця, зоря, клекътъ, ковылиє, лада, смага, тутнути, чрьленыи, щекоть та інші. Є у «Слові…» поодинокі грецизми (панолома).\n\nАвтор «Слова…» був добре знайомий з регіональними діалектами, у тому числі, очевидно, і з галицькими. Порівняти, наприклад, такі регіоналізми: лисицы брешуть «гавкають», мечи гримлють, ничить трава жалощами; а чи диво ся, братие, стару помолодити? яруги цвѣлити «дратувати» (північноукраїнське)..\n\nОсобливо багаті епітети «Слова…», порівняння та метафори, метонімії й гіперболи. Автор персоніфікує природу, робить її живою істотою, яка або співчуває, або шкодить людині. Досконалість поетичних образів доводить, що, побіч літописів, мусила існувати й багата народна і дружинна поезія зі складною та високорозвиненою поетикою.\n\nТакож в «Слові…» поширені тюркізми (кащей, чага, харалуг тощо), що вказує на наявність тісних відносин між стародавньою Руссю та тюрками Великого Степу, зокрема Причорноморських степів.\n\nУспіхів у відновленні первинного тексту «Слова» і знятті «темнот» досяг також український дослідник Маркін В. М."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:57.020Z",
+          "resultDisplay": "# Слово о полку Ігоревім — Section 4\n\nМова і поетика\nВ.Перов]]\nОсновою мови «Слова» є народнопоетична стихія, тогочасна жива розмовна мова. Більшість дослідників припускають, що автор «Слова…» був або киянин, або чернігівець, інші (Орлов, Юґов) доводять, що він мусив бути галичанином («карпаторус»).\n\nЗв'язок з народною поетикою, літописом і воєнними повістями свідчить про глибоке народне коріння «Слова…». Помітний і генетичний зв'язок «Слова…» та українських народних дум, але цей аспект історії українського фольклору ще потребує поглибленого аналізу..\n\nРосійський мовознавець К. Калайдович, писав у 1818 році: «Спосіб вираження „Пісні“ і самі слова: кресити, болоньє, смага, година, невідомі великоросіянам, але й нині ними користуються в Україні, показують, що автор належав до нинішньої Малоросії.»\n\nУ «Слові…» засвідчено такі живомовні українські риси, як, наприклад, відбито повноголосся (ворота, голова, голосъ, полонені, хороброе), закінчення -ові, -еві (-єві) в давальному відмінку іменників чоловічого роду (Дунаєві, Игореві, Романові, королеві), кличний відмінок іменників (Бояне, дружино, княже, Всеволоде, господине), форми дієслів теперішнього часу з м'якими закінченнями -ть (велить, плачуть, ржуть) і багато інших.\n\nУ «Слові…» трапляється значна кількість діалектизмів (близько 150), таких, як болоня, велми, гораздъ, жалощи, зегзиця, зоря, клекътъ, ковылиє, лада, смага, тутнути, чрьленыи, щекоть та інші. Є у «Слові…» поодинокі грецизми (панолома).\n\nАвтор «Слова…» був добре знайомий з регіональними діалектами, у тому числі, очевидно, і з галицькими. Порівняти, наприклад, такі регіоналізми: лисицы брешуть «гавкають», мечи гримлють, ничить трава жалощами; а чи диво ся, братие, стару помолодити? яруги цвѣлити «дратувати» (північноукраїнське)..\n\nОсобливо багаті епітети «Слова…», порівняння та метафори, метонімії й гіперболи. Автор персоніфікує природу, робить її живою істотою, яка або співчуває, або шкодить людині. Досконалість поетичних образів доводить, що, побіч літописів, мусила існувати й багата народна і дружинна поезія зі складною та високорозвиненою поетикою.\n\nТакож в «Слові…» поширені тюркізми (кащей, чага, харалуг тощо), що вказує на наявність тісних відносин між стародавньою Руссю та тюрками Великого Степу, зокрема Причорноморських степів.\n\nУспіхів у відновленні первинного тексту «Слова» і знятті «темнот» досяг також український дослідник Маркін В. М.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773456176575_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "гапакси в Слові о полку Ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456176575_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"гапакси в Слові о полку Ігоревім\"\n\n### Result 1 (score: 0.5335)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0789`\n- **Text**:\nВаріанты: 1 Х.\r\nП. опущено. 2 Х. П. рѣцѣ. 3 Х.\r\nП. приб. ждаша. 4 Х. П. опущено. 5\r\nХ. П. опущено. 6 Х. П. через. 7 Х. П.\r\nволодарева. 8 Х. П. отсюда. 9 П. и от витебека\r\nпобеже володарь. 16 Х. П. иже. 11 Х. П. по полю. 12\r\nХ. П. изблудивших (съ б. юс.). 13\r\nХ. П. изымаша. 14 Х. П. к полоцкоу. 15\r\nХ. П. галицкыи. 16 Х. П. из (Х. переправлено позже въ за).\r\n17 Х. П. опущено. 18 Х. П. володимера\r\nс(вя)тославлю. 19 Х. П. дъщеръ. 20 Х. П. Том.\r\n21 Х. П. изяславича. 22 Х. П. дъщеръ.\r\n23 Х. П. дюрдя. \n\n### Result 2 (score: 0.5313)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0062`\n- **Text**:\nЧимало в цій повісті афористичних виразів типу:\r\nСоцкий Микула рече: «Господине! не погнетше пчелъ меду не Ђдать» (509);\r\nДанилови же рекшю: «Подобаеть воину устремившуся на брань или побЂду прияти или\r\nпасти ся оть ратныхъ» (515); РЂша Прузи Ятвяземь: «Можете ли древо поддержати\r\nсулицами и на сию рать дерзнути?» (540) та ін. 4\n\n1 Грушевський М. Історія\r\nукраїнської літератури. — Т. 3. — С. 144.\n\n2 Там же. — С. 145.\n\n3 Там же. — С. 146.\n\n4 Там же. — Т. 3. —\r\nС. 148.\n\nУ фразеології галицької час\n\n### Result 3 (score: 0.5301)\n- **Work**: Українська драматургія першої половини XIX ст. (1958)\n- **Author**: Антологія\n- **Genre/Period**: drama / modern\n- **Chunk ID**: `bf813e34_c0138`\n- **Text**:\nЗа тебе заміж? та що се ти, гаспидів Очкурня?та я з тебе дух виб’ю,\r\nта я тебе зувічу, як собаку! та я тебе в три погибелі зверну, що й пір’я на\r\nтобі не останеться! Чи такому ж бридкому, як ти, женитися з Марусею? Подивись\r\nна себе, неотесо! адже ж ти поганіший від...\n\nОчкурня\n\n(покволом)\n\nХа! ха! ха! ха! а ти хіба кращий від мене? га, маро?\n\nКабиця\n\nТа вона на тебе і плюнуть не захоче...\n\nОчкурня\n\nА на тебе плюне, хоч не схоче, ха! ха! ха! /285/\n\nКабиця\n\nЩоб такий ледачий, як ти, одбив у мене \n\n### Result 4 (score: 0.5291)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0474`\n- **Text**:\nВаріанты: 1 Х.\r\nП. к резаню. 2 Х. П. меншаго. 3 Х. П. зимы. 4\r\nХ. П. лядскыи. 5 Х. П. петрока. 6\r\nХ. П. ослѣпи, и приб. его. 7 Х. П. врѣза. 8\r\nХ. П. разграби. 9 Х. П. з. 10 Х. П.\r\nземлѣ. 11 Х. П. іеѵглское. 12\r\nХ. П. роускаго. 13 Х. П. въсхити. 14\r\nХ. П. не по колицех. 15 Х. П. презри. 16 Х. П.\r\nгробници. 17 Х. П. приб. х (т. е. 600). 18\r\nХ. П. совокоупи. 19 Х. П. игора. 20 Х. П.\r\nкыевѣ. 21 Х. П. съ. 22 Х. П. володимером,\r\nи приб. и. 23 Х. П. мьстиславича. 24\r\nХ. П. с(ы)новца. 25 Х. П. зятя. 26 \n\n### Result 5 (score: 0.5262)\n- **Work**: Генсьорський — ГВЛ лексичні та стилістичні особливості (1961)\n- **Author**: Генсьорський А.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `701afbae_c0279`\n- **Text**:\nЗате галицький редактор широко використовує інший\r\nструктурно-стилістичний засіб — еліпс.\n\nЕліпси, як відомо,\r\nвластиві й тепер живій народній мові, особливо прямій розмовній мові.\r\nБезсумнівно, що в мові широких руських мас XIII ст. цей засіб був дуже\r\nпоширений. Мова того часу, як і сучасна просторічна мова, йшла у своїх висловах\r\nза образами-уявленнями, причому взаємовідносини цих образів-уявлень не завжди\r\nдіставали словесне граматичне вираження 13. Звідси паратаксичність і\r\nчаста еліптичніс\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:57.020Z",
+          "resultDisplay": "Found 5 results for: \"гапакси в Слові о полку Ігоревім\"\n\n### Result 1 (score: 0.5335)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0789`\n- **Text**:\nВаріанты: 1 Х.\r\nП. опущено. 2 Х. П. рѣцѣ. 3 Х.\r\nП. приб. ждаша. 4 Х. П. опущено. 5\r\nХ. П. опущено. 6 Х. П. через. 7 Х. П.\r\nволодарева. 8 Х. П. отсюда. 9 П. и от витебека\r\nпобеже володарь. 16 Х. П. иже. 11 Х. П. по полю. 12\r\nХ. П. изблудивших (съ б. юс.). 13\r\nХ. П. изымаша. 14 Х. П. к полоцкоу. 15\r\nХ. П. галицкыи. 16 Х. П. из (Х. переправлено позже въ за).\r\n17 Х. П. опущено. 18 Х. П. володимера\r\nс(вя)тославлю. 19 Х. П. дъщеръ. 20 Х. П. Том.\r\n21 Х. П. изяславича. 22 Х. П. дъщеръ.\r\n23 Х. П. дюрдя. \n\n### Result 2 (score: 0.5313)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0062`\n- **Text**:\nЧимало в цій повісті афористичних виразів типу:\r\nСоцкий Микула рече: «Господине! не погнетше пчелъ меду не Ђдать» (509);\r\nДанилови же рекшю: «Подобаеть воину устремившуся на брань или побЂду прияти или\r\nпасти ся оть ратныхъ» (515); РЂша Прузи Ятвяземь: «Можете ли древо поддержати\r\nсулицами и на сию рать дерзнути?» (540) та ін. 4\n\n1 Грушевський М. Історія\r\nукраїнської літератури. — Т. 3. — С. 144.\n\n2 Там же. — С. 145.\n\n3 Там же. — С. 146.\n\n4 Там же. — Т. 3. —\r\nС. 148.\n\nУ фразеології галицької час\n\n### Result 3 (score: 0.5301)\n- **Work**: Українська драматургія першої половини XIX ст. (1958)\n- **Author**: Антологія\n- **Genre/Period**: drama / modern\n- **Chunk ID**: `bf813e34_c0138`\n- **Text**:\nЗа тебе заміж? та що се ти, гаспидів Очкурня?та я з тебе дух виб’ю,\r\nта я тебе зувічу, як собаку! та я тебе в три погибелі зверну, що й пір’я на\r\nтобі не останеться! Чи такому ж бридкому, як ти, женитися з Марусею? Подивись\r\nна себе, неотесо! адже ж ти поганіший від...\n\nОчкурня\n\n(покволом)\n\nХа! ха! ха! ха! а ти хіба кращий від мене? га, маро?\n\nКабиця\n\nТа вона на тебе і плюнуть не захоче...\n\nОчкурня\n\nА на тебе плюне, хоч не схоче, ха! ха! ха! /285/\n\nКабиця\n\nЩоб такий ледачий, як ти, одбив у мене \n\n### Result 4 (score: 0.5291)\n- **Work**: Повість временних літ (Іпатський список) (1113)\n- **Author**: Нестор\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `34aba42b_c0474`\n- **Text**:\nВаріанты: 1 Х.\r\nП. к резаню. 2 Х. П. меншаго. 3 Х. П. зимы. 4\r\nХ. П. лядскыи. 5 Х. П. петрока. 6\r\nХ. П. ослѣпи, и приб. его. 7 Х. П. врѣза. 8\r\nХ. П. разграби. 9 Х. П. з. 10 Х. П.\r\nземлѣ. 11 Х. П. іеѵглское. 12\r\nХ. П. роускаго. 13 Х. П. въсхити. 14\r\nХ. П. не по колицех. 15 Х. П. презри. 16 Х. П.\r\nгробници. 17 Х. П. приб. х (т. е. 600). 18\r\nХ. П. совокоупи. 19 Х. П. игора. 20 Х. П.\r\nкыевѣ. 21 Х. П. съ. 22 Х. П. володимером,\r\nи приб. и. 23 Х. П. мьстиславича. 24\r\nХ. П. с(ы)новца. 25 Х. П. зятя. 26 \n\n### Result 5 (score: 0.5262)\n- **Work**: Генсьорський — ГВЛ лексичні та стилістичні особливості (1961)\n- **Author**: Генсьорський А.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `701afbae_c0279`\n- **Text**:\nЗате галицький редактор широко використовує інший\r\nструктурно-стилістичний засіб — еліпс.\n\nЕліпси, як відомо,\r\nвластиві й тепер живій народній мові, особливо прямій розмовній мові.\r\nБезсумнівно, що в мові широких руських мас XIII ст. цей засіб був дуже\r\nпоширений. Мова того часу, як і сучасна просторічна мова, йшла у своїх висловах\r\nза образами-уявленнями, причому взаємовідносини цих образів-уявлень не завжди\r\nдіставали словесне граматичне вираження 13. Звідси паратаксичність і\r\nчаста еліптичніс\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456176616_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "гапакс"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456176616_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'гапакс' — 5 results\n\n1. **Гапакс** — Га́пакс, гапакс лего́менон (від грец. ἅπαξ λεγόμενον — «щось згадане один раз», латинська транслітерація hapax legomenon) — термін, уживаний у корпусній\n2. **Алісія Елсбет Столлінгз** — видала три книги поезії: «Архаїчна посмішка» (англ. Archaic Smile) (1999), «Гапакс» (англ. Hapax) (2006) та «Оливи» (англ. Olives) (2012). 2007 року вийшов\n3. **Самбатас** — Самбата́с (Самвата́с, грец. Σαμβατάς) — гапакс, себто слово невідомого походження і непевного значення, не засвідчене ніде, крім трактату «Про управління\n4. **Оказіоналізм (філологія)** — точно розрахований на естетичну свідомість людей даної історичної епохи. Гапакс Екземплифікант Ковані слова Єрмоленко С., Бибик С., Тодор О. Українська\n5. **Космічна трилогія** — «Переландрі» так, неначе він втілився як Ісус Христос. Нерувал (англ. Neruval) — гапакс в Переландрі і, виходячи з контексту, мабуть, планета Уран Оярса (англ."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:42:57.020Z",
+          "resultDisplay": "Wikipedia search: 'гапакс' — 5 results\n\n1. **Гапакс** — Га́пакс, гапакс лего́менон (від грец. ἅπαξ λεγόμενον — «щось згадане один раз», латинська транслітерація hapax legomenon) — термін, уживаний у корпусній\n2. **Алісія Елсбет Столлінгз** — видала три книги поезії: «Архаїчна посмішка» (англ. Archaic Smile) (1999), «Гапакс» (англ. Hapax) (2006) та «Оливи» (англ. Olives) (2012). 2007 року вийшов\n3. **Самбатас** — Самбата́с (Самвата́с, грец. Σαμβατάς) — гапакс, себто слово невідомого походження і непевного значення, не засвідчене ніде, крім трактату «Про управління\n4. **Оказіоналізм (філологія)** — точно розрахований на естетичну свідомість людей даної історичної епохи. Гапакс Екземплифікант Ковані слова Єрмоленко С., Бибик С., Тодор О. Українська\n5. **Космічна трилогія** — «Переландрі» так, неначе він втілився як Ісус Христос. Нерувал (англ. Neruval) — гапакс в Переландрі і, виходячи з контексту, мабуть, планета Уран Оярса (англ.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "a47c63dd-9566-4e1b-a18f-c4c6c14dff48",
+      "timestamp": "2026-03-14T02:43:10.608Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Initiating Word Verification",
+          "description": "I'm now zeroing in on confirming \"Шерешири\" as a unique word. I'm focusing on the next step and using my search capabilities to check this hypothesis and make swift progress. I am anticipating verification based on the initial assessment.",
+          "timestamp": "2026-03-14T02:43:06.980Z"
+        },
+        {
+          "subject": "Searching Literary References",
+          "description": "Now I'm diving deeper into literary sources, targeting the term \"стрильці\" within \"слово о полку\". This should reveal relevant information. Next, I plan on confirming the usage of \"темні місця\" in the same work.",
+          "timestamp": "2026-03-14T02:43:10.395Z"
+        }
+      ],
+      "tokens": {
+        "input": 31581,
+        "output": 62,
+        "cached": 27337,
+        "thoughts": 285,
+        "tool": 0,
+        "total": 31928
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773456190498_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"стрильці\" слово"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456190498_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"стрильці\" слово\"\n\n### Result 1 (score: 0.5234)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0094`\n- **Text**:\nСтрічу військ означали висловами зіступитися,\r\nзразитися, саму битву словами бій, січа, брань. Вирішальне значення\r\nу битві мали тяжкозбройні частини, що наступали на ворога зі списами в руках.\r\nСтрільці-лучники грали тільки побічну роль. Вигляд війська в наступі описує\r\nГалицький літопис 1251 р. так: «Військо злізло з коней і озброїлося в обозі,\r\nщити їхні були, як зоря, шоломи їхні, як сонце, що сходить, у руках тримали\r\nсписи, як многі трості; стрільці йшли по обох боках і тримали в руках рож\n\n### Result 2 (score: 0.4840)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0360`\n- **Text**:\nсулици своя повръгоша и\r\nглавы своя подклониша] Пор.\r\nДалі „сулицы ляцкіи\"; сулиця — власне вістря, оскіп до списа,\r\nαίχμή δόρατος Лет.\r\nМанасс. (Барс. I, 290); по тому — спис,\r\nδοράτων; „с сулицами хожаше”, „сулица\r\nиспущаа” Олександрія 1 ред., с. 52; „сулицею вся покорить”, 18; „избранніи\r\nпЂшци несут сулицЂ и щиты круглы”, Флавій, кн. III, Волокол. № 651, арк. 77;\r\nзгад. в угоді з Ґотським берегом; Амарт. I, с. 187. В літопису Іп. р. 1232 —\r\n„гонящимъ же има разлучистася, потом же видивъ брат\n\n### Result 3 (score: 0.4780)\n- **Work**: Хрестоматія давньої української літератури (Білецький) (1952)\n- **Author**: Білецький О.\n- **Genre/Period**: anthology / modern\n- **Chunk ID**: `59fd4e79_c0357`\n- **Text**:\nсребреница — срібна монета\n\nсрогій — жорстокий, лютий\n\nсромотне — ганебне\n\nстатечность — міць, твердість, постійність\n\nстація — зупинка, стоянка\n\nстисковати — нарікати, тужити\n\nстогна — площа, вулиця\n\nстолах — шлунок\n\nстрасти — страждання, мука, хвороба, пристрасть,\r\nпорок\n\nстроскати — стурбувати, засмутити\n\nстружіе — спис\n\nстрый, стръй, строй — дядько, батьків брат\n\nстряпати — баритися, полагоджувати справу\n\nстуда, студ — сором\n\nстуден(ь)ство — холод\n\nстудень — холод\n\nстудный — огидний, безсоро\n\n### Result 4 (score: 0.4745)\n- **Work**: Микола Хвильовий. Слово повстання таємне... (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `726eed5a_c0000`\n- **Text**:\nСлово \"повстання\" таємне\n\nЧув я, як в тирсі давно\n\nВечір збентежений темний\n\nСкиглив повстання зерном.\n\nВ грудях моїх зростала\n\nХвиля бурхлива — живець,\n\nПодих скорботи невдалий\n\nЗдатний не був вже на герць.\n\nТакож схопив я повстання\n\nВ жвавих ланах громовиць,\n\nЧув я повстання в зітханні\n\nКволих байдужих телиць.\n\nЩось ще гойдається в думці —\n\nЩо? Небезпека, не варт?\n\nСолодко вмить перегнуться,\n\nЩастя підхопити вжарт.\n\nСлово \"повстання\" палюче,\n\nБлискавка грізна, зросло —\n\nБачиш, як певно, жагуче\n\n### Result 5 (score: 0.4717)\n- **Work**: Грінченко-Драгоманов — Діалоги про українську національну справу (1894)\n- **Author**: Грінченко Б.\n- **Genre/Period**: polemic / modern\n- **Chunk ID**: `5554668f_c0329`\n- **Text**:\nсвобідний — вільний\n\nсвобідно — вільно\n\nсвятощ — святиня\n\nсей — цей\n\nсектярський — сектантський\n\nсклонити — схилити\n\nскрайній — крайній\n\nслідити — стежити\n\nсотрудник — співробітник\n\nспасати — рятувати\n\nспасти — врятувати\n\nспеціальний — специфічний; особливий\n\nспеціально — специфічно; особливо\n\nспоритися — сперечатися\n\nспорщик — сперечальник\n\nстан — становище\n\nстановити — ставити, розташовувати\n\nстанути — стати\n\nсторона — країна\n\nсторонність — упередженість\n\nстремління — прагнення\n\nстрічка — рядо\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:43:13.339Z",
+          "resultDisplay": "Found 5 results for: \"\"стрильці\" слово\"\n\n### Result 1 (score: 0.5234)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0094`\n- **Text**:\nСтрічу військ означали висловами зіступитися,\r\nзразитися, саму битву словами бій, січа, брань. Вирішальне значення\r\nу битві мали тяжкозбройні частини, що наступали на ворога зі списами в руках.\r\nСтрільці-лучники грали тільки побічну роль. Вигляд війська в наступі описує\r\nГалицький літопис 1251 р. так: «Військо злізло з коней і озброїлося в обозі,\r\nщити їхні були, як зоря, шоломи їхні, як сонце, що сходить, у руках тримали\r\nсписи, як многі трості; стрільці йшли по обох боках і тримали в руках рож\n\n### Result 2 (score: 0.4840)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0360`\n- **Text**:\nсулици своя повръгоша и\r\nглавы своя подклониша] Пор.\r\nДалі „сулицы ляцкіи\"; сулиця — власне вістря, оскіп до списа,\r\nαίχμή δόρατος Лет.\r\nМанасс. (Барс. I, 290); по тому — спис,\r\nδοράτων; „с сулицами хожаше”, „сулица\r\nиспущаа” Олександрія 1 ред., с. 52; „сулицею вся покорить”, 18; „избранніи\r\nпЂшци несут сулицЂ и щиты круглы”, Флавій, кн. III, Волокол. № 651, арк. 77;\r\nзгад. в угоді з Ґотським берегом; Амарт. I, с. 187. В літопису Іп. р. 1232 —\r\n„гонящимъ же има разлучистася, потом же видивъ брат\n\n### Result 3 (score: 0.4780)\n- **Work**: Хрестоматія давньої української літератури (Білецький) (1952)\n- **Author**: Білецький О.\n- **Genre/Period**: anthology / modern\n- **Chunk ID**: `59fd4e79_c0357`\n- **Text**:\nсребреница — срібна монета\n\nсрогій — жорстокий, лютий\n\nсромотне — ганебне\n\nстатечность — міць, твердість, постійність\n\nстація — зупинка, стоянка\n\nстисковати — нарікати, тужити\n\nстогна — площа, вулиця\n\nстолах — шлунок\n\nстрасти — страждання, мука, хвороба, пристрасть,\r\nпорок\n\nстроскати — стурбувати, засмутити\n\nстружіе — спис\n\nстрый, стръй, строй — дядько, батьків брат\n\nстряпати — баритися, полагоджувати справу\n\nстуда, студ — сором\n\nстуден(ь)ство — холод\n\nстудень — холод\n\nстудный — огидний, безсоро\n\n### Result 4 (score: 0.4745)\n- **Work**: Микола Хвильовий. Слово повстання таємне... (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `726eed5a_c0000`\n- **Text**:\nСлово \"повстання\" таємне\n\nЧув я, як в тирсі давно\n\nВечір збентежений темний\n\nСкиглив повстання зерном.\n\nВ грудях моїх зростала\n\nХвиля бурхлива — живець,\n\nПодих скорботи невдалий\n\nЗдатний не був вже на герць.\n\nТакож схопив я повстання\n\nВ жвавих ланах громовиць,\n\nЧув я повстання в зітханні\n\nКволих байдужих телиць.\n\nЩось ще гойдається в думці —\n\nЩо? Небезпека, не варт?\n\nСолодко вмить перегнуться,\n\nЩастя підхопити вжарт.\n\nСлово \"повстання\" палюче,\n\nБлискавка грізна, зросло —\n\nБачиш, як певно, жагуче\n\n### Result 5 (score: 0.4717)\n- **Work**: Грінченко-Драгоманов — Діалоги про українську національну справу (1894)\n- **Author**: Грінченко Б.\n- **Genre/Period**: polemic / modern\n- **Chunk ID**: `5554668f_c0329`\n- **Text**:\nсвобідний — вільний\n\nсвобідно — вільно\n\nсвятощ — святиня\n\nсей — цей\n\nсектярський — сектантський\n\nсклонити — схилити\n\nскрайній — крайній\n\nслідити — стежити\n\nсотрудник — співробітник\n\nспасати — рятувати\n\nспасти — врятувати\n\nспеціальний — специфічний; особливий\n\nспеціально — специфічно; особливо\n\nспоритися — сперечатися\n\nспорщик — сперечальник\n\nстан — становище\n\nстановити — ставити, розташовувати\n\nстанути — стати\n\nсторона — країна\n\nсторонність — упередженість\n\nстремління — прагнення\n\nстрічка — рядо\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456190552_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Скляренко Віталій Григорович",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456190552_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Скляренко Віталій Григорович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%BA%D0%BB%D1%8F%D1%80%D0%B5%D0%BD%D0%BA%D0%BE_%D0%92%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87\n\nВіта́лій Григо́рович Скляре́нко (14 серпня 1937, с. Новомиколаївка Новоукраїнського району Кіровоградської області — 20 липня 2020, Київ) — український мовознавець, славіст. Доктор філологічних наук (1983). Професор (1992). Член-кореспондент (1992), академік (2003) НАН України. Заслужений діяч науки і техніки України (2003). Був директором Інституту мовознавства ім. О. О. Потебні НАН України (1996—2017), головним редактором журналу «Мовознавство» (2007—2019). Автор понад 170 наукових праць з історичної акцентології, етимології, історії української мови.\n\n\n== Життєпис ==\n1959 року закінчив Одеський університет ім. І. І. Мечникова, філологічний факультет. Працював учителем, директором середньої школи, інспектором шкіл на Миколаївщині та Кіровоградщині. У 1963—1966 рр. навчався в аспірантурі Інституту мовознавства НАН України. Після захисту кандидатської дисертації (1967) став працівником відділу загального та слов'янського мовознавства, долучився до укладання «Етимологічного словника української мови».\n\nЗгодом працював заступником директора (1987—1996) і директором (1996—2017) Інституту, академіком-секретарем Відділення літератури, мови та мистецтвознавства НАН України (2004—2008), радником Президії НАН України (2009—2019), відповідальним редактором журналу «Мовознавство» (2007—2019).\nПомер на 83-му році життя 20 липня 2020 року. Похований разом з дружиною на Байковому кладовищі (ділянка № 33, 50°25′3.48″ пн. ш. 30°30′7.34″ сх. д.).\n\n\n== Науковий доробок ==\nПершим у слов'янському мовознавстві розпочав системно досліджувати історію акцентуації кожної частини мови від праслов'янського періоду до нашого часу. На багатому матеріалі зі східнослов'янських акцентованих пам'яток і сучасних говорів вичерпно дослідив основні історичні закономірності наголошування іменників і дієслів. Становлення українського наголосу простежив як наслідок еволюції праслов'янської, давньоруської та староукраїнської акцентних систем. Особливу увагу приділив тим специфічним рисам і тенденціям, які прояснюють складні випадки наголошування в сучасній мові.\nВивчення природи балто-слов'янських і праслов'янських інтонацій, зібраний і опрацьований величезний фактичний матеріал східнослов'янських і південнослов'янських мов дали змогу В. Г. Скляренкові реконструювати праслов'янську акцентну систему, по-новому пояснити цілу низку акцентологічних явищ і процесів праслов'янської мови. Цим він заклав підвалини для створення в майбутньому історичних акцентологій слов'янських мов.\nСпівавтор і співредактор семитомного «Етимологічного словника української мови» — унікального лексикографічного видання, до якого він написав близько 2000 статей. Досліджував «темні місця» в «Слові о полку Ігоревім», переважну більшість яких прочитав і осмислив по-новому. Запропонував нову концепцію походження назв Русь і варяги. Його етимології відзначаються широтою залученого матеріалу й переконливістю аргументів.\n\n\n== Публікації ==\n\n\n=== Монографії ===\nІсторія акцентуації іменників а-основ української мови. — К.: Наук. думка, 1969. — 146 с.\nІсторія акцентуації іменників середнього роду української мови. — К.: Наук. думка, 1979. — 109 с.\nІсторія української мови: Фонетика. — К.: Наук. думка, 1979. — 367 с. (автор розділу «Праслов'янські інтонації та їх відбиття в українській мові»).\nНариси з історичної акцентології української мови. — К.: Наук. думка, 1983. — 239 с.\nИсторическая типология славянских языков. — К.: Наук. думка, 1986. — 239 с. (автор розділу «Просодия»).\nПраслов'янська акцентологія. — К.: Укр. книга,1998. — 342 с.\n«Темні місця» в «Слові о полку Ігоревім». — К.: Довіра, 2003. — 147 с.\nІсторія українського наголосу: Іменник. — К.: Наук. думка, 2006. — 708 с.\nРусь і варяги: Історико-етимологічне дослідження. — К.: Довіра, 2006. — 119 с.\nІсторія українського наголосу. Дієслово. — К.: Наук. думка, 2017. — 660 с.\nДослідження з етимології та історичної лексикології української мови. — К.: Наук. думка, 2018. — 685 с.\n\n\n=== Статті в журналі «Мовознавство» ===\nПоходження рухомості наголосу в іменниках типу «Книжка» // Мовознавство. — 1968. — № 4. — С. 58–61.\nДо питання про новоакутову інтонацію [праслов'янської мови] // Мовознавство. — 1971. — № 1. — С. 49–56.\nЗ історії акцентуації іменників середнього роду О-основ (Іменники з кореневим наголосом) // Мовознавство. — 1972. — № 5. — С. 62–69.\nЗ історії акцентуації абстрактних іменників [іменники на-ння, ття] // Мовознавство. — 1973. — № 4. — С. 34–41.\nАкцентологічна проблематика форми родового відмінка множини іменників // Мовознавство. — 1975. — № 6. — С. 33–41.\nЗ історії акцентуації іменників середнього роду о-основ. (Іменники з флективним наголосом) // Мовознавство. — 1977. — № 3. — С. 48–49.\nІсторія акцентуації іменників основ української мови // Мовознавство. — 1978. — № 2. — С. 14–22.\nІсторія акцентуації іменників t-основ української мови // Мовознавство. — 1979. — № 5. — С. 38–45.\nЗ історії акцентуації неозначеної форми дієслів української мови // Мовознавство. — 1988. — № 2. — С. 38–44.\nЗ історії акцентуації дієприслівників української мови // Мовознавство. — 1991. — № 5. — С. 14–19.\nЕтимологічні розвідки. 3 // Мовознавство. — 1994. — № 6 — С. 12–18.\nЕтимологічні розвідки. 5 // Мовознавство. — 1996. — № 6. — С. 12–18.\nЕтимологічні розвідки. 6 // Мовознавство. — 1997. — № 4/5. — C. 11–16.\nПоходження назви Русь. 1 // Мовознавство. — 2003. — № 5. — С. 3–13.\nПоходження назви Русь. 2 // Мовознавство. — 2004. — № 2/3. — С. 3–19.\nПоходження назви Русь. 3 // Мовознавство. — 2004. — № 5/6. — С. 3–11.\nПоходження назви варяги // Мовознавство. — 2006. — № 1. — С. 8–16.\nПоходження назви Україна // Мовознавство. — 2006. — № 5. — С. 15–33.\nЕтимологічні розвідки. 7. Невіста // Мовознавство. — 2007. — № 3. — С. 3–11.\n«Темні місця» в «Слові о полку Ігоревім». 11 // Мовознавство. — 2008. — № 2/3. — С. 3–12.\nЕтимологічні розвідки. 8 // Мовознавство. — 2009. — № 1. — С. 3–13.\n«Темні місця» в «Слові о полку Ігоревім». 12 // Мовознавство. — 2009. — № 3/4. — С. 43–53.\nЕтимологічні розвідки. 9 // Мовознавство. — 2010. — № 1. — С. 3–13.\n«Темні місця» в «Слові о полку Ігоревім». 13 // Мовознавство. — 2010. — № 2/3. — С. 30–40.\nЕтимологічні розвідки. 10. Невід // Мовознавство. — 2010. — № 4/5. — С. 14–21.\nПоходження назви Русь. 6 // Мовознавство. — 2011. — № 3. — С. 16–25.\nЕтимологічні розвідки. 11 // Мовознавство. — 2011. — № 5. — С. 3–10.\n«Темні місця» в «Слові о полку Ігоревім». 14 // Мовознавство. — 2012. — № 1. — С. 3–12.\nДо питання про «Руські письмена» в житті Костянтина Філософа // Мовознавство. — 2014. — № 2. — С. 3–14.\nДо питання про «руські письмена» в житії Костянтина Філософа. 2 // Мовознаство. — 2016. — С. 3–21.\nДо питання про «руські письмена» в житії Костянтина Філософа. 3 // Мовознавство. — 2017. — № 2. — С. 3–16.\n«Темні місця» в «Слові о полку Ігоревім». 15. // Мовознавство. — К., 2018. — № 5. — С. 3–9.\nСловотвірна реконструкція праслов'янської лексики (безсуфіксних дієслів). 1. // Мовознавство. — К., 2019. — № 6. — С. 3–21.\nСловотвірна реконструкція праслов'янської лексики (безсуфіксних дієслів). 2. // Мовознавство. — К., 2020. — № 2. — С. 3–26.\n\n\n=== Статті в інших виданнях ===\nАкцентологічні коментарі до відмінювання іменників чоловічого роду // Праці Одеського державного університету ім. І. І. Мечникова. — Одеса, 1960. — Т. 150. — Вип. 6. — С. 63–69.\nНаголошування іменників першої відміни // Українська мова та література в школі. — 1966. — № 5. — С. 22–25.\nПрасербська двоскладова інтонація // Структура і розвиток слов'янських мов. — К., 1967. — С. 45–55.\nК вопросу о происхождении славянской окситонированной акцентной парадигмы // Советское славяноведение. — 1988. — № 1. — С. 61–68.\nАвторські наголоси у творах Т. Г. Шевченка // Культура слова. — К.: Наук. думка, 1989. — Вип. 37. — С. 22–25.\n«Слово о полкý….» чи «Слово о пóлку…» // Культура слова. — К.: Наук. думка, 1990. — Вип. 38. — С. 74–76.\nЗвідки походить назва Україна // Україна. — 1991. — № 1. — С. 20–39.\nУкраїна: походження назви // Вісник МАУ. — 1991. — № 1. — С. 66–72.\nК истории славянской подвижной акцентной парадигмы // Вопросы языкознания. — 1991. — № 6. — С. 64–77.\nСлова з двома наголосами в поетичних творах Лесі Українки // Культура слова. — 1991. — Вип. 40. — С. 32–35.\nУ нашім раї на землі // Культура слова. — 1996. — Вип. 48/49. — С. 100—103.\nПрилетіла ластівка голубою ласкою… (про походження слів ластівка і ласка) // Культура слова. — 1997. — Вип. 50. — С. 56-61.\nЩоб наш коровай ясен був // Культура слова. — 2000. — Вип. 53/54. — С. 109—114.\nБог і багатство, або Щастя давніх слов'ян // Культура слова. — 2004. — Вип. 64. — С. 72-74.\nПоходження етноніма «русини» // Життя у слові: Збірник наукових праць на пошану акад. В. М. Русанівського. — К.: Вид. дім Д. Бураго, 2011. — С. 96–104.\nПоходження слова суд «judicium» // Академік Олександр Савич Мельничук і сучасне мовознавство. — К.: Вид. дім Д. Бураго, 2012. — С. 9–16.\n\n\n== Відзнаки, нагороди ==\nПремія НАН України ім. О. О. Потебні (2001).\nЗвання «Заслужений діяч науки і техніки України» (2003).\nОрден князя Ярослава Мудрого V ступеня (2007).\nВідзнака НАН України «За наукові досягнення» (2007).\n\n\n== Примітки ==\n\n\n== Література ==\nЛукінова Т. Б. Скляренко Віталій Григорович // Українська мова : енциклопедія / НАН України, Інститут мовознавства ім. О. О. Потебні, Інститут української мови; редкол.: В. М. Русанівський  (співголова), О. О. Тараненко (співголова), М. П. Зяблюк та  ін. — 2-ге вид., випр. і доп. — К. : Вид-во «Укр. енцикл.» ім. М. П. Бажана, 2004. — 824 с. : іл. — ISBN 966-7492-19-2. — С. 605—606.\nСкляренко Віталій Григорович // Вісник НАН України. — 2007. — № 8.\nЛукінова Т. Б., Гальчук І. Ю. Він цілий світ відкрив у слові (до 75-річчя академіка НАН України Віталія Григоровича Скляренка) // Вісник НАН України, — 2012. — № 10. — С. 78—83.\nСкляренко Віталій Григорович // Видатні особистості з українського мовознавства. Хрестоматія / за заг. ред. Марини Навальної; укл.: Тетяна Левченко, Тетяна Чубань. — Переяслав-Хмельницький: «Видавництво КСВ», 2016. — С. 141—144. — ISBN 978-966-8906-57-2.\nСкляренко Віталій Григорович // Лукінова Т. Б. Нариси з історії славістики в Україні. — К.: Наук. думка, 2018. — С. 692—721.\n\n\n== У мережі ==\nПрофіль В. Г. Скляренка на сайті Інституту мовознавства ім. О. О. Потебні НАН України\nБібліометричний профіль В. Г. Скляренка в Google-Академія\nВіталій Скляренко / Чтиво"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:43:13.339Z",
+          "resultDisplay": "# Скляренко Віталій Григорович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%BA%D0%BB%D1%8F%D1%80%D0%B5%D0%BD%D0%BA%D0%BE_%D0%92%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87\n\nВіта́лій Григо́рович Скляре́нко (14 серпня 1937, с. Новомиколаївка Новоукраїнського району Кіровоградської області — 20 липня 2020, Київ) — український мовознавець, славіст. Доктор філологічних наук (1983). Професор (1992). Член-кореспондент (1992), академік (2003) НАН України. Заслужений діяч науки і техніки України (2003). Був директором Інституту мовознавства ім. О. О. Потебні НАН України (1996—2017), головним редактором журналу «Мовознавство» (2007—2019). Автор понад 170 наукових праць з історичної акцентології, етимології, історії української мови.\n\n\n== Життєпис ==\n1959 року закінчив Одеський університет ім. І. І. Мечникова, філологічний факультет. Працював учителем, директором середньої школи, інспектором шкіл на Миколаївщині та Кіровоградщині. У 1963—1966 рр. навчався в аспірантурі Інституту мовознавства НАН України. Після захисту кандидатської дисертації (1967) став працівником відділу загального та слов'янського мовознавства, долучився до укладання «Етимологічного словника української мови».\n\nЗгодом працював заступником директора (1987—1996) і директором (1996—2017) Інституту, академіком-секретарем Відділення літератури, мови та мистецтвознавства НАН України (2004—2008), радником Президії НАН України (2009—2019), відповідальним редактором журналу «Мовознавство» (2007—2019).\nПомер на 83-му році життя 20 липня 2020 року. Похований разом з дружиною на Байковому кладовищі (ділянка № 33, 50°25′3.48″ пн. ш. 30°30′7.34″ сх. д.).\n\n\n== Науковий доробок ==\nПершим у слов'янському мовознавстві розпочав системно досліджувати історію акцентуації кожної частини мови від праслов'янського періоду до нашого часу. На багатому матеріалі зі східнослов'янських акцентованих пам'яток і сучасних говорів вичерпно дослідив основні історичні закономірності наголошування іменників і дієслів. Становлення українського наголосу простежив як наслідок еволюції праслов'янської, давньоруської та староукраїнської акцентних систем. Особливу увагу приділив тим специфічним рисам і тенденціям, які прояснюють складні випадки наголошування в сучасній мові.\nВивчення природи балто-слов'янських і праслов'янських інтонацій, зібраний і опрацьований величезний фактичний матеріал східнослов'янських і південнослов'янських мов дали змогу В. Г. Скляренкові реконструювати праслов'янську акцентну систему, по-новому пояснити цілу низку акцентологічних явищ і процесів праслов'янської мови. Цим він заклав підвалини для створення в майбутньому історичних акцентологій слов'янських мов.\nСпівавтор і співредактор семитомного «Етимологічного словника української мови» — унікального лексикографічного видання, до якого він написав близько 2000 статей. Досліджував «темні місця» в «Слові о полку Ігоревім», переважну більшість яких прочитав і осмислив по-новому. Запропонував нову концепцію походження назв Русь і варяги. Його етимології відзначаються широтою залученого матеріалу й переконливістю аргументів.\n\n\n== Публікації ==\n\n\n=== Монографії ===\nІсторія акцентуації іменників а-основ української мови. — К.: Наук. думка, 1969. — 146 с.\nІсторія акцентуації іменників середнього роду української мови. — К.: Наук. думка, 1979. — 109 с.\nІсторія української мови: Фонетика. — К.: Наук. думка, 1979. — 367 с. (автор розділу «Праслов'янські інтонації та їх відбиття в українській мові»).\nНариси з історичної акцентології української мови. — К.: Наук. думка, 1983. — 239 с.\nИсторическая типология славянских языков. — К.: Наук. думка, 1986. — 239 с. (автор розділу «Просодия»).\nПраслов'янська акцентологія. — К.: Укр. книга,1998. — 342 с.\n«Темні місця» в «Слові о полку Ігоревім». — К.: Довіра, 2003. — 147 с.\nІсторія українського наголосу: Іменник. — К.: Наук. думка, 2006. — 708 с.\nРусь і варяги: Історико-етимологічне дослідження. — К.: Довіра, 2006. — 119 с.\nІсторія українського наголосу. Дієслово. — К.: Наук. думка, 2017. — 660 с.\nДослідження з етимології та історичної лексикології української мови. — К.: Наук. думка, 2018. — 685 с.\n\n\n=== Статті в журналі «Мовознавство» ===\nПоходження рухомості наголосу в іменниках типу «Книжка» // Мовознавство. — 1968. — № 4. — С. 58–61.\nДо питання про новоакутову інтонацію [праслов'янської мови] // Мовознавство. — 1971. — № 1. — С. 49–56.\nЗ історії акцентуації іменників середнього роду О-основ (Іменники з кореневим наголосом) // Мовознавство. — 1972. — № 5. — С. 62–69.\nЗ історії акцентуації абстрактних іменників [іменники на-ння, ття] // Мовознавство. — 1973. — № 4. — С. 34–41.\nАкцентологічна проблематика форми родового відмінка множини іменників // Мовознавство. — 1975. — № 6. — С. 33–41.\nЗ історії акцентуації іменників середнього роду о-основ. (Іменники з флективним наголосом) // Мовознавство. — 1977. — № 3. — С. 48–49.\nІсторія акцентуації іменників основ української мови // Мовознавство. — 1978. — № 2. — С. 14–22.\nІсторія акцентуації іменників t-основ української мови // Мовознавство. — 1979. — № 5. — С. 38–45.\nЗ історії акцентуації неозначеної форми дієслів української мови // Мовознавство. — 1988. — № 2. — С. 38–44.\nЗ історії акцентуації дієприслівників української мови // Мовознавство. — 1991. — № 5. — С. 14–19.\nЕтимологічні розвідки. 3 // Мовознавство. — 1994. — № 6 — С. 12–18.\nЕтимологічні розвідки. 5 // Мовознавство. — 1996. — № 6. — С. 12–18.\nЕтимологічні розвідки. 6 // Мовознавство. — 1997. — № 4/5. — C. 11–16.\nПоходження назви Русь. 1 // Мовознавство. — 2003. — № 5. — С. 3–13.\nПоходження назви Русь. 2 // Мовознавство. — 2004. — № 2/3. — С. 3–19.\nПоходження назви Русь. 3 // Мовознавство. — 2004. — № 5/6. — С. 3–11.\nПоходження назви варяги // Мовознавство. — 2006. — № 1. — С. 8–16.\nПоходження назви Україна // Мовознавство. — 2006. — № 5. — С. 15–33.\nЕтимологічні розвідки. 7. Невіста // Мовознавство. — 2007. — № 3. — С. 3–11.\n«Темні місця» в «Слові о полку Ігоревім». 11 // Мовознавство. — 2008. — № 2/3. — С. 3–12.\nЕтимологічні розвідки. 8 // Мовознавство. — 2009. — № 1. — С. 3–13.\n«Темні місця» в «Слові о полку Ігоревім». 12 // Мовознавство. — 2009. — № 3/4. — С. 43–53.\nЕтимологічні розвідки. 9 // Мовознавство. — 2010. — № 1. — С. 3–13.\n«Темні місця» в «Слові о полку Ігоревім». 13 // Мовознавство. — 2010. — № 2/3. — С. 30–40.\nЕтимологічні розвідки. 10. Невід // Мовознавство. — 2010. — № 4/5. — С. 14–21.\nПоходження назви Русь. 6 // Мовознавство. — 2011. — № 3. — С. 16–25.\nЕтимологічні розвідки. 11 // Мовознавство. — 2011. — № 5. — С. 3–10.\n«Темні місця» в «Слові о полку Ігоревім». 14 // Мовознавство. — 2012. — № 1. — С. 3–12.\nДо питання про «Руські письмена» в житті Костянтина Філософа // Мовознавство. — 2014. — № 2. — С. 3–14.\nДо питання про «руські письмена» в житії Костянтина Філософа. 2 // Мовознаство. — 2016. — С. 3–21.\nДо питання про «руські письмена» в житії Костянтина Філософа. 3 // Мовознавство. — 2017. — № 2. — С. 3–16.\n«Темні місця» в «Слові о полку Ігоревім». 15. // Мовознавство. — К., 2018. — № 5. — С. 3–9.\nСловотвірна реконструкція праслов'янської лексики (безсуфіксних дієслів). 1. // Мовознавство. — К., 2019. — № 6. — С. 3–21.\nСловотвірна реконструкція праслов'янської лексики (безсуфіксних дієслів). 2. // Мовознавство. — К., 2020. — № 2. — С. 3–26.\n\n\n=== Статті в інших виданнях ===\nАкцентологічні коментарі до відмінювання іменників чоловічого роду // Праці Одеського державного університету ім. І. І. Мечникова. — Одеса, 1960. — Т. 150. — Вип. 6. — С. 63–69.\nНаголошування іменників першої відміни // Українська мова та література в школі. — 1966. — № 5. — С. 22–25.\nПрасербська двоскладова інтонація // Структура і розвиток слов'янських мов. — К., 1967. — С. 45–55.\nК вопросу о происхождении славянской окситонированной акцентной парадигмы // Советское славяноведение. — 1988. — № 1. — С. 61–68.\nАвторські наголоси у творах Т. Г. Шевченка // Культура слова. — К.: Наук. думка, 1989. — Вип. 37. — С. 22–25.\n«Слово о полкý….» чи «Слово о пóлку…» // Культура слова. — К.: Наук. думка, 1990. — Вип. 38. — С. 74–76.\nЗвідки походить назва Україна // Україна. — 1991. — № 1. — С. 20–39.\nУкраїна: походження назви // Вісник МАУ. — 1991. — № 1. — С. 66–72.\nК истории славянской подвижной акцентной парадигмы // Вопросы языкознания. — 1991. — № 6. — С. 64–77.\nСлова з двома наголосами в поетичних творах Лесі Українки // Культура слова. — 1991. — Вип. 40. — С. 32–35.\nУ нашім раї на землі // Культура слова. — 1996. — Вип. 48/49. — С. 100—103.\nПрилетіла ластівка голубою ласкою… (про походження слів ластівка і ласка) // Культура слова. — 1997. — Вип. 50. — С. 56-61.\nЩоб наш коровай ясен був // Культура слова. — 2000. — Вип. 53/54. — С. 109—114.\nБог і багатство, або Щастя давніх слов'ян // Культура слова. — 2004. — Вип. 64. — С. 72-74.\nПоходження етноніма «русини» // Життя у слові: Збірник наукових праць на пошану акад. В. М. Русанівського. — К.: Вид. дім Д. Бураго, 2011. — С. 96–104.\nПоходження слова суд «judicium» // Академік Олександр Савич Мельничук і сучасне мовознавство. — К.: Вид. дім Д. Бураго, 2012. — С. 9–16.\n\n\n== Відзнаки, нагороди ==\nПремія НАН України ім. О. О. Потебні (2001).\nЗвання «Заслужений діяч науки і техніки України» (2003).\nОрден князя Ярослава Мудрого V ступеня (2007).\nВідзнака НАН України «За наукові досягнення» (2007).\n\n\n== Примітки ==\n\n\n== Література ==\nЛукінова Т. Б. Скляренко Віталій Григорович // Українська мова : енциклопедія / НАН України, Інститут мовознавства ім. О. О. Потебні, Інститут української мови; редкол.: В. М. Русанівський  (співголова), О. О. Тараненко (співголова), М. П. Зяблюк та  ін. — 2-ге вид., випр. і доп. — К. : Вид-во «Укр. енцикл.» ім. М. П. Бажана, 2004. — 824 с. : іл. — ISBN 966-7492-19-2. — С. 605—606.\nСкляренко Віталій Григорович // Вісник НАН України. — 2007. — № 8.\nЛукінова Т. Б., Гальчук І. Ю. Він цілий світ відкрив у слові (до 75-річчя академіка НАН України Віталія Григоровича Скляренка) // Вісник НАН України, — 2012. — № 10. — С. 78—83.\nСкляренко Віталій Григорович // Видатні особистості з українського мовознавства. Хрестоматія / за заг. ред. Марини Навальної; укл.: Тетяна Левченко, Тетяна Чубань. — Переяслав-Хмельницький: «Видавництво КСВ», 2016. — С. 141—144. — ISBN 978-966-8906-57-2.\nСкляренко Віталій Григорович // Лукінова Т. Б. Нариси з історії славістики в Україні. — К.: Наук. думка, 2018. — С. 692—721.\n\n\n== У мережі ==\nПрофіль В. Г. Скляренка на сайті Інституту мовознавства ім. О. О. Потебні НАН України\nБібліометричний профіль В. Г. Скляренка в Google-Академія\nВіталій Скляренко / Чтиво",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773456190607_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Гапакс"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456190607_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Гапакс\n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D0%B0%D0%BF%D0%B0%D0%BA%D1%81\n\nГа́пакс, гапакс лего́менон (від грец. ἅπαξ λεγόμενον — «щось згадане один раз», латинська транслітерація hapax legomenon) — термін, уживаний у корпусній лінгвістиці щодо слів, які зустрічаються лише один раз як у письмовій пам'ятці, так і в працях якогось автора або в окремо взятому тексті. Іноді його уживають неправильно щодо слова, яке зустрічається кілька разів у тексті тільки одного автора. Щодо таких випадків доречніші інші терміни: «дис логоменон» (δις λεγόμενον, dis legomenon) — якщо слово зустрічається у тексті двічі; «трис легоменон» (τρις λεγόμενον, tris legomenon) — щодо слова, згаданого тричі, і «тетракіс легоменон» (τετράκις λεγόμενον, tetrakis legomenon) — якщо слово згадане чотири рази. Втім, ці терміни досить рідкісні.\n\n\n== Значення ==\nГапакси у стародавніх текстах нелегко піддаються дешифруванню. Якщо слово зустрічається кілька разів у різних контекстах, це дає змогу досить точно визначити його семантику, чого не можна сказати про слово, згадане тільки раз, до того ж іноді без жодного контексту (наприклад, у переліку). Так, багато нерозшифрованих знаків майя є гапаксами, біблійні (зокрема, гебрейські) гапакси зумовлюють труднощі перекладу текстів.\nДеякі науковці вважають гапакси корисними для визначення авторства творів. Так, П. Н. Геррісон (P. N. Harrison) своєю працею «Проблема Пастирських послань» (The Problem of the Pastoral Epistles), написаною у 1921 році, впровадив цей метод у біблійні дослідження. Він показав, що у трьох Пастирських посланнях апостола Павла (Перше та Друге до Тимофія, та Послання до Тита) зустрічається набагато більше гапаксів, ніж в інших його посланнях. Він стверджував, що кількість гапаксів в анонімному або спірному творі вказує на реєстр слів того чи іншого автора, допомагаючи встановити авторство.\n\n\n== Приклади ==\n\n\n=== Арабська мова ===\nВласні імена: «Ірам» (Коран 89:7), «Бабіл» («Вавилон» — Коран 2:102), «Бакка» або «Баккат» («Бакка» — Коран 3:96), «Джибт» (Коран 4:51), «Рамад'ан» («Рамадан» — Коран 2:185), «ар-Рум» («Стародавній Рим» — Коран 30:2), «Таснім» (Коран 83:27), «Курейш» («Курейш» — Коран 106:1), «Маджус» («Маги» — Коран 22:17), «Марут» («Гарут і Марут» — Коран 2:102), «Макка» або «Маккат» («Мекка» — Коран 48:24), «Наср» (Коран 71:23), «Ду ан-Нун» (Коран 21:87), «Гарут» («Гарут і Марут» — Коран 2:102).\nزَنْجَبِيل («заньябіл») — «імбир» (Коран 76:17)\nОдин з епітетів Аллаха — الصَّمَد («ас-самад» — «Один Моленний», «Один Благанний») також є гапаксом Корану\n\n\n=== Англійська мова ===\nFlother («сніжинка») — знайдене у рукопису, датованому близько 1275 р.\nHonorificabilitudinitatibus — знайдене у творах Шекспіра\nNortelrye («виховання») — знайдене у творах Дж. Чосера\nSassigassity (можливе значення — «зухвалість») — згадане в оповіданні Ч. Дікенса «Різдвяна ялинка» (A Christmas Tree)\nSlæpwerigne (значення дискусійне: «сильно втомлений, сонний» чи «втомлений сном») — знайдене у давньоанглійському корпусі «Книга Ексетера» (the Exeter Book)\n\n\n=== Грецька мова ===\nГрецький оригінал «Нового Заповіту» містить 686 гапаксів, які іноді зовуть «новозаповітними». 62 з них зустрічаються у «Першому посланні Петра» і 54 — у «Другому посланні Петра»\nЗгідно з Клайдом Фарром, «Іліада» містить 1097 гапаксів, у той час як «Одіссея» — 868.\nΠαναώριος («дочасний», «передчасний») — приклад гапакса «Іліади» (24:540)\n\n\n=== Італійська мова ===\nRamogna — зустрічається у «Божественній комедії» Данте (Чистилище XI, 25)\nTrasumanar — інший гапакс «Божественної комедії» (Рай I, 70). Перекладають його як «що проходить поза людиною, по той бік людини».\nUltrafilosofia («поза філософією», «по той бік філософії») — зустрічається у «Міркуваннях» («Zibaldone») Джакомо Леопарді (Zibaldone 114—115 — 7 червня 1820 р.)\n\n\n=== Латинська мова ===\nDeproeliantis — дієприкметник дієслова deproelior («запекло б'юся», «яро борюся»). Зустрічається в одинадцятому рядку «Оди 1.9.» Горація\nMactatu — форма відкладного відмінка однини слова mactatus («пожертвований», «нагороджений», «вбитий»). Зустрічається у поемі «Про природу речей» (De rerum natura) Лукреція\nMnemosynus (можливо — «подарунок на пам'ять» чи «пам'ятна записка, нагадка») — зустрічається у 3 рядку 12-ї поеми Катулла\nRhos («Русь») — зустрічається у «Бертинських аналах»\nScortillum («повійка, маленька повія») — зустрічається у 3 рядку 10-ї поеми Катулла\nTerricrepo — прикметник, який, певно, стосується якогось прийому ораторського мистецтва. Зустрічається у 8 книзі «Сповіді» Августина.\n\n\n=== Старослов'янська і давньоруська мови ===\nДвд҃ва есть сколота («Давидова сколота», ймовірно, заколот, змова) — зустрічається тільки в «Повісті временних літ».\nОрътъма («вид дорогого одягу») — зустрічається тільки в «Слові о полку Ігоревім».\nХаралужный — зустрічається тільки у «Слові о полку Ігоревім». Значення його точно не ясне.\n\n\n=== Українська мова ===\n\n\n== У культурі ==\nАмериканський режисер-авангардист Голліс Фремптон у 1971—1972 роках створив серію фільмів, присвячених цій темі.\nСлово отримало популярність у засобах масової інформації у 2015 році — після того як учасник британської телевікторини University Challenge Тед Лавдей ужив його у своїй відповіді на питання (правда, вимовивши його не зовсім правильно).\nКанал Vsauce на YouTube завантажив у вересні 2015 року відеоматеріал про закон Ципфа, де ведучий побіжно згадує слово «quizzaciously» — приклад гапаксу в англійській мові. Google у результатах пошуку дає єдиний приклад його уживання в Інтернеті. Незабаром це слово стало розділом сайту reddit, мемом, і навіть назвою пісні.\n\n\n== Див. також ==\nОказіоналізм (філологія)\nКовані слова\n\n\n== Примітки ==\n\n\n== Джерела ==\nIs that a Hapax Legomenon? [Архівовано 5 вересня 2015 у Wayback Machine.] (англ.)\n\n\n== Посилання ==\nГапакс легоменон // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 1 : А — Л. — С. 212."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:43:13.339Z",
+          "resultDisplay": "# Гапакс\n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D0%B0%D0%BF%D0%B0%D0%BA%D1%81\n\nГа́пакс, гапакс лего́менон (від грец. ἅπαξ λεγόμενον — «щось згадане один раз», латинська транслітерація hapax legomenon) — термін, уживаний у корпусній лінгвістиці щодо слів, які зустрічаються лише один раз як у письмовій пам'ятці, так і в працях якогось автора або в окремо взятому тексті. Іноді його уживають неправильно щодо слова, яке зустрічається кілька разів у тексті тільки одного автора. Щодо таких випадків доречніші інші терміни: «дис логоменон» (δις λεγόμενον, dis legomenon) — якщо слово зустрічається у тексті двічі; «трис легоменон» (τρις λεγόμενον, tris legomenon) — щодо слова, згаданого тричі, і «тетракіс легоменон» (τετράκις λεγόμενον, tetrakis legomenon) — якщо слово згадане чотири рази. Втім, ці терміни досить рідкісні.\n\n\n== Значення ==\nГапакси у стародавніх текстах нелегко піддаються дешифруванню. Якщо слово зустрічається кілька разів у різних контекстах, це дає змогу досить точно визначити його семантику, чого не можна сказати про слово, згадане тільки раз, до того ж іноді без жодного контексту (наприклад, у переліку). Так, багато нерозшифрованих знаків майя є гапаксами, біблійні (зокрема, гебрейські) гапакси зумовлюють труднощі перекладу текстів.\nДеякі науковці вважають гапакси корисними для визначення авторства творів. Так, П. Н. Геррісон (P. N. Harrison) своєю працею «Проблема Пастирських послань» (The Problem of the Pastoral Epistles), написаною у 1921 році, впровадив цей метод у біблійні дослідження. Він показав, що у трьох Пастирських посланнях апостола Павла (Перше та Друге до Тимофія, та Послання до Тита) зустрічається набагато більше гапаксів, ніж в інших його посланнях. Він стверджував, що кількість гапаксів в анонімному або спірному творі вказує на реєстр слів того чи іншого автора, допомагаючи встановити авторство.\n\n\n== Приклади ==\n\n\n=== Арабська мова ===\nВласні імена: «Ірам» (Коран 89:7), «Бабіл» («Вавилон» — Коран 2:102), «Бакка» або «Баккат» («Бакка» — Коран 3:96), «Джибт» (Коран 4:51), «Рамад'ан» («Рамадан» — Коран 2:185), «ар-Рум» («Стародавній Рим» — Коран 30:2), «Таснім» (Коран 83:27), «Курейш» («Курейш» — Коран 106:1), «Маджус» («Маги» — Коран 22:17), «Марут» («Гарут і Марут» — Коран 2:102), «Макка» або «Маккат» («Мекка» — Коран 48:24), «Наср» (Коран 71:23), «Ду ан-Нун» (Коран 21:87), «Гарут» («Гарут і Марут» — Коран 2:102).\nزَنْجَبِيل («заньябіл») — «імбир» (Коран 76:17)\nОдин з епітетів Аллаха — الصَّمَد («ас-самад» — «Один Моленний», «Один Благанний») також є гапаксом Корану\n\n\n=== Англійська мова ===\nFlother («сніжинка») — знайдене у рукопису, датованому близько 1275 р.\nHonorificabilitudinitatibus — знайдене у творах Шекспіра\nNortelrye («виховання») — знайдене у творах Дж. Чосера\nSassigassity (можливе значення — «зухвалість») — згадане в оповіданні Ч. Дікенса «Різдвяна ялинка» (A Christmas Tree)\nSlæpwerigne (значення дискусійне: «сильно втомлений, сонний» чи «втомлений сном») — знайдене у давньоанглійському корпусі «Книга Ексетера» (the Exeter Book)\n\n\n=== Грецька мова ===\nГрецький оригінал «Нового Заповіту» містить 686 гапаксів, які іноді зовуть «новозаповітними». 62 з них зустрічаються у «Першому посланні Петра» і 54 — у «Другому посланні Петра»\nЗгідно з Клайдом Фарром, «Іліада» містить 1097 гапаксів, у той час як «Одіссея» — 868.\nΠαναώριος («дочасний», «передчасний») — приклад гапакса «Іліади» (24:540)\n\n\n=== Італійська мова ===\nRamogna — зустрічається у «Божественній комедії» Данте (Чистилище XI, 25)\nTrasumanar — інший гапакс «Божественної комедії» (Рай I, 70). Перекладають його як «що проходить поза людиною, по той бік людини».\nUltrafilosofia («поза філософією», «по той бік філософії») — зустрічається у «Міркуваннях» («Zibaldone») Джакомо Леопарді (Zibaldone 114—115 — 7 червня 1820 р.)\n\n\n=== Латинська мова ===\nDeproeliantis — дієприкметник дієслова deproelior («запекло б'юся», «яро борюся»). Зустрічається в одинадцятому рядку «Оди 1.9.» Горація\nMactatu — форма відкладного відмінка однини слова mactatus («пожертвований», «нагороджений», «вбитий»). Зустрічається у поемі «Про природу речей» (De rerum natura) Лукреція\nMnemosynus (можливо — «подарунок на пам'ять» чи «пам'ятна записка, нагадка») — зустрічається у 3 рядку 12-ї поеми Катулла\nRhos («Русь») — зустрічається у «Бертинських аналах»\nScortillum («повійка, маленька повія») — зустрічається у 3 рядку 10-ї поеми Катулла\nTerricrepo — прикметник, який, певно, стосується якогось прийому ораторського мистецтва. Зустрічається у 8 книзі «Сповіді» Августина.\n\n\n=== Старослов'янська і давньоруська мови ===\nДвд҃ва есть сколота («Давидова сколота», ймовірно, заколот, змова) — зустрічається тільки в «Повісті временних літ».\nОрътъма («вид дорогого одягу») — зустрічається тільки в «Слові о полку Ігоревім».\nХаралужный — зустрічається тільки у «Слові о полку Ігоревім». Значення його точно не ясне.\n\n\n=== Українська мова ===\n\n\n== У культурі ==\nАмериканський режисер-авангардист Голліс Фремптон у 1971—1972 роках створив серію фільмів, присвячених цій темі.\nСлово отримало популярність у засобах масової інформації у 2015 році — після того як учасник британської телевікторини University Challenge Тед Лавдей ужив його у своїй відповіді на питання (правда, вимовивши його не зовсім правильно).\nКанал Vsauce на YouTube завантажив у вересні 2015 року відеоматеріал про закон Ципфа, де ведучий побіжно згадує слово «quizzaciously» — приклад гапаксу в англійській мові. Google у результатах пошуку дає єдиний приклад його уживання в Інтернеті. Незабаром це слово стало розділом сайту reddit, мемом, і навіть назвою пісні.\n\n\n== Див. також ==\nОказіоналізм (філологія)\nКовані слова\n\n\n== Примітки ==\n\n\n== Джерела ==\nIs that a Hapax Legomenon? [Архівовано 5 вересня 2015 у Wayback Machine.] (англ.)\n\n\n== Посилання ==\nГапакс легоменон // Літературознавча енциклопедія : у 2 т. / авт.-уклад. Ю. І. Ковалів. — Київ : ВЦ «Академія», 2007. —  Т. 1 : А — Л. — С. 212.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5bd19d5a-3e4a-40ae-bf9e-c5cb81e7d9d1",
+      "timestamp": "2026-03-14T02:43:21.938Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding with search",
+          "description": "I'm now formulating the search query, ready to gather relevant information for the next phase. I'm focusing on refining the query to pinpoint the exact data I need to progress. The results should set the stage for further analysis and action.",
+          "timestamp": "2026-03-14T02:43:20.327Z"
+        },
+        {
+          "subject": "Querying for details",
+          "description": "I'm currently engaged in a literary search to extract specific details. My current focus is to narrow the search parameters. I'm aiming to find precise information within the provided context, facilitating a deeper understanding. The next step hinges on the results.",
+          "timestamp": "2026-03-14T02:43:21.793Z"
+        }
+      ],
+      "tokens": {
+        "input": 40163,
+        "output": 31,
+        "cached": 28123,
+        "thoughts": 152,
+        "tool": 0,
+        "total": 40346
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773456201932_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"темні місця\" \"Слово о полку Ігоревім\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456201932_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"темні місця\" \"Слово о полку Ігоревім\"\"\n\n### Result 1 (score: 0.7097)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.5827)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0186`\n- **Text**:\nОлексій Коваленко. Слово о полку Ігоревім. \r\nДрукується за виданням: «Слово о полку Ігоревім. Поетичний переспів\r\nОлексія Коваленка», Дніпропетровське книжкове видавництво, 1960, 92 стор.\r\nВперше переспів опубліковано в альманасі «Вогні Придніпров’я», Дніпропетровське\r\nобласне газетно-журнальне вид-во, 1954, стор. 161 — 170. Для нашого видання\r\nперекладач вніс деякі поправки й зміни.\n\nПавло Тичина\n\nТоді\n\nпо Руській землі\n\nрідко ратай де погейкував,\n\nа найчастіше гайвороння крякало,\n\nтрупища помі\n\n### Result 3 (score: 0.5755)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 4 (score: 0.5743)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 5 (score: 0.5742)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1927`\n- **Text**:\nЛітература: Пыпин\r\nА. Очерк литературной истории старинных повестей и сказок русских. П. 1857; Пыпин\r\nА. Ложные и отреченные книги русской старины. П. 1862; Яковлев В.\r\nПамятники русской литературы XII и XIII веков. П. 1872; Яковлев В.\r\nДревне-киевские религиозные сказання. В. 1875; Огоновський О. Слово о\r\nполку Ігореві. Л. 1876; Веневитинов М. Хождение игумена Даниила в святую\r\nземлю. П. 1877; Потебня А. Слово о полку Игореве. Текст и примечания.\r\nВороніж 1878; Максимович М. История древней рус\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:43:22.116Z",
+          "resultDisplay": "Found 5 results for: \"\"темні місця\" \"Слово о полку Ігоревім\"\"\n\n### Result 1 (score: 0.7097)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.5827)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0186`\n- **Text**:\nОлексій Коваленко. Слово о полку Ігоревім. \r\nДрукується за виданням: «Слово о полку Ігоревім. Поетичний переспів\r\nОлексія Коваленка», Дніпропетровське книжкове видавництво, 1960, 92 стор.\r\nВперше переспів опубліковано в альманасі «Вогні Придніпров’я», Дніпропетровське\r\nобласне газетно-журнальне вид-во, 1954, стор. 161 — 170. Для нашого видання\r\nперекладач вніс деякі поправки й зміни.\n\nПавло Тичина\n\nТоді\n\nпо Руській землі\n\nрідко ратай де погейкував,\n\nа найчастіше гайвороння крякало,\n\nтрупища помі\n\n### Result 3 (score: 0.5755)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1526`\n- **Text**:\nЗ безконечної лїтератури Слова о полку \r\n Ігоревім піднесу тільки найважнійше. Огляди лїтератури Слова: Жданова \r\n Литература Слова о п. Иг. — К. 1880 (з Университетских ИзвЂстій), Барсова \r\n (див. низше), Владимірова — Слово о полку ИгоревЂ, К., 1894 і Древ. рус. \r\n литер. Розвідки — Вс. Миллеръ Взглядъ на Слово о полку ИгоревЂ, Москва, 1877 \r\n (погляд на Слово як на результат лїтературних впливів \r\n візантийсько-болгарських). Потебня — Слово о п. Иг., Воронїж, 1878 (звязки \r\n Слова з народньою\n\n### Result 4 (score: 0.5743)\n- **Work**: Слово о полку Ігоревім (поетичні переклади) (1187)\n- **Author**: Різні\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `73aa1f1a_c0267`\n- **Text**:\nБагатьма своїми аспектами\r\n«Слово о полку Ігоревім» залишається для сучасного читача \"полем\r\nнезнаємим\", рясніє \"темними\" місцями та \"білими\r\nплямами\". Можливо, окремі його таємниці так ніколи й не будуть розгадані,\r\nодначе завдяки спільним зусиллям і українських, і зарубіжних учених,\r\nписьменників, перекладачів, воно все більше наближається до нас, розкриває\r\nперед нами чарівний дивосвіт наших далеких предків, а своїм глибоким\r\nпатріотизмом, тонким ліризмом, високою поетичністю продовжує хвилюв\n\n### Result 5 (score: 0.5742)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1927`\n- **Text**:\nЛітература: Пыпин\r\nА. Очерк литературной истории старинных повестей и сказок русских. П. 1857; Пыпин\r\nА. Ложные и отреченные книги русской старины. П. 1862; Яковлев В.\r\nПамятники русской литературы XII и XIII веков. П. 1872; Яковлев В.\r\nДревне-киевские религиозные сказання. В. 1875; Огоновський О. Слово о\r\nполку Ігореві. Л. 1876; Веневитинов М. Хождение игумена Даниила в святую\r\nземлю. П. 1877; Потебня А. Слово о полку Игореве. Текст и примечания.\r\nВороніж 1878; Максимович М. История древней рус\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5d75e740-69b3-43a5-8c78-2dd03aa6ea53",
+      "timestamp": "2026-03-14T02:43:31.747Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Initiating output construction",
+          "description": "I'm now structuring my findings and integrating them with my pre-existing knowledge. The goal is to formulate a comprehensive response, leveraging the information I've gathered. My focus is on synthesizing the disparate pieces of information into a cohesive and coherent whole.",
+          "timestamp": "2026-03-14T02:43:28.295Z"
+        },
+        {
+          "subject": "Formulating the response",
+          "description": "I am now concentrating on producing a precise and contextually rich response. I'm focusing on incorporating the specific terminology and refining the overall structure to ensure clarity and relevance. I intend to deliver a well-organized answer that effectively addresses the prompt's core requirements.",
+          "timestamp": "2026-03-14T02:43:31.637Z"
+        }
+      ],
+      "tokens": {
+        "input": 41695,
+        "output": 19,
+        "cached": 35226,
+        "thoughts": 303,
+        "tool": 0,
+        "total": 42017
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456211745_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Стрильці",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456211745_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "No Wikipedia results for: 'Стрильці'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:43:31.975Z",
+          "resultDisplay": "No Wikipedia results for: 'Стрильці'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "0eec5ca8-7e52-4030-9d93-0620ee30a25d",
+      "timestamp": "2026-03-14T02:43:51.165Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning Broad Search",
+          "description": "I'm now focusing on the next step: obtaining the necessary information. It appears that a general search is required to find the base material.",
+          "timestamp": "2026-03-14T02:43:40.453Z"
+        },
+        {
+          "subject": "Investigating Term's Meaning",
+          "description": "I'm presently examining the term's possible interpretations. This involves exploring different related words and potential meanings within the given context. My aim is to narrow down the most fitting definition.",
+          "timestamp": "2026-03-14T02:43:46.287Z"
+        },
+        {
+          "subject": "Querying Literary Sources",
+          "description": "I'm now investigating \"стрѣльци\" within literary texts. My current objective is to verify its presence and context, to determine if it aligns with the prompt's focus.",
+          "timestamp": "2026-03-14T02:43:50.945Z"
+        }
+      ],
+      "tokens": {
+        "input": 41730,
+        "output": 20,
+        "cached": 34986,
+        "thoughts": 735,
+        "tool": 0,
+        "total": 42485
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773456231163_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"стрѣльци\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456231163_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"стрѣльци\"\"\n\n### Result 1 (score: 0.5083)\n- **Work**: Борис Грінченко. Князь Ігор (1863)\n- **Author**: Грінченко Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eab97d5c_c0000`\n- **Text**:\nI\n\n### Result 2 (score: 0.5064)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 3 (score: 0.4858)\n- **Work**: Патерик Києво-Печерський (1462)\n- **Author**: Невідомий\n- **Genre/Period**: religious / old_east_slavic\n- **Chunk ID**: `3b9d3966_c0344`\n- **Text**:\nПримітки.\n\n### Result 4 (score: 0.4852)\n- **Work**: Іван Багряний. Маруся Богуславка (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ab7ce682_c0022`\n- **Text**:\nОсобливо вражає екіпіровка. Всі солдати, як і командири, одягнені в нові довжелезні шинелі, в сталеві зелені шоломи з ременями під підборіддям, взуті в дебелі чоботи, обчепляні протигазами, флягами, набійницями, лопатками саперними... Сонце пече немилосердно, а колона ніби демонструє проти нього. Сіро-сталеві чотирикутники, складені ще з менших, сунуться ритмічно й глухо, ніби машина. Тригранні багнети рушниць, взятих \"на ремень\", миготять блискавками, вистрілюючи без звуку то вліво, то вправо р\n\n### Result 5 (score: 0.4833)\n- **Work**: Улас Самчук. Морозів хутір (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `191faa6b_c0114`\n- **Text**:\nТі солдати пройшли бульваром… По них стріляли, але вони не звертали на це уваги… Йшли та йшли… За ними помчали вершники… Щось, може, ескадрон. Це були гарні вершники на добрих конях… Справжні козаки. Вони випередили тих, що йшли пішки, і помчалися на Хрещатик. За піхотинцями йшло багато народу, і чим довше вони йшли, тим народу збільшувалось. Ми з Марусею не видержали також і побігли на бульвар… Ми приєдналися до людей, що йшли посередині бульвару… Йшли та йшли… Гетьманська варта тікала. Ми крич\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:43:51.387Z",
+          "resultDisplay": "Found 5 results for: \"\"стрѣльци\"\"\n\n### Result 1 (score: 0.5083)\n- **Work**: Борис Грінченко. Князь Ігор (1863)\n- **Author**: Грінченко Б.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eab97d5c_c0000`\n- **Text**:\nI\n\n### Result 2 (score: 0.5064)\n- **Work**: Микола Хвильовий. Камо грядеши (1893)\n- **Author**: Хвильовий М.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `eb7f6dc9_c0005`\n- **Text**:\nІІІ\n\n### Result 3 (score: 0.4858)\n- **Work**: Патерик Києво-Печерський (1462)\n- **Author**: Невідомий\n- **Genre/Period**: religious / old_east_slavic\n- **Chunk ID**: `3b9d3966_c0344`\n- **Text**:\nПримітки.\n\n### Result 4 (score: 0.4852)\n- **Work**: Іван Багряний. Маруся Богуславка (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ab7ce682_c0022`\n- **Text**:\nОсобливо вражає екіпіровка. Всі солдати, як і командири, одягнені в нові довжелезні шинелі, в сталеві зелені шоломи з ременями під підборіддям, взуті в дебелі чоботи, обчепляні протигазами, флягами, набійницями, лопатками саперними... Сонце пече немилосердно, а колона ніби демонструє проти нього. Сіро-сталеві чотирикутники, складені ще з менших, сунуться ритмічно й глухо, ніби машина. Тригранні багнети рушниць, взятих \"на ремень\", миготять блискавками, вистрілюючи без звуку то вліво, то вправо р\n\n### Result 5 (score: 0.4833)\n- **Work**: Улас Самчук. Морозів хутір (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `191faa6b_c0114`\n- **Text**:\nТі солдати пройшли бульваром… По них стріляли, але вони не звертали на це уваги… Йшли та йшли… За ними помчали вершники… Щось, може, ескадрон. Це були гарні вершники на добрих конях… Справжні козаки. Вони випередили тих, що йшли пішки, і помчалися на Хрещатик. За піхотинцями йшло багато народу, і чим довше вони йшли, тим народу збільшувалось. Ми з Марусею не видержали також і побігли на бульвар… Ми приєдналися до людей, що йшли посередині бульвару… Йшли та йшли… Гетьманська варта тікала. Ми крич\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4981a76d-e1fc-4089-b4bc-9e35c662061b",
+      "timestamp": "2026-03-14T02:44:03.360Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Focusing on target names",
+          "description": "\\n\\n\n\nI'm zeroing in on the names, making sure I grasp the core goal. I'll need to pinpoint which methods are best for gathering the needed info, ensuring I don't miss anything. The objective is to identify how best to approach the central topic.",
+          "timestamp": "2026-03-14T02:43:58.508Z"
+        },
+        {
+          "subject": "Analyzing contextual usage",
+          "description": "\\n\\n\n\nMy current focus is on pinpointing the specific context of the names mentioned. I'm employing the search function to locate them within provided documents, checking for their usage. The goal is to determine if any of these names appear within the curriculum materials. I am using the search function, to identify any mentions. This will give me a good understanding of what needs to be looked at.",
+          "timestamp": "2026-03-14T02:44:03.120Z"
+        }
+      ],
+      "tokens": {
+        "input": 42568,
+        "output": 16,
+        "cached": 34555,
+        "thoughts": 348,
+        "tool": 0,
+        "total": 42932
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "grep_search_1773456243353_0",
+          "name": "grep_search",
+          "args": {
+            "dir_path": "curriculum",
+            "pattern": "Striltsy"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "grep_search_1773456243353_0",
+                "name": "grep_search",
+                "response": {
+                  "output": "Error during grep search operation: Process exited with code 2: error: The argument '--threads <NUM>' requires 1 values, but 2 were provided\n\nUSAGE:\n    \n    rg [OPTIONS] PATTERN [PATH ...]\n    rg [OPTIONS] -e PATTERN ... [PATH ...]\n    rg [OPTIONS] -f PATTERNFILE ... [PATH ...]\n    rg [OPTIONS] --files [PATH ...]\n    rg [OPTIONS] --type-list\n    command | rg [OPTIONS] PATTERN\n    rg [OPTIONS] --help\n    rg [OPTIONS] --version\n\nFor more information try --help\n\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:44:03.390Z",
+          "resultDisplay": "Error: Process exited with code 2: error: The argument '--threads <NUM>' requires 1 values, but 2 were provided\n\nUSAGE:\n    \n    rg [OPTIONS] PATTERN [PATH ...]\n    rg [OPTIONS] -e PATTERN ... [PATH ...]\n    rg [OPTIONS] -f PATTERNFILE ... [PATH ...]\n    rg [OPTIONS] --files [PATH ...]\n    rg [OPTIONS] --type-list\n    command | rg [OPTIONS] PATTERN\n    rg [OPTIONS] --help\n    rg [OPTIONS] --version\n\nFor more information try --help\n\n",
+          "displayName": "SearchText",
+          "description": "Searches for a regular expression pattern within file contents.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "273a856b-6043-4452-81ef-3d086f807f63",
+      "timestamp": "2026-03-14T02:44:14.700Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Re-evaluating the Approach",
+          "description": "I'm focusing on the term \"Striltsy\" now, trying to ensure I'm getting the right context. I'll need to adapt my search strategy based on what comes next.",
+          "timestamp": "2026-03-14T02:44:10.436Z"
+        },
+        {
+          "subject": "Refining Search Terms",
+          "description": "I'm now zeroing in on variations of \"Striltsy\" and \"стрельцы,\" aiming to refine my search queries. Considering the potential for different spellings and related terms is key for a thorough investigation.",
+          "timestamp": "2026-03-14T02:44:14.496Z"
+        }
+      ],
+      "tokens": {
+        "input": 42716,
+        "output": 27,
+        "cached": 41178,
+        "thoughts": 316,
+        "tool": 0,
+        "total": 43059
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773456254698_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"стрільці\" слово о полку ігоревім"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456254698_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"стрільці\" слово о полку ігоревім\"\n\n### Result 1 (score: 0.5432)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0333`\n- **Text**:\nІ от виладнали\r\n [русичі] шість полків: Ігорів полк посередині, а праворуч — брата його,\r\n Всеволодів, а ліворуч — Святославів, синівця його; попереду його, [Ігоря],—\r\n син Володимир і другий полк, Ярославів, ковуї, що були з Ольстином, і третій\r\n полк теж попереду,— стрільці, що були од усіх князів виведені. І так\r\n виладнали вони полки свої, і сказав Ігор до братів своїх: «Браття! Сього ми\r\n шукали єсмо! Тож ударимо!» І тоді рушили вони до них, поклавши на бога\r\n уповання своє.\n\nІ коли прибули\n\n### Result 2 (score: 0.5336)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0094`\n- **Text**:\nСтрічу військ означали висловами зіступитися,\r\nзразитися, саму битву словами бій, січа, брань. Вирішальне значення\r\nу битві мали тяжкозбройні частини, що наступали на ворога зі списами в руках.\r\nСтрільці-лучники грали тільки побічну роль. Вигляд війська в наступі описує\r\nГалицький літопис 1251 р. так: «Військо злізло з коней і озброїлося в обозі,\r\nщити їхні були, як зоря, шоломи їхні, як сонце, що сходить, у руках тримали\r\nсписи, як многі трості; стрільці йшли по обох боках і тримали в руках рож\n\n### Result 3 (score: 0.5227)\n- **Work**: Ліна Костенко. Берестечко (1930)\n- **Author**: Костенко Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `e2fabdd6_c0065`\n- **Text**:\nПОЛЯ, ПОЛЯ, ПОЛЯ… ДОЛИНИ І ДОЛИНИ…\n\nНапнувся обрій наче тятива.\n\nІз Паволочі дзвін, вечірній дзвін долине.\n\nІ знову чути як росте трава.\n\nСТОЮ НА ВЕЖІ І ДИВЛЮСЬ НА ШЛЯХ.\n\nЧервоний щит призахідного сонця.\n\nА що це там за гомін у полях?\n\nГей, джуро, глянь! Та їх там ціла сотня.\n\nА може, й дві. — Гей, джуро, ти зіркий.\n\nТобі видніше із тамтої вежі.\n\n— Це, — каже, — батьку, наші козаки.\n\nЯ, — каже, — батьку, бачу по одежі.\n\nПРИЙШЛО ЇХ ДВІСТА. ВДАРИЛИ ЧОЛОМ.\n\nРозбили табір ген по оболоні.\n\nВже сходив\n\n### Result 4 (score: 0.5158)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0228`\n- **Text**:\nити дождю стрЂлами] — стилістична формула, що її добре знає\r\nдавньо-руське письменство в пам'ятках перекладних та оригінальних: “...помысли\r\nо убогыхъ како лежать ныня дъждевьными каплями, яко стрЂлами пронижаеми”,\r\nСтосл. Геннад. гл. 77, Изб. Свят. р. 1076 і Злат. Усп. XIV в. (у нов. сп. —\r\nгл. 78, мій Отч. экск. в Нежин, 1918, 54), звідки й у Молінні Дан. Заточи, „мнЂ\r\nпомяни... каплями дождевными, яко стрЂлами сердце пронизающе”, сс. 12, 46, 47.\r\nВ епічній традиції: „и стрЂлы на ня летяху яко\n\n### Result 5 (score: 0.5131)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0218`\n- **Text**:\nЧрълень стягъ, бЂла\r\nхорюговь, чрълена чолка, сребрено стружіе...] — перераховується здобич, що її захопили руські в\r\nвежах Половецьких після першого бою, вона припала Ігореві, як проводиреві. — „стягъ”\r\n— див. попереду. — „хорюговь” — запозичене слово монгольськ.\r\n„оронго”, д.-ц.-сл. „хоржгы” з діялект. hоронго, прапор (Меліор.);\r\nможливо, корогва була за прапор для окремого загону; у Флав. — часто: кн. 5,\r\nВол., арк. 145 та ин., „возносоша хоругви кесаревьскыя”, „хоругви от'емше”, кн.\r\n6, арк.\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:44:14.927Z",
+          "resultDisplay": "Found 5 results for: \"\"стрільці\" слово о полку ігоревім\"\n\n### Result 1 (score: 0.5432)\n- **Work**: Київський літопис (1198)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / old_east_slavic\n- **Chunk ID**: `aff8f05d_c0333`\n- **Text**:\nІ от виладнали\r\n [русичі] шість полків: Ігорів полк посередині, а праворуч — брата його,\r\n Всеволодів, а ліворуч — Святославів, синівця його; попереду його, [Ігоря],—\r\n син Володимир і другий полк, Ярославів, ковуї, що були з Ольстином, і третій\r\n полк теж попереду,— стрільці, що були од усіх князів виведені. І так\r\n виладнали вони полки свої, і сказав Ігор до братів своїх: «Браття! Сього ми\r\n шукали єсмо! Тож ударимо!» І тоді рушили вони до них, поклавши на бога\r\n уповання своє.\n\nІ коли прибули\n\n### Result 2 (score: 0.5336)\n- **Work**: Крип'якевич — Історія української культури (1937) (1937)\n- **Author**: Крип'якевич І.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `48346587_c0094`\n- **Text**:\nСтрічу військ означали висловами зіступитися,\r\nзразитися, саму битву словами бій, січа, брань. Вирішальне значення\r\nу битві мали тяжкозбройні частини, що наступали на ворога зі списами в руках.\r\nСтрільці-лучники грали тільки побічну роль. Вигляд війська в наступі описує\r\nГалицький літопис 1251 р. так: «Військо злізло з коней і озброїлося в обозі,\r\nщити їхні були, як зоря, шоломи їхні, як сонце, що сходить, у руках тримали\r\nсписи, як многі трості; стрільці йшли по обох боках і тримали в руках рож\n\n### Result 3 (score: 0.5227)\n- **Work**: Ліна Костенко. Берестечко (1930)\n- **Author**: Костенко Л.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `e2fabdd6_c0065`\n- **Text**:\nПОЛЯ, ПОЛЯ, ПОЛЯ… ДОЛИНИ І ДОЛИНИ…\n\nНапнувся обрій наче тятива.\n\nІз Паволочі дзвін, вечірній дзвін долине.\n\nІ знову чути як росте трава.\n\nСТОЮ НА ВЕЖІ І ДИВЛЮСЬ НА ШЛЯХ.\n\nЧервоний щит призахідного сонця.\n\nА що це там за гомін у полях?\n\nГей, джуро, глянь! Та їх там ціла сотня.\n\nА може, й дві. — Гей, джуро, ти зіркий.\n\nТобі видніше із тамтої вежі.\n\n— Це, — каже, — батьку, наші козаки.\n\nЯ, — каже, — батьку, бачу по одежі.\n\nПРИЙШЛО ЇХ ДВІСТА. ВДАРИЛИ ЧОЛОМ.\n\nРозбили табір ген по оболоні.\n\nВже сходив\n\n### Result 4 (score: 0.5158)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0228`\n- **Text**:\nити дождю стрЂлами] — стилістична формула, що її добре знає\r\nдавньо-руське письменство в пам'ятках перекладних та оригінальних: “...помысли\r\nо убогыхъ како лежать ныня дъждевьными каплями, яко стрЂлами пронижаеми”,\r\nСтосл. Геннад. гл. 77, Изб. Свят. р. 1076 і Злат. Усп. XIV в. (у нов. сп. —\r\nгл. 78, мій Отч. экск. в Нежин, 1918, 54), звідки й у Молінні Дан. Заточи, „мнЂ\r\nпомяни... каплями дождевными, яко стрЂлами сердце пронизающе”, сс. 12, 46, 47.\r\nВ епічній традиції: „и стрЂлы на ня летяху яко\n\n### Result 5 (score: 0.5131)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0218`\n- **Text**:\nЧрълень стягъ, бЂла\r\nхорюговь, чрълена чолка, сребрено стружіе...] — перераховується здобич, що її захопили руські в\r\nвежах Половецьких після першого бою, вона припала Ігореві, як проводиреві. — „стягъ”\r\n— див. попереду. — „хорюговь” — запозичене слово монгольськ.\r\n„оронго”, д.-ц.-сл. „хоржгы” з діялект. hоронго, прапор (Меліор.);\r\nможливо, корогва була за прапор для окремого загону; у Флав. — часто: кн. 5,\r\nВол., арк. 145 та ин., „возносоша хоругви кесаревьскыя”, „хоругви от'емше”, кн.\r\n6, арк.\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "333569b1-d06b-4d65-8bb3-34dc91ea6a38",
+      "timestamp": "2026-03-14T02:44:27.602Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Querying for Clarification",
+          "description": "I'm now zeroing in on verifying the term \"Striltsy\". I intend to find out more about it so I can proceed to the next step.",
+          "timestamp": "2026-03-14T02:44:21.023Z"
+        },
+        {
+          "subject": "Analyzing Term Context",
+          "description": "I'm now carefully examining the surrounding context to understand what \"Striltsy\" might mean in relation to the other terms. I am hoping the surrounding terms will clarify the meaning of \"Striltsy\".",
+          "timestamp": "2026-03-14T02:44:25.599Z"
+        },
+        {
+          "subject": "Section Extraction Planned",
+          "description": "I'm now planning on extracting the \"Слово о полку Ігоревім\" text from Wikipedia. I'm hoping to use this information to determine the meaning of the word \"Striltsy\".",
+          "timestamp": "2026-03-14T02:44:27.467Z"
+        }
+      ],
+      "tokens": {
+        "input": 44288,
+        "output": 26,
+        "cached": 41166,
+        "thoughts": 486,
+        "tool": 0,
+        "total": 44800
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773456267591_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Слово о полку Ігоревім",
+            "mode": "section",
+            "section": 12
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773456267591_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Слово о полку Ігоревім — Section 12\n\nТекст твору\n; Транскрипція оригінального тексту\n* Оригінальний текст «Слова о полку Ігоревім» підготовлено за виданням 1800 року, яке взято за основу, та за Катерининською копією (за фототипічними їх виданнями).\n* Текст «Слова», максимально наближений до видання 1800 року, розділено на окремі слова і ритмічні рядки.\n; Переклад XIX—XX століття українською мовою\n* Слово о полку Ігоревім у віршованих перекладах. Відень: Загально-Українська Культурна Рада, 1915. 56&nbsp;с. (Воєнна бібліотека Культурної Ради).\n; Переклад сучасною українською мовою\n* Слово о полку Ігоревім&nbsp;/ Редакція і вступна стаття Богдана Лепкого. Краків: Українське Видавництво, 1941. 64&nbsp;с. (Літературна бібліотека, ч.&nbsp;5)\n* Ритмічний переклад пам'ятки, зроблений Л.&nbsp;Є.&nbsp;Махновцем, за виданням: «Слово о полку Ігоревім». Вступ: М.&nbsp;К.&nbsp;Гудзій. Упорядкування: В.&nbsp;Л.&nbsp;Микитась. К. : Радянський письменник, 1955.\n*"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:44:27.885Z",
+          "resultDisplay": "# Слово о полку Ігоревім — Section 12\n\nТекст твору\n; Транскрипція оригінального тексту\n* Оригінальний текст «Слова о полку Ігоревім» підготовлено за виданням 1800 року, яке взято за основу, та за Катерининською копією (за фототипічними їх виданнями).\n* Текст «Слова», максимально наближений до видання 1800 року, розділено на окремі слова і ритмічні рядки.\n; Переклад XIX—XX століття українською мовою\n* Слово о полку Ігоревім у віршованих перекладах. Відень: Загально-Українська Культурна Рада, 1915. 56&nbsp;с. (Воєнна бібліотека Культурної Ради).\n; Переклад сучасною українською мовою\n* Слово о полку Ігоревім&nbsp;/ Редакція і вступна стаття Богдана Лепкого. Краків: Українське Видавництво, 1941. 64&nbsp;с. (Літературна бібліотека, ч.&nbsp;5)\n* Ритмічний переклад пам'ятки, зроблений Л.&nbsp;Є.&nbsp;Махновцем, за виданням: «Слово о полку Ігоревім». Вступ: М.&nbsp;К.&nbsp;Гудзій. Упорядкування: В.&nbsp;Л.&nbsp;Микитась. К. : Радянський письменник, 1955.\n*",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "f65f55aa-0152-4169-acf3-fe9656756fa5",
+      "timestamp": "2026-03-14T02:44:50.908Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Determining the Next Action",
+          "description": "\\n\\n\n\nI'm focused on moving forward with the provided information. My goal is to make progress on the task at hand by identifying the next actionable step, so I'm deliberating how to best proceed.",
+          "timestamp": "2026-03-14T02:44:36.821Z"
+        },
+        {
+          "subject": "Confirming Textual Analysis",
+          "description": "\\n\\n\n\nMy current focus is on confirming my initial analysis. I'm checking the specific text containing the term \"шереширы\" to better understand the context surrounding \"Striltsy\". This verification is crucial for accurately determining the word's meaning and role in the passage.",
+          "timestamp": "2026-03-14T02:44:41.853Z"
+        },
+        {
+          "subject": "Refining Contextual Understanding",
+          "description": "\\n\\n\n\nI'm focused on carefully reviewing the provided text and its relationship to the prompt. My current thought process involves assessing the potential meaning of \"Striltsy\" within the given context. This verification aims to find a logical explanation for its inclusion and connection with other elements in the excerpt.",
+          "timestamp": "2026-03-14T02:44:45.932Z"
+        },
+        {
+          "subject": "Evaluating Relevant Text",
+          "description": "\\n\\n\n\nMy current focus is on the quote that includes \"шерешири.\" I'll determine how this term is used within the chosen text. I'm reviewing the provided passage, and the goal is to pinpoint the exact meaning of \"шерешири\" in context, which will greatly inform my understanding of the entire prompt.",
+          "timestamp": "2026-03-14T02:44:50.642Z"
+        }
+      ],
+      "tokens": {
+        "input": 44693,
+        "output": 20,
+        "cached": 40825,
+        "thoughts": 868,
+        "tool": 0,
+        "total": 45581
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773456290906_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"шереширами\""
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773456290906_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"шереширами\"\"\n\n### Result 1 (score: 0.4988)\n- **Work**: Кониський — Шевченко-Грушівський: Хроніка життя (1991)\n- **Author**: Кониський О.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `4524f5ee_c0651`\n- **Text**:\n1014 Чалий, с. 142. [Тарас Шевченко. Документи...\r\n— С. 317].\n\n1015 Хата. — 1860. — С. 90.\n\n1016 Записки... — С. 195.\n\n1017 Залеськими. — Ред.\n\n1018 Лист д. Абрамцова. — [ІЛ. — Ф. 77. — № 127. — Арк.\r\n54].\n\nЛебединські варенушники заходилися на честь Шевченка /492/\r\nзварити «кашу». Тарас охоче прийняв запросини на ту «кашу». Після 12-літнього\r\nвигнання з рідного краю він тепер був серед рідної, любої України, серед її\r\nприроди, що саме тоді розповнилася усією своєю красою весняною; серед її люде\n\n### Result 2 (score: 0.4772)\n- **Work**: Іван Багряний. Маруся Богуславка (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ab7ce682_c0022`\n- **Text**:\nОсобливо вражає екіпіровка. Всі солдати, як і командири, одягнені в нові довжелезні шинелі, в сталеві зелені шоломи з ременями під підборіддям, взуті в дебелі чоботи, обчепляні протигазами, флягами, набійницями, лопатками саперними... Сонце пече немилосердно, а колона ніби демонструє проти нього. Сіро-сталеві чотирикутники, складені ще з менших, сунуться ритмічно й глухо, ніби машина. Тригранні багнети рушниць, взятих \"на ремень\", миготять блискавками, вистрілюючи без звуку то вліво, то вправо р\n\n### Result 3 (score: 0.4768)\n- **Work**: Іван Нечуй-Левицький. Українські гумористи та штукарі (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `ca86308c_c0092`\n- **Text**:\nТихою ходою я йшов цією чудовою вербовою алеєю, вдихаючи в себе повними грудьми вогке чисте повітря, усолоджуючи душу тишею та спокоєм в цьому пишному закуточку. Згадки про дитячі давні мої літа роєм пролітали передо мною, неначе веселі ластівки вилися та грали в зеленому вербовому листі. Я ввесь ніби потонув у згадках про минувше й задумався. Передо мною майнули картини давнього минувшого часу, виринали в пам’яті, неначе виходили з сизої далечі, з сизого туману. От я ніби гуляю надвечір у неділ\n\n### Result 4 (score: 0.4719)\n- **Work**: Іван Нечуй-Левицький. Причепа (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `a5a1635b_c0109`\n- **Text**:\nПан Пшепшинський сам виїхав на Україну з Польщі. Його дочки родились у Польщі, але зросли на Україні, і тут вони втягли з матернім молоком і благодатним повітрям нашої землі шляхетський погляд, що ніби кожний поляк повинен бути паном, багатим, значним, мати землі й ліси. Паннам, котрі зроду і не бачили польського мужика, і в голову не приходило, що на світі є поляки — не пани, а просто-таки мужики, в сіряках, в простих чоботях, котрі так само роблять і бідують, як і наші українські селяни. Дурне\n\n### Result 5 (score: 0.4679)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0325`\n- **Text**:\n2. Літературна техніка „промови“ власне немудра:\r\nпо-білоруськи писати було авторові, мабуть, не важко (зразок ми навели вже:\r\n„гетакый“, гето“, „гетого“ і т. д., „няколи“, „насмотрыуся“, „моучкомъ“ і т.\r\nд.), Не дуже журився автор і добором вульґаризмів: і щодо німців на\r\nкоролівській службі, і щодо власних земляків, що піддалися чужій моді, бажання\r\nМелешка те саме — „да коли жъ бы я гетого чорта кулакомъ въ морду“, „а коли бъ\r\nгетакого бЂса кулакомъ въ морду, забывъ бы другых мутыты“; німець \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T02:44:51.076Z",
+          "resultDisplay": "Found 5 results for: \"\"шереширами\"\"\n\n### Result 1 (score: 0.4988)\n- **Work**: Кониський — Шевченко-Грушівський: Хроніка життя (1991)\n- **Author**: Кониський О.\n- **Genre/Period**: biography / modern\n- **Chunk ID**: `4524f5ee_c0651`\n- **Text**:\n1014 Чалий, с. 142. [Тарас Шевченко. Документи...\r\n— С. 317].\n\n1015 Хата. — 1860. — С. 90.\n\n1016 Записки... — С. 195.\n\n1017 Залеськими. — Ред.\n\n1018 Лист д. Абрамцова. — [ІЛ. — Ф. 77. — № 127. — Арк.\r\n54].\n\nЛебединські варенушники заходилися на честь Шевченка /492/\r\nзварити «кашу». Тарас охоче прийняв запросини на ту «кашу». Після 12-літнього\r\nвигнання з рідного краю він тепер був серед рідної, любої України, серед її\r\nприроди, що саме тоді розповнилася усією своєю красою весняною; серед її люде\n\n### Result 2 (score: 0.4772)\n- **Work**: Іван Багряний. Маруся Богуславка (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `ab7ce682_c0022`\n- **Text**:\nОсобливо вражає екіпіровка. Всі солдати, як і командири, одягнені в нові довжелезні шинелі, в сталеві зелені шоломи з ременями під підборіддям, взуті в дебелі чоботи, обчепляні протигазами, флягами, набійницями, лопатками саперними... Сонце пече немилосердно, а колона ніби демонструє проти нього. Сіро-сталеві чотирикутники, складені ще з менших, сунуться ритмічно й глухо, ніби машина. Тригранні багнети рушниць, взятих \"на ремень\", миготять блискавками, вистрілюючи без звуку то вліво, то вправо р\n\n### Result 3 (score: 0.4768)\n- **Work**: Іван Нечуй-Левицький. Українські гумористи та штукарі (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `ca86308c_c0092`\n- **Text**:\nТихою ходою я йшов цією чудовою вербовою алеєю, вдихаючи в себе повними грудьми вогке чисте повітря, усолоджуючи душу тишею та спокоєм в цьому пишному закуточку. Згадки про дитячі давні мої літа роєм пролітали передо мною, неначе веселі ластівки вилися та грали в зеленому вербовому листі. Я ввесь ніби потонув у згадках про минувше й задумався. Передо мною майнули картини давнього минувшого часу, виринали в пам’яті, неначе виходили з сизої далечі, з сизого туману. От я ніби гуляю надвечір у неділ\n\n### Result 4 (score: 0.4719)\n- **Work**: Іван Нечуй-Левицький. Причепа (1838)\n- **Author**: Нечуй-Левицький І.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `a5a1635b_c0109`\n- **Text**:\nПан Пшепшинський сам виїхав на Україну з Польщі. Його дочки родились у Польщі, але зросли на Україні, і тут вони втягли з матернім молоком і благодатним повітрям нашої землі шляхетський погляд, що ніби кожний поляк повинен бути паном, багатим, значним, мати землі й ліси. Паннам, котрі зроду і не бачили польського мужика, і в голову не приходило, що на світі є поляки — не пани, а просто-таки мужики, в сіряках, в простих чоботях, котрі так само роблять і бідують, як і наші українські селяни. Дурне\n\n### Result 5 (score: 0.4679)\n- **Work**: Чижевський — Історія української літератури (1956)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `fbf8bdff_c0325`\n- **Text**:\n2. Літературна техніка „промови“ власне немудра:\r\nпо-білоруськи писати було авторові, мабуть, не важко (зразок ми навели вже:\r\n„гетакый“, гето“, „гетого“ і т. д., „няколи“, „насмотрыуся“, „моучкомъ“ і т.\r\nд.), Не дуже журився автор і добором вульґаризмів: і щодо німців на\r\nкоролівській службі, і щодо власних земляків, що піддалися чужій моді, бажання\r\nМелешка те саме — „да коли жъ бы я гетого чорта кулакомъ въ морду“, „а коли бъ\r\nгетакого бЂса кулакомъ въ морду, забывъ бы другых мутыты“; німець \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "24cdfbdf-9c45-4c72-a213-91b8df514b35",
+      "timestamp": "2026-03-14T02:46:18.916Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Слово: Унікальні слова\n\n## Key Facts Ledger\n```yaml\nsubject: \"Слово: Унікальні слова\"\ntype: \"phenomenon\"\ndates:\n  start: \"1185\" \n  end: \"1187\"   \n  key_events:\n    - year: 1185\n      event: \"Похід князя Ігоря Святославича, що став історичною основою для поеми та її унікальної лексики.\"\n    - year: 1187\n      event: \"Імовірний рік створення «Слова о полку Ігоревім», що зафіксувало низку гапаксів та «темних місць».\"\n    - year: 1800\n      event: \"Перше друковане видання пам'ятки, яке започаткувало двохсотлітню дискусію щодо розшифрування незрозумілих слів.\"\n    - year: 2003\n      event: \"Видання фундаментальної праці В. Скляренка «Темні місця в Слові о полку Ігоревім», що підсумувала сучасні українські дослідження.\"\nprimary_quotes:\n  - text: \"За нимъ кликну Карна, и Жля поскочи по Руской земли, смагу мычючи въ пламянѣ розѣ.\"\n    source: \"Слово о полку Ігоревім, 1187\"\n    attribution: \"Автор «Слова»\"\n  - text: \"Ты бо можеши посуху живыми шереширами стрѣляти - удалыми сынами Глѣбовы.\"\n    source: \"Слово о полку Ігоревім, 1187\"\n    attribution: \"Автор «Слова»\"\n  - text: \"Багатьма своїми аспектами «Слово...» залишається для сучасного читача полем незнаємим, рясніє темними місцями та білими плямами.\"\n    source: \"«Слово о полку Ігоревім» (вступ до поетичних перекладів)\"\n    attribution: \"Літературознавчий коментар\"\nforbidden_claims:\n  - \"Гапакси та незрозумілі слова є доказом того, що пам'ятка є пізнішою підробкою.\"\n  - \"Міфологічні образи Карни і Жлі — це лише спотворені імена половецьких ханів.\"\n  - \"Лексика «Слова» повністю тотожна тогочасній російській мові і не містить специфічних праукраїнських рис.\"\n```\n\n## Використані джерела\n1. [Вікіпедія: Слово о полку Ігоревім](https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім) — базовий контекст про мову та поетику твору.\n2. [Вікіпедія: Гапакс](https://uk.wikipedia.org/wiki/Гапакс) — визначення терміна «гапакс легоменон» та його роль у лінгвістиці.\n3. [Літопис: Перетц В.М. Слово о полку Ігоревім, 1926] — академічний аналіз лексичних особливостей твору.\n4. [Літопис: Чижевський Д. Історія української літератури, 1956] — аналіз рідкісних та запозичених слів (зокрема «шерешири»).\n5. [Вікіпедія: Карна і Желя](https://uk.wikipedia.org/wiki/Карна_і_Желя) — етимологія та міфологічне значення персоніфікацій скорботи.\n6. [Вікіпедія: Скляренко Віталій Григорович](https://uk.wikipedia.org/wiki/Скляренко_Віталій_Григорович) — внесок академіка у розшифрування «темних місць».\n\n## Хронологія\n- **1185**: Поразка князя Ігоря, яка спровокувала масштабну скорботу («Карна і Жля») на Русі.\n- **1187**: Написання тексту, де автор майстерно вплітає міфологічні, військові та вузькорегіональні терміни.\n- **1795**: Віднайдення рукопису, в якому переписувачі (ймовірно XV-XVI ст.) могли частково спотворити первісне звучання гапаксів.\n- **1800**: Перше видання тексту; початок наукових спроб пояснити такі слова, як «шерешири».\n- **1926**: Вихід праці Володимира Перетца, яка детально аналізує стилістику та епічні формули «Слова».\n- **2003**: Публікація монографії В. Скляренка, яка пропонує обґрунтовану фонологічну та етимологічну реконструкцію «темних місць».\n\n## Ключові факти та цитати\n- **Гапакс (Hapax legomenon)** — слово, що зустрічається в корпусі текстів лише один раз. У «Слові» таких слів багато через специфічну поетичну мову та можливі помилки переписувачів (так звані «темні місця»).\n- **Шерешири**: За словами Д. Чижевського, це \"якась військова зброя\". Автор «Слова» використовує їх метафорично: звертаючись до Всеволода Велике Гніздо, він каже, що той може «посуху живими шереширами стріляти» (маючи на увазі відважних синів Глібових). Це слово є абсолютним гапаксом.\n- **Карна і Жля**: Персоніфіковані образи плачу і скорботи. За міфологічними віруваннями, Желя (Жля) розносила попіл загиблих воїнів у розі. У «Слові» вони скачуть Руською землею, розкидаючи «смагу» (жар, вогонь) з полум'яного рога.\n- **Стрильці (Стрільці)**: Військовий термін, який у контексті незрозумілих епічних формул («стріляти живими шереширами») вказує на переосмислення автором традиційної військової лексики.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!context] — Пояснення терміна «гапакс легоменон» (від грец. ἅπαξ λεγόμενον — «згадане один раз») та чому розшифрування стародавніх текстів нагадує детективну роботу.\n- Section \"Вступ\": [!history-bite] — Згадка про те, що переписувачі XV-XVI століть самі не розуміли багатьох слів оригіналу (через зміну мовних норм), тому іноді зливали слова докупи або змінювали букви, створюючи нові «темні місця».\n- Section \"Основний матеріал\": [!quote] — Цитата з описом Карни та Жлі: «За нимъ кликну Карна, и Жля поскочи по Руской земли...».\n- Section \"Основний матеріал\": [!myth-buster] — Спростування поширеного радянського/імперського міфу, ніби Карна і Жля — це імена реальних половецьких ханів (Карн і Желябуг). Насправді це глибокі праслов'янські міфологічні концепти, пов'язані з українськими словами «карати» (оплакувати) і «жаль».\n- Section \"Основний матеріал\": [!culture] — Аналіз «шереширів». Як незрозуміла військова зброя (можливо, метальні снаряди з «грецьким вогнем» або різновид катапульти) стає метафорою для живих воїнів — «живими шереширами стріляти».\n- Section \"Практика\": [!decolonization] — Акцент на тому, що розуміння мови «Слова» неможливе без знання української діалектології та живої народної мови. Імперські дослідники часто заходили в глухий кут, ігноруючи праукраїнські корені лексики (такі як «смага», «болоння», «жалощі»).\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Російська дореволюційна та частково радянська наука часто намагалася пояснити незрозумілі слова «Слова» виключно через призму російської мови або штучно підганяла їх під церковнослов'янські аналоги. Якщо слово не піддавалося (як Карна і Жля), його маргіналізували або пояснювали як випадковий збіг/іноземне ім'я, позбавляючи текст його глибокої автохтонної міфологічної бази.\n- **Ukrainian reality**: Сучасна українська лінгвістика (В. Скляренко, Л. Махновець, В. Німчук) довела, що більшість «темних місць» блискуче пояснюються через залучення багатої української діалектної лексики та розуміння регіонального києво-чернігівського контексту XII століття. Мова «Слова» — це жива стихія тогочасної Русі, що має безпосередній генетичний зв'язок з українською мовою.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| **Гапакси «Слова»** | Свідчення «зіпсованості» тексту або невідомі загальноруські архаїзми. | Органічні елементи авторської лексики, часто живі праукраїнські слова або регіоналізми. |\n| **Карна і Жля** | Імена половецьких ханів-ворогів. | Праслов'янські богині скорботи; від автохтонних коренів (жаль, кара/плач). |\n| **Шерешири** | Незрозумілий термін, часто виправлявся на щось інше у перекладах. | Специфічний військовий термін XII ст. (метальний снаряд), вжитий як блискуча метафора. |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Концепція гапаксів**: Гапакс (hapax legomenon) — слово, вжите в тексті чи корпусі текстів лише один раз. У давніх рукописах вони є найбільшим викликом для філологів-палеографів, оскільки відсутність інших контекстів унеможливлює точне встановлення значення.\n- **«Темні місця»**: Специфічний термін у дослідженні «Слова о полку Ігоревім». Пам'ятка рясніє словами, які або зустрічаються лише тут (абсолютні гапакси), або є наслідком помилок переписувача XV-XVI ст., який механічно з'єднав чи роз'єднав слова оригіналу.\n- **Роль палеографа-лексикографа**: Дослідники змушені застосовувати комплексний підхід: етимологічний аналіз, порівняння з іншими слов'янськими мовами, залучення українських діалектизмів (як це робив академік В. Скляренко) та історичного контексту.\n\n### Основний матеріал\n- **Шерешири (Shereshiry)**:\n  - Згадується у фрагменті: «Ты бо можеши посуху живыми шереширами стрѣляти - удалыми сынами Глѣбовы».\n  - Значення: Дослідники (зокрема Д. Чижевський) трактують це як різновид військової зброї. Ймовірно, це метальні снаряди (можливо, начинені запальною сумішшю, аналог «грецького вогню» або спеціальні стріли). \n  - Метафорика: Автор «Слова» застосовує приголомшливий поетичний прийом — перетворює зброю на метафору війська. Всеволод може стріляти «живими шереширами» — тобто кидати в бій своїх стрімких і нищівних воїнів.\n- **Карна і Жля (Karnu/Zhylya)**:\n  - Цитата: «За нимъ кликну Карна, и Жля поскочи по Руской земли, смагу мычючи въ пламянѣ розѣ».\n  - Міфологічний вимір: Це сестри-богині скорботи, печалі та жалю у давніх слов'ян, вісниці мертвих. \n  - Етимологія: Желя (Жля) походить від кореня «жаль» (смуток). Карна походить від давнього значення слова «карати» (оплакувати, голосити за померлим).\n  - Контекст: Вони з'являються після трагічної поразки Ігоря, розносячи Руссю «смагу» (вогонь, жар — ще одне питомо українське слово) у полум'яному розі. Це глибоко язичницький, фольклорний образ, що свідчить про двовір'я та народне коріння поетики твору.\n- **Стрильці та мілітарний контекст**:\n  - У поєднанні з «шереширами», мотив стріляння («стрѣляти») і лучників розкриває високий рівень розвитку військової термінології Київської Русі. Стрільці-лучники та новітня зброя (як шерешири) відображають мілітарні реалії XII століття, які автор вільно переплавляє у високу поезію.\n\n### Практика\n- **Етимологічне трасування**: Розбір того, як лінгвісти розплутують «темні місця». Наприклад, спростування старої гіпотези про те, що Карна і Жля — це хани. Аналіз словотвору доводить їхню слов'янську, міфологічну природу.\n- **Граматична ідентифікація**: Виявлення питомих українських рис у цих фрагментах. Наприклад, слово «смага», яке вживається разом із Жлею, є абсолютно незрозумілим для російської мови, але досі живе в українських діалектах (смага — сухість у роті від спраги або жар, вогонь). Це ключ до розуміння всього фрагмента.\n- **Транскрипція та реконструкція**: Як оригінальний суцільний текст без пробілів (in continuo) розбивався на слова дослідниками у 1800 році, і де вони могли припуститися помилок, створивши «штучні» гапакси.\n\n### Підсумок\n- Унікальна лексика «Слова» (гапакси) — це не дефект рукопису, а його найвища цінність. Вона консервує для нас багатство живої розмовної, військової та міфологічної мови Русі-України XII століття.\n- Деколонізаційний підхід (використання української діалектології) є єдиним дієвим інструментом для адекватного прочитання цієї пам'ятки.\n- Ця глибока лексична складність прокладає шлях до наступного модуля, який буде присвячений ευρύτερη міфології твору («slovo-mythology»), де образи Карни і Жлі отримають ще ширший контекст на тлі інших язичницьких божеств (Даждьбог, Стрибог, Велес).\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Gathering the Research",
+          "description": "I'm now collating the information to accurately construct the output. Focusing on synthesizing the gathered data, I'm working towards the final stage of information processing. This involves cross-referencing and refining the extracted insights.",
+          "timestamp": "2026-03-14T02:44:56.890Z"
+        },
+        {
+          "subject": "Interpreting the Data",
+          "description": "I am now focusing on the nuances of the collected data. The goal is to accurately interpret the meaning and context within the provided text. My current efforts involve dissecting the details related to \"Shereshiry\", scrutinizing its various interpretations and implications within the original context.",
+          "timestamp": "2026-03-14T02:45:02.114Z"
+        },
+        {
+          "subject": "Processing the Context",
+          "description": "My attention is now directed toward analyzing the relationships between the presented terms. I aim to uncover the connections and implications of each, particularly within the context of the initial text. My process involves scrutinizing the usage of \"striltsy\", to determine its specific meaning and significance within the provided information.",
+          "timestamp": "2026-03-14T02:45:07.409Z"
+        },
+        {
+          "subject": "Connecting the Concepts",
+          "description": "I'm now examining how the key terms interconnect within the text. My focus is on synthesizing their meanings to formulate a coherent narrative, with particular attention to \"Striltsy\" as it relates to the military context and the act of shooting \"shereshiry.\" Further analysis will involve clarifying the relationship to \"Karnu/Zhylya\".",
+          "timestamp": "2026-03-14T02:45:12.053Z"
+        },
+        {
+          "subject": "Formulating a Synthesis",
+          "description": "I am now beginning to piece together the insights, readying the final structure of my output. I'm focusing on the military connections of \"shereshiry\" and \"striltsy\", and the context of the related terms.",
+          "timestamp": "2026-03-14T02:45:17.062Z"
+        },
+        {
+          "subject": "Analyzing the Connections",
+          "description": "I'm now linking the key terms, and starting to arrange the information for my final output. Currently, I'm focusing on \"шерешири\" in relation to the military context and the act of shooting, along with a consideration of related terms. I will take into account the \"Стрильці\" in the military context.",
+          "timestamp": "2026-03-14T02:45:20.589Z"
+        },
+        {
+          "subject": "Refining the Structure",
+          "description": "Now, I'm beginning to construct the output, ensuring all the key points are addressed. I'm focusing on the integration of all concepts. I'm taking into consideration the Ukrainian language requirements, the specific format for the text, and the forbidden claims to avoid.",
+          "timestamp": "2026-03-14T02:45:23.969Z"
+        },
+        {
+          "subject": "Synthesizing the Data",
+          "description": "I am now focusing on synthesizing the research gathered. My aim is to structure the information logically, particularly about the military meaning of \"shereshiry\" in relation to \"striltsy\", and their impact on the final output. The goal is to accurately represent the interconnections of the terms.",
+          "timestamp": "2026-03-14T02:45:28.681Z"
+        },
+        {
+          "subject": "Crafting the Outline",
+          "description": "I am now organizing the research to construct the outline. I'm focusing on the structured approach and the precise arrangement of information. I will prioritize the required format, the key facts, and forbidden claims, incorporating them in the correct structure.",
+          "timestamp": "2026-03-14T02:45:28.699Z"
+        }
+      ],
+      "tokens": {
+        "input": 46157,
+        "output": 3872,
+        "cached": 40397,
+        "thoughts": 2026,
+        "tool": 0,
+        "total": 52055
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

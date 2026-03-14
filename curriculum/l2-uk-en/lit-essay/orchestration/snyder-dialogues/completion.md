@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 38 — E2E
+PASS: pipeline lit-essay 44
 
   Module:   snyder-dialogues
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:23:37Z
+  Date:     2026-03-14T01:43:12Z

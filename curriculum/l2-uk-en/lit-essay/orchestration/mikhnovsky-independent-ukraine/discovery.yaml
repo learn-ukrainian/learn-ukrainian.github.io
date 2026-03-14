@@ -1,0 +1,253 @@
+discovered_at: '2026-03-14T00:20:24.610701+00:00'
+query_keywords:
+- Mikhnovsky Independent Ukraine
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Mikhnovsky Independent Ukraine у контексті української
+  літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: The video discusses how the Terechenko family was 'tabooed' by Soviet
+    historiography and mentions the UPR, which relates to the decolonization perspective
+    and historiography around figures like Mikhnovsky.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива – to illustrate Soviet
+    efforts to suppress the memory of Ukrainian figures and movements.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.4
+  relevance_note: This video continues the story of the Terechenko family's business
+    and social impact. While it provides historical context for Ukraine, it is less
+    directly linked to Mikhnovsky's political and ideological struggle for independence.
+  transcript_excerpt: Вони віддали мільйони на розвиток України. Та чи вболівали за
+    її незалежність?
+  embed_suggestion: After section Вступ та контекст – as general background on influential
+    Ukrainian families during the period preceding the independence movement.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.1
+  relevance_note: The video discusses the Holocaust, Stalinist regime, and comparison
+    of genocides, which is unrelated to Mikhnovsky and his work on Ukrainian independence.
+  transcript_excerpt: сьогодні ми будемо мати розмову з Анатолієм подольським який
+    є істориком кандидатом історичних наук а також керівником українського центру
+    вивчення історії Голокосту.
+  embed_suggestion: Not applicable - the video is not relevant to the module's topic.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode79/
+  title: Ukrainian History Course Part 9 – Independent Ukraine
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - phrases
+  - introductions
+  - culture
+  - history
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 79
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0560
+  text: "Історія\n України\nПрофільний рівень\n11\nОсобливості підручника:\n•\t \t\
+    авторський виклад матеріалу дасть змогу зануритися \nв події творення незалежної\
+    \ України \n•\t \tуривки з історичних джерел створять цілісний образ \nперіоду\
+    \ та дозволять відчути себе учасником подій \n•\t \tсюжетні ілюстрації та цікаві\
+    \ завдання до них \nрозвиватимуть уміння давати власну оцінку сучасним \nподіям\
+    \ \nІнтерактивний електронний додаток дозволить: \n•\t \tздійснити онлайн-тестування\
+    \ до кожного розділу \n•\t \tознайомитися з додатковим "
+  section_title: Сторінка 324
+  grade: 11
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0482
+  text: "255\nЗміст\nМОДЕРНА УКРАЇНСЬКА ПРОЗА\nРанній модернізм  . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 111\nОсобливості українського модернізму . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . 115 \nМихайло Коцюбинський . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 117\n\
+    Теорія літератури. Імпресіонізм. Психологічна новела . . . . . . . . . . . . .\
+    \ . . . 121\nІntermezzo . . . . . . . . . . . . ."
+  section_title: Сторінка 255
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0002
+  text: "3\nШановні восьмикласники та восьмикласниці! Перш ніж розпочати роботу з \
+    \ підручником, необхідно \nознайомитися з його змістом і структурою. Матеріал\
+    \ у ньо-\nму об’єднано в  п’ять розділів, кожен із яких містить кіль-\nка параграфів,\
+    \ що, у  свою чергу, поділяються на пункти. Ви вже знаєте, що історія, як і  будь-яка\
+    \ інша наука, \nмає власну термінологію, і  її необхідно розуміти. Підруч-\nник\
+    \ містить дати основних подій, визначення понять і тер-\nмінів, інформацію про\
+    \ видатних історичних діячів. Слова "
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5771872401237488
+  chunk_id: feaa5fa7_c0944
+  text: "Історіографія: Василенко Н. К истории\r\nмалорусской историографии и малорусского\
+    \ /406/ общественного строя. КСт., XI\r\n— XII. 1894; Лазаревский А. Прежние изыскатели\
+    \ малорусс. старины. КСт.\r\n1891 — 97 і окремо: Очерки, заметки и документы по\
+    \ истории Малороссии, I — V.\r\nК. 1891 — 98; Иконников В. Опыт русской историографии,\
+    \ П. К. 1908; Грушевский\r\nМ. Развитие украинских изучений. Украинский народ\
+    \ в его прошлом и настоящем, І.\r\nП. 1914; Дорошенко Д. Огляд укр. історіографії.\
+    \ Прага 1923; Багалій\r\nД. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5675772428512573
+  chunk_id: eef657d3_c0724
+  text: "1 Докладніше про це в\r\nнашій розвідці \"Ukrainian Autonomists of the 1780’s\
+    \ and 1790’s and Count\r\nP.A.Rumyantsey-Zadunaysky\" — \"The Annals of the Ukrainian\
+    \ Academy of\r\nArts and Sciences in the U.S.\", vol. VI, No. 3, 4 (21-22), 195S,\
+    \ p.p.\r\n1313-1326."
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.5625052452087402
+  chunk_id: 3588aaff_c0285
+  text: "53 Мої застереження\r\nщодо цього терміна й теорії, що за ним стоїть, подані\
+    \ в працях: Grabowicz G.\r\nToward a History of Ukrainian Literature; Grabowicz\
+    \ G. Some Further\r\nObservations on ’Non-historical Nations’ and ’Incomplete’\
+    \ Literatures: a Repiy.\r\n— У різних місцях.\n\n54 Пор.: Волинський\r\nП. К.\
+    \ Теоретична боротьба в українській літературі (перша половина XIX\r\nст.). —\
+    \ К., 1959. — C. 141-210 та ін. — Вищезгадана Шевченкова критика\r\nКотляревського\
+    \ — виняток, що підтверджує правило."
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

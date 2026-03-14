@@ -1,0 +1,171 @@
+discovered_at: '2026-03-14T00:05:27.634939+00:00'
+query_keywords:
+- Заповіти
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Тестамент, Духовниця
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=0Y-gcudZvZI
+  channel: Історія Мови
+  title: Shevchenko's "Testament" in the original - in 19th century spelling.
+  relevance_score: 0.9
+  relevance_note: The video directly analyzes Taras Shevchenko's famous poem 'Заповіт'
+    (Testament), exploring its original 19th-century spelling and discussing its historical
+    and linguistic context. It provides valuable insight into the core module topic
+    and vocabulary.
+  transcript_excerpt: І для цього пропоную взяти заповіт Шевченка як загальновідомий
+    і досить короткий твір. І ми візьмемо його не у теперішньому правописі, а в оригіналі,
+    так як його написав Тарас Григорович у Переяславі у 1845 році.
+  embed_suggestion: After Основний матеріал -- It provides a deep dive into the historical
+    and linguistic context of a significant 'заповіт'.
+- url: https://www.youtube.com/watch?v=qbW_BAPRu3g
+  channel: Ukrainian Lessons
+  title: ULP 6-222 | Українська поезія. Тарас Шевченко «Заповіт» | Ukrainian Lessons
+    Podcast Season 6
+  relevance_score: 0.9
+  relevance_note: This podcast episode is a Ukrainian lesson specifically dedicated
+    to analyzing Taras Shevchenko's 'Заповіт.' It defines the term 'заповіт' in the
+    context of the poem and discusses its significance, directly aligning with the
+    module's topic and vocabulary.
+  transcript_excerpt: фактично цей вірш став його заповітом заповіт - це певний документ
+    або певні вказівки щодо того що робити після смерті людини часто члени родини
+    пишуть заповіт щоб дати знати що вони хочуть щоб сталося після їх
+  embed_suggestion: After Основний матеріал -- It offers a direct pedagogical analysis
+    of a key 'заповіт' and defines the term.
+- url: https://www.youtube.com/watch?v=PL0sKQtThZACng8d3rQ82b8qB9ELWkx1wc
+  channel: Історія Мови
+  title: Староукраїнська
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=0mIdORQMKxA
+  channel: Let's Learn Ukrainian
+  title: Testament, T. Shevchenko (Заповіт, Т. Шевченко) Ukrainian Poem with us!
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=sWoXEASOMHs
+  channel: Let's Learn Ukrainian
+  title: Ukrainian Vocabulary. Question Words (what, how, when, where, etc.)
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Z4V9zr2YEOs
+  channel: Speak Ukrainian
+  title: My Oxford University students read Taras Shevchenko's poems
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  text: "3. Скласти план і відповідно до нього систематизувати матеріал. 4. Узагальнити\
+    \ основні положення. 5. Скласти усно текст повідомлення, намагаючись висловити\
+    \ й \nаргументувати власну думку. 6. За потреби записати текст повідомлення повністю\
+    \ або частково \nта переказати усно текст удома."
+  section_title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0003
+  text: "4\nЧИТАЄМО Й РОЗПОВІДАЄМО \nЧИТАЄМО Й РОЗПОВІДАЄМО \nПРО СВОЇ ЗАХОПЛЕННЯ\n\
+    ПРО СВОЇ ЗАХОПЛЕННЯ\n \nОзнайомтеся з новим підручником. Знайдіть у змісті \n\
+    перший розділ. Які твори вміщені в ньому? Які автори творів \nвам знайомі? Яка\
+    \ назва видалася вам особливо цікавою?\nЧитайте вдумливо:\n\nвизначайте тему\
+    \ твору, де й коли відбувалась описана \nподія;\n\nне залишайте поза увагою\
+    \ незрозуміле;\n\nвизначте, який це вид твору; \n\nхто дійові особи, які в\
+    \ них почуття, вчинки;\n\nпрогнозуйте розвиток сюжету;\n\nмір"
+  section_title: Сторінка 4
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0450
+  text: "Хід заняття\n\t 1. Опрацюйте наведений матеріал і дайте відповіді на запитання.\
+    \ 2. Зробіть висновки відповідно до мети заняття."
+  section_title: Сторінка 249
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0013
+  text: 'ПОВТОРЕННЯ
+
+    та узагальнення вивченого'
+  section_title: Сторінка 14
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5277026891708374
+  chunk_id: 4800ab33_c0246
+  text: "Отже, ці докази, які я назвав непричетними, дає не\r\nталант оратора, а пам’ять\
+    \ і читання всяких авторів.\n\nЗабуття бога, яке протиставляється молитві, не\
+    \ менше,\r\nніж будь-яке інше місце, зможе нам допомогти у підборі матеріалу.\
+    \ А коли ми вже\r\nпояснили, які лиха походять від забуття бога, легко буде зрозуміти,\
+    \ як дуже треба\r\nрекомендувати молитву, яка звільняє нас від багатьох лих, тому\
+    \ що безперервно\r\nпідносить думку до бога. З цього стає зовсім ясно, який великий\
+    \ запас доказів\r\nможна шукати у так"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5229741930961609
+  chunk_id: 4800ab33_c0244
+  text: "Крім того, знай, що вживання місць різне у\r\nвизначеному і в невизначеному\
+    \ питаннях. Невизначене питання може вигідно\r\nкористуватися всіма місцями, крім\
+    \ обставин і другорядних даних, а визначене\r\nпитання, хоч йому можуть дуже допомагати\
+    \ інші місця, однак підтверджується\r\nдругорядними даними. \\181\\\n\nРозділ\
+    \ п’ятий\n\nСПЕЦІАЛЬНІ ВКАЗІВКИ, ЯК ТРЕБА ДОБУВАТИ ДОКАЗИ ІЗ\r\nЗГАДАНИХ МІСЦЬ\n\
+    \nМетою цього мистецтва є обгрунтування або\r\nспростування істинності чи хибності\
+    \ певного судження, щоб все, як то кажуть\r\n"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5186055898666382
+  chunk_id: c6aa97a6_c0037
+  text: "Завдання поезії двояке: видумувати й видумане\r\nвикласти у віршованій формі.\
+    \ Поет тоді видумує, коли, використовуючи фігури\r\nпрозопопеї та етопеї, надає\
+    \ видуманим предметам, наче справжнім, і неживим,\r\nначе живим, властивостей\
+    \ живих істот або приписує якому-небудь явищу якусь\r\nособливу при-/39/чину,\
+    \ чи то бога або муз, чи говорить про Дуже визначних\r\nпоетів, вважаючи їх взірцем\
+    \ для наслідування.\n\nПРО НАСЛІДУВАННЯ\n\nНаслідувати — означає робити одну річ\
+    \ на зразок\r\nіншої. Існує два види наслідування"
+  work: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+  year: 1973
+  genre: rhetoric
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/dovg/dovg.htm

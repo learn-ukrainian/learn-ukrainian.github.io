@@ -1,0 +1,147 @@
+discovered_at: '2026-03-14T01:35:15.028559+00:00'
+query_keywords:
+- 'Орфографія: Літери'
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- The letter "Ґ" (G) vs "КГ"
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=om1DUT2zsWE
+  channel: Історія Мови
+  title: '"The Stonemasons" by Ivan Franko, written by Drahomanovka'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses historical orthography systems (Drahomanivka)
+    and specific letter usages in Ivan Franko's works, providing excellent context
+    for the evolution of Ukrainian letters.
+  transcript_excerpt: І це відео про один із варіантів правопису, який використовував
+    Іван Франко. Свої ранні твори він писав так званою Драгоманівкою.
+  embed_suggestion: After section Вступ -- to introduce the historical variability
+    and evolution of Ukrainian orthography before delving into modern rules.
+- url: https://www.youtube.com/watch?v=0Y-gcudZvZI
+  channel: Історія Мови
+  title: Shevchenko's "Testament" in the original - in 19th century spelling.
+  relevance_score: 0.9
+  relevance_note: The video explores 19th-century Ukrainian spelling, including letters
+    no longer present in modern Ukrainian, and discusses the historical standardization
+    of orthography. This is highly relevant to understanding the context of Ukrainian
+    letters.
+  transcript_excerpt: Та українська мова, якою ми пишемо зараз, це її правопис був
+    упорядкований не так і давно, лише 100 років тому у 20-х роках X століття. А до
+    того моменту ми мали більш ніж 100 років різних варіантів.
+  embed_suggestion: After section Вступ -- to provide a broader historical overview
+    of Ukrainian orthography changes and the existence of different letter forms over
+    time.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0195
+  text: "188\nМОВЛЕННЄВИЙ ПРОСТІР\nТекст\nПригадайте!\nТекст — це певне повідомлення;\
+    \ сукупність речень, пов’я-\nзаних між собою за змістом.\nТема — це те, про що\
+    \ йдеться в тексті. Найчастіше тему \nвідображає заголовок тексту.\nПідтема (мікротема)\
+    \ — це частина загальної теми тексту, \nщо зазвичай розкривається в одному абзаці.\n\
+    Основна думка тексту — це те, заради чого був створений \nпевний текст, що хотів\
+    \ донести автор до своїх читачів.\nКлючові слова — це окремі слова чи словосполучення,\
+    \ \nякі визначають тему та "
+  section_title: Сторінка 191
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrmova-zabolotnyi-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrajinska-mova-zabolotnij-2018_s0050
+  text: '1. Знайдіть фразеологізми, поясніть їхнє лексичне значення та схарактери-
+
+    зуйте стилістичне забарвлення. 2. Знайдіть складні слова та поясніть їхнє написання.
+    3. Поясніть уживання тире в реченнях першого тексту. Основи'
+  section_title: Сторінка 37
+  grade: 10
+  author: zabolotnij
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5322227478027344
+  chunk_id: fc2291b5_c2902
+  text: "ІНТЕРПРЕТАЦІЯ (від лат.\r\ninterpretatio — пояснення, трактування) літературна\
+    \ — тлумачення літ. твору з\r\nметою осягнення його змісту та ідейно-худож. концепції.\
+    \ І. буває: 1) Художня\r\n— як продукт вторинної худож. діяльності, створюваний\
+    \ на основі первинної; це —\r\nпереклади з мови одного мист-ва на мову іншого\
+    \ (з мови худож. л-ри на мову\r\nкіно, музики, хореографії, скульптури та ін.),\
+    \ ремінісценції, пародії,\r\nінсценізації. Оригінальність літ. трактування в І.\
+    \ не повинна виходити за межі\r\nхудож. зм"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.527185320854187
+  chunk_id: fbf8bdff_c0020
+  text: "Досліджуючи „ідейний зміст“ творів, мусимо часто\r\nзвертатися до джерел\
+    \ поза межами даного літературного твору, передусім до інших\r\nтворів того самого\
+    \ автора, або авторів того самого часу, а часто і до\r\nбіографічних дат про автора,\
+    \ до нелітературних проявів (листування, спогади)\r\nавтора або сучасників; до\
+    \ судів сучасників про твір (критика, пародії тощо); до\r\nісторичних дат про\
+    \ добу, коли постав твір, нарешті, до дат про освіту автора, його\r\nчитання (каталоги\
+    \ бібліотек письменників), його літерат"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5257624387741089
+  chunk_id: feaa5fa7_c0774
+  text: "Головні — це лексично\r\nповнозначні слова з домінантними супроти інших частин\
+    \ мови граматичними\r\nфункціями (іменник, прикметник, дієслово, прислівник).\
+    \ Співвідносні — повнозначні\r\nслова з залежними від головних частин функціями\
+    \ та оформленням (займенник,\r\nчислівник). Службові — слова неповнозначні. Осторонь\
+    \ від цієї\r\nклясифікації стоїть вигук, що ним висловлюємо переважно емоції.\
+    \ В деяких\r\nз головних частин мови є проміжні форми, що ніби роздвоюються між\
+    \ різними\r\nчастинами мови; це дієприкметники"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

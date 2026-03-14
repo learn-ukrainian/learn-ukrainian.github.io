@@ -1,0 +1,422 @@
+{
+  "sessionId": "664629e9-acca-489c-b0b0-71589be33faf",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T03:01:38.419Z",
+  "lastUpdated": "2026-03-14T03:03:00.411Z",
+  "messages": [
+    {
+      "id": "883b860a-6c1f-4bfb-b145-ca7fcc032144",
+      "timestamp": "2026-03-14T03:01:38.419Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-089\nlevel: RUTH\nsequence: 89\nslug: diplomatic-language\nversion: '2.0'\ntitle: Дипломатична мова\nsubtitle: Diplomatic Language\nfocus: Relations with Sweden and Crimea\nphase: 4\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Diplomatic Language\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Hetman's Envoy\nprerequisites:\n- social-contract\nconnects_to:\n- orlyk-latin-comparison\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Дипломатична мова** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Дипломатична мова\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Дипломатична мова\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "ccb21d00-8b2a-4fa9-8cfd-c20123ff261e",
+      "timestamp": "2026-03-14T03:01:45.985Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Research",
+          "description": "I'm now zeroing in on the subsequent stage. My efforts concentrate on gathering the core information needed. I'm moving deliberately, ensuring I grasp the nuances before proceeding further.",
+          "timestamp": "2026-03-14T03:01:42.260Z"
+        },
+        {
+          "subject": "Beginning the Search Process",
+          "description": "I'm now starting to investigate, using the chosen method. My focus is on compiling the necessary facts to proceed, aiming for a comprehensive initial overview. I intend to build a solid foundation of understanding.",
+          "timestamp": "2026-03-14T03:01:45.862Z"
+        }
+      ],
+      "tokens": {
+        "input": 20469,
+        "output": 26,
+        "cached": 0,
+        "thoughts": 336,
+        "tool": 0,
+        "total": 20831
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773457305983_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Дипломатія Війська Запорозького"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773457305983_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Дипломатія Війська Запорозького' — 5 results\n\n1. **Дипломатія ad hoc** — України, 2004 — Т.1 — 760с. ISBN 966-316-039-X В. І. Сергійчук. Дипломатія Війська Запорозького // там же В. Н. Денисов. Ад хок [Архівовано 21 листопада 2016\n2. **Паволоцький полк** — Заруба В. М. Адміністративно-територіальний устрій та адміністрація Війська Запорозького у 1648—1782 роках. — Дніпропетровськ, 2007. — с. 77. «Паволоцький\n3. **Богдан Конша** — Богдан Конша (? — травень 1623) — гетьман Війська Запорозького. Прийшов до влади, судячи з усього, після О. Голуба, який став гетьманом 4 червня 1622.\n4. **Переговори про укладення союзу Бранденбург-Пруссії з Військом Запорозьким** — укладення союзу Бранденбург-Пруссії з Військом Запорозьким (1655—1657) — політичні зносини між гетьманом Війська Запорізького Богданом Хмельницьким із\n5. **Підгаєцька угода (1667)** — нікуди, де тільки мешкають козаки, що належать до Запорозького війська. Навзаєм і запорозькі війська не повинні вимагати жодних міст, у яких досі козаків"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:01:46.315Z",
+          "resultDisplay": "Wikipedia search: 'Дипломатія Війська Запорозького' — 5 results\n\n1. **Дипломатія ad hoc** — України, 2004 — Т.1 — 760с. ISBN 966-316-039-X В. І. Сергійчук. Дипломатія Війська Запорозького // там же В. Н. Денисов. Ад хок [Архівовано 21 листопада 2016\n2. **Паволоцький полк** — Заруба В. М. Адміністративно-територіальний устрій та адміністрація Війська Запорозького у 1648—1782 роках. — Дніпропетровськ, 2007. — с. 77. «Паволоцький\n3. **Богдан Конша** — Богдан Конша (? — травень 1623) — гетьман Війська Запорозького. Прийшов до влади, судячи з усього, після О. Голуба, який став гетьманом 4 червня 1622.\n4. **Переговори про укладення союзу Бранденбург-Пруссії з Військом Запорозьким** — укладення союзу Бранденбург-Пруссії з Військом Запорозьким (1655—1657) — політичні зносини між гетьманом Війська Запорізького Богданом Хмельницьким із\n5. **Підгаєцька угода (1667)** — нікуди, де тільки мешкають козаки, що належать до Запорозького війська. Навзаєм і запорозькі війська не повинні вимагати жодних міст, у яких досі козаків",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "171e9793-3228-4baf-a6da-36cca8b98c29",
+      "timestamp": "2026-03-14T03:01:52.097Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing to the Next Stage",
+          "description": "I'm now focused on the next phase. I'm exploring the best approach to proceed, and I'm analyzing the most efficient path forward. I'll utilize the knowledge gained to ensure I'm aligned with the intended goal. I am proceeding.",
+          "timestamp": "2026-03-14T03:01:50.753Z"
+        },
+        {
+          "subject": "Querying Wikipedia for Details",
+          "description": "I'm now putting the plan into action, beginning by gathering information from Wikipedia. My focus is on retrieving the necessary text to fulfill the task. This foundational step is crucial.",
+          "timestamp": "2026-03-14T03:01:51.976Z"
+        }
+      ],
+      "tokens": {
+        "input": 20951,
+        "output": 25,
+        "cached": 19779,
+        "thoughts": 139,
+        "tool": 0,
+        "total": 21115
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773457312096_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Зовнішня політика Гетьманщини",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773457312096_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Зовнішня політика Гетьманщини' — 5 results\n\n1. **Зовнішня політика України** — Зо́внішня полі́тика Украї́ни — стратегічний підхід української держави до відносин з іноземними державами, співпраці з міжнародними організаціями, просування\n2. **Гетьманщина** — українсько-російського митного кордону Докладніше: Ліквідація автономії Гетьманщини 1764 — скасування Гетьманщини як автономної держави і створення на її теренах Малоросійської\n3. **Конотопські статті** — гетьманом Петром Дорошенком. Це обмеження суттєво впливало на зовнішню політику Гетьманщини. ￼ ￼ Після підписання Конотопських статей на конотопські землі\n4. **Кайрський договір** — оборонно-наступальний військовий союз Гетьманщини з Кримським ханством. Зазначалися наміри сторін здійснювати координовану зовнішню політику — зокрема узгоджувати зміст\n5. **Колоніальна політика** — а також утримання держави чи народу у своїх руках. Колоніальна політика — це політика поневолення і експлуатації за допомогою військового, політичного"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:01:52.393Z",
+          "resultDisplay": "Wikipedia search: 'Зовнішня політика Гетьманщини' — 5 results\n\n1. **Зовнішня політика України** — Зо́внішня полі́тика Украї́ни — стратегічний підхід української держави до відносин з іноземними державами, співпраці з міжнародними організаціями, просування\n2. **Гетьманщина** — українсько-російського митного кордону Докладніше: Ліквідація автономії Гетьманщини 1764 — скасування Гетьманщини як автономної держави і створення на її теренах Малоросійської\n3. **Конотопські статті** — гетьманом Петром Дорошенком. Це обмеження суттєво впливало на зовнішню політику Гетьманщини. ￼ ￼ Після підписання Конотопських статей на конотопські землі\n4. **Кайрський договір** — оборонно-наступальний військовий союз Гетьманщини з Кримським ханством. Зазначалися наміри сторін здійснювати координовану зовнішню політику — зокрема узгоджувати зміст\n5. **Колоніальна політика** — а також утримання держави чи народу у своїх руках. Колоніальна політика — це політика поневолення і експлуатації за допомогою військового, політичного",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e63d4b8d-656f-4000-a8a4-6c133083c77a",
+      "timestamp": "2026-03-14T03:01:59.403Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "\\n\\n\n\nI'm now focused on the next phase. I'm aiming to determine how the current information can be best utilized. I'll need to strategically move forward to the next step, leveraging what I've collected so far, so that I can accomplish the overall goal.",
+          "timestamp": "2026-03-14T03:01:57.959Z"
+        },
+        {
+          "subject": "Searching for Specific Details",
+          "description": "\\n\\n\n\nMy current focus is on pinpointing precise details. I'm actively working to narrow down the information and extract relevant data points. This process involves leveraging specialized capabilities, targeting specific sources to ensure the information aligns with my objectives. The goal is to obtain highly specific answers to the queries.",
+          "timestamp": "2026-03-14T03:01:59.200Z"
+        }
+      ],
+      "tokens": {
+        "input": 21296,
+        "output": 71,
+        "cached": 19712,
+        "thoughts": 148,
+        "tool": 0,
+        "total": 21515
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773457319316_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "дипломатія Карл Густав"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773457319316_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"дипломатія Карл Густав\"\n\n### Result 1 (score: 0.4900)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0172`\n- **Text**:\n13 Див. дослідження\r\nЕ.Верунського: Werunsky E. «Maiestas Karolina» // ZSSR. Germanist. Abt. —\r\n1888. — Bd. 9. Чеську бібліографію подає Й.Шуста: Šusta J. Kareł\r\nIV. Za chs. korunou. — S. 186-224.\n\n14 Chronicon //\r\nFRB.— Vol. 4. — P. 525.\n\n15 Про методи, за\r\nдопомогою яких Карл IV приєднував нові території до Богемського королівства,\r\nдив.: Sanmann von Bülow H. Die Inkorporationen Karls IV: Ein\r\nBeitrag zur Geschichte des Staatseinheitsgedankens im späteren\r\nMittelalter. — Marburg, 1942. — S. 34\n\n### Result 2 (score: 0.4838)\n- **Work**: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах (1995)\n- **Author**: Мацьків Т.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e65c8b4f_c0033`\n- **Text**:\nНайбільше дипломатичних місій у Польщі мала Росія,\r\nпонад 80; дальше йшла Англія та Прусія, що тримали по 35, за ними — Австрія,\r\nДанія, Франція та Швеція, які спромогались на 20 до 30 місій кожна. Однак самі\r\nцифри й кількість місій не запевняли успіху. Поважні впливи при королівському\r\nдворі у Варшаві здобували і дипломати таких держав, що не мали численних місій.\r\nДо впливових дипломатів у Варшаві того часу слід зарахувати російського посла\r\nкн. Григорія Ф. Долгорукого, австрійського посла че\n\n### Result 3 (score: 0.4782)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1273`\n- **Text**:\nДипломатична діяльність\r\nуряду ЗУНР мала на меті головне визнання його ін. державами, насамперед,\r\nмировою конференцією в Парижі, та покінчення війни з Польщею. Для закордонної\r\nрепрезентації утворено посольства у Відні, Берліні, Празі й Будапешті. Через\r\nсвоїх представників уряд ЗУНР нав’язав там дипломатично — консулярні взаємини,\r\nпоштово-телеграфні й торговельні зв’язки. Це були тільки фактичні взаємини;\r\nлише австр. уряд визнавав спершу посла М. Василька, а потім посла Сінґалевича як\r\nлеґіт\n\n### Result 4 (score: 0.4776)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0761`\n- **Text**:\n4 Дипломатичні\r\nвідносини між Московією та Габсбурзькими імператорами досі найвичерпніше\r\nпроаналізував лише Г.Юберсбергер: Übersberger H. Osterreich und\r\nRussland seit dem Ende des 15. Jh. Bd. 1. 1489-1605. — Vienna, 1906.\r\nДокументи, що зберігаються в російських архівах, заслуговують на більшу увагу з\r\nбоку західних істориків. Вони дають чітку картину витоків і розвитку\r\nросійської дипломатії, що грунтується на візантійських та монгольських\r\nтрадиціях, певні характерні риси якої дуже відрізнял\n\n### Result 5 (score: 0.4683)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0171`\n- **Text**:\n3 Детальне\r\nдослідження про поширення пошесті, єврейські погроми у Німеччині та ексцеси\r\nфлагелантів провів Е.Верунський (Werunsky E. Op. cil. — Bd 1. — S.\r\n239-324). Про ставлення до цього Карла див.: Ibid. — S. 271.\n\n4 Про намісників\r\nКарла в Німеччині див.: Huttenbranker L. Die Vikare Karls IV in\r\nDeutschland // Festschrift A. Brackmann. — Weimar, 1931. — S. 546-568.\n\n5 Про Кола ді\r\nРієнцо, його ідеї та пророцтва див.: Burdach K., Piur P. Briefwechsel\r\ndes Cola di Rienzo // Vom Mittelalter żu\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:02:01.258Z",
+          "resultDisplay": "Found 5 results for: \"дипломатія Карл Густав\"\n\n### Result 1 (score: 0.4900)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0172`\n- **Text**:\n13 Див. дослідження\r\nЕ.Верунського: Werunsky E. «Maiestas Karolina» // ZSSR. Germanist. Abt. —\r\n1888. — Bd. 9. Чеську бібліографію подає Й.Шуста: Šusta J. Kareł\r\nIV. Za chs. korunou. — S. 186-224.\n\n14 Chronicon //\r\nFRB.— Vol. 4. — P. 525.\n\n15 Про методи, за\r\nдопомогою яких Карл IV приєднував нові території до Богемського королівства,\r\nдив.: Sanmann von Bülow H. Die Inkorporationen Karls IV: Ein\r\nBeitrag zur Geschichte des Staatseinheitsgedankens im späteren\r\nMittelalter. — Marburg, 1942. — S. 34\n\n### Result 2 (score: 0.4838)\n- **Work**: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах (1995)\n- **Author**: Мацьків Т.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e65c8b4f_c0033`\n- **Text**:\nНайбільше дипломатичних місій у Польщі мала Росія,\r\nпонад 80; дальше йшла Англія та Прусія, що тримали по 35, за ними — Австрія,\r\nДанія, Франція та Швеція, які спромогались на 20 до 30 місій кожна. Однак самі\r\nцифри й кількість місій не запевняли успіху. Поважні впливи при королівському\r\nдворі у Варшаві здобували і дипломати таких держав, що не мали численних місій.\r\nДо впливових дипломатів у Варшаві того часу слід зарахувати російського посла\r\nкн. Григорія Ф. Долгорукого, австрійського посла че\n\n### Result 3 (score: 0.4782)\n- **Work**: Енциклопедія українознавства (1955)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `feaa5fa7_c1273`\n- **Text**:\nДипломатична діяльність\r\nуряду ЗУНР мала на меті головне визнання його ін. державами, насамперед,\r\nмировою конференцією в Парижі, та покінчення війни з Польщею. Для закордонної\r\nрепрезентації утворено посольства у Відні, Берліні, Празі й Будапешті. Через\r\nсвоїх представників уряд ЗУНР нав’язав там дипломатично — консулярні взаємини,\r\nпоштово-телеграфні й торговельні зв’язки. Це були тільки фактичні взаємини;\r\nлише австр. уряд визнавав спершу посла М. Василька, а потім посла Сінґалевича як\r\nлеґіт\n\n### Result 4 (score: 0.4776)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0761`\n- **Text**:\n4 Дипломатичні\r\nвідносини між Московією та Габсбурзькими імператорами досі найвичерпніше\r\nпроаналізував лише Г.Юберсбергер: Übersberger H. Osterreich und\r\nRussland seit dem Ende des 15. Jh. Bd. 1. 1489-1605. — Vienna, 1906.\r\nДокументи, що зберігаються в російських архівах, заслуговують на більшу увагу з\r\nбоку західних істориків. Вони дають чітку картину витоків і розвитку\r\nросійської дипломатії, що грунтується на візантійських та монгольських\r\nтрадиціях, певні характерні риси якої дуже відрізнял\n\n### Result 5 (score: 0.4683)\n- **Work**: Дворнік — Слов'яни в Європейській історії та цивілізації (2000)\n- **Author**: Дворнік Ф.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `b129e02f_c0171`\n- **Text**:\n3 Детальне\r\nдослідження про поширення пошесті, єврейські погроми у Німеччині та ексцеси\r\nфлагелантів провів Е.Верунський (Werunsky E. Op. cil. — Bd 1. — S.\r\n239-324). Про ставлення до цього Карла див.: Ibid. — S. 271.\n\n4 Про намісників\r\nКарла в Німеччині див.: Huttenbranker L. Die Vikare Karls IV in\r\nDeutschland // Festschrift A. Brackmann. — Weimar, 1931. — S. 546-568.\n\n5 Про Кола ді\r\nРієнцо, його ідеї та пророцтва див.: Burdach K., Piur P. Briefwechsel\r\ndes Cola di Rienzo // Vom Mittelalter żu\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773457319358_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "листування кримський хан"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773457319358_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"листування кримський хан\"\n\n### Result 1 (score: 0.6485)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0973`\n- **Text**:\nЯсновельможний милостивий хане кримський з численними\r\nордами, близький наш сусіде! 690\n\n690 Лист піддається\r\nсумніву щодо автентичності.\n\n### Result 2 (score: 0.5745)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2051`\n- **Text**:\n„Урождений, нам милий! Ласкавість \r\nі доброта наша так велика, що й листа твого ми прийняли — хоч написаний він \r\nрукою скаляною замордованнєм чи затриманнєм нашого королївського посла (которого \r\nй досї не бачимо), і будучи помазанцем божим і йдучи за прикладом самого Господа \r\nБога, що звик вибачати людям і найбільші проступки їх, — готові ми прийняти тебе \r\nдо ласки нашої і на тім урядї затримати, аби тільки правдиво, щиро і чесно \r\nприсягу свою і повинне подданство нам віддав, не пристаючи б\n\n### Result 3 (score: 0.5642)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0748`\n- **Text**:\nПро посилки з обох монархій, російської й\r\nпольської, до кримського хана з оголошенням про учинений поміж ними мир і з\r\nпобажанням, щоб і хан лишався з тими обома монархами без війни в сусідській\r\nприязні. А коли б того не захотів, то обидві монархії чинитимуть йому відсіч і\r\nвоєнний промисел разом, уживши до того запорозьких\n\nі донських козаків.\n\nІ те ми постановили, щоб обидва великі наші господарі\r\nпослали до кримського хана й оголосили йому через свої грамоти про той\r\nутверджений мир, аби за\n\n### Result 4 (score: 0.5562)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2577`\n- **Text**:\n“Старшому володареві над військом \r\nЗапорозьким і гетьманові Б. Хмельницькому, синові нашому, здоровля доброго і \r\nдовголітнього панування від Бога вірно жичу!\n\n“Листи ваші принесені Осман-аґою, \r\nвіддані цісареві і всім нам. Перетолкувавши їх і добре зрозумівши, дуже ми \r\nвтішилися, так якби себе бачили. А все в них написане і переказане через \r\nОсман-аґу вдячно прийнявши я всьому рицарству свому об'явив, сину мій милий. \r\nБажаємо того всі, аби Бог ту приязнь заховав до віку, і дітей наших не р\n\n### Result 5 (score: 0.5559)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0762`\n- **Text**:\nПродовж, Боже, щасливе в здоров’ї наше панування! Від\r\nнас бажаємо королеві польському, великому князеві литовському, руському,\r\nпрусському, мазовецькому, жмудському, інфлянтському, київському, вандальському,\r\nЯнові-Казимирові Четвертому, великому монархові, що з’єднує в собі всі чесноти,\r\nпродовж йому, Боже, до останнього дня щасливе панування! А зі щирою любов’ю\r\nпривітавши і спитавшися про щасливе панування, ми, хан, звідомляємо, що лист\r\nдійшов до нас через вашого посла Карвовського. Пишете,\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:02:01.258Z",
+          "resultDisplay": "Found 5 results for: \"листування кримський хан\"\n\n### Result 1 (score: 0.6485)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0973`\n- **Text**:\nЯсновельможний милостивий хане кримський з численними\r\nордами, близький наш сусіде! 690\n\n690 Лист піддається\r\nсумніву щодо автентичності.\n\n### Result 2 (score: 0.5745)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2051`\n- **Text**:\n„Урождений, нам милий! Ласкавість \r\nі доброта наша так велика, що й листа твого ми прийняли — хоч написаний він \r\nрукою скаляною замордованнєм чи затриманнєм нашого королївського посла (которого \r\nй досї не бачимо), і будучи помазанцем божим і йдучи за прикладом самого Господа \r\nБога, що звик вибачати людям і найбільші проступки їх, — готові ми прийняти тебе \r\nдо ласки нашої і на тім урядї затримати, аби тільки правдиво, щиро і чесно \r\nприсягу свою і повинне подданство нам віддав, не пристаючи б\n\n### Result 3 (score: 0.5642)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0748`\n- **Text**:\nПро посилки з обох монархій, російської й\r\nпольської, до кримського хана з оголошенням про учинений поміж ними мир і з\r\nпобажанням, щоб і хан лишався з тими обома монархами без війни в сусідській\r\nприязні. А коли б того не захотів, то обидві монархії чинитимуть йому відсіч і\r\nвоєнний промисел разом, уживши до того запорозьких\n\nі донських козаків.\n\nІ те ми постановили, щоб обидва великі наші господарі\r\nпослали до кримського хана й оголосили йому через свої грамоти про той\r\nутверджений мир, аби за\n\n### Result 4 (score: 0.5562)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c2577`\n- **Text**:\n“Старшому володареві над військом \r\nЗапорозьким і гетьманові Б. Хмельницькому, синові нашому, здоровля доброго і \r\nдовголітнього панування від Бога вірно жичу!\n\n“Листи ваші принесені Осман-аґою, \r\nвіддані цісареві і всім нам. Перетолкувавши їх і добре зрозумівши, дуже ми \r\nвтішилися, так якби себе бачили. А все в них написане і переказане через \r\nОсман-аґу вдячно прийнявши я всьому рицарству свому об'явив, сину мій милий. \r\nБажаємо того всі, аби Бог ту приязнь заховав до віку, і дітей наших не р\n\n### Result 5 (score: 0.5559)\n- **Work**: Літопис Величка (1720)\n- **Author**: Величко С.В.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `a27d9879_c0762`\n- **Text**:\nПродовж, Боже, щасливе в здоров’ї наше панування! Від\r\nнас бажаємо королеві польському, великому князеві литовському, руському,\r\nпрусському, мазовецькому, жмудському, інфлянтському, київському, вандальському,\r\nЯнові-Казимирові Четвертому, великому монархові, що з’єднує в собі всі чесноти,\r\nпродовж йому, Боже, до останнього дня щасливе панування! А зі щирою любов’ю\r\nпривітавши і спитавшися про щасливе панування, ми, хан, звідомляємо, що лист\r\nдійшов до нас через вашого посла Карвовського. Пишете,\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773457319401_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Зовнішня політика Богдана Хмельницького",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773457319401_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Зовнішня політика Богдана Хмельницького' — 5 results\n\n1. **Зовнішня політика України** — Зо́внішня полі́тика Украї́ни — стратегічний підхід української держави до відносин з іноземними державами, співпраці з міжнародними організаціями, просування\n2. **Березневі статті** — Березне́ві статті́ 1654 року (інші назви — «Статті Богдана Хмельницького», «Березневі статті Богдана Хмельницького», «Статті війська Запорозького», «Переяславський\n3. **Дипломатична служба Богдана Хмельницького** — Дипломатична служба Богдана Хмельницького, Дипломатична служба Української козацької держави — група посадовців Української козацької держави 1648–57\n4. **Густав Лільєкрона** — Шведсько-український союз Богдана Хмельницького. Архівні документи ЗОВНІШНЯ ПОЛІТИКА БОГДАНА ХМЕЛЬНИЦЬКОГО Зовнішня політика козацької держави у 1654—1657\n5. **Хмельниччина** — місце у проміжку між 1648 та 1657 роками, та повстання під проводом Богдана Хмельницького, під час яких Річ Посполита втратила контроль над центральною частиною"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:02:01.258Z",
+          "resultDisplay": "Wikipedia search: 'Зовнішня політика Богдана Хмельницького' — 5 results\n\n1. **Зовнішня політика України** — Зо́внішня полі́тика Украї́ни — стратегічний підхід української держави до відносин з іноземними державами, співпраці з міжнародними організаціями, просування\n2. **Березневі статті** — Березне́ві статті́ 1654 року (інші назви — «Статті Богдана Хмельницького», «Березневі статті Богдана Хмельницького», «Статті війська Запорозького», «Переяславський\n3. **Дипломатична служба Богдана Хмельницького** — Дипломатична служба Богдана Хмельницького, Дипломатична служба Української козацької держави — група посадовців Української козацької держави 1648–57\n4. **Густав Лільєкрона** — Шведсько-український союз Богдана Хмельницького. Архівні документи ЗОВНІШНЯ ПОЛІТИКА БОГДАНА ХМЕЛЬНИЦЬКОГО Зовнішня політика козацької держави у 1654—1657\n5. **Хмельниччина** — місце у проміжку між 1648 та 1657 роками, та повстання під проводом Богдана Хмельницького, під час яких Річ Посполита втратила контроль над центральною частиною",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "7a97d5f1-eb93-49b6-b7da-2ec9af30a2f7",
+      "timestamp": "2026-03-14T03:02:08.155Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Beginning information gathering",
+          "description": "I am now engaged in collecting and analyzing the necessary information to get this process rolling. I am moving forward and attempting to gather the relevant material. My next step will be to thoroughly examine the collected information.",
+          "timestamp": "2026-03-14T03:02:06.421Z"
+        },
+        {
+          "subject": "Initiating information retrieval",
+          "description": "I'm currently focused on the active phase of retrieving the required content. Specifically, I'm pulling information from diverse sources to create a strong foundation for future processing. The aim is to build a rich dataset for analysis.",
+          "timestamp": "2026-03-14T03:02:07.993Z"
+        }
+      ],
+      "tokens": {
+        "input": 24407,
+        "output": 73,
+        "cached": 20105,
+        "thoughts": 112,
+        "tool": 0,
+        "total": 24592
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773457328075_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "sections",
+            "query": "Дипломатична служба Богдана Хмельницького"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773457328075_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Sections of 'Дипломатична служба Богдана Хмельницького':\n\n1 Див. також (index=1)\n2 Джерела та література (index=2)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:02:08.795Z",
+          "resultDisplay": "Sections of 'Дипломатична служба Богдана Хмельницького':\n\n1 Див. також (index=1)\n2 Джерела та література (index=2)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773457328116_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "дипломатія Богдан Хмельницький"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773457328116_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"дипломатія Богдан Хмельницький\"\n\n### Result 1 (score: 0.6074)\n- **Work**: Голобуцький — Запорозьке козацтво (1994)\n- **Author**: Голобуцький В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `9a2443f5_c0547`\n- **Text**:\nМистецтво полководця і організатора Богдан\r\nХмельницький поєднував з великим дипломатичним талантом. Ставлячи свої\r\nдипломатичні здібності на службу справі /414/ визволення українського\r\nнароду, він поряд з внутрішньополітичними вміло використовував і\r\nзовнішньополітичні суперечності, які роздирали його ворогів. «Чужоземці\r\nпорівнювали Хмельницького з Кромвелем, — писав видатний польський історик\r\nЛюдвік Кубаля, — порівняння само по собі приходило особливо в роках, коли ці\r\nдві особи звертали на\n\n### Result 2 (score: 0.6055)\n- **Work**: Гвоздик-Пріцак — Економічна і політична візія Хмельницького (1999)\n- **Author**: Гвоздик-Пріцак Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `878e19f5_c0001`\n- **Text**:\nж) Татарська кіннота\n\n§ 2. Дипломатична служба\n\nа) Дипломатичні зносини держави Богдана Хмельницького\n\nб) Видатки Московської держави на дипломатичну службу\r\nз Кримським ханством\n\nв) Видатки Польської держави на дипломатичну службу\n\nг) Видатки держави Богдана Хмельницького на\r\nдипломатичну службу в 1653 р.\n\nд) Видатки Богдана Хмельницького на службу розвідки\n\nе) Посилення торгівлі «східними товарами»\n\n§ 3. Потенційний бюджет держави Богдана Хмельницького\n\nа) Статті витрат у потенційному бюджеті \n\n### Result 3 (score: 0.5964)\n- **Work**: Гвоздик-Пріцак — Економічна і політична візія Хмельницького (1999)\n- **Author**: Гвоздик-Пріцак Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `878e19f5_c0130`\n- **Text**:\nОскільки державний український архів не зберігся,\r\nнеможливо встановити кількості всіх посольств, які Б. Хмельницький посилав або\r\nодержував. Однак слід не забувати, що коли приїздили посли з інших країн, вони\r\nбули на повному утриманні українського уряду, а також якщо посли привозили\r\nподарунки — вони отримували відповідні дари. І все ж збереглися відомості про\r\nпосольства обох типів (до і від), які засвідчують дуже велику активність\r\nукраїнської міжнародної політики.\n\nДля прикладу візьмемо рік\n\n### Result 4 (score: 0.5813)\n- **Work**: Голобуцький — Запорозьке козацтво (1994)\n- **Author**: Голобуцький В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `9a2443f5_c0548`\n- **Text**:\nСильна особистість Богдана Хмельницького викликала\r\nповагу до нього навіть з боку ворогів. Богдан Хмельницький відзначався\r\nпростотою і чемністю в поводженні, скромністю в побуті. Мужній і безстрашний,\r\nзавжди готовий віддати життя справі визволення свого народу, Богдан\r\nХмельницький особистим прикладом запалював і вів за собою народні маси. Під\r\nйого керівництвом, виросла ціла плеяда талановитих державних діячів, полководців\r\nі дипломатів: Максим Кривоніс, Данило Нечай, Іван Богун, Іван Виговсь\n\n### Result 5 (score: 0.5803)\n- **Work**: Літопис Грабянки (1710)\n- **Author**: Грабянка Г.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `96daa715_c0098`\n- **Text**:\nЗ божою допомогою та при сприянні усього малоруського\r\nнароду, закінчивши переговори, та вирядивши з належними почестями великих\r\nпослів його царської величності, Хмельницький наказав підготувати від свого\r\nімені та від імені усього війська спеціальну грамоту, що адресувалася царській\r\nвеличності. Ось вона.\n\nКопія з листа до государя, царя та великого князя\r\nвсеросійського Олексія Михайловича від Богдана Хмельницького, гетьмана\r\nзапорізького.\n\nЛист переданий посланцями — генеральним суддею\r\nСамі\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:02:08.795Z",
+          "resultDisplay": "Found 5 results for: \"дипломатія Богдан Хмельницький\"\n\n### Result 1 (score: 0.6074)\n- **Work**: Голобуцький — Запорозьке козацтво (1994)\n- **Author**: Голобуцький В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `9a2443f5_c0547`\n- **Text**:\nМистецтво полководця і організатора Богдан\r\nХмельницький поєднував з великим дипломатичним талантом. Ставлячи свої\r\nдипломатичні здібності на службу справі /414/ визволення українського\r\nнароду, він поряд з внутрішньополітичними вміло використовував і\r\nзовнішньополітичні суперечності, які роздирали його ворогів. «Чужоземці\r\nпорівнювали Хмельницького з Кромвелем, — писав видатний польський історик\r\nЛюдвік Кубаля, — порівняння само по собі приходило особливо в роках, коли ці\r\nдві особи звертали на\n\n### Result 2 (score: 0.6055)\n- **Work**: Гвоздик-Пріцак — Економічна і політична візія Хмельницького (1999)\n- **Author**: Гвоздик-Пріцак Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `878e19f5_c0001`\n- **Text**:\nж) Татарська кіннота\n\n§ 2. Дипломатична служба\n\nа) Дипломатичні зносини держави Богдана Хмельницького\n\nб) Видатки Московської держави на дипломатичну службу\r\nз Кримським ханством\n\nв) Видатки Польської держави на дипломатичну службу\n\nг) Видатки держави Богдана Хмельницького на\r\nдипломатичну службу в 1653 р.\n\nд) Видатки Богдана Хмельницького на службу розвідки\n\nе) Посилення торгівлі «східними товарами»\n\n§ 3. Потенційний бюджет держави Богдана Хмельницького\n\nа) Статті витрат у потенційному бюджеті \n\n### Result 3 (score: 0.5964)\n- **Work**: Гвоздик-Пріцак — Економічна і політична візія Хмельницького (1999)\n- **Author**: Гвоздик-Пріцак Л.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `878e19f5_c0130`\n- **Text**:\nОскільки державний український архів не зберігся,\r\nнеможливо встановити кількості всіх посольств, які Б. Хмельницький посилав або\r\nодержував. Однак слід не забувати, що коли приїздили посли з інших країн, вони\r\nбули на повному утриманні українського уряду, а також якщо посли привозили\r\nподарунки — вони отримували відповідні дари. І все ж збереглися відомості про\r\nпосольства обох типів (до і від), які засвідчують дуже велику активність\r\nукраїнської міжнародної політики.\n\nДля прикладу візьмемо рік\n\n### Result 4 (score: 0.5813)\n- **Work**: Голобуцький — Запорозьке козацтво (1994)\n- **Author**: Голобуцький В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `9a2443f5_c0548`\n- **Text**:\nСильна особистість Богдана Хмельницького викликала\r\nповагу до нього навіть з боку ворогів. Богдан Хмельницький відзначався\r\nпростотою і чемністю в поводженні, скромністю в побуті. Мужній і безстрашний,\r\nзавжди готовий віддати життя справі визволення свого народу, Богдан\r\nХмельницький особистим прикладом запалював і вів за собою народні маси. Під\r\nйого керівництвом, виросла ціла плеяда талановитих державних діячів, полководців\r\nі дипломатів: Максим Кривоніс, Данило Нечай, Іван Богун, Іван Виговсь\n\n### Result 5 (score: 0.5803)\n- **Work**: Літопис Грабянки (1710)\n- **Author**: Грабянка Г.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `96daa715_c0098`\n- **Text**:\nЗ божою допомогою та при сприянні усього малоруського\r\nнароду, закінчивши переговори, та вирядивши з належними почестями великих\r\nпослів його царської величності, Хмельницький наказав підготувати від свого\r\nімені та від імені усього війська спеціальну грамоту, що адресувалася царській\r\nвеличності. Ось вона.\n\nКопія з листа до государя, царя та великого князя\r\nвсеросійського Олексія Михайловича від Богдана Хмельницького, гетьмана\r\nзапорізького.\n\nЛист переданий посланцями — генеральним суддею\r\nСамі\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773457328154_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "шведсько-український союз"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773457328154_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"шведсько-український союз\"\n\n### Result 1 (score: 0.4954)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0415`\n- **Text**:\nЗа словами П. Орлика (в меморіялі «Déduction\r\ndes droits de l’Ukraine» — «Вивід прав України», складеному 1712 p. 13,\r\nзміст угоди 1708 р. був такий: Україна і землі, до неї прилучені, мають бути\r\nвільними й незалежними; король шведський зобов’язується оберігати їх від усіх\r\nворогів; зокрема, король має вислати туди негайно помічні війська, коли того\r\nбуде вимагати потреба та коли цього будуть домагатися гетьман та його Стани\r\n(Etats). Усе завойоване на території Росії, але колись належне «руськ\n\n### Result 2 (score: 0.4951)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0416`\n- **Text**:\nРоку 1709, вже на еміґрації, після смерти Мазепи, у\r\nмеморіялі, складеному в Бендерах 26 вересня (ст. ст.) 1709 р., український\r\nекзильний уряд просив короля Карла XII (пункт III), щоб він «зволив знову\r\nприлюдним письмом потвердити під іменням нового гетьмана своє запевнення, що\r\nдалі воюватиме з москалями й не входитиме в мирові переговори доти, доки\r\nруський (український) народ, скинувши ярмо теперішньої неволі, не вернеться до\r\nколишньої своєї свободи»; а в разі перемоги — «щоб тоді не виклю\n\n### Result 3 (score: 0.4945)\n- **Work**: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах (1995)\n- **Author**: Мацьків Т.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e65c8b4f_c0244`\n- **Text**:\nУ цьому українсько-шведському договорі за 8 квітня\r\n1709 р. ясно з’ясована ціль: повне визволення України з — під Москви та\r\nпривернення давніх козацьких прав і привілеїв. 31\n\nДо союзу Мазепи з Карлом XII поставився Михайло\r\nГрущевський дуже критично, але не менш об’єктивно.\n\nДеякі історики уважають, що в працях Грушевського на\r\nпершому місці стоїть нарід та його суспільно-економічні інтереси. Напр., Д.\r\nДорошенко твердив, що Грушевський \"мало цінить державні змагання\r\nукраїнських князів і гетьм\n\n### Result 4 (score: 0.4906)\n- **Work**: Симоновський — Короткий опис про козацький малоросійський народ (1765)\n- **Author**: Симоновський П.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `772ecb52_c0240`\n- **Text**:\nШаховскій Князь; ГенералъЛейтенантъ 145.1.2. 148.1.\n\nШведская армія 49.1.\n\nШведское войско 120.2. 131.1.\n\nШведская ВЂра 128.2.\n\nШведскій Генералъ 125.1.\n\nШведскій Король 20.2. 120 — 122. 124 — 127. 129 — 153. 135 — 136.\r\n138 — 139.\n\nШведская помощь 129.2.\n\nШведская сторона 120.2.\n\nШведы 120 — 121. 125.2. 127.1. 129 — 135. 136.2. 140.1. 148.1.\n\nШвеція 120.1.\n\nШеваліеръ Петръ 20.1.\n\nШевалье, Французскій историкъ 5.2. 9.2.\n\nШеинъ Генералъ АлексЂй Семеновичь 117.1.\n\nШереметьевъ 117.1. 119 — 120.\n\nШе\n\n### Result 5 (score: 0.4850)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0474`\n- **Text**:\nМосковський терор, політичний поділ України й загроза\r\nсоціяльної анархії вплинули на ставлення української людности до українсько-шведського\r\nсоюзу. Звичайно, треба дуже обережно ставитися до тверджень Петра I, Меншікова\r\nта інших керівників московського уряду, що «сей край (Україна) как был, так и\r\nесть» (лист Петра I до князя В.В. Долгорукого з 30 жовтня 1708 р.), що «здЂшней\r\nнарод со слезами Богу жалуютца на онаго (Мазепу) и неописанно злобствуют» (лист\r\nПетра I до Ф. М. Апраксіна з 30 жовт\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:02:08.795Z",
+          "resultDisplay": "Found 5 results for: \"шведсько-український союз\"\n\n### Result 1 (score: 0.4954)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0415`\n- **Text**:\nЗа словами П. Орлика (в меморіялі «Déduction\r\ndes droits de l’Ukraine» — «Вивід прав України», складеному 1712 p. 13,\r\nзміст угоди 1708 р. був такий: Україна і землі, до неї прилучені, мають бути\r\nвільними й незалежними; король шведський зобов’язується оберігати їх від усіх\r\nворогів; зокрема, король має вислати туди негайно помічні війська, коли того\r\nбуде вимагати потреба та коли цього будуть домагатися гетьман та його Стани\r\n(Etats). Усе завойоване на території Росії, але колись належне «руськ\n\n### Result 2 (score: 0.4951)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0416`\n- **Text**:\nРоку 1709, вже на еміґрації, після смерти Мазепи, у\r\nмеморіялі, складеному в Бендерах 26 вересня (ст. ст.) 1709 р., український\r\nекзильний уряд просив короля Карла XII (пункт III), щоб він «зволив знову\r\nприлюдним письмом потвердити під іменням нового гетьмана своє запевнення, що\r\nдалі воюватиме з москалями й не входитиме в мирові переговори доти, доки\r\nруський (український) народ, скинувши ярмо теперішньої неволі, не вернеться до\r\nколишньої своєї свободи»; а в разі перемоги — «щоб тоді не виклю\n\n### Result 3 (score: 0.4945)\n- **Work**: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах (1995)\n- **Author**: Мацьків Т.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `e65c8b4f_c0244`\n- **Text**:\nУ цьому українсько-шведському договорі за 8 квітня\r\n1709 р. ясно з’ясована ціль: повне визволення України з — під Москви та\r\nпривернення давніх козацьких прав і привілеїв. 31\n\nДо союзу Мазепи з Карлом XII поставився Михайло\r\nГрущевський дуже критично, але не менш об’єктивно.\n\nДеякі історики уважають, що в працях Грушевського на\r\nпершому місці стоїть нарід та його суспільно-економічні інтереси. Напр., Д.\r\nДорошенко твердив, що Грушевський \"мало цінить державні змагання\r\nукраїнських князів і гетьм\n\n### Result 4 (score: 0.4906)\n- **Work**: Симоновський — Короткий опис про козацький малоросійський народ (1765)\n- **Author**: Симоновський П.\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `772ecb52_c0240`\n- **Text**:\nШаховскій Князь; ГенералъЛейтенантъ 145.1.2. 148.1.\n\nШведская армія 49.1.\n\nШведское войско 120.2. 131.1.\n\nШведская ВЂра 128.2.\n\nШведскій Генералъ 125.1.\n\nШведскій Король 20.2. 120 — 122. 124 — 127. 129 — 153. 135 — 136.\r\n138 — 139.\n\nШведская помощь 129.2.\n\nШведская сторона 120.2.\n\nШведы 120 — 121. 125.2. 127.1. 129 — 135. 136.2. 140.1. 148.1.\n\nШвеція 120.1.\n\nШеваліеръ Петръ 20.1.\n\nШевалье, Французскій историкъ 5.2. 9.2.\n\nШеинъ Генералъ АлексЂй Семеновичь 117.1.\n\nШереметьевъ 117.1. 119 — 120.\n\nШе\n\n### Result 5 (score: 0.4850)\n- **Work**: Оглоблін — Гетьман Мазепа та його доба (1960)\n- **Author**: Оглоблін О.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `eef657d3_c0474`\n- **Text**:\nМосковський терор, політичний поділ України й загроза\r\nсоціяльної анархії вплинули на ставлення української людности до українсько-шведського\r\nсоюзу. Звичайно, треба дуже обережно ставитися до тверджень Петра I, Меншікова\r\nта інших керівників московського уряду, що «сей край (Україна) как был, так и\r\nесть» (лист Петра I до князя В.В. Долгорукого з 30 жовтня 1708 р.), що «здЂшней\r\nнарод со слезами Богу жалуютца на онаго (Мазепу) и неописанно злобствуют» (лист\r\nПетра I до Ф. М. Апраксіна з 30 жовт\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "c2aabee6-ea3f-42e7-9abf-5e2aefbf8436",
+      "timestamp": "2026-03-14T03:02:15.283Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Generation",
+          "description": "I'm now focusing on refining the output. I am preparing to assemble the information gathered so far into a coherent and informative response. I'm prioritizing clarity and accuracy as I put the pieces together.",
+          "timestamp": "2026-03-14T03:02:14.223Z"
+        },
+        {
+          "subject": "Composing the Response",
+          "description": "I'm currently focused on structuring the final text. My priority is to create a well-organized response that addresses the requested topic. I am aiming for a logical flow to clearly present the relevant information.",
+          "timestamp": "2026-03-14T03:02:15.155Z"
+        }
+      ],
+      "tokens": {
+        "input": 27374,
+        "output": 24,
+        "cached": 0,
+        "thoughts": 124,
+        "tool": 0,
+        "total": 27522
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773457335282_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Українсько-шведські відносини"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773457335282_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Українсько-шведські відносини' — 5 results\n\n1. **Українсько-шведські відносини** — Украї́нсько-шве́дські відно́сини — двосторонні відносини між державами Україна та Швеція у галузі міжнародної політики, економіки, освіти, науки, культури\n2. **Міжнародні відносини України** — Українсько-шведські відносини 18 грудня 1991: визнання незалежності України. Докладніше: Українсько-азербайджанські відносини Докладніше: Українсько-афганські\n3. **Посольство України у Швеції** — Королю Швеції Карлу XVI Густаву вручив Олександр Сліпченко. Українсько-шведські відносини Український дипломатичний корпус Список дипломатичних місій\n4. **Українсько-польські відносини** — Українсько-польські відносини — комплекс двосторонніх відносин між Україною та Республікою Польща на міждержавному рівні, що охоплює політичне, економічне\n5. **Українсько-білоруські відносини** — З&#039;їзду народів Росії. Див. також: Міжнародні відносини України в 1917—1922 роках Див. також: Українсько-білоруські переговори про державний кордон 1918"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T03:02:15.581Z",
+          "resultDisplay": "Wikipedia search: 'Українсько-шведські відносини' — 5 results\n\n1. **Українсько-шведські відносини** — Украї́нсько-шве́дські відно́сини — двосторонні відносини між державами Україна та Швеція у галузі міжнародної політики, економіки, освіти, науки, культури\n2. **Міжнародні відносини України** — Українсько-шведські відносини 18 грудня 1991: визнання незалежності України. Докладніше: Українсько-азербайджанські відносини Докладніше: Українсько-афганські\n3. **Посольство України у Швеції** — Королю Швеції Карлу XVI Густаву вручив Олександр Сліпченко. Українсько-шведські відносини Український дипломатичний корпус Список дипломатичних місій\n4. **Українсько-польські відносини** — Українсько-польські відносини — комплекс двосторонніх відносин між Україною та Республікою Польща на міждержавному рівні, що охоплює політичне, економічне\n5. **Українсько-білоруські відносини** — З&#039;їзду народів Росії. Див. також: Міжнародні відносини України в 1917—1922 роках Див. також: Українсько-білоруські переговори про державний кордон 1918",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "485a1d1c-8b6b-4c15-ac6d-9d44a21a872a",
+      "timestamp": "2026-03-14T03:03:00.410Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Дипломатична мова\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Дипломатична мова Гетьманщини (відносини зі Швецією та Кримом)\"\ntype: \"phenomenon\"\ndates:\n  start: \"1648-01-01\"\n  end: \"1709-07-08\"\n  key_events:\n    - year: 1648\n      event: \"Укладення військово-політичного союзу Богдана Хмельницького з Кримським ханством.\"\n    - year: 1656\n      event: \"Активні дипломатичні переговори та спроби укласти коаліцію зі Швецією (Карл X Густав) за часів Хмельницького.\"\n    - year: 1708\n      event: \"Укладення українсько-шведського договору між гетьманом Іваном Мазепою та королем Карлом XII.\"\nprimary_quotes:\n  - text: \"Ясновельможний милостивий хане кримський з численними ордами, близький наш сусіде!\"\n    source: \"Літопис Самійла Величка, 1720\"\n    attribution: \"Формула звертання до кримського хана у дипломатичному листуванні\"\n  - text: \"Україна і землі, до неї прилучені, мають бути вільними й незалежними; король шведський зобов’язується оберігати їх від усіх ворогів...\"\n    source: \"Пилип Орлик, «Вивід прав України» (Déduction des droits de l’Ukraine), 1712\"\n    attribution: \"Опис змісту українсько-шведського договору 1708 року\"\nforbidden_claims:\n  - \"Гетьманщина не мала власної зовнішньої політики і була лише об'єктом дипломатії сусідніх держав.\"\n  - \"Дипломатія козаків зводилася до прохань про підданство (зокрема Москві).\"\n  - \"Відносини з Кримським ханством мали виключно характер тимчасових і вимушених військових союзів без належного дипломатичного оформлення.\"\n```\n\n## Використані джерела\n1. [Літопис Самійла Величка](http://litopys.org.ua/) — класичний літопис, що містить зразки дипломатичного листування Гетьманщини з Кримським ханством.\n2. [О. Оглоблін. «Гетьман Мазепа та його доба»](http://litopys.org.ua/) — ґрунтовна праця, де аналізується українсько-шведський союз 1708 року та наводяться витяги з документів (меморіал Пилипа Орлика).\n3. [Літопис Григорія Грабянки](http://litopys.org.ua/) — джерело для аналізу офіційної дипломатичної риторики та титулатури гетьманського уряду.\n4. [В. Голобуцький. «Запорозьке козацтво»](http://litopys.org.ua/) — аналіз дипломатичної служби та талантів Богдана Хмельницького.\n\n## Хронологія\n- 1648: Встановлення дипломатичних контактів та укладення союзу між Військом Запорозьким та Кримським ханством перед початком Визвольної війни.\n- 1655-1657: Переговори Богдана Хмельницького зі шведським королем Карлом X Густавом щодо створення антипольської коаліції.\n- 1708 (жовтень-листопад): Укладення військово-політичного союзу між гетьманом Іваном Мазепою та шведським королем Карлом XII.\n- 1709 (8 квітня): Офіційне підтвердження українсько-шведського договору (зафіксоване в документах і пізніше описане Пилипом Орликом).\n- 1712: Написання Пилипом Орликом меморіалу «Вивід прав України», де мовою європейської дипломатії обґрунтовується суверенність України.\n\n## Ключові факти та цитати\n- Дипломатична служба Гетьманщини була високоорганізованою інституцією (Генеральна військова канцелярія).\n- Листування з Кримським ханством велося з дотриманням східного етикету та пишних титулатур («Ясновельможний милостивий хане...»).\n- Відносини зі Швецією базувалися на європейській дипломатичній традиції (латина, польська, староукраїнська мови) і трактували Україну як рівноправного суб'єкта міжнародного права.\n- За словами П. Орлика, договір 1708 р. гарантував, що «Україна і землі, до неї прилучені, мають бути вільними й незалежними».\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!myth-buster] Російська історіографія зображувала козаків як неорганізованих бунтівників. Насправді Гетьманщина мала професійну дипломатичну службу (Генеральну канцелярію) і вела активну зовнішню політику.\n- Section \"Вступ\": [!context] Дипломатична мова Гетьманщини залежала від адресата: у спілкуванні з Кримом і Портою використовували східний етикет і пишні епітети, зі Швецією та європейськими країнами — строгу європейську канцелярійну традицію та латину.\n- Section \"Основний матеріал\": [!quote] Цитата з Пилипа Орлика про договір зі Швецією 1708 року, що підкреслює статус України: «Україна... має бути вільною й незалежною».\n- Section \"Основний матеріал\": [!history-bite] Звертання до кримського хана у листуванні (за Літописом Величка) рясніли підкреслено шанобливими формулами («Ясновельможний милостивий хане... близький наш сусіде!»), що демонструє майстерність козацької дипломатії у налагодженні союзів.\n- Section \"Практика\": [!culture] Знання іноземних мов (особливо латини) було обов'язковою умовою для генерального писаря та козацьких дипломатів, що свідчить про високий рівень освіти тогочасної еліти.\n- Section \"Підсумок\": [!decolonization] Договори зі Швецією та Кримом — це угоди між суверенними державами, а не «зради» чи «пошуки нового пана», як це маркувала імперська пропаганда.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth**: Гетьманщина була нездатна до самостійної міжнародної політики і потребувала «протекторату» (зокрема, московського), а всі інші союзи (з Кримом, Швецією) розглядалися виключно як «зрада» або тактичні помилки. Козаки подавалися як малоосвічені вояки.\n- **Ukrainian reality**: Гетьманщина (Військо Запорозьке) була повноцінним суб'єктом міжнародного права з розгалуженою мережею дипломатичних місій. Дипломатична мова козацької еліти була вишуканою, інтегрувала латинську традицію та східний протокол. Договори з Кримом і Швецією (особливо Мазепинський союз 1708 р.) були актами суверенної держави, спрямованими на забезпечення власної незалежності.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Союз І. Мазепи та Карла XII | «Зрада», «перехід на бік ворога» | Військово-політичний союз двох суверенних держав задля здобуття незалежності України |\n| Відносини з Кримом | «Набіги», «неприродний союз християн з мусульманами» | Прагматичний військово-політичний союз, скріплений відповідним дипломатичним протоколом |\n| Статус України | «Малоросія», «піддані царя» | Вільна і незалежна держава (зафіксовано в дипломатичних трактатах) |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Головна теза**: Розвінчання міфу про «неосвічених козаків». Гетьманщина (Військо Запорозьке) після 1648 року швидко вибудувала потужну дипломатичну службу. \n- **Мовний аспект**: Багатомовність Генеральної військової канцелярії. Використання староукраїнської (руської), польської, латини (для Європи, зокрема Швеції) та освоєння елементів східного протоколу (для Криму та Османської імперії).\n- **Інституція**: Генеральний писар та канцеляристи як еліта нації. \n\n### Основний матеріал\n- **Дипломатія з Кримським ханством**: Аналіз риторики на основі Літопису Самійла Величка. Використання пишних титулатур та епітетів («Ясновельможний милостивий хане... близький наш сусіде»). Це демонструє не підлеглість, а східну дипломатичну традицію шанобливості для забезпечення критично важливого союзу (кінноти).\n- **Дипломатія зі Швецією**: Аналіз європейського вектора. Від контактів Б. Хмельницького (Карл X Густав) до епохального договору І. Мазепи (Карл XII) у 1708 році.\n- **Джерела**: Згадка меморіалу Пилипа Орлика «Вивід прав України» (1712). Орлик, як колишній генеральний писар, блискуче володів європейською дипломатичною мовою і зафіксував суть шведсько-українського союзу: «Україна... має бути вільною й незалежною».\n\n### Практика\n- **Аналіз тексту**: Завдання на порівняння двох стилів дипломатичного листування — орієнтального (з Кримом) та західноєвропейського (зі Швецією).\n- **Лексика**: Вивчення титулатур, звертань та дипломатичних формул (канцелярської мови) XVII–XVIII століть. Вміння розпізнати політичний підтекст за ввічливими формулами.\n\n### Підсумок\n- **Висновки**: Дипломатична мова Гетьманщини є прямим доказом її державної спроможності та європейського рівня освіченості еліти.\n- **Деколонізація**: Підкреслення того, що Україна вела діалог зі Швецією та Кримом як рівна з рівними, що повністю спростовує імперські наративи про «одвічне прагнення до возз'єднання».\n- **Зв'язок**: Перехід до наступного модуля (orlyk-latin-comparison), де детальніше розглядатиметься роль латини в дипломатії часів Пилипа Орлика.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Determining the Next Steps",
+          "description": "I am now focusing on determining the best way to assemble the gathered information, focusing on the historical connections and interactions between these entities. I'm considering how to weave the details into a cohesive narrative that emphasizes the key relationships and events.",
+          "timestamp": "2026-03-14T03:02:21.490Z"
+        },
+        {
+          "subject": "Constructing the Research Output",
+          "description": "I am currently working to organize the research notes into the specified output format. This involves categorizing key facts, establishing a clear timeline, and extracting relevant quotes to support the analysis. The goal is to build a well-structured and insightful response, integrating all the gathered information effectively.",
+          "timestamp": "2026-03-14T03:02:24.260Z"
+        },
+        {
+          "subject": "Finalizing the Document Structure",
+          "description": "I'm now structuring the final output, ensuring all sections are present and well-organized. I am working on integrating the key facts and quotes into the relevant sections, focusing on creating a smooth flow and clear presentation.",
+          "timestamp": "2026-03-14T03:02:26.734Z"
+        },
+        {
+          "subject": "Creating the Research Sections",
+          "description": "I am now focusing on arranging the findings into the different sections as outlined. I am currently working on populating each part with its respective content, including key facts, quotes, and contextual analysis. The goal is to build a thorough and well-organized representation.",
+          "timestamp": "2026-03-14T03:02:29.058Z"
+        }
+      ],
+      "tokens": {
+        "input": 27725,
+        "output": 2833,
+        "cached": 0,
+        "thoughts": 709,
+        "tool": 0,
+        "total": 31267
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

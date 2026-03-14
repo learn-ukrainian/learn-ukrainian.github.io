@@ -1,0 +1,230 @@
+discovered_at: '2026-03-13T23:53:24.461992+00:00'
+query_keywords:
+- Kulish Panteleimon Essayist
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати Куліша як есеїста у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0508
+  text: "281\nПлани-схеми для самостійної роботи з  підручником і  додатковою літературою\n\
+    Плани-схеми для самостійної роботи з  підручником  \nі  додатковою літературою\n\
+    Як скласти план\n\t 1. Уважно прочитайте текст, до якого вам треба скласти план.\
+    \ 2. Виберіть із нього лише той матеріал, який відповідає темі плану. 3. Поділіть\
+    \ текст на логічно завершені частини, знайдіть у  кожній із них \nголовну думку,\
+    \ чітко сформулюйте та запишіть їх. 4. Дайте назви частинам тексту. 5. Перед тим\
+    \ як записати план у зошит, "
+  section_title: Сторінка 281
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  text: "Використана  література\nІванюк С. Міфи про Миколу Куліша / Сергій Іванюк\
+    \ // Наукові записки Національного \nуніверситету «Києво-Могилянська академія».\
+    \ — 1998. — Т. 4. — С. 75–83. — (Серія \n«Філологія»). Кузякіна Н. Траєкторія\
+    \ доль / Наталя Кузякіна. — К. : Темпора, 2010. Куліш А. Спогади про Миколу Куліша\
+    \ // Куліш М. Твори: В 2 т. — К., 1990. — Т. 2. — \nС. 695–753. Наєнко М. Художня\
+    \ література України / М. Наєнко. — К., 2007. — С. 845–857. Панченко В. Арки і\
+    \ шибениці (драматургія Миколи Куліша) /"
+  section_title: Сторінка 126
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5526696443557739
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5413376092910767
+  chunk_id: feaa5fa7_c1870
+  text: "Першим етапом, що підготовляв наук. вивчення\r\nлітератури на Центр. і Сх.\
+    \ Землях, були критичні огляди нових творів, друковані\r\nу періодичних виданнях,\
+    \ здебільшого в альманахах. Такий характер мали огляди І.\r\nМастака (Осипа Бодянського)\
+    \ »Малороссийские повести, рассказываемые Грыцьком\r\nОсновьяненком« (»Ученые\
+    \ Записки Московского Университета« 1834), Ієремії Галки\r\n(Миколи Костомарова)\
+    \ »Обзор сочинений, написанных на малороссийском языке« (в\r\n»Молодику« 1844),\
+    \ Амвросія Метлинського »Обозрение собр"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5406105518341064
+  chunk_id: fc2291b5_c4079
+  text: "Літ.: Чернявський М.\r\nПантелеймон Олександрович Куліш і його оповідання.\
+    \ Бахмут, 1900; Маковей О.\r\nПанько Олелькович Куліш. Огляд його діяльності.\
+    \ Львів, 1900; Шенрок В. П. А.\r\nКулиш. Биографический очерк. К., 1901; Дубове\
+    \ листя. Альманах на згадку про П.\r\nО. Куліша. К., 1903; Щурат В. Філософічна\
+    \ основа творчості Куліша. Львів, 1922;\r\nДорошенко Д. Пантелеймон Куліш. Ляйпціг,\
+    \ 1923; Пантелеймон Куліш. К., 1927;\r\nЗаписки Наукового товариства імені Шевченка,\
+    \ т. 148. Львів, 1928; Петров В.\r\nПантєлим"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

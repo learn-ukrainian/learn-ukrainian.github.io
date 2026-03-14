@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 6 — E2E
+PASS: pipeline lit-essay 10
 
   Module:   franko-some-words
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:42:16Z
+  Date:     2026-03-14T00:14:37Z

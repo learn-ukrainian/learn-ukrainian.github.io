@@ -1,0 +1,243 @@
+discovered_at: '2026-03-14T00:25:23.976261+00:00'
+query_keywords:
+- Lypynsky Ham Japheth
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Lypynsky Ham Japheth у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.75
+  relevance_note: This video directly relates to the suppression of historical figures
+    by Soviet historiography, which is highly relevant to the 'Деколонізаційна перспектива'
+    and 'історіографія' sections of the module concerning Lypynsky Ham Japheth, assuming
+    his narrative was also suppressed or distorted.
+  transcript_excerpt: Це прізвище завжди було табуйованим. Радянська історія та історіографія
+    викидала та зневажала таких представників еліти і знаті.
+  embed_suggestion: After Деколонізаційна перспектива -- to illustrate how specific
+    historical figures or narratives were suppressed and 'discarded' by Soviet-era
+    historiography, reinforcing the concept of decolonizing Ukrainian history.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.4
+  relevance_note: The video discusses broader historical events (Holodomor, Holocaust)
+    and the impact of Russian/Stalinist crimes, which is a general historical context
+    but not directly focused on Lypynsky Ham Japheth's specific works or decolonization
+    efforts regarding his legacy.
+  transcript_excerpt: Ми кажемо про Голодомор, про злочини Сталіна, російські злочини,
+    тому що доля євреїв України це частина історії, коли українці формують власну
+    історію.
+  embed_suggestion: After Вступ та контекст -- if the module aims to provide a broad
+    historical overview of Ukrainian suffering and resilience, it could tangentially
+    relate to the general context of Lypynsky Ham Japheth's work.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0309
+  text: "221\nЗМІСТ\nПередмова . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . .3\nВСТУП\n§ 1 \nЛексикографія.\
+    \ Сучасні лексикографічні  джерела: словники, довідкова література \n(у тому числі\
+    \ на електронних носіях)  . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4\n§ 2 \nІнформативна\
+    \ й нормативна функції словників і д"
+  section_title: Сторінка 221
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5538022518157959
+  chunk_id: 2bf33f78_c0380
+  text: "14 Милюков П. Вказана\r\nпраця. — С.10; Пештич С.Л. \"Синопсис\" как историческое\
+    \ произведение\r\n// Труды отдела древнерусской литературы. — 1959. — T.15. —\
+    \ C.286.\n\n15 Лаппо-Данилевский\r\nА.С. Вказана праця. — С. 19.\n\n16 Там само.\
+    \ — С.\r\n20-21.\n\n17 Паламарчук Петр.\r\nМосква, Мосох и третий Рим // Слово.\
+    \ — М., 1989. — Вып. 1. — С. 223.\n\n18 Сумцов Н.Ф.\r\nИннокентий Гизель. — К.,\
+    \ 1874(?). — С. 40.\n\n19 Там само. — С.\r\n41.\n\n20 Див.: Мыцык Ю.А.\r\nУкраинские\
+    \ летописи... ; Мыцык Ю.А. Влияние \"Кройники\" Феодосия\r\n"
+  work: Синопсис. Київ, 1674
+  author: Невідомий
+  year: 1674
+  genre: chronicle
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/synopsis/syn.htm
+- score: 0.5406550168991089
+  chunk_id: 87c07f1b_c0434
+  text: "В розділі є посилання на такі праці: Франка\r\nІв. Слово о Лазареві; воскресении:\
+    \ Староруська поема на апокрифічні теми //\r\nЗНТШ. 1900. Т. 35 — 36. С. 18 —\
+    \ 19, 1 — 57; Перетц В. Н. Историко-литературные\r\nисследования и материалы.\
+    \ СПб., 1902. Т. 3., ч. 1; Калайдович К. Ф. Записки\r\nважные и мелочные // Летописи\
+    \ рус. лит. и древностей Н. С. Тихонравова. М.,\r\n1861. Т. 3. С. 82 — 110; Пыпин\
+    \ А. Н. Ложные и отреченные книги русской\r\nстарины, собр. А. П. Пыпиным // Памятники\
+    \ старинной русской литературы, "
+  work: Грушевський — Історія української літератури, т.3-6
+  author: Грушевський М.
+  year: 1923
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushukr/hrush3.htm
+- score: 0.5360633730888367
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

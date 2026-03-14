@@ -1,0 +1,254 @@
+discovered_at: '2026-03-14T01:15:50.303264+00:00'
+query_keywords:
+- Riabchuk Two Ukraines
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Riabchuk Two Ukraines у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.9
+  relevance_note: Directly illustrates how Soviet historiography suppressed and distorted
+    the narrative of the Tereşchenko family, a clear example of historical manipulation
+    relevant to understanding the construction of national identity and the need for
+    decolonization in historical discourse, core to Riabchuk's 'Two Ukraines' concept.
+  transcript_excerpt: радянська історія, історіографія їх, ну, викидувала і зневажали.
+    Тобто ніде ні підприємства трещенків, ні їхні маєтки, будинки по Глухову ніколи
+    не згадували взагалі це слово сполучення, що це Терещенків.
+  embed_suggestion: After section Деколонізаційна перспектива -- as it provides a
+    concrete example of Soviet-era historical narrative suppression, which is central
+    to the decolonization theme.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.7
+  relevance_note: Discusses the re-evaluation of historical narratives (WWII, Holocaust)
+    in the context of current Russian aggression, which aligns with the decolonization
+    perspective and challenging established historical paradigms, a key aspect of
+    Riabchuk's work on national identity formation.
+  transcript_excerpt: йдеться про зміну парадигми дослідження говоріння і осмислення
+    Другої Світової, ми вже приречені порівнювати злочинами путінського режиму...
+  embed_suggestion: After section Деколонізаційна перспектива -- because it directly
+    addresses the need to change historical paradigms and compare past atrocities
+    with current events, reflecting a decolonized view of history.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.3
+  relevance_note: A biographical video about the business history of the Tereşchenko
+    family. While historical, it does not directly engage with the theoretical aspects
+    of Riabchuk's 'Two Ukraines,' historiography, national narratives, or decolonization
+    efforts.
+  transcript_excerpt: Микола Терещенко народився 14 жовтня року. Його батько тоді
+    тільки починав робити перші успіхи в комерції. Закінчивши кілька років училища,
+    юний Микола опановував тонкощі торгівлі.
+  embed_suggestion: None -- the video's focus on business history does not directly
+    align with any specific section of a module discussing Riabchuk's theory on Ukrainian
+    identity and historiography.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 7-klas-istoria-ukr-galimov-2024_s0334
+  text: "222\nЗміст\nЗміст\nПередмова . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3\n\
+    \t\n§ 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . 4\nРозділ І. ВЕЛИКЕ РОЗСЕЛЕННЯ\
+    \ СЛОВ’ЯНСТВА. ЗМІНА \nНАСЕЛЕННЯ ПРИЧОРНОМОРСЬКИХ СТЕПІВ\n\t\n§ 2. Слов’янство\
+    \ у V—VІІ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . 9\n\t\n§ 3. Слов’янські племена на те"
+  section_title: Сторінка 223
+  grade: 7
+  author: galimov
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0001
+  text: "«Українська мова. Буквар»  \nпідручник для 1 класу закладів  \nзагальної\
+    \ середньої освіти\n(у 2-х частинах)\nЧастина  друга\nМар’яна  Захарійчук\nВидавництво\
+    \ «Грамота»\n2025\nPidruchnyk.com.ua"
+  section_title: Сторінка 2
+  grade: 1
+  author: zaharijchuk
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.587899386882782
+  chunk_id: 3588aaff_c0285
+  text: "53 Мої застереження\r\nщодо цього терміна й теорії, що за ним стоїть, подані\
+    \ в працях: Grabowicz G.\r\nToward a History of Ukrainian Literature; Grabowicz\
+    \ G. Some Further\r\nObservations on ’Non-historical Nations’ and ’Incomplete’\
+    \ Literatures: a Repiy.\r\n— У різних місцях.\n\n54 Пор.: Волинський\r\nП. К.\
+    \ Теоретична боротьба в українській літературі (перша половина XIX\r\nст.). —\
+    \ К., 1959. — C. 141-210 та ін. — Вищезгадана Шевченкова критика\r\nКотляревського\
+    \ — виняток, що підтверджує правило."
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5866989493370056
+  chunk_id: 3588aaff_c0106
+  text: "Основним і водночас вельми проблематичним джерелом\r\nосмислення тогочасного\
+    \ контексту рецепції української літератури є розгорнута\r\nбібліографічно-описова\
+    \ довідка В. Сиповського, \"Україна в російському\r\nписьменстві: 1800-1850\"\
+     108,\n\n108 Сиповський\r\nВасиль. Україна в російському письменстві: 1800-1850.\
+    \ — К., 1928.\n\nПерше, що тут вражає, — це сам фактаж, його розміри:\r\nяк видно\
+    \ зі змісту, йдеться про майже п’ятсот творів. І де навіть тоді, коли\r\nавтор\
+    \ зосереджується на красному письменстві, специфі"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.583463728427887
+  chunk_id: feaa5fa7_c0944
+  text: "Історіографія: Василенко Н. К истории\r\nмалорусской историографии и малорусского\
+    \ /406/ общественного строя. КСт., XI\r\n— XII. 1894; Лазаревский А. Прежние изыскатели\
+    \ малорусс. старины. КСт.\r\n1891 — 97 і окремо: Очерки, заметки и документы по\
+    \ истории Малороссии, I — V.\r\nК. 1891 — 98; Иконников В. Опыт русской историографии,\
+    \ П. К. 1908; Грушевский\r\nМ. Развитие украинских изучений. Украинский народ\
+    \ в его прошлом и настоящем, І.\r\nП. 1914; Дорошенко Д. Огляд укр. історіографії.\
+    \ Прага 1923; Багалій\r\nД. "
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

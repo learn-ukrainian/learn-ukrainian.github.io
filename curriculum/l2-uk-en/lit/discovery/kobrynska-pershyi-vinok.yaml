@@ -1,0 +1,185 @@
+discovered_at: '2026-03-14T00:42:49.527235+00:00'
+query_keywords:
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=Du3WQV0K580
+  channel: Суспільне Культура
+  title: «Ніяких всесвітньо відомих українців в культурних пантеонах не значилось»
+    — інтервʼю Оксани Забужко
+  relevance_score: 0.6
+  relevance_note: The video features contemporary Ukrainian feminist writer Oksana
+    Zabuzhko discussing Ukrainian identity and its place in Europe, particularly in
+    the context of decolonization. This aligns tangentially with the module's 'Деколонізаційна
+    перспектива' section, as Kobrynska's work also asserted Ukrainian female identity
+    against imperial narratives.
+  transcript_excerpt: Чи вам вдалося достукатися до інших, скажу так, європейців?
+    Про те, що ми з ними однієї крові і апелюючи до деяких тез, висловлених ту книзі,
+    що ми заслуговуємо їхніх зусиль, щоби вони допомогли нам пережити цю війну.
+  embed_suggestion: After section 'Деколонізаційна перспектива' — to provide a modern
+    parallel and discussion on Ukrainian cultural identity and its decolonial aspects.
+- url: https://www.youtube.com/watch?v=O-HJK0cypDw
+  channel: Суспільне Культура
+  title: Can you gain experience by reading a book? | Kateryna Zarembo | Bookstore
+    Podcast
+  relevance_score: 0.2
+  relevance_note: This video discusses general themes of reading and books, but it
+    does not specifically relate to Nataliya Kobrynska, 'Pershyi Vinok', Ukrainian
+    feminist literature, or decolonization.
+  transcript_excerpt: Говоримо про книжки, що допоможуть краще зрозуміти цю реальність.
+    Завжди говоримо в цій серії, що, звісно, одна книжка навряд чи його здатна пояснити,
+    але інколи бувають книжки, які впливають на нас більше, ніж інші.
+  embed_suggestion: None — not relevant to module topic.
+- url: https://www.youtube.com/watch?v=ByhXgKx-JwA
+  channel: Суспільне Док
+  title: '«Школи Сластіона: загублене минуле» — що сталося з архітектурними пам''ятками
+    українського модерну?'
+  relevance_score: 0.1
+  relevance_note: This video is about Ukrainian architectural modernism, which is
+    unrelated to the literary and feminist themes of the module on Kobrynska.
+  transcript_excerpt: Школи Сластіона зведені у стилі Українського архітектурного
+    модерну. Він виник на початку XX століття і розвивався майже 40 років.
+  embed_suggestion: None — not relevant to module topic.
+- url: https://www.youtube.com/watch?v=7BiKT3ZtVwg
+  channel: Суспільне Док
+  title: 'Як ГО Truth Hounds документує воєнні злочині в гарячих точках | Лицарі правозахисту
+    #2'
+  relevance_score: 0.1
+  relevance_note: This video discusses the documentation of war crimes by an NGO,
+    which is entirely unrelated to the literary, historical, and feminist content
+    of the module.
+  transcript_excerpt: Основною діяльністю громадської організації 'Truth Hounds' є
+    документування воєнних злочинів та злочинів проти людяності, а також правозахисна
+    діяльність.
+  embed_suggestion: None — not relevant to module topic.
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0186
+  text: '2. Структурна цілісність тексту: вступ, основна частина, висновок. 3. Логічність
+    і послідовність викладу змісту. 4. Дотримання мовних норм (орфоепічних, лексичних,
+    граматичних, стилістичних). 5. Виразність мовлення (образність та емоційний вплив).'
+  section_title: Сторінка 138
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6297192573547363
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.627640962600708
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.6192017793655396
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

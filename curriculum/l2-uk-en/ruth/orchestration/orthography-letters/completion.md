@@ -1,10 +1,10 @@
-PASS: build_module_v2.py ruth 52 — E2E
+PASS: pipeline ruth 50
 
   Module:   orthography-letters
   Track:    ruth
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T10:45:41Z
+  Date:     2026-03-14T07:08:12Z

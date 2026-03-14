@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-essay 15 — E2E
+PASS: pipeline lit-essay 20
 
   Module:   zerov-ad-fontes
   Track:    lit-essay
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:55:54Z
+  Date:     2026-03-14T00:38:36Z

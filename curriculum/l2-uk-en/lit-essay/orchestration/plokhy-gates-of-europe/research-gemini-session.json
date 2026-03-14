@@ -1,0 +1,717 @@
+{
+  "sessionId": "3360cffa-089f-4d02-9b1b-0115b6fa2593",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:33:47.559Z",
+  "lastUpdated": "2026-03-14T01:36:00.558Z",
+  "messages": [
+    {
+      "id": "774878e6-ed68-4cef-a769-17e4dfb5a002",
+      "timestamp": "2026-03-14T01:33:47.559Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-lit.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nsequence: 35\nmodule: lit-essay-35\nlevel: LIT.ESSAY\nslug: plokhy-gates-of-europe\nversion: '2.0'\ntitle: Plokhy Gates Of Europe\nsubtitle: Plokhy Gates Of Europe\ncontent_outline:\n- section: Вступ та контекст\n  words: 800\n  points: []\n- section: Аналіз ключових творів\n  words: 1200\n  points: []\n- section: Стилістика та мова автора\n  words: 1200\n  points: []\n- section: Деколонізаційна перспектива\n  words: 1000\n  points:\n  - Як цей автор руйнує імперські міфи\n  - Українська суб'єктність у тексті\n- section: Підсумок та спадщина\n  words: 800\n  points: []\nvocabulary_hints:\n  required:\n  - історіографія\n  - наратив\n  - суб'єктність\n  recommended:\n  - деколонізація\nactivity_hints:\n- type: reading\n  focus: Аналіз першоджерела\n- type: essay-response\n  focus: Критичне есе\n- type: critical-analysis\n  focus: Деконструкція тексту\nfocus: literature\npedagogy: literature\nimmersion: 100% Ukrainian\nphase: LIT Expansion\nobjectives:\n- Проаналізувати творчість Plokhy Gates Of Europe у контексті української літератури\n- Дослідити вплив автора на формування національної ідентичності\npersona:\n  voice: Senior Specialist\n  role: Continental Historian\nword_target: 5000\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Plokhy Gates Of Europe** for the **lit-essay** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **4000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Plokhy Gates Of Europe\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Plokhy Gates Of Europe\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "feb0bf13-2aae-45f3-a83e-f92275998d9a",
+      "timestamp": "2026-03-14T01:33:59.553Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Stage",
+          "description": "I'm now focused on the next stage. Progress is contingent on completing the existing tasks in a sequential manner. I am formulating plans to address the issues that remain. The approach I've chosen looks promising and should allow me to proceed.",
+          "timestamp": "2026-03-14T01:33:52.920Z"
+        },
+        {
+          "subject": "Beginning Research on Topic",
+          "description": "I'm starting the research process, intending to gather initial information. I'm focusing on the book and the author, ensuring I have a solid foundation before moving forward. My strategy involves targeted information gathering to ensure the scope is correct. I am committed to establishing a strong basis for the essay.",
+          "timestamp": "2026-03-14T01:33:59.419Z"
+        }
+      ],
+      "tokens": {
+        "input": 20470,
+        "output": 19,
+        "cached": 0,
+        "thoughts": 363,
+        "tool": 0,
+        "total": 20852
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452039551_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Брама Європи"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452039551_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia article not found: 'Брама Європи'"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:33:59.783Z",
+          "resultDisplay": "Wikipedia article not found: 'Брама Європи'",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "e1e93058-ec95-44be-9606-fcc1ff9bfe5e",
+      "timestamp": "2026-03-14T01:34:04.085Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Commencing Search Execution",
+          "description": "I'm now initiating the Wikipedia search for \"Брама Європи\" to gather relevant information. My next step will be to use the search results to create a more focused query.",
+          "timestamp": "2026-03-14T01:34:03.086Z"
+        },
+        {
+          "subject": "Refining Search Queries",
+          "description": "I am now focused on conducting a Wikipedia search for \"Плохій Сергій\" to augment my understanding. I will then use the results of both searches to formulate a more refined search.",
+          "timestamp": "2026-03-14T01:34:04.003Z"
+        }
+      ],
+      "tokens": {
+        "input": 20505,
+        "output": 39,
+        "cached": 0,
+        "thoughts": 85,
+        "tool": 0,
+        "total": 20629
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452044048_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Брама Європи"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452044048_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Брама Європи' — 5 results\n\n1. **Галицька брама** — «Галицька брама» — краєзнавчий часопис. Виходить у Львові щомісяця українською мовою. Перше число вийшло у вересні 1994 року. Номери «Галицької брами» переважно\n2. **Моравська брама** — Моравська брама (чеськ. Moravská brána, пол. Brama Morawska, нім. Mährische Pforte, словац. Moravská brána) — географічний регіон у Моравії, Чехія. Є\n3. **Верхня Польська брама (Кам'янець-Подільський)** — Ве́рхня По́льська бра́ма — комплекс північно-західних укріплень Старого міста Кам&#039;янця-Подільського. Складається з башти Стефана Баторія, до якої примикає\n4. **Зоряна брама: SG-1** — «Зоряна брама SG-1» (англ. Stargate SG-1) — науково-фантастичний телевізійний серіал, заснований на фільмі «Зоряна брама», компанії MGM. Створений за участі\n5. **Міська брама (Валлетта)** — Міська брама (мальт. Bieb il-Belt) — брама, розташована на в&#039;їзді в Валлетту, побудована в період з 2011 по 2014 рік за проєктом італійського архітектора"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:04.604Z",
+          "resultDisplay": "Wikipedia search: 'Брама Європи' — 5 results\n\n1. **Галицька брама** — «Галицька брама» — краєзнавчий часопис. Виходить у Львові щомісяця українською мовою. Перше число вийшло у вересні 1994 року. Номери «Галицької брами» переважно\n2. **Моравська брама** — Моравська брама (чеськ. Moravská brána, пол. Brama Morawska, нім. Mährische Pforte, словац. Moravská brána) — географічний регіон у Моравії, Чехія. Є\n3. **Верхня Польська брама (Кам'янець-Подільський)** — Ве́рхня По́льська бра́ма — комплекс північно-західних укріплень Старого міста Кам&#039;янця-Подільського. Складається з башти Стефана Баторія, до якої примикає\n4. **Зоряна брама: SG-1** — «Зоряна брама SG-1» (англ. Stargate SG-1) — науково-фантастичний телевізійний серіал, заснований на фільмі «Зоряна брама», компанії MGM. Створений за участі\n5. **Міська брама (Валлетта)** — Міська брама (мальт. Bieb il-Belt) — брама, розташована на в&#039;їзді в Валлетту, побудована в період з 2011 по 2014 рік за проєктом італійського архітектора",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773452044085_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Сергій Плохій",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452044085_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Сергій Плохій' — 5 results\n\n1. **Плохій Сергій Миколайович** — де народився Сергій Плохій. Незабаром сім&#039;я повернулася до Запоріжжя, де Сергій провів свої дитинство та юність. 1980 року Сергій Плохій закінчив Дніпровський\n2. **Плохій** — особове ім&#039;я людини. Плохій — прізвище. Плохій Валерій Семенович (нар. 1947) — державний діяч, український дипломат. Плохій Сергій Миколайович (нар. 1957) —\n3. **Лунін Сергій Ігорович** —  19 травня 2021 Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. — Харків: КСД, 2016. Сергій Плохій. Загублене царство\n4. **Український гуманітарний огляд** — України) Володимир Кравченко (Харківський національний університет) Сергій Плохій (Harvard University, США) Марина Ткачук (Університет «Києво-Могилянська\n5. **Українська екологічна асоціація «Зелений світ»** — «Чорнобиль». Він також став одним із активістів новоствореного «Руху». Сергій Плохій пише у своєму романі Чорнобиль. Історія ядерної катастрофи, що тоді"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:04.604Z",
+          "resultDisplay": "Wikipedia search: 'Сергій Плохій' — 5 results\n\n1. **Плохій Сергій Миколайович** — де народився Сергій Плохій. Незабаром сім&#039;я повернулася до Запоріжжя, де Сергій провів свої дитинство та юність. 1980 року Сергій Плохій закінчив Дніпровський\n2. **Плохій** — особове ім&#039;я людини. Плохій — прізвище. Плохій Валерій Семенович (нар. 1947) — державний діяч, український дипломат. Плохій Сергій Миколайович (нар. 1957) —\n3. **Лунін Сергій Ігорович** —  19 травня 2021 Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. — Харків: КСД, 2016. Сергій Плохій. Загублене царство\n4. **Український гуманітарний огляд** — України) Володимир Кравченко (Харківський національний університет) Сергій Плохій (Harvard University, США) Марина Ткачук (Університет «Києво-Могилянська\n5. **Українська екологічна асоціація «Зелений світ»** — «Чорнобиль». Він також став одним із активістів новоствореного «Руху». Сергій Плохій пише у своєму романі Чорнобиль. Історія ядерної катастрофи, що тоді",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "7ca3f240-9151-4ede-b4e8-aa6fb090bcf7",
+      "timestamp": "2026-03-14T01:34:10.655Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Extracting Relevant Details",
+          "description": "I am now focused on extracting relevant information to fulfill the objective. I will start by querying a source of knowledge.",
+          "timestamp": "2026-03-14T01:34:08.232Z"
+        },
+        {
+          "subject": "Gathering Author's Works",
+          "description": "I'm now gathering details about the author's key publications. I'm leveraging multiple information retrieval methods to broaden my scope and secure a complete understanding of the subject matter. This includes a search focused on the Ukrainian title of the book and the author's name, as well as a search including the author's name and the term 'decolonization'.",
+          "timestamp": "2026-03-14T01:34:10.164Z"
+        }
+      ],
+      "tokens": {
+        "input": 21329,
+        "output": 101,
+        "cached": 19716,
+        "thoughts": 215,
+        "tool": 0,
+        "total": 21645
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452050257_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Плохій Сергій Миколайович"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452050257_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Плохій Сергій Миколайович\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%BB%D0%BE%D1%85%D1%96%D0%B9_%D0%A1%D0%B5%D1%80%D0%B3%D1%96%D0%B9_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9%D0%BE%D0%B2%D0%B8%D1%87\n\nСергій Миколайович Плохій (англ. Serhii Plokhii; нар. 23 травня 1957, Горький, Російська РФСР) — український та американський історик, професор кафедри української історії в Гарвардському університеті, де з 2013 по 2025 рр. він займав посаду директора Гарвардського українського наукового інституту. Один з провідних спеціалістів з історії Східної Європи. Член Українського ПЕН. Є членом наукової ради «Українського історичного журналу». Живе й працює у США.\nАвтор більше десятка книг з історії України та Східної Європи. Входить до складу наукової ради Українського історичного журналу. Лауреат Національної премії України імені Тараса Шевченка (2018). Іноземний член Національної Академії Наук України\n\n\n== Життєпис ==\nНародився 23 травня 1957 року в Горькому (нині — Нижній Новгород, Росія). Батьки — Микола і Лідія Плохії. Микола Плохій працював інженером-металургом, а мати — педіатром. Батько був випускником Запорізького машинобудівного інституту. Після закінчення вишу батька відправили за державним розподілом до Горького, де народився Сергій Плохій. Незабаром сім'я повернулася до Запоріжжя, де Сергій провів свої дитинство та юність.\n1980 року Сергій Плохій закінчив Дніпровський університет, де отримав спеціальність історика. Займався історією України XVII—XVIII ст. Професійно ріс і розвивався під керівництвом професора Юрія Мицика та засновника дніпропетровської джерелознавчої школи Миколи Ковальського. Вступив до аспірантури цього ж університету. Кандидатську дисертацію захищав 1982 року на історичному факультеті Університету дружби народів в Москві, тема: «Латиномовні твори середини XVII століття як джерело з історії визвольної війни українського народу 1648—1654 рр.» (спеціальність 07.00.09., 209 ст.) Ступінь доктора історичних наук отримав у 1990 році у КНУ ім. Шевченка, захистивши 1990 року дисертацію «Політика папства на Україні у другій половині XVI — середині XVII століття» (спеціальність 07.00.02.,07.00.03, 411 ст.)\nУ 1983—1992 роках викладав у Дніпровському університеті, де пройшов шлях від викладача до професора, завідувача кафедри та декана. У 1986—1987 роках стажувався у Колумбійському та Гарвардському університетах. Разом з викладачами та аспірантами кафедри загальної історії почав дослідження історії німецьких та менонітських поселень на Півдні України. На громадських засадах виконував обов'язки директора Музею університету.\nУ серпні 1991 приїхав до Канади викладати в Університеті Альберти. Одночасно очолював відділ, а потім сектор в Інституті української археографії Національної Академії наук України, де став ініціатором видання джерел з історії українських церков. 1996 року був запрошений на наукову роботу до Канадського інституту українських студій (КІУС), де заснував Програму дослідження релігії та культури. Більше 10 років працював заступником директора (associate director) Центру українських історичних досліджень імені Петра Яцика при КІУС. Займався дослідженням спадщини Михайла Грушевського, зокрема був одним з редакторів англійського перекладу фундаментальної «Історії України-Руси» (History of Ukraine-Rus').\nУ 2007 році зайняв за конкурсом посаду професора історії України Гарвардського університету. З 2013 року Сергій Плохій — директор Українського наукового інституту, де він, зокрема, керує проєктом «МАПА. Цифровий Атлас України».\nУ 2023 році став членом Міжнародної академічної консультативної ради проєкту Ukrainian History Global Initiative.\nКоло наукових інтересів:\nСергій Плохій працює над дослідженням ранньомодерної та модерної історії України та Східної Європи, а також політичної та культурної історії Холодної війни. До цієї категорії, зокрема, входять різноманітні дослідження з історії слов'янських народів і політики папства щодо українських земель.\n\n\n== Цікаві факти ==\nНапрацювання історика Сергія Плохія є перекладені багатьма мовами, серед яких — китайська, білоруська, польська, естонська, іспанська, румунська, португальська, німецька, французька.\nПереклади українською мовою: «Наливайкова віра», «Царі та козаки. Загадки української ікони», «Ялта. Ціна миру», «Великий переділ: Незвичайна історія Михайла Грушевського», «Козацький міф».\nІніціював створення Програми дослідження релігії та культури.\nНайпопулярніші книги автора: «Брама Європи», «Чорнобиль», «Остання імперія»[1].\nПочатковою мрією майбутнього історика було стати відомим журналістом.\n\n\n== Нагороди та відзнаки ==\nу 2002—2005 роках книги Сергія Плохія вигравали перший приз Американської асоціації Українських студій (American Association for Ukrainian Studies).\n2009 — премія Американської асоціації сприяння слов'янським дослідженням («Early Slavic Studies Association Distinguished Scholarship Award»).\n2015 — Премія Лайонела Ґелбера (Канада) за найкращу англомовну книжку 2014 року з історії міжнародних відносин «The Last Empire: The Final Days of the Soviet Union».\n2015 — Премія фундації Антоновичів.\n2018 — Національна премія України імені Тараса Шевченка (за книгу «Брама Європи»).\n2018 — британська Премія Бейлі Ґіффорд у галузі документалістики (за книгу «Чорнобиль. Історія трагедії.»)\n\n\n== Праці ==\nУкраїнською\nПлохій Сергій; Мицик Юрій; Стороженко Іван. Тієї слави козацької повік не забудем. Дніпропетровськ: «Промінь», 1989. 118 с. ISBN ? (Давно се діялось колись)\nПлохій Сергій; Мицик Юрій; Стороженко Іван.Як козаки воювали. Дніпропетровськ: Промінь, 1990. 302 с. ISBN 5-7775-0334-9 (Давно се діялось колись)\nПлохій Сергій; Крижанівський Олег. Історія церкви та релігійної думки в Україні у 3. кн.: Кн.3, Кінець XVI — середина XIX ст. Київ: Либідь. 1994. 335 с. ISBN 5-325-00153-1\nЮрій Мицик, Сергій Плохій. Як козаки Україну боронили. Кліо. 2018 р. 368 с. ISBN 978-617-7023-63-9\nАнглійською\nВласні книги:\n\nPlokhy, Serhii. The Cossacks and Religion in Early Modern Ukraine. Oxford: Oxford University Press, 2001. 416 p. ISBN 978-0199247394.\n(пер. українською) Сергій Плохій. Наливайкова віра: козаки та релігія в ранньомодерній Україні. (пер. Софія Грачова). Київ: Критика, 2005. 495 с. ISBN 966-7679-76-4.\nPlokhy, Serhii. Tsars and Cossacks: A Study in Iconography. Ukrainian Research Institute of Harvard University, 2003. 102 p. ISBN 978-0916458959 (Harvard Papers in Ukrainian Studies)\n(пер. українською) Сергій Плохій. Царі та козаки. Загадки української ікони. (авторизований пер. Тетяна Григор'єва). Київ: Критика, 2018. 160 с. ISBN 978-966-2789-08-09.\nPlokhy, Serhii and Frank E. Sysyn. Religion and Nation in Modern Ukraine. Canadian Institute of Ukrainian Study Parishes, 2003. 232 p. ISBN 978-1895571363.\nPlokhy, Serhii. Unmaking Imperial Russia: Mykhailo Hrushevsky and the Writing of Ukrainian History. University of Toronto Press, 2005. 700 p. ISBN 978-0802039378.\n(пер. українською) Сергій Плохій. Великий переділ: Незвичайна історія Михайла Грушевського. (пер. Микола Климчук). Київ: Критика, 2011. 600 с. ISBN 978-966-8978-40-1.\nPlokhy, Serhii. The Origins of the Slavic Nations: Premodern Identities in Russia, Ukraine and Belarus. Cambridge University Press, 2006. 379 p. ISBN 978-0521864039.\n(пер. укр.) Сергій Плохій. Походження слов'янських націй. Домодерні ідентичності в Україні, Росії та Білорусі. (пер. М. Климчук та Т. Цимбал). Київ: Критика, 2015. 430 с. ISBN 978-966-8978-79-1\nPlokhy, Serhii. Ukraine and Russia: Representations of the Past. University of Toronto Press, 2008. 391 p. ISBN 978-0802093271.\nPlokhy, Serhii. Yalta: The Price of Peace. Viking Adult, 2010. 480 p. ISBN 978-1101189924\n(пер. українською) Сергій Плохій. Ялта. Ціна миру. (пер. Н. Є. Коваль). Харків: КСД, 2019. 416 с. ISBN 978-617-12-6306-2\nPlokhy, Serhii. The Cossack Myth. History and Nationhood in the Age of Empires. Cambridge University Press. 2012. 408 p. ISBN 978-1107022102\n(пер. українською) Сергій Плохій. Козацький міф. Історія та націєтворення в епоху імперій. (пер. Микола Климчук). Київ: Laurus, 2013. 440 с. ISBN 978-966-2449-26-6\n(пер. українською) Сергій Плохій. Козацький міф. Історія та націєтворення в епоху імперій. (пер. Микола Климчук). Київ: Laurus, 2015. 400 с. ISBN 978-966-2449-83-9\n(пер. українською) Сергій Плохій. Козацький міф. Історія та націєтворення в епоху імперій. (пер. Микола Климчук). Харків: КСД, 2018. 400 с. ISBN 978-617-12-4751-2\nPlokhy, Serhii. The Last Empire: The Final Days of the Soviet Union.New York: Basic Books, 2014. 520 p. ISBN 978-0-465-05696-5.\n(пер. українською) Сергій Плохій. Остання імперія. Занепад і крах Радянського Союзу. (пер. Ярослав Лебеденко, Анатолій Саган). Харків: КСД, 2019. 512 с. ISBN 978-617-12-6891-3\nPlokhy, Serhii. The Gates of Europe: A History of Ukraine. New York: Basic Books, 2015. 395 pp. ISBN 978-0-465-05091-8.\n(пер. українською) Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. (пер. Роман Клочко). Харків: КСД, 2016. 496 с. ISBN 978-617-12-1056-1.\nPlokhy, Serhii. The Man with the Poison Gun: A Cold War Spy Story. New York: Basic Books, 2016. 384 p. ISBN 978-0465035908\n(пер. українською) Сергій Плохій. Убивство у Мюнхені. По червоному сліду. (пер. Микола Климчук). Харків: КСД, 2017. 512 c. ISBN 978-617-12-3855-8\nPlokhy, Serhii. Lost Kingdom. A History of Russian Nationalism from Ivan the Great to Vladimir Putin.New York: Basic Books, 2017. 432 p. ISBN 978-0465098491\n(пер. українською) Сергій Плохій. Загублене царство. Історія «Русского мира» з 1470 року до сьогодні. (пер. Віктор Євменов, Єгор Євменов). Харків: Фоліо, 2019. 320 c. ISBN 978-966-03-8848-2\nPlokhy, Serhii. Chernobyl: The History of a Nuclear Catastrophe.New York: Basic Books, 2018. 432 p. ISBN 978-1541617094\n(пер. українською) Сергій Плохій. Чорнобиль. Історія ядерної катастрофи. (пер. Владислав Махонін, Євген Тарнавський). Харків: Фоліо, 2019. 400 c. ISBN 978-966-03-8922-9\nPlokhy, Serhii. Forgotten Bastards of the Eastern Front. Oxford: Oxford University Press, 2019. 369 p. ISBN 978-0190061012\n(пер. українською) Сергій Плохій. Забуті покидьки східного фронту. (пер. Н. Є. Коваль). Харків: КСД, 2020. 320 c. ISBN 978-617-12-7692-5\nPlokhy, Serhii. Nuclear Folly: A History of the Cuban Missile Crisis, New York: W. W. Norton & Company, 2021. ISBN 978-0-393-54081-9\nPlokhy, Serhii, The Frontline: Essays on Ukraine's Past and Present, Cambridge, MA: Ukrainian Research Institute, Harvard University, 2021. ISBN 978-0-674-26882-1\nPlokhy, Serhii. Atoms and Ashes: A Global History of Nuclear Disaster, New York: W. W. Norton & Company, 2022. ISBN 978-1-324-02104-9\n(пер. українською) Сергій Плохій. Атоми і попіл: глобальна історія ядерних катастроф. (пер. Назар Старовойт). Київ: Наш Формат, 2024. 344 c. ISBN 978-617-8115-64-7\nPlokhy, Serhii. The Russo-Ukrainian War: The Return of History W. W. Norton & Company (May 16, 2023) ISBN 978-1324051190\n(пер. українською) Сергій Плохій. Російсько-українська війна: Повернення історії. (пер. Ларченко Максим). Харків: КСД, 2023. 400 c. ISBN 978-617-15-0274-1\nВідредаговані книги:\n\nPoltava 1709: The Battle and the Myth. Editor: Plokhy, Serhii. Harvard Ukrainian Research Institute. 2012. 480 p. ISBN 9781932650099 (Harvard Papers in Ukrainian Studies)\nUkraine and Europe: Cultural Encounters and Negotiations. Editors: Plokhy, Serhii; Brogi Bercoff, Giovanna, Pavlyshyn, Marko. University of Toronto Press. 2017. 480 p. ISBN 978-1487500900\nThe Future of the Past: New Perspectives on Ukrainian History. Editor: Plokhy, Serhii. Harvard Ukrainian Research Institute. 2017. 516 p. ISBN 9781932650167 (Harvard Papers in Ukrainian Studies)\nЗбірки лекцій:\n\nPlokhy, Serhii. Ukraine's Quest for Europe: Borders, Cultures, Identities. Saskatoon: Heritage Press, 2007. 48 p. ISBN 0-88880-447-4 (A Mohyla Lecture Publication Homeland Series No.4.)\nРосійською\nПлохий, Сергей. Освещение освободительной войны украинского народа 1648—1654 гг. в работах И. Пастория. Днипропетровськ: ДГУ, 1980. ? с.(прим.: дипломна робота)\nПлохий С. Н. Латиноязычные сочинения середины XVII века как источник по истории освободительной войны украинского народа 1648—1654 гг. Москва: Університет дружби народів ім. Патріса Лумумби, 1982. ? с. (дисертація) 27 с. (автореферат) (прим.: кандидатська дисертація)\nПлохий С. Н. Освободительная война украинского народа 1648—1654 гг. в латиноязычной историографии середины XVII века. Днепропетровск: ДГУ, 1983. 68 с.\nПлохий, Сергей. Борьба украинского народа с католической экспансией (XVI—XVII вв.). Днепропетровск: ДГУ, 1987. 63 с.\nПлохий С. Н. Папство и Украина: политика римской курии на украинских землях в XVI—XVII вв.: монография / С. Н. Плохий, ред. М. М. Малыш. Киев: Выща школа, 1989. — 222 c. ISBN 5-11-002298-4\nПлохий, Сергей. Политика папства на Украине во второй половине XVI — середине XVII века. Киев. 1989. ? с. (дисертація), 36 с. автореферат) (прим.: докторська дисертація)\n\n\n== Джерела ==\n\n\n== Посилання ==\nПопулярні дослідження: https://book-ye.com.ua/authors/sergiy-plokhiy/.\nSerhii Plokhii [Архівовано 14 травня 2018 у Wayback Machine.] на сайті Гарвардського університету\nSerhii Plokhii [Архівовано 28 квітня 2021 у Wayback Machine.] на сайті Гарвардського українського наукового інституту\nSerhii Plokhii [Архівовано 11 березня 2018 у Wayback Machine.] на Goodreads\nЗбірка інтерв'ю з Сергієм Плохієм [Архівовано 20 березня 2022 у Wayback Machine.]"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:13.813Z",
+          "resultDisplay": "# Плохій Сергій Миколайович\n**URL**: https://uk.wikipedia.org/wiki/%D0%9F%D0%BB%D0%BE%D1%85%D1%96%D0%B9_%D0%A1%D0%B5%D1%80%D0%B3%D1%96%D0%B9_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9%D0%BE%D0%B2%D0%B8%D1%87\n\nСергій Миколайович Плохій (англ. Serhii Plokhii; нар. 23 травня 1957, Горький, Російська РФСР) — український та американський історик, професор кафедри української історії в Гарвардському університеті, де з 2013 по 2025 рр. він займав посаду директора Гарвардського українського наукового інституту. Один з провідних спеціалістів з історії Східної Європи. Член Українського ПЕН. Є членом наукової ради «Українського історичного журналу». Живе й працює у США.\nАвтор більше десятка книг з історії України та Східної Європи. Входить до складу наукової ради Українського історичного журналу. Лауреат Національної премії України імені Тараса Шевченка (2018). Іноземний член Національної Академії Наук України\n\n\n== Життєпис ==\nНародився 23 травня 1957 року в Горькому (нині — Нижній Новгород, Росія). Батьки — Микола і Лідія Плохії. Микола Плохій працював інженером-металургом, а мати — педіатром. Батько був випускником Запорізького машинобудівного інституту. Після закінчення вишу батька відправили за державним розподілом до Горького, де народився Сергій Плохій. Незабаром сім'я повернулася до Запоріжжя, де Сергій провів свої дитинство та юність.\n1980 року Сергій Плохій закінчив Дніпровський університет, де отримав спеціальність історика. Займався історією України XVII—XVIII ст. Професійно ріс і розвивався під керівництвом професора Юрія Мицика та засновника дніпропетровської джерелознавчої школи Миколи Ковальського. Вступив до аспірантури цього ж університету. Кандидатську дисертацію захищав 1982 року на історичному факультеті Університету дружби народів в Москві, тема: «Латиномовні твори середини XVII століття як джерело з історії визвольної війни українського народу 1648—1654 рр.» (спеціальність 07.00.09., 209 ст.) Ступінь доктора історичних наук отримав у 1990 році у КНУ ім. Шевченка, захистивши 1990 року дисертацію «Політика папства на Україні у другій половині XVI — середині XVII століття» (спеціальність 07.00.02.,07.00.03, 411 ст.)\nУ 1983—1992 роках викладав у Дніпровському університеті, де пройшов шлях від викладача до професора, завідувача кафедри та декана. У 1986—1987 роках стажувався у Колумбійському та Гарвардському університетах. Разом з викладачами та аспірантами кафедри загальної історії почав дослідження історії німецьких та менонітських поселень на Півдні України. На громадських засадах виконував обов'язки директора Музею університету.\nУ серпні 1991 приїхав до Канади викладати в Університеті Альберти. Одночасно очолював відділ, а потім сектор в Інституті української археографії Національної Академії наук України, де став ініціатором видання джерел з історії українських церков. 1996 року був запрошений на наукову роботу до Канадського інституту українських студій (КІУС), де заснував Програму дослідження релігії та культури. Більше 10 років працював заступником директора (associate director) Центру українських історичних досліджень імені Петра Яцика при КІУС. Займався дослідженням спадщини Михайла Грушевського, зокрема був одним з редакторів англійського перекладу фундаментальної «Історії України-Руси» (History of Ukraine-Rus').\nУ 2007 році зайняв за конкурсом посаду професора історії України Гарвардського університету. З 2013 року Сергій Плохій — директор Українського наукового інституту, де він, зокрема, керує проєктом «МАПА. Цифровий Атлас України».\nУ 2023 році став членом Міжнародної академічної консультативної ради проєкту Ukrainian History Global Initiative.\nКоло наукових інтересів:\nСергій Плохій працює над дослідженням ранньомодерної та модерної історії України та Східної Європи, а також політичної та культурної історії Холодної війни. До цієї категорії, зокрема, входять різноманітні дослідження з історії слов'янських народів і політики папства щодо українських земель.\n\n\n== Цікаві факти ==\nНапрацювання історика Сергія Плохія є перекладені багатьма мовами, серед яких — китайська, білоруська, польська, естонська, іспанська, румунська, португальська, німецька, французька.\nПереклади українською мовою: «Наливайкова віра», «Царі та козаки. Загадки української ікони», «Ялта. Ціна миру», «Великий переділ: Незвичайна історія Михайла Грушевського», «Козацький міф».\nІніціював створення Програми дослідження релігії та культури.\nНайпопулярніші книги автора: «Брама Європи», «Чорнобиль», «Остання імперія»[1].\nПочатковою мрією майбутнього історика було стати відомим журналістом.\n\n\n== Нагороди та відзнаки ==\nу 2002—2005 роках книги Сергія Плохія вигравали перший приз Американської асоціації Українських студій (American Association for Ukrainian Studies).\n2009 — премія Американської асоціації сприяння слов'янським дослідженням («Early Slavic Studies Association Distinguished Scholarship Award»).\n2015 — Премія Лайонела Ґелбера (Канада) за найкращу англомовну книжку 2014 року з історії міжнародних відносин «The Last Empire: The Final Days of the Soviet Union».\n2015 — Премія фундації Антоновичів.\n2018 — Національна премія України імені Тараса Шевченка (за книгу «Брама Європи»).\n2018 — британська Премія Бейлі Ґіффорд у галузі документалістики (за книгу «Чорнобиль. Історія трагедії.»)\n\n\n== Праці ==\nУкраїнською\nПлохій Сергій; Мицик Юрій; Стороженко Іван. Тієї слави козацької повік не забудем. Дніпропетровськ: «Промінь», 1989. 118 с. ISBN ? (Давно се діялось колись)\nПлохій Сергій; Мицик Юрій; Стороженко Іван.Як козаки воювали. Дніпропетровськ: Промінь, 1990. 302 с. ISBN 5-7775-0334-9 (Давно се діялось колись)\nПлохій Сергій; Крижанівський Олег. Історія церкви та релігійної думки в Україні у 3. кн.: Кн.3, Кінець XVI — середина XIX ст. Київ: Либідь. 1994. 335 с. ISBN 5-325-00153-1\nЮрій Мицик, Сергій Плохій. Як козаки Україну боронили. Кліо. 2018 р. 368 с. ISBN 978-617-7023-63-9\nАнглійською\nВласні книги:\n\nPlokhy, Serhii. The Cossacks and Religion in Early Modern Ukraine. Oxford: Oxford University Press, 2001. 416 p. ISBN 978-0199247394.\n(пер. українською) Сергій Плохій. Наливайкова віра: козаки та релігія в ранньомодерній Україні. (пер. Софія Грачова). Київ: Критика, 2005. 495 с. ISBN 966-7679-76-4.\nPlokhy, Serhii. Tsars and Cossacks: A Study in Iconography. Ukrainian Research Institute of Harvard University, 2003. 102 p. ISBN 978-0916458959 (Harvard Papers in Ukrainian Studies)\n(пер. українською) Сергій Плохій. Царі та козаки. Загадки української ікони. (авторизований пер. Тетяна Григор'єва). Київ: Критика, 2018. 160 с. ISBN 978-966-2789-08-09.\nPlokhy, Serhii and Frank E. Sysyn. Religion and Nation in Modern Ukraine. Canadian Institute of Ukrainian Study Parishes, 2003. 232 p. ISBN 978-1895571363.\nPlokhy, Serhii. Unmaking Imperial Russia: Mykhailo Hrushevsky and the Writing of Ukrainian History. University of Toronto Press, 2005. 700 p. ISBN 978-0802039378.\n(пер. українською) Сергій Плохій. Великий переділ: Незвичайна історія Михайла Грушевського. (пер. Микола Климчук). Київ: Критика, 2011. 600 с. ISBN 978-966-8978-40-1.\nPlokhy, Serhii. The Origins of the Slavic Nations: Premodern Identities in Russia, Ukraine and Belarus. Cambridge University Press, 2006. 379 p. ISBN 978-0521864039.\n(пер. укр.) Сергій Плохій. Походження слов'янських націй. Домодерні ідентичності в Україні, Росії та Білорусі. (пер. М. Климчук та Т. Цимбал). Київ: Критика, 2015. 430 с. ISBN 978-966-8978-79-1\nPlokhy, Serhii. Ukraine and Russia: Representations of the Past. University of Toronto Press, 2008. 391 p. ISBN 978-0802093271.\nPlokhy, Serhii. Yalta: The Price of Peace. Viking Adult, 2010. 480 p. ISBN 978-1101189924\n(пер. українською) Сергій Плохій. Ялта. Ціна миру. (пер. Н. Є. Коваль). Харків: КСД, 2019. 416 с. ISBN 978-617-12-6306-2\nPlokhy, Serhii. The Cossack Myth. History and Nationhood in the Age of Empires. Cambridge University Press. 2012. 408 p. ISBN 978-1107022102\n(пер. українською) Сергій Плохій. Козацький міф. Історія та націєтворення в епоху імперій. (пер. Микола Климчук). Київ: Laurus, 2013. 440 с. ISBN 978-966-2449-26-6\n(пер. українською) Сергій Плохій. Козацький міф. Історія та націєтворення в епоху імперій. (пер. Микола Климчук). Київ: Laurus, 2015. 400 с. ISBN 978-966-2449-83-9\n(пер. українською) Сергій Плохій. Козацький міф. Історія та націєтворення в епоху імперій. (пер. Микола Климчук). Харків: КСД, 2018. 400 с. ISBN 978-617-12-4751-2\nPlokhy, Serhii. The Last Empire: The Final Days of the Soviet Union.New York: Basic Books, 2014. 520 p. ISBN 978-0-465-05696-5.\n(пер. українською) Сергій Плохій. Остання імперія. Занепад і крах Радянського Союзу. (пер. Ярослав Лебеденко, Анатолій Саган). Харків: КСД, 2019. 512 с. ISBN 978-617-12-6891-3\nPlokhy, Serhii. The Gates of Europe: A History of Ukraine. New York: Basic Books, 2015. 395 pp. ISBN 978-0-465-05091-8.\n(пер. українською) Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. (пер. Роман Клочко). Харків: КСД, 2016. 496 с. ISBN 978-617-12-1056-1.\nPlokhy, Serhii. The Man with the Poison Gun: A Cold War Spy Story. New York: Basic Books, 2016. 384 p. ISBN 978-0465035908\n(пер. українською) Сергій Плохій. Убивство у Мюнхені. По червоному сліду. (пер. Микола Климчук). Харків: КСД, 2017. 512 c. ISBN 978-617-12-3855-8\nPlokhy, Serhii. Lost Kingdom. A History of Russian Nationalism from Ivan the Great to Vladimir Putin.New York: Basic Books, 2017. 432 p. ISBN 978-0465098491\n(пер. українською) Сергій Плохій. Загублене царство. Історія «Русского мира» з 1470 року до сьогодні. (пер. Віктор Євменов, Єгор Євменов). Харків: Фоліо, 2019. 320 c. ISBN 978-966-03-8848-2\nPlokhy, Serhii. Chernobyl: The History of a Nuclear Catastrophe.New York: Basic Books, 2018. 432 p. ISBN 978-1541617094\n(пер. українською) Сергій Плохій. Чорнобиль. Історія ядерної катастрофи. (пер. Владислав Махонін, Євген Тарнавський). Харків: Фоліо, 2019. 400 c. ISBN 978-966-03-8922-9\nPlokhy, Serhii. Forgotten Bastards of the Eastern Front. Oxford: Oxford University Press, 2019. 369 p. ISBN 978-0190061012\n(пер. українською) Сергій Плохій. Забуті покидьки східного фронту. (пер. Н. Є. Коваль). Харків: КСД, 2020. 320 c. ISBN 978-617-12-7692-5\nPlokhy, Serhii. Nuclear Folly: A History of the Cuban Missile Crisis, New York: W. W. Norton & Company, 2021. ISBN 978-0-393-54081-9\nPlokhy, Serhii, The Frontline: Essays on Ukraine's Past and Present, Cambridge, MA: Ukrainian Research Institute, Harvard University, 2021. ISBN 978-0-674-26882-1\nPlokhy, Serhii. Atoms and Ashes: A Global History of Nuclear Disaster, New York: W. W. Norton & Company, 2022. ISBN 978-1-324-02104-9\n(пер. українською) Сергій Плохій. Атоми і попіл: глобальна історія ядерних катастроф. (пер. Назар Старовойт). Київ: Наш Формат, 2024. 344 c. ISBN 978-617-8115-64-7\nPlokhy, Serhii. The Russo-Ukrainian War: The Return of History W. W. Norton & Company (May 16, 2023) ISBN 978-1324051190\n(пер. українською) Сергій Плохій. Російсько-українська війна: Повернення історії. (пер. Ларченко Максим). Харків: КСД, 2023. 400 c. ISBN 978-617-15-0274-1\nВідредаговані книги:\n\nPoltava 1709: The Battle and the Myth. Editor: Plokhy, Serhii. Harvard Ukrainian Research Institute. 2012. 480 p. ISBN 9781932650099 (Harvard Papers in Ukrainian Studies)\nUkraine and Europe: Cultural Encounters and Negotiations. Editors: Plokhy, Serhii; Brogi Bercoff, Giovanna, Pavlyshyn, Marko. University of Toronto Press. 2017. 480 p. ISBN 978-1487500900\nThe Future of the Past: New Perspectives on Ukrainian History. Editor: Plokhy, Serhii. Harvard Ukrainian Research Institute. 2017. 516 p. ISBN 9781932650167 (Harvard Papers in Ukrainian Studies)\nЗбірки лекцій:\n\nPlokhy, Serhii. Ukraine's Quest for Europe: Borders, Cultures, Identities. Saskatoon: Heritage Press, 2007. 48 p. ISBN 0-88880-447-4 (A Mohyla Lecture Publication Homeland Series No.4.)\nРосійською\nПлохий, Сергей. Освещение освободительной войны украинского народа 1648—1654 гг. в работах И. Пастория. Днипропетровськ: ДГУ, 1980. ? с.(прим.: дипломна робота)\nПлохий С. Н. Латиноязычные сочинения середины XVII века как источник по истории освободительной войны украинского народа 1648—1654 гг. Москва: Університет дружби народів ім. Патріса Лумумби, 1982. ? с. (дисертація) 27 с. (автореферат) (прим.: кандидатська дисертація)\nПлохий С. Н. Освободительная война украинского народа 1648—1654 гг. в латиноязычной историографии середины XVII века. Днепропетровск: ДГУ, 1983. 68 с.\nПлохий, Сергей. Борьба украинского народа с католической экспансией (XVI—XVII вв.). Днепропетровск: ДГУ, 1987. 63 с.\nПлохий С. Н. Папство и Украина: политика римской курии на украинских землях в XVI—XVII вв.: монография / С. Н. Плохий, ред. М. М. Малыш. Киев: Выща школа, 1989. — 222 c. ISBN 5-11-002298-4\nПлохий, Сергей. Политика папства на Украине во второй половине XVI — середине XVII века. Киев. 1989. ? с. (дисертація), 36 с. автореферат) (прим.: докторська дисертація)\n\n\n== Джерела ==\n\n\n== Посилання ==\nПопулярні дослідження: https://book-ye.com.ua/authors/sergiy-plokhiy/.\nSerhii Plokhii [Архівовано 14 травня 2018 у Wayback Machine.] на сайті Гарвардського університету\nSerhii Plokhii [Архівовано 28 квітня 2021 у Wayback Machine.] на сайті Гарвардського українського наукового інституту\nSerhii Plokhii [Архівовано 11 березня 2018 у Wayback Machine.] на Goodreads\nЗбірка інтерв'ю з Сергієм Плохієм [Архівовано 20 березня 2022 у Wayback Machine.]",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452050320_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Сергій Плохій Брама Європи"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452050320_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Сергій Плохій Брама Європи\"\n\n### Result 1 (score: 0.4446)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0237`\n- **Text**:\n\"Українське студентство, якому дорогі досягнення української культури, устами своїх делегатів доручило Президії загального з’їзду об’єднаного студентства вітати наших робітників пера та їх мистецьку централю.\n\nСтудентство радіє, що \"Золота Брама\" стає синонімом поважних досягнень майстрів слова й бажає, щоб гасло боротьби за велику літературу скоро здійснилось. Книги наших письменників стануть тоді творчим цементом для нашої спільноти й причиняться до загоювання ран непорозумінь, задразнень. А с\n\n### Result 2 (score: 0.4399)\n- **Work**: Емма Андієвська. Казка про яян (1931)\n- **Author**: Андієвська Е.\n- **Genre/Period**: fable / modern\n- **Chunk ID**: `bdfeeba9_c0001`\n- **Text**:\n— Ще на початку, коли я щойно сюди потрапив, я здибав одного юродивого, який сидів біля каміння цієї вежі, котру я оце марно будую. Він повідав мені,\n\nщо місто має сім брам і з кожної можна вийти, хоча досі жоден мешканець цього міста не міг відчинити брами з тієї простої причини, що ніхто з тутешніх насельників не спроможний вимовити коротесенького слова, що відчиняє ці брами.\n\n— Яке ж це слово?\n\n— Це слово знають усі яяни: звичайнісіньке \"ти\". Але коли хтось із яян, — а це стається так рідко, \n\n### Result 3 (score: 0.4202)\n- **Work**: Улас Самчук. Морозів хутір (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `191faa6b_c0128`\n- **Text**:\n— Слов’яни змогли втриматися в Європі тільки тому, що існує Росія. Це єдина діюча сила, що змогла зброєю охоронити наш світ. Погоджуюсь. Росія не завжди діяла в рукавичках і не завжди на користь собі. Але ти не заперечиш, що не будь Росії вже в чотирнадцятому, чи у вісімнадцятому віці, то ґермани залили б наш простір. Ми були б тільки звичайними рабами. Отакими, як ті, що збирали бавовну на плантаціях південної Америки. Іван III, Іван IV, пізніше Петро Великий і нарешті Катерина створили передум\n\n### Result 4 (score: 0.4199)\n- **Work**: Павло Тичина. Сковорода (симфонія) (1891)\n- **Author**: Тичина П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `0f990de3_c0221`\n- **Text**:\nсвятих благай.\n\n(ЦДАМЛМ, ф. 464, оп. 1, ЛГв 1205, арк. 9—10)\n\nПІД БРАМОЮ\n\nНіч. Тривога. Заграва, як регіт.\n\nНа осяяній ограді борюкаються тіні: чорт з рогам [и і] чернець\n\nз хрестом. Оглянеться <брамщик> ігумен — <братія стоїть>\n\nбратія немовби стої[ть] собі на місці, тільки юродивий усе щось\n\nприставляє. А повернешся сюди — ізнов те саме. <Тьху на всі\n\nст[о]рони!> Свят, свят... Одійди, сатапо, й не лоскочи душі моєї...\n\nЧи хто гукав мене? — Голоси: <Ось ще й як горить > <А ви-\n\nйдім > < Виходьт\n\n### Result 5 (score: 0.4189)\n- **Work**: Драгоманов — Вибрані праці (1880)\n- **Author**: Драгоманов М.\n- **Genre/Period**: polemic / modern\n- **Chunk ID**: `c846b4d3_c0720`\n- **Text**:\nТим часом російське письменство, не глядячи на всі\r\nперешкоди з боку уряду, не спало й добилось собі становиська світового й осібно\r\nв кругу слов’янському. Чи це кому подобається, чи ні, а європейський світ\r\nпризнав російське письменство рівноправним членом у своїй сім’ї, і тепер не\r\nпроходить тижня, щоб не появлялось чого-небудь перекладеного з російської на\r\nяку-небудь світову мову: французьку, німецьку, англійську. Багато європейців\r\nтепер учиться російської мови, й недалеко той час, коли вон\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:13.813Z",
+          "resultDisplay": "Found 5 results for: \"Сергій Плохій Брама Європи\"\n\n### Result 1 (score: 0.4446)\n- **Work**: Улас Самчук. Плянета Ді-Пі (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `4612aca8_c0237`\n- **Text**:\n\"Українське студентство, якому дорогі досягнення української культури, устами своїх делегатів доручило Президії загального з’їзду об’єднаного студентства вітати наших робітників пера та їх мистецьку централю.\n\nСтудентство радіє, що \"Золота Брама\" стає синонімом поважних досягнень майстрів слова й бажає, щоб гасло боротьби за велику літературу скоро здійснилось. Книги наших письменників стануть тоді творчим цементом для нашої спільноти й причиняться до загоювання ран непорозумінь, задразнень. А с\n\n### Result 2 (score: 0.4399)\n- **Work**: Емма Андієвська. Казка про яян (1931)\n- **Author**: Андієвська Е.\n- **Genre/Period**: fable / modern\n- **Chunk ID**: `bdfeeba9_c0001`\n- **Text**:\n— Ще на початку, коли я щойно сюди потрапив, я здибав одного юродивого, який сидів біля каміння цієї вежі, котру я оце марно будую. Він повідав мені,\n\nщо місто має сім брам і з кожної можна вийти, хоча досі жоден мешканець цього міста не міг відчинити брами з тієї простої причини, що ніхто з тутешніх насельників не спроможний вимовити коротесенького слова, що відчиняє ці брами.\n\n— Яке ж це слово?\n\n— Це слово знають усі яяни: звичайнісіньке \"ти\". Але коли хтось із яян, — а це стається так рідко, \n\n### Result 3 (score: 0.4202)\n- **Work**: Улас Самчук. Морозів хутір (1905)\n- **Author**: Самчук У.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `191faa6b_c0128`\n- **Text**:\n— Слов’яни змогли втриматися в Європі тільки тому, що існує Росія. Це єдина діюча сила, що змогла зброєю охоронити наш світ. Погоджуюсь. Росія не завжди діяла в рукавичках і не завжди на користь собі. Але ти не заперечиш, що не будь Росії вже в чотирнадцятому, чи у вісімнадцятому віці, то ґермани залили б наш простір. Ми були б тільки звичайними рабами. Отакими, як ті, що збирали бавовну на плантаціях південної Америки. Іван III, Іван IV, пізніше Петро Великий і нарешті Катерина створили передум\n\n### Result 4 (score: 0.4199)\n- **Work**: Павло Тичина. Сковорода (симфонія) (1891)\n- **Author**: Тичина П.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `0f990de3_c0221`\n- **Text**:\nсвятих благай.\n\n(ЦДАМЛМ, ф. 464, оп. 1, ЛГв 1205, арк. 9—10)\n\nПІД БРАМОЮ\n\nНіч. Тривога. Заграва, як регіт.\n\nНа осяяній ограді борюкаються тіні: чорт з рогам [и і] чернець\n\nз хрестом. Оглянеться <брамщик> ігумен — <братія стоїть>\n\nбратія немовби стої[ть] собі на місці, тільки юродивий усе щось\n\nприставляє. А повернешся сюди — ізнов те саме. <Тьху на всі\n\nст[о]рони!> Свят, свят... Одійди, сатапо, й не лоскочи душі моєї...\n\nЧи хто гукав мене? — Голоси: <Ось ще й як горить > <А ви-\n\nйдім > < Виходьт\n\n### Result 5 (score: 0.4189)\n- **Work**: Драгоманов — Вибрані праці (1880)\n- **Author**: Драгоманов М.\n- **Genre/Period**: polemic / modern\n- **Chunk ID**: `c846b4d3_c0720`\n- **Text**:\nТим часом російське письменство, не глядячи на всі\r\nперешкоди з боку уряду, не спало й добилось собі становиська світового й осібно\r\nв кругу слов’янському. Чи це кому подобається, чи ні, а європейський світ\r\nпризнав російське письменство рівноправним членом у своїй сім’ї, і тепер не\r\nпроходить тижня, щоб не появлялось чого-небудь перекладеного з російської на\r\nяку-небудь світову мову: французьку, німецьку, англійську. Багато європейців\r\nтепер учиться російської мови, й недалеко той час, коли вон\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452050614_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Брама Європи Плохій деколонізація"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452050614_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Брама Європи Плохій деколонізація\"\n\n### Result 1 (score: 0.4871)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0264`\n- **Text**:\nДо того ж лихі тії змієподібні шептальці 1,\r\nяким наші Єви вільно нахиляють вухо, показують їм гарні зовні і словесно\r\nяблучка, а при них можність і славу цього світу, через що вже й Адами даються\r\nзводитися, тобто за молодими й старі починають блудити і через таку несталість\r\nпредків усіх не важать.\n\nОтож, як вище ознайомилося, зволь, ваша княжа\r\nмилосте, за тим певним та істинним прикладом чинити, а що далі написано, не\r\nволи лінуватися прочитати і так можна буде доказати, що є недобре для дор\n\n### Result 2 (score: 0.4835)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c0696`\n- **Text**:\nРазом з адресованою королеви „юстификацією” \r\n епископату була приладжена і видрукована, також по польськи, „Суплїкація до \r\n сенату Корони і в. кн. Литовського, від обивателїв коронних і в. кн. \r\n Литовського, стану шляхетського, релїґії старинної грецької, послушенства \r\n східнього” 4). Вона служила доповненнєм до епископського меморіалу. \r\n Написана сильно, а місцями навіть різко, без тої смиренної (хоч і гідної) \r\n покори Юстифікації, вона впадала в тони козацького меморіалу 1621 р. або \r\n с\n\n### Result 3 (score: 0.4657)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0356`\n- **Text**:\nОтворяеши Кіеву врата\r\n] В 1-му вид. „оттворяеши” — знов переписувач\r\nпомиливсь у рук., як і в Іп. сп. ωт зам. о в\r\nслові „ωтгороды”, зам. „огороды” Хл. і Поґ., ст. 326. — Вислів\r\n— звичайний: пор. „Вышегородци отвориша врата граду”, Соф. 1-ий, р. 1195, с.\r\n170; „невоздержавше уности отвориша ворота на русьскую землю”, Іп. р. 1185, с.\r\n645. У Флавія, Арх. І — „затвориша врата граду”. Іп. р. 1151 „Гюрги... рече\r\nБЂлогородцем: вы есте людье мои и створите ми градъ. БЂлогородци же рекоша: a\r\nКыевъ \n\n### Result 4 (score: 0.4655)\n- **Work**: Героїчне та знаменитості в українській культурі (1999)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a5f3ae7f_c0325`\n- **Text**:\nНе викликаючи заперечень у принципі, ці заклики та\r\nпоради потребують, однак, вельми серйозного уточнення. Незалежна українська\r\nдержава аж ніяк не є тим місцем, де відбулася всебічна й послідовна\r\nдеколонізація, і де справді зникли підстави для збереження і відтворення siege\r\nmentality. Головним опонентом націоналістичної міфотворчості тут є не тільки й\r\nнавіть не стільки раціональне знання та здоровий глузд, скільки інша\r\nнаціоналістична міфотворчість — російська (чи, краще сказати, малоросійс\n\n### Result 5 (score: 0.4651)\n- **Work**: Василь Стус. Пам'яті М.К. Зерова (1938)\n- **Author**: Стус В.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c5df7752_c0000`\n- **Text**:\nКолеса глухо стукотять,\n\nмов хвиля об паром,\n\nстрічай, товаришу Хароне,\n\nз лихом і з добром.\n\nКолеса б’ють, колеса б’ють,\n\nкудись торують путь,\n\nуже й додому не вернуть,\n\nдодому — не вернуть.\n\nКолеса глухо стукотять,\n\nколеса стукотять\n\nв христа, в вождя, в усіх божат\n\nі в мать і в перемать.\n\nМосква, гора Ведмежа, Кем\n\nі Попів-острів — шлях\n\nза ґратами, за вартами,\n\nрозбухлий на сльозах.\n\nІ знову Вятка, Котлас, Усть —\n\nВим. Далі — до Чиб’ю.\n\nрад-соц-концтаборів союз,\n\nкотрий господь забув.\n\nДияво\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:13.813Z",
+          "resultDisplay": "Found 5 results for: \"Брама Європи Плохій деколонізація\"\n\n### Result 1 (score: 0.4871)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0264`\n- **Text**:\nДо того ж лихі тії змієподібні шептальці 1,\r\nяким наші Єви вільно нахиляють вухо, показують їм гарні зовні і словесно\r\nяблучка, а при них можність і славу цього світу, через що вже й Адами даються\r\nзводитися, тобто за молодими й старі починають блудити і через таку несталість\r\nпредків усіх не важать.\n\nОтож, як вище ознайомилося, зволь, ваша княжа\r\nмилосте, за тим певним та істинним прикладом чинити, а що далі написано, не\r\nволи лінуватися прочитати і так можна буде доказати, що є недобре для дор\n\n### Result 2 (score: 0.4835)\n- **Work**: Грушевський — Історія України-Руси, т.7-10 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `5794da94_c0696`\n- **Text**:\nРазом з адресованою королеви „юстификацією” \r\n епископату була приладжена і видрукована, також по польськи, „Суплїкація до \r\n сенату Корони і в. кн. Литовського, від обивателїв коронних і в. кн. \r\n Литовського, стану шляхетського, релїґії старинної грецької, послушенства \r\n східнього” 4). Вона служила доповненнєм до епископського меморіалу. \r\n Написана сильно, а місцями навіть різко, без тої смиренної (хоч і гідної) \r\n покори Юстифікації, вона впадала в тони козацького меморіалу 1621 р. або \r\n с\n\n### Result 3 (score: 0.4657)\n- **Work**: Перетц — Слово о полку Ігоревім (1926) (1926)\n- **Author**: Перетц В.М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3faf433b_c0356`\n- **Text**:\nОтворяеши Кіеву врата\r\n] В 1-му вид. „оттворяеши” — знов переписувач\r\nпомиливсь у рук., як і в Іп. сп. ωт зам. о в\r\nслові „ωтгороды”, зам. „огороды” Хл. і Поґ., ст. 326. — Вислів\r\n— звичайний: пор. „Вышегородци отвориша врата граду”, Соф. 1-ий, р. 1195, с.\r\n170; „невоздержавше уности отвориша ворота на русьскую землю”, Іп. р. 1185, с.\r\n645. У Флавія, Арх. І — „затвориша врата граду”. Іп. р. 1151 „Гюрги... рече\r\nБЂлогородцем: вы есте людье мои и створите ми градъ. БЂлогородци же рекоша: a\r\nКыевъ \n\n### Result 4 (score: 0.4655)\n- **Work**: Героїчне та знаменитості в українській культурі (1999)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a5f3ae7f_c0325`\n- **Text**:\nНе викликаючи заперечень у принципі, ці заклики та\r\nпоради потребують, однак, вельми серйозного уточнення. Незалежна українська\r\nдержава аж ніяк не є тим місцем, де відбулася всебічна й послідовна\r\nдеколонізація, і де справді зникли підстави для збереження і відтворення siege\r\nmentality. Головним опонентом націоналістичної міфотворчості тут є не тільки й\r\nнавіть не стільки раціональне знання та здоровий глузд, скільки інша\r\nнаціоналістична міфотворчість — російська (чи, краще сказати, малоросійс\n\n### Result 5 (score: 0.4651)\n- **Work**: Василь Стус. Пам'яті М.К. Зерова (1938)\n- **Author**: Стус В.\n- **Genre/Period**: poetry / modern\n- **Chunk ID**: `c5df7752_c0000`\n- **Text**:\nКолеса глухо стукотять,\n\nмов хвиля об паром,\n\nстрічай, товаришу Хароне,\n\nз лихом і з добром.\n\nКолеса б’ють, колеса б’ють,\n\nкудись торують путь,\n\nуже й додому не вернуть,\n\nдодому — не вернуть.\n\nКолеса глухо стукотять,\n\nколеса стукотять\n\nв христа, в вождя, в усіх божат\n\nі в мать і в перемать.\n\nМосква, гора Ведмежа, Кем\n\nі Попів-острів — шлях\n\nза ґратами, за вартами,\n\nрозбухлий на сльозах.\n\nІ знову Вятка, Котлас, Усть —\n\nВим. Далі — до Чиб’ю.\n\nрад-соц-концтаборів союз,\n\nкотрий господь забув.\n\nДияво\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452050654_3",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Сергій Плохій історіографія імперські міфи"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452050654_3",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Сергій Плохій історіографія імперські міфи\"\n\n### Result 1 (score: 0.4998)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.4968)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c2914`\n- **Text**:\nЛіт.: Попов А. Обзор\r\nхронографов русской редакции, в. 1. М., 1866; Истрин В. М. Хронограф Ипатского\r\nсписка летописи под 1114 годом. «Журнал Министерства народного просвещения»,\r\n1897, ноябрь, отд. 2; Vдальцова З. В. Хроника Иоанна Малалы в Киевской Руси. В\r\nкн.: Археографический ежегодник за 1965 г. М., 1966; Шусторович Э. М. 1)\r\nХроника Иоанна Малалы и античная традиция в древнерусской литературе. «Труды\r\nОтдела древнерусской литературы», 1968, т. 23; 2) Древнеславянский перевод\r\nхроники Иоан\n\n### Result 3 (score: 0.4961)\n- **Work**: Томпсон — Трубадури імперії (2006)\n- **Author**: Томпсон Е.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `f79fbc43_c0482`\n- **Text**:\nРосійська імперія, 34, 39-42, 62, 63, 80, 83, 84, 85, 87-88, 134,\r\n154-155, 199, 207, 259, 294-296, 314, 333\n\nРосійський постколоніальний дискурс, 89, 313-345\n\nРосія, експансія, 60-61; історія воєн:, 45, 87, 263, 233;\r\nсамопрезентація Росії, 81-82, 87, 134-138, 149, 174, 246247, 288-289\n\n«Росія», термінологічна неоднозначність, 42-48, 85-86\n\nРосіяни, 42-49, 81, 104, 134, 191, 269, 296, 297\n\nРотберг, А. 180, 202п.\n\nРотшильд, Джозеф, 307п.\n\nРумуни та Румунія, 131, 258, 263, 264, 290-292, 300\n\nРябі\n\n### Result 4 (score: 0.4957)\n- **Work**: Історія Русів (1829)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `f648356f_c0037`\n- **Text**:\nПредыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ, или Малой Россіи. — М., 1846. — С. 21-44.]\n\nПредыдущая     \r\nГлавная     \r\nСлЂдующая\n\n### Result 5 (score: 0.4947)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1479`\n- **Text**:\nДалї, подібні огляди (коротші, часто меньш \r\n докладні) містять курси історії давньої Руси; вкажу Соловйова т. І кн. 3 гл. 1 \r\n (c. 669 і далї), Поґодїна ИзслЂдованія т. VII (вибрані з лїтописей тексти) і \r\n його ж Древняя русская исторія домонгольскаго ига т. II (два видання), \r\n Бестужева-Рюміна Русская исторія т. І (c. 192 і далї), Іловайского Исторія \r\n Россіи т. І (гл. XIX), Рожкова Обзоръ рус. исторіи съ соціолог. точки зрЂнія \r\n (І гл. 4), Платонова Лекціи по рус. исторіи (коротеньке). Ог\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:13.813Z",
+          "resultDisplay": "Found 5 results for: \"Сергій Плохій історіографія імперські міфи\"\n\n### Result 1 (score: 0.4998)\n- **Work**: Слово о полку Ігоревім (1187)\n- **Author**: Невідомий\n- **Genre/Period**: poetry / old_east_slavic\n- **Chunk ID**: `c9f36928_c0010`\n- **Text**:\n«Слово о плъку ИгоревЂ» та його поетичні переклади та переспіви.\n\nИроическая пЂснь о походЂ на половцовъ... (видання 1800 року, графіка)\n\nМихайло Грушевський. Історія української літератури. т. II. Творчість XII-XIII вв. «Слово о полку Ігоревім».\n\nВіталій Скляренко. «Темні місця» в «Слові о полку Ігоревім». Київ, 2003.\n\nВолодимир Перетц. Слово о полку Ігоревім. Пам’ятка феодальної України-Руси XII віку. Київ, 1926.\n\nБорис Яценко. «Слово о полку Ігоревім» та його доба. Київ, 2000.\n\n«Слово о полку\n\n### Result 2 (score: 0.4968)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c2914`\n- **Text**:\nЛіт.: Попов А. Обзор\r\nхронографов русской редакции, в. 1. М., 1866; Истрин В. М. Хронограф Ипатского\r\nсписка летописи под 1114 годом. «Журнал Министерства народного просвещения»,\r\n1897, ноябрь, отд. 2; Vдальцова З. В. Хроника Иоанна Малалы в Киевской Руси. В\r\nкн.: Археографический ежегодник за 1965 г. М., 1966; Шусторович Э. М. 1)\r\nХроника Иоанна Малалы и античная традиция в древнерусской литературе. «Труды\r\nОтдела древнерусской литературы», 1968, т. 23; 2) Древнеславянский перевод\r\nхроники Иоан\n\n### Result 3 (score: 0.4961)\n- **Work**: Томпсон — Трубадури імперії (2006)\n- **Author**: Томпсон Е.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `f79fbc43_c0482`\n- **Text**:\nРосійська імперія, 34, 39-42, 62, 63, 80, 83, 84, 85, 87-88, 134,\r\n154-155, 199, 207, 259, 294-296, 314, 333\n\nРосійський постколоніальний дискурс, 89, 313-345\n\nРосія, експансія, 60-61; історія воєн:, 45, 87, 263, 233;\r\nсамопрезентація Росії, 81-82, 87, 134-138, 149, 174, 246247, 288-289\n\n«Росія», термінологічна неоднозначність, 42-48, 85-86\n\nРосіяни, 42-49, 81, 104, 134, 191, 269, 296, 297\n\nРотберг, А. 180, 202п.\n\nРотшильд, Джозеф, 307п.\n\nРумуни та Румунія, 131, 258, 263, 264, 290-292, 300\n\nРябі\n\n### Result 4 (score: 0.4957)\n- **Work**: Історія Русів (1829)\n- **Author**: Невідомий\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `f648356f_c0037`\n- **Text**:\nПредыдущая     \r\nГлавная     \r\nСлЂдующая\n\n[Г. Конискій. Исторія Русовъ, или Малой Россіи. — М., 1846. — С. 21-44.]\n\nПредыдущая     \r\nГлавная     \r\nСлЂдующая\n\n### Result 5 (score: 0.4947)\n- **Work**: Грушевський — Історія України-Руси, т.2-3 (1898)\n- **Author**: Грушевський М.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `c44f1207_c1479`\n- **Text**:\nДалї, подібні огляди (коротші, часто меньш \r\n докладні) містять курси історії давньої Руси; вкажу Соловйова т. І кн. 3 гл. 1 \r\n (c. 669 і далї), Поґодїна ИзслЂдованія т. VII (вибрані з лїтописей тексти) і \r\n його ж Древняя русская исторія домонгольскаго ига т. II (два видання), \r\n Бестужева-Рюміна Русская исторія т. І (c. 192 і далї), Іловайского Исторія \r\n Россіи т. І (гл. XIX), Рожкова Обзоръ рус. исторіи съ соціолог. точки зрЂнія \r\n (І гл. 4), Платонова Лекціи по рус. исторіи (коротеньке). Ог\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "ccb3fe05-b8dc-4693-86be-fabca446bbea",
+      "timestamp": "2026-03-14T01:34:19.871Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing the next action",
+          "description": "I'm focused on moving forward with the project. I'm considering what needs to happen to get to the next stage. Progress is the key, and I'm figuring out how best to make it happen. I'm exploring the available avenues to achieve my goals, and I'm honing in on the most promising paths forward.",
+          "timestamp": "2026-03-14T01:34:18.253Z"
+        },
+        {
+          "subject": "Determining the best approach",
+          "description": "I'm now thinking about how to refine my approach to gather the information needed. It's about ensuring I'm using the best strategy to access and analyze the data for the task at hand. The goal is to obtain the necessary information in the most efficient manner, and I'm weighing up my options.",
+          "timestamp": "2026-03-14T01:34:19.790Z"
+        }
+      ],
+      "tokens": {
+        "input": 30986,
+        "output": 20,
+        "cached": 13902,
+        "thoughts": 213,
+        "tool": 0,
+        "total": 31219
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452059870_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Брама Європи книга",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452059870_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Брама Європи книга' — 5 results\n\n1. **Галицька брама** — «Галицька брама» — краєзнавчий часопис. Виходить у Львові щомісяця українською мовою. Перше число вийшло у вересні 1994 року. Номери «Галицької брами» переважно\n2. **Середньовічний Львів. Фортифікації (книга)** — тогочасної Європи. Книга ілюстрована 90 середньовічними мініатюрами, гравюрами, картинами відомих художників, міститься до 30 світлин. У книзі вперше подано\n3. **Зоряна брама: SG-1** — «Зоряна брама SG-1» (англ. Stargate SG-1) — науково-фантастичний телевізійний серіал, заснований на фільмі «Зоряна брама», компанії MGM. Створений за участі\n4. **Міські брами Львова** — нових міських книгах вже 1382 р. було згадано Галицьку браму із звідним мостом. На 1407 р. було зведено мурований міст перед внутрішньою брамою, який очевидно\n5. **Книга Еноха** — брами, що ведуть на вищий ярус неба. Також на небі є 12 брам, з яких віють 4 сприятливих і 8 несприятливих вітрів. У Посланні Варнави в I ст. Книга Еноха"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:20.136Z",
+          "resultDisplay": "Wikipedia search: 'Брама Європи книга' — 5 results\n\n1. **Галицька брама** — «Галицька брама» — краєзнавчий часопис. Виходить у Львові щомісяця українською мовою. Перше число вийшло у вересні 1994 року. Номери «Галицької брами» переважно\n2. **Середньовічний Львів. Фортифікації (книга)** — тогочасної Європи. Книга ілюстрована 90 середньовічними мініатюрами, гравюрами, картинами відомих художників, міститься до 30 світлин. У книзі вперше подано\n3. **Зоряна брама: SG-1** — «Зоряна брама SG-1» (англ. Stargate SG-1) — науково-фантастичний телевізійний серіал, заснований на фільмі «Зоряна брама», компанії MGM. Створений за участі\n4. **Міські брами Львова** — нових міських книгах вже 1382 р. було згадано Галицьку браму із звідним мостом. На 1407 р. було зведено мурований міст перед внутрішньою брамою, який очевидно\n5. **Книга Еноха** — брами, що ведуть на вищий ярус неба. Також на небі є 12 брам, з яких віють 4 сприятливих і 8 несприятливих вітрів. У Посланні Варнави в I ст. Книга Еноха",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "2488d97e-c9d9-4c80-8cfe-4ed64a335af1",
+      "timestamp": "2026-03-14T01:34:24.193Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the next phase",
+          "description": "I'm focused on moving forward with the project. I'm considering the best actions to achieve the final outcome. I'm evaluating how to tackle the next phase, planning to execute it effectively, and determining the optimal sequence of steps.",
+          "timestamp": "2026-03-14T01:34:23.560Z"
+        },
+        {
+          "subject": "Commencing research steps",
+          "description": "I'm now starting the first research actions, seeking relevant information to help advance. I'm initiating the primary query, setting the stage for the following analysis. I'll monitor progress.",
+          "timestamp": "2026-03-14T01:34:24.122Z"
+        }
+      ],
+      "tokens": {
+        "input": 31391,
+        "output": 34,
+        "cached": 27673,
+        "thoughts": 147,
+        "tool": 0,
+        "total": 31572
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773452064192_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Брама Європи. Історія України від скіфських воєн до незалежності"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773452064192_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Брама Європи. Історія України від скіфських воєн до незалежності' — 5 results\n\n1. **Лунін Сергій Ігорович** — війни — і чому з цим складно боротися. zaborona.com. 19 травня 2021 Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. —\n2. **Історія Європи** — Історія кельтів: цивілізація, що породила Європу Брама Європи. Історія України від скіфських воєн до незалежності / Сергій Плохій; пер. з англ. Романс Клочка\n3. **Плохій Сергій Миколайович** — 978-0-465-05091-8. (пер. українською) Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. (пер. Роман Клочко). Харків: КСД, 2016. 496\n4. **Доісторична Україна** — ISBN 978-617-7810-29-1. Плохій, Сергій (2021). Брама Європи. Історія України від скіфських воєн до незалежності. Харків: Книжковий клуб &quot;Клуб сімейного дозвілля&quot;\n5. **Історія України** — Істо́рія Украї́ни — історія земель сучасної України, українського народу, держави та інших її мешканців, що проживають на території України, від доісторичних"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:24.560Z",
+          "resultDisplay": "Wikipedia search: 'Брама Європи. Історія України від скіфських воєн до незалежності' — 5 results\n\n1. **Лунін Сергій Ігорович** — війни — і чому з цим складно боротися. zaborona.com. 19 травня 2021 Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. —\n2. **Історія Європи** — Історія кельтів: цивілізація, що породила Європу Брама Європи. Історія України від скіфських воєн до незалежності / Сергій Плохій; пер. з англ. Романс Клочка\n3. **Плохій Сергій Миколайович** — 978-0-465-05091-8. (пер. українською) Сергій Плохій. Брама Європи. Історія України від скіфських воєн до незалежності. (пер. Роман Клочко). Харків: КСД, 2016. 496\n4. **Доісторична Україна** — ISBN 978-617-7810-29-1. Плохій, Сергій (2021). Брама Європи. Історія України від скіфських воєн до незалежності. Харків: Книжковий клуб &quot;Клуб сімейного дозвілля&quot;\n5. **Історія України** — Істо́рія Украї́ни — історія земель сучасної України, українського народу, держави та інших її мешканців, що проживають на території України, від доісторичних",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "96265f16-3d88-4905-972b-db790436b440",
+      "timestamp": "2026-03-14T01:34:34.610Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the next phase",
+          "description": "I'm focused on moving forward with the project. I'm considering what actions will bring me closer to the next stage of completion. My current focus is to determine the optimal way of achieving that.",
+          "timestamp": "2026-03-14T01:34:29.237Z"
+        },
+        {
+          "subject": "Proceeding with research",
+          "description": "I'm now diving into the specifics of the search, aiming to refine the information gathering. I'm moving toward using different tools to find suitable search results. I'll make sure to use a variety of search terms to be as thorough as possible.",
+          "timestamp": "2026-03-14T01:34:31.870Z"
+        },
+        {
+          "subject": "Targeting specific queries",
+          "description": "I'm now formulating more targeted search queries within the literary search tool, focusing on the themes explored in the book, such as decolonization and imperial myths. I'm also attempting a direct search for the book's title to see if it appears in any prior literary works. This step is essential to broaden my information base.",
+          "timestamp": "2026-03-14T01:34:34.350Z"
+        }
+      ],
+      "tokens": {
+        "input": 31824,
+        "output": 46,
+        "cached": 27599,
+        "thoughts": 656,
+        "tool": 0,
+        "total": 32526
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773452074562_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "деколонізація історії України імперські міфи"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452074562_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"деколонізація історії України імперські міфи\"\n\n### Result 1 (score: 0.5641)\n- **Work**: Героїчне та знаменитості в українській культурі (1999)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a5f3ae7f_c0325`\n- **Text**:\nНе викликаючи заперечень у принципі, ці заклики та\r\nпоради потребують, однак, вельми серйозного уточнення. Незалежна українська\r\nдержава аж ніяк не є тим місцем, де відбулася всебічна й послідовна\r\nдеколонізація, і де справді зникли підстави для збереження і відтворення siege\r\nmentality. Головним опонентом націоналістичної міфотворчості тут є не тільки й\r\nнавіть не стільки раціональне знання та здоровий глузд, скільки інша\r\nнаціоналістична міфотворчість — російська (чи, краще сказати, малоросійс\n\n### Result 2 (score: 0.5241)\n- **Work**: Томпсон — Трубадури імперії (2006)\n- **Author**: Томпсон Е.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `f79fbc43_c0269`\n- **Text**:\nСаме цю імперську мрію російської еліти, очевидну навіть наприкінці\r\nрадянського періоду і на ранньому етапі пострадянського періоду дезорієнтації й\r\nхаосу, я й хотіла б /207/ показати в цьому розділі. Письменники, які\r\nсприяють цим мріям, пишуть про «Імперію» так, неначе це Росія: вони й далі\r\nплутають «Імперію» з Росією, незважаючи на те, що частина її вже відпала, а в\r\nіншій частині з’явилися тріщини. Ці письменники, подібно до того, як це чинили\r\nїхні західноєвропейські колеги в XIX й на поч\n\n### Result 3 (score: 0.5162)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0223`\n- **Text**:\n12 Мабуть увесь\r\nросійський теоретичний дискурс про Україну (зокрема в Бєлінського й Леніна, за\r\nвинятком хіба Герцена) був, очевидно, забарвлений усвідомленими й\r\nнеусвідомленими імперськими постулатами. Українські осмислення цієї\r\nпроблематики з боку \"прогресивних\", тобто антиконсервативних\r\nмислителів, таких як Драгоманов чи Франко, за своєю природою не поділяють тих\r\nсамих засновків, хоч і проявляють інші комплекси. Закидати їм, передусім\r\nДрагоманову, як це робить Донцов, звичайне наслідува\n\n### Result 4 (score: 0.5141)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0715`\n- **Text**:\nА мовиться, зокрема, не лише про той факт, що його\r\nзачіпають або згадують усі учасники дискусії, а саме: український модернізм був\r\nдемонізований його сучасниками, яким властивий був популізм, розвинене почуття\r\nгромадського обов’язку й утилітаризм, а також і пізнішими, так само\r\nпопулістськими, але набагато примітивнішими й вульгарнішими совєтськими\r\nкритиками. Куди важливішою є демонізація процесу, самого методу ототожнення й\r\nвизначення української історії літератури. Знову-таки, поділ на ма\n\n### Result 5 (score: 0.5126)\n- **Work**: Героїчне та знаменитості в українській культурі (1999)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a5f3ae7f_c0050`\n- **Text**:\nСпроби вийти поза зачароване коло «Переяславського\r\nміфу», зовсім інакше проінтерпретувати роль Хмельницького в українській історії\r\nзавжди натикалися на значні труднощі — адже міфологізований образ «мужа\r\nизбранна, вольности отця — героя Богдана» (Г. Сковорода), — був складовим\r\nелементом «Переяславського міфа», а не навпаки (тобто коли б міфологема\r\nПереяслава була лише одним із елементів культу Хмельницького). Практично це\r\nозначає, що неможливо було спростовувати, «деміфологізовувати» Переяс\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:36.100Z",
+          "resultDisplay": "Found 5 results for: \"деколонізація історії України імперські міфи\"\n\n### Result 1 (score: 0.5641)\n- **Work**: Героїчне та знаменитості в українській культурі (1999)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a5f3ae7f_c0325`\n- **Text**:\nНе викликаючи заперечень у принципі, ці заклики та\r\nпоради потребують, однак, вельми серйозного уточнення. Незалежна українська\r\nдержава аж ніяк не є тим місцем, де відбулася всебічна й послідовна\r\nдеколонізація, і де справді зникли підстави для збереження і відтворення siege\r\nmentality. Головним опонентом націоналістичної міфотворчості тут є не тільки й\r\nнавіть не стільки раціональне знання та здоровий глузд, скільки інша\r\nнаціоналістична міфотворчість — російська (чи, краще сказати, малоросійс\n\n### Result 2 (score: 0.5241)\n- **Work**: Томпсон — Трубадури імперії (2006)\n- **Author**: Томпсон Е.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `f79fbc43_c0269`\n- **Text**:\nСаме цю імперську мрію російської еліти, очевидну навіть наприкінці\r\nрадянського періоду і на ранньому етапі пострадянського періоду дезорієнтації й\r\nхаосу, я й хотіла б /207/ показати в цьому розділі. Письменники, які\r\nсприяють цим мріям, пишуть про «Імперію» так, неначе це Росія: вони й далі\r\nплутають «Імперію» з Росією, незважаючи на те, що частина її вже відпала, а в\r\nіншій частині з’явилися тріщини. Ці письменники, подібно до того, як це чинили\r\nїхні західноєвропейські колеги в XIX й на поч\n\n### Result 3 (score: 0.5162)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0223`\n- **Text**:\n12 Мабуть увесь\r\nросійський теоретичний дискурс про Україну (зокрема в Бєлінського й Леніна, за\r\nвинятком хіба Герцена) був, очевидно, забарвлений усвідомленими й\r\nнеусвідомленими імперськими постулатами. Українські осмислення цієї\r\nпроблематики з боку \"прогресивних\", тобто антиконсервативних\r\nмислителів, таких як Драгоманов чи Франко, за своєю природою не поділяють тих\r\nсамих засновків, хоч і проявляють інші комплекси. Закидати їм, передусім\r\nДрагоманову, як це робить Донцов, звичайне наслідува\n\n### Result 4 (score: 0.5141)\n- **Work**: Грабович — До історії української літератури (1997)\n- **Author**: Грабович Г.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `3588aaff_c0715`\n- **Text**:\nА мовиться, зокрема, не лише про той факт, що його\r\nзачіпають або згадують усі учасники дискусії, а саме: український модернізм був\r\nдемонізований його сучасниками, яким властивий був популізм, розвинене почуття\r\nгромадського обов’язку й утилітаризм, а також і пізнішими, так само\r\nпопулістськими, але набагато примітивнішими й вульгарнішими совєтськими\r\nкритиками. Куди важливішою є демонізація процесу, самого методу ототожнення й\r\nвизначення української історії літератури. Знову-таки, поділ на ма\n\n### Result 5 (score: 0.5126)\n- **Work**: Героїчне та знаменитості в українській культурі (1999)\n- **Author**: Колектив\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `a5f3ae7f_c0050`\n- **Text**:\nСпроби вийти поза зачароване коло «Переяславського\r\nміфу», зовсім інакше проінтерпретувати роль Хмельницького в українській історії\r\nзавжди натикалися на значні труднощі — адже міфологізований образ «мужа\r\nизбранна, вольности отця — героя Богдана» (Г. Сковорода), — був складовим\r\nелементом «Переяславського міфа», а не навпаки (тобто коли б міфологема\r\nПереяслава була лише одним із елементів культу Хмельницького). Практично це\r\nозначає, що неможливо було спростовувати, «деміфологізовувати» Переяс\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773452074606_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Брама Європи метафора"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773452074606_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Брама Європи метафора\"\n\n### Result 1 (score: 0.5496)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c5004`\n- **Text**:\nМЕТАФОРА (від грец.\r\nμεταφορά — перенесення) — троп, заснований\r\nна перенесенні за подібністю ознак і властивостей одного предмета, явища на\r\nінший. В основі М. лежить здатність слова, при активізації різних граней його семантики,\r\nпримножувати свою.номінативну функцію. Напр.: «Гашу над столом моїм Полум’я\r\nзблідлий листок...». (В. Свідзінський). Побутує тлумачення М. як\r\nскороченого порівняння (листок полум’я — полум’я, як листок), проте в\r\nМ. обидва плани смислової структури виступають у злитт\n\n### Result 2 (score: 0.5310)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0225`\n- **Text**:\nта сильна есть, но и сей равна мЂра.\n\nаки на земли, путь творитъ на мори,\n\nсловомъ единЂмъ преставляетъ горы.\n\nЦе просто звичайна моральна епіґрама, що не потрібує\r\nніякого малюнка: коли автор додає до цього емблеми любові (серце) та віри\r\n(хрест), то це власне не змінює вірша як літературного твору. Маємо тут, до\r\nречі, зі звичайною ілюстрацією або віньєткою до вірша — не більше.\n\n19. хотящимъ въ благо нравъ свой премЂнити\n\nи порожныя примЂти избити /203/\n\nАкадемія и позорно мЂсто\n\nподаетъ житі\n\n### Result 3 (score: 0.5230)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0409`\n- **Text**:\nЗ залізної клавіатури.\n\nАктивне використання науково-технічної,\r\nсуспільно-політичної і музичної термінології дозволяє авторові досягати\r\nпередбачуваних художніх рішень. Особливістю бажанівського світовідтворення є\r\nвикористання абстрактної, зокрема й термінологічної лексики для персоніфікації,\r\nпобудови метафор: Інша грань нову межу затисла; Безкрайність і кінець\r\nпрядуть єдину сталь; Ти з нами і для нас, товаришу Життя!; Багрово-чорні\r\nсполохи блукали по зомлілій від жаху землі; Тьмяне й гірке\n\n### Result 4 (score: 0.5224)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c1163`\n- **Text**:\nМЕТАФОРА (грец.\r\nμεταφορά — перенесення) — один з основних\r\nтропів, який полягає в перенесенні ознак і властивостей одного явища на\r\nінше на основі подібності. Прямі ознаки в М. поєднуються з переносними, різні\r\nасоціативні плани зливаються в одно ціле, творячи цілісний виразний і яскравий\r\nобраз. Метафорична система Шевченка глибоко своєрідна. Його М. часто\r\nвкладаються у форму метафоричних порівнянь. У ранній творчості поета М.\r\nздебільшого фольклорного походження, грунтом для них є світ поети\n\n### Result 5 (score: 0.5192)\n- **Work**: Іван Багряний. Сад Гетсиманський (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e11e11b6_c0017`\n- **Text**:\nА десь за ним хтось на роялі задумливо грає журну і бентежну сонату Бетховена. Місячну сонату. Хтось там теж дивиться на місяць. І грає... Вічна легенда про двох братів, вирізьблена на далекому місяці, бентежить душу, як і завжди, як і давно-давно колись в дні золотого дитинства, своєю трагедією, своєю таємничістю нерозгаданою — таємничістю неоправданої, кричущої зради. \"Навіщо?! Навіщо ж брат підняв брата на вила?!\" — так завжди кричало серце дитяче, стискаючись в темряві нерухомої ночі, коли т\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:36.100Z",
+          "resultDisplay": "Found 5 results for: \"Брама Європи метафора\"\n\n### Result 1 (score: 0.5496)\n- **Work**: Українська літературна енциклопедія (1988-1995) (1995)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `fc2291b5_c5004`\n- **Text**:\nМЕТАФОРА (від грец.\r\nμεταφορά — перенесення) — троп, заснований\r\nна перенесенні за подібністю ознак і властивостей одного предмета, явища на\r\nінший. В основі М. лежить здатність слова, при активізації різних граней його семантики,\r\nпримножувати свою.номінативну функцію. Напр.: «Гашу над столом моїм Полум’я\r\nзблідлий листок...». (В. Свідзінський). Побутує тлумачення М. як\r\nскороченого порівняння (листок полум’я — полум’я, як листок), проте в\r\nМ. обидва плани смислової структури виступають у злитт\n\n### Result 2 (score: 0.5310)\n- **Work**: Чижевський — Українське літературне бароко (2003)\n- **Author**: Чижевський Д.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `41d0facc_c0225`\n- **Text**:\nта сильна есть, но и сей равна мЂра.\n\nаки на земли, путь творитъ на мори,\n\nсловомъ единЂмъ преставляетъ горы.\n\nЦе просто звичайна моральна епіґрама, що не потрібує\r\nніякого малюнка: коли автор додає до цього емблеми любові (серце) та віри\r\n(хрест), то це власне не змінює вірша як літературного твору. Маємо тут, до\r\nречі, зі звичайною ілюстрацією або віньєткою до вірша — не більше.\n\n19. хотящимъ въ благо нравъ свой премЂнити\n\nи порожныя примЂти избити /203/\n\nАкадемія и позорно мЂсто\n\nподаетъ житі\n\n### Result 3 (score: 0.5230)\n- **Work**: Русанівський — Історія укр. літ. мови (2001)\n- **Author**: Русанівський В.\n- **Genre/Period**: scholarly / modern\n- **Chunk ID**: `7808b51b_c0409`\n- **Text**:\nЗ залізної клавіатури.\n\nАктивне використання науково-технічної,\r\nсуспільно-політичної і музичної термінології дозволяє авторові досягати\r\nпередбачуваних художніх рішень. Особливістю бажанівського світовідтворення є\r\nвикористання абстрактної, зокрема й термінологічної лексики для персоніфікації,\r\nпобудови метафор: Інша грань нову межу затисла; Безкрайність і кінець\r\nпрядуть єдину сталь; Ти з нами і для нас, товаришу Життя!; Багрово-чорні\r\nсполохи блукали по зомлілій від жаху землі; Тьмяне й гірке\n\n### Result 4 (score: 0.5224)\n- **Work**: Шевченківський словник (1977)\n- **Author**: Колектив\n- **Genre/Period**: encyclopedia / modern\n- **Chunk ID**: `d77902e2_c1163`\n- **Text**:\nМЕТАФОРА (грец.\r\nμεταφορά — перенесення) — один з основних\r\nтропів, який полягає в перенесенні ознак і властивостей одного явища на\r\nінше на основі подібності. Прямі ознаки в М. поєднуються з переносними, різні\r\nасоціативні плани зливаються в одно ціле, творячи цілісний виразний і яскравий\r\nобраз. Метафорична система Шевченка глибоко своєрідна. Його М. часто\r\nвкладаються у форму метафоричних порівнянь. У ранній творчості поета М.\r\nздебільшого фольклорного походження, грунтом для них є світ поети\n\n### Result 5 (score: 0.5192)\n- **Work**: Іван Багряний. Сад Гетсиманський (1906)\n- **Author**: Багряний І.\n- **Genre/Period**: prose / modern\n- **Chunk ID**: `e11e11b6_c0017`\n- **Text**:\nА десь за ним хтось на роялі задумливо грає журну і бентежну сонату Бетховена. Місячну сонату. Хтось там теж дивиться на місяць. І грає... Вічна легенда про двох братів, вирізьблена на далекому місяці, бентежить душу, як і завжди, як і давно-давно колись в дні золотого дитинства, своєю трагедією, своєю таємничістю нерозгаданою — таємничістю неоправданої, кричущої зради. \"Навіщо?! Навіщо ж брат підняв брата на вила?!\" — так завжди кричало серце дитяче, стискаючись в темряві нерухомої ночі, коли т\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "39cd10bc-3d7d-4a49-af84-89cb1abe88cd",
+      "timestamp": "2026-03-14T01:34:42.051Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing Towards the Goal",
+          "description": "\\n\\n\n\nI am now focusing on how best to move ahead and realize the next action. My priority is ensuring I am set up to make steady progress. I am working towards formulating the best way to get this done.",
+          "timestamp": "2026-03-14T01:34:40.541Z"
+        },
+        {
+          "subject": "Validating the Vocabulary",
+          "description": "\\n\\n\n\nI'm presently zeroing in on confirming the vocabulary used in the provided text. The goal is to make sure I grasp the core concepts. With verification complete, the next logical step will be clear.",
+          "timestamp": "2026-03-14T01:34:41.899Z"
+        }
+      ],
+      "tokens": {
+        "input": 34562,
+        "output": 29,
+        "cached": 27502,
+        "thoughts": 244,
+        "tool": 0,
+        "total": 34835
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773452082050_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "історіографія",
+              "наратив",
+              "суб'єктність",
+              "деколонізація"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773452082050_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 4/4\n\n- **історіографія** — FOUND (1 match): історіографія(noun)\n- **наратив** — FOUND (2 match): наратив(noun), наратив(noun)\n- **суб'єктність** — FOUND (2 match): суб'єктність(noun), суб'єктність(noun)\n- **деколонізація** — FOUND (1 match): деколонізація(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:42.062Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 4/4\n\n- **історіографія** — FOUND (1 match): історіографія(noun)\n- **наратив** — FOUND (2 match): наратив(noun), наратив(noun)\n- **суб'єктність** — FOUND (2 match): суб'єктність(noun), суб'єктність(noun)\n- **деколонізація** — FOUND (1 match): деколонізація(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "4b51b45e-8cb3-4efb-8033-9ffbd5bafdc6",
+      "timestamp": "2026-03-14T01:34:47.986Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Investigation",
+          "description": "I'm now focused on the next stage. I am determining how to effectively utilize available utilities to progress the investigation. I'm assessing how to use these utilities to meet the immediate goals.",
+          "timestamp": "2026-03-14T01:34:46.727Z"
+        },
+        {
+          "subject": "Executing the Queries",
+          "description": "I'm now proceeding with the next queries. Using the designated tool, I am assessing the frequency of specific terms. The aim is to get more data points for the ongoing investigation, specifically related to the given terms.",
+          "timestamp": "2026-03-14T01:34:47.846Z"
+        }
+      ],
+      "tokens": {
+        "input": 34703,
+        "output": 41,
+        "cached": 27332,
+        "thoughts": 173,
+        "tool": 0,
+        "total": 34917
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_grac_1773452087938_0",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "деколонізація",
+            "mode": "frequency"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773452087938_0",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**деколонізація**: frequency = 311, relative = 0.15 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:54.009Z",
+          "resultDisplay": "**деколонізація**: frequency = 311, relative = 0.15 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773452087984_1",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "query": "суб'єктність",
+            "mode": "frequency"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773452087984_1",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**суб'єктність**: frequency = 1,334, relative = 0.66 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:34:54.009Z",
+          "resultDisplay": "**суб'єктність**: frequency = 1,334, relative = 0.66 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "8d6724f1-965c-45d5-a5c5-9579f18aa619",
+      "timestamp": "2026-03-14T01:36:00.558Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Plokhy Gates Of Europe\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Plokhy Gates Of Europe\"\ntype: \"phenomenon\"\ndates:\n  start: \"2015-01-01\"\n  end: \"2016-01-01\"\n  key_events:\n    - year: 2014\n      event: \"Початок російсько-української війни, що спонукало Сергія Плохія написати оглядову історію України для західного читача\"\n    - year: 2015\n      event: \"Вихід англомовного оригіналу 'The Gates of Europe: A History of Ukraine' у видавництві Basic Books\"\n    - year: 2016\n      event: \"Вихід українського перекладу 'Брама Європи. Історія України від скіфських воєн до незалежності' у видавництві КСД\"\n    - year: 2018\n      event: \"Сергій Плохій отримує Національну премію України імені Тараса Шевченка за книгу 'Брама Європи'\"\nprimary_quotes:\n  - text: \"Мабуть увесь російський теоретичний дискурс про Україну... був, очевидно, забарвлений усвідомленими й неусвідомленими імперськими постулатами.\"\n    source: \"До історії української літератури, 1997\"\n    attribution: \"Грабович Г.\"\n  - text: \"Незалежна українська держава аж ніяк не є тим місцем, де відбулася всебічна й послідовна деколонізація... Головним опонентом націоналістичної міфотворчості тут є... інша націоналістична міфотворчість — російська\"\n    source: \"Героїчне та знаменитості в українській культурі, 1999\"\n    attribution: \"Колектив авторів\"\n  - text: \"Саме цю імперську мрію російської еліти... Письменники, які сприяють цим мріям, пишуть про «Імперію» так, неначе це Росія\"\n    source: \"Трубадури імперії, 2006\"\n    attribution: \"Томпсон Е.\"\nforbidden_claims:\n  - \"Українська історія є лише регіональним відгалуженням або 'гілкою' загальноросійської історії (імперський міф)\"\n  - \"Україна виникла як 'штучне утворення' без власної історичної суб'єктності\"\n  - \"Київська Русь була виключно першою формою російської державності\"\n```\n\n## Використані джерела\n1. [Wikipedia: Плохій Сергій Миколайович](https://uk.wikipedia.org/wiki/%D0%9F%D0%BB%D0%BE%D1%85%D1%96%D0%B9_%D0%A1%D0%B5%D1%80%D0%B3%D1%96%D0%B9_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9%D0%BE%D0%B2%D0%B8%D1%87) — Біографія історика, список його ключових праць, інформація про нагороди (Шевченківська премія 2018 р.).\n2. [Героїчне та знаменитості в українській культурі (1999)] — RAG-джерело, що розкриває проблему відсутності деколонізації та впливу російської міфотворчості на історіографію (оптика, з якою працює Плохій).\n3. [Томпсон Е. Трубадури імперії (2006)] — RAG-джерело, аналіз російського постколоніального та імперського дискурсу, який автор системно деконструює у книзі.\n4. [Грабович Г. До історії української літератури (1997)] — RAG-джерело про усвідомлені й неусвідомлені імперські постулати щодо України в історіографії та літературознавстві.\n5. GRAC Corpus та VESUM — перевірка частотності та морфології термінів (суб'єктність, деколонізація, наратив).\n\n## Хронологія\n- 1957: Народження Сергія Плохія (Горький, нині Нижній Новгород, згодом родина переїхала до Запоріжжя).\n- 1980: Закінчення Дніпровського університету (формування історичної бази).\n- 2007: С. Плохій обіймає посаду професора історії України Гарвардського університету.\n- 2013: Плохій стає директором Українського наукового інституту Гарвардського університету.\n- 2014: Анексія Криму та початок війни на Донбасі, що створює гостру необхідність пояснити західному світу справжню історію України.\n- 2015: Публікація \"The Gates of Europe: A History of Ukraine\" у Нью-Йорку (Basic Books).\n- 2016: Публікація українського перекладу \"Брама Європи\" (видавництво КСД, переклад Романа Клочка).\n- 2018: Присудження Національної премії імені Тараса Шевченка.\n- 2022: Новий сплеск глобальної популярності книги після повномасштабного вторгнення як основного джерела знань про Україну для іноземців.\n\n## Ключові факти та цитати\n- Праця охоплює понад 2500 років історії — від часів Геродота і скіфських воєн до падіння СРСР та боротьби за незалежність у XXI столітті.\n- Головна метафора твору: Україна як \"Брама Європи\", унікальний простір на кордоні між Сходом і Заходом, християнством та ісламом, що сформував синтетичну ідентичність і специфічну політичну культуру регіону.\n- Плохій наголошує на глибокому впливі західних політичних традицій (Магдебурзьке право, реформація, ренесансні ідеї), які доходили до українських територій і відокремлювали їхній розвиток від самодержавного вектора Московського царства.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ та контекст\": [!context] — Написання \"Брами Європи\" у 2014-2015 роках було швидкою та потужною інтелектуальною відповіддю на російську пропаганду та спробою пояснити Заходу, чому Україна має повне право на незалежне існування.\n- Section \"Аналіз ключових творів\": [!history-bite] — Сутність метафори \"Брама Європи\": Україна показана не як периферійна буферна зона, а як динамічна контактна зона, через яку циркулювали ідеї, товари та армії, збагачуючи місцеву культуру.\n- Section \"Стилістика та мова автора\": [!culture] — Унікальне поєднання суворого академічного стандарту Гарварду з майстерним сторітелінгом. Плохій перетворює складну макроісторію на захопливий \"page-turner\", доступний широкому колу читачів.\n- Section \"Деколонізаційна перспектива\": [!myth-buster] — Спростування Плохієм путінського міфу про \"один народ\" через методичну демонстрацію різних шляхів політичного розвитку України (з її традицією козацької демократії та виборності) і Росії (з її традицією абсолютизму).\n- Section \"Деколонізаційна перспектива\": [!quote] — Цитата Еви Томпсон про небезпеку російського імперського дискурсу, який змушував світ дивитися на Україну виключно через московську лінзу — саме цю оптику Плохій успішно деконструює.\n- Section \"Підсумок та спадщина\": [!legacy] — Статус \"Брами Європи\" як головного міжнародного підручника з історії України: після 2022 року ця книга стала настільною для західних політиків, дипломатів і журналістів.\n\n## Деколонізаційний контекст\n- **Imperial/Soviet myth:** Історія українських земель — це лише регіональний сюжет у межах створення великої Російської імперії; українці не мали власної еліти чи політичної волі, а були лише об'єктом боротьби сусідніх держав і \"природно\" тяжіли до Москви.\n- **Ukrainian reality:** Плохій повністю повертає Україні історичну суб'єктність. Він доводить, що українці — активні творці європейської історії, які не просто терпіли натиск імперій, а адаптувалися, трансформували їх і врешті-решт ставали каталізаторами їхнього розпаду (як у випадку з СРСР).\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------|\n| Київська Русь | Колиска виключно російської державності, правонаступницею якої є Москва | Спільна історична спадщина, де українські території є безпосереднім ядром і зберігають тяглість європейських традицій |\n| Козаччина | Стихійний селянський бунт проти поляків заради возз'єднання з православним царем | Феномен формування нової національної еліти, яка відстоювала свої права, вольності та власну державу |\n| Україна | Окраїна, південно-західна провінція російського світу | Самостійний простір, \"Брама Європи\" з власною суб'єктністю та глибокими зв'язками із західною цивілізацією |\n\n## Відеоресурси\n(нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ та контекст\n- **Історичне тло:** Праця побачила світ у 2015 році як пряма реакція Гарвардського професора на початок російсько-української війни, анексію Криму та маніпуляції Кремля історичними фактами.\n- **Мета автора:** Дати глобальній аудиторії ключ до розуміння того, чому українці так запекло борються за свою свободу, розкривши глибинне європейське коріння української ідентичності.\n- **Переосмислення:** Плохій кинув виклик домінуючій на Заході руссоцентричній оптиці, згідно з якою історія Східної Європи ототожнювалася виключно з розширенням Московського царства.\n\n### Аналіз ключових творів\n- **Хронологічний вимір:** \"Брама Європи\" є монументальним синтезом понад двох тисячоліть історії.\n- **Структура викладу:** Книга розбита на логічні блоки, які показують послідовну зміну епох: від античного Причорномор'я і Київської Русі до Галицько-Волинської держави, литовсько-польської доби, Гетьманщини, епохи імперій (Російської та Австро-Угорської) та національно-визвольних змагань XX століття.\n- **Геополітична вісь:** Метафора \"брами\" ілюструє концепцію Ф. Тернера про \"фронтир\" (кордон), але в європейському контексті. Україна була місцем зустрічі східного і західного християнства, кочового степу і осілої землеробської цивілізації.\n\n### Стилістика та мова автора\n- **Глобальна наративна історія:** Плохій свідомо відходить від формату сухої монографії для вузького кола фахівців. Його метод — захопливий макроісторичний наратив, де епохальні зсуви проілюстровані через долі конкретних історичних постатей.\n- **Доступність і глибина:** Мова твору є легкою, але фактаж залишається абсолютно бездоганним, підкріпленим останніми досягненнями сучасної історіографії. \n- **Термінологічна акуратність:** Плохій надзвичайно ретельно добирає терміни, уникаючи застарілих імперських штампів, і формує новий, сучасний словник української історії в англомовному світі.\n\n### Деколонізаційна перспектива\n- **Українська суб'єктність:** Ключова інновація твору — фокус на здатності українців діяти самостійно. Плохій розглядає Україну не як \"жертву\", а як націю, здатну робити вибір між різними політичними проєктами (Польща, Росія, Османська імперія).\n- **Деконструкція імперських міфів:** У тексті методично руйнується наратив про \"один народ\". Автор показує, як тривале перебування українських земель у складі Речі Посполитої (і вплив Магдебурзького права, Ренесансу) сформувало політичну культуру, засновану на договорі та праві, що докорінно відрізняється від самодержавного російського підходу.\n- **Боротьба за спадщину:** Плохій звільняє історію Київської Русі та козацтва від монополії російської імперської історіографії.\n\n### Підсумок та спадщина\n- **Світове визнання:** Отримання Національної премії імені Тараса Шевченка (2018) закріпило статус \"Брами Європи\" як канонічного тексту. Переклад десятками мов світу.\n- **Формування ідентичності:** Ця праця змінила правила гри в інтелектуальному просторі, ставши своєрідним \"паспортом\" України для світового співтовариства. Сьогодні \"Брама Європи\" формує дискурс західних медіа, аналітиків та науковців, зміцнюючи підтримку української деколонізаційної боротьби.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: SOURCE_NOT_FOUND\n**Raw Error**: None (Low direct semantic match relevance scores for the modern 2015 monograph \"Брама Європи\" in the primary literary RAG corpus).\n**Self-Correction**: Shifted RAG queries to broader historiographical та деколонізаційні concepts (\"імперські міфи\", \"деколонізація історії України\") to successfully extract valid theoretical and literary context (e.g., quotations from G. Grabowicz and E. Thompson). Relied on the Wikipedia extract for precise factual, biographical, and bibliographic anchoring of S. Plokhy's work.\n**Proposed Tooling Fix**: Consider expanding the RAG corpus for the LIT and HIST seminar tracks to include post-2010 modern Ukrainian historiographical monographs, reviews, and analytical essays, as the current index is predominantly optimized for pre-2000s literature and primary chronicles.\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Planning the Next Move",
+          "description": "I'm focused on moving forward. I've considered the initial steps and now I'm strategizing the approach to successfully fulfill the overall objective. It's all coming together!",
+          "timestamp": "2026-03-14T01:34:58.156Z"
+        },
+        {
+          "subject": "Finalizing Research Structure",
+          "description": "I'm solidifying the structure. The core elements are defined, the approach to organizing the information is ready, and I'm ready to move into the actual research phase with the notes I already have.",
+          "timestamp": "2026-03-14T01:35:00.645Z"
+        },
+        {
+          "subject": "Drafting the Outline Sections",
+          "description": "I'm now drafting the sections and beginning to fill them with supporting quotes. I'm leveraging the available information, including relevant concepts gleaned from the search results, as a foundation for each segment of the analysis. Ready to continue adding content and refining the sections!",
+          "timestamp": "2026-03-14T01:35:02.866Z"
+        },
+        {
+          "subject": "Preparing Core Content",
+          "description": "I'm structuring the key research notes, focusing on the outline's sections and gathering supporting evidence. Using relevant findings, the context for the project is becoming clear. I'm strategically selecting the core quotes to build the foundation for each section.",
+          "timestamp": "2026-03-14T01:35:05.430Z"
+        },
+        {
+          "subject": "Refining the Output Structure",
+          "description": "I'm structuring the research report, incorporating key facts and events. The outline is set, including dates, subject, and the type of analysis. The next phase will see me use all available resources for a thorough exploration.",
+          "timestamp": "2026-03-14T01:35:07.812Z"
+        },
+        {
+          "subject": "Preparing Initial Draft",
+          "description": "I'm structuring the research report based on the provided outline, pulling in key quotes and facts. I'm focusing on the book's context and central themes. The foundation is set, and I'm ready to elaborate on the subject using the gathered information.",
+          "timestamp": "2026-03-14T01:35:08.880Z"
+        },
+        {
+          "subject": "Creating the Initial Report",
+          "description": "I'm now structuring the report. I'm focusing on the outline sections and gathering supporting evidence from my research. I'm using key quotes and facts, including historical context, to ensure a comprehensive analysis. I'm ready to proceed with generating the initial draft, complete with key details!",
+          "timestamp": "2026-03-14T01:35:11.145Z"
+        },
+        {
+          "subject": "Establishing Report Foundation",
+          "description": "I'm structuring the report, including the key facts and quotes that will shape the narrative. The groundwork is prepared, ready to analyze and contextualize the book with supporting evidence. I am now preparing the final touches to make sure the work is ready.",
+          "timestamp": "2026-03-14T01:35:12.900Z"
+        },
+        {
+          "subject": "Establishing the Foundation",
+          "description": "I'm structuring the report, including the key facts and quotes that will shape the narrative.  I've chosen the outline, facts, dates, and primary quotes to include. The foundation is set, I'm ready to begin the work with the gathered information.",
+          "timestamp": "2026-03-14T01:35:15.390Z"
+        },
+        {
+          "subject": "Refining Report Content",
+          "description": "I'm now structuring the report, including the key facts and quotes that will shape the narrative. I've gathered sources, created the framework, and chosen the outline, ready to proceed. I am now preparing the final touches to make sure the work is ready to go.",
+          "timestamp": "2026-03-14T01:35:17.764Z"
+        },
+        {
+          "subject": "Constructing the Research Report",
+          "description": "I'm structuring the report, including the key facts and quotes that will shape the narrative. I've chosen the outline, facts, dates, and primary quotes to include. The foundation is set, and I'm ready to begin the work with the gathered information.",
+          "timestamp": "2026-03-14T01:35:19.756Z"
+        },
+        {
+          "subject": "Finalizing the Research Report",
+          "description": "I'm structuring the report, including the key facts, quotes, and the overall narrative. The outline is defined, dates and subject are clear, and the context is set. Now I am using the information for an in-depth exploration.",
+          "timestamp": "2026-03-14T01:35:21.704Z"
+        },
+        {
+          "subject": "Creating the Initial Report",
+          "description": "I'm now structuring the report, including the key facts, quotes, and the overall narrative. I've chosen the outline, facts, dates, and primary quotes to include. The foundation is set, and I'm ready to begin the work with the gathered information.",
+          "timestamp": "2026-03-14T01:35:23.582Z"
+        },
+        {
+          "subject": "Refining the Research Notes",
+          "description": "I'm structuring the research report based on the provided outline, pulling in key quotes and facts. I'm focusing on the book's context and central themes. The foundation is set, and I'm ready to elaborate on the subject using the gathered information.",
+          "timestamp": "2026-03-14T01:35:25.395Z"
+        },
+        {
+          "subject": "Analyzing Report Structure",
+          "description": "I'm structuring the research report based on the provided outline and the gathered evidence. I have selected key facts, dates, quotes, and decided on the report's overall narrative direction. I'm also preparing the final touches to make sure the work is ready to go.",
+          "timestamp": "2026-03-14T01:35:27.165Z"
+        },
+        {
+          "subject": "Creating the Report Draft",
+          "description": "I'm now structuring the report. I have the outline, key quotes, facts, and dates, and I've chosen the direction for the narrative. All the source material is organized, and I'm ready to begin composing the sections of the report with the included information.",
+          "timestamp": "2026-03-14T01:35:29.169Z"
+        },
+        {
+          "subject": "Creating the Final Output",
+          "description": "I'm now structuring the report. I have the outline, key quotes, facts, and dates, and I've chosen the direction for the narrative. The groundwork is prepared, and now I'm ready to begin assembling the final version, with all the elements organized and ready.",
+          "timestamp": "2026-03-14T01:35:30.754Z"
+        },
+        {
+          "subject": "Preparing a Final Draft",
+          "description": "I'm now structuring the report. I have the outline, key quotes, facts, and dates, and I've chosen the direction for the narrative. The groundwork is prepared, and now I'm ready to begin assembling the final version, with all the elements organized and ready.",
+          "timestamp": "2026-03-14T01:35:33.152Z"
+        },
+        {
+          "subject": "Creating the Report Final Version",
+          "description": "I'm structuring the research report based on the provided outline, pulling in key quotes and facts. I'm focusing on the book's context and central themes. The foundation is set, I'm ready to elaborate on the subject using the gathered information, including key facts, quotes, and the overall narrative.",
+          "timestamp": "2026-03-14T01:35:34.136Z"
+        }
+      ],
+      "tokens": {
+        "input": 34803,
+        "output": 3718,
+        "cached": 33988,
+        "thoughts": 4235,
+        "tool": 0,
+        "total": 42756
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}

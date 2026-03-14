@@ -1,0 +1,224 @@
+discovered_at: '2026-03-14T00:10:51.060711+00:00'
+query_keywords:
+- Franko What Is Progress
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Franko What Is Progress у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0221
+  text: "Художній засіб\nПриклад\nПорівняння (не менше двох прикладів)\nЕпітети (не\
+    \ менше двох прикладів)\nУособлення (не менше двох прикладів)\n \n Чи вплинули\
+    \ ці художні засоби на твоє сприйняття оповідання? \nЯк?\n 22. Які прислів’я,\
+    \ наведені на початку розділу, відповідають твору \nІ. Франка?\nДомашнє завдання\
+    \ (на вибір)\n \n1. Склади і запиши в робочий зошит план оповідання.\n \n2. Склади\
+    \ по два запитання кожного виду та усно дай на них \nвідповіді.\n \n3. Напиши\
+    \ твір-роздум на тему «Чи можна виправити свої по-\nмилк"
+  section_title: Сторінка 217
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0190
+  text: "§ 30  Особливості вживання прийменників  \n183\nВправа 263\n1   Розгляньте\
+    \ інфографіку  Розкажіть, як на ній відображено важливість на-\nвчання \nШкола\n\
+    Училище, університет, навчальні курси, самоосвіта\nПрофесії\n2  Напишіть есе на\
+    \ одну з  тем \n• Навчання — інвестиція в майбутнє чи марнування \nчасу?\n• Для\
+    \ чого потрібно навчатися?\n• Як я уявляю себе в майбутньому?\n              \
+    \     Підручник \n \n         видавництво \"Ранок\""
+  section_title: Сторінка 186
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5870057344436646
+  chunk_id: fbf8bdff_c0734
+  text: "It should be remembered that Franko was also a\r\nscholar and publicist (his\
+    \ research into the different linguistic devices used\r\nin these various branches\
+    \ of the literary language deserves further study).\r\nThis accounts for the particular\
+    \ attention he paid to investigating the\r\nbeginnings and sources of conflicts-whether\
+    \ contemporaneous or future. He\r\ndelighted, for example, in stories about children\
+    \ and he provided for the adult\r\ncharacters of his, prose /94/ detailed descriptions\
+    \ of their motiv"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5584440231323242
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5478793978691101
+  chunk_id: fc2291b5_c2280
+  text: "Літ.: Франко І. Із\r\nсекретів поетичної творчості В кн.: Франко І. Зібрання\
+    \ творів, т. 31. К., 1981;\r\nТеория литературы. Основные проблемы в историческом\
+    \ освещенни, кн. 3. М., 1965;\r\nЛихачев Д. Нестилизационные подражания. В кн.:\
+    \ Лихачев Д. Поэтика древнерусской\r\nлитературы. М., 1979; Храпченко М. Б. Творческая\
+    \ индивидуальность писателя и\r\nразвитие литературы. В кн.: Храпченко М. Б. Собрание\
+    \ сочинений, т. 3. М., 1981.\n\nМ. П. Бондар."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

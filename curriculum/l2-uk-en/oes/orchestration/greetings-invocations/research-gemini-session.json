@@ -1,0 +1,320 @@
+{
+  "sessionId": "72be417a-0cdc-429d-9390-924ba9cd5cf1",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-13T23:49:17.313Z",
+  "lastUpdated": "2026-03-13T23:49:46.503Z",
+  "messages": [
+    {
+      "id": "5d7a7a44-d8db-4969-8faa-3f19b2db7e66",
+      "timestamp": "2026-03-13T23:49:17.313Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-006\nlevel: RUTH\nsequence: 6\nslug: criminal-law-murder\nversion: '2.0'\ntitle: 'Кримінальне право: Вбивство'\nsubtitle: 'Criminal Law I: Murder'\nfocus: Головщина revisited\nphase: 1\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - 'Introduction to Criminal Law I: Murder'\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Grod Court Judge\nprerequisites:\n- land-law-basics\nconnects_to:\n- courts-basic\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Кримінальне право: Вбивство** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Кримінальне право: Вбивство\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Кримінальне право: Вбивство\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "0edaaa42-19d9-40ba-9466-e2f5fd0640b8",
+      "timestamp": "2026-03-13T23:49:25.764Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Proceeding to the Next Stage",
+          "description": "I'm focused on what comes next. I'm currently analyzing the information I have and outlining the critical path to completion, so I can successfully execute the following stage. The aim is to get this task finished.",
+          "timestamp": "2026-03-13T23:49:20.999Z"
+        },
+        {
+          "subject": "Commencing Research Notes",
+          "description": "I am now structuring my approach. The aim is to create detailed research notes, using all available resources. My focus is on the specific format required for the output, and I'm ensuring all the essential elements are present. I will start with Wikipedia to ensure I obtain the required information.",
+          "timestamp": "2026-03-13T23:49:24.753Z"
+        },
+        {
+          "subject": "Drafting the Introduction",
+          "description": "I'm presently building the introduction. My focus is to encapsulate the core of the subject. I'm prioritizing accuracy and relevance. I will ensure this section sets the stage effectively for the subsequent parts of the research notes.",
+          "timestamp": "2026-03-13T23:49:25.645Z"
+        }
+      ],
+      "tokens": {
+        "input": 20488,
+        "output": 18,
+        "cached": 13502,
+        "thoughts": 457,
+        "tool": 0,
+        "total": 20963
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445765764_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Головщина",
+            "mode": "search"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445765764_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Головщина' — 5 results\n\n1. **Головщина** — Головщи́на — в руському праві убивство людини або штраф за «голову убитого», який сплачувався сім&#039;ї або родичам убитого. Розмір головщини залежав від стану\n2. **Закон Руський** — викупом (вира), що збирався князем та його адміністрацією, і винагородою (головщина), що давалася потерпілому або його родичам. На «Закон Руський» є посилання\n3. **Вира** — 1958. — Т. 1, кн. II : Літери В — Ґ. — С. 158. — 1000 екз. Головництво, головщина [Архівовано 14 червня 2021 у Wayback Machine.] // Українська мала енциклопедія :\n4. **Проїзні митні збори Запорізької Січі** — промитом); посажене — збір, пропорційний до розмірів возів у саженях; головщина (запроваджено 1714 р.) — стягнення не з вартості товару, а з «голови»\n5. **Воронівці (Хмільницький район)** — нинішніх Воронівець (а саме: на північ за селом — Селисько, на південь — Головщина, на південний схід — Скаржинці) шляхтичі Вороничі (Воронецькі) отримали"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:25.972Z",
+          "resultDisplay": "Wikipedia search: 'Головщина' — 5 results\n\n1. **Головщина** — Головщи́на — в руському праві убивство людини або штраф за «голову убитого», який сплачувався сім&#039;ї або родичам убитого. Розмір головщини залежав від стану\n2. **Закон Руський** — викупом (вира), що збирався князем та його адміністрацією, і винагородою (головщина), що давалася потерпілому або його родичам. На «Закон Руський» є посилання\n3. **Вира** — 1958. — Т. 1, кн. II : Літери В — Ґ. — С. 158. — 1000 екз. Головництво, головщина [Архівовано 14 червня 2021 у Wayback Machine.] // Українська мала енциклопедія :\n4. **Проїзні митні збори Запорізької Січі** — промитом); посажене — збір, пропорційний до розмірів возів у саженях; головщина (запроваджено 1714 р.) — стягнення не з вартості товару, а з «голови»\n5. **Воронівці (Хмільницький район)** — нинішніх Воронівець (а саме: на північ за селом — Селисько, на південь — Головщина, на південний схід — Скаржинці) шляхтичі Вороничі (Воронецькі) отримали",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "ad6a22f7-a724-40e6-aa7b-a5e5db48e889",
+      "timestamp": "2026-03-13T23:49:31.404Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Querying for Elaboration",
+          "description": "I am now seeking additional context. I will initiate a search to find additional details to get a more comprehensive view of the topic at hand, aiming for a richer understanding. This will hopefully allow me to refine my approach.",
+          "timestamp": "2026-03-13T23:49:29.909Z"
+        },
+        {
+          "subject": "Initiating Source Searches",
+          "description": "I'm moving forward by extracting key terms from the initial search results. I'm preparing to use another tool to find supporting evidence, specifically aiming to locate primary source material that elaborates on the concept and provides further relevant details. This will refine my understanding of the subject.",
+          "timestamp": "2026-03-13T23:49:31.029Z"
+        }
+      ],
+      "tokens": {
+        "input": 20902,
+        "output": 73,
+        "cached": 19678,
+        "thoughts": 149,
+        "tool": 0,
+        "total": 21124
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773445771215_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Головщина"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445771215_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Головщина\n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B2%D1%89%D0%B8%D0%BD%D0%B0\n\nГоловщи́на — в руському праві убивство людини або штраф за «голову убитого», який сплачувався сім'ї або родичам убитого. Розмір головщини залежав від стану убитого.\n\n\n== Вбивство ==\nЗа «Псковською судною грамотою» — вбивство, душогубство. В 96 артикулі зазначалось:\n\nА где оучинится головщина, а доличат коєго головника, ино князю на головниках взять рубль продажи.\n\n\n== Штраф ==\nЗа «Руською Правдою» і «Новгородською судною грамотою» — певна сума грошей, яку сплачував убивця на користь родичів убитого.\nЛитовські статути Великого князівства Литовського, які базувалися на руському праві, також передбачали головщину. В артикулі 9-му згадується:\n\nА естли бы от тых ранъ умеръ, тогды тотъ, который ранил, с права за доводом горълом мает быти каран, а головщина зъ именья або маетности винъного теж совито плачона будет.\nСтатути встановлювали розмір головщини залежно від соціального становища вбитого. Так, значно збільшувався її розмір у випадках вбивства шляхтича.\n\n\n== Див. також ==\nВира\n\n\n== Джерела та література ==\nГайдай Л. Історія України в особах, термінах, назвах і поняттях. — Луцьк: Вежа, 2000.\nВладимирский-Буданов М. Ф. Курсы по истории русского права. Киев, 1888, стр. 253-4.\nСергеевич В. И. Курсы по истории русского права. СПб., 1890, стр. 481—482."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:32.034Z",
+          "resultDisplay": "# Головщина\n**URL**: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B2%D1%89%D0%B8%D0%BD%D0%B0\n\nГоловщи́на — в руському праві убивство людини або штраф за «голову убитого», який сплачувався сім'ї або родичам убитого. Розмір головщини залежав від стану убитого.\n\n\n== Вбивство ==\nЗа «Псковською судною грамотою» — вбивство, душогубство. В 96 артикулі зазначалось:\n\nА где оучинится головщина, а доличат коєго головника, ино князю на головниках взять рубль продажи.\n\n\n== Штраф ==\nЗа «Руською Правдою» і «Новгородською судною грамотою» — певна сума грошей, яку сплачував убивця на користь родичів убитого.\nЛитовські статути Великого князівства Литовського, які базувалися на руському праві, також передбачали головщину. В артикулі 9-му згадується:\n\nА естли бы от тых ранъ умеръ, тогды тотъ, который ранил, с права за доводом горълом мает быти каран, а головщина зъ именья або маетности винъного теж совито плачона будет.\nСтатути встановлювали розмір головщини залежно від соціального становища вбитого. Так, значно збільшувався її розмір у випадках вбивства шляхтича.\n\n\n== Див. також ==\nВира\n\n\n== Джерела та література ==\nГайдай Л. Історія України в особах, термінах, назвах і поняттях. — Луцьк: Вежа, 2000.\nВладимирский-Буданов М. Ф. Курсы по истории русского права. Киев, 1888, стр. 253-4.\nСергеевич В. И. Курсы по истории русского права. СПб., 1890, стр. 481—482.",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773445771262_1",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Вира"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773445771262_1",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Вира\n**URL**: https://uk.wikipedia.org/wiki/%D0%92%D0%B8%D1%80%D0%B0\n\nВи́ра — грошовий штраф за вбивство вільної людини у Київській Русі.\nПоходження слова вира остаточно не з'ясоване: здебільшого воно пояснюється як германізм і порівнюється з дав.-в.-нім. і сер.-в.-нім. wërgēlt , нім. Wergelt («вергельд»), утвореними від wēr («чоловік») і geld («відплата, вартість»); М. Фасмер вважав слово питомо слов'янським і виводив прасл.: *vira від *virъ («чоловік», пор. лит. výras, гот. wair, wër, лат. vir).\nВиру сплачував убивця на користь князя, якщо йому вдавалося уникнути кровної помсти. За «Руською правдою» помста зі сторони родичів убитого могла бути замінена сплатою 40 гривень. За вбивство ж представника княжої адміністрації потрібно було сплатити подвійну виру (80 гривень). Піввира (20 гривень) сплачувалася за нанесення тяжких тілесних пошкоджень (покалічення) і вбивство невірної жінки. За раба не було вири, а тільки платили кару за пошкодження чужої речі. «Руська правда» знає також поклепну виру й подає способи, як звільнитися від наклепу. У випадку, якщо вбивцю не знаходили, «дику» виру платила вся община — верв, на території якої було знайдено труп вбитого. Після скасування кровної помсти (дивіться Закон Руський), вира — єдина кара, що накладалася державою на злочинця або на верв (громаду), якщо не викривали вбивцю. Виру для князя збирав княжий урядовець — вирник, який діставав під час служби утримання від верві, так званий вирний поклон.\nВід вири слід відрізняти головщину — гроші, виплачувані родичам вбитого.\n\n\n== Див. також ==\nАрхаїчне право\nВергельд\nГоніння сліду\nКровна помста\nУсобиця\n\n\n== Джерела ==\nГайдай Л. Історія України в особах, термінах, назвах і поняттях.- Луцьк: Вежа, 2000.\nДовідник з історії України. За ред. І. Підкови та Р. Шуста. — К.: Генеза, 1993. [Архівовано 10 квітня 2009 у Wayback Machine.]\nЕтимологічний словник української мови : в 7 т. / редкол.: О. С. Мельничук (гол. ред.) та ін. — К. : Наукова думка, 1982. — Т. 1 : А — Г / Ін-т мовознавства ім. О. О. Потебні АН УРСР ; укл.: Р. В. Болдирєв та ін. — 632 с.\n\n\n== Посилання ==\nТ. Л. Вілкул. Вира [Архівовано 2 червня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2003. — Т. 1 : А — В. — С. 512. — ISBN 966-00-0734-5.\nВира [Архівовано 14 червня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1958. — Т. 1, кн. II : Літери В — Ґ. — С. 158. — 1000 екз.\nГоловництво, головщина [Архівовано 14 червня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1958. — Т. 1, кн. II : Літери В — Ґ. — С. 259. — 1000 екз.\nПокалічення // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1963. — Т. 6, кн. XI : Літери Пере — По. — С. 1412-1413. — 1000 екз.\nМайнові покарання у «Руській Правді»"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:32.034Z",
+          "resultDisplay": "# Вира\n**URL**: https://uk.wikipedia.org/wiki/%D0%92%D0%B8%D1%80%D0%B0\n\nВи́ра — грошовий штраф за вбивство вільної людини у Київській Русі.\nПоходження слова вира остаточно не з'ясоване: здебільшого воно пояснюється як германізм і порівнюється з дав.-в.-нім. і сер.-в.-нім. wërgēlt , нім. Wergelt («вергельд»), утвореними від wēr («чоловік») і geld («відплата, вартість»); М. Фасмер вважав слово питомо слов'янським і виводив прасл.: *vira від *virъ («чоловік», пор. лит. výras, гот. wair, wër, лат. vir).\nВиру сплачував убивця на користь князя, якщо йому вдавалося уникнути кровної помсти. За «Руською правдою» помста зі сторони родичів убитого могла бути замінена сплатою 40 гривень. За вбивство ж представника княжої адміністрації потрібно було сплатити подвійну виру (80 гривень). Піввира (20 гривень) сплачувалася за нанесення тяжких тілесних пошкоджень (покалічення) і вбивство невірної жінки. За раба не було вири, а тільки платили кару за пошкодження чужої речі. «Руська правда» знає також поклепну виру й подає способи, як звільнитися від наклепу. У випадку, якщо вбивцю не знаходили, «дику» виру платила вся община — верв, на території якої було знайдено труп вбитого. Після скасування кровної помсти (дивіться Закон Руський), вира — єдина кара, що накладалася державою на злочинця або на верв (громаду), якщо не викривали вбивцю. Виру для князя збирав княжий урядовець — вирник, який діставав під час служби утримання від верві, так званий вирний поклон.\nВід вири слід відрізняти головщину — гроші, виплачувані родичам вбитого.\n\n\n== Див. також ==\nАрхаїчне право\nВергельд\nГоніння сліду\nКровна помста\nУсобиця\n\n\n== Джерела ==\nГайдай Л. Історія України в особах, термінах, назвах і поняттях.- Луцьк: Вежа, 2000.\nДовідник з історії України. За ред. І. Підкови та Р. Шуста. — К.: Генеза, 1993. [Архівовано 10 квітня 2009 у Wayback Machine.]\nЕтимологічний словник української мови : в 7 т. / редкол.: О. С. Мельничук (гол. ред.) та ін. — К. : Наукова думка, 1982. — Т. 1 : А — Г / Ін-т мовознавства ім. О. О. Потебні АН УРСР ; укл.: Р. В. Болдирєв та ін. — 632 с.\n\n\n== Посилання ==\nТ. Л. Вілкул. Вира [Архівовано 2 червня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2003. — Т. 1 : А — В. — С. 512. — ISBN 966-00-0734-5.\nВира [Архівовано 14 червня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1958. — Т. 1, кн. II : Літери В — Ґ. — С. 158. — 1000 екз.\nГоловництво, головщина [Архівовано 14 червня 2021 у Wayback Machine.] // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1958. — Т. 1, кн. II : Літери В — Ґ. — С. 259. — 1000 екз.\nПокалічення // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1963. — Т. 6, кн. XI : Літери Пере — По. — С. 1412-1413. — 1000 екз.\nМайнові покарання у «Руській Правді»",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773445771358_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "genre": "legal",
+            "query": "головщина"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445771358_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"головщина\"\n\n### Result 1 (score: 0.5384)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0206`\n- **Text**:\nРОЗДЂЛЪ ДВАНАДАЦТЫЙ О ГОЛОВЩЫЗНАХЪ И НАВЕЗКАХЪ ЛЮДЕЙ ПОСПОЛИТЫХЪ.\n\nАРТЫКУЛЪ 1.\n\nО головщинахъ и навезкахъ людей простого стану.\n\nГоловщызна панцерному слузЂ пятдесятъ копъ грошей,\r\nпутному слузЂ тридцать копъ грошей, бортнику двадцать пять копъ грошей, тяглому\r\nдвадцать копъ грошей, паробку десеть копъ грошей, а жонамъ ихъ совито. А\r\nнавезка панцерному слузЂ шесть рублей грошей, бортнику два рубли грошей,\r\nтяглому рубль грошей, паробку полтина грошей, а жонамъ ихъ совито, а жонца,\r\nкоторая мужа \n\n### Result 2 (score: 0.5249)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0195`\n- **Text**:\nХто бы кому руку або ногу втялъ, або око, губу, зубы,\r\nухо вытялъ, за кождый таковый члонокъ по петдесятъ копъ грошей платити, а\r\nдвадцать и чотыри недЂли на замку седЂти. Або хто бы обЂ двЂ руки и обе двЂ\r\nноги и обЂ двЂ ухи оттялъ и обЂ двЂ очи; тогды головщизну яко за человЂка маеть\r\nплачоно сто копъ грошей, а годъ и шесть недЂль седЂти. А рана, которая бы у\r\nчеловЂка была, съ которое бы кости выбирано, тридцать копъ грошей. А естли бы\r\nсъ тое раны речъ замкнулъ, хотя бы се и выгоилъ; тогды м\n\n### Result 3 (score: 0.4906)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0202`\n- **Text**:\nТежъ уставуемъ, ижъ коли бы у якой звадЂ слуга\r\nборонечы пана своего, кого забилъ або ранилъ; таковый отъ кождого права маеть\r\nбыти воленъ, але сторона жалобливая будеть тыхъ ранъ и головщизну на пану его\r\nдохотити. Нижли естли бы чій слуга своволнЂ безъ расказанья пана своего передъ\r\nочима кого забилъ або ранилъ, хотя бы не былъ припоручонъ; маеть панъ его\r\nпоймати и до везенья посадити, а кровнымъ забитого дати вЂдомость. И естли бы\r\nфолькгуючи служебникови своему поимати его не хотЂлъ, а онъ \n\n### Result 4 (score: 0.4652)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0200`\n- **Text**:\nКоли бы колько братьи было и сестръ рожоныхъ\r\nвыпосажоныхъ и не выпосажоныхъ, а одинъ брать отъ ихъ забитъ былъ; тогды они\r\nсами братья мимо сестръ выпосажоныхъ маюць головщизны доходити, и естьли бы\r\nбратья змерли, тогды и дочки выпосажоные мають головщизны искати, а естли бы\r\nсынове и дочки змерли, тогды близкіе доходити мають.\n\nАРТЫКУЛЪ 26.\n\nО звадахъ.\n\nЕсли бы хто съ кимъ звадилъ, а въ оной звадЂ оба два\r\nсе ранили, а одинъ бы съ тыхъ позванъ до права, а свЂдковъ бы межи собою не\r\nмЂли, хто \n\n### Result 5 (score: 0.4587)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0203`\n- **Text**:\nУставуемъ, тежъ, естьли бы ся потрафило гдЂ жъ\r\nкольвекъ забитого человЂка перехождчаго або безплеменнаго, которого головщизны\r\nискати не будетъ кому; тогды скоро такового человЂка трупъ будеть знайденъ,\r\nтого жъ часу врядъ того замку або двора нашого врядникъ маеть обослати всихъ\r\nмЂщанъ людей сельскихъ, такъ и подданыхъ нашихъ яко и шляхецскихъ, и опыт\r\nвчинити разъ або и два, а гдЂ бы се на такихъ двохъ копахъ о томъ забитью\r\nвывЂдатися не могли, тогды третюю копу присяжную маеть врядъ собрат\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:32.034Z",
+          "resultDisplay": "Found 5 results for: \"головщина\"\n\n### Result 1 (score: 0.5384)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0206`\n- **Text**:\nРОЗДЂЛЪ ДВАНАДАЦТЫЙ О ГОЛОВЩЫЗНАХЪ И НАВЕЗКАХЪ ЛЮДЕЙ ПОСПОЛИТЫХЪ.\n\nАРТЫКУЛЪ 1.\n\nО головщинахъ и навезкахъ людей простого стану.\n\nГоловщызна панцерному слузЂ пятдесятъ копъ грошей,\r\nпутному слузЂ тридцать копъ грошей, бортнику двадцать пять копъ грошей, тяглому\r\nдвадцать копъ грошей, паробку десеть копъ грошей, а жонамъ ихъ совито. А\r\nнавезка панцерному слузЂ шесть рублей грошей, бортнику два рубли грошей,\r\nтяглому рубль грошей, паробку полтина грошей, а жонамъ ихъ совито, а жонца,\r\nкоторая мужа \n\n### Result 2 (score: 0.5249)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0195`\n- **Text**:\nХто бы кому руку або ногу втялъ, або око, губу, зубы,\r\nухо вытялъ, за кождый таковый члонокъ по петдесятъ копъ грошей платити, а\r\nдвадцать и чотыри недЂли на замку седЂти. Або хто бы обЂ двЂ руки и обе двЂ\r\nноги и обЂ двЂ ухи оттялъ и обЂ двЂ очи; тогды головщизну яко за человЂка маеть\r\nплачоно сто копъ грошей, а годъ и шесть недЂль седЂти. А рана, которая бы у\r\nчеловЂка была, съ которое бы кости выбирано, тридцать копъ грошей. А естли бы\r\nсъ тое раны речъ замкнулъ, хотя бы се и выгоилъ; тогды м\n\n### Result 3 (score: 0.4906)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0202`\n- **Text**:\nТежъ уставуемъ, ижъ коли бы у якой звадЂ слуга\r\nборонечы пана своего, кого забилъ або ранилъ; таковый отъ кождого права маеть\r\nбыти воленъ, але сторона жалобливая будеть тыхъ ранъ и головщизну на пану его\r\nдохотити. Нижли естли бы чій слуга своволнЂ безъ расказанья пана своего передъ\r\nочима кого забилъ або ранилъ, хотя бы не былъ припоручонъ; маеть панъ его\r\nпоймати и до везенья посадити, а кровнымъ забитого дати вЂдомость. И естли бы\r\nфолькгуючи служебникови своему поимати его не хотЂлъ, а онъ \n\n### Result 4 (score: 0.4652)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0200`\n- **Text**:\nКоли бы колько братьи было и сестръ рожоныхъ\r\nвыпосажоныхъ и не выпосажоныхъ, а одинъ брать отъ ихъ забитъ былъ; тогды они\r\nсами братья мимо сестръ выпосажоныхъ маюць головщизны доходити, и естьли бы\r\nбратья змерли, тогды и дочки выпосажоные мають головщизны искати, а естли бы\r\nсынове и дочки змерли, тогды близкіе доходити мають.\n\nАРТЫКУЛЪ 26.\n\nО звадахъ.\n\nЕсли бы хто съ кимъ звадилъ, а въ оной звадЂ оба два\r\nсе ранили, а одинъ бы съ тыхъ позванъ до права, а свЂдковъ бы межи собою не\r\nмЂли, хто \n\n### Result 5 (score: 0.4587)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0203`\n- **Text**:\nУставуемъ, тежъ, естьли бы ся потрафило гдЂ жъ\r\nкольвекъ забитого человЂка перехождчаго або безплеменнаго, которого головщизны\r\nискати не будетъ кому; тогды скоро такового человЂка трупъ будеть знайденъ,\r\nтого жъ часу врядъ того замку або двора нашого врядникъ маеть обослати всихъ\r\nмЂщанъ людей сельскихъ, такъ и подданыхъ нашихъ яко и шляхецскихъ, и опыт\r\nвчинити разъ або и два, а гдЂ бы се на такихъ двохъ копахъ о томъ забитью\r\nвывЂдатися не могли, тогды третюю копу присяжную маеть врядъ собрат\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773445771403_3",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "вбивство",
+            "genre": "legal"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445771403_3",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"вбивство\"\n\n### Result 1 (score: 0.5044)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0351`\n- **Text**:\n2 [2] Аще пріидет(ь) кровавъ муж(ь) на\r\nдвор(ъ) или синь 2, то видока 3 ему не искати, но платити\r\n4 ему продажа за безчестие 5, каков(ъ) будет(ъ); (4) аще\r\nне будет(ъ) на нем знамения 6, то привести ему видок(ъ), слово\r\nпротиву слова.\n\n3 [3, 5] Аще ж(е) ударит(ъ) мечем(ъ) или\r\nножем(ъ), а не на см(е)рть, то кн(я)зю вины 9 гривен(ъ), а исцү 7\r\nза рану 8 сүдят(ъ).\n\n4 (6) Аще ударит(ъ) на см(е)рть [4, 7] жердию\r\nили попехнет(ъ), а знамения нѣтъ, а видок(ъ) будет(ъ), аще будет(ъ)\r\nболярин(ъ) или лю\n\n### Result 2 (score: 0.5028)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0190`\n- **Text**:\nТежъ уставуемъ, хтобы на чій домъ або на господу\r\nкгвалтомъ наЂхалъ або нашолъ, а тоть господарь домовый также и гость, который\r\nвъ дому его томъ або господЂ стоить, оного кгвалтовника самого або помочниковъ\r\nего боронечи дому своего забилъ; тогды скоро по ономъ кгвалте маеть сусЂдомъ\r\nсвоимъ околичнымъ обволати и оповЂдати, и того жъ часу до вряду нашого, который\r\nбудеть наблизшій, Ђхати або слати, изъ уряду взявшы возного и сторону людей\r\nдобрыхъ шляхту а иншихъ сусЂдовъ вЂры годныхъ, оный кгв\n\n### Result 3 (score: 0.5026)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0137`\n- **Text**:\nи 1 протѡръ 2 тому 3\r\nже платити 4; (34) а кнѧзю 6 продажѣ 6\r\n12 гри(венъ) в челѧдинѣ 7 или 8 оукрадше 9.\n\n(48) Ѻ А)\r\nсвѡдѣ 10 же 11.\n\n33 [35] А и 12\r\nсвоѥгѡ города 13 в чюжю 14 землю свѡда 15\r\nнѣтуть 16 Б); но такоже 17 въıвести 18\r\nѥму 19 послухи 20 любо мъıтника 21\r\nпередъ 22 кимь 23 же купивше 24, то 25\r\nистьцю 26 лице 27 взѧти, а прѡка ѥму 28\r\nжелѣти 29, что с нимь 30 погибло 31 В),\r\nа ѻному 32 своихъ кунъ 33 желѣти 34.\n\n(49) Ѻ 35 Г) татьб(ѣ)\r\n36.\n\n34 [36] Аже 31 оубиють 38\r\nкогѻ 39 оу 40 к\n\n### Result 4 (score: 0.5002)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0227`\n- **Text**:\nУставуемъ, тежъ хтобы злодЂя при лицы своемъ забилъ,\r\nтакового злодЂя забитого того жъ часу по ономъ забитью маеть оказати сусЂдомъ\r\nоколичнымъ и потомъ што нарихлей зъ ураду нашого, которій наближей будеть,\r\nвознымъ и стороною обведши до вряду привести и оказати маеть. А потомъ будеть\r\nли о то позванъ до права; тогды врядъ ему маеть допустити отприсегнутися, ижъ\r\nего на злочинствЂ при лицу въ дому своемъ забилъ. Такъ тежъ естли бы се\r\nпотрафило кому на дорозЂ злодЂя погонити, а онъ бы се поймат\n\n### Result 5 (score: 0.4978)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0100`\n- **Text**:\n23 1, 2, 17, 31,\r\n32, 38, 39, 41, 44, 46, 47, 53 — оубилъ или; 3, 5, 6, 13, 14, 20, 23, 26, 37,\r\n49 в(ъ, о) свадѣ (сваде) оубилъ (убилъ)] оубилъ или в свадѣ 9, 13,\r\n40, 41 убилъ; 10 оуволъ; 25, 42, 44 оуболъ;\n\n24 \r\n7, 9, 11, 28, 24, 35, 40, 48, 50, 52 — или;\n\n25 15, 40 сваде;\n\n26 39 іли;\n\n27 1, 7, 12, 16,\r\n18, 31, 33, 88, 49, 53, 54 пироу; 8 піру;\n\n28 37 явленно; 7,\r\n9, 11, 19, 28, 35, 45, 50, 51, 53-55 какъ; 22, 24, 48 како; 44 такы; 52 + и;\n\n30 12, 17, 18, 22,\r\n25, 29, 32, 33, 36, 38, 49 емоу;\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:32.034Z",
+          "resultDisplay": "Found 5 results for: \"вбивство\"\n\n### Result 1 (score: 0.5044)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0351`\n- **Text**:\n2 [2] Аще пріидет(ь) кровавъ муж(ь) на\r\nдвор(ъ) или синь 2, то видока 3 ему не искати, но платити\r\n4 ему продажа за безчестие 5, каков(ъ) будет(ъ); (4) аще\r\nне будет(ъ) на нем знамения 6, то привести ему видок(ъ), слово\r\nпротиву слова.\n\n3 [3, 5] Аще ж(е) ударит(ъ) мечем(ъ) или\r\nножем(ъ), а не на см(е)рть, то кн(я)зю вины 9 гривен(ъ), а исцү 7\r\nза рану 8 сүдят(ъ).\n\n4 (6) Аще ударит(ъ) на см(е)рть [4, 7] жердию\r\nили попехнет(ъ), а знамения нѣтъ, а видок(ъ) будет(ъ), аще будет(ъ)\r\nболярин(ъ) или лю\n\n### Result 2 (score: 0.5028)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0190`\n- **Text**:\nТежъ уставуемъ, хтобы на чій домъ або на господу\r\nкгвалтомъ наЂхалъ або нашолъ, а тоть господарь домовый также и гость, который\r\nвъ дому его томъ або господЂ стоить, оного кгвалтовника самого або помочниковъ\r\nего боронечи дому своего забилъ; тогды скоро по ономъ кгвалте маеть сусЂдомъ\r\nсвоимъ околичнымъ обволати и оповЂдати, и того жъ часу до вряду нашого, который\r\nбудеть наблизшій, Ђхати або слати, изъ уряду взявшы возного и сторону людей\r\nдобрыхъ шляхту а иншихъ сусЂдовъ вЂры годныхъ, оный кгв\n\n### Result 3 (score: 0.5026)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0137`\n- **Text**:\nи 1 протѡръ 2 тому 3\r\nже платити 4; (34) а кнѧзю 6 продажѣ 6\r\n12 гри(венъ) в челѧдинѣ 7 или 8 оукрадше 9.\n\n(48) Ѻ А)\r\nсвѡдѣ 10 же 11.\n\n33 [35] А и 12\r\nсвоѥгѡ города 13 в чюжю 14 землю свѡда 15\r\nнѣтуть 16 Б); но такоже 17 въıвести 18\r\nѥму 19 послухи 20 любо мъıтника 21\r\nпередъ 22 кимь 23 же купивше 24, то 25\r\nистьцю 26 лице 27 взѧти, а прѡка ѥму 28\r\nжелѣти 29, что с нимь 30 погибло 31 В),\r\nа ѻному 32 своихъ кунъ 33 желѣти 34.\n\n(49) Ѻ 35 Г) татьб(ѣ)\r\n36.\n\n34 [36] Аже 31 оубиють 38\r\nкогѻ 39 оу 40 к\n\n### Result 4 (score: 0.5002)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0227`\n- **Text**:\nУставуемъ, тежъ хтобы злодЂя при лицы своемъ забилъ,\r\nтакового злодЂя забитого того жъ часу по ономъ забитью маеть оказати сусЂдомъ\r\nоколичнымъ и потомъ што нарихлей зъ ураду нашого, которій наближей будеть,\r\nвознымъ и стороною обведши до вряду привести и оказати маеть. А потомъ будеть\r\nли о то позванъ до права; тогды врядъ ему маеть допустити отприсегнутися, ижъ\r\nего на злочинствЂ при лицу въ дому своемъ забилъ. Такъ тежъ естли бы се\r\nпотрафило кому на дорозЂ злодЂя погонити, а онъ бы се поймат\n\n### Result 5 (score: 0.4978)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0100`\n- **Text**:\n23 1, 2, 17, 31,\r\n32, 38, 39, 41, 44, 46, 47, 53 — оубилъ или; 3, 5, 6, 13, 14, 20, 23, 26, 37,\r\n49 в(ъ, о) свадѣ (сваде) оубилъ (убилъ)] оубилъ или в свадѣ 9, 13,\r\n40, 41 убилъ; 10 оуволъ; 25, 42, 44 оуболъ;\n\n24 \r\n7, 9, 11, 28, 24, 35, 40, 48, 50, 52 — или;\n\n25 15, 40 сваде;\n\n26 39 іли;\n\n27 1, 7, 12, 16,\r\n18, 31, 33, 88, 49, 53, 54 пироу; 8 піру;\n\n28 37 явленно; 7,\r\n9, 11, 19, 28, 35, 45, 50, 51, 53-55 какъ; 22, 24, 48 како; 44 такы; 52 + и;\n\n30 12, 17, 18, 22,\r\n25, 29, 32, 33, 36, 38, 49 емоу;\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "cce16e6c-03b6-4dde-875b-fcac7ff3f9d1",
+      "timestamp": "2026-03-13T23:49:43.054Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Continuing the Process",
+          "description": "I'm focused on moving forward with the project. I've formulated a strategy for taking the next action. My priority is completing the task by choosing the best way to get it done. I'm confident in my approach.",
+          "timestamp": "2026-03-13T23:49:37.104Z"
+        },
+        {
+          "subject": "Pinpointing Relevant Excerpts",
+          "description": "I'm zeroing in on the specific passages. I've reviewed the search results and will now move to isolate and extract the precise text snippets. My goal is to ensure accuracy.",
+          "timestamp": "2026-03-13T23:49:40.730Z"
+        },
+        {
+          "subject": "Isolating the Quotes",
+          "description": "Now, I'm focusing on the primary objective. I'm extracting the specified quotes and consolidating the information. My immediate task involves refining the search and extraction process for utmost precision. I will also incorporate other search tools, and verify the relevant words.",
+          "timestamp": "2026-03-13T23:49:42.742Z"
+        }
+      ],
+      "tokens": {
+        "input": 26139,
+        "output": 68,
+        "cached": 20364,
+        "thoughts": 531,
+        "tool": 0,
+        "total": 26738
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773445782964_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "душогубство",
+            "genre": "legal"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773445782964_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"душогубство\"\n\n### Result 1 (score: 0.4342)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0227`\n- **Text**:\nУставуемъ, тежъ хтобы злодЂя при лицы своемъ забилъ,\r\nтакового злодЂя забитого того жъ часу по ономъ забитью маеть оказати сусЂдомъ\r\nоколичнымъ и потомъ што нарихлей зъ ураду нашого, которій наближей будеть,\r\nвознымъ и стороною обведши до вряду привести и оказати маеть. А потомъ будеть\r\nли о то позванъ до права; тогды врядъ ему маеть допустити отприсегнутися, ижъ\r\nего на злочинствЂ при лицу въ дому своемъ забилъ. Такъ тежъ естли бы се\r\nпотрафило кому на дорозЂ злодЂя погонити, а онъ бы се поймат\n\n### Result 2 (score: 0.4335)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0144`\n- **Text**:\nРізночитання\n\n### Result 3 (score: 0.4333)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0203`\n- **Text**:\nУставуемъ, тежъ, естьли бы ся потрафило гдЂ жъ\r\nкольвекъ забитого человЂка перехождчаго або безплеменнаго, которого головщизны\r\nискати не будетъ кому; тогды скоро такового человЂка трупъ будеть знайденъ,\r\nтого жъ часу врядъ того замку або двора нашого врядникъ маеть обослати всихъ\r\nмЂщанъ людей сельскихъ, такъ и подданыхъ нашихъ яко и шляхецскихъ, и опыт\r\nвчинити разъ або и два, а гдЂ бы се на такихъ двохъ копахъ о томъ забитью\r\nвывЂдатися не могли, тогды третюю копу присяжную маеть врядъ собрат\n\n### Result 4 (score: 0.4323)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0351`\n- **Text**:\n2 [2] Аще пріидет(ь) кровавъ муж(ь) на\r\nдвор(ъ) или синь 2, то видока 3 ему не искати, но платити\r\n4 ему продажа за безчестие 5, каков(ъ) будет(ъ); (4) аще\r\nне будет(ъ) на нем знамения 6, то привести ему видок(ъ), слово\r\nпротиву слова.\n\n3 [3, 5] Аще ж(е) ударит(ъ) мечем(ъ) или\r\nножем(ъ), а не на см(е)рть, то кн(я)зю вины 9 гривен(ъ), а исцү 7\r\nза рану 8 сүдят(ъ).\n\n4 (6) Аще ударит(ъ) на см(е)рть [4, 7] жердию\r\nили попехнет(ъ), а знамения нѣтъ, а видок(ъ) будет(ъ), аще будет(ъ)\r\nболярин(ъ) или лю\n\n### Result 5 (score: 0.4286)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0224`\n- **Text**:\nУставуемъ, кгды бы поймано злодЂя приличного, а на\r\nтотъ часъ безъ лица будеть пойманъ; тогды такового злодЂя три кроть одного дня\r\nможеть мучити, только бы на которомъ человЂку не образилъ. А естли бы не\r\nдомучилсе; тогды за кождымъ разомъ муки оное маеть его навезати водлЂ стану\r\nего. Пакли жъ бы у въ оной муцЂ злодЂйства на немъ домучитисе не могъ, а оною\r\nмукою уморилъ, або на чдонку образилъ; таковый будеть повиненъ за умерлого\r\nголовщизну а за хромоту пол-человЂка платити водлугь стану его\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:46.502Z",
+          "resultDisplay": "Found 5 results for: \"душогубство\"\n\n### Result 1 (score: 0.4342)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0227`\n- **Text**:\nУставуемъ, тежъ хтобы злодЂя при лицы своемъ забилъ,\r\nтакового злодЂя забитого того жъ часу по ономъ забитью маеть оказати сусЂдомъ\r\nоколичнымъ и потомъ што нарихлей зъ ураду нашого, которій наближей будеть,\r\nвознымъ и стороною обведши до вряду привести и оказати маеть. А потомъ будеть\r\nли о то позванъ до права; тогды врядъ ему маеть допустити отприсегнутися, ижъ\r\nего на злочинствЂ при лицу въ дому своемъ забилъ. Такъ тежъ естли бы се\r\nпотрафило кому на дорозЂ злодЂя погонити, а онъ бы се поймат\n\n### Result 2 (score: 0.4335)\n- **Work**: Грамоти XIV ст. (1350)\n- **Author**: Різні\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `c8772648_c0144`\n- **Text**:\nРізночитання\n\n### Result 3 (score: 0.4333)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0203`\n- **Text**:\nУставуемъ, тежъ, естьли бы ся потрафило гдЂ жъ\r\nкольвекъ забитого человЂка перехождчаго або безплеменнаго, которого головщизны\r\nискати не будетъ кому; тогды скоро такового человЂка трупъ будеть знайденъ,\r\nтого жъ часу врядъ того замку або двора нашого врядникъ маеть обослати всихъ\r\nмЂщанъ людей сельскихъ, такъ и подданыхъ нашихъ яко и шляхецскихъ, и опыт\r\nвчинити разъ або и два, а гдЂ бы се на такихъ двохъ копахъ о томъ забитью\r\nвывЂдатися не могли, тогды третюю копу присяжную маеть врядъ собрат\n\n### Result 4 (score: 0.4323)\n- **Work**: Руська Правда (Юшков) (1935)\n- **Author**: Юшков С.\n- **Genre/Period**: legal / old_east_slavic\n- **Chunk ID**: `f7f102c9_c0351`\n- **Text**:\n2 [2] Аще пріидет(ь) кровавъ муж(ь) на\r\nдвор(ъ) или синь 2, то видока 3 ему не искати, но платити\r\n4 ему продажа за безчестие 5, каков(ъ) будет(ъ); (4) аще\r\nне будет(ъ) на нем знамения 6, то привести ему видок(ъ), слово\r\nпротиву слова.\n\n3 [3, 5] Аще ж(е) ударит(ъ) мечем(ъ) или\r\nножем(ъ), а не на см(е)рть, то кн(я)зю вины 9 гривен(ъ), а исцү 7\r\nза рану 8 сүдят(ъ).\n\n4 (6) Аще ударит(ъ) на см(е)рть [4, 7] жердию\r\nили попехнет(ъ), а знамения нѣтъ, а видок(ъ) будет(ъ), аще будет(ъ)\r\nболярин(ъ) или лю\n\n### Result 5 (score: 0.4286)\n- **Work**: Другий (Волинський) статут ВКЛ 1566 року (1566)\n- **Author**: ВКЛ\n- **Genre/Period**: legal / middle_ukrainian\n- **Chunk ID**: `3f4399ca_c0224`\n- **Text**:\nУставуемъ, кгды бы поймано злодЂя приличного, а на\r\nтотъ часъ безъ лица будеть пойманъ; тогды такового злодЂя три кроть одного дня\r\nможеть мучити, только бы на которомъ человЂку не образилъ. А естли бы не\r\nдомучилсе; тогды за кождымъ разомъ муки оное маеть его навезати водлЂ стану\r\nего. Пакли жъ бы у въ оной муцЂ злодЂйства на немъ домучитисе не могъ, а оною\r\nмукою уморилъ, або на чдонку образилъ; таковый будеть повиненъ за умерлого\r\nголовщизну а за хромоту пол-человЂка платити водлугь стану его\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_verify_words_1773445783008_1",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "головщина",
+              "душогубство",
+              "нав'язка",
+              "вира"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773445783008_1",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 2/4\n\n- **головщина** — NOT FOUND\n- **душогубство** — FOUND (3 match): душогубство(noun), душогубство(noun), душогубство(noun)\n- **нав'язка** — NOT FOUND\n- **вира** — FOUND (1 match): вира(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:46.502Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 2/4\n\n- **головщина** — NOT FOUND\n- **душогубство** — FOUND (3 match): душогубство(noun), душогубство(noun), душогубство(noun)\n- **нав'язка** — NOT FOUND\n- **вира** — FOUND (1 match): вира(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_grac_1773445783051_2",
+          "name": "mcp_rag_query_grac",
+          "args": {
+            "mode": "frequency",
+            "query": "головщина"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_grac_1773445783051_2",
+                "name": "mcp_rag_query_grac",
+                "response": {
+                  "output": "**головщина**: frequency = 11, relative = 0.01 per million"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-13T23:49:46.502Z",
+          "resultDisplay": "**головщина**: frequency = 11, relative = 0.01 per million",
+          "displayName": "query_grac (rag MCP Server)",
+          "description": "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, lemma form distribution, concordance examples, or collocations. Use mode='frequency' for word/lemma frequency, 'concordance' for usage examples, 'collocations' for common word combinations.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    }
+  ],
+  "kind": "main"
+}

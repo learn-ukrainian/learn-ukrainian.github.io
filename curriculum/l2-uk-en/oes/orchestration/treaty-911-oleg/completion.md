@@ -1,10 +1,10 @@
-PASS: build_module_v2.py oes 71 — E2E
+PASS: pipeline oes 69
 
   Module:   treaty-911-oleg
   Track:    oes
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T11:23:07Z
+  Date:     2026-03-14T07:07:44Z

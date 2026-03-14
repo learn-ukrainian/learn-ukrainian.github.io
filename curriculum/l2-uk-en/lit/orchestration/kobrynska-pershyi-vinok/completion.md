@@ -2,9 +2,9 @@ PASS: pipeline lit 219
 
   Module:   kobrynska-pershyi-vinok
   Track:    lit
-  Mode:     v3
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-28T20:00:26Z
+  Date:     2026-03-14T07:08:27Z

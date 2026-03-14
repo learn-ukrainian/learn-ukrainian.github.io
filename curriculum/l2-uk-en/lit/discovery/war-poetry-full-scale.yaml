@@ -1,0 +1,268 @@
+discovered_at: '2026-03-14T00:04:39.383187+00:00'
+query_keywords:
+- War Poetry Full Scale
+- канон
+- метафора
+- дискурс
+- Вступ та культурний контекст
+- 'Аналіз твору: Сюжет та структура'
+- Герменевтика та ключові образи
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати твір War Poetry Full Scale у контексті епохи
+- Дослідити стилістичні особливості тексту
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses Serhiy Zhadan's new poetry collection
+    created during the full-scale invasion, focusing on language and its transformation,
+    which is highly relevant to contemporary 'War Poetry Full Scale' and its cultural/decolonizational
+    aspects. The term 'метафора' from the vocabulary is also mentioned.
+  transcript_excerpt: Він презентує нову збірку віршів скрипниківка роботу над якої
+    автор розпочав у період до і після початку повномасштабного вторгнення до збірки
+    ввійшов 51 вірш це поезія про мову.
+  embed_suggestion: After section Вступ та культурний контекст -- The video provides
+    an excellent contemporary example and cultural context for Ukrainian war poetry.
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.6
+  relevance_note: The video discusses the broader Ukrainian literary canon, featuring
+    Serhiy Zhadan and mentioning the term 'канон' from the module's vocabulary. While
+    related to Ukrainian literature and culture, its focus is on historical literary
+    figures and the concept of canon rather than specifically 'War Poetry Full Scale'.
+  transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
+    вивчають.
+  embed_suggestion: After section Вступ та культурний контекст -- It provides a broader
+    historical literary context and discusses the concept of 'канон', which is part
+    of the module's vocabulary.
+- url: https://www.youtube.com/watch?v=F3i24QzrcO4
+  channel: Harvard Ukrainian Research Institute
+  title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
+  channel: Суспільне Культура
+  title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=fl1Po9Kkhh8
+  channel: Radio Khartia
+  title: 'Хроніки Радіо Хартія: 24/7 трансляція історій про культуру, армію та суспільство'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/episode223/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 223
+- url: https://www.ukrainianlessons.com/episode224/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - vocabulary
+  - housing
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 224
+- url: https://www.ukrainianlessons.com/episode225/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 225
+- url: https://www.ukrainianlessons.com/episode226/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 226
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0474
+  text: "ХУДОЖНІ ТВОРИ\nЕпічні\n(прозові)\nЛіричні\n(віршовані)\nДраматичні\n(призначені\
+    \ для \nпостановки на сцені)\nміф\nлегенда\nпереказ\nказка\nбайка\nоповідання\n\
+    повість\nроман\nвірш\nпісня\nгімн\nдрама\nкомедія\nтрагедія\nтрагікомедія\nЛіро-епічні\n\
+    поема\nбалада\nбайка\nспівомовка\nвіршована гумореска\nісторична пісня\nдума\n\
+    КОМПОЗИЦІЯ (БУДОВА) ТВОРУ\nХУДОЖНІ ЗАСОБИ\nопис природи\nроздуми\nспогади\nмонологи\n\
+    опис тварини\nзаголовок\nС Ю Ж Е Т\n(послідовність подій)\nекспозиція – зав’язка\
+    \ – розвиток дії – кульмінація – розв’язка\nопис предме"
+  section_title: Сторінка 307
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0020
+  text: "Уживайте метафори: світло розуму, високодумне чоло, \nглибина думки, словесна\
+    \ боротьба, розкіш спілкування \n(на вибір). Доберіть для музи відповідне нашому\
+    \ часові \nпромовисте ім’я. Виголосьте розповідь у класі."
+  section_title: Сторінка 16
+  grade: 11
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0255
+  text: 'Широке епічне зображення цієї боротьби визначає патріотичний
+
+    пафос розповіді. Основна ідея — єдність, заснована на християн-
+
+    ській вірі, патріотизмі, товаристві й вольності. У повісті порушено
+
+    НОВА УКРАЇНСЬКА ЛІТЕРАТУРА
+
+    188'
+  section_title: Сторінка 188
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.555898904800415
+  chunk_id: fc2291b5_c3692
+  text: "КОНТЕКСТ (лат. contextus\r\n— з’єднання, зв’язок, зчеплення) — відносно завершена\
+    \ (змістом і формою)\r\nчастина тексту, в межах якої оптимально виявляються сенс,\
+    \ значення\r\nокремого слова, фрази, образного вислову. Відомо, напр., що поза\
+    \ К. (його\r\nстилістичними та смисловими зв’язками) цитата може втратити первісне\
+    \ значення,\r\nнабути іншого, не властивого їй змісту. В худож. л-рі К. визначає\
+    \ конкретний\r\nзміст, стиліст. забарвлення, міру виразності не лише окр. слів,\
+    \ фраз, а й\r\nхудож. засобів (тропів, "
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5544852614402771
+  chunk_id: fc2291b5_c5005
+  text: "Літ.: Потебня А. А. Из\r\nзаписок по теории словесности. Х., 1905; Мейлах\
+    \ Б. С. Метафора как элемент\r\nхудожественной системы. В кн.: Мейлах Б. С. Вопросы\
+    \ литературы и эстетики. Л.,\r\n1958; Коцюбинська М. Х. Відтворення чи перетворення.\
+    \ «Радянське\r\nлітературознавство», 1967, № 1; Соловей Е. С. «Метафора-прийом»\
+    \ і\r\n«метафора-відкриття». «Радянське літературознавство», 1970, № 1; Соловей\
+    \ Е. С.\r\nНові дослідження про метафору. «Радянське літературознавство», 1973,\
+    \ № 2: Жоль\r\nК. К. Мысль. Слово. Метафора"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5538927316665649
+  chunk_id: 3588aaff_c0008
+  text: "Питання канону, оскільки вказує на авторитет — і\r\nтрадицій, і підходів,\
+    \ і інтерпретаторів, неминуче пов’язане із боротьбою за цей\r\nавторитет. Бо жодна\
+    \ влада (в тому числі й інтелектуальна) не дається і не\r\nздається безконфліктно.\
+    \ Якщо розбіжність у цінностях і методах глибинна, як це\r\nбуло між совєтським\
+    \ і несовєтським літературознавством, то дискурс звучатиме\r\nмайже тільки в ключі\
+    \ безпардонного конфлікту й взаємних звинувачень у\r\n\"фальсифікаціях\". Але\
+    \ протистояння — хоч і коректне — по суті\r\nок"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

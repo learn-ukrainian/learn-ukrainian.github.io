@@ -1,0 +1,174 @@
+discovered_at: '2026-03-14T01:37:23.866881+00:00'
+query_keywords:
+- Частини мови
+- Основний матеріал
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+- Noun declensions (standardized)
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=S3GgY9Fa8uk
+  channel: Ukrainian Lessons
+  title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle
+    in Ukrainian
+  relevance_score: 0.9
+  relevance_note: The video explicitly introduces and discusses the 'дієприслівник'
+    (adverbial participle), which is a specific type of 'частина мови' (part of speech),
+    directly aligning with the module's topic.
+  transcript_excerpt: далі ми поговоримо з вами про особливу частину мови дієприслівник
+  embed_suggestion: After Основний матеріал -- the video provides a direct explanation
+    of one of the key 'частини мови' (parts of speech) covered by the module.
+- url: https://www.youtube.com/watch?v=GZby0IyRXGg
+  channel: Історія Мови
+  title: '[HISTORY OF THE LANGUAGE] Loanwords. Part 7'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=ptpwBG1WhuA
+  channel: Історія Мови
+  title: '[HISTORY OF THE LANGUAGE] Loanwords. Parts 5 & 6'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=_dEArnWQ2c4
+  channel: Let's Learn Ukrainian
+  title: 'Ukrainian Adverbs: Grammar and Vocabulary #Ukrainian #grammar #adverb'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=B6n9yn4FyU8
+  channel: Let's Learn Ukrainian
+  title: 'Як and its multiple meanings in Ukrainian (yes, it doesn''t only mean HOW):
+    Ukrainian Lesson'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=-zJICaUujGk
+  channel: Speak Ukrainian
+  title: VOCATIVE CASE IN UKRAINIAN LANGUAGE
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=iqHbQT250xc
+  channel: Speak Ukrainian
+  title: Ukrainian Adjectives. Agreement with the Ukrainian nouns.
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs: []
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0089
+  text: "Практична риторика\n62\nЦІЛІ СЛУХАННЯ І ЗАСОБИ ЇХ ДОСЯГНЕННЯ\nЦілі слухання\n\
+    розуміння\nаналіз та оцінювання\n запам’ятовування\nінформації\nЯк досягти\nвиділити\
+    \ та записати\nключові слова  \n      словосполучення\nтрансформувати інформацію,\
+    \ \nтобто зробити\nрисунки\nсхеми\nтаблиці\nУвага! Розрізняйте факти й оцінку\
+    \ фактів, виявляйте неточності та помилки, \nдопущені мовцем\n \n Які види слухання\
+    \ поєднуються в  навчальній роботі школяра?\n \n Які види слухання можуть доповнювати\
+    \ одне одного? Які є  протилежними і  як"
+  section_title: Сторінка 62
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0099
+  text: "Частини  мови\nУ розділі ти будеш вивчати:\nІМЕННИКИ\nхто? що?\nякий? яка?\
+    \ \nяке? які?\nщо робить? \nщо роблять?\nскільки?  \nкотрий?\nЧИСЛІВНИКИ\nДІЄСЛОВА\n\
+    ПРИКМЕТНИКИ"
+  section_title: Сторінка 101
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0001
+  text: "Умовні позначення:\n— урок розвитку писемного\nмовлення.\n— вивчити \nнапам’ять;\n\
+    — словник;\n— домашнє завдання;\n— робота в парах, \nчитання діалогів;\n— тема\
+    \ уроку;\n— завдання на вибір;\n— завдання підвищеної \nскладності;\nС\n— робота\
+    \ в групах;\n? \n— ознайомитись;"
+  section_title: Сторінка 2
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-glazova-2018_s0038
+  text: "29\nСлово і  контекст. Залежність значень слова від контексту. Слововживання\
+    \ § 5 \x1F\n45. Прочитайте уривок зі спілкування на форумі веб-сайта «Юним  мовознавцям».\n\
+    Грамотій\nДата: Четвер, 25.10.2018, 14:25 | Повідомлення # 15\nГрупа: Користувачі\n\
+    Повідомлень: 15\nСтатус: Offline\nНа уроці української мови трапилося завдання,\
+    \ ко-\nтре загнало в глухий кут. Потрібно було пояснити \nлексичне значення слова\
+    \ основний. Але ж пояснити \nзначення слова можна і як «найважливіший, голов-\n\
+    ний», і як «такий, що є основ"
+  section_title: Сторінка 29
+  grade: 10
+  author: glazova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5575864315032959
+  chunk_id: fc2291b5_c5177
+  text: "М. як наука має вел. значення для розроблення термінології,\r\nу наук. коментуванні\
+    \ мовних текстів, машинному перекладі; воно дає і теор.\r\nвисновки для розв’язання\
+    \ проблеми взаємостосунків матеріального та ідеального.\r\nПроблема взаємозв’язку\
+    \ мови й мислення, мовних і логічних величин вивчається\r\nодночасно М. і філософією.\
+    \ Осн. види мовозн. методів — описовий, зіставний\r\n(конфронтативний, контрастивний),\
+    \ типол., істор. (порівняльно-істор.,\r\nкомпаративний) і нормативно-стилістичний."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5496742725372314
+  chunk_id: fc2291b5_c5169
+  text: "Слова можуть застосовуватися окремо одне від одного\r\n(для називання відповідних\
+    \ об’єктів з метою їх ідентифікації чи для формування\r\nкоротких висловлювань\
+    \ — однослівних речень), або комбінуватися з ін. словами\r\nдля побудови більш\
+    \ докладних висловів — поширених простих чи складних речень.\r\nУ кожній М. речення\
+    \ будуються за певними усталеними в ній синтакс. моделями.\r\nЗалежно від своїх\
+    \ семант. і синтакс. функцій у структурі речень слова можуть\r\nнабувати різних\
+    \ формальних ознак, за якими вони групую"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5327700972557068
+  chunk_id: feaa5fa7_c0774
+  text: "Головні — це лексично\r\nповнозначні слова з домінантними супроти інших частин\
+    \ мови граматичними\r\nфункціями (іменник, прикметник, дієслово, прислівник).\
+    \ Співвідносні — повнозначні\r\nслова з залежними від головних частин функціями\
+    \ та оформленням (займенник,\r\nчислівник). Службові — слова неповнозначні. Осторонь\
+    \ від цієї\r\nклясифікації стоїть вигук, що ним висловлюємо переважно емоції.\
+    \ В деяких\r\nз головних частин мови є проміжні форми, що ніби роздвоюються між\
+    \ різними\r\nчастинами мови; це дієприкметники"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm

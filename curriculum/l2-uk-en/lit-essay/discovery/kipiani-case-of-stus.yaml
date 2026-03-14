@@ -1,0 +1,243 @@
+discovered_at: '2026-03-14T01:54:08.250559+00:00'
+query_keywords:
+- Kipiani Case Of Stus
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Kipiani Case Of Stus у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: The video explores the suppression of the Terechenko family by Soviet
+    historiography, directly reinforcing the module's themes of 'історіографія' and
+    'Деколонізаційна перспектива' by illustrating how the Soviet regime attempted
+    to erase or distort the narratives of 'undesirable' figures. This provides valuable
+    context for understanding the persecution of Vasyl Stus and Kipiani's work.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- provides a concrete
+    example of Soviet historical revisionism and suppression, which is directly relevant
+    to understanding the broader context of the Stus case.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.2
+  relevance_note: The video discusses broad historical topics of Soviet crimes and
+    genocide (Holocaust, Holodomor), which are part of the 'Деколонізаційна перспектива'
+    umbrella, but it is not specifically focused on the Kipiani Case of Stus or political
+    repression of dissidents.
+  transcript_excerpt: Ми кажемо про про Голодомор про злочини Сталіна оборона російські
+    злочини тому що доля євреїв України Це ж не окрема доля це частина історії...
+  embed_suggestion: Not suitable for embedding -- broad historical context but too
+    far removed from the module's specific focus.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.1
+  relevance_note: This video focuses on the business history and wealth of the Terechenko
+    family, which is unrelated to the module's topic of the Kipiani Case of Stus,
+    Ukrainian literature, or political repression.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable for embedding -- topic is about business history
+    of a different family, not related to the module.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0268
+  text: "Підрядні речення означальне, з’ясувальне, обставинні способу дії, міри \n\
+    і ступеня залежать від конкретних слів у головній частині. Інші підрядні обста-\n\
+    винні (місця, часу, порівняльне, причини, мети, умовне, допустове) пояснюють \n\
+    головну частину в цілому. 223"
+  section_title: Сторінка 176
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0133
+  text: "362.1. Прочитай план тексту. Поміркуй, яка головна думка твору, по­\nбудованого\
+    \ за цим планом. Добери заголовок.\nПлан\n1. Дорога зі школи.\n2. Незвичайна знахідка.\n\
+    3. Прийняте рішення.\n4. Лікування цуценятка.\n5. Вдячне цуценя.\n2. Побудуй текст\
+    \ за поданим планом. Запиши одну з частин (на \nвибір).\nтї 363. Знайди в другій\
+    \ частині підручника «Українська мова та \nчитання. 4 клас. У 2 ч.» художній твір,\
+    \ який тобі до вподо­\nби. Склади та запиши до нього план.\n364. Розшифруй анаграми.\
+    \ Сформулюй визначення "
+  section_title: Сторінка 135
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5361860394477844
+  chunk_id: 4800ab33_c0271
+  text: "Не треба користуватися вступами, коли сама велич справи\r\nсягає того, чого\
+    \ іншим разом не можна досягти промовою. Та дарма їх\r\nзастосовувати тоді, /67зв./\
+    \ коли суддя вже раніше підготувався до даної справи,\r\nабо зайнятий, або замало\
+    \ часу, або коли вища влада змушує розпочинати від\r\nвикладу самої справи.\n\n\
+    Далі, початком і прямим вступом користуємося в\r\nнизькому, сумнівному, неясному\
+    \ роді справи або взагалі тоді, коли слухачі не\r\nнастроєні вороже, ані не є\
+    \ друзями, але тому, щоб завоювати їхню прих"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.5307974219322205
+  chunk_id: fc2291b5_c4985
+  text: "Літ.: Помяловський И.\r\nМарк Теренций Варрон Реатинский и Мениппова сатура.\
+    \ СПБ, 1869; Тройський І. М.\r\nІсторія античної літератури. К., 1959; История\
+    \ греческой литературы, т. 3. М., 1960.\n\nВ. П. Маслюк."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5290266275405884
+  chunk_id: 4800ab33_c0318
+  text: "6. Можна поставити питання, як саме спростування, що\r\nскладається з одного\
+    \ чи більше моментів, треба розміщувати з обгрунтуванням. Чи\r\nобгрунтування,\
+    \ чи спростування має займати перше місце. Я відповідаю, що на це\r\nє трояка\
+    \ причина: по-перше, якщо ти бачиш, що слухачі здібні й готові слухати,\r\nто\
+    \ ти повинен передусім обгрунтувати поставлену тему, потім спростувати\r\nпротилежне.\
+    \ По-друге, якщо ти зрозумієш, що вони мають протилежну думку\r\n(внаслідок певних\
+    \ причин, які їх переконали), то також і ті"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

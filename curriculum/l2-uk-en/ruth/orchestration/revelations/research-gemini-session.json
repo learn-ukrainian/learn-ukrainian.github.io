@@ -1,0 +1,698 @@
+{
+  "sessionId": "938bb28d-6652-4398-92f7-a70371b324c3",
+  "projectHash": "ad818000baf0b7a7c98f509dc95b7b60baa8ddef154856f0b8befd9597cdd77b",
+  "startTime": "2026-03-14T01:12:49.671Z",
+  "lastUpdated": "2026-03-14T01:14:46.431Z",
+  "messages": [
+    {
+      "id": "427d745c-b6b0-4573-af83-0fe86b9a45d0",
+      "timestamp": "2026-03-14T01:12:49.671Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.\n\nABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:\n\n1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.\n2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files.\n3. DO NOT SEND MESSAGES. Do not use send_message, message broker, MCP tools, or any communication tool.\n4. DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head) but NEVER run commands that write, move, delete, or execute scripts (no sed -i, no python scripts, no git, no audit_module.sh).\n5. DO NOT TAKE INITIATIVE. Do not explore the codebase beyond what the task requires. Do not check GitHub issues, status files, inbox, or broker messages. Do not make strategic decisions.\n6. DO NOT DELEGATE. Do not say \"Claude should...\", \"please run...\", or request any skills/commands.\n\nHOW TO SUCCEED:\n- Read the task content provided below\n- Think about the content\n- Output your result as plain text between the delimiters specified in the task\n- That's it. Nothing else. Just text output.\n\nIF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop.\n\nTASK:\nActivate skill full-rebuild-ruth.\n\n# Phase A: Research + Meta (Seminar Track)\n\n> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**\n> **Your ONLY task: Research the topic. The plan's content_outline is the source of truth — do NOT generate a meta outline.**\n\n---\n\n## Your Input\n\n**Plan file (SOURCE OF TRUTH):**\n\n> **Focus on**: `title`, `content_outline`, `objectives`, `vocabulary_hints`, `connects_to`, `prerequisites`.\n> **Ignore for research**: `grammar`, `register`, and voice/role fields — these are used in later phases, not research. Do NOT reference persona or voice instructions.\n\n```yaml\nmodule: ruth-041\nlevel: RUTH\nsequence: 41\nslug: revelations\nversion: '2.0'\ntitle: Откровення\nsubtitle: Revelations\nfocus: Apocalyptic imagery — Rare lexicon\nphase: 2\nword_target: 5000\ncontent_outline:\n- section: Вступ\n  points:\n  - Introduction to Revelations\n  words: 1250\n- section: Основний матеріал\n  points:\n  - Primary source analysis and grammar focus\n  words: 1250\n- section: Практика\n  points:\n  - Exercises and activities\n  words: 1250\n- section: Підсумок\n  points:\n  - Summary and connection to next module\n  words: 1250\nvocabulary_hints:\n  required: []\n  recommended: []\nactivity_hints:\n- type: transcription\n  focus: ''\n  items: 1\n- type: etymology-trace\n  focus: ''\n  items: 1\n- type: grammar-identify\n  focus: ''\n  items: 1\npersona:\n  voice: Baroque Scholar\n  role: Apocalyptic Exegete\nprerequisites:\n- epistles-romans\nconnects_to:\n- herasym-smotrytsky-poems\nobjectives:\n- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння\n- Продукувати тексти академічного та професійного рівня за тематикою модуля\n- Демонструвати вільне володіння спеціалізованою лексикою та термінологією\n- Застосовувати знання з теми «Практика» у власній мовній практиці\n\n```\n\n---\n\n## PART 1: Deep Research\n\nResearch **Откровення** for the **ruth** track. Produce structured research notes that will drive content writing in Phase B.\n\n### Your RAG Tools (USE THEM)\n\nYou have access to Ukrainian language tools via MCP. **Use them during research.**\n\n| Tool | When to use | Args |\n|------|-------------|------|\n| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode=\"extract\"` |\n| `query_wikipedia` | See article structure before diving in | `query`, `mode=\"sections\"` |\n| `query_wikipedia` | Read a specific section by index | `query`, `mode=\"section\"`, `section=N` |\n| `query_wikipedia` | Find the right article title | `query`, `mode=\"search\"` |\n| `search_literary` | Find primary source excerpts (chronicles, poetry, legal texts, testimonies) | `query`, `genre` (optional) |\n| `verify_words` | Check Ukrainian words exist in VESUM dictionary | `words` (list of strings) |\n| `query_grac` | Check word frequency in Ukrainian corpus | `query`, `mode=\"frequency\"` |\n\n> **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.\n\n### Mandatory Research Workflow (follow ALL 4 steps in order)\n\n**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode=\"extract\")` for the main topic article. If the article is long, use `mode=\"sections\"` then `mode=\"section\"` to read key sections. This gives you the factual backbone.\n\n**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:\n- The main subject (person/event/concept name)\n- Related figures, institutions, or movements\n- The historical period or genre\n\nThis is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.\n\n**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode=\"frequency\")` for frequency data on key terms.\n\n**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.\n\n### Research Requirements\n\n1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.\n2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.\n3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.\n4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:\n   - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths\n   - `[!history-bite]` — Surprising or lesser-known facts\n   - `[!context]` — Broader historical/cultural context\n   - `[!quote]` — Primary source citations\n   - `[!decolonization]` — Ukraine-centric reframing\n   - `[!culture]` — Cultural significance\n5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography (e.g., erasure of identity, stripping of local agency, Soviet tropes) and define the Ukrainian-centric framing (centering local agency, restoring historical truth, using accurate terminology).\n6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.\n\n### Research Output Cap\nKeep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).\nFocus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.\n\nIf this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:\n\n```markdown\n## Contested Terms\n\n| Concept | Imperial framing | Ukrainian (decolonized) framing |\n|---------|-----------------|-------------------------------|\n| ...     | ...             | ...                           |\n```\n\n---\n\n## Downstream Audit Gates (Phase B content will be checked for)\n\nPlan your research and outline knowing that Phase B content must pass these gates:\n- **Word count**: minimum **5000** words — allocate outline sections accordingly\n- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines\n- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)\n- **Duplicate headers**: ensure outline section names don't share keywords\n\n---\n\n## Output Format\n\n> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.\n\n### Output Block 1: Research Notes\n\n===RESEARCH_START===\n\n# Дослідження: Откровення\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Откровення\"\ntype: \"event\" # \"event\", \"biography\", or \"phenomenon\"\nvital_status: \"living\" # ONLY for biography: \"living\" or \"deceased\" (omit for events)\ndates:\n  start: \"YYYY-MM-DD\" # Event start OR biography birth (approximate: \"~YYYY\")\n  end: \"YYYY-MM-DD\"   # Event end OR biography death (omit if living/ongoing)\n  key_events:\n    - year: YYYY\n      event: \"Event description (Ukrainian)\"\n    - year: YYYY\n      event: \"Event description\"\nprimary_quotes:\n  - text: \"Exact Ukrainian quote\"\n    source: \"Source name, year\"\n    attribution: \"Who said/wrote it\"\n  - text: \"...\"\n    source: \"...\"\n    attribution: \"...\"\nforbidden_claims:\n  - \"Common myth or Russian propaganda claim to avoid\"\n  - \"...\"\n```\n\n## Використані джерела\n1. [Source name](URL) — brief description\n2. ...\n3. ...\n\n## Хронологія\n- {date}: {event}\n- ...\n\n## Ключові факти та цитати\n- ...\n\n## Engagement Hooks (mapped to sections)\n- Section \"{section_name}\": [!hook_type] — {raw research fact/data to be used for this hook in Phase B}\n- ...\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: ...\n- Ukrainian reality: ...\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| ...     | ...             | ...               |\n\n## Відеоресурси\n(Якщо під час дослідження ви натрапили на релевантні відеоматеріали — документальні фільми, архівні записи, інтерв'ю — зазначте їх тут. НЕ шукайте відео спеціально — це робить фаза discover. Максимум 3 записи.)\n- {Канал — Назва — URL — Короткий опис релевантності}\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### {Section 1 from content_outline}\nKey facts, dates, sources for this section...\n\n### {Section 2 from content_outline}\n...\n\n===RESEARCH_END===\n\n## Friction Report (MANDATORY)\n\nAfter Output Block 1, include the Friction Report:\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: {what you were doing when friction occurred, or \"Full Phase A\"}\n**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...\n**Raw Error**: {actual error or \"None\"}\n**Self-Correction**: {what you changed, or \"N/A\"}\n**Proposed Tooling Fix**: {if a script/design issue, or \"N/A\"}\n===FRICTION_END===\n\n---\n\n## Boundaries\n\n- Do NOT write lesson content — only research notes\n- Do NOT generate activities or vocabulary\n- Do NOT skip any section from the plan's content_outline\n- Do NOT use Russian-language sources\n- Do NOT fabricate quotes or dates — if unsure, mark as \"[needs verification]\"\n- Do NOT reference persona names or voice instructions — persona is assigned at content generation time\n- Do NOT request skills, delegate to Claude, or skip this phase\n\n\nATTACHED DATA:\n{\"to_model\": \"gemini-3.1-pro-preview\"}\n"
+        }
+      ]
+    },
+    {
+      "id": "a4618398-26cb-4ba5-aba1-f601c33ddde3",
+      "timestamp": "2026-03-14T01:13:12.716Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Commencing the Next Stage",
+          "description": "\\n\\n\n\nI'm now formulating the subsequent actions. I will proceed by initiating the investigation into the provided topic, leveraging the tools at my disposal. My focus is on ensuring a smooth progression toward achieving the intended objective, which will provide the necessary details.",
+          "timestamp": "2026-03-14T01:12:58.250Z"
+        },
+        {
+          "subject": "Exploring Potential Resources",
+          "description": "\\n\\n\n\nI'm now honing in on the most relevant search terms, specifically focusing on \"Откровення\" and related Ukrainian terms and phrases. The aim is to gather initial information from various sources to develop a well-rounded understanding of the topic, which will guide the search process. I'm prioritizing accuracy to find resources that fit the criteria.",
+          "timestamp": "2026-03-14T01:13:09.910Z"
+        },
+        {
+          "subject": "Initiating Research Queries",
+          "description": "\\n\\n\n\nMy current strategy involves searching Ukrainian literary databases for relevant information using key terms. I am focusing on “Апокаліпсис” and “Откровення”, refining my search parameters to specify the Middle Ukrainian period. I will then cross-reference with any findings from the initial Wikipedia query to triangulate the data.",
+          "timestamp": "2026-03-14T01:13:12.589Z"
+        }
+      ],
+      "tokens": {
+        "input": 20463,
+        "output": 23,
+        "cached": 0,
+        "thoughts": 471,
+        "tool": 0,
+        "total": 20957
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773450792713_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Об'явлення Івана Богослова"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773450792713_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Об'явлення Івана Богослова' — 5 results\n\n1. **Об'явлення Івана Богослова** — Вікіцитати містять висловлювання від або про: Об&#039;явлення Івана Богослова У Вікіджерелах є Об&#039;явлення св. Івана Богослова (Біблія в перекладі Огієнка) Вікісховище\n2. **Іван Євангеліст** — книг Нового Заповіту: Євангелія від Івана, Об&#039;явлення Івана Богослова та Послань Івана. Автор Євангелія від Івана не називає себе на ім&#039;я, але в богослов&#039;ї\n3. **Апокаліпсис (значення)** — кінець світу, іноді синонім слова «армагеддон». Апокаліпсис (Об&#039;явлення Івана Богослова) — одна з книг Нового Заповіту Апокаліпсис — жанр наукової фантастики\n4. **Число звіра** — таких як 1, 3 та 7. Число звіра записано в Об&#039;явлення Іоанна Богослова: Святий Іван (Об&#039;явлення Івана Богослова, Глава 13, стих 18) У стародавніх алфавітах\n5. **Ось Я стою під дверима та стукаю** — Ось Я стою під дверима та стукаю — це уривок з Об&#039;явлення Івана Богослова, який є виявом Божої любові до людини і надією на те, що вона відчинить двері"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:13.116Z",
+          "resultDisplay": "Wikipedia search: 'Об'явлення Івана Богослова' — 5 results\n\n1. **Об'явлення Івана Богослова** — Вікіцитати містять висловлювання від або про: Об&#039;явлення Івана Богослова У Вікіджерелах є Об&#039;явлення св. Івана Богослова (Біблія в перекладі Огієнка) Вікісховище\n2. **Іван Євангеліст** — книг Нового Заповіту: Євангелія від Івана, Об&#039;явлення Івана Богослова та Послань Івана. Автор Євангелія від Івана не називає себе на ім&#039;я, але в богослов&#039;ї\n3. **Апокаліпсис (значення)** — кінець світу, іноді синонім слова «армагеддон». Апокаліпсис (Об&#039;явлення Івана Богослова) — одна з книг Нового Заповіту Апокаліпсис — жанр наукової фантастики\n4. **Число звіра** — таких як 1, 3 та 7. Число звіра записано в Об&#039;явлення Іоанна Богослова: Святий Іван (Об&#039;явлення Івана Богослова, Глава 13, стих 18) У стародавніх алфавітах\n5. **Ось Я стою під дверима та стукаю** — Ось Я стою під дверима та стукаю — це уривок з Об&#039;явлення Івана Богослова, який є виявом Божої любові до людини і надією на те, що вона відчинить двері",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "44b78fb1-2386-4b43-a4fa-a258c2be7c46",
+      "timestamp": "2026-03-14T01:13:19.867Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Querying Wikipedia for Info",
+          "description": "I'm now zeroing in on the extraction phase. I'm focusing on obtaining the necessary information from the specified source. The goal is to obtain the initial data extraction, which will then facilitate further processing.",
+          "timestamp": "2026-03-14T01:13:17.654Z"
+        },
+        {
+          "subject": "Beginning Data Extraction",
+          "description": "I am currently working on the extraction of specific data from the selected source. The task is to obtain the necessary segments needed for the following stages. I will then utilize this extracted information for further analysis and refinement.",
+          "timestamp": "2026-03-14T01:13:19.232Z"
+        }
+      ],
+      "tokens": {
+        "input": 20902,
+        "output": 71,
+        "cached": 16389,
+        "thoughts": 149,
+        "tool": 0,
+        "total": 21122
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773450799762_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "query": "Об'явлення Івана Богослова",
+            "mode": "extract"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773450799762_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Об'явлення Івана Богослова\n**URL**: https://uk.wikipedia.org/wiki/%D0%9E%D0%B1%27%D1%8F%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F_%D0%86%D0%B2%D0%B0%D0%BD%D0%B0_%D0%91%D0%BE%D0%B3%D0%BE%D1%81%D0%BB%D0%BE%D0%B2%D0%B0\n\nОб'я́влення, або Одкрове́ння, Іоа́на Богосло́ва — остання книга Нового Завіту та один з найдавніших творів християнської літератури. Також знана як Апока́ліпсис (з грец. αποκαλυψις — «відкриття», «одкровення»).\nАпокаліпсис написано Іоанном Богословом на острові Патмос після видіння на засланні в 90 рр. I ст. (ряд учених відносять книгу до 69 рр.). Провіщаючи кінець світу, друге пришестя Христа та тисячолітнє Царство Боже після Страшного Суду, Апокаліпсис містить у собі таємниче зображення майбутньої долі Церкви Христової та всього світу і це єдина книга зі всього Нового Заповіту, — яку, разом з пророчими книгами Старого Заповіту, — можна за жанром повністю віднести до так званої «пророчої літератури».\nПечеру Апокаліпсису та Монастир Іоанна Богослова, що на острові Патмос, нині внесено ЮНЕСКО до переліку об'єктів світової спадщини.\n\n\n== Зміст по главах ==\n1-3 — послання сімом Церквам.\n4-8 — Бог на престолі та зняття семи печатей. Чотири Вершники Апокаліпсису.\n8-11 — Сім труб (шофари).\n12 — Жінка, зодягнена в сонце. Народження пастиря. Вихід червоного дракона і бій в небесах з архангел Михаїлом.\n13 — Звір із моря. Прийняття відмітки звіра у вигляді числа 666.\n14 — Ангел стоїть на Сіонській горі та з ним 144 000. Гнів на тих хто поклоняється звірові.\n15-16 — Сім чаш гніву. Битва при Армагедоні.\n17-18 — Суд над Вавилонською блудницею\n19 — Радість на небі.\n20 — Тисячолітнє царство. Останній великий суд.\n21 — Нова земля і нове небо.\n22 — Річка води життя. Раби Божі побачать обличчя його. Застереження і благословення Іоанна.\n\n\n== Інтерпретація пророцтв Апокаліпсиса ==\nАпокаліпсис — пророча книга, яка, як і старозавітні пророцтва, залишилися незрозумілими, доки не справдилися. Є різні теологічні школи інтерпретації пророцтв Об'явлення: «претеристи» вважають, що св. Іван пророкував про долю ворожої йому Римської імперії і використовував при цьому алегоричну мову для приховування змісту своїх писань; «футуристи» бачать в Об'явленні пророцтва про долю всього людства, усієї людської історії; «символісти» вбачають у пророцтвах Об'явлення символічну картину конфлікту між Добром і Злом.\nСергій Булгаков стверджує, що тема Євангелія та Апокаліпсису долає всі конфесії та національності, оскільки ці книги створені за часів доконфесіональності, коли не було ще «поділу церков». Проте в книгах передбачається розподіл, який все-таки подолає «з'єднання церков», що повинно відбутися раніше за кінець світу.\n\n\n== Див. також ==\nРаґнарьок\nАпокаліпсис (Дюрер)\n\n\n== Примітки ==\n\n\n== Література ==\nУкраїнська радянська енциклопедія : у 12 т. / гол. ред. М. П. Бажан ; редкол.: О. К. Антонов та ін. — 2-ге вид. — К. : Головна редакція УРЕ, 1974–1985.\n\n\n== Посилання ==\n\nОдкровення Св. Іоана Богослова // Українська Релігієзнавча Енциклопедія\n«Апокаліпсис» // Літературознавчий словник-довідник / за ред. Р. Т. Гром’яка, Ю. І. Коваліва, В. І. Теремка. — Київ : ВЦ «Академія», 2007. — С. 56.\nРоздуми про Біблію — Об'явлення Івана Богослова\nСлухати першу главу Апокаліпсиса\nСлухати останню 22-гу главу Апокаліпсиса\nАпокаліпсис. Відео з читанням"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:23.409Z",
+          "resultDisplay": "# Об'явлення Івана Богослова\n**URL**: https://uk.wikipedia.org/wiki/%D0%9E%D0%B1%27%D1%8F%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F_%D0%86%D0%B2%D0%B0%D0%BD%D0%B0_%D0%91%D0%BE%D0%B3%D0%BE%D1%81%D0%BB%D0%BE%D0%B2%D0%B0\n\nОб'я́влення, або Одкрове́ння, Іоа́на Богосло́ва — остання книга Нового Завіту та один з найдавніших творів християнської літератури. Також знана як Апока́ліпсис (з грец. αποκαλυψις — «відкриття», «одкровення»).\nАпокаліпсис написано Іоанном Богословом на острові Патмос після видіння на засланні в 90 рр. I ст. (ряд учених відносять книгу до 69 рр.). Провіщаючи кінець світу, друге пришестя Христа та тисячолітнє Царство Боже після Страшного Суду, Апокаліпсис містить у собі таємниче зображення майбутньої долі Церкви Христової та всього світу і це єдина книга зі всього Нового Заповіту, — яку, разом з пророчими книгами Старого Заповіту, — можна за жанром повністю віднести до так званої «пророчої літератури».\nПечеру Апокаліпсису та Монастир Іоанна Богослова, що на острові Патмос, нині внесено ЮНЕСКО до переліку об'єктів світової спадщини.\n\n\n== Зміст по главах ==\n1-3 — послання сімом Церквам.\n4-8 — Бог на престолі та зняття семи печатей. Чотири Вершники Апокаліпсису.\n8-11 — Сім труб (шофари).\n12 — Жінка, зодягнена в сонце. Народження пастиря. Вихід червоного дракона і бій в небесах з архангел Михаїлом.\n13 — Звір із моря. Прийняття відмітки звіра у вигляді числа 666.\n14 — Ангел стоїть на Сіонській горі та з ним 144 000. Гнів на тих хто поклоняється звірові.\n15-16 — Сім чаш гніву. Битва при Армагедоні.\n17-18 — Суд над Вавилонською блудницею\n19 — Радість на небі.\n20 — Тисячолітнє царство. Останній великий суд.\n21 — Нова земля і нове небо.\n22 — Річка води життя. Раби Божі побачать обличчя його. Застереження і благословення Іоанна.\n\n\n== Інтерпретація пророцтв Апокаліпсиса ==\nАпокаліпсис — пророча книга, яка, як і старозавітні пророцтва, залишилися незрозумілими, доки не справдилися. Є різні теологічні школи інтерпретації пророцтв Об'явлення: «претеристи» вважають, що св. Іван пророкував про долю ворожої йому Римської імперії і використовував при цьому алегоричну мову для приховування змісту своїх писань; «футуристи» бачать в Об'явленні пророцтва про долю всього людства, усієї людської історії; «символісти» вбачають у пророцтвах Об'явлення символічну картину конфлікту між Добром і Злом.\nСергій Булгаков стверджує, що тема Євангелія та Апокаліпсису долає всі конфесії та національності, оскільки ці книги створені за часів доконфесіональності, коли не було ще «поділу церков». Проте в книгах передбачається розподіл, який все-таки подолає «з'єднання церков», що повинно відбутися раніше за кінець світу.\n\n\n== Див. також ==\nРаґнарьок\nАпокаліпсис (Дюрер)\n\n\n== Примітки ==\n\n\n== Література ==\nУкраїнська радянська енциклопедія : у 12 т. / гол. ред. М. П. Бажан ; редкол.: О. К. Антонов та ін. — 2-ге вид. — К. : Головна редакція УРЕ, 1974–1985.\n\n\n== Посилання ==\n\nОдкровення Св. Іоана Богослова // Українська Релігієзнавча Енциклопедія\n«Апокаліпсис» // Літературознавчий словник-довідник / за ред. Р. Т. Гром’яка, Ю. І. Коваліва, В. І. Теремка. — Київ : ВЦ «Академія», 2007. — С. 56.\nРоздуми про Біблію — Об'явлення Івана Богослова\nСлухати першу главу Апокаліпсиса\nСлухати останню 22-гу главу Апокаліпсиса\nАпокаліпсис. Відео з читанням",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450799823_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Апокаліпсис",
+            "period": "middle_ukrainian"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450799823_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Апокаліпсис\"\n\n### Result 1 (score: 0.4472)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0382`\n- **Text**:\nМОРЕ\n\n### Result 2 (score: 0.4227)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0106`\n- **Text**:\nЗвЂр лют грядет из моря, злых сонм знаменуєт,\n\nпервая антихриста глава изявляєт.\n\nИн из земли исходит со агнчими рогами,\n\nоба будут хулы ригати устнами.\n\nСей лжепророк огнь сведет, люди убоятся,\n\nнеписанніи в небЂ звЂрем поклонятся. [Ап., XVI]\r\n1\n\n1 Зміст цього вірша\r\nближчий до XVII розділу «Апокаліпсиса».\n\n* * *\n\nГрад великій Вавилон огнем согоряєт,\n\nскоро, яко жерновный камень, упадаєт.\n\nПлачуть єго царіє, купцы, художници,\n\nрибаріє и дЂвы и корабленницы,\n\nЯко прибытков своих не могут стяжати\n\n### Result 3 (score: 0.4196)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0105`\n- **Text**:\nиже си сокрушившу кораблю спасоша,\n\nЄхидна Павла в руку усЂкнула бяше,\n\nчеловЂкоубійцу всяк єго непщеваше.\n\nЄгда же, отрас ю во огнь, без вреда явися,\n\nот несмысленных еллин за бога вмЂнися. [ДЂя[н].,\r\nXXVIII, [1—7]]\n\n[ВІРШІ НА АПОКАЛІПСИС]\n\nАпокалипъсис первій\n\nІоан в остров Патмос єлма заточися,\n\nсын человЂч в восторзЂ оному явися,\n\nИмЂяй седмь 1 звЂзд в руцЂ и меч\r\nиспущенный\n\nиз уст, между свЂтилник седмію ставленный. [Ап.,\r\nI, [9—16]]\n\n1 У рукопису число\r\nпозначено цифрою («з̃», тобто 7).\n\n\n\n### Result 4 (score: 0.4183)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0255`\n- **Text**:\nА когда прейдет? Відай\r\nтолько, что не видно;\n\nВремя бо жизні єго\r\nприближись послідно:\n\nСе днесь Діоктит єго без\r\nмилості бієт,\n\nАбіє же от сих ран Гіпомен\r\nпочієт.\n\nТерпініє\n\nО, когда слава сія єму\r\nотложенна,\n\nНехай больш б’ють, терзають,\r\nмучать Гіпомена!\n\nОтрада\n\nНе будуть. Терпінія міра\r\nісполнися:\n\nСе бо і Діоктита гибель\r\nприближися.\n\nДІЙСТВІЄ IV\n\nЯВЛЕНІЄ 1\n\nГіпомен, в\r\nполусмерть прибитий от Діоктита, весело, з упованієм блаженного воздаянія\r\nумираєт.\n\nГіпомен\n\nПолучил, чего іскал, Діок\n\n### Result 5 (score: 0.4157)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0256`\n- **Text**:\nА мой дух уже прийми, прийми\r\nв своя длани!\n\nЯВЛЕНІЄ 2\n\nДва приходять\r\nнищії і, сожалія о скорой смерті Гіпомена, относять єго тіло до гроба.\n\nНищий 1\n\nЧто се лежить, о друже? П’яний\r\nіли спящий?\n\nїли чи не Гіпомен, послі мук\r\nболящий?\n\nВидіх-бо, в Діоктита как он\r\nбил мучимий.\n\nНищий 2\n\nАх, он єсть! Но уже мертв і\r\nнеподвижимий!\n\nО нещастіє наше! Кто бо от\r\nнас нищий\n\nТощ от него отишол? Когда\r\nсам он пищі\n\nВкусил? Ах, как случилось\r\nживот окончити!\n\nНе знають розпуженні о сем\r\nдомовити!\n\nМи уб\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:23.409Z",
+          "resultDisplay": "Found 5 results for: \"Апокаліпсис\"\n\n### Result 1 (score: 0.4472)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0382`\n- **Text**:\nМОРЕ\n\n### Result 2 (score: 0.4227)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0106`\n- **Text**:\nЗвЂр лют грядет из моря, злых сонм знаменуєт,\n\nпервая антихриста глава изявляєт.\n\nИн из земли исходит со агнчими рогами,\n\nоба будут хулы ригати устнами.\n\nСей лжепророк огнь сведет, люди убоятся,\n\nнеписанніи в небЂ звЂрем поклонятся. [Ап., XVI]\r\n1\n\n1 Зміст цього вірша\r\nближчий до XVII розділу «Апокаліпсиса».\n\n* * *\n\nГрад великій Вавилон огнем согоряєт,\n\nскоро, яко жерновный камень, упадаєт.\n\nПлачуть єго царіє, купцы, художници,\n\nрибаріє и дЂвы и корабленницы,\n\nЯко прибытков своих не могут стяжати\n\n### Result 3 (score: 0.4196)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0105`\n- **Text**:\nиже си сокрушившу кораблю спасоша,\n\nЄхидна Павла в руку усЂкнула бяше,\n\nчеловЂкоубійцу всяк єго непщеваше.\n\nЄгда же, отрас ю во огнь, без вреда явися,\n\nот несмысленных еллин за бога вмЂнися. [ДЂя[н].,\r\nXXVIII, [1—7]]\n\n[ВІРШІ НА АПОКАЛІПСИС]\n\nАпокалипъсис первій\n\nІоан в остров Патмос єлма заточися,\n\nсын человЂч в восторзЂ оному явися,\n\nИмЂяй седмь 1 звЂзд в руцЂ и меч\r\nиспущенный\n\nиз уст, между свЂтилник седмію ставленный. [Ап.,\r\nI, [9—16]]\n\n1 У рукопису число\r\nпозначено цифрою («з̃», тобто 7).\n\n\n\n### Result 4 (score: 0.4183)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0255`\n- **Text**:\nА когда прейдет? Відай\r\nтолько, что не видно;\n\nВремя бо жизні єго\r\nприближись послідно:\n\nСе днесь Діоктит єго без\r\nмилості бієт,\n\nАбіє же от сих ран Гіпомен\r\nпочієт.\n\nТерпініє\n\nО, когда слава сія єму\r\nотложенна,\n\nНехай больш б’ють, терзають,\r\nмучать Гіпомена!\n\nОтрада\n\nНе будуть. Терпінія міра\r\nісполнися:\n\nСе бо і Діоктита гибель\r\nприближися.\n\nДІЙСТВІЄ IV\n\nЯВЛЕНІЄ 1\n\nГіпомен, в\r\nполусмерть прибитий от Діоктита, весело, з упованієм блаженного воздаянія\r\nумираєт.\n\nГіпомен\n\nПолучил, чего іскал, Діок\n\n### Result 5 (score: 0.4157)\n- **Work**: Українська література XVIII ст. (1750)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `21c791c4_c0256`\n- **Text**:\nА мой дух уже прийми, прийми\r\nв своя длани!\n\nЯВЛЕНІЄ 2\n\nДва приходять\r\nнищії і, сожалія о скорой смерті Гіпомена, относять єго тіло до гроба.\n\nНищий 1\n\nЧто се лежить, о друже? П’яний\r\nіли спящий?\n\nїли чи не Гіпомен, послі мук\r\nболящий?\n\nВидіх-бо, в Діоктита как он\r\nбил мучимий.\n\nНищий 2\n\nАх, он єсть! Но уже мертв і\r\nнеподвижимий!\n\nО нещастіє наше! Кто бо от\r\nнас нищий\n\nТощ от него отишол? Когда\r\nсам он пищі\n\nВкусил? Ах, как случилось\r\nживот окончити!\n\nНе знають розпуженні о сем\r\nдомовити!\n\nМи уб\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450799866_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "period": "middle_ukrainian",
+            "query": "Откровення"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450799866_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Откровення\"\n\n### Result 1 (score: 0.4807)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0393`\n- **Text**:\nЛонгин. Кто только удостоился видЂть живаго сего мужа, во\r\nмгновеніи дЂлается проповЂдником его и слышит сіе: «Вострубите в новомЂсячіи».\r\nМужеск ли пол или женск, как только явился ему воскресшій человЂк, бЂжіт и\r\nблаговЂствует, / 16/731 / с радостію великою возвЂщает о нем: — Воскрес,\r\nвоскрес, воистину воскрес господь! Явися не только Симону, но и мнЂ, малЂйшему,\r\nпознался. ТЂм самым познался мнЂ, что невидимый для мене есть. Не вижу его во\r\nмертвых, но тЂм самым вижу его в живых. А видЂть в \n\n### Result 2 (score: 0.4791)\n- **Work**: Литовсько-білоруські літописи та хроніки (1980)\n- **Author**: ПСРЛ\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `3bd1f572_c0144`\n- **Text**:\nО видЂнии отверстых 99А небес Ц. Един человЂк благочестивый в 99Б полку князя Владимира\r\nсамовидЂц 100 видЂния, сам повЂда, же шестой годины над великим\r\nкнязем было небо отверсто 1, c которого выйшол Ч 2 облок,\r\nяк багряная заря, низко держачися. Той облак полный был рук человЂческих, едины\r\nруки держали оружие, другии вЂнцы, иныи цвЂты велми пенкныи 3, a гды\r\nпришла седмая година, велми много вЂнцов от рук оных полка облачного опустишася\r\nна полки христианския, бо гды жь 3А поганыи отвсюль ост\n\n### Result 3 (score: 0.4701)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0612`\n- **Text**:\nДо стор. 133. Премудрості Соломона... — «Книга притчей\r\nСоломонових» — частина Старого завіту біблії.\n\nТРАКТАТИ. ДІАЛОГИ\n\nУБУЖДШЕСЯ ВИДЂША СЛАВУ ЕГО\n\nАвтограф твору зберігався серед паперів І. І. Срезневського в\r\nАрхіві АН СРСР у Ленінграді (ф. 216, оп. 3, папка № 227, арк. 1 — 2). Папір не\r\nмає водяних філіграней. Жодних списків до нас не дійшло.\n\nЦей твір, як і наступний — «Да лобжет мя от лобзаній уст своих»,\r\nдосі вважали вступом до курсу лекцій «О християнском добронравіи», прочитаного\r\nСко\n\n### Result 4 (score: 0.4642)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0097`\n- **Text**:\nГласе слова, рожденна от отца пред вЂки,\n\nпригласи мя на радость c небесными лики.\n\n4\n\nУдаливыйся з дЂтска на труд[ы] в пустыню,\n\nрастый тЂлом и духом во всяку святыню,\n\nНе удали растущой помощи твоєя,\n\nотпусты я в плод благих дЂл души моєя.\n\n5\n\nРизу остру от власов велбуждых имЂвый,\n\nпояс тверд от ременя на чреслЂх носивый,\n\nТако зраком велбуда в узкость врат входити,\n\nв жизни горнєй грядущу дажд ми плоть смирити.\r\n|арк.65.|\n\n6\n\nСнЂдь акриды, верх зелій и мед дивый лЂсный\n\nимЂвый, проходя путь \n\n### Result 5 (score: 0.4638)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0157`\n- **Text**:\nТреба розділити тему на\r\nчасті в наррації, і кождую часть теми особно повідати. Такоє у мене казаннє\r\nзнайдується на воскресеніє Христово, в котором тема: «Солнце возсіяет в нощи, и\r\nлуна трыщи на день, и каплет кровь от древа, и камень дасть глас свой». Тую всю\r\nтему я розділив-єм на часті в наррації і кождую часть особно повідав-єм. Ексордіум\r\nзась і конклюзія звичайним ідуть трибом, як і в інших казаннях; ексордіум\r\nпочинається: «Чворакий єст сенс в Письмі Святом», і проч.; конклюзія починаєт\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:23.409Z",
+          "resultDisplay": "Found 5 results for: \"Откровення\"\n\n### Result 1 (score: 0.4807)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0393`\n- **Text**:\nЛонгин. Кто только удостоился видЂть живаго сего мужа, во\r\nмгновеніи дЂлается проповЂдником его и слышит сіе: «Вострубите в новомЂсячіи».\r\nМужеск ли пол или женск, как только явился ему воскресшій человЂк, бЂжіт и\r\nблаговЂствует, / 16/731 / с радостію великою возвЂщает о нем: — Воскрес,\r\nвоскрес, воистину воскрес господь! Явися не только Симону, но и мнЂ, малЂйшему,\r\nпознался. ТЂм самым познался мнЂ, что невидимый для мене есть. Не вижу его во\r\nмертвых, но тЂм самым вижу его в живых. А видЂть в \n\n### Result 2 (score: 0.4791)\n- **Work**: Литовсько-білоруські літописи та хроніки (1980)\n- **Author**: ПСРЛ\n- **Genre/Period**: chronicle / middle_ukrainian\n- **Chunk ID**: `3bd1f572_c0144`\n- **Text**:\nО видЂнии отверстых 99А небес Ц. Един человЂк благочестивый в 99Б полку князя Владимира\r\nсамовидЂц 100 видЂния, сам повЂда, же шестой годины над великим\r\nкнязем было небо отверсто 1, c которого выйшол Ч 2 облок,\r\nяк багряная заря, низко держачися. Той облак полный был рук человЂческих, едины\r\nруки держали оружие, другии вЂнцы, иныи цвЂты велми пенкныи 3, a гды\r\nпришла седмая година, велми много вЂнцов от рук оных полка облачного опустишася\r\nна полки христианския, бо гды жь 3А поганыи отвсюль ост\n\n### Result 3 (score: 0.4701)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0612`\n- **Text**:\nДо стор. 133. Премудрості Соломона... — «Книга притчей\r\nСоломонових» — частина Старого завіту біблії.\n\nТРАКТАТИ. ДІАЛОГИ\n\nУБУЖДШЕСЯ ВИДЂША СЛАВУ ЕГО\n\nАвтограф твору зберігався серед паперів І. І. Срезневського в\r\nАрхіві АН СРСР у Ленінграді (ф. 216, оп. 3, папка № 227, арк. 1 — 2). Папір не\r\nмає водяних філіграней. Жодних списків до нас не дійшло.\n\nЦей твір, як і наступний — «Да лобжет мя от лобзаній уст своих»,\r\nдосі вважали вступом до курсу лекцій «О християнском добронравіи», прочитаного\r\nСко\n\n### Result 4 (score: 0.4642)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0097`\n- **Text**:\nГласе слова, рожденна от отца пред вЂки,\n\nпригласи мя на радость c небесными лики.\n\n4\n\nУдаливыйся з дЂтска на труд[ы] в пустыню,\n\nрастый тЂлом и духом во всяку святыню,\n\nНе удали растущой помощи твоєя,\n\nотпусты я в плод благих дЂл души моєя.\n\n5\n\nРизу остру от власов велбуждых имЂвый,\n\nпояс тверд от ременя на чреслЂх носивый,\n\nТако зраком велбуда в узкость врат входити,\n\nв жизни горнєй грядущу дажд ми плоть смирити.\r\n|арк.65.|\n\n6\n\nСнЂдь акриды, верх зелій и мед дивый лЂсный\n\nимЂвый, проходя путь \n\n### Result 5 (score: 0.4638)\n- **Work**: Українська література XVII ст. (1650)\n- **Author**: Антологія\n- **Genre/Period**: anthology / middle_ukrainian\n- **Chunk ID**: `f82cfba8_c0157`\n- **Text**:\nТреба розділити тему на\r\nчасті в наррації, і кождую часть теми особно повідати. Такоє у мене казаннє\r\nзнайдується на воскресеніє Христово, в котором тема: «Солнце возсіяет в нощи, и\r\nлуна трыщи на день, и каплет кровь от древа, и камень дасть глас свой». Тую всю\r\nтему я розділив-єм на часті в наррації і кождую часть особно повідав-єм. Ексордіум\r\nзась і конклюзія звичайним ідуть трибом, як і в інших казаннях; ексордіум\r\nпочинається: «Чворакий єст сенс в Письмі Святом», і проч.; конклюзія починаєт\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "fa5ae57a-97fb-465c-b37e-a43904654a87",
+      "timestamp": "2026-03-14T01:13:32.363Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing Next Steps",
+          "description": "I am now focused on charting a course forward. I plan to perform some more work to make headway with this process. I will be using my research abilities to gain a better understanding.",
+          "timestamp": "2026-03-14T01:13:28.278Z"
+        },
+        {
+          "subject": "Continuing Research Endeavor",
+          "description": "I am now delving into related materials, using my capabilities to expand the search and understand more context. I'll need to gather additional details to improve my understanding of the subject matter.",
+          "timestamp": "2026-03-14T01:13:31.480Z"
+        }
+      ],
+      "tokens": {
+        "input": 25124,
+        "output": 101,
+        "cached": 16852,
+        "thoughts": 348,
+        "tool": 0,
+        "total": 25573
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_get_chunk_context_1773450811893_0",
+          "name": "mcp_rag_get_chunk_context",
+          "args": {
+            "window": 2,
+            "chunk_id": "1b7685d5_c0105"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_get_chunk_context_1773450811893_0",
+                "name": "mcp_rag_get_chunk_context",
+                "response": {
+                  "output": "Invalid chunk_id format: 1b7685d5_c0105"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:32.378Z",
+          "resultDisplay": "Invalid chunk_id format: 1b7685d5_c0105",
+          "displayName": "get_chunk_context (rag MCP Server)",
+          "description": "Get surrounding text chunks for context. Given a chunk_id from search results, returns the chunk and its neighbors from the same textbook.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_get_chunk_context_1773450812324_1",
+          "name": "mcp_rag_get_chunk_context",
+          "args": {
+            "window": 2,
+            "chunk_id": "1b7685d5_c0106"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_get_chunk_context_1773450812324_1",
+                "name": "mcp_rag_get_chunk_context",
+                "response": {
+                  "output": "Invalid chunk_id format: 1b7685d5_c0106"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:32.378Z",
+          "resultDisplay": "Invalid chunk_id format: 1b7685d5_c0106",
+          "displayName": "get_chunk_context (rag MCP Server)",
+          "description": "Get surrounding text chunks for context. Given a chunk_id from search results, returns the chunk and its neighbors from the same textbook.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_verify_words_1773450812363_2",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "Откровення",
+              "Апокаліпсис",
+              "есхатологія",
+              "есхатологічний"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773450812363_2",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 4 words\n\nFound: 2/4\n\n- **Откровення** — NOT FOUND\n- **Апокаліпсис** — NOT FOUND\n- **есхатологія** — FOUND (1 match): есхатологія(noun)\n- **есхатологічний** — FOUND (3 match): есхатологічний(adj), есхатологічний(adj), есхатологічний(adj)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:32.378Z",
+          "resultDisplay": "Batch verification: 4 words\n\nFound: 2/4\n\n- **Откровення** — NOT FOUND\n- **Апокаліпсис** — NOT FOUND\n- **есхатологія** — FOUND (1 match): есхатологія(noun)\n- **есхатологічний** — FOUND (3 match): есхатологічний(adj), есхатологічний(adj), есхатологічний(adj)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "1624d75e-6610-4b85-bf98-0be0e69b470a",
+      "timestamp": "2026-03-14T01:13:39.508Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Analyzing Next Steps",
+          "description": "I am now focused on refining my approach. After the initial attempt, I realized I needed a different method to verify the provided terms. I will check for alternative methods to handle potential proper nouns.",
+          "timestamp": "2026-03-14T01:13:35.798Z"
+        },
+        {
+          "subject": "Revising Verification Strategy",
+          "description": "I'm adjusting my approach to account for proper nouns. The initial attempts failed, so I'm now using lowercase versions of the terms. I'm also revising how I query for key phrases.",
+          "timestamp": "2026-03-14T01:13:38.953Z"
+        }
+      ],
+      "tokens": {
+        "input": 25391,
+        "output": 69,
+        "cached": 23301,
+        "thoughts": 294,
+        "tool": 0,
+        "total": 25754
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_verify_words_1773450819320_0",
+          "name": "mcp_rag_verify_words",
+          "args": {
+            "words": [
+              "откровення",
+              "апокаліпсис"
+            ]
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_verify_words_1773450819320_0",
+                "name": "mcp_rag_verify_words",
+                "response": {
+                  "output": "Batch verification: 2 words\n\nFound: 1/2\n\n- **откровення** — NOT FOUND\n- **апокаліпсис** — FOUND (2 match): апокаліпсис(noun), апокаліпсис(noun)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:40.101Z",
+          "resultDisplay": "Batch verification: 2 words\n\nFound: 1/2\n\n- **откровення** — NOT FOUND\n- **апокаліпсис** — FOUND (2 match): апокаліпсис(noun), апокаліпсис(noun)",
+          "displayName": "verify_words (rag MCP Server)",
+          "description": "Batch-verify multiple Ukrainian word forms against VESUM in a single call. Much faster than multiple verify_word calls — one SQL query instead of N round-trips. Returns per-word results: found/not-found with lemma, POS, and tags.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450819468_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "антихрист",
+            "period": "middle_ukrainian"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450819468_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"антихрист\"\n\n### Result 1 (score: 0.6206)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0372`\n- **Text**:\nА так, щоб достатньо знав про власного антихриста,\r\nхто він і звідки прийшов і хто його перший прийме і слухати буде, начувайся і,\r\nпильно придивившись до тих доказів ясних, зважай на себе. Якщо прийшов\r\nантихрист або ще на нього очікуєш, — аби потім, підведений єретицьким\r\nбаламуттям і вірячи, що папа є антихрист, не прогледів власного і правдивого\r\nантихриста, коли прибуде, як жиди, сподіваючись на іншого Месію у своїх думах і\r\nфантазіях, правдивого Месію Христа Спасителя нашого прогледіли і п\n\n### Result 2 (score: 0.5819)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0384`\n- **Text**:\nПо-сьоме: якщо антихрист має знищити всі знаки і пам’ятки\r\nхристиянської віри, оскільки названі гидотою, яка на подив спустошує і розкидає\r\nвсі речі святі, тоді можемо правдиво сказати, що сьогоднішні єретики є його\r\nчленами. Бо від початку світу не було ще секти, яка б так сильно псувала і\r\nганьбила всі знаки християнської релігії, як сьогоднішня єретицька аріянська і\r\nновохрещенська секта. Всі помисли і труди їхні скеровані на те, щоб викидати\r\nприсвячені Богові вівтарі, вивертати Божі церкви,\n\n### Result 3 (score: 0.5802)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0381`\n- **Text**:\nДо того ж треба знати, що військо антихриста, яким\r\nсобі має підбивати людей, є всі єретики, як каже Златоуст. А святий Іван усіх\r\nєретиків називає антихристами. А якби папа серед них був головним антихристом,\r\nто ніколи б єретики, які є членами, слугами і предтечами антихриста, так не\r\nнаступали на папу як на свого гетьмана, а папське царство, як свого повелителя,\r\nпомножували і розширювали. Але тепер не тільки лютерани, кальвіністи, а й ті,\r\nкого євангелісти вважають єретиками, новохрещенці, е\n\n### Result 4 (score: 0.5681)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0385`\n- **Text**:\nПо-восьме: антихрист названий людиною гріха, тому що\r\nмає примножувати всі гріхи, несправедливості, а все, що є добрим, має псувати і\r\nзнищувати. Отже, ті, хто рятує і розширює царство гріховне, певно, є слугами\r\nантихристовими. А це теперішні єретики, бо не тільки всі зовнішні ознаки християнської\r\nнабожності псують і їм якнайболючіше роблять, а й згладжують внутрішню святість\r\nі набожність або перешкоджають їм усяким способом і розширяють гріховне\r\nцарство. Бо завдяки їхнім старанням усюди пан\n\n### Result 5 (score: 0.5670)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0382`\n- **Text**:\nПо-перше: тоді, коли антихрист має ганьбити Бога, і\r\nпресвяте ім’я його, і прибуток його, і святих, які перебувають на небі. Чи не є\r\nвірними слугами і посланцями антихриста ті, котрі це вже починають робити,\r\nкотрі пресвяту Трійцю, Бога, Сина Божого і Духа Святого, ганьблять, котрі\r\nХриста Пана б’ють за божество його і за інші заслуги, які мав у батька свого\r\nпротягом усіх віків? Чи це не антихристи, які прибуток Божий, тобто Церкву\r\nсвяту вселенську, в якій\n\nХристос перебуває з Духом своїм Свя\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:40.101Z",
+          "resultDisplay": "Found 5 results for: \"антихрист\"\n\n### Result 1 (score: 0.6206)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0372`\n- **Text**:\nА так, щоб достатньо знав про власного антихриста,\r\nхто він і звідки прийшов і хто його перший прийме і слухати буде, начувайся і,\r\nпильно придивившись до тих доказів ясних, зважай на себе. Якщо прийшов\r\nантихрист або ще на нього очікуєш, — аби потім, підведений єретицьким\r\nбаламуттям і вірячи, що папа є антихрист, не прогледів власного і правдивого\r\nантихриста, коли прибуде, як жиди, сподіваючись на іншого Месію у своїх думах і\r\nфантазіях, правдивого Месію Христа Спасителя нашого прогледіли і п\n\n### Result 2 (score: 0.5819)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0384`\n- **Text**:\nПо-сьоме: якщо антихрист має знищити всі знаки і пам’ятки\r\nхристиянської віри, оскільки названі гидотою, яка на подив спустошує і розкидає\r\nвсі речі святі, тоді можемо правдиво сказати, що сьогоднішні єретики є його\r\nчленами. Бо від початку світу не було ще секти, яка б так сильно псувала і\r\nганьбила всі знаки християнської релігії, як сьогоднішня єретицька аріянська і\r\nновохрещенська секта. Всі помисли і труди їхні скеровані на те, щоб викидати\r\nприсвячені Богові вівтарі, вивертати Божі церкви,\n\n### Result 3 (score: 0.5802)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0381`\n- **Text**:\nДо того ж треба знати, що військо антихриста, яким\r\nсобі має підбивати людей, є всі єретики, як каже Златоуст. А святий Іван усіх\r\nєретиків називає антихристами. А якби папа серед них був головним антихристом,\r\nто ніколи б єретики, які є членами, слугами і предтечами антихриста, так не\r\nнаступали на папу як на свого гетьмана, а папське царство, як свого повелителя,\r\nпомножували і розширювали. Але тепер не тільки лютерани, кальвіністи, а й ті,\r\nкого євангелісти вважають єретиками, новохрещенці, е\n\n### Result 4 (score: 0.5681)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0385`\n- **Text**:\nПо-восьме: антихрист названий людиною гріха, тому що\r\nмає примножувати всі гріхи, несправедливості, а все, що є добрим, має псувати і\r\nзнищувати. Отже, ті, хто рятує і розширює царство гріховне, певно, є слугами\r\nантихристовими. А це теперішні єретики, бо не тільки всі зовнішні ознаки християнської\r\nнабожності псують і їм якнайболючіше роблять, а й згладжують внутрішню святість\r\nі набожність або перешкоджають їм усяким способом і розширяють гріховне\r\nцарство. Бо завдяки їхнім старанням усюди пан\n\n### Result 5 (score: 0.5670)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0382`\n- **Text**:\nПо-перше: тоді, коли антихрист має ганьбити Бога, і\r\nпресвяте ім’я його, і прибуток його, і святих, які перебувають на небі. Чи не є\r\nвірними слугами і посланцями антихриста ті, котрі це вже починають робити,\r\nкотрі пресвяту Трійцю, Бога, Сина Божого і Духа Святого, ганьблять, котрі\r\nХриста Пана б’ють за божество його і за інші заслуги, які мав у батька свого\r\nпротягом усіх віків? Чи це не антихристи, які прибуток Божий, тобто Церкву\r\nсвяту вселенську, в якій\n\nХристос перебуває з Духом своїм Свя\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450819507_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "\"кінець світу\"",
+            "period": "middle_ukrainian"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450819507_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"\"кінець світу\"\"\n\n### Result 1 (score: 0.4694)\n- **Work**: Українські інтермедії XVII-XVIII ст. (1700)\n- **Author**: Різні\n- **Genre/Period**: interlude / middle_ukrainian\n- **Chunk ID**: `ed325924_c0054`\n- **Text**:\nТо Stecko zákasawszy sobie ręce w gárce,\r\ná Klimko vćieknie Г,\n\nСтецко\n\nОй, матьонько, матьонько, тепер же ми ліхо!\n\nЧи біс, чи ліх чоловік ўправіл мене тихо\n\nВ то нестєстє Д веліке, що-м убоство\r\nсвоє\n\nПотолк, внивоч обротил те горщочкі моє!\n\nЩо ся діят? Чи бог то милостіў 12 справити\n\nА сіра\n\nБ пасокою, кров’ю\n\nВ зглядено, побачено\n\nГ Стецько, закасавши\r\nсобі руки (б’є) по горшках, а Климко втече\n\nД нещастя\n\nХотил, такоє ричи на мене пустити,\n\nЧи ліхіі 13 люде? О боже милостиви!\n\nКолі ш би ся \n\n### Result 2 (score: 0.4686)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0683`\n- **Text**:\nВерхи гор, волосы глав, лучи зари и солнца — все сіе ничто же есть\r\nНо сіи фигуры текут к вЂчному, его ж силою влекомыя, — как гласит запрос его к\r\nІову: «Вечернюю звЂзду за власы ея привлечеши ли?». Он один совершеніе и конец\r\nсвЂтилам и знаменіям. «Да станет солнце! И ста солнце и луна». «Дондеже\r\nпришедши, ста верху... Се нынЂ!» 74\n\n«Соверш[ишася] 75 небо и земля и все украшеніе их».\r\nСпаситель, умирая, послЂдній испустил вопль: «Совершишася», сирЂчь: вся сія\r\nисторіа с нравоученіем создана в\n\n### Result 3 (score: 0.4634)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0056`\n- **Text**:\nВельми цікаве місце в «Квінкунксі» маємо в\r\nприкінцевому пророцтві, де йдеться про загибель Польської держави.\r\nАпокаліптичні настрої з’явились у польському суспільстві вже в часі написання\r\nтвору: «Почуєш одностайний людський голос: «Згинемо!» Сам С. Оріховський\r\nназиває себе «тінню дому, що постійно міркує про явний свій занепад», бо відчуває,\r\nщо той має згинути «у розбраті домовому або в ув’язненні ворожому». Поляків він\r\nзве «блюзнірами». Звідусіль Польська держава оточена лютими ворогами: \n\n### Result 4 (score: 0.4623)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0224`\n- **Text**:\nКонець вЂку єст знаком, не волос сЂдины.\n\nЗнаком валки внутрніи, постронъных погрозки,\n\nЗнаком полон, вязенья, кайдалы, поврозки,\n\nКоторими не толко христиан погане,\n\nЛеч, што тяжша, свои своих, хрістиан хрістяне\n\nВяжуть, вязять, кров точать. Пойзри на сусЂды,\n\nШто ся дЂєт, якіи зо всЂх сторон бЂды.\n\nПлачет наша братія, доставшися въ руки\n\nВрага креста Христова, и то не без муки.\n\nДомовыи неснаски, ненависть терпЂти\n\nОт своєго своєму, близкій конець, дЂти.\n\nРоскош, збытки, лакомство, сваволя, не\n\n### Result 5 (score: 0.4619)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0149`\n- **Text**:\nЕсли б можно до их лЂт что ни есть приложить, имЂли б они конец. Но\r\nтеперь они всему-на-всему сами суть концем. Не конец то, послЂ чего нЂчто еще\r\nслЂдует, но сей род сам / 22 / всему концем. Остаток не в языках:\r\nостаток Израилев ест, и один остаток спасается, а прочое все мимо течет: «Уничижатся\r\nязыцы, яко вода мимотекущая...» А что Іоиль точно о родЂ ізраилском сіе\r\nговорит, слушай Мойсея, человЂка божія, Хрісту сродного и с Хрістом\r\nбесЂдующаго: «Блажен еси, Ізраилю! Кто подобен тебЂ, роде\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:40.101Z",
+          "resultDisplay": "Found 5 results for: \"\"кінець світу\"\"\n\n### Result 1 (score: 0.4694)\n- **Work**: Українські інтермедії XVII-XVIII ст. (1700)\n- **Author**: Різні\n- **Genre/Period**: interlude / middle_ukrainian\n- **Chunk ID**: `ed325924_c0054`\n- **Text**:\nТо Stecko zákasawszy sobie ręce w gárce,\r\ná Klimko vćieknie Г,\n\nСтецко\n\nОй, матьонько, матьонько, тепер же ми ліхо!\n\nЧи біс, чи ліх чоловік ўправіл мене тихо\n\nВ то нестєстє Д веліке, що-м убоство\r\nсвоє\n\nПотолк, внивоч обротил те горщочкі моє!\n\nЩо ся діят? Чи бог то милостіў 12 справити\n\nА сіра\n\nБ пасокою, кров’ю\n\nВ зглядено, побачено\n\nГ Стецько, закасавши\r\nсобі руки (б’є) по горшках, а Климко втече\n\nД нещастя\n\nХотил, такоє ричи на мене пустити,\n\nЧи ліхіі 13 люде? О боже милостиви!\n\nКолі ш би ся \n\n### Result 2 (score: 0.4686)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0683`\n- **Text**:\nВерхи гор, волосы глав, лучи зари и солнца — все сіе ничто же есть\r\nНо сіи фигуры текут к вЂчному, его ж силою влекомыя, — как гласит запрос его к\r\nІову: «Вечернюю звЂзду за власы ея привлечеши ли?». Он один совершеніе и конец\r\nсвЂтилам и знаменіям. «Да станет солнце! И ста солнце и луна». «Дондеже\r\nпришедши, ста верху... Се нынЂ!» 74\n\n«Соверш[ишася] 75 небо и земля и все украшеніе их».\r\nСпаситель, умирая, послЂдній испустил вопль: «Совершишася», сирЂчь: вся сія\r\nисторіа с нравоученіем создана в\n\n### Result 3 (score: 0.4634)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0056`\n- **Text**:\nВельми цікаве місце в «Квінкунксі» маємо в\r\nприкінцевому пророцтві, де йдеться про загибель Польської держави.\r\nАпокаліптичні настрої з’явились у польському суспільстві вже в часі написання\r\nтвору: «Почуєш одностайний людський голос: «Згинемо!» Сам С. Оріховський\r\nназиває себе «тінню дому, що постійно міркує про явний свій занепад», бо відчуває,\r\nщо той має згинути «у розбраті домовому або в ув’язненні ворожому». Поляків він\r\nзве «блюзнірами». Звідусіль Польська держава оточена лютими ворогами: \n\n### Result 4 (score: 0.4623)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0224`\n- **Text**:\nКонець вЂку єст знаком, не волос сЂдины.\n\nЗнаком валки внутрніи, постронъных погрозки,\n\nЗнаком полон, вязенья, кайдалы, поврозки,\n\nКоторими не толко христиан погане,\n\nЛеч, што тяжша, свои своих, хрістиан хрістяне\n\nВяжуть, вязять, кров точать. Пойзри на сусЂды,\n\nШто ся дЂєт, якіи зо всЂх сторон бЂды.\n\nПлачет наша братія, доставшися въ руки\n\nВрага креста Христова, и то не без муки.\n\nДомовыи неснаски, ненависть терпЂти\n\nОт своєго своєму, близкій конець, дЂти.\n\nРоскош, збытки, лакомство, сваволя, не\n\n### Result 5 (score: 0.4619)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c0149`\n- **Text**:\nЕсли б можно до их лЂт что ни есть приложить, имЂли б они конец. Но\r\nтеперь они всему-на-всему сами суть концем. Не конец то, послЂ чего нЂчто еще\r\nслЂдует, но сей род сам / 22 / всему концем. Остаток не в языках:\r\nостаток Израилев ест, и один остаток спасается, а прочое все мимо течет: «Уничижатся\r\nязыцы, яко вода мимотекущая...» А что Іоиль точно о родЂ ізраилском сіе\r\nговорит, слушай Мойсея, человЂка божія, Хрісту сродного и с Хрістом\r\nбесЂдующаго: «Блажен еси, Ізраилю! Кто подобен тебЂ, роде\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "78070844-1984-4fa8-8908-5063e7de7168",
+      "timestamp": "2026-03-14T01:13:46.708Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Progressing Towards Connection",
+          "description": "I am now focused on charting the best path forward to achieve the next step. I am concentrating on the most efficient way to achieve my goal using the available resources. I'm strategizing how to best leverage the information to meet the desired outcome.",
+          "timestamp": "2026-03-14T01:13:44.506Z"
+        },
+        {
+          "subject": "Refining the Strategy",
+          "description": "I'm now carefully mapping out the next phase. My immediate focus is on refining the search terms to gather relevant information. My attention is directed towards ensuring I extract the most pertinent details.",
+          "timestamp": "2026-03-14T01:13:46.532Z"
+        }
+      ],
+      "tokens": {
+        "input": 28392,
+        "output": 78,
+        "cached": 0,
+        "thoughts": 335,
+        "tool": 0,
+        "total": 28805
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_search_literary_1773450826625_0",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "query": "Герасим Смотрицький",
+            "period": "middle_ukrainian"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450826625_0",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Герасим Смотрицький\"\n\n### Result 1 (score: 0.5797)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0102`\n- **Text**:\nВЂчный и всесилный боже всякоя благодати,\n\nсвоим милосердієм благоволи нам се дати,\n\nДа дом сей богатно благословится на многіє лЂта,\n\nи да не оскудЂєт слава єго до скончанія свЂта,\n\nВ день же страшный одесную себе стати\n\nи [зъ] избранными радостный глас услышати.\n\nСія предсловная сказанія и двострочноє съгласіє\n\nмногогрЂшным Герасимом Даниловичем съставлено бЂ.\n\nПЛЮТАРХУС\n\nТакіє нехай у тебе мЂсце мЂвають,\n\nКоторыє не ради на все зезволяють,\n\nA которым мылша роскош, ниж цнота —\n\nПредъ такими ка\n\n### Result 2 (score: 0.5265)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0012`\n- **Text**:\nСмотрицький видає низку написаних із великим\r\nлітературним хистом творів, у яких захищає відновлення православної ієрархії,\r\nспростовує звинувачення католицько-уніатського табору, показує свавілля\r\nкоролівських властей і переслідування українського й білоруського населення, що\r\nвідстоювало свої права й гідність: «Verificatia niewinności...»\r\n(«Виправдання невинності...», Вільно, 1621), «Obrona Verificatiey...» («Оборона\r\n«Виправдання...», Вільно, 1621), «Elenchus pism uszczypliwych...» («Викритт\n\n### Result 3 (score: 0.5175)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0105`\n- **Text**:\nУ вірші обігрується одна з апофегм (афористичних\r\nсентенцій) Плутарха.\n\nПодається за першодруком, ЦНБ АН УРСР, ЛНБ АН УРСР.\n\nОстрозька біблія. 1581. Сторінка з віршем Герасима Смотрицького\r\n«Зри сія знаменія княжате славнаго...».\n\nДив. також:\n\nГЕРАСИМ СМОТРИЦЬКИЙ. Українська література XIV-XVI ст.\n\nГЕРАСИМ СМОТРИЦЬКИЙ. Українські гуманісти епохи Відродження.\n\nГЕРАСИМ СМОТРИЦЬКИЙ. Ключ царства небесного. Українська література XIV-XVI ст.\n\nГерасим СМОТРИЦЬКИЙ. Ключ царства небесного, 1587 р. Перек\n\n### Result 4 (score: 0.5046)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0005`\n- **Text**:\nСтиль і поетика українських віршів кінця XVI — початку\r\nXVII ст. розвиваються від рівня, характерного для пізнього східнослов’янського\r\nсередньовіччя, а точніше преренесансу, до рівня, властивого Ренесансу і\r\nранньому барокко. Цей процес репрезентують поетичні пам’ятки кінця XVI ст.\r\n(вірші Герасима Смотрицького з острозької Біблії, вірші з Києво-Михайлівського\r\nзбірника, «Скарга нищих до бога», «Просфонима») та поетичні пам’ятки початку\r\nXVII ст. (вірші Даміана Наливайка, Мелетія Смотрицького, \n\n### Result 5 (score: 0.5042)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0116`\n- **Text**:\nПроте здебільшого полеміка проти протестантів рідко\r\nвиходить із меж догматичних, а отже, не входить до суспільно-політичних, як це\r\nбачимо в С. Оріховського. Інша річ — питання щодо унії. Тут уже зачіпалися\r\nживотрепетні проблеми буття українського народу. Перший з-поміж православних,\r\nхто підняв голоса проти т. зв. «єдності», був Герасим Смотрицький. Він вказав у\r\nкнизі «Ключ царства небесного» від 1587 року, що ідея унії постала в\r\nримо-католицьких колах, які почали осуджувати православ’я; са\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:47.647Z",
+          "resultDisplay": "Found 5 results for: \"Герасим Смотрицький\"\n\n### Result 1 (score: 0.5797)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0102`\n- **Text**:\nВЂчный и всесилный боже всякоя благодати,\n\nсвоим милосердієм благоволи нам се дати,\n\nДа дом сей богатно благословится на многіє лЂта,\n\nи да не оскудЂєт слава єго до скончанія свЂта,\n\nВ день же страшный одесную себе стати\n\nи [зъ] избранными радостный глас услышати.\n\nСія предсловная сказанія и двострочноє съгласіє\n\nмногогрЂшным Герасимом Даниловичем съставлено бЂ.\n\nПЛЮТАРХУС\n\nТакіє нехай у тебе мЂсце мЂвають,\n\nКоторыє не ради на все зезволяють,\n\nA которым мылша роскош, ниж цнота —\n\nПредъ такими ка\n\n### Result 2 (score: 0.5265)\n- **Work**: Смотрицький — Граматіки Словенскія (1619) (1619)\n- **Author**: Смотрицький М.\n- **Genre/Period**: grammar / middle_ukrainian\n- **Chunk ID**: `e96717d0_c0012`\n- **Text**:\nСмотрицький видає низку написаних із великим\r\nлітературним хистом творів, у яких захищає відновлення православної ієрархії,\r\nспростовує звинувачення католицько-уніатського табору, показує свавілля\r\nкоролівських властей і переслідування українського й білоруського населення, що\r\nвідстоювало свої права й гідність: «Verificatia niewinności...»\r\n(«Виправдання невинності...», Вільно, 1621), «Obrona Verificatiey...» («Оборона\r\n«Виправдання...», Вільно, 1621), «Elenchus pism uszczypliwych...» («Викритт\n\n### Result 3 (score: 0.5175)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0105`\n- **Text**:\nУ вірші обігрується одна з апофегм (афористичних\r\nсентенцій) Плутарха.\n\nПодається за першодруком, ЦНБ АН УРСР, ЛНБ АН УРСР.\n\nОстрозька біблія. 1581. Сторінка з віршем Герасима Смотрицького\r\n«Зри сія знаменія княжате славнаго...».\n\nДив. також:\n\nГЕРАСИМ СМОТРИЦЬКИЙ. Українська література XIV-XVI ст.\n\nГЕРАСИМ СМОТРИЦЬКИЙ. Українські гуманісти епохи Відродження.\n\nГЕРАСИМ СМОТРИЦЬКИЙ. Ключ царства небесного. Українська література XIV-XVI ст.\n\nГерасим СМОТРИЦЬКИЙ. Ключ царства небесного, 1587 р. Перек\n\n### Result 4 (score: 0.5046)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0005`\n- **Text**:\nСтиль і поетика українських віршів кінця XVI — початку\r\nXVII ст. розвиваються від рівня, характерного для пізнього східнослов’янського\r\nсередньовіччя, а точніше преренесансу, до рівня, властивого Ренесансу і\r\nранньому барокко. Цей процес репрезентують поетичні пам’ятки кінця XVI ст.\r\n(вірші Герасима Смотрицького з острозької Біблії, вірші з Києво-Михайлівського\r\nзбірника, «Скарга нищих до бога», «Просфонима») та поетичні пам’ятки початку\r\nXVII ст. (вірші Даміана Наливайка, Мелетія Смотрицького, \n\n### Result 5 (score: 0.5042)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0116`\n- **Text**:\nПроте здебільшого полеміка проти протестантів рідко\r\nвиходить із меж догматичних, а отже, не входить до суспільно-політичних, як це\r\nбачимо в С. Оріховського. Інша річ — питання щодо унії. Тут уже зачіпалися\r\nживотрепетні проблеми буття українського народу. Перший з-поміж православних,\r\nхто підняв голоса проти т. зв. «єдності», був Герасим Смотрицький. Він вказав у\r\nкнизі «Ключ царства небесного» від 1587 року, що ідея унії постала в\r\nримо-католицьких колах, які почали осуджувати православ’я; са\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450826667_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "period": "middle_ukrainian",
+            "query": "есхатологія"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450826667_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"есхатологія\"\n\n### Result 1 (score: 0.4795)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0061`\n- **Text**:\nВідомо, що антична філософія, яка була переважно\r\nонтологічною, бо ще не відокремлювала мовну форму мислення від його змісту,\r\nрозглядала найрозвиненіші на той час дедуктивні прийоми і способи доведення та\r\nміркування. Антична логіка, що грунтувалась здебільшого на математиці, а\r\nпочасти й на класифікаційних і систематологічних принципах тогочасної біології,\r\nтакож була теорією переважно необхідного дедуктивного виведення, індукція в ній\r\nбула мало розроблена. Хоча середньовічна логіка зробила ч\n\n### Result 2 (score: 0.4651)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c1211`\n- **Text**:\nИсканіе философскаго камня или превращеніе всЂх вещей в золото и\r\nсодЂланіе состава из онаго, дабы продлить человЂческую жизнь до нЂскольких\r\nтысяч лЂт, есть остаток египетскаго плотолюбія, которое, не могши продлить\r\nжизни тЂлесной, при всЂх мудрованіях своих нашло способ продолжать\r\nсуществованіе трупов человЂческих, извЂстных у нас под именем мумій. Сія секта,\r\n— говорил он, — мЂряя жизнь аршином лЂт, а не дЂл, несообразна тЂм правилам\r\nмудраго, о котором пишется: «Поживе вмалЂ, исполни лЂта \n\n### Result 3 (score: 0.4603)\n- **Work**: Митрофан Довгалевський. Поетика. (1973)\n- **Author**: Довгалевський М.\n- **Genre/Period**: rhetoric / middle_ukrainian\n- **Chunk ID**: `c6aa97a6_c0124`\n- **Text**:\n2. Інвокація — це звернення про допомогу до\r\nбожества, або до святих, або до покровителів цього мистецтва, завдяки яким\r\nоспівуємо предмет. Як наприклад: до покровителів поетичного мистецтва — муз,\r\nАполлона або, якщо пишемо про військові справи — то до Марса, Беллони, а якщо\r\nпро пастуші — то до Церери, а якщо про сільськогосподарські — то до Сільвана.\r\nПроте краще зробить християнський поет, якщо звернеться до того, від кого\r\nприходить всяка допомога, тобто до трисвятого найбільшого бога, єдин\n\n### Result 4 (score: 0.4529)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0372`\n- **Text**:\n10. Образність буває тоді, коли ми виражаємо якусь\r\nповажну справу і так, що слухач легко розуміє, яка вона і яка велика. Якщо\r\nйдеться про якість справи, образність здійснюється за допомогою характеристики\r\nабо гіпотипосиса. Якщо — про кількість, дуже тонко можна подати її за\r\nдопомогою вигаданої подібності або порівняння. \\278\\\n\nІ так зможеш виразити щонайкращу відвагу св. Василія,\r\nякою той перешкодив безбожному імператорові 61 зайти до церкви, де\r\nопишеш царську свиту і пишний похід, щоб пок\n\n### Result 5 (score: 0.4521)\n- **Work**: Митрофан Довгалевський. Поетика. (1973)\n- **Author**: Довгалевський М.\n- **Genre/Period**: rhetoric / middle_ukrainian\n- **Chunk ID**: `c6aa97a6_c0148`\n- **Text**:\nЕпіграматична поезія, або епіграма, виводить свою\r\nназву від грецького слова έπιγραφή,\r\n|81зв.| що по-латині звучить — inscriptio або superscriptio [напис]. Такі\r\nнаписи є на могилах, будинках, мавзолеях, пам’ятних місцях, скульптурах,\r\nколонах, кораблях, мурах, пам’ятниках перемоги, статуях, щитах, пірамідах,\r\nмонументах і т. д. Ці написи пишуть учені поети, і епіграма — це свого роду\r\nпоетичний твір.\n\nЩодо суті, то епіграма — це коротка поема, в якій\r\nрозповідається просто про якусь річ або ос\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:47.647Z",
+          "resultDisplay": "Found 5 results for: \"есхатологія\"\n\n### Result 1 (score: 0.4795)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0061`\n- **Text**:\nВідомо, що антична філософія, яка була переважно\r\nонтологічною, бо ще не відокремлювала мовну форму мислення від його змісту,\r\nрозглядала найрозвиненіші на той час дедуктивні прийоми і способи доведення та\r\nміркування. Антична логіка, що грунтувалась здебільшого на математиці, а\r\nпочасти й на класифікаційних і систематологічних принципах тогочасної біології,\r\nтакож була теорією переважно необхідного дедуктивного виведення, індукція в ній\r\nбула мало розроблена. Хоча середньовічна логіка зробила ч\n\n### Result 2 (score: 0.4651)\n- **Work**: Григорій Сковорода. Повне зібрання творів (1973)\n- **Author**: Сковорода Г.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `5c054efc_c1211`\n- **Text**:\nИсканіе философскаго камня или превращеніе всЂх вещей в золото и\r\nсодЂланіе состава из онаго, дабы продлить человЂческую жизнь до нЂскольких\r\nтысяч лЂт, есть остаток египетскаго плотолюбія, которое, не могши продлить\r\nжизни тЂлесной, при всЂх мудрованіях своих нашло способ продолжать\r\nсуществованіе трупов человЂческих, извЂстных у нас под именем мумій. Сія секта,\r\n— говорил он, — мЂряя жизнь аршином лЂт, а не дЂл, несообразна тЂм правилам\r\nмудраго, о котором пишется: «Поживе вмалЂ, исполни лЂта \n\n### Result 3 (score: 0.4603)\n- **Work**: Митрофан Довгалевський. Поетика. (1973)\n- **Author**: Довгалевський М.\n- **Genre/Period**: rhetoric / middle_ukrainian\n- **Chunk ID**: `c6aa97a6_c0124`\n- **Text**:\n2. Інвокація — це звернення про допомогу до\r\nбожества, або до святих, або до покровителів цього мистецтва, завдяки яким\r\nоспівуємо предмет. Як наприклад: до покровителів поетичного мистецтва — муз,\r\nАполлона або, якщо пишемо про військові справи — то до Марса, Беллони, а якщо\r\nпро пастуші — то до Церери, а якщо про сільськогосподарські — то до Сільвана.\r\nПроте краще зробить християнський поет, якщо звернеться до того, від кого\r\nприходить всяка допомога, тобто до трисвятого найбільшого бога, єдин\n\n### Result 4 (score: 0.4529)\n- **Work**: Феофан Прокопович. Філософські твори (1981)\n- **Author**: Прокопович Ф.\n- **Genre/Period**: philosophy / middle_ukrainian\n- **Chunk ID**: `4800ab33_c0372`\n- **Text**:\n10. Образність буває тоді, коли ми виражаємо якусь\r\nповажну справу і так, що слухач легко розуміє, яка вона і яка велика. Якщо\r\nйдеться про якість справи, образність здійснюється за допомогою характеристики\r\nабо гіпотипосиса. Якщо — про кількість, дуже тонко можна подати її за\r\nдопомогою вигаданої подібності або порівняння. \\278\\\n\nІ так зможеш виразити щонайкращу відвагу св. Василія,\r\nякою той перешкодив безбожному імператорові 61 зайти до церкви, де\r\nопишеш царську свиту і пишний похід, щоб пок\n\n### Result 5 (score: 0.4521)\n- **Work**: Митрофан Довгалевський. Поетика. (1973)\n- **Author**: Довгалевський М.\n- **Genre/Period**: rhetoric / middle_ukrainian\n- **Chunk ID**: `c6aa97a6_c0148`\n- **Text**:\nЕпіграматична поезія, або епіграма, виводить свою\r\nназву від грецького слова έπιγραφή,\r\n|81зв.| що по-латині звучить — inscriptio або superscriptio [напис]. Такі\r\nнаписи є на могилах, будинках, мавзолеях, пам’ятних місцях, скульптурах,\r\nколонах, кораблях, мурах, пам’ятниках перемоги, статуях, щитах, пірамідах,\r\nмонументах і т. д. Ці написи пишуть учені поети, і епіграма — це свого роду\r\nпоетичний твір.\n\nЩодо суті, то епіграма — це коротка поема, в якій\r\nрозповідається просто про якусь річ або ос\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_query_wikipedia_1773450826707_2",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "search",
+            "query": "Есхатологія в українській літературі"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773450826707_2",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "Wikipedia search: 'Есхатологія в українській літературі' — 5 results\n\n1. **Християнська есхатологія** — царства Божого, тобто месіанізм. Сучасна християнська есхатологія в українській художній літературі представлена християнським письменником-богословом Василем\n2. **Есхатологія** — Есхатологія (дав.-гр. ἔσχᾰτον «кінець») — розділ теології і філософії, що складає систему поглядів і вірувань про кінець світу, а також про долю людства\n3. **Слов'янська есхатологія** — Слов&#039;янська есхатологія — уявлення про кінець світу в слов&#039;янських народів. Найцікавіші про кінець світу походять з Підкарпаття (записи кінця XIX — початку\n4. **Страшний суд** — суд Вікісховище має мультимедійні дані за темою: Страшний суд Смерть Есхатологія Похорон Апокаліпсис Кінець світу Душа Ікона Страшного суду Труди\n5. **Друге пришестя** — (лат. adventus — прихід). Учення про кінець світу складає християнську есхатологію. Євангеліє від Матвія (Матв. 24:29,30) цю подію описує так: І зараз,"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:47.647Z",
+          "resultDisplay": "Wikipedia search: 'Есхатологія в українській літературі' — 5 results\n\n1. **Християнська есхатологія** — царства Божого, тобто месіанізм. Сучасна християнська есхатологія в українській художній літературі представлена християнським письменником-богословом Василем\n2. **Есхатологія** — Есхатологія (дав.-гр. ἔσχᾰτον «кінець») — розділ теології і філософії, що складає систему поглядів і вірувань про кінець світу, а також про долю людства\n3. **Слов'янська есхатологія** — Слов&#039;янська есхатологія — уявлення про кінець світу в слов&#039;янських народів. Найцікавіші про кінець світу походять з Підкарпаття (записи кінця XIX — початку\n4. **Страшний суд** — суд Вікісховище має мультимедійні дані за темою: Страшний суд Смерть Есхатологія Похорон Апокаліпсис Кінець світу Душа Ікона Страшного суду Труди\n5. **Друге пришестя** — (лат. adventus — прихід). Учення про кінець світу складає християнську есхатологію. Євангеліє від Матвія (Матв. 24:29,30) цю подію описує так: І зараз,",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "de84f761-6ee4-4b20-846a-1627d772bf5c",
+      "timestamp": "2026-03-14T01:13:55.525Z",
+      "type": "gemini",
+      "content": "",
+      "thoughts": [
+        {
+          "subject": "Advancing the Next Phase",
+          "description": "Focusing intently on the subsequent stage, I'm working to make sure my approach aligns with the overall objectives. I am analyzing the available information to execute the next part effectively, making certain that it builds logically on what's been done.",
+          "timestamp": "2026-03-14T01:13:52.634Z"
+        },
+        {
+          "subject": "Executing the Search Strategy",
+          "description": "I'm now prioritizing the application of the search tools. My focus is on extracting relevant details and relevant text. The plan involves a combination of targeted queries and extracting specific content to uncover more poetic examples.",
+          "timestamp": "2026-03-14T01:13:55.250Z"
+        }
+      ],
+      "tokens": {
+        "input": 31644,
+        "output": 81,
+        "cached": 27159,
+        "thoughts": 321,
+        "tool": 0,
+        "total": 32046
+      },
+      "model": "gemini-3.1-pro-preview",
+      "toolCalls": [
+        {
+          "id": "mcp_rag_query_wikipedia_1773450835440_0",
+          "name": "mcp_rag_query_wikipedia",
+          "args": {
+            "mode": "extract",
+            "query": "Смотрицький Герасим Данилович"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_query_wikipedia_1773450835440_0",
+                "name": "mcp_rag_query_wikipedia",
+                "response": {
+                  "output": "# Смотрицький Герасим Данилович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9_%D0%93%D0%B5%D1%80%D0%B0%D1%81%D0%B8%D0%BC_%D0%94%D0%B0%D0%BD%D0%B8%D0%BB%D0%BE%D0%B2%D0%B8%D1%87\n\nГера́сим Дани́лович Смотри́цький (*? , Смотрич — 12 жовтня 1594) — руський (український) письменник, педагог з Поділля. Представник дрібної шляхетської родини Смотрицьких, батько Мелетія, Степана Смотрицьких.\n\n\n== Життєпис ==\nНародився у шляхетській родині дяка, переписувача Данила Смотрицького. Вважався освіченою, навченою людиною, «першим руським богословом». Був підстаростою, гродським писарем у Кам'янецькому старостві, 1576 року запрошений князем Василем-Костянтином Острозьким до Острога, був призначений його підскарбієм. Став одним з передових діячів-учених острозького гуртка; у 1580 році Г. Смотрицький — перший ректор Острозької школи (академії).\nРазом з Іваном Федоровичем Герасим Смотрицький — один із видавців «Острозької Біблії», до якої написав передмову і віршовану посвяту князю Василю-Костянтину Острозькому, один зі зразків найдавнішого українського віршування (нерівноскладове), що нагадує українські думи.\nЗа надані послуги отримав від князя В. К. Острозького два села (Бакаївка, Борисівка).\n\n\n== Праці ==\nУ своїх творах Герасим Смотрицький не завжди дотримується теологічних аргументів, натомість використовує народний гумор з приповідками і прислів'ями, писав їх мовою, наближеною до народної, тому був зрозумілим широким верствам. Полемічні твори Смотрицького проти відступників від православ'я й сатира на духовенство переважно загубилися. Збереглася лише такі книги:\n\n«Ключ царства небесного» (1587, Острог) — перша друкована пам'ятка української полемічної літератури. Автор змагається за незалежність «руської віри», полемізує з єзуїтом Бенедиктом Гербестом, критикує католицьке вчення про божественне походження папської влади. Складається з посвяти князю Олександру Острозькому, звернення «До народов руских …» і двох полемічних трактатів:\n«Ключ царства небесного и нашее христианское духовное власти нерушимый узел»;\n«Календар римський новий» (1587) — у ньому автор критикує, відкидає впровадження григоріянського календаря;\nВіршовані твори не збереглись, про них згадує Захарія Копистенський в «Палінодії».\n\n\n== Примітки ==\n\n\n== Література ==\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nЛистя древнього древа. — Хмельницький, 1996.\nМицик Ю. Смотрицький Герасим Данилович [Архівовано 21 грудня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 675—676. — ISBN 978-966-00-1290-5.\nСмотрицький, Герасим // Філософський енциклопедичний словник / В. І. Шинкарук (гол. редкол.) та ін ; Інститут філософії імені Григорія Сковороди НАН України. — Київ : Абрис, 2002. — С. 590. — 742 с. — 1000 екз. — ББК 87я2. — ISBN 966-531-128-X.\nChynczewska-Hennel T. Smotrycki (Smotrzycki) Daniłowicz Herasym (zm. 1594) // Polski Słownik Biograficzny. — Warszawa — Kraków : Polska Akademia Nauk, Polska Akademia Umiejętności, 1999. — Tom XXXIX/3, zeszyt 162. — S. 355. (пол.)\nЖуковський В., Махлюк В. М. Організаційно-педагогічна діяльність ректора Острозької академії (1576—1636 рр.) Герасима Смотрицького // Науковий журнал. Науковий огляд. — 2016. — № 1 (22). — С.72-82. (link [Архівовано 22 серпня 2021 у Wayback Machine.])\n\n\n== Посилання ==\n\nСмотрицький Герасим Данилович // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nСмотрицький Герасим // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1965. — Т. 7, кн. XIV : Літери Сен — Сті. — С. 1783. — 1000 екз.\nЦаралунга І. Б. Варіативність староукраїнської мови у творах Г. Смотрицького // Філологічні студії. Науковий вісник Криворізького державного педагогічного університету. — 2011. — Вип. 6. — С. 684—689.\nБіографія і твори на Ізборнику [Архівовано 13 квітня 2010 у Wayback Machine.]\nВірша Герасима Смотрицького; «Ключь царства небесного» Герасима Смотрицького 1577 року // Хрестоматія по українській літературі. Ч. 1. Народна словесність і Стара література (ХІ–XVIII століття) / Зложили: проф. М. Сумцов і М. Плевако при участі проф. Д. Багалія. — Харків: Видавництво «Союз», 1918. — С. 87—88. — 152 с.\nSmotrytsky, Herasym [Архівовано 21 вересня 2015 у Wayback Machine.] + портрет (англ.)"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:56.968Z",
+          "resultDisplay": "# Смотрицький Герасим Данилович\n**URL**: https://uk.wikipedia.org/wiki/%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9_%D0%93%D0%B5%D1%80%D0%B0%D1%81%D0%B8%D0%BC_%D0%94%D0%B0%D0%BD%D0%B8%D0%BB%D0%BE%D0%B2%D0%B8%D1%87\n\nГера́сим Дани́лович Смотри́цький (*? , Смотрич — 12 жовтня 1594) — руський (український) письменник, педагог з Поділля. Представник дрібної шляхетської родини Смотрицьких, батько Мелетія, Степана Смотрицьких.\n\n\n== Життєпис ==\nНародився у шляхетській родині дяка, переписувача Данила Смотрицького. Вважався освіченою, навченою людиною, «першим руським богословом». Був підстаростою, гродським писарем у Кам'янецькому старостві, 1576 року запрошений князем Василем-Костянтином Острозьким до Острога, був призначений його підскарбієм. Став одним з передових діячів-учених острозького гуртка; у 1580 році Г. Смотрицький — перший ректор Острозької школи (академії).\nРазом з Іваном Федоровичем Герасим Смотрицький — один із видавців «Острозької Біблії», до якої написав передмову і віршовану посвяту князю Василю-Костянтину Острозькому, один зі зразків найдавнішого українського віршування (нерівноскладове), що нагадує українські думи.\nЗа надані послуги отримав від князя В. К. Острозького два села (Бакаївка, Борисівка).\n\n\n== Праці ==\nУ своїх творах Герасим Смотрицький не завжди дотримується теологічних аргументів, натомість використовує народний гумор з приповідками і прислів'ями, писав їх мовою, наближеною до народної, тому був зрозумілим широким верствам. Полемічні твори Смотрицького проти відступників від православ'я й сатира на духовенство переважно загубилися. Збереглася лише такі книги:\n\n«Ключ царства небесного» (1587, Острог) — перша друкована пам'ятка української полемічної літератури. Автор змагається за незалежність «руської віри», полемізує з єзуїтом Бенедиктом Гербестом, критикує католицьке вчення про божественне походження папської влади. Складається з посвяти князю Олександру Острозькому, звернення «До народов руских …» і двох полемічних трактатів:\n«Ключ царства небесного и нашее христианское духовное власти нерушимый узел»;\n«Календар римський новий» (1587) — у ньому автор критикує, відкидає впровадження григоріянського календаря;\nВіршовані твори не збереглись, про них згадує Захарія Копистенський в «Палінодії».\n\n\n== Примітки ==\n\n\n== Література ==\nЕнциклопедія українознавства : Словникова частина : [в 11 т.] / Наукове товариство імені Шевченка ; гол. ред. проф., д-р Володимир Кубійович. — Париж — Нью-Йорк : Молоде життя, 1955—1995. — ISBN 5-7707-4049-3.\nЛистя древнього древа. — Хмельницький, 1996.\nМицик Ю. Смотрицький Герасим Данилович [Архівовано 21 грудня 2016 у Wayback Machine.] // Енциклопедія історії України : у 10 т. / редкол.: В. А. Смолій (голова) та ін. ; Інститут історії України НАН України. — К. : Наукова думка, 2012. — Т. 9 : Прил — С. — С. 675—676. — ISBN 978-966-00-1290-5.\nСмотрицький, Герасим // Філософський енциклопедичний словник / В. І. Шинкарук (гол. редкол.) та ін ; Інститут філософії імені Григорія Сковороди НАН України. — Київ : Абрис, 2002. — С. 590. — 742 с. — 1000 екз. — ББК 87я2. — ISBN 966-531-128-X.\nChynczewska-Hennel T. Smotrycki (Smotrzycki) Daniłowicz Herasym (zm. 1594) // Polski Słownik Biograficzny. — Warszawa — Kraków : Polska Akademia Nauk, Polska Akademia Umiejętności, 1999. — Tom XXXIX/3, zeszyt 162. — S. 355. (пол.)\nЖуковський В., Махлюк В. М. Організаційно-педагогічна діяльність ректора Острозької академії (1576—1636 рр.) Герасима Смотрицького // Науковий журнал. Науковий огляд. — 2016. — № 1 (22). — С.72-82. (link [Архівовано 22 серпня 2021 у Wayback Machine.])\n\n\n== Посилання ==\n\nСмотрицький Герасим Данилович // Універсальний словник-енциклопедія. — 4-те вид. — К. : Теза, 2006.\nСмотрицький Герасим // Українська мала енциклопедія : 16 кн. : у 8 т. / проф. Є. Онацький. — Накладом Адміністратури УАПЦ в Аргентині. — Буенос-Айрес, 1965. — Т. 7, кн. XIV : Літери Сен — Сті. — С. 1783. — 1000 екз.\nЦаралунга І. Б. Варіативність староукраїнської мови у творах Г. Смотрицького // Філологічні студії. Науковий вісник Криворізького державного педагогічного університету. — 2011. — Вип. 6. — С. 684—689.\nБіографія і твори на Ізборнику [Архівовано 13 квітня 2010 у Wayback Machine.]\nВірша Герасима Смотрицького; «Ключь царства небесного» Герасима Смотрицького 1577 року // Хрестоматія по українській літературі. Ч. 1. Народна словесність і Стара література (ХІ–XVIII століття) / Зложили: проф. М. Сумцов і М. Плевако при участі проф. Д. Багалія. — Харків: Видавництво «Союз», 1918. — С. 87—88. — 152 с.\nSmotrytsky, Herasym [Архівовано 21 вересня 2015 у Wayback Machine.] + портрет (англ.)",
+          "displayName": "query_wikipedia (rag MCP Server)",
+          "description": "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: 'summary' — article intro paragraph; 'extract' — full article plaintext (up to 50K chars); 'sections' — list section headings with indices; 'section' — read a specific section (requires section parameter); 'search' — keyword search returning titles and snippets. Results are cached locally (30-day TTL) to avoid redundant API calls.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450835482_1",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "period": "middle_ukrainian",
+            "query": "Апокаліпсис",
+            "genre": "polemic"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450835482_1",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Апокаліпсис\"\n\n### Result 1 (score: 0.4046)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0056`\n- **Text**:\nВельми цікаве місце в «Квінкунксі» маємо в\r\nприкінцевому пророцтві, де йдеться про загибель Польської держави.\r\nАпокаліптичні настрої з’явились у польському суспільстві вже в часі написання\r\nтвору: «Почуєш одностайний людський голос: «Згинемо!» Сам С. Оріховський\r\nназиває себе «тінню дому, що постійно міркує про явний свій занепад», бо відчуває,\r\nщо той має згинути «у розбраті домовому або в ув’язненні ворожому». Поляків він\r\nзве «блюзнірами». Звідусіль Польська держава оточена лютими ворогами: \n\n### Result 2 (score: 0.4038)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0372`\n- **Text**:\nА так, щоб достатньо знав про власного антихриста,\r\nхто він і звідки прийшов і хто його перший прийме і слухати буде, начувайся і,\r\nпильно придивившись до тих доказів ясних, зважай на себе. Якщо прийшов\r\nантихрист або ще на нього очікуєш, — аби потім, підведений єретицьким\r\nбаламуттям і вірячи, що папа є антихрист, не прогледів власного і правдивого\r\nантихриста, коли прибуде, як жиди, сподіваючись на іншого Месію у своїх думах і\r\nфантазіях, правдивого Месію Христа Спасителя нашого прогледіли і п\n\n### Result 3 (score: 0.3952)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0126`\n- **Text**:\nЗдається, «Апокрисис» вразив Іпатія Потія. Чи не тому\r\nвін пише просторого листа до князя К. Острозького, добре розуміючи, що, поки\r\nправославні мають такого голову і промотора, воювати з ними буде нелегко? Цей\r\nлист зачинає знамениту дискусію І. Потія з Клириком Острозьким. Твір написано у\r\nвласну оборону за прийняття унії, за що князь гнівався на єпископа. Але\r\nправослав’я він називає «проклятою схизмою»; залишається переконаним\r\nприхильником унії, знову наголошуючи, що «нічого нового не вчини\n\n### Result 4 (score: 0.3876)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0124`\n- **Text**:\nЯк бачимо, пророчі викладки цієї пам’ятки разючі.\n\nОб’єктивно кажучи, за силою логіки та пристрасті\r\n«Апокрисис» значно переважує твори, супроти яких автор виступив. Меншої\r\nемоційної сили були полемічні вірші із «Загоровського збірника», створеного у\r\n80 — 90-ті роки XVI ст., де вже більше лайки, ніж доказу, відтак полеміка\r\nведеться не так стосовно політичних, як догматичних постулатів. Унія тут\r\nрозглядається як діло диявола, вона уподібнюється єресі, гріху, а ведуть до неї\r\n«плотські совіти»\n\n### Result 5 (score: 0.3811)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0425`\n- **Text**:\nЧасто-густо в крові бродять.\n\nЯк впаде палаш кривавий,\n\nКров стікає рукавами.\n\nА другому бистра стріла\n\nСерце тепле остудила.\n\nТретій, кіньми потоптаний,\n\nВже ніколи більш не встане.\n\nВорог ряди прориває,\n\nВійсько флангом відступає,\n\nПереможець невблаганний\n\nНавздогін наносить рани.\n\nПо трофеї, знать, ходили,\n\nГеть лицарство потомили,\n\nЩо вертає з труду свого,\n\nВіддаючи славу Богу,\n\nІ сприймає все як ласку —\n\nПеремогу і поразку.\n\nЯк би битва не кінчалась —\n\nБогу слава щоб дісталась.\n\nБоже, маєш \n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:56.968Z",
+          "resultDisplay": "Found 5 results for: \"Апокаліпсис\"\n\n### Result 1 (score: 0.4046)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0056`\n- **Text**:\nВельми цікаве місце в «Квінкунксі» маємо в\r\nприкінцевому пророцтві, де йдеться про загибель Польської держави.\r\nАпокаліптичні настрої з’явились у польському суспільстві вже в часі написання\r\nтвору: «Почуєш одностайний людський голос: «Згинемо!» Сам С. Оріховський\r\nназиває себе «тінню дому, що постійно міркує про явний свій занепад», бо відчуває,\r\nщо той має згинути «у розбраті домовому або в ув’язненні ворожому». Поляків він\r\nзве «блюзнірами». Звідусіль Польська держава оточена лютими ворогами: \n\n### Result 2 (score: 0.4038)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0372`\n- **Text**:\nА так, щоб достатньо знав про власного антихриста,\r\nхто він і звідки прийшов і хто його перший прийме і слухати буде, начувайся і,\r\nпильно придивившись до тих доказів ясних, зважай на себе. Якщо прийшов\r\nантихрист або ще на нього очікуєш, — аби потім, підведений єретицьким\r\nбаламуттям і вірячи, що папа є антихрист, не прогледів власного і правдивого\r\nантихриста, коли прибуде, як жиди, сподіваючись на іншого Месію у своїх думах і\r\nфантазіях, правдивого Месію Христа Спасителя нашого прогледіли і п\n\n### Result 3 (score: 0.3952)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0126`\n- **Text**:\nЗдається, «Апокрисис» вразив Іпатія Потія. Чи не тому\r\nвін пише просторого листа до князя К. Острозького, добре розуміючи, що, поки\r\nправославні мають такого голову і промотора, воювати з ними буде нелегко? Цей\r\nлист зачинає знамениту дискусію І. Потія з Клириком Острозьким. Твір написано у\r\nвласну оборону за прийняття унії, за що князь гнівався на єпископа. Але\r\nправослав’я він називає «проклятою схизмою»; залишається переконаним\r\nприхильником унії, знову наголошуючи, що «нічого нового не вчини\n\n### Result 4 (score: 0.3876)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0124`\n- **Text**:\nЯк бачимо, пророчі викладки цієї пам’ятки разючі.\n\nОб’єктивно кажучи, за силою логіки та пристрасті\r\n«Апокрисис» значно переважує твори, супроти яких автор виступив. Меншої\r\nемоційної сили були полемічні вірші із «Загоровського збірника», створеного у\r\n80 — 90-ті роки XVI ст., де вже більше лайки, ніж доказу, відтак полеміка\r\nведеться не так стосовно політичних, як догматичних постулатів. Унія тут\r\nрозглядається як діло диявола, вона уподібнюється єресі, гріху, а ведуть до неї\r\n«плотські совіти»\n\n### Result 5 (score: 0.3811)\n- **Work**: Суспільно-політична думка XVI-XVII ст. (1600)\n- **Author**: Антологія\n- **Genre/Period**: polemic / middle_ukrainian\n- **Chunk ID**: `004505f2_c0425`\n- **Text**:\nЧасто-густо в крові бродять.\n\nЯк впаде палаш кривавий,\n\nКров стікає рукавами.\n\nА другому бистра стріла\n\nСерце тепле остудила.\n\nТретій, кіньми потоптаний,\n\nВже ніколи більш не встане.\n\nВорог ряди прориває,\n\nВійсько флангом відступає,\n\nПереможець невблаганний\n\nНавздогін наносить рани.\n\nПо трофеї, знать, ходили,\n\nГеть лицарство потомили,\n\nЩо вертає з труду свого,\n\nВіддаючи славу Богу,\n\nІ сприймає все як ласку —\n\nПеремогу і поразку.\n\nЯк би битва не кінчалась —\n\nБогу слава щоб дісталась.\n\nБоже, маєш \n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        },
+        {
+          "id": "mcp_rag_search_literary_1773450835523_2",
+          "name": "mcp_rag_search_literary",
+          "args": {
+            "genre": "poetry",
+            "query": "Апокаліпсис",
+            "period": "middle_ukrainian"
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "mcp_rag_search_literary_1773450835523_2",
+                "name": "mcp_rag_search_literary",
+                "response": {
+                  "output": "Found 5 results for: \"Апокаліпсис\"\n\n### Result 1 (score: 0.4227)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0106`\n- **Text**:\nЗвЂр лют грядет из моря, злых сонм знаменуєт,\n\nпервая антихриста глава изявляєт.\n\nИн из земли исходит со агнчими рогами,\n\nоба будут хулы ригати устнами.\n\nСей лжепророк огнь сведет, люди убоятся,\n\nнеписанніи в небЂ звЂрем поклонятся. [Ап., XVI]\r\n1\n\n1 Зміст цього вірша\r\nближчий до XVII розділу «Апокаліпсиса».\n\n* * *\n\nГрад великій Вавилон огнем согоряєт,\n\nскоро, яко жерновный камень, упадаєт.\n\nПлачуть єго царіє, купцы, художници,\n\nрибаріє и дЂвы и корабленницы,\n\nЯко прибытков своих не могут стяжати\n\n### Result 2 (score: 0.4196)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0105`\n- **Text**:\nиже си сокрушившу кораблю спасоша,\n\nЄхидна Павла в руку усЂкнула бяше,\n\nчеловЂкоубійцу всяк єго непщеваше.\n\nЄгда же, отрас ю во огнь, без вреда явися,\n\nот несмысленных еллин за бога вмЂнися. [ДЂя[н].,\r\nXXVIII, [1—7]]\n\n[ВІРШІ НА АПОКАЛІПСИС]\n\nАпокалипъсис первій\n\nІоан в остров Патмос єлма заточися,\n\nсын человЂч в восторзЂ оному явися,\n\nИмЂяй седмь 1 звЂзд в руцЂ и меч\r\nиспущенный\n\nиз уст, между свЂтилник седмію ставленный. [Ап.,\r\nI, [9—16]]\n\n1 У рукопису число\r\nпозначено цифрою («з̃», тобто 7).\n\n\n\n### Result 3 (score: 0.3897)\n- **Work**: Климентій Зіновіїв. Вірші. Приповісті. (1971)\n- **Author**: Зіновіїв К.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `9dddf65a_c0374`\n- **Text**:\nІ нε то(к)мо, что пя(т) ранъ, алε\r\nбεзчислεнно. Згідно з апокрифічною версією біблійної легенди,\r\nХристу було нанесено ран «п’ять тисяч і сЂм сот, \\362\\ крем тых пяти\r\nвеликих, которіє в руках, и в ногах, и во ребрах» («ПасЂя... о муцЂ Христа» — Апокрифи\r\nі легенди, II, стор. 235). Мотив цей варіювався не тільки у різних пасіях\r\n(Апокрифи і легенди, стор. 236 — 242), але й у духовних віршах. Пор.: «Штири\r\nтисящ і пят ран великих задали» (Угроруські духовні вірші, XLVII, 122, стор.\r\n156).\n\n269. .\n\n### Result 4 (score: 0.3813)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0145`\n- **Text**:\nДвЂ инокинЂ бяху, от них же єдина особно любяше\r\nсвятаго Іоанна Предтечу, другая же святаго Іоанна Євангелисту, яже єлико ко\r\nмеждоособной бесЂди схождахуся, сице, яко иногда и учителница єдва возможаше их\r\nукро |арк.137зв.| тити. Сія бо возлюбленнаго своєго, овая же вопреки своєго\r\nвозлюбленнаго достоинства предлагаше и предпочиташе Во єдину же нощ святый\r\nІоанн Креститель, любителницЂ своєй во снЂ явившися, глаголет: «Сестро, буди\r\nтебЂ извЂстно, яко святий Іоанн Євангелиста ровний мнЂ єсть. Н\n\n### Result 5 (score: 0.3788)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0198`\n- **Text**:\nІсторію гіпотези про авторство Мартина Броневського\r\nдив. у кн.: Яременко П. К. Український письменник-полеміст Христофор\r\nФілалет і його «Апокрисис», Львів, 1964, с. 10 — 24. За свідченням уніатського\r\nписьменника Ігнатія Стебельського, Мартин Броневський був аріанином, але, як\r\nзауважує М. О. Максимович, «ця назва під пером уніата значить не більше, що\r\n«непапіст», особливо стосовно людини, котра написала таку поважну («дельную»)\r\nкнигу проти унії при самому її початку і притому видану від іме\n"
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-03-14T01:13:56.968Z",
+          "resultDisplay": "Found 5 results for: \"Апокаліпсис\"\n\n### Result 1 (score: 0.4227)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0106`\n- **Text**:\nЗвЂр лют грядет из моря, злых сонм знаменуєт,\n\nпервая антихриста глава изявляєт.\n\nИн из земли исходит со агнчими рогами,\n\nоба будут хулы ригати устнами.\n\nСей лжепророк огнь сведет, люди убоятся,\n\nнеписанніи в небЂ звЂрем поклонятся. [Ап., XVI]\r\n1\n\n1 Зміст цього вірша\r\nближчий до XVII розділу «Апокаліпсиса».\n\n* * *\n\nГрад великій Вавилон огнем согоряєт,\n\nскоро, яко жерновный камень, упадаєт.\n\nПлачуть єго царіє, купцы, художници,\n\nрибаріє и дЂвы и корабленницы,\n\nЯко прибытков своих не могут стяжати\n\n### Result 2 (score: 0.4196)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0105`\n- **Text**:\nиже си сокрушившу кораблю спасоша,\n\nЄхидна Павла в руку усЂкнула бяше,\n\nчеловЂкоубійцу всяк єго непщеваше.\n\nЄгда же, отрас ю во огнь, без вреда явися,\n\nот несмысленных еллин за бога вмЂнися. [ДЂя[н].,\r\nXXVIII, [1—7]]\n\n[ВІРШІ НА АПОКАЛІПСИС]\n\nАпокалипъсис первій\n\nІоан в остров Патмос єлма заточися,\n\nсын человЂч в восторзЂ оному явися,\n\nИмЂяй седмь 1 звЂзд в руцЂ и меч\r\nиспущенный\n\nиз уст, между свЂтилник седмію ставленный. [Ап.,\r\nI, [9—16]]\n\n1 У рукопису число\r\nпозначено цифрою («з̃», тобто 7).\n\n\n\n### Result 3 (score: 0.3897)\n- **Work**: Климентій Зіновіїв. Вірші. Приповісті. (1971)\n- **Author**: Зіновіїв К.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `9dddf65a_c0374`\n- **Text**:\nІ нε то(к)мо, что пя(т) ранъ, алε\r\nбεзчислεнно. Згідно з апокрифічною версією біблійної легенди,\r\nХристу було нанесено ран «п’ять тисяч і сЂм сот, \\362\\ крем тых пяти\r\nвеликих, которіє в руках, и в ногах, и во ребрах» («ПасЂя... о муцЂ Христа» — Апокрифи\r\nі легенди, II, стор. 235). Мотив цей варіювався не тільки у різних пасіях\r\n(Апокрифи і легенди, стор. 236 — 242), але й у духовних віршах. Пор.: «Штири\r\nтисящ і пят ран великих задали» (Угроруські духовні вірші, XLVII, 122, стор.\r\n156).\n\n269. .\n\n### Result 4 (score: 0.3813)\n- **Work**: Іван Величковський. Твори (1972)\n- **Author**: Величковський І.\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `1b7685d5_c0145`\n- **Text**:\nДвЂ инокинЂ бяху, от них же єдина особно любяше\r\nсвятаго Іоанна Предтечу, другая же святаго Іоанна Євангелисту, яже єлико ко\r\nмеждоособной бесЂди схождахуся, сице, яко иногда и учителница єдва возможаше их\r\nукро |арк.137зв.| тити. Сія бо возлюбленнаго своєго, овая же вопреки своєго\r\nвозлюбленнаго достоинства предлагаше и предпочиташе Во єдину же нощ святый\r\nІоанн Креститель, любителницЂ своєй во снЂ явившися, глаголет: «Сестро, буди\r\nтебЂ извЂстно, яко святий Іоанн Євангелиста ровний мнЂ єсть. Н\n\n### Result 5 (score: 0.3788)\n- **Work**: Українська поезія XVI-XVII ст. (1650)\n- **Author**: Різні\n- **Genre/Period**: poetry / middle_ukrainian\n- **Chunk ID**: `e66c81a3_c0198`\n- **Text**:\nІсторію гіпотези про авторство Мартина Броневського\r\nдив. у кн.: Яременко П. К. Український письменник-полеміст Христофор\r\nФілалет і його «Апокрисис», Львів, 1964, с. 10 — 24. За свідченням уніатського\r\nписьменника Ігнатія Стебельського, Мартин Броневський був аріанином, але, як\r\nзауважує М. О. Максимович, «ця назва під пером уніата значить не більше, що\r\n«непапіст», особливо стосовно людини, котра написала таку поважну («дельную»)\r\nкнигу проти унії при самому її початку і притому видану від іме\n",
+          "displayName": "search_literary (rag MCP Server)",
+          "description": "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. Returns text chunks with work, author, year, genre, and language period metadata.",
+          "renderOutputAsMarkdown": true
+        }
+      ]
+    },
+    {
+      "id": "5374dfef-b36a-4e4f-a800-ceb7af6d1a81",
+      "timestamp": "2026-03-14T01:14:46.431Z",
+      "type": "gemini",
+      "content": "===RESEARCH_START===\n\n# Дослідження: Откровення\n\n## Key Facts Ledger\n<!-- IMMUTABLE TRUTH ANCHOR — review phase verifies prose against this -->\n```yaml\nsubject: \"Откровення\"\ntype: \"phenomenon\"\ndates:\n  start: \"~1581\"\n  end: \"1798\"\n  key_events:\n    - year: 1581\n      event: \"Видання Острозької Біблії, що включала повний текст Апокаліпсиса церковнослов'янською мовою.\"\n    - year: 1587\n      event: \"Вихід «Ключа царства небесного» Герасима Смотрицького з есхатологічними мотивами.\"\n    - year: 1690\n      event: \"Написання Іваном Величковським циклу «Вірші на Апокаліпсис».\"\nprimary_quotes:\n  - text: \"Звір лют грядет из моря, злых сонм знаменуєт, / первая антихриста глава изявляєт.\"\n    source: \"Іван Величковський, «Твори»\"\n    attribution: \"Іван Величковський\"\n  - text: \"Град великій Вавилон огнем согоряєт, / скоро, яко жерновный камень, упадаєт.\"\n    source: \"Іван Величковський, «Твори»\"\n    attribution: \"Іван Величковський\"\n  - text: \"Іоан в остров Патмос єлма заточися, / сын человЂч в восторзЂ оному явися\"\n    source: \"Іван Величковський, «Твори»\"\n    attribution: \"Іван Величковський\"\n  - text: \"А так, щоб достатньо знав про власного антихриста, хто він і звідки прийшов і хто його перший прийме і слухати буде, начувайся...\"\n    source: \"Суспільно-політична думка XVI-XVII ст. (Антологія)\"\n    attribution: \"Анонімний полеміст\"\nforbidden_claims:\n  - \"Твердження, що українська література була ізольованою від європейської есхатологічної думки.\"\n  - \"Зведення есхатологічних мотивів виключно до впливу московських старовірів.\"\n  - \"Ігнорування полемічного використання образу антихриста в українській публіцистиці.\"\n```\n\n## Використані джерела\n1. [Іван Величковський. Твори (1972)](http://litopys.org.ua) — «Вірші на Апокаліпсис».\n2. [Суспільно-політична думка XVI-XVII ст.](http://litopys.org.ua) — Полемічні тексти та трактування образу антихриста.\n3. [Вікіпедія: Об'явлення Івана Богослова](https://uk.wikipedia.org/wiki/Об%27явлення_Івана_Богослова) — Загальний фактологічний контекст та структура книги.\n4. [Вікіпедія: Смотрицький Герасим Данилович](https://uk.wikipedia.org/wiki/Смотрицький_Герасим_Данилович) — Життєпис та значення діяльності Г. Смотрицького.\n\n## Хронологія\n- 90-ті рр. I ст.: Написання Апокаліпсиса Іоанном Богословом на острові Патмос.\n- 1581: Публікація Острозької Біблії, до якої ввійшов повний текст Откровення (передмови та вірші Г. Смотрицького).\n- 1587: Герасим Смотрицький публікує «Ключ царства небесного», першу друковану пам'ятку української полемічної літератури.\n- Кінець XVI – XVII ст.: Розквіт української полемічної літератури, в якій активно використовуються есхатологічні образи.\n- 1690: Іван Величковський створює цикл «Вірші на Апокаліпсис», де віршує ключові видіння Іоанна Богослова.\n\n## Ключові факти та цитати\n- Книга Откровення (Апокаліпсис) — єдина пророча книга Нового Завіту, яка містить багату метафорику, символи та специфічну лексику (звір з моря, вавилонська блудниця, сім труб, армагеддон).\n- В українській бароковій та полемічній літературі есхатологія (вчення про кінець світу) була не маргінальним, а провідним напрямом думки.\n- Полемісти активно використовували образ «антихриста». Для православних авторів ним часто поставав Папа Римський або католицькі інституції, а есхатологічна лексика ставала потужною зброєю в ідеологічній боротьбі.\n- Унікальним явищем староукраїнської поезії є перекладення біблійних видінь силабічним віршем. Іван Величковський створив цикл, де графічно та ритмічно описував звіра з моря («Звір лют грядет из моря...») та падіння Вавилона.\n- Тексти рясніють рідкісною лексикою: «грядет», «сонм», «жерновный камень», «єлма» (коли), «восторг» (екстаз, видіння), що свідчить про високий регістр книжної мови того часу.\n\n## Engagement Hooks (mapped to sections)\n- Section \"Вступ\": [!context] — Пояснення історичного контексту написання Апокаліпсиса та його революційного поширення в Україні завдяки Острозькій Біблії 1581 року.\n- Section \"Вступ\": [!myth-buster] — Спростування імперського міфу про те, що апокаліптичні настрої та пошуки антихриста були суто російським (старообрядницьким) явищем; насправді Україна мала власну потужну традицію есхатологічної полеміки.\n- Section \"Основний матеріал\": [!quote] — Аналіз цитати І. Величковського про «звіра з моря» з розбором рідкісної лексики («сонм», «грядет»).\n- Section \"Основний матеріал\": [!history-bite] — Демонстрація того, як теологічний концепт «антихриста» став політичним ярликом у жорстких дискусіях навколо Берестейської унії.\n- Section \"Практика\": [!culture] — Зв'язок текстів із візуальним мистецтвом: вплив Апокаліпсиса на українські ікони «Страшного Суду», де серед грішників зображували реальних політичних та етнічних ворогів.\n- Section \"Підсумок\": [!decolonization] — Фокус на тому, що українські інтелектуали оперували європейським богословським інструментарієм, творячи самостійний, інтелектуально насичений дискурс, а не просто «провінційну» літературу.\n\n## Деколонізаційний контекст\n- Imperial/Soviet myth: Традиційно російська та радянська історіографії подавали староукраїнську релігійну літературу як примітивну, архаїчну або зовсім ігнорували її «містичний» компонент як реакційний. Есхатологію приписували переважно російським старовірам.\n- Ukrainian reality: Українські автори (від Острозьких книжників до барокових поетів, таких як Іван Величковський) були частиною європейського інтелектуального поля. Вони майстерно використовували складну біблійну екзегезу та апокаліптичну образність для захисту власної ідентичності, конструюючи вишукану барокову поезію і гостру полеміку.\n\n## Contested Terms (if applicable)\n| Concept | Imperial framing | Ukrainian framing |\n|---------|-----------------|-------------------|\n| Есхатологія | Забобони та «релігійний фанатизм» темних мас | Високий богословський та літературний дискурс, інструмент осмислення історії |\n| Антихрист | Концепт російського розколу (Петро I як антихрист) | Політично-полемічний концепт у боротьбі за релігійну та національну ідентичність |\n| Полемічна література | Пролог до «возз'єднання» з Росією | Самобутній український інтелектуальний опір та захист прав нації |\n\n## Відеоресурси\n- (нічого не знайдено)\n\n## Section-Mapped Research Notes\n\n### Вступ\n- **Тема**: Ознайомлення з книгою Откровення (Апокаліпсис) та її рецепцією в Україні.\n- **Факти**: Книга написана на острові Патмос наприкінці І ст. В Україні її текст стає масово доступним завдяки Івану Федоровичу та Герасиму Смотрицькому, які у 1581 році видають Острозьку Біблію.\n- **Лексика**: Фокус на термінах: есхатологія, одкровення, Апокаліпсис, армагеддон.\n- **Хуки**: Використати `[!context]` для розповіді про значення Острозького гуртка та `[!myth-buster]` для розвінчання російської монополії на есхатологічний дискурс у Східній Європі.\n\n### Основний матеріал\n- **Тема**: Аналіз першоджерел, рідкісної лексики та граматичних конструкцій періоду Середньої української мови.\n- **Факти**: Рецепція Апокаліпсиса відбувалася двома шляхами: через високу поезію та через полемічну прозу. \n- **Поезія**: Цикл Івана Величковського «Вірші на Апокаліпсис». Розбір цитат: «Звір лют грядет из моря...» та «Град великій Вавилон огнем согоряєт...».\n- **Лексичний розбір**: Звернути увагу на слова «грядет» (іде), «сонм» (зібрання, натовп), «єлма» (коли), «восторг» (у значенні містичного видіння).\n- **Полеміка**: Як невідомі автори та відомі публіцисти застосовували ярлик «антихриста» до опонентів.\n- **Хуки**: Інтегрувати `[!quote]` з Величковського та `[!history-bite]` про полемічні війни.\n\n### Практика\n- **Тема**: Вправи на засвоєння есхатологічної лексики та розуміння текстів.\n- **Матеріал для вправ**: Робота з транскрипцією (transcription) церковнослов'янізмів, етимологічний аналіз (etymology-trace) грецьких запозичень (апокаліпсис, есхатологія) та ідентифікація граматичних форм (grammar-identify) у віршах Величковського.\n- **Культурний вимір**: Розширити розуміння лексики через візуальні образи. Застосувати `[!culture]` про українські барокові ікони Страшного Суду, де словесні образи Апокаліпсиса набували кольору і локального політичного змісту.\n\n### Підсумок\n- **Тема**: Узагальнення матеріалу та перехід до наступного модуля.\n- **Факти**: Книга Откровення дала українським авторам потужний словник для опису турбулентної реальності XVI-XVIII століть. Ця традиція безпосередньо вплинула на творчість перших полемістів.\n- **Зв'язок**: Місток до постаті Герасима Смотрицького (наступний модуль `herasym-smotrytsky-poems`), який написав «Ключ царства небесного» (1587) — твір, пронизаний есхатологічною тривогою та апокаліптичними попередженнями.\n- **Хук**: Завершити через `[!decolonization]`, фіксуючи українську літературу як невіддільну частину складної європейської барокової культури.\n\n===RESEARCH_END===\n\n===FRICTION_START===\n**Phase**: Phase A: Research + Meta (Seminar)\n**Step**: Full Phase A\n**Friction Type**: NONE\n**Raw Error**: None\n**Self-Correction**: N/A\n**Proposed Tooling Fix**: N/A\n===FRICTION_END===",
+      "thoughts": [
+        {
+          "subject": "Commencing Text Production",
+          "description": "I'm now generating the requested text. I'm focusing on ensuring it's in a clear and concise format, ready for the user.",
+          "timestamp": "2026-03-14T01:14:01.027Z"
+        },
+        {
+          "subject": "Beginning The Analysis",
+          "description": "I'm now starting to analyze the provided content, working through the sections of the outline. The goal is to identify and extract relevant information, focusing on the specific themes outlined in the prompt and building towards the final output. The main sections are being analyzed now to build the foundation for the summary.",
+          "timestamp": "2026-03-14T01:14:03.459Z"
+        },
+        {
+          "subject": "Crafting The Initial Draft",
+          "description": "I am now beginning to build the introductory section. I'm focusing on the historical setting and reception of the Book of Revelation within Ukrainian culture. Gathering context to lay the groundwork for subsequent analysis of the core themes, it will include an overview of the topic.",
+          "timestamp": "2026-03-14T01:14:05.336Z"
+        },
+        {
+          "subject": "Developing the First Section",
+          "description": "I'm presently building the introduction. Focusing on integrating historical context and early reception of the Book of Revelation in Ukraine, I'm working to make sure the opening provides a strong basis for the analysis, using the gathered research and source material.",
+          "timestamp": "2026-03-14T01:14:07.264Z"
+        },
+        {
+          "subject": "Refining The Research Synthesis",
+          "description": "I'm now integrating the extracted information and quotes, aiming to build a clear and compelling narrative. The focus is on weaving the historical events and literary sources together, preparing for the detailed source analysis, to present the information coherently.",
+          "timestamp": "2026-03-14T01:14:08.885Z"
+        },
+        {
+          "subject": "Synthesizing Source Material",
+          "description": "I am now beginning the process of compiling and structuring the source materials. Focusing on organizing the gathered quotes and data points, my goal is to create a detailed outline, ensuring each piece of evidence is properly cataloged and set up for further analysis. This is a crucial step towards building a robust understanding of the subject matter.",
+          "timestamp": "2026-03-14T01:14:10.854Z"
+        },
+        {
+          "subject": "Constructing The Outline",
+          "description": "I am now organizing the research data, constructing the outline of the text. This involves structuring the collected information, including direct quotes and historical context, into a logical flow. I am focusing on a clear presentation for the user.",
+          "timestamp": "2026-03-14T01:14:12.761Z"
+        },
+        {
+          "subject": "Summarizing the Core Research",
+          "description": "I'm now creating a structured outline based on the collected research, incorporating key quotes and historical dates. This involves synthesizing the facts to build a foundation for deeper analysis, focusing on organizing the material for clear presentation.",
+          "timestamp": "2026-03-14T01:14:14.193Z"
+        },
+        {
+          "subject": "Constructing a Detailed Report",
+          "description": "I'm now consolidating the data, and organizing the research into a clear format. Using the gathered information, I'm working to produce a comprehensive report structure, complete with key quotes and dates for the user.",
+          "timestamp": "2026-03-14T01:14:15.769Z"
+        },
+        {
+          "subject": "Creating the Research Structure",
+          "description": "I'm now arranging the research, creating a structured format for the final output. The main focus is on the historical and literary components of the topic, making sure the presentation suits the user's needs.",
+          "timestamp": "2026-03-14T01:14:17.410Z"
+        },
+        {
+          "subject": "Formulating a Detailed Report",
+          "description": "I'm now integrating the collected research, focusing on the historical and literary contexts. My main focus is on crafting a report that incorporates key facts, quotes, and chronologies. I am now working on organizing the data, and compiling the materials to best suit the user's needs.",
+          "timestamp": "2026-03-14T01:14:19.243Z"
+        },
+        {
+          "subject": "Constructing The Full Report",
+          "description": "I'm now integrating the collected materials, quotes, and research notes, and synthesizing them into the detailed structure of the report. The focus remains on providing a comprehensive overview that highlights the apocalyptic imagery within Ukrainian literature.",
+          "timestamp": "2026-03-14T01:14:20.831Z"
+        },
+        {
+          "subject": "Preparing Data Synthesis",
+          "description": "I'm now integrating all gathered information and quotes into a cohesive structure, to organize the research data, including key dates and quotes. My goal is to synthesize the source material in preparation for detailed analysis, focusing on a clear, and comprehensive presentation.",
+          "timestamp": "2026-03-14T01:14:22.854Z"
+        },
+        {
+          "subject": "Finalizing Report Structure",
+          "description": "I am now building the final section of the report, weaving together the key information to create a clear presentation. The focus is now on summarizing findings and linking the analysis of apocalyptic themes to other works.",
+          "timestamp": "2026-03-14T01:14:24.941Z"
+        },
+        {
+          "subject": "Refining the Research Plan",
+          "description": "I'm now consolidating the data, and organizing the research into a clear format. Using the gathered information, I'm working to create a complete report structure, which will then allow me to begin the synthesis of the collected research material and its quotes.",
+          "timestamp": "2026-03-14T01:14:26.838Z"
+        }
+      ],
+      "tokens": {
+        "input": 36535,
+        "output": 3097,
+        "cached": 0,
+        "thoughts": 3382,
+        "tool": 0,
+        "total": 43014
+      },
+      "model": "gemini-3.1-pro-preview"
+    }
+  ],
+  "kind": "main"
+}
