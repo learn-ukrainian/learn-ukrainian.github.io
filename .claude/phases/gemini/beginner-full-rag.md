@@ -149,7 +149,7 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 - {WORD_TARGET}–{WORD_CEILING} words (under {WORD_TARGET} = FAIL, over {WORD_CEILING} = also FAIL — trim excess)
 - {ENGAGEMENT_MIN}+ callout boxes (`[!tip]`, `[!warning]`, `[!note]`, `[!culture]`, `[!challenge]`, `[!practice]`)
 - EXACT H2 titles from the outline below — missing/renamed sections fail validation
-- **MUST end with a `# {SUMMARY_HEADING}` section** containing a brief recap and 3-4 self-check questions with English translations
+- **MUST end with a `## {SUMMARY_HEADING}` section** containing a brief recap and 3-4 self-check questions with English translations
 
 {EXACT_SECTION_TITLES}
 
@@ -319,7 +319,7 @@ If a verb's imperative isn't in your content, don't use it in activities.
 - type: watch-and-repeat
   title: "Listen and Repeat"
   instruction: "Watch the video and repeat."  # optional
-  items:  # minItems: 6
+  items:  # minItems: 1
     - letter: "А"
       video: "https://www.youtube.com/watch?v=..."
       note: "Open 'a' as in 'father'."       # optional pronunciation guidance
@@ -330,7 +330,7 @@ If a verb's imperative isn't in your content, don't use it in activities.
 - type: classify
   title: "Vowels vs Consonants"
   instruction: "Sort the letters."            # optional
-  categories:  # minItems: 2
+  categories:  # 2+ categories, minItems: 1 per category
     - label: "Голосні"
       items: ["А", "О", "У", "І"]
     - label: "Приголосні"
@@ -342,7 +342,7 @@ If a verb's imperative isn't in your content, don't use it in activities.
 - type: image-to-letter
   title: "First Letter Match"
   instruction: "Which letter does this word start with?"  # optional
-  items:  # minItems: 6
+  items:  # minItems: 5
     - emoji: "👩"
       answer: "М"
       distractors: ["Т", "Н", "К"]
@@ -440,7 +440,7 @@ Rules for YAML:
 ### Content Checks
 - [ ] Word count between {WORD_TARGET} and {WORD_CEILING}? (over ceiling = FAIL, trim excess)
 - [ ] Every plan section has prose?
-- [ ] **Summary section present** (`# {SUMMARY_HEADING}`) with self-check questions?
+- [ ] **Summary section present** (`## {SUMMARY_HEADING}`) with self-check questions?
 - [ ] {ENGAGEMENT_MIN}+ callout boxes?
 - [ ] All target vocabulary words used in content?
 - [ ] No Russianisms, Russian characters, IPA?
@@ -493,7 +493,7 @@ Not covered:
 
 ---
 
-# {SUMMARY_HEADING}
+## {SUMMARY_HEADING}
 
 {Summary + 3-4 self-check questions. Each question includes English translation.}
 
