@@ -1,0 +1,210 @@
+discovered_at: '2026-03-14T19:34:06.960060+00:00'
+query_keywords:
+- 'Василь Барка: «Жовтий князь» — епос Голодомору'
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати «Жовтий князь» як найважливіший роман про Голодомор
+- Дослідити символіку та поетику Барки — біблійні та фольклорні пласти
+- Порівняти із Самчуком — два підходи до Голодомору
+- literature
+- епос
+- персоніфікація
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0180
+  text: "\x03\n\x83 У вигляді схеми, таблиці, конспекту, коміксів тощо занотуйте інформацію\
+    \ про \nтвір ю . яновського «Майстер корабля»: жанрові та стильові особливості,\
+    \ теми \nта проблеми, мотиви, персонажі, основні сюжетні колізії . щоб отримати\
+    \ повніше уявлення про творчість Þ. ßновського, прочи-\nтайте його твори «Ãоллівуд\
+    \ на áерезі ×орного моря», «Áайгород», \n«×отири шаáлі», «Äитинство», «Подвійне\
+    \ коло» . Запрошуємо до бібліотеки"
+  section_title: Сторінка 97
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0439
+  text: "286\nЗМІСТ\nЗМІСТ\nДорогі семикласниці та семикласники! \n \n \n \n \n  3\n\
+    ВСТУП   \n \n \n \n \n \n \n \n \n  4 \nФункції художньої літератури   \n \n \n\
+    \ \n \n \n  4\nРозділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ   \n \n \n \n \n  8\nНАРОДНА\
+    \ ТВОРЧІСТЬ   \n \n \n \n \n \n \n  8\n \nНародні соціально-побутові пісні   \n\
+    \ \n \n \n \n  9\n \nКозацькі пісні   \n \n \n \n \n \n \n \n 10\n \nОй на г;орі\
+    \ та женці жнуть   \n \n \n \n \n \n 12\n \nЧумацькі пісні   \n \n \n \n \n \n\
+    \ \n \n 14\n \nЧум;аче, чумаче, чого зажурився?   \n \n \n \n \n 15\n \nСтрілецькі\
+    \ пісні    \n \n \n \n \n \n \n 17\n \nТам, пі"
+  section_title: Сторінка 288
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0209
+  text: "§ 29–31. ПРОЗА ХІХ ст.: ВІД РОМАНТИЗМУ ДО РЕАЛІЗМУ\nОбкладинка до повісті\
+    \ \nМ. Гоголя \n«Тарас Бульба»\nОЗНАКИ РОМАНТИЧНОГО СТИЛЮ \nВ ПОВІСТІ МИКОЛИ ГОГОЛЯ\
+    \ \n«СОРОЧИНСЬКИЙ ЯРМАРОК»"
+  section_title: Сторінка 123
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5648292899131775
+  chunk_id: 41d0facc_c0034
+  text: "11 Теми про Шекспіра\r\nми доторкнемось в главі про драму. Пор. O. Walzel.\
+    \ Shakespeares\r\ndramatische Baukunst (Shakespeare-Jahrbuch. LII [1916]), тепер\
+    \ ще огляд — J.\r\nAlbrecht. O problemu barokovosti v Shakespearově díle dramatickém\r\
+    \n(Časopis pro mod. filol. 23 [1938], стор. 33 та далі, 152 т. д., 254 т.\r\n\
+    д., 310 т. д.).\n\n12 Юнґман в\r\n2-му виданні своєї історії чеської літератури\
+    \ 1849 р. подає для періоду 1620 —\r\n1774 pp. 1677 назв книжок, значно більше\
+    \ половини їх належить представникам\r\nпереважн"
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm
+- score: 0.5549439191818237
+  chunk_id: fc2291b5_c3011
+  text: "Літ.: Ильина Г. Я. Йордан\r\nЙовков. В кн.: Очерки истории болгарской литературы\
+    \ XIX — XX веков. М., 1959;\r\nШайкевич Б. Воєнні оповідання Й. Йовкова та болгарське\
+    \ реалістичне образотворче\r\nмистецтво часів першої Балканської війни. «Слов’янське\
+    \ літературознавство і\r\nфольклористика», 1976, в. 11; Гольберг М. Світ Йордана\
+    \ Йовкова. «Всесвіт»,\r\n1980, № 11.\n\nВ. Н. Климчук."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5526065230369568
+  chunk_id: 701afbae_c0001
+  text: 'Галицько-Волинський літопис (розшифровка за Іпатським списком).
+
+
+    Галицько-Волинський літопис (розшифровка за Острозьким списком).
+
+
+    Літопис руський (переклад Л.Махновця).
+
+
+    Повість врем’яних літ. (переклад В.Яременка).
+
+
+    Ярослав Книш. Фрагменти невідомого списку Іпатіївського літопису
+
+
+    «Літописи». З Енциклопедії Українознавства.
+
+
+    «Літописи». З енциклопедії «Українська мова».
+
+
+    А.І.Генсьорський. Термін «Русь» (та похідні) в Древній Русі... (1962).
+
+
+    [Генсьорський А. І. Галицько-Волинський літопис (лек'
+  work: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+  year: 1961
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hens1/hn.htm

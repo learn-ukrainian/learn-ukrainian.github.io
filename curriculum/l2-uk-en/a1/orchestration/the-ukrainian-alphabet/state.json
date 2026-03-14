@@ -21,45 +21,7 @@
         "type": "script",
         "name": "discover_passthrough"
       }
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-12T21:49:06Z",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "unknown"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-12T21:49:06Z",
-      "note": "extracted-from-full-build",
-      "executor": {
-        "type": "script",
-        "name": "extracted_from_full_build"
-      }
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-12T21:50:50Z",
-      "attempts": 1,
-      "executor": {
-        "type": "deterministic",
-        "name": "morphological_validator"
-      }
-    },
-    "review": {
-      "status": "complete",
-      "ts": "2026-03-12T21:59:40Z",
-      "attempts": 2,
-      "note": "fix-iter1",
-      "executor": {
-        "type": "llm",
-        "agent": "unknown",
-        "model": "unknown"
-      }
     }
   },
-  "last_updated": "2026-03-13T09:37:15Z"
+  "last_updated": "2026-03-14T21:29:41Z"
 }

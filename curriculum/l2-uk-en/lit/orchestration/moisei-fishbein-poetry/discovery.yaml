@@ -1,0 +1,185 @@
+discovered_at: '2026-03-14T19:43:16.257813+00:00'
+query_keywords:
+- 'Мойсей Фішбейн: Апокриф'
+- Вступ та контекст
+- «Апокриф» та ранні збірки
+- «Пророк» та зрілі твори
+- Мова та стиль
+- Деколонізаційний вимір
+- Підсумок та спадщина
+- Проаналізувати поезію Фішбейна — єврейсько-українську інтелектуальну традицію
+- Дослідити свідомий вибір української мови як творчого рішення
+- Зрозуміти Фішбейна як спростування міфу про «чужу» українську мову
+- literature
+- апокриф
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0109
+  text: "4. Складіть робочий план і відповідно до нього систематизуйте \nдібраний\
+    \ матеріал. 5. Основні положення кількох джерел узагальніть. 6. Опрацюйте текст\
+    \ так, щоб його зміст зрозуміли не тільки \nчитачі, а й слухачі. 86"
+  section_title: Сторінка 86
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0216
+  text: "Склад. Основні  правила  переносу . . . . . . . . . . . . . . . . . . . 84\n\
+    § 38–39. Наголос. Орфоепічна  помилка . . . . . . . . . . . . . . . . . . . .\
+    \ . . 88\n§ 40. Розвиток мовлення. Твір-розповідь  на  основі  власного   \nдосвіду\
+    \ в  художньому  стилі  (за  планом) . . . . . . . . . . . . . . . . . . . . .\
+    \ 92\nФОНЕТИКА. ГРАФІКА. ОРФОЕПІЯ. ОРФОГРАФІЯ\nВимова  голосних  і  приголосних\
+    \  звуків. Чергування  звуків. Правопис  префіксів  з-  (зі-,  с-),  роз-  (розі-),\
+    \  без-\n§ 41. Вимова голосних звук"
+  section_title: Сторінка 205
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5581237077713013
+  chunk_id: fbf8bdff_c0060
+  text: "„Апокрифи“ — це такі твори про події та особи\r\nсвященної історії, що не\
+    \ визнані християнською церквою та не прийняті нею до\r\n„канону“ св. Письма.\
+    \ В св. Письмі багато подій освітлено лише загально, багато\r\nосіб згадано лише\
+    \ побіжно. Цілком природньо, що у християн, а ще давніше в\r\nжидів ці події та\
+    \ особи викликали інтерес та що довкола них зібрався\r\nлеґендарний матеріял,\
+    \ почасти перейнятій від інших народів („мандрівні\r\nсюжети“), почасти вигаданий.\
+    \ Такі леґенди рано зафіксовані писемно; щоб надат"
+  work: Чижевський — Історія української літератури
+  author: Чижевський Д.
+  year: 1956
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/chyzh/chy01.htm
+- score: 0.5555899739265442
+  chunk_id: e0892426_c0042
+  text: "XI-XII ст. Переклад на\r\nРусі апокрифів (гр. «таємний, прихований») — пам'яток\
+    \ ранньохристиянської і\r\nсередньовічної літератури. Значна частина апокрифів\
+    \ іудейського та східного\r\nпоходження, Апокрифи виникли як доповнення до Біблії,\
+    \ але не були прийняті\r\nцерквою. Первісно апокрифи — це книги таємні, сокровенні,\
+    \ доступні лише\r\nпосвяченим у всі таємниці культу. І лише після формування канонічного\
+    \ корпусу\r\nтекстів Біблії апокрифічними почали називати твори, які не ввійшли\
+    \ до нього.\r\nЧастина неканоні"
+  work: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/dzuba/dzubapered.htm
+- score: 0.5375286936759949
+  chunk_id: 48346587_c0300
+  text: "Апокрифи. Дуже багатий, своїм\r\nзмістом дуже знаменний і своїм впливом дуже\
+    \ важливий відділ перекладного\r\nписьменства становлять апокрифи. Були це перекази\
+    \ на біблійні теми, що\r\nпоставали й поширювалися там, де приймалася християнська\
+    \ віра. Служили вони\r\nдоповненням і розширенням Святого Письма та біблійних\
+    \ книг. Люди, що приймали\r\nхристиянську релігію, власною уявою й власною видумкою\
+    \ бажали заповнити\r\nпрогалини, які вони знаходили в біблійних книгах. Так постали\
+    \ різні перекази —\r\nпро створення "
+  work: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+  year: 1937
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/krypcult/krcult.htm

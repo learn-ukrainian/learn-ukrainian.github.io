@@ -1,0 +1,227 @@
+discovered_at: '2026-03-14T19:35:45.363871+00:00'
+query_keywords:
+- 'Ірина Вільде: Сестри Річинські'
+- Вступ та контекст
+- '«Сестри Річинські»: епічна структура'
+- Жіночі образи та фемінізм
+- Мова та стиль
+- Деколонізаційний вимір
+- Підсумок та спадщина
+- Проаналізувати епічну сагу «Сестри Річинські» як зразок галицького психологічного
+  реалізму
+- Дослідити жіноче письмо Вільде у контексті феміністичної традиції
+- Зрозуміти Галичину як окремий літературний простір
+- literature
+- епопея
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=5RGKfGp6tlo
+  channel: Суспільне Культура
+  title: 'Ірена Карпа: що читати, щоб відволіктися. Сестри Річинські, Руїни Бога |
+    Подкаст Книгосховище» #20'
+  relevance_score: 0.7
+  relevance_note: The video's title explicitly mentions «Сестри Річинські» as a book
+    discussed by Irena Karpa in the context of what to read, suggesting it reinforces
+    the module by highlighting the work's contemporary relevance. However, the provided
+    transcript excerpt focuses on general literary topics, poetry, and songwriting,
+    and does not contain a specific discussion of the novel itself.
+  transcript_excerpt: книгосховище откаст Олени гусейнової про книжки що допоможуть
+    прожити та пережити непрості воєнні реалії. Вітаю Мене звати Олена Гусейнова і
+    тут ми говоримо з вами друзі про книжки.
+  embed_suggestion: After section Вступ та контекст -- to introduce the work as a
+    contemporary reading recommendation.
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0381
+  text: "Жінка постає немов за-\nгадкова й  велична інфанта (принцеса), а  «дух \n\
+    сполоханий» і серце ліричного героя відгукують-\nся на жіночу красу почуттям «побожної\
+    \ хвали». «Яснозоряна» усмішка незвично поєднана \nз «холодним полиском очей»,\
+    \ які вражають душу \nгероя: «І я схилився упокорено, / Діткнутий ле-\nзом двох\
+    \ мечей». У жіночому образі поєдналися \nкраса й  недоступність ідеалу. Герой\
+    \ відчуває \nзахват і  схиляння перед красою («Освячений, \n\x03\n\x84 Весна.\
+    \ Чотири сезони. (П’єр-Оґюст Ренуар, 1879)"
+  section_title: Сторінка 206
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5538378953933716
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5324341654777527
+  chunk_id: 479cf43d_c0235
+  text: 'В. Білодід
+
+
+    Див. також:
+
+
+    Ігор Гирич. В. Вернадський. Між російським і українським берегами.
+
+
+    [Філософська думка в Україні: Біобібліографічний словник. — К., 2002. — С. 33-36.]'
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  year: 2002
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- score: 0.5308299660682678
+  chunk_id: 41d0facc_c0050
+  text: "Тут поняття А: «ниспослання духа», поняття Б:\r\n«духовно утЂшеніе» паралелізм\
+    \ встановлюється через через об’єкт «духа»\r\nта атрибут «духовний». Не мусимо,\
+    \ одначе, вважати такі епіґрами за «менш вдалі»,\r\n«менш мистецькі», — часто\
+    \ навпаки, паралелізм між дуже далекими поняттями, що\r\nзближуються лише завдяки\
+    \ їх атрибутам, саме й викликає почуття дотепності,\r\nгостроти епіґрами (найліпші\
+    \ приклади в перекладах Величковського) 31.\n\nЛише рідко в «Вінцях» зустрінемо\
+    \ епіґрами\r\nантитетичні. Здебільша антитез"
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm

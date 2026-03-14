@@ -1,0 +1,201 @@
+discovered_at: '2026-03-14T19:39:41.057088+00:00'
+query_keywords:
+- 'Данило Шумук: Мемуари — УПА та Ґулаг'
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати мемуари Шумука як унікальний документ двох систем терору
+- Дослідити трансформацію автора — від комуніста до борця за незалежність
+- Зрозуміти мемуарну прозу як літературний жанр
+- literature
+- мемуари
+- Ґулаг
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0458
+  text: '238
+
+    ЗМІСТ
+
+    Передмова . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 3
+
+    § 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 5
+
+    Розділ I. Україна в  роки Першої світової війни
+
+    § 2. Перша світова війна та український національний рух . . . . . . . . . . . '
+  section_title: Сторінка 238
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 5-klas-ukrmova-litvinova-2022_s0002
+  text: '3
+
+    Зміст
+
+    ЗМІСТ
+
+    Любі п’ятикласники та  п’ятикласниці! . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 6
+
+    Навігатор до  підручника . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 7
+
+    ВСТУП. УКРАЇНСЬКА  МОВА  В  ЖИТТІ  УКРАЇНЦІВ . . . . . . . . . . . 8
+
+    Мова в  житті людей . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 9
+
+    Мова як засіб спілкування. Значення мови . . . . . . . . . . . . . . . . . . .
+    .'
+  section_title: Сторінка 3
+  grade: 5
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0232
+  text: "220\n220\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . 3\nВступ. Краса та багатство\
+    \ української мови\n§ 1. Милозвучність  української  мови . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 4\n§ 2. Багатство  української  мови . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . 6\n§ 3. Розвиток мовлення. Складання\
+    \  діалогів  відповідно   \nдо  ситуації  спілкування  . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . 8\nП"
+  section_title: Сторінка 220
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5541681051254272
+  chunk_id: 7808b51b_c0498
+  text: "Тим. — Баб’як П. Листи Євгена Тимченка до В.\r\nГнатюка // Записки наукового\
+    \ товариства ім. Т. Шевченка. Праці філологічної\r\nсекції. Т. CCXXIV. — Львів,\
+    \ 1992.\n\nТ.Л.С. — Тредиаковский В., Ломоносов М.,\r\nСумароков А. Стихотворения.\
+    \ — М., 1935.\n\nУЗ — Успенский сборник XII—XIII вв. / Издание\r\nподготовили\
+    \ О.А. Клязевская, В.Г. Демянов, М.В. Ляпон под ред. С.М. Каткова. —\r\nМ., 1971.\n\
+    \nУІ — Українські інтермедії XVII-XVIII ст. Пам’ятки давньої української літератури.\
+    \ К., — 1960.\n\nУП — Українська поезія. К"
+  work: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/rusaniv/ru.htm
+- score: 0.5458084344863892
+  chunk_id: 1af78606_c0182
+  text: "Літ.: Шахматов О., Кримський\r\nА. Нариси з історії укр. мови та хрестоматія\
+    \ з пам’ятників письменської\r\nстароукраїнщини XI-XIII вв. К., 1924; КІУЛМ, т.\
+    \ 1-2. К., 1958-61; Хрестоматія\r\nмат-лів з історії укр. літ. мови, ч. 1 — 2.\
+    \ К., 1959 — 61; Жовтобрюх М. А.\r\nМова укр. преси (До серед, дев’яностих років\
+    \ XIX ст.). К., 1963; Його ж. Мова\r\nукр. період, преси (кін. XIX — поч. XX ст.).\
+    \ К., 1970; Чапленко В. Історія нової\r\nукр. літ. мови (XVII ст. — 1933). Н.-Й.,\
+    \ 1970; Плющ П. П. Історія укр. літ.\r\nмови"
+  work: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+  year: 2004
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/ukrmova/um01.htm
+- score: 0.5455018877983093
+  chunk_id: fc2291b5_c2628
+  text: "Літ.: Дубина М. Сурмачі\r\nвозз’єднання. К., 1976; Сміюн О. Д «Західна Україна».\
+    \ Систематичний покажчик змісту. Львів, 1962.\n\nС. В. Далавурак."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

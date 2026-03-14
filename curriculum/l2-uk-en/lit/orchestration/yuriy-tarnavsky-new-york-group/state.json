@@ -1,0 +1,27 @@
+{
+  "track": "lit",
+  "slug": "yuriy-tarnavsky-new-york-group",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-14T19:41:19Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-14T19:41:19Z",
+      "task_id": "v5-yuriy-tarnavsky-new-york-group-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
+}

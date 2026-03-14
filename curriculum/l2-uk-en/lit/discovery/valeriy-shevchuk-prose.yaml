@@ -1,0 +1,173 @@
+discovered_at: '2026-03-14T19:33:07.135647+00:00'
+query_keywords:
+- 'Валерій Шевчук: Три листки за вікном та інша проза'
+- Вступ та контекст
+- 'Аналіз: «Три листки за вікном»'
+- 'Аналіз: «Око Прірви» та інші твори'
+- Мова та стиль
+- Деколонізаційний вимір
+- Підсумок та спадщина
+- Проаналізувати ширший прозовий доробок Шевчука — «Три листки за вікном», «Око Прірви»
+- Дослідити готичний містицизм як форму інтелектуального спротиву
+- Порівняти із сучасними наступниками (Виннічук, Іздрик)
+- literature
+- химерна
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0404
+  text: "Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.\
+    \ — \n№ 6. — С. 90–100. Домашнє завдання"
+  section_title: Сторінка 248
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-literatura-mishhenko-2017_s0372
+  text: "– \nК., 1990. 7. Шевченківський словник: У 2 т. – К., 1976–1977. 8. Світова\
+    \ велич Шевченка: У 3 т. – К., 1964."
+  section_title: Сторінка 217
+  grade: 9
+  author: mishhenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0061
+  text: "Таран Л. «Цвіте прозорий вертоград...» (Поетика М. Зерова і М. Рильського)\
+    \ // Слово і \nчас. — 1994. — № 9–10. — С. 52–54. Домашнє завдання\nМаксим Рильський,\
+    \ poeta Maximus"
+  section_title: Сторінка 42
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5689071416854858
+  chunk_id: fc2291b5_c4245
+  text: "Літ.: Кочубей Ю. В.\r\nЗв’язки української літератури з літературами Близького\
+    \ і Середнього Сходу. В\r\nкн.: Українська література в загальнослов’янському\
+    \ і світовому літературному\r\nконтексті, т. 3. К., 1988.\n\nВ. І. Ткаченко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.550777792930603
+  chunk_id: fc2291b5_c3005
+  text: "Літ.: З історії\r\nчехословацько-українських літературних зв’язків. Братіслава,\
+    \ 1959; Шевчук В.\r\nСучасні українсько-чехословацькі літературні зв’язки. 1945\
+    \ — 1960. К., 1963.\n\nМ. Неврлий."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5426567196846008
+  chunk_id: 41d0facc_c0089
+  text: '[Чижевський Дмитро. Українське літературне бароко. — К., 2003. — С. 86-106.]
+
+
+    4. Невідомий український поет 18-го віку'
+  work: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+  year: 2003
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/chyzh/chyb.htm
