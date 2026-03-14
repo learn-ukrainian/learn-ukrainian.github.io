@@ -223,6 +223,7 @@ a:hover { text-decoration: underline; }
 const API = '/api/dashboard';
 let overviewData = null;
 let trackCache = {};
+let moduleCache = {};
 
 // ==================== DATA FETCHING ====================
 
@@ -243,8 +244,12 @@ async function fetchTrackDetail(trackId) {
 }
 
 async function fetchModuleDetail(trackId, slug) {
+  const key = `${trackId}/${slug}`;
+  if (moduleCache[key]) return moduleCache[key];
   const res = await fetch(`${API}/module/${trackId}/${slug}`);
-  return await res.json();
+  const data = await res.json();
+  moduleCache[key] = data;
+  return data;
 }
 
 // ==================== RENDERING ====================
@@ -345,15 +350,21 @@ async function openModule(trackId, slug) {
   panel.classList.add('open');
   overlay.classList.add('open');
 
-  const m = await fetchModuleDetail(trackId, slug);
-  renderModulePanel(content, m);
+  // Fetch both dashboard detail and state detail in parallel
+  const trackData = overviewData?.tracks?.find(t => t.id === trackId);
+  const moduleNum = trackData?.modules?.findIndex(mod => mod.slug === slug) + 1 || 0;
+  const [m, stateData] = await Promise.all([
+    fetchModuleDetail(trackId, slug),
+    moduleNum > 0 ? fetch(`/api/state/module/${trackId}/${moduleNum}`).then(r => r.json()).catch(() => null) : null,
+  ]);
+  renderModulePanel(content, m, stateData);
 }
 
-function renderModulePanel(container, m) {
+function renderModulePanel(container, m, stateData) {
   const status = m.status?.overall?.status || 'unknown';
   const statusCls = status === 'content-complete' ? 'content-complete' : status;
   const gates = m.status?.gates || {};
-  const gateNames = ['meta', 'structure', 'lesson', 'activities', 'vocabulary', 'naturalness', 'ipa', 'review'];
+  const gateNames = ['meta', 'structure', 'lesson', 'activities', 'vocabulary', 'naturalness', 'pedagogy', 'immersion', 'engagement', 'research', 'review'];
 
   let gateHtml = gateNames.map(name => {
     const g = gates[name];
@@ -489,12 +500,82 @@ function renderModulePanel(container, m) {
 
     ${actHtml}
     ${pipelinePhasesHtml}
+    ${_renderStateInfo(stateData)}
     ${orchHtml}
 
     <div class="meta-info">
       ${m.lesson?.last_modified ? `Last modified: ${new Date(m.lesson.last_modified).toLocaleString()}` : ''}
     </div>
   `;
+}
+
+function _renderStateInfo(s) {
+  if (!s) return '';
+  let html = '';
+
+  // V5 pipeline phases with executor provenance
+  if (s.phases && Object.keys(s.phases).length > 0) {
+    const V5_ORDER = ['research', 'discover', 'content', 'validate', 'review', 'activities', 'mdx'];
+    html += `<div style="margin-top:16px"><div class="word-bar-label">Pipeline Phases (v5)</div>`;
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:4px;">`;
+    V5_ORDER.forEach(p => {
+      const ph = s.phases[p];
+      if (!ph) return;
+      const st = ph.status || 'pending';
+      const color = st === 'complete' ? 'var(--green)' : st === 'failed' ? 'var(--red)' : 'var(--text3)';
+      const exec = ph.executor;
+      const agent = exec ? `${exec.agent || exec.name || '?'}` : '';
+      const model = exec?.model && exec.model !== 'unknown' ? ` (${exec.model.replace('gemini-3.1-pro-preview','pro').replace('claude-opus-4-6','opus')})` : '';
+      html += `<div style="background:var(--bg);padding:3px 6px;border-radius:4px;font-size:11px;">
+        <span style="color:${color};font-weight:600">${p}</span>
+        <span style="color:var(--text3)">${agent}${model}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Immersion from audit
+  if (s.audit?.immersion != null) {
+    const imm = s.audit.immersion;
+    const immColor = imm >= 45 ? 'var(--green)' : imm >= 30 ? 'var(--yellow)' : 'var(--red)';
+    html += `<div style="margin-top:8px;font-size:13px;">Immersion: <span style="color:${immColor};font-weight:600">${imm}%</span></div>`;
+  }
+
+  // Content review score
+  if (s.content_review?.score != null) {
+    const sc = s.content_review.score;
+    const rv = s.content_review.verdict || '';
+    const scColor = sc >= 9 ? 'var(--green)' : sc >= 8 ? 'var(--blue)' : sc >= 7 ? 'var(--yellow)' : 'var(--red)';
+    html += `<div style="font-size:13px;">Content Review: <span style="color:${scColor};font-weight:600">${sc}/10</span>`;
+    if (rv) html += ` <span style="color:${rv === 'PASS' ? 'var(--green)' : 'var(--red)'}"> ${rv}</span>`;
+    html += `</div>`;
+  }
+
+  // Prompt review (preflight)
+  if (s.prompt_review) {
+    const pr = s.prompt_review;
+    const prColor = pr.status === 'PASS' ? 'var(--green)' : 'var(--yellow)';
+    html += `<div style="font-size:12px;color:var(--text2);">Preflight: <span style="color:${prColor}">${pr.status}</span>`;
+    if (pr.issues > 0) html += ` (${pr.high || 0} HIGH, ${pr.issues} total)`;
+    html += `</div>`;
+  }
+
+  // Consultations
+  if (s.consultations && s.consultations.length > 0) {
+    html += `<div style="margin-top:12px"><div class="word-bar-label">Consultations (${s.consultations.length})</div>`;
+    s.consultations.forEach(c => {
+      const outcomeColor = c.outcome === 'applied' ? 'var(--green)' : c.outcome === 'queued' ? 'var(--purple)' : 'var(--text3)';
+      const confColor = c.confidence === 'high' ? 'var(--green)' : c.confidence === 'medium' ? 'var(--yellow)' : 'var(--red)';
+      html += `<div style="font-size:11px;padding:2px 0;">
+        #${c.num} <span style="color:${outcomeColor}">${c.outcome}</span>
+        <span style="color:${confColor}">[${c.confidence}]</span>
+        ${c.scope || ''} ${c.changes_count || 0} changes
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  return html;
 }
 
 // ==================== EVENTS ====================
