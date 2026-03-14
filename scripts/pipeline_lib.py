@@ -1626,10 +1626,12 @@ def dispatch_gemini(
         stdout_only=True,  # Always stdout-only in pipeline
         allow_write=allow_write, output_file=output_file, timeout=timeout,
     )
-    # Fallback: if rate limited, try the other model
-    if not ok and _is_rate_limited(output):
+    # Fallback: if rate limited OR timed out (empty output = silent hang), try the other model
+    should_fallback = not ok and (_is_rate_limited(output) or output.strip() == "")
+    if should_fallback:
         fallback = PRO_MODEL if model == FLASH_MODEL else FLASH_MODEL
-        log(f"  [fallback] {model} rate-limited, retrying with {fallback}...")
+        reason = "rate-limited" if _is_rate_limited(output) else "timeout/hang"
+        log(f"  [fallback] {model} {reason}, retrying with {fallback}...")
         ok, output = dispatch_gemini_raw(
             prompt, task_id, model=fallback,
             stdout_only=True, allow_write=allow_write,
