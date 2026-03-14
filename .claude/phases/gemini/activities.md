@@ -165,6 +165,74 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
   instruction: "Прочитайте уривок."
 ```
 
+### Analytical Activity Schemas (Seminar tracks)
+
+These activity types follow a reading activity. Use `source_reading` to link back to the reading's `id`.
+
+**critical-analysis** — deep analysis of a text:
+```yaml
+- type: critical-analysis
+  source_reading: reading-hrushevsky
+  title: "Аналіз аргументації Грушевського"
+  target_text: "Головним і єдиним рушієм усієї світової історії є не амбітні королі..."
+  questions:
+    - "Який головний аргумент автор висуває у цьому уривку?"
+    - "Яку риторичну стратегію використовує автор?"
+  model_answers:
+    - "Автор стверджує, що рушієм історії є народні маси, а не окремі правителі."
+    - "Автор використовує протиставлення (антитезу): королі/гетьмани проти народних мас."
+  focus_points:
+    - "rhetorical strategy"
+    - "argument structure"
+```
+
+**essay-response** — extended writing with rubric:
+```yaml
+- type: essay-response
+  source_reading: reading-hrushevsky
+  title: "Есе: народоцентричний підхід"
+  prompt: "Як Грушевський обґрунтовує свій народоцентричний підхід до історії? Наведіть конкретні приклади з тексту."
+  min_words: 150
+  model_answer: "Грушевський будує свій аргумент на протиставленні..."
+  rubric:
+    - criteria: "Аргументація"
+      description: "Чи наводить учень конкретні цитати з тексту?"
+      points: 5
+    - criteria: "Мовна якість"
+      description: "Чи використовує учень відповідну академічну лексику?"
+      points: 3
+```
+
+**comparative-study** — comparing texts or concepts:
+```yaml
+- type: comparative-study
+  source_reading: reading-hrushevsky
+  title: "Порівняння двох підходів до історії"
+  items_to_compare:
+    - "Народоцентричний підхід Грушевського"
+    - "Державоцентричний підхід (традиційна школа)"
+  criteria:
+    - "Хто є головним суб'єктом історії?"
+    - "Яка роль держави?"
+  prompt: "Порівняйте два підходи за вказаними критеріями."
+  model_answer: "Грушевський ставить народ у центр, тоді як традиційна школа..."
+```
+
+**authorial-intent** — analysing the author's purpose:
+```yaml
+- type: authorial-intent
+  source_reading: reading-hrushevsky
+  title: "Авторський задум Грушевського"
+  text_excerpt: "Головним і єдиним рушієм..."
+  prompt: "Яку мету переслідував автор, обираючи таку структуру аргументу?"
+  techniques_to_identify:
+    - "протиставлення (антитеза)"
+    - "емоційна лексика"
+  model_answer: "Грушевський прагнув переконати читача у необхідності..."
+```
+
+**Linking analytical activities to readings:** Use `source_reading` in any analytical activity to reference the `id` of a reading activity. This tells the UI which text the analysis refers to.
+
 ### Common Schema Mistakes (FIX BEFORE OUTPUT)
 
 **These mistakes caused audit failures in previous rebuilds. Check EVERY activity against these rules:**
@@ -209,54 +277,6 @@ options:
 6. **Group-sort accuracy** — Every item must belong unambiguously to exactly one group. Do NOT include category labels (like "непрямий" meaning "indirect cases") as items — only include concrete instances.
 
 7. **Item count consistency** — Activities of the same type should have similar item counts (±2). Don't have one quiz with 4 items and another with 12.
-
-### A1–A2 Activity Language Rules (CRITICAL)
-
-**Metalanguage (grammar terminology) is introduced at B1.** A1–A2 learners do NOT know terms like іменник (noun), дієслово (verb), частина мови (part of speech), голосний (vowel), відмінок (case). These are grammar jargon that hasn't been taught yet. Writing "Яка частина мови позначає дію?" to an A1–A2 learner is meaningless.
-
-**The rule for ALL A1 and A2 activities:**
-- **Questions, explanations, instructions** → English (this is scaffolding, same as the lesson prose)
-- **Target content being practiced** → Ukrainian (the words, phrases, sentences learners are learning)
-- **Option text** → Ukrainian when selecting Ukrainian words/phrases, English when selecting concepts
-
-This matches the A1 immersion band (10–50%) and A2 band (30–70%): English scaffolding for metalanguage, Ukrainian for target content.
-
-**Additional rules for Cyrillic Code modules (a1-1 through a1-4):**
-- Only use letters/words from the module's taught letter set. If the module teaches А, У, М, Л, Н, С — every Ukrainian word in activities must use ONLY those 6 letters.
-- Do not invent pedagogical terminology. "Справжні друзі / Оманливі друзі" (true/false friends) is a term for WORDS between languages, not individual letters. Say "visual traps" instead.
-- **NO sentence-level activities.** Students know bare nouns only — no verbs, no cases, no grammar. Do NOT create fill-in activities that ask students to "complete a phrase" or "choose the right word in a sentence." Activities must test: letter recognition, letter-sound mapping, syllable building, word decoding, and word-meaning matching.
-- **Do NOT use words as verbs.** Even if a word CAN be a verb form (e.g., "мала" can mean "had"), treat all decodable words as bare nouns/adjectives in activities. Do NOT create activities that rely on verb meanings.
-- **Prefer fewer, high-quality activities over padding.** If you only have 10 decodable words, 8 well-designed activities are better than 10 activities where the last 2 are garbage. Do NOT force fill-in or quiz items that require grammar the student hasn't learned.
-
-Example quiz for A1:
-```yaml
-- type: quiz
-  title: "Check Your Knowledge"
-  instruction: Choose the correct answer.
-  items:
-    - question: "Which letter looks like English H but represents the /n/ sound?"
-      explanation: "Н is a visual trap — it looks like H but sounds like N."
-      options:
-        - text: "Н"
-          correct: true
-        - text: "М"
-          correct: false
-        - text: "С"
-          correct: false
-        - text: "Л"
-          correct: false
-    - question: "What does the word сума mean?"
-      explanation: "Сума means sum/amount in Ukrainian."
-      options:
-        - text: "sum/amount"
-          correct: true
-        - text: "bag"
-          correct: false
-        - text: "moon"
-          correct: false
-        - text: "mom"
-          correct: false
-```
 
 ### YAML Formatting Rules (HARD FAIL if violated)
 
