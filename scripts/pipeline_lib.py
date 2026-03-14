@@ -2213,11 +2213,10 @@ def _get_content_template(track: str, module_num: int,
         if tier == "beginner":
             return "beginner-checkpoint.md"
         return "core-checkpoint.md"
-    if full_build and tier == "beginner":
-        # Always use RAG template — RAG server is always available
-        return "beginner-full-rag.md"
     if tier == "beginner":
-        return "beginner-content.md"
+        # Always use RAG template — RAG server is always available.
+        # Full-build extracts activities from the output; non-full-build ignores them.
+        return "beginner-full-rag.md"
     if tier == "seminar":
         return "content.md"
     return "core-content.md"
