@@ -104,7 +104,7 @@ Common confusions to avoid: В is a CONSONANT (not a vowel), І is a VOWEL (not 
 - For the rest of the text, use natural, level-appropriate Ukrainian guided by the textbook excerpts below.
 - Match the syntactic complexity, sentence length, and vocabulary level of the provided textbook excerpts. Do not exceed their lexical density.
 - When textbook excerpts contain vocabulary or grammar not yet taught at this level, simplify or provide an English gloss in parentheses.
-- Activities may ONLY use Ukrainian words that appear in the content you wrote above. Do not introduce new vocabulary in activities.
+- Activity **answers** must use Ukrainian words from the content above. **Distractors** (wrong options) may use other level-appropriate Ukrainian words.
 
 ### Immersion Target
 
@@ -112,29 +112,24 @@ Common confusions to avoid: В is a CONSONANT (not a vowel), І is a VOWEL (not 
 
 ### Structural Containment (how to achieve immersion without code-switching)
 
-**IMPORTANT**: The immersion calculator STRIPS markdown tables when counting Ukrainian content. Tables still work for grammar paradigms and explanations, but they contribute ZERO to your immersion score. Use **blockquote dialogues**, **bulleted example lists**, and **pattern boxes** for Ukrainian content that counts toward immersion. Tables are for English-language grammar explanations and paradigm displays.
+**Note**: Tables contribute zero to the immersion score. Use **blockquote dialogues**, **bulleted example lists**, and **pattern boxes** for Ukrainian content. Reserve tables for English-language grammar paradigms.
 
-**Three rules govern where each language appears:**
+**Language placement rules:**
 
-1. **Explanatory paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
+1. **Explanatory paragraphs = mostly English** with Ukrainian vocabulary **bolded inline**. Short Ukrainian phrases and sentences are fine inline when they illustrate a point naturally — e.g., "To say you're going home, you'd say **Я йду додому**."
 
-**MANDATORY for A2+: Ukrainian Reading Practice blocks.** After EVERY major section, include a **Reading Practice** block — a short Ukrainian paragraph (5-8 sentences) that uses the grammar and vocabulary just taught. Follow it with an English translation. This is the PRIMARY driver of immersion score. Format:
-
-> **(Читання / Reading Practice)**
->
-> Олена працює лікаркою в Києві. Вона дуже любить свою роботу. Раніше вона була студенткою...
->
-> *(Olena works as a doctor in Kyiv. She loves her job very much. Previously she was a student...)*
-
-Without these blocks, immersion will be 15-20% and the module FAILS.
-
-2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
-   - **Tables** — paradigms, vocabulary groups, gender sorting (WARNING: tables contribute ZERO to immersion score)
-   - **Bulleted example lists** — Ukrainian line + English gloss: `- **Читай книгу!** — Read the book!`
+2. **Standalone Ukrainian examples** go in structural containers:
+   - **Bulleted example lists** — Ukrainian + English gloss: `- **Читай книгу!** — Read the book!`
    - **Blockquote dialogues** — mini-conversations with labeled speakers
    - **Pattern boxes** — transformations: `читати → читай → читайте`
 
-3. **Prioritize score-generating containers.** Because tables yield zero immersion points, use **bulleted example lists** and **blockquote dialogues** for the vast majority of your Ukrainian content. Reserve tables strictly for English-heavy grammar paradigms and reference charts.
+3. **MANDATORY for A2+: Reading Practice blocks.** After each major section, include a blockquote with 5-8 Ukrainian sentences using the grammar just taught, followed by English translation. These are the primary driver of immersion score.
+
+> **(Читання / Reading Practice)**
+>
+> Олена працює лікаркою в Києві. Вона дуже любить свою роботу...
+>
+> *(Olena works as a doctor in Kyiv. She loves her job very much...)*
 
 ### Style Rules
 
@@ -180,7 +175,7 @@ You're writing for someone seeing Ukrainian for the first time. English explains
 
 Follow the structural containment rules above. In each section:
 1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
-2. **Show** the pattern with **10-15 rich Ukrainian examples** per grammar point using bulleted example lists, dialogues, and pattern boxes. This high volume is REQUIRED to hit the immersion target specified above. Do not rely on tables for this — they contribute zero to immersion.
+2. **Show** the pattern with **5-10 Ukrainian examples** per grammar point using bulleted example lists, dialogues, and pattern boxes.
 3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
@@ -193,7 +188,7 @@ Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes sprea
 Do NOT write IPA or Latin transliteration.
 
 **Deliberate errors (showing common mistakes):**
-When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
+When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional.
 
 ### Dialogue Quality (CRITICAL)
 
@@ -277,28 +272,26 @@ Choose types based on what the constraints allow:
 - **Questions, instructions, explanations** → English (students can't read Ukrainian metalanguage)
 - **Content being practiced** → Ukrainian (words, letters, phrases from the lesson)
 - **Options** → Ukrainian when choosing Ukrainian words, English when choosing concepts
-- Never use grammar terms like іменник, дієслово, відмінок
+- Activity instructions should use English grammar terms, not Ukrainian (іменник, дієслово, відмінок) — save those for content explanations
 
-### Irregular Forms Warning (SKIP if verbs are banned above)
+### Common Irregular Imperatives (reference)
 
-If verbs ARE in scope for this module, note these irregular imperative forms. NEVER guess — use ONLY forms from your content. Common traps:
-- взяти → **візьми/візьміть** (NOT ~~взяй/взяйте~~)
-- стояти → **стій/стійте** (NOT ~~стояй/стояйте~~)
-- сісти → **сядь/сядьте** (NOT ~~сісь/сісьте~~)
-- їсти → **їж/їжте** (NOT ~~їсь/їсьте~~)
+If your module uses imperative verbs, these are common traps:
+- взяти → **візьми/візьміть** (NOT ~~взяй~~)
+- стояти → **стій/стійте** (NOT ~~стояй~~)
+- сісти → **сядь/сядьте** (NOT ~~сісь~~)
+- їсти → **їж/їжте** (NOT ~~їсь~~)
 
-If verbs are BANNED in the grammar constraints above, ignore this section entirely.
-
-- **и** is RUSSIAN. The Ukrainian conjunction is **і** (or **й** after vowels, **та**).
+**и** is RUSSIAN. The Ukrainian conjunction is **і** (or **й** after vowels, **та**).
 
 If a verb's imperative isn't in your content, don't use it in activities.
 
 ### Consistency Rules (the whole point of single-pass)
 
-1. **Same words**: Every Ukrainian word in activities must appear in your content above
-2. **Correct agreement in answers**: Activity `answer` fields must have correct adj-noun gender agreement. If you wrote `великий стіл` in content, the correct answer in activities must also be `великий стіл` — NOT `велика стіл`
-3. **Wrong forms are OK as distractors**: In `options` arrays, wrong gender/case forms are expected — they're the incorrect choices. Example: `options: ["нова", "новий", "нове", "нові"]` for a feminine noun — only `нова` is correct, the rest are intentional distractors
-4. **Same forms**: If content uses `книга` (nominative), don't use `книги` (genitive) in the `answer` unless genitive also appears in the content
+1. **Answers from content**: Activity answers must use words/phrases from your content above
+2. **Correct agreement**: `answer` fields must have correct adj-noun gender agreement matching the content
+3. **Distractors are flexible**: Wrong options may use wrong forms or other level-appropriate words
+4. **Same forms in answers**: If content uses `книга` (nominative), don't use `книги` (genitive) in the `answer` unless genitive also appears in the content
 
 ### Activity Schemas (EXACT field structures — any unlisted field = FAIL)
 
@@ -385,6 +378,7 @@ Do NOT use `sentence`, `jumbled`, or `scrambled` — only `words` + `answer`.
 
 - **Object with `items:` wrapper** (not bare list)
 - Each entry: `lemma`, `translation`, `pos` (required); `gender`, `notes`, `usage`, `example` (optional)
+- **Lemma = dictionary form** (infinitive for verbs, nominative singular for nouns). If you only taught an imperative like "читай", the lemma is still "читати"
 - NO `ipa` field
 - Include ALL words from `vocabulary_hints` in the plan
 
@@ -416,15 +410,14 @@ Rules for YAML:
 - [ ] All target vocabulary words used in content?
 - [ ] No Russianisms, Russian characters, IPA?
 - [ ] **Grammar terms glossed on first use** (e.g., "орудний відмінок (instrumental case)")?
-- [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
+- [ ] No bilingual ping-pong in prose? (Don't alternate Ukrainian→English→Ukrainian in flowing paragraphs. Reading Practice blocks and bulleted examples with glosses are fine.)
 - [ ] **Dialogue quality**: 4-6 substantial dialogues (4-8 lines each). Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
-- [ ] **Textbook citations**: At least 1 `<!-- adapted from: ... -->` or `<!-- original: ... -->` comment per H2 section.
+- [ ] **Textbook citations**: At least 1 `<!-- adapted from: ... -->` comment per H2 section where you used textbook material.
 
 ### Activity Checks
 - [ ] {ACTIVITY_MIN}–{ACTIVITY_MAX} activities?
-- [ ] Activities use only words from content above?
-- [ ] Every Ukrainian word also appears in content?
-- [ ] Adjective-noun pairings match content?
+- [ ] Activity answers use words from content above?
+- [ ] Adjective-noun pairings in answers match content?
 - [ ] Quiz: exactly 1 `correct: true`, `explanation` at question level?
 - [ ] Anagram: scrambled letters = answer letters?
 - [ ] Fill-in: `answer` appears in `options`?
@@ -442,7 +435,7 @@ Rules for YAML:
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
 
-Output FOUR blocks in this exact order:
+Output FIVE blocks in this exact order:
 
 **Block 1: Content**
 ```

@@ -94,7 +94,7 @@ Follow the full review protocol. In summary:
 - **When you find a problem: fix it immediately with the Edit tool, then note it in your review.** Don't accumulate issues for later — fix them now while you have the exact text in front of you.
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
+- Russianisms (кушать→їсти, приймати участь→брати участь, etc.)
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - **Word salad** — paragraphs that string together unrelated claims with no logical thread, or sentences that randomly alternate between Ukrainian and English within the same paragraph. Each paragraph must have one clear point. Score Language Quality ≤ 6 if found.

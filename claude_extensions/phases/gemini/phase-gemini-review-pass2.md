@@ -103,7 +103,7 @@ Audit status:     {COMPUTED_AUDIT_STATUS}
 - Are activities well-designed and error-free?
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, etc.)
+- Russianisms (кушать→їсти, приймати участь→брати участь, etc.)
 - Colonial framing (Ukrainian defined by contrast with Russian)
 - Word salad (unrelated claims strung together)
 - Grammar scope violations (teaching concepts from later modules)

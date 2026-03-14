@@ -28,7 +28,7 @@ Keep both tables visible as you write. Every activity and vocab item must serve 
 
 ## Vocabulary Scope
 
-> **Activity answers MUST use Ukrainian words from the lesson content.** Distractors (wrong options) may use other level-appropriate Ukrainian words to create meaningful choices. Read the content file first to know which words are in scope for answers.
+> **Every Ukrainian word in your activities MUST come from the lesson content you are reinforcing.** Read the content file first. Do not introduce new Ukrainian vocabulary in activities — only practice words that appear in the lesson. If you need a concept not covered in the content, use English instead.
 
 ## Folk Material (optional — use for culturally rich activities)
 
@@ -55,9 +55,9 @@ Read these files from disk:
 {CONTENT_PATH}
 ```
 
-**Plan file (SOURCE OF TRUTH):**
-```yaml
-{PLAN_CONTENT}
+**Plan file** (for objectives and context):
+```
+{PLAN_PATH}
 ```
 
 {VOCAB_HINTS}
@@ -114,8 +114,8 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
 ```yaml
 - type: quiz
   title: "Перевірте знання"
-  items:  # minItems: 8
-    - question: "Яка частина мови позначає дію або стан предмета?"
+  items:  # minItems: 8, question ≥5 words
+    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
       explanation: "Дієслово позначає дію або стан."  # HERE at question level
       options:  # exactly 4
         - text: "дієслово"
@@ -128,7 +128,7 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
           correct: false
 ```
 
-**Key rules**: `explanation` at QUESTION level (not inside options), exactly 4 options, exactly 1 `correct: true`.
+**Key rules**: `explanation` at QUESTION level (not inside options), `question` ≥5 words, exactly 4 options, exactly 1 `correct: true`.
 
 ### Correct Reading Schema (REFERENCE)
 
@@ -184,7 +184,7 @@ options:
     correct: true
 ```
 
-2. **Quiz question clarity** — Questions should be clear and specific. Short questions are fine if they're unambiguous.
+2. **Quiz question text length** — Every `question` field must be ≥5 words. WRONG: "Слово «хто» — це..." (3 words). RIGHT: "До якої частини мови належить слово «хто»?" (8 words). Short questions fail the pedagogy gate.
 
 3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure. Common mistakes: adding `id` to non-reading activities, adding `hint` where not allowed, adding `explanation` inside option objects.
 
