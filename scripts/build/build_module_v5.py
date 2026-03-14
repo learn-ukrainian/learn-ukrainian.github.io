@@ -359,37 +359,8 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
         if rc == 0:
             passed_list.append((n, slug))
         else:
-            # Auto-rebuild: if validate exhausted, attempt one rebuild
-            _rebuilt_ok = False
-            _no_auto_rebuild = getattr(args, "no_auto_rebuild", False)
-            if not args.rebuild and not _no_auto_rebuild:
-                try:
-                    _rb_paths = get_module_paths(args.track, slug)
-                    _rb_orch = _rb_paths["md"].parent / "orchestration" / slug
-                    _needs_rebuild = False
-                    _rb_v5 = _rb_orch / "state.json"
-                    if _rb_v5.exists():
-                        _rb_st = json.loads(_rb_v5.read_text("utf-8"))
-                        for phase_key in ("review", "validate"):
-                            _ph = _rb_st.get("phases", {}).get(phase_key, {})
-                            if _ph.get("note", "").startswith("needs-"):
-                                _needs_rebuild = True
-                                break
-                    if _needs_rebuild:
-                        print("  AUTO-REBUILD: review exhausted — attempting rebuild...", flush=True)
-                        rebuild_args = argparse.Namespace(**vars(single_args))
-                        rebuild_args.rebuild = True
-                        if _run_single_module(rebuild_args) == 0:
-                            passed_list.append((n, slug))
-                            print("  AUTO-REBUILD: SUCCESS", flush=True)
-                            _rebuilt_ok = True
-                        else:
-                            print("  AUTO-REBUILD: FAILED — module needs manual attention", flush=True)
-                except Exception as _rbe:
-                    print(f"  AUTO-REBUILD: error checking state — {_rbe}", flush=True)
-            if not _rebuilt_ok:
-                failed_list.append((n, slug))
-                print("  FAILED — continuing to next module", flush=True)
+            failed_list.append((n, slug))
+            print("  FAILED — use consultation loop for systemic fixes", flush=True)
 
     elapsed = time.time() - t0_batch
     elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
@@ -444,8 +415,9 @@ def main() -> int:
     # Pipeline control
     parser.add_argument("--rebuild", action="store_true",
                         help="Nuke state and rebuild from research")
-    parser.add_argument("--no-auto-rebuild", action="store_true",
-                        help="Disable automatic rebuild when validate exhausts fix attempts")
+    # --no-auto-rebuild: REMOVED — auto-rebuild disabled permanently (#874).
+    # Review exhaustion now marks module as needs-manual-review.
+    # Use consultation loop for systemic template fixes.
     parser.add_argument("--force-phase", type=str, default=None,
                         help="Re-run a single phase (research/content/activities/validate/review/mdx)")
     parser.add_argument("--restart-from", type=str, default=None,

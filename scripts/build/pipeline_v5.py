@@ -3311,38 +3311,7 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
             return False
 
     log("  review: EXHAUSTED — review + fix attempts all insufficient")
-
-    # Auto-rebuild: delete content/activities, clear state, let Gemini regenerate
-    no_auto_rebuild = getattr(ctx, "no_auto_rebuild", False)
-    already_rebuilt = getattr(ctx, "_auto_rebuilt", False)
-    if not no_auto_rebuild and not already_rebuilt:
-        log("  review: AUTO-REBUILD — deleting content/activities for fresh Gemini generation")
-        for key in ("md", "activities", "vocabulary"):
-            p = ctx.paths.get(key)
-            if p and p.exists():
-                p.unlink()
-                log(f"    removed {p.name}")
-        # Clear state for content → review
-        phases = state.setdefault("phases", {})
-        for pid in ("content", "activities", "validate", "review"):
-            phases.pop(pid, None)
-        save_state(ctx, state)
-        # Mark so we don't loop forever
-        ctx._auto_rebuilt = True  # type: ignore[attr-defined]
-        # Re-run from content through review
-        for pid, func in [("content", phase_content), ("activities", phase_activities),
-                          ("validate", phase_validate), ("review", phase_review)]:
-            if not _call_phase(func, pid, ctx, state):
-                if pid in NON_BLOCKING:
-                    log(f"  {pid}: FAIL — continuing")
-                    continue
-                log(f"  AUTO-REBUILD STOPPED at {pid}")
-                mark_failed(state, phase, ctx,
-                            attempts=2 + MAX_REVIEW_FIX_ITERS, note="auto-rebuild-failed",
-                            executor=_rev_exec)
-                _update_pipeline_status(ctx, "needs-manual-review")
-                return False
-        return is_complete(state, "review")
+    log("  review: Content preserved (no auto-rebuild). Use consultation loop for systemic fixes.")
 
     mark_failed(state, phase, ctx,
                 attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review",
