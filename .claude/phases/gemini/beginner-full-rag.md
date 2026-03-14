@@ -147,7 +147,7 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 
 **Targets:**
 - {WORD_TARGET}–{WORD_CEILING} words (under {WORD_TARGET} = FAIL, over {WORD_CEILING} = also FAIL — trim excess)
-- {ENGAGEMENT_MIN}+ callout boxes (`[!tip]`, `[!warning]`, `[!did-you-know]`, `[!culture]`)
+- {ENGAGEMENT_MIN}+ callout boxes (`[!tip]`, `[!warning]`, `[!note]`, `[!culture]`, `[!challenge]`, `[!practice]`)
 - EXACT H2 titles from the outline below — missing/renamed sections fail validation
 - **MUST end with a `# {SUMMARY_HEADING}` section** containing a brief recap and 3-4 self-check questions with English translations
 
@@ -263,7 +263,7 @@ Choose types based on what the constraints allow:
 
 | Constraint level | Use these | Avoid these |
 |-----------------|-----------|-------------|
-| Alphabet modules (M1-M4) | quiz, match-up, group-sort, anagram, true-false, fill-in | unjumble, cloze, translate |
+| Alphabet modules (M1-M4) | quiz, match-up, group-sort, anagram, true-false, fill-in, watch-and-repeat, image-to-letter, classify | unjumble, cloze, translate |
 | Simple sentences (M5-M10) | + unjumble, fill-in with sentences | cloze, translate |
 | Full sentences (M11+) | all types including translate | cloze (needs 14+ blanks) |
 
@@ -301,7 +301,7 @@ If a verb's imperative isn't in your content, don't use it in activities.
   title: "Check Your Knowledge"
   instruction: Choose the correct answer.   # optional
   items:  # minItems: 6
-    - question: "What does мама mean?"      # ≥5 words
+    - question: "What does мама mean?"
       explanation: "Мама means mom."        # at QUESTION level, NOT inside options
       options:                              # exactly 4, exactly 1 correct
         - text: "mom"
@@ -314,13 +314,48 @@ If a verb's imperative isn't in your content, don't use it in activities.
           correct: false
 ```
 
+**watch-and-repeat** — video pronunciation practice:
+```yaml
+- type: watch-and-repeat
+  title: "Listen and Repeat"
+  instruction: "Watch the video and repeat."  # optional
+  items:  # minItems: 6
+    - letter: "А"
+      video: "https://www.youtube.com/watch?v=..."
+      note: "Open 'a' as in 'father'."       # optional pronunciation guidance
+```
+
+**classify** — sort items into categories:
+```yaml
+- type: classify
+  title: "Vowels vs Consonants"
+  instruction: "Sort the letters."            # optional
+  categories:  # minItems: 2
+    - label: "Голосні"
+      items: ["А", "О", "У", "І"]
+    - label: "Приголосні"
+      items: ["М", "Н", "Т", "К"]
+```
+
+**image-to-letter** — match image/emoji to first letter:
+```yaml
+- type: image-to-letter
+  title: "First Letter Match"
+  instruction: "Which letter does this word start with?"  # optional
+  items:  # minItems: 6
+    - emoji: "👩"
+      answer: "М"
+      distractors: ["Т", "Н", "К"]
+      note: "мама"                            # optional
+```
+
 **anagram** — letter scramble (M1-M10 ONLY, not M11+):
 ```yaml
 - type: anagram
   title: "Unscramble the Word"
-  instruction: "Rearrange the letters."     # optional
-  items:  # minItems: 8
-    - scrambled: "А М А М"                  # SPACE-SEPARATED, same letters as answer
+  instruction: "Rearrange the letters."       # optional
+  items:  # minItems: 6
+    - scrambled: "А М А М"                    # SPACE-SEPARATED, same letters as answer
       answer: "МАМА"
 ```
 
@@ -328,9 +363,9 @@ If a verb's imperative isn't in your content, don't use it in activities.
 ```yaml
 - type: unjumble
   title: "Put the Words in Order"
-  items:  # minItems: 8
-- words: ["Ця", "нова", "книга", "дуже", "цікава"] # array of strings, 5-10 words
-  answer: "Ця нова книга дуже цікава"   # single string
+  items:  # minItems: 6
+    - words: ["Ця", "нова", "книга", "дуже", "цікава"]
+      answer: "Ця нова книга дуже цікава"
 ```
 Do NOT use `sentence`, `jumbled`, or `scrambled` — only `words` + `answer`.
 
@@ -368,7 +403,7 @@ Do NOT use `sentence`, `jumbled`, or `scrambled` — only `words` + `answer`.
 ```yaml
 - type: true-false
   title: "True or False?"
-  items:  # minItems: 8
+  items:  # minItems: 6
     - statement: "The letter Н makes the same sound as English H."
       correct: false
       explanation: "Н looks like H but sounds like N."
