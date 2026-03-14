@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-14T05:17:03Z",
+      "ts": "2026-03-14T10:32:16Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-14T05:17:03Z",
+      "ts": "2026-03-14T10:32:16Z",
       "task_id": "v5-poeziia-baroko-pA",
       "mode": "full",
       "executor": {

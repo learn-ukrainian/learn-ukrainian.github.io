@@ -2,5 +2,26 @@
   "track": "oes",
   "slug": "pateryk-literary-form",
   "mode": "v5",
-  "phases": {}
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-14T13:27:53Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-14T13:27:53Z",
+      "task_id": "v5-pateryk-literary-form-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  }
 }

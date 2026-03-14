@@ -5885,6 +5885,9 @@ resources:
     - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
       url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
       source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура
   lit-drach-knife-sun:
     youtube:
     - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
@@ -6232,9 +6235,6 @@ resources:
     - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
       url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
       source: Radio Khartia
-    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
-      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
-      source: Суспільне Культура
   lit-koval-prose-renaissance:
     youtube:
     - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
@@ -7037,12 +7037,6 @@ resources:
       source: Історія Мови
   ruth-skovoroda-language:
     youtube:
-    - title: ULP 6-221 | Українська поезія. Григорій Сковорода «De libertate» | Ukrainian Lessons Podcast Seas...
-      url: https://www.youtube.com/watch?v=2UzBSihe1xo
-      source: Ukrainian Lessons
-    - title: '#old Ukrainian 17th century "Perestoroga" 1605 #shorts'
-      url: https://www.youtube.com/watch?v=X157csox9sk
-      source: Історія Мови
     - title: 'Russian language: winter'
       url: https://www.youtube.com/watch?v=r_Db1KAfyNQ
       source: Історія Мови
@@ -7054,8 +7048,27 @@ resources:
     - title: '[LANGUAGE OF ANCIENT LETTER] Signature of Anna Yaroslavna'
       url: https://www.youtube.com/watch?v=Xev8Sog2BlY
       source: Історія Мови
+    - title: Усе про стародавню історію України для НМТ
+      url: https://www.youtube.com/watch?v=Rfg2SfkuZrs
+      source: Ukrainian Lessons
   ruth-poeziia-baroko:
     youtube:
     - title: (3) The language of the Hetmanate of the 17th century. The Chronicle of Samovydts about Khmelnytsky
       url: https://www.youtube.com/watch?v=6FVAHppswqA
       source: Історія Мови
+  lit-osmachka-prose:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком Анатолієм Подольським
+      url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+      source: Суспільне Культура
+  lit-zhadan-kharkiv-landscape:
+    youtube:
+    - title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+      url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+      source: Radio Khartia
+    - title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває наша мова»'
+      url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+      source: Суспільне Культура

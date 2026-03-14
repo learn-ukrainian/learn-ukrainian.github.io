@@ -124,11 +124,21 @@ immersion: 100% Ukrainian
 
 ---
 
+## Downstream Audit Gates (know these BEFORE you start)
+
+Phase B content must pass these gates — plan your research accordingly:
+- **Word count**: minimum **4000** words
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes
+- **Engagement callouts**: map 6+ hooks to specific sections during research
+- **Duplicate headers**: ensure outline section names don't share keywords
+
+---
+
 ## PART 1: Deep Research
 
 Research **Кайдашева сім'я: Анатомія Конфлікту** for the **lit** track. Produce structured research notes that will drive content writing in Phase B.
 
-### Your RAG Tools (USE THEM)
+### Your RAG Tools
 
 You have access to Ukrainian language tools via MCP. **Use them during research.**
 
@@ -144,13 +154,28 @@ You have access to Ukrainian language tools via MCP. **Use them during research.
 
 > **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.
 
-**Workflow**: Search Wikipedia FIRST for factual foundation → search literary RAG for primary quotes → verify vocabulary with VESUM.
+### Research Workflow (minimize tool round-trips)
+
+> **Performance rule**: Each tool call forces context re-processing. Batch your calls. Do NOT add narration between tool calls ("I will now search...") — output ONLY the tool call block. Fewer turns = faster completion.
+
+**Batch 1 — Initial sweep (call ALL of these in ONE turn):**
+- `query_wikipedia(query="Кайдашева сім'я: Анатомія Конфлікту", mode="extract")` — factual backbone
+- `search_literary(query="Кайдашева сім'я: Анатомія Конфлікту")` — primary source excerpts
+- `verify_words(words=[...])` — check vocabulary_hints from plan
+
+**Batch 2 — Targeted follow-up (1-2 calls MAX):**
+Based on Batch 1 results, fill gaps with ONE of:
+- `search_literary` with a different query if primary quotes are missing
+- `query_wikipedia` for a related article if key context is missing
+- Skip this batch entirely if Batch 1 covered everything
+
+**That's it. 2 batches, not 4 sequential steps.** Quality comes from thinking, not from more tool calls.
 
 ### Research Requirements
 
-1. **Sources**: Use `query_wikipedia` (mode=`extract`) for Ukrainian Wikipedia articles. Also consult history.org.ua, litopys.org.ua. Use `search_literary` for primary source excerpts. Russian-language sources are PROHIBITED.
+1. **Sources**: Minimum **3 distinct sources** — at least 1 from Wikipedia AND at least 1 from `search_literary` (RAG). Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.
 2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.
-3. **Primary Quotes**: Find 2+ quotable primary source excerpts (original Ukrainian text preferred).
+3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.
 4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:
    - `[!myth-buster]` — Decolonization: correct imperial/Soviet myths
    - `[!history-bite]` — Surprising or lesser-known facts
@@ -174,16 +199,6 @@ If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish
 |---------|-----------------|-------------------------------|
 | ...     | ...             | ...                           |
 ```
-
----
-
-## Downstream Audit Gates (Phase B content will be checked for)
-
-Plan your research and outline knowing that Phase B content must pass these gates:
-- **Word count**: minimum **4000** words — allocate outline sections accordingly
-- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines
-- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
-- **Duplicate headers**: ensure outline section names don't share keywords
 
 ---
 

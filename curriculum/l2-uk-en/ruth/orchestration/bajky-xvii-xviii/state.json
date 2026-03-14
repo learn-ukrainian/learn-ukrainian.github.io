@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-14T05:25:36Z",
+      "ts": "2026-03-14T10:34:05Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-14T05:25:36Z",
+      "ts": "2026-03-14T10:34:05Z",
       "task_id": "v5-bajky-xvii-xviii-pA",
       "mode": "full",
       "executor": {

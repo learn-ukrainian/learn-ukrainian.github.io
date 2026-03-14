@@ -102,11 +102,21 @@ immersion: 100% Ukrainian
 
 ---
 
+## Downstream Audit Gates (know these BEFORE you start)
+
+Phase B content must pass these gates — plan your research accordingly:
+- **Word count**: minimum **4000** words
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes
+- **Engagement callouts**: map 6+ hooks to specific sections during research
+- **Duplicate headers**: ensure outline section names don't share keywords
+
+---
+
 ## PART 1: Deep Research
 
 Research **Bazhan Quiet Step** for the **lit** track. Produce structured research notes that will drive content writing in Phase B.
 
-### Your RAG Tools (USE THEM)
+### Your RAG Tools
 
 You have access to Ukrainian language tools via MCP. **Use them during research.**
 
@@ -122,24 +132,26 @@ You have access to Ukrainian language tools via MCP. **Use them during research.
 
 > **Important**: Invoke these tools using your standard tool-calling interface. Do NOT write Python code.
 
-### Mandatory Research Workflow (follow ALL 4 steps in order)
+### Research Workflow (minimize tool round-trips)
 
-**Step 1 — Wikipedia foundation**: Call `query_wikipedia(mode="extract")` for the main topic article. If the article is long, use `mode="sections"` then `mode="section"` to read key sections. This gives you the factual backbone.
+> **Performance rule**: Each tool call forces context re-processing. Batch your calls. Do NOT add narration between tool calls ("I will now search...") — output ONLY the tool call block. Fewer turns = faster completion.
 
-**Step 2 — Literary RAG deep search (MANDATORY)**: Call `search_literary` at least **3 times** with different queries targeting different aspects of the topic. Search for:
-- The main subject (person/event/concept name)
-- Related figures, institutions, or movements
-- The historical period or genre
+**Batch 1 — Initial sweep (call ALL of these in ONE turn):**
+- `query_wikipedia(query="Bazhan Quiet Step", mode="extract")` — factual backbone
+- `search_literary(query="Bazhan Quiet Step")` — primary source excerpts
+- `verify_words(words=[...])` — check vocabulary_hints from plan
 
-This is where primary source quotes come from — chronicles, legal texts, poetry, testimonies, scholarly works. Our RAG has 125K+ chunks from litopys.org.ua, izbornyk.org.ua, and scholarly monographs. **Do NOT skip this step even if Wikipedia gave good results.** Wikipedia is secondary; literary RAG has primary sources.
+**Batch 2 — Targeted follow-up (1-2 calls MAX):**
+Based on Batch 1 results, fill gaps with ONE of:
+- `search_literary` with a different query if primary quotes are missing
+- `query_wikipedia` for a related article if key context is missing
+- Skip this batch entirely if Batch 1 covered everything
 
-**Step 3 — Cross-verify**: Use `verify_words` to check any Ukrainian vocabulary you plan to highlight. Use `query_grac(mode="frequency")` for frequency data on key terms.
-
-**Step 4 — Fill gaps**: If Steps 1-2 left gaps in any `content_outline` section, do targeted `query_wikipedia` or `search_literary` calls for those specific sections.
+**That's it. 2 batches, not 4 sequential steps.** Quality comes from thinking, not from more tool calls.
 
 ### Research Requirements
 
-1. **Sources**: Minimum **4 distinct sources** — at least 1 from Wikipedia AND at least 2 from `search_literary` (RAG). Also consult history.org.ua, litopys.org.ua. Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.
+1. **Sources**: Minimum **3 distinct sources** — at least 1 from Wikipedia AND at least 1 from `search_literary` (RAG). Russian-language sources are PROHIBITED. Every factual claim must be traceable to a cited source.
 2. **Timeline**: Build a chronological timeline with 5+ dated events/milestones.
 3. **Primary Quotes**: Find **3+** quotable primary source excerpts using `search_literary`. Use guillemet quotes «...» for Ukrainian text. If `search_literary` returns relevant chunks, extract and attribute them properly. Mark unverified quotes as `[needs verification]`.
 4. **Engagement Hooks**: Research and expand upon any hooks already suggested in the `content_outline`, and add new ones to reach a minimum of 6 total hooks mapped to specific content sections:
@@ -165,16 +177,6 @@ If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish
 |---------|-----------------|-------------------------------|
 | ...     | ...             | ...                           |
 ```
-
----
-
-## Downstream Audit Gates (Phase B content will be checked for)
-
-Plan your research and outline knowing that Phase B content must pass these gates:
-- **Word count**: minimum **4000** words — allocate outline sections accordingly
-- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Soviet tropes (e.g., erasure of victim identity), imperial terminology, or Moscow-centric timelines
-- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
-- **Duplicate headers**: ensure outline section names don't share keywords
 
 ---
 

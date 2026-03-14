@@ -1,28 +1,9 @@
-        # Fix 3 issue(s) in `being-and-becoming`
+        # Fix 1 issue(s) in `being-and-becoming`
 
         ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'успішним' (m/n/p) + 'став' (m)
-**How to fix:** Change 'успішним' to match the gender/case of 'став', or vice versa.
-**Where:** ~line 127
-
-### Fix 2: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'була' (f) + 'студенткою' (f)
-**How to fix:** Change 'була' to match the gender/case of 'студенткою', or vice versa.
-**Where:** ~line 202
-
-### Fix: Gate `Immersion` FAIL — 20.8% LOW (target 45-65% (A2.1))
-**⚠ SCOPE WARNING:** Immersion gap is 24% (20.8% → 45% min). This is too large for a fix pass. Focus on the EASIEST wins:
-1. Add Ukrainian section headers with English in parentheses
-2. Add 'Наприклад:' / 'Порівняйте:' before example blocks
-3. Add short Ukrainian phrases with (translations) in existing paragraphs
-Do NOT rewrite entire sections. Target +5-8% improvement max.
-
-### Other Audit Failures
-
-```
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a2/audit/being-and-becoming-audit.log for details)
-```
+**What:** Agreement mismatch: 'хорошою' (f) + 'стану' (m)
+**How to fix:** Change 'хорошою' to match the gender/case of 'стану', or vice versa.
+**Where:** ~line 224
 
 
 

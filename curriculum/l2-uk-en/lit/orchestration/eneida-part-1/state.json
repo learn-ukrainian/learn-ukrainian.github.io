@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-13T12:49:27Z",
+      "ts": "2026-03-14T08:45:31Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T12:49:27Z",
+      "ts": "2026-03-14T08:45:31Z",
       "task_id": "v5-eneida-part-1-pA",
       "mode": "full",
       "executor": {

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T23:06:10.590341+00:00'
+discovered_at: '2026-03-14T10:26:32.455619+00:00'
 query_keywords:
 - Koval Storinky
 - канон
@@ -18,33 +18,18 @@ videos:
 - url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
   channel: Radio Khartia
   title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
-  relevance_score: 0.8
-  relevance_note: This video directly addresses the concept of 'канон' (a module vocabulary
-    term), the continuity of Ukrainian literature, and the problem of cultural memory.
-    This is highly relevant to understanding 'Koval Storinky' within its cultural
-    and historical epoch and its decolonizational aspect.
+  relevance_score: 0.75
+  relevance_note: Addresses the restoration of the Ukrainian literary canon and cultural
+    memory, directly referencing 'канон' from the module's vocabulary. It provides
+    foundational cultural and historical context for understanding Ukrainian literature,
+    aligning with the module's 'Вступ та культурний контекст' and 'Деколонізаційний
+    вимір' sections.
   transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
     вивчають. Себто так чи інакше ми будемо говорити про тяглість української літератури,
-    про проблему пам'яті, власне, про те, що в є в назві книжки Віри Павліної про
-    амнезію, про її подолання.
-  embed_suggestion: After section Вступ та культурний контекст -- as it provides a
-    foundational discussion on the Ukrainian literary canon and its historical development,
-    crucial for contextualizing 'Koval Storinky'.
-- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
-  channel: Суспільне Культура
-  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
-    наша мова»'
-  relevance_score: 0.6
-  relevance_note: The video discusses Serhiy Zhadan's work focusing on the Ukrainian
-    language, its resilience, and the concept of metaphor, which is a module vocabulary
-    term. It provides a contemporary cultural context relevant to language and decolonization
-    themes in literary analysis.
-  transcript_excerpt: Назва збірки походить від назви українського правопису, в ній
-    Сергій Жадан досліджує мову, як стверджує сам автор, цитую, 'здатність мови повертатися
-    і самовідтворюватись, про її вразливість, про її здатність до опору'.
-  embed_suggestion: After section Мова, стиль та поетика -- because it discusses a
-    contemporary writer's engagement with language and its transformations, linking
-    to stylistic analysis.
+    про проблему пам'яті.
+  embed_suggestion: After section Вступ та культурний контекст -- as it provides essential
+    background on the Ukrainian literary landscape and its historical challenges,
+    setting the stage for the analysis of a specific work.
 - url: https://www.youtube.com/watch?v=F3i24QzrcO4
   channel: Harvard Ukrainian Research Institute
   title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
@@ -55,6 +40,14 @@ videos:
 - url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
   channel: Суспільне Культура
   title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''

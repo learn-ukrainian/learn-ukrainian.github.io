@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-14T04:32:45Z",
+      "ts": "2026-03-14T10:17:21Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-14T04:32:45Z",
+      "ts": "2026-03-14T10:17:21Z",
       "task_id": "v5-uzhevych-hramatyka-pA",
       "mode": "full",
       "executor": {

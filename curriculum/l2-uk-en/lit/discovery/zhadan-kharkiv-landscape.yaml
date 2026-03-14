@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T22:51:39.872647+00:00'
+discovered_at: '2026-03-14T10:06:06.049689+00:00'
 query_keywords:
 - Zhadan Kharkiv Landscape
 - канон
@@ -15,6 +15,35 @@ query_keywords:
 error: null
 warning: null
 videos:
+- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
+  channel: Radio Khartia
+  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
+  relevance_score: 0.8
+  relevance_note: This video features Serhiy Zhadan discussing the Ukrainian literary
+    canon, his identity as a 'Kharkiv romantic/idealist,' and themes of literary continuity
+    and memory. This provides strong contextual background for a work titled 'Kharkiv
+    Landscape,' especially regarding its cultural and decolonizational dimensions.
+  transcript_excerpt: Ви не просто харківський романтик, ви харківський ідеаліст,
+    Сергію, тому що бажана в школі давно нема. ... Себто так чи інакше ми будемо говорити
+    про тяглість української літератури, про проблему пам'яті...
+  embed_suggestion: After section 'Вступ та культурний контекст' – it directly links
+    Zhadan to Kharkiv's literary tradition and sets the stage for understanding his
+    work within the broader Ukrainian literary landscape.
+- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
+  channel: Суспільне Культура
+  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
+    наша мова»'
+  relevance_score: 0.6
+  relevance_note: The video features Serhiy Zhadan discussing his new poetry collection
+    and general thoughts on the Ukrainian language. While relevant to his work and
+    broader cultural context, it does not specifically analyze the 'Zhadan Kharkiv
+    Landscape' work itself.
+  transcript_excerpt: Сергій Жадан досліджує мову як стверджує сам автор цитую здатність
+    мови повертатися і самовідтворюватись про її вразливість про її здатність до опору
+    кінець цитати
+  embed_suggestion: After section 'Мова, стиль та поетика' – it provides broader context
+    on Zhadan's views on language and its role in society, which can enrich the stylistic
+    analysis of 'Kharkiv Landscape'.
 - url: https://www.youtube.com/watch?v=F3i24QzrcO4
   channel: Harvard Ukrainian Research Institute
   title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'
@@ -25,21 +54,6 @@ videos:
 - url: https://www.youtube.com/watch?v=Ud-3_gW8Pto
   channel: Суспільне Культура
   title: 'Різдвяний концерт на UA: Культура. Хор «Ластівка»'
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=dSaZkGK8yKY
-  channel: Суспільне Культура
-  title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
-    наша мова»'
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=uFsAk8Fg3yI
-  channel: Radio Khartia
-  title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''

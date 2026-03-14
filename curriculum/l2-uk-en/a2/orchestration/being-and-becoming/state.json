@@ -23,7 +23,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-13T23:22:39Z",
+      "ts": "2026-03-14T11:16:45Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -32,15 +32,37 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-13T23:22:39Z",
+      "ts": "2026-03-14T11:16:45Z",
       "note": "extracted-from-full-build",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
       }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-14T11:31:41Z",
+      "attempts": 5,
+      "note": "dedup-prompt-bug:constraint-conflict-dative",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-14T11:43:45Z",
+      "attempts": 4,
+      "note": "needs-manual-review",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
     }
   },
   "_immersion_regenerated": true,
-  "last_updated": "2026-03-13T23:17:56Z"
+  "last_updated": "2026-03-14T10:25:01Z"
 }

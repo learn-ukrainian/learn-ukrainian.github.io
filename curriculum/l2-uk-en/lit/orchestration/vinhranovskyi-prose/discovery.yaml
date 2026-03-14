@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T21:45:33.989933+00:00'
+discovered_at: '2026-03-14T10:02:35.257329+00:00'
 query_keywords:
 - Vinhranovskyi Prose
 - канон
@@ -19,32 +19,30 @@ videos:
   channel: Radio Khartia
   title: Як відновити український літературний ґрунт? Про Бажана, Тичину і нашу культуру
   relevance_score: 0.7
-  relevance_note: The video discusses the restoration of Ukrainian literary ground,
-    the concept of a literary 'канон', and the continuity of Ukrainian literature,
-    addressing issues of cultural amnesia. This directly reinforces the 'Вступ та
-    культурний контекст' of any Ukrainian literary module, including Vinhranovskyi's
-    prose, and explicitly uses the vocabulary term 'канон'.
+  relevance_note: The video explores the concept of the Ukrainian literary canon,
+    discussing key figures like Bazhan and Tychyna and the process of restoring Ukrainian
+    literary heritage. This directly relates to the module's 'Вступ та культурний
+    контекст' section and the vocabulary term 'канон', providing essential background
+    for understanding literary analysis.
   transcript_excerpt: Канон залежить від великих письменників доби, в якій цей канон
-    вивчають. Себто так чи інакше ми будемо говорити про тяглість української літератури,
-    про проблему пам'яті.
-  embed_suggestion: After section Вступ та культурний контекст -- because it provides
-    a strong general cultural and literary context, discussing the literary canon
-    and the continuity of Ukrainian literature.
+    вивчають. Бажан має бути повернутий в шкільну програму.
+  embed_suggestion: After section Вступ та культурний контекст – the discussion about
+    the literary canon and its formation provides crucial context for understanding
+    Ukrainian prose within its cultural landscape.
 - url: https://www.youtube.com/watch?v=dSaZkGK8yKY
   channel: Суспільне Культура
   title: 'Сергій Жадан: «"Скрипниківка"» — метафора змін і трансформацій, яких набуває
     наша мова»'
-  relevance_score: 0.4
-  relevance_note: The video discusses contemporary Ukrainian literature and the resilience
-    of the Ukrainian language, which is tangentially related to the broader context
-    of Ukrainian prose but not directly to Vinhranovskyi's work or its specific analysis.
-    The terms 'метафора' and 'мова' are relevant vocabulary.
-  transcript_excerpt: Сергій Жадан досліджує мову, її здатність повертатися і самовідтворюватись,
-    про її вразливість та здатність до опору. Будемо говорити про презентацію нової
-    збірки «Скрипниківка», всеукраїнський тур та волонтерську діяльність.
-  embed_suggestion: After section Мова, стиль та поетика -- because it discusses the
-    Ukrainian language and its characteristics, which can complement a broader discussion
-    on style and poetics.
+  relevance_score: 0.5
+  relevance_note: The video discusses contemporary Ukrainian language and poetry,
+    focusing on its resilience and transformations. While not directly about Vinhranovskyi's
+    prose, its themes of language, style, and resistance can be tangentially related
+    to the module's sections on 'Мова, стиль та поетика' and 'Деколонізаційний вимір'.
+  transcript_excerpt: Сергій Жадан досліджує мову як стверджує сам автор цитую здатність
+    мови повертатися і самовідтворюватись про її вразливість про її здатність до опору.
+  embed_suggestion: After section Деколонізаційний вимір – it discusses the dynamic
+    nature of language and its capacity for resistance, which aligns with decolonization
+    themes in literature.
 - url: https://www.youtube.com/watch?v=F3i24QzrcO4
   channel: Harvard Ukrainian Research Institute
   title: 'Ukraine in the World: Panel IV: Rethinking the Ukrainian Literary Canon'

@@ -2,13 +2,13 @@
   "module": "being-and-becoming",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-03-14T00:29:47.048354Z",
+  "last_audit": "2026-03-14T12:49:35.307171Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-14T00:29:29.821360Z",
+    "md": "2026-03-14T12:43:00.735805Z",
     "meta": "2026-03-13T15:47:31.859275Z",
-    "activities": "2026-03-14T00:27:37.925857Z",
-    "vocabulary": "2026-03-14T00:22:39.255974Z",
+    "activities": "2026-03-14T12:42:28.642179Z",
+    "vocabulary": "2026-03-14T12:40:01.097762Z",
     "research": "2026-03-12T20:44:51.525765Z",
     "plan": "2026-03-05T15:41:10.430730Z"
   },
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2699/2000 (raw: 2875) | immersion: 20.8% LOW (target 45-65% (A2.1))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3525/2000 (raw: 3661)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "37/1"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 2,
+    "blocking_issues": [
+      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+    ],
+    "pass_count": 5,
     "fail_count": 1,
-    "deferred_count": 3
+    "deferred_count": 0
   }
 }

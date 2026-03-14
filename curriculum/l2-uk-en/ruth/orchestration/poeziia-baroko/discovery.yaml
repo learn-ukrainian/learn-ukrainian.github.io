@@ -1,4 +1,4 @@
-discovered_at: '2026-03-14T05:16:08.600877+00:00'
+discovered_at: '2026-03-14T10:31:11.126746+00:00'
 query_keywords:
 - Українська бароко поезія XVI-XVII ст.
 - Основний матеріал
@@ -20,15 +20,20 @@ videos:
   channel: Історія Мови
   title: (3) The language of the Hetmanate of the 17th century. The Chronicle of Samovydts
     about Khmelnytsky
-  relevance_score: 0.55
+  relevance_score: 0.5
   relevance_note: The video discusses the language of the Hetmanate in the 17th century
-    and a historical chronicle (Samovydets' Chronicle), providing context for the
-    linguistic environment of the period. While not directly about Baroque poetry,
-    it offers relevant background for the module's theme of Ukrainian competing as
-    a literary language in that era.
+    and the Chronicle of Samovydts, providing historical and linguistic context for
+    the period. While it is relevant to the 17th century and Ukrainian language, it
+    does not directly focus on 'Baroque poetry' or its specific forms (syllabic verse,
+    panegyrics, laments) which are the core of this module. It's tangentially related
+    through historical context.
   transcript_excerpt: мова Гетьманщини самовидець про Хмельницького мовою того часу
-  embed_suggestion: After Вступ (Introduction) — to provide historical and linguistic
-    context for the module's topic.
+    третя частина бо маючи в тому своїм у гостях того ілляша орлянчика Переяславського
+    привілею у поївши оного ключ у п'яного взявши ти Слав свого посланця по той привілей
+    даний от короля його милости і Владислава ivon і прирізу його посланець
+  embed_suggestion: After section Вступ (Introduction) - This video provides valuable
+    historical and linguistic context for the 17th century, setting the stage for
+    the emergence of Baroque poetry, even though it doesn't cover poetry specifically.
 blogs: []
 rag_chunks:
 - score: 0.5

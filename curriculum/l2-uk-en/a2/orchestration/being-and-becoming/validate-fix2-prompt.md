@@ -1,33 +1,59 @@
-        # Fix 4 issue(s) in `being-and-becoming`
+        # Fix 11 issue(s) in `being-and-becoming`
 
         ### Fix 1: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'успішним' (m/n/p) + 'став' (m)
-**How to fix:** Change 'успішним' to match the gender/case of 'став', or vice versa.
-**Where:** ~line 127
+**What:** Agreement mismatch: 'впевнений' (m) + 'що' (n)
+**How to fix:** Change 'впевнений' to match the gender/case of 'що', or vice versa.
+**Where:** ~line 45
 
 ### Fix 2: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'була' (f) + 'студенткою' (f)
-**How to fix:** Change 'була' to match the gender/case of 'студенткою', or vice versa.
-**Where:** ~line 202
+**What:** Agreement mismatch: 'стала' (f) + 'менеджеркою' (f)
+**How to fix:** Change 'стала' to match the gender/case of 'менеджеркою', or vice versa.
+**Where:** ~line 95
 
-### Fix 3: ACTIVITY_VESUM_FAIL
-**What:** Activity answers contain VESUM-failed words: айтівецьи, айтівецьом
+### Fix 3: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'була' (f) + 'звичайною' (f)
+**How to fix:** Change 'була' to match the gender/case of 'звичайною', or vice versa.
+**Where:** ~line 95
+
+### Fix 4: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'лікарів' (m) + 'талановитих' (p)
+**How to fix:** Change 'лікарів' to match the gender/case of 'талановитих', or vice versa.
+**Where:** ~line 132
+
+### Fix 5: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'була' (f) + 'вчителькою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'вчителькою', or vice versa.
+**Where:** ~line 166
+
+### Fix 6: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'була' (f) + 'простою' (f/m)
+**How to fix:** Change 'була' to match the gender/case of 'простою', or vice versa.
+**Where:** ~line 220
+
+### Fix 7: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'нашого' (m/n) + 'директоркою' (f)
+**How to fix:** Change 'нашого' to match the gender/case of 'директоркою', or vice versa.
+**Where:** ~line 223
+
+### Fix 8: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'хорошою' (f) + 'буду' (f)
+**How to fix:** Change 'хорошою' to match the gender/case of 'буду', or vice versa.
+**Where:** ~line 224
+
+### Fix 9: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'була' (f) + 'економісткою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'економісткою', or vice versa.
+**Where:** ~line 229
+
+### Fix 10: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'була' (f) + 'айтівкою' (f)
+**How to fix:** Change 'була' to match the gender/case of 'айтівкою', or vice versa.
+**Where:** ~line 230
+
+### Fix 11: ACTIVITY_VESUM_FAIL
+**What:** Activity answers contain VESUM-failed words: Іван
 **How to fix:** Fix spelling or replace these words — students will practice non-existent forms.
 **Where:** being-and-becoming.yaml
-
-### Fix: Gate `Immersion` FAIL — 20.8% LOW (target 45-65% (A2.1))
-**⚠ SCOPE WARNING:** Immersion gap is 24% (20.8% → 45% min). This is too large for a fix pass. Focus on the EASIEST wins:
-1. Add Ukrainian section headers with English in parentheses
-2. Add 'Наприклад:' / 'Порівняйте:' before example blocks
-3. Add short Ukrainian phrases with (translations) in existing paragraphs
-Do NOT rewrite entire sections. Target +5-8% improvement max.
-
-### Other Audit Failures
-
-```
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a2/audit/being-and-becoming-audit.log for details)
-```
 
 
 

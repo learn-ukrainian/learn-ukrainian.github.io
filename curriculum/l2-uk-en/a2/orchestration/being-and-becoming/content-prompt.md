@@ -1,9 +1,9 @@
-# Full Module Build: Content + Activities + Vocabulary
+# Full Module Build: Content + Activities + Vocabulary (RAG-enabled)
 
 > **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Encouraging Cultural Guide.**
 >
 > **Your role:** You are an **editor and adapter**, not an author writing from scratch.
-> Ukrainian school textbooks have already solved "how to teach this topic." Your job is to **find the right pedagogical approach in the textbook excerpts below** and **transform it** for English-speaking learners (teens and adults) at the a2 level.
+> Ukrainian school textbooks have already solved "how to teach this topic." Your job is to **search for the right pedagogical approach using your RAG tools** and **transform it** for English-speaking learners (teens and adults) at the a2 level.
 >
 > **Your task:** Build a complete beginner module — lesson content, practice activities, and vocabulary — in one pass.
 > Writing content and activities together ensures consistency: the same words, the same gender pairings, the same phrases appear in both.
@@ -17,7 +17,7 @@
 | File | What to extract |
 |------|----------------|
 | `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/research/being-and-becoming-research.md` | Background knowledge, engagement hooks |
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a2/being-and-becoming.yaml` | Objectives, content_outline, vocabulary_hints (source of truth) |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a2/being-and-becoming.yaml` | Objectives, vocabulary_hints (source of truth) |
 | `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A2.md` | Level constraints, immersion band |
 | `schemas/activities-a2.schema.json` | Activity field definitions (`additionalProperties: false`) |
 
@@ -25,7 +25,54 @@ Read ALL files before writing anything.
 
 ---
 
-## 2. Constraints (apply to EVERYTHING you write)
+## 2. Your RAG Tools (USE THEM)
+
+You have access to Ukrainian language tools via MCP. **Use them throughout your work** — not just at the start.
+
+### Essential Tools (use for EVERY module)
+
+| Tool | When to use | Example |
+|------|------------|---------|
+| `search_text` | Find how this topic is taught in real textbooks | `search_text("знахідний відмінок", grade=3)` |
+| `verify_words` | Check Ukrainian words exist in VESUM before using them | `verify_words(["книга", "великий", "гарний"])` |
+| `verify_lemma` | Get all inflected forms of a word | `verify_lemma("книга")` → nom/gen/dat/acc/... |
+
+### Optional Tools (use when relevant)
+
+| Tool | When to use |
+|------|------------|
+| `query_pravopys` | Spelling or grammar rules you're explaining |
+| `query_grac` | Check if a word/phrase is actually used (frequency data) |
+| `search_images` | Find relevant textbook illustrations |
+
+### Your Workflow
+
+1. **RESEARCH FIRST**: Before writing, search textbooks for how this topic is taught at grade 3-5 level:
+   - Search for the topic keywords: `search_text("", grade=3-5)`
+   - Search for exercise patterns: `search_text("вправа ", grade=3-5)`
+   - Search for dialogue models: `search_text("діалог ", grade=3-5)`
+   - Study the pedagogical progression — how do real textbooks introduce this concept?
+   - Study textbook dialogues — notice how speakers have **real situations** (market, classroom, street) and **natural responses** (not just echoing commands)
+
+2. **VERIFY AS YOU WRITE**: Before using any Ukrainian word you're unsure about, call `verify_words` to check it exists. Empty result = the word doesn't exist in standard Ukrainian. Do NOT use it.
+
+3. **VERIFY ACTIVITIES**: After creating activities, batch-verify all Ukrainian words in your activity items with `verify_words`.
+
+> **Since your students are English-speaking teens and adults (L2)**, translate textbook exercise instructions to English while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
+
+**L1→L2 Transformation:** Textbooks teach Ukrainian to native speakers (L1). Your learners need:
+1. **Explicit grammar rules** in English (L1 learners already know intuitively)
+2. **Level-appropriate vocabulary only** (L1 Grade 5 vocab ≠ L2 A1 vocab)
+3. **Setting/purpose for dialogues** (L1 assumes shared cultural context)
+4. **Production/comprehension exercises** (not metalinguistic analysis)
+
+**Cite adaptations:** For each dialogue or exercise adapted from textbook search results, add:
+`<!-- adapted from: {source author}, Grade {N}, вправа {N} -->`
+Even when no exact textbook exercise matches, ground your content in textbook pedagogy — use their progression patterns, example types, and exercise formats. Do NOT add fallback comments.
+
+---
+
+## 3. Constraints (apply to EVERYTHING you write)
 
 ### Grammar Constraints (HARD FAIL if violated)
 
@@ -86,15 +133,25 @@ A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No 
 
 **Three rules govern where each language appears:**
 
-1. **Paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
+1. **Explanatory paragraphs = English** with Ukrainian vocabulary **bolded inline**: "The informal command of **читати** (to read) is **читай**." Short phrases and grammatical fragments (e.g., comparing **Я йду** vs **Я іду**) may appear inline.
+
+**MANDATORY for A2+: Ukrainian Reading Practice blocks.** After EVERY major section, include a **Reading Practice** block — a short Ukrainian paragraph (5-8 sentences) that uses the grammar and vocabulary just taught. Follow it with an English translation. This is the PRIMARY driver of immersion score. Format:
+
+> **(Читання / Reading Practice)**
+>
+> Олена працює лікаркою в Києві. Вона дуже любить свою роботу. Раніше вона була студенткою...
+>
+> *(Olena works as a doctor in Kyiv. She loves her job very much. Previously she was a student...)*
+
+Without these blocks, immersion will be 15-20% and the module FAILS.
 
 2. **Full Ukrainian sentences = structural containers only.** Any Ukrainian sentence (3+ words with a verb) must go in one of these containers — never in flowing prose paragraphs:
-   - **Tables** — paradigms, vocabulary groups, gender sorting (highest immersion density)
+   - **Tables** — paradigms, vocabulary groups, gender sorting (WARNING: tables contribute ZERO to immersion score)
    - **Bulleted example lists** — Ukrainian line + English gloss: `- **Читай книгу!** — Read the book!`
    - **Blockquote dialogues** — mini-conversations with labeled speakers
    - **Pattern boxes** — transformations: `читати → читай → читайте`
 
-3. **Vary containers.** Never use the same container type twice in a row. Alternate between tables, example lists, dialogues, and pattern boxes to keep the rhythm natural.
+3. **Prioritize score-generating containers.** Because tables yield zero immersion points, use **bulleted example lists** and **blockquote dialogues** for the vast majority of your Ukrainian content. Reserve tables strictly for English-heavy grammar paradigms and reference charts.
 
 ### Style Rules
 
@@ -106,14 +163,15 @@ A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No 
 
 ---
 
-## 3. Write the Lesson Content
+## 4. Write the Lesson Content
 
 Write **Being and Becoming** for the a2 track.
 
 **Targets:**
-- 2000–3000 words (under 2000 = FAIL)
+- 2000–3000 words (under 2000 = FAIL, over 3000 = also FAIL — trim excess)
 - 4+ callout boxes (`[!tip]`, `[!warning]`, `[!did-you-know]`, `[!culture]`)
 - EXACT H2 titles from the outline below — missing/renamed sections fail validation
+- **MUST end with a `# Підсумок` section** containing a brief recap and 3-4 self-check questions with English translations
 
 ## REQUIRED H2 Sections (use EXACT titles)
 
@@ -139,19 +197,24 @@ Your output MUST use these EXACT H2 headings — do NOT rephrase, translate diff
 
 ### Writing Style
 
-You're writing for an A1 learner progressing through a structured course. They already know previous modules' content. English scaffolds new grammar; Ukrainian is what they're learning and practicing.
+You're writing for someone seeing Ukrainian for the first time. English explains; Ukrainian is what they're learning.
 
-Follow the structural containment rules above. Each H2 section MUST follow this sequence:
+Follow the structural containment rules above. In each section:
+1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
+2. **Show** the pattern with **10-15 rich Ukrainian examples** per grammar point using bulleted example lists, dialogues, and pattern boxes. This high volume is REQUIRED to hit the 45-65% immersion target. Do not rely on tables for this — they contribute zero to immersion.
+3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
-1. **DISCOVER** — Start with a Ukrainian dialogue or example set that demonstrates the pattern. NO English explanation yet. Let the learner notice the pattern themselves. Use a blockquote dialogue (4-8 lines) or a set of contrastive pairs in a table.
-2. **UNDERSTAND** — Now explain the pattern in 1-2 English sentences MAX. Use a paradigm table to show the system.
-3. **PRACTICE** — A second, different dialogue or scenario using the same pattern in a new context. End the section with a callout box (tip, warning, culture note, or fun fact).
+Keep paragraphs short (3-5 sentences). Use 4+ callout boxes spread across sections.
 
-**FORBIDDEN patterns (HARD FAIL):**
-- Starting a section with an English grammar explanation (must start with Ukrainian examples)
-- Bulleted example lists longer than 5 items (spam — use a dialogue or table instead)
-- Robotic dialogues where one speaker just echoes the other ("Читай!" / "Я читаю." repeated)
-- Listing random permutations of the same verb forms as separate bullets
+**Grammar terminology by level:**
+- **A1 M1-M10**: English grammar terms ONLY (students are still learning the alphabet)
+- **A1 M11+**: Introduce basic Ukrainian terms with English gloss: **іменник** (noun), **дієслово** (verb)
+- **A2+**: Use Ukrainian grammar terms naturally, with English gloss on FIRST use: **орудний відмінок** (instrumental case). After the first gloss, use the Ukrainian term freely.
+
+Do NOT write IPA or Latin transliteration.
+
+**Deliberate errors (showing common mistakes):**
+When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
 
 ### Dialogue Quality (CRITICAL)
 
@@ -168,6 +231,8 @@ Every blockquote dialogue MUST:
 
 Why this fails: it's a verb conjugation table disguised as a dialogue. No situation, no purpose, no natural speech.
 
+**GOOD** — These examples use level-appropriate words. Your dialogues must also use words from your content above.
+
 **GOOD** (classroom — teacher gives instructions, student responds naturally):
 > **(На уроці / In the classroom)**
 > — Читайте тут. Дивіться!
@@ -175,16 +240,15 @@ Why this fails: it's a verb conjugation table disguised as a dialogue. No situat
 > — Ні, не це. Слухайте!
 > — Так, я слухаю.
 
+**GOOD** (on the street — someone asks for help, the other responds):
+> **(На вулиці / On the street)**
+> — Скажіть, будь ласка, де це?
+> — Ідіть там. Дивіться — ось!
+> — Дякую!
+
 **Key pattern**: Each speaker has a GOAL. One asks/commands, the other REACTS (agrees, questions, redirects) — never just echoes the verb back.
 
-Limit to **2-3 dialogues per module** (not 9). Each in a DIFFERENT situation. Dialogues should make the learner think "I could use this in real life." 
-
-Keep paragraphs short (3-5 sentences). Use 4+ callout boxes spread across sections.
-
-Ukrainian grammar terminology (голосні, приголосні, іменник, дієслово, etc.) — introduce English-first with Ukrainian in parentheses: "vowels (голосні)". Only use terms relevant to this module's grammar scope (see PEDAGOGICAL_CONSTRAINTS above). Do NOT write IPA or Latin transliteration.
-
-**Deliberate errors (showing common mistakes):**
-When showing a wrong pattern to avoid, use strikethrough: ~~великий книга~~ → велика книга. This tells the validator the error is intentional. In activities, wrong forms in `options` arrays are always fine (they're distractors) — no special marking needed.
+Use your `search_text("діалог ...")` results as models for natural dialogue flow. Include **4-6 substantial dialogues** per module in DIFFERENT situations — dialogues are the strongest driver of immersion score. Make them extended conversations (4-8 lines), not just 2-line exchanges. Dialogues should feel like real life, not grammar drills.
 
 ## Language Quality Rules (Beginner Tier)
 
@@ -229,30 +293,20 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 
 
-### Textbook Source Material (ADAPT, don't ignore)
-
-
-
-**L1→L2 Transformation Rules:** The excerpts above are from Ukrainian school textbooks that teach Ukrainian to **native speakers (L1)**. Your learners are **English-speaking teens and adults (L2)**. When adapting:
-
-1. **L1 assumes intuitive grammar** → L2 needs explicit rule statements in English
-2. **L1 uses native-level vocabulary** → L2 uses level-appropriate vocabulary guided by textbook excerpts
-3. **L1 dialogues assume cultural context** → L2 dialogues need setting/purpose explanation
-4. **L1 exercises test metalinguistic knowledge** → L2 exercises test production/comprehension
-
-**Cite your adaptations:** For each dialogue or exercise you adapt from the textbook excerpts, add an HTML comment:
-```
-<!-- adapted from: Заболотний Grade 5, вправа 221 -->
-```
-Even when no exact textbook exercise matches, ground your content in textbook pedagogy — use their progression patterns, example types, and exercise formats. Do NOT add fallback comments.
-
 
 
 ---
 
-## 4. Create Activities (from YOUR content above)
+## 5. Create Activities (from YOUR content above)
 
 After writing the content, create activities that practice the Ukrainian you just taught. This is why we do both in one pass — you know exactly which words, phrases, and gender pairings you used.
+
+**Before creating activities:** Search textbooks for exercise examples:
+- `search_text("вправа ", grade=3-5)` — find exercises on this topic
+- `search_text("знайди визнач добери", grade=3-5)` — find exercise instruction patterns
+- `search_text("з'єднай підкресли", grade=3-5)` — find matching/sorting patterns
+- Study how real textbooks test this specific skill — adapt the exercise structure (not the language of instruction) for English-speaking adults
+- **After creating activities:** call `verify_words` on ALL Ukrainian words in your items/options/answers
 
 **Targets:**
 - 10–15 activities
@@ -271,99 +325,6 @@ After writing the content, create activities that practice the Ukrainian you jus
 | mark-the-words | ≥6 items |
 | error-correction | ≥6 items |
 | group-sort | ≥8 items |
-
-### Real Textbook Exercises (вправи) — Pedagogical Inspiration
-
-These are real exercises from Ukrainian school textbooks (grade 3/4). Study their **pedagogical patterns** — how they build progressively, use familiar vocabulary, and test specific skills. Since your students are English-speaking adults, **translate exercise instructions to English** while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
-
-**Grade 3, kravtsova** — Сторінка 64:
-```
-64
-180.	 1. Прочитай початок казки.
-У країні Мови жив король Іменник. Інколи він полюбляв 
-поділяти слова на групи. Тоді він вигукував:   
-— Він мій! Вона моя! Воно моє!
-Крок 1. Назвиѳ предмети, зображені на малюнку.
-2.	 Виконай завдання на вибір.
-	 Випиши іменники в однині, познач закінчення. 
-	 Випиши назви тварин. Зміни їх за числами. Познач закінчення.
-Зразок. Вовк   — вовки.
-РІД ІМЕННИКІВ
-2.	 Дослідиѳ, на які групи Іменник поділяв слова.
-Крок 2. Запиши наѳзви зображених предметів у потрібни
-```
-
-**Grade 3, vashulenko** — Сторінка 110:
-```
-110
-Навчаюся визначати рід іменників
-34
-Рід іменників:  
-чоловічий, жіночий, середній
-	 	
-1   Визначте, істоту якого роду називає 
-кожний іменник.
-	 	
-3   Допишіть пари слів за зразком.
-2   Прочитай, уставляючи замість крапок слова мій, моя, моє, він, 
-вона, воно. Визнач рід іменників і поясни свою відповідь. Запиши 
-утворені речення.
-мати — тато
-дочка — син
-малюк — маля
-Іменники бувають чоловічого, 
-жіночого і середнього роду. 
-Досліди, як визнача-
-ють рід іменників.
-Я — дослідник
-Я — дослід
-```
-
-**Grade 3, vashulenko** — Сторінка 152:
-```
-152
-Досліди, як змінюються 
-дієслова за часами.
-Я — дослідник
-Я — дослідниця
-Навчаюся змінювати дієслова за часами
-міркували
-міркуємо
-будемо міркувати
-6   Прочитай слова і порівняй їх.
-Що означає дієслово? Коли відбувається дія?
-На яке питання відповідає дієслово?
-До якої часової форми належить кожне дієслово?
-  Зроби висновок, як змінювати дієслова за часами, і звір його з таблицею.
-Час дієслів
-Питання
-Приклади
-Теперішній час
-що роблю?
-що робиш?
-що робить?
-що роблять?
-лечу, пишу
-летиш, пишеш
-
-```
-
-**Grade 3, vashulenko** — Сторінка 153:
-```
-7   Прочитай вірш Олександра Олеся. Випиши дієслова і визнач їхній час. 
-9   Прочитай текст. Розкажи про картини природи, які ти уявив (уявила).
-Пригріє —  
-пригріло.
-  Добери до виписаних дієслів форми минулого часу. Запиши їх за 
-зразком. 
-  Випишіть із тексту дієслова минулого часу у стовпчик. Доберіть до 
-них форми майбутнього часу.
-  Доведи, що всі дієслова у тексті вжито в теперішньому часі. Запиши 
-всі часові форми до кожного дієслова. 
-Скоро сонечко пригріє,
-потечуть струмки,
-темний
-```
 
 ### Which Activity Types to Use
 
@@ -439,8 +400,8 @@ If a verb's imperative isn't in your content, don't use it in activities.
 - type: unjumble
   title: "Put the Words in Order"
   items:  # minItems: 8
-    - words: ["книга", "Це", "нова"]        # array of strings
-      answer: "Це нова книга"               # single string
+- words: ["Ця", "нова", "книга", "дуже", "цікава"] # array of strings, 5-10 words
+  answer: "Ця нова книга дуже цікава"   # single string
 ```
 Do NOT use `sentence`, `jumbled`, or `scrambled` — only `words` + `answer`.
 
@@ -507,16 +468,18 @@ Rules for YAML:
 
 ---
 
-## 5. Self-Audit Before Output
+## 6. Self-Audit Before Output
 
 
 
 ### Content Checks
-- [ ] Word count ≥ 2000?
+- [ ] Word count between 2000 and 3000? (over ceiling = FAIL, trim excess)
 - [ ] Every plan section has prose?
+- [ ] **Summary section present** (`# Підсумок`) with self-check questions?
 - [ ] 4+ callout boxes?
 - [ ] All target vocabulary words used in content?
 - [ ] No Russianisms, Russian characters, IPA?
+- [ ] **Grammar terms glossed on first use** (e.g., "орудний відмінок (instrumental case)")?
 - [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
 - [ ] **Dialogue quality**: Max 2-3 dialogues total. Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
 - [ ] **Textbook citations**: At least 1 `<!-- adapted from: ... -->` or `<!-- original: ... -->` comment per H2 section.
@@ -533,9 +496,13 @@ Rules for YAML:
 - [ ] No extra fields (schema is `additionalProperties: false`)?
 - [ ] No `hint` fields in any activity items?
 
+### VESUM Verification (RAG-specific)
+- [ ] Called `verify_words` on all Ukrainian words in activities?
+- [ ] No words with empty VESUM results in final output?
+
 ---
 
-## 6. Output Format
+## 7. Output Format
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
 
@@ -619,5 +586,6 @@ items:
 **Raw Error**: {actual error or "None"}
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if applicable, or "N/A"}
+**RAG Tools Used**: {list tools called and what you found useful}
 ===FRICTION_END===
 ```

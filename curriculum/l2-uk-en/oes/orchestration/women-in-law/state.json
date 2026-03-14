@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-14T01:57:23Z",
+      "ts": "2026-03-14T10:06:49Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-14T01:57:23Z",
+      "ts": "2026-03-14T10:06:49Z",
       "task_id": "v5-women-in-law-pA",
       "mode": "full",
       "executor": {

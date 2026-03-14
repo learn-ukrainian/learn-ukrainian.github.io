@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-13T20:42:40Z",
+      "ts": "2026-03-14T09:59:23Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T20:42:40Z",
+      "ts": "2026-03-14T09:59:23Z",
       "task_id": "v5-osmachka-prose-pA",
       "mode": "full",
       "executor": {

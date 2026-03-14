@@ -1,4 +1,4 @@
-discovered_at: '2026-03-13T20:42:16.036742+00:00'
+discovered_at: '2026-03-14T09:58:38.695697+00:00'
 query_keywords:
 - Osmachka Prose
 - історіографія
@@ -15,6 +15,52 @@ query_keywords:
 error: null
 warning: null
 videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: Directly addresses how Soviet historiography suppressed and denigrated
+    Ukrainian figures ('радянська історія, історіографія їх, ну, викидувала і зневажали').
+    This is highly relevant to the module's 'Деколонізаційна перспектива' section
+    and the concept of 'історіографія' as it applies to understanding Ukrainian literature
+    from the Soviet period, like Osmachka's prose.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- it provides a concrete
+    example of how Soviet historiography functioned to erase or distort narratives,
+    which is crucial context for analyzing Osmachka's work through a decolonial lens.
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.6
+  relevance_note: Discusses the Stalinist regime, historical interpretation, and the
+    challenge of teaching history, which is tangentially related to the decolonization
+    perspective of Osmachka's work and the module's 'історіографія' vocabulary. It
+    provides historical context relevant to the era Osmachka wrote in.
+  transcript_excerpt: це виклик для академічної освітньої середовища України як викладати
+    історію Другої світової війни Як викладати зокрема історію Голокосту в цих умовах
+    коли москові творить такі злочини на нашій землі то взагалі виклик такий про зміну
+    йдеться про зміну парадигми дослідження говоріння і осмислення Другої Світової
+    ми вже приречені порівнювати злочинами путінського режиму і тому ця агресія зараз
+    впливає на все на нашу діяльність на життя на роботу
+  embed_suggestion: After section Деколонізаційна перспектива -- as it frames the
+    challenge of interpreting history under and after repressive regimes, which aligns
+    with decolonizing the narrative around Osmachka's work.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.3
+  relevance_note: Focuses on the business history and influence of the Tereşchenko
+    family in the Russian Empire. While it's Ukrainian history, it lacks direct thematic
+    connection to Osmachka's prose, literary analysis, or the Soviet-era decolonization
+    perspective relevant to the module.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not relevant for embedding.
 - url: https://www.youtube.com/watch?v=aQLb5PaOxWg
   channel: Harvard Ukrainian Research Institute
   title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
@@ -33,29 +79,6 @@ videos:
 - url: https://www.youtube.com/watch?v=QLSDbqPHpLg
   channel: Суспільне Культура
   title: ГУЛАГ. Історія. Дискусія Французького інституту
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
-  channel: Суспільне Культура
-  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
-    Анатолієм Подольським
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=qizEIzPxRXc
-  channel: Суспільне Док
-  title: Чому в СРСР рід Терещенків був табуйованим
-  relevance_score: 0.0
-  relevance_note: ''
-  transcript_excerpt: ''
-  embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
-  channel: Суспільне Док
-  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
-    ТЕРЕЩЕНКІВ | Серія 2'
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''

@@ -1,4 +1,4 @@
-discovered_at: '2026-03-14T04:49:32.316054+00:00'
+discovered_at: '2026-03-14T10:23:04.607167+00:00'
 query_keywords:
 - Українські грамоти XIV століття
 - Основний матеріал
@@ -20,49 +20,49 @@ videos:
   channel: Історія Мови
   title: '[ANCIENT CERTIFICATES] Charter about Mogorich – Halych, 1194.'
   relevance_score: 0.9
-  relevance_note: Video directly discusses 14th-century charters ('грамоті XIV століття')
-    and provides a specific historical example ('могорич у XIV століттях'), aligning
-    perfectly with the module's core topic.
+  relevance_note: Directly discusses charters, specifically mentioning 14th-century
+    documents and related historical context. Aligns well with the module's core topic
+    of Ukrainian charters of the 14th century.
   transcript_excerpt: А ще ми згадаємо і про другий зафіксований могорич у грамоті
     XIV століття.
-  embed_suggestion: After Основний матеріал -- provides a detailed example of a 14th-century
-    charter discussed in the main content.
+  embed_suggestion: After Основний матеріал -- provides specific examples and deeper
+    context for the types of charters discussed in the module.
 - url: https://www.youtube.com/watch?v=Xev8Sog2BlY
   channel: Історія Мови
   title: '[LANGUAGE OF ANCIENT LETTER] Signature of Anna Yaroslavna'
-  relevance_score: 0.8
-  relevance_note: While focusing on an 11th-century charter, the video discusses the
-    language and significance of ancient Ukrainian 'грамоти', which directly reinforces
-    the module's understanding of these documents, even if from an earlier period.
+  relevance_score: 0.7
+  relevance_note: Focuses on an ancient Ukrainian charter (11th century signature
+    of Anna Yaroslavna). While not 14th century, it reinforces the concept of early
+    Ukrainian documents and legal language, providing valuable historical background.
   transcript_excerpt: Сьогодні ми говоримо про кириличний підпис Анни Ярославни, української
     князівни, доньки Ярослава Мудрого. Цей підпис натрапляємо на грамоті, на грамоті,
     яку вона підписала абатству святого Крипена у 1063 році.
-  embed_suggestion: After Вступ -- provides valuable historical context and a foundational
-    understanding of ancient charters before diving into the 14th-century specifics.
+  embed_suggestion: After Вступ -- serves as an excellent historical precursor, illustrating
+    an earlier example of a Ukrainian charter and setting the stage for the 14th-century
+    focus.
 - url: https://www.youtube.com/watch?v=Rfg2SfkuZrs
-  channel: Speak Ukrainian
+  channel: Ukrainian Lessons
   title: Усе про стародавню історію України для НМТ
-  relevance_score: 0.4
-  relevance_note: The video provides a general overview of ancient Ukrainian history
-    for test preparation, which is tangentially related to the module's historical
-    context but lacks specific focus on 14th-century charters or legal documents.
+  relevance_score: 0.5
+  relevance_note: Covers ancient Ukrainian history broadly, from the earliest humans
+    to early Slavic states. While in the same general historical domain, it lacks
+    specific focus on charters or the 14th century, making it tangentially related.
   transcript_excerpt: Сьогодні ми будемо говорити про стародавню історію України.
-  embed_suggestion: After Вступ -- offers very broad historical context, but its direct
-    relevance to 'грамоти' is minimal.
+    ... ми там почнемо від виникнення, від появи перших людей на території України
+    і фактично дійдемо до перших слов'янських держав.
+  embed_suggestion: After Вступ -- could provide very broad historical context if
+    deemed necessary, but not directly tied to the module's specific focus.
 - url: https://www.youtube.com/watch?v=1MOcJ3YEjQI
-  channel: Speak Ukrainian
+  channel: Ukrainian Lessons
   title: Вся історія України за 30 хвилин. Реальна історія з Акімом Галімовим
-  relevance_score: 0.4
-  relevance_note: This video presents a very broad 'history of Ukraine in 30 minutes',
-    covering a vast timeline from ancient archaeological findings to the Kyivan Rus'.
-    Its focus is too general to be highly relevant to 14th-century charters.
-  transcript_excerpt: Мене звати акім галімов І це реальна історія історію будь-якої
-    країни починають від найстаріших археологічних знахідок на Закарпатті у Стоянці
-    Королево знайдено найдавніше людське поселення всієї центральної і Східної Європи
-    зі знаряддями праці первісної людини з каменю і кісток вік цього поселення сягає
-    близько мільйона років.
-  embed_suggestion: After Вступ -- provides a high-level historical backdrop, but
-    does not delve into the specific topic of the module.
+  relevance_score: 0.2
+  relevance_note: Provides a very general overview of Ukrainian history. Its scope
+    is too broad (from millions of years ago to early states) to be relevant to the
+    specific topic of 14th-century Ukrainian charters.
+  transcript_excerpt: вся історія України за 30 хвилин...від найстаріших археологічних
+    знахідок на Закарпатті у Стоянці Королево... до перших слов'янських держав
+  embed_suggestion: N/A -- too broad to be effectively embedded in this specific module
+    without diluting the focus.
 blogs: []
 rag_chunks:
 - score: 0.5

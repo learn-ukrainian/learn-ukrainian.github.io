@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-13T21:46:20Z",
+      "ts": "2026-03-14T10:03:27Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-13T21:46:20Z",
+      "ts": "2026-03-14T10:03:27Z",
       "task_id": "v5-vinhranovskyi-prose-pA",
       "mode": "full",
       "executor": {

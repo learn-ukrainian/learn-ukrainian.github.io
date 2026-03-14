@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-14T00:10:55Z",
+      "ts": "2026-03-14T10:42:23Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-14T00:10:55Z",
+      "ts": "2026-03-14T10:42:23Z",
       "task_id": "v5-polonisms-in-law-pA",
       "mode": "full",
       "executor": {

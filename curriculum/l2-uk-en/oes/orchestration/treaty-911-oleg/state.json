@@ -5,7 +5,7 @@
   "phases": {
     "discover": {
       "status": "complete",
-      "ts": "2026-03-14T02:09:30Z",
+      "ts": "2026-03-14T13:25:50Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
@@ -14,7 +14,7 @@
     },
     "research": {
       "status": "complete",
-      "ts": "2026-03-14T02:09:30Z",
+      "ts": "2026-03-14T13:25:50Z",
       "task_id": "v5-treaty-911-oleg-pA",
       "mode": "full",
       "executor": {
