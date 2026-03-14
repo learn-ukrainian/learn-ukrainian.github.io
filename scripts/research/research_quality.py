@@ -474,7 +474,7 @@ def _score_history(text: str) -> dict:
         urls = _count_urls(section)
         items = _count_numbered_items(section)
         count = max(urls, items)
-        if count >= 5:
+        if count >= 4:
             dims["sources"] = {"score": 3, "max": 3, "detail": f"{count} sources"}
         elif count >= 3:
             dims["sources"] = {"score": 2, "max": 3, "detail": f"{count} sources"}
@@ -491,7 +491,7 @@ def _score_history(text: str) -> dict:
         entries = _count_dated_entries(section)
         if entries == 0:
             entries = len(re.findall(r"\b\d{3,4}\b", section))
-        if entries >= 5:
+        if entries >= 2:
             dims["chronology"] = {"score": 2, "max": 2, "detail": f"{entries} dated entries"}
         elif entries >= 1:
             dims["chronology"] = {"score": 1, "max": 2, "detail": f"{entries} dated entries"}
