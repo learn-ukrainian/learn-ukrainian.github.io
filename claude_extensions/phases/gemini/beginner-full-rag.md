@@ -263,9 +263,9 @@ Choose types based on what the constraints allow:
 
 | Constraint level | Use these | Avoid these |
 |-----------------|-----------|-------------|
-| Letters/syllables only (M1-M10) | quiz, match-up, group-sort, anagram, true-false | fill-in, unjumble, cloze, translate |
-| Words + simple phrases | + fill-in, match-up with phrases | unjumble, cloze |
-| Basic sentences allowed | + unjumble, fill-in with sentences, translate | cloze (needs 14+ blanks) |
+| Alphabet modules (M1-M4) | quiz, match-up, group-sort, anagram, true-false, fill-in | unjumble, cloze, translate |
+| Simple sentences (M5-M10) | + unjumble, fill-in with sentences | cloze, translate |
+| Full sentences (M11+) | all types including translate | cloze (needs 14+ blanks) |
 
 ### Language Rules (A1/A2)
 
