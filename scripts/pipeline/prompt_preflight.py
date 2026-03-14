@@ -276,6 +276,100 @@ def parse_preflight_response(text: str) -> PreflightResult:
 
 
 # ---------------------------------------------------------------------------
+# Auto-fix
+# ---------------------------------------------------------------------------
+
+
+# Known fix patterns: maps issue keywords to prompt sections to remove/replace.
+# Each entry: (trigger_keywords, section_header_pattern, action)
+_FIX_PATTERNS: list[tuple[list[str], str, str]] = [
+    # Contradiction: immersion target mismatch
+    (
+        ["45-65%", "45–65%", "immersion target"],
+        r"(?i)this high volume is REQUIRED to hit the \d+-\d+% immersion target",
+        "this high volume is REQUIRED to hit the immersion target specified above",
+    ),
+    # Contradiction: verb ban vs verb warning
+    (
+        ["verb", "imperative", "banned", "Irregular Forms"],
+        r"### Irregular Forms Warning.*?(?=\n###|\n---|\Z)",
+        "",  # remove entire section
+    ),
+]
+
+
+def apply_preflight_fixes(
+    prompt_path: Path,
+    high_issues: list[PreflightIssue],
+    orch_dir: Path,
+) -> Path | None:
+    """Apply suggested fixes from preflight HIGH issues to the rendered prompt.
+
+    Saves the fixed prompt to orch_dir/content-prompt-fixed.md.
+    Returns the path to the fixed prompt, or None if no fixes could be applied.
+    """
+    prompt_text = prompt_path.read_text("utf-8")
+    original = prompt_text
+    fixes_applied = 0
+
+    for issue in high_issues:
+        combined = f"{issue.problem} {issue.suggested_fix}".lower()
+
+        # Try pattern-based fixes first
+        for trigger_words, pattern, replacement in _FIX_PATTERNS:
+            if any(w.lower() in combined for w in trigger_words):
+                new_text = re.sub(pattern, replacement, prompt_text, flags=re.DOTALL)
+                if new_text != prompt_text:
+                    prompt_text = new_text
+                    fixes_applied += 1
+                    log(f"  preflight: Applied pattern fix for [{issue.issue_type}] {issue.location}")
+                    break
+
+        # If no pattern matched but the fix suggests removing a section,
+        # try to find and remove the section by header
+        if "remove" in issue.suggested_fix.lower() and fixes_applied == 0:
+            # Extract section name from the location field
+            section_match = re.search(r"###?\s+(.+?)(?:\s+vs|\s+section|\Z)", issue.location)
+            if section_match:
+                section_name = section_match.group(1).strip()
+                # Remove the section (header + content until next section)
+                section_pattern = rf"###\s+{re.escape(section_name)}.*?(?=\n###|\n---|\n##[^#]|\Z)"
+                new_text = re.sub(section_pattern, "", prompt_text, flags=re.DOTALL)
+                if new_text != prompt_text:
+                    prompt_text = new_text
+                    fixes_applied += 1
+                    log(f"  preflight: Removed section '{section_name}' per suggested fix")
+
+    if fixes_applied == 0:
+        return None
+
+    # Clean up multiple blank lines left by removals
+    prompt_text = re.sub(r"\n{4,}", "\n\n\n", prompt_text)
+
+    # Save the fixed prompt
+    fixed_path = orch_dir / "content-prompt-fixed.md"
+    fixed_path.write_text(prompt_text, "utf-8")
+
+    # Also save a diff for verification
+    orig_lines = original.splitlines()
+    fixed_lines = prompt_text.splitlines()
+    import difflib
+    diff = difflib.unified_diff(
+        orig_lines, fixed_lines,
+        fromfile="original-prompt.md",
+        tofile="content-prompt-fixed.md",
+        n=2,
+    )
+    diff_text = "\n".join(diff)
+    if diff_text:
+        diff_path = orch_dir / "preflight-fix-diff.md"
+        diff_path.write_text(diff_text, "utf-8")
+        log(f"  preflight: Diff saved → {diff_path.name} ({fixes_applied} fix(es))")
+
+    return fixed_path
+
+
+# ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 

@@ -3241,7 +3241,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     # Prompt preflight: Gemini reviews its own instructions against audit gates
     if not getattr(ctx, "skip_prompt_preflight", False):
         try:
-            from pipeline.prompt_preflight import run_prompt_preflight
+            from pipeline.prompt_preflight import apply_preflight_fixes, run_prompt_preflight
             _dispatch_fn = getattr(ctx, "content_dispatch_fn", None) or dispatch_gemini
             preflight = run_prompt_preflight(
                 prompt_file, ctx.track, ctx.module_num, ctx.orch_dir,
@@ -3253,11 +3253,27 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     log(f"    → {hi.problem[:150]}")
                     if hi.suggested_fix:
                         log(f"      FIX: {hi.suggested_fix[:150]}")
+                # Auto-fix: apply suggested fixes to the prompt
+                fixed_prompt_path = apply_preflight_fixes(
+                    prompt_file, preflight.high_issues, ctx.orch_dir,
+                )
+                if fixed_prompt_path:
+                    log(f"  preflight: Auto-fixed prompt saved → {fixed_prompt_path.name}")
+                    prompt_file = fixed_prompt_path
+                else:
+                    log("  preflight: Auto-fix could not be applied — using original prompt")
                 # Save preflight state
                 ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
                     "status": preflight.status,
                     "issues": len(preflight.issues),
                     "high": len(preflight.high_issues),
+                    "auto_fixed": fixed_prompt_path is not None,
+                }
+            else:
+                ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
+                    "status": preflight.status,
+                    "issues": 0,
+                    "high": 0,
                 }
         except Exception as e:
             log(f"  preflight: Skipped — {e}")
@@ -3297,6 +3313,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             log(f"  content: Retry {attempt}/{MAX_P2_ATTEMPTS} — expanding {current_words}w → {ctx.word_target}w target")
         else:
             dispatch_file = prompt_file
+
+        # Safety check: save the final prompt Gemini will see
+        final_prompt_path = ctx.orch_dir / "content-prompt-final.md"
+        final_prompt_path.write_text(dispatch_file.read_text("utf-8"), "utf-8")
+        log(f"  content: Final prompt saved → {final_prompt_path.name} (inspect before/during build)")
 
         output_file = _gemini_output_path(ctx.slug, f"2{attempt_suffix}")
         ok, _ = _dispatch_fn(
