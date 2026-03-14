@@ -401,7 +401,7 @@ Rules for YAML:
 - [ ] No Russianisms, Russian characters, IPA?
 - [ ] **Grammar terms glossed on first use** (e.g., "орудний відмінок (instrumental case)")?
 - [ ] No bilingual ping-pong? (Scan for Ukrainian sentence → English translation in the same paragraph. If found, move the Ukrainian to a table, list, or dialogue.)
-- [ ] **Dialogue quality**: Max 2-3 dialogues total. Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
+- [ ] **Dialogue quality**: 4-6 substantial dialogues (4-8 lines each). Every dialogue starts with `> **(Location)**`. No echo-drill patterns (speaker A commands → speaker B echoes the verb). If you find an echo drill, REWRITE it with a real situation and varied responses.
 - [ ] **Textbook citations**: At least 1 `<!-- adapted from: ... -->` or `<!-- original: ... -->` comment per H2 section.
 
 ### Activity Checks
