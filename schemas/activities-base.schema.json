@@ -2183,7 +2183,6 @@
           "items": {
             "type": "object",
             "required": [
-              "emoji",
               "answer",
               "distractors"
             ],
@@ -2191,7 +2190,13 @@
             "properties": {
               "emoji": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "description": "Emoji representing the word"
+              },
+              "image": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Image/emoji representing the word (alias for emoji)"
               },
               "answer": {
                 "type": "string",
@@ -2207,7 +2212,7 @@
               },
               "note": {
                 "type": "string",
-                "description": "The Ukrainian word the emoji represents"
+                "description": "The Ukrainian word the image represents"
               }
             }
           }

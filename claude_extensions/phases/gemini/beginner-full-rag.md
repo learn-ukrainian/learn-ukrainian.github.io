@@ -180,7 +180,7 @@ You're writing for someone seeing Ukrainian for the first time. English explains
 
 Follow the structural containment rules above. In each section:
 1. **Explain** the concept in an English paragraph (with Ukrainian vocabulary bolded inline)
-2. **Show** the pattern with **10-15 rich Ukrainian examples** per grammar point using bulleted example lists, dialogues, and pattern boxes. This high volume is REQUIRED to hit the 45-65% immersion target. Do not rely on tables for this — they contribute zero to immersion.
+2. **Show** the pattern with **10-15 rich Ukrainian examples** per grammar point using bulleted example lists, dialogues, and pattern boxes. This high volume is REQUIRED to hit the immersion target specified above. Do not rely on tables for this — they contribute zero to immersion.
 3. **Reinforce** with a callout box (tip, warning, culture note, or fun fact)
 
 Keep paragraphs short (3-5 sentences). Use {ENGAGEMENT_MIN}+ callout boxes spread across sections.
@@ -279,13 +279,16 @@ Choose types based on what the constraints allow:
 - **Options** → Ukrainian when choosing Ukrainian words, English when choosing concepts
 - Never use grammar terms like іменник, дієслово, відмінок
 
-### Irregular Forms Warning (CRITICAL for activities)
+### Irregular Forms Warning (SKIP if verbs are banned above)
 
-Some Ukrainian verbs have **irregular imperative forms**. NEVER guess — use ONLY the forms from your content above. Common traps:
+If verbs ARE in scope for this module, note these irregular imperative forms. NEVER guess — use ONLY forms from your content. Common traps:
 - взяти → **візьми/візьміть** (NOT ~~взяй/взяйте~~)
 - стояти → **стій/стійте** (NOT ~~стояй/стояйте~~)
 - сісти → **сядь/сядьте** (NOT ~~сісь/сісьте~~)
 - їсти → **їж/їжте** (NOT ~~їсь/їсьте~~)
+
+If verbs are BANNED in the grammar constraints above, ignore this section entirely.
+
 - **и** is RUSSIAN. The Ukrainian conjunction is **і** (or **й** after vowels, **та**).
 
 If a verb's imperative isn't in your content, don't use it in activities.
