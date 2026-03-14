@@ -1,0 +1,70 @@
+module: folk-018
+level: FOLK
+sequence: 18
+slug: dumy-nevilnytski
+version: '2.0'
+title: 'Невільницькі думи: Плач бранців'
+subtitle: 'Captivity Dumas: The Captives'' Lament'
+focus: Turkish captivity dumas, Marusia Bohuslavka, theme of enslavement and liberation
+phase: FOLK.4
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - The невільницький цикл as the oldest and most tragic duma cycle
+  - Historical reality — Crimean slave trade, galley slavery
+  words: 750
+- section: Маруся Богуславка
+  points:
+  - The captive woman who frees prisoners — plot and analysis
+  - Gender, agency, and sacrifice — a woman as epic hero
+  words: 950
+- section: Плач невільників
+  points:
+  - Duma about the lament of captives in Turkish galleys
+  - The motif of apostrophe to the Dnieper, winds, homeland
+  words: 850
+- section: Втеча та визволення
+  points:
+  - Escape narratives — swimming, divine intervention, ransom
+  - The motif of return to the homeland — joy and devastation
+  words: 800
+- section: Текстовий аналіз
+  points:
+  - Close reading of nevylnytski dumy with glosses
+  - Emotional vocabulary — diminutives, lament formulas
+  words: 850
+- section: Підсумок
+  points:
+  - Captivity dumas as testimony of Ukrainian suffering
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- невільник
+- бранець
+- галера
+- ясир
+- визволення
+- каторга
+- Богуславка
+- тюрма
+activity_hints:
+- type: reading
+  focus: Captivity duma text analysis
+  items: 1
+- type: vocabulary
+  focus: Captivity and liberation terminology
+  items: 1
+- type: quiz
+  focus: Historical context of slave trade
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Duma Studies Scholar
+connects_to:
+- pokhodzhennia-dum
+- dumy-lytsarski
+objectives:
+- Аналізувати невільницькі думи як свідчення трагічного досвіду
+- Інтерпретувати образ Марусі Богуславки як жіночого епічного героя
+- Розуміти зв'язок між думами та історичною реальністю невільництва

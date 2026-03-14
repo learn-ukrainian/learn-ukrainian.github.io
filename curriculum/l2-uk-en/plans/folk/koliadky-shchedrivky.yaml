@@ -1,0 +1,69 @@
+module: folk-001
+level: FOLK
+sequence: 1
+slug: koliadky-shchedrivky
+version: '2.0'
+title: 'Колядки та щедрівки: Міф про створення світу'
+subtitle: 'Carols and Shchedrivky: The Cosmogonic Myth'
+focus: Cosmogonic myths in winter ritual songs, world tree symbolism, pre-Christian layers
+phase: FOLK.1
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Winter ritual poetry as the oldest stratum of Ukrainian oral tradition
+  - Calendar cycle and the solstice as mythic renewal
+  words: 750
+- section: Космогонічні мотиви
+  points:
+  - Creation myths encoded in carols — diving birds, primordial waters
+  - World tree (світове дерево) as axis mundi
+  words: 900
+- section: Поетика колядок
+  points:
+  - Formulaic openings, parallelism, ritual address to the hospodar
+  - Melodic structure and syllabic verse
+  words: 850
+- section: Щедрівки та Маланка
+  points:
+  - New Year shchedrivky cycle, Malanka rituals
+  - Gender roles in performance — male koliadnyky vs female shchedrivnyky
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected carols with glosses
+  - Archaic vocabulary and mythological references
+  words: 850
+- section: Підсумок
+  points:
+  - Survival of pre-Christian worldview in Christian-era performance
+  - Vocabulary table and key terms
+  words: 800
+vocabulary_hints:
+- колядка
+- щедрівка
+- космогонія
+- світове дерево
+- обрядовий
+- господар
+- засівання
+- вертеп
+activity_hints:
+- type: reading
+  focus: Close reading of carol texts
+  items: 1
+- type: vocabulary
+  focus: Ritual terminology
+  items: 1
+- type: comparative-analysis
+  focus: Pre-Christian vs Christian layers
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Ethnomusicologist
+connects_to:
+- vesnianky-hayivky
+objectives:
+- Аналізувати космогонічні мотиви в українських колядках та щедрівках
+- Розрізняти дохристиянські та християнські шари в обрядовій поезії
+- Демонструвати володіння спеціалізованою фольклористичною термінологією

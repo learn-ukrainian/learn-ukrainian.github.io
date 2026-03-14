@@ -1,0 +1,71 @@
+module: ruth-115
+level: RUTH
+sequence: 115
+slug: misterii-ta-moralite
+version: '2.0'
+title: 'Містерії, міраклі та мораліте'
+subtitle: 'Mysteries, Miracles, and Morality Plays'
+focus: Slovo pro zburennia pekla, allegorical personification, liturgical drama
+phase: 5
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Medieval dramatic genres in Ukrainian literary tradition
+  - Містерія, міракль, мораліте — definitions and distinctions
+  words: 750
+- section: Слово про збурення пекла
+  points:
+  - The Harrowing of Hell — Christ's descent and victory over Satan
+  - Dramatic dialogue between Christ and Hell personified
+  - Sources — apocryphal Gospel of Nicodemus
+  words: 950
+- section: Алегорична персоніфікація
+  points:
+  - Abstract concepts as characters — Смерть, Гріх, Покаяння, Правда
+  - Morality play structure — psychomachia (battle for the soul)
+  words: 850
+- section: Літургійна драма
+  points:
+  - Drama emerging from church liturgy — Easter and Christmas plays
+  - From церковний обряд to theatrical performance
+  words: 800
+- section: Текстовий аналіз
+  points:
+  - Close reading of excerpts from «Слово про збурення пекла»
+  - Dialogue analysis — rhetoric of confrontation
+  words: 850
+- section: Підсумок
+  points:
+  - Ukrainian liturgical drama in European context
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- містерія
+- мораліте
+- міракль
+- персоніфікація
+- алегорія
+- літургійна драма
+- психомахія
+- апокриф
+activity_hints:
+- type: reading
+  focus: Liturgical drama text analysis
+  items: 1
+- type: vocabulary
+  focus: Medieval dramatic terminology
+  items: 1
+- type: comparative-analysis
+  focus: Ukrainian vs Western European mystery plays
+  items: 1
+persona:
+  voice: Theater Scholar
+  role: Medieval Drama Specialist
+connects_to:
+- vertep-ukrainskyi-teatr
+- intermedii-xvii-xviii
+objectives:
+- Аналізувати «Слово про збурення пекла» як зразок літургійної драми
+- Розуміти алегоричну персоніфікацію як ключовий прийом мораліте
+- Розрізняти жанри містерії, міракля та мораліте за формальними ознаками

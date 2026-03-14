@@ -1,0 +1,69 @@
+module: folk-010
+level: FOLK
+sequence: 10
+slug: sotsialno-pobutovi-kazky
+version: '2.0'
+title: 'Соціально-побутові казки: Народний реалізм'
+subtitle: 'Everyday Tales: Folk Realism'
+focus: Everyday tales satirizing greed, corruption, social inequality
+phase: FOLK.2
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Соціально-побутова казка as the most realistic folk genre
+  - Humor and satire as weapons of the powerless
+  words: 750
+- section: Антигерої — пан, піп, чорт
+  points:
+  - The lord (пан), priest (піп), and devil (чорт) as targets of satire
+  - Social hierarchy inverted through narrative
+  words: 900
+- section: Герой — розумний наймит
+  points:
+  - The clever servant/peasant who outwits the powerful
+  - Wit as social capital — intelligence vs authority
+  words: 850
+- section: Тематичні кластери
+  points:
+  - Tales of just reward, marital relations, neighborly disputes
+  - The lazy wife, the foolish husband — gender in folk narrative
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected tales with linguistic commentary
+  - Colloquial language, proverbs embedded in narrative
+  words: 850
+- section: Підсумок
+  points:
+  - Social tales as mirror of Ukrainian village life
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- побутовий
+- сатира
+- наймит
+- пан
+- дотепність
+- справедливість
+- хитрощі
+activity_hints:
+- type: reading
+  focus: Social tale text analysis
+  items: 1
+- type: vocabulary
+  focus: Social hierarchy terminology
+  items: 1
+- type: comparative-analysis
+  focus: Satire targets across tale types
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Social Historian of Folklore
+connects_to:
+- kazky-pro-tvaryn
+- narodni-lehendy
+objectives:
+- Аналізувати соціально-побутові казки як інструмент народної критики
+- Інтерпретувати образ розумного наймита в контексті соціальної ієрархії
+- Демонструвати розуміння сатиричних прийомів у народній прозі

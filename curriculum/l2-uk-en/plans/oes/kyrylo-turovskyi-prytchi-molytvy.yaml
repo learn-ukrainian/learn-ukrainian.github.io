@@ -1,0 +1,70 @@
+module: oes-102
+level: OES
+sequence: 102
+slug: kyrylo-turovskyi-prytchi-molytvy
+version: '2.0'
+title: 'Кирило Турівський: Притчі та молитви'
+subtitle: 'Kyrylo of Turiv: Parables and Prayers'
+focus: Притча про сліпця і хромця, prayers, стовпництво (stylitism)
+phase: 4
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Kyrylo's literary range — beyond sermons to parables and prayers
+  - Biographical context — стовпник (stylite) life and ascetic practice
+  words: 750
+- section: Притча про сліпця і хромця
+  points:
+  - The blind man and the lame man — allegorical parable of body and soul
+  - Political subtext — critique of princely power
+  words: 950
+- section: Молитви Кирила
+  points:
+  - Penitential prayers — канон покаянний
+  - Poetic structure — acrostic, rhythmic prose, liturgical embedding
+  words: 850
+- section: Стовпництво та аскетизм
+  points:
+  - Kyrylo as стовпник — the pillar ascetic tradition
+  - Ascetic theology and its literary expression
+  words: 800
+- section: Мовний аналіз
+  points:
+  - Close reading of parable and prayer excerpts
+  - Allegory decoding — soul/body, vineyard/church
+  words: 850
+- section: Підсумок
+  points:
+  - Kyrylo's place in the tradition of Ukrainian spiritual literature
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- притча
+- стовпник
+- аскетизм
+- покаяння
+- алегоричний
+- канон
+- сліпець
+- хромець
+activity_hints:
+- type: reading
+  focus: Parable and prayer text analysis
+  items: 1
+- type: vocabulary
+  focus: Theological and ascetic terminology
+  items: 1
+- type: comparative-analysis
+  focus: Parable vs sermon — genre differences
+  items: 1
+persona:
+  voice: Senior Paleographer
+  role: Medieval Theologian
+connects_to:
+- kyrylo-turovskyi-propovidi
+- hagiography-intro
+objectives:
+- Аналізувати «Притчу про сліпця і хромця» як алегорію душі та тіла
+- Розуміти стовпництво як аскетичну практику та її вплив на літературу
+- Демонструвати вміння інтерпретувати покаянні молитви як поетичну форму

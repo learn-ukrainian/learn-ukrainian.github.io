@@ -1,0 +1,70 @@
+module: folk-019
+level: FOLK
+sequence: 19
+slug: dumy-lytsarski
+version: '2.0'
+title: 'Лицарські думи: Оспівування звитяги'
+subtitle: 'Heroic Dumas: Celebrating Valor'
+focus: Heroic dumas — Samiilo Kishka, Baida, Cossack martial ethos
+phase: FOLK.4
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - The лицарський цикл — dumas of battle, victory, and Cossack glory
+  - Historical heroes transformed into epic figures
+  words: 750
+- section: Самійло Кішка
+  points:
+  - The longest and most complex duma — mutiny on a Turkish galley
+  - Narrative structure — captivity, ruse, liberation, battle
+  words: 950
+- section: Дума про Байду
+  points:
+  - Байда (Dmytro Vyshnevetsky) — defiance before the Sultan
+  - Martyrdom motif — death chosen over submission
+  words: 850
+- section: Козацький ідеал лицарства
+  points:
+  - Honor (слава), brotherhood (побратимство), freedom (воля)
+  - The sea campaign (морський похід) as ultimate test of valor
+  words: 800
+- section: Текстовий аналіз
+  points:
+  - Close reading of heroic dumas with linguistic commentary
+  - Military vocabulary, Turkish loanwords, Cossack terminology
+  words: 850
+- section: Підсумок
+  points:
+  - Heroic dumas as foundation of Ukrainian martial identity
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- лицарський
+- звитяга
+- Кішка
+- Байда
+- побратимство
+- слава
+- морський похід
+- гетьман
+activity_hints:
+- type: reading
+  focus: Heroic duma text analysis
+  items: 1
+- type: vocabulary
+  focus: Military and honor terminology
+  items: 1
+- type: comparative-analysis
+  focus: Historical figure vs epic hero
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Duma Studies Scholar
+connects_to:
+- dumy-nevilnytski
+- dumy-sotsialno-pobutovi
+objectives:
+- Аналізувати лицарські думи як вираження козацького етосу
+- Інтерпретувати образ Самійла Кішки як епічного стратега
+- Розуміти мотив мучеництва та вибору між смертю і підкоренням

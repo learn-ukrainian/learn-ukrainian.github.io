@@ -1,0 +1,70 @@
+module: folk-013
+level: FOLK
+sequence: 13
+slug: bylyny-kyivskoho-tsyklu
+version: '2.0'
+title: 'Билини київського циклу: Епос княжої доби'
+subtitle: 'Kyiv Cycle Byliny: Epic of the Princely Era'
+focus: Kyiv cycle epics, Prince Volodymyr's court, epic worldview
+phase: FOLK.3
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Bylyny as East Slavic heroic epic — Ukrainian origins thesis
+  - The Kyiv cycle centered on Volodymyr's court
+  words: 750
+- section: Епічний світ Києва
+  points:
+  - Volodymyr Красне Сонечко as epic king, not historical ruler
+  - The feast (бенкет) as epic topos — where heroes are summoned
+  words: 900
+- section: Жанрові особливості
+  points:
+  - Tonicheskiy verse, formulaic composition, oral-formulaic theory
+  - Retardation, hyperbole, epic epithets
+  words: 850
+- section: Українське походження билин
+  points:
+  - Kyivan geography, Pochaina River, Dnieper rapids
+  - Why byliny survived in Russian North but originated in Ukraine
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected byliny excerpts with glosses
+  - Archaic vocabulary, formulaic phrases
+  words: 850
+- section: Підсумок
+  points:
+  - Bylyny as contested heritage — decolonizing the epic tradition
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- билина
+- богатир
+- епос
+- Володимир
+- бенкет
+- гіпербола
+- формульний
+- тонічний вірш
+activity_hints:
+- type: reading
+  focus: Bylyna text analysis
+  items: 1
+- type: vocabulary
+  focus: Epic terminology
+  items: 1
+- type: comparative-analysis
+  focus: Ukrainian origins evidence
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Epic Poetry Scholar
+connects_to:
+- istorychni-perekazy
+- bohatyri-illiya-dobrynia
+objectives:
+- Аналізувати билини київського циклу як епічний жанр
+- Обґрунтовувати українське походження билинного епосу
+- Демонструвати розуміння формульної поетики усного епосу

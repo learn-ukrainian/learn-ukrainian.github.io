@@ -1495,6 +1495,9 @@ levels:
       - pateryk-literary-form
       - davni-teksty-zbirka
       - oes-capstone
+      # Кирило Туровський addition (#882)
+      - kyrylo-turovskyi-propovidi
+      - kyrylo-turovskyi-prytchi-molytvy
   ruth:
     type: track
     modules:
@@ -1611,6 +1614,10 @@ levels:
       - pysovnyk-lystuvannia
       - likarski-poradnyky
       - ruth-capstone
+      # Шкільна драма / Вертеп addition (#882)
+      - kyievo-mohylianska-shkilna-drama
+      - vertep-ukrainskyi-teatr
+      - misterii-ta-moralite
   lit-essay:
     type: track
     modules:
@@ -1836,3 +1843,40 @@ levels:
   # lit-crimea: REMOVED — see #879
   # Ukrainian-writing authors (Алієв, Мусаєва, Джеляль) moved to LIT main track (Phase 5).
   # Non-Ukrainian-language authors (Гаспралі, Челебіджіхан, Чобан-заде, Сенцов) dropped per language rule.
+  # ── FOLK — Ukrainian Oral Literary Tradition (24 modules) ── #882
+  folk:
+    type: track
+    modules:
+      # FOLK.1 Обрядова поезія (Ritual & Calendar Songs)
+      - koliadky-shchedrivky
+      - vesnianky-hayivky
+      - rusalni-pisni
+      - kupalski-pisni
+      - obzhynkovi-pisni
+      - vesilni-pisni
+      - holosinnya
+      # FOLK.2 Казки та легенди (Fairy Tales & Legends)
+      - charivni-kazky
+      - kazky-pro-tvaryn
+      - sotsialno-pobutovi-kazky
+      - narodni-lehendy
+      - istorychni-perekazy
+      # FOLK.3 Епос (Heroic Tradition)
+      - bylyny-kyivskoho-tsyklu
+      - bohatyri-illiya-dobrynia
+      - zastavy-bohatyrski
+      - bylyny-sotsialni
+      # FOLK.4 Думи та кобзарство
+      - pokhodzhennia-dum
+      - dumy-nevilnytski
+      - dumy-lytsarski
+      - dumy-sotsialno-pobutovi
+      - kobzarstvo-fenomen
+      # FOLK.2+ Балади та лірика (Gemini review additions)
+      - narodni-balady
+      - chumatski-burlatski-pisni
+      # FOLK.5 Малі жанри (Folk Humor & Micro-Genres)
+      - prykazky-ta-pryslivia
+      - zahadky
+      - narodni-anekdoty
+      - rodynna-liryka-kolomyiky

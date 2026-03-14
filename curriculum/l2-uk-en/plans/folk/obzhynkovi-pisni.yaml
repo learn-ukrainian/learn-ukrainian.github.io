@@ -1,0 +1,69 @@
+module: folk-005
+level: FOLK
+sequence: 5
+slug: obzhynkovi-pisni
+version: '2.0'
+title: 'Обжинкові пісні: Апофеоз хліборобської праці'
+subtitle: 'Harvest Songs: Apotheosis of the Grain Grower'
+focus: Harvest songs, Spas holidays, agrarian ritual cycle
+phase: FOLK.1
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - The harvest as the culmination of the agrarian year
+  - Обжинки — ritual completion of field work
+  words: 750
+- section: Три Спаси
+  points:
+  - Медовий, Яблучний, Горіховий Спас — blessing of first fruits
+  - Agricultural calendar and Christian overlay
+  words: 900
+- section: Обжинкова обрядовість
+  points:
+  - The last sheaf (дідух) as spirit of the field
+  - Crown-weaving for the hospodar, communal feast
+  words: 850
+- section: Поетика обжинкових пісень
+  points:
+  - Praise of labor, formulaic addresses to the field and grain
+  - Rhythmic structure tied to work movements
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of harvest songs with glosses
+  - Agricultural lexicon and its survival in modern Ukrainian
+  words: 850
+- section: Підсумок
+  points:
+  - Harvest ritual as expression of collective identity
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- обжинки
+- дідух
+- Спас
+- хлібороб
+- сніп
+- жниця
+- серп
+activity_hints:
+- type: reading
+  focus: Harvest song text analysis
+  items: 1
+- type: vocabulary
+  focus: Agricultural terminology
+  items: 1
+- type: quiz
+  focus: Ritual calendar and Spas holidays
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Agrarian Ethnographer
+connects_to:
+- kupalski-pisni
+- vesilni-pisni
+objectives:
+- Аналізувати обжинкову обрядовість як вираження хліборобського світогляду
+- Розуміти символіку останнього снопа та обрядового вінка
+- Застосовувати знання аграрної лексики у власній мовній практиці

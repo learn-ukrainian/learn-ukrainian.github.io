@@ -1,0 +1,71 @@
+module: folk-014
+level: FOLK
+sequence: 14
+slug: bohatyri-illiya-dobrynia
+version: '2.0'
+title: 'Богатирський епос: Ілля Муромець та Добриня'
+subtitle: 'Bogatyr Epic: Illia Muromets and Dobrynia'
+focus: Bogatyr character study, hero types, warrior ethos
+phase: FOLK.3
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Bogatyr as epic hero type — defender of the land
+  - The triad — Ілля, Добриня, Альоша Попович
+  words: 750
+- section: Ілля Муромець
+  points:
+  - From paralyzed peasant to greatest bogatyr
+  - Illness-and-cure motif as initiation pattern
+  - Illia's conflicts with Volodymyr — tension between hero and king
+  words: 950
+- section: Добриня Нікітич
+  points:
+  - The courtly bogatyr — diplomat, musician, dragon-slayer
+  - Dobrynia and the Zmiy — the archetypal dragon fight
+  words: 850
+- section: Типологія героїв
+  points:
+  - Strength (Ілля), wisdom (Добриня), cunning (Альоша)
+  - Women warriors — Настасія Микулічна
+  words: 800
+- section: Текстовий аналіз
+  points:
+  - Close reading of key battle scenes with linguistic glosses
+  - Epic formulas for arming, riding, fighting
+  words: 850
+- section: Підсумок
+  points:
+  - Bogatyr as ideal and critique — folk ambivalence about power
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- богатир
+- Калін-цар
+- Змій
+- палиця
+- застава
+- полонений
+- двобій
+- ініціація
+activity_hints:
+- type: reading
+  focus: Bogatyr epic text analysis
+  items: 1
+- type: vocabulary
+  focus: Warrior and combat terminology
+  items: 1
+- type: quiz
+  focus: Hero typology
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Heroic Epic Scholar
+connects_to:
+- bylyny-kyivskoho-tsyklu
+- zastavy-bohatyrski
+objectives:
+- Аналізувати образи богатирів як втілення народного ідеалу воїна
+- Інтерпретувати ініціаційний мотив у билині про Іллю Муромця
+- Порівнювати типи героїв — силу, мудрість і хитрість

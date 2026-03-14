@@ -1,0 +1,70 @@
+module: folk-020
+level: FOLK
+sequence: 20
+slug: dumy-sotsialno-pobutovi
+version: '2.0'
+title: 'Соціально-побутові думи: Родинна мораль'
+subtitle: 'Domestic Dumas: Family Morality'
+focus: Family tragedy dumas, betrayal, widows and orphans, moral lessons
+phase: FOLK.4
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - The побутовий цикл — dumas of family life, not battlefield
+  - Later chronological layer — 17th-18th century social conflicts
+  words: 750
+- section: Дума про вдову та синів
+  points:
+  - The widow's sons who dishonor her — ingratitude punished
+  - Mother's curse as ultimate sanction in folk morality
+  words: 900
+- section: Дума про сестру і брата
+  points:
+  - Sibling betrayal — the sister who poisons, the brother who forgives
+  - Gender and family loyalty conflicts
+  words: 850
+- section: Козак та родина
+  points:
+  - Tension between Cossack freedom and family obligation
+  - The wife left behind — waiting, mourning, economic hardship
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of domestic dumas with linguistic commentary
+  - Emotional register — curses, blessings, lament formulas
+  words: 850
+- section: Підсумок
+  points:
+  - Domestic dumas as folk ethics — honor, loyalty, gratitude
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- побутовий
+- вдова
+- сирота
+- прокляття
+- вдячність
+- зрада
+- мораль
+- покара
+activity_hints:
+- type: reading
+  focus: Domestic duma text analysis
+  items: 1
+- type: vocabulary
+  focus: Family and moral terminology
+  items: 1
+- type: quiz
+  focus: Moral framework of domestic dumas
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Duma Studies Scholar
+connects_to:
+- dumy-lytsarski
+- kobzarstvo-fenomen
+objectives:
+- Аналізувати побутові думи як вираження народної етики
+- Інтерпретувати конфлікт між козацькою волею та родинним обов'язком
+- Розуміти роль материнського прокляття в народній моралі

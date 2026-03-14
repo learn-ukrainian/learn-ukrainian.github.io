@@ -1,0 +1,70 @@
+module: folk-015
+level: FOLK
+sequence: 15
+slug: zastavy-bohatyrski
+version: '2.0'
+title: 'Застави богатирські: Образ степового кордону'
+subtitle: 'Bogatyr Outposts: The Steppe Frontier Image'
+focus: Steppe frontier in epic poetry, border defense, nomadic threat
+phase: FOLK.3
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - The steppe frontier as the defining space of the Kyiv cycle
+  - Застава as both military and mythic boundary
+  words: 750
+- section: Степ як епічний простір
+  points:
+  - Wild Field (Дике Поле) — danger, freedom, the unknown
+  - Roads, crossroads, boundary stones — spatial symbolism
+  words: 900
+- section: Ворог — Ідолище, Тугарин, Калін
+  points:
+  - Epic enemies as nomadic threat — Pechenegs, Polovtsians encoded
+  - Monstrous enlargement of the real enemy
+  words: 850
+- section: Оборона землі
+  points:
+  - Bogatyr outposts — collective defense motif
+  - Solo combat vs army — individual heroism
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of frontier byliny with commentary
+  - Landscape descriptions, movement verbs, spatial adverbs
+  words: 850
+- section: Підсумок
+  points:
+  - The frontier in Ukrainian cultural memory — from bylyny to Cossack era
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- застава
+- степ
+- Дике Поле
+- кордон
+- кочівник
+- двобій
+- дозор
+- шлях
+activity_hints:
+- type: reading
+  focus: Frontier bylyna text analysis
+  items: 1
+- type: vocabulary
+  focus: Frontier and military terminology
+  items: 1
+- type: comparative-analysis
+  focus: Epic frontier vs historical frontier
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Frontier Studies Scholar
+connects_to:
+- bohatyri-illiya-dobrynia
+- bylyny-sotsialni
+objectives:
+- Аналізувати образ степового кордону як епічного простору
+- Інтерпретувати епічних ворогів як кодування реальних номадичних загроз
+- Розуміти зв'язок між билинним фронтиром і козацькою добою

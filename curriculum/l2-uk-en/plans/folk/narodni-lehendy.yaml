@@ -1,0 +1,70 @@
+module: folk-011
+level: FOLK
+sequence: 11
+slug: narodni-lehendy
+version: '2.0'
+title: 'Народні легенди: Народне християнство'
+subtitle: 'Folk Legends: Popular Christianity'
+focus: Apocryphal legends, syncretic worldview, folk explanations of the world
+phase: FOLK.2
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Legends as folk genre — between myth and history
+  - Distinction from казка — legends claim truth
+  words: 750
+- section: Апокрифічні легенди
+  points:
+  - Non-canonical stories about Christ, saints, creation
+  - Folk reinterpretation of biblical narratives
+  words: 900
+- section: Етіологічні легенди
+  points:
+  - Why-stories — origin of animals, plants, geographic features
+  - Folk science encoded in narrative
+  words: 850
+- section: Синкретичний світогляд
+  points:
+  - Christian saints replacing pagan deities — Іл'ля/Перун, Параскева/Мокоша
+  - двовір'я (dual faith) as cultural phenomenon
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected legends with glosses
+  - Narrative voice — authority, didacticism, wonder
+  words: 850
+- section: Підсумок
+  points:
+  - Legends as evidence of folk worldview
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- легенда
+- апокриф
+- етіологія
+- синкретизм
+- двовір'я
+- святий
+- чудо
+- переказ
+activity_hints:
+- type: reading
+  focus: Legend text analysis
+  items: 1
+- type: vocabulary
+  focus: Religious syncretism terminology
+  items: 1
+- type: quiz
+  focus: Apocryphal vs canonical narratives
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Religious Folklorist
+connects_to:
+- sotsialno-pobutovi-kazky
+- istorychni-perekazy
+objectives:
+- Аналізувати апокрифічні легенди як вираження народного християнства
+- Розуміти механізм синкретизму язичницьких та християнських вірувань
+- Демонструвати вміння розрізняти жанри легенди, казки та переказу

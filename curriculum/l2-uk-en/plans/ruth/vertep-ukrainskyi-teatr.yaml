@@ -1,0 +1,72 @@
+module: ruth-114
+level: RUTH
+sequence: 114
+slug: vertep-ukrainskyi-teatr
+version: '2.0'
+title: 'Вертеп: Український мандрівний ляльковий театр'
+subtitle: 'Vertep: Ukrainian Itinerant Puppet Theater'
+focus: Two-tier structure (sacred/profane), Halahanivsky vertep 1770, stock characters
+phase: 5
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Вертеп as uniquely Ukrainian puppet theater tradition
+  - Origins — from Nativity drama to folk entertainment
+  words: 750
+- section: Двоярусна структура
+  points:
+  - Upper tier — священний (sacred) — Nativity scene, biblical characters
+  - Lower tier — світський (profane) — folk comedy, satire, dancing
+  - Theological and social meaning of the two-tier arrangement
+  words: 950
+- section: Галаганівський вертеп 1770
+  points:
+  - The most complete surviving vertep text
+  - Characters — Ірод, Смерть, Запорожець, Шинкар, Циган
+  - Performance context and audience
+  words: 900
+- section: Типові персонажі
+  points:
+  - Stock characters as social types — the Cossack, the innkeeper, the soldier
+  - Comedy through dialect, gesture, music
+  words: 750
+- section: Текстовий аналіз
+  points:
+  - Close reading of vertep dialogue excerpts
+  - Colloquial language, humor, musical cues
+  words: 850
+- section: Підсумок
+  points:
+  - Vertep revival in modern Ukraine
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- вертеп
+- ярус
+- лялька
+- інтермедія
+- шинкар
+- запорожець
+- Ірод
+- двоярусний
+activity_hints:
+- type: reading
+  focus: Vertep text analysis
+  items: 1
+- type: vocabulary
+  focus: Theater and performance terminology
+  items: 1
+- type: quiz
+  focus: Vertep structure and characters
+  items: 1
+persona:
+  voice: Theater Scholar
+  role: Folk Theater Specialist
+connects_to:
+- kyievo-mohylianska-shkilna-drama
+- misterii-ta-moralite
+objectives:
+- Аналізувати вертеп як унікальну форму українського лялькового театру
+- Розуміти символіку двоярусної структури — священне та профанне
+- Демонструвати знання типових персонажів Галаганівського вертепу

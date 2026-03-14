@@ -1,0 +1,71 @@
+module: folk-012
+level: FOLK
+sequence: 12
+slug: istorychni-perekazy
+version: '2.0'
+title: "Історичні перекази: Пам'ять про минуле"
+subtitle: 'Historical Legends: Memory of the Past'
+focus: Folk memory of Karmaliuk, Dovbush, Cossack era, oral history
+phase: FOLK.2
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Історичний переказ — folk memory as alternative history
+  - Difference between legend and perekas — anchoring in real events
+  words: 750
+- section: Козацькі перекази
+  points:
+  - Stories of Cossack origin, battles, Sich life
+  - Zaporozhian Sich as folk utopia of freedom
+  words: 900
+- section: Народні герої — опришки
+  points:
+  - Олекса Довбуш — Carpathian Robin Hood
+  - Устим Кармалюк — peasant rebel
+  - Heroization process in folk memory
+  words: 850
+- section: Перекази про місця
+  points:
+  - Toponymic legends — how places got their names
+  - Landscape as memory — graves, crosses, oaks
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected perekazy with historical commentary
+  - Distinguishing folk elaboration from historical kernel
+  words: 850
+- section: Підсумок
+  points:
+  - Folk memory as resistance to official historiography
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- переказ
+- опришок
+- Довбуш
+- Кармалюк
+- козак
+- Запорозька Січ
+- топонім
+- героїзація
+activity_hints:
+- type: reading
+  focus: Historical perekas text analysis
+  items: 1
+- type: vocabulary
+  focus: Historical and geographic terminology
+  items: 1
+- type: comparative-analysis
+  focus: Folk memory vs historical record
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Oral Historian
+connects_to:
+- narodni-lehendy
+- bylyny-kyivskoho-tsyklu
+objectives:
+- Аналізувати історичні перекази як форму народної пам'яті
+- Інтерпретувати процес героїзації народних ватажків
+- Розрізняти фольклорне оздоблення та історичне ядро переказів

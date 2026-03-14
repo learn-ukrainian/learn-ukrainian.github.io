@@ -1,0 +1,70 @@
+module: oes-101
+level: OES
+sequence: 101
+slug: kyrylo-turovskyi-propovidi
+version: '2.0'
+title: 'Кирило Турівський: Проповіді Златоуста руського'
+subtitle: 'Kyrylo of Turiv: Sermons of the Rus'' Chrysostom'
+focus: Slovo na Verbnytsiu, Slovo na Velykden, Byzantine rhetoric, "Zlatoust ruskyi"
+phase: 4
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Kyrylo of Turiv — the greatest orator of Kyivan Rus'
+  - The title "Златоуст руський" — Ukrainian Chrysostom
+  words: 750
+- section: Слово на Вербницю
+  points:
+  - Palm Sunday sermon — allegorical reading of Christ's entry into Jerusalem
+  - Rhetorical structure — exordium, narratio, peroratio
+  words: 900
+- section: Слово на Великдень
+  points:
+  - Easter sermon — the Resurrection as cosmic triumph
+  - Nature imagery and liturgical poetry
+  words: 850
+- section: Візантійська риторика
+  points:
+  - Byzantine homiletic tradition — amplificatio, antithesis, anaphora
+  - Kyrylo's innovation within inherited forms
+  words: 850
+- section: Мовний аналіз
+  points:
+  - Close reading of sermon excerpts with glosses
+  - High register Church Slavonic — rhetoric as art
+  words: 850
+- section: Підсумок
+  points:
+  - Kyrylo's legacy in Ukrainian literary history
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- проповідь
+- алегорія
+- риторика
+- метафора
+- екзегеза
+- красномовство
+- антитеза
+- анафора
+activity_hints:
+- type: reading
+  focus: Sermon text analysis
+  items: 1
+- type: vocabulary
+  focus: Rhetorical terminology
+  items: 1
+- type: comparative-analysis
+  focus: Kyrylo vs Byzantine models
+  items: 1
+persona:
+  voice: Senior Paleographer
+  role: Homiletics Scholar
+connects_to:
+- ilarion-sermon-intro
+- kyrylo-turovskyi-prytchi-molytvy
+objectives:
+- Аналізувати проповіді Кирила Турівського як зразок візантійської риторики
+- Інтерпретувати алегоричний метод екзегези у «Слові на Вербницю»
+- Демонструвати розуміння риторичних прийомів давньоукраїнської гомілетики

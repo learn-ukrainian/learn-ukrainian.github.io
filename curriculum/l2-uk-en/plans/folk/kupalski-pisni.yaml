@@ -1,0 +1,70 @@
+module: folk-004
+level: FOLK
+sequence: 4
+slug: kupalski-pisni
+version: '2.0'
+title: 'Купальські пісні: Магія літнього сонцестояння'
+subtitle: 'Kupala Songs: Midsummer Solstice Magic'
+focus: Midsummer rituals, fire and water purification, fern flower myth
+phase: FOLK.1
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Kupala Night as the apex of the solar year
+  - Syncretic fusion — pagan solstice with St. John's Day
+  words: 750
+- section: Вогонь і вода
+  points:
+  - Dual purification — leaping over fire, bathing in rivers
+  - Symbolic opposition and union of elements
+  words: 900
+- section: Цвіт папороті
+  points:
+  - The fern flower myth — quest for hidden treasure and forbidden knowledge
+  - Narrative structure and ritual enactment
+  words: 850
+- section: Купальські пісні — поетика
+  points:
+  - Dialogue structure, refrains, ritual questioning
+  - Erotic symbolism and courtship motifs
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of Kupala songs with linguistic glosses
+  - Archaic lexicon — Купайло, Марена, відьма
+  words: 850
+- section: Підсумок
+  points:
+  - Kupala in modern Ukrainian identity and cultural revival
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- Купала
+- сонцестояння
+- папороть
+- очищення
+- Марена
+- вінок
+- ворожіння
+- багаття
+activity_hints:
+- type: reading
+  focus: Kupala song text analysis
+  items: 1
+- type: vocabulary
+  focus: Ritual and nature terminology
+  items: 1
+- type: comparative-analysis
+  focus: Fire vs water symbolism
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Ritual Studies Scholar
+connects_to:
+- rusalni-pisni
+- obzhynkovi-pisni
+objectives:
+- Аналізувати символіку вогню та води в купальській обрядовості
+- Інтерпретувати міф про цвіт папороті як наративну структуру
+- Демонструвати розуміння синкретизму язичницьких та християнських елементів

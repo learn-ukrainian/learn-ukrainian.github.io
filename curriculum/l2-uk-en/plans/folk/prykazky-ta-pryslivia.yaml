@@ -1,0 +1,69 @@
+module: folk-022
+level: FOLK
+sequence: 22
+slug: prykazky-ta-pryslivia
+version: '2.0'
+title: 'Приказки та прислів''я: Етика повсякдення'
+subtitle: 'Proverbs and Sayings: Ethics of Everyday Life'
+focus: Folk philosophy condensed in proverbs, paremiological study
+phase: FOLK.5
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Proverbs and sayings as the most compact form of folk wisdom
+  - Distinction — прислів'я (complete judgment) vs приказка (figurative phrase)
+  words: 750
+- section: Тематичні групи
+  points:
+  - Labor, family, justice, nature, cleverness vs foolishness
+  - Anti-authority proverbs — skepticism toward lords, priests, officials
+  words: 900
+- section: Поетика малої форми
+  points:
+  - Rhythm, rhyme, alliteration, antithesis
+  - Binary structure — X, а Y (contrast principle)
+  words: 850
+- section: Пареміологія як наука
+  points:
+  - Collection history — from Nomis to modern corpora
+  - Comparative paremiology — shared and unique Ukrainian proverbs
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading and analysis of selected proverbs
+  - Archaic vocabulary, metaphorical meaning, modern usage
+  words: 850
+- section: Підсумок
+  points:
+  - Proverbs as living language — usage in modern Ukrainian discourse
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- прислів'я
+- приказка
+- пареміологія
+- антитеза
+- алітерація
+- мудрість
+- афоризм
+activity_hints:
+- type: reading
+  focus: Proverb analysis
+  items: 1
+- type: vocabulary
+  focus: Paremiological terminology
+  items: 1
+- type: quiz
+  focus: Matching proverbs to meanings
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Paremiologist
+connects_to:
+- kobzarstvo-fenomen
+- zahadky
+objectives:
+- Аналізувати прислів'я та приказки як вираження народної філософії
+- Розрізняти прислів'я та приказку за структурними ознаками
+- Демонструвати вміння інтерпретувати метафоричне значення паремій

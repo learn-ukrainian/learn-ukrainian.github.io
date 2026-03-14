@@ -1,0 +1,69 @@
+module: folk-003
+level: FOLK
+sequence: 3
+slug: rusalni-pisni
+version: '2.0'
+title: 'Русальні пісні: Троїцький цикл та духи природи'
+subtitle: 'Rusalka Songs: Green Holidays and Nature Spirits'
+focus: Green Holidays (Zeleni sviata), water-nymph animism, Rusalka week rituals
+phase: FOLK.1
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Троїцький цикл (Trinity cycle) in the ritual calendar
+  - Зелені свята as a pivotal moment between spring and summer
+  words: 750
+- section: Русалки в народній демонології
+  points:
+  - Rusalky as spirits of the unquiet dead — drowned maidens, unbaptized children
+  - Regional variation — forest vs water spirits
+  words: 900
+- section: Русальний тиждень
+  points:
+  - Taboos during Rusalka week — no swimming, no laundry, no spinning
+  - Проводи русалок — ritual expulsion of rusalky
+  words: 850
+- section: Поетика русальних пісень
+  points:
+  - Melodic and textual features — minor keys, lament-like structures
+  - Nature imagery — water, willow, moonlight
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of rusalni pisni with glosses
+  - Animistic vocabulary and belief system
+  words: 850
+- section: Підсумок
+  points:
+  - Rusalky in Ukrainian literature — from folk belief to literary image
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- русалка
+- троїцький
+- зелені свята
+- демонологія
+- оберіг
+- табу
+- анімізм
+activity_hints:
+- type: reading
+  focus: Rusalni pisni text analysis
+  items: 1
+- type: vocabulary
+  focus: Folk demonology terminology
+  items: 1
+- type: quiz
+  focus: Ritual calendar knowledge
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Mythologist
+connects_to:
+- vesnianky-hayivky
+- kupalski-pisni
+objectives:
+- Аналізувати образ русалки в контексті народної демонології
+- Розуміти зв'язок між обрядовою поезією та анімістичним світоглядом
+- Демонструвати володіння термінологією народної міфології

@@ -1,0 +1,71 @@
+module: ruth-113
+level: RUTH
+sequence: 113
+slug: kyievo-mohylianska-shkilna-drama
+version: '2.0'
+title: 'Шкільна драма Києво-Могилянської академії'
+subtitle: 'School Drama of the Kyiv-Mohyla Academy'
+focus: Prokopovych's Volodymyr, Dovhalevsky's poetics, baroque rhetoric synthesis
+phase: 5
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - School drama (шкільна драма) as pedagogical theater at KMA
+  - The tradition — students perform Latin and vernacular plays
+  words: 750
+- section: Феофан Прокопович — «Володимир»
+  points:
+  - Tragicomedy about the Baptism of Rus' — political allegory for Peter's reforms
+  - Structure — 5 acts, chorus, prologue, epilogue
+  - Blending classical form with Slavic content
+  words: 1000
+- section: Довгалевський та поетики
+  points:
+  - Mytrofan Dovhalevsky's poetics manuals
+  - Codification of dramatic rules for students
+  words: 800
+- section: Барокова риторика та синтез
+  points:
+  - Allegory, emblem, conceit — baroque dramatic devices
+  - Fusion of Latin erudition and Ukrainian subject matter
+  words: 800
+- section: Текстовий аналіз
+  points:
+  - Close reading of excerpts from «Володимир» with linguistic commentary
+  - Macaronic language — Latin, Church Slavonic, vernacular mixing
+  words: 850
+- section: Підсумок
+  points:
+  - School drama as cradle of Ukrainian theater
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- шкільна драма
+- трагікомедія
+- пролог
+- епілог
+- хор
+- барокова поетика
+- алегорія
+- макаронізм
+activity_hints:
+- type: reading
+  focus: School drama text analysis
+  items: 1
+- type: vocabulary
+  focus: Dramatic and theatrical terminology
+  items: 1
+- type: comparative-analysis
+  focus: Latin model vs Ukrainian adaptation
+  items: 1
+persona:
+  voice: Theater Scholar
+  role: Baroque Drama Specialist
+connects_to:
+- kyiv-mohyla-rhetoric
+- vertep-ukrainskyi-teatr
+objectives:
+- Аналізувати шкільну драму КМА як синтез класичної та барокової поетики
+- Інтерпретувати «Володимира» Прокоповича як політичну алегорію
+- Розуміти роль шкільної драми у становленні українського театру

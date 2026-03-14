@@ -1,0 +1,71 @@
+module: folk-017
+level: FOLK
+sequence: 17
+slug: pokhodzhennia-dum
+version: '2.0'
+title: Походження та специфіка козацьких дум
+subtitle: Origins and Specifics of Cossack Dumas
+focus: Origin of dumas, recitative structure, irregular meter, distinction from byliny
+phase: FOLK.4
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Думи as uniquely Ukrainian epic genre — not byliny, not songs
+  - Historical context — Cossack era (16th-18th c.)
+  words: 750
+- section: Жанрова специфіка
+  points:
+  - Recitative performance — no fixed melody, improvised within tradition
+  - Irregular syllabic verse — asymmetric lines, non-strophic
+  - Difference from пісня — duma is recited, not sung
+  words: 950
+- section: Тематичні цикли
+  points:
+  - Three cycles — невільницькі (captivity), лицарські (heroic), побутові (domestic)
+  - Chronological development from 15th to 18th century
+  words: 850
+- section: Поетичні засоби
+  points:
+  - Epic formulas, parallelism, gradation
+  - Nature symbolism — steppe, sea, falcon, eagle
+  words: 800
+- section: Текстовий аналіз
+  points:
+  - Close reading of duma opening formulas and closing бажання
+  - Linguistic features — archaic verb forms, Turkic loanwords
+  words: 850
+- section: Підсумок
+  points:
+  - Duma tradition as Ukrainian cultural patrimony
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- дума
+- речитатив
+- кобзар
+- нерівноскладовий
+- козак
+- невільник
+- формула
+- славослів'я
+activity_hints:
+- type: reading
+  focus: Duma text analysis
+  items: 1
+- type: vocabulary
+  focus: Duma genre terminology
+  items: 1
+- type: comparative-analysis
+  focus: Duma vs bylina — genre differences
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Duma Studies Scholar
+connects_to:
+- bylyny-sotsialni
+- dumy-nevilnytski
+objectives:
+- Аналізувати жанрову специфіку думи — речитативність та нерівноскладовість
+- Розрізняти думи від билин та пісень за формальними ознаками
+- Демонструвати розуміння тематичних циклів козацьких дум

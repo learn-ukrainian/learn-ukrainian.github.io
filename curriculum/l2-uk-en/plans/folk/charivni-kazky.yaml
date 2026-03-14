@@ -1,0 +1,71 @@
+module: folk-008
+level: FOLK
+sequence: 8
+slug: charivni-kazky
+version: '2.0'
+title: 'Чарівні казки: Міфологічні архетипи та ініціація'
+subtitle: 'Magic Tales: Mythological Archetypes and Initiation'
+focus: Magic tales, Baba Yaga, initiation rites, Propp's morphology
+phase: FOLK.2
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - The magic tale (чарівна казка) as the most complex folk narrative genre
+  - Propp's morphology — universal structure, Ukrainian specifics
+  words: 750
+- section: Архетипні персонажі
+  points:
+  - Баба Яга — initiator, gatekeeper to the other world
+  - Змій (dragon) — chaos principle, adversary
+  - Котигорошко, Іван — hero types
+  words: 950
+- section: Ініціаційна структура
+  points:
+  - Departure, threshold crossing, trials, transformation, return
+  - The forest as liminal space — between worlds
+  words: 850
+- section: Чарівні предмети та помічники
+  points:
+  - Magic objects — клубочок, скатертинка-самобранка, чоботи-скороходи
+  - Animal helpers — вдячні тварини motif
+  words: 800
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected tales with formulaic analysis
+  - Opening and closing formulas — "Жив собі..." / "І я там був..."
+  words: 850
+- section: Підсумок
+  points:
+  - Ukrainian magic tales in comparative context
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- чарівна казка
+- архетип
+- ініціація
+- Баба Яга
+- змій
+- Котигорошко
+- клубочок
+- потойбіччя
+activity_hints:
+- type: reading
+  focus: Magic tale text analysis
+  items: 1
+- type: vocabulary
+  focus: Fairy tale terminology
+  items: 1
+- type: comparative-analysis
+  focus: Ukrainian vs European tale variants
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Narratologist
+connects_to:
+- holosinnya
+- kazky-pro-tvaryn
+objectives:
+- Аналізувати структуру чарівної казки за морфологічною моделлю
+- Інтерпретувати архетипні образи Баби Яги та Змія в контексті міфології
+- Демонструвати розуміння ініціаційного сценарію в народній прозі

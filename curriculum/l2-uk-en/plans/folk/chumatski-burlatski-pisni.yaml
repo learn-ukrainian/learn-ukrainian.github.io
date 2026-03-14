@@ -1,0 +1,73 @@
+module: folk-026
+level: FOLK
+sequence: 26
+slug: chumatski-burlatski-pisni
+version: '2.0'
+title: 'Чумацькі та бурлацькі пісні: Голос мандрівника'
+subtitle: Chumak and Burlak Songs — The Wanderer's Voice
+focus: Social lyrical songs of trade, displacement, and wandering life
+phase: FOLK.2
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Суспільно-побутова лірика — пісні соціальних груп
+  - Чумацтво як культурний феномен — сіль, риба, степ
+  words: 750
+- section: Чумацькі пісні
+  points:
+  - Тематика — дорога, небезпека, розлука з родиною
+  - '«Ой поїхав чумаченько» — аналіз тексту'
+  - Степовий пейзаж як психологічний простір
+  words: 950
+- section: Бурлацькі пісні
+  points:
+  - Бурлаки — сезонні робітники, маргіналізація
+  - Соціальний протест у пісні
+  - Порівняння з волзькими бурлацькими піснями — різні традиції
+  words: 900
+- section: Рекрутські та солдатські пісні
+  points:
+  - Примусова мобілізація — трагедія відриву від землі
+  - Антимілітарний пафос народної пісні
+  words: 800
+- section: Поетичні засоби
+  points:
+  - Ліризм — суб'єктивність, емоційність
+  - Символіка дороги — шлях як метафора долі
+  - Мелодика та ритміка — зв'язок тексту з мелодією
+  words: 850
+- section: Підсумок
+  points:
+  - Чумацька пісня як документ зниклого побуту
+  - Словник термінів
+  words: 750
+vocabulary_hints:
+- чумак
+- бурлак
+- рекрут
+- валка
+- сіль
+- степ
+- мандрівник
+- розлука
+activity_hints:
+- type: reading
+  focus: Аналіз чумацьких пісень
+  items: 1
+- type: vocabulary
+  focus: Лексика мандрівних пісень
+  items: 1
+- type: essay-response
+  focus: Степ як простір у фольклорі
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Social Song Traditions Specialist
+connects_to:
+- narodni-balady
+- dumy-lytsarski
+objectives:
+- Аналізувати чумацькі та бурлацькі пісні як вираження соціального досвіду
+- Дослідити символіку дороги та степу в українській ліриці
+- Зрозуміти зв'язок між соціальним становищем та поетичною формою

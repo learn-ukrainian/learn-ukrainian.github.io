@@ -1,0 +1,69 @@
+module: folk-002
+level: FOLK
+sequence: 2
+slug: vesnianky-hayivky
+version: '2.0'
+title: 'Веснянки та гаївки: Пробудження природи'
+subtitle: 'Spring Songs and Circle Dances: Awakening of Nature'
+focus: Spring invocation songs, circle dances, courtship rituals
+phase: FOLK.1
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Spring cycle in the Ukrainian ritual calendar
+  - Performative magic — singing as invocation of warmth and fertility
+  words: 750
+- section: Веснянки як заклинання
+  points:
+  - Calling spring — formulaic invocations to birds, sun, warmth
+  - Melodic simplicity and choral performance
+  words: 900
+- section: Гаївки та хороводи
+  points:
+  - Circle dances (хороводи) as ritual space
+  - Dramatized games — courtship, choosing a partner
+  words: 850
+- section: Рослинна символіка
+  points:
+  - Plant imagery — барвінок, калина, верба
+  - Vegetation as code for human life stages
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected vesnianky with linguistic commentary
+  - Archaic imperative and vocative forms
+  words: 850
+- section: Підсумок
+  points:
+  - From ritual to aesthetic — vesnianky in modern Ukrainian culture
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- веснянка
+- гаївка
+- хоровод
+- заклинання
+- барвінок
+- калина
+- обрядовість
+activity_hints:
+- type: reading
+  focus: Spring song text analysis
+  items: 1
+- type: vocabulary
+  focus: Plant and ritual terminology
+  items: 1
+- type: comparative-analysis
+  focus: Regional variations of vesnianky
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Ethnographer of Ritual
+connects_to:
+- koliadky-shchedrivky
+- rusalni-pisni
+objectives:
+- Аналізувати функцію веснянок як магічного заклинання природи
+- Інтерпретувати рослинну символіку в контексті народного світогляду
+- Застосовувати знання обрядового календаря у власній мовній практиці

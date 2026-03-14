@@ -1,0 +1,70 @@
+module: folk-021
+level: FOLK
+sequence: 21
+slug: kobzarstvo-fenomen
+version: '2.0'
+title: Кобзарство як унікальний феномен
+subtitle: Kobzarstvo as a Unique Phenomenon
+focus: Blind kobzars, guild system, lebiyska mova, Soviet destruction
+phase: FOLK.4
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Kobzarstvo as a uniquely Ukrainian institution — no European parallel
+  - The blind minstrel as sacred figure and social conscience
+  words: 750
+- section: Кобзар, бандурист, лірник
+  points:
+  - Instrument types — кобза, бандура, ліра (hurdy-gurdy)
+  - Performance traditions and regional distribution
+  words: 850
+- section: Цехова організація
+  points:
+  - Kobzar guilds (цехи) — apprenticeship, initiation, secret language
+  - Лебійська мова — the cryptolect of blind musicians
+  words: 900
+- section: Репертуар і суспільна функція
+  points:
+  - Dumas, psalmy, satirical songs — moral teaching at fairs and churches
+  - Kobzar as living newspaper, moral authority, community memory
+  words: 850
+- section: Знищення кобзарства
+  points:
+  - Soviet persecution — the 1930s conference and mass execution
+  - Destruction of an oral tradition as cultural genocide
+  words: 850
+- section: Підсумок
+  points:
+  - Revival efforts and modern kobzarstvo
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- кобзар
+- бандура
+- лірник
+- цех
+- лебійська мова
+- псальма
+- сліпий
+- репертуар
+activity_hints:
+- type: reading
+  focus: Kobzar tradition analysis
+  items: 1
+- type: vocabulary
+  focus: Musical and guild terminology
+  items: 1
+- type: comparative-analysis
+  focus: Kobzarstvo vs European minstrel traditions
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Ethnomusicologist
+connects_to:
+- dumy-sotsialno-pobutovi
+- prykazky-ta-pryslivia
+objectives:
+- Аналізувати кобзарство як унікальний український культурний феномен
+- Розуміти цехову організацію та функцію лебійської мови
+- Усвідомлювати трагедію радянського знищення кобзарської традиції

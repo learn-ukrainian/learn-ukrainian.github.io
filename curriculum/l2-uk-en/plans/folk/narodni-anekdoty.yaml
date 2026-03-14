@@ -1,0 +1,70 @@
+module: folk-024
+level: FOLK
+sequence: 24
+slug: narodni-anekdoty
+version: '2.0'
+title: 'Народні анекдоти та небилиці: Сміхова культура'
+subtitle: 'Folk Anecdotes and Tall Tales: Laughter Culture'
+focus: Folk humor, tall tales, comedic worldview, carnival inversion
+phase: FOLK.5
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Laughter culture (сміхова культура) as essential folk worldview
+  - Анекдот vs небилиця — joke vs tall tale
+  words: 750
+- section: Народний анекдот
+  points:
+  - Social types as targets — пан, піп, москаль, циган
+  - Punchline structure, brevity, stereotyping as social commentary
+  words: 900
+- section: Небилиці та нісенітниці
+  points:
+  - The world upside down — fish climbing trees, dead men dancing
+  - Carnival logic — inversion of natural order for comic effect
+  words: 850
+- section: Сміх як зброя
+  points:
+  - Humor against oppression — laughing at the powerful
+  - Москаль in folk humor — the imperial soldier mocked
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected anecdotes and tall tales
+  - Colloquial language, dialectalisms, performance markers
+  words: 850
+- section: Підсумок
+  points:
+  - Folk humor as resistance and resilience
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- анекдот
+- небилиця
+- нісенітниця
+- сміхова культура
+- карнавал
+- пародія
+- сатира
+- дотепність
+activity_hints:
+- type: reading
+  focus: Folk humor text analysis
+  items: 1
+- type: vocabulary
+  focus: Humor and narrative terminology
+  items: 1
+- type: quiz
+  focus: Humor types and social targets
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Humor Studies Scholar
+connects_to:
+- zahadky
+- prykazky-ta-pryslivia
+objectives:
+- Аналізувати народні анекдоти як інструмент соціальної критики
+- Розуміти карнавальну логіку небилиць і нісенітниць
+- Демонструвати вміння інтерпретувати сміхову культуру як форму спротиву

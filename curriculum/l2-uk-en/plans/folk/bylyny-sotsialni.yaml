@@ -1,0 +1,70 @@
+module: folk-016
+level: FOLK
+sequence: 16
+slug: bylyny-sotsialni
+version: '2.0'
+title: 'Соціальний конфлікт в епосі: Вольга і Микула'
+subtitle: 'Social Conflict in Epic: Volga and Mykula'
+focus: Peasant vs prince tension, social hierarchy in epic, Mykula Selyaninovich
+phase: FOLK.3
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Social tension as a major theme in the bylina tradition
+  - Not all heroes are warriors — the plowman as hero
+  words: 750
+- section: Вольга та Микула
+  points:
+  - Prince Volga (magic, shapeshifting) vs Mykula (superhuman plowman)
+  - The plow that no warrior can lift — allegory of labor's superiority
+  words: 950
+- section: Садко — купецький епос
+  points:
+  - Sadko the merchant-musician — Novgorod cycle but relevant social type
+  - Wealth, adventure, the sea king — maritime epic
+  words: 800
+- section: Соціальна критика в епосі
+  points:
+  - Ілля vs Володимир — hero humiliated by ungrateful prince
+  - Bogatyr rebellion — when defenders turn against the court
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of Volga and Mykula with linguistic glosses
+  - Agricultural vocabulary in epic context
+  words: 850
+- section: Підсумок
+  points:
+  - Epic as social commentary — folk justice against aristocratic order
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- орач
+- плуг
+- князь
+- наймит
+- соціальний конфлікт
+- перевага
+- алегорія
+- бунт
+activity_hints:
+- type: reading
+  focus: Social bylyna text analysis
+  items: 1
+- type: vocabulary
+  focus: Social hierarchy terminology
+  items: 1
+- type: quiz
+  focus: Social themes in epic poetry
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Social Historian of Epic
+connects_to:
+- zastavy-bohatyrski
+- pokhodzhennia-dum
+objectives:
+- Аналізувати соціальний конфлікт між князем і орачем у билині
+- Інтерпретувати образ Микули Селяниновича як алегорію праці
+- Розуміти епічну критику соціальної нерівності

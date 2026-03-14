@@ -1,0 +1,70 @@
+module: folk-007
+level: FOLK
+sequence: 7
+slug: holosinnya
+version: '2.0'
+title: 'Голосіння: Поетика скорботи та плачі'
+subtitle: 'Funeral Laments: The Poetics of Grief'
+focus: Funeral laments as stylized collective mourning, women's verbal art
+phase: FOLK.1
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Голосіння as the most emotionally intense genre of folk poetry
+  - Women as keepers of the lament tradition
+  words: 750
+- section: Структура поховального обряду
+  points:
+  - Preparation, vigil, procession, burial, поминки
+  - Role of the голосільниця — professional mourner
+  words: 900
+- section: Поетика голосінь
+  points:
+  - Improvisation within formulaic frames
+  - Apostrophe to the dead, nature imagery, rhetorical questions
+  words: 850
+- section: Рекрутські та сирітські голосіння
+  points:
+  - Laments for soldiers (рекрутські) — the living dead metaphor
+  - Orphan laments — social vulnerability expressed through poetry
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected laments with linguistic commentary
+  - Diminutives, vocatives, emotional intensifiers
+  words: 850
+- section: Підсумок
+  points:
+  - Голосіння as verbal art and social function
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- голосіння
+- плач
+- голосільниця
+- поминки
+- скорбота
+- сирітський
+- рекрутський
+- похорон
+activity_hints:
+- type: reading
+  focus: Lament text analysis
+  items: 1
+- type: vocabulary
+  focus: Mourning and funeral terminology
+  items: 1
+- type: quiz
+  focus: Poetic devices in laments
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Oral Poetry Scholar
+connects_to:
+- vesilni-pisni
+- charivni-kazky
+objectives:
+- Аналізувати голосіння як жанр усної поезії з унікальною поетикою
+- Розуміти соціальну функцію ритуального оплакування
+- Демонструвати вміння інтерпретувати емоційно-виражальні засоби голосінь

@@ -1,0 +1,70 @@
+module: folk-006
+level: FOLK
+sequence: 6
+slug: vesilni-pisni
+version: '2.0'
+title: 'Весільна обрядовість: Драматизм переходу'
+subtitle: 'Wedding Rituals: The Drama of Passage'
+focus: Wedding as multi-act folk drama, rites of passage, symbolic death and rebirth
+phase: FOLK.1
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - The Ukrainian wedding as the most elaborate folk ritual
+  - Structure as multi-day dramatic performance
+  words: 750
+- section: Сватання та заручини
+  points:
+  - Matchmaking (сватання) — ritual dialogue, symbolic bread
+  - Рушник as symbol of consent, binding agreement
+  words: 900
+- section: Дівич-вечір та коровай
+  points:
+  - Bachelorette ritual — unbraiding, lament songs
+  - Коровай baking as collective women's ritual
+  words: 850
+- section: Весільний день
+  points:
+  - Blessing, departure, церковний шлюб
+  - Symbolic tests, ransom of the bride
+  words: 850
+- section: Поетика весільних пісень
+  points:
+  - Genre variety — величальні, жартівливі, плачі
+  - Formulaic structures, refrains, dialogue songs
+  words: 850
+- section: Підсумок
+  points:
+  - Wedding as model of social transition — maiden to wife
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- сватання
+- коровай
+- рушник
+- дружка
+- староста
+- дівич-вечір
+- величальна
+- посаг
+activity_hints:
+- type: reading
+  focus: Wedding song text analysis
+  items: 1
+- type: vocabulary
+  focus: Wedding ritual terminology
+  items: 1
+- type: comparative-analysis
+  focus: Regional wedding traditions
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Ritual Drama Scholar
+connects_to:
+- obzhynkovi-pisni
+- holosinnya
+objectives:
+- Аналізувати весільну обрядовість як багатоактову народну драму
+- Інтерпретувати символіку переходу від дівоцтва до заміжжя
+- Демонструвати володіння весільною обрядовою лексикою

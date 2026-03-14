@@ -1,0 +1,69 @@
+module: folk-009
+level: FOLK
+sequence: 9
+slug: kazky-pro-tvaryn
+version: '2.0'
+title: 'Казки про тварин: Від тотемізму до алегорії'
+subtitle: 'Animal Tales: From Totemism to Allegory'
+focus: Animal tales as moral allegories, totemistic roots, trickster figures
+phase: FOLK.2
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Animal tales as the oldest narrative stratum
+  - From totemic belief to moral fable
+  words: 750
+- section: Тотемічне коріння
+  points:
+  - Animals as clan ancestors — bear, wolf, fox
+  - Traces of totemism in Ukrainian folk culture
+  words: 850
+- section: Трікстер — Лисичка-сестричка
+  points:
+  - The fox as universal trickster — cunning, deception, social commentary
+  - Comparison with European Reynard tradition
+  words: 900
+- section: Моральна алегорія
+  points:
+  - 'Animal tales as coded social criticism: strong vs weak, clever vs foolish'
+  - Didactic function — tales for children and adults
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of Коза-дереза, Рукавичка, Колобок
+  - Cumulative structure, repetition, dialogue patterns
+  words: 850
+- section: Підсумок
+  points:
+  - Animal tales in the Ukrainian pedagogical tradition
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- тотемізм
+- трікстер
+- алегорія
+- байка
+- кумулятивна казка
+- лисиця
+- антропоморфізм
+activity_hints:
+- type: reading
+  focus: Animal tale text analysis
+  items: 1
+- type: vocabulary
+  focus: Animal and moral terminology
+  items: 1
+- type: quiz
+  focus: Tale structure and function
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Comparative Narratologist
+connects_to:
+- charivni-kazky
+- sotsialno-pobutovi-kazky
+objectives:
+- Аналізувати тотемічне коріння казок про тварин
+- Інтерпретувати образ трікстера в контексті української фольклорної традиції
+- Розуміти кумулятивну структуру та її дидактичну функцію

@@ -1,0 +1,69 @@
+module: folk-023
+level: FOLK
+sequence: 23
+slug: zahadky
+version: '2.0'
+title: 'Загадки: Метафоричне бачення світу'
+subtitle: 'Riddles: A Metaphorical Worldview'
+focus: Riddles as cognitive training, metaphorical thinking, folk classification
+phase: FOLK.5
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Загадка as an ancient genre — from ritual to entertainment
+  - Riddles as cognitive training — seeing one thing through another
+  words: 750
+- section: Структура загадки
+  points:
+  - Description of the unknown through the known — coded metaphor
+  - Types — descriptive, question, numerical, contradictory
+  words: 900
+- section: Тематичні групи
+  points:
+  - Nature, household, human body, tools, abstract concepts
+  - Agricultural world as primary source domain
+  words: 850
+- section: Поетика загадок
+  points:
+  - Personification, metonymy, synecdoche, paradox
+  - Sound play — assonance, consonance, onomatopoeia
+  words: 850
+- section: Текстовий аналіз
+  points:
+  - Close reading of selected riddles with linguistic commentary
+  - Decoding metaphorical logic
+  words: 850
+- section: Підсумок
+  points:
+  - Riddles in pedagogical and performance contexts
+  - Vocabulary table
+  words: 800
+vocabulary_hints:
+- загадка
+- відгадка
+- метафора
+- персоніфікація
+- парадокс
+- метонімія
+- синекдоха
+activity_hints:
+- type: reading
+  focus: Riddle text analysis
+  items: 1
+- type: vocabulary
+  focus: Figurative language terminology
+  items: 1
+- type: quiz
+  focus: Solving Ukrainian folk riddles
+  items: 1
+persona:
+  voice: Senior Folklorist
+  role: Cognitive Folklorist
+connects_to:
+- prykazky-ta-pryslivia
+- narodni-anekdoty
+objectives:
+- Аналізувати загадки як форму метафоричного мислення
+- Розуміти механізм кодування відповіді через описову метафору
+- Демонструвати вміння класифікувати загадки за типами та тематикою
