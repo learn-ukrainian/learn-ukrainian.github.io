@@ -20,7 +20,7 @@ sources:
     - "Ukrainian literary criticism (Krytyka, Слово і час)"
     - "Diaspora scholarship (HURI, CIUS)"
     - "Contemporary literary journalism"
-  note: "All analysis from Ukrainian perspective. Russian/Soviet interpretations used only as objects of critique. Ukrainian-language authors ONLY."
+  note: "All analysis from Ukrainian perspective. Russian/Soviet interpretations used only as objects of critique. Ukrainian-language authors ONLY — no Russian-language writers regardless of ethnicity or political alignment."
 
 vocabulary:
   cumulative_from: "[a1, a2, b1, b2, c1]"
@@ -56,6 +56,7 @@ phases:
       - "Панас Мирний (1849-1920) — Хіба ревуть воли"
       - "Марко Вовчок (1833-1907) — Інститутка"
       - "Руданський, Глібов, Старицький, Грінченко"
+      - "Наталія Кобринська (1855-1920) — «Дух часу», альманах «Перший вінок»"
 
   - id: LIT.2
     name: "Фаза 2: Європейський Модернізм (1890s-1917)"
@@ -92,6 +93,8 @@ phases:
       - "Йогансен, Домонтович, Антонич, Сосюра, Плужник, Бажан"
       - "Сандармох — трагедія і стирання пам'яті"
       - "Розстріляне Відродження як феномен (thematic)"
+      - "Олена Теліга (1906-1942) — «О краю мій…», Празька школа"
+      - "Олег Ольжич (1907-1944) — «Рінь», «Вежі», «Підзамче»"
 
   - id: LIT.4
     name: "Фаза 4: Опір та Стійкість (1933-1991)"
@@ -109,6 +112,10 @@ phases:
       - "Вінграновський (1925-2005) — поезія та проза"
       - "Тютюнник (1931-1980) — новели"
       - "Гончар, Малишко, Драч, Сверстюк, Дзюба, Голобородько"
+      - "Валерій Шевчук (1939-) — «Дім на горі», «Три листки за вікном», «Око Прірви»"
+      - "Ірина Вільде (1907-1982) — «Сестри Річинські», «Метелики на шпильках»"
+      - "Емма Андієвська (1931-) — «Роман про добру людину», Нью-Йоркська група"
+      - "Юрій Тарнавський (1934-2025) — «Життя в місті», Нью-Йоркська група"
       - "Голодомор у літературі (thematic)"
       - "Самвидав і підпілля (thematic)"
       - "Жінки-письменниці та опір (thematic)"
@@ -128,7 +135,10 @@ phases:
       - "Дереш — Культ, Намір"
       - "Коваль — Сторінки (1990s)"
       - "Іздрик, Прохасько, Матіос, Маляртшук"
-      - "Чех, Сенцов, Калитко, Софія Андрухович"
+      - "Чех, Калитко, Софія Андрухович"
+      - "Мойсей Фішбейн (1946-2020) — «Апокриф», «Пророк», «Ранній рай»"
+      - "Алім Алієв, Севгіль Мусаєва — кримськотатарські автори українською"
+      - "Наріман Джеляль — публіцистика, листи з ув'язнення"
       - "Деколонізаційна теорія літератури (thematic)"
       - "Гундорова — Постчорнобильська бібліотека"
       - "Війна як літературний рух (thematic)"
@@ -139,8 +149,8 @@ phases:
 # Variant tracks (separate plans)
 variant_tracks:
   - track: lit-essay
-    modules: 49
-    focus: "Non-fiction, essays, intellectual history"
+    modules: 53
+    focus: "Non-fiction, essays, intellectual history + testimony prose (merged LIT-DOC)"
     plan: "plans/lit-essay.yaml"
   - track: lit-hist-fic
     modules: 20

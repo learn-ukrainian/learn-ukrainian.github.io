@@ -8,7 +8,7 @@ version: "1.0"
 status: planned
 
 overview:
-  total_modules: 49
+  total_modules: 53
   description: "The intellectual history of Ukraine through essays, pamphlets, and critical thought — from 19th-century polemics to 21st-century decolonization theory"
   prerequisites: "[c1]"
   target_audience: "Advanced learners seeking mastery of Ukrainian non-fiction, political thought, and identity discourse"
@@ -109,6 +109,19 @@ phases:
       - "Маринович — Всесвіт за колючим дротом"
       - "Чижевський — Нариси барокової історії"
       - "Луцький — Діаспорний міст"
+
+  - id: ESSAY.6
+    name: "Тестимоніальна Проза"
+    name_en: "Testimony Prose (merged from LIT-DOC)"
+    modules: "[50, 53]"
+    focus: "Documentary literature as truth-telling — Holodomor testimony, prison letters, memoirs"
+    era: "1934-1989"
+    key_authors:
+      - "Самчук — «Марія» (1934) — Голодомор"
+      - "Барка — «Жовтий князь» (1963) — Голодомор"
+      - "Світличний — табірна лірика і листи"
+      - "Шумук — мемуари (УПА та Ґулаг)"
+    note: "Merged from LIT-DOC. Duplicate modules (Асєєв, Кіпіані, Вакуленко, Амеліна, Мариновіч, Стус листи) already covered in ESSAY.5 and LIT-WAR."
 
 constraints:
   min_engagement_boxes: 3

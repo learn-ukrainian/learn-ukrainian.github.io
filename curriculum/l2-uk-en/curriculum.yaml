@@ -974,6 +974,11 @@ levels:
       - samvydav-underground-publishing
       - women-writers-resistance
       - shestydesiatnyky-as-phenomenon
+      - valeriy-shevchuk-dim-na-hori
+      - valeriy-shevchuk-prose
+      - iryna-vilde-sestry-richynski
+      - emma-andiyevska-new-york-group
+      - yuriy-tarnavsky-new-york-group
       - synthesis-4
       - bu-ba-bu-carnival
       - bu-ba-bu-the-end-of-soviet
@@ -1022,6 +1027,9 @@ levels:
       - diaspora-connections
       - diaspora-consciousness-mur
       - new-york-group-poets
+      - moisei-fishbein-poetry
+      - aliev-musayeva-crimean-tatar-ukrainian
+      - nariman-dzhelyal-publicistics
       - amelina-renaissance
       - synthesis-5
       - skovoroda-baroque-philosophy
@@ -1665,6 +1673,11 @@ levels:
       - solomea-pavlychko-modernism
       - oxana-hundorova-postcolonialism
       - vira-ageyeva-canon
+      # ESSAY.6 — Testimony Prose (merged from LIT-DOC, #879)
+      - samchuk-mariya-holodomor
+      - barka-zhovtyi-kniaz
+      - svitlychny-prison-lyrics
+      - shumuk-memoirs
   lit-hist-fic:
     type: track
     modules:
@@ -1731,9 +1744,8 @@ levels:
       - zhadan-life-maria
       - markus-traces-on-road
       - markus-infantry
-      - zernya-daughter-donetsk
+      - zernya-dotsya
       - polozhiy-ilovaisk
-      - yashchenko-donbas-stories
       - bilozerska-diary
       - babich-poetry
       - kotsyubailo-legacy-lit
@@ -1797,22 +1809,10 @@ levels:
       - voronyna-agent-000
       - andrusyak-adventures
       - juvenile-synthesis
-  lit-doc:
-    type: track
-    modules:
-      - holocaust-testimony-ukrainian
-      - holodomor-testimony-as-literature
-      - prison-letters-as-documentary
-      - vakulenko-occupation-diary
-      - aseyev-the-torture-camp
-      - aseyev-camp-paradise
-      - aseyev-isolation-donetsk
-      - yermolenko-philosophical-narrative
-      - matviichuk-human-rights
-      - kipiani-case-of-stus
-      - amelina-women-looking-at-war
-      - chronicles-as-testimony
-      - shcherbak-chornobyl-documentary
+  # lit-doc: MERGED INTO lit-essay (ESSAY.6) — see #879
+  # Unique modules (Самчук, Барка, Світличний, Шумук) added to lit-essay.
+  # Duplicate modules (Асєєв, Кіпіані, Вакуленко, Амеліна, Мариновіч) already in lit-essay/lit-war.
+  # Kuznetsov dropped (wrote in Russian).
   lit-drama:
     type: track
     modules:
@@ -1833,18 +1833,6 @@ levels:
       - skovoroda-dialogues-theatre
       - nezdana-contemporary-women-drama
       - vynnychenko-european-stage
-  lit-crimea:
-    type: track
-    modules:
-      - gaspirali-crimean-modernizer
-      - celebicihan-poet-statesman
-      - choban-zade-scholar-poet
-      - crimean-tatar-oral-tradition
-      - sentsov-numbers
-      - sentsov-stories
-      - dzhelyal-letters-from-cell
-      - aliev-musayeva-dzhemilev
-      - krymskyi-historical-poetry
-      - crimean-khanate-court-poetry
-      - surgunlik-deportation-literature
-      - avdet-literature-of-return
+  # lit-crimea: REMOVED — see #879
+  # Ukrainian-writing authors (Алієв, Мусаєва, Джеляль) moved to LIT main track (Phase 5).
+  # Non-Ukrainian-language authors (Гаспралі, Челебіджіхан, Чобан-заде, Сенцов) dropped per language rule.
