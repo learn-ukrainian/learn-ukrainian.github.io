@@ -83,11 +83,10 @@ IMMERSION_RULES: dict[str, str] = {
     "a1-m01-02": (
         "TARGET: 5-15% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: 100% English.\n"
-        "- UKRAINIAN CONTENT: Individual letters and words only — bolded inline in English prose "
-        "with translation in parentheses: \"The letter **Н** looks like H but sounds like N.\"\n"
-        "- TABLES: Simple letter-sound or word-meaning tables (Ukrainian in left column, English in right).\n"
-        "- STRUCTURAL RULE: Every paragraph is English. Ukrainian never appears as a standalone sentence.\n"
+        "- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.\n"
+        "- UKRAINIAN CONTENT: Words and short phrases inline: \"The letter **Н** looks like H but sounds like N.\"\n"
+        "- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.\n"
+        "- TABLES: Simple letter-sound or word-meaning tables.\n"
         "Ukrainian sentences max 10 words."
     ),
     "a1-m03-05": (
@@ -2249,6 +2248,20 @@ def _read_phase_file(filename: str) -> str:
     return f"(Phase file not found: {filename})"
 
 
+def _get_summary_heading(ctx: ModuleContext) -> str:
+    """Get the summary heading from the plan's content_outline, falling back to defaults."""
+    outline = ctx.plan.get("content_outline", [])
+    for section in outline:
+        if isinstance(section, dict):
+            name = section.get("section", "")
+            if "підсумок" in name.lower() or "summary" in name.lower():
+                return name
+    # Fallback
+    if ctx.track.startswith("a1") and ctx.module_num <= 14:
+        return "Підсумок — Summary"
+    return "Підсумок"
+
+
 def _build_learner_state(ctx: ModuleContext) -> str:
     """Build the learner state manifest for this module."""
     try:
@@ -2316,11 +2329,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
             else "Чому це важливо? — Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
             else "Чому це важливо?"
         ),
-        "SUMMARY_HEADING": (
-            "Summary" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
-            else "Підсумок — Summary" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
-            else "Підсумок"
-        ),
+        "SUMMARY_HEADING": _get_summary_heading(ctx),
         "SELF_CHECK_HEADING": (
             "Check yourself:" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
             else "Перевірте себе — Check yourself:" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
@@ -2714,11 +2723,11 @@ Read the current content file at `{ctx.paths["md"]}` and the original prompt at 
 {{entire rewritten module with dramatically expanded content}}
 ===CONTENT_END===
 
-===WORD_COUNTS===
+===WORD_COUNTS_START===
 Section "{{name}}": {{count}} words
 ...
 Total: {{total}} words
-===WORD_COUNTS===
+===WORD_COUNTS_END===
 """
 
 

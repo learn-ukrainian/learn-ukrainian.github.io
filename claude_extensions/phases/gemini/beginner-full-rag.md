@@ -182,7 +182,7 @@ The Russian conjunction **"и"** (meaning "and") is forbidden. Use Ukrainian con
 Output FIVE blocks in this exact order (plus optional friction report):
 
 **Block 1: Content** — `===CONTENT_START===` ... `===CONTENT_END===`
-**Block 2: Word Counts** — `===WORD_COUNTS===` ... `===WORD_COUNTS===`
+**Block 2: Word Counts** — `===WORD_COUNTS_START===` ... `===WORD_COUNTS_END===`
 **Block 3: Activities** — `===ACTIVITIES_START===` ... `===ACTIVITIES_END===` (bare list, no wrapper)
 **Block 4: Vocabulary** — `===VOCABULARY_START===` ... `===VOCABULARY_END===` (object with `items:`)
 **Block 5: Builder Notes** — `===BUILDER_NOTES_START===` ... `===BUILDER_NOTES_END===`
