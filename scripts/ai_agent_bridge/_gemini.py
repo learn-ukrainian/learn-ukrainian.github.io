@@ -14,17 +14,43 @@ from ._broker import (
     _validate_file_writes,
     _write_pid_file,
 )
-from ._config import GEMINI_CLI, _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, REPO_ROOT
+from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, GEMINI_CLI, REPO_ROOT
 from ._github import _post_review_to_github
 from ._messaging import (
     _extract_issue_number,
     acknowledge,
+    get_conversation_context,
     read_message,
     send_message,
     send_to_gemini,
 )
 from ._model import _detect_model_error
 from ._prompts import build_gemini_prompt
+
+
+def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-preview",
+                    skip_github: bool = False):
+    """Multi-turn conversation with Gemini. Includes conversation history in prompt.
+
+    Each call adds to the conversation thread (via task_id) and Gemini sees
+    all previous messages for context.
+    """
+    history, msg_count = get_conversation_context(task_id)
+
+    if history:
+        full_content = (
+            f"## Conversation History\n\n{history}\n\n"
+            f"===\n\n## Current Message\n\n{content}"
+        )
+        print(f"📜 Conversation '{task_id}' — turn {msg_count + 1}")
+    else:
+        full_content = content
+        print(f"📜 Starting conversation '{task_id}'")
+
+    return ask_gemini(
+        full_content, task_id=task_id, msg_type="query",
+        model=model, skip_github=skip_github,
+    )
 
 
 def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query",

@@ -239,6 +239,48 @@ def get_conversation(task_id: str):
         print()
 
 
+def get_conversation_context(task_id: str, max_chars: int = 30000) -> tuple[str, int]:
+    """Get conversation history as formatted context for prompt injection.
+
+    Returns (formatted_text, message_count). Keeps the most recent messages
+    when truncation is needed (oldest messages dropped first).
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT from_llm, content, timestamp
+        FROM messages
+        WHERE task_id = ?
+        ORDER BY id ASC
+    """, (task_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    if not rows:
+        return "", 0
+
+    # Build entries newest-first so truncation drops oldest
+    entries = []
+    for from_llm, content, timestamp in rows:
+        entries.append(f"**{from_llm.upper()}** ({timestamp}):\n{content}\n")
+
+    # Keep newest messages within budget
+    kept = []
+    total = 0
+    for entry in reversed(entries):
+        if total + len(entry) > max_chars:
+            dropped = len(entries) - len(kept)
+            kept.append(f"... [{dropped} older messages omitted] ...")
+            break
+        kept.append(entry)
+        total += len(entry)
+
+    kept.reverse()
+    return "\n\n".join(kept), len(rows)
+
+
 def _extract_issue_number(task_id: str) -> int | None:
     """Extract GH issue number from task_id. Returns None if no issue pattern."""
     if not task_id:

@@ -4,10 +4,10 @@ import argparse
 import sys
 from pathlib import Path
 
-from ._broker import broker_cleanup, bridge_status
+from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
 from ._db import get_db
-from ._gemini import ask_gemini, process_and_respond
+from ._gemini import ask_gemini, converse_gemini, process_and_respond
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -246,6 +246,14 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemini_parser.add_argument("--no-github", dest="no_github", action="store_true",
                                    help="Skip auto-posting review to GitHub issue")
 
+    # converse — multi-turn conversation with Gemini
+    converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
+    converse_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    converse_parser.add_argument("--task-id", required=True, help="Conversation thread ID (e.g., 'a1-1-planning')")
+    converse_parser.add_argument("--model", default="gemini-3.1-pro-preview", help="Gemini model")
+    converse_parser.add_argument("--no-github", dest="no_github", action="store_true",
+                                 help="Skip auto-posting to GitHub")
+
     # process-all
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
     proc_all_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
@@ -299,6 +307,10 @@ def _dispatch_command(args):
         _handle_ask_claude(args)
     elif args.command == "ask-gemini":
         _handle_ask_gemini(args)
+    elif args.command == "converse":
+        content = sys.stdin.read() if args.content == "-" else args.content
+        converse_gemini(content, args.task_id, args.model,
+                        getattr(args, 'no_github', False))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
