@@ -8,8 +8,8 @@ and activity requirements for each CEFR level.
 # Grammar constraints by level (what's ALLOWED at each level)
 GRAMMAR_CONSTRAINTS = {
     'A1': {
-        'cases_allowed': ['nominative', 'accusative', 'locative', 'genitive', 'vocative'],
-        'cases_forbidden': ['dative', 'instrumental'],
+        'cases_allowed': ['nominative', 'accusative', 'locative', 'genitive', 'dative', 'instrumental', 'vocative'],
+        'cases_forbidden': [],
         'aspect': 'imperfective_only',
         'participles': False,
         'subordinate_clauses': False,
