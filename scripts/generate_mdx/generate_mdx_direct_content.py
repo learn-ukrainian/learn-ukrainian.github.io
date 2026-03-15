@@ -52,7 +52,7 @@ def _render_letter_grid(letter_list: list[dict], include_note: bool = False) -> 
         }
         for l in letter_list
     ]
-    return f"<LetterGrid client:load letters={{JSON.parse(`{dump_json_for_jsx(grid_data)}`)}} />\n"
+    return f"<LetterGrid client:only=\"react\" letters={{JSON.parse(`{dump_json_for_jsx(grid_data)}`)}} />\n"
 
 
 def _render_abetka_sessions(letters: list[dict]) -> list[str]:
@@ -81,7 +81,7 @@ def _render_abetka_sessions(letters: list[dict]) -> list[str]:
         ]
         if war_items:
             lines.append(
-                f'<WatchAndRepeat client:load items={{JSON.parse(`{dump_json_for_jsx(war_items)}`)}} '
+                f'<WatchAndRepeat client:only=\"react\" items={{JSON.parse(`{dump_json_for_jsx(war_items)}`)}} '
                 f'title="Повтори: {session["title"]}" isUkrainian />\n'
             )
 
@@ -308,7 +308,7 @@ def _render_syllable_vocab(data: dict) -> list[str]:
             )
         lines.append("\n## Слова по складах\n")
         lines.append(
-            f"<VocabCard client:load words={{JSON.parse("
+            f"<VocabCard client:only=\"react\" words={{JSON.parse("
             f"`{dump_json_for_jsx(words)}`)}} "
             f'title="Слова по складах" isUkrainian />\n'
         )
@@ -359,7 +359,7 @@ def render_communicative(data: dict) -> str:
                 ],
             })
         lines.append(
-            f"<PhraseTable client:load groups={{JSON.parse(`{dump_json_for_jsx(groups)}`)}} isUkrainian />\n"
+            f"<PhraseTable client:only=\"react\" groups={{JSON.parse(`{dump_json_for_jsx(groups)}`)}} isUkrainian />\n"
         )
 
     dialogues = data.get("dialogues")
@@ -377,7 +377,7 @@ def render_communicative(data: dict) -> str:
             props = f"exchanges={{JSON.parse(`{dump_json_for_jsx(exchanges)}`)}}"
             if title:
                 props += f' title="{escape_jsx_string(title)}"'
-            lines.append(f"<DialogueBox client:load {props} isUkrainian />\n")
+            lines.append(f"<DialogueBox client:only=\"react\" {props} isUkrainian />\n")
 
     return "\n".join(lines)
 
@@ -401,7 +401,7 @@ def render_vocabulary_module(data: dict) -> str:
             for w in vocab
         ]
         lines.append(
-            f"<VocabCard client:load words={{JSON.parse(`{dump_json_for_jsx(words)}`)}} isUkrainian />\n"
+            f"<VocabCard client:only=\"react\" words={{JSON.parse(`{dump_json_for_jsx(words)}`)}} isUkrainian />\n"
         )
 
     return "\n".join(lines)

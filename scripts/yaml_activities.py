@@ -1028,19 +1028,19 @@ class ActivityParser:
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
         items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Quiz client:load questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Quiz client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _select_to_mdx(self, activity: SelectActivity) -> str:
         items = [{'question': str(i.question), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options], 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Select client:load questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Select client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _true_false_to_mdx(self, activity: TrueFalseActivity) -> str:
         items = [{'statement': str(i.statement), 'isTrue': i.correct, 'explanation': str(i.explanation) if i.explanation else ''} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<TrueFalse client:load items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<TrueFalse client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _fill_in_to_mdx(self, activity: FillInActivity) -> str:
         items = [{'sentence': str(i.sentence), 'answer': str(i.answer), 'options': [str(opt) for opt in i.options]} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<FillIn client:load items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<FillIn client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _cloze_to_mdx(self, activity: ClozeActivity) -> str:
         passage = activity.passage
@@ -1062,38 +1062,38 @@ class ActivityParser:
                 passage = new_passage
 
         blanks = [{'index': i, 'answer': str(b.answer), 'options': [str(opt) for opt in b.options]} for i, b in enumerate(activity.blanks)]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze client:load passage={{{json.dumps(str(passage), ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze client:only='react' passage={{{json.dumps(str(passage), ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} />"
 
     def _match_up_to_mdx(self, activity: MatchUpActivity) -> str:
         pairs = [{'left': str(p.left), 'right': str(p.right)} for p in activity.pairs]
-        return f"### {self._escape_jsx(activity.title)}\n\n<MatchUp client:load pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<MatchUp client:only='react' pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}} />"
 
     def _group_sort_to_mdx(self, activity: GroupSortActivity) -> str:
         groups = {g.name: g.items for g in activity.groups}
-        return f"### {self._escape_jsx(activity.title)}\n\n<GroupSort client:load groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<GroupSort client:only='react' groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}} />"
 
     def _unjumble_to_mdx(self, activity: UnjumbleActivity) -> str:
         items = [{'jumbled': ' / '.join(str(w) for w in i.words), 'answer': str(i.answer)} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Unjumble client:load items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Unjumble client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity) -> str:
         items = []
         for i in activity.items:
             opts = self._dump_safe_json([str(opt) for opt in i.options])
             items.append(f'  <ErrorCorrectionItem sentence="{self._escape_jsx(str(i.sentence))}" errorWord="{self._escape_jsx(str(i.error))}" correctForm="{self._escape_jsx(str(i.answer))}" options={{JSON.parse(`{opts}`)}} explanation="{self._escape_jsx(str(i.explanation))}" />')
-        return f"### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:load>\n{chr(10).join(items)}\n</ErrorCorrection>"
+        return f"### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection client:only='react'>\n{chr(10).join(items)}\n</ErrorCorrection>"
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
         ans = self._dump_safe_json([w for word in activity.answers for w in (str(word).split() if ' ' in str(word) else [str(word)])])
-        return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:load>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
+        return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords client:only='react'>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(str(activity.instruction))}\" text=\"{self._escape_jsx(str(activity.text))}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
 
     def _translate_to_mdx(self, activity: TranslateActivity) -> str:
         items = [{'source': str(i.source), 'options': [{'text': str(o.text), 'correct': o.correct} for o in i.options]} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Translate client:load questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Translate client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:
         items = [{'scrambled': str(i.scrambled), 'answer': str(i.answer), 'hint': str(i.hint) if i.hint else ''} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Anagram client:load items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Anagram client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _essay_response_to_mdx(self, activity: EssayResponseActivity, is_ukrainian_forced: bool = False) -> str:
         rubric_md = ""
@@ -1117,7 +1117,7 @@ class ActivityParser:
         # This puts "string" inside {}, resulting in prompt={"string"} which is valid JSX
         # So we don't need _dump_safe_json here, but we DO need to NOT escape quotes inside content
         # json.dumps does escaping correctly for a JS string literal.
-        return f"### {self._escape_jsx(activity.title)}\n\n<EssayResponse client:load title=\"{self._escape_jsx(activity.title)}\" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} rubric={{{json.dumps(rubric_md, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<EssayResponse client:only='react' title=\"{self._escape_jsx(activity.title)}\" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} rubric={{{json.dumps(rubric_md, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _reading_to_mdx(self, activity: ReadingActivity, is_ukrainian_forced: bool = False) -> str:
         tasks = self._dump_safe_json(activity.tasks)
@@ -1125,25 +1125,25 @@ class ActivityParser:
         # Seminar mode uses text/source; legacy uses context/resource
         text_prop = f' text={{{json.dumps(activity.text, ensure_ascii=False)}}}' if activity.text else ''
         source_prop = f' source={{{json.dumps(activity.source, ensure_ascii=False)}}}' if activity.source else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity client:load title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\"{text_prop}{source_prop} resource={{JSON.parse(`{resource}`)}} tasks={{JSON.parse(`{tasks}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity client:only='react' title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\"{text_prop}{source_prop} resource={{JSON.parse(`{resource}`)}} tasks={{JSON.parse(`{tasks}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _critical_analysis_to_mdx(self, activity: CriticalAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
         # Seminar mode uses targetText/questions/modelAnswers; legacy uses context/question/modelAnswer
         target_text_prop = f' targetText={{{json.dumps(activity.target_text, ensure_ascii=False)}}}' if activity.target_text else ''
         questions_prop = f' questions={{JSON.parse(`{self._dump_safe_json(activity.questions)}`)}}' if activity.questions else ''
         model_answers_prop = f' modelAnswers={{JSON.parse(`{self._dump_safe_json(activity.model_answers)}`)}}' if activity.model_answers else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<CriticalAnalysis client:load title=\"{self._escape_jsx(activity.title)}\" context={{{json.dumps(activity.context, ensure_ascii=False)}}} question={{{json.dumps(activity.question, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{target_text_prop}{questions_prop}{model_answers_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<CriticalAnalysis client:only='react' title=\"{self._escape_jsx(activity.title)}\" context={{{json.dumps(activity.context, ensure_ascii=False)}}} question={{{json.dumps(activity.question, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{target_text_prop}{questions_prop}{model_answers_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _comparative_study_to_mdx(self, activity: ComparativeStudyActivity, is_ukrainian_forced: bool = False) -> str:
         # Seminar mode uses itemsToCompare/criteria/prompt; legacy uses sourceA/sourceB/task
         items_prop = f' itemsToCompare={{JSON.parse(`{self._dump_safe_json(activity.items_to_compare)}`)}}' if activity.items_to_compare else ''
         criteria_prop = f' criteria={{JSON.parse(`{self._dump_safe_json(activity.criteria)}`)}}' if activity.criteria else ''
         prompt_prop = f' prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}}' if activity.prompt else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<ComparativeStudy client:load title=\"{self._escape_jsx(activity.title)}\" content={{{json.dumps(activity.source_a, ensure_ascii=False)}}} task={{{json.dumps(activity.task, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{items_prop}{criteria_prop}{prompt_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<ComparativeStudy client:only='react' title=\"{self._escape_jsx(activity.title)}\" content={{{json.dumps(activity.source_a, ensure_ascii=False)}}} task={{{json.dumps(activity.task, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}}{items_prop}{criteria_prop}{prompt_prop} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _authorial_intent_to_mdx(self, activity: AuthorialIntentActivity, is_ukrainian_forced: bool = False) -> str:
         questions = self._dump_safe_json(activity.questions)
-        return f"### {self._escape_jsx(activity.title)}\n\n<AuthorialIntent client:load title=\"{self._escape_jsx(activity.title)}\" excerpt={{{json.dumps(activity.excerpt, ensure_ascii=False)}}} questions={{JSON.parse(`{questions}`)}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<AuthorialIntent client:only='react' title=\"{self._escape_jsx(activity.title)}\" excerpt={{{json.dumps(activity.excerpt, ensure_ascii=False)}}} questions={{JSON.parse(`{questions}`)}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _source_evaluation_to_mdx(self, activity: SourceEvaluationActivity, is_ukrainian_forced: bool = False) -> str:
         """Convert source-evaluation activity to SourceEvaluation component (ISTORIO)."""
@@ -1164,7 +1164,7 @@ class ActivityParser:
         criteria_prop = f' evaluationCriteria={{JSON.parse(`{self._dump_safe_json(activity.evaluation_criteria)}`)}}' if activity.evaluation_criteria else ''
         questions_prop = f' guidingQuestions={{JSON.parse(`{self._dump_safe_json(activity.guiding_questions)}`)}}' if activity.guiding_questions else ''
 
-        return f"### {self._escape_jsx(activity.title)}\n\n<SourceEvaluation client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} sourceText={{{json.dumps(activity.source_text, ensure_ascii=False)}}}{metadata_prop}{criteria_prop}{questions_prop} modelEvaluation={{{json.dumps(activity.model_evaluation, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<SourceEvaluation client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} sourceText={{{json.dumps(activity.source_text, ensure_ascii=False)}}}{metadata_prop}{criteria_prop}{questions_prop} modelEvaluation={{{json.dumps(activity.model_evaluation, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _debate_to_mdx(self, activity: DebateActivity, is_ukrainian_forced: bool = False) -> str:
         """Convert debate activity to Debate component (ISTORIO)."""
@@ -1186,39 +1186,39 @@ class ActivityParser:
         context_prop = f' historicalContext={{{json.dumps(activity.historical_context, ensure_ascii=False)}}}' if activity.historical_context else ''
         tasks_prop = f' analysisTasks={{JSON.parse(`{self._dump_safe_json(activity.analysis_tasks)}`)}}' if activity.analysis_tasks else ''
 
-        return f"### {self._escape_jsx(activity.title)}\n\n<Debate client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} debateQuestion={{{json.dumps(activity.debate_question, ensure_ascii=False)}}}{context_prop} positions={{JSON.parse(`{self._dump_safe_json(positions_data)}`)}}{tasks_prop} modelAnalysis={{{json.dumps(activity.model_analysis, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Debate client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} debateQuestion={{{json.dumps(activity.debate_question, ensure_ascii=False)}}}{context_prop} positions={{JSON.parse(`{self._dump_safe_json(positions_data)}`)}}{tasks_prop} modelAnalysis={{{json.dumps(activity.model_analysis, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _etymology_trace_to_mdx(self, activity: EtymologyTraceActivity, is_ukrainian_forced: bool = False) -> str:
         items = [{'word': str(i.word), 'modern': str(i.modern), 'evolution': str(i.evolution)} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<EtymologyTrace client:load title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<EtymologyTrace client:only='react' title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _grammar_identify_to_mdx(self, activity: GrammarIdentifyActivity, is_ukrainian_forced: bool = False) -> str:
         items = [{'text': str(i.text), 'form': str(i.form), 'answer': str(i.answer)} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<GrammarIdentify client:load title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<GrammarIdentify client:only='react' title=\"{self._escape_jsx(activity.title)}\" items={{JSON.parse(`{self._dump_safe_json(items)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _transcription_to_mdx(self, activity: TranscriptionActivity, is_ukrainian_forced: bool = False) -> str:
         hints = self._dump_safe_json(activity.hints) if activity.hints else '[]'
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<Transcription client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} answer={{{json.dumps(activity.answer, ensure_ascii=False)}}} hints={{JSON.parse(`{hints}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Transcription client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} answer={{{json.dumps(activity.answer, ensure_ascii=False)}}} hints={{JSON.parse(`{hints}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _paleography_analysis_to_mdx(self, activity: PaleographyAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
         hotspots = [{'x': h.x, 'y': h.y, 'label': h.label, 'explanation': h.explanation} for h in activity.hotspots]
         options = self._dump_safe_json(activity.options) if activity.options else '[]'
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<PaleographyAnalysis client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} imageUrl={{{json.dumps(activity.image_url, ensure_ascii=False)}}} hotspots={{JSON.parse(`{self._dump_safe_json(hotspots)}`)}} options={{JSON.parse(`{options}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<PaleographyAnalysis client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} imageUrl={{{json.dumps(activity.image_url, ensure_ascii=False)}}} hotspots={{JSON.parse(`{self._dump_safe_json(hotspots)}`)}} options={{JSON.parse(`{options}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _dialect_comparison_to_mdx(self, activity: DialectComparisonActivity, is_ukrainian_forced: bool = False) -> str:
         features = [{'featureName': f.feature_name, 'valueA': f.value_a, 'valueB': f.value_b, 'explanation': f.explanation} for f in activity.features]
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
         label_a_prop = f' labelA={{{json.dumps(activity.label_a, ensure_ascii=False)}}}' if activity.label_a else ''
         label_b_prop = f' labelB={{{json.dumps(activity.label_b, ensure_ascii=False)}}}' if activity.label_b else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<DialectComparison client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} textA={{{json.dumps(activity.text_a, ensure_ascii=False)}}} textB={{{json.dumps(activity.text_b, ensure_ascii=False)}}}{label_a_prop}{label_b_prop} features={{JSON.parse(`{self._dump_safe_json(features)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<DialectComparison client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} textA={{{json.dumps(activity.text_a, ensure_ascii=False)}}} textB={{{json.dumps(activity.text_b, ensure_ascii=False)}}}{label_a_prop}{label_b_prop} features={{JSON.parse(`{self._dump_safe_json(features)}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _translation_critique_to_mdx(self, activity: TranslationCritiqueActivity, is_ukrainian_forced: bool = False) -> str:
         translations = [{'translator': t.translator, 'text': t.text, 'accuracyScore': t.accuracy_score, 'notes': t.notes} for t in activity.translations]
         focus_points = self._dump_safe_json(activity.focus_points) if activity.focus_points else '[]'
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
-        return f"### {self._escape_jsx(activity.title)}\n\n<TranslationCritique client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} translations={{JSON.parse(`{self._dump_safe_json(translations)}`)}} focusPoints={{JSON.parse(`{focus_points}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<TranslationCritique client:only='react' title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} translations={{JSON.parse(`{self._dump_safe_json(translations)}`)}} focusPoints={{JSON.parse(`{focus_points}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     # ------------------------------------------------------------------
     # Pre-literacy activity renderers
@@ -1232,7 +1232,7 @@ class ActivityParser:
         if activity.instruction:
             props += f' instruction="{self._escape_jsx(activity.instruction)}"'
         heading = activity.title or 'Classify'
-        return f"### {self._escape_jsx(heading)}\n\n<Classify client:load {props} />"
+        return f"### {self._escape_jsx(heading)}\n\n<Classify client:only='react' {props} />"
 
     def _image_to_letter_to_mdx(self, activity: ImageToLetterActivity) -> str:
         items = [{'emoji': i.emoji, 'answer': i.answer, 'distractors': i.distractors} for i in activity.items]
@@ -1240,7 +1240,7 @@ class ActivityParser:
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
         heading = activity.title or 'Image to Letter'
-        return f"### {self._escape_jsx(heading)}\n\n<ImageToLetter client:load {props} />"
+        return f"### {self._escape_jsx(heading)}\n\n<ImageToLetter client:only='react' {props} />"
 
     def _watch_and_repeat_to_mdx(self, activity: WatchAndRepeatActivity) -> str:
         items = []
@@ -1257,4 +1257,4 @@ class ActivityParser:
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
         heading = activity.title or 'Watch and Repeat'
-        return f"### {self._escape_jsx(heading)}\n\n<WatchAndRepeat client:load {props} />"
+        return f"### {self._escape_jsx(heading)}\n\n<WatchAndRepeat client:only='react' {props} />"

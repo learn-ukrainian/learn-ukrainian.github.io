@@ -23,8 +23,8 @@ _SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
-from manifest_utils import get_module_by_slug  # noqa: E402
-from yaml_activities import Activity, ActivityParser  # noqa: E402
+from manifest_utils import get_module_by_slug
+from yaml_activities import Activity, ActivityParser
 
 
 def yaml_activities_to_jsx(activities: list[Activity], is_ukrainian_forced: bool = False) -> str:
@@ -53,7 +53,7 @@ def highlight_morphemes_to_jsx(item: HighlightMorphemesItem, title: str, is_ukra
 
     return f'''### {title}
 
-<HighlightMorphemes client:load isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>
+<HighlightMorphemes client:only='react' isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>
   <HighlightMorphemesActivity{instruction_jsx}
     text={{`{escape_jsx(item.text)}`}}
     morphemes={{[
@@ -67,7 +67,7 @@ def essay_response_to_jsx(data: EssayResponseData, title: str, is_ukrainian_forc
     """Convert essay-response data to JSX EssayResponse component."""
     return f'''### {title}
 
-<EssayResponse client:load
+<EssayResponse client:only='react'
   title="{escape_jsx(title)}"
   prompt={{`{escape_jsx(data.prompt)}`}}
   modelAnswer={{`{escape_jsx(data.modelAnswer)}`}}
@@ -80,7 +80,7 @@ def comparative_study_to_jsx(data: ComparativeStudyData, title: str, is_ukrainia
     """Convert comparative-study data to JSX ComparativeStudy component."""
     return f'''### {title}
 
-<ComparativeStudy client:load
+<ComparativeStudy client:only='react'
   title="{escape_jsx(title)}"
   content={{`{escape_jsx(data.content)}`}}
   task={{`{escape_jsx(data.task)}`}}

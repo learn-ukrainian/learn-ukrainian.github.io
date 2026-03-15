@@ -54,7 +54,7 @@ def _render_watch_and_repeat(activity: dict) -> str:
     props = f"items={{JSON.parse(`{dump_json_for_jsx(items)}`)}}"
     if title:
         props += f' title="{escape_jsx_string(title)}"'
-    return f"<WatchAndRepeat client:load {props} isUkrainian />\n"
+    return f"<WatchAndRepeat client:only=\"react\" {props} isUkrainian />\n"
 
 
 def _render_classify(activity: dict) -> str:
@@ -77,7 +77,7 @@ def _render_classify(activity: dict) -> str:
         props += f' title="{escape_jsx_string(title)}"'
     if instruction:
         props += f' instruction="{escape_jsx_string(instruction)}"'
-    return f"<Classify client:load {props} isUkrainian />\n"
+    return f"<Classify client:only=\"react\" {props} isUkrainian />\n"
 
 
 def _render_image_to_letter(activity: dict) -> str:
@@ -97,7 +97,7 @@ def _render_image_to_letter(activity: dict) -> str:
     props = f"items={{JSON.parse(`{dump_json_for_jsx(items)}`)}}"
     if title:
         props += f' title="{escape_jsx_string(title)}"'
-    return f"<ImageToLetter client:load {props} isUkrainian />\n"
+    return f"<ImageToLetter client:only=\"react\" {props} isUkrainian />\n"
 
 
 def _render_true_false(activity: dict) -> str:
@@ -120,7 +120,7 @@ def _render_true_false(activity: dict) -> str:
         props += f' title="{escape_jsx_string(title)}"'
     if instruction:
         props += f' instruction="{escape_jsx_string(instruction)}"'
-    return f"<TrueFalse client:load {props} isUkrainian />\n"
+    return f"<TrueFalse client:only=\"react\" {props} isUkrainian />\n"
 
 
 def _render_build_sentence(activity: dict) -> str:
@@ -131,7 +131,7 @@ def _render_build_sentence(activity: dict) -> str:
         answer_str = item.get("answer", "")
         hint = item.get("hint", "")
         lines.append(
-            f'<Unjumble client:load words="{escape_jsx_string(words_str)}" '
+            f'<Unjumble client:only=\"react\" words="{escape_jsx_string(words_str)}" '
             f'answer="{escape_jsx_string(answer_str)}"'
             + (f' hint="{escape_jsx_string(hint)}"' if hint else "")
             + " isUkrainian />"
@@ -146,7 +146,7 @@ def _render_match_sound(activity: dict) -> str:
         for item in activity.get("items", [])
     ]
     props = f"pairs={{JSON.parse(`{dump_json_for_jsx(pairs)}`)}}"
-    return f"<MatchUp client:load {props} isUkrainian />\n"
+    return f"<MatchUp client:only=\"react\" {props} isUkrainian />\n"
 
 
 def _render_pattern_drill(activity: dict) -> str:
@@ -162,7 +162,7 @@ def _render_pattern_drill(activity: dict) -> str:
     props = f"items={{JSON.parse(`{dump_json_for_jsx(items)}`)}}"
     if prompt:
         props += f' instruction="{escape_jsx_string(prompt)}"'
-    return f"<FillIn client:load {props} isUkrainian />\n"
+    return f"<FillIn client:only=\"react\" {props} isUkrainian />\n"
 
 
 def _render_riddle(activity: dict) -> str:
@@ -180,7 +180,7 @@ def _render_riddle(activity: dict) -> str:
 
     props = f"questions={{JSON.parse(`{dump_json_for_jsx(questions)}`)}}"
     title = activity.get("title", "\u0417\u0430\u0433\u0430\u0434\u043a\u0438")
-    return f'<Quiz client:load {props} instruction="{escape_jsx_string(title)}" isUkrainian />\n'
+    return f'<Quiz client:only=\"react\" {props} instruction="{escape_jsx_string(title)}" isUkrainian />\n'
 
 
 def _render_tongue_twister(activity: dict) -> str:
@@ -196,7 +196,7 @@ def _render_tongue_twister(activity: dict) -> str:
 
     title = activity.get("title", "\u0421\u043a\u043e\u0440\u043e\u043c\u043e\u0432\u043a\u0438")
     props = f"items={{JSON.parse(`{dump_json_for_jsx(items)}`)}}"
-    return f'<WatchAndRepeat client:load {props} title="{escape_jsx_string(title)}" isUkrainian />\n'
+    return f'<WatchAndRepeat client:only=\"react\" {props} title="{escape_jsx_string(title)}" isUkrainian />\n'
 
 
 def _render_reading(activity: dict) -> str:
@@ -208,7 +208,7 @@ def _render_reading(activity: dict) -> str:
     props = f'text="{escape_jsx_string(text)}" title="{escape_jsx_string(title)}"'
     if tasks:
         props += f" tasks={{JSON.parse(`{dump_json_for_jsx(tasks)}`)}}"
-    return f"<ReadingActivity client:load {props} isUkrainian />\n"
+    return f"<ReadingActivity client:only=\"react\" {props} isUkrainian />\n"
 
 
 def _render_proverb_drill(activity: dict) -> str:
