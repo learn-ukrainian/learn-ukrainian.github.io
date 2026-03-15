@@ -125,6 +125,12 @@ def embed_youtube_video_links(body: str) -> str:
         return f'\n\n<YouTubeVideo client:load url="{safe_url}" label="{safe_label}" />\n\n'
 
     def _yt_replace(m: re.Match) -> str:
+        # Don't replace YouTube links inside markdown table cells
+        start = m.start()
+        line_start = body.rfind('\n', 0, start) + 1
+        line_prefix = body[line_start:start].strip()
+        if line_prefix.startswith('|') or line_prefix.endswith('|'):
+            return m.group(0)  # Leave table links as-is
         return _yt_component(m.group(2), m.group(1)) or m.group(0)
 
     def _yt_jinja_replace(m: re.Match) -> str:
