@@ -22,9 +22,9 @@ content_outline:
   - "Ukrainian uses Cyrillic script — descended from Greek via the First Bulgarian
     Empire. 33 letters, highly phonetic: each letter usually maps to one sound
     (unlike English where 'ough' can sound 5 different ways)."
-  - "Show the full 33-letter alphabet chart as a reference map. Learners don't
-    memorize it all now — they'll master each group in M2 (vowels), M3 (consonants),
-    M4 (special signs). Today: overview + first 10 practice letters."
+  - "Show the full 33-letter alphabet chart (COPY EXACTLY):
+    А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я
+    Learners don't memorize it all now — master each group in M2-M4."
   - "Cultural hook: Cyrillic was created by students of Saints Cyril and Methodius.
     It is NOT derived from Latin — it descends from the Greek alphabet."
 - section: "Букви і звуки — Letters and Sounds"
@@ -44,8 +44,12 @@ content_outline:
     Vowels = voice only, no obstruction. Every Ukrainian syllable has exactly one vowel."
   - "22 consonant letters + the soft sign Ь (modifier, no sound of its own).
     Consonants = air is obstructed (lips, tongue, teeth)."
-  - "Preview chart organized by category. M2 will master vowels, M3 will master
-    consonants, M4 will complete special signs and the apostrophe."
+  - "Preview chart organized by category (COPY EXACTLY):
+    Голосні (Base): А, О, У, Е, И, І
+    Голосні (Iotated): Я, Ю, Є, Ї
+    Приголосні: Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ
+    Modifier: Ь
+    M2 will master vowels, M3 consonants, M4 special signs."
 - section: "Перші 10 літер — First 10 Letters"
   words: 350
   points:
