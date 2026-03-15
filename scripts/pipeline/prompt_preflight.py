@@ -183,7 +183,7 @@ Only report an issue if:
 - A target is **mathematically impossible** to reach given the constraints
 - A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." The prompt is good enough if it produces passing content.
+Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
 
 **Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
