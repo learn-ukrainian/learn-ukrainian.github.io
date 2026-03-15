@@ -55,8 +55,9 @@ CLAUDE_DEFAULT_REVIEW: str = "claude"
 
 # Seminar tracks get research (phase 0) + review (phase 5)
 SEMINAR_TRACKS = {
-    "bio", "hist", "istorio", "lit", "oes", "ruth",
+    "bio", "hist", "istorio", "lit", "oes", "ruth", "folk",
     "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
+    "lit-drama",
 }
 
 # Professional tracks: need external research (not covered by State Standard)
@@ -113,6 +114,8 @@ TRACK_CONFIGS = {
     "lit-war":        _seminar("LIT"),
     "lit-humor":      _seminar("LIT"),
     "lit-youth":      _seminar("LIT"),
+    "lit-drama":      _seminar("LIT"),
+    "folk":           _seminar("FOLK"),
     "oes":            _seminar("OES"),
     "ruth":           _seminar("RUTH"),
     # --- Core tracks (all Pro — flash too weak for quality content) ---

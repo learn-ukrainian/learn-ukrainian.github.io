@@ -6,13 +6,9 @@ All functions are imported back into video_discovery.py for backward compatibili
 
 from __future__ import annotations
 
-import json
 import logging
 import re
-from pathlib import Path
 from typing import Any
-
-import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -500,7 +496,7 @@ def format_rag_discovery(
 # RAG discovery
 # ---------------------------------------------------------------------------
 
-_SEMINAR_TRACKS = {"hist", "istorio", "bio", "lit", "oes", "ruth"}
+_SEMINAR_TRACKS = {"hist", "istorio", "bio", "lit", "oes", "ruth", "folk"}
 
 _LEVEL_GRADE_RANGES: dict[str, tuple[int, int]] = {
     "A1": (1, 4),
