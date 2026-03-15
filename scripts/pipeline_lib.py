@@ -2248,6 +2248,16 @@ def _read_phase_file(filename: str) -> str:
     return f"(Phase file not found: {filename})"
 
 
+def _get_ukrainian_topic(ctx: ModuleContext) -> str:
+    """Get Ukrainian topic keywords for RAG search. English kills semantic matching."""
+    # Use grammar field if available — it's already in Ukrainian
+    grammar = ctx.plan.get("grammar", [])
+    if grammar:
+        return " ".join(grammar[:2])
+    # Fall back to title but warn — English titles won't match Ukrainian textbooks well
+    return ctx.plan.get("title", ctx.slug).replace("-", " ")
+
+
 def _get_summary_heading(ctx: ModuleContext) -> str:
     """Get the summary heading from the plan's content_outline, falling back to defaults."""
     outline = ctx.plan.get("content_outline", [])
@@ -2320,7 +2330,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
         "TEXTBOOK_EXAMPLES": _prefetch_textbook_examples(ctx),
         "TEXTBOOK_ACTIVITY_EXAMPLES": _prefetch_textbook_activity_examples(ctx),
         "TEXTBOOK_GRADE": _get_textbook_grade(ctx),
-        "TOPIC_KEYWORDS": " ".join(ctx.plan.get("keywords", [])[:3]) or ctx.plan.get("title", ctx.slug).replace("-", " "),
+        "TOPIC_KEYWORDS": " ".join(ctx.plan.get("keywords", [])[:3]) or _get_ukrainian_topic(ctx),
         "CHECKPOINT_GUIDANCE": _get_checkpoint_guidance(ctx),
         "CHECKPOINT_REVIEW_GUIDANCE": _get_checkpoint_review_guidance(ctx),
         "EXACT_SECTION_TITLES": _build_exact_section_titles(ctx),

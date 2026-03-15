@@ -182,12 +182,13 @@ Analyze the prompt above and identify:
 
 For each issue, provide a specific fix.
 
-**Severity guidelines — be strict about HIGH:**
-- **HIGH**: Will cause the generated content to FAIL an automated audit gate (word count, activity count, schema validation). Only use HIGH if you can name the specific gate that will fail.
-- **MEDIUM**: Could cause a lower quality score but won't fail a gate.
-- **LOW**: Style preference or minor ambiguity.
+**Severity guidelines — be VERY strict about HIGH:**
+- **HIGH**: Will cause the generated content to FAIL one of these specific automated audit gates: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion, Review. You MUST name which gate will fail. If you cannot name a gate → it's not HIGH.
+- **MEDIUM**: Could cause a lower review score but won't fail any gate.
+- **LOW**: Style preference, minor ambiguity, or cosmetic issue.
 
-Do NOT inflate severity. If an issue is annoying but won't cause a gate failure, it's MEDIUM at most.
+Examples of NOT HIGH: heading format preferences, RAG query language, video embed syntax, vocabulary wording. These don't fail gates.
+Examples of HIGH: word target impossible to reach (Words gate), missing H2 section (Structure gate), banned grammar used (Pedagogy gate).
 
 ## Output Format (YAML)
 
