@@ -83,10 +83,15 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     skip_review = getattr(args, "skip_review", False)
     ctx.review = not skip_review or getattr(args, "review_claude", False)  # type: ignore[attr-defined]
     ctx.skip_discover = getattr(args, "skip_discover", False)  # type: ignore[attr-defined]
-    # Review agent: --review-claude forces Claude, default uses config.
-    # CLAUDE_DEFAULT_REVIEW from batch_gemini_config is the source of truth.
+
+    # Review agent: opposite of content builder (an LLM never reviews its own work)
+    use_claude_phases = set(getattr(args, "use_claude", "").replace(",", " ").upper().split()) if getattr(args, "use_claude", "") else set()
+    claude_builds_content = "B" in use_claude_phases
     if getattr(args, "review_claude", False):
         ctx.review_agent = "claude"  # type: ignore[attr-defined]
+    elif claude_builds_content:
+        ctx.review_agent = "gemini"  # type: ignore[attr-defined]
+        log("  review: Auto-routing to Gemini (Claude built content — cross-agent review)")
     else:
         ctx.review_agent = CLAUDE_DEFAULT_REVIEW  # type: ignore[attr-defined]
 
