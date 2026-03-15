@@ -3296,10 +3296,10 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not getattr(ctx, "skip_prompt_preflight", False):
         try:
             from pipeline.prompt_preflight import apply_preflight_fixes, run_prompt_preflight
-            _dispatch_fn = getattr(ctx, "content_dispatch_fn", None) or dispatch_gemini
+            # Preflight always goes to Gemini (cross-agent review of the prompt)
             preflight = run_prompt_preflight(
                 prompt_file, ctx.track, ctx.module_num, ctx.orch_dir,
-                dispatch_fn=_dispatch_fn,
+                dispatch_fn=dispatch_gemini,
             )
             if preflight.high_issues:
                 log(f"  preflight: WARNING — {len(preflight.high_issues)} HIGH issue(s) in prompt")
