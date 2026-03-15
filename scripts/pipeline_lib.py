@@ -3305,7 +3305,9 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     log(f"  preflight: Auto-fixed prompt saved → {fixed_prompt_path.name}")
                     prompt_file = fixed_prompt_path
                 else:
-                    log("  preflight: Auto-fix could not be applied — using original prompt")
+                    log("  preflight: BLOCKED — HIGH issues found but auto-fix could not resolve them")
+                    log("  preflight: Fix the template or pipeline code, then re-run")
+                    return False
                 # Save preflight state
                 ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
                     "status": preflight.status,
