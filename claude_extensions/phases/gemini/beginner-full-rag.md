@@ -74,7 +74,7 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 Write **{TOPIC_TITLE}** for the {TRACK} track.
 
-**Targets:** {WORD_TARGET}–{WORD_CEILING} words | {ENGAGEMENT_MIN}+ callout boxes | {ACTIVITY_MIN}–{ACTIVITY_MAX} activities | {VOCAB_COUNT_TARGET} vocab items
+**Targets:** {WORD_TARGET}–{WORD_CEILING} words | {ENGAGEMENT_MIN}+ callout boxes | **{ACTIVITY_MIN}–{ACTIVITY_MAX} activities total** (required types + additional types to reach minimum) | {VOCAB_COUNT_TARGET} vocab items
 
 {EXACT_SECTION_TITLES}
 
@@ -117,7 +117,7 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 **MANDATORY for A2+:** Reading Practice blocks after each major section (5-8 Ukrainian sentences + English translation).
 
 **Grammar terminology by level:**
-- A1 M1-M10: English terms in prose, Ukrainian in parentheses for section headings: `## Голосні — Vowels`
+- A1 M1-M10: English terms in prose, bilingual section headings with em-dash: `## Голосні — Vowels`
 - A1 M11+: Introduce Ukrainian terms with gloss: **іменник** (noun)
 - A2+: Ukrainian terms freely after first gloss
 
