@@ -14,7 +14,7 @@ objectives:
 - "Learner understands letter ≠ sound (букви vs звуки)"
 - Learner distinguishes vowels (голосні) from consonants (приголосні) as categories
 - "Learner can read and write words using 10 practice letters: А О У І М Н Т К С Л"
-- Learner recognizes 5+ survival sight words (привіт, дякую, так, ні, це)
+- Learner recognizes 3 sight words (привіт, дякую, це) and uses decodable так/ні
 content_outline:
 - section: Вступ — Introduction
   words: 150
@@ -67,9 +67,9 @@ content_outline:
   points:
   - "Micro-dialogues using decodable words + sight words:
     — Це кіт? — Так, це кіт. / — Це місто? — Ні, це ліс."
-  - "Sight words (recognized as wholes, letters not yet all taught):
-    привіт (hello), дякую (thank you), це (this is), так (yes), ні (no).
-    These appear constantly — learn them as whole shapes now, decode them later."
+  - "Sight words (contain untaught letters — recognize as wholes):
+    привіт (hello), дякую (thank you), це (this is).
+    так (yes) and ні (no) are fully decodable with the 10 practice letters."
   - "Reading practice: short sentences mixing decodable words and sight words.
     Мама тут. Кіт там. Це молоко. Це масло."
 - section: "Підсумок — Summary"
@@ -118,7 +118,7 @@ activity_hints:
   focus: "Sort the 10 practice letters into vowels (А О У І) vs consonants (М Н Т К С Л)"
   items: 10
 - type: match-up
-  focus: "Match Ukrainian letter to its sound (for false friends: Н≠H, С≠C, Р≠P)"
+  focus: "Match Ukrainian letter to its sound (for false friends: Н≠H, С≠C)"
   items: 10
 - type: fill-in
   focus: "Blend letters into syllables and words: М+А→МА, МА+МА→?"
