@@ -95,6 +95,15 @@ _YT_BARE_URL_RE = re.compile(
     re.MULTILINE,
 )
 
+# iframe embeds (Gemini sometimes produces these instead of markdown links)
+# Matches: <iframe ... src="https://www.youtube.com/embed/VIDEO_ID" ...></iframe>
+# Also matches when inside callout boxes (> <iframe ...)
+_YT_IFRAME_RE = re.compile(
+    r'>?\s*<iframe[^>]*src="(https?://(?:www\.)?youtube\.com/embed/[A-Za-z0-9_-]+)"[^>]*>'
+    r'(?:</iframe>)?',
+    re.IGNORECASE,
+)
+
 
 def embed_youtube_video_links(body: str) -> str:
     """Replace YouTube markdown links with inline ``<YouTubeVideo>`` components.
@@ -130,7 +139,17 @@ def embed_youtube_video_links(body: str) -> str:
     def _yt_bare_url_replace(m: re.Match) -> str:
         return _yt_component(m.group(2)) or m.group(0)
 
+    def _yt_iframe_replace(m: re.Match) -> str:
+        embed_url = m.group(1)
+        # Convert embed URL to watch URL for the component
+        watch_url = embed_url.replace("/embed/", "/watch?v=")
+        return _yt_component(watch_url) or m.group(0)
+
+    # Strip [!video] callout wrappers — these are just containers for iframes
+    body = re.sub(r'>\s*\[!video\]\s*\n', '', body)
+
     # Process in order: specific patterns first, then general
+    body = _YT_IFRAME_RE.sub(_yt_iframe_replace, body)
     body = _YT_JINJA_ID_RE.sub(_yt_jinja_id_replace, body)
     body = _YT_JINJA_RE.sub(_yt_jinja_replace, body)
     body = _YT_VIDEO_LINK_RE.sub(_yt_replace, body)

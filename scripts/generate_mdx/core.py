@@ -549,6 +549,25 @@ def main():
         module_id = f"{mod.level}-{mod.slug}"
         module_resources = all_resources.get(module_id, {})
 
+        # Add pronunciation videos from plan to resources
+        if plan_data and plan_data.get("pronunciation_videos"):
+            pv = plan_data["pronunciation_videos"]
+            yt_resources = module_resources.get("youtube", [])
+            if pv.get("overview"):
+                yt_resources.append({"title": "Alphabet Overview", "url": pv["overview"],
+                                     "source": pv.get("credit", "")})
+            if pv.get("poster"):
+                yt_resources.append({"title": "Alphabet Poster", "url": pv["poster"],
+                                     "source": pv.get("credit", "")})
+            if pv.get("playlist"):
+                yt_resources.append({"title": "Letter Pronunciation Playlist", "url": pv["playlist"],
+                                     "source": pv.get("credit", "")})
+            for letter, url in (pv.get("letters") or {}).items():
+                yt_resources.append({"title": f"Літера {letter}", "url": url,
+                                     "source": pv.get("credit", "")})
+            if yt_resources:
+                module_resources["youtube"] = yt_resources
+
         # Detect pipeline version and build status
         pv, bs = detect_pipeline_info(level_dir, mod.slug)
 
