@@ -88,10 +88,17 @@ def _post_as_new_issue(task_id: str, chunks: list[str], model: str, total_parts:
     title = f"Review: {task_id}" if task_id else f"Review: {datetime.now(UTC).isoformat()}"
     first_body = _format_review_chunk(chunks[0], model, 1, total_parts)
 
+    # Try with label first, fall back to no label if it doesn't exist
     result = subprocess.run(
         ["gh", "issue", "create", "--title", title, "--label", "review-result", "-F", "-"],
         input=first_body, text=True, capture_output=True, timeout=15
     )
+    if result.returncode != 0 and "label" in result.stderr.lower():
+        # Label doesn't exist — retry without it
+        result = subprocess.run(
+            ["gh", "issue", "create", "--title", title, "-F", "-"],
+            input=first_body, text=True, capture_output=True, timeout=15
+        )
     if result.returncode != 0:
         print(f"⚠️  GitHub issue creation failed: {result.stderr[:200]}")
         return None
