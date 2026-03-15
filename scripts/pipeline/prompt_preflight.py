@@ -75,7 +75,7 @@ def build_audit_context(track: str, module_num: int) -> str:
         f"Min activity types: {cfg.get('min_types_unique', '?')}",
         "",
         "### Immersion",
-        f"Target range: {cfg.get('immersion', {}).get('description', '?')}",
+        "Target range: defined in the prompt's Immersion Target section (varies by module).",
         "Tables count ZERO for immersion — only blockquotes, bulleted lists, and pattern boxes count.",
         "",
         "### Grammar constraints",
