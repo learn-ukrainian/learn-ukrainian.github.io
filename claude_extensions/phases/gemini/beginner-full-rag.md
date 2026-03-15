@@ -54,7 +54,7 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 {DECODABLE_VOCABULARY}
 
-**Target vocabulary** (from the plan — teach and use these):
+**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your {VOCAB_COUNT_TARGET} vocabulary target:
 
 {VOCABULARY_HINTS}
 
@@ -123,7 +123,7 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 
 ### Dialogue Quality
 
-Every dialogue MUST start with `> **(Location / Місце)**` and have a real situation. **No echo drills.** For alphabet modules (M1-M4): 2-4 short micro-dialogues (2-4 lines each, using decodable words + sight words). For M5+: 4-6 dialogues, 4-8 lines each.
+**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each. For alphabet modules (M1-M4): 2-4 short micro-dialogues (2-4 lines, using decodable words + sight words), location headers optional.
 
 **Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
 
@@ -163,6 +163,7 @@ Object with `items:` wrapper. Each entry: `lemma` (dictionary form), `translatio
 - **No Russian characters**: ы, э, ё, ъ — never
 - **No IPA or Latin transliteration** — stress marks (´) only
 - **Ukrainian quotes** in content: «...» | **YAML values**: plain text or single quotes (never «»)
+- **Euphony** (у/в, і/й alternation): follow rules in the shared content rules section below — audit flags violations
 - **YAML colon values**: quote with single quotes: `'text: with colon'`
 - H2 titles must match the outline EXACTLY. You MAY add H3 sub-headings within H2 sections (e.g., for individual letters, grammar sub-topics)
 - **MUST end with `## {SUMMARY_HEADING}`** with self-check questions
