@@ -296,14 +296,16 @@ a {
 }
 
 /* Tables */
-.theme-doc-markdown table {
+.theme-doc-markdown table,
+.sl-markdown-content table {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: var(--ifm-global-shadow-lw);
   border: none;
 }
 
-.theme-doc-markdown table th {
+.theme-doc-markdown table th,
+.sl-markdown-content table th {
   background: linear-gradient(135deg, var(--co-blue-deep), var(--co-blue-bright));
   color: white;
   font-weight: 600;
@@ -311,16 +313,19 @@ a {
   border: none;
 }
 
-.theme-doc-markdown table td {
+.theme-doc-markdown table td,
+.sl-markdown-content table td {
   padding: 0.875rem 1rem;
   border-bottom: 1px solid var(--co-gray-200);
 }
 
-.theme-doc-markdown table tr:hover {
+.theme-doc-markdown table tr:hover,
+.sl-markdown-content table tr:hover {
   background: var(--co-gray-50);
 }
 
-.theme-doc-markdown table tr:last-child td {
+.theme-doc-markdown table tr:last-child td,
+.sl-markdown-content table tr:last-child td {
   border-bottom: none;
 }
 

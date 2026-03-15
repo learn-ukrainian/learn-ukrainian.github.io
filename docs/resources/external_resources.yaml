@@ -2,6 +2,32 @@ version: '3.1'
 generated_at: '2026-03-03'
 cleaned_at: '2026-03-13'
 resources:
+  a1-the-ukrainian-alphabet:
+    articles:
+    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
+      url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
+      url: https://talkukrainian.com/ukrainian-alphabet/
+      relevance: high
+      source: talkukrainian
+  a1-vowel-sounds:
+    articles:
+    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-consonant-sounds:
+    articles:
+    - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
+      url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+      relevance: high
+      source: ukrainianlessons.com
   a1-the-cyrillic-code-iii:
     articles:
     - title: Ukrainian Cyrillic Alphabet — Letters and Sounds
@@ -7073,4 +7099,469 @@ resources:
     youtube:
     - title: 'Ірена Карпа: що читати, щоб відволіктися. Сестри Річинські, Руїни Бога | Подкаст Книгосховище» #20'
       url: https://www.youtube.com/watch?v=5RGKfGp6tlo
+      source: Суспільне Культура
+  lit-hist-fic-kulish-black-council-revisit:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+  lit-hist-fic-lepkyi-mazepa:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-pchilka-fables:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+  lit-hist-fic-zahrebelny-roksolana-2:
+    youtube:
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-zavadovych-adventures:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+  lit-hist-fic-zahrebelny-dyvo:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-nestayko-toreadors-1:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-hist-fic-zahrebelny-death-in-kyiv:
+    articles:
+    - title: Kyiv tour + Participle in Ukrainian
+      url: https://www.ukrainianlessons.com/episode108/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК ТЕРЕЩЕНКІВ | Серія 2'
+      url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+      source: Суспільне Док
+  lit-youth-nestayko-toreadors-2:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК ТЕРЕЩЕНКІВ | Серія 2'
+      url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+      source: Суспільне Док
+  lit-hist-fic-ivanychuk-malvy:
+    youtube:
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-nestayko-toreadors-3:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-hist-fic-ivanychuk-water:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-nestayko-forest-school:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-hist-fic-ivanychuk-scar:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-blyznets-zemlyanyk:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-hist-fic-bilyk-sword-ares:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-malyk-alice:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-hist-fic-shklyar-black-raven-1:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+  lit-hist-fic-shklyar-marusia:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-hist-fic-lys-century-jacob:
+    youtube:
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-hist-fic-kokotyukha-red:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК ТЕРЕЩЕНКІВ | Серія 2'
+      url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+      source: Суспільне Док
+  lit-hist-fic-kokotyukha-chervonyi:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-hist-fic-rafeyenko-long-times:
+    youtube:
+    - title: Гідність у війні. Військове лідерство / Бірчак
+      url: https://www.youtube.com/watch?v=ITtN8k86AhU
+      source: Radio Khartia
+  lit-hist-fic-shevchuk-three-leaves:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК ТЕРЕЩЕНКІВ | Серія 2'
+      url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+      source: Суспільне Док
+  lit-youth-rutkivsky-dzhury-2:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+  lit-youth-dermansky-monsters:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-dermansky-chu-drove:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-vynnychuk-lviv-tales:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-starovyt-my-kyiv:
+    articles:
+    - title: Kyiv tour + Participle in Ukrainian
+      url: https://www.ukrainianlessons.com/episode108/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+    - title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК ТЕРЕЩЕНКІВ | Серія 2'
+      url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+      source: Суспільне Док
+  lit-youth-oksenyk-forest-valley:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-bachynsky-140-decibels:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-pavliuk-rytm:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-andrusyak-rabbits:
+    youtube:
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-youth-lutsyshyna-whale:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-kids-poetry-anthology:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+  lit-youth-zabila-poems:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-rutkivsky-dzhury-1:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-rutkivsky-dzhury-3:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-youth-voronyna-agent-000:
+    youtube:
+    - title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК ТЕРЕЩЕНКІВ | Серія 2'
+      url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+      source: Суспільне Док
+  lit-youth-andrusyak-adventures:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-sich-riflemen-poetry:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-unr-war-literature:
+    youtube:
+    - title: Гідність у війні. Військове лідерство / Бірчак
+      url: https://www.youtube.com/watch?v=ITtN8k86AhU
+      source: Radio Khartia
+  lit-war-wwii-bahrianyi-samchuk-war:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-wwii-malaniuk-war-poetry:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-war-lit-origins-2014:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-lozko-poetry-of-maidan:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-war-chekh-absolute-zero:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-war-chekh-point-zero:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-zhadan-internat-war:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+  lit-war-zhadan-life-maria:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-markus-infantry:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+    - title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК ТЕРЕЩЕНКІВ | Серія 2'
+      url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+      source: Суспільне Док
+  lit-war-polozhiy-ilovaisk:
+    youtube:
+    - title: Гідність у війні. Військове лідерство / Бірчак
+      url: https://www.youtube.com/watch?v=ITtN8k86AhU
+      source: Radio Khartia
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-war-bilozerska-diary:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-babich-poetry:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-kotsyubailo-legacy-lit:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-kalytko-borders-lit:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+    - title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники» #shorts'
+      url: https://www.youtube.com/watch?v=XwdmeKRbckU
+      source: Суспільне Культура
+  lit-war-yakimchuk-apricots-war:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-amelina-new-renaissance:
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-maksym-kryvtsov-poetry:
+    articles:
+    - title: Ukrainian Lessons Podcast Season 6
+      url: https://www.ukrainianlessons.com/episode222/
+      relevance: medium
+      source: ukrainianlessons.com
+    - title: Taras Shevchenko — Ukraine's National Poet
+      url: https://www.ukrainianlessons.com/taras-shevchenko/
+      relevance: medium
+      source: ukrainianlessons.com
+    youtube:
+    - title: Чому в СРСР рід Терещенків був табуйованим
+      url: https://www.youtube.com/watch?v=qizEIzPxRXc
+      source: Суспільне Док
+  lit-war-yaryna-chornohuz-war:
+    youtube:
+    - title: 'What books will help you better understand the history of Ukraine? | Podcast "Bookstore" #19'
+      url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+      source: Суспільне Культура
+  lit-war-gorlis-gorsky-kholodnyi-yar:
+    youtube:
+    - title: «Ніяких всесвітньо відомих українців в культурних пантеонах не значилось» — інтервʼю Оксани Забужко
+      url: https://www.youtube.com/watch?v=Du3WQV0K580
+      source: Суспільне Культура
+  lit-war-upa-underground-literature:
+    youtube:
+    - title: «Ніяких всесвітньо відомих українців в культурних пантеонах не значилось» — інтервʼю Оксани Забужко
+      url: https://www.youtube.com/watch?v=Du3WQV0K580
+      source: Суспільне Культура
+  lit-war-pavlo-vyshebaba-soldier-poetry:
+    youtube:
+    - title: Павло Вишебаба – Тільки не пиши мені про війну | День, якого не повинно бути
+      url: https://www.youtube.com/watch?v=qFKRtDiGk5U
       source: Суспільне Культура
