@@ -2453,6 +2453,16 @@ npm run sync:landing:dry      # Preview changes without applying
   --model gemini-3-pro-preview
 ```
 
+**Multi-turn conversation (new):**
+```bash
+# Start or continue a threaded conversation with Gemini
+.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+  "Let's plan the A1/1 build" \
+  --task-id "a1-1-planning" \
+  --model gemini-3.1-pro-preview
+```
+Each turn includes full conversation history from the broker DB. Truncation drops oldest messages first.
+
 **Key flags for `ask-gemini`:**
 
 | Flag | Purpose |
@@ -2462,6 +2472,14 @@ npm run sync:landing:dry      # Preview changes without applying
 | `--delimiters X,Y` | Inject specific delimiter names into system prompt (e.g., `FINAL_REVIEW,FRICTION`) |
 | `--model` | Gemini model (always `gemini-3-pro-preview` for content) |
 | `--task-id` | Session isolation (prefix: `yw-` builder, `gr-` reviewer, `fr-` final review) |
+
+**Key flags for `converse`:**
+
+| Flag | Purpose |
+|------|---------|
+| `--task-id` | Conversation thread ID (required) |
+| `--model` | Gemini model (default: `gemini-3.1-pro-preview`) |
+| `--no-github` | Skip auto-posting to GitHub issues |
 | `--no-github` | Skip auto-posting review to GitHub issue |
 
 ### Signal Script (Gemini → Claude notification)

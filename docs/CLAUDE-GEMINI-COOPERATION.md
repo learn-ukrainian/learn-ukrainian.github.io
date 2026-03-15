@@ -56,7 +56,25 @@
 | **GitHub comments** | Reviews, feedback, progress, disagreements | Unlimited |
 | **Broker messages** | Notifications ONLY: "read #559", "review on #558" | < 200 chars |
 
-### The Pattern
+### Communication Modes
+
+| Mode | Command | Use when |
+|------|---------|----------|
+| **One-shot** | `ask-gemini "msg" --task-id issue-N` | Reviews, simple requests |
+| **Multi-turn** | `converse "msg" --task-id "topic"` | Co-design, planning, iteration |
+| **Passive** | `send "msg" --to gemini` | FYI notifications |
+
+### Architecture (How the Bridge Works)
+
+The bridge is **not** an MCP tool. MCP is one-directional (client→server). The bridge bypasses MCP entirely using a SQLite message queue + subprocess spawning. Claude inserts a message into the broker DB, spawns gemini-cli with the message as prompt, captures output, stores it back. For multi-turn (`converse`), conversation history from the DB is prepended to each new message.
+
+Claude always initiates. Gemini responds. Gemini cannot initiate contact with Claude.
+
+### Builder Notes (structured handoff)
+
+After every build, Gemini outputs `===BUILDER_NOTES_START===` block. Pipeline extracts to `orchestration/{slug}/builder-notes.yaml`. Review prompt injects via `{BUILDER_NOTES_BLOCK}`.
+
+### The GitHub Pattern
 
 ```
 Agent A                    GitHub                      Agent B

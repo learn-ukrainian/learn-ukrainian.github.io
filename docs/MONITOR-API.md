@@ -149,7 +149,7 @@ Returns (v5 module):
 
 All module-level responses include `needs_rebuild: true|false` — true for v3/unbuilt modules, false for v5/v4.
 
-V5 phases: `research`, `discover`, `content`, `validate`, `review`, `activities`, `mdx`.
+V5 phases: `research`, `discover`, `content`, `validate`, `activities`, `review`, `mdx`.
 V4 phases: `research`, `discover`, `content`, `activities`, `validate`, `review`, `mdx`.
 V3 phases: `A`, `B`, `C`, `audit`, `D`.
 

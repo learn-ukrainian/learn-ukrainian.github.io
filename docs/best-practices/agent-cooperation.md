@@ -52,6 +52,31 @@ For requests needing immediate response:
   --task-id issue-559
 ```
 
+### Multi-turn conversations (converse)
+For iterative co-design, planning, or prompt optimization:
+```bash
+# Start a conversation
+.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+  "Let's plan the A1/1 build. Here's the plan: ..." \
+  --task-id "a1-1-planning"
+
+# Continue (Gemini sees full history)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+  "Good points. What about the dialogue examples?" \
+  --task-id "a1-1-planning"
+```
+Each turn includes full conversation history. Oldest messages truncated first if history exceeds 30K chars. Use `--model gemini-3.1-pro-preview` for design conversations.
+
+### How the bridge works (architecture)
+The bridge is **not** an MCP tool. MCP is one-directional (client→server). The bridge uses a different architecture:
+
+1. **SQLite broker DB** (`data/broker.db`) — shared message queue
+2. **CLI wrapper** spawns gemini-cli as a subprocess with the message as prompt
+3. Gemini runs, output is captured and stored back in the broker DB
+4. Reviews auto-posted to GitHub issues (when task_id matches `issue-NNN`)
+
+This means: Claude always initiates. Gemini responds. Gemini cannot initiate contact with Claude (the broker supports it, but nobody polls).
+
 ### Automatic Review Persistence
 
 Reviews dispatched via `ask-gemini` are automatically posted to GitHub:
@@ -157,6 +182,19 @@ Use Gemini's skill files instead of verbose prompts. Each skill encodes the full
 ```
 
 **Always use skills for content work.** Ad-hoc prompts miss critical protocol steps.
+
+---
+
+## Builder Notes (Gemini→Claude structured handoff)
+
+After every content or activity build, Gemini outputs a `===BUILDER_NOTES_START===` block with:
+- **status**: SUCCESS / PARTIAL / BLOCKED
+- **deviations**: where and why Gemini deviated from the plan
+- **frictions**: template/schema issues encountered
+- **unverified_terms**: Ukrainian words Gemini couldn't verify via RAG/VESUM
+- **review_focus**: specific items that need reviewer attention
+
+The pipeline extracts this to `orchestration/{slug}/builder-notes.yaml`. The review prompt injects it via `{BUILDER_NOTES_BLOCK}` so Claude knows where to focus the review.
 
 ---
 
