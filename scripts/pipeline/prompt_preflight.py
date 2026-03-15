@@ -187,8 +187,10 @@ For each issue, provide a specific fix.
 - **MEDIUM**: Could cause a lower review score but won't fail any gate.
 - **LOW**: Style preference, minor ambiguity, or cosmetic issue.
 
-Examples of NOT HIGH: heading format preferences, RAG query language, video embed syntax, vocabulary wording. These don't fail gates.
+Examples of NOT HIGH: heading format preferences, RAG query language, video embed syntax, vocabulary wording, image-to-letter using emojis (not URLs). These don't fail gates.
 Examples of HIGH: word target impossible to reach (Words gate), missing H2 section (Structure gate), banned grammar used (Pedagogy gate).
+
+**Do NOT flag**: image-to-letter activities use emoji characters (👩, 🐈), not image URLs. This is by design.
 
 ## Output Format (YAML)
 

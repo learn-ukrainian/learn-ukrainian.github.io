@@ -2368,7 +2368,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
                 vh_lines.append(f"- {item}")
             vh_lines.append("")
         if recommended:
-            vh_lines.append("**Recommended** (include if space allows):")
+            vh_lines.append("**Recommended** (use in your content to reach the vocabulary target):")
             for item in recommended:
                 vh_lines.append(f"- {item}")
             vh_lines.append("")
@@ -2662,13 +2662,13 @@ def _check_archive_fits_outline(ctx: ModuleContext) -> tuple[bool, list[str], li
 
 def _build_section_budget_table(sections: list, word_target: int) -> str:
     """Build a markdown table of section word budgets."""
-    rows = ["| Section | Target |", "|---------|--------|"]
+    rows = ["| Section | Minimum |", "|---------|---------|"]
     for section in sections:
         title, words = _parse_section(section)
         if words <= 0:
             words = word_target // max(len(sections), 1)
-        rows.append(f"| {title} | {words} |")
-    rows.append(f"| **Total** | **{word_target}** |")
+        rows.append(f"| {title} | {words}+ |")
+    rows.append(f"| **Total** | **{word_target}+ (aim for ~{int(word_target * 1.2)})** |")
     return "\n".join(rows)
 
 
