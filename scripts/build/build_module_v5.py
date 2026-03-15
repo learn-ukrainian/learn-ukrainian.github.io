@@ -34,8 +34,6 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 # Import v5 pipeline
 from batch_gemini_config import (
-    CLAUDE_DEFAULT_PHASES,
-    CLAUDE_DEFAULT_REVIEW,
     CURRICULUM_DIR,
     PRO_TRACKS,
     SEMINAR_TRACKS,
@@ -81,19 +79,21 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 
     # Review flags — review is ON by default, use --skip-review to disable
     skip_review = getattr(args, "skip_review", False)
-    ctx.review = not skip_review or getattr(args, "review_claude", False)  # type: ignore[attr-defined]
+    ctx.review = not skip_review  # type: ignore[attr-defined]
     ctx.skip_discover = getattr(args, "skip_discover", False)  # type: ignore[attr-defined]
 
-    # Review agent: opposite of content builder (an LLM never reviews its own work)
-    use_claude_phases = set(getattr(args, "use_claude", "").replace(",", " ").upper().split()) if getattr(args, "use_claude", "") else set()
-    claude_builds_content = "B" in use_claude_phases
-    if getattr(args, "review_claude", False):
-        ctx.review_agent = "claude"  # type: ignore[attr-defined]
-    elif claude_builds_content:
-        ctx.review_agent = "gemini"  # type: ignore[attr-defined]
-        log("  review: Auto-routing to Gemini (Claude built content — cross-agent review)")
+    # --writer: who writes content + activities. Opposite agent reviews.
+    # Research is always Gemini (web search). Validate is always deterministic.
+    writer = getattr(args, "writer", None)
+    if writer:
+        ctx.writer = writer.lower()  # type: ignore[attr-defined]
     else:
-        ctx.review_agent = CLAUDE_DEFAULT_REVIEW  # type: ignore[attr-defined]
+        ctx.writer = "gemini"  # type: ignore[attr-defined]
+
+    if ctx.writer == "claude":
+        ctx.review_agent = "gemini"  # type: ignore[attr-defined]
+    else:
+        ctx.review_agent = "claude"  # type: ignore[attr-defined]
 
     # --stop-before
     sb = getattr(args, "stop_before", None)
@@ -114,23 +114,15 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     # --force-phase
     ctx.force_phase = getattr(args, "force_phase", None)  # type: ignore[attr-defined]
 
-    # --use-claude: set of phase IDs to dispatch via Claude
-    # Falls back to CLAUDE_DEFAULT_PHASES from batch_gemini_config when not specified.
-    # Seminar/PRO tracks default to Gemini for research (phase A) — they need
-    # web search for factual/historical research. CLI --use-claude still overrides.
+    # Route phases based on --writer (research always Gemini, validate always deterministic)
+    # Legacy --use-claude still supported as override
     use_claude_str = getattr(args, "use_claude", "") or ""
     if use_claude_str:
         ctx.use_claude = set(use_claude_str.replace(",", " ").upper().split())  # type: ignore[attr-defined]
+    elif ctx.writer == "claude":
+        ctx.use_claude = {"B", "C"}  # type: ignore[attr-defined] — content + activities
     else:
-        _is_research_gemini_track = (
-            ctx.track in SEMINAR_TRACKS
-            or ctx.track.startswith("lit-")
-            or ctx.track in PRO_TRACKS
-        )
-        if _is_research_gemini_track:
-            ctx.use_claude = set(CLAUDE_DEFAULT_PHASES) - {"A"}  # type: ignore[attr-defined]
-        else:
-            ctx.use_claude = set(CLAUDE_DEFAULT_PHASES)  # type: ignore[attr-defined]
+        ctx.use_claude = set()  # type: ignore[attr-defined] — Gemini does everything
 
     # Per-phase Claude model
     _is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track in PRO_TRACKS
@@ -393,7 +385,8 @@ def main() -> int:
             Review runs by default. Use --skip-review to disable.
 
             Examples:
-              %(prog)s a1 12                            # Full build (with review)
+              %(prog)s a1 12                            # Full build (Gemini writes, Claude reviews)
+              %(prog)s a1 12 --writer claude            # Claude writes, Gemini reviews
               %(prog)s a1 12 --skip-review              # Skip review phase
               %(prog)s a1 --all                         # Build entire track
               %(prog)s a1 --range 1-20                  # Build range
@@ -442,15 +435,19 @@ def main() -> int:
     parser.add_argument("--skip-review", action="store_true", dest="skip_review",
                         help="Skip review phase (review runs by default)")
     parser.add_argument("--review-claude", action="store_true", dest="review_claude",
-                        help="Use Claude for review instead of default agent")
+                        help="(Legacy) Force Claude for review. Prefer --writer which auto-routes")
 
     # Preflight
     parser.add_argument("--skip-prompt-preflight", action="store_true", dest="skip_prompt_preflight",
                         help="Skip Gemini prompt self-review before content generation")
 
+    # Writer selection
+    parser.add_argument("--writer", type=str, default=None, choices=["claude", "gemini"],
+                        help="Who writes content + activities (opposite agent reviews). Default: gemini")
+
     # Model overrides
     parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
-                        help="Phases to run via Claude instead of Gemini (e.g. 'B', 'A B C', 'A C')")
+                        help="(Legacy) Phases to run via Claude (e.g. 'B', 'B C'). Prefer --writer claude")
     parser.add_argument("--gemini-model", type=str, default=None, dest="gemini_model",
                         help="Override Gemini model for all phases")
     parser.add_argument("--claude-model-A", type=str, default=None, dest="claude_model_A",
