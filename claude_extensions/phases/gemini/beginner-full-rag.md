@@ -91,6 +91,10 @@ When your module involves the Ukrainian alphabet, vowels, or consonants, use the
 
 Common confusions to avoid: В is a CONSONANT (not a vowel), І is a VOWEL (not a consonant), Й is a CONSONANT (not a vowel).
 
+### What the Learner Already Knows
+
+{LEARNER_STATE}
+
 ### Vocabulary Guidance
 
 {DECODABLE_VOCABULARY}

@@ -2249,6 +2249,17 @@ def _read_phase_file(filename: str) -> str:
     return f"(Phase file not found: {filename})"
 
 
+def _build_learner_state(ctx: ModuleContext) -> str:
+    """Build the learner state manifest for this module."""
+    try:
+        from pipeline.learner_state import build_learner_state, format_learner_state
+        state = build_learner_state(ctx.track, ctx.module_num)
+        return format_learner_state(state)
+    except Exception as e:
+        log(f"  learner-state: Skipped — {e}")
+        return "(Learner state not available)"
+
+
 # ============================================================================
 # 15. Write Placeholders
 # ============================================================================
@@ -2287,6 +2298,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
         "LEVEL_CONSTRAINTS": ctx.level_constraints,
         "PEDAGOGICAL_CONSTRAINTS": get_pedagogical_constraints(ctx.track, ctx.module_num, ctx.plan),
         "DECODABLE_VOCABULARY": "",  # Decodable system removed (#841) — plan vocabulary_hints is source of truth
+        "LEARNER_STATE": _build_learner_state(ctx),
         "STRUCTURAL_RULES": get_structural_rules(ctx.track, ctx.module_num),
         "H3_WORD_RANGE": get_h3_word_range(ctx.track, ctx.module_num),
         "EXPANSION_METHOD": get_expansion_method(ctx.track, ctx.module_num),
