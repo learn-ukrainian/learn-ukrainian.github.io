@@ -182,6 +182,13 @@ Analyze the prompt above and identify:
 
 For each issue, provide a specific fix.
 
+**Severity guidelines — be strict about HIGH:**
+- **HIGH**: Will cause the generated content to FAIL an automated audit gate (word count, activity count, schema validation). Only use HIGH if you can name the specific gate that will fail.
+- **MEDIUM**: Could cause a lower quality score but won't fail a gate.
+- **LOW**: Style preference or minor ambiguity.
+
+Do NOT inflate severity. If an issue is annoying but won't cause a gate failure, it's MEDIUM at most.
+
 ## Output Format (YAML)
 
 ```yaml
