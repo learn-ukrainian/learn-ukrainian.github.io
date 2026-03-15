@@ -123,7 +123,7 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 
 ### Dialogue Quality
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each. For alphabet modules (M1-M4): 2-4 short micro-dialogues (2-4 lines, using decodable words + sight words), location headers optional.
+**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each. For alphabet modules (M1-M10): dialogues are OPTIONAL — only include them if they feel natural with the available vocabulary. Do NOT force nonsensical dialogues just to hit a count.
 
 **Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
 
