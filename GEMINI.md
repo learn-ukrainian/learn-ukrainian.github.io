@@ -52,13 +52,59 @@ Coming. Same quality bar.
 
 ## RAG Tools — Use Them
 
-| Tool | When |
-|------|------|
-| `search_text` | Find how textbooks teach this topic |
-| `verify_words` / `verify_lemma` | Check every Ukrainian word you're unsure about |
-| `query_pravopys` | Spelling/grammar rules |
-| `search_literary` | Primary sources for seminars |
-| `query_wikipedia` | Facts, dates, biographical data |
+These are MCP tools available via the RAG server at `http://127.0.0.1:8766/sse`. Use them during builds.
+
+| Tool | What it does | Example query |
+|------|-------------|---------------|
+| `search_text` | Search Ukrainian school textbooks (1.2K+ chunks) | `search_text("знахідний відмінок", grade=3)` |
+| `verify_words` | Check if Ukrainian words exist in VESUM (415K lemmas) | `verify_words(["книга", "великий"])` |
+| `verify_lemma` | Get all inflected forms of a word | `verify_lemma("книга")` |
+| `query_pravopys` | Official spelling/grammar rules | `query_pravopys("апостроф")` |
+| `query_grac` | Check word/phrase frequency (corpus data) | `query_grac("залюбки")` |
+| `search_literary` | Primary literary sources (chronicles, poetry) | `search_literary("Шевченко Заповіт")` |
+| `search_images` | Textbook illustrations (10K+ images) | `search_images("дієслово таблиця")` |
+| `query_wikipedia` | Ukrainian Wikipedia (5 modes) | `query_wikipedia("Данило Галицький", mode="summary")` |
+| `query_r2u` | Russian-Ukrainian dictionary (for finding Ukrainian equivalents) | `query_r2u("красивый")` |
+| `query_ulif` | ULIF linguistic dictionary | `query_ulif("наголос")` |
+
+**Rules**:
+- If you're unsure about a Ukrainian word form, call `verify_words`. Empty result = word doesn't exist.
+- For textbook searches, use Ukrainian query terms. English kills semantic matching.
+- `search_text` accepts `grade` filter (1-11) and `subject` filter.
+- `query_wikipedia` has modes: `summary`, `full`, `search`, `sections`, `links`.
+
+## Cooperation Tooling
+
+### Multi-turn conversations
+Claude can start a threaded conversation with you:
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
+  "message" --task-id "topic-name"
+```
+You'll see the full conversation history in each turn. Use the same `task-id` to continue a thread.
+
+### Builder Notes (after every build)
+Output this block after every content or activity build:
+```
+===BUILDER_NOTES_START===
+phase: CONTENT | ACTIVITIES
+status: SUCCESS | PARTIAL | BLOCKED
+word_count: {actual}
+deviations:
+  - section: "..."
+    reason: "..."
+frictions:
+  - type: TEMPLATE_CONSTRAINT | SCHEMA_MISMATCH | PLAN_GAP | RAG_FAILURE
+    description: "..."
+    proposed_fix: "..."
+unverified_terms:
+  - "{words you couldn't verify via RAG/VESUM}"
+review_focus:
+  - "{what the reviewer should check}"
+rag_tools_used:
+  - "{tool}: {query} → {useful or not}"
+===BUILDER_NOTES_END===
+```
 
 **Rule**: If you're unsure about a Ukrainian word form, verify it. Don't guess.
 
