@@ -2382,9 +2382,9 @@ def build_placeholders(ctx: ModuleContext) -> None:
             result = read_discovery_yaml(discovery_path)
             placeholders["VIDEO_DISCOVERY"] = format_discovery_for_template(result)
         except Exception:
-            placeholders["VIDEO_DISCOVERY"] = "(No video discoveries available)"
+            placeholders["VIDEO_DISCOVERY"] = ""
     else:
-        placeholders["VIDEO_DISCOVERY"] = "(No video discoveries available)"
+        placeholders["VIDEO_DISCOVERY"] = ""
 
     # Supplement with YouTube links from research (research may find per-letter
     # videos that channel-based discovery missed)
