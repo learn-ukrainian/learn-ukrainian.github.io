@@ -2696,8 +2696,8 @@ def _build_phase2_expansion_prompt(
     section_report = "\n".join(f"- **{name}**: {wc} words" for name, wc in sections)
     research_path = ctx.paths.get("research", "")
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
-    # A1/A2: no overshoot, just hit the target. B1+: 1.5x.
-    overshoot = ctx.word_target if base_level in ('A1', 'A2') or had_truncation else int(ctx.word_target * 1.5)
+    # A1/A2: 1.2x overshoot to safely clear minimum. B1+: 1.5x.
+    overshoot = int(ctx.word_target * 1.2) if base_level in ('A1', 'A2') or had_truncation else int(ctx.word_target * 1.5)
     return f"""# content: EXPAND — Content is {current_words} words, need {ctx.word_target}+
 
 > **Persona reminder:** You are {ctx.skill_identity}. Write in the voice of {ctx.persona_flavor}. Maintain your voice throughout.
@@ -3191,7 +3191,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     engagement_min = _cfg_engagement
     example_min = 8
     base_level = ctx.track.split('-')[0].upper() if ctx.track else ''
-    overshoot = ctx.word_target if base_level in ('A1', 'A2') else int(ctx.word_target * 1.5)
+    overshoot = int(ctx.word_target * 1.2) if base_level in ('A1', 'A2') else int(ctx.word_target * 1.5)
 
     log(f"  content: Whole-module generation ({num_sections} sections, target: {ctx.word_target}w, overshoot: {overshoot}w)")
 
