@@ -312,7 +312,7 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 ### Typography
 
 - **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
-- Use ONLY vocabulary from the plan's `vocabulary_hints` — do NOT invent new terms
+- Base content vocabulary on the plan's `vocabulary_hints`. Function words (pronouns, conjunctions, particles, question words) are always allowed
 
 ---
 

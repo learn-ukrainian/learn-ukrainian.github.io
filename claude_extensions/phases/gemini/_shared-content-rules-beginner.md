@@ -24,7 +24,7 @@ Latin transliterations are BANNED: never use kh, sh, ch, zh, ts, ya, yu, ye, shc
 ### Typography
 
 - **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
-- Use ONLY vocabulary from the plan's `vocabulary_hints` — do NOT invent new terms
+- Base content vocabulary on the plan's `vocabulary_hints`. Function words (pronouns, conjunctions, particles, question words) are always allowed
 
 ### No Word Salad (HARD FAIL)
 
