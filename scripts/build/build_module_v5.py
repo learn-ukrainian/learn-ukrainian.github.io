@@ -145,12 +145,10 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
         ctx.refresh = True  # type: ignore[attr-defined]
 
     # --full-build: single-call mode (content + activities + vocabulary)
-    # Auto-enabled for beginner tier (A1, A2 M1-20, B1 M1-5) unless --no-full-build
-    from pipeline_lib import _get_prompt_tier
+    # Default: split mode (content separate from activities) for better quality
+    # Use --full-build to force single-pass mode
     explicit_full = getattr(args, "full_build", False)
-    no_full = getattr(args, "no_full_build", False)
-    auto_full = _get_prompt_tier(ctx.track, ctx.module_num) == "beginner"
-    ctx.full_build = (explicit_full or auto_full) and not no_full  # type: ignore[attr-defined]
+    ctx.full_build = explicit_full  # type: ignore[attr-defined]
 
     # RAG: auto-enabled when .gemini/settings.json exists (MCP tools available)
     explicit_rag = getattr(args, "rag", False)
