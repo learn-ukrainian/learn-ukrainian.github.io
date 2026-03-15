@@ -274,7 +274,7 @@ _A1_PHASE_CONSTRAINTS: dict[str, str] = {
         "BANNED (too complex for first contact):\n"
         "- Past tense, future tense, conditionals\n"
         "- Participles, passive voice, gerunds\n"
-        "- Complex clauses (який, що, бо, якщо)\n"
+        "- Compound/complex sentences — max 1 clause per sentence (no і/а/але joining clauses)\n"
         "- Do not explicitly teach cases — use nouns in natural contexts\n\n"
         "METALANGUAGE:\n"
         "- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'\n"
@@ -2320,7 +2320,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
         "TEXTBOOK_EXAMPLES": _prefetch_textbook_examples(ctx),
         "TEXTBOOK_ACTIVITY_EXAMPLES": _prefetch_textbook_activity_examples(ctx),
         "TEXTBOOK_GRADE": _get_textbook_grade(ctx),
-        "TOPIC_KEYWORDS": " ".join(ctx.plan.get("keywords", [])[:3]),
+        "TOPIC_KEYWORDS": " ".join(ctx.plan.get("keywords", [])[:3]) or ctx.plan.get("title", ctx.slug).replace("-", " "),
         "CHECKPOINT_GUIDANCE": _get_checkpoint_guidance(ctx),
         "CHECKPOINT_REVIEW_GUIDANCE": _get_checkpoint_review_guidance(ctx),
         "EXACT_SECTION_TITLES": _build_exact_section_titles(ctx),
