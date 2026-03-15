@@ -101,6 +101,10 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 4. **PRACTICE** — examples, dialogues, reading practice
 5. **CELEBRATE** — in Summary, tell learners what they can now do
 
+### Emotional Safety (scored — Beginner Safety dimension)
+
+Use direct address ("you", "your") at least 15 times throughout the module. Include encouragement ("Great job!", "You're doing well", "Don't worry"), quick wins (learner reads their first word early), and reassurance ("This is normal", "Take your time"). The learner should feel supported, not overwhelmed.
+
 ### Writing Style
 
 English explains; Ukrainian is what they're learning. In each section:
@@ -160,7 +164,7 @@ Object with `items:` wrapper. Each entry: `lemma` (dictionary form), `translatio
 - **No IPA or Latin transliteration** — stress marks (´) only
 - **Ukrainian quotes** in content: «...» | **YAML values**: plain text or single quotes (never «»)
 - **YAML colon values**: quote with single quotes: `'text: with colon'`
-- H2 titles must match the outline EXACTLY
+- H2 titles must match the outline EXACTLY. You MAY add H3 sub-headings within H2 sections (e.g., for individual letters, grammar sub-topics)
 - **MUST end with `## {SUMMARY_HEADING}`** with self-check questions
 
 ### Common Irregular Imperatives
