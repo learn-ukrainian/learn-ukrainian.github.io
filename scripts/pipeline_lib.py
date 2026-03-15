@@ -3361,6 +3361,13 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     log("  content: ⚠ Gemini reported token limit truncation")
                 last_friction = friction if is_real_truncation else last_friction
 
+            # Extract builder notes
+            builder_notes = _extract_delimited_content(raw, "===BUILDER_NOTES_START===", "===BUILDER_NOTES_END===")
+            if builder_notes:
+                notes_file = ctx.orch_dir / "builder-notes.yaml"
+                notes_file.write_text(builder_notes, encoding="utf-8")
+                log(f"  content: Builder notes saved → {notes_file.name}")
+
             # Extract activity plans (generated alongside content for Phase 2→activities handoff)
             activity_plans = _extract_delimited_content(raw, "===ACTIVITY_PLANS_START===", "===ACTIVITY_PLANS_END===")
             if activity_plans:

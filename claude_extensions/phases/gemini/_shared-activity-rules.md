@@ -57,6 +57,26 @@ items:
 ===VOCABULARY_END===
 ```
 
+## Builder Notes (MANDATORY)
+
+```
+===BUILDER_NOTES_START===
+phase: ACTIVITIES
+status: SUCCESS | PARTIAL | BLOCKED
+activity_count: {number of activities generated}
+deviations:
+  - "{any deviations from plan activity_hints and why}"
+frictions:
+  - type: SCHEMA_MISMATCH | PLAN_GAP | CONTENT_VOCABULARY_GAP
+    description: "{what went wrong}"
+    proposed_fix: "{how to fix}"
+unverified_terms:
+  - "{Ukrainian words in activities you couldn't verify}"
+review_focus:
+  - "{activities or items that need reviewer attention}"
+===BUILDER_NOTES_END===
+```
+
 ## Friction Report (MANDATORY)
 
 ```

@@ -2391,8 +2391,16 @@ def _extract_activities_output(ctx: ModuleContext, raw_output: str) -> tuple[boo
     return wrote_activities, wrote_vocab
 
 
-def _extract_friction_report(ctx: ModuleContext, raw_output: str) -> None:
-    """Extract and log friction report from LLM output."""
+def _extract_build_diagnostics(ctx: ModuleContext, raw_output: str) -> None:
+    """Extract builder notes and friction report from LLM output."""
+    # Builder notes
+    builder_notes = _extract_delimiter(raw_output, "===BUILDER_NOTES_START===", "===BUILDER_NOTES_END===")
+    if builder_notes:
+        notes_file = ctx.orch_dir / "activities-builder-notes.yaml"
+        notes_file.write_text(builder_notes, encoding="utf-8")
+        log(f"  activities: Builder notes saved → {notes_file.name}")
+
+    # Friction report
     friction = _extract_delimiter(raw_output, "===FRICTION_START===", "===FRICTION_END===")
     if friction:
         friction_file = ctx.orch_dir / "activities-friction.md"
@@ -2581,7 +2589,7 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
     wrote_activities, wrote_vocab = _extract_activities_output(ctx, raw_output)
 
     # Friction report
-    _extract_friction_report(ctx, raw_output)
+    _extract_build_diagnostics(ctx, raw_output)
 
     # Vocabulary fallback if needed
     if wrote_activities and not wrote_vocab and _vocab_fallback(ctx, raw_output):
@@ -3072,6 +3080,15 @@ def _review_build_d1_prompt(ctx: ModuleContext, screen: DScreenResult,
     prompt_text = prompt_text.replace("{DETERMINISTIC_ISSUES}", _format_deterministic_issues(screen.deterministic_issues))
     prompt_text = prompt_text.replace("{RUSSIANISM_TABLE}", russicism_table or "(No track-specific Russianism table available — use general checklist)")
     prompt_text = prompt_text.replace("{FILLER_PHRASES}", _format_filler_phrases(screen.deterministic_issues))
+
+    # Inject builder notes if available
+    builder_notes_path = ctx.orch_dir / "builder-notes.yaml"
+    if builder_notes_path.exists():
+        builder_notes = builder_notes_path.read_text("utf-8")
+        notes_block = f"```yaml\n{builder_notes}\n```\nFocus your review on the `review_focus` items above."
+    else:
+        notes_block = "(No builder notes from content phase)"
+    prompt_text = prompt_text.replace("{BUILDER_NOTES_BLOCK}", notes_block)
 
     rag_context = _prefetch_rag_context(ctx)
     prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)

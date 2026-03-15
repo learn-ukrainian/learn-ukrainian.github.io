@@ -470,7 +470,7 @@ Rules for YAML:
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
 
-Output FIVE blocks in this exact order:
+Output SIX blocks in this exact order:
 
 **Block 1: Content**
 ```
@@ -541,7 +541,34 @@ items:
 ===VOCABULARY_END===
 ```
 
-**Block 5: Friction Report (MANDATORY)**
+**Block 5: Builder Notes (MANDATORY)**
+
+Tell the reviewer what they need to know. Be honest — this saves everyone time.
+
+```
+===BUILDER_NOTES_START===
+phase: CONTENT
+status: SUCCESS | PARTIAL | BLOCKED
+word_count: {actual word count}
+deviations:
+  - section: "{section name}"
+    reason: "{why you deviated from the plan}"
+frictions:
+  - type: TEMPLATE_CONSTRAINT | SCHEMA_MISMATCH | PLAN_GAP | RAG_FAILURE
+    description: "{what went wrong}"
+    proposed_fix: "{how to fix the template/pipeline}"
+research_gaps:
+  - "{what you couldn't find or verify}"
+unverified_terms:
+  - "{Ukrainian words you couldn't verify via RAG/VESUM}"
+review_focus:
+  - "{specific section or word that needs human/reviewer attention}"
+rag_tools_used:
+  - "{tool}: {what you searched for and whether it helped}"
+===BUILDER_NOTES_END===
+```
+
+**Block 6: Friction Report (MANDATORY)**
 ```
 ===FRICTION_START===
 **Phase**: Full Build (Content + Activities + Vocabulary)
@@ -550,6 +577,5 @@ items:
 **Raw Error**: {actual error or "None"}
 **Self-Correction**: {what you changed, or "N/A"}
 **Proposed Tooling Fix**: {if applicable, or "N/A"}
-**RAG Tools Used**: {list tools called and what you found useful}
 ===FRICTION_END===
 ```

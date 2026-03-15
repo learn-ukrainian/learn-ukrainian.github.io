@@ -41,6 +41,9 @@ Read ALL of these files before writing anything:
 3. **Vocabulary**: `{VOCAB_PATH}`
 4. **Plan** (source of truth for scope): `{PLAN_PATH}`
 5. **Research notes** (seminar tracks only — for fact verification): `{RESEARCH_PATH}`
+6. **Builder notes** (from content builder):
+
+{BUILDER_NOTES_BLOCK}
 
 **Do not proceed until you have read every line of the content and every activity item.**
 
