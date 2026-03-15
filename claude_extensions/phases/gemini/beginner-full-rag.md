@@ -161,6 +161,7 @@ Object with `items:` wrapper. Each entry: `lemma` (dictionary form), `translatio
 
 - **No Russianisms**: кушати→їсти, получати→отримувати, самий→найкращий
 - **No Russian characters**: ы, э, ё, ъ — never
+- **No colonial framing**: never define Ukrainian by comparing it to Russian. Don't say "unlike Russian..." or "not found in Russian." Present Ukrainian on its own terms
 - **No IPA or Latin transliteration** — stress marks (´) only
 - **Ukrainian quotes** in content: «...» | **YAML values**: plain text or single quotes (never «»)
 - **Euphony** (у/в, і/й alternation): follow rules in the shared content rules section below — audit flags violations

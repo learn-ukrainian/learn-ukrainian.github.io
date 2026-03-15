@@ -212,7 +212,20 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
             except Exception as e:
                 logger.warning("Auto-fix: euphony failed: %s", e)
 
-            # 1b. Demote extra H1 headings to H2
+            # 1b. Alphabet chart fix (В↔У, І↔Й confusion)
+            try:
+                from pipeline.alphabet_fix import fix_alphabet_charts
+                text, alpha_fixes = fix_alphabet_charts(text)
+                if alpha_fixes:
+                    dirty = True
+                    total += len(alpha_fixes)
+                    _log(f"    Auto-fix: {len(alpha_fixes)} alphabet chart correction(s)")
+                    for af in alpha_fixes:
+                        _log(f"      → {af}")
+            except Exception as e:
+                logger.warning("Auto-fix: alphabet chart failed: %s", e)
+
+            # 1c. Demote extra H1 headings to H2
             try:
                 text, n = _fix_extra_h1(text)
                 if n > 0:
