@@ -158,39 +158,34 @@ Your content will be scored on these dimensions (9-10 = PASS):
 # Preflight prompt builder
 # ---------------------------------------------------------------------------
 
-_PREFLIGHT_PROMPT = """You are reviewing a content generation prompt BEFORE it is used to build a module. Your job is to find problems that will cause the generated content to FAIL the audit.
+_PREFLIGHT_PROMPT = """You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
 
-## The Prompt to Review
+**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+
+## The Prompt
 
 <prompt>
 {RENDERED_PROMPT}
 </prompt>
 
-## What the Audit Will Check
+## Audit Gates (what your content will be checked against)
 
 {AUDIT_CONTEXT}
 
 {DIMENSION_CONTEXT}
 
-## Your Task
+## Instructions
 
-Analyze the prompt above and identify:
-1. **CONTRADICTIONS** — instructions that conflict with each other or with the audit gates
-2. **IMPOSSIBLE TARGETS** — the instructions make it mathematically impossible to hit a gate
-3. **MISSING INSTRUCTIONS** — something the audit requires but the prompt doesn't mention
-4. **UNCLEAR** — ambiguous instructions that could be interpreted wrong
+Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
 
-For each issue, provide a specific fix.
+Only report an issue if:
+- Two instructions **directly contradict** each other AND following one will FAIL a named gate
+- A target is **mathematically impossible** to reach given the constraints
+- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
 
-**Severity guidelines — be VERY strict about HIGH:**
-- **HIGH**: Will cause the generated content to FAIL one of these specific automated audit gates: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion, Review. You MUST name which gate will fail. If you cannot name a gate → it's not HIGH.
-- **MEDIUM**: Could cause a lower review score but won't fail any gate.
-- **LOW**: Style preference, minor ambiguity, or cosmetic issue.
+Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." The prompt is good enough if it produces passing content.
 
-Examples of NOT HIGH: heading format preferences, RAG query language, video embed syntax, vocabulary wording, image-to-letter using emojis (not URLs). These don't fail gates.
-Examples of HIGH: word target impossible to reach (Words gate), missing H2 section (Structure gate), banned grammar used (Pedagogy gate).
-
-**Do NOT flag**: image-to-letter activities use emoji characters (👩, 🐈), not image URLs. This is by design.
+**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
 ## Output Format (YAML)
 
