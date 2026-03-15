@@ -28,6 +28,8 @@ def check_duplicate_sentences(content: str, yaml_content: str = "") -> list[dict
 
     # Internal Purity Check (within Lesson MD only)
     text = re.sub(r'^---.*?---\n', '', content, flags=re.DOTALL)
+    # Remove video links — letter modules legitimately repeat video link patterns
+    text = re.sub(r'\[.*?\]\(https?://.*?youtube.*?\)', '', text)
     sentence_pattern = re.compile(r'(?<=[.!?])\s+')
     lesson_sentences = [s.strip() for s in sentence_pattern.split(text) if len(s.strip()) > 50]
 
