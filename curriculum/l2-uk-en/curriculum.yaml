@@ -807,6 +807,12 @@ levels:
       - andriy-pilshchykov
       - dmytro-kotsyubailo
       - roman-ratushny
+      # Textbook authors → BIO (#894)
+      - andrii-chaikovskyi
+      - iryna-vilde
+      - moisei-fishbein
+      - oleh-olzhych
+      - anatolii-dimarov
   lit:
     type: track
     modules:
