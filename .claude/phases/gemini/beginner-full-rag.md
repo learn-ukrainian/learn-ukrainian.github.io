@@ -117,7 +117,7 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 **MANDATORY for A2+:** Reading Practice blocks after each major section (5-8 Ukrainian sentences + English translation).
 
 **Grammar terminology by level:**
-- A1 M1-M10: English terms only
+- A1 M1-M10: English terms in prose, Ukrainian in parentheses for section headings: `## Голосні — Vowels`
 - A1 M11+: Introduce Ukrainian terms with gloss: **іменник** (noun)
 - A2+: Ukrainian terms freely after first gloss
 
