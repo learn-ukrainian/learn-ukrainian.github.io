@@ -1030,6 +1030,10 @@ levels:
       - moisei-fishbein-poetry
       - aliev-musayeva-crimean-tatar-ukrainian
       - nariman-dzhelyal-publicistics
+      # Textbook authors addition (#894)
+      - yevhen-hutsalo-shistdesiatnyky
+      - mykhailo-petrenko-romantyka
+      - mykhailo-stelmakh-shchedryi-vechir
       - amelina-renaissance
       - synthesis-5
       - skovoroda-baroque-philosophy
@@ -1708,6 +1712,10 @@ levels:
       - rafeyenko-long-times
       - hist-fic-synthesis
       - shevchuk-three-leaves
+      # Textbook authors addition (#894)
+      - andrii-chaikovskyi-za-sestroiu
+      - andrian-kashchenko-cossack-myth
+      - natalena-koroleva-lehendy
   lit-fantastika:
     type: track
     modules:
@@ -1766,6 +1774,9 @@ levels:
       - illia-chernilevskyi-poetry
       - gorlis-gorsky-kholodnyi-yar
       - upa-underground-literature
+      # Textbook authors addition (#894)
+      - pavlo-vyshebaba-soldier-poetry
+      - bohdan-zholdak-ukry
   lit-humor:
     type: track
     modules:
@@ -1816,6 +1827,9 @@ levels:
       - voronyna-agent-000
       - andrusyak-adventures
       - juvenile-synthesis
+      # Textbook authors addition (#894)
+      - sashko-dermanskyi-chudove-chudovysko
+      - anatolii-dimarov-filosofski-kazky
   # lit-doc: MERGED INTO lit-essay (ESSAY.6) — see #879
   # Unique modules (Самчук, Барка, Світличний, Шумук) added to lit-essay.
   # Duplicate modules (Асєєв, Кіпіані, Вакуленко, Амеліна, Мариновіч) already in lit-essay/lit-war.

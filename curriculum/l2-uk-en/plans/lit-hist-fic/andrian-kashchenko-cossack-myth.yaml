@@ -1,0 +1,86 @@
+module: lit-hist-fic-22
+level: LIT-HIST-FIC
+sequence: 22
+slug: andrian-kashchenko-cossack-myth
+version: '2.0'
+title: 'Андріан Кащенко: Над Кодацьким порогом'
+subtitle: Popularizing the Zaporozhian Sich myth and banned for bourgeois nationalism
+focus: literature
+pedagogy: Seminar
+phase: HISTFIC.1
+word_target: 5000
+objectives:
+- Проаналізувати творчість Андріана Кащенка як основоположника популярної козацької прози
+- Дослідити роль оповідань «Над Кодацьким порогом» та «З Дніпра на Дунай» у формуванні козацького міфу
+- Зрозуміти причини заборони Кащенка в СРСР як «буржуазного націоналіста»
+sources:
+- name: Андріан Кащенко — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Андріан Кащенко (1858–1921) — вчитель, громадський діяч, катеринославець
+  - Запоріжжя як центр козацької пам'яті
+  - Кащенко серед «популяризаторів» козацької історії
+  words: 850
+- section: '«Над Кодацьким порогом» та козацькі оповідання'
+  points:
+  - Сюжет та історичне тло — Запорозька Січ, пороги, вільне козацтво
+  - Архетип козака-воїна та козака-лицаря
+  - Епічний пейзаж Дніпра як дійова особа тексту
+  words: 900
+- section: '«З Дніпра на Дунай» та великі повісті'
+  points:
+  - Зруйнування Січі та козацька еміграція
+  - Трагедія розсіяння як наративний каркас
+  - Задунайські козаки — маловідома сторінка історії
+  words: 850
+- section: Мова, стиль та поетика
+  points:
+  - Народна оповідність — стилізація під козацький літопис
+  - Динамічний пригодницький наратив для масового читача
+  - Романтична ідеалізація vs історична достовірність
+  words: 800
+- section: Деколонізаційний вимір
+  points:
+  - Козацький міф як протидія «малоросійському» наративу
+  - Заборона як «буржуазний націоналіст» — що саме лякало радянську владу
+  - Кащенко та формування козакофільства як масового руху
+  words: 800
+- section: Підсумок та рецепція
+  points:
+  - Вплив на масову козацьку культуру XX–XXI ст.
+  - Перевидання після 1991 та місце в шкільному каноні
+  - Питання для дискусії
+  words: 800
+vocabulary_hints:
+  required:
+  - Запорозька Січ (Zaporozhian Sich)
+  - козакофільство (Cossack-philia)
+  - поріг (rapid/cataract)
+  - наратив (narrative)
+  recommended:
+  - ідеалізація (idealization)
+  - літопис (chronicle)
+  - еміграція (emigration)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових епізодів «Над Кодацьким порогом» та «З Дніпра на Дунай»
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Козацький міф у літературі — конструювання чи відродження пам'яті?
+  output: Аналітичне есе
+- type: critical-analysis
+  focus: Порівняння козацьких наративів Кащенка та Куліша
+connects_to:
+- kulish-black-council-revisit
+- starytsky-bohdan
+- bilyk-sword-ares
+persona:
+  voice: Senior Philologist & Critic
+  role: Keeper of the Sich Gate
+module_type: literature
+immersion: 100% Ukrainian

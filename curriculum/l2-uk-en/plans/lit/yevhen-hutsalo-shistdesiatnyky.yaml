@@ -1,0 +1,88 @@
+module: lit-230
+level: LIT
+sequence: 230
+slug: yevhen-hutsalo-shistdesiatnyky
+version: '2.0'
+title: 'Євген Гуцало: лірична проза шістдесятника'
+subtitle: Lyrical prose of the Sixtiers generation and the decolonial turn of Mentalnist ordy
+focus: literature
+pedagogy: Seminar
+phase: LIT.4 Resistance and Resilience 1933-1991
+word_target: 5000
+objectives:
+- Проаналізувати лірику прози Євгена Гуцала в контексті руху шістдесятників
+- Дослідити еволюцію від камерної прози до публіцистики «Ментальності орди»
+- Зрозуміти роль Гуцала у збереженні селянського мовного пласту в модерній українській прозі
+sources:
+- name: Євген Гуцало — проза та публіцистика
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Євген Гуцало (1937–1995) — народження на Вінниччині, батько-вчитель української літератури
+  - Покоління шістдесятників — хронологія та ідейні засади
+  - Місце Гуцала серед прозаїків-шістдесятників (Шевчук, Дрозд, Загребельний)
+  words: 850
+- section: 'Рання лірична проза: «Люди серед людей»'
+  points:
+  - Камерна оповідність — портрети сільських людей
+  - Психологізм деталі та «замальовка» як жанр
+  - Традиція Стефаника і Коцюбинського в малій прозі Гуцала
+  words: 850
+- section: 'Повісті та романи: зріла проза'
+  points:
+  - «Шкільний хліб» — автобіографічна повість про дитинство
+  - «Позичений чоловік» та інші комічні повісті
+  - Селянський простір як носій етнічної пам'яті
+  words: 850
+- section: Мова, стиль та поетика
+  points:
+  - Лексичне багатство — діалектизми Поділля та Вінниччини
+  - Сенсорна деталь — запахи, звуки, кольори сільського світу
+  - Ритміка прози — наближення до поетичного мовлення
+  words: 800
+- section: '«Ментальність орди» — деколонізаційний поворот'
+  points:
+  - Публіцистика 1990-х як інтелектуальний заповіт
+  - Аналіз імперської ментальності — передбачення сучасних деколонізаційних теорій
+  - Поняття «ордицтва» та його актуальність після 2022
+  words: 850
+- section: Підсумок та рецепція
+  points:
+  - Гуцало як недооцінений класик — причини замовчування
+  - Вплив на сучасну українську прозу (Жадан, Андрухович)
+  - Питання для дискусії
+  words: 800
+vocabulary_hints:
+  required:
+  - шістдесятники (the Sixtiers)
+  - лірика (lyric quality)
+  - ордицтво (horde mentality)
+  - публіцистика (political writing/essays)
+  recommended:
+  - камерний (intimate, chamber-like)
+  - діалектизм (dialectism)
+  - етнічна пам'ять (ethnic memory)
+activity_hints:
+- type: reading
+  focus: Аналіз уривків із «Ментальності орди» та ранніх оповідань
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Еволюція Гуцала від лірика до деколонізаційного мислителя
+  output: Аналітичне есе
+- type: critical-analysis
+  focus: Порівняння мовних стратегій Гуцала та Шевчука
+connects_to:
+- symonenko-knights
+- stus-vertical-of-spirit
+- honchar-cathedral
+prerequisites:
+- lit-208
+persona:
+  voice: Senior Philologist & Critic
+  role: Chronicler of the Podolian Village
+module_type: literature
+immersion: 100% Ukrainian
