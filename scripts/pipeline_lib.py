@@ -3248,6 +3248,31 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not log_prompt_health(health_issues, "Phase 2"):
         return False
 
+    # Pre-content gate: Semantic Russicism scan on plan vocabulary
+    try:
+        from pipeline.semantic_russianisms import scan_and_fix_plan
+        plan_path = ctx.paths.get("plan")
+        if plan_path and plan_path.exists():
+            findings, fixes = scan_and_fix_plan(plan_path)
+            if findings:
+                log(f"  pre-content: Semantic Russicism scan: {len(findings)} finding(s), {fixes} auto-fixed")
+    except Exception as e:
+        log(f"  pre-content: Russicism scan skipped — {e}")
+
+    # Pre-content gate: Research quality assessment (informational)
+    try:
+        rp = ctx.paths.get("research")
+        if rp and rp.exists():
+            from research_quality import assess_research_compat
+            rq = assess_research_compat(rp, ctx.track, ctx.paths.get("md"))
+            if rq:
+                score = rq.get("score")
+                quality = rq.get("quality", "unknown")
+                log(f"  pre-content: Research quality: {quality} ({score}/10)" if score else
+                    f"  pre-content: Research quality: {quality}")
+    except Exception as e:
+        log(f"  pre-content: Research quality check skipped — {e}")
+
     # Prompt preflight: Gemini reviews its own instructions against audit gates
     if not getattr(ctx, "skip_prompt_preflight", False):
         try:

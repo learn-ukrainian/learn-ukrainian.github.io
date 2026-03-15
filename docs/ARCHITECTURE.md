@@ -1,369 +1,205 @@
 # Learn Ukrainian — System Architecture
 
-> Last updated: 2026-03-08 | Issue: #796
+> Last updated: 2026-03-15 | Issue: #892
 
 ## Overview
 
-Learn Ukrainian is an AI-powered content factory that generates Ukrainian language learning materials. Two AI agents (Gemini builds, Claude reviews) produce curriculum content through a deterministic pipeline with 34 quality gates.
+Learn Ukrainian is an AI-powered content factory that generates Ukrainian language learning materials. Two AI agents (Gemini builds, Claude reviews) produce curriculum content through a deterministic pipeline with quality gates and adversarial cross-review.
 
-**Scale**: ~600 modules across 10 tracks, ~143K LOC in `scripts/`, 25 JSON schemas.
+**Scale**: ~1700 modules across 23 tracks, ~143K LOC in `scripts/`, 25 JSON schemas.
 
 ## System Diagram
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│                        PIPELINE v5 (build_module_v5.py)              │
-│  research → discover → sandbox → content → activities → validate     │
-│                                              → [review] → mdx        │
-└─────────┬──────────┬────────────┬──────────┬────────────┬───────────┘
-          │          │            │          │            │
-    ┌─────▼───┐ ┌───▼────┐ ┌────▼───┐ ┌───▼────┐ ┌────▼─────┐
-    │ Gemini  │ │  RAG   │ │ VESUM  │ │ Claude │ │  Audit   │
-    │ (build) │ │ (data) │ │(morph) │ │(review)│ │ (gates)  │
-    └─────────┘ └────────┘ └────────┘ └────────┘ └──────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                     PIPELINE v5 (build_module_v5.py)                   │
+│                                                                        │
+│  ┌──────────┐  ┌─────────┐  ┌─────────┐  ┌──────────┐  ┌──────────┐  │
+│  │ research │→ │ content │→ │validate │→ │activities│→ │  review  │→ mdx
+│  └──────────┘  └─────────┘  └─────────┘  └──────────┘  └──────────┘  │
+│       │         ↑ preflight    │              │           ↑ builder    │
+│       │         ↑ learner      │              │           ↑ notes      │
+│       │         ↑ state        │              │                       │
+│  ┌────▼────┐  ┌─▼──────┐  ┌──▼─────┐  ┌────▼────┐  ┌──▼───────┐   │
+│  │ Gemini  │  │ Gemini │  │ Determ │  │ Gemini  │  │  Claude  │   │
+│  │(research)│  │(write) │  │(VESUM) │  │(YAML)   │  │(review)  │   │
+│  └─────────┘  └────────┘  └────────┘  └─────────┘  └──────────┘   │
+└────────────────────────────────────────────────────────────────────────┘
+         │              │                                    │
+    ┌────▼────┐    ┌────▼────┐                         ┌────▼────┐
+    │   RAG   │    │ VESUM   │                         │  Audit  │
+    │(textbooks│    │(415K    │                         │(34 gates│
+    │ wiki,lit)│    │ lemmas) │                         │         │
+    └─────────┘    └─────────┘                         └─────────┘
 ```
+
+## Pipeline Phases (v5)
+
+| # | Phase | Agent | Purpose | Pre-conditions |
+|---|-------|-------|---------|----------------|
+| 1 | **research** | Gemini | Web research, textbook search, meta outline | Plan exists |
+| 2 | **discover** | Gemini | YouTube discovery (non-blocking) | — |
+| 3 | **content** | Gemini | Lesson prose + vocabulary | Preflight passes, learner state injected |
+| 4 | **validate** | Deterministic | VESUM morphology, Russicism detection, euphony | Content exists |
+| 5 | **activities** | Gemini | Interactive activities YAML (reads written content) | Content validated |
+| 6 | **review** | **Claude** | Cross-agent adversarial review of content + activities | All build phases complete |
+| 7 | **mdx** | Deterministic | Markdown → Starlight MDX | Review done or skipped |
+
+**Key design**: Activities come AFTER validate so they're grounded in the validated content. Review comes LAST so it sees the complete module.
+
+### Pre-Content Gates (run before content phase)
+
+| Gate | Script | What it checks |
+|------|--------|----------------|
+| **Preflight** | `pipeline/prompt_preflight.py` | Gemini reviews its own prompt for contradictions. Auto-fixes HIGH issues. |
+| **Semantic Russianisms** | `pipeline/semantic_russianisms.py` | Catches words in plan with Russian meanings (e.g., лук=onion → цибуля) |
+| **Learner State** | `pipeline/learner_state.py` | Injects cumulative vocabulary + grammar from all previous modules |
+
+### Content Phase Enhancements
+
+| Feature | What it does |
+|---------|-------------|
+| **Builder Notes** | Gemini outputs structured YAML (deviations, frictions, unverified terms) |
+| **Prompt restructuring** | Goal → Context → Outline → Guidelines → Constraints (not constraints-first) |
+| **Split mode** | Content and activities are separate phases (default), not one pass |
 
 ## Three-Layer Content Architecture
 
 ```
-plans/{level}/{slug}.yaml    →  IMMUTABLE source of truth (human-owned)
+plans/{level}/{slug}.yaml    →  Source of truth (reviewed before lock)
 {level}/{slug}.md + yaml     →  BUILD artifacts (AI-generated)
 {level}/status/{slug}.json   →  AUDIT cache (system-generated)
 ```
 
-| Layer | Location | Owner | Mutability |
-|-------|----------|-------|------------|
-| **Plans** | `curriculum/l2-uk-en/plans/` | Human architect | Immutable (version-bumped with approval) |
-| **Build** | `curriculum/l2-uk-en/{level}/` | AI agents (Gemini) | Mutable (rebuilt by pipeline) |
-| **Status** | `curriculum/l2-uk-en/{level}/status/` | Audit system | Auto-generated, cached |
-
-## Subsystems (11)
-
-### 1. Pipeline (`scripts/pipeline_v5.py` + `scripts/pipeline/`)
-**~11K LOC** | Entry: `scripts/build_module_v5.py`
-
-The sole build pipeline. v3/v4 are retired.
-
-| Phase | LLM | Purpose |
-|-------|-----|---------|
-| **research** | Gemini | Web research, meta outline, friction hooks |
-| **discover** | Gemini | YouTube discovery, transcript scoring |
-| **sandbox** | _(none)_ | VESUM-validated word bank (deterministic) |
-| **content** | Gemini | Full lesson prose with lexical sandbox |
-| **activities** | Gemini | Interactive activities + vocabulary YAML |
-| **validate** | Gemini | Morphological validator + Russicism check + fix loop |
-| **review** | **Claude** | Cross-agent adversarial review (optional, max 2 fix attempts) |
-| **mdx** | _(none)_ | Deterministic markdown → Starlight MDX |
-
-Non-blocking phases: discover, sandbox, validate, review.
-
-See: [`docs/best-practices/prompt-engineering.md`](best-practices/prompt-engineering.md), [`docs/best-practices/context-engineering.md`](best-practices/context-engineering.md)
-
-Supporting modules:
-- `scripts/pipeline/state.py` — State machine (phase tracking, restarts)
-- `scripts/pipeline/parsing.py` — Markdown/YAML parsing
-- `scripts/pipeline/screen.py` — Content screening
-- `scripts/pipeline/fixes.py` — Post-phase deterministic fixes
-- `scripts/pipeline_lib.py` — Shared pipeline utilities (legacy, being decomposed)
-
-### 2. Audit System (`scripts/audit/`)
-**~23K LOC** | Entry: `scripts/audit_module.py`
-
-34 specialized check modules enforcing quality gates.
-
-```
-scripts/audit/
-├── core.py                    # Orchestrator (AuditContext + AuditState pattern)
-├── config.py                  # Level-specific thresholds (word targets, gate minimums)
-├── gates.py                   # Gate evaluation + recommendation engine
-├── report.py                  # Terminal + markdown report generation
-├── status_cache.py            # Status JSON caching
-├── naturalness_check.py       # LLM-based naturalness scoring
-├── template_parser.py         # Template YAML parsing
-└── checks/                    # 34 individual check modules
-    ├── activities.py           # Activity validation (types, schemas, complexity)
-    ├── morphological_validator.py  # VESUM grammar checking
-    ├── yaml_schema_validation.py   # YAML schema enforcement
-    ├── review_validation.py    # LLM review integrity
-    ├── template_compliance.py  # Template structure compliance
-    ├── content_quality_pipeline.py # Content quality scoring
-    ├── cross_file_integrity.py # Plan↔content↔vocab consistency
-    ├── vocabulary.py           # Vocabulary gate checks
-    ├── review_gaming.py        # Anti-gaming (ping-pong, content recall)
-    └── ... (24 more)
-```
-
-**Key gates**: Words ≥ target, activities ≥ minimum, unique types, engagement boxes, vocab count, naturalness ≥ 8/10.
-
-See: [`docs/best-practices/audit-standards.md`](best-practices/audit-standards.md), [`docs/best-practices/module-content-quality.md`](best-practices/module-content-quality.md)
-
-### 3. RAG System (`scripts/rag/` + `.mcp/servers/rag/`)
-**~8K LOC** | MCP server at `.mcp/servers/rag/server.py`
-
-Data sources indexed in Qdrant (local vector DB) + live HTTP queries.
-
-| Source | Type | Collection | MCP Tool |
-|--------|------|------------|----------|
-| Textbooks (1.2K chunks) | RAG | `textbook_chunks` | `search_text` |
-| Literary sources | RAG | `literary_texts` | `search_literary` |
-| VESUM (415K lemmas) | SQLite | `data/vesum/` | `verify_word`, `verify_lemma` |
-| Ukrainian Wikipedia | Live | — | `query_wikipedia` |
-| GRAC corpus (2B tokens) | Live | — | `query_grac` |
-| ULIF paradigms | Live | — | `query_ulif` |
-| r2u dictionary | Live | — | `query_r2u` |
-| Pravopys 2019 | Reference | — | `query_pravopys` |
-
-Ingestion pipeline:
-- `ingest.py` / `ingest_literary.py` — Chunk and embed textbook/literary content
-- `embed.py` — Embedding generation (cached with pickle)
-- `import_vesum.py` — VESUM dictionary import to SQLite
-- `scrape_*.py` — Web scrapers (litopys, ukrlib, wikisource, izbornyk)
-- `extract_text.py` / `extract_images.py` — PDF content extraction
-
-### 4. API Server (`scripts/api/`)
-**~6K LOC** | FastAPI + WebSocket
-
-Dashboard and monitoring for pipeline operations.
-
-```
-scripts/api/
-├── main.py              # FastAPI app, WebSocket, shared endpoints
-├── dashboard_router.py  # Module listing, track scanning, detail views
-├── state_router.py      # Pipeline state management (unified v5 format)
-├── blue_router.py       # Claude team endpoints
-├── gold_router.py       # Gemini team endpoints
-├── admin_router.py      # Admin operations
-├── comms_router.py      # Notifications
-├── rag_router.py        # RAG search integration
-├── images_router.py     # Image serving
-└── config.py            # API configuration
-```
-
-### 5. Scoring System (`scripts/scoring/`)
-**~3.5K LOC**
-
-Module quality scoring with weighted criteria aggregation.
-
-- `aggregator.py` — Score aggregation (CC=105, needs decomposition)
-- `metrics.py` — Metric definitions
-- `caps.py` — Score caps and constraints
-- `report.py` — Score reporting
-- `sampling.py` — Statistical sampling
-- Also: `scripts/calculate_richness.py` — Content richness scoring (dryness flags, module type detection)
-
-### 6. Code Generation (`scripts/generate_*.py`)
-**~6.5K LOC**
-
-- `generate_mdx.py` — Markdown → Starlight MDX (main track)
-- `generate_mdx_direct.py` — MDX for l2-uk-direct track
-- `generate_json.py` — Module → JSON for Vibe app
-- `generate_plan_markdown.py` — Plan YAML → human-readable markdown
-
-### 7. Batch Operations (`scripts/batch_*.py`)
-**~6K LOC**
-
-- `batch_gemini_runner.py` — Dispatches Gemini builds across modules
-- `batch_dispatcher.py` — Job orchestration
-- `batch_gemini_config.py` — Model defaults per track/level
-- `batch_fix_review.py` — Batch review fixing
-- `batch_research.py` — Batch research phase
-- `batch_report.py` — Batch status reporting
-
-### 8. Agent Bridge (`scripts/ai_agent_bridge/__main__.py`)
-**~2K LOC**
-
-Inter-agent communication (Claude ↔ Gemini). Uses gemini-cli subprocess.
-
-### 9. RAG Ingestion (`scripts/rag/scrape_*.py`, `ingest_*.py`)
-**~4.8K LOC**
-
-Web scrapers and data ingestors for populating RAG collections.
-
-### 10. Prompt Templates (`claude_extensions/phases/` + `gemini_extensions/skills/`)
-**~8.7K LOC** (54 prompt/template files)
-
-Phase-specific prompts injected into LLM calls during pipeline execution.
-
-### 11. Playgrounds (`scripts/api/` static files + dashboards)
-**~4.8K LOC**
-
-Interactive HTML dashboards for exploring pipeline data.
+| Layer | Location | Owner | Lifecycle |
+|-------|----------|-------|-----------|
+| **Plans** | `curriculum/l2-uk-en/plans/` | Human + LLM (reviewed) | DRAFT → REVIEWED → LOCKED |
+| **Build** | `curriculum/l2-uk-en/{level}/` | Gemini | Rebuilt by pipeline |
+| **Status** | `curriculum/l2-uk-en/{level}/status/` | Audit system | Auto-generated |
 
 ## AI Agent Architecture
 
 ```
-┌─────────────────────┐     ┌─────────────────────┐
-│   Claude (Blue)     │     │   Gemini (Gold)      │
-│   - Architect       │◄───►│   - Content builder  │
-│   - Reviewer        │     │   - Researcher       │
-│   - Code author     │     │   - Activity creator  │
-└─────────────────────┘     └─────────────────────┘
-         │                           │
-         ▼                           ▼
-┌─────────────────────┐     ┌─────────────────────┐
-│ claude_extensions/   │     │ gemini_extensions/   │
-│ ├── commands/        │     │ └── skills/          │
-│ ├── skills/          │     │     ├── full-rebuild-*│
-│ ├── phases/          │     │     ├── hetman/       │
-│ ├── quick-ref/       │     │     └── final-review/ │
-│ └── rules/           │     └─────────────────────┘
-└─────────────────────┘
+┌─────────────────────────┐        ┌─────────────────────────┐
+│   Claude (Blue Team)     │        │   Gemini (Gold Team)     │
+│   - Architect            │  ask-  │   - Content builder      │
+│   - Reviewer             │◄─────►│   - Researcher           │
+│   - Code author          │ gemini │   - Activity creator     │
+│   - Quality gate         │converse│   - Adversarial reviewer │
+│                          │        │     (of Claude's work)   │
+│   CLAUDE.md              │        │   GEMINI.md              │
+│   (mission, rules, RAG)  │        │   (mission, scoring,     │
+│                          │        │    RAG tools, coop)      │
+└─────────────────────────┘        └─────────────────────────┘
 ```
 
 **Rule**: An LLM must NEVER review its own work. Gemini builds → Claude reviews.
 
-**Extensions source of truth**:
-- `claude_extensions/` → deployed to `.claude/` via `npm run claude:deploy`
-- `gemini_extensions/` → deployed to `.gemini/` (manual copy)
+### Cooperation Tooling
 
-## MCP Servers
+| Tool | Command | Purpose |
+|------|---------|---------|
+| **One-shot** | `ask-gemini "msg" --task-id issue-N` | Reviews, simple requests |
+| **Multi-turn** | `converse "msg" --task-id "topic"` | Co-design, planning, iteration |
+| **Builder Notes** | `===BUILDER_NOTES_START===` | Structured handoff after builds |
 
-| Server | Location | Purpose |
-|--------|----------|---------|
-| **RAG** | `.mcp/servers/rag/server.py` | Textbook search, VESUM verification, literary sources, live queries |
-| **Message Broker** | `.mcp/servers/message-broker/server.py` | Inter-agent message queue |
+The bridge is NOT an MCP tool. It uses SQLite broker DB + subprocess spawning. Claude always initiates.
+
+## Subsystems
+
+### 1. Pipeline (`scripts/build/pipeline_v5.py` + `scripts/pipeline/`)
+**~11K LOC** | Entry: `scripts/build_module_v5.py`
+
+Supporting modules:
+- `pipeline/state.py` — Phase tracking, restarts
+- `pipeline/parsing.py` — Markdown/YAML parsing
+- `pipeline/screen.py` — Content screening
+- `pipeline/fixes.py` — FIND/REPLACE fix application
+- `pipeline/prompt_preflight.py` — Prompt review + auto-fix
+- `pipeline/learner_state.py` — Cumulative vocab + grammar manifest
+- `pipeline/semantic_russianisms.py` — Semantic false friend detection
+- `pipeline/consultation.py` — Template improvement loop
+- `pipeline_lib.py` — Shared utilities
+
+### 2. Audit System (`scripts/audit/`)
+**~23K LOC** | Entry: `scripts/audit_module.py` | 34 check modules
+
+### 3. RAG System (`scripts/rag/` + `.mcp/servers/rag/`)
+**~8K LOC** | MCP server at port 8766
+
+| Source | MCP Tool |
+|--------|----------|
+| Textbooks (1.2K chunks) | `search_text` |
+| Literary sources | `search_literary` |
+| VESUM (415K lemmas) | `verify_word`, `verify_lemma` |
+| Ukrainian Wikipedia | `query_wikipedia` (5 modes) |
+| GRAC corpus | `query_grac` |
+| Pravopys 2019 | `query_pravopys` |
+| r2u dictionary | `query_r2u` |
+| ULIF paradigms | `query_ulif` |
+
+### 4. API Server (`scripts/api/`)
+**~6K LOC** | FastAPI + WebSocket | Port 8765
+
+### 5. Agent Bridge (`scripts/ai_agent_bridge/`)
+**~2K LOC** | Claude↔Gemini communication via subprocess + SQLite broker
+
+### 6. Prompt Templates (`claude_extensions/phases/gemini/`)
+**~54 files** | Phase-specific prompts injected during pipeline execution
+
+Key templates:
+- `beginner-full-rag.md` — Beginner content (220 lines, restructured)
+- `beginner-activities.md` — Beginner activities (separate phase)
+- `review-structured.md` — Claude D.1 review
+- `review-repair.md` — Claude D.2 fix
+
+### 7. Batch Operations, Scoring, Code Generation, Playgrounds
+See `docs/SCRIPTS.md` for full reference.
 
 ## Curriculum Tracks
 
-### Main Track: `l2-uk-en` (Ukrainian for English speakers)
+### Core Language: `l2-uk-en` (A1→C2)
+Ukrainian for English-speaking teens and adults.
 
-| Level | Modules | Status |
-|-------|---------|--------|
-| A1 | 63 | Complete |
-| A2 | 67 | Complete |
-| B1 | 92 | Complete |
-| B2 | 59 | Complete |
-| C1 | 1 | Early draft |
-| C2 | 0 | Not started |
+### Seminar Tracks (B2–C1)
+HIST, BIO, ISTORIO, LIT, OES, RUTH — history, literature, biography.
 
-### Seminar Tracks
-
-| Track | Modules | Description |
-|-------|---------|-------------|
-| HIST | 140 | Ukrainian history |
-| BIO | 76 | Famous Ukrainians |
-| ISTORIO | 3 | Historiography |
-| LIT | 0 | Literature |
-| OES | 0 | Old East Slavic |
-| RUTH | 0 | Ruthenian |
-
-### Secondary Track: `l2-uk-direct`
-
-L1-agnostic Ukrainian (A1→B2). Separate schemas, no English. See `docs/l2-uk-direct/ARCHITECTURE.md`.
-
-## Schemas (`schemas/`)
-
-- Activity schemas: base + per-level variants (A1–C2 + seminar tracks)
-- Module schemas: plan, status, meta
-- Vocabulary schemas: standard + direct track
-- Vibe integration: `vibe-module.schema.json`
+### Secondary: `l2-uk-direct` (A1→B2)
+L1-agnostic Ukrainian. Separate schemas, no English.
 
 ## Quality Systems
 
-| System | Type | Gates? | Entry Point |
-|--------|------|--------|-------------|
-| **Audit** | Deterministic | Yes (blocking) | `scripts/audit_module.py` |
-| **Morphological Validator** | VESUM-based | Yes (blocking) | `scripts/audit/checks/morphological_validator.py` |
-| **Lexical Sandbox** | VESUM-based | Non-blocking | `scripts/lexical_sandbox.py` |
-| **Russicism Detection** | Rule-based | Yes (blocking) | Part of validate phase |
-| **Content Quality** | LLM-based | No (informational) | `scripts/audit/checks/content_quality_pipeline.py` |
-| **Naturalness** | LLM-based | Yes (≥8/10) | `scripts/audit/naturalness_check.py` |
-
-## Cross-Subsystem Dependencies
-
-```
-Pipeline ──► Audit (validate phase runs audit gates)
-Pipeline ──► RAG (research + sandbox phases query Qdrant/VESUM)
-Pipeline ──► Agent Bridge (review phase calls Claude/Gemini)
-Audit ──► RAG (morphological validator uses VESUM SQLite)
-Audit ──► Scoring (gates.py calls scoring for recommendations)
-API ──► Audit (dashboard runs audit_module for live status)
-API ──► Pipeline (state_router reads pipeline state files)
-Batch ──► Pipeline (dispatches build_module_v5 per module)
-Codegen ──► Audit (MDX gen reads status for frontmatter)
-```
-
-Shared config files (single source of truth):
-- `scripts/audit/config.py` — level thresholds, word targets, gate minimums
-- `schemas/*.json` — activity/vocabulary/plan validation schemas
-- `docs/resources/trusted_sources.yaml` — approved reference sources
-
-## Storage Overview
-
-| Store | Technology | Location | Purpose |
-|-------|-----------|----------|---------|
-| Curriculum content | YAML + Markdown | `curriculum/` | Plans, lessons, activities, vocab |
-| Audit cache | JSON | `{level}/status/*.json` | Cached audit results |
-| VESUM dictionary | SQLite | `data/vesum/vesum.db` | 415K lemmas, ~6M word forms |
-| Textbook chunks | Qdrant (local) | `data/qdrant/` | 1.2K embedded textbook chunks |
-| Literary sources | Qdrant (local) | `data/qdrant/` | Primary source embeddings |
-| Pipeline state | JSON | `{level}/orchestration/*/state.json` | Build phase tracking |
-| Build metadata | YAML | `{level}/meta/*.yaml` | Naturalness scores, timestamps |
-
-## Deployment Topology
-
-Local-only development environment (no cloud deployment):
-
-- **macOS workstation** — 16GB RAM, pyenv Python 3.12.8
-- **Qdrant** — local vector DB (Docker or binary), default port 6333
-- **RAG MCP server** — standalone daemon on port 8766 (`./services.sh start rag`)
-- **API server** — FastAPI on port 8765 (`./services.sh start api`)
-- **Starlight dev server** — Astro on port 4321 (`./services.sh start starlight`)
-- **Service management** — `./services.sh {start|stop|restart|status} [service ...]`
+| System | Type | Entry Point |
+|--------|------|-------------|
+| Audit (34 gates) | Deterministic | `scripts/audit_module.py` |
+| VESUM morphology | Dictionary | `audit/checks/morphological_validator.py` |
+| Russicism detection | Rule-based | Part of validate phase |
+| Semantic Russianisms | Dictionary | `pipeline/semantic_russianisms.py` |
+| Preflight | LLM + auto-fix | `pipeline/prompt_preflight.py` |
+| Content review | LLM (Claude) | Review phase |
+| Builder notes | LLM (Gemini) | Extracted from build output |
 
 ## Key Design Decisions
 
-1. **Pipeline v5 is the ONLY pipeline** — v3/v4 retired, code in `scripts/retired/`
-2. **VESUM is ground truth** — 415K lemmas, ~6M forms. All Ukrainian words verified against it
-3. **Plans are immutable** — Content changes require plan version bump + human approval
-4. **Deterministic where possible** — Sandbox, MDX gen, fixes are LLM-free
-5. **Cross-agent review** — Gemini never reviews its own output
-6. **34 audit gates** — All must pass for a module to be considered complete
-7. **Word targets are minimums** — Never reduce targets, expand content
-
-## File Structure
-
-```
-learn-ukrainian/
-├── curriculum/l2-uk-en/           # Content (plans + build artifacts + status)
-│   ├── plans/{level}/{slug}.yaml  # Immutable plans
-│   ├── {level}/{slug}.md          # Lesson prose
-│   ├── {level}/activities/        # Activity YAML
-│   ├── {level}/vocabulary/        # Vocabulary YAML
-│   ├── {level}/meta/              # Build metadata
-│   └── {level}/status/            # Audit cache
-├── scripts/                       # All Python code (~143K LOC)
-│   ├── build_module_v5.py         # Pipeline v5 CLI
-│   ├── pipeline_v5.py             # Pipeline v5 implementation
-│   ├── pipeline/                  # Pipeline support modules
-│   ├── audit/                     # Audit system (34 checks)
-│   ├── rag/                       # RAG indexing + querying
-│   ├── api/                       # FastAPI dashboard server
-│   ├── scoring/                   # Quality scoring
-│   ├── batch_*.py                 # Batch operations
-│   ├── generate_*.py              # Code generation (MDX, JSON, plan markdown)
-│   └── ai_agent_bridge         # Inter-agent communication
-├── claude_extensions/             # Claude Code config (source of truth)
-├── gemini_extensions/             # Gemini config (source of truth)
-├── .mcp/servers/                  # MCP servers (RAG, message broker)
-├── schemas/                       # JSON schemas (25 files)
-├── docs/                          # Documentation
-│   ├── best-practices/            # Standards and guides
-│   ├── l2-uk-en/templates/        # 37 module templates
-│   └── resources/                 # Trusted sources, external resources
-└── starlight/                     # Web output (Astro/Starlight)
-```
+1. **Pipeline v5 is the ONLY pipeline** — v3/v4 retired
+2. **VESUM is ground truth** — 415K lemmas, all Ukrainian words verified
+3. **Plans reviewed before lock** — DRAFT → REVIEWED → LOCKED lifecycle
+4. **Split build** — Content and activities are separate phases (default)
+5. **Activities after validate** — Grounded in validated content
+6. **Review sees everything** — Content + activities + vocabulary
+7. **Cross-agent review** — Gemini builds, Claude reviews, never self-review
+8. **Preflight auto-fix** — Fix prompt contradictions before wasting a build
+9. **Learner state injection** — Gemini knows what the student knows
+10. **Builder notes** — Structured handoff from Gemini to Claude
 
 ## Related Documentation
 
 | Topic | Location |
 |-------|----------|
 | Pipeline commands | `docs/SCRIPTS.md` |
-| Track architecture | `docs/best-practices/track-architecture.md` |
-| Audit standards | `docs/best-practices/audit-standards.md` |
-| Module quality | `docs/best-practices/module-content-quality.md` |
 | Agent cooperation | `docs/best-practices/agent-cooperation.md` |
-| Markdown format | `docs/MARKDOWN-FORMAT.md` |
+| Cooperation protocol | `docs/CLAUDE-GEMINI-COOPERATION.md` |
+| Audit standards | `docs/best-practices/audit-standards.md` |
+| Track architecture | `docs/best-practices/track-architecture.md` |
 | Activity YAML | `docs/ACTIVITY-YAML-REFERENCE.md` |
 | Monitoring API | `docs/MONITOR-API.md` |
-| Trusted sources | `docs/resources/trusted_sources.yaml` |

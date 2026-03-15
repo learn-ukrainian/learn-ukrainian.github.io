@@ -88,9 +88,10 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 - **v4 and v3 are RETIRED.** Do not use `build_module.py`.
 - **Gemini** builds: research, discover, content, activities
 - **Claude** reviews: review phase (cross-agent adversarial, max 2 fix attempts)
-- **Lexical sandbox**: VESUM-validated word bank (runs inline during content/validate, not a separate phase) — injected via `{LEXICAL_SANDBOX}`
+- **Pre-content gates**: semantic Russicism scan on plan, research quality check, preflight auto-fix, learner state injection
 - **Validate**: morphological validator + Russicism detection + agreement checking
-- Discover is non-blocking — failures don't halt the pipeline.
+- **Split build** (default): content and activities are separate phases. Use `--full-build` for one-pass.
+- **Plans**: DRAFT → REVIEWED → LOCKED lifecycle. Review plan before content build.
 - Model defaults: `scripts/batch_gemini_config.py` | Review default: `claude-opus-4-6`
 - Build: `.venv/bin/python scripts/build_module_v5.py {track} {num} [--rebuild] [--restart-from {phase}]`
 
