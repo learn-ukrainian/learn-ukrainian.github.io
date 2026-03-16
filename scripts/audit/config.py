@@ -5,6 +5,28 @@ Contains grammar constraints, case patterns, level configurations,
 and activity requirements for each CEFR level.
 """
 
+# Proper names and abbreviations whitelisted from VESUM verification.
+# These are valid Ukrainian words that VESUM may not contain (names, acronyms, etc.).
+PROPER_NAME_WHITELIST: set[str] = {
+    # Common Ukrainian given names
+    "Микола", "Олег", "Олена", "Тарас", "Іван", "Марія", "Андрій", "Петро",
+    "Богдан", "Василь", "Ганна", "Дмитро", "Катерина", "Леся", "Оксана",
+    "Степан", "Ярослав", "Григорій", "Софія", "Наталя", "Юрій", "Володимир",
+    "Максим", "Олександр", "Олександра", "Михайло", "Данило", "Роман", "Сергій",
+    # Ukrainian cities and regions
+    "Київ", "Львів", "Одеса", "Харків", "Дніпро", "Запоріжжя", "Полтава",
+    "Чернігів", "Суми", "Вінниця", "Тернопіль", "Луцьк", "Рівне", "Ужгород",
+    "Івано-Франківськ", "Чернівці", "Миколаїв", "Херсон", "Кропивницький",
+    # Countries and regions
+    "Україна", "Галичина", "Волинь", "Поділля", "Слобожанщина", "Буковина",
+    "Закарпаття", "Крим", "Донбас",
+    # Historical figures (surnames)
+    "Шевченко", "Франко", "Грушевський", "Хмельницький", "Мазепа", "Сковорода",
+    "Котляревський", "Леонтович", "Лисенко",
+    # Common abbreviations
+    "ІТ", "ЗНО", "НМТ", "ЄС", "ООН", "НАТО", "ЗСУ",
+}
+
 # Grammar constraints by level (what's ALLOWED at each level)
 GRAMMAR_CONSTRAINTS = {
     'A1': {
@@ -1437,10 +1459,8 @@ def get_a1_immersion_range(
     When sandbox_lemma_count is provided and small (<20), the floor is lowered
     for M11+ modules to prevent repetitive padding with a tiny vocabulary.
     """
-    if module_num <= 2:
-        return (5, 15)   # Cyrillic intro - mostly English explanations
-    elif module_num <= 5:
-        return (10, 25)  # Early vocab building
+    if module_num <= 6:
+        return (5, 15)   # Phonetics block (M1-M6) — mostly English explanations
     elif module_num <= 10:
         return (15, 35)  # Growing immersion
     elif module_num <= 20:

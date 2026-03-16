@@ -32,7 +32,7 @@ TRACK_SKILLS: dict[str, tuple[str, str, str]] = {
 }
 
 IMMERSION_RULES: dict[str, str] = {
-    "a1-m01-02": (
+    "a1-m01-06": (
         "TARGET: 5-15% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.\n"
@@ -905,9 +905,7 @@ def get_immersion_rule(track: str, module_num: int) -> str:
     base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
     if base == "a1":
         if module_num <= 2:
-            return IMMERSION_RULES["a1-m01-02"]
-        elif module_num <= 5:
-            return IMMERSION_RULES["a1-m03-05"]
+            return IMMERSION_RULES["a1-m01-06"]
         elif module_num <= 10:
             return IMMERSION_RULES["a1-m06-10"]
         elif module_num <= 20:
