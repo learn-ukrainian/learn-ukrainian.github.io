@@ -46,8 +46,20 @@ content_outline:
   - Перепрошую (I apologize) — a more formal and sincere apology than Вибачте; used when you have genuinely inconvenienced
     someone
   - 'Usage contexts: ordering at a cafe (Будь ласка, каву), bumping into someone (Вибачте!), receiving a gift (Дуже дякую!)'
+- section: "Звертання (Addressing People)"
+  words: 150
+  points:
+  - "When you address someone directly, Ukrainian changes the name form. This is
+    called the vocative (кличний відмінок). For now, just memorize these forms
+    as fixed phrases — we will cover the full vocative rules later."
+  - "Common address forms: Мамо! Тату! Бабусю! Дідусю! — used when calling
+    family members. Друже! — when addressing a friend."
+  - "Formal address: пане (Mr.), пані (Ms.) — Добрий день, пане Петре!
+    Добрий день, пані Оксано! Notice how the name also changes."
+  - "Key pattern: most feminine names/titles end in -о (Мамо, Оксано, пані Іро),
+    most masculine in -е or -у (Друже, Тату, пане Петре)."
 - section: Знайомство (Introductions)
-  words: 250
+  words: 200
   points:
   - 'Asking names: Як вас звати? (formal) vs Як тебе звати? (informal) — literally ''How do they call you?'''
   - 'Responding: Мене звати... (My name is...) — the standard self-introduction formula from State Standard §4.2.3.1'
@@ -76,6 +88,8 @@ vocabulary_hints:
   - вибачте (excuse me, formal) — Top 500 word; used to get attention or apologize politely
   - перепрошую (I apologize) — formal apology; more sincere than вибачте
   - дуже приємно (pleased to meet you) — introduction formula; literally 'very pleasant'
+  - пане (Mr., formal address) — vocative form used before male names/titles
+  - пані (Ms., formal address) — vocative form used before female names/titles
   recommended:
   - бувай/бувайте (bye, informal/formal plural) — casual farewell; literally 'be well'
   - здрастуйте (hello, formal) — alternative formal greeting; slightly old-fashioned but still used
