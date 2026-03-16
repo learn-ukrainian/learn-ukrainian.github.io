@@ -1460,26 +1460,17 @@ def get_a1_immersion_range(
     for M11+ modules to prevent repetitive padding with a tiny vocabulary.
     """
     if module_num <= 6:
-        return (5, 15)   # Phonetics block (M1-M6) — mostly English explanations
-    elif module_num <= 10:
-        return (15, 35)  # Growing immersion
-    elif module_num <= 20:
-        min_imm, max_imm = (25, 45)  # Foundation established
+        return (5, 15)    # M1-M6: Phonetics — letters, sounds, syllables, stress
+    elif module_num <= 14:
+        return (10, 20)   # M7-M14: First Contact — gender, greetings, basic sentences
+    elif module_num <= 24:
+        return (15, 25)   # M15-M24: Sentence Building — verbs, questions, possessives
+    elif module_num <= 34:
+        return (15, 30)   # M25-M34: Cases — accusative, locative, genitive
+    elif module_num <= 54:
+        return (20, 35)   # M35-M54: Daily Life + Communication — tense, food, travel
     else:
-        min_imm, max_imm = (25, 55)  # Consolidation (was 30→25; grammar modules need English for rule explanations)
-
-    # Adaptive floor: reduce minimum when sandbox is small to avoid repetition.
-    # Grammar modules typically have 20-35 lemmas but need mostly English for
-    # rule explanations — 35% immersion requires ~50+ usable lemmas.
-    if sandbox_lemma_count is not None and module_num > 10:
-        if sandbox_lemma_count < 15:
-            min_imm = max(5, min_imm - 15)
-        elif sandbox_lemma_count < 30:
-            min_imm = max(10, min_imm - 10)
-        elif sandbox_lemma_count < 50:
-            min_imm = max(15, min_imm - 5)
-
-    return (min_imm, max_imm)
+        return (25, 40)   # M55-M64: Independence — practical skills, final exam
 
 
 def get_a2_immersion_range(module_num: int) -> tuple[int, int]:

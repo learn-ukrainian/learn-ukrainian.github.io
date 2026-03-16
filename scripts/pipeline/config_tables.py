@@ -41,30 +41,18 @@ IMMERSION_RULES: dict[str, str] = {
         "- TABLES: Simple letter-sound or word-meaning tables.\n"
         "Ukrainian sentences max 10 words."
     ),
-    "a1-m03-05": (
-        "TARGET: 10-25% Ukrainian.\n"
+    "a1-m07-14": (
+        "TARGET: 10-20% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: 100% English.\n"
+        "- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.\n"
         "- UKRAINIAN CONTENT: Words and short phrases bolded inline: \"The word **книга** (book) is feminine.\"\n"
-        "- TABLES: Vocabulary tables, letter groups, simple word families.\n"
+        "- TABLES: Vocabulary tables, word families, simple paradigm tables.\n"
         "- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. "
         "Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.\n"
         "Ukrainian sentences max 10 words."
     ),
-    "a1-m06-10": (
-        "TARGET: 15-35% Ukrainian.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.\n"
-        "- UKRAINIAN CONTENT: Words and phrases inline bolded. Short example sentences in bulleted lists "
-        "or tables — each with English gloss on the same line.\n"
-        "- TABLES: Word families, vocabulary groups, simple paradigm tables.\n"
-        "- PATTERN BOXES: Show transformations: `слово → слова` (word → words).\n"
-        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian vocabulary. "
-        "Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.\n"
-        "Ukrainian sentences max 10 words."
-    ),
-    "a1-m11-20": (
-        "TARGET: 25-40% Ukrainian.\n"
+    "a1-m15-24": (
+        "TARGET: 15-25% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
         "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
         "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
@@ -72,53 +60,46 @@ IMMERSION_RULES: dict[str, str] = {
         "- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).\n"
         "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
         "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
-        "Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. "
-        "Never write a Ukrainian sentence followed by its English translation in a prose paragraph.\n"
-        "Ukrainian sentences max 10 words. Mix container types — don't use tables for everything."
+        "Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.\n"
+        "Ukrainian sentences max 10 words. Mix container types."
     ),
-    "a1-m21+": (
-        "TARGET: 30-55% Ukrainian.\n"
+    "a1-m25-34": (
+        "TARGET: 15-30% Ukrainian.\n"
         "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. "
-        "You must explain grammar primarily by demonstrating it. Show, don't tell.\n"
-        "- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian. "
-        "This is the highest-density immersion tool. Do not explain usage nuances in English prose — "
-        "instead, create dual-column tables (Ukrainian Sentence | English Context/Translation) "
-        "that map out the nuances. Move the teaching logic inside the tables.\n"
+        "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
+        "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
+        "- TABLES: Paradigm tables, case endings, vocabulary groups — all cells Ukrainian.\n"
+        "- PATTERN BOXES: Show transformations: `книга → книгу` (nominative → accusative).\n"
+        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
+        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
+        "Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes.\n"
+        "Ukrainian sentences max 10 words. Mix container types."
+    ),
+    "a1-m35-54": (
+        "TARGET: 20-35% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.\n"
+        "- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.\n"
         "- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).\n"
         "- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.\n"
         "- PATTERN BOXES: Show transformations: `читати → читай → читайте`.\n"
         "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
-        "- IMMERSION BLOCKS: Every major H2 section MUST conclude with a substantial "
-        "Ukrainian-only dialogue or narrative blockquote (>) of at least 80-150 words "
-        "demonstrating the concepts in context. If translations are needed, place them "
-        "in a separate table BELOW the blockquote.\n"
         "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
-        "Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. "
-        "Vary your containers — never use the same type twice in a row.\n"
-        "Ukrainian sentences max 10 words.\n"
-        "NOTE: When the lexical sandbox has fewer than 20 lemmas, the immersion floor is lowered "
-        "to prevent repetitive padding. Focus on quality immersion with the available vocabulary "
-        "rather than forcing high percentages.\n\n"
-        "BEFORE/AFTER EXAMPLE — follow the AFTER pattern:\n\n"
-        "❌ BAD (too much English, ~10% immersion):\n"
-        "To form the imperative mood in Ukrainian, you take the infinitive form of the verb "
-        "and remove the -ти ending. Then you add the appropriate suffix depending on whether "
-        "you are speaking to one person informally or to multiple people formally. For the "
-        "informal singular form, you simply use the stem. For the formal or plural form, "
-        "you add -те to the informal form.\n\n"
-        "✅ GOOD (tables + dialogue + examples, ~45% immersion):\n"
-        "Drop **-ти** from the infinitive to form commands.\n\n"
-        "| Infinitive | ти-command | ви-command |\n"
-        "|---|---|---|\n"
-        "| читати | читай | читайте |\n"
-        "| писати | пиши | пишіть |\n\n"
-        "> — **Читай** текст! — Read the text!\n"
-        "> — **Пишіть** відповідь. — Write the answer.\n"
-        "> — **Слухайте** уважно! — Listen carefully!\n\n"
-        "Add **будь ласка** to soften any command.\n\n"
-        "- **Дайте, будь ласка, воду.** — Please give water.\n"
-        "- **Скажіть, будь ласка, де метро?** — Please tell me, where is the metro?"
+        "Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.\n"
+        "Ukrainian sentences max 10 words. Mix container types."
+    ),
+    "a1-m55+": (
+        "TARGET: 25-40% Ukrainian.\n"
+        "LANGUAGE ROLES:\n"
+        "- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.\n"
+        "- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.\n"
+        "- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).\n"
+        "- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.\n"
+        "- PATTERN BOXES: Show transformations: `читати → читай → читайте`.\n"
+        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
+        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
+        "Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.\n"
+        "Ukrainian sentences max 10 words. Mix container types."
     ),
     "a2-m01-20": (
         "TARGET: 45-65% Ukrainian.\n"
@@ -904,14 +885,18 @@ def get_immersion_rule(track: str, module_num: int) -> str:
     """Compute immersion rule from track + module number."""
     base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
     if base == "a1":
-        if module_num <= 2:
+        if module_num <= 6:
             return IMMERSION_RULES["a1-m01-06"]
-        elif module_num <= 10:
-            return IMMERSION_RULES["a1-m06-10"]
-        elif module_num <= 20:
-            return IMMERSION_RULES["a1-m11-20"]
+        elif module_num <= 14:
+            return IMMERSION_RULES["a1-m07-14"]
+        elif module_num <= 24:
+            return IMMERSION_RULES["a1-m15-24"]
+        elif module_num <= 34:
+            return IMMERSION_RULES["a1-m25-34"]
+        elif module_num <= 54:
+            return IMMERSION_RULES["a1-m35-54"]
         else:
-            return IMMERSION_RULES["a1-m21+"]
+            return IMMERSION_RULES["a1-m55+"]
     elif base == "a2":
         if module_num <= 20:
             return IMMERSION_RULES["a2-m01-20"]
