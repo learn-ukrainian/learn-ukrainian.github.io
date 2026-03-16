@@ -1,0 +1,21 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1701
+deviations:
+  - section: "Перші 10 літер — First 10 Letters"
+    reason: "Expanded significantly beyond 350 minimum (to ~582) to accommodate letter-by-letter H3 subsections with mandatory video embeds and blending walkthroughs. This is the core teaching section."
+  - section: "Підсумок — Summary"
+    reason: "Expanded beyond 100 minimum (to ~186) to include all four self-check questions from the plan plus a complete recap list."
+frictions: []
+research_gaps:
+  - "Bolshakova Grade 1 page references for individual letter introduction pages (p.13-22 referenced in plan but only p.11 and p.24 returned by RAG)"
+unverified_terms: []
+review_focus:
+  - "Verify all 20 vocabulary items appear at least once in content (VOCAB-IN-CONTENT rule)"
+  - "Check that no Ukrainian imperative verbs slipped into content"
+  - "Verify stress mark placement on Ukrainian words"
+  - "Confirm all 10 YouTube video URLs are correctly embedded"
+  - "Check immersion band stays within 5-15%"
+rag_tools_used:
+  - "search_text: 'букви і звуки абетка алфавіт голосні приголосні' grade=1 → Bolshakova p.24 (vowel/consonant definitions), Zaharijchuk p.13 (sound classification exercises)"
+  - "verify_words: all 23 vocabulary candidates → 23/23 confirmed in VESUM"

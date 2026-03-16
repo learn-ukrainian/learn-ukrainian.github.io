@@ -1,47 +1,36 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1420",
+    "COMPUTED_WORD_COUNT": "2052",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "118.3",
-    "COMPUTED_ACTIVITY_COUNT": "9",
-    "COMPUTED_VOCAB_COUNT": "23",
-    "COMPUTED_ENGAGEMENT_COUNT": "3",
-    "COMPUTED_IMMERSION_PERCENT": "9.8",
+    "COMPUTED_WORD_PERCENT": "171.0",
+    "COMPUTED_ACTIVITY_COUNT": "0",
+    "COMPUTED_VOCAB_COUNT": "0",
+    "COMPUTED_ENGAGEMENT_COUNT": "7",
+    "COMPUTED_IMMERSION_PERCENT": "9.9",
     "COMPUTED_IMMERSION_TARGET": "5-15%",
-    "COMPUTED_RICHNESS_SCORE": "53",
+    "COMPUTED_RICHNESS_SCORE": "51",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 0/3, examples: 0/24, proverbs: 0/1, tables: 0/2",
+    "COMPUTED_RICHNESS_GAPS": "cultural: 0/3, examples: 1/24, dialogues: 3/4, realworld: 0/3, tables: 0/2",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
   "deterministic_issues": [],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-ukrainian-alphabet.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M01 — The Ukrainian Alphabet\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md | Target: 1200 words\n  📋 Required activity types from meta: classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                            185 /  150  ✅ (+35)\n     Букви і звуки — Letters and Sounds              194 /  200  ✅ (-6)\n     Голосні та приголосні — Vowels and Consonants   151 /  200  ❌ (-49)\n     Перші 10 літер — First 10 Letters               280 /  350  ❌ (-70)\n     Перші слова — First Words in Context            281 /  200  ✅ (+81)\n     Підсумок — Summary                              152 /  100  ✅ (+52)\n     ──────────────────────────────────────────────────────────────────────\n     TOTAL                                          1243 / 1200  ✅ (+43)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1420/1200 (raw: 1555)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 3/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 9.8% (target 5-15% (M01))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-ukrainian-alphabet.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-ukrainian-alphabet.md\n  VESUM misses: 1 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 38456.33it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 41 | VESUM: 40 (97.6%) | RAG: 0 | Not found: 1\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 40/41 (98%) verified\n⚠️ VESUM not found (1): КІ",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-ukrainian-alphabet.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M01 — The Ukrainian Alphabet\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md | Target: 1200 words\n  📋 Required activity types from meta: classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                            285 /  150  ✅ (+135)\n     Букви і звуки — Letters and Sounds              255 /  200  ✅ (+55)\n     Голосні та приголосні — Vowels and Consonants   250 /  200  ✅ (+50)\n     Перші 10 літер — First 10 Letters               721 /  350  ✅ (+371)\n     Перші слова — First Words in Context            251 /  200  ✅ (+51)\n     Підсумок — Summary                              172 /  100  ✅ (+72)\n     ──────────────────────────────────────────────────────────────────────\n     TOTAL                                          1934 / 1200  ✅ (+734)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2052/1200 (raw: 2151)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 7/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 9.9% (target 5-15% (M01))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-ukrainian-alphabet.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-ukrainian-alphabet.md\n  Words: 36 | VESUM: 36 (100.0%) | RAG: 0 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 36/36 (100%) verified",
   "h2_sections": "1. Вступ — Introduction\n2. Букви і звуки — Letters and Sounds\n3. Голосні та приголосні — Vowels and Consonants\n4. Перші 10 літер — First 10 Letters\n5. Перші слова — First Words in Context\n6. Підсумок — Summary",
   "vesum_stats": {
-    "total": 41,
-    "vesum_hits": 40,
+    "total": 36,
+    "vesum_hits": 36,
     "rag_hits": 0,
-    "not_found": 1,
+    "not_found": 0,
     "rag_errors": 0,
     "by_source": {
       "prose": {
-        "total": 41,
-        "vesum_hits": 40,
-        "not_found": 1
+        "total": 36,
+        "vesum_hits": 36,
+        "not_found": 0
       }
     }
   },
-  "vesum_not_found": [
-    {
-      "original": "КІ",
-      "clean": "кі",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    }
-  ],
-  "content_hash": "e123848e075bc874"
+  "vesum_not_found": [],
+  "content_hash": "bf32a717b4619db1"
 }

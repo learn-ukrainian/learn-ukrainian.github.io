@@ -1,0 +1,23 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1698
+deviations:
+  - section: "Шість основних голосних — Six Base Vowels"
+    reason: "Expanded to ~502 words (target 300+) to give each vowel proper H3 treatment with video embeds and examples"
+  - section: "Йотовані голосні — Iotated Vowels"
+    reason: "Expanded to ~453 words (target 350+) to cover all four iotated vowels plus Й with video embeds and cultural notes"
+frictions: []
+research_gaps:
+  - "No Grade 1 textbook content specifically showing iotated vowel discovery exercises — used Grade 2 Kravtsova p.10 instead"
+unverified_terms: []
+review_focus:
+  - "И vs І description accuracy — no IPA used, relies on jaw position description"
+  - "Syllable count for Україна — counted as 4 syllables (У-кра-ї-на) per standard Ukrainian syllabification"
+  - "моя and моє listed as adjective POS (VESUM classifies мій as adj) — reviewer should confirm this is acceptable"
+  - "image-to-letter activity includes trick items (риба→Р, вухо→В, сир→С) where the answer is a consonant, not a vowel — intentional pedagogical design to test letter awareness"
+rag_tools_used:
+  - "search_text: голосні звуки букви позначення голосних (grade 1) → Bolshakova p.24 vowel/consonant intro, p.25 syllable rules, p.28 наголос"
+  - "search_text: йотовані голосні я ю є ї два звуки (grade 2) → Kravtsova p.10 discovery exercise, Bolshakova p.34-35 vowel letter scheme"
+  - "search_text: наголос голосні звуки складоподіл (grade 1) → Bolshakova p.28 stress section with молоко drill"
+  - "verify_words: all 21 vocabulary words → 21/21 found in VESUM"
+  - "verify_words: 18 additional content words → 18/18 found in VESUM"

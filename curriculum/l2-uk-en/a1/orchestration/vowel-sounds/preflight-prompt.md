@@ -39,8 +39,8 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 | File | What to extract |
 |------|----------------|
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/the-ukrainian-alphabet-research.md` | Background knowledge, engagement hooks |
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-ukrainian-alphabet.yaml` | Objectives, vocabulary_hints (source of truth) |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/vowel-sounds-research.md` | Background knowledge, engagement hooks |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/vowel-sounds.yaml` | Objectives, vocabulary_hints (source of truth) |
 | `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md` | Level constraints, immersion band |
 | `schemas/activities-a1.schema.json` | Activity field definitions (`additionalProperties: false`) |
 
@@ -48,17 +48,30 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 | Tool | When | Example |
 |------|------|---------|
-| `search_text` | Find textbook pedagogy | `search_text("Full alphabet overview (33 letters) Sound-letter correspondence (букви vs звуки)", grade=1-2)` |
+| `search_text` | Find textbook pedagogy | `search_text("Base vowel pronunciation (А О У Е И І) Iotated vowels dual function (Я Ю Є Ї)", grade=1-2)` |
 | `verify_words` | Check words exist in VESUM | `verify_words(["книга", "великий"])` |
 | `verify_lemma` | Get inflected forms | `verify_lemma("книга")` |
 | `query_pravopys` | Spelling/grammar rules | `query_pravopys("апостроф")` |
 
 ### What the Learner Already Knows
 
-(This is the first module — no prior learner knowledge.)
+**Modules completed before this one:** 1
+**Previous module:** The Ukrainian Alphabet
 
-**Coming next (module after this):** Base vowel pronunciation (А О У Е И І), Iotated vowels dual function (Я Ю Є Ї), И vs І distinction
+**Cumulative vocabulary (20 words):**
+мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
+сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+
+**Grammar already taught (4 topics):**
+- Full alphabet overview (33 letters)
+- Sound-letter correspondence (букви vs звуки)
+- Vowel vs consonant classification
+- Basic syllable blending and word reading
+
+**Coming next (module after this):** Sonorant consonants (Л М Н Р В), Voiced/voiceless consonant pairs, No final devoicing rule
 You may use related words as fixed phrases for foreshadowing, but do NOT explain the grammar rule.
+
+**Rule:** Do not re-explain grammar already taught. Do not use vocabulary words the learner hasn't seen unless you introduce them explicitly.
 
 ### Vocabulary
 
@@ -69,28 +82,26 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 ### Vocabulary from Plan (MANDATORY — include ALL required items)
 
 **Required** (MUST appear in vocabulary YAML):
-- мама (mom) — decodable (М+А+М+А); universal first word; Bolshakova p.14
-- тато (dad) — decodable (Т+А+Т+О); high-frequency family word
-- кіт (cat) — decodable (К+І+Т); high-frequency; Bolshakova
-- молоко (milk) — decodable (М+О+Л+О+К+О); Bolshakova p.14
-- масло (butter) — decodable (М+А+С+Л+О); Bolshakova p.15
-- ліс (forest) — decodable (Л+І+С); high-frequency
-- місто (city) — decodable (М+І+С+Т+О); high-frequency
-- око (eye) — decodable (О+К+О); Bolshakova p.13
-- так (yes) — decodable (Т+А+К); survival word
-- ні (no) — decodable (Н+І); survival word
+- яблуко (apple) — key word for Я; Bolshakova p.18
+- риба (fish) — key word for И; high-frequency; Bolshakova
+- село (village) — demonstrates unstressed Е staying pure; high-frequency
+- Україна (Ukraine) — key word for Ї; cultural significance
+- їжак (hedgehog) — key word for Ї; children's literature staple
+- юнак (young man) — key word for Ю; State Standard vocabulary
+- край (edge/land) — demonstrates Й at word end; high-frequency
+- день (day) — demonstrates Е; top 50 word
+- син (son) — demonstrates И; high-frequency family word
+- моя (my-f) — demonstrates Я after vowel; possessive sight word
 
 **Recommended** (use in your content to reach the vocabulary target):
-- сон (dream/sleep) — decodable (С+О+Н); Bolshakova p.22
-- сом (catfish) — decodable (С+О+М); Bolshakova p.22
-- ніс (nose) — decodable (Н+І+С); body vocabulary
-- мак (poppy) — decodable (М+А+К); Bolshakova
-- сік (juice) — decodable (С+І+К); everyday food word
-- стіл (table) — decodable (С+Т+І+Л); everyday object
-- тут (here) — decodable (Т+У+Т); high-frequency adverb
-- там (there) — decodable (Т+А+М); high-frequency adverb
-- сало (lard) — decodable (С+А+Л+О); everyday food word
-- кіно (cinema) — decodable (К+І+Н+О); everyday word
+- вухо (ear) — demonstrates У; body vocabulary
+- їжа (food) — demonstrates Ї; everyday vocabulary
+- моє (my-n) — demonstrates Є after vowel; possessive sight word
+- яйце (egg) — demonstrates Я at word start; everyday vocabulary
+- юшка (soup/broth) — demonstrates Ю; everyday vocabulary
+- каша (porridge) — demonstrates А; everyday food word; Bolshakova
+- небо (sky) — demonstrates Е; high-frequency
+- сир (cheese) — demonstrates И; everyday food; minimal pair with сір
 
 These are your TARGET words — teach them all and use them heavily. For the rest of the text, use natural, level-appropriate Ukrainian.
 
@@ -111,7 +122,6 @@ Ukrainian sentences max 10 words.
 ### Pronunciation Videos (from plan — MANDATORY embeds)
 *Credit: Anna Ohoiko — Ukrainian Lessons*
 
-- **Overview**: [Anna Ohoiko — Ukrainian Lessons — Overview](https://www.youtube.com/watch?v=ksXIXj7CXwc)
 - **Full Playlist**: [Anna Ohoiko — Ukrainian Lessons — Playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
 
 **Each letter below MUST get its video embedded in the corresponding H3 section:**
@@ -119,13 +129,13 @@ Ukrainian sentences max 10 words.
 - **Літера А**: [Anna Ohoiko — Ukrainian Lessons — А](https://www.youtube.com/watch?v=hvB3VpcR3ZE)
 - **Літера О**: [Anna Ohoiko — Ukrainian Lessons — О](https://www.youtube.com/watch?v=gJFxRIPRZbI)
 - **Літера У**: [Anna Ohoiko — Ukrainian Lessons — У](https://www.youtube.com/watch?v=VB1O6PmtYRU)
+- **Літера Е**: [Anna Ohoiko — Ukrainian Lessons — Е](https://www.youtube.com/watch?v=KFlsroBW0dk)
+- **Літера И**: [Anna Ohoiko — Ukrainian Lessons — И](https://www.youtube.com/watch?v=W-1rCu0indE)
 - **Літера І**: [Anna Ohoiko — Ukrainian Lessons — І](https://www.youtube.com/watch?v=Z9TH0H4ShGo)
-- **Літера М**: [Anna Ohoiko — Ukrainian Lessons — М](https://www.youtube.com/watch?v=Ez95H4ibuJo)
-- **Літера Н**: [Anna Ohoiko — Ukrainian Lessons — Н](https://www.youtube.com/watch?v=vNUfiKHPYaU)
-- **Літера Т**: [Anna Ohoiko — Ukrainian Lessons — Т](https://www.youtube.com/watch?v=m-jcLR_gK0k)
-- **Літера К**: [Anna Ohoiko — Ukrainian Lessons — К](https://www.youtube.com/watch?v=J7sGEI4-xJo)
-- **Літера С**: [Anna Ohoiko — Ukrainian Lessons — С](https://www.youtube.com/watch?v=7UsFBgSL91E)
-- **Літера Л**: [Anna Ohoiko — Ukrainian Lessons — Л](https://www.youtube.com/watch?v=v6-3Xg52Buk)
+- **Літера Я**: [Anna Ohoiko — Ukrainian Lessons — Я](https://www.youtube.com/watch?v=yhSAf41LX8I)
+- **Літера Ю**: [Anna Ohoiko — Ukrainian Lessons — Ю](https://www.youtube.com/watch?v=9JdIBYCTWGw)
+- **Літера Є**: [Anna Ohoiko — Ukrainian Lessons — Є](https://www.youtube.com/watch?v=O0bwRyyBQSc)
+- **Літера Ї**: [Anna Ohoiko — Ukrainian Lessons — Ї](https://www.youtube.com/watch?v=UcjdjQXhAY8)
 
 
 
@@ -133,7 +143,7 @@ Ukrainian sentences max 10 words.
 
 ## 4. Outline
 
-Write **The Ukrainian Alphabet** for the a1 track.
+Write **Vowel Sounds** for the a1 track.
 
 **Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
@@ -141,42 +151,47 @@ Write **The Ukrainian Alphabet** for the a1 track.
 
 Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says *айтішник*, use *айтішник*, not a synonym).
 
-- `## Вступ — Introduction` (~150 words)
-  - Ukrainian uses Cyrillic script — descended from Greek via the First Bulgarian Empire. 33 letters, highly phonetic: each letter usually maps to one sound (unlike English where 'ough' can sound 5 different ways).
-  - Show the full 33-letter alphabet chart (COPY EXACTLY): А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я Learners don't memorize it all now — master each group in M2-M4.
-  - Cultural hook: Cyrillic was created by students of Saints Cyril and Methodius. It is NOT derived from Latin — it descends from the Greek alphabet.
-- `## Букви і звуки — Letters and Sounds` (~200 words)
-  - Letters (букви) are written symbols. Sounds (звуки) are what you hear and pronounce. They are not the same thing — Ukrainian has 38 phonemes but 33 letters.
-  - Key insight: Ukrainian spelling is highly phonetic — one letter almost always represents one sound. This makes Ukrainian FAR easier to read than English. Once you learn the 33 letters, you can sound out any word.
-  - Some letters do double duty: iotated vowels (Я Ю Є Ї) can represent two sounds. The soft sign (Ь) modifies the consonant before it. Details in M2 and M4.
-- `## Голосні та приголосні — Vowels and Consonants` (~200 words)
-  - 10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї). Vowels = voice only, no obstruction. Every Ukrainian syllable has exactly one vowel.
-  - 22 consonant letters + the soft sign Ь (modifier, no sound of its own). Consonants = air is obstructed (lips, tongue, teeth).
-  - Preview chart organized by category (COPY EXACTLY): Голосні (Base): А, О, У, Е, И, І Голосні (Iotated): Я, Ю, Є, Ї Приголосні: Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ Modifier: Ь M2 will master vowels, M3 consonants, M4 special signs.
-- `## Перші 10 літер — First 10 Letters` (~350 words)
-  - Today's practice set: А О У І (4 vowels) + М Н Т К С Л (6 consonants). These 10 high-frequency letters let you read real Ukrainian words immediately.
-  - Letter-by-letter introduction with pronunciation guidance: А — open 'a' as in 'father'. М — like English M. О — rounded 'o' as in 'more'. Н — like English N (looks like H but is NOT H!). У — 'oo' as in 'moon'. Т — like English T. І — 'ee' as in 'see'. К — like English K. С — like English S. Л — like English L (tongue position differs slightly).
-  - Decodable words (use ONLY these 10 letters): мама (mom), тато (dad), кіт (cat), молоко (milk), масло (butter), око (eye), ніс (nose), місто (city), ліс (forest), сон (dream), мак (poppy), сік (juice), сало (lard), стіл (table), тут (here), там (there).
-  - Detailed phonetic walkthroughs: how to blend М+А→МА, then МА+МА→МАМА. How to read К+І+Т→КІТ. Build from letters → syllables → words.
-- `## Перші слова — First Words in Context` (~200 words)
-  - Micro-dialogues using decodable words + sight words: — Це кіт? — Так, це кіт. / — Це місто? — Ні, це ліс.
-  - Sight words (contain untaught letters — recognize as wholes): привіт (hello), дякую (thank you), це (this is). так (yes) and ні (no) are fully decodable with the 10 practice letters.
-  - Reading practice: short sentences mixing decodable words and sight words. Мама тут. Кіт там. Це молоко. Це масло.
+- `## Вступ — Introduction` (~100 words)
+  - Review: M1 gave you the alphabet map and 10 practice letters. Today: the vowel system — 10 letters that carry every Ukrainian syllable.
+  - Why vowels matter: every syllable has exactly one vowel. Count the vowels and you know how many syllables a word has.
+- `## Шість основних голосних — Six Base Vowels` (~300 words)
+  - А — open, like 'a' in 'father'. Never reduces. Words: мама (M1 review), каша (porridge), сало (lard).
+  - О — rounded, like 'o' in 'more'. Stays О even when unstressed (unlike Russian!). Words: око (M1 review), молоко (M1 review), село (village).
+  - У — like 'oo' in 'moon'. Words: тут (M1 review), лук (M1 review), вухо (ear).
+  - Е — like 'e' in 'set'. NOT like English 'ee'. Words: небо (sky), село (village). New consonants Д, В, Р appear in examples — focus is on the vowel sound.
+  - И — uniquely Ukrainian. No exact English equivalent. Jaw relaxed, tongue lower than І. Words: риба (fish), сир (cheese), син (son).
+  - І — like 'ee' in 'see'. Brighter and higher than И. Words: ліс (M1 review), кіт (M1 review), сік (M1 review).
+  - The И vs І distinction is the hardest vowel contrast for English speakers. Drill with minimal pairs: сир (cheese) vs сір (grey). Feel the jaw position.
+- `## Наголос — Word Stress` (~150 words)
+  - Every Ukrainian word has one stressed syllable. The stressed vowel is louder and slightly longer, but its quality does NOT change.
+  - Golden Rule: Ukrainian vowels stay pure in any position — stressed or unstressed. English speakers naturally swallow unstressed vowels into schwa (uh). Fight this!
+  - Example: молоко — stress on last syllable (молокО), but all three О's sound the same. Compare English 'photograph' where vowels shift with stress.
+- `## Йотовані голосні — Iotated Vowels` (~350 words)
+  - Я, Ю, Є, Ї are 'double-duty' vowels. At word start or after another vowel, they represent TWO sounds: Й + base vowel.
+  - Я = й+а. At start: яблуко (apple). After vowel: моя (my-f). After consonant: softens it (мати vs м'яти — apostrophe preserves Й).
+  - Ю = й+у. At start: юнак (young man), юшка (broth). After consonant: softens it (люди — Л becomes soft).
+  - Є = й+е. At start: Європа (Europe). After vowel: моє (my-n).
+  - Ї = ALWAYS two sounds й+і, never softens a consonant. Words: їжак (hedgehog), їжа (food), Україна. Cultural note: the letter Ї as a symbol of Ukrainian identity.
+  - Й — the semi-vowel itself. Short consonant-like sound. Words: край (edge/land), йогурт. Never forms a syllable alone.
+- `## Голосні в словах — Vowels in Words` (~200 words)
+  - Reading practice — words organized by vowel focus. Use any consonants freely (consonant system is covered in M3).
+  - Short sentences: Це яблуко. Це моє село. Мама каже 'так'. Де мій кіт?
+  - Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (5 vowels = 5 syllables), кіт (1 vowel = 1 syllable).
 - `## Підсумок — Summary` (~100 words)
-  - 33 letters: 10 vowels, 22 consonants, 1 modifier (Ь). Highly phonetic system.
-  - You mastered 10 letters today. You can read: мама, тато, кіт, молоко, місто, ліс.
-  - Self-check: Can you find all 10 vowel letters on the chart? Can you read мама and кіт? What is the difference between букви and звуки?
-  - Next: M2 deep-dives into the vowel system — all 10 vowel letters.
+  - 10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї) + semi-vowel Й.
+  - Golden Rule reinforced: Ukrainian vowels stay pure — never swallow or reduce them.
+  - Self-check: Can you pronounce all 6 base vowels? What two sounds does Я make at word start? What is the difference between И and І?
+  - Next: M3 masters the consonant system — voiced/voiceless pairs, sonorants, hard vs soft.
 
 ### Section Word Budgets
 
 | Section | Minimum |
 |---------|---------|
-| Вступ — Introduction | 150+ |
-| Букви і звуки — Letters and Sounds | 200+ |
-| Голосні та приголосні — Vowels and Consonants | 200+ |
-| Перші 10 літер — First 10 Letters | 350+ |
-| Перші слова — First Words in Context | 200+ |
+| Вступ — Introduction | 100+ |
+| Шість основних голосних — Six Base Vowels | 300+ |
+| Наголос — Word Stress | 150+ |
+| Йотовані голосні — Iotated Vowels | 350+ |
+| Голосні в словах — Vowels in Words | 200+ |
 | Підсумок — Summary | 100+ |
 | **Total** | **1200+ (aim for ~1440)** |
 
@@ -185,7 +200,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 ## 5. Guidelines
 
 ### Workflow
-1. **Research first**: `search_text("Full alphabet overview (33 letters) Sound-letter correspondence (букви vs звуки)", grade=1-2)` — find how textbooks teach this
+1. **Research first**: `search_text("Base vowel pronunciation (А О У Е И І) Iotated vowels dual function (Я Ю Є Ї)", grade=1-2)` — find how textbooks teach this
 2. **Write content** following the outline and lesson arc below
 3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
 4. **Create activities** from your content
@@ -221,7 +236,15 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 
 ### Dialogue Quality
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each. For alphabet modules (M1-M10): dialogues are OPTIONAL — only include them if they feel natural with the available vocabulary. Do NOT force nonsensical dialogues just to hit a count.
+**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
+
+**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
+- Greeting: `— Привіт! — Привіт!`
+- Identification: `— Це кіт? — Так, це кіт.`
+- Location: `— Молоко тут? — Ні, молоко там.`
+- Combined: `— Мама тут? — Так, мама тут. А тато там.`
+
+Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
 
 **Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
 
@@ -272,7 +295,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 **Allowed types:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
 **Forbidden types:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
-**Required types:** watch-and-repeat, image-to-letter, classify, match-up, fill-in
+**Required types:** watch-and-repeat, classify, image-to-letter, quiz, classify
 
 | Module range | Use these | Avoid these |
 |-------------|-----------|-------------|

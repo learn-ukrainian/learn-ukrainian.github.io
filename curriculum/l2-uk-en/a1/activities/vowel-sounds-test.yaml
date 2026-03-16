@@ -1,0 +1,261 @@
+- items:
+  - letter: А
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    word: мама
+  - letter: О
+    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    word: молоко
+  - letter: У
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    word: тут
+  - letter: Е
+    video: https://www.youtube.com/watch?v=KFlsroBW0dk
+    word: день
+  - letter: І
+    video: https://www.youtube.com/watch?v=W-1rCu0indE
+    word: риба
+  - letter: І
+    video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    word: ліс
+  - letter: Я
+    video: https://www.youtube.com/watch?v=yhSAf41LX8I
+    word: яблуко
+  - letter: Ю
+    video: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    word: юнак
+  - letter: Є
+    video: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    word: єнот
+  - letter: Ї
+    video: https://www.youtube.com/watch?v=UcjdjQXhAY8
+    word: їжак
+  title: Listen and Repeat
+  type: watch-and-repeat
+- categories:
+  - items:
+    - А
+    - О
+    - У
+    - Е
+    - І
+    - І
+    label: Base Vowels (Голосні)
+  - items:
+    - Я
+    - Ю
+    - Є
+    - Ї
+    label: Iotated Vowels (Йотовані)
+  title: Sort the Vowels
+  type: classify
+- items:
+  - answer: Я
+    distractors:
+    - А
+    - О
+    emoji: 🍎
+    note: яблуко
+  - answer: Ї
+    distractors:
+    - І
+    - А
+    emoji: 🦔
+    note: їжак
+  - answer: О
+    distractors:
+    - У
+    - А
+    emoji: 👁️
+    note: око
+  - answer: У
+    distractors:
+    - О
+    - А
+    emoji: 👂
+    note: вухо
+  - answer: Е
+    distractors:
+    - А
+    - І
+    emoji: 🏡
+    note: село
+  - answer: О
+    distractors:
+    - І
+    - Е
+    emoji: 🐟
+    note: риба
+  - answer: О
+    distractors:
+    - У
+    - Е
+    emoji: 🥛
+    note: молоко
+  - answer: Ю
+    distractors:
+    - Я
+    - Є
+    emoji: 🧑
+    note: юнак
+  title: Match Picture to First Letter
+  type: image-to-letter
+- instruction: Listen and identify which vowel you hear.
+  items:
+  - options:
+    - correct: true
+      text: сир
+    - correct: false
+      text: сір
+    - correct: false
+      text: син
+    - correct: false
+      text: сік
+    question: Which word do you hear? (Jaw relaxed, lower tongue)
+  - options:
+    - correct: true
+      text: сір
+    - correct: false
+      text: сир
+    - correct: false
+      text: син
+    - correct: false
+      text: сік
+    question: Which word do you hear? (Tongue high and tense)
+  - options:
+    - correct: true
+      text: син
+    - correct: false
+      text: сін
+    - correct: false
+      text: сир
+    - correct: false
+      text: сір
+    question: Which word do you hear? (Family word)
+  - options:
+    - correct: true
+      text: ліс
+    - correct: false
+      text: лис
+    - correct: false
+      text: лис
+    - correct: false
+      text: лис
+    question: Which word do you hear? (Forest word)
+  - options:
+    - correct: true
+      text: сік
+    - correct: false
+      text: суп
+    - correct: false
+      text: сир
+    - correct: false
+      text: син
+    question: Which word do you hear? (Juice word)
+  - options:
+    - correct: true
+      text: мама
+    - correct: false
+      text: мапа
+    - correct: false
+      text: сума
+    - correct: false
+      text: мема
+    question: Which word do you hear? (Mother word)
+  title: Identify the word you hear
+  type: quiz
+- categories:
+  - items:
+    - люди
+    - сяйво
+    - син
+    - ліс
+    label: 1 Sound (після приголосного)
+  - items:
+    - яблуко
+    - юнак
+    - моє
+    - їжак
+    - моя
+    - єнот
+    label: 2 Sounds (на початку або після голосного)
+  instruction: Does the vowel represent 1 sound or 2 in this word?
+  title: Count the sounds
+  type: classify
+- instruction: Every syllable has exactly one vowel. Count them!
+  items:
+  - answer: '3'
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    sentence: молоко = ___ syllables
+  - answer: '1'
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    sentence: кіт = ___ syllable
+  - answer: '4'
+    options:
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+    sentence: Україна = ___ syllables
+  - answer: '3'
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    sentence: яблуко = ___ syllables
+  - answer: '2'
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    sentence: мама = ___ syllables
+  - answer: '2'
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    sentence: село = ___ syllables
+  title: Count syllables
+  type: fill-in
+- instruction: Визначте, чи твердження правильне.
+  items:
+  - correct: true
+    statement: Ukrainian vowels stay pure even when unstressed.
+  - correct: false
+    statement: The letter 'О' sounds like 'uh' when it is not stressed.
+  - correct: true
+    statement: Every Ukrainian syllable has exactly one vowel.
+  - correct: true
+    statement: 'The letter ''Ї'' always makes two sounds: Й + І.'
+  - correct: false
+    statement: The letter 'И' sounds exactly like the English 'ee'.
+  - correct: true
+    statement: Stress makes a vowel louder and slightly longer.
+  title: Vowel Rules check
+  type: true-false
+- instruction: З'єднайте відповідні елементи.
+  pairs:
+  - left: молоко
+    right: '3'
+  - left: кіт
+    right: '1'
+  - left: риба
+    right: '2'
+  - left: Україна
+    right: '4'
+  - left: яблуко
+    right: '3'
+  - left: мама
+    right: '2'
+  title: Match Word to Syllable Count
+  type: match-up

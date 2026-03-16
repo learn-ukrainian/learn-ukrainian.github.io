@@ -21,7 +21,48 @@
         "type": "script",
         "name": "discover_passthrough"
       }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-16T10:29:28Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-16T10:31:02Z",
+      "attempts": 1,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-16T10:33:55Z",
+      "task_id": "v5-the-ukrainian-alphabet-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-16T10:37:05Z",
+      "attempts": 1,
+      "note": "gemini-inline-fixes",
+      "review_grounding": "rag-textbook",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
     }
   },
-  "last_updated": "2026-03-14T21:29:41Z"
+  "last_updated": "2026-03-16T10:16:10Z"
 }

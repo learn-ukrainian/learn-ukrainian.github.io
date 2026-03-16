@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Added anagram and true-false activities beyond plan's 6 hints to reach 8 total and improve variety"
+  - "image-to-letter uses 8 items (plan: 8) — two items share answer М (мама, місто) since many decodable words start with М"
+frictions:
+  - type: PLAN_GAP
+    description: "Plan vocabulary_hints lists 3 sight words (привіт, дякую, це) but these contain untaught letters and were not included in the 20-item vocabulary to keep focus on decodable words"
+    proposed_fix: "Consider adding sight words as a separate vocabulary category in future plan versions"
+unverified_terms:
+  - "All vocabulary items use only the 10 practice letters (А О У І М Н Т К С Л) and are taken directly from the lesson content"
+review_focus:
+  - "fill-in activity uses letter blending format (М + А → ___) — verify this renders correctly in the activity UI"
+  - "anagram scrambled letters should be verified to contain exactly the same letters as the answer"
