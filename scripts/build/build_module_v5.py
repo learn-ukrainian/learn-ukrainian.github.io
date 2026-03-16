@@ -341,6 +341,7 @@ def _run_single_module(args: argparse.Namespace) -> int:
 def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
     """Run the pipeline for a batch of modules. Returns 0 if all pass, 1 otherwise."""
     passed_list, failed_list, skipped_list = [], [], []
+    preflight_issues: list[tuple[int, str, str]] = []  # (num, slug, issue_summary)
     t0_batch = time.time()
 
     for i, n in enumerate(nums, 1):
@@ -392,6 +393,30 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
             failed_list.append((n, slug))
             print("  FAILED — use consultation loop for systemic fixes", flush=True)
 
+        # Collect preflight issues for batch summary
+        try:
+            paths = get_module_paths(args.track, slug)
+            orch_dir = paths["md"].parent / "orchestration" / slug
+            state_file = orch_dir / "state.json"
+            if state_file.exists():
+                st = json.loads(state_file.read_text("utf-8"))
+                pf = st.get("phases", {}).get("content", {}).get("prompt_preflight", {})
+                high_count = pf.get("high", 0)
+                if high_count > 0:
+                    # Read the preflight output for details
+                    pf_output = orch_dir / "preflight-output.md"
+                    detail = ""
+                    if pf_output.exists():
+                        lines = pf_output.read_text("utf-8").splitlines()
+                        # Extract HIGH issue lines
+                        for line in lines:
+                            if "HIGH" in line or "CONTRADICTION" in line or "BLOCKED" in line:
+                                detail = line.strip()[:120]
+                                break
+                    preflight_issues.append((n, slug, detail or f"{high_count} HIGH issue(s)"))
+        except Exception:
+            pass  # preflight summary is best-effort
+
     elapsed = time.time() - t0_batch
     elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
     print(f"\n{'='*70}", flush=True)
@@ -403,6 +428,10 @@ def _run_batch(args: argparse.Namespace, nums: list[int]) -> int:
         print("  Failed modules:", flush=True)
         for n, slug in failed_list:
             print(f"    #{n} {slug}", flush=True)
+    if preflight_issues:
+        print(f"\n  Preflight issues ({len(preflight_issues)}):", flush=True)
+        for n, slug, detail in preflight_issues:
+            print(f"    #{n} {slug}: {detail}", flush=True)
     print(f"{'='*70}", flush=True)
     return 1 if failed_list else 0
 
