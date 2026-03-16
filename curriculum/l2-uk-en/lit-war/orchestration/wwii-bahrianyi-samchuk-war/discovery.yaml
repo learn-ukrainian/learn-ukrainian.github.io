@@ -1,0 +1,251 @@
+discovered_at: '2026-03-15T19:27:36.328599+00:00'
+query_keywords:
+- WWII Bahrianyi Samchuk War
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати воєнну прозу Багряного і Самчука у контексті Другої світової
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: This video discusses how the history of the Tereshchenko family
+    was suppressed and distorted by Soviet historiography. This directly relates to
+    the module's theme of 'історіографія' and 'Деколонізаційна перспектива' by providing
+    a concrete example of how historical narratives are manipulated, which is crucial
+    context for understanding the decolonization efforts in the war prose of Bahrianyi
+    and Samchuk.
+  transcript_excerpt: радянська історія, історіографія їх, ну, викидувала і зневажали.
+    Тобто ніде ні підприємства трещенків, ні їхні маєтки, будинки по Глухову ніколи
+    не згадували взагалі це слово сполучення, що це Терещенків.
+  embed_suggestion: After 'Деколонізаційна перспектива' – to illustrate the suppression
+    of Ukrainian historical narratives by Soviet historiography, providing a tangible
+    example for the module's decolonization theme.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.4
+  relevance_note: The video focuses on the business innovations and influence of the
+    Tereshchenko family. While it is about an important Ukrainian family and their
+    contribution to the development of Ukraine, it doesn't directly address WWII,
+    war prose, or the specific themes of historiography and decolonization relevant
+    to this module. It is tangentially related as general Ukrainian history.
+  transcript_excerpt: Вони віддали мільйони на розвиток України. Та чи вболівали за
+    її незалежність? Вони мали статус перших осіб держави та були вигнані і забуті
+    на майже 100 років.
+  embed_suggestion: None - topic is more focused on economic history/biography than
+    the module's themes of war prose and decolonization.
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.2
+  relevance_note: The video discusses the historical connection of Polish gentry to
+    Kyivan Rus', which is a historical topic, but not directly related to WWII, Bahrianyi,
+    Samchuk, or their war prose. It is too far removed from the module's core focus.
+  transcript_excerpt: дуже важливо що коли шляхта говорить наші права наші власні
+    права які були не надані польськими королями а лише неми затверджені вони з відтіля
+    вони з Русі вони від тих давніх наших князів.
+  embed_suggestion: None - topic is too distant.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0451
+  text: "Практичні заняття\n1. Дослідження документів та матеріалів усної історії\
+    \ \nпро Другу світову війну\n2. Війна в  пам’ятниках рідного краю\nЗавдання для\
+    \ узагальнення знань і підготовки  \nдо тематичного оцінювання за розділом VI\
+    \  \n«Україна в  роки Другої світової війни (1939—1945  рр.)»\nі"
+  section_title: Сторінка 234
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0458
+  text: '238
+
+    ЗМІСТ
+
+    Передмова . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 3
+
+    § 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 5
+
+    Розділ I. Україна в  роки Першої світової війни
+
+    § 2. Перша світова війна та український національний рух . . . . . . . . . . . '
+  section_title: Сторінка 238
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-istoriya-ukr-galimov-2024_s0492
+  text: "270\nЕвакуація дітей з  інтернату \nв  Харкові співробітниками \nвидавництва\
+    \ «Ранок». Березень 2022  р. Перші дні \nширокомасштабного \nвторгнення. Діти\
+    \ \nв  бомбосховищі під час \nповітряної тривоги\nРозтрощений автомобіль \nпісля\
+    \ ракетного удару РФ по \nбудівлі Харківської обласної \nдержавної адміністрації.\
+    \ Березень 2022  р. Зміст\nПередмова. . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . 3\n§ 1. Повторення. Вступ. . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 272
+  grade: 11
+  author: galimov
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5312385559082031
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5168309211730957
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5164670944213867
+  chunk_id: 3588aaff_c0006
+  text: "Щоправда, тут спрацьовували не лише внутрішні,\r\nнемовби спонтанні й неусвідомлені,\
+    \ але й зовнішні, планомірні фактори, бо\r\nприкметою того самого залежного, колоніального\
+    \ стану і чільним компонентом\r\nзагального завуження інтелектуальних обріїв було\
+    \ знецінення компаративістики,\r\nпідміна її препарованими, ідеологічно \"звіреними\"\
+    , тобто науково\r\nвикривленими і знекровленими темами, зв’язками й топосами.\
+    \ (Гадаю, що звичайний\r\nбібліографічний перелік тоді дозволених тем проілюструє\
+    \ цю тезу.) Досліджен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

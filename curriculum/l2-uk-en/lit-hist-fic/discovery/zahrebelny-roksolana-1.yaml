@@ -1,0 +1,224 @@
+discovered_at: '2026-03-15T17:06:33.243405+00:00'
+query_keywords:
+- Zahrebelny Roksolana 1
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Zahrebelny Roksolana 1 у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 5-klas-istoriya-schupak-2022_s0024
+  text: "РОЗДІЛ 1\n26\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    1.\t Самооцінювання. Оцініть свої успіхи в опануванні теми «Джерела істо-\nричної\
+    \ інформації» — уявно поєднайте кожне із запитань для самокон-\nтролю з відповідним\
+    \ смайликом успіху. Дайте відповіді на запитання.\nЩо таке історичні джерела?\n\
+    Які є види історичних джерел?\nЧому важливо визначати \nдостовірність джерел?\n\
+    Як можна досліджувати \nісторичні джерела?\n?\nПрекрасно\nДобре\nпопрацювати\n\
+    Треба \nНічого не\nзрозуміло\n2.\t Виконайте онл"
+  section_title: Сторінка 26
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0268
+  text: "Підрядні речення означальне, з’ясувальне, обставинні способу дії, міри \n\
+    і ступеня залежать від конкретних слів у головній частині. Інші підрядні обста-\n\
+    винні (місця, часу, порівняльне, причини, мети, умовне, допустове) пояснюють \n\
+    головну частину в цілому. 223"
+  section_title: Сторінка 176
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0044
+  text: "РОЗДІЛ 1\n46\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    Самооцінювання. Оцініть свої успіхи в опануванні теми «Писемні \nпам’ятки, фольклор\
+    \ і сучасні візуальні джерела про історію». Дайте від-\nповіді на запитання.\n\
+    Що можна дізнатися за \nдопомогою даних етнографії?\nЯкі види писемності існували\
+    \ \nв давнину?\nЧому сучасні види візуальних \nджерел є цінними \nдля історичних\
+    \ досліджень? \nЯк можна дослідити фотографію \nяк історичне джерело?\n?\nПрекрасно\n\
+    Добре\nпопрацювати\nТреба \nНічого не\nзро"
+  section_title: Сторінка 46
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0003
+  text: "4\nЧИТАЄМО Й РОЗПОВІДАЄМО \nЧИТАЄМО Й РОЗПОВІДАЄМО \nПРО СВОЇ ЗАХОПЛЕННЯ\n\
+    ПРО СВОЇ ЗАХОПЛЕННЯ\n \nОзнайомтеся з новим підручником. Знайдіть у змісті \n\
+    перший розділ. Які твори вміщені в ньому? Які автори творів \nвам знайомі? Яка\
+    \ назва видалася вам особливо цікавою?\nЧитайте вдумливо:\n\nвизначайте тему\
+    \ твору, де й коли відбувалась описана \nподія;\n\nне залишайте поза увагою\
+    \ незрозуміле;\n\nвизначте, який це вид твору; \n\nхто дійові особи, які в\
+    \ них почуття, вчинки;\n\nпрогнозуйте розвиток сюжету;\n\nмір"
+  section_title: Сторінка 4
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5642580986022949
+  chunk_id: 5739d24f_c0024
+  text: "ТОМ I     \r\nРозділ I\n\nОСНОВНІ ПРИНЦІПИ ДОСЛЇДУ УКРАЇНСЬКОЇ ІСТОРІЇ —\
+    \ \r\nДЕРЖАВНІСТЬ І НЕДЕРЖАВНІСТЬ, ПЕРЕВАГА ВНУТРІШНЬОЇ ІСТОРІЇ НАД ЗВЕРХНЕЮ,\
+    \ \r\nВІДНОСИНИ ҐЛЬОТИКИ Й АРХЕОЛОҐІЇ ДО ІСТОРІЇ, ПОЧАТОК ІСТОРИЧНОГО ЖИТЯ, ПОДЇЛ\
+    \ НА \r\nПЕРІОДИ, ЗАГАЛЬНИЙ ПРОСПЕКТ ПРАЦЇ.\n\nЧерез ті неприхильні обставини\
+    \ сього житя, \r\n українському народови тільки часами удавало ся жити самостійним\
+    \ полїтичним \r\n житем, всею повнотою національного житя, і не цїлости, а тільки\
+    \ деякими \r\n частями його."
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.5584994554519653
+  chunk_id: 6573f12d_c1239
+  text: "1.5. Метрики литовська, мазовецька і коронна\n\n1.6. Родовідні книги. Сімейні\
+    \ родоводи\n\n1.7. Пом'яники ж джерела з генеалогії княжих родин.\r\nЛюбецький\
+    \ пом'яник. Спроба ідентифікації князівських імен\n\n1.8. Холмський пом'яник.\
+    \ Спроба ідентифікації\r\nкнязівських імен\n\n1.9. Києво-Печерський пом'яник.\
+    \ Спроба ідентифікації\r\nкнязівських імен\n\n1.10. Пом'яник Супральського монастиря.\
+    \ Спроба\r\nідентифікації князівських імен\n\n1.11. Гербівники як джерело з генеалогії\
+    \ княжих родин\n\n1.12. «Teraturgema» Афанасія К"
+  work: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/dynasty/dyn01.htm
+- score: 0.5493787527084351
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

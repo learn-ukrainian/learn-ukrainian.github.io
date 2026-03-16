@@ -1,0 +1,27 @@
+{
+  "track": "folk",
+  "slug": "bylyny-kyivskoho-tsyklu",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-15T17:47:08Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-15T17:47:08Z",
+      "task_id": "v5-bylyny-kyivskoho-tsyklu-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-sonnet-4-6"
+      }
+    }
+  }
+}

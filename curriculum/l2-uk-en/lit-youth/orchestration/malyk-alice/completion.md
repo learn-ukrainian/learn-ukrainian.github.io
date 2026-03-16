@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-juvenile 10 — E2E
+PASS: pipeline lit-youth 10
 
   Module:   malyk-alice
-  Track:    lit-juvenile
-  Mode:     e2e
+  Track:    lit-youth
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:49:14Z
+  Date:     2026-03-15T18:11:31Z

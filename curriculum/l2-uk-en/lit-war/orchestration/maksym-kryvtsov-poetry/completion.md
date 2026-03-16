@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-war 21 — E2E
+PASS: pipeline lit-war 22
 
   Module:   maksym-kryvtsov-poetry
   Track:    lit-war
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T23:11:28Z
+  Date:     2026-03-15T21:56:12Z

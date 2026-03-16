@@ -1,0 +1,240 @@
+discovered_at: '2026-03-15T17:20:15.508263+00:00'
+query_keywords:
+- Nestayko Fantasy
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Nestayko Fantasy у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=15SaxKl6PuY
+  channel: Harvard Ukrainian Research Institute
+  title: Seminar in Ukrainian Studies - Ostap Sereda
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0007
+  text: "Зміст    5 \nХудожня організація. . . . . . . . . . . . . . . . . 135\n\
+    Читацький практикум. Intermezzo . . . . . . . . . . . . . . . . . . . . 136\n\
+    Повість «Тіні забутих предків» . . . . . . . . . 141\nІсторія створення. . . .\
+    \ . . . . . . . . . . . . . . . 141\nНеоромантична основа. . . . . . . . . . .\
+    \ . . . . 141\nАвторський погляд. . . . . . . . . . . . . . . . . . 142\nТема\
+    \ кохання . . . . . . . . . . . . . . . . . . . . . . 142\nЛюдина, природа, магія.\
+    \ . . . . . . . . . . . . . 142\nІван Палійчук та"
+  section_title: Сторінка 5
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0446
+  text: "Читачі не одразу, а лише по-\nступово одержують нову й важливу інформацію\
+    \ \nпро персонажів та з’ясовують мотиви їхніх учин-\nків. Авторка розкриває «правду»\
+    \ кожного зі сво-\nїх героїв, художньо осмислює їхню залежність \nвід звичаєвого\
+    \ права, стереотипів селянської \nморалі, та почасти — від соціальних умов. \x03\
+    \nВихідний день \n(Àнäріé Êоöка, 1970-ті)\nÐоçкриваþчи ïоäі¿ ïевноãо часовоãо\
+    \ віäтинкó, ïисьменниöя çаëóчаº катеãорі¿ \nминóëоãо, сьоãоäенноãо і ïриéäеøньоãо,\
+    \ ùо наäаº ¿¿ творам не ïросто ôіëосоô-\nс"
+  section_title: Сторінка 236
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5829595327377319
+  chunk_id: fc2291b5_c2280
+  text: "Літ.: Франко І. Із\r\nсекретів поетичної творчості В кн.: Франко І. Зібрання\
+    \ творів, т. 31. К., 1981;\r\nТеория литературы. Основные проблемы в историческом\
+    \ освещенни, кн. 3. М., 1965;\r\nЛихачев Д. Нестилизационные подражания. В кн.:\
+    \ Лихачев Д. Поэтика древнерусской\r\nлитературы. М., 1979; Храпченко М. Б. Творческая\
+    \ индивидуальность писателя и\r\nразвитие литературы. В кн.: Храпченко М. Б. Собрание\
+    \ сочинений, т. 3. М., 1981.\n\nМ. П. Бондар."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5787178874015808
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5744204521179199
+  chunk_id: fc2291b5_c2893
+  text: "Літ.: Федоренко Н. В\r\nрусле времени и творчества (К 25-летию журнала «Иностранная\r\
+    \nлитература»)«Иностранная литература», 1980, № 7; «Иностранная литература». 1955\r\
+    \n— 1974. Указатель содержания журнала. М., 1975; «Иностранная литература». 1975\r\
+    \n— 1984. Указатель содержания журнала. М., 1985.\n\nС. Д. Павличко.\n\nІНСТРУМЕНТОВКА\
+    \ —\r\nзвукова організація худож. мови. Найчастіше термін вживається в віршознавстві.\r\
+    \nОсн. елементи 1. — повтори приголосних (алітерація) і\r\nголосних звуків (асонанс),\
+    \ слів (анаф"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

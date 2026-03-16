@@ -1,0 +1,254 @@
+discovered_at: '2026-03-15T17:08:11.262381+00:00'
+query_keywords:
+- Zahrebelny Roksolana 2
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Zahrebelny Roksolana 2 у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.5
+  relevance_note: The video discusses historical ties and national identity formation
+    in the context of Kyivan Rus and Polish nobility, which broadly connects to themes
+    of 'наратив' and 'деколонізаційна перспектива' if the author's work engages with
+    early Ukrainian history. However, it is not directly about literary analysis or
+    the specific author.
+  transcript_excerpt: ми бачимо що немає перерви правда ті люди тобто шля та в той
+    час вони ніби творять оцей ланцюжок так вони пов'язують цей час з Київською Руссю
+    Вони забезпечують тяглість оцими моментами наголошення на тому що у нас Славне
+    минуле.
+  embed_suggestion: After section Вступ та контекст -- to offer a historical perspective
+    on national identity and the construction of historical narratives, which may
+    inform the author's work.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.4
+  relevance_note: The video provides a biographical account of the Terekhchenko family,
+    highlighting their contributions and eventual historical oblivion. While it touches
+    on 'спадщина' (legacy) and forgotten figures, it lacks the direct focus on 'історіографія'
+    and the explicit critique of historical narratives present in Candidate 2, making
+    its relevance more tangential to the specific module sections.
+  transcript_excerpt: Вони віддали мільйони на розвиток України. Та чи вболівали за
+    її незалежність? Вони мали статус перших осіб держави та були вигнані і забуті
+    на майже 100 років.
+  embed_suggestion: After section Підсумок та спадщина -- to illustrate the long-term
+    impact and sometimes forgotten legacy of prominent Ukrainian figures, if the author's
+    work explores similar themes.
+- url: https://www.youtube.com/watch?v=15SaxKl6PuY
+  channel: Harvard Ukrainian Research Institute
+  title: Seminar in Ukrainian Studies - Ostap Sereda
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0263
+  text: "184\nЗМІСТ\n§ 37–39. Обставина. Види обставин за значенням і способи їхнього\
+    \ вираження. Порівняльний зворот  . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82\n§ 40. Розвиток\
+    \ мовлення. Стислий письмовий переказ розповідного тексту  \nз елементами опису\
+    \ місцевості в художньому стилі . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 88\n§ 41. Типи односкладних речень . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0268
+  text: "Підрядні речення означальне, з’ясувальне, обставинні способу дії, міри \n\
+    і ступеня залежать від конкретних слів у головній частині. Інші підрядні обста-\n\
+    винні (місця, часу, порівняльне, причини, мети, умовне, допустове) пояснюють \n\
+    головну частину в цілому. 223"
+  section_title: Сторінка 176
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-ukrmova-zabolotnyi-2025_s0165
+  text: '141
+
+    ІІ. Виконайте завдання за текстом. 1. Запропонуйте до тексту свій варіант заголовка.
+    2. Знайдіть відповідь на запитання «Від якої людини й чому, на думку автора, хо-
+
+    четься скоріше втекти?». 3. Оберіть із-поміж поданих у рамці висловів ті, які
+    співзвучні з текстом. 4. Знайдіть у тексті односкладні речення та визначте в них
+    граматичні основи. 5. Знайдіть складне речення, частина якого є односкладним реченням.
+    6. Перебудуйте перше речення на односкладне з дієсловом наказового способу. 7.
+    Поясн'
+  section_title: Сторінка 145
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5394850373268127
+  chunk_id: 5739d24f_c0544
+  text: "75) Важнїйша лїтература: Срезневскій Роженицы у \r\n Славянъ и другихъ языческихъ\
+    \ народовъ, 1855. Valjavec — О Rodjenicach ili \r\n Sudjenicach (Književnik, II).\
+    \ Афанасьевъ op. c. III гл. XXV. Потебня: О долЂ и \r\n сродныхъ съ нею существахъ,\
+    \ Труды моск. археол. общ. т. I. Крек 2 с. \r\n 408-9. Krauss Sreća. Glück und\
+    \ Schicksal im Volksglauben der Südslaven, 1886. \r\n Веселовскій Разысканія въ\
+    \ области русскаґо духовнаго стиха, V (Сборникъ II \r\n отд. петерб. акад. т.\
+    \ 46). Machal гл. V. Гальковскій Миθоло"
+  work: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+  year: 1898
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrushrus/iur100.htm
+- score: 0.5370833873748779
+  chunk_id: 6573f12d_c1239
+  text: "1.5. Метрики литовська, мазовецька і коронна\n\n1.6. Родовідні книги. Сімейні\
+    \ родоводи\n\n1.7. Пом'яники ж джерела з генеалогії княжих родин.\r\nЛюбецький\
+    \ пом'яник. Спроба ідентифікації князівських імен\n\n1.8. Холмський пом'яник.\
+    \ Спроба ідентифікації\r\nкнязівських імен\n\n1.9. Києво-Печерський пом'яник.\
+    \ Спроба ідентифікації\r\nкнязівських імен\n\n1.10. Пом'яник Супральського монастиря.\
+    \ Спроба\r\nідентифікації князівських імен\n\n1.11. Гербівники як джерело з генеалогії\
+    \ княжих родин\n\n1.12. «Teraturgema» Афанасія К"
+  work: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+  year: 2000
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/dynasty/dyn01.htm
+- score: 0.5344091653823853
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

@@ -1,0 +1,247 @@
+discovered_at: '2026-03-15T17:13:44.254084+00:00'
+query_keywords:
+- Nestayko Toreadors 2
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Nestayko Toreadors 2 у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.5
+  relevance_note: The video discusses the suppression of the Tereşchenko family's
+    history in Soviet historiography. This provides a relevant historical example
+    of narrative control and decolonization, which can support the 'Деколонізаційна
+    перспектива' section of the module, even though it's not directly about Nestayko's
+    literary work.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- provides a historical
+    example of how narratives were suppressed and later reclaimed, illustrating the
+    concept of decolonization.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.5
+  relevance_note: This video, like Candidate 2, explores the historical impact and
+    subsequent suppression of the Tereşchenko family's legacy. It reinforces the theme
+    of reclaiming historical narratives from a decolonization perspective, providing
+    context for the 'Деколонізаційна перспектива' section, though not directly literary.
+  transcript_excerpt: Вони віддали мільйони на розвиток України. Та чи вболівали за
+    її незалежність? Вони мали статус перших осіб держави та були вигнані і забуті
+    на майже 100 років.
+  embed_suggestion: After section Деколонізаційна перспектива -- offers another historical
+    case study of Ukrainian figures whose contributions were overlooked or erased,
+    strengthening the understanding of decolonization.
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.2
+  relevance_note: The video discusses historical connections between Polish nobility
+    and Kyivan Rus, which is a general historical topic and not directly related to
+    Vsevolod Nestayko's literary work or the themes of his writing.
+  transcript_excerpt: Вони забезпечують тяглість оцими моментами наголошення на тому
+    що у нас Славне минуле і це Славне минуле цікаво підтверджується на всіх рівнях
+    скажімо польські автори пишуть про давнє минуле цих руських земель
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0007
+  text: "Зміст    5 \nХудожня організація. . . . . . . . . . . . . . . . . 135\n\
+    Читацький практикум. Intermezzo . . . . . . . . . . . . . . . . . . . . 136\n\
+    Повість «Тіні забутих предків» . . . . . . . . . 141\nІсторія створення. . . .\
+    \ . . . . . . . . . . . . . . . 141\nНеоромантична основа. . . . . . . . . . .\
+    \ . . . . 141\nАвторський погляд. . . . . . . . . . . . . . . . . . 142\nТема\
+    \ кохання . . . . . . . . . . . . . . . . . . . . . . 142\nЛюдина, природа, магія.\
+    \ . . . . . . . . . . . . . 142\nІван Палійчук та"
+  section_title: Сторінка 5
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-zabolotnyi-2024_s0254
+  text: "250\n250\nІІ. Виконайте завдання до тексту. 1. З’ясуйте стиль мовлення. Які\
+    \ типи мовлення поєднано в тексті? 2. Обґрунтуйте поділ тексту на абзаци. Знайдіть\
+    \ у кожному з них ключові слова \n(словосполучення). 3. Визначте зачин, основну\
+    \ частину й кінцівку. 4. Знайдіть у тексті опис зовнішності Діка й випишіть портретну\
+    \ лексику. На\nяких деталях автор зосереджує увагу? Поясніть, як зовнішність Діка\
+    \ допомагає\nчитачеві пізнати його вдачу, темперамент, характер. 5. Складіть і\
+    \ запишіть простий план тексту."
+  section_title: Сторінка 254
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0329
+  text: "212\nПрактична риторика\nавтор не тільки висловлює негативну оцінку, а й\
+    \ намагаєть-\nся привернути увагу громадськості до суспільно значуÁих \nпроб лем,\
+    \ висвітлити негативні сторони та спонукати до ви-\nрішення цих проблем. \x91\
+    лементи \nîñóäó\nВисловлення осуду може включати такі елементи: \n звертання\
+    \ до адресата\x1E \n зазначення вчинків, поведінки або слів адресата, Áо ви-\n\
+    кликали осуд\x1E \n негативну оцінку\x1E \n власне осуд дій або, навпаки, бездіяльності\
+    \ адресата\x1E \n вираження негативних емоцій адресанта "
+  section_title: Сторінка 212
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0014
+  text: "Текст ІІ потужніше, ніж перший, активізує увагу слухачів, бо в ньому використано:\n\
+    •\t риторичні запитання (Ви хочете мати успіх у престижній фірмі? Готові слухати?);\
+    \ \n•\t пряме звернення на ви, яке «приміряє» на себе кожен учасник заходу (на\
+    \ противагу \nбезособовим конструкціям потрібно влаштуватися, варто пам’ятати,\
+    \ треба підготу-\nватися); \n•\t тропи (провалити співбесіду, виграти у двобої,\
+    \ людина в дорогому костюмі)."
+  section_title: Сторінка 10
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5164222717285156
+  chunk_id: 3588aaff_c0006
+  text: "Щоправда, тут спрацьовували не лише внутрішні,\r\nнемовби спонтанні й неусвідомлені,\
+    \ але й зовнішні, планомірні фактори, бо\r\nприкметою того самого залежного, колоніального\
+    \ стану і чільним компонентом\r\nзагального завуження інтелектуальних обріїв було\
+    \ знецінення компаративістики,\r\nпідміна її препарованими, ідеологічно \"звіреними\"\
+    , тобто науково\r\nвикривленими і знекровленими темами, зв’язками й топосами.\
+    \ (Гадаю, що звичайний\r\nбібліографічний перелік тоді дозволених тем проілюструє\
+    \ цю тезу.) Досліджен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5152797698974609
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5119768381118774
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

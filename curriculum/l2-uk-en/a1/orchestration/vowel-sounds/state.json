@@ -21,6 +21,47 @@
         "type": "script",
         "name": "discover_passthrough"
       }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-16T20:22:14Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-16T20:24:33Z",
+      "attempts": 1,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-16T20:26:48Z",
+      "task_id": "v5-vowel-sounds-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-16T20:29:12Z",
+      "attempts": 1,
+      "note": "gemini-inline-fixes",
+      "review_grounding": "rag-textbook",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
     }
   },
   "last_updated": "2026-03-16T13:28:22Z"

@@ -1,0 +1,235 @@
+discovered_at: '2026-03-15T19:42:16.596769+00:00'
+query_keywords:
+- Markus Traces On Road
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Markus Traces On Road у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.3
+  relevance_note: Video discusses the suppression of the Tereşchenko family in Soviet
+    historiography. This relates to the module's 'історіографія' and 'Деколонізаційна
+    перспектива' themes by illustrating how historical narratives can be manipulated,
+    but it is not about 'Markus Traces On Road' or literature directly.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section 'Деколонізаційна перспектива' — it provides a concrete
+    example of historical narrative suppression relevant to decolonization.
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.2
+  relevance_note: Video discusses historical ties between Polish nobility and Kyiv
+    Rus, touching on themes of national identity and historical continuity. While
+    in Ukrainian and historically relevant, it does not directly address the author
+    'Markus Traces On Road' or literary analysis.
+  transcript_excerpt: коли шляхта говорить наші права наші власні права які були не
+    надані польськими королями а лише неми затверджені вони з відтіля вони з Русі
+    вони від тих давніх наших князів. Вони забезпечують тяглість оцими моментами наголошення
+    на тому що у нас Славне минуле.
+  embed_suggestion: None. The content is too broad for this specific literary module.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.1
+  relevance_note: Video focuses on the business innovations and influence of the Tereşchenko
+    family. While an interesting piece of Ukrainian history, it lacks direct relevance
+    to literary analysis or the specific author 'Markus Traces On Road'.
+  transcript_excerpt: Про їхні скарби ходили легенди. Та якою була ціна цих статків?
+    Вони віддали мільйони на розвиток України. Та чи вболівали за її незалежність?
+  embed_suggestion: None. The content is too broad for this specific literary module.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0190
+  text: "§ 30  Особливості вживання прийменників  \n183\nВправа 263\n1   Розгляньте\
+    \ інфографіку  Розкажіть, як на ній відображено важливість на-\nвчання \nШкола\n\
+    Училище, університет, навчальні курси, самоосвіта\nПрофесії\n2  Напишіть есе на\
+    \ одну з  тем \n• Навчання — інвестиція в майбутнє чи марнування \nчасу?\n• Для\
+    \ чого потрібно навчатися?\n• Як я уявляю себе в майбутньому?\n              \
+    \     Підручник \n \n         видавництво \"Ранок\""
+  section_title: Сторінка 186
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  text: "ТЕКСТ\nУ розділі ти будеш вивчати:\nДізнаєшся про:\nРОЗПОВІДЬ\nОПИС\nМІРКУВАННЯ\n\
+    ЕСЕ\nпро щось розповідає\nописує предмети\nдоводить якусь думку\nвисловлює думку\
+    \ автора \nпро щось\nЩО ТАКЕ ТЕКСТ\nтема\nмета\nзачин\nосновна частина\nкінцівка\n\
+    ЯК БУДУЄТЬСЯ  \nТЕКСТ"
+  section_title: Сторінка 3
+  grade: 3
+  author: vashulenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0133
+  text: "362.1. Прочитай план тексту. Поміркуй, яка головна думка твору, по­\nбудованого\
+    \ за цим планом. Добери заголовок.\nПлан\n1. Дорога зі школи.\n2. Незвичайна знахідка.\n\
+    3. Прийняте рішення.\n4. Лікування цуценятка.\n5. Вдячне цуценя.\n2. Побудуй текст\
+    \ за поданим планом. Запиши одну з частин (на \nвибір).\nтї 363. Знайди в другій\
+    \ частині підручника «Українська мова та \nчитання. 4 клас. У 2 ч.» художній твір,\
+    \ який тобі до вподо­\nби. Склади та запиши до нього план.\n364. Розшифруй анаграми.\
+    \ Сформулюй визначення "
+  section_title: Сторінка 135
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5435579419136047
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5414449572563171
+  chunk_id: 4800ab33_c0136
+  text: "Книжка X. Про пам’ять і виголошування. /2зв./ \\105\\\n\nКнижка перша\n\n\
+    ПОДАЄ ЗАГАЛЬНІ ВСТУПНІ НАСТАНОВИ\n\nПоки приступимо до окремих настанов, передусім\r\
+    \nскажемо про те, що взагалі входить до всього ораторського мистецтва. Адже це\r\
+    \nподібне до подорожнього, який спочатку розглядає з підвищеного схилу дорогу\
+    \ на\r\nпростягнених внизу полях, звідки вона виходить і в якому напрямі веде\
+    \ до місця,\r\nкуди йому треба йти, а також яка вона, чи рівна всюди, чи тут суха,\
+    \ а там\r\nболотиста, деінде лякає чагарниками й"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm
+- score: 0.535513699054718
+  chunk_id: b715df49_c0005
+  text: "Огляд кількох століть історії\r\nкниги в Україні, насамперед книги української,\
+    \ дозволяє поставити питання, якою\r\nмірою можна вважати цю історію процесом,\
+    \ що його подальші етапи випливають з\r\nпопередніх. Деякі дослідники вважають,\
+    \ що будь-яка національна історія, в тому\r\nчислі історія національної культури,\
+    \ є метарозповіддю, позначеною штучним\r\nнав’язуванням історичному процесові\
+    \ наперед заданої схеми. Безперечно, на\r\nрізних етапах історії події мали свою\
+    \ специфіку й розгорталися в різних\r\nконтекс"
+  work: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+  year: 2002
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/isaevych/is.htm

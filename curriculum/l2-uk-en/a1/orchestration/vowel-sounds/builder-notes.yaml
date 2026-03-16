@@ -1,23 +1,27 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1698
+word_count: 1701
 deviations:
   - section: "Шість основних голосних — Six Base Vowels"
-    reason: "Expanded to ~502 words (target 300+) to give each vowel proper H3 treatment with video embeds and examples"
-  - section: "Йотовані голосні — Iotated Vowels"
-    reason: "Expanded to ~453 words (target 350+) to cover all four iotated vowels plus Й with video embeds and cultural notes"
-frictions: []
+    reason: "Exceeded 300-word target (~502 words) because each of 6 vowels + И/І contrast needs dedicated H3 subsection with video embed, examples, and callout. Redistributed from budget surplus."
+  - section: "Vocabulary"
+    reason: "Plan vocabulary_hints lists моя as required. Since моя/моє are forms of мій, listed мій as the lemma with note about all three forms. Added Європа, йогурт, and лук to reach 20 items."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan says лук is an M1 review word for У, but лук does not appear in the cumulative vocabulary list (20 words). Used it anyway as it's a natural У-demonstrator — reviewer should verify if лук was taught in M1."
+  - type: TEMPLATE_CONSTRAINT
+    description: "Plan lists 'Україна (5 vowels = 5 syllables)' but phonologically Україна has 4 syllables (У-кра-ї-на) since Ї is one syllable position despite being two phonemes. Corrected to 4 syllables in content."
 research_gaps:
-  - "No Grade 1 textbook content specifically showing iotated vowel discovery exercises — used Grade 2 Kravtsova p.10 instead"
+  - "No RAG results for explicit и vs і minimal pair pedagogy in Grade 1-2 textbooks — used contrastive approach from research notes"
 unverified_terms: []
 review_focus:
-  - "И vs І description accuracy — no IPA used, relies on jaw position description"
-  - "Syllable count for Україна — counted as 4 syllables (У-кра-ї-на) per standard Ukrainian syllabification"
-  - "моя and моє listed as adjective POS (VESUM classifies мій as adj) — reviewer should confirm this is acceptable"
-  - "image-to-letter activity includes trick items (риба→Р, вухо→В, сир→С) where the answer is a consonant, not a vowel — intentional pedagogical design to test letter awareness"
+  - "Україна syllable count: content says 4 syllables (У-кра-ї-на). Plan outline says 5. Verify which is correct."
+  - "Check that all 18 plan vocabulary words appear in content body (VOCAB-IN-CONTENT rule)"
+  - "Verify immersion percentage is within 5-15% band"
+  - "И vs І section — confirm jaw position description is pedagogically accurate"
 rag_tools_used:
-  - "search_text: голосні звуки букви позначення голосних (grade 1) → Bolshakova p.24 vowel/consonant intro, p.25 syllable rules, p.28 наголос"
-  - "search_text: йотовані голосні я ю є ї два звуки (grade 2) → Kravtsova p.10 discovery exercise, Bolshakova p.34-35 vowel letter scheme"
-  - "search_text: наголос голосні звуки складоподіл (grade 1) → Bolshakova p.28 stress section with молоко drill"
-  - "verify_words: all 21 vocabulary words → 21/21 found in VESUM"
-  - "verify_words: 18 additional content words → 18/18 found in VESUM"
+  - "search_text: 'голосні звуки букви позначення голосних звуків буквами' grade=1 → Bolshakova p.24 (vowel/consonant intro), Zaharijchuk p.13-15"
+  - "search_text: 'йотовані голосні я ю є ї два звуки' grade=2 → Kravtsova p.10 (iotated discovery exercise), Bolshakova p.34-35"
+  - "search_text: 'наголос наголошений склад голосний звук' grade=1 → Bolshakova p.28 (stress intro), p.25 (syllable counting)"
+  - "verify_words: all 20 vocabulary items → 20/20 found in VESUM"
+  - "verify_words: лук, Європа, люди, мати, каже, мій → 6/6 found"

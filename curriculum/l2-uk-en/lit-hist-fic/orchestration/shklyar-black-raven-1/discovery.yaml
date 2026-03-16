@@ -1,0 +1,243 @@
+discovered_at: '2026-03-15T17:25:32.059469+00:00'
+query_keywords:
+- Shklyar Black Raven 1
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Shklyar Black Raven 1 у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+  channel: Суспільне Культура
+  title: 'What books will help you better understand the history of Ukraine? | Podcast
+    "Bookstore" #19'
+  relevance_score: 0.7
+  relevance_note: The video discusses the importance of Ukrainian historiography and
+    contrasting it with Russian narratives, which is highly relevant to the module's
+    'Деколонізаційна перспектива' and 'Вступ та контекст' sections for a historical
+    novel.
+  transcript_excerpt: пані Олену наша відмінність від Російської і історіографії де
+    мусить бути один єдиний варіант у нас до цих пір і де війна але при цьому Ми дискутуємо
+    Ми шукаємо відповіді ми не підпорядковуємо політиці історії
+  embed_suggestion: After section Деколонізаційна перспектива -- The video directly
+    addresses the decolonization of historical understanding, which is a core theme
+    of this section.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.4
+  relevance_note: While the video mentions 'історіографія' and deals with Ukrainian
+    history, its specific focus on the Tereșchenko family's suppression in Soviet
+    historiography is only tangentially related to the broader context of Shklyar's
+    'Black Raven' novel.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: None -- The specific historical topic is too narrow for this module
+    on 'Shklyar Black Raven 1'.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: This video, a continuation of the Tereșchenko family's story focusing
+    on their business, is largely irrelevant to the literary and historical context
+    of Shklyar's 'Black Raven' novel. It lacks direct thematic or contextual links.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: None -- This video is not relevant to the module content.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0003
+  text: "4\nЧИТАЄМО Й РОЗПОВІДАЄМО \nЧИТАЄМО Й РОЗПОВІДАЄМО \nПРО СВОЇ ЗАХОПЛЕННЯ\n\
+    ПРО СВОЇ ЗАХОПЛЕННЯ\n \nОзнайомтеся з новим підручником. Знайдіть у змісті \n\
+    перший розділ. Які твори вміщені в ньому? Які автори творів \nвам знайомі? Яка\
+    \ назва видалася вам особливо цікавою?\nЧитайте вдумливо:\n\nвизначайте тему\
+    \ твору, де й коли відбувалась описана \nподія;\n\nне залишайте поза увагою\
+    \ незрозуміле;\n\nвизначте, який це вид твору; \n\nхто дійові особи, які в\
+    \ них почуття, вчинки;\n\nпрогнозуйте розвиток сюжету;\n\nмір"
+  section_title: Сторінка 4
+  grade: 4
+  author: savchenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrmova-zabolotnyi-2019_s0336
+  text: "Озвучте текст рецензії в класі. Намагайтеся зацікавити одноліт-\nків. пам’ятка\n\
+    \x90отуêµося ¸исати ре¾ензіâ\n1. Прочитайте книжку (перегляньте кіноôільм, відвідайте\
+    \ виставу, \nконцертну програму), на яку писатимете рецензію. 2. Визначте теми,\
+    \ Áо розвиває автор (авторка) твору. 3. Прокоментуйте назву твору. À\n\x8E"
+  section_title: Сторінка 215
+  grade: 11
+  author: zabolotnyi
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrlit-kovalenko-2023_s0265
+  text: "1\nПравила  читання\n1\nПершочергово у тексті твору шукай відповіді \nна\
+    \ запитання:\n• Хто діє? Які його / її вчинки?\n• Де і коли відбуваються події?\n\
+    • Кого або що описує автор/авторка?\n2\n \nПри повторному читанні:\n1. Виділи\
+    \ деталі в тексті (портреті, пейзажі, \nописі предмета чи приміщення).\n2. Проаналізуй,\
+    \ яку роль вона відіграє:\n• у портреті: передає зовнішню \nхарактеристику чи\
+    \ звертає увагу на \nвнутрішні якості героя / героїні;\n• у пейзажі: відтворює\
+    \ різноманітні стани \nприроди чи внутрішній стан г"
+  section_title: Сторінка 257
+  grade: 6
+  author: kovalenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0508
+  text: "281\nПлани-схеми для самостійної роботи з  підручником і  додатковою літературою\n\
+    Плани-схеми для самостійної роботи з  підручником  \nі  додатковою літературою\n\
+    Як скласти план\n\t 1. Уважно прочитайте текст, до якого вам треба скласти план.\
+    \ 2. Виберіть із нього лише той матеріал, який відповідає темі плану. 3. Поділіть\
+    \ текст на логічно завершені частини, знайдіть у  кожній із них \nголовну думку,\
+    \ чітко сформулюйте та запишіть їх. 4. Дайте назви частинам тексту. 5. Перед тим\
+    \ як записати план у зошит, "
+  section_title: Сторінка 281
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5439402461051941
+  chunk_id: 9976239a_c0083
+  text: "Коментар до кожного твору містить вичерпні відомості про всі наявні\r\nджерела\
+    \ тексту, перелік їх у генеалогічній (стадіальній) послідовності, довідки\r\n\
+    про джерело основного тексту та датування твору; включає історію задуму і\r\n\
+    тексту твору, аналіз творчої праці над чорновими і подальшими рукописними\r\n\
+    текстами та аналіз друкованих текстів, що становлять продовження творчої праці\r\
+    \nШевченка. Саме цей аналіз лежить в основі мотивування вибору основного,\r\n\
+    критично встановленого тексту, обґрунтування хр"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5421571731567383
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5403674840927124
+  chunk_id: 9976239a_c0641
+  text: "3 Див.: Опис рукописів Т. Г. Шевченка. — К., 1961;\r\nПутівник по фондах\
+    \ відділу рукописів Інституту літератури. — К., 1999. — С.\r\n539 — 559.\n\n4\
+    \ Інститут літератури імені Т. Г. Шевченка НАН України,\r\nвідділ рукописів, ф.\
+    \ 1, № 76.\n\n5 Там само, ф. 1, № 70.\n\nВидання творів, поданих у першому томі,\
+    \ грунтується на всій\r\nсукупності текстологічних досліджень творчості Шевченка\
+    \ — атрибуції текстів,\r\nдослідженні особливостей творчого процесу поета, включаючи\
+    \ моменти автоцензури,\r\nкласифікації джерел тексту"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm

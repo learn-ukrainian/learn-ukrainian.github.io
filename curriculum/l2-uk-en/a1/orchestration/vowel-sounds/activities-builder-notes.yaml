@@ -1,0 +1,19 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 9
+deviations:
+  - "Added true-false (8 items) and anagram (8 items) and match-up (9 pairs) beyond plan hints — reinforces vowel knowledge through varied practice"
+  - "image-to-letter: some items test consonant-initial words (риба→Р, молоко→М, сир→С, село→С) since most lesson vocabulary starts with consonants; only яблуко→Я, їжак→Ї, око→О, яйце→Я start with vowels. This is a natural consequence of the vocabulary set."
+  - "classify #2 (one sound or two): used 8 items across 2 categories (5+3) matching plan target of 8"
+frictions:
+  - type: PLAN_GAP
+    description: "Plan quiz focus says 'listen and identify which vowel you hear' but watch-and-repeat already covers listening. Adapted quiz to written И vs І discrimination with word examples from the lesson."
+    proposed_fix: "N/A — adaptation is pedagogically appropriate for text-based activities"
+unverified_terms:
+  - "сір (grey) — used as minimal pair example in quiz"
+  - "синє (blue, neuter) — used in classify activity for softening example"
+  - "люди (people) — used in classify activity for softening example"
+  - "мати (mother) — used in classify activity for softening example"
+review_focus:
+  - "classify #2 (one sound or two): the 'one sound' category items (люди, мати, синє) come from the lesson text but test a nuanced distinction — verify pedagogical clarity for A1"
+  - "image-to-letter: several items test first consonant rather than first vowel since most lesson words are consonant-initial"

@@ -1,0 +1,246 @@
+discovered_at: '2026-03-15T18:45:48.600016+00:00'
+query_keywords:
+- Andrusyak Adventures
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Andrusyak Adventures у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+  channel: Суспільне Культура
+  title: 'What books will help you better understand the history of Ukraine? | Podcast
+    "Bookstore" #19'
+  relevance_score: 0.9
+  relevance_note: The video discusses Ukrainian historiography, decolonization of
+    historical narratives, and the importance of national historical self-understanding,
+    which is highly relevant to analyzing 'Andrusyak Adventures' within a decolonial
+    framework and understanding its impact on national identity.
+  transcript_excerpt: Наша відмінність від Російської історіографії полягає в тому,
+    що ми дискутуємо і шукаємо відповіді, не підпорядковуючи історію політиці. Ми
+    досліджуємо свою історію для пізнання себе, а не для того, щоб комусь щось доводити.
+  embed_suggestion: After Деколонізаційна перспектива -- This video provides crucial
+    contextual understanding of decolonized Ukrainian historiography, directly aligning
+    with the section's themes and supporting the analysis of Andrusyak's work.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.5
+  relevance_note: The video discusses the suppression of the Tereshchenko family's
+    history in Soviet historiography. While generally related to historiography and
+    challenging narratives, it is not specific to Andrusyak Adventures or the module's
+    core focus.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: Not suitable for embedding. The module is specifically about Andrusyak
+    Adventures, not general examples of historical suppression.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: This video details the business history of the Tereshchenko family.
+    It is tangentially related to Ukrainian history but has almost no direct relevance
+    to the literary, decolonial, or national identity themes of the 'Andrusyak Adventures'
+    module.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable for embedding. The content is too far removed from
+    the specific topic and themes of this module.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0003
+  text: "4\n\uFEFFПередмова\n­документів та запитання до них, тести для самоконтролю,\
+    \ які викону-\nються в режимі онлайн, тощо. Усе це ви знайдете за електронною\
+    \ адре-\nсою: interactive.ranok.com.ua.\nПосилання на електронні матеріали розташовано\
+    \ на сторінках під-\nручника спеціальною позначкою    .\nТакож у підручнику вам\
+    \ зустрічатимуться символи, що познача-\nють окремі рубрики, кожна з яких має\
+    \ своє призначення.\nДокументи розповідають  — тут наведені фрагменти історичних\
+    \ \nджерел та запитання до них.\nПостать в  іст"
+  section_title: Сторінка 4
+  grade: 9
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriia-shchupak-2023_s0126
+  text: "122\n1. ІСТОРИЧНІ З АГАДКИ\nВизначте, які географічні назви закодовані \n\
+    в анаграмах. Укажіть зображення історичної \nпам’ятки, яке з ними пов’язане.\n\
+    Онлайн-гра\nА\nБ\nВ\nГ\nД\n1\n2\n3\n4\nЛЇМІГАА\nЯИЦНЗ\nФТЄРАВ\nІЛН\n2. ІСТОРИЧНА\
+    \ ХРОНОЛО ГІЯ\nУпорядкуйте хронологічну послідовність історичних по-\nдій і фактів.\
+    \ Визначте, скільки століть, років їх між собою \nвіддаляє. Доберіть із наступних\
+    \ розділів підручника історич-\nні події, що відбувалися з ними синхронно. \n\
+    Життя Конфуція\nСтворення єдиної\nдержави в Єгипті\nЗаснув"
+  section_title: Сторінка 124
+  grade: 6
+  author: shchupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-istoriya-schupak-2022_s0044
+  text: "РОЗДІЛ 1\n46\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    Самооцінювання. Оцініть свої успіхи в опануванні теми «Писемні \nпам’ятки, фольклор\
+    \ і сучасні візуальні джерела про історію». Дайте від-\nповіді на запитання.\n\
+    Що можна дізнатися за \nдопомогою даних етнографії?\nЯкі види писемності існували\
+    \ \nв давнину?\nЧому сучасні види візуальних \nджерел є цінними \nдля історичних\
+    \ досліджень? \nЯк можна дослідити фотографію \nяк історичне джерело?\n?\nПрекрасно\n\
+    Добре\nпопрацювати\nТреба \nНічого не\nзро"
+  section_title: Сторінка 46
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5480595827102661
+  chunk_id: 172f2637_c0087
+  text: '4. Грубою помилкою було б негайно ідентифікувати ці висновки зі світоглядом
+    автора. Частіше їх доводиться іден­тифікувати з світоглядом редактора, а то й
+    видавця, а часто й просто Мар''ї Алексєвни. Світогляд автора знаходиться ста­ранною
+    аналітичною роботою над усіма його творами і су­часною йому творчістю інших. В
+    данім оповіданні куточок світогляду визирає з-під відношення автора до кволих
+    лю­дей.
+
+
+    5. Знайти справжній світогляд автора, аналізуючи тільки його твори, — справа дуже
+    нелегка, а поде'
+  work: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+  year: 1895
+  genre: prose
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=25044
+- score: 0.5350031852722168
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5346333980560303
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

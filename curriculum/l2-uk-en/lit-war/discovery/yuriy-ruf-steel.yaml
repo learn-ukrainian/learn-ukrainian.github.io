@@ -1,0 +1,218 @@
+discovered_at: '2026-03-15T20:03:19.190901+00:00'
+query_keywords:
+- 'Юрій Руф: Поезія сталі'
+- Вступ та контекст
+- Концепт «Літератури чину» в ХХІ столітті
+- Мілітарна естетика та національна етика
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- 'Дослідити життя та внесок Юрій Руф: Поезія сталі у сучасну українську культуру'
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+- literature
+- суб'єктність
+- тяглість
+- геноцид
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0002
+  text: "М\nО\nЛ\nД\nА В\nІ Я\nВ\nА\nЛ\nА\nХ І\nЯ\nР\nУ\nМ\nУ\nН\nІ Я\nА В С Т Р І\
+    \ Й С Ь К А\nІ М П Е Р І Я\nУ\nГ\nО\nР\nЩ\nИ Н\nА\nО С М А Н С Ь К А\nІ М П Е\
+    \ Р І Я\nР\nО\nС\nІ\nЙ\nС\nЬ\nК\nА\n \nІ\nМ\nП\nЕ\nР\nІ\nЯ\nМОДЕРНА  УКРАЇНСЬКА\
+    \  ПРОЗА\nВСТУП. РЕАЛІСТИЧНА \nУКРАЇНСЬКА ПРОЗА\nУКРАЇНСЬКА  ЛІТЕРАТУРА  ДРУГОЇ\
+    \  ПОЛОВИНИ  ХІХ ст. В  КОНТЕКСТІ  РОЗВИТКУ  ТОДІШНЬОГО   \nСУСПІЛЬСТВА, КУЛЬТУРИ\
+    \  Й  МИСТЕЦТВА"
+  section_title: Сторінка 3
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0479
+  text: "254\nЗМІСТ\nВСТУП. РЕАЛІСТИЧНА УКРАЇНСЬКА ПРОЗА\nУкраїнська література другої\
+    \ половини ХІХ ст. в контексті \nрозвитку тодішнього суспільства, культури й мистецтва.\
+    \ . . . . . . . . . . . . . 3\nІван Нечуй-Левицький . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\nТеорія\
+    \ літератури. Соціально-побутова повість. Реалізм . . . . . . . . . . . . . .\
+    \ . 14\nКайдашева сім’я  (Скорочено) . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 254
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0421
+  text: '255
+
+    ЗМІСТ
+
+    ЛІТЕРАТУРНЕ ШІСТДЕСЯТНИЦТВО . . . . . . . . . . . . . . . . . . . . . . . . 188
+
+    Українська література на початку 60-х років ХХ ст.. . . . . . . . . . . . . .
+    . 188
+
+    Василь Симоненко. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 190
+
+    «Задивляюсь у твої зіниці...» . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 190
+
+    Я... . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . .'
+  section_title: Сторінка 255
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrlit-avramenko-2024_s0346
+  text: '238
+
+    ЗМІСТ
+
+    Від автора . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . 3
+
+    ВСТУП
+
+    § 1. Художній твір як явище мистецтва. . . . . . . . . . . . . . . . . . . . .
+    . . . 4
+
+    ПІСЕННА  ЛІРИКА
+
+    § 2–3. Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+    Ой на горі та женці жнуть . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . 9
+
+    Ой у лузі та ще'
+  section_title: Сторінка 241
+  grade: 7
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5352635383605957
+  chunk_id: feaa5fa7_c1899
+  text: "Загальні курси і огляди: Франко И.\r\nЮжно-русская литература. Энциклопедический\
+    \ словарь Брокгауза и Ефрона, XLI. П.\r\n1904; Єфремов С. Історія укр. письменства,\
+    \ I — II. Вид. 4. К.-Ляйпціґ\r\n1924; Дорошкевич О. Підручник по історії укр.\
+    \ літератури. К. 1924; Шамрай\r\nА. Укр. література. Стислий огляд. Х. 1927; Українська\
+    \ література (при участі Білецького\r\nО., Розенберґа О., Недужої М. та ін.).\
+    \ Всеукр. Заочний Інститут Нар.\r\nОсвіти. Х. 1929; Украинская литература (статті\
+    \ Білецького О., Кирилюка Є.,\r\nПі"
+  work: Енциклопедія українознавства
+  author: Колектив
+  year: 1955
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/encycl/eu.htm
+- score: 0.5327581167221069
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5232924222946167
+  chunk_id: ce21b6f1_c0000
+  text: 'ЛІТЕРАТУРА, ЇЇ ЗАВДАННЯ І НАЙВАЖНІШІ ЦІХИ
+
+
+    ("Правда", часть літературно-наукова. Книжка друга. "Сьогочасне літературне прямування")'
+  work: Іван Франко. Літературно-критичні статті
+  author: Франко І.
+  year: 1856
+  genre: letters
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=648

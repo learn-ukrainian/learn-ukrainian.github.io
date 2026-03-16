@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-war 14 — E2E
+PASS: pipeline lit-war 17
 
   Module:   kotsyubailo-legacy-lit
   Track:    lit-war
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T23:01:46Z
+  Date:     2026-03-15T21:56:09Z

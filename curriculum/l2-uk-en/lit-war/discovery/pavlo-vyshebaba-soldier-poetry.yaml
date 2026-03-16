@@ -1,0 +1,205 @@
+discovered_at: '2026-03-15T20:10:44.075772+00:00'
+query_keywords:
+- 'Павло Вишебаба: Тільки не пиши мені про війну'
+- Вступ та культурний контекст
+- '«Тільки не пиши мені про війну»: аналіз збірки'
+- Рок-поетика та перформативність
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати поезію Павла Вишебаби як голос покоління Майдану та АТО
+- Дослідити синтез рок-поетики, екологічної свідомості та воєнного досвіду
+- Зрозуміти еволюцію від мирного активізму до поезії війни
+- literature
+- антигероїзм
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qFKRtDiGk5U
+  channel: Суспільне Культура
+  title: Павло Вишебаба – Тільки не пиши мені про війну | День, якого не повинно бути
+  relevance_score: 1.0
+  relevance_note: The video is a direct reading of Pavlo Vyshebaba's poem 'Тільки
+    не пиши мені про війну', which is the central topic of this module.
+  transcript_excerpt: Павло вишебаба доньці тільки не пиши мені про війну. Розкажи
+    чи є біля тебе сад, Чи ти чуєш коників і цикад?
+  embed_suggestion: 'After section «Тільки не пиши мені про війну»: аналіз збірки
+    -- This video provides an direct audio experience of the poem being analyzed.'
+- url: https://www.youtube.com/watch?v=PLa6RrfylRW7TsJDCiNqE5DKDIvctou0A0
+  channel: Суспільне Культура
+  title: День, якого не повинно бути
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0458
+  text: '238
+
+    ЗМІСТ
+
+    Передмова . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . 3
+
+    § 1. Вступ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . 5
+
+    Розділ I. Україна в  роки Першої світової війни
+
+    § 2. Перша світова війна та український національний рух . . . . . . . . . . . '
+  section_title: Сторінка 238
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0195
+  text: "139\nДвокрапка в складному реченні\n6.\t Напишіть вільне есе на тему «Ця\
+    \ музика спонукає до \nдумок». \nКУЛЬТУРА СЛОВА\nА.\t Переглянувши експрес-урок\
+    \ «Що таке кшталт?», пе­\nрекажіть його зміст. Доберіть синоніми до сполуки на\
+    \ \nкшталт, складіть з ними речення. \nБ.\t Розглянувши ілюстрацію, скажіть, у\
+    \ чому полягає відмінність між словами білет і квиток. \nСкладіть з ними речення.\
+    \ \n7.\t Прочитайте речення й виконайте завдання (розділові знаки пропущено).\n\
+    1. Ні хліва ні повітки не ставили не бачили в тому по"
+  section_title: Сторінка 139
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0078
+  text: "55\nОдяг. Взуття\nКУЛЬТУРА СЛОВА \n1.\t Перегляньте експрес-урок «Індустрія\
+    \ чи індустрія?». Запишіть проблемні слова в наголо­\nшуванні. Поставте в них\
+    \ наголоси.  \n2.\t Запам’ятайте правильний варіант слововживання. \nНЕПРАВИЛЬНО\n\
+    ПРАВИЛЬНО\nкидатися в очі (про щось яскраве)\nвпадати в очі\nробити вигляд\nвдавати\n\
+    на смак і колір товариша нема\nна колір і смак товариш не всяк\nшириною два метра\n\
+    завширшки два метри\nу випадку потреби\nу разі потреби, за потреби\n3.\t Потренуйтеся\
+    \ грамотно читати чистомовки. \n— Вед"
+  section_title: Сторінка 55
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5454188585281372
+  chunk_id: 464a3d03_c0000
+  text: І. ВСТУПНІ УВАГИ ПРО КРИТИКУ
+  work: Іван Франко. Із секретів поетичної творчості
+  author: Франко І.
+  year: 1856
+  genre: biography
+  language_period: modern
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=624
+- score: 0.5144037008285522
+  chunk_id: 3588aaff_c0652
+  text: "Одначе, якщо такі випадкові звернення до контексту\r\nврядигоди й трапляються,\
+    \ то мають здебільшого невизначений та загальний\r\nхарактер на кшталт щойно поданої\
+    \ згадки про \"різні суспільні та політичні\r\nпроцеси\". По суті, метод Чижевського,\
+    \ — всупереч переконанню редактора,\r\n— насправді не передбачає \"пильної уваги\
+    \ до глибинних культурних та\r\nсоціальних впливів і тенденцій\" (IX). Виявилося\
+    \ це не тільки в його\r\nсвідомому прагненні зосереджуватися \"на тих питаннях,\
+    \ що досі недостатньо\r\nвисвітлювалися"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5060150027275085
+  chunk_id: 4800ab33_c0518
+  text: "7. Вступне слово, яке, звичайно, буває перед\r\nдиспутами, судами, нарадами,\
+    \ а особливо, на початку книг, не вимагає жодного\r\nіншого особливого мистецтва,\
+    \ як того, що притаманне вступам до промов. Бо ж\r\nвиголошувати вступне слово\
+    \ перед диспутом — це те саме, що й починати промову,\r\nі вступне слово — це\
+    \ те саме, що й початок промови. Необхідно завоювати\r\nприхильність у читачів\
+    \ і слухачів, принижуючи себе або виражаючи любов до\r\nбатьківщини, релігії,\
+    \ честот, викладаючи причини, які я навів би для на"
+  work: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+  year: 1981
+  genre: philosophy
+  language_period: middle_ukrainian
+  source_url: http://izbornyk.org.ua/procop/proc.htm

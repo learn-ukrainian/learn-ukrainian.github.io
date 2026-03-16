@@ -1,0 +1,249 @@
+discovered_at: '2026-03-15T17:09:05.054141+00:00'
+query_keywords:
+- Zavadovych Adventures
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Zavadovych Adventures у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+  channel: Суспільне Культура
+  title: 'What books will help you better understand the history of Ukraine? | Podcast
+    "Bookstore" #19'
+  relevance_score: 0.7
+  relevance_note: Video discusses Ukrainian history and historiography, emphasizing
+    a decolonized perspective and the role of books in understanding national identity,
+    which aligns with the module's 'Деколонізаційна перспектива' and 'Вступ та контекст'
+    sections, and the goal to explore the author's influence on national identity.
+  transcript_excerpt: Я знаю таку особливість нашого теперішнього буття що нам з вами
+    друзі дуже часто доводиться перебувати в певних діалогах іноді доволі агресивних
+    Коли нам пропонують різні люди свої версії української історії і нам з вами друзі
+    було би добре мати хорошу бібліотечку для того щоб мати такі класні Круті аргументи.
+  embed_suggestion: After section Вступ та контекст -- provides general context on
+    Ukrainian historiography and the importance of literature for national understanding.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.3
+  relevance_note: While mentioning 'історіографія', the video focuses specifically
+    on the Tereşchenko family and their portrayal in Soviet history, which is largely
+    unrelated to 'Zavadovych Adventures' or general literary analysis.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: None -- content is not directly relevant to the module topic.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.1
+  relevance_note: The video is about the business and influence of the Tereşchenko
+    family, which is unrelated to the literary work or author 'Zavadovych Adventures'
+    and the module's focus on Ukrainian literature and national identity.
+  transcript_excerpt: Колись десь звідси розпочалася історія багатства роду Терещенків.
+    Микола, старший син Артемія, з дитинства допомагав батькові торгувати зерном.
+  embed_suggestion: None -- content is not directly relevant to the module topic.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 3-klas-ukrainska-mova-kravtsova-2020-1_s0132
+  text: "134\nПригадай! До тексту можна дібрати заголовок. У заголовку \nкоротко відображено\
+    \ тему тексту. Заголовок може бути \nу формі розповідного, питального чи спонукального\
+    \ речення.\n2.\t Придумайте заголовок до казки.  \n368.\t Виконай завдання на\
+    \ вибір.\n\t Назвиѳ тему кожної частини.\n\t Постав питання до кожної частини.\n\
+    Пригадай! Текст може поділятися на смислові частини — \nабзаци. Абзац — це одне\
+    \ або кілька речень. Абзаци пов’язані \nміж собою за змістом і розміщені в логічній\
+    \ послідовності.\nКожен абзац пи"
+  section_title: Сторінка 134
+  grade: 3
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 5-klas-istoriya-schupak-2022_s0044
+  text: "РОЗДІЛ 1\n46\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    Самооцінювання. Оцініть свої успіхи в опануванні теми «Писемні \nпам’ятки, фольклор\
+    \ і сучасні візуальні джерела про історію». Дайте від-\nповіді на запитання.\n\
+    Що можна дізнатися за \nдопомогою даних етнографії?\nЯкі види писемності існували\
+    \ \nв давнину?\nЧому сучасні види візуальних \nджерел є цінними \nдля історичних\
+    \ досліджень? \nЯк можна дослідити фотографію \nяк історичне джерело?\n?\nПрекрасно\n\
+    Добре\nпопрацювати\nТреба \nНічого не\nзро"
+  section_title: Сторінка 46
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0006
+  text: "4\nЗміст\nПередмова                                                     \
+    \                                                                            \
+    \                7 \nНавігатор                                               \
+    \                            7\nВступ                                        \
+    \                                 8\n§ 1  Мовні обов’язки українців та українок\
+    \                                       9\n§ 2  Повторення вивченого в  6 класі\
+    \                                            14\nПов"
+  section_title: Сторінка 7
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.554073691368103
+  chunk_id: 3588aaff_c0551
+  text: "4. У тому-таки вступному розділі, де подається\r\nкороткий огляд попередньої\
+    \ української науки про літературу, Чижевський також\r\nвважає за потрібне спробувати\
+    \ десь на шести сторінках викласти ази поетики. Для\r\nангломовних читачів це\
+    \ може видатися ексцентричним або вищою мірою недоречним.\r\nОдначе така спроба\
+    \ цілком відповідає тим настановам, про які йшлося вище.\r\nПочавши з двох параграфів,\
+    \ присвячених мові (де він згадує, приміром, архаїзми,\r\nнеологізми, жаргон тощо),\
+    \ продовживши короткими визначен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5534207820892334
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5503516793251038
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

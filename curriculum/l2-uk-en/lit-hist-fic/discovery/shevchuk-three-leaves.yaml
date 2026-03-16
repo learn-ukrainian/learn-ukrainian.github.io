@@ -1,0 +1,272 @@
+discovered_at: '2026-03-15T17:45:25.749858+00:00'
+query_keywords:
+- Shevchuk Three Leaves
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Shevchuk Three Leaves у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: This video discusses the suppression of the Tereşchenko family's
+    history in Soviet historiography. This is highly relevant to the module's 'Деколонізаційна
+    перспектива' and 'історіографія' themes, as it provides a concrete example of
+    historical narratives being distorted for ideological reasons. While not about
+    a literary figure, it reinforces the concept of decolonization within Ukrainian
+    historical context, which can be extended to literature.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- to illustrate the
+    broader context of suppressed Ukrainian historical narratives and historiography,
+    providing a tangible example of the issues discussed.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.5
+  relevance_note: This video focuses on the business innovations and influence of
+    the Tereşchenko family. While it touches upon their 'спадщина' (legacy), which
+    is a module section, the primary focus on economic and business history is tangentially
+    related to a literary module about Shevchuk. It reinforces the idea of influential
+    Ukrainian figures but less directly than the historiography aspect of Candidate
+    2.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: After section Підсумок та спадщина -- to provide a broader example
+    of the 'legacy' of significant Ukrainian figures, although the specific content
+    (business) is not directly related to literature.
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.1
+  relevance_note: The video discusses the historical connection of Polish gentry to
+    Kyivska Rus, which is a historical topic in Ukrainian, but it is entirely unrelated
+    to the specific literary work 'Shevchuk Three Leaves' or the author's stylistics
+    and influence on national identity. It does not directly teach or reinforce any
+    aspect of the module's core content.
+  transcript_excerpt: дуже важливо що коли шляхта говорить наші права наші власні
+    права які були не надані польськими королями а лише неми затверджені вони з відтіля
+    вони з Русі вони від тих давніх наших князів.
+  embed_suggestion: Not suitable for embedding due to low relevance.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 5-klas-istoriya-schupak-2022_s0044
+  text: "РОЗДІЛ 1\n46\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    Самооцінювання. Оцініть свої успіхи в опануванні теми «Писемні \nпам’ятки, фольклор\
+    \ і сучасні візуальні джерела про історію». Дайте від-\nповіді на запитання.\n\
+    Що можна дізнатися за \nдопомогою даних етнографії?\nЯкі види писемності існували\
+    \ \nв давнину?\nЧому сучасні види візуальних \nджерел є цінними \nдля історичних\
+    \ досліджень? \nЯк можна дослідити фотографію \nяк історичне джерело?\n?\nПрекрасно\n\
+    Добре\nпопрацювати\nТреба \nНічого не\nзро"
+  section_title: Сторінка 46
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 9-klas-ukrajinska-mova-voron-2017_s0084
+  text: "«Поняття про культуру мовлення» (перша група);\n2. «Функції мови, спілкування»\
+    \ (друга група);\n3. «Поняття про українську літературну мову» (третя група).\
+    \ II. Прослухайте представників кожної групи із підготовленим матеріалом. Дайте\
+    \ оцінку виступам однокласників. III. Поміркуйте, який вид тематичних виписок\
+    \ є доречним при опрацюванні \nнаукової літератури, а який краще застосовувати\
+    \ під час роботи з публі­\nцистичними статтями. 67"
+  section_title: Сторінка 67
+  grade: 9
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5674045085906982
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5563598871231079
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5540099143981934
+  chunk_id: 3588aaff_c0106
+  text: "Основним і водночас вельми проблематичним джерелом\r\nосмислення тогочасного\
+    \ контексту рецепції української літератури є розгорнута\r\nбібліографічно-описова\
+    \ довідка В. Сиповського, \"Україна в російському\r\nписьменстві: 1800-1850\"\
+     108,\n\n108 Сиповський\r\nВасиль. Україна в російському письменстві: 1800-1850.\
+    \ — К., 1928.\n\nПерше, що тут вражає, — це сам фактаж, його розміри:\r\nяк видно\
+    \ зі змісту, йдеться про майже п’ятсот творів. І де навіть тоді, коли\r\nавтор\
+    \ зосереджується на красному письменстві, специфі"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

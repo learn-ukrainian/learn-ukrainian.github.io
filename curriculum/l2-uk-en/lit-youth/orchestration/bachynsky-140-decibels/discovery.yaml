@@ -1,0 +1,248 @@
+discovered_at: '2026-03-15T18:27:22.212587+00:00'
+query_keywords:
+- Bachynsky 140 Decibels
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Bachynsky 140 Decibels у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+  channel: Суспільне Культура
+  title: 'What books will help you better understand the history of Ukraine? | Podcast
+    "Bookstore" #19'
+  relevance_score: 0.9
+  relevance_note: The video directly discusses Ukrainian historiography and the importance
+    of a decolonized perspective against Russian narratives, aligning perfectly with
+    the 'Деколонізаційна перспектива' section and the 'історіографія' vocabulary term.
+  transcript_excerpt: пані Олену наша відмінність від Російської і історіографії де
+    мусить бути один єдиний варіант у нас до цих пір і де війна але при цьому Ми дискутуємо
+    Ми шукаємо відповіді ми не підпорядковуємо політиці історії так
+  embed_suggestion: After section Деколонізаційна перспектива
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.7
+  relevance_note: This video discusses how Soviet historiography suppressed the Tereshchenko
+    family, providing a concrete example of decolonization in history, which reinforces
+    the module's 'Деколонізаційна перспектива' and 'історіографія' vocabulary.
+  transcript_excerpt: радянська історія, історіографія їх, ну, викидувала і зневажали.
+    Тобто ніде ні підприємства трещенків, ні їхні маєтки, будинки по Глухову ніколи
+    не згадували взагалі це слово сполучення, що це Терещенків.
+  embed_suggestion: After section Деколонізаційна перспектива
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.4
+  relevance_note: The video is about the historical legacy of the Tereshchenko family's
+    business, which is tangentially related to Ukrainian history. While from a reputable
+    channel, it doesn't directly address the module's specific focus on 'Bachynsky
+    140 Decibels', their works, style, or a decolonization *perspective* in a broader
+    sense, only their specific historical context.
+  transcript_excerpt: Колись десь звідси розпочалася історія багатства роду Терещенків.
+    Микола, старший син Артемія, з дитинства допомагав батькові торгувати зерном.
+  embed_suggestion: Not recommended for direct embed due to low specific relevance,
+    but could be a supplementary resource for general historical context.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0263
+  text: "184\nЗМІСТ\n§ 37–39. Обставина. Види обставин за значенням і способи їхнього\
+    \ вираження. Порівняльний зворот  . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82\n§ 40. Розвиток\
+    \ мовлення. Стислий письмовий переказ розповідного тексту  \nз елементами опису\
+    \ місцевості в художньому стилі . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 88\n§ 41. Типи односкладних речень . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . "
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0265
+  text: ". 136\n§ 65–66. Вставні слова, словосполучення та речення . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . 138\n§ 67. Розвиток мовлення. Лист-запрошення\
+    \ з використанням звертань  \nі вставних компонентів (у текстовому редакторі «Word»)\
+    \ . . . . . . . . . . . . . . . . . . . . . . 142\n§ 68. Розвиток мовлення. Письмовий\
+    \ твір-роздум . . . . . . . . . . . . . . . . . . . . . . . . . . . . 144\n§ 69.\
+    \ Відокремлені члени речення  . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . ."
+  section_title: Сторінка 185
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0218
+  text: "135\n§ 61. Подвоєння  букв  на  позначення  подовжених  \nприголосних . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 138\n§ 62. Розвиток мовлення. Твір-роздум  на  тему,  пов’язану   \n\
+    із  життєвим  досвідом, у  художньому  стилі  (за  колективно   \nскладеним  планом)\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 141\nСИНТАКСИС  І  ПУНКТУАЦІЯ\n§ 63. Словосполучення . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 206
+  grade: 5
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5575819611549377
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.5542206764221191
+  chunk_id: eef657d3_c0724
+  text: "1 Докладніше про це в\r\nнашій розвідці \"Ukrainian Autonomists of the 1780’s\
+    \ and 1790’s and Count\r\nP.A.Rumyantsey-Zadunaysky\" — \"The Annals of the Ukrainian\
+    \ Academy of\r\nArts and Sciences in the U.S.\", vol. VI, No. 3, 4 (21-22), 195S,\
+    \ p.p.\r\n1313-1326."
+  work: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+  year: 1960
+  genre: scholarly
+  language_period: modern
+  source_url: http://litopys.org.ua/coss3/ohl01.htm
+- score: 0.5474638938903809
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

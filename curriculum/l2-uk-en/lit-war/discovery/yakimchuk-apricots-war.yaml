@@ -1,0 +1,244 @@
+discovered_at: '2026-03-15T19:54:54.360003+00:00'
+query_keywords:
+- Yakimchuk Apricots War
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Yakimchuk Apricots War у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=YYG0XuuQGS8
+  channel: Суспільне Культура
+  title: 'What books will help you better understand the history of Ukraine? | Podcast
+    "Bookstore" #19'
+  relevance_score: 0.8
+  relevance_note: The video discusses Ukrainian historiography and the importance
+    of forming an independent national narrative, explicitly contrasting it with Russian
+    approaches. This directly reinforces the 'Деколонізаційна перспектива' section
+    and the module's focus on national identity and literature.
+  transcript_excerpt: Наша відмінність від Російської історіографії, де мусить бути
+    один єдиний варіант, у нас до цих пір іде війна, але при цьому ми дискутуємо,
+    ми шукаємо відповіді, ми не підпорядковуємо політиці історії. На відміну від Росії,
+    де історію інструменталізують, нам не треба нікому нічого доводити.
+  embed_suggestion: After Деколонізаційна перспектива – provides excellent contextual
+    discussion on independent Ukrainian historiography and narrative formation, which
+    is crucial for understanding decolonized literary analysis.
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.5
+  relevance_note: This video discusses how the Tereshchenko family was suppressed
+    in Soviet historiography, touching on themes of historical revisionism and reclaiming
+    national figures. While related to decolonization and historiography, it's specific
+    to a historical family rather than general literary analysis or the module's core
+    subject.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After Деколонізаційна перспектива – could serve as an example
+    of historical figures whose narratives were suppressed, illustrating the need
+    for decolonized historical perspectives. However, it's not directly related to
+    literary works.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: The video is a historical documentary about the business and wealth
+    of the Tereshchenko family. Although it's about Ukrainian history, its focus on
+    economic activities and the family's rise is too far removed from the literary
+    analysis, author's style, and decolonization perspective of the 'Yakimchuk Apricots
+    War' module.
+  transcript_excerpt: Колись десь звідси розпочалася історія багатства роду Терещенків.
+    Микола, старший син Артемія, з дитинства допомагав батькові торгувати зерном.
+  embed_suggestion: None – the topic is not sufficiently relevant to the module's
+    content.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0002
+  text: "3\nШановні восьмикласники та восьмикласниці! Перш ніж розпочати роботу з \
+    \ підручником, необхідно \nознайомитися з його змістом і структурою. Матеріал\
+    \ у ньо-\nму об’єднано в  п’ять розділів, кожен із яких містить кіль-\nка параграфів,\
+    \ що, у  свою чергу, поділяються на пункти. Ви вже знаєте, що історія, як і  будь-яка\
+    \ інша наука, \nмає власну термінологію, і  її необхідно розуміти. Підруч-\nник\
+    \ містить дати основних подій, визначення понять і тер-\nмінів, інформацію про\
+    \ видатних історичних діячів. Слова "
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-golub-2023_s0122
+  text: "120\n288    І   Випишіть із тексту прикметники разом з іменниками, до яких\
+    \ \nвони належать. Поставте питання до прикметників, визначте \nрід, число та\
+    \ відмінок. Поясніть, від чого вони залежать. До-\nберіть прикметники до виділених\
+    \ слів. Якщо хтось із друзів думає, що перебіг вашого мислення \nнеправильний,\
+    \ важливо відверто про це сказати. Необхідно \nвикласти переконливі аргументи,\
+    \ чому саме це неправильно, \nне турбуючись про те, що ви образитеся. Звісно,\
+    \ ідеться не \nпро намір чіплятися до інших. Вар"
+  section_title: Сторінка 120
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0268
+  text: "Підрядні речення означальне, з’ясувальне, обставинні способу дії, міри \n\
+    і ступеня залежать від конкретних слів у головній частині. Інші підрядні обста-\n\
+    винні (місця, часу, порівняльне, причини, мети, умовне, допустове) пояснюють \n\
+    головну частину в цілому. 223"
+  section_title: Сторінка 176
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5476053357124329
+  chunk_id: 3588aaff_c0106
+  text: "Основним і водночас вельми проблематичним джерелом\r\nосмислення тогочасного\
+    \ контексту рецепції української літератури є розгорнута\r\nбібліографічно-описова\
+    \ довідка В. Сиповського, \"Україна в російському\r\nписьменстві: 1800-1850\"\
+     108,\n\n108 Сиповський\r\nВасиль. Україна в російському письменстві: 1800-1850.\
+    \ — К., 1928.\n\nПерше, що тут вражає, — це сам фактаж, його розміри:\r\nяк видно\
+    \ зі змісту, йдеться про майже п’ятсот творів. І де навіть тоді, коли\r\nавтор\
+    \ зосереджується на красному письменстві, специфі"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5473389029502869
+  chunk_id: f79fbc43_c0476
+  text: "Yeltsin. Boris. The Struggle for Russia. Translated by\r\nCatherine A. Fitzpatrick.\
+    \ New York: Random House, 1995.\n\nYergin, Daniel and Thane Gustafson. Russia\
+    \ 2010 and What It\r\nMeans for the World. New York: Vintage. 1995.\n\nЗограф,\
+    \ Н. Ю. Антропологические исследования мужского\r\nвеликорусского населения Владимирской,\
+    \ Ярославской и Костромской губерний. Москва,\r\n1890.\n\nЗотов, Игорь \"Александр\
+    \ Солженицын, Альбер Камю и кризис\r\nвоображения\", Огонек, №29 (4408) (июль\
+    \ 1995).\n\nЗуев Ф. Г., и др. История По"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm
+- score: 0.543111264705658
+  chunk_id: f79fbc43_c0021
+  text: "У вступі наводиться огляд різних підходів до націоналізму в XX\r\nстолітті.\
+    \ У першому розділі автор прагне позиціонувати проблему захисту Росією\r\nсвоїх\
+    \ колоніальних домагань у контексті текстуальної політики в самій Росії та\r\n\
+    інших країнах. Вказується на різницю між колоніалізмом російського та західного\r\
+    \nзразка і робиться спроба показати, що російський колоніалізм виходить за межі\r\
+    \nзагальноприйнятої концептуальної бази наукових студій, присвячених російській\r\
+    \nлітературі. Стандарти, традиції та оч"
+  work: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+  year: 2006
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/thompson/tom.htm

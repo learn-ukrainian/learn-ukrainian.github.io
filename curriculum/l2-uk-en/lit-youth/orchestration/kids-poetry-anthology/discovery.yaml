@@ -1,0 +1,288 @@
+discovered_at: '2026-03-15T18:34:39.162644+00:00'
+query_keywords:
+- Kids Poetry Anthology
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Kids Poetry Anthology у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.2
+  relevance_note: This video focuses on the Tereșchenko family's history and their
+    suppression by Soviet historiography. While it touches on historiography and narrative
+    control, it is not related to children's poetry or its literary analysis, even
+    with the 'Деколонізаційна перспектива' section. The focus is on political history,
+    not literary analysis.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=pAUQaKJYGIM
+  channel: Суспільне Культура
+  title: «Сталінський режим є співвідповідальним за Голокост» — інтерв'ю з істориком
+    Анатолієм Подольським
+  relevance_score: 0.1
+  relevance_note: This video discusses the Holocaust and Stalin's regime from a historical
+    perspective, which is unrelated to the topic of children's poetry. While it's
+    in Ukrainian, its content is entirely outside the module's scope.
+  transcript_excerpt: сьогодні ми будемо мати розмову з Анатолієм подольським який
+    є істориком кандидатом історичних наук а також керівником українського центру
+    вивчення історії Голокосту
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.1
+  relevance_note: This video details the business and philanthropic history of the
+    Tereșchenko family, which is unrelated to children's poetry. Its historical content
+    does not connect to the module's literary theme.
+  transcript_excerpt: Про їхні скарби ходили легенди. Та якою була ціна цих статків?
+    Вони віддали мільйони на розвиток України.
+  embed_suggestion: N/A
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.65
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+- url: https://www.ukrainianlessons.com/taras-shevchenko/
+  title: Taras Shevchenko — Ukraine's National Poet
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - shevchenko
+  - literature
+  - history
+  - poetry
+- url: https://www.ukrainianlessons.com/episode223/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 223
+- url: https://www.ukrainianlessons.com/episode224/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - vocabulary
+  - housing
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 224
+- url: https://www.ukrainianlessons.com/episode225/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - poetry
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 225
+rag_chunks:
+- score: 0.5
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0001
+  text: 'Зміст    3
+
+    Зміст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+
+    Будьмо творчими читачами!. . . . . . . . . . . . 7
+
+    Література і дійсність. . . . . . . . . . . . . . . . 9
+
+    Література та інші види мистецтва . . . . . . . 9
+
+    Автор і читач. . . . . . . . . . . . . . . . . . . . . . . . 9
+
+    Читання та його види. . . . . . . . . . . . . . . . . 10
+
+    Діалогічне прочитання художнього твору. . 10
+
+    Особливості літературного  
+
+    процесу. . . . . . . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 3
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0003
+  text: 'Кожен із майстрів слова послуговується
+
+    різними мовними ресурсами для творення
+
+    образів (зокрема, зорових): тропами, синтак-
+
+    сичними фігурами, віршованою чи прозовою
+
+    формою тощо — унаслідок цього виникають
+
+    різні образи, які по-своєму красиві й есте-
+
+    тично вартісні. Отже, ідейність, образність
+
+    та емоційність здатні захоплювати читача,
+
+    впливати на його виховання. Опановуючи шкільний курс української
+
+    літератури, ви маєте навчитися аналізувати
+
+    художні твори різних епох, митців і стилів,
+
+    що допоможе ва'
+  section_title: Сторінка 4
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 3-klas-ukrainska-mova-kravtsova-2020-1_s0108
+  text: "110\n307.\t 1.\t Прочитай уривки з віршів про весну. Як ти гадаєш, чи радіють\
+    \ \nпоети приходу весни? Обґрунтуй свою думку.\n308. 1.\t Прочитай та спиши речення.\n\
+    Крізь прозоре скло \nсонечко зійшло \nі поклало теплу руку \nна моє чоло. \n\t\
+    \n\t   Дмитро Павличко\n2.\t Що ти можеш сказати про виділені слова? Визнач серед\
+    \ них \nта підкресли підмет і присудок.\nУрок розвитку зв’язного мовлення. \n\
+    Складання казки за малюнковим планом та кінцівкою\n309.\t 1.\t Розшифруй слова.\
+    \ \nа\nб\nв\n1\nк\nч\nб\n2\nа\nі\nі\n3\nу\nр\nш\nКод 1. 1а, 2б,"
+  section_title: Сторінка 110
+  grade: 3
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0002
+  text: "3\nШановні восьмикласники та восьмикласниці! Перш ніж розпочати роботу з \
+    \ підручником, необхідно \nознайомитися з його змістом і структурою. Матеріал\
+    \ у ньо-\nму об’єднано в  п’ять розділів, кожен із яких містить кіль-\nка параграфів,\
+    \ що, у  свою чергу, поділяються на пункти. Ви вже знаєте, що історія, як і  будь-яка\
+    \ інша наука, \nмає власну термінологію, і  її необхідно розуміти. Підруч-\nник\
+    \ містить дати основних подій, визначення понять і тер-\nмінів, інформацію про\
+    \ видатних історичних діячів. Слова "
+  section_title: Сторінка 3
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5733429193496704
+  chunk_id: 3588aaff_c0005
+  text: "Стосовно досліджень, які тут подані, то в них звучать\r\nі виділяються три\
+    \ ключі. Перший, бодай у плані історії поставання цих праць, —\r\nце компаративістський\
+    \ вимір. Дослідження таких тем, як українсько-російські або\r\nукраїнсько-польські\
+    \ літературні взаємини, природно випливали із моїх найраніших\r\nнаукових зацікавлень\
+    \ і водночас становили — й надалі становлять — точку відношення,\r\nключовий момент,\
+    \ від якого, на мою думку, мало б починатися нове осмислення\r\nукраїнського літературного\
+    \ процесу, його "
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5698427557945251
+  chunk_id: 9976239a_c0083
+  text: "Коментар до кожного твору містить вичерпні відомості про всі наявні\r\nджерела\
+    \ тексту, перелік їх у генеалогічній (стадіальній) послідовності, довідки\r\n\
+    про джерело основного тексту та датування твору; включає історію задуму і\r\n\
+    тексту твору, аналіз творчої праці над чорновими і подальшими рукописними\r\n\
+    текстами та аналіз друкованих текстів, що становлять продовження творчої праці\r\
+    \nШевченка. Саме цей аналіз лежить в основі мотивування вибору основного,\r\n\
+    критично встановленого тексту, обґрунтування хр"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5588144063949585
+  chunk_id: 3588aaff_c0551
+  text: "4. У тому-таки вступному розділі, де подається\r\nкороткий огляд попередньої\
+    \ української науки про літературу, Чижевський також\r\nвважає за потрібне спробувати\
+    \ десь на шести сторінках викласти ази поетики. Для\r\nангломовних читачів це\
+    \ може видатися ексцентричним або вищою мірою недоречним.\r\nОдначе така спроба\
+    \ цілком відповідає тим настановам, про які йшлося вище.\r\nПочавши з двох параграфів,\
+    \ присвячених мові (де він згадує, приміром, архаїзми,\r\nнеологізми, жаргон тощо),\
+    \ продовживши короткими визначен"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-juvenile 24 — E2E
+PASS: pipeline lit-youth 24
 
   Module:   kids-folklore
-  Track:    lit-juvenile
-  Mode:     e2e
+  Track:    lit-youth
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T19:58:57Z
+  Date:     2026-03-15T18:36:49Z

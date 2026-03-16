@@ -1,0 +1,188 @@
+discovered_at: '2026-03-15T18:27:53.339388+00:00'
+query_keywords:
+- 'Євген Гуцало: лірична проза шістдесятника'
+- Вступ та культурний контекст
+- 'Рання лірична проза: «Люди серед людей»'
+- 'Повісті та романи: зріла проза'
+- Мова, стиль та поетика
+- «Ментальність орди»
+- Підсумок та рецепція
+- Проаналізувати лірику прози Євгена Гуцала в контексті руху шістдесятників
+- Дослідити еволюцію від камерної прози до публіцистики «Ментальності орди»
+- Зрозуміти роль Гуцала у збереженні селянського мовного пласту в модерній українській
+  прозі
+- literature
+- шістдесятники
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0312
+  text: "Літературне «шістдесятництво» . іван Драч  165\nВиявляємо літературну компетентність\n\
+    1. яке враження справив на вас твір? які асоціації виникли? які запитання у вас\
+    \ \nз’явилися? Обговоріть їх з однокласниками, однокласницями й учителями .\n\
+    2. Поміркуйте, чому автор назвав свій твір «Крила» . які літературні асоціації\
+    \ \nпороджує ця назва? Пригадайте фразеологізми зі словом криëа . який емо-\n\
+    ційно-експресивний відтінок — позитивний чи негативний — має це слово \nу фразеологізмах,\
+    \ народній творчості?\n3"
+  section_title: Сторінка 165
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0421
+  text: '255
+
+    ЗМІСТ
+
+    ЛІТЕРАТУРНЕ ШІСТДЕСЯТНИЦТВО . . . . . . . . . . . . . . . . . . . . . . . . 188
+
+    Українська література на початку 60-х років ХХ ст.. . . . . . . . . . . . . .
+    . 188
+
+    Василь Симоненко. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . 190
+
+    «Задивляюсь у твої зіниці...» . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 190
+
+    Я... . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . .'
+  section_title: Сторінка 255
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0419
+  text: 'А ще він писав казки, п’єси та веселі повісті й анекдоти. Перші
+
+    поетичні твори митця — це ліричні вірші з жовнірського життя. Основні мотиви —
+    туга за рідною домівкою, біль серця, роз-
+
+    лученого з коханою, жаль за марно втраченими роками. Поезія
+
+    Українська поезія другої половини ХІХ ст. 317'
+  section_title: Сторінка 317
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0404
+  text: "Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.\
+    \ — \n№ 6. — С. 90–100. Домашнє завдання"
+  section_title: Сторінка 248
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0004
+  text: ". . . . . . . . 51\nЖанр, художня організація, персонажі. . . . . 52\nЕміграційна\
+    \ література. . . . . . . . . . . . 56\nЄвген Маланюк. . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 58\nОсвідчення («Один вечір») . . . . . . . . . . . .\
+    \ . . 59\nЧитацький практикум. Один вечір. . . . . . . . . 60\nПро творче покликання\
+    \  \n(«Напис на книзі віршів»). . . . . . . . . . . . . . . 61\nЧитацький практикум.\
+    \ Напис на книзі  \nвіршів. . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 61\nНостальгія  \n(«Під чужим не"
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5459516048431396
+  chunk_id: 59fd4e79_c0001
+  text: "«Евфоніа веселобрмячаа»\n\nКирил Транквіліон. «Перло многоцЂнное»     (Див.\
+    \ Українська література XVII ст.)\n\nДраматична література\n\nРіздвяні вірші Памви\
+    \ Беринди\n\nВірші Касіяна Саковича на погреб Сагайдачного\n\n«Размышлян’є о муцЂ\
+    \ Іоаникіа Волковича»\n\nІнтермедії до драми Я. Гаватовича     (Див. Українська\
+    \ література XVII ст.)\n\n«Слово о збуреню пекла»\n\nЛітература другої половини\
+    \ XVII — початку XVIII\r\nст.\n\nВіршова література\n\nІсторичні вірші\n\nКлиментій\
+    \ Зіновієв\n\nІоан Величковський\n\nІоан Максимович\n\nДр"
+  work: Хрестоматія давньої української літератури (Білецький)
+  author: Білецький О.
+  year: 1952
+  genre: anthology
+  language_period: modern
+  source_url: http://izbornyk.org.ua/biletso/bilo.htm
+- score: 0.5444189310073853
+  chunk_id: 3c6fc78f_c0290
+  text: "7. Античная лирика. — М. : Гослитиздат, 1968. — 623\r\nс.\n\n8. Античные\
+    \ риторики. / Под ред. А. А. Тахо-Годи. — М.:\r\nИзд-во Моск. ун-та, 1978. — 352\
+    \ с.\n\n9. Арістотель Поетика. / Пер. Б. Тена. — К.:\r\nМистецтво, 1967. — 84\
+    \ с.\n\n10. Аристотель. Риторика. / Пер. Н.\r\nПлатоновой. — В кн.: Античные риторики.\
+    \ М.: Изд-во Моск. ун-та, 1978, с. 15\r\n— 164.\n\n11. Арнольд из Виллановы. Салернский\
+    \ кодекс\r\nздоровья. / Пер. Ю. Ф. Шульца, вступ. ст. В. Н. Терновского и Ю. Ф.\
+    \ Шульца. — М.,\r\n1970. — 110 с.\n\n12. Аскоченс"
+  work: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+  year: 1983
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/masluk/mas.htm
+- score: 0.5390779376029968
+  chunk_id: fc2291b5_c4769
+  text: "Літ.: Лазоренко А.\r\nМолодые семидесятых. В кн.: Донбасс: писатель и время.\
+    \ Донецк, 1979.\n\nЛ. П. Кир’яков."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

@@ -1,0 +1,180 @@
+discovered_at: '2026-03-15T18:49:24.410243+00:00'
+query_keywords:
+- 'Сашко Дерманський: Чудове Чудовисько та інші світи'
+- Вступ та культурний контекст
+- 'Аналіз творів: «Чудове Чудовисько» та «Король буків»'
+- «Казки Дракона Омелька» та малі форми
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати феномен Сашка Дерманського як найпопулярнішого сучасного дитячого
+  автора
+- Дослідити поетику фентезі в романах «Чудове Чудовисько», «Король буків» та «Казки
+  Дракона Омелька»
+- Зрозуміти роль гумору та абсурду як інструментів формування української дитячої
+  ідентичності
+- literature
+- фентезі
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0202
+  text: "А. Уявіть, що вам доручили розмістити цей текст на шкільному сайті. Підготуйте\
+    \ до тексту \nкілька вступних речень, щоб зацікавити учнів вашої школи дочитати\
+    \ його до кінця. Т. Пата. Птахи"
+  section_title: Сторінка 130
+  grade: 9
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0439
+  text: "286\nЗМІСТ\nЗМІСТ\nДорогі семикласниці та семикласники! \n \n \n \n \n  3\n\
+    ВСТУП   \n \n \n \n \n \n \n \n \n  4 \nФункції художньої літератури   \n \n \n\
+    \ \n \n \n  4\nРозділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ   \n \n \n \n \n  8\nНАРОДНА\
+    \ ТВОРЧІСТЬ   \n \n \n \n \n \n \n  8\n \nНародні соціально-побутові пісні   \n\
+    \ \n \n \n \n  9\n \nКозацькі пісні   \n \n \n \n \n \n \n \n 10\n \nОй на г;орі\
+    \ та женці жнуть   \n \n \n \n \n \n 12\n \nЧумацькі пісні   \n \n \n \n \n \n\
+    \ \n \n 14\n \nЧум;аче, чумаче, чого зажурився?   \n \n \n \n \n 15\n \nСтрілецькі\
+    \ пісні    \n \n \n \n \n \n \n 17\n \nТам, пі"
+  section_title: Сторінка 288
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.521596372127533
+  chunk_id: 3588aaff_c0331
+  text: "Інтегроване розуміння Вишенського та його ролі в\r\nкультурному й літературному\
+    \ житті сучасної йому доби потребує осмислення\r\nконтексту й підставових параметрів\
+    \ його мислі. Певною мірою це вже зробив\r\nГрушевський, який у п’ятому томі своєї\
+    \ \"Історії української\r\nлітератури\" докладно розглянув, між іншим, візантійський\
+    \ і слов’янський\r\nісихазм, роль святої гори Афону, їх глибинний вплив на культуру\
+    \ Русі. (Т.5. —\r\nС.351352.) Нещодавно специфічне питання споріднення Вишенського\
+    \ з ісихазмом\r\nрозглядалос"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5092686414718628
+  chunk_id: fc2291b5_c3055
+  text: "Літ.: Новиков Н. В.\r\nОбразы восточнославянской волшебной сказки. Л., 1974;\
+    \ Пропп В. Я. Морфология\r\nсказки. М., 1969; Ярмиш Ю. Ф. У світі казки. К., 1975;\
+    \ Шабліовський В. Є. Ритм\r\nфантастичної казки. «Слов’янське літературознавство\
+    \ і фольклористика», 1986, в.\r\n15; Дунаєвська Л. Ф. Українська народна казка.\
+    \ К., 1987; Бріцина О. Ю.\r\nУкраїнська народна соціально-побутова казка (специфіка\
+    \ та функціонування). К.,\r\n1989.\n\nІ. П. Березовський."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5092507004737854
+  chunk_id: 68ba0555_c0006
+  text: "Глобальний контекст історії . . . . . . . . . . . . .\r\n. . 655\n\nЕкономічна\
+    \ стагнація СРСР . . . . . . . . . . . . . .\r\n. 660\n\nПолітична культура епохи\
+    \ Хрущова . . . . . . . . . .\r\n. . . . . 665\n\n«Розвинутий соціалізм» . . .\
+    \ . . . . . . . . . . . .\r\n671\n\nПолітичний простір України . . . . . . . .\
+    \ . . . . .\r\n. . 675\n\nКультура повсякденного життя . . . . . . . . . . . .\r\
+    \n. . . 683\n\nНауково-технічна культура України . . . . . . . . . .\r\n. . .\
+    \ . . 689\n\nГуманітарна культура України . . . . . . . . . ."
+  work: Попович — Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/popovych/narys.htm

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-war 12 — E2E
+PASS: pipeline lit-war 15
 
   Module:   bilozerska-diary
   Track:    lit-war
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T22:59:37Z
+  Date:     2026-03-15T21:56:08Z

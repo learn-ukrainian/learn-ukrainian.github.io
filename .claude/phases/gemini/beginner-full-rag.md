@@ -123,7 +123,15 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 
 ### Dialogue Quality
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each. For alphabet modules (M1-M10): dialogues are OPTIONAL — only include them if they feel natural with the available vocabulary. Do NOT force nonsensical dialogues just to hit a count.
+**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
+
+**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
+- Greeting: `— Привіт! — Привіт!`
+- Identification: `— Це кіт? — Так, це кіт.`
+- Location: `— Молоко тут? — Ні, молоко там.`
+- Combined: `— Мама тут? — Так, мама тут. А тато там.`
+
+Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
 
 **Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
 

@@ -1,0 +1,256 @@
+discovered_at: '2026-03-15T19:34:30.211781+00:00'
+query_keywords:
+- Chekh Absolute Zero
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Chekh Absolute Zero у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: This video is highly relevant as it directly addresses the suppression
+    of Ukrainian figures (Tereşçenko family) and their legacy within Soviet historiography.
+    This strongly aligns with the 'історіографія' and 'Деколонізаційна перспектива'
+    sections, providing a concrete example of how colonial narratives impact historical
+    and cultural memory, which is directly applicable to literary decolonization.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали.
+  embed_suggestion: After section Деколонізаційна перспектива -- as it powerfully
+    illustrates the impact of colonial narratives on historical figures and their
+    remembrance, mirroring challenges in literary re-evaluation.
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.6
+  relevance_note: The video discusses the construction of historical narratives and
+    national identity by Polish nobility linking to Kyivan Rus, which provides relevant
+    background for understanding 'історіографія' and 'Деколонізаційна перспектива'
+    within a broader cultural context, though not directly about the literary figure
+    Chekh Absolute Zero.
+  transcript_excerpt: Вони забезпечують тяглість оцими моментами наголошення на тому
+    що у нас Славне минуле і це Славне минуле цікаво підтверджується на всіх рівнях
+    скажімо польські автори пишуть про давнє минуле цих руських земель
+  embed_suggestion: After section Деколонізаційна перспектива -- as it offers a historical
+    example of narrative construction and identity, relevant for contextualizing decolonized
+    literary analysis.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.2
+  relevance_note: While about a prominent Ukrainian family, the video focuses on their
+    business innovations, wealth, and philanthropy. This specific biographical and
+    economic focus is largely tangential to the module's literary analysis, stylistic
+    discussion, or decolonization of a literary figure named Chekh Absolute Zero.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable for direct embedding, as its specific focus on business
+    history does not align with the module's literary and decolonization themes. Could
+    potentially be used as general background on prominent Ukrainian families if the
+    module context expanded.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 5-klas-istoriya-schupak-2022_s0024
+  text: "РОЗДІЛ 1\n26\nЗапитання і завдання\nI.\nЗнаю й систематизую нову інформацію\n\
+    1.\t Самооцінювання. Оцініть свої успіхи в опануванні теми «Джерела істо-\nричної\
+    \ інформації» — уявно поєднайте кожне із запитань для самокон-\nтролю з відповідним\
+    \ смайликом успіху. Дайте відповіді на запитання.\nЩо таке історичні джерела?\n\
+    Які є види історичних джерел?\nЧому важливо визначати \nдостовірність джерел?\n\
+    Як можна досліджувати \nісторичні джерела?\n?\nПрекрасно\nДобре\nпопрацювати\n\
+    Треба \nНічого не\nзрозуміло\n2.\t Виконайте онл"
+  section_title: Сторінка 26
+  grade: 5
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 2-klas-ukrmova-kravcova-2019-1_s0138
+  text: '112
+
+    Спостереження за основними ознаками тексту................................. 112
+
+    Типи текстів...........................................................................................
+    115
+
+    Будова тексту........................................................................................
+    119
+
+    Повторення...............................................................................................125
+
+    Список використаних джерел..............................................................127
+
+    У'
+  section_title: Сторінка 128
+  grade: 2
+  author: kravcova
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 6-klas-istoriya-gisem-2023_s0020
+  text: "За потреби скористай­\nтеся додатковими джерелами. Підручник  \nВидавництво\
+    \ «Ранок»"
+  section_title: Сторінка 19
+  grade: 6
+  author: gisem
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0007
+  text: "Зміст    5 \nХудожня організація. . . . . . . . . . . . . . . . . 135\n\
+    Читацький практикум. Intermezzo . . . . . . . . . . . . . . . . . . . . 136\n\
+    Повість «Тіні забутих предків» . . . . . . . . . 141\nІсторія створення. . . .\
+    \ . . . . . . . . . . . . . . . 141\nНеоромантична основа. . . . . . . . . . .\
+    \ . . . . 141\nАвторський погляд. . . . . . . . . . . . . . . . . . 142\nТема\
+    \ кохання . . . . . . . . . . . . . . . . . . . . . . 142\nЛюдина, природа, магія.\
+    \ . . . . . . . . . . . . . 142\nІван Палійчук та"
+  section_title: Сторінка 5
+  grade: 10
+  author: borzenko
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5597858428955078
+  chunk_id: 9976239a_c0083
+  text: "Коментар до кожного твору містить вичерпні відомості про всі наявні\r\nджерела\
+    \ тексту, перелік їх у генеалогічній (стадіальній) послідовності, довідки\r\n\
+    про джерело основного тексту та датування твору; включає історію задуму і\r\n\
+    тексту твору, аналіз творчої праці над чорновими і подальшими рукописними\r\n\
+    текстами та аналіз друкованих текстів, що становлять продовження творчої праці\r\
+    \nШевченка. Саме цей аналіз лежить в основі мотивування вибору основного,\r\n\
+    критично встановленого тексту, обґрунтування хр"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5562215447425842
+  chunk_id: 9976239a_c0642
+  text: "Коментар включає історію задуму та тексту і створення коментованого\r\nтвору,\
+    \ його творчу історію за всіма наявними матеріалами. Основний зміст цієї\r\nчастини\
+    \ текстологічного коментаря — аналіз творчої роботи над чорновими й\r\nнаступними\
+    \ рукописними текстами та аналіз друкованих текстів, що становлять\r\nпродовження\
+    \ творчої праці Шевченка. Саме цей аналіз лежить в основі мотивування\r\nосновного,\
+    \ дефінітивного тексту, обґрунтування хронології (дати) твору,\r\nвстановлення\
+    \ генеалогічного ланцюга послідовни"
+  work: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+  year: 1961
+  genre: poetry
+  language_period: modern
+  source_url: http://izbornyk.org.ua/shevchenko/shev.htm
+- score: 0.5414698123931885
+  chunk_id: 3588aaff_c0285
+  text: "53 Мої застереження\r\nщодо цього терміна й теорії, що за ним стоїть, подані\
+    \ в працях: Grabowicz G.\r\nToward a History of Ukrainian Literature; Grabowicz\
+    \ G. Some Further\r\nObservations on ’Non-historical Nations’ and ’Incomplete’\
+    \ Literatures: a Repiy.\r\n— У різних місцях.\n\n54 Пор.: Волинський\r\nП. К.\
+    \ Теоретична боротьба в українській літературі (перша половина XIX\r\nст.). —\
+    \ К., 1959. — C. 141-210 та ін. — Вищезгадана Шевченкова критика\r\nКотляревського\
+    \ — виняток, що підтверджує правило."
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

@@ -1,0 +1,184 @@
+discovered_at: '2026-03-15T20:04:41.298651+00:00'
+query_keywords:
+- 'Ілля Чернілевський: Поезія несправдженого майбуття'
+- Вступ та контекст
+- 'Ліризм та війна: Аналіз збірки'
+- Метафорика втраченої весни
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- 'Дослідити життя та внесок Ілля Чернілевський: Поезія несправдженого майбуття у
+  сучасну українську культуру'
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+- literature
+- суб'єктність
+- тяглість
+- геноцид
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0413
+  text: "253\nЗміст\nВід автора . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3\nВСТУП. «РОЗСТРІЛЯНЕ\
+    \ ВІДРОДЖЕННЯ». . . . . . . . . . . . . . . . . . . . 4\nУкраїнська література\
+    \ ХХ ст. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . 4\nТ. Л. «Розстріляне відродження» . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . 5   \nЛІТЕРАТУРНИЙ АВАНГАРД . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 253
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0479
+  text: "254\nЗМІСТ\nВСТУП. РЕАЛІСТИЧНА УКРАЇНСЬКА ПРОЗА\nУкраїнська література другої\
+    \ половини ХІХ ст. в контексті \nрозвитку тодішнього суспільства, культури й мистецтва.\
+    \ . . . . . . . . . . . . . 3\nІван Нечуй-Левицький . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\nТеорія\
+    \ літератури. Соціально-побутова повість. Реалізм . . . . . . . . . . . . . .\
+    \ . 14\nКайдашева сім’я  (Скорочено) . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . ."
+  section_title: Сторінка 254
+  grade: 10
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  text: "Зміст    3\nЗміст\nПізнавати себе і світ . . . . . . . . . . . . . . . .\
+    \ . . . 7\nВступ. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . 9\nБлизьке й далеке ХХ століття . . . . . . . . . . . . . 9\nНа шляху\
+    \ до свободи й незалежності. . . . . . . 9\nДві літератури . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . 10\nРозстріляне відродження. . . . . . . . . . .\
+    \ . . . . . 10\nЛітературні організації . . . . . . . . . . . . . . . . . 11\n\
+    Літературний і мистецький \nавангард. . . . . . . . "
+  section_title: Сторінка 3
+  grade: 11
+  author: borzenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  text: "Поясніть, як ви розумієте думку автора. Наведіть \nфакти, які їй відповідають.\
+    \ Практичне заняття \nДержавне будівництво УЦР: здобутки і  прорахунки\nЗавдання\
+    \ для узагальнення знань  \nі підготовки до тематичного оцінювання  \nза розділом\
+    \ II «Початок Української революції»"
+  section_title: Сторінка 55
+  grade: 10
+  author: gisem
+  page: ''
+  trust_tier: 2
+- score: 0.1666666716337204
+  chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0439
+  text: "286\nЗМІСТ\nЗМІСТ\nДорогі семикласниці та семикласники! \n \n \n \n \n  3\n\
+    ВСТУП   \n \n \n \n \n \n \n \n \n  4 \nФункції художньої літератури   \n \n \n\
+    \ \n \n \n  4\nРозділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ   \n \n \n \n \n  8\nНАРОДНА\
+    \ ТВОРЧІСТЬ   \n \n \n \n \n \n \n  8\n \nНародні соціально-побутові пісні   \n\
+    \ \n \n \n \n  9\n \nКозацькі пісні   \n \n \n \n \n \n \n \n 10\n \nОй на г;орі\
+    \ та женці жнуть   \n \n \n \n \n \n 12\n \nЧумацькі пісні   \n \n \n \n \n \n\
+    \ \n \n 14\n \nЧум;аче, чумаче, чого зажурився?   \n \n \n \n \n 15\n \nСтрілецькі\
+    \ пісні    \n \n \n \n \n \n \n 17\n \nТам, пі"
+  section_title: Сторінка 288
+  grade: 7
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary:
+- score: 0.5588081479072571
+  chunk_id: 3588aaff_c0285
+  text: "53 Мої застереження\r\nщодо цього терміна й теорії, що за ним стоїть, подані\
+    \ в працях: Grabowicz G.\r\nToward a History of Ukrainian Literature; Grabowicz\
+    \ G. Some Further\r\nObservations on ’Non-historical Nations’ and ’Incomplete’\
+    \ Literatures: a Repiy.\r\n— У різних місцях.\n\n54 Пор.: Волинський\r\nП. К.\
+    \ Теоретична боротьба в українській літературі (перша половина XIX\r\nст.). —\
+    \ К., 1959. — C. 141-210 та ін. — Вищезгадана Шевченкова критика\r\nКотляревського\
+    \ — виняток, що підтверджує правило."
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5392128825187683
+  chunk_id: fc2291b5_c2280
+  text: "Літ.: Франко І. Із\r\nсекретів поетичної творчості В кн.: Франко І. Зібрання\
+    \ творів, т. 31. К., 1981;\r\nТеория литературы. Основные проблемы в историческом\
+    \ освещенни, кн. 3. М., 1965;\r\nЛихачев Д. Нестилизационные подражания. В кн.:\
+    \ Лихачев Д. Поэтика древнерусской\r\nлитературы. М., 1979; Храпченко М. Б. Творческая\
+    \ индивидуальность писателя и\r\nразвитие литературы. В кн.: Храпченко М. Б. Собрание\
+    \ сочинений, т. 3. М., 1981.\n\nМ. П. Бондар."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5254656076431274
+  chunk_id: 3588aaff_c0445
+  text: "Отож, хоча в цій книжці йдеться про вищою мірою санкціоновані\r\nтеми, —\
+    \ індустріалізація, революційне завзяття, перебудова суспільства, сам\r\nЛенін,\
+    \ — й інтерпретуються вони з /360/ показною правовірністю, вона\r\nвсе-таки зазнала\
+    \ тієї самої долі, що й «ідеологічно хистка» й «абстрактно\r\nгуманістична» збірка\
+    \ «Замість сонетів і октав». Незважаючи на кілька перших\r\nпозитивних відгуків,\
+    \ зокрема прихильні рецензії поета Миколи Асєєва й критика\r\nА. Лейтеса 4, негативні\
+    \ оцінки почали переважати. Причини д"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm

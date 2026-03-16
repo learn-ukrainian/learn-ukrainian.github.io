@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py lit-war 4 — E2E
+PASS: pipeline lit-war 8
 
   Module:   chekh-point-zero
   Track:    lit-war
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-20T23:07:57Z
+  Verdict:  PASS
+  Date:     2026-03-15T21:56:04Z

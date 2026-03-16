@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-hist-fic 17 — E2E
+PASS: pipeline lit-hist-fic 17
 
   Module:   kokotyukha-chervonyi
   Track:    lit-hist-fic
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T19:45:44Z
+  Date:     2026-03-15T19:20:31Z

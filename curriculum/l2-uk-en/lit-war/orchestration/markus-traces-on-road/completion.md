@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-war 7 — E2E
+PASS: pipeline lit-war 11
 
   Module:   markus-traces-on-road
   Track:    lit-war
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T22:51:52Z
+  Date:     2026-03-15T21:56:06Z

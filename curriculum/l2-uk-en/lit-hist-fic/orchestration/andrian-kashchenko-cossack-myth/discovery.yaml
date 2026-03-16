@@ -1,0 +1,194 @@
+discovered_at: '2026-03-15T19:24:39.700626+00:00'
+query_keywords:
+- 'Андріан Кащенко: Над Кодацьким порогом'
+- Вступ та культурний контекст
+- «Над Кодацьким порогом» та козацькі оповідання
+- «З Дніпра на Дунай» та великі повісті
+- Мова, стиль та поетика
+- Деколонізаційний вимір
+- Підсумок та рецепція
+- Проаналізувати творчість Андріана Кащенка як основоположника популярної козацької
+  прози
+- Дослідити роль оповідань «Над Кодацьким порогом» та «З Дніпра на Дунай» у формуванні
+  козацького міфу
+- Зрозуміти причини заборони Кащенка в СРСР як «буржуазного націоналіста»
+- literature
+- Запорозька
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 8-klas-ukrlit-avramenko-2025_s0367
+  text: "207\nЗМІСТ\nВСТУП\n§ 1. Художній твір в історико-культурному контексті доби.\
+    \ . . . . . . . . . . . . . . 4\nПРАДАВНЯ УКРАЇНА В ДЗЕРКАЛІ ЛІТЕРАТУРИ \n§ 2–3.\
+    \ Культура й віра давніх українців. Історичне оповідання  \n                 \
+    \  Івана Білика «Дарунки скіфів». . . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . 8\n\t\n         Дарунки скіфів (Скорочено) . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n§ 4–5. Русь,\
+    \  її  культура  та  письменство . . . . . . . . ."
+  section_title: Сторінка 207
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.3333333432674408
+  chunk_id: 8-klas-istoria-ukr-schupak-2025_s0109
+  text: "Розділ 2\nСТАНОВЛЕННЯ КОЗАЦТВА \n(XVI — перша половина XVII ст.)\nЗНАЮ МИНУЛЕ\
+    \ » ОСМИСЛЮЮ СЬОГОДЕННЯ » ПРОГНОЗУЮ МАЙБУТНЄ \nЗАПИТАННЯ І ЗАВДАННЯ «•\n•» ЗНАЮ\
+    \ І СИСТЕМАТИЗУЮ НОВУ ІНФОРМАЦІЮ\n1. С а м о о ц і н ю в а н н я\nОцініть свої\
+    \ успіхи в опануванні теми «Козацькі повстання кінця XVI ст.».\nМожу назвати час\
+    \ та провідників козацьких по­\nвстань кінця XVI ст.\nМожу визначити причини,\
+    \ приводи до повстань, їх \nрезультати й наслідки.\nМожу пояснити причини поразки\
+    \ козацьких по­\nвстань кінця XVI ст.\nМожу схар"
+  section_title: Сторінка 84
+  grade: 8
+  author: schupak
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0418
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 117
+
+    Т. Л. Сатирична комедія . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . 121
+
+    Мина Мазайло  (Уривок) . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . 127
+
+    ПЕРЛИНИ ЗАХІДНОУКРАЇНСЬКОЇ ЛІТЕРАТУРИ  . . . . . . . . . 132
+
+    Розвиток літератури в Західній Україні (до 1939 р.) . . . . . . . . . . . . 132
+
+    Богдан-Ігор Антонич . . . . . . . . . . . . . . . . . . . . . . . '
+  section_title: Сторінка 254
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0403
+  text: "21. Виконайте завдання одного з варіантів. Варіант А. Намалюйте або згенеруйте\
+    \ за допомогою штучного інтелекту обкла-\nдинку до повісті «Таємниця козацького\
+    \ скарбу». Презентуйте свою роботу \nодноліткам. Варіант Б. Напишіть допис (6–8\
+    \ речень) для розміщення в соцмережі, мета яко-\nго – спонукати однолітків прочитати\
+    \ повість «Таємниця козацького скарбу» або \nінші твори детективного жанру. Як\
+    \ написати \nкрутий детектив\n1. Забезпечити постійну зміну \nподій. 2. Додати\
+    \ містичний елемент. 3. Долучити твар"
+  section_title: Сторінка 264
+  grade: 8
+  author: zabolotnyi
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 8-klas-istoriya-ukr-gisem-2021_s0096
+  text: "Ро-\nбота в  парах. Обговоріть план роботи та  підготуйте лист від \nімені\
+    \ представника місцевих органів влади з  південних україн­\nських земель до цент­ральних\
+    \ органів влади, де опишіть те, як \nвиникло українське козацтво. За необхідності\
+    \ зверніться до до­\nдаткових джерел інформації. 10. Висловіть свою думку щодо\
+    \ \nцінностей українського козацтва. Чи зберігають вони своє \n­значення сьогодні?\
+    \ 11. До уроку узагальнення за розділом під­\nготуйте навчальний проєкт «Яку роль\
+    \ відіграло українське ко­\nзац"
+  section_title: Сторінка 50
+  grade: 8
+  author: gisem
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.5810875296592712
+  chunk_id: 3d7a3a6b_c0024
+  text: "20 Szajnocha K. Dwa\r\nlata dziejów naczych. 1646, 1648. Opowiadania i źródła.\r\
+    \n— Lwów, 1865. — T. 1. — S. 29.\n\n21 Gawroński R.\r\nFr. Obszar, zalundnienie\
+    \ i tworzenie się kozaczyzny.—\r\nKraków, 1914; ibidem. Geneza i rozwój idei kozactwa\
+    \ i kozaczyzny\r\nw XVI wieku.— Warszawa, 1924.\n\n22 Jabłonowski\r\nA. Historia\
+    \ Rusi PoBudniowej do upadku Rzeczy Pospolitej Polskiej. —\r\nKraków, 1912.— S.\
+    \ 121-122.\n\n23 Соловйов С. М. Малороссийское козачество до Богдана Хмельницкого\
+    \ // Русский вестник, 1859.— Т. 23.— Кн. "
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.5759738683700562
+  chunk_id: 3d7a3a6b_c0025
+  text: "36 Дашкевич Я. Р.\r\nКозацтво на Великому кордоні // Українське козацтво:\
+    \ сучасний стан та\r\nперспективи дослідження проблеми. Матеріали круглого столу\
+    \ // Український\r\nісторичний журнал, 1990.— № 12.— С. 20; його ж. Україна на\
+    \ межі між Сходом і\r\nЗаходом (XIV—XVIII ст.) // Записки наукового товариства\
+    \ ім. Шевченка (далі —\r\nЗНТШ).— Львів, 1991.— Т. 222.— С 39-40.\n\n37 Леп’явко\
+    \ С. Козацькі\r\nвійни кінця XVI ст. в Україні.— Чернігів, 1996.\n\n38 Винар А.\
+    \ Огляд\r\nісторичної літератури про початки козаччини /"
+  work: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+  year: 1999
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/coss1/shch.htm
+- score: 0.570013165473938
+  chunk_id: ffcfbeb9_c0061
+  text: "29 Ніколаєва Т.,\r\nЩербій Є. Народний одяг //\r\nКультура і побут населення\
+    \ України. — К., 1991. — С. 59, 99.\n\n30 Залізняк Л. Від склавинів до української\
+    \ нації. — С.\r\n133-134.\n\nАдже козацтво\r\nпродовжило військові традиції київських\
+    \ князів, у яких уже були культ меча,\r\nконя і шаблі, малинові стяги, вшанування\
+    \ верховних покровителів — святого Юрія,\r\nСвятої Покрови тощо. Навіть \r\nукраїнські\
+    \ кобзарі\r\n пізнього \r\nсередньовіччя мали своїх попередників у Київській Русі\
+    \ — таких, як віщий\r\nспівець Боян і й"
+  work: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+  year: 2001
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/pivtorak/pivt.htm

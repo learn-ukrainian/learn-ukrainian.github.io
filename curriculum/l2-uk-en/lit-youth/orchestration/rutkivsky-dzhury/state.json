@@ -1,0 +1,25 @@
+{
+  "track": "lit-youth",
+  "slug": "rutkivsky-dzhury",
+  "mode": "v5",
+  "phases": {
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-15T18:11:31Z",
+      "note": "file-exists",
+      "executor": {
+        "type": "script",
+        "name": "file_exists_skip"
+      }
+    },
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-15T18:11:31Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discover_passthrough"
+      }
+    }
+  }
+}

@@ -314,8 +314,12 @@ async function toggleTrack(trackId) {
 
   if (grid.children.length === 0) {
     grid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-    const data = await fetchTrackSummary(trackId);
-    renderModuleGrid(grid, data, trackId);
+    try {
+      const data = await fetchTrackSummary(trackId);
+      renderModuleGrid(grid, data, trackId);
+    } catch (e) {
+      grid.innerHTML = `<div class="error" style="padding:1rem;color:#e74c3c;">Failed to load modules: ${e.message}</div>`;
+    }
   }
 }
 

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-hist-fic 9 — E2E
+PASS: pipeline lit-hist-fic 9
 
   Module:   ivanychuk-water
   Track:    lit-hist-fic
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T14:50:58Z
+  Date:     2026-03-15T19:20:27Z

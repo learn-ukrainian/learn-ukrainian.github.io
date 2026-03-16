@@ -1,0 +1,262 @@
+discovered_at: '2026-03-15T17:20:00.971131+00:00'
+query_keywords:
+- Ivanychuk Scar
+- історіографія
+- наратив
+- суб'єктність
+- Вступ та контекст
+- Аналіз ключових творів
+- Стилістика та мова автора
+- Деколонізаційна перспектива
+- Підсумок та спадщина
+- Проаналізувати творчість Ivanychuk Scar у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+- literature
+error: null
+warning: null
+videos:
+- url: https://www.youtube.com/watch?v=qizEIzPxRXc
+  channel: Суспільне Док
+  title: Чому в СРСР рід Терещенків був табуйованим
+  relevance_score: 0.8
+  relevance_note: Directly addresses the suppression and distortion of Ukrainian history
+    (specifically the Tereshchenko family) by Soviet historiography. This aligns strongly
+    with the module's themes of історіографія and Деколонізаційна перспектива, providing
+    a concrete example of the historical revisionism that Ivanychuk's work likely
+    counters.
+  transcript_excerpt: Це прізвище, воно було завжди таке табоване. А і вони, як представники
+    еліти і представники знаті, звичайно, радянська історія, історіографія їх, ну,
+    викидувала і зневажали. Тобто ніде ні підприємства трещенків, ні їхні маєтки,
+    будинки по Глухову ніколи не згадували взагалі це слово сполучення, що це [музика]
+    Терещенків.
+  embed_suggestion: After section Деколонізаційна перспектива to provide a clear example
+    of historical narrative manipulation and the need for decolonized historical perspectives,
+    or within a discussion of історіографія.
+- url: https://www.youtube.com/watch?v=XwdmeKRbckU
+  channel: Суспільне Культура
+  title: '«Польська шляхта пов’язувала своє минуле з Київською Руссю» | «Батьки-засновники»
+    #shorts'
+  relevance_score: 0.6
+  relevance_note: Discusses the construction of historical narratives and national
+    identity through the lens of Polish nobility's connection to Kyivan Rus. This
+    is tangentially relevant to Ivanychuk's focus on historical themes and national
+    identity, especially in the context of decolonization efforts to reclaim Ukrainian
+    history.
+  transcript_excerpt: дуже важливо що коли шляхта говорить наші права наші власні
+    права які були не надані польськими королями а лише неми затверджені вони з відтіля
+    вони з Русі вони від тих давніх наших князів ... Вони забезпечують тяглість оцими
+    моментами наголошення на тому що у нас Славне минуле і це Славне минуле цікаво
+    підтверджується на всіх рівнях скажімо польські автори пишуть про давнє минуле
+    цих руських земель
+  embed_suggestion: After section Деколонізаційна перспектива to illustrate how historical
+    narratives are shaped and reclaimed, or after Вступ та контекст to introduce the
+    complexity of historical interpretation.
+- url: https://www.youtube.com/watch?v=cPwiNoy-N5I
+  channel: Суспільне Док
+  title: 'Бізнес-інновації і переїзд до Києва: як зростав вплив Терещенків | СПАДОК
+    ТЕРЕЩЕНКІВ | Серія 2'
+  relevance_score: 0.3
+  relevance_note: Focuses on the economic history and business innovations of the
+    Tereshchenko family. While historical, its specific focus on commerce and wealth
+    building is largely unrelated to a literary analysis of Ivanychuk Scar's works,
+    his stylistic choices, or broader decolonization perspectives as applied to literature,
+    unless Ivanychuk specifically addressed this family or economic history in a relevant
+    way.
+  transcript_excerpt: Микола Терещенко збудує одну з найбільших бізнес-імперій свого
+    часу, але все життя він пам'ятатиме, що починав з базару і робитиме все, щоб бути
+    своїм у вищому товаристві.
+  embed_suggestion: Not suitable for embedding in this module due to low topical relevance.
+- url: https://www.youtube.com/watch?v=aQLb5PaOxWg
+  channel: Harvard Ukrainian Research Institute
+  title: 'The “Asiatic Renaissance” & Ukrainian Occidentalism of 1946-1948: Mykola
+    Khvylovy vs. Arnold Toynbee'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=F9NLN3e1wmc
+  channel: Harvard Ukrainian Research Institute
+  title: '2008-11-17. The Great Famine in Ukraine. Opening: Flier, Graziosi, Kyrychenko.'
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=QLSDbqPHpLg
+  channel: Суспільне Культура
+  title: ГУЛАГ. Історія. Дискусія Французького інституту
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+blogs:
+- url: https://www.ukrainianlessons.com/episode233/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.4
+  topics:
+  - culture
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 233
+- url: https://www.ukrainianlessons.com/ukrainian-literature/
+  title: Ukrainian Literature — Key Authors and Works
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - literature
+  - authors
+  - books
+  - culture
+- url: https://www.ukrainianlessons.com/episode156/
+  title: Ukrainian Lessons Podcast Season 4
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - literature
+  - shevchenko
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 4
+  episode: 156
+- url: https://www.ukrainianlessons.com/episode222/
+  title: Ukrainian Lessons Podcast Season 6
+  source: ukrainianlessons.com
+  relevance_score: 0.35
+  topics:
+  - culture
+  - history
+  - poetry
+  - literature
+  - shevchenko
+  content_type: podcast_episode
+  series: ULP
+  season: 6
+  episode: 222
+rag_chunks:
+- score: 0.5
+  chunk_id: 11-klas-ukrajinska-mova-voron-2019_s0219
+  text: "Зробіть висновки й узагальнення, що випливають із зібраного \nфактичного\
+    \ матеріалу. Послуговуйтесь вставними конструкціями \nотже, як бачимо, на мою\
+    \ думку, на моє переконання, як видно із \nнаведених фактів тощо. Використайте\
+    \ у творчій роботі риторичні фігури (оклики, питан-\nня, звертання). Доберіть\
+    \ влучний заголовок."
+  section_title: Сторінка 145
+  grade: 11
+  author: voron
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  text: '. . . . . . . . . . . . . 149
+
+    § 45. Стилістичне використання синонімів, антонімів і паронімів. . . . . . . .
+    . . . . . . . . . . 154
+
+    § 46. Стилістичні особливості слів іншомовного походження. . . . . . . . . . .
+    . . . . . . . . . . . 159
+
+    § 47. Стилістичне забарвлення лексики. Книжна й розмовна лексика. . . . . . .
+    . . . . . . . 163
+
+    § 48. Стилістична роль неологізмів і застарілої лексики . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . 168
+
+    § 49. Стилістичні можливості фразеологізмів. . . . .'
+  section_title: Сторінка 207
+  grade: 11
+  author: avramenko
+  page: ''
+  trust_tier: 2
+- score: 0.25
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0490
+  text: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . 128
+
+    § 51 Словотвір іменників, прикметників , дієслів, прислівників . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . 131
+
+    § 52 Складні, складноскорочені слова, способи їх творення та написання . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 133
+
+    § 53 Стилістичне використання засобів словотвору  . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . '
+  section_title: Сторінка 270
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+- score: 0.20000000298023224
+  chunk_id: 8-klas-ukrmova-avramenko-2025_s0260
+  text: "183\n Зміст\nЗМІСТ\nВід авторів . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\
+    \ . 3\nВСТУП\n§ 1. Мова як засіб пізнання, впливу та головна ознака національної\
+    \ ідентичності . . . 4\n§ 2. Розвиток мовлення. Висловлення на дискусійну тему\
+    \ з відстоюванням  \nвласної позиції . . . . . . . . . . . . . . . . . . . . .\
+    \ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n\
+    ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО\nМорфологія. О"
+  section_title: Сторінка 184
+  grade: 8
+  author: avramenko
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 10-klas-ukrmova-karaman-2018_s0416
+  text: Поясніть розділові знаки в тексті. Випишіть мовні засоби розмовного стилю,
+    схарактеризуйте їх.
+  section_title: Сторінка 235
+  grade: 10
+  author: karaman
+  page: ''
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- score: 0.6196328401565552
+  chunk_id: fc2291b5_c2722
+  text: "Літ.: Шлиевский П. В.\r\nВнутренняя структура образа В кн.: Теория литературы.\
+    \ Основные проблеми в\r\nисторическом освещении. Образ, метод, характер. М., 1962;\
+    \ Коцюбинська М.\r\nЛітература як мистецтво слова Деякі принципи літературного\
+    \ аналізу художньої\r\nмови. К., 1965; Фролова К. Аналіз художнього твору. К.,\
+    \ 1975.\n\nВ. П. Іванисенко."
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm
+- score: 0.5828718543052673
+  chunk_id: 3588aaff_c0479
+  text: "Наступна площина, яка вбирає попередню, — наративна\r\nабо риторична. Адже\
+    \ кожен текст має певний голос, оскільки він постає як\r\nоповідь і послуговується\
+    \ такими чи іншими риторичними прийомами. Навіть текст,\r\nякий не має помітного\
+    \ оповідача, все одно має голос. Цей випадок безтілесного\r\nголосу, де текст\
+    \ твориться не якоюсь індивідуальною психікою, а самою чистою\r\nпоезією, є особливим\
+    \ і вельми цікавим варіантом, який, до речі, зможемо\r\nпроілюструвати. Більш\
+    \ звичні прояви голосу в цьому наративно-ри"
+  work: Грабович — До історії української літератури
+  author: Грабович Г.
+  year: 1997
+  genre: scholarly
+  language_period: modern
+  source_url: http://izbornyk.org.ua/hrabo/hr.htm
+- score: 0.5819220542907715
+  chunk_id: fc2291b5_c2893
+  text: "Літ.: Федоренко Н. В\r\nрусле времени и творчества (К 25-летию журнала «Иностранная\r\
+    \nлитература»)«Иностранная литература», 1980, № 7; «Иностранная литература». 1955\r\
+    \n— 1974. Указатель содержания журнала. М., 1975; «Иностранная литература». 1975\r\
+    \n— 1984. Указатель содержания журнала. М., 1985.\n\nС. Д. Павличко.\n\nІНСТРУМЕНТОВКА\
+    \ —\r\nзвукова організація худож. мови. Найчастіше термін вживається в віршознавстві.\r\
+    \nОсн. елементи 1. — повтори приголосних (алітерація) і\r\nголосних звуків (асонанс),\
+    \ слів (анаф"
+  work: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+  year: 1995
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/ulencycl/ule.htm

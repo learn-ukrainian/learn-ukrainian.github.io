@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-war 18 — E2E
+PASS: pipeline lit-war 20
 
   Module:   amelina-new-renaissance
   Track:    lit-war
-  Mode:     e2e
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T23:07:13Z
+  Date:     2026-03-15T21:56:11Z

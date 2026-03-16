@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit-juvenile 11 — E2E
+PASS: pipeline lit-youth 11
 
   Module:   rutkivsky-dzhury
-  Track:    lit-juvenile
-  Mode:     e2e
+  Track:    lit-youth
+  Mode:     v5
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:51:00Z
+  Date:     2026-03-15T18:11:31Z
