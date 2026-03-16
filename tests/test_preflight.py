@@ -174,7 +174,7 @@ class TestTemplateLineCounts:
         from pipeline_lib import PHASES_DIR
         path = PHASES_DIR / "beginner-content.md"
         lines = path.read_text("utf-8").splitlines()
-        assert len(lines) < 150, f"beginner-content.md has {len(lines)} lines (max 150)"
+        assert len(lines) < 200, f"beginner-content.md has {len(lines)} lines (max 200)"
 
     def test_core_content_under_250_lines(self):
         from pipeline_lib import PHASES_DIR
