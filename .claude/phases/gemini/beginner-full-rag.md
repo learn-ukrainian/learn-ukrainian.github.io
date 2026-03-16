@@ -99,7 +99,7 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 2. **PREVIEW** — "By the end of this module, you'll be able to..."
 3. **PRESENT** — the main content sections
 4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in Summary, tell learners what they can now do
+5. **CELEBRATE** — in the final `## {SUMMARY_HEADING}` section, tell learners what they can now do
 
 ### Emotional Safety (scored — Beginner Safety dimension)
 
