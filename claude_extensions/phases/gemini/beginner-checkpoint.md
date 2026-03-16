@@ -115,7 +115,7 @@ Write the checkpoint content for **{TOPIC_TITLE}** ({TRACK} track).
 1. **Paragraphs = English** with Ukrainian vocabulary **bolded inline**: "Remember **книга** (book)? Now combine it with the adjective **нова** to get **нова книга**."
 
 2. **Full Ukrainian sentences = prefer structural containers.** Ukrainian sentences (3+ words with a verb) work best in containers, but short inline Ukrainian is fine in explanatory context (e.g., "Remember how **Це нова книга** uses the adjective before the noun?"):
-   - **Tables** — paradigms, vocabulary groups, gender sorting (highest immersion density)
+   - **Tables** — paradigms, vocabulary groups, gender sorting (tables count ZERO for immersion — use for structure/explanation only)
    - **Bulleted example lists** — Ukrainian line + English gloss: `- **Читай книгу!** — Read the book!`
    - **Blockquote dialogues** — mini-conversations with labeled speakers
    - **Pattern boxes** — transformations: `читати → читай → читайте`
