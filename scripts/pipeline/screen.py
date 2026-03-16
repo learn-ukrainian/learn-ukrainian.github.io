@@ -25,7 +25,7 @@ from pipeline.parsing import (
 
 logger = logging.getLogger(__name__)
 
-# Lazy import to avoid circular dependency with pipeline_lib
+# Lazy import to avoid circular dependency with pipeline.core
 def _log(msg: str) -> None:
     from pipeline.core import log
     log(msg)

@@ -714,7 +714,7 @@ class TestLoadState:
         state_file = tmp_path / "state.json"
         state_file.write_text(json.dumps({
             "slug": "loaded", "track": "b1", "module_num": 3,
-            "mode": "full", "phases": {"research": {"status": "complete"}},
+            "mode": "v5", "phases": {"research": {"status": "complete"}},
             "last_updated": "2026-01-01T00:00:00Z",
         }))
         ctx = ModuleContext(

@@ -143,7 +143,7 @@ Not covered:
 
 def run_prompt(prompt_path: Path, output_dir: Path, content_only: bool = True) -> Path:
     """Send prompt to Gemini and save raw output."""
-    from pipeline_lib import dispatch_gemini_raw
+    from pipeline.core import dispatch_gemini_raw
 
     prompt_text = prompt_path.read_text("utf-8")
     if content_only:
@@ -187,7 +187,7 @@ def report(text: str) -> None:
     print(f"Words:      {imm['total_words']}")
     print(f"Ukrainian:  {imm['uk_words']} ({imm['immersion_pct']}%)")
     print(f"English:    {imm['en_words']}")
-    print(f"---")
+    print("---")
     print(f"H2 sections:      {cont['h2_sections']}")
     print(f"Table rows:       {cont['table_rows']}")
     print(f"Dialogue lines:   {cont['dialogue_lines']}")

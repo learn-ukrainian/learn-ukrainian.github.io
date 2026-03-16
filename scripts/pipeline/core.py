@@ -26,7 +26,7 @@ import tempfile
 import textwrap
 import threading
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -102,34 +102,13 @@ class ModuleContext:
 
 
 # ============================================================================
-# 4. State Helpers
+# 4. State Helpers (delegated to pipeline.state)
 # ============================================================================
 
-def _state_file(ctx: ModuleContext) -> Path:
-    return ctx.orch_dir / "state.json"
-
-
-def load_state(ctx: ModuleContext) -> dict:
-    """Load state.json or return fresh state."""
-    sf = _state_file(ctx)
-    if sf.exists():
-        try:
-            return json.loads(sf.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            pass
-    return {
-        "slug": ctx.slug,
-        "track": ctx.track,
-        "module_num": ctx.module_num,
-        "mode": ctx.mode,
-        "phases": {},
-        "last_updated": _now_iso(),
-    }
-
-
-def _now_iso() -> str:
-    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-
+from pipeline.state import (
+    _now_iso,
+    load_state,
+)
 
 # ============================================================================
 # 5. Logging (thread-safe, no string hacks)
@@ -213,8 +192,6 @@ def run_script(args: list[str], capture: bool = False, timeout: int = 600) -> su
 
 # Backward-compat re-exports from pipeline.dispatch
 from pipeline.dispatch import (  # noqa: F401
-    _is_rate_limited,
-    _is_transient_error,
     dispatch_gemini,
     dispatch_gemini_raw,
     save_gemini_session,
