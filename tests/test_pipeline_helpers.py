@@ -85,9 +85,9 @@ class TestBuildSectionBudgetTable:
             {"section": "Main", "words": 500},
         ]
         result = _build_section_budget_table(sections, 800)
-        assert "| Intro | 300 |" in result
-        assert "| Main | 500 |" in result
-        assert "| **Total** | **800** |" in result
+        assert "| Intro | 300+" in result
+        assert "| Main | 500+" in result
+        assert "**Total**" in result and "800+" in result
 
     def test_zero_word_sections_get_even_split(self):
         from pipeline_lib import _build_section_budget_table
@@ -96,26 +96,26 @@ class TestBuildSectionBudgetTable:
             {"section": "B", "words": 0},
         ]
         result = _build_section_budget_table(sections, 1200)
-        assert "| A | 600 |" in result
-        assert "| B | 600 |" in result
+        assert "| A | 600+" in result
+        assert "| B | 600+" in result
 
     def test_empty_sections(self):
         from pipeline_lib import _build_section_budget_table
         result = _build_section_budget_table([], 1200)
-        assert "| **Total** | **1200** |" in result
+        assert "**Total**" in result and "1200+" in result
 
     def test_string_sections(self):
         from pipeline_lib import _build_section_budget_table
         sections = ["Section One", "Section Two"]
         result = _build_section_budget_table(sections, 1000)
         # String sections have words=0, so get even split
-        assert "| Section One | 500 |" in result
+        assert "| Section One | 500+" in result
 
     def test_has_markdown_header(self):
         from pipeline_lib import _build_section_budget_table
         result = _build_section_budget_table([{"section": "X", "words": 100}], 100)
-        assert result.startswith("| Section | Target |")
-        assert "|---------|--------|" in result
+        assert result.startswith("| Section | Minimum |")
+        assert "|---------|" in result
 
 
 # ============================================================================
@@ -416,7 +416,7 @@ class TestGetPedagogicalConstraints:
         from pipeline_lib import get_pedagogical_constraints
         plan = {"phase": "A1.1 [First Contact]"}
         result = get_pedagogical_constraints("a1", 1, plan)
-        assert "GRAMMAR BAN" in result
+        assert "GRAMMAR CONSTRAINTS" in result
         assert "BANNED" in result
 
     def test_a1_phase_5_allows_imperatives(self):
@@ -761,11 +761,13 @@ class TestV5PhaseTerminology:
         )
 
     def test_content_phase_label_present(self):
-        """pipeline_lib.py should use 'content:' label in the phase_2_content function."""
-        pipeline_lib_path = Path("scripts/pipeline_lib.py")
-        source = pipeline_lib_path.read_text(encoding="utf-8")
-        assert "content: SKIP (already complete)" in source
-        assert "content: FAIL" in source
+        """Pipeline should use 'content:' label in content phase functions."""
+        # Content adoption/generation in pipeline_lib, skip/post-gates in pipeline_v5
+        pipeline_lib_source = Path("scripts/pipeline_lib.py").read_text(encoding="utf-8")
+        pipeline_v5_source = Path("scripts/build/pipeline_v5.py").read_text(encoding="utf-8")
+        combined = pipeline_lib_source + pipeline_v5_source
+        assert "content: SKIP (already complete)" in combined
+        assert "content: FAIL" in combined
 
 
 # ============================================================================
@@ -915,13 +917,12 @@ class TestCheckpointTemplateRouting:
     def test_non_checkpoint_beginner_content_template(self):
         from pipeline_lib import _get_content_template
         result = _get_content_template("a1", 5, slug="greetings-and-politeness")
-        assert result == "beginner-content.md"
+        assert result == "beginner-full-rag.md"
 
     def test_non_checkpoint_no_slug_unchanged(self):
         from pipeline_lib import _get_content_template
-        # Without slug, routing is unchanged (backward compatibility)
         result = _get_content_template("a1", 14)
-        assert result == "beginner-content.md"
+        assert result == "beginner-full-rag.md"
 
     def test_beginner_checkpoint_activities_template(self):
         from pipeline_lib import _get_activities_template

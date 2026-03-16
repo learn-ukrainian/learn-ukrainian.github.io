@@ -16,7 +16,6 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import os
 import re
 import subprocess
 import sys
@@ -62,8 +61,6 @@ from pipeline_lib import (
     # Scoring helpers (for Gemini review)
     _get_scoring_section,
     _now_iso,
-    _run_with_heartbeat,
-    # Thread-safe locks
     _validate_activities_yaml,
     # Bilingual section titles
     bilingualify_section_titles,
@@ -72,8 +69,6 @@ from pipeline_lib import (
     # Fix-prompt helpers moved to pipeline_v5.py (section 2b)
     fill_template,
     log,
-    # Phase B content (archive check + fallback to phase_2_content)
-    phase_B_content,
     # Phase helpers
     run_verify,
     run_verify_prose_only,
@@ -315,78 +310,15 @@ def _dispatch_claude_phase(
     timeout: int = 600,
     allow_tools: list[str] | None = None,
 ) -> tuple[bool, str]:
-    """Call Claude CLI headlessly for a phase prompt file."""
-    import shutil
-    claude_bin = shutil.which("claude") or "claude"
-    env = os.environ.copy()
-    env.pop("CLAUDECODE", None)
+    """Call Claude CLI headlessly for a phase prompt file.
 
-    prompt = prompt_file.read_text("utf-8")
-    prompt = prompt.replace("You are Gemini", "You are Claude")
-
-    cmd = [claude_bin, "--model", model, "-p", "--output-format", "text"]
-    if allow_tools:
-        cmd.extend(["--allowedTools", ",".join(allow_tools)])
-
-    _PHASE_DELIMITERS: dict[str, tuple[str, str]] = {
-        "D.1":     ("===REVIEW_START===", "===REVIEW_END==="),
-        "D.2":     ("===SECTION_FIX_START===", "===SECTION_FIX_END==="),
-        "C vocab": ("===VOCABULARY_START===", "===VOCABULARY_END==="),
-        "C":       ("===ACTIVITIES_START===", "===ACTIVITIES_END==="),
-        "B":       ("===CONTENT_START===", "===CONTENT_END==="),
-        "A":       ("===RESEARCH_START===", "===RESEARCH_END==="),
-    }
-    expected_start, expected_end = "===REVIEW_START===", "===REVIEW_END==="
-    for key in ("D.2", "D.1", "C vocab", "C", "B", "A"):
-        if key in phase_label:
-            expected_start, expected_end = _PHASE_DELIMITERS[key]
-            break
-
-    if "D.1" in phase_label:
-        cmd.extend(["--append-system-prompt",
-                     f"CRITICAL: Your output MUST contain {expected_start} and {expected_end} "
-                     "delimiters wrapping the review, AND ===SECTION_FIX_START=== / ===SECTION_FIX_END=== "
-                     "delimiters wrapping FIND/REPLACE fix pairs for every issue found. "
-                     "Both blocks are required. Output without these delimiters is automatically discarded. "
-                     "FIND/REPLACE FORMAT: The FIND text must be RAW file content copy-pasted from Read output. "
-                     "Do NOT add Section/Line metadata headers, do NOT wrap in triple backticks, "
-                     "do NOT add any framing text. Just the raw text that exists in the file."])
-    elif "D.2" in phase_label and allow_tools:
-        cmd.extend(["--append-system-prompt",
-                     "You have Edit and Grep tools. Fix each issue by editing files directly. "
-                     "Use Grep to verify text exists before editing. "
-                     "Do NOT output FIND/REPLACE blocks — use the Edit tool instead. "
-                     "After all fixes, output a ===FRICTION_START=== / ===FRICTION_END=== block "
-                     "documenting any issues encountered."])
-    else:
-        cmd.extend(["--append-system-prompt",
-                     f"CRITICAL: Your output MUST contain {expected_start} and {expected_end} "
-                     "delimiters wrapping the full structured output. Output without these delimiters "
-                     "is automatically discarded. Do NOT summarize — produce the FULL output requested."])
-
-    try:
-        result = _run_with_heartbeat(
-            cmd,
-            label=f"Claude {phase_label}",
-            timeout=timeout,
-            capture_output=True, text=True,
-            input=prompt,
-            cwd=str(PROJECT_ROOT), env=env,
-        )
-        if result.returncode != 0:
-            err = (result.stderr or "").strip()
-            log(f"  Claude CLI error (rc={result.returncode}): {err[:300]}")
-            return False, ""
-        return True, result.stdout.strip()
-    except FileNotFoundError:
-        log("  Claude CLI not found — ensure 'claude' is on PATH")
-        return False, ""
-    except subprocess.TimeoutExpired:
-        log(f"  Claude CLI TIMEOUT ({timeout}s)")
-        return False, ""
-    except Exception as e:
-        log(f"  Claude CLI exception: {e}")
-        return False, ""
+    Delegates to pipeline.dispatch.dispatch_claude_phase.
+    """
+    from pipeline.dispatch import dispatch_claude_phase
+    return dispatch_claude_phase(
+        prompt_file, phase_label,
+        model=model, timeout=timeout, allow_tools=allow_tools,
+    )
 
 
 
@@ -2114,8 +2046,71 @@ def _make_content_dispatch_fn(
     return _dispatch
 
 
+def _try_adopt_or_generate_content(ctx: ModuleContext) -> bool:
+    """Check for adoptable existing content or archive, else generate fresh.
+
+    Inlined from the old phase_B_content → phase_2_content chain.
+    """
+    content_path = ctx.paths["md"]
+
+    # Skip adoption when --force-phase content is set — always regenerate
+    force_regen = (getattr(ctx, "force_phase", None) or "").lower() == "content"
+
+    # 1. Adopt existing content if it meets word target
+    if not force_regen and content_path.exists():
+        word_count = len(content_path.read_text(encoding="utf-8").split())
+        if word_count >= ctx.word_target * 0.8:
+            refresh_needed = False
+            research_path = ctx.paths.get("research")
+            if research_path and research_path.exists():
+                try:
+                    from research_quality import assess_research_compat
+                    info = assess_research_compat(research_path, ctx.track, content_path)
+                    if info and info.get("content_alignment", {}).get("refresh_recommended"):
+                        refresh_needed = True
+                        reasons = info["content_alignment"].get("reasons", [])
+                        log("  content: Research-content misalignment detected")
+                        for r in reasons:
+                            log(f"    - {r}")
+                except ImportError:
+                    pass
+            if refresh_needed and getattr(ctx, "refresh", False):
+                log("  content: --refresh flag set — regenerating prose from research")
+            elif refresh_needed:
+                log("  content: ADOPT (use --refresh to regenerate from updated research)")
+                return True
+            else:
+                log(f"  content: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
+                return True
+
+    # 2. Try archive restoration for seminar tracks
+    if not force_regen and getattr(ctx, "is_archived", False):
+        from pipeline_lib import _check_archive_fits_outline, restore_from_archive
+        fits, matched, missing = _check_archive_fits_outline(ctx)
+        archive_source = getattr(ctx, "archive_source", "unknown")
+        if fits:
+            log(f"  content: Archive fits outline — {len(matched)}/{len(matched)+len(missing)} sections match")
+            if missing:
+                log(f"  content: Missing sections (will be caught in activities): {', '.join(missing)}")
+            if ctx.dry_run:
+                log(f"  content: DRY-RUN — would restore from archive ({archive_source})")
+                return True
+            archive_dir = getattr(ctx, "archive_dir", None)
+            if restore_from_archive(ctx, archive_dir):
+                return True
+            else:
+                log("  content: Archive restore FAILED — falling back to generation")
+        else:
+            log(f"  content: Archive does NOT fit outline — only {len(matched)}/{len(matched)+len(missing)} sections match")
+            log("  content: Generating fresh prose instead")
+
+    # 3. Generate fresh content
+    from pipeline_lib import phase_2_content
+    return phase_2_content(ctx)
+
+
 def phase_content(ctx: ModuleContext, state: dict) -> bool:
-    """Content: write prose. Delegates to pipeline_lib.phase_B_content."""
+    """Content: write prose. Adopt existing, restore archive, or generate fresh."""
     if is_complete(state, "content"):
         log("  content: SKIP (already complete)")
         return True
@@ -2132,7 +2127,8 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
         log(f"  content: Using Claude for content generation (model: {model})")
         ctx.content_dispatch_fn = _make_content_dispatch_fn(ctx)  # type: ignore[attr-defined]
 
-    ok = phase_B_content(ctx)
+    # --- Adopt existing content if it meets word target ---
+    ok = _try_adopt_or_generate_content(ctx)
 
     if not ok:
         mark_failed(state, "content", ctx, executor=_cnt_exec)

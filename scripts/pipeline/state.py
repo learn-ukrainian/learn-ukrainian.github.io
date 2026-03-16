@@ -10,11 +10,47 @@ import json
 import logging
 import os
 import tempfile
-from datetime import datetime
+import threading
+import warnings
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, NotRequired, TypedDict
 
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Thread-safe file lock for state writes
+# ---------------------------------------------------------------------------
+try:
+    from filelock import FileLock
+except ImportError:
+    warnings.warn(
+        "filelock not installed — state writes will not be thread-safe. "
+        "Install with: pip install filelock",
+        stacklevel=1,
+    )
+    class FileLock:  # type: ignore[no-redef]
+        def __init__(self, path: str | Path):
+            pass
+        def __enter__(self):
+            return self
+        def __exit__(self, *a: Any):
+            pass
+
+_state_lock: FileLock | None = None
+_state_lock_init = threading.Lock()
+
+
+def init_state_lock(ctx) -> None:
+    """Create a file-based lock for thread-safe state writes."""
+    global _state_lock
+    with _state_lock_init:
+        lock_path = ctx.orch_dir / "state.json.lock"
+        _state_lock = FileLock(str(lock_path))
+
+
+def _now_iso() -> str:
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class PhaseExecutor(TypedDict):
@@ -175,11 +211,10 @@ def is_complete(state: dict, phase_id: str) -> bool:
 
 def _mark_phase(state: dict, phase_id: str, ctx, status: str, **extra: Any) -> None:
     """Mark a phase status in v5 state (thread-safe via file lock)."""
-    pl = _get_pipeline_lib()
-    lock = pl._state_lock or pl.FileLock(str(_state_file(ctx)) + ".lock")
+    lock = _state_lock or FileLock(str(_state_file(ctx)) + ".lock")
     with lock:
         phases = state.setdefault("phases", {})
-        phases[phase_id] = {"status": status, "ts": pl._now_iso(), **extra}
+        phases[phase_id] = {"status": status, "ts": _now_iso(), **extra}
         save_state(ctx, state)
 
 

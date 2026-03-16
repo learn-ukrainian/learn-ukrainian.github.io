@@ -5,9 +5,7 @@ Consolidates shared utilities used by build_module_v5.py (via pipeline_v5.py)
 and external scripts.
 
 Key design decisions:
-  - dispatch_gemini: includes rate-limit fallback (from v2)
-  - dispatch_gemini_raw: original no-fallback version (for external scripts)
-  - mark_phase: always uses FileLock (merged v1 base + v2 locking)
+  - Dispatch: delegated to pipeline.dispatch (Gemini + Claude)
   - log: thread-safe by default (no string hacks)
   - No monkey-patching anywhere
 """
@@ -26,8 +24,6 @@ import sys
 import tempfile
 import textwrap
 import threading
-import time
-import warnings
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -44,7 +40,6 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from batch_gemini_config import (
-    FLASH_MODEL,
     PHASES_DIR,
     PRO_MODEL,
     PRO_TRACKS,
@@ -1169,93 +1164,15 @@ def load_state(ctx: ModuleContext) -> dict:
     }
 
 
-def save_state(ctx: ModuleContext) -> None:
-    """Persist state.json atomically."""
-    if getattr(ctx, "mode", None) in ("v4", "v5"):
-        return
-    ctx.state["last_updated"] = _now_iso()
-    tmp = _state_file(ctx).with_suffix(".tmp")
-    tmp.write_text(json.dumps(ctx.state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    tmp.rename(_state_file(ctx))
-
-
-def is_phase_complete(ctx: ModuleContext, phase: str) -> bool:
-    """Check if a phase is marked complete in state."""
-    if getattr(ctx, "mode", None) == "v5":
-        return False
-    if ctx.force_phase == phase:
-        return False
-    return ctx.state.get("phases", {}).get(phase, {}).get("status") == "complete"
-
-
 def _now_iso() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 # ============================================================================
-# 5. Thread-safe Locks (from v2)
+# 5. Logging (thread-safe, no string hacks)
 # ============================================================================
 
-_HAS_FILELOCK = False
-try:
-    from filelock import FileLock
-    _HAS_FILELOCK = True
-except ImportError:
-    warnings.warn(
-        "filelock not installed — parallel 4a+4b will run sequentially. "
-        "Install with: pip install filelock",
-        stacklevel=1,
-    )
-    class FileLock:  # type: ignore[no-redef]
-        def __init__(self, path: str | Path):
-            pass
-        def __enter__(self):
-            return self
-        def __exit__(self, *a: Any):
-            pass
-
-_state_lock: FileLock | None = None
 _log_lock = threading.Lock()
-
-
-def _init_state_lock(ctx: ModuleContext) -> None:
-    """Create a file-based lock for thread-safe state writes."""
-    global _state_lock
-    lock_path = ctx.orch_dir / "state.json.lock"
-    _state_lock = FileLock(str(lock_path))
-
-
-# ============================================================================
-# 6. mark_phase — Merged v1 base + v2 FileLock (always locks)
-# ============================================================================
-
-def mark_phase(ctx: ModuleContext, phase: str, status: str, **extra: Any) -> None:
-    """Update phase status in state.json and persist (thread-safe via FileLock).
-
-    Skips the file write in v4/v5 mode — they use their own state files.
-    """
-    if ctx.dry_run:
-        return
-    if getattr(ctx, "mode", None) in ("v4", "v5"):
-        return
-    lock = _state_lock or FileLock(str(ctx.orch_dir / "state.json.lock"))
-    with lock:
-        if "phases" not in ctx.state:
-            ctx.state["phases"] = {}
-        entry = {"status": status, "timestamp": _now_iso()}
-        entry.update(extra)
-        ctx.state["phases"][phase] = entry
-        save_state(ctx)
-
-
-# Backward-compat alias
-mark_phase_locked = mark_phase
-
-
-# ============================================================================
-# 7. Logging (thread-safe, no string hacks)
-# ============================================================================
-
 _log_fh = None
 
 
@@ -1280,107 +1197,13 @@ def log(msg: str) -> None:
             _log_fh.flush()
 
 
-# ============================================================================
-# 8. Phase Sequence + Artifact Cleanup
-# ============================================================================
-
-# BACKWARD-COMPAT: v2/v3 numbered phase IDs. Needed for cleaning old module artifacts.
-PHASE_SEQUENCE = [
-    "0", "0.5", "1", "2", "3", "4ab", "6", "6b", "5", "7", "8",
-]
-
-
-def _phase_state_ids(phase_id: str) -> list[str]:
-    """Map v2 phase IDs to state.json phase IDs. BACKWARD-COMPAT."""
-    if phase_id == "4ab":
-        return ["3a", "3b"]
-    if phase_id == "5":
-        return ["5-enrich"]
-    if phase_id == "7":
-        return ["7-final"]
-    return [phase_id]
-
-
-# BACKWARD-COMPAT: v2/v3 artifact glob patterns. Maps old numbered phases to file patterns.
-PHASE_ARTIFACT_PATTERNS: dict[str, list[str]] = {
-    "0":    ["research-*", "phase-0-*"],
-    "0.5":  ["discovery*", "phase-0-5-*"],
-    "1":    ["phase-1-*"],
-    "2":    ["content-*", "phase-2-*"],
-    "3":    ["activities-*", "phase-3-*", "phase3-*", "phase-3a-*", "phase-3b-*"],
-    "4ab":  ["validate-*", "phase-4a-*", "phase-4b-*", "phase4a-*", "phase4b-*", "phase-4-*"],
-    "6":    ["review-*", "phase-6-*"],
-    "6b":   ["phase-6b-*"],
-    "5":    ["phase5-*", "phase-5-*"],
-    "7":    ["final-review*", "phase7-*", "phase-7-*"],
-    "8":    ["phase-8-*", "phase8-*"],
-}
-
-
-def _external_artifacts_for_phase(ctx: ModuleContext, phase_id: str) -> list[Path]:
-    """Return paths to audit/review/status files produced by a phase."""
-    slug = ctx.slug
-    paths = ctx.paths
-    result: list[Path] = []
-    if phase_id in ("3", "5", "7"):
-        audit_dir = paths["md"].parent / "audit"
-        for ext in ["-audit.md", "-audit.log", "-grammar.yaml", "-quality.md"]:
-            f = audit_dir / f"{slug}{ext}"
-            if f.exists():
-                result.append(f)
-        status_f = paths["status"]
-        if status_f.exists():
-            result.append(status_f)
-    if phase_id == "6":
-        review_f = paths["review"]
-        if review_f.exists():
-            result.append(review_f)
-    if phase_id == "8":
-        completion = ctx.orch_dir / "completion.md"
-        if completion.exists():
-            result.append(completion)
-        mdx_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / ctx.track
-        mdx_file = mdx_dir / f"{ctx.slug}.mdx"
-        if mdx_file.exists():
-            result.append(mdx_file)
-    return result
-
-
-def clean_phase_artifacts(ctx: ModuleContext, phase_id: str, forward: bool = False) -> int:
-    """Delete orchestration artifacts for a phase (and all subsequent if forward=True)."""
-    if forward:
-        try:
-            idx = PHASE_SEQUENCE.index(phase_id)
-        except ValueError:
-            idx = 0
-        phases_to_clean = PHASE_SEQUENCE[idx:]
-    else:
-        phases_to_clean = [phase_id]
-
-    deleted = 0
-    orch_dir = ctx.orch_dir
-    for pid in phases_to_clean:
-        patterns = PHASE_ARTIFACT_PATTERNS.get(pid, [])
-        for pattern in patterns:
-            for f in orch_dir.glob(pattern):
-                f.unlink()
-                deleted += 1
-        for f in _external_artifacts_for_phase(ctx, pid):
-            f.unlink()
-            deleted += 1
-        if "phases" in ctx.state and pid in ctx.state["phases"]:
-            del ctx.state["phases"][pid]
-        for state_id in _phase_state_ids(pid):
-            if "phases" in ctx.state and state_id in ctx.state["phases"]:
-                del ctx.state["phases"][state_id]
-
-    if deleted > 0:
-        save_state(ctx)
-    return deleted
+def mark_phase(ctx: ModuleContext, phase: str, status: str, **extra: Any) -> None:
+    """Legacy no-op. v5 uses pipeline.state.mark_complete/mark_failed."""
+    return
 
 
 # ============================================================================
-# 9. Gemini Dispatch Helpers
+# 6. Dispatch Helpers (delegated to pipeline.dispatch)
 # ============================================================================
 
 TMP_DIR = Path(tempfile.gettempdir())
@@ -1396,153 +1219,11 @@ def run_script(args: list[str], capture: bool = False, timeout: int = 600) -> su
     )
 
 
-def _run_with_heartbeat(
-    cmd: list[str], label: str, timeout: int = 1800,
-    heartbeat_interval: int = 30, **kwargs,
-) -> subprocess.CompletedProcess:
-    """Run a subprocess with periodic heartbeat logging."""
-    stop_event = threading.Event()
-    t0 = time.time()
-
-    def _heartbeat():
-        while not stop_event.wait(heartbeat_interval):
-            elapsed = int(time.time() - t0)
-            m, s = divmod(elapsed, 60)
-            print(f"    ⏳ {label} — {m}m {s:02d}s elapsed...", flush=True)
-
-    thread = threading.Thread(target=_heartbeat, daemon=True)
-    thread.start()
-    try:
-        result = subprocess.run(cmd, timeout=timeout, **kwargs)
-        return result
-    finally:
-        stop_event.set()
-        thread.join(timeout=2)
-
-
-def dispatch_gemini_raw(
-    prompt: str, task_id: str, model: str = PRO_MODEL,
-    stdout_only: bool = False, allow_write: bool = False,
-    output_file: Path | None = None, timeout: int = 1800,
-    max_retries: int = 3,
-) -> tuple[bool, str]:
-    """Dispatch a prompt to Gemini via ai_agent_bridge (no rate-limit fallback).
-
-    Retries up to max_retries times on transient network errors
-    (TLS drops, socket resets, etc.) with exponential backoff.
-
-    Returns (success, raw_output_text).
-    """
-    args = [
-        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
-        "-",  # read prompt from stdin
-        "--task-id", task_id,
-        "--model", model,
-    ]
-    if stdout_only:
-        args.append("--stdout-only")
-    if allow_write:
-        args.append("--allow-write")
-
-    last_output = ""
-    for attempt in range(1, max_retries + 1):
-        try:
-            result = _run_with_heartbeat(
-                [VENV_PYTHON, *args],
-                label=f"Gemini {task_id}",
-                timeout=timeout,
-                cwd=str(PROJECT_ROOT), capture_output=True, text=True,
-                input=prompt,
-            )
-            output_text = result.stdout or ""
-            last_output = output_text
-            if result.returncode == 0:
-                if output_file:
-                    output_file.parent.mkdir(parents=True, exist_ok=True)
-                    output_file.write_text(output_text, encoding="utf-8")
-                return True, output_text
-            # Check if failure is a transient network error
-            combined = f"{output_text}\n{result.stderr or ''}"
-            if attempt < max_retries and _is_transient_error(combined):
-                delay = 5 * (2 ** (attempt - 1))  # 5s, 10s
-                log(f"  [retry] Transient network error on attempt {attempt}/{max_retries}, "
-                    f"waiting {delay}s...")
-                time.sleep(delay)
-                continue
-            # Non-transient failure or final attempt
-            if output_file:
-                output_file.parent.mkdir(parents=True, exist_ok=True)
-                output_file.write_text(output_text, encoding="utf-8")
-            return False, output_text
-        except subprocess.TimeoutExpired:
-            log(f"  TIMEOUT: Gemini dispatch {task_id} exceeded {timeout}s")
-            return False, ""
-
-    # Exhausted retries
-    return False, last_output
-
-
-# ---------------------------------------------------------------------------
-# Gemini session capture
-# ---------------------------------------------------------------------------
-_GEMINI_SESSION_DIR = Path.home() / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
-
-
-def save_gemini_session(dest: Path, label: str = "session") -> bool:
-    """Copy the most recent gemini-cli session JSON to dest directory.
-
-    Returns True if a session was found and copied.
-    """
-    if not _GEMINI_SESSION_DIR.exists():
-        return False
-    try:
-        sessions = sorted(_GEMINI_SESSION_DIR.glob("session-*.json"), key=lambda p: p.stat().st_mtime)
-        if not sessions:
-            return False
-        latest = sessions[-1]
-        dest.mkdir(parents=True, exist_ok=True)
-        target = dest / f"{label}-gemini-session.json"
-        shutil.copy2(latest, target)
-        return True
-    except Exception:
-        return False
-
-
-# Rate limit / auth failure signatures in Gemini CLI output
-_RATE_LIMIT_PATTERNS = [
-    "Error authenticating",
-    "FatalAuthenti",
-    "RESOURCE_EXHAUSTED",
-    "rate limit",
-    "quota exceeded",
-    "429",
-]
-
-# Transient network error signatures (TLS drops, socket resets)
-_TRANSIENT_PATTERNS = [
-    "premature close",
-    "econnreset",
-    "socket hang up",
-    "fetch failed",
-    "network error",
-    "etimedout",
-    "enotfound",
-    "epipe",
-    "connection reset",
-]
-
-
-def _is_rate_limited(output: str) -> bool:
-    """Check if dispatch failed due to rate limiting or auth exhaustion."""
-    lower = output.lower()
-    return any(p.lower() in lower for p in _RATE_LIMIT_PATTERNS)
-
-
-def _is_transient_error(output: str) -> bool:
-    """Check if dispatch failed due to a transient network error."""
-    lower = output.lower()
-    return any(p in lower for p in _TRANSIENT_PATTERNS)
-
+# Backward-compat re-exports from pipeline.dispatch
+from pipeline.dispatch import (
+    dispatch_gemini,
+    save_gemini_session,
+)
 
 # ---------------------------------------------------------------------------
 # Pre-dispatch prompt health check
@@ -1613,37 +1294,6 @@ def log_prompt_health(issues: list[str], phase_name: str) -> bool:
     return not has_error
 
 
-def dispatch_gemini(
-    prompt: str, task_id: str, model: str = PRO_MODEL,
-    stdout_only: bool = False, allow_write: bool = False,
-    output_file: Path | None = None, timeout: int = 1800,
-) -> tuple[bool, str]:
-    """Dispatch a prompt to Gemini with stdout_only=True and flash→pro fallback.
-
-    This is the default dispatch used by the pipeline. Always forces stdout_only=True.
-    If the specified model is Flash and it fails due to rate limiting, retries with Pro.
-    """
-    ok, output = dispatch_gemini_raw(
-        prompt, task_id, model=model,
-        stdout_only=True,  # Always stdout-only in pipeline
-        allow_write=allow_write, output_file=output_file, timeout=timeout,
-    )
-    # Fallback: if rate limited OR timed out (empty output = silent hang), try the other model
-    should_fallback = not ok and (_is_rate_limited(output) or output.strip() == "")
-    if should_fallback:
-        fallback = PRO_MODEL if model == FLASH_MODEL else FLASH_MODEL
-        reason = "rate-limited" if _is_rate_limited(output) else "timeout/hang"
-        log(f"  [fallback] {model} {reason}, retrying with {fallback}...")
-        ok, output = dispatch_gemini_raw(
-            prompt, task_id, model=fallback,
-            stdout_only=True, allow_write=allow_write,
-            output_file=output_file, timeout=timeout,
-        )
-        if ok:
-            log(f"  [fallback] {fallback} succeeded")
-    return ok, output
-
-
 # ============================================================================
 # 10. Template & Extraction Helpers
 # ============================================================================
@@ -1689,28 +1339,6 @@ def _dispatch_prompt(ctx: ModuleContext, prompt_file: Path) -> str:
     content = prompt_file.read_text("utf-8")
     return f"Activate skill {ctx.skill_name}.\n\n{content}"
 
-
-def extract_phase_output(
-    input_file: Path, phase_key: str, output_dir: Path, attempt: int = 1,
-    tags: list[str] | None = None,
-) -> bool:
-    """Extract delimited content via extract_phase.py. Returns True if all tags found."""
-    args = [
-        str(SCRIPTS_DIR / "extract_phase.py"),
-        str(input_file),
-        "--output-dir", str(output_dir),
-        "--attempt", str(attempt),
-    ]
-    if tags:
-        args.extend(["--tags", *tags])
-        args.extend(["--phase", phase_key])
-    else:
-        args.extend(["--phase", phase_key])
-    result = run_script(args, capture=True)
-    if result.stdout:
-        for line in result.stdout.strip().split("\n"):
-            log(f"    {line}")
-    return result.returncode == 0
 
 
 def _extract_delimited_content(text: str, start_tag: str, end_tag: str) -> str | None:
@@ -1828,231 +1456,6 @@ def _parse_section(section: Any) -> tuple[str, int]:
 
 
 # Fix-prompt helpers moved to pipeline_v5.py — the only consumer.
-
-
-# ============================================================================
-# 13. Claude CLI Helpers
-# ============================================================================
-
-def _claude_cli() -> str:
-    """Return path to the claude CLI executable."""
-    return shutil.which("claude") or "claude"
-
-
-def _run_claude_headless(prompt: str, timeout: int = 300, model: str | None = None) -> tuple[bool, str]:
-    """Call `claude -p <prompt>` headlessly and return (success, output)."""
-    env = os.environ.copy()
-    env.pop("CLAUDECODE", None)
-    cmd = [_claude_cli()]
-    if model:
-        cmd.extend(["--model", model])
-    cmd.extend(["-p", prompt, "--output-format", "text"])
-    try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True,
-            timeout=timeout, cwd=str(PROJECT_ROOT), env=env,
-        )
-        if result.returncode != 0:
-            err = (result.stderr or "").strip()
-            log(f"  Claude CLI error (rc={result.returncode}): {err[:200]}")
-            return False, ""
-        return True, result.stdout.strip()
-    except FileNotFoundError:
-        log("  Claude CLI not found — install claude and ensure it is on PATH")
-        return False, ""
-    except Exception as e:
-        log(f"  Claude CLI exception: {e}")
-        return False, ""
-
-
-def _apply_file_fixes(fix_response: str, ctx: ModuleContext) -> int:
-    """Parse and apply OLD/NEW file fixes from Claude final review output."""
-    blocks = re.findall(
-        r"===FIX_START===\s*\n(.*?)===FIX_END===",
-        fix_response, re.DOTALL,
-    )
-    applied = 0
-    for block in blocks:
-        file_match = re.search(r"^FILE:\s*(.+)$", block, re.MULTILINE)
-        old_match = re.search(r"---OLD---\s*\n(.*?)---NEW---", block, re.DOTALL)
-        new_match = re.search(r"---NEW---\s*\n(.*?)$", block, re.DOTALL)
-        if not (file_match and old_match and new_match):
-            log("    FIX: skipping malformed block")
-            continue
-        rel_path = file_match.group(1).strip()
-        target = PROJECT_ROOT / rel_path
-        if not target.exists():
-            log(f"    FIX: file not found: {rel_path}")
-            continue
-        old_text = old_match.group(1).rstrip("\n")
-        new_text = new_match.group(1).rstrip("\n")
-        content = target.read_text(encoding="utf-8")
-        if old_text not in content:
-            log(f"    FIX: old text not found in {target.name} — skipping")
-            continue
-        content = content.replace(old_text, new_text, 1)
-        target.write_text(content, encoding="utf-8")
-        log(f"    FIX applied: {target.name}")
-        applied += 1
-    return applied
-
-
-def dispatch_claude_final_review(ctx: ModuleContext) -> tuple[bool, str, str]:
-    """Phase 9: Full final QA gate via headless Claude CLI.
-
-    Returns (success, verdict, report_text).
-    """
-    def _read(path: Path | None) -> str:
-        if path and path.exists():
-            return path.read_text(encoding="utf-8")
-        return "(file not found)"
-
-    content_text   = _read(ctx.paths.get("md"))
-    activities_text = _read(ctx.paths.get("activities"))
-    vocab_text     = _read(ctx.paths.get("vocabulary"))
-    plan_path = PROJECT_ROOT / f"curriculum/l2-uk-en/plans/{ctx.track}/{ctx.slug}.yaml"
-    plan_text      = _read(plan_path)
-    review_text    = _read(ctx.paths.get("review"))
-
-    _, audit_output = run_verify(ctx.paths["md"])
-
-    content_rel   = f"curriculum/l2-uk-en/{ctx.track}/{ctx.slug}.md"
-    activities_rel = f"curriculum/l2-uk-en/{ctx.track}/activities/{ctx.slug}.yaml"
-    vocab_rel     = f"curriculum/l2-uk-en/{ctx.track}/vocabulary/{ctx.slug}.yaml"
-
-    system_prompt = (
-        "You are the final adversarial QA gate for Ukrainian language curriculum modules. "
-        "A Gemini pipeline built this module. Your job is to catch semantic errors, "
-        "pedagogical traps, and LLM artifacts that automated audits cannot detect. "
-        "Trust nothing — verify everything by reading the actual file contents. "
-        "Apply fixes directly using the structured format. Be the adversary."
-    )
-
-    user_prompt = f"""# Phase 9: Final QA Review — {ctx.slug}
-
-**Track:** {ctx.track} | **Module:** #{ctx.module_num}
-
----
-
-## Files
-
-### Content ({content_rel})
-```markdown
-{content_text}
-```
-
-### Activities ({activities_rel})
-```yaml
-{activities_text}
-```
-
-### Vocabulary ({vocab_rel})
-```yaml
-{vocab_text}
-```
-
-### Plan (source of truth)
-```yaml
-{plan_text}
-```
-
-### Existing Review (Green Team)
-```markdown
-{review_text}
-```
-
-### Fresh Audit Output
-```
-{audit_output}
-```
-
----
-
-## Your Task
-
-Perform a deep adversarial review. Check ALL of the following:
-
-**Ukrainian Language Quality:**
-- No Russianisms (кушати, получати, приймати участь, слідуючий)
-- No Russian characters (ы, э, ё, ъ)
-- Gender agreement, case agreement, verb aspect correct
-
-**Pedagogical Correctness:**
-- No vocabulary outside the plan's vocabulary_hints used in activities
-- No grammar forms beyond this module's level (check plan.grammar_focus)
-- No forward references to future modules presented as teachable content
-- Unjumble activities: words array contains all words+punctuation in the answer
-- Fill-in activities: answer produces a grammatical sentence when inserted
-
-**Factual Accuracy:**
-- Dates, names, translations correct
-- Historical/cultural claims accurate and not contested
-
-**LLM Artifacts:**
-- Purple prose, grandiose openers
-- "Це не просто X, а Y" overuse
-- Folk etymology presented as fact
-- False statistics or invented percentages
-
-**Plan Compliance:**
-- All content_outline sections present
-- Required vocabulary used in prose
-- Objectives map to self-check questions
-
----
-
-## Output Format
-
-First, list every issue you found (be specific — quote the exact text, state the file and line context, explain what's wrong and what the correct version should be).
-
-Then output fixes using EXACTLY this format for each fix (no code fences around the blocks):
-
-===FIX_START===
-FILE: {content_rel}
----OLD---
-exact text to replace (must exist verbatim in the file)
----NEW---
-exact replacement text
-===FIX_END===
-
-You may use multiple FIX blocks. The FILE field must be one of:
-- {content_rel}
-- {activities_rel}
-- {vocab_rel}
-
-Finally, output your verdict:
-
-===VERDICT===
-APPROVE
-===END_VERDICT===
-
-Verdict guide:
-- APPROVE: audit passes, no remaining issues after fixes
-- NEEDS_WORK: fixed what you could, minor issues remain (still pass audit)
-- REJECT: content is thin (<70% word target), unfixable Russianisms, broken activities, or factual errors in core claims
-
-Do not rubber-stamp. A verdict of APPROVE on a module with real unfixed issues is a failure.
-"""
-
-    full_prompt = f"{system_prompt}\n\n{user_prompt}"
-    claude_model_f = getattr(ctx, "claude_model_F", None)
-    log(f"  Phase 9 (Claude): Calling headless claude for final QA review{f' [{claude_model_f}]' if claude_model_f else ''}...")
-    ok, report = _run_claude_headless(full_prompt, timeout=600, model=claude_model_f)
-    if not ok:
-        return False, "", ""
-    log(f"  Phase 9 (Claude): Review complete ({len(report)} chars)")
-
-    fixes_applied = _apply_file_fixes(report, ctx)
-    if fixes_applied:
-        log(f"  Phase 9 (Claude): Applied {fixes_applied} fix(es)")
-
-    verdict_match = re.search(
-        r"===VERDICT===\s*\n\s*(APPROVE|NEEDS_WORK|REJECT)\s*\n\s*===END_VERDICT===",
-        report,
-    )
-    verdict = verdict_match.group(1) if verdict_match else "NEEDS_WORK"
-    log(f"  Phase 9 (Claude): Verdict → {verdict}")
-    return True, verdict, report
 
 
 # ============================================================================
@@ -3168,11 +2571,6 @@ def _prefetch_textbook_activity_examples(ctx: ModuleContext) -> str:
 
 def phase_2_content(ctx: ModuleContext) -> bool:
     """content: Content (whole-module, single Gemini call)."""
-    phase = "2"
-    if is_phase_complete(ctx, phase):
-        log("  content: SKIP (already complete)")
-        return True
-
     sections = ctx.content_outline
     if not sections:
         log("  content: FAILED — no content_outline in plan")
@@ -3358,7 +2756,6 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             # Skip expand if content already meets or exceeds word target
             if current_words >= ctx.word_target:
                 log(f"  content: word count {current_words} >= target {ctx.word_target}, skipping expand")
-                mark_phase(ctx, phase, "complete", words=current_words, attempts=attempt - 1)
                 return True
             deficit = ctx.word_target - current_words
             had_truncation = last_friction and "TOKEN_LIMIT_TRUNCATION" in last_friction
@@ -3485,7 +2882,6 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     log(f"  content: {label} extracted from full-build → {target.name}")
 
         if total_words >= ctx.word_target * 0.75:
-            mark_phase(ctx, phase, "complete", words=total_words, attempts=attempt)
             return True
         log(f"  content: Too thin — {total_words}w vs {ctx.word_target}w target (attempt {attempt})")
 
@@ -3493,172 +2889,18 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     return False
 
 
-# ============================================================================
-# 18. Phase B Content (from v2, renamed from phase_2_v2)
-# ============================================================================
-
-def phase_B_content(ctx: ModuleContext) -> bool:
-    """Phase B: Write Prose. Checks archived prose against plan+research outline.
-
-    Archive is used only if it covers >=70% of the content_outline sections.
-    Falls back to phase_2_content if archive doesn't fit.
-    """
-    phase = "2"
-    if getattr(ctx, "refresh", False) and is_phase_complete(ctx, phase):
-        state_phases = ctx.state.get("phases", {})
-        downstream = [k for k in state_phases if k >= "2"]
-        for k in downstream:
-            del state_phases[k]
-        save_state(ctx)
-        log(f"  content: RESET (--refresh flag, cleared {len(downstream)} phases)")
-    elif is_phase_complete(ctx, phase):
-        log("  content: SKIP (already complete)")
-        return True
-
-    content_path = ctx.paths["md"]
-    if content_path.exists():
-        word_count = len(content_path.read_text(encoding="utf-8").split())
-        if word_count >= ctx.word_target * 0.8:
-            refresh_needed = False
-            research_path = ctx.paths.get("research")
-            if research_path and research_path.exists():
-                try:
-                    from research_quality import assess_research_compat
-                    info = assess_research_compat(research_path, ctx.track, content_path)
-                    if info and info.get("content_alignment", {}).get("refresh_recommended"):
-                        refresh_needed = True
-                        reasons = info["content_alignment"].get("reasons", [])
-                        log("  content: Research-content misalignment detected")
-                        for r in reasons:
-                            log(f"    - {r}")
-                except ImportError:
-                    pass
-            if refresh_needed and getattr(ctx, "refresh", False):
-                log("  content: --refresh flag set — regenerating prose from research")
-            elif refresh_needed:
-                log("  content: ADOPT (use --refresh to regenerate from updated research)")
-                mark_phase(ctx, phase, "complete", note="adopted-stale-prose", words=word_count)
-                return True
-            else:
-                log(f"  content: ADOPT — existing prose found ({word_count}w, target {ctx.word_target}w)")
-                mark_phase(ctx, phase, "complete", note="adopted-existing-prose", words=word_count)
-                return True
-
-    if getattr(ctx, "is_archived", False):
-        fits, matched, missing = _check_archive_fits_outline(ctx)
-        archive_source = getattr(ctx, "archive_source", "unknown")
-        if fits:
-            log(f"  content: Archive fits outline — {len(matched)}/{len(matched)+len(missing)} sections match")
-            if missing:
-                log(f"  content: Missing sections (will be caught in activities): {', '.join(missing)}")
-            if ctx.dry_run:
-                log(f"  content: DRY-RUN — would restore from archive ({archive_source})")
-                return True
-            archive_dir = getattr(ctx, "archive_dir", None)
-            if restore_from_archive(ctx, archive_dir):
-                mark_phase(ctx, phase, "complete", note="restored-from-archive",
-                           source=archive_source,
-                           sections_matched=len(matched),
-                           sections_missing=len(missing))
-                return True
-            else:
-                log("  content: Archive restore FAILED — falling back to generation")
-        else:
-            log(f"  content: Archive does NOT fit outline — only {len(matched)}/{len(matched)+len(missing)} sections match")
-            log("  content: Generating fresh prose instead")
-
-    if ctx.dry_run and not ctx.content_outline:
-        log("  content: DRY-RUN — would generate prose (outline depends on research)")
-        return True
-
-    return phase_2_content(ctx)
+# phase_B_content removed — logic inlined into pipeline_v5.phase_content
 
 
 # ============================================================================
-# 19. Phase E (MDX) + Phase F (Final Review) Delegates
+# 19. Preflight
 # ============================================================================
 
-def phase_8_mdx(ctx: ModuleContext) -> bool:
-    """Phase 8/E: MDX generation + lint. Deterministic, no LLM."""
-    phase = "8"
-    if is_phase_complete(ctx, phase):
-        log("  Phase 8: SKIP (already complete)")
-        return True
-    if ctx.dry_run:
-        log("  Phase 8: DRY-RUN — would generate MDX")
-        return True
-    log("  Phase 8: Generating MDX...")
-    result = run_script([
-        str(SCRIPTS_DIR / "generate_mdx.py"), "l2-uk-en", ctx.track, str(ctx.module_num),
-    ], capture=True)
-    if result.returncode != 0:
-        log(f"  Phase 8: WARNING — MDX generation returned {result.returncode}")
-    mark_phase(ctx, phase, "complete")
-    return True
-
-
-def phase_9_final_review(ctx: ModuleContext) -> bool:
-    """Phase 9/F: Final adversarial QA gate via Claude API."""
-    if not getattr(ctx, "final_review", False):
-        return True
-    phase = "9-final-review"
-    if is_phase_complete(ctx, phase):
-        log("  Phase 9: SKIP (already complete)")
-        return True
-    if ctx.dry_run:
-        log("  Phase 9: DRY-RUN — would call Claude API for final review")
-        return True
-
-    ok, verdict, report = dispatch_claude_final_review(ctx)
-    if not ok:
-        log("  Phase 9: FAILED — Claude CLI unavailable")
-        return False
-
-    final_review_path = ctx.paths["review"].parent / f"{ctx.slug}-final-review.md"
-    write_review_with_hash(final_review_path, report, ctx.paths["md"])
-    log(f"  Phase 9: Report saved → {final_review_path.name}")
-    orch_report = ctx.orch_dir / "final-review.md"
-    orch_report.write_text(report, encoding="utf-8")
-
-    if "===FIX_START===" in report:
-        passed, audit_out = run_verify(ctx.paths["md"])
-        audit_log = ctx.orch_dir / "phase9-post-fix-audit.log"
-        audit_log.write_text(audit_out, encoding="utf-8")
-        if not passed:
-            log(f"  Phase 9: Post-fix audit FAILED (verdict: {verdict})")
-            if verdict == "REJECT":
-                mark_phase(ctx, phase, "failed", verdict=verdict)
-                return False
-            log("  Phase 9: Audit failed but verdict is not REJECT — marking NEEDS_WORK")
-        else:
-            log("  Phase 9: Post-fix audit PASS")
-
-    if verdict == "REJECT":
-        log("  Phase 9: REJECT — module needs rebuild")
-        mark_phase(ctx, phase, "failed", verdict=verdict)
-        return False
-
-    mark_phase(ctx, phase, "complete", verdict=verdict)
-    return True
-
-
-# ============================================================================
-# 20. Preflight (from v1 + v2)
-# ============================================================================
-
-def preflight(args: argparse.Namespace) -> ModuleContext:
-    """Resolve all paths, load plan, compute config. Returns ModuleContext."""
-    track = args.track
-    num = args.num
+def preflight_v2(args: argparse.Namespace) -> ModuleContext:
+    """Resolve all paths, load plan, detect archive. Returns ModuleContext."""
+    track, num = args.track, args.num
     slug = slug_for_num(track, num)
     log(f"Module: {track} #{num} → {slug}")
-
-    if getattr(args, "content_only", False):
-        mode = "content-only"
-    elif getattr(args, "enrich", False):
-        mode = "enrich"
-    else:
-        mode = "full"
 
     paths = get_module_paths(track, slug)
     orch_dir = paths["orchestration"]
@@ -3690,7 +2932,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     content_outline = plan.get("content_outline", [])
 
     ctx = ModuleContext(
-        track=track, module_num=num, slug=slug, mode=mode,
+        track=track, module_num=num, slug=slug, mode="e2e",
         paths=paths, orch_dir=orch_dir,
         plan=plan,
         word_target=word_target, topic_title=topic_title,
@@ -3706,33 +2948,22 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
         rebuild=getattr(args, "rebuild", False),
     )
 
+    ctx.state = load_state(ctx)
+    ctx.state["mode"] = "e2e"
+
+    from pipeline.state import init_state_lock
+    init_state_lock(ctx)
+
+    # v5 handles --rebuild artifact cleanup in build_module_v5.py;
+    # log state status for observability
     is_dry = getattr(args, "dry_run", False)
     if getattr(args, "rebuild", False):
         if is_dry:
-            ctx.state = load_state(ctx)
             log("State: RESET (--rebuild) — DRY-RUN, no artifacts deleted")
         else:
-            ctx.state = load_state(ctx)
-            deleted = clean_phase_artifacts(ctx, PHASE_SEQUENCE[0], forward=True)
-            state_file = _state_file(ctx)
-            lock_file = state_file.with_suffix(".json.lock")
-            for f in [state_file, lock_file]:
-                if f.exists():
-                    f.unlink()
-            ctx.state = load_state(ctx)
-            log(f"State: RESET (--rebuild) — deleted {deleted} artifacts")
+            log("State: RESET (--rebuild)")
     else:
-        ctx.state = load_state(ctx)
         restart_from = getattr(args, "restart_from", None)
-        if not is_dry:
-            if getattr(args, "force_phase", None):
-                deleted = clean_phase_artifacts(ctx, args.force_phase, forward=False)
-                if deleted:
-                    log(f"Cleaned {deleted} artifacts for phase {args.force_phase}")
-            if restart_from:
-                deleted = clean_phase_artifacts(ctx, restart_from, forward=True)
-                if deleted:
-                    log(f"Cleaned {deleted} artifacts from phase {restart_from} onward")
         if restart_from:
             log(f"State: Restarting from {restart_from}")
         elif ctx.state.get("phases"):
@@ -3740,20 +2971,6 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
             log(f"State: Loaded — phases complete: {', '.join(completed) or 'none'}")
         else:
             log("State: Fresh")
-    return ctx
-
-
-def preflight_v2(args: argparse.Namespace) -> ModuleContext:
-    """Resolve all paths, load plan, detect archive. Returns ModuleContext."""
-    track, num = args.track, args.num
-    slug_for_num(track, num)  # validate slug exists
-
-    args.content_only = False
-    args.enrich = False
-    ctx = preflight(args)
-    ctx.mode = "e2e"
-    ctx.state["mode"] = "e2e"
-    _init_state_lock(ctx)
 
     is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track.startswith("lit-")
     if is_seminar:

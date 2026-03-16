@@ -304,41 +304,6 @@ class TestSelfAuditIntegration:
 
 
 # =============================================================================
-# v5 guards in pipeline_lib.py
-# =============================================================================
-
-class TestV5Guards:
-    def test_save_state_noop_for_v5(self, tmp_path):
-        """pipeline_lib.save_state should be a no-op when mode='v5'."""
-        from pipeline_lib import save_state as lib_save_state
-        ctx = _make_ctx(tmp_path)
-        ctx.state = {"phases": {"old": {"status": "complete"}}, "last_updated": "before"}
-        sf = ctx.orch_dir / "state.json"
-        # Ensure no state.json exists
-        if sf.exists():
-            sf.unlink()
-        lib_save_state(ctx)
-        # Should NOT have written state.json
-        assert not sf.exists()
-
-    def test_is_phase_complete_returns_false_for_v5(self, tmp_path):
-        """pipeline_lib.is_phase_complete should always return False for v5."""
-        from pipeline_lib import is_phase_complete as lib_is_phase_complete
-        ctx = _make_ctx(tmp_path)
-        ctx.state = {"phases": {"2": {"status": "complete"}}}
-        assert lib_is_phase_complete(ctx, "2") is False
-
-    def test_mark_phase_noop_for_v5(self, tmp_path):
-        """pipeline_lib.mark_phase should be a no-op when mode='v5'."""
-        from pipeline_lib import mark_phase as lib_mark_phase
-        ctx = _make_ctx(tmp_path)
-        ctx.state = {"phases": {}}
-        lib_mark_phase(ctx, "2", "complete")
-        # Should NOT have added the phase
-        assert "2" not in ctx.state["phases"]
-
-
-# =============================================================================
 # Delimiter extraction
 # =============================================================================
 

@@ -160,18 +160,18 @@ class TestPipelinePhaseOrder:
 
     def test_phase_order_no_sandbox(self):
         """Sandbox removed in #820. Activities moved after review."""
-        from scripts.api.state_router import V5_PHASE_ORDER
+        from scripts.api.state_helpers import V5_PHASE_ORDER
 
         assert "sandbox" not in V5_PHASE_ORDER
         assert V5_PHASE_ORDER == [
             "research", "discover", "content", "validate",
-            "review", "activities", "mdx",
+            "activities", "review", "mdx",
         ]
 
     def test_v4_phase_order_no_sandbox(self):
-        from scripts.api.state_router import V4_PHASE_ORDER
+        from scripts.api.state_helpers import V5_PHASE_ORDER
 
-        assert "sandbox" not in V4_PHASE_ORDER
+        assert "sandbox" not in V5_PHASE_ORDER
 
 
 class TestClaudeContentDispatch:
@@ -184,16 +184,11 @@ class TestClaudeContentDispatch:
         assert "opus" in CLAUDE_MODEL_CONTENT
 
     def test_phase_b_in_delimiters(self):
-        """_dispatch_claude_phase should recognize Phase B delimiters."""
-        # We can't call it directly without Claude CLI, but verify the
-        # delimiter mapping includes B
-        import inspect
-
-        import scripts.build.pipeline_v5 as pv5
-        source = inspect.getsource(pv5._dispatch_claude_phase)
-        assert '"B"' in source
-        assert "===CONTENT_START===" in source
-        assert "===CONTENT_END===" in source
+        """dispatch_claude_phase should recognize Phase B delimiters."""
+        # Verify the delimiter mapping in pipeline.dispatch includes B
+        from pipeline.dispatch import _PHASE_DELIMITERS
+        assert "B" in _PHASE_DELIMITERS
+        assert _PHASE_DELIMITERS["B"] == ("===CONTENT_START===", "===CONTENT_END===")
 
     def test_content_dispatch_fn_set_when_use_claude_b(self):
         """phase_content should set content_dispatch_fn when B in use_claude."""
@@ -208,7 +203,7 @@ class TestClaudeContentDispatch:
         state = {"phases": {}}
 
         with patch("scripts.build.pipeline_v5.is_complete", return_value=False), \
-             patch("scripts.build.pipeline_v5.phase_B_content", return_value=True) as mock_pbc, \
+             patch("scripts.build.pipeline_v5._try_adopt_or_generate_content", return_value=True) as mock_adopt, \
              patch("scripts.build.pipeline_v5.mark_complete"), \
              patch("scripts.build.pipeline_v5._invalidate_stale_artifacts"):
             ctx._self_audited = False
@@ -220,7 +215,7 @@ class TestClaudeContentDispatch:
             # Verify content_dispatch_fn was set on ctx
             assert hasattr(ctx, "content_dispatch_fn")
             assert callable(ctx.content_dispatch_fn)
-            mock_pbc.assert_called_once_with(ctx)
+            mock_adopt.assert_called_once_with(ctx)
 
     def test_content_dispatch_fn_not_set_without_flag(self):
         """phase_content should NOT set content_dispatch_fn when B not in use_claude."""
@@ -234,7 +229,7 @@ class TestClaudeContentDispatch:
         state = {"phases": {}}
 
         with patch("scripts.build.pipeline_v5.is_complete", return_value=False), \
-             patch("scripts.build.pipeline_v5.phase_B_content", return_value=True), \
+             patch("scripts.build.pipeline_v5._try_adopt_or_generate_content", return_value=True), \
              patch("scripts.build.pipeline_v5.mark_complete"), \
              patch("scripts.build.pipeline_v5._invalidate_stale_artifacts"):
             ctx._self_audited = False
