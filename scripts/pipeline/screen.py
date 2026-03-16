@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from pipeline_lib import ModuleContext
+    from pipeline.core import ModuleContext
 
 from pipeline.parsing import (
     DScreenResult,
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 # Lazy import to avoid circular dependency with pipeline_lib
 def _log(msg: str) -> None:
-    from pipeline_lib import log
+    from pipeline.core import log
     log(msg)
 
 
@@ -423,7 +423,7 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False,
         skip_review: Skip review-related audit gates.
         skip_activities: Skip activity/vocab audit gates (for prose-only validation).
     """
-    from pipeline_lib import run_verify, run_verify_prose_only
+    from pipeline.core import run_verify, run_verify_prose_only
 
     result = DScreenResult(metrics={})
 

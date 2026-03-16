@@ -8,12 +8,12 @@ Extracted from parsing_helpers.py to improve maintainability index.
 from __future__ import annotations
 
 import contextlib
-import json
 import re
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from pipeline_lib import ModuleContext
-
+if TYPE_CHECKING:
+    from pipeline.parsing import D1Result
 
 # ---------------------------------------------------------------------------
 # D.1 review parsing — sub-parsers for scores + issues
@@ -98,7 +98,7 @@ def _parse_d1_issues(review_text: str) -> list[dict]:
     return issues
 
 
-def _parse_d1_review(raw_output: str, extract_delimiter_fn, extract_delimiter_tolerant_fn) -> "D1Result":
+def _parse_d1_review(raw_output: str, extract_delimiter_fn, extract_delimiter_tolerant_fn) -> D1Result:
     """Parse D.1 Markdown review from delimiters."""
     from pipeline.parsing import D1Result
 
@@ -195,7 +195,7 @@ def _parse_factual_issues(review_text: str) -> tuple[list[dict], int, int]:
     return issues, discrepancy_count, plan_missing_count
 
 
-def _parse_factual_review(raw_output: str, extract_delimiter_fn, extract_delimiter_tolerant_fn) -> "D1Result":
+def _parse_factual_review(raw_output: str, extract_delimiter_fn, extract_delimiter_tolerant_fn) -> D1Result:
     """Parse Gemini Fact Checker output."""
     from pipeline.parsing import D1Result
 

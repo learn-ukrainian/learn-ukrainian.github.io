@@ -763,7 +763,7 @@ class TestV5PhaseTerminology:
     def test_content_phase_label_present(self):
         """Pipeline should use 'content:' label in content phase functions."""
         # Content adoption/generation in pipeline_lib, skip/post-gates in pipeline_v5
-        pipeline_lib_source = Path("scripts/pipeline_lib.py").read_text(encoding="utf-8")
+        pipeline_lib_source = Path("scripts/pipeline/core.py").read_text(encoding="utf-8")
         pipeline_v5_source = Path("scripts/build/pipeline_v5.py").read_text(encoding="utf-8")
         combined = pipeline_lib_source + pipeline_v5_source
         assert "content: SKIP (already complete)" in combined
@@ -796,13 +796,14 @@ class TestSelfAuditSnippetContentPath:
         assert fake_content_path in resolved
 
     def test_pipeline_lib_resolves_content_path_in_snippet(self):
-        """Verify pipeline_lib.py contains the resolution logic for SELF_AUDIT_SNIPPET."""
-        pipeline_lib_path = Path("scripts/pipeline_lib.py")
-        source = pipeline_lib_path.read_text(encoding="utf-8")
+        """Verify pipeline core contains the resolution logic for SELF_AUDIT_SNIPPET."""
+        # Real code now in pipeline/core.py (pipeline_lib.py is a backward-compat stub)
+        pipeline_core_path = Path("scripts/pipeline/core.py")
+        source = pipeline_core_path.read_text(encoding="utf-8")
 
         # The fix must include a .replace("{CONTENT_PATH}", ...) applied to the snippet
         assert '"{CONTENT_PATH}"' in source or "'{CONTENT_PATH}'" in source, (
-            "Expected {CONTENT_PATH} resolution in pipeline_lib.py"
+            "Expected {CONTENT_PATH} resolution in pipeline/core.py"
         )
         # Specifically: the SELF_AUDIT_SNIPPET assignment must resolve nested {CONTENT_PATH}
         assert "SELF_AUDIT_SNIPPET" in source

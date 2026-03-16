@@ -14,7 +14,7 @@ import yaml
 
 # Ensure scripts/ is on the path for pipeline_lib import
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from pipeline_lib import log
+from pipeline.core import log
 
 # Word + Russian meaning → Ukrainian equivalent.
 # These words ARE valid Ukrainian but mean something different than in Russian.

@@ -19,7 +19,7 @@ _pipeline_lib = None
 def _get_pipeline_lib():
     global _pipeline_lib
     if _pipeline_lib is None:
-        import pipeline_lib as _pl
+        import pipeline.core as _pl
         _pipeline_lib = _pl
     return _pipeline_lib
 

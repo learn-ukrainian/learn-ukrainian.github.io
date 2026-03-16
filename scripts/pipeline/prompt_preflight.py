@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
-from pipeline_lib import log
+from pipeline.core import log
 
 # ---------------------------------------------------------------------------
 # Data model
@@ -98,7 +98,7 @@ def build_dimension_context(track: str, module_num: int) -> str:
     """Build a summary of scoring dimensions for this tier."""
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     try:
-        from pipeline_lib import _get_prompt_tier
+        from pipeline.core import _get_prompt_tier
     except ImportError:
         return "(tier config not available)"
 
@@ -399,7 +399,7 @@ def run_prompt_preflight(
         PreflightResult with status and issues
     """
     if dispatch_fn is None:
-        from pipeline_lib import dispatch_gemini
+        from pipeline.core import dispatch_gemini
         dispatch_fn = dispatch_gemini
 
     rendered_prompt = rendered_prompt_path.read_text("utf-8")

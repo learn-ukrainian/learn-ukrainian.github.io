@@ -13,7 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
-from pipeline_lib import log
+from pipeline.core import log
 
 # ---------------------------------------------------------------------------
 # Data model

@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from pipeline_lib import ModuleContext, log
+from pipeline.core import ModuleContext, log
 
 # ---------------------------------------------------------------------------
 # Module file helpers

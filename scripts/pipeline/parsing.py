@@ -11,27 +11,9 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from pipeline_lib import ModuleContext, log
+from pipeline.core import ModuleContext, log
 
 # Import helpers -- all heavy logic lives in parsing_helpers.py
-from pipeline.parsing_helpers import (
-    _build_d3_context,
-    _CALIBRATION_DIR,
-    _compute_metrics_direct,
-    _extract_audit_failures,
-    _extract_gate_blockers,
-    _extract_vesum_failures,
-    _format_deterministic_issues,
-    _format_filler_phrases,
-    _format_vesum_verification,
-    _get_russicism_table,
-    _get_track_calibration,
-    _LLM_FILLER_COMPILED,
-    _LLM_FILLER_DEFS,
-    _quick_review_quality_gate,
-    _scan_llm_filler,
-)
-
 
 # ---------------------------------------------------------------------------
 # Dataclasses
@@ -217,3 +199,25 @@ def _extract_fix_plan(review_text: str) -> str:
     if not sections:
         return review_text
     return "\n\n---\n\n".join(sections)
+
+
+# ---------------------------------------------------------------------------
+# Re-exports from sibling modules (parsing_helpers, parsing_review)
+# pipeline_v5.py imports everything from pipeline.parsing as the public API
+# ---------------------------------------------------------------------------
+from pipeline.parsing_helpers import (  # noqa: F401
+    _compute_metrics_direct,
+    _extract_audit_failures,
+    _extract_gate_blockers,
+    _extract_vesum_failures,
+    _format_deterministic_issues,
+    _format_filler_phrases,
+    _format_vesum_verification,
+    _get_russicism_table,
+    _scan_llm_filler,
+)
+from pipeline.parsing_review import (  # noqa: F401
+    _build_d3_context,
+    _get_track_calibration,
+    _quick_review_quality_gate,
+)

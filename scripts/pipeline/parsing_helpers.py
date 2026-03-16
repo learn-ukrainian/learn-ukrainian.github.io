@@ -11,19 +11,18 @@ import json
 import re
 from pathlib import Path
 
-from pipeline_lib import ModuleContext, log
+from pipeline.core import ModuleContext
 
 # Re-export review/calibration/quality-gate functions for backward compat
 from pipeline.parsing_review import (  # noqa: F401
-    _build_d3_context,
     _CALIBRATION_DIR,
+    _build_d3_context,
     _get_russicism_table,
     _get_track_calibration,
     _parse_d1_review,
     _parse_factual_review,
     _quick_review_quality_gate,
 )
-
 
 # ---------------------------------------------------------------------------
 # LLM filler scanner
