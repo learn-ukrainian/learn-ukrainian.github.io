@@ -1504,10 +1504,10 @@ levels:
       - galytsko-volynskyi-literary-art
       - pateryk-literary-form
       - davni-teksty-zbirka
-      - oes-capstone
       # Кирило Туровський addition (#882)
       - kyrylo-turovskyi-propovidi
       - kyrylo-turovskyi-prytchi-molytvy
+      - oes-capstone
   ruth:
     type: track
     modules:
@@ -1623,11 +1623,11 @@ levels:
       - bajky-xvii-xviii
       - pysovnyk-lystuvannia
       - likarski-poradnyky
-      - ruth-capstone
       # Шкільна драма / Вертеп addition (#882)
       - kyievo-mohylianska-shkilna-drama
       - vertep-ukrainskyi-teatr
       - misterii-ta-moralite
+      - ruth-capstone
   lit-essay:
     type: track
     modules:
@@ -1716,12 +1716,12 @@ levels:
       - kokotyukha-red
       - kokotyukha-chervonyi
       - rafeyenko-long-times
-      - hist-fic-synthesis
-      - shevchuk-three-leaves
       # Textbook authors addition (#894)
       - andrii-chaikovskyi-za-sestroiu
       - andrian-kashchenko-cossack-myth
       - natalena-koroleva-lehendy
+      - hist-fic-synthesis
+      - shevchuk-three-leaves
   lit-fantastika:
     type: track
     modules:
@@ -1832,10 +1832,10 @@ levels:
       - rutkivsky-dzhury-3
       - voronyna-agent-000
       - andrusyak-adventures
-      - juvenile-synthesis
       # Textbook authors addition (#894)
       - sashko-dermanskyi-chudove-chudovysko
       - anatolii-dimarov-filosofski-kazky
+      - juvenile-synthesis
   # lit-doc: MERGED INTO lit-essay (ESSAY.6) — see #879
   # Unique modules (Самчук, Барка, Світличний, Шумук) added to lit-essay.
   # Duplicate modules (Асєєв, Кіпіані, Вакуленко, Амеліна, Мариновіч) already in lit-essay/lit-war.
