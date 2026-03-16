@@ -92,7 +92,9 @@ def _lint_line_patterns(lines_raw: list[str], module_num: int) -> list[str]:
         if '> [!explanation]' in stripped and '[!answer]' in stripped:
             lint_errors.append(f"Line {line_num}: Malformed Explanation. Contains '[!answer]' inside explanation block.")
 
-        if stripped.startswith('- [') and not re.match(r'- \[[ xX]\]', stripped):
+        if (stripped.startswith('- [')
+                and not re.match(r'- \[[ xX]\]', stripped)
+                and not re.match(r'- \[[^\]]+\]\(', stripped)):  # exclude markdown links
             lint_errors.append(f"Line {line_num}: Invalid Checkbox format. Use '- [ ]' or '- [x]'.")
 
         is_vocab_row = (stripped.startswith('|') and stripped.count('|') >= 3)
