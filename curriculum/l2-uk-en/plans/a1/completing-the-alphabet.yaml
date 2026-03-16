@@ -41,16 +41,16 @@ content_outline:
   - "Rule: apostrophe appears after Б, П, В, М, Ф, Р before Я, Ю, Є, Ї."
   - "Compare: without apostrophe, М+Я would mean 'soft М + А'. With apostrophe,
     М'Я means 'hard М + Й + А'. The apostrophe is NOT optional."
-- section: "Африкати та Ф — Affricates and Ф"
+- section: "Африкати, Щ та Ф — Affricates, Щ, and Ф"
   words: 300
   points:
-  - "Ц — two sounds fused into one: Т+С. Like English 'ts' in 'cats'. Words:
-    цукор (sugar), цибуля (onion). Common in endings: -ець, -иця."
-  - "Ч — like English 'ch' in 'church'. Very frequent. Words: час (time/hour),
-    черепаха (turtle), чай (tea)."
-  - "Щ — two sounds in one letter: Ш+Ч. Uniquely Ukrainian pronunciation. Words:
-    що (what), ще (still/more), щастя (happiness). що appears in almost every
-    conversation — it's one of the most common words in Ukrainian."
+  - "Ц — a true affricate: Т+С fused into one sound. Like English 'ts' in 'cats'.
+    Words: цукор (sugar), цибуля (onion). Common in endings: -ець, -иця."
+  - "Ч — a true affricate: like English 'ch' in 'church'. Very frequent. Words:
+    час (time/hour), черепаха (turtle), чай (tea)."
+  - "Щ — NOT an affricate. It represents TWO separate sounds: Ш+Ч (a consonant
+    cluster written as one letter). Words: що (what), ще (still/more), щастя
+    (happiness). що appears in almost every conversation."
   - "Ф — like English 'f'. Rare in native Ukrainian words — appears mostly in
     borrowings: факт (fact), фото (photo). Voiceless partner of В."
 - section: "Диграфи ДЖ, ДЗ — Digraphs"
