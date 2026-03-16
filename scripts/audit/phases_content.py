@@ -17,7 +17,7 @@ from .checks.content_gaming import check_content_gaming
 from .checks.content_purity import check_content_purity
 from .checks.imperial_terminology import check_imperial_terminology
 from .checks.prose_quality import check_prose_quality
-from .checks.russicism_detection import check_russicisms
+from .checks.russicism_detection import check_russicisms, check_semantic_false_friends
 from .checks.state_standard_compliance import check_state_standard_compliance
 from .checks.vocabulary import (
     check_metalanguage_scaffolding,
@@ -108,6 +108,12 @@ def run_content_detectors(ctx: AuditContext, state: AuditState) -> None:
             sev_icon = "\u274c" if v['severity'] == 'critical' else "\u26a0\ufe0f"
             print(f"     {sev_icon} [{v['type']}] {v['issue']}")
         content_quality_violations.extend(russicism_violations)
+
+    false_friend_violations = check_semantic_false_friends(ctx.content, ctx.file_path)
+    if false_friend_violations:
+        for v in false_friend_violations:
+            print(f"     \u274c [{v['type']}] {v['issue']}")
+        content_quality_violations.extend(false_friend_violations)
 
     colonial_violations = check_colonial_framing(ctx.content, ctx.file_path)
     if colonial_violations:

@@ -1,14 +1,13 @@
 """
 Russicism Detection
 
-Detects common Russian calques and lexical Russicisms in Ukrainian content.
-These are words/phrases that are Russian borrowings with standard Ukrainian
-equivalents. The Phase B prompt lists them as "HARD FAIL" items.
+Detects common Russian calques and lexical Russicisms in Ukrainian content,
+plus semantic false friends (valid Ukrainian words with Russian meanings).
 
 Returns list[dict] with 'type', 'severity', 'issue', 'fix' keys.
 No LLM calls — pure regex matching.
 
-Issue: #596
+Issue: #596, #912
 """
 
 import re
@@ -251,3 +250,117 @@ def check_russicisms(content: str, file_path: str = '') -> list[dict]:
     })
 
     return violations
+
+
+# ---------------------------------------------------------------------------
+# Semantic False Friends — valid Ukrainian words with Russian meanings
+# Issue: #912
+# ---------------------------------------------------------------------------
+
+# Patterns that pair a Ukrainian word with an English translation in content:
+# **лук** (onion)   |  лук — onion  |  лук = onion  |  лук: onion
+_TRANSLATION_PATTERNS = [
+    r"\*\*{word}\*\*\s*[\(\[—–=\-]\s*(?:an?\s+)?{meaning}\b",  # **лук** (onion)
+    r"\b{word}\b\s*[\(\[]\s*(?:an?\s+)?{meaning}\b",            # лук (onion)
+    r"\b{word}\b\s*[—–=\-]+\s*(?:an?\s+)?{meaning}\b",          # лук — onion
+    r"\b{word}\b\s*[:]\s*(?:an?\s+)?{meaning}\b",               # лук: onion
+    r"\|\s*{word}\s*\|\s*(?:an?\s+)?{meaning}\b",               # | лук | onion |
+    r"\|\s*(?:an?\s+)?{meaning}\s*\|\s*{word}\s*\|",            # | onion | лук | (reversed)
+]
+
+
+def _build_false_friend_patterns() -> list[dict]:
+    """Build compiled regex patterns from SEMANTIC_FALSE_FRIENDS."""
+    from pipeline.semantic_russianisms import SEMANTIC_FALSE_FRIENDS
+
+    compiled = []
+    for ff in SEMANTIC_FALSE_FRIENDS:
+        word = re.escape(ff["word"])
+        for russian_meaning in ff["russian_meanings"]:
+            meaning = re.escape(russian_meaning)
+            for tmpl in _TRANSLATION_PATTERNS:
+                pattern = tmpl.format(word=word, meaning=meaning)
+                compiled.append({
+                    "regex": re.compile(pattern, re.IGNORECASE),
+                    "word": ff["word"],
+                    "russian_meaning": russian_meaning,
+                    "ukrainian_meaning": ff["ukrainian_meaning"],
+                    "replacement": ff["replacement"],
+                    "replacement_translation": ff["replacement_translation"],
+                })
+    return compiled
+
+
+_COMPILED_FALSE_FRIENDS: list[dict] | None = None
+
+
+def _get_false_friend_patterns() -> list[dict]:
+    global _COMPILED_FALSE_FRIENDS
+    if _COMPILED_FALSE_FRIENDS is None:
+        _COMPILED_FALSE_FRIENDS = _build_false_friend_patterns()
+    return _COMPILED_FALSE_FRIENDS
+
+
+def check_semantic_false_friends(content: str, file_path: str = '') -> list[dict]:
+    """Detect semantic false friends — Ukrainian words paired with Russian meanings.
+
+    Scans for patterns like **лук** (onion), лук — onion, | лук | onion |
+    where the English translation reflects the Russian, not Ukrainian, meaning.
+
+    Returns list[dict] with 'type', 'severity', 'issue', 'fix' keys.
+    """
+    # Skip historical/paleography tracks — may contain legitimate Russian context
+    path_lower = file_path.lower()
+    for exempt in _EXEMPT_TRACKS:
+        if f'/{exempt}/' in path_lower:
+            return []
+
+    # Only scan narrative zones (skip YAML frontmatter, code blocks, HTML comments)
+    narrative_zones = _split_narrative_zones(content)
+    narrative_text = '\n'.join(narrative_zones)
+
+    patterns = _get_false_friend_patterns()
+    found = []
+
+    for entry in patterns:
+        for m in entry["regex"].finditer(narrative_text):
+            # Skip if inside guillemets or blockquote
+            if _is_in_quote_context(narrative_text, m.start()):
+                continue
+            found.append({
+                "word": entry["word"],
+                "russian_meaning": entry["russian_meaning"],
+                "ukrainian_meaning": entry["ukrainian_meaning"],
+                "replacement": entry["replacement"],
+                "replacement_translation": entry["replacement_translation"],
+                "matched": m.group(),
+            })
+
+    if not found:
+        return []
+
+    # Deduplicate by word
+    seen_words: set[str] = set()
+    unique: list[dict] = []
+    for f in found:
+        if f["word"] not in seen_words:
+            seen_words.add(f["word"])
+            unique.append(f)
+
+    details = '; '.join(
+        "'{word}' translated as '{rm}' (Ukrainian meaning: {um}{repl})".format(
+            word=f['word'], rm=f['russian_meaning'], um=f['ukrainian_meaning'],
+            repl=f", use {f['replacement']} instead" if f['replacement'] else "",
+        )
+        for f in unique[:5]
+    )
+
+    return [{
+        'type': 'SEMANTIC_FALSE_FRIEND',
+        'severity': 'critical',
+        'issue': f"Found {len(unique)} semantic false friend(s): {details}",
+        'fix': (
+            "The word exists in Ukrainian but the English translation uses the Russian meaning. "
+            "Replace the word or fix the translation to match Ukrainian semantics."
+        ),
+    }]

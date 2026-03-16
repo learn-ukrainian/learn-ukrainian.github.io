@@ -86,6 +86,7 @@ from .review_gaming import (
 )
 from .russicism_detection import (
     check_russicisms,
+    check_semantic_false_friends,
 )
 from .section_order import (
     check_section_order,
@@ -158,6 +159,7 @@ __all__ = [
     # Section Order
     'check_section_order',
     'check_select_min_correct',
+    'check_semantic_false_friends',
     'check_seminar_reading_pairing',
     'check_sentence_complexity',
     'check_topic_consistency',

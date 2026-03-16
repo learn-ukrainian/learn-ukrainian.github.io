@@ -102,11 +102,11 @@ class TestFixPlan:
         assert "цибуля" in updated
         assert "лук (onion)" not in updated
 
-    def test_no_fix_for_flag_only(self, tmp_path):
+    def test_detects_город_as_city(self, tmp_path):
         plan = {
             "vocabulary_hints": {
                 "required": [
-                    "дурний (stupid) — adjective",
+                    "город (city) — noun",
                 ]
             }
         }
@@ -115,4 +115,4 @@ class TestFixPlan:
 
         findings, fixes = scan_and_fix_plan(plan_path)
         assert len(findings) == 1
-        assert fixes == 0  # flag-only, no auto-fix
+        assert fixes == 1  # auto-fixed to місто

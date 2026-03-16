@@ -19,6 +19,7 @@ from pipeline.core import log
 # Word + Russian meaning → Ukrainian equivalent.
 # These words ARE valid Ukrainian but mean something different than in Russian.
 SEMANTIC_FALSE_FRIENDS: list[dict] = [
+    # --- High-confidence entries (verified) ---
     {
         "word": "лук",
         "russian_meanings": ["onion", "цибуля", "onions"],
@@ -40,19 +41,65 @@ SEMANTIC_FALSE_FRIENDS: list[dict] = [
         "replacement": "тиждень",
         "replacement_translation": "week",
     },
+    # рушник removed: IS the standard Ukrainian word for towel (including generic use)
+    # дурний removed: SUM defines it as "lacking intelligence" — "stupid" IS correct Ukrainian
+    # --- Added from Gemini false-friends audit (2026-03-16) ---
     {
-        "word": "рушник",
-        "russian_meanings": ["towel (generic)"],
-        "ukrainian_meaning": "embroidered ritual towel",
-        "replacement": None,  # context-dependent — just flag
-        "replacement_translation": None,
+        "word": "річ",
+        "russian_meanings": ["speech"],
+        "ukrainian_meaning": "thing, item",
+        "replacement": "промова",
+        "replacement_translation": "speech",
     },
     {
-        "word": "дурний",
-        "russian_meanings": ["stupid", "idiot"],
-        "ukrainian_meaning": "silly, foolish (milder connotation)",
-        "replacement": None,  # flag only
-        "replacement_translation": None,
+        "word": "шар",
+        "russian_meanings": ["ball", "sphere"],
+        "ukrainian_meaning": "layer",
+        "replacement": "куля",
+        "replacement_translation": "ball",
+    },
+    {
+        "word": "мешкати",
+        "russian_meanings": ["to dawdle", "to delay", "dawdle", "delay"],
+        "ukrainian_meaning": "to live, to dwell",
+        "replacement": "баритися",
+        "replacement_translation": "to delay",
+    },
+    # гадати removed: SUM meaning #3 IS ворожити; "to guess" = "I suppose" is valid Ukrainian
+    {
+        "word": "лічити",
+        "russian_meanings": ["to treat", "to heal", "treatment"],
+        "ukrainian_meaning": "to count",
+        "replacement": "лікувати",
+        "replacement_translation": "to treat (medically)",
+    },
+    {
+        "word": "наглий",
+        "russian_meanings": ["arrogant", "impudent", "insolent"],
+        "ukrainian_meaning": "sudden, unexpected",
+        "replacement": "зухвалий",
+        "replacement_translation": "arrogant",
+    },
+    {
+        "word": "лаяти",
+        "russian_meanings": ["to bark", "bark", "barking"],
+        "ukrainian_meaning": "to scold, to swear at",
+        "replacement": "гавкати",
+        "replacement_translation": "to bark",
+    },
+    {
+        "word": "палиця",
+        "russian_meanings": ["finger"],
+        "ukrainian_meaning": "stick, cane",
+        "replacement": "палець",
+        "replacement_translation": "finger",
+    },
+    {
+        "word": "сварка",
+        "russian_meanings": ["welding"],
+        "ukrainian_meaning": "quarrel, argument",
+        "replacement": "зварювання",
+        "replacement_translation": "welding",
     },
 ]
 
