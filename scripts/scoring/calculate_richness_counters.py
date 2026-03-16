@@ -12,8 +12,6 @@ import statistics
 from pathlib import Path
 
 import yaml
-from slug_utils import to_bare_slug
-
 from calculate_richness_config import (
     CITATION_MARKERS,
     COLLOCATION_PATTERNS,
@@ -26,6 +24,7 @@ from calculate_richness_config import (
     TIMELINE_MARKERS,
     UKRAINIAN_PLACES,
 )
+from slug_utils import to_bare_slug
 
 
 def count_engagement_boxes(content: str) -> int:
@@ -66,8 +65,15 @@ def count_engagement_boxes(content: str) -> int:
 
 
 def count_examples(content: str) -> int:
-    """Count Ukrainian example sentences in various formats."""
+    """Count Ukrainian example sentences and word-level examples.
+
+    Matches both sentence-level examples (Ukrainian sentences with punctuation)
+    and word-level examples common in A1 beginner modules:
+    - **слово** — translation
+    - **слово** (translation)
+    """
     patterns = [
+        # Sentence-level examples
         r'\*\*[А-ЯІЇЄҐа-яіїєґ][^*]{5,}[.!?]\*\*',
         r'^\s*[-–—]\s*[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]',
         r'^\s*[-–—]\s*_[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]_',
@@ -75,8 +81,10 @@ def count_examples(content: str) -> int:
         r'\*[Пп]риклад[и|:]?\*[:\s]+[«"]?[А-ЯІЇЄҐа-яіїєґ]',
         r'>\s*\*[Пп]риклад',
         r'«[А-ЯІЇЄҐа-яіїєґ][^»]{10,}[.!?]?»',
-        r'^\s*\*\s+\*\*[А-ЯІЇЄҐа-яіїєґ]+\*\*\s*[—–-]',
         r'"[А-ЯІЇЄҐа-яіїєґ][^"]{10,}[.!?]"',
+        # Word-level examples: **word** — translation or **word** (translation)
+        r'^\s*[-–—*]\s*\*\*[А-ЯІЇЄҐа-яіїєґ][^*]+\*\*\s*[—–\-]\s*\w',
+        r'^\s*[-–—*]\s*\*\*[А-ЯІЇЄҐа-яіїєґ][^*]+\*\*\s*\([^)]+\)',
     ]
     count = 0
     for pattern in patterns:
@@ -121,7 +129,7 @@ def calculate_variety_score(content: str) -> float:
 
 
 def count_cultural_refs(content: str) -> int:
-    """Count cultural references (places, traditions, people)."""
+    """Count cultural references (places, traditions, people, cultural boxes)."""
     count = 0
     for place in UKRAINIAN_PLACES:
         if place in content:
@@ -129,6 +137,8 @@ def count_cultural_refs(content: str) -> int:
     for term in CULTURAL_TERMS:
         if term.lower() in content.lower():
             count += 1
+    # Count [!cultural] and [!culture] engagement boxes (common in A1)
+    count += len(re.findall(r'>\s*\[!cultur', content, re.IGNORECASE))
     return min(count, 20)
 
 
