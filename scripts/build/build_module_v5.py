@@ -192,6 +192,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 
     # Prompt preflight: Gemini reviews its own prompt before content generation
     ctx.skip_prompt_preflight = getattr(args, "skip_prompt_preflight", False)  # type: ignore[attr-defined]
+    ctx.preflight_only = getattr(args, "preflight_only", False)  # type: ignore[attr-defined]
 
     return ctx
 
@@ -472,6 +473,8 @@ def main() -> int:
     # Preflight
     parser.add_argument("--skip-prompt-preflight", action="store_true", dest="skip_prompt_preflight",
                         help="Skip Gemini prompt self-review before content generation")
+    parser.add_argument("--preflight-only", action="store_true", dest="preflight_only",
+                        help="Run through research + preflight, then stop before content dispatch")
 
     # Writer selection
     parser.add_argument("--writer", type=str, default=None, choices=["claude", "gemini"],

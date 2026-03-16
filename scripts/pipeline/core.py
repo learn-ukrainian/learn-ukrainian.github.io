@@ -1703,6 +1703,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         except Exception as e:
             log(f"  preflight: Skipped — {e}")
 
+    if getattr(ctx, "preflight_only", False):
+        log("  content: PREFLIGHT-ONLY — stopping before content dispatch")
+        log(f"  content: Prompt ready at {prompt_file}")
+        return True
+
     if ctx.dry_run:
         log("  content: DRY-RUN — would dispatch whole-module content generation")
         return True
