@@ -193,6 +193,8 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     # Prompt preflight: Gemini reviews its own prompt before content generation
     ctx.skip_prompt_preflight = getattr(args, "skip_prompt_preflight", False)  # type: ignore[attr-defined]
     ctx.preflight_only = getattr(args, "preflight_only", False)  # type: ignore[attr-defined]
+    if ctx.preflight_only:
+        ctx.stop_before_phase = "validate"  # type: ignore[attr-defined]
 
     return ctx
 
