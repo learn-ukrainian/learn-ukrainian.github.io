@@ -201,7 +201,11 @@ def extract_words_from_yaml(yaml_path: Path, is_vocab: bool = False) -> dict[str
     else:
         # Activities: walk all strings and extract Ukrainian tokens
         all_strings = _walk_yaml_strings(data)
-        combined = "\n".join(all_strings)
+        # Skip blending formula strings (e.g. "М + А + М + А → ___")
+        # — they contain pedagogical syllables (ЛО, КІ, МА) that aren't words.
+        # Filter: "→" catches result arrows, " + " catches letter addition notation.
+        filtered = [s for s in all_strings if "→" not in s and " + " not in s]
+        combined = "\n".join(filtered)
         tokens = tokenize_all_ukrainian(combined)
         for original, clean in tokens:
             if clean not in words:

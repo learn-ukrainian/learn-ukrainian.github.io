@@ -62,6 +62,36 @@ from pipeline_v5 import (
 )
 
 # ============================================================================
+# Claude dispatch for preflight (when Gemini writes, Claude reviews)
+# ============================================================================
+
+def _make_preflight_claude_dispatch():
+    """Create a Claude dispatch fn with the same interface as dispatch_gemini.
+
+    Used for preflight when the reviewer is Claude (i.e. --writer gemini).
+    """
+    from pipeline_v5 import CLAUDE_MODEL_FINAL_REVIEW, _dispatch_claude_phase
+
+    def _dispatch(
+        prompt: str, task_id: str, model: str = "",
+        stdout_only: bool = True, allow_write: bool = False,
+        output_file: Path | None = None, timeout: int = 600,
+    ) -> tuple[bool, str]:
+        prompt_path = Path(prompt)
+        ok, raw = _dispatch_claude_phase(
+            prompt_path, "Preflight",
+            model=CLAUDE_MODEL_FINAL_REVIEW,
+            timeout=timeout,
+        )
+        if ok and output_file and raw:
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+            output_file.write_text(raw, "utf-8")
+        return ok, raw
+
+    return _dispatch
+
+
+# ============================================================================
 # Preflight
 # ============================================================================
 
@@ -94,6 +124,8 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
         ctx.review_agent = "gemini"  # type: ignore[attr-defined]
     else:
         ctx.review_agent = "claude"  # type: ignore[attr-defined]
+        # Preflight goes to reviewer (Claude) — create dispatch fn
+        ctx.preflight_dispatch_fn = _make_preflight_claude_dispatch()  # type: ignore[attr-defined]
 
     # --stop-before
     sb = getattr(args, "stop_before", None)

@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from pipeline_lib import ModuleContext
@@ -130,14 +130,45 @@ def _fix_ipa_brackets(text: str) -> tuple[str, int]:
     return text, 0
 
 
+def _strip_hints_recursive(obj: Any) -> int:
+    """Recursively strip 'hint' keys from dicts. Returns removal count."""
+    removed = 0
+    if isinstance(obj, dict):
+        if "hint" in obj:
+            del obj["hint"]
+            removed += 1
+        for v in obj.values():
+            removed += _strip_hints_recursive(v)
+    elif isinstance(obj, list):
+        for item in obj:
+            removed += _strip_hints_recursive(item)
+    return removed
+
+
 def _fix_yaml_activities(act_path: Path) -> int:
-    """Run YAML schema fixes on activity file. Returns fix count."""
+    """Run YAML schema fixes + strip hallucinated hint fields. Returns fix count."""
     from audit.checks.yaml_schema_validation import fix_yaml_file
     n, msgs = fix_yaml_file(act_path, dry_run=False)
     if n > 0:
         _log(f"    Auto-fix: {n} YAML schema fix(es) in {act_path.name}")
         for msg in msgs[:3]:
             _log(f"      {msg[:120]}")
+
+    # Strip hint fields in the same pass (avoids second YAML round-trip)
+    import yaml as yaml_lib
+    try:
+        data = yaml_lib.safe_load(act_path.read_text("utf-8"))
+    except Exception:
+        return n
+    if isinstance(data, list):
+        n_hints = _strip_hints_recursive(data)
+        if n_hints > 0:
+            act_path.write_text(
+                yaml_lib.dump(data, allow_unicode=True, sort_keys=False, default_flow_style=False),
+                "utf-8",
+            )
+            _log(f"    Auto-fix: stripped {n_hints} hallucinated hint field(s)")
+            n += n_hints
     return n
 
 

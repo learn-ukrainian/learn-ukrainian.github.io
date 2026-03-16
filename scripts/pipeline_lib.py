@@ -3292,14 +3292,18 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     except Exception as e:
         log(f"  pre-content: Research quality check skipped — {e}")
 
-    # Prompt preflight: Gemini reviews its own instructions against audit gates
+    # Prompt preflight: reviewer agent checks the writer's prompt
     if not getattr(ctx, "skip_prompt_preflight", False):
         try:
             from pipeline.prompt_preflight import apply_preflight_fixes, run_prompt_preflight
-            # Preflight always goes to Gemini (cross-agent review of the prompt)
+            # Preflight goes to the review agent (opposite of writer)
+            _preflight_dispatch = dispatch_gemini  # default
+            review_agent = getattr(ctx, "review_agent", "gemini")
+            if review_agent == "claude":
+                _preflight_dispatch = getattr(ctx, "preflight_dispatch_fn", None) or dispatch_gemini
             preflight = run_prompt_preflight(
                 prompt_file, ctx.track, ctx.module_num, ctx.orch_dir,
-                dispatch_fn=dispatch_gemini,
+                dispatch_fn=_preflight_dispatch,
             )
             if preflight.high_issues:
                 log(f"  preflight: WARNING — {len(preflight.high_issues)} HIGH issue(s) in prompt")

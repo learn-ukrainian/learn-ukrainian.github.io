@@ -409,9 +409,9 @@ def run_prompt_preflight(
     preflight_prompt_path = orch_dir / "preflight-prompt.md"
     preflight_prompt_path.write_text(preflight_prompt_text, "utf-8")
 
-    log("  preflight: Dispatching prompt review to Gemini...")
+    log("  preflight: Dispatching prompt review to reviewer agent...")
 
-    # Dispatch to Gemini
+    # Dispatch to reviewer (opposite of writer)
     output_path = orch_dir / "preflight-output.md"
     task_id = f"preflight-{track}-{module_num}"
 
@@ -422,7 +422,7 @@ def run_prompt_preflight(
     )
 
     if not ok:
-        log("  preflight: Gemini dispatch failed")
+        log("  preflight: Reviewer dispatch failed")
         return PreflightResult(status="DISPATCH_ERROR", raw_output=raw or "")
 
     raw_output = output_path.read_text("utf-8") if output_path.exists() else (raw or "")

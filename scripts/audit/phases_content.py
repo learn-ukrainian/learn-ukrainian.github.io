@@ -15,7 +15,6 @@ from .checks import (
 from .checks.colonial_framing import check_colonial_framing
 from .checks.content_gaming import check_content_gaming
 from .checks.content_purity import check_content_purity
-from .checks.euphony import check_euphony_violations
 from .checks.imperial_terminology import check_imperial_terminology
 from .checks.prose_quality import check_prose_quality
 from .checks.russicism_detection import check_russicisms
@@ -117,12 +116,14 @@ def run_content_detectors(ctx: AuditContext, state: AuditState) -> None:
             print(f"     \u26a0\ufe0f  [{v['type']}] {v['issue']}")
         content_quality_violations.extend(colonial_violations)
 
-    euphony_violations = check_euphony_violations(ctx.content, ctx.file_path)
-    if euphony_violations:
-        print(f"  \U0001f3b5 Euphony violations: {len(euphony_violations)}")
-        for v in euphony_violations:
-            print(f"     \u26a0\ufe0f  [{v['type']}] {v['issue']}")
-        content_quality_violations.extend(euphony_violations)
+    # Euphony detector disabled — too many false positives on letter lists
+    # and non-prose content. See check_euphony_violations() if re-enabling.
+    # euphony_violations = check_euphony_violations(ctx.content, ctx.file_path)
+    # if euphony_violations:
+    #     print(f"  \U0001f3b5 Euphony violations: {len(euphony_violations)}")
+    #     for v in euphony_violations:
+    #         print(f"     \u26a0\ufe0f  [{v['type']}] {v['issue']}")
+    #     content_quality_violations.extend(euphony_violations)
 
     prose_violations = check_prose_quality(ctx.content)
     if prose_violations:

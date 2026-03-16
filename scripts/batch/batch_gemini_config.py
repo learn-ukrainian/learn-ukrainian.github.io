@@ -37,7 +37,7 @@ CLAUDE_OPUS   = "claude-opus-4-6"
 
 CLAUDE_MODEL_CORE_RESEARCH    = CLAUDE_SONNET   # Research, core tracks
 CLAUDE_MODEL_CORE_CONTENT     = CLAUDE_OPUS     # Content, core tracks
-CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_SONNET   # Activities, core tracks
+CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_OPUS     # Activities, core tracks
 CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS   # Research, seminar tracks
 CLAUDE_MODEL_SEMINAR_CONTENT    = CLAUDE_OPUS   # Content, seminar tracks
 CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS   # Activities, seminar tracks
