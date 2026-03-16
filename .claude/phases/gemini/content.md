@@ -70,6 +70,13 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
 {STRUCTURAL_RULES}
 
+### Immersion Rules (98-100% Ukrainian)
+
+Tables contribute **zero** to immersion — this is critical for seminar modules where immersion must be near-total. Use **dialogues**, **bulleted examples**, and **pattern boxes** exclusively.
+- Container priority: dialogues > bulleted lists > numbered lists > inline examples
+- Tables are forbidden except for minimal paradigm summaries
+- All prose should be in Ukrainian; English only in parenthetical glosses on first use
+
 Use at least **4 DIFFERENT** callout types. Include 4-6 self-check questions in {SUMMARY_HEADING}. Connect content to Ukrainian cultural context.
 
 {FOLK_MATERIAL}

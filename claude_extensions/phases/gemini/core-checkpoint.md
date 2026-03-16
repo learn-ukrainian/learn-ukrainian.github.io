@@ -127,6 +127,12 @@ Each skill-review section should follow this pattern:
 
 {STRUCTURAL_RULES}
 
+### Rule 4b: Immersion Rules
+
+Tables contribute **zero** to immersion. Use **dialogues**, **bulleted examples**, and **pattern boxes** for Ukrainian content instead.
+- Container priority: dialogues > bulleted lists > numbered lists > inline examples > tables (last resort for paradigms only)
+- Structural containment: English explains concepts; Ukrainian is what they practice
+
 ### Rule 5: Callout Type Variety
 
 Use at least **4 DIFFERENT** callout types:

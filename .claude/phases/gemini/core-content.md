@@ -56,6 +56,13 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 
 {STRUCTURAL_RULES}
 
+### Immersion Rules
+
+Tables contribute **zero** to immersion. Use **dialogues**, **bulleted examples**, and **pattern boxes** for Ukrainian content instead.
+- Container priority: dialogues > bulleted lists > numbered lists > inline examples > tables (last resort for paradigms only)
+- 10-15 Ukrainian examples per grammar point, 4-6 dialogues per module
+- Structural containment: English explains concepts; Ukrainian is what they practice
+
 Use at least **4 DIFFERENT** callout types. Include 4-6 self-check questions in {SUMMARY_HEADING}. Connect 2-3 points to Ukrainian cultural context (proverbs, literary quotes, real-world contexts).
 
 {FOLK_MATERIAL}

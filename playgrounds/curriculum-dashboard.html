@@ -58,7 +58,7 @@ a:hover { text-decoration: underline; }
 .module-table .rq-coverage { color: var(--text3); font-size: 11px; }
 .module-table .ver-label { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 3px; }
 .module-table .ver-v5 { background: rgba(63,185,80,0.15); color: var(--green); }
-.module-table .ver-v3, .module-table .ver-unbuilt { background: rgba(72,79,88,0.2); color: var(--text3); }
+.module-table .ver-unbuilt { background: rgba(72,79,88,0.2); color: var(--text3); }
 
 /* Unbuilt modules */
 .obsolete { opacity: 0.4; }
@@ -223,7 +223,7 @@ async function loadTrackDetail(trackId) {
           const ver = m.pipeline_version || 'unbuilt';
           const isV5 = ver === 'v5';
           const obsolete = isV5 ? '' : ' obsolete';
-          const verCls = isV5 ? 'ver-v5' : ver === 'v3' ? 'ver-v3' : 'ver-unbuilt';
+          const verCls = isV5 ? 'ver-v5' : 'ver-unbuilt';
           const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
           const r = m.research || {};
           let rCol;

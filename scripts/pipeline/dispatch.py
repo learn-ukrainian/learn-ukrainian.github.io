@@ -144,6 +144,7 @@ def dispatch_gemini_raw(
     if allow_write:
         args.append("--allow-write")
 
+    _log(f"  [dispatch] Gemini {task_id}: prompt={len(prompt)} chars, model={model}")
     last_output = ""
     for attempt in range(1, max_retries + 1):
         try:
@@ -175,7 +176,8 @@ def dispatch_gemini_raw(
                 output_file.write_text(output_text, encoding="utf-8")
             return False, output_text
         except subprocess.TimeoutExpired:
-            _log(f"  TIMEOUT: Gemini dispatch {task_id} exceeded {timeout}s")
+            _log(f"  TIMEOUT: Gemini dispatch {task_id} exceeded {timeout}s "
+                 f"(model={model}, prompt={len(prompt)} chars)")
             return False, ""
 
     # Exhausted retries

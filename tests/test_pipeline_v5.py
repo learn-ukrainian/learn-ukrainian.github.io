@@ -1529,3 +1529,38 @@ class TestRebuildFileDeletion:
                    "validate-fix1-prompt.md", "content-friction-1.md",
                    "holodomor-svidky-enrichment.txt", "screen-result.json"]:
             assert not _is_rebuild_deletable(f), f"{f} should be kept"
+
+
+class TestContentTemplateSelection:
+    """Test that _get_content_template always returns beginner-full-rag.md for beginner tier."""
+
+    def test_a1_returns_beginner_full_rag(self):
+        from pipeline.core import _get_content_template
+        for module_num in (1, 5, 10, 15, 20):
+            result = _get_content_template("a1", module_num)
+            assert result == "beginner-full-rag.md", (
+                f"A1 module {module_num} should use beginner-full-rag.md, got {result}"
+            )
+
+    def test_a2_early_returns_beginner_full_rag(self):
+        from pipeline.core import _get_content_template
+        for module_num in (1, 10, 20):
+            result = _get_content_template("a2", module_num)
+            assert result == "beginner-full-rag.md", (
+                f"A2 module {module_num} should use beginner-full-rag.md, got {result}"
+            )
+
+    def test_a2_late_returns_core(self):
+        from pipeline.core import _get_content_template
+        result = _get_content_template("a2", 21)
+        assert result == "core-content.md", (
+            f"A2 module 21 should use core-content.md, got {result}"
+        )
+
+    def test_full_build_flag_irrelevant_for_beginner(self):
+        from pipeline.core import _get_content_template
+        for full_build in (True, False):
+            result = _get_content_template("a1", 5, full_build=full_build)
+            assert result == "beginner-full-rag.md", (
+                f"A1 with full_build={full_build} should use beginner-full-rag.md, got {result}"
+            )

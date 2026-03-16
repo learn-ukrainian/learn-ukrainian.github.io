@@ -405,6 +405,7 @@ def verify_module(md_path: Path, use_rag: bool = True,
         rag_results = {w: {"textbook": False, "literary": False, "error": False} for w in vesum_misses}
 
     # 5. Build results
+    from audit.config import PROPER_NAME_WHITELIST
     results = []
     stats = {
         "total": len(all_words),
@@ -412,6 +413,7 @@ def verify_module(md_path: Path, use_rag: bool = True,
         "rag_hits": 0,
         "not_found": 0,
         "rag_errors": 0,
+        "proper_names": 0,
         "by_source": {},
     }
 
@@ -428,6 +430,15 @@ def verify_module(md_path: Path, use_rag: bool = True,
             literary_hit = rag.get("literary", False)
             rag_error = rag.get("error", False)
 
+        # Check proper name whitelist before marking as not-found.
+        # Only explicit whitelist — no capitalization heuristic (sentence-initial
+        # words are capitalized too, which would suppress real VESUM failures).
+        is_proper_name = (
+            not vesum_hit and not textbook_hit and not literary_hit
+            and (original in PROPER_NAME_WHITELIST
+                 or clean in PROPER_NAME_WHITELIST)
+        )
+
         # Determine status
         if vesum_hit:
             status = "✅"
@@ -435,6 +446,9 @@ def verify_module(md_path: Path, use_rag: bool = True,
         elif textbook_hit or literary_hit:
             status = "⚠️"
             stats["rag_hits"] += 1
+        elif is_proper_name:
+            status = "ℹ️"
+            stats["proper_names"] += 1
         elif rag_error and not use_rag:
             # RAG was skipped, not an error
             status = "❌"
@@ -453,6 +467,8 @@ def verify_module(md_path: Path, use_rag: bool = True,
         src_stats["total"] += 1
         if vesum_hit:
             src_stats["vesum_hits"] += 1
+        elif is_proper_name:
+            pass  # Proper names don't count as not_found
         elif not (textbook_hit or literary_hit):
             src_stats["not_found"] += 1
 

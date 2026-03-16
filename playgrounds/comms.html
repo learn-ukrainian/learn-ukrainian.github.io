@@ -289,8 +289,8 @@ function closeDetail() {
 // Parse task_id to extract track, slug, phase
 function parseTaskId(taskId) {
   if (!taskId) return null;
-  // v3-body-injury-dual-pA -> track from state, slug=body-injury-dual, phase=A
-  const m = taskId.match(/^v3-(.+?)-(p[A-Z].*)$/);
+  // v5-body-injury-dual-pA -> track from state, slug=body-injury-dual, phase=A
+  const m = taskId.match(/^v5-(.+?)-(p[A-Z].*)$/);
   if (m) return { slug: m[1], phaseKey: m[2] };
   // yw-some-slug-p0 -> old format
   const m2 = taskId.match(/^yw-(.+?)-(p\d.*)$/);
@@ -466,7 +466,7 @@ async function loadLiveActivity() {
       compEl.innerHTML = '<div class="empty-feed">No completions in last hour</div>';
     } else {
       compEl.innerHTML = completions.map(c => `
-        <div class="feed-item completion" onclick="showConversation('v3-${c.slug}-pA')">
+        <div class="feed-item completion" onclick="showConversation('v5-${c.slug}-pA')">
           <div class="fi-top">
             <span class="fi-track">${c.track}</span>
             <span class="fi-age">${timeAgo(c.seconds_ago)} ago</span>
@@ -485,8 +485,8 @@ async function loadLiveActivity() {
       dispEl.innerHTML = '<div class="empty-feed">No recent messages</div>';
     } else {
       dispEl.innerHTML = dispatches.map(d => {
-        // Extract slug from task_id (v3-some-slug-pA -> some-slug)
-        const slug = (d.task_id || '').replace(/^v3-/, '').replace(/-p[A-Z].*$/, '') || d.task_id;
+        // Extract slug from task_id (v5-some-slug-pA -> some-slug)
+        const slug = (d.task_id || '').replace(/^v5-/, '').replace(/-p[A-Z].*$/, '') || d.task_id;
         const phase = (d.task_id || '').match(/-p([A-Z][^-]*)/) ? (d.task_id.match(/-p([A-Z][^-]*)/)[1]) : '';
         const isFinished = (d.preview || '').includes('finished');
         const isError = d.type === 'error' || (d.preview || '').includes('Error');

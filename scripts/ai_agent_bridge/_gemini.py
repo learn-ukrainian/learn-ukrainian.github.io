@@ -273,6 +273,9 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
                         output_path, skip_github, attempt, max_retries, base_delay):
     """Run a single Gemini CLI attempt. Returns None to retry, False to stop, or (response, sent)."""
     try:
+        prompt_preview = prompt[:200].replace('\n', ' ')
+        print(f"  [gemini] attempt {attempt+1}/{max_retries}, model={model}, "
+              f"prompt={len(prompt)} chars: {prompt_preview}...", flush=True)
         gemini_cmd = [GEMINI_CLI, "-m", model, "-y"]
 
         pre_snapshot = None
@@ -365,17 +368,39 @@ def _stream_with_watchdog(proc, timeout_val):
         _watchdog_timer.start()
 
     output_lines = []
+    _last_output_time = time.time()
+    _STALL_THRESHOLD = 120  # seconds
     try:
         for line in proc.stdout:
             print(line, end='')
             sys.stdout.flush()
             output_lines.append(line)
+            now = time.time()
+            stall_duration = now - _last_output_time
+            if stall_duration > _STALL_THRESHOLD:
+                print(f"\n  [watchdog] Output resumed after {stall_duration:.0f}s stall", flush=True)
+            _last_output_time = now
     except (OSError, ValueError):
         pass
+
+    # Log if the stream ended with a long stall before EOF
+    final_stall = time.time() - _last_output_time
+    if final_stall > _STALL_THRESHOLD and not _timed_out:
+        print(f"\n  [watchdog] Stream ended after {final_stall:.0f}s of silence "
+              f"({len(output_lines)} lines received)", flush=True)
 
     proc.wait()
     if _watchdog_timer:
         _watchdog_timer.cancel()
+
+    # Capture stderr on timeout for diagnostics
+    if _timed_out and proc.stderr:
+        try:
+            stderr_content = proc.stderr.read()
+            if stderr_content and stderr_content.strip():
+                print(f"  [watchdog] stderr on timeout: {stderr_content[:500]}", flush=True)
+        except (OSError, ValueError):
+            pass
 
     return _timed_out, output_lines
 
