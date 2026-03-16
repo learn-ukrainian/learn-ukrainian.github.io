@@ -72,6 +72,14 @@ content_outline:
     (How are you?) Дякую! (Thank you!) Будь ласка! (Please!) До побачення! (Goodbye!)"
   - "Celebration: you can now decode any Ukrainian word. The reading skills from
     M1-M4 are the foundation for everything that follows."
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "Recap: Ь softens consonants, apostrophe preserves Й-sound, Ц and Ч are
+    affricates, Щ is a Ш+Ч cluster, ДЖ and ДЗ are digraphs, Ф is rare."
+  - "Self-check: What does Ь do? When do you use an apostrophe? What two sounds
+    does Щ represent? Can you read any Ukrainian word now?"
+  - "Next: M5 — syllables and word division."
 vocabulary_hints:
   required:
   - "сіль (salt) — demonstrates Ь softening; everyday kitchen word"

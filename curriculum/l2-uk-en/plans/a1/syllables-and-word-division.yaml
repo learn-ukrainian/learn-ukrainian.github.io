@@ -47,6 +47,14 @@ content_outline:
   - 'Syllable counting drills: given a word, count the vowels and identify each syllable boundary.'
   - 'Word division exercises: mark correct division points in multi-syllable words (бі-блі-о-те-ка, у-ні-вер-си-тет).'
   - 'Reading multi-syllable words aloud: building fluency by reading words syllable-by-syllable, then at full speed.'
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "Recap: every vowel = one syllable, open vs closed syllables, consonant cluster
+    split rules, word division for writing."
+  - "Self-check: How many syllables in Україна? What is an open syllable? Where do
+    you split a consonant cluster?"
+  - "Next: M6 — stress and intonation."
 vocabulary_hints:
   required:
   - 'молоко (milk) — 3 open syllables мо-ло-ко; Top 500 word; collocations: пити молоко, склянка молока'

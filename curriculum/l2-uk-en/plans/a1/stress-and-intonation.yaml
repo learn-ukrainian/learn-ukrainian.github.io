@@ -54,6 +54,14 @@ content_outline:
   - 'Stress placement drills: identify which syllable carries the stress in common words.'
   - 'Minimal pairs practice: distinguish words that differ only in stress (зАмок/замОк, мУка/мукА).'
   - 'Intonation reading exercises: read the same sentence as a statement, question, and exclamation.'
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "Recap: stress is free and mobile, vowel purity under stress, rising intonation
+    for questions, stress minimal pairs."
+  - "Self-check: Where is the stress in вода? What happens to vowel quality when
+    unstressed? How does question intonation differ from statement?"
+  - "Next: M7 — greetings and basic phrases."
 vocabulary_hints:
   required:
   - 'замок (castle/lock) — stress minimal pair: зАмок (castle) vs замОк (lock)'
