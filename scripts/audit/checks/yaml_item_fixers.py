@@ -222,6 +222,23 @@ def fix_group_sort_groups(activity: dict) -> list[str]:
     return fixes
 
 
+def fix_classify_groups_to_categories(activity: dict) -> list[str]:
+    """Fix: classify using groups/name instead of categories/label."""
+    fixes = []
+    if activity.get('type') != 'classify':
+        return fixes
+    # Convert groups → categories
+    if 'groups' in activity and 'categories' not in activity:
+        activity['categories'] = activity.pop('groups')
+        fixes.append("Renamed 'groups' to 'categories' in classify activity")
+    # Convert name → label in each category
+    for cat in activity.get('categories', []):
+        if isinstance(cat, dict) and 'name' in cat and 'label' not in cat:
+            cat['label'] = cat.pop('name')
+            fixes.append("Renamed 'name' to 'label' in classify category")
+    return fixes
+
+
 def fix_select_property_renames(activity: dict) -> list[str]:
     """Fix 10: Rename answers/choices to options in select items."""
     fixes = []
@@ -289,4 +306,5 @@ TYPE_FIXERS = {
     'fill-in': fix_fill_in_items,
     'error-correction': fix_error_correction_items,
     'group-sort': fix_group_sort_groups,
+    'classify': fix_classify_groups_to_categories,
 }
