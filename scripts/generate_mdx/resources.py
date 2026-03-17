@@ -122,7 +122,7 @@ def embed_youtube_video_links(body: str) -> str:
             return None
         safe_url = escape_jsx(url)
         safe_label = escape_jsx(label)
-        return f'\n\n<YouTubeVideo client:load url="{safe_url}" label="{safe_label}" />\n\n'
+        return f'\n\n<YouTubeVideo client:only="react" url="{safe_url}" label="{safe_label}" />\n\n'
 
     def _yt_replace(m: re.Match) -> str:
         # Don't replace YouTube links inside markdown table cells
