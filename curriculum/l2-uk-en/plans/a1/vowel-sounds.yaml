@@ -2,7 +2,7 @@ module: a1-002
 level: A1
 sequence: 2
 slug: vowel-sounds
-version: '2.1'
+version: '2.2'
 title: Vowel Sounds
 subtitle: "Голосні звуки — The Heartbeat of Every Ukrainian Word"
 focus: grammar
@@ -54,7 +54,7 @@ content_outline:
   - "Я, Ю, Є, Ї are 'double-duty' vowels. At word start or after another vowel,
     they represent TWO sounds: Й + base vowel."
   - "Я = й+а. At start: яблуко (apple). After vowel: моя (my-f).
-    After consonant: softens it (мати vs м'яти — apostrophe preserves Й)."
+    After consonant: softens it (дядько — Д becomes soft before Я)."
   - "Ю = й+у. At start: юнак (young man), юшка (broth). After consonant: softens it
     (люди — Л becomes soft)."
   - "Є = й+е. At start: Європа (Europe). After vowel: моє (my-n)."
