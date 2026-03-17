@@ -642,11 +642,37 @@ def _build_activities_prompt(
         {vocab_text}
         ```
 
+        ## Activity YAML Schema (CRITICAL — follow exactly)
+
+        Bare YAML list at root (NOT `activities:` wrapper). Each activity requires `type` and `title`.
+
+        **quiz**: `items:` array, each: `question` (str), `options` (array of str), `explanation` (str, optional)
+        **match-up**: `pairs:` array (NOT items), each: `left` (str), `right` (str)
+        **fill-in**: `items:` array, each: `sentence` (str with ___ blank), `answer` (str), `options` (array of str)
+        **group-sort**: `groups:` array, each: `name` (str), `items` (array of str)
+        **true-false**: `items:` array, each: `statement` (str), `correct` (bool)
+        **classify**: `categories:` array, each: `label` (str), `items` (array of str)
+        **watch-and-repeat**: `items:` array, each: `video` (YouTube URL, required), `letter` (str), `word` (str), `note` (str)
+        **image-to-letter**: `items:` array, each: `emoji` (str), `answer` (str), `distractors` (array of str)
+        **anagram**: `items:` array, each: `scrambled` (str), `answer` (str)
+        **unjumble**: `items:` array, each: `words` (array of str), `answer` (str)
+
+        Example match-up:
+        ```yaml
+        - type: match-up
+          title: "Voiced and Voiceless Partners"
+          pairs:
+            - left: "Б"
+              right: "П"
+            - left: "Д"
+              right: "Т"
+        ```
+
         ## Activity Rules
         - Activities test LANGUAGE skills, not content recall
-        - Each activity needs a unique `id` field
+        - NO `id` field — the system generates IDs automatically
         - Minimum items per activity: 6
-        - Include variety: quiz, match-up, fill-in, group-sort, true-false, etc.
+        - Include variety from the plan's activity_hints
         - All Ukrainian text must be real, correct Ukrainian
 
         ## Vocabulary Rules
