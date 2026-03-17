@@ -2,7 +2,7 @@ module: a1-002
 level: A1
 sequence: 2
 slug: vowel-sounds
-version: '2.2'
+version: '2.3'
 title: Vowel Sounds
 subtitle: "Голосні звуки — The Heartbeat of Every Ukrainian Word"
 focus: grammar
@@ -30,7 +30,7 @@ content_outline:
     каша (porridge), сало (lard)."
   - "О — rounded, like 'o' in 'more'. Stays О even when unstressed (unlike Russian!).
     Words: око (M1 review), молоко (M1 review), село (village)."
-  - "У — like 'oo' in 'moon'. Words: тут (M1 review), лук (M1 review), вухо (ear)."
+  - "У — like 'oo' in 'moon'. Words: тут (M1 review), вухо (ear), суп (soup)."
   - "Е — like 'e' in 'set'. NOT like English 'ee'. Words: небо (sky), село (village).
     New consonants Д, В, Р appear in examples — focus is on the vowel sound."
   - "И — uniquely Ukrainian. No exact English equivalent. Jaw relaxed, tongue lower
@@ -113,7 +113,7 @@ activity_hints:
 - type: quiz
   focus: "И vs І discrimination — listen and identify which vowel you hear"
   items: 10
-- type: classify
+- type: group-sort
   focus: "Iotated vowel dual function — does it represent 1 sound or 2 in this word?"
   items: 8
 - type: fill-in
