@@ -2,7 +2,7 @@ module: a1-002
 level: A1
 sequence: 2
 slug: vowel-sounds
-version: '2.1'
+version: '2.0'
 title: Vowel Sounds
 subtitle: "Голосні звуки — The Heartbeat of Every Ukrainian Word"
 focus: grammar
@@ -38,7 +38,7 @@ content_outline:
   - "І — like 'ee' in 'see'. Brighter and higher than И. Words: ліс (M1 review),
     кіт (M1 review), сік (M1 review)."
   - "The И vs І distinction is the hardest vowel contrast for English speakers.
-    Drill with minimal pairs: кит (whale) vs кіт (cat). Feel the jaw position."
+    Drill with minimal pairs: сир (cheese) vs сір (grey). Feel the jaw position."
 - section: "Наголос — Word Stress"
   words: 150
   points:
@@ -99,7 +99,7 @@ vocabulary_hints:
   - "юшка (soup/broth) — demonstrates Ю; everyday vocabulary"
   - "каша (porridge) — demonstrates А; everyday food word; Bolshakova"
   - "небо (sky) — demonstrates Е; high-frequency"
-  - "сир (cheese) — demonstrates И; everyday food word"
+  - "сир (cheese) — demonstrates И; everyday food; minimal pair with сір"
 activity_hints:
 - type: watch-and-repeat
   focus: "Vowel pronunciation drill — hear and repeat each of the 10 vowel letters"
