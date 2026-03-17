@@ -24,7 +24,35 @@ MDX Gate (deterministic)
 └── 7. MDX generation         — always last, always succeeds if content passes
 ```
 
-**The review gate does not determine pass/fail.** Only content gates 1-5 do. This removes the incentive for LLMs to inflate review scores.
+**Shippable = all content gates PASS + review ≥ 8/10.** The review gate is enforced by the module dashboard (`scripts/module_dashboard.py`), not by the automated audit.
+
+---
+
+## Review Lifecycle (#970)
+
+### Artifacts
+- **Review findings** → `orchestration/{slug}/review-*.md` (raw outputs, prompts, results)
+- **Friction log** → `orchestration/{slug}/friction.yaml` (curated learnings that survive rebuilds)
+- **Global friction** → `docs/rules/global-friction.yaml` (project-wide linguistic constraints)
+- **Dashboard** → `scripts/module_dashboard.py` (aggregated view of all modules)
+
+### Friction logs
+Friction files use YAML with `id`, `status` (active/resolved), `type`, `description`.
+Active frictions are injected into content and review prompts automatically.
+When a friction is fixed (in code or templates), set `status: resolved` — it stays in the log for history but stops being injected into prompts.
+
+Global frictions apply to ALL modules (e.g., "сес-тра is valid per Правопис §49").
+Module frictions are specific to one module (e.g., "M02: сір is not a word").
+
+### No more GH review tickets
+The pipeline no longer auto-creates GH issues for review passes. Review artifacts live in orchestration folders. GH issues are for work items only.
+
+### Dashboard
+```bash
+.venv/bin/python scripts/module_dashboard.py a1           # all A1 modules
+.venv/bin/python scripts/module_dashboard.py a1 --first 6  # first 6 only
+.venv/bin/python scripts/module_dashboard.py a1 --failing-only
+```
 
 ---
 
