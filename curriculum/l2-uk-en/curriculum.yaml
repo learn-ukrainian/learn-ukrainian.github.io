@@ -163,7 +163,7 @@ levels:
   b1:
     type: core
     modules:
-      # ── Phase B1.1: Meta-Language & Phonetics (1-7) ──
+      # ── Phase B1.1: Meta-Language & Phonetics (1-8) ──
       - how-to-talk-about-grammar        #  1
       - language-about-verbs              #  2
       - reading-grammar-rules             #  3
@@ -171,108 +171,111 @@ levels:
       - ready-for-immersion               #  5
       - phonetics-assimilation            #  6 MOVED from M93, narrowed: voicing + softness + -ться
       - phonetics-alternation-simplification #  7 NEW SPLIT — cluster simplification + alternations
-      # ── Phase B1.2: Aspect Mastery (8-17) ──
-      - aspect-complete-system            #  8
-      - aspect-past-single-repeated       #  9
-      - aspect-past-result-process        # 10
-      - aspect-future                     # 11
-      - aspect-negation                   # 12
-      - aspect-in-imperatives             # 13
-      - aspect-pairs-essential-40         # 14
-      - work-week-aspect-in-action        # 15
-      - aspect-integration-practice       # 16
-      - checkpoint-aspect-mastery         # 17
-      # ── Phase B1.3: Motion Verbs (18-27) ──
-      - motion-verbs-full-system          # 18
-      - motion-coming-going               # 19
-      - motion-passing-crossing           # 20
-      - motion-starting-returning         # 21
-      - motion-approaching-departing      # 22
-      - motion-figurative-uses            # 23
-      - motion-full-prefix-integration    # 24
-      - motion-patterns-other-verbs       # 25
-      - motion-practice-integration       # 26
-      - checkpoint-motion-verbs           # 27
-      # ── Phase B1.4: Pronouns & Complex Sentences I (28-37) ──
-      - indefinite-negative-pronouns      # 28 MOVED from M92 — before relative clauses
-      - relative-clauses-yakyi            # 29
-      - relative-clauses-de-kudy-zvidky   # 30
-      - relative-clauses-koly-shcho       # 31
-      - purpose-shchob-infinitive         # 32
-      - purpose-shchob-past-form          # 33
-      - conditionals-real-yakshcho        # 34
-      - conditionals-unreal-yakby         # 35
-      - conditionals-mixed-complex        # 36
-      - checkpoint-complex-sentences-1    # 37
-      # ── Phase B1.5: Complex Sentences II (38-44) ──
-      - concessive-khocha                 # 38
-      - causal-result-clauses             # 39
-      - temporal-clauses                  # 40
-      - complex-sentence-integration      # 41
-      - reported-statements               # 42
-      - reported-questions-commands        # 43
-      - checkpoint-complex-sentences-2    # 44
-      # ── Phase B1.6: Participles & Advanced Grammar (45-57) ──
-      - active-participles-phrases        # 45 REORDERED: participles before adverbial
-      - past-passive-participles-1        # 46
-      - past-passive-participles-2        # 47
-      - passive-constructions             # 48
-      - one-member-sentences              # 49 NEW SPLIT — before adverbial participles
-      - adverbial-participles-imperfective # 50 REORDERED: adverbial after participles
-      - adverbial-participles-perfective  # 51
-      - diminutives-master-class          # 52
-      - numerals-collectives-fractions    # 53
-      - integrated-grammar-lab            # 54 narrowed: one-member sentences extracted
-      - checkpoint-advanced-grammar       # 55
-      # ── Phase B1.7: Word Formation & Lexicology (56-67) ──
-      - word-formation-nouns              # 56 NEW — §4.3.3 noun suffixes/prefixes
-      - word-formation-modifiers          # 57 NEW — §4.3.6-7 adjective/adverb formation
-      - synonymy-thinking-verbs           # 58
-      - synonymy-speaking-verbs           # 59
-      - antonyms-polysemy                 # 60 NEW — антоніми + багатозначність
-      - homonyms-paronyms                 # 61 NEW — омоніми + пароніми
-      - collocations-expressions          # 62
-      - abstract-concepts-ideas           # 63
-      - abstract-concepts-processes       # 64
-      - expressing-opinions               # 65
-      - agreement-disagreement            # 66
-      - discourse-markers-basic           # 67
-      # ── Phase B1.8: Communication & Society (68-78) ──
-      - discourse-markers-advanced        # 68
-      - describing-changes                # 69
-      - media-news                        # 70
-      - society-politics                  # 71
-      - professional-communication        # 72
-      - environment-ecology               # 73
-      - health-wellness                   # 74
-      - emotions-deep-dive                # 75
-      - relationships                     # 76
-      - business-basics                   # 77
-      - travel-geography                  # 78
-      # ── Phase B1.9: Culture & Regions (79-87) ──
-      - emotional-intelligence            # 79
-      - regions-west                      # 80
-      - regions-east                      # 81
-      - regions-south                     # 82
-      - regions-center                    # 83
-      - ukrainian-music-today             # 84
-      - ukrainian-cinema-and-tv           # 85
-      - technology-and-startups           # 86
-      - sports-in-ukraine                 # 87
-      # ── Phase B1.10: Lifestyle, Media & Final (88-100) ──
-      - active-lifestyle                  # 88
-      - running-in-ukraine                # 89
-      - mountains-trail                   # 90
-      - cycling-water                     # 91
-      - winter-sports                     # 92
-      - ukrainian-cuisine                 # 93
-      - ukrainski-sviata-ta-festyvali     # 94
-      - novyny-yak-chytaty                # 95
-      - interviu-ta-podkasty              # 96
-      - communication-channels            # 97
-      - presentations-visuals             # 98
-      - feedback-negotiation-complaints   # 99
-      - b1-final-exam                     # 100
+      - stress-mobility-euphony           #  8 NEW — §4.1.2 mobile stress + §4.1.3 advanced euphony
+      # ── Phase B1.2: Aspect Mastery (9-18) ──
+      - aspect-complete-system            #  9
+      - aspect-past-single-repeated       # 10
+      - aspect-past-result-process        # 11
+      - aspect-future                     # 12
+      - aspect-negation                   # 13
+      - aspect-in-imperatives             # 14
+      - aspect-pairs-essential-40         # 15
+      - work-week-aspect-in-action        # 16
+      - aspect-integration-practice       # 17
+      - checkpoint-aspect-mastery         # 18
+      # ── Phase B1.3: Motion Verbs (19-28) ──
+      - motion-verbs-full-system          # 19
+      - motion-coming-going               # 20
+      - motion-passing-crossing           # 21
+      - motion-starting-returning         # 22
+      - motion-approaching-departing      # 23
+      - motion-figurative-uses            # 24
+      - motion-full-prefix-integration    # 25
+      - motion-patterns-other-verbs       # 26
+      - motion-practice-integration       # 27
+      - checkpoint-motion-verbs           # 28
+      # ── Phase B1.4: Pronouns & Complex Sentences I (29-38) ──
+      - indefinite-negative-pronouns      # 29 MOVED from M92 — before relative clauses
+      - relative-clauses-yakyi            # 30
+      - relative-clauses-de-kudy-zvidky   # 31
+      - relative-clauses-koly-shcho       # 32
+      - purpose-shchob-infinitive         # 33
+      - purpose-shchob-past-form          # 34
+      - conditionals-real-yakshcho        # 35
+      - conditionals-unreal-yakby         # 36
+      - conditionals-mixed-complex        # 37
+      - checkpoint-complex-sentences-1    # 38
+      # ── Phase B1.5: Complex Sentences II (39-45) ──
+      - concessive-khocha                 # 39
+      - causal-result-clauses             # 40
+      - temporal-clauses                  # 41
+      - complex-sentence-integration      # 42
+      - reported-statements               # 43
+      - reported-questions-commands        # 44
+      - checkpoint-complex-sentences-2    # 45
+      # ── Phase B1.6: Participles & Advanced Grammar (46-56) ──
+      - active-participles-phrases        # 46 REORDERED: participles before adverbial
+      - past-passive-participles-1        # 47
+      - past-passive-participles-2        # 48
+      - passive-constructions             # 49
+      - one-member-sentences              # 50 NEW SPLIT — before adverbial participles
+      - adverbial-participles-imperfective # 51 REORDERED: adverbial after participles
+      - adverbial-participles-perfective  # 52
+      - diminutives-master-class          # 53
+      - numerals-collectives-fractions    # 54
+      - integrated-grammar-lab            # 55 narrowed: one-member sentences extracted
+      - checkpoint-advanced-grammar       # 56
+      # ── Phase B1.7: Word Formation & Lexicology (57-70) ──
+      - word-formation-nouns              # 57 NEW — §4.3.3 noun suffixes/prefixes
+      - word-formation-modifiers          # 58 NEW — §4.3.6-7 adjective/adverb formation
+      - possessive-short-adjectives       # 59 MOVED from B1.6 — possessive adj + short-form adj
+      - adjective-comparison              # 60 NEW — synthetic + analytic comparison forms
+      - synonymy-thinking-verbs           # 61
+      - synonymy-speaking-verbs           # 62
+      - antonyms-polysemy                 # 63 NEW — антоніми + багатозначність
+      - homonyms-paronyms                 # 64 NEW — омоніми + пароніми
+      - collocations-expressions          # 65
+      - abstract-concepts-ideas           # 66
+      - abstract-concepts-processes       # 67
+      - expressing-opinions               # 68
+      - agreement-disagreement            # 69
+      - discourse-markers-basic           # 70
+      # ── Phase B1.8: Communication & Society (71-81) ──
+      - discourse-markers-advanced        # 71
+      - describing-changes                # 72
+      - media-news                        # 73
+      - society-politics                  # 74
+      - professional-communication        # 75
+      - environment-ecology               # 76
+      - health-wellness                   # 77
+      - emotions-deep-dive                # 78
+      - relationships                     # 79
+      - business-basics                   # 80
+      - travel-geography                  # 81
+      # ── Phase B1.9: Culture & Regions (82-90) ──
+      - emotional-intelligence            # 82
+      - regions-west                      # 83
+      - regions-east                      # 84
+      - regions-south                     # 85
+      - regions-center                    # 86
+      - ukrainian-music-today             # 87
+      - ukrainian-cinema-and-tv           # 88
+      - technology-and-startups           # 89
+      - sports-in-ukraine                 # 90
+      # ── Phase B1.10: Lifestyle, Media & Final (91-103) ──
+      - active-lifestyle                  # 91
+      - running-in-ukraine                # 92
+      - mountains-trail                   # 93
+      - cycling-water                     # 94
+      - winter-sports                     # 95
+      - ukrainian-cuisine                 # 96
+      - ukrainski-sviata-ta-festyvali     # 97
+      - novyny-yak-chytaty                # 98
+      - interviu-ta-podkasty              # 99
+      - communication-channels            # 100
+      - presentations-visuals             # 101
+      - feedback-negotiation-complaints   # 102
+      - b1-final-exam                     # 103
   b2:
     type: core
     modules:
@@ -302,74 +305,80 @@ levels:
       - complex-syntax-ellipsis-parcelling # 22 MOVED from old M44
       - direct-indirect-speech            # 23 NEW — пряма/непряма мова, цитування
       - checkpoint-syntax                 # 24 NEW
-      # ── Phase B2.3: Register System (25-35) — compressed 12→10 ──
-      - register-introduction             # 25
-      - register-formal-informal          # 26
-      - register-business-ukrainian       # 27
-      - register-academic-technical       # 28 MERGED (academic + technical)
-      - register-official-legal           # 29
-      - register-literary-ukrainian       # 30
-      - register-media-journalistic       # 31
-      - register-colloquial-style         # 32
-      - register-religious-ukrainian      # 33 EXPANDED (all faiths in Ukraine)
-      - register-practice-cross-register-rewriting # 34
-      - checkpoint-register               # 35 RENAMED from checkpoint-register-synthesis
-      # ── Phase B2.4: Domain Vocabulary (36-39) ──
-      - politics-government-vocabulary    # 36
-      - law-justice-vocabulary            # 37
-      - economics-business-vocabulary     # 38
-      - checkpoint-domain                 # 39 RENAMED from b21-checkpoint
-      # ── Phase B2.5: Advanced Morphology (40-53) ──
-      - aspect-nuances-secondary-imperfectivization # 40
-      - aspect-nuances-imperative-infinitive        # 41
-      - pluperfect-tense                  # 42 MOVED from isolated old M94
-      - conditional-mood-particles        # 43 NEW — умовний спосіб + частки + вигуки
-      - numeral-declension-time-dates     # 44
-      - numeral-declension-compound-numbers # 45
-      - word-formation-person-suffixes    # 46
-      - word-formation-abstract-nouns     # 47
-      - word-formation-place-object-names # 48
-      - word-formation-adjective-formation # 49
-      - word-formation-adverbs-integration # 50
-      - advanced-conjunctions-i           # 51 MOVED from old M67
-      - advanced-conjunctions-ii          # 52 MOVED from old M68
-      - checkpoint-morphology             # 53 RENAMED from b21c-checkpoint
-      # ── Phase B2.6: Lexicology (54-64) — synonyms 12→3, phraseology 10→6 ──
-      - synonymy-types-and-rows           # 54 NEW — absolute, contextual, stylistic
-      - synonymy-in-registers             # 55 NEW — synonym selection across styles
-      - synonymy-practice-precision       # 56 NEW — precision drills
-      - proverbs-work-wisdom-character    # 57
-      - proverbs-nature-time-caution      # 58
-      - set-expressions-combined          # 59 MERGED (i + ii)
-      - idioms-somatic                    # 60 MERGED (head-face + hands-legs + body)
-      - idioms-animals                    # 61 MERGED (animals-i + animals-ii)
-      - idioms-nature                     # 62
-      - neologisms-borrowings             # 63 NEW — неологізми, запозичення
-      - checkpoint-lexicology             # 64 RENAMED from b2-checkpoint
-      # ── Phase B2.7: Communication Skills (65-76) ──
-      - professional-email-basics         # 65
-      - professional-email-advanced       # 66
-      - professional-reports-basics       # 67
-      - professional-reports-advanced     # 68
-      - academic-writing                  # 69
-      - text-analysis                     # 70
-      - news-analysis-basics              # 71
-      - news-analysis-advanced            # 72
-      - presentation-skills-basics        # 73
-      - presentation-skills-advanced      # 74
-      - discussion-debate                 # 75
-      - checkpoint-communication          # 76 NEW
-      # ── Phase B2.8: Culture & Thematic (77-81) ──
-      - tekhnolohii-ta-shi               # 77
-      - nauka-i-doslidzhennia            # 78
-      - mystetstvo-i-literatura          # 79
-      - modern-diaspora                  # 80
-      - religion-in-ukraine              # 81
-      # ── Phase B2.9: Capstone & Final (82-85) ──
-      - capstone-research                # 82
-      - capstone-prezentatsiya           # 83
-      - b2-pidsumkovyy-ohlyad           # 84
-      - b2-final-exam                    # 85
+      # ── Phase B2.2b: Stylistic Foundations (25-27) ──
+      - phonetic-stylistic-devices        # 25 NEW — alliteration, assonance, onomatopoeia
+      - lexical-stylistic-devices         # 26 NEW — metaphor, metonymy, synecdoche, epithet, oxymoron
+      - syntactic-stylistic-devices       # 27 NEW — anaphora, epistrophe, parallelism, chiasmus
+      # ── Phase B2.3: Register System (28-38) — compressed 12→10 ──
+      - register-introduction             # 28
+      - register-formal-informal          # 29
+      - register-business-ukrainian       # 30
+      - register-academic-technical       # 31 MERGED (academic + technical)
+      - register-official-legal           # 32
+      - register-literary-ukrainian       # 33
+      - register-media-journalistic       # 34
+      - register-colloquial-style         # 35
+      - register-religious-ukrainian      # 36 EXPANDED (all faiths in Ukraine)
+      - register-practice-cross-register-rewriting # 37
+      - checkpoint-register               # 38 RENAMED from checkpoint-register-synthesis
+      # ── Phase B2.4: Domain Vocabulary (39-42) ──
+      - politics-government-vocabulary    # 39
+      - law-justice-vocabulary            # 40
+      - economics-business-vocabulary     # 41
+      - checkpoint-domain                 # 42 RENAMED from b21-checkpoint
+      # ── Phase B2.5: Advanced Morphology (43-56) ──
+      - aspect-nuances-secondary-imperfectivization # 43
+      - aspect-nuances-imperative-infinitive        # 44
+      - pluperfect-tense                  # 45 MOVED from isolated old M94
+      - conditional-mood-particles        # 46 NEW — умовний спосіб + частки + вигуки
+      - numeral-declension-time-dates     # 47
+      - numeral-declension-compound-numbers # 48
+      - word-formation-person-suffixes    # 49
+      - word-formation-abstract-nouns     # 50
+      - word-formation-place-object-names # 51
+      - word-formation-adjective-formation # 52
+      - word-formation-adverbs-integration # 53
+      - advanced-conjunctions-i           # 54 MOVED from old M67
+      - advanced-conjunctions-ii          # 55 MOVED from old M68
+      - checkpoint-morphology             # 56 RENAMED from b21c-checkpoint
+      # ── Phase B2.5b: Advanced Case Semantics (57) ──
+      - advanced-case-semantics           # 57 NEW — partitive genitive, ethical dative, instrumental comparison
+      # ── Phase B2.6: Lexicology (58-68) — synonyms 12→3, phraseology 10→6 ──
+      - synonymy-types-and-rows           # 58 NEW — absolute, contextual, stylistic
+      - synonymy-in-registers             # 59 NEW — synonym selection across styles
+      - synonymy-practice-precision       # 60 NEW — precision drills
+      - proverbs-work-wisdom-character    # 61
+      - proverbs-nature-time-caution      # 62
+      - set-expressions-combined          # 63 MERGED (i + ii)
+      - idioms-somatic                    # 64 MERGED (head-face + hands-legs + body)
+      - idioms-animals                    # 65 MERGED (animals-i + animals-ii)
+      - idioms-nature                     # 66
+      - neologisms-borrowings             # 67 NEW — неологізми, запозичення
+      - checkpoint-lexicology             # 68 RENAMED from b2-checkpoint
+      # ── Phase B2.7: Communication Skills (69-80) ──
+      - professional-email-basics         # 69
+      - professional-email-advanced       # 70
+      - professional-reports-basics       # 71
+      - professional-reports-advanced     # 72
+      - academic-writing                  # 73
+      - text-analysis                     # 74
+      - news-analysis-basics              # 75
+      - news-analysis-advanced            # 76
+      - presentation-skills-basics        # 77
+      - presentation-skills-advanced      # 78
+      - discussion-debate                 # 79
+      - checkpoint-communication          # 80 NEW
+      # ── Phase B2.8: Culture & Thematic (81-85) ──
+      - tekhnolohii-ta-shi               # 81
+      - nauka-i-doslidzhennia            # 82
+      - mystetstvo-i-literatura          # 83
+      - modern-diaspora                  # 84
+      - religion-in-ukraine              # 85
+      # ── Phase B2.9: Capstone & Final (86-89) ──
+      - capstone-research                # 86
+      - capstone-prezentatsiya           # 87
+      - b2-pidsumkovyy-ohlyad           # 88
+      - b2-final-exam                    # 89
   c1:
     type: core
     modules:
@@ -394,7 +403,7 @@ levels:
       - essay-writing-practice               # 18
       - practice-ii-article-critique         # 19
       - c1-1-checkpoint                      # 20
-      # Phase C1.2: Professional Communication [7 modules]
+      # Phase C1.2: Professional Communication [9 modules]
       - cv-resume-writing                    # 21
       - job-interview                        # 22
       - business-etiquette                   # 23
@@ -402,90 +411,95 @@ levels:
       - political-system                     # 25
       - media-landscape                      # 26
       - global-context                       # 27
-      # Phase C1.3: Мовознавство & Sociolinguistics [13 modules]
-      - zahalne-movoznavstvo                 # 28
-      - dialects-of-ukrainian                # 29
-      - surzhyk                              # 30
-      - history-of-language                  # 31
-      - diaspora-ukrainian                   # 32
-      - leksykolohiia-c1                     # 33
-      - morfolohichna-norma-c1               # 34
-      - tekstoznavstvo                       # 35
-      - professional-scenarios               # 36
-      - case-studies                         # 37
-      - review                               # 38
-      - speaking-practice                    # 39
-      - checkpoint-movoznavstvo              # 40
-      # Phase C1.4: Complex Sentences [7 modules]
-      - skladnosuriadne-rechennia            # 41
-      - skladnopidriadne-oznachalne-zyasuvalne  # 42
-      - skladnopidriadne-obstavynne          # 43
-      - asyndetic-semantics                  # 44
-      - combined-complex-sentences           # 45
-      - complex-sentence-practice            # 46
-      - checkpoint-complex-sentences         # 47
+      - economics-vocabulary-c1             # 28
+      - science-technology-c1               # 29
+      # Phase C1.3: Мовознавство & Sociolinguistics [15 modules]
+      - zahalne-movoznavstvo                 # 30
+      - dialects-of-ukrainian                # 31
+      - surzhyk                              # 32
+      - history-of-language                  # 33
+      - diaspora-ukrainian                   # 34
+      - leksykolohiia-c1                     # 35
+      - morfolohichna-norma-c1               # 36
+      - imperative-mastery                   # 37
+      - numeral-mastery-c1                   # 38
+      - tekstoznavstvo                       # 39
+      - professional-scenarios               # 40
+      - case-studies                         # 41
+      - review                               # 42
+      - speaking-practice                    # 43
+      - checkpoint-movoznavstvo              # 44
+      # Phase C1.4: Complex Sentences [8 modules]
+      - skladnosuriadne-rechennia            # 45
+      - skladnopidriadne-oznachalne-zyasuvalne  # 46
+      - skladnopidriadne-obstavynne          # 47
+      - asyndetic-semantics                  # 48
+      - combined-complex-sentences           # 49
+      - complex-sentence-practice            # 50
+      - one-member-sentences-c1             # 51
+      - checkpoint-complex-sentences         # 52
       # Phase C1.5: Stylistics & Rhetoric [20 modules]
-      - metaphor-simile                      # 48
-      - irony-sarcasm                        # 49
-      - hyperbole-litotes                    # 50
-      - euphemism-taboo                      # 51
-      - rhetorical-questions                 # 52
-      - fonetychni-stylistychni-zasoby       # 53
-      - morfolohichni-stylistychni-zasoby    # 54
-      - syntaksychni-stylistychni-zasoby     # 55
-      - frazeolohichni-stylistychni-zasoby   # 56
-      - degrees-of-certainty                 # 57
-      - politeness-strategies                # 58
-      - high-formal-register                 # 59
-      - intimate-register                    # 60
-      - slang-youth                          # 61
-      - persuasive-speech                    # 62
-      - istoriia-ukrainskoi-literatury       # 63
-      - literaturoznavcha-terminolohiia      # 64
-      - analiz-poezii                        # 65
-      - review-c1-5                          # 66
-      - checkpoint-c1-5                      # 67
+      - metaphor-simile                      # 53
+      - irony-sarcasm                        # 54
+      - hyperbole-litotes                    # 55
+      - euphemism-taboo                      # 56
+      - rhetorical-questions                 # 57
+      - fonetychni-stylistychni-zasoby       # 58
+      - morfolohichni-stylistychni-zasoby    # 59
+      - syntaksychni-stylistychni-zasoby     # 60
+      - frazeolohichni-stylistychni-zasoby   # 61
+      - degrees-of-certainty                 # 62
+      - politeness-strategies                # 63
+      - high-formal-register                 # 64
+      - intimate-register                    # 65
+      - slang-youth                          # 66
+      - persuasive-speech                    # 67
+      - istoriia-ukrainskoi-literatury       # 68
+      - literaturoznavcha-terminolohiia      # 69
+      - analiz-poezii                        # 70
+      - review-c1-5                          # 71
+      - checkpoint-c1-5                      # 72
       # Phase C1.6: Folk Culture & Traditions [23 modules]
-      - kobzari-bandura                      # 68
-      - ritual-songs                         # 69
-      - kolyskovi-ta-dumy                    # 70
-      - hopak-i-kozachok                     # 71
-      - rehionalni-tantsi                    # 72
-      - pysanky                              # 73
-      - vyshyvanka                           # 74
-      - honcharstvo-ta-rizbyarstvo           # 75
-      - narodna-mifolohiia                   # 76
-      - narodna-medytsyna                    # 77
-      - kozatski-lehendy                     # 78
-      - kazky-ta-prytchi                     # 79
-      - zymovi-obriady                       # 80
-      - vesna-ta-lito                        # 81
-      - khrestyny-ta-vesillia                # 82
-      - pomynalni-obriady                    # 83
-      - halychyna                            # 84
-      - traditional-clothing                 # 85
-      - ukrainian-cuisine-traditions         # 86
-      - ukrainian-house                      # 87
-      - podillia-ta-volyn                    # 88
-      - praktyka-1-narodna-kultura           # 89
-      - checkpoint-folk-culture              # 90
+      - kobzari-bandura                      # 73
+      - ritual-songs                         # 74
+      - kolyskovi-ta-dumy                    # 75
+      - hopak-i-kozachok                     # 76
+      - rehionalni-tantsi                    # 77
+      - pysanky                              # 78
+      - vyshyvanka                           # 79
+      - honcharstvo-ta-rizbyarstvo           # 80
+      - narodna-mifolohiia                   # 81
+      - narodna-medytsyna                    # 82
+      - kozatski-lehendy                     # 83
+      - kazky-ta-prytchi                     # 84
+      - zymovi-obriady                       # 85
+      - vesna-ta-lito                        # 86
+      - khrestyny-ta-vesillia                # 87
+      - pomynalni-obriady                    # 88
+      - halychyna                            # 89
+      - traditional-clothing                 # 90
+      - ukrainian-cuisine-traditions         # 91
+      - ukrainian-house                      # 92
+      - podillia-ta-volyn                    # 93
+      - praktyka-1-narodna-kultura           # 94
+      - checkpoint-folk-culture              # 95
       # Phase C1.7: Fine Arts & High Culture [16 modules]
-      - ukrainian-avant-garde                # 91
-      - klasychna-muzyka-1-vytoky            # 92
-      - klasychna-muzyka-2-natsionalna-shkola  # 93
-      - klasychna-muzyka-3-modernizm-i-suchasnist  # 94
-      - operne-mystetstvo                    # 95
-      - vokalne-mystetstvo                   # 96
-      - obrazotvorche-mystetstvo-1           # 97
-      - obrazotvorche-mystetstvo-2           # 98
-      - balet-i-tanets                       # 99
-      - teatralne-mystetstvo-1               # 100
-      - teatralne-mystetstvo-2               # 101
-      - ukrainska-arkhitektura               # 102
-      - suchasna-muzyka                      # 103
-      - ukrainske-kino                       # 104
-      - praktyka-2-vysoke-mystetstvo         # 105
-      - c1-final-checkpoint                  # 106
+      - ukrainian-avant-garde                # 96
+      - klasychna-muzyka-1-vytoky            # 97
+      - klasychna-muzyka-2-natsionalna-shkola  # 98
+      - klasychna-muzyka-3-modernizm-i-suchasnist  # 99
+      - operne-mystetstvo                    # 100
+      - vokalne-mystetstvo                   # 101
+      - obrazotvorche-mystetstvo-1           # 102
+      - obrazotvorche-mystetstvo-2           # 103
+      - balet-i-tanets                       # 104
+      - teatralne-mystetstvo-1               # 105
+      - teatralne-mystetstvo-2               # 106
+      - ukrainska-arkhitektura               # 107
+      - suchasna-muzyka                      # 108
+      - ukrainske-kino                       # 109
+      - praktyka-2-vysoke-mystetstvo         # 110
+      - c1-final-checkpoint                  # 111
   hist:
     type: track
     modules:
@@ -1334,7 +1348,7 @@ levels:
       - c2-2-practice-ii             # 41 — Phase practice II
       - c2-2-review                  # 42 — Phase review
       - c2-2-checkpoint              # 43 — Phase checkpoint
-      # ── C2.3 Professional Language (21 modules) ──────────────────────
+      # ── C2.3 Professional Language (22 modules) ──────────────────────
       # Removed → STEM: legal-ukrainian-i..v, medical-ukrainian-i..v
       - professional-language-overview # 44 — Professional communication overview
       - terminology-acquisition-i     # 45 — Terminology systems I
@@ -1352,55 +1366,56 @@ levels:
       - professional-research-skills  # 57 — Professional research skills
       - building-domain-expertise     # 58 — Building domain expertise
       - academic-publishing           # 59 — Academic publishing in Ukrainian (NEW)
-      - professional-portfolio-i      # 60 — Professional portfolio I
-      - professional-portfolio-ii     # 61 — Professional portfolio II
-      - professional-identity         # 62 — Professional identity
-      - c2-3-review                  # 63 — Phase review
-      - c2-3-checkpoint              # 64 — Phase checkpoint
+      - conference-thesis-notes      # 60 — Conference thesis notes: format, structure, shorthand (NEW #936)
+      - professional-portfolio-i      # 61 — Professional portfolio I
+      - professional-portfolio-ii     # 62 — Professional portfolio II
+      - professional-identity         # 63 — Professional identity
+      - c2-3-review                  # 64 — Phase review
+      - c2-3-checkpoint              # 65 — Phase checkpoint
       # ── C2.4 Thematic Discourse (14 modules) ─────────────────────
       # State Standard 2024 Каталог Б: all 21 themes covered (#834)
-      - suspilstvo-i-hromadyanstvo    # 65 — Society & Citizenship (themes 3.7, 3.8)
-      - zovnishnia-polityka-i-diaspora # 66 — Foreign Policy & Diaspora (theme 3.9)
-      - ekonomika-i-dobrobut          # 67 — Economy & Welfare (themes 3.10, 3.13)
-      - zdorovya-i-medytsyna          # 68 — Health & Medicine (theme 3.11)
-      - osvita-nauka-innovatsiyi      # 69 — Education, Science & Innovation (themes 3.12, 3.19)
-      - ekolohiya-i-klimat            # 70 — Ecology & Climate (theme 3.18)
-      - media-i-dezinformatsiya       # 71 — Media & Disinformation (theme 3.20)
-      - sport-i-liudskyi-potentsial   # 72 — Sport & Human Potential (theme 3.5)
-      - spozhyvannya-i-posluhy        # 73 — Consumer Culture & Services (themes 3.14, 3.15, 3.16)
-      - misto-selo-prostir            # 74 — Urban & Rural Space (themes 3.2, 3.17)
-      - podoroz-dozvillya-kultura     # 75 — Travel, Leisure & Culture (themes 3.4, 3.6)
-      - identychnist-tradytsiyi-simya # 76 — Identity, Traditions & Family (themes 3.1, 3.3, 3.21)
-      - c2-4-practice                 # 77 — Thematic Discourse Practice
-      - c2-4-checkpoint               # 78 — Thematic Discourse Assessment
+      - suspilstvo-i-hromadyanstvo    # 66 — Society & Citizenship (themes 3.7, 3.8)
+      - zovnishnia-polityka-i-diaspora # 67 — Foreign Policy & Diaspora (theme 3.9)
+      - ekonomika-i-dobrobut          # 68 — Economy & Welfare (themes 3.10, 3.13)
+      - zdorovya-i-medytsyna          # 69 — Health & Medicine (theme 3.11)
+      - osvita-nauka-innovatsiyi      # 70 — Education, Science & Innovation (themes 3.12, 3.19)
+      - ekolohiya-i-klimat            # 71 — Ecology & Climate (theme 3.18)
+      - media-i-dezinformatsiya       # 72 — Media & Disinformation (theme 3.20)
+      - sport-i-liudskyi-potentsial   # 73 — Sport & Human Potential (theme 3.5)
+      - spozhyvannya-i-posluhy        # 74 — Consumer Culture & Services (themes 3.14, 3.15, 3.16)
+      - misto-selo-prostir            # 75 — Urban & Rural Space (themes 3.2, 3.17)
+      - podoroz-dozvillya-kultura     # 76 — Travel, Leisure & Culture (themes 3.4, 3.6)
+      - identychnist-tradytsiyi-simya # 77 — Identity, Traditions & Family (themes 3.1, 3.3, 3.21)
+      - c2-4-practice                 # 78 — Thematic Discourse Practice
+      - c2-4-checkpoint               # 79 — Thematic Discourse Assessment
       # ── C2.5 Meta-Skills & Capstone (27 modules) ────────────────────
-      - complete-grammar-review       # 79  — Complete grammar review
-      - rare-archaic-forms            # 80  — Rare & archaic forms
-      - regional-varieties            # 81  — Regional varieties
-      - sociolinguistic-mastery       # 82  — Sociolinguistic mastery
-      - language-policy-decolonization # 83  — Language policy & decolonization
-      - corpus-linguistics            # 84  — Corpus linguistics & digital tools
-      - error-analysis                # 85  — Error analysis & self-correction
-      - native-like-fluency           # 86  — Native-like fluency strategies
-      - teaching-ukrainian-i          # 87  — Teaching Ukrainian I
-      - teaching-ukrainian-ii         # 88  — Teaching Ukrainian II
-      - teaching-ukrainian-iii        # 89  — Teaching Ukrainian III
-      - translation-theory-ii         # 90  — Translation theory: advanced
-      - translation-practice-i        # 91  — Translation practice I
-      - translation-practice-ii       # 92  — Translation practice II
-      - interpretation-advanced       # 93  — Advanced interpretation
-      - capstone-topic-selection      # 94  — Capstone: topic selection
-      - capstone-research-project     # 95  — Capstone: research
-      - capstone-drafting             # 96  — Capstone: drafting
-      - capstone-revision             # 97  — Capstone: revision
-      - capstone-polish               # 98  — Capstone: polish
-      - capstone-defense              # 99  — Capstone: defense
-      - final-review-i               # 100 — Final review I
-      - final-review-ii              # 101 — Final review II
-      - final-review-iii             # 102 — Final review III
-      - final-exam-integrated-skills  # 103 — Final exam
-      - c2-certification-preparation  # 104 — Certification preparation
-      - c2-riven-zaversheno          # 105 — Level completion
+      - complete-grammar-review       # 80  — Complete grammar review
+      - rare-archaic-forms            # 81  — Rare & archaic forms
+      - regional-varieties            # 82  — Regional varieties
+      - sociolinguistic-mastery       # 83  — Sociolinguistic mastery
+      - language-policy-decolonization # 84  — Language policy & decolonization
+      - corpus-linguistics            # 85  — Corpus linguistics & digital tools
+      - error-analysis                # 86  — Error analysis & self-correction
+      - native-like-fluency           # 87  — Native-like fluency strategies
+      - teaching-ukrainian-i          # 88  — Teaching Ukrainian I
+      - teaching-ukrainian-ii         # 89  — Teaching Ukrainian II
+      - teaching-ukrainian-iii        # 90  — Teaching Ukrainian III
+      - translation-theory-ii         # 91  — Translation theory: advanced
+      - translation-practice-i        # 92  — Translation practice I
+      - translation-practice-ii       # 93  — Translation practice II
+      - interpretation-advanced       # 94  — Advanced interpretation
+      - capstone-topic-selection      # 95  — Capstone: topic selection
+      - capstone-research-project     # 96  — Capstone: research
+      - capstone-drafting             # 97  — Capstone: drafting
+      - capstone-revision             # 98  — Capstone: revision
+      - capstone-polish               # 99  — Capstone: polish
+      - capstone-defense              # 100 — Capstone: defense
+      - final-review-i               # 101 — Final review I
+      - final-review-ii              # 102 — Final review II
+      - final-review-iii             # 103 — Final review III
+      - final-exam-integrated-skills  # 104 — Final exam
+      - c2-certification-preparation  # 105 — Certification preparation
+      - c2-riven-zaversheno          # 106 — Level completion
   oes:
     type: track
     modules:

@@ -1,0 +1,144 @@
+discovered_at: '2026-03-17T10:28:31.832085+00:00'
+query_keywords:
+- Ступені порівняння прикметників
+- Порівняння в українській мові
+- Comparison in Ukrainian
+- Вищий ступінь порівняння
+- Comparative Degree
+- Найвищий ступінь порівняння
+- Superlative Degree
+- Неправильні форми порівняння
+- Irregular Comparison Forms
+- 'Порівняння у контексті: стиль і прагматика'
+- 'Comparison in Context: Style and Pragmatics'
+- Порівняння в дії
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode104/
+  title: Healthy lifestyle + Degrees of comparison in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.7
+  topics:
+  - grammar
+  - verbs
+  - vocabulary
+  - health
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 3
+  episode: 104
+- url: https://opentext.ku.edu/dobraforma/chapter/20-1/
+  title: 'Dobra Forma: Comparative Degree of Adjectives'
+  source: dobraforma
+  relevance_score: 0.6
+  topics:
+  - comparative
+  - adjectives
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/20-2/
+  title: 'Dobra Forma: Comparative Degree of Adjectives (Exceptions)'
+  source: dobraforma
+  relevance_score: 0.6
+  topics:
+  - comparative
+  - adjectives
+  - grammar
+  - exceptions
+- url: https://opentext.ku.edu/dobraforma/chapter/20-3/
+  title: 'Dobra Forma: Superlative Degree of Adjectives'
+  source: dobraforma
+  relevance_score: 0.6
+  topics:
+  - superlative
+  - adjectives
+  - grammar
+- url: https://www.ukrainianlessons.com/lesson/104/
+  title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+    in Ukrainian
+  source: ukrainianlessons.com
+  relevance_score: 0.6
+  topics:
+  - ULP
+  - Season 3
+  content_type: podcast_episode
+  series: 3
+  season: 3
+  episode: 104
+rag_chunks:
+- score: 0.5
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0070
+  text: "КрокЗ. Зроби висновок. Порівняй його з правилом.\nВ українській мові прикметники\
+    \ не лише називають ознаку \nпредмета, а й виражають різний ступінь прояву певної\
+    \ якості. \nЦі форми прикметників називають ступенями порівняння. \nВони можуть\
+    \ утворюватися за допомогою суфікса -іш-(-ш-) \n(цікавіший) та префікса най- (найцікавіший).\n\
+    \\>\n196. 1. Для чого потрібні ступені порівняння прикметників? \nСвої міркування\
+    \ починайте так:\nЯ гадаю, що ступені порівняння прикметників потрібні \nдля того,\
+    \ щоб... .Я можу до"
+  section_title: Сторінка 72
+  grade: 4
+  author: kravtsova
+  page: ''
+  trust_tier: 2
+- score: 0.3333333432674408
+  chunk_id: 6-klas-ukrmova-golub-2023_s0134
+  text: "131\n1. Під час утворення вищого ступеня порівняння змі-\nнюється корінь\
+    \ у таких словах:\nвеликий — більший, малий — менший, гарний (хоро-\nший) — кращий,\
+    \ добрий — ліпший, поганий — гірший.\n2. Для підсилювання значення прикметників\
+    \ найви-\nщого ступеня порівняння додаються префікси якнай-, \nщонай-: щонайяскравіший,\
+    \ якнайсильніший. \n3. Слово «самий» ніколи не вживаємо з прикметника-\nми, натомість\
+    \ використовуємо префікс най-. \n4. Утворення простої форми вищого ступеня порів-\n\
+    няння в деяких прикметниках"
+  section_title: Сторінка 131
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.25
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0147
+  text: "Розділ 4  ПРИСЛІВНИК\n140\n§ 24  Ступені порівняння прислівників\nВправа\
+    \ 193 \n?\n?\nважливо\nважливіше\nнайважливіше\n1  Прочитайте речення \nАле ще\
+    \ важливо не проґавити моменту (Я. Стельмах).\nЩо важливіше — бути сильними фізично\
+    \ чи морально?\nНайважливіше було правильно зорієнтуватися у величез-\nному обсязі\
+    \ інформації.\n2  Поміркуйте, чим відрізняються прислівники в  реченнях \n3  Пригадайте,\
+    \ що ви знаєте про ступені порівняння прикметників \nПрислівники із суфіксами\
+    \ -е, -о, що походять від якіс-\nних прикме"
+  section_title: Сторінка 143
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-golub-2023_s0133
+  text: "130\n312   Визначте групи виділених прикметників. Поясніть їхнє лексичне\
+    \ \nзначення. У якому з речень ознака виявляється більшою мірою? \nВисловіть припущення,\
+    \ для чого треба ділити завдання на рівні.\nПершим кроком до ефективного розподілу\
+    \ часу є визна-\nчення того, які завданням по-справжньому важливі. Розділіть \n\
+    завдання на кілька рівнів: 1 — найважливіші, 2 — важливі-\nші, 3 — важливі (з\
+    \ інтернету). \n313   Розгляньте уважно таблицю й підготуйте повідомлення про\
+    \ ступені \nпорівняння якісних прикметн"
+  section_title: Сторінка 130
+  grade: 6
+  author: golub
+  page: ''
+  trust_tier: 1
+- score: 0.1666666716337204
+  chunk_id: 6-klas-ukrmova-avramenko-2023_s0133
+  text: "125\n125\n§ 63–64.  Ступені  порівняння  якісних  прикметників \nУ деяких\
+    \ прикметниках при творенні ступенів порівняння відбуваєть­\nся чергування приголосних\
+    \ (низький → нижчий, високий → вищий, лег-\nкий → легший) або зміна основи слова\
+    \ (малий → менший, великий → біль-\nший, гарний → кращий).\nНе утворюють ступенів\
+    \ порівняння такі якісні прикметники:\n•\t на позначення масті тварини: буланий,\
+    \ вороний, гнідий, соловий, мурий;\n•\t на позначення кольору, утворені за кольоровою\
+    \ подібністю з іншими \nпредметам"
+  section_title: Сторінка 125
+  grade: 6
+  author: avramenko
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []
