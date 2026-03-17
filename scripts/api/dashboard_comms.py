@@ -6,9 +6,8 @@ pipeline queue scanning, and dispatcher state.
 
 import json
 import sqlite3
-from pathlib import Path
 
-from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT
+from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
 
 WATCHER_PID_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.pid"
 WATCHER_LOG_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.log"

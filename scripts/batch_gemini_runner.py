@@ -12,15 +12,11 @@ from pathlib import Path
 # Ensure scripts/ is on sys.path for sibling imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from batch_gemini_runner import (  # noqa: E402
+from batch_gemini_runner import (
     BatchRunner,
     setup_logging,
     show_failures,
-    _filter_schema_for_track,
-    _get_core_activity_examples,
-    _get_seminar_activity_examples,
 )
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Gemini Batch Runner")

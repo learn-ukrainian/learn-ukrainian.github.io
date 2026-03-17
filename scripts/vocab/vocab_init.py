@@ -157,7 +157,7 @@ def main():
         # and allowlist to satisfy static analysis. Parameterized queries can't bind
         # table names in SQLite.
         safe_name = table.replace("]", "]]")  # escape any ] in name
-        count = conn.execute(f"SELECT COUNT(*) FROM [{safe_name}]").fetchone()[0]  # noqa: S608
+        count = conn.execute(f"SELECT COUNT(*) FROM [{safe_name}]").fetchone()[0]
         print(f"  - {table} ({count} rows)")
 
     # Show indexes

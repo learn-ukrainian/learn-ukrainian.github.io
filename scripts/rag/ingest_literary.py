@@ -515,7 +515,6 @@ def scrape_wave(wave_num: int, texts: list[dict]):
 def ingest_wave(client, wave_num: int, batch_size: int = 32):
     """Ingest all JSONL files for a wave into Qdrant."""
     from qdrant_client.models import PointStruct, SparseVector
-
     from rag.embed import TextEncoder
 
     pattern = f"wave{wave_num}-*.jsonl"

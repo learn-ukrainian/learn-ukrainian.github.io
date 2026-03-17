@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Stub: module moved to scripts/vocab/vocab_init.py"""
-import importlib.util as _ilu, sys as _sys
+import importlib.util as _ilu
+import sys as _sys
 from pathlib import Path as _P
+
 _f = _P(__file__).parent / "vocab" / "vocab_init.py"
 if __name__ == "__main__":
     import runpy; runpy.run_path(str(_f), run_name="__main__")

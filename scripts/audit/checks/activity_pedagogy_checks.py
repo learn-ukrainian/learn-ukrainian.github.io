@@ -13,7 +13,6 @@ from ..config import (
     STAGE_ORDER,
 )
 
-
 _SORTING_PROMPTS = [
     re.compile(r'which\s+(word|one|item)s?\s+(needs?|has|have|is|are|contains?)', re.IGNORECASE),
     re.compile(r'sort\s+(by|into|the)', re.IGNORECASE),

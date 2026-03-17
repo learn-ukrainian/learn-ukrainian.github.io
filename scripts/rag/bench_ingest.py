@@ -97,11 +97,11 @@ def bench_config(texts: list[str], batch_size: int, use_fp16: bool, max_length: 
 
 def compare_quality(texts: list[str], max_length: int = 512):
     """Compare FP16 vs FP32 embedding quality on same texts."""
-    from FlagEmbedding import BGEM3FlagModel
     import numpy as np
+    from FlagEmbedding import BGEM3FlagModel
 
     print(f"\n{'='*60}")
-    print(f"Quality comparison: FP16 vs FP32 (first 20 chunks)")
+    print("Quality comparison: FP16 vs FP32 (first 20 chunks)")
     print(f"{'='*60}")
 
     sample = texts[:20]
@@ -131,7 +131,7 @@ def compare_quality(texts: list[str], max_length: int = 512):
         cosines.append(cos)
 
     cosines = np.array(cosines)
-    print(f"  Cosine similarity (FP16 vs FP32):")
+    print("  Cosine similarity (FP16 vs FP32):")
     print(f"    Mean:  {cosines.mean():.6f}")
     print(f"    Min:   {cosines.min():.6f}")
     print(f"    Max:   {cosines.max():.6f}")
@@ -174,7 +174,7 @@ def main():
 
     # Summary
     print(f"\n{'='*60}")
-    print(f"SUMMARY")
+    print("SUMMARY")
     print(f"{'='*60}")
     print(f"{'Config':<35} {'Time':>8} {'Speed':>12}")
     print(f"{'-'*35} {'-'*8} {'-'*12}")

@@ -8,12 +8,10 @@ import json
 import subprocess
 import time
 from datetime import datetime
-from pathlib import Path
 
 import yaml
-
 from batch_gemini_config import PROJECT_ROOT
-from batch_utils import ExponentialBackoff, ErrorCategory, classify_error
+from batch_utils import ErrorCategory, ExponentialBackoff, classify_error
 from gemini_output import (
     extract_delimited,
     extract_yaml,

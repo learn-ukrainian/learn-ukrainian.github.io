@@ -20,7 +20,6 @@ from .report import (
     generate_report,
     print_gates,
     print_lint_errors,
-    print_low_density_activities,
     print_pedagogical_violations,
     print_recommendation,
     print_template_violations,

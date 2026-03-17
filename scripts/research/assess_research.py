@@ -31,19 +31,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import yaml
-from research_quality import (
-    assess_research_compat,
-    find_research_path,
-    get_rubric,
-)
 
 # Import helpers — all rendering, queue processing, and coverage logic
 from assess_research_helpers import (
-    _build_refresh_queue,
-    _build_upgrade_queue,
-    _colored,
     _compute_all_coverage,
-    _coverage_for_track as _coverage_for_track_impl,
     _parse_slug_entry,
     _render_all_coverage,
     _render_all_overview,
@@ -53,18 +44,19 @@ from assess_research_helpers import (
     _render_refresh_queue,
     _render_single_module,
     _render_upgrade_queue,
-    BOLD,
-    COLORS,
-    DIM,
-    GREEN,
-    RED,
-    RESET,
+)
+from assess_research_helpers import (
+    _coverage_for_track as _coverage_for_track_impl,
 )
 from assess_research_queue import (
-    _is_plan_already_enriched,
     _process_enrich_plans,
     _process_refresh_queue,
     _process_upgrade_queue,
+)
+from research_quality import (
+    assess_research_compat,
+    find_research_path,
+    get_rubric,
 )
 
 

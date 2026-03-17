@@ -14,6 +14,16 @@ from ..config import (
     ACTIVITY_RESTRICTIONS,
 )
 
+# Re-export from activity_counting for backward compatibility
+from .activity_counting import (  # noqa: F401
+    check_activity_ukrainian_content,
+    check_anagram_min_letters,
+    check_resources_placement,
+    check_resources_required,
+    check_unjumble_word_match,
+    count_items,
+)
+
 # Re-export from activity_format_checks for backward compatibility
 from .activity_format_checks import (  # noqa: F401
     check_activity_header_format,
@@ -25,16 +35,6 @@ from .activity_format_checks import (  # noqa: F401
     check_malformed_cloze_activities,
     check_mark_the_words_format,
     check_yaml_activity_types,
-)
-
-# Re-export from activity_counting for backward compatibility
-from .activity_counting import (  # noqa: F401
-    check_activity_ukrainian_content,
-    check_anagram_min_letters,
-    check_resources_placement,
-    check_resources_required,
-    check_unjumble_word_match,
-    count_items,
 )
 
 # Re-export from activity_pedagogy_checks for backward compatibility

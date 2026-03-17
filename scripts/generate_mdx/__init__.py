@@ -8,6 +8,28 @@ like ``from generate_mdx import generate_mdx, escape_jsx``.
 """
 
 # Dataclasses
+# Converters
+from .converters import (
+    CALLOUT_MAP,
+    comparative_study_to_jsx,
+    convert_callouts,
+    essay_response_to_jsx,
+    highlight_morphemes_to_jsx,
+    normalize_mdx,
+    process_dialogues,
+    process_story_sections,
+    resolve_slug_links,
+    yaml_activities_to_jsx,
+)
+
+# Core
+from .core import (
+    detect_pipeline_info,
+    generate_mdx,
+    get_modules_from_manifest,
+    main,
+    parse_frontmatter,
+)
 from .dataclasses_ import (
     AnagramItem,
     ClozeData,
@@ -26,9 +48,6 @@ from .dataclasses_ import (
     TrueFalseItem,
     UnjumbleItem,
 )
-
-# Utilities
-from .utils import dump_json_for_jsx, escape_jsx, fix_html_for_jsx
 
 # Parsers
 from .parsers import (
@@ -49,40 +68,30 @@ from .parsers import (
     parse_true_false,
     parse_unjumble,
 )
-
-# Converters
-from .converters import (
-    CALLOUT_MAP,
-    comparative_study_to_jsx,
-    convert_callouts,
-    essay_response_to_jsx,
-    highlight_morphemes_to_jsx,
-    normalize_mdx,
-    process_dialogues,
-    process_story_sections,
-    resolve_slug_links,
-    yaml_activities_to_jsx,
+from .resources import (
+    b1_vocab_items_to_markdown as _b1_vocab_items_to_markdown,
 )
 
 # Resources (re-export with original underscore-prefixed names for backward compat)
 from .resources import (
     embed_youtube_video_links as _embed_youtube_video_links,
+)
+from .resources import (
     format_resources_for_mdx,
-    load_discovery_resources as _load_discovery_resources,
-    merge_resources as _merge_resources,
     validate_and_clean_url,
+)
+from .resources import (
+    load_discovery_resources as _load_discovery_resources,
+)
+from .resources import (
+    merge_resources as _merge_resources,
+)
+from .resources import (
     vocab_items_to_markdown as _vocab_items_to_markdown,
-    b1_vocab_items_to_markdown as _b1_vocab_items_to_markdown,
 )
 
-# Core
-from .core import (
-    detect_pipeline_info,
-    generate_mdx,
-    get_modules_from_manifest,
-    main,
-    parse_frontmatter,
-)
+# Utilities
+from .utils import dump_json_for_jsx, escape_jsx, fix_html_for_jsx
 
 __all__ = [
     # Dataclasses

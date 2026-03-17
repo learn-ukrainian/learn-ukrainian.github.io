@@ -5,10 +5,7 @@ Includes show_failures for reviewing failed modules and summary report generatio
 
 import json
 
-from batch_utils import atomic_write_json
-from batch_gemini_config import PROJECT_ROOT
-
-from .constants import FAILURES_DIR, log
+from .constants import FAILURES_DIR
 
 
 def show_failures(track):

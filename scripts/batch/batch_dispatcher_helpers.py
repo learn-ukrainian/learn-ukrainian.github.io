@@ -15,7 +15,6 @@ from pathlib import Path
 
 from audit.status_cache import get_source_paths, read_status
 from batch_dispatcher_config import (
-    COOLDOWN_SECONDS,
     COST_ESTIMATES,
     RUNNER_MAX_CONSECUTIVE_FAILURES,
     RUNNER_MAX_FAILURE_RATE,

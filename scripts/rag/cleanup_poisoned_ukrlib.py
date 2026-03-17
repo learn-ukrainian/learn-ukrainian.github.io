@@ -13,8 +13,8 @@ Related: issue #804
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 from pathlib import Path
 
 DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "literary_texts"
@@ -41,7 +41,7 @@ def load_valid_chunk_ids() -> set[str]:
 
 def main():
     from qdrant_client import QdrantClient
-    from qdrant_client.models import Filter, FieldCondition, MatchText
+    from qdrant_client.models import FieldCondition, Filter, MatchText
 
     client = QdrantClient(host="localhost", port=6333, timeout=120)
 
@@ -101,13 +101,13 @@ def main():
             print(f"  ... scanned {valid_count + len(poisoned_point_ids):,} points so far "
                   f"({len(poisoned_point_ids):,} poisoned, {valid_count:,} valid)")
 
-    print(f"\n[cleanup] Scan complete:")
+    print("\n[cleanup] Scan complete:")
     print(f"  Total ukrlib points: {valid_count + len(poisoned_point_ids):,}")
     print(f"  Valid (in current JSONL): {valid_count:,}")
     print(f"  Poisoned (to delete): {len(poisoned_point_ids):,}")
 
     if poisoned_samples:
-        print(f"\n[cleanup] Sample poisoned chunks:")
+        print("\n[cleanup] Sample poisoned chunks:")
         for s in poisoned_samples:
             print(f"  - {s['chunk_id']}: {s['author']} — {s['work']}")
 

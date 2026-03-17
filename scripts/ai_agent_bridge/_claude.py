@@ -8,7 +8,7 @@ import uuid
 from pathlib import Path
 
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
-from ._config import CLAUDE_CLI, _PARENT_ENV, REPO_ROOT
+from ._config import _PARENT_ENV, CLAUDE_CLI, REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_claude_prompt

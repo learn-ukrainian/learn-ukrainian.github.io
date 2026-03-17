@@ -7,7 +7,6 @@ activity example generation, and schema filtering.
 import json
 import logging
 import os
-import re
 import time
 from datetime import datetime
 from pathlib import Path

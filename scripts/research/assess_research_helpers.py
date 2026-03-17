@@ -6,11 +6,7 @@ All functions are imported back into assess_research.py for backward compatibili
 
 from __future__ import annotations
 
-import json
-import sys
 from pathlib import Path
-
-import yaml
 
 from research_quality import (
     DIMENSION_SHORT_LABELS,

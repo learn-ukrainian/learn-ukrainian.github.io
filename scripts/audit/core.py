@@ -18,7 +18,6 @@ SCRIPT_DIR = Path(__file__).parent.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 
-from slug_utils import to_bare_slug
 from yaml_activities import ActivityParser
 
 from .checks.outline_compliance import (
@@ -28,6 +27,9 @@ from .checks.outline_compliance import (
 from .cleaners import extract_core_content
 from .config import get_level_config, get_word_target
 from .gates import GateResult, evaluate_structure
+
+# Re-export for backward compatibility (used by tests)
+from .lint import check_typography  # noqa: F401
 from .loaders import (
     get_module_number_from_curriculum,
     load_yaml_meta,
@@ -63,9 +65,6 @@ from .validators import (
     validate_checkpoint_format,
     validate_tone,
 )
-
-# Re-export for backward compatibility (used by tests)
-from .lint import check_typography  # noqa: F401
 
 
 def _load_and_resolve(file_path: str, skip_activities: bool, skip_review: bool) -> tuple[AuditContext, AuditState]:

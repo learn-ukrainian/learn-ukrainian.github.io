@@ -5,13 +5,12 @@ Loads YAML metadata, plans, vocabulary, and curriculum manifests
 from the filesystem.
 """
 
-import os
 import re
+import sys
 from pathlib import Path
 
 import yaml
 
-import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from slug_utils import to_bare_slug
 

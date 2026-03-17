@@ -3,7 +3,7 @@
 import subprocess
 from pathlib import Path
 
-from ._config import GEMINI_CLI, _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV
+from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, GEMINI_CLI
 
 
 def check_model(model: str, timeout: int = 15, force: bool = False) -> bool:

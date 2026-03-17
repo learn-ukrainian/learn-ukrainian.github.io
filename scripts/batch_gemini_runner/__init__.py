@@ -16,17 +16,17 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from .report import show_failures
 from .runner import BatchRunner
 from .utils import (
-    setup_logging,
     _filter_schema_for_track,
     _get_core_activity_examples,
     _get_seminar_activity_examples,
+    setup_logging,
 )
 
 __all__ = [
     "BatchRunner",
-    "show_failures",
-    "setup_logging",
     "_filter_schema_for_track",
     "_get_core_activity_examples",
     "_get_seminar_activity_examples",
+    "setup_logging",
+    "show_failures",
 ]

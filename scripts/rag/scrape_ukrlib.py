@@ -906,7 +906,7 @@ def audit_jsonl(path: Path, author_info: dict | None = None) -> tuple[bool, list
         if len(errors) > 20:
             print(f"      ... and {len(errors) - 20} more")
     else:
-        print(f"   ✅ PASS")
+        print("   ✅ PASS")
 
     return len(errors) == 0, errors
 
@@ -951,13 +951,13 @@ def audit_cross_contamination(data_dir: Path) -> tuple[bool, list[str]]:
         if pct > 50:
             errors.append(f"{fname}: {foreign}/{len(titles)} works ({pct:.0f}%) also appear in other author files — likely contaminated")
 
-    print(f"\n── Cross-Author Contamination Check ──")
+    print("\n── Cross-Author Contamination Check ──")
     if errors:
         print(f"   ❌ FAIL ({len(errors)} contaminated files):")
         for e in errors:
             print(f"      - {e}")
     else:
-        print(f"   ✅ PASS — no cross-contamination detected")
+        print("   ✅ PASS — no cross-contamination detected")
 
     return len(errors) == 0, errors
 
@@ -1205,7 +1205,7 @@ def main():
     # Post-scrape audit
     if args.audit and not args.dry_run:
         print(f"\n{'='*60}")
-        print(f"Running post-scrape audit...")
+        print("Running post-scrape audit...")
         print(f"{'='*60}")
         passed = 0
         failed = 0

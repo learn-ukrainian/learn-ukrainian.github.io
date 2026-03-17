@@ -26,20 +26,13 @@ import yaml
 
 # Import helpers — keyword building, blog/RAG search, formatting
 from content.video_discovery_helpers import (
-    _BLOG_STOPWORDS,
-    _build_search_terms,
     _default_qdrant_check,
-    _extract_noun_phrases,
-    _LEVEL_GRADE_RANGES,
-    _score_article,
     _search_blog_dbs,
-    _SEMINAR_TRACKS,
-    build_discovery_keywords,
-    build_search_keywords,
     cap_query,
-    extract_lemmas_from_hints,
     format_blog_discovery,
     format_rag_discovery,
+)
+from content.video_discovery_helpers import (
     search_rag as _search_rag_impl,
 )
 

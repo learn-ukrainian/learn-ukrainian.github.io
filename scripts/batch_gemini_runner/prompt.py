@@ -6,7 +6,6 @@ Builds prompts from templates with module data substitution.
 import re
 
 import yaml
-
 from batch_gemini_config import PROJECT_ROOT, num_for_slug
 from slug_utils import review_path as _review_path
 

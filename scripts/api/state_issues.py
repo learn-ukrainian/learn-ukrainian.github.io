@@ -9,7 +9,6 @@ from datetime import UTC, datetime
 
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_helpers import (
-    PLANS_ROOT,
     detect_pipeline_version,
     find_content_file,
     get_audit_status,
@@ -19,7 +18,6 @@ from .state_helpers import (
     read_v2_state,
     read_v3_state,
 )
-
 
 CRITICAL_KEYWORDS = frozenset({
     "factual error", "factual mistake", "incorrect", "wrong",

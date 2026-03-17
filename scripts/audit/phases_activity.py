@@ -5,10 +5,16 @@ Handles YAML activity validation, activity answer checking,
 and processing of activity sections for the audit pipeline.
 """
 
-import re
 import sys
-from pathlib import Path
 
+from .checks import (
+    check_activity_header_format,
+    check_activity_ukrainian_content,
+    check_resources_placement,
+    check_resources_required,
+    check_unjumble_word_match,
+    count_items,
+)
 from .checks.activities import (
     check_advanced_activities_presence,
     check_cloze_syntax_errors,
@@ -40,14 +46,6 @@ from .checks.external_resource_validation import (
 )
 from .checks.yaml_lint import lint_yaml_file
 from .checks.yaml_schema_validation import check_activity_yaml_schema
-from .checks import (
-    check_activity_header_format,
-    check_activity_ukrainian_content,
-    check_resources_placement,
-    check_resources_required,
-    check_unjumble_word_match,
-    count_items,
-)
 from .cleaners import clean_for_stats
 from .config import (
     ACTIVITY_COMPLEXITY,

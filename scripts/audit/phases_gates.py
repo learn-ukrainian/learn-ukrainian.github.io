@@ -49,7 +49,6 @@ from .gates import (
     evaluate_immersion,
     evaluate_lint,
     evaluate_naturalness,
-    evaluate_pedagogy,
     evaluate_persona,
     evaluate_priority_types,
     evaluate_research_alignment,
@@ -83,10 +82,7 @@ def _count_sandbox_lemmas(file_path: str) -> int | None:
         for line in text.splitlines():
             stripped = line.strip()
             # Table data rows: "| lemma | ..." but not header separators or header rows
-            if stripped.startswith("| ") and not stripped.startswith("|---") and not stripped.startswith("| Lemma"):
-                count += 1
-            # Bullet entries: "- **word** (POS)"
-            elif stripped.startswith("- **"):
+            if (stripped.startswith("| ") and not stripped.startswith("|---") and not stripped.startswith("| Lemma")) or stripped.startswith("- **"):
                 count += 1
     except OSError:
         return None
