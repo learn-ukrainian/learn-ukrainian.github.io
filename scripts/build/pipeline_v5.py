@@ -3495,55 +3495,45 @@ def phase_review_claude(ctx: ModuleContext, state: dict) -> bool:
 
 def _dispatch_review_passes(ctx: ModuleContext, screen, rag_data: dict,
                              total_rag: int) -> tuple[D1Result | None, D1Result | None, str, str]:
-    """Dispatch Pass 1 (factual) and Pass 2 (linguistic) in parallel.
+    """Dispatch Pass 1 (factual) then Pass 2 (linguistic) sequentially.
 
     Returns (pass1_result, pass2_result, raw1, raw2).
     """
-    from concurrent.futures import ThreadPoolExecutor
-
     raw1 = ""
     raw2 = ""
     pass1_result: D1Result | None = None
 
-    pass1_prompt: str | None = None
+    # Pass 1: Factual check (RAG-grounded)
     if total_rag > 0:
         pass1_prompt = _build_pass1_prompt(ctx, screen, rag_data)
         (ctx.orch_dir / "review-pass1-prompt.md").write_text(pass1_prompt, "utf-8")
+
+        log("  review-gemini: Dispatching Pass 1 (factual check)...")
+        ok1, raw1 = pipeline_lib.dispatch_gemini_raw(
+            pass1_prompt, task_id=f"{ctx.slug}-review-pass1", timeout=600)
+
+        if ok1:
+            (ctx.orch_dir / "review-pass1-raw.md").write_text(raw1, "utf-8")
+            pass1_result = _parse_factual_review(raw1)
+            if pass1_result.ok:
+                disc_count = len([i for i in pass1_result.issues if i.get("type") == "FACTUAL_DISCREPANCY"])
+                log(f"  review-gemini: Pass 1 \u2014 {pass1_result.verdict} "
+                    f"({disc_count} discrepancies, score {pass1_result.scores.get('factual_accuracy', '?')})")
+            else:
+                log("  review-gemini: Pass 1 \u2014 failed to parse output")
+        else:
+            log("  review-gemini: Pass 1 \u2014 dispatch failed")
     else:
         log("  review-gemini: Pass 1 SKIPPED (no RAG sources)")
         pass1_result = D1Result(ok=True, verdict="PASS", raw_review="(No RAG sources available \u2014 factual check skipped)")
 
+    # Pass 2: Linguistic review
     pass2_prompt = _build_pass2_prompt(ctx, screen)
     (ctx.orch_dir / "review-pass2-prompt.md").write_text(pass2_prompt, "utf-8")
 
-    log("  review-gemini: Dispatching review passes"
-        f" {'(Pass 1 + Pass 2 in parallel)' if pass1_prompt else '(Pass 2 only)'}...")
-
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        fut1 = pool.submit(
-            lambda: pipeline_lib.dispatch_gemini_raw(
-                pass1_prompt, task_id=f"{ctx.slug}-review-pass1", timeout=600)
-        ) if pass1_prompt else None
-        fut2 = pool.submit(
-            lambda: pipeline_lib.dispatch_gemini_raw(
-                pass2_prompt, task_id=f"{ctx.slug}-review-pass2", timeout=600)
-        )
-
-        if fut1:
-            ok1, raw1 = fut1.result()
-            if ok1:
-                (ctx.orch_dir / "review-pass1-raw.md").write_text(raw1, "utf-8")
-                pass1_result = _parse_factual_review(raw1)
-                if pass1_result.ok:
-                    disc_count = len([i for i in pass1_result.issues if i.get("type") == "FACTUAL_DISCREPANCY"])
-                    log(f"  review-gemini: Pass 1 \u2014 {pass1_result.verdict} "
-                        f"({disc_count} discrepancies, score {pass1_result.scores.get('factual_accuracy', '?')})")
-                else:
-                    log("  review-gemini: Pass 1 \u2014 failed to parse output")
-            else:
-                log("  review-gemini: Pass 1 \u2014 dispatch failed")
-
-        ok2, raw2 = fut2.result()
+    log("  review-gemini: Dispatching Pass 2 (linguistic review)...")
+    ok2, raw2 = pipeline_lib.dispatch_gemini_raw(
+        pass2_prompt, task_id=f"{ctx.slug}-review-pass2", timeout=600)
 
     pass2_result: D1Result | None = None
     if ok2:
