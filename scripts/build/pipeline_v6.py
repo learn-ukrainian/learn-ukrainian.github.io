@@ -57,6 +57,40 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
+# Agent-agnostic dispatch
+# ---------------------------------------------------------------------------
+
+def _dispatch(prompt: str, task_id: str, model: str, timeout: int = 900) -> tuple[bool, str]:
+    """Dispatch to Gemini or Claude based on model name."""
+    if model.startswith("claude"):
+        return _dispatch_claude(prompt, model, timeout)
+    return dispatch_gemini(prompt, task_id, model=model, stdout_only=True, timeout=timeout)
+
+
+def _dispatch_claude(prompt: str, model: str, timeout: int = 900) -> tuple[bool, str]:
+    """Call Claude CLI with plain prompt."""
+    import shutil
+    import subprocess as _sp
+
+    claude_bin = shutil.which("claude") or "claude"
+    cmd = [claude_bin, "--model", model, "-p", "--output-format", "text"]
+
+    try:
+        result = _sp.run(cmd, input=prompt, capture_output=True, text=True, timeout=timeout)
+        if result.returncode != 0:
+            err = (result.stderr or "").strip()
+            log(f"  dispatch: Claude error (rc={result.returncode}): {err[:200]}")
+            return False, ""
+        return True, result.stdout.strip()
+    except FileNotFoundError:
+        log("  dispatch: Claude CLI not found")
+        return False, ""
+    except _sp.TimeoutExpired:
+        log(f"  dispatch: Claude timeout ({timeout}s)")
+        return False, ""
+
+
+# ---------------------------------------------------------------------------
 # Phase 1: Preflight (reuses existing single-call preflight)
 # ---------------------------------------------------------------------------
 
@@ -155,12 +189,12 @@ def phase_write_content(ctx: ModuleContext, state: dict) -> bool:
         log("  content: Template fill failed")
         return False
 
-    log(f"  content: Dispatching write ({word_target}w target, {overshoot}w overshoot)...")
-
-    ok, raw = dispatch_gemini(
+    writer_model = getattr(ctx, "writer_model", ctx.model)
+    log(f"  content: Dispatching write ({word_target}w target, {overshoot}w overshoot, model={writer_model})...")
+    ok, raw = _dispatch(
         prompt_file.read_text("utf-8"),
         task_id=f"v6-{ctx.slug}-content",
-        model=ctx.model, stdout_only=True, timeout=900,
+        model=writer_model, timeout=900,
     )
 
     if not ok:
@@ -215,12 +249,12 @@ def phase_write_activities(ctx: ModuleContext, state: dict) -> bool:
     prompt_file = ctx.orch_dir / "activities-prompt.md"
     prompt_file.write_text(prompt, "utf-8")
 
-    log("  activities: Dispatching activities + vocabulary generation...")
-
-    ok, raw = dispatch_gemini(
+    writer_model = getattr(ctx, "writer_model", ctx.model)
+    log(f"  activities: Dispatching activities + vocabulary generation (model={writer_model})...")
+    ok, raw = _dispatch(
         prompt,
         task_id=f"v6-{ctx.slug}-activities",
-        model=ctx.model, stdout_only=True, timeout=600,
+        model=writer_model, timeout=600,
     )
 
     if not ok:
@@ -354,12 +388,12 @@ def phase_review_fix(ctx: ModuleContext, state: dict, audit_output: str) -> bool
     prompt_file = ctx.orch_dir / "review-fix-prompt.md"
     prompt_file.write_text(prompt, "utf-8")
 
-    log("  review: Dispatching review + fix...")
-
-    ok, raw = dispatch_gemini(
+    reviewer_model = getattr(ctx, "reviewer_model", PRO_MODEL)
+    log(f"  review: Dispatching review + fix (model={reviewer_model})...")
+    ok, raw = _dispatch(
         prompt,
         task_id=f"v6-{ctx.slug}-review-fix",
-        model=PRO_MODEL, stdout_only=True, timeout=900,
+        model=reviewer_model, timeout=900,
     )
 
     if not ok:
@@ -690,9 +724,13 @@ def run_v6(ctx: ModuleContext) -> bool:
     """Run the v6 pipeline."""
     state = load_state(ctx)
 
+    writer_model = getattr(ctx, "writer_model", ctx.model)
+    reviewer_model = getattr(ctx, "reviewer_model", PRO_MODEL)
+
     log(f"\nPipeline v6: {ctx.slug}")
     log(f"  Track: {ctx.track}, Module: {ctx.module_num}")
     log(f"  Word target: {ctx.word_target}")
+    log(f"  Writer: {writer_model}, Reviewer: {reviewer_model}")
 
     # Phase 1: Preflight
     if not phase_preflight(ctx, state):

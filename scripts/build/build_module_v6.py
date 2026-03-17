@@ -66,6 +66,10 @@ def _build_ctx(args: argparse.Namespace) -> ModuleContext:
     level_cfg = LEVEL_CONFIG.get(base, {})
     word_target = level_cfg.get("target_words", 1200)
 
+    # Resolve writer/reviewer models
+    writer_model = _resolve_model(args.writer) if args.writer else track_config.get("model", "gemini-3-flash-preview")
+    reviewer_model = _resolve_model(args.reviewer) if args.reviewer else "gemini-3.1-pro-preview"
+
     ctx = ModuleContext(
         track=track,
         module_num=module_num,
@@ -75,9 +79,11 @@ def _build_ctx(args: argparse.Namespace) -> ModuleContext:
         paths=paths,
         plan=plan,
         track_config=track_config,
-        model=track_config.get("model", "gemini-3-flash-preview"),
+        model=writer_model,
         dry_run=args.dry_run,
     )
+    ctx.writer_model = writer_model  # type: ignore[attr-defined]
+    ctx.reviewer_model = reviewer_model  # type: ignore[attr-defined]
 
     # Set orchestration dir
     ctx.orch_dir = paths.get("orchestration", paths["md"].parent / "orchestration" / slug)
@@ -87,6 +93,24 @@ def _build_ctx(args: argparse.Namespace) -> ModuleContext:
     build_placeholders(ctx)
 
     return ctx
+
+
+# Model name aliases → actual model IDs
+_MODEL_ALIASES = {
+    "gemini-flash": "gemini-3-flash-preview",
+    "flash": "gemini-3-flash-preview",
+    "gemini-pro": "gemini-3.1-pro-preview",
+    "pro": "gemini-3.1-pro-preview",
+    "claude-sonnet": "claude-sonnet-4-6",
+    "sonnet": "claude-sonnet-4-6",
+    "claude-opus": "claude-opus-4-6",
+    "opus": "claude-opus-4-6",
+}
+
+
+def _resolve_model(name: str) -> str:
+    """Resolve model alias to actual model ID."""
+    return _MODEL_ALIASES.get(name.lower(), name)
 
 
 def main() -> int:
@@ -102,6 +126,10 @@ def main() -> int:
                         choices=V6_PHASES, help="Restart from this phase")
     parser.add_argument("--preflight-only", action="store_true", dest="preflight_only",
                         help="Stop after preflight phase")
+    parser.add_argument("--writer", type=str, default=None,
+                        help="Writer model (e.g., gemini-flash, gemini-pro, claude-sonnet, claude-opus)")
+    parser.add_argument("--reviewer", type=str, default=None,
+                        help="Reviewer model (e.g., gemini-pro, claude-opus, claude-sonnet)")
 
     args = parser.parse_args()
     t0 = time.time()
