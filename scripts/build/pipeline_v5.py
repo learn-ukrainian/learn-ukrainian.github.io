@@ -43,6 +43,7 @@ from batch_gemini_config import (
     CLAUDE_MODEL_CORE_CONTENT,
     CLAUDE_MODEL_CORE_RESEARCH,
     CLAUDE_MODEL_FINAL_REVIEW,
+    FLASH_MODEL,
     PHASES_DIR,
     PRO_MODEL,
     PRO_TRACKS,
@@ -2794,10 +2795,12 @@ def _validate_fix_loop(ctx: ModuleContext, state: dict, phase: str,
         fix_prompt_file.write_text(fix_prompt, "utf-8")
 
         fix_output = _gemini_output_path(ctx.slug, f"validate-fix{attempt}")
+        # Flash for fix rounds: explicit instructions don't need Pro's reasoning,
+        # and Pro routinely times out (10min) in full-execution mode (#919)
         ok, _ = dispatch_gemini(
             _dispatch_prompt(ctx, fix_prompt_file),
             task_id=f"v5-{ctx.slug}-validate-fix{attempt}",
-            model=ctx.model, allow_write=True, output_file=fix_output,
+            model=FLASH_MODEL, allow_write=True, output_file=fix_output,
             timeout=TIMEOUT_FIX,
         )
         if not ok:
@@ -4076,6 +4079,9 @@ def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -
             ctx.force_research = True  # type: ignore[attr-defined]
         return _call_phase(PHASE_FUNCTIONS[force_key], force_key, ctx, state)
 
+    # --stop-before (used by --preflight-only and others)
+    stop_before = getattr(ctx, "stop_before_phase", None)
+
     # --restart-from: clear from this phase onward and run
     restart_from = getattr(ctx, "restart_from", None)
     if restart_from:
@@ -4106,6 +4112,9 @@ def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -
             ctx.force_research = True  # type: ignore[attr-defined]
         log(f"  --restart-from {restart_key}: running phases {', '.join(remaining)}")
         for phase_id in remaining:
+            if stop_before and phase_id == stop_before:
+                log(f"\n  Stopping before {phase_id}")
+                return True
             if not _call_phase(PHASE_FUNCTIONS[phase_id], phase_id, ctx, state):
                 _expected = {
                     "research": ctx.paths.get("research"),
@@ -4121,9 +4130,6 @@ def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -
                 log(f"\n  PIPELINE STOPPED at {phase_id}")
                 return False
         return True
-
-    # --stop-before
-    stop_before = getattr(ctx, "stop_before_phase", None)
 
     # Full pipeline
     for phase_id in sequence:
