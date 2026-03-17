@@ -1639,20 +1639,58 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         plan_path = ctx.paths.get("plan")
         if plan_path and plan_path.exists():
             plan_findings = scan_plan_for_russianisms(plan_path)
-            all_findings.extend(plan_findings)
+            all_findings.extend(("plan", f) for f in plan_findings)
         research_path = ctx.paths.get("research")
         if research_path and research_path.exists():
             r_findings = scan_research_for_russianisms(research_path)
-            all_findings.extend(r_findings)
+            all_findings.extend(("research", f) for f in r_findings)
         if all_findings:
-            log(f"  pre-content: SEMANTIC RUSSICISM — {len(all_findings)} false friend(s) detected:")
-            for f in all_findings:
-                log(f"    ❌ '{f['word']}' used as '{f['meaning_found']}' "
-                    f"(Ukrainian meaning: {f['ukrainian_meaning']}) "
-                    f"[{f['category']}]")
-            log("  pre-content: BLOCKED — fix the plan/research before building.")
-            log("  pre-content: The Ukrainian word is valid but the English meaning is Russian.")
-            return False
+            log(f"  pre-content: SEMANTIC RUSSICISM — {len(all_findings)} false friend(s) detected")
+            # Build LLM fix prompt
+            fix_instructions = []
+            for source, f in all_findings:
+                log(f"    ❌ [{source}] '{f['word']}' used as '{f['meaning_found']}' "
+                    f"(Ukrainian meaning: {f['ukrainian_meaning']}) [{f['category']}]")
+                fix_instructions.append(
+                    f"- In {source}, the word '{f['word']}' is paired with the meaning "
+                    f"'{f['meaning_found']}'. This is the RUSSIAN meaning. "
+                    f"In Ukrainian, '{f['word']}' means '{f['ukrainian_meaning']}'. "
+                    f"Fix the {source} to use the correct Ukrainian meaning."
+                )
+            # Dispatch fix to Gemini with file write access
+            fix_prompt = (
+                f"Fix semantic false friends in the plan file.\n"
+                f"File: {plan_path}\n\n"
+                "These Ukrainian words exist in both Ukrainian and Russian but have "
+                "DIFFERENT meanings. The plan currently uses the Russian meaning.\n\n"
+                + "\n".join(fix_instructions) + "\n\n"
+                "Read the file, find each issue, and fix ONLY the English meaning/translation "
+                "to match the correct Ukrainian meaning. Keep the Ukrainian word unchanged. "
+                "Do NOT change any other part of the file. Write the fixed file."
+            )
+            # Use the reviewer agent (opposite of writer) for the fix
+            review_agent = getattr(ctx, "review_agent", "gemini")
+            if review_agent == "claude":
+                _fix_dispatch = getattr(ctx, "preflight_dispatch_fn", None) or dispatch_gemini
+            else:
+                _fix_dispatch = dispatch_gemini
+            log(f"  pre-content: Dispatching false-friend fix to {review_agent}...")
+            ok, _ = _fix_dispatch(
+                fix_prompt,
+                task_id=f"russicism-fix-{ctx.slug}",
+                model=ctx.model, stdout_only=False,
+                allow_write=True, timeout=120,
+            )
+            if ok:
+                # Re-scan to verify fix worked
+                re_findings = scan_plan_for_russianisms(plan_path) if plan_path else []
+                if re_findings:
+                    log(f"  pre-content: STILL {len(re_findings)} false friend(s) after fix — BLOCKED")
+                    return False
+                log("  pre-content: False friends fixed by Gemini ✅")
+            else:
+                log("  pre-content: BLOCKED — Gemini could not fix false friends. Fix plan manually.")
+                return False
     except Exception as e:
         log(f"  pre-content: Russicism scan skipped — {e}")
 
