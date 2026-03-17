@@ -3381,12 +3381,12 @@ def _run_plan_adherence_check(ctx: ModuleContext) -> str:
 
     log(f"  plan-adherence: {len(high_issues)} HIGH, {len(medium_issues)} MEDIUM issue(s)")
 
-    if not high_issues:
-        # Only MEDIUM/LOW — log but don't inject into fix plan
+    if not high_issues and not medium_issues:
+        # Only LOW — log but don't inject into fix plan
         return ""
 
     lines = ["## Plan Adherence Issues (Deterministic — MUST FIX)\n"]
-    for issue in high_issues:
+    for issue in [*high_issues, *medium_issues]:
         lines.append(f"- **[{issue.severity}] {issue.check_type}** in `{issue.section}`")
         lines.append(f"  - Expected: {issue.expected}")
         lines.append(f"  - Actual: {issue.actual}")
@@ -3684,11 +3684,19 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
     # 9-10. Apply fixes
     n_fixes = _apply_review_fixes_and_plan_autofix(ctx, screen, raw1, raw2)
 
+    # 10.5. Plan adherence check (deterministic — runs in both Claude and Gemini paths)
+    plan_adherence_text = _run_plan_adherence_check(ctx)
+    if plan_adherence_text:
+        log("  review-gemini: Plan adherence issues found — will inject into fix plan")
+
     # 11. Post-review audit
     passed, audit_out = run_verify(ctx.paths["md"])
 
     review_says_fail = merged.verdict == "FAIL"
     if not review_says_fail and merged.scores.get("overall", 10) < 9.0:
+        review_says_fail = True
+    # Plan adherence failures also trigger fix loop
+    if plan_adherence_text:
         review_says_fail = True
 
     if passed and not review_says_fail:
@@ -3717,6 +3725,10 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         )
     else:
         fix_plan = _extract_fix_plan(review_text)
+
+    # Inject plan adherence issues into fix plan
+    if plan_adherence_text:
+        fix_plan = plan_adherence_text + "\n\n---\n\n" + fix_plan
 
     # Inject structured review findings for targeted fixes (#937)
     if not _audit_only_fix:
