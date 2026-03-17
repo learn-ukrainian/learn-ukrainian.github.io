@@ -1,3 +1,5 @@
+**Curriculum context:** This is Module 3 of the A1 track (Ukrainian for English speakers). Title: "Consonant Sounds" — Приголосні звуки — Voiced, Voiceless, Hard, and Soft. Phase: A1.1 [First Contact]. Previous module: Vowel Sounds. Next module: Completing The Alphabet.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal

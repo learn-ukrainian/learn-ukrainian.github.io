@@ -13,9 +13,28 @@
         "model": "gemini-3-flash-preview"
       }
     },
+    "final_audit": {
+      "status": "failed",
+      "ts": "2026-03-17T19:36:16Z",
+      "attempts": 2,
+      "note": "final-audit-failed",
+      "executor": {
+        "type": "deterministic",
+        "name": "audit"
+      }
+    },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T18:22:36Z",
+      "ts": "2026-03-17T20:28:03Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-17T20:30:25Z",
       "attempts": 1,
       "executor": {
         "type": "llm",
@@ -25,32 +44,23 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-17T18:44:26Z",
-      "attempts": 1,
+      "ts": "2026-03-17T20:32:32Z",
+      "task_id": "v5-consonant-sounds-pC",
       "executor": {
         "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     },
     "review": {
-      "status": "complete",
-      "ts": "2026-03-17T18:58:13Z",
-      "attempts": 1,
+      "status": "failed",
+      "ts": "2026-03-17T20:48:21Z",
+      "attempts": 4,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
-      }
-    },
-    "final_audit": {
-      "status": "failed",
-      "ts": "2026-03-17T18:59:30Z",
-      "attempts": 2,
-      "note": "final-audit-failed",
-      "executor": {
-        "type": "deterministic",
-        "name": "audit"
       }
     }
   }

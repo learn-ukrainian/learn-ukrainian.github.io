@@ -1,4 +1,0 @@
-**Phase**: Full Build
-**Friction Type**: PLAN_GAP
-**Problem**: Plan outline states "Україна (5 vowels = 5 syllables)" but phonologically Україна has 4 syllables: У-кра-ї-на. The letter Ї represents two phonemes (й+і) but occupies one syllable position. The plan conflates vowel letter count (5 letters: У, А, Ї, А plus the non-vowel К, Р, Н) with syllable count. Actual vowel letters that create syllable nuclei: У, А, Ї, А = 4.
-**Proposed Fix**: Update plan section "Голосні в словах" to say "Україна (4 vowels = 4 syllables)" or clarify the counting method. The word has 4 syllable nuclei despite having 5 letters that are classified as vowel letters in the alphabet chart.

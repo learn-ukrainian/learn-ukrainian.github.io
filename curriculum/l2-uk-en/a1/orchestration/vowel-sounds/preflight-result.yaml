@@ -1,4 +1,15 @@
-status: PASS
-issue_count: 0
-high_count: 0
-issues: []
+status: ISSUES_FOUND
+issue_count: 1
+high_count: 1
+issues:
+- type: CONTRADICTION
+  location: Outline section '## Шість основних голосних — Six Base Vowels' vs 'FRICTION
+    CONSTRAINTS'
+  problem: 'The outline explicitly instructs to ''Drill with minimal pairs: сир (cheese)
+    vs сір (grey)''. However, the ''FRICTION CONSTRAINTS'' section (Section 7) explicitly
+    labels this a previous failure, stating: ''Hallucinated word "сір" claimed as
+    Ukrainian for "grey". The correct word is "сірий". Replace the сир/сір minimal
+    pair with a verified pair like кит/кіт''.'
+  suggested_fix: Update the outline and plan points to use 'кит (whale) vs кіт (cat)'
+    instead of the incorrect 'сир vs сір' minimal pair.
+  severity: HIGH

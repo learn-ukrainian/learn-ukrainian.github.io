@@ -1,21 +1,26 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1701
+word_count: 1545
 deviations:
   - section: "Перші 10 літер — First 10 Letters"
-    reason: "Expanded significantly beyond 350 minimum (to ~582) to accommodate letter-by-letter H3 subsections with mandatory video embeds and blending walkthroughs. This is the core teaching section."
-  - section: "Підсумок — Summary"
-    reason: "Expanded beyond 100 minimum (to ~186) to include all four self-check questions from the plan plus a complete recap list."
-frictions: []
+    reason: "Expanded significantly beyond 350 minimum (~520 words) to accommodate individual H3 letter sections with video embeds as required by the plan. Other sections slightly over target to compensate."
+frictions:
+  - type: TEMPLATE_CONSTRAINT
+    description: "Anagram activity type is awkward for 3-letter words — scrambling КІТ yields only a few permutations (ТКІ, ІТК, ТІК), some of which look like plausible Ukrainian letter combinations. Included a mix of 3-5 letter words."
+    proposed_fix: "Consider whether anagram type should have a minimum word length of 4 for alphabet modules."
+  - type: PLAN_GAP
+    description: "Friction constraint says stress should be verified against ukrainian-word-stress dictionary, but no such verification tool is available in the current MCP toolset. Used standard dictionary knowledge for common A1 words."
+    proposed_fix: "Add stress verification to MCP toolset or document which words have been manually verified."
 research_gaps:
-  - "Bolshakova Grade 1 page references for individual letter introduction pages (p.13-22 referenced in plan but only p.11 and p.24 returned by RAG)"
+  - "No Grade 1 textbook content found specifically showing the letter-by-letter introduction sequence (which letters are taught first). Bolshakova appears to follow a different sequence than our 10-letter set."
 unverified_terms: []
 review_focus:
-  - "Verify all 20 vocabulary items appear at least once in content (VOCAB-IN-CONTENT rule)"
-  - "Check that no Ukrainian imperative verbs slipped into content"
-  - "Verify stress mark placement on Ukrainian words"
-  - "Confirm all 10 YouTube video URLs are correctly embedded"
-  - "Check immersion band stays within 5-15%"
+  - "Verify all stress marks are correct (especially молоко́, мі́сто, ма́сло, о́ко, са́ло, кіно́)"
+  - "Check that no Russian characters (ы, э, ё, ъ) appear anywhere"
+  - "Confirm all 20 vocabulary items appear in the content body (VOCAB-IN-CONTENT rule)"
+  - "Verify anagram scrambled forms do not accidentally spell real Ukrainian words"
+  - "Check direct address count (target: 15+ uses of you/your)"
 rag_tools_used:
-  - "search_text: 'букви і звуки абетка алфавіт голосні приголосні' grade=1 → Bolshakova p.24 (vowel/consonant definitions), Zaharijchuk p.13 (sound classification exercises)"
-  - "verify_words: all 23 vocabulary candidates → 23/23 confirmed in VESUM"
+  - "search_text: 'букви і звуки абетка голосні приголосні' grade=1 → Bolshakova p.24 (vowels/consonants intro), Zaharijchuk p.13 (vowel/consonant sounds)"
+  - "search_text: 'перші букви складання складів мама тато кіт молоко' grade=1 → Bolshakova p.44 (letter Т, syllable blending), p.28 (stress, мама/молоко/кіт examples)"
+  - "verify_words: all 23 vocabulary items → 23/23 FOUND in VESUM"

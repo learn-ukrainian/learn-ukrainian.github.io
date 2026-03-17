@@ -479,7 +479,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: stress-and-intonation
-version: '3.0'
+version: '3.1'
 title: Stress and Intonation
 subtitle: The Music of Ukrainian
 focus: grammar
@@ -496,7 +496,7 @@ content_outline:
   words: 350
   points:
   - 'Free and mobile stress concept: unlike Polish (penultimate) or French (final), Ukrainian stress can fall on any syllable
-    — there is no fixed rule.'
+    of a content word (note: clitics like short prepositions/conjunctions typically lack stress) — there is no fixed rule.'
   - 'Stress changes meaning: зАмок (castle) vs замОк (lock), мУка (torment) vs мукА (flour) — minimal pairs that demonstrate
     the functional load of stress.'
   - 'How stress is marked in dictionaries and textbooks: the acute accent (´) over the stressed vowel; practice reading dictionary
@@ -508,11 +508,12 @@ content_outline:
   - 'First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and household words.'
   - 'Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some verb forms.'
   - 'Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable words.'
-  - 'No fixed rule: the same ending can have different stress (кнИга vs водА, both -а ending) — stress must be learned per word.'
+  - 'No fixed rule: the same ending can have different stress (кнИжка vs водА, both -а ending) — stress must be learned per word.'
 - section: Рухомий наголос — Mobile Stress
   words: 250
   points:
-  - 'Stress shifts in declension: рукА (nominative) → рУки (genitive/plural) — the stress moves when the word form changes.'
+  - 'Stress shifts in declension: рукА (nominative singular) → рУки (nominative/accusative plural) — the stress moves when
+    the word form changes. (Note: genitive singular is рукИ — stress stays).'
   - 'Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш (you write) — verb stress can shift between
     stems and endings.'
   - 'Preview note: mobile stress will matter more when learning cases and verb conjugation — for now, awareness is the goal.'
@@ -522,7 +523,8 @@ content_outline:
   points:
   - 'Declarative intonation: pitch falls at the end of the sentence — Це кафе. with a downward contour.'
   - 'Interrogative with question word: pitch rises on the question word, then falls — ДЕ кафе?'
-  - 'Yes/no questions (without question word): pitch rises sharply at the end — Це кафе? with an upward contour.'
+  - 'Yes/no questions (without question word): pitch rises sharply on the stressed syllable of the key word, then falls
+    (IK-3 pattern) — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.'
   - 'Exclamatory intonation: sharp rise with emphasis — Це кафе! expressing surprise or excitement.'
   - 'Contrast drill: practicing the same sentence with all four intonation patterns.'
 - section: Практика — Practice

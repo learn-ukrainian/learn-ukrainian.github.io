@@ -1,513 +1,372 @@
-# Beginner Activities & Vocabulary
+        # Generate Activities and Vocabulary for: stress-and-intonation
 
-> **You are Gemini, generating activities and vocabulary for a beginner-level module.**
-> **Your ONLY task: Generate activities YAML and vocabulary YAML.**
+        Read the module content below and produce TWO outputs:
+        1. Activities YAML (interactive exercises that test the LANGUAGE skills taught)
+        2. Vocabulary YAML (all Ukrainian words introduced in the content)
 
-## Targets
+        ## Module Content
 
-| Target | Value |
-|--------|-------|
-| Skill identity | Patient & Supportive Ukrainian Tutor |
-| Module persona | Patient Supportive Tutor, acting as Orchestra Conductor |
-| Activities required | 8–15 |
-| Required types | quiz, match-up, true-false, fill-in |
-| Vocabulary items | 20 |
+        ```markdown
+        [watchdog] Output resumed after 193s stall
+# Stress and Intonation — The Music of Ukrainian
 
-### Item Minimums Per Activity Type
+Welcome to Module 6! You are doing incredibly well on your Ukrainian learning journey. So far, you have mastered the alphabet, learned how to blend sounds, and discovered how to break words into syllables. That is a massive achievement! Great job!
 
-| Type | Minimum |
-|------|--------|
-| quiz | ≥6 items |
-| true-false | ≥6 items |
-| fill-in | ≥6 items |
-| match-up | ≥6 pairs |
-| anagram | ≥6 items |
-| unjumble | ≥6 items |
-| group-sort | ≥8 items |
-| watch-and-repeat | ≥1 items |
-| classify | ≥1 items |
-| image-to-letter | ≥5 items |
+Now that you can read the letters and build syllables, it is time to focus on how to make your Ukrainian sound natural and beautiful. By the end of this module, you will be able to identify the stressed syllable in common words, understand that Ukrainian stress is free and mobile, produce the correct intonation for different types of sentences, and confidently use dictionary stress marks. 
 
-**CRITICAL — HARD FAIL if violated:** Each activity MUST meet the minimum item count for its type. Activities with fewer items than the minimum will cause an automatic validation failure. Check the minimums table above BEFORE submitting.
+We often call this "The Music of Ukrainian." Let's tune our ears and get started! Take your time, listen carefully, and remember that every new concept is just another step forward.
 
-### Real Textbook Exercises (вправи) — Pedagogical Inspiration
+## Наголос — Stress
 
-These are real exercises from Ukrainian school textbooks (grade 1/2). Study their **pedagogical patterns** — how they build progressively, use familiar vocabulary, and test specific skills. Since your students are English-speaking adults, **translate exercise instructions to English** while keeping Ukrainian content words. Adapt the pedagogical approach (progressive difficulty, real-world context) but not the language of instruction.
+When you speak English, you naturally stress certain syllables more than others. For example, you say "wa-ter," not "wa-TER." In Ukrainian, this emphasis is called **на́голос** (stress). 
 
-**Grade 1, zaharijchuk** — Сторінка 73:
-```
-71
-	
-Відшукай предмети, у назвах яких є буква ї, 
-звуки [йа], звук [дз].
-Вийди, вийди, ... ,
-На дідове ... ,
-На бабине ... ,
-На наше ... ,
-На весняні ... ,
-На маленькі ... .
-полечко
-зіллячко
- квіточки
-сонечко
-подвір’ячко
- діточки
-	
-Знайди «загублений» склад у словах — на-
-звах намальованих предметів. 
-	
-Прочитай слова в рамках. Розмісти їх у по-
-трібних місцях у закличці. Прочитай її. 
-__ -мін-го	
-фук-,	
-фла-,	
-фут-
-__ -ре-ло	
-дзе-,	
-джи-,	
-дже-
-лі- __ -на	
--ши-,	
--щи-,	
--чи-
-Pidruchnyk.com.ua
-```
+However, there is a very important difference between Ukrainian and other languages you might know. Some languages have strict rules for stress. For instance, in Polish, the stress almost always falls on the second-to-last syllable. In French, it usually falls on the last syllable. 
 
-**Grade 1, zaharijchuk** — Сторінка 11:
-```
-9
-Склад слова.  
-Наголошені та ненаголошені склади
-	 Що «зайве»? Поділи слова на склади. Визнач 
-наголошений склад.
-        
-        
-        
-	 Який у тебе сьогодні настрій? Вибери.
-```
+Ukrainian is different! The **на́голос** in Ukrainian is "free." This means the stress can fall on *any* syllable in a word. There is no single mathematical rule you can apply to guess it. You might be thinking this sounds challenging. Don't worry! This is completely normal for anyone learning the language. 
 
-**Grade 1, zaharijchuk** — Сторінка 30:
-```
-28
-Вшниі, шаркептик, шмкруаа, 
-шшпииан, аачкш.
-	
-«Збери» слова — назви намальованих пред-
-метів. Поділи на склади слово, у якому дві 
-букви ш (усно).
-Бачу Ш, ш (ша). Чую [ш].
-ш и н ш и
-ш и ш к
-к о м и ш
-и
-а
-л
-а
-о
-у
-и
-і
-Ш
-ша
-шо
-шу
-ши
-ші
-а
-о
-у
-и
-і
-аш
-ош
-уш
-иш
-іш
-Ш
-ша-                  
-шо-                       шпа-                   
-ши
-шка
-на
-шу
-м
-міти
-ше
-лест
-рех
- [  –  •–  |  –•|  –•] 
- [  –  •|  –  •– ] 
-Ш ш
-Pidruchnyk.com.ua
-```
+Because the stress is free, it can actually change the meaning of a word entirely! This is why paying attention to the **на́голос** is so important. Let's look at a classic example. These two words are spelled exactly the same way, but the stress changes their meaning:
 
-**Grade 1, zaharijchuk** — Сторінка 24:
-```
-22
-	 Утвори слова — нáзви предметів.
-Х
-	
-Що тобі відомо про персонажів казки «Ко-
-тигорошко»?  Роз­кажи.
-	
-Прочитай склади. Знайди слова із цими 
-складами.
-	
-Розділи речення на слова, прочитай при­
-слів’я. У при­слі­в’ї є 4, 5 чи 6 слів? Вибери 
-правильну відповідь.
-	
-Зимабезснігу — літобезхліба.
-	
-Які букви нагадують ці предмети?
-хвилина
-мухомор
-горіхи
-горох
-хви-
--хо-
--рох
--хи
-Pidruchnyk.com.ua
-```
+*   **за́мок** (castle) — stress is on the first syllable.
+*   **замо́к** (lock) — stress is on the last syllable.
 
+If you say **за́мок** instead of **замо́к**, you might accidentally tell someone you bought a new medieval fortress for your front door! 
 
+Let's look at another pair:
+*   **му́ка** (torment) — stress on the first syllable.
+*   **мука́** (flour) — stress on the last syllable.
 
-## Vocabulary Scope
+> [!tip] **Dictionary Secret**
+> How do you know where the stress goes if there are no rules? In Ukrainian textbooks and dictionaries, you will see a small mark above the stressed vowel, like this: **а́**, **о́**, **у́**. This is called an acute accent. When you learn a new word, always memorize it *with* its stress mark!
 
-> **Activity answers must use words from the lesson content you are reinforcing.** Read the content file first. Distractors (wrong options) may use other level-appropriate words, but correct answers should practice vocabulary from the lesson. If you need a concept not covered in the content, use English instead.
+Here is a short dialogue to show how this works in a real situation:
 
-## Module Constraints (HARD FAIL if violated)
+> **(На екскурсії / On an excursion)**
+> — Це **за́мок**?
+> — Так, це **за́мок**.
+> — А це що?
+> — Це **замо́к**.
 
-GRAMMAR CONSTRAINTS (A1.1 — First Contact):
-Keep grammar simple — this is the learner's first exposure to Ukrainian.
+Every time you encounter a new word in our lessons, we will provide the **на́голос**. Make it a habit to emphasize that vowel clearly when you practice reading aloud.
 
-ALLOWED:
-- Це + noun: «Це кіт», «Це мама»
-- Simple present tense (я читаю, я бачу)
-- Basic imperatives (читай, слухай, дивись)
-- Question words: «Хто це?», «Що це?», «Де?»
-- Так/Ні answers
-- Adj + noun: «великий дім», «нова книга»
+## Типові наголоси — Common Stress Patterns
 
-BANNED (too complex for first contact):
-- Past tense, future tense, conditionals
-- Participles, passive voice, gerunds
-- Compound/complex sentences — max 1 clause per sentence (no і/а/але joining clauses)
-- Do not explicitly teach cases — use nouns in natural contexts
+Even though there is no fixed rule for the **на́голос**, your ear will soon start to pick up on common patterns. As you build your vocabulary, you will notice that certain types of words tend to group together. Let's explore some of these typical patterns. 
 
-METALANGUAGE:
-- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'
-- Section headings MUST be bilingual (e.g., '## Голосні — Vowels')
-- Explanatory prose in English, Ukrainian for examples and dialogues
+**1. First-syllable stress**
+Many basic, everyday words carry the stress on the very first syllable. This gives them a strong, confident sound right from the start.
 
-> **These constraints apply to activities too.** If only specific letters are allowed, every Ukrainian word in activities must use ONLY those letters. If sentences are not allowed, do NOT create sentence-level activities.
+*   **ма́ма** (mom)
+*   **та́то** (dad)
+*   **до́брий** (good)
+*   **я́блуко** (apple)
 
-## Your Input
+> **(На вулиці / On the street)**
+> — **До́брий** день!
+> — **До́брий** день! **Та́то** тут?
+> — Так, **та́то** тут.
 
-Read these files:
+**2. Penultimate (second-to-last) stress**
+This is a very frequent pattern in two- and three-syllable words. The stress lands gently right before the final vowel.
 
-| File | Purpose |
-|------|---------|
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/stress-and-intonation.md` | Lesson content to test/reinforce |
-| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/stress-and-intonation.yaml` | vocabulary_hints |
-| `schemas/activities-a1.schema.json` | Allowed fields per activity type |
-| `docs/ACTIVITY-YAML-REFERENCE.md` | Activity reference guide |
+*   **шко́ла** (school)
+*   **кни́га** (book)
+*   **мі́сто** (city)
 
----
+**3. Last-syllable stress**
+Some words save all their energy for the very end. The last vowel gets the emphasis.
 
-## Beginner Activity Rules
+*   **вода́** (water)
+*   **молоко́** (milk)
+*   **далеко́** (far)
+*   **кіно́** (cinema)
 
-### Language in Activities
+> **(Вдома / At home)**
+> — **Вода́** тут?
+> — Ні, **вода́** там. А **молоко́** тут.
 
-- **Questions, explanations, instructions** → English (scaffolding language)
-- **Target content being practiced** → Ukrainian (letters, words, phrases)
-- **Option text** → Ukrainian when selecting Ukrainian words/letters, English when selecting concepts
+> [!warning] **Don't Get Tricked!**
+> You might notice that **шко́ла** and **вода́** both end with the letter **-а**. But look closely! The stress is different. **Шко́ла** has the stress on the first syllable, while **вода́** has it on the last. You cannot guess the stress just by looking at the ending of the word. You must learn the **на́голос** for each specific word.
 
-### Activity Types by Constraint Level
+Remember, your goal right now is not to memorize every pattern perfectly. Your goal is simply to be aware that the **на́голос** is a crucial part of the word's identity. You are doing a fantastic job training your brain to notice these details!
 
-**If constraints say "letters/syllables only" (no sentences):**
-Use: `quiz`, `match-up`, `group-sort`, `anagram`, `true-false`
-Do NOT use: `fill-in`, `unjumble`, `cloze`, `error-correction`, `translate`
+## Рухомий наголос — Mobile Stress
 
-**If constraints allow words and simple phrases:**
-Add: `fill-in`, `match-up` with phrases
-Still avoid: `cloze` (needs 14+ blanks), `error-correction`, `unjumble`
+Now, we are going to preview a fascinating feature of the Ukrainian language. We call it "mobile stress." 
 
-**If constraints allow basic sentences:**
-Add: `unjumble`, `fill-in` with sentences, `translate`
-Still avoid: `cloze` (needs 14+ blanks)
+What does that mean? Well, words in Ukrainian often change their endings depending on how they are used in a sentence. For example, a noun might change when it becomes plural. When the ending of a word changes, the **на́голос** sometimes "moves" or jumps to a different syllable! 
 
-### unjumble (sentence word reordering — ONLY when sentences allowed)
+Let's look at a common noun, **рука́** (hand or arm). In the singular form (just one hand), the stress is on the last syllable:
 
-```yaml
-- type: unjumble
-  title: "Put the Words in Order"
-  instruction: "Arrange the words to form a correct Ukrainian sentence."
-  items:  # minItems: 8
-    - words: ["книга", "Це", "нова"]
-      answer: "Це нова книга"
-    - words: ["великий", "дім", "Це"]
-      answer: "Це великий дім"
-```
+*   **рука́** (hand/arm)
 
-**CRITICAL**: Use `words` (array of strings) + `answer` (string). Do NOT use `sentence`, `jumbled`, or `scrambled` fields — those are WRONG and will fail schema validation.
+But when we talk about *two* hands (the plural form), the stress jumps back to the first syllable:
 
-### Do NOT Use Grammar Terminology
+*   **ру́ки** (hands/arms)
 
-A1/A2 learners do NOT know terms like іменник (noun), дієслово (verb), голосний (vowel), відмінок (case). Write questions in plain English.
+The stress moved! This mobile stress is very common in Ukrainian nouns. 
 
-❌ "Яка частина мови позначає дію?" (meaningless to A1)
-✅ "Which letter looks like English H but sounds like N?" (clear)
+It also happens with verbs (action words). Let's preview the verb **писа́ти** (to write). Listen to how the stress dances around depending on who is doing the writing:
 
----
+*   **писа́ти** (to write — the base form)
+*   **пишу́** (I write)
+*   **пи́шеш** (you write)
 
-## Schema Reference
+Notice how it shifts? **ПисАти** (stress on the "a"), **пишУ** (stress on the "u"), and then **пИшеш** (stress jumps back to the "и"). 
 
-### quiz (English questions, Ukrainian options)
+> [!note] **Just a Preview!**
+> Do you need to memorize these verb conjugations right now? Absolutely not! This is only a preview. You will officially learn how to conjugate verbs later on. For now, your only task is to be aware that the **на́голос** can move when words change shape. 
 
-```yaml
+The most practical tip for mastering mobile stress is to listen to native speakers as often as possible. Your ear will naturally internalize these rhythms over time. Keep up the excellent work; you are building a strong foundation!
+
+## Інтонація — Intonation
+
+If the **на́голос** is the rhythm of individual words, then **інтона́ція** (intonation) is the melody of the whole sentence. Intonation is how your voice rises and falls when you speak. It acts as a powerful social signal. The way you pitch your voice tells the listener if you are making a statement, asking a **пита́ння** (question), or showing surprise.
+
+Ukrainian intonation is very expressive. Let's break down the main patterns you will use every day.
+
+**1. Declarative Intonation (Statements)**
+When you are simply stating a fact, the pitch of your voice gently falls at the end of the sentence. This is very similar to English.
+
+*   Це **шко́ла**. (This is a school.) — *Pitch falls on 'ла'.*
+*   Це **молоко́**. (This is milk.) — *Pitch falls right at the end.*
+
+**2. Interrogative with a Question Word**
+When you ask a **пита́ння** using a specific question word (like Who, What, Where), the pitch of your voice reaches its highest point on that question word, and then falls towards the end of the sentence. 
+
+*   Де **шко́ла**? (Where is the school?) — *Pitch is highest on 'Де', then falls.*
+*   Що це? (What is this?) — *Pitch is highest on 'Що', then falls.*
+
+**3. Yes/No Questions (IK-3 Pattern)**
+This one requires some practice because it is quite different from English! In English, when you ask a yes/no question, your voice usually rises at the very end of the sentence. 
+
+In Ukrainian, the pitch rises *sharply* on the stressed syllable of the most important word in the question, and then it *falls* back down. 
+
+*   Це **ма́ма**? (Is this mom?) — *The pitch rises sharply on the stressed 'ма', and then falls on the second 'ма'.*
+*   Це **за́мок**? (Is this a castle?) — *Rise on 'за', fall on 'мок'.*
+
+When you hear this specific rise-and-fall melody, you instantly know that the speaker is waiting for your **ві́дповідь** (answer)!
+
+**4. Exclamatory Intonation**
+When you want to show excitement, surprise, or strong emotion, your voice will have a sharp rise with a lot of emphasis.
+
+*   Це **за́мок**! (This is a castle!)
+*   **До́брий** день! (Good day!)
+
+> [!practice] **Contrast Drill**
+> Try reading this sequence out loud. Notice how the meaning changes purely based on your **інтона́ція**, without changing a single letter!
+> 
+> *   Це **кафе́**. *(Statement: falling pitch. You are pointing out a cafe.)*
+> *   Це **кафе́**? *(Question: sharp rise on 'фе' then fall. You are asking if it is a cafe.)*
+> *   Це **кафе́**! *(Exclamation: strong, sharp rise. You are excited to see the cafe!)*
+
+## Практика — Practice
+
+You have learned so much about the music of Ukrainian today! Let's put it into practice. Read the following lists out loud. 
+
+First, focus on hitting the correct **на́голос**. Give the stressed syllable a little extra push with your voice:
+
+*   **ма́ма**
+*   **вода́**
+*   **до́брий**
+*   **шко́ла**
+*   **далеко́**
+
+Now, let's practice our minimal pairs. Notice how moving the stress changes the entire word!
+
+*   **за́мок** (castle)
+*   **замо́к** (lock)
+*   **му́ка** (torment)
+*   **мука́** (flour)
+
+Finally, practice your **інтона́ція**. Read these three sentences, changing the melody of your voice for each one. Imagine you are acting in a play!
+
+1. Це **шко́ла**. (Say it like a boring fact.)
+2. Це **шко́ла**? (Say it like you are confused and need an answer.)
+3. Це **шко́ла**! (Say it like you just found the best school in the world.)
+
+## Підсумок — Summary
+
+Congratulations! You have completed Module 6. You are taking great strides toward speaking beautifully and naturally. 
+
+Let's recap what we learned today:
+*   Ukrainian **на́голос** (stress) is free and mobile. It doesn't follow one strict rule, so you should always check the accent marks in your materials.
+*   Stress is incredibly important because it can completely change the meaning of a word, like the difference between **за́мок** and **замо́к**.
+*   We explored mobile stress, where the accent moves when words change form (like **рука́** and **ру́ки**). 
+*   We learned that **інтона́ція** changes the melody of a sentence, letting us turn a statement into a **пита́ння** (question) or an exclamation.
+
+**Self-Check Questions:**
+1. Where does the stress fall in the word **вода́**?
+2. Why is it important not to guess the stress based on how a word is spelled?
+3. How does the intonation of a yes/no question differ from a regular statement in Ukrainian?
+
+If you can answer those questions, you are ready to move on. Next up in Module 7, we will crack the gender code and explore how Ukrainian words are grouped. See you there!
+        ```
+
+        ## Plan Activity Hints
+
+        ```yaml
+        - focus: Identify which syllable carries the stress
+  items: 12
+  type: quiz
+- focus: Match stress minimal pairs to their meanings
+  items: 8
+  type: match-up
+- focus: Recognize correct intonation patterns for sentence types
+  items: 8
+  type: true-false
+- focus: Place stress marks on common words
+  items: 10
+  type: fill-in
+
+        ```
+
+        ## Plan Vocabulary Hints
+
+        ```yaml
+        recommended:
+- далеко (far) — last-syllable stress далекО
+- наголос (stress/accent) — metalinguistic term
+- інтонація (intonation) — metalinguistic term
+- питання (question) — high-frequency word
+- відповідь (answer) — high-frequency word
+required:
+- 'замок (castle/lock) — stress minimal pair: зАмок (castle) vs замОк (lock)'
+- 'вода (water) — last-syllable stress водА; Top 300 word; collocations: пити воду,
+  холодна вода'
+- рука (hand/arm) — mobile stress рукА → рУки; Top 200 word
+- писати (to write) — mobile stress in conjugation писАти → пишУ → пИшеш; Top 200
+  word
+- школа (school) — penultimate stress шкОла; Top 200 word
+- молоко (milk) — last-syllable stress молокО
+- 'добрий (good) — first-syllable stress дОбрий; Top 100 word; collocations: добрий
+  день'
+
+        ```
+
+        ## Activity YAML Schema — COPY THIS FORMAT EXACTLY
+
+        Below are working examples for EVERY activity type. Your output MUST use the same
+        field names. Wrong field names (e.g., `prompt` instead of `left`, `text` instead of
+        `statement`) will cause validation failure.
+
+        ```yaml
+        # Activity YAML examples — one per type, exact schema
+# Used by v6 activities prompt to show the LLM correct field names
+
 - type: quiz
-  title: "Check Your Knowledge"
-  instruction: Choose the correct answer.
-  items:  # minItems: 6
-    - question: "Which letter looks like English H but represents the /n/ sound?"
-      explanation: "Н is a visual trap — it looks like H but sounds like N."
+  title: "Apostrophe Rules"
+  items:
+    - question: "Which Ukrainian word means meat?"
       options:
-        - text: "Н"
+        - text: "м'ясо"
           correct: true
-        - text: "М"
+        - text: "молоко"
           correct: false
-        - text: "С"
-          correct: false
-        - text: "Л"
-          correct: false
-    - question: "What does the word сума mean?"
-      explanation: "Сума means sum/amount in Ukrainian."
-      options:
-        - text: "sum/amount"
-          correct: true
-        - text: "bag"
-          correct: false
-        - text: "moon"
-          correct: false
-        - text: "mom"
-          correct: false
-```
+      explanation: "М'ясо means meat."
 
-Key: `explanation` at QUESTION level (not inside options), exactly 4 options, exactly 1 `correct: true`.
-
-### anagram (letter scramble — M1-M10)
-
-```yaml
-- type: anagram
-  title: "Unscramble the Word"
-  instruction: "Rearrange the letters to form the correct Ukrainian word."
-  items:  # minItems: 8
-    - scrambled: "А М А М"    # SPACE-SEPARATED letters
-      answer: "МАМА"
-    - scrambled: "а н у л"
-      answer: "луна"
-```
-
-**CRITICAL**: Letters MUST be space-separated. `scrambled` and `answer` must have exactly the same letters.
-
-### match-up
-
-```yaml
 - type: match-up
-  title: "Match Letter to Sound"
-  pairs:  # minItems: 6 — MUST use "pairs:" not "items:"
-    - left: "Н"
-      right: "/n/ sound"
-    - left: "М"
-      right: "/m/ sound"
-```
+  title: "Voiced and Voiceless Partners"
+  pairs:
+    - left: "Б"
+      right: "П"
+    - left: "Д"
+      right: "Т"
+    - left: "З"
+      right: "С"
+    - left: "Ж"
+      right: "Ш"
+    - left: "Г"
+      right: "Х"
+    - left: "Ґ"
+      right: "К"
 
-### fill-in (MUST include `options` array)
-
-```yaml
 - type: fill-in
-  title: "Complete the Sentence"
-  items:  # minItems: 6
-    - sentence: "Мама купує ___."
-      answer: "молоко"
-      options: ["молоко", "молока", "молоку", "молоком"]  # REQUIRED: exactly 4 options, answer MUST be in the list
-    - sentence: "Я бачу ___."
-      answer: "кота"
-      options: ["кіт", "кота", "коту", "котом"]
-```
+  title: "Complete the Word"
+  items:
+    - sentence: "Це мій ___."
+      answer: "дім"
+      options: ["дім", "дом", "дам"]
 
-❌ WRONG: fill-in without `options` — every item MUST have `options` (exactly 4 strings)
-❌ WRONG: `answer` not in `options` — the answer MUST appear verbatim in the options array
-
-### group-sort
-
-```yaml
 - type: group-sort
-  title: "Sort the Letters"
-  groups:  # 2-4 groups
-    - name: "True Friends (same look, same sound)"
-      items: ["А", "М"]
-    - name: "Visual Traps (different sound)"
-      items: ["Н", "С"]
-```
+  title: "Sonorant or Not?"
+  groups:
+    - name: "Сонорні"
+      items: ["М", "Н", "Л", "Р", "В"]
+    - name: "Не сонорні"
+      items: ["Б", "Д", "З", "Ж", "Г"]
 
-### true-false
+- type: classify
+  title: "Find the Soft Sign"
+  categories:
+    - label: "Soft Н (Н + Ь)"
+      items: ["день", "кінь", "осінь"]
+    - label: "Soft Л (Л + Ь)"
+      items: ["сіль", "Львів"]
+    - label: "No soft sign"
+      items: ["час", "цукор"]
 
-```yaml
 - type: true-false
   title: "True or False?"
-  items:  # minItems: 8
-    - statement: "The Ukrainian letter Н makes the same sound as English H."
-      correct: false
-      explanation: "Н looks like H but sounds like N — it's a visual trap."
-```
-
----
-
-## Activity Quality Rules
-
-1. **Activity answers must use words from the lesson content.** Distractors (wrong options) may use other level-appropriate words. For early modules (M1-M10), also ensure words use only the allowed letter set.
-2. **Plausible, clear items.** Every question must have one unambiguous correct answer.
-3. **No sentence-level activities** if constraints say letters/syllables only.
-4. **Prefer fewer, high-quality activities** over padding. 6 good activities > 8 activities where the last 2 are filler.
-
-## Mandatory Self-Check
-
-1. **QUIZ single correct** — every quiz item has exactly 1 `correct: true`
-2. **ANAGRAM letter match** — scrambled letters = same letters as answer (same count, same chars)
-3. **MATCH-UP unique pairs** — no duplicate left or right values
-4. **Schema compliance** — only fields from `schemas/activities-a1.schema.json`, no extras
-
-## Allowed Activity Types
-
-**ALLOWED (use ONLY these):** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
-
-**FORBIDDEN (audit will auto-FAIL):** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
-
-## YAML Formatting Rules (HARD FAIL if violated)
-
-**Do NOT use Ukrainian angular quotes `«»` in YAML values.** They break YAML parsing when combined with colons.
-
-```yaml
-❌ WRONG (guillemets + colon = YAML parse error):
-  title: «Знайдіть пару: термін та його значення»
-  explanation: Термін «доконати» означає: завершити дію.
-
-✅ RIGHT (plain strings, quote with single quotes if value contains colon):
-  title: 'Знайдіть пару: термін та його значення'
-  explanation: Термін доконати означає завершити дію.
-```
-
-**Rules:**
-1. **Never use `«»` in YAML** — use plain text or single/double quotes
-2. **Quote any value containing `:`** with single quotes: `'text: with colon'`
-3. **Double-check** every `title`, `question`, `sentence`, `explanation`, and `text` field
-
-## Language Quality (applies to ALL Ukrainian text in activities)
-
-- **No Russianisms**: кушати→їсти, приймати участь→брати участь, получати→отримувати, самий кращий→найкращий, відноситися→стосуватися, слідуючий→наступний
-- **No Russian characters**: ы, э, ё, ъ must NEVER appear
-- **No IPA**: NEVER include IPA symbols or `ipa` fields
-- **No Latin transliteration**: Reference Ukrainian words in Cyrillic, not Latin (ZhYty → Жити)
-
-## Vocabulary YAML Rules
-
-1. **Object with `items:` wrapper** — NOT a bare list
-2. **Follow plan's vocabulary_hints** — include all required items
-3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos`
-4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
-5. **NO `ipa` field**
-6. **Count target**: 20 items
-
-## Output Delimiters
-
-> **Content outside delimiters is automatically discarded by the extraction pipeline.**
-
-Activities block (BARE LIST — no wrapper):
-```
-===ACTIVITIES_START===
-- type: quiz
-  title: "..."
   items:
-    ...
-===ACTIVITIES_END===
-```
+    - statement: "Б is a voiced consonant."
+      correct: true
+    - statement: "Ш is a sonorant consonant."
+      correct: false
 
-Vocabulary block (OBJECT with `items:` wrapper):
-```
-===VOCABULARY_START===
-items:
-  - lemma: "слово"
-    translation: "word"
-    pos: "noun"
-===VOCABULARY_END===
-```
+- type: watch-and-repeat
+  title: "Pronunciation Practice"
+  items:
+    - letter: "М"
+      word: "мама"
+      video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+      note: "Press your lips together."
 
-## Builder Notes (MANDATORY)
+- type: image-to-letter
+  title: "Picture to Letter"
+  items:
+    - emoji: "🐝"
+      answer: "Б"
+      distractors: ["П", "В"]
+      note: "бджола starts with Б"
 
-```
-===BUILDER_NOTES_START===
-phase: ACTIVITIES
-status: SUCCESS | PARTIAL | BLOCKED
-activity_count: {number of activities generated}
-deviations:
-  - "{any deviations from plan activity_hints and why}"
-frictions:
-  - type: SCHEMA_MISMATCH | PLAN_GAP | CONTENT_VOCABULARY_GAP
-    description: "{what went wrong}"
-    proposed_fix: "{how to fix}"
-unverified_terms:
-  - "{Ukrainian words in activities you couldn't verify}"
-review_focus:
-  - "{activities or items that need reviewer attention}"
-===BUILDER_NOTES_END===
-```
+- type: anagram
+  title: "Unscramble"
+  items:
+    - scrambled: "імд"
+      answer: "дім"
 
-## Friction Report (MANDATORY)
+- type: unjumble
+  title: "Put in Order"
+  items:
+    - words: ["мій", "Це", "дім"]
+      answer: "Це мій дім"
 
-```
-===FRICTION_START===
-**Phase**: Phase 3: Activities + Vocabulary
-**Step**: {what you were doing when friction occurred, or "Full YAML generation"}
-**Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
-**Raw Error**: {actual error or "None"}
-**Self-Correction**: {what you changed, or "N/A"}
-**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
-===FRICTION_END===
-```
+        ```
 
-## Item Counting
+        **KEY RULES:**
+        - `match-up` uses `pairs:` with `left:` / `right:` (NOT `items:` with `prompt:` / `answer:`)
+        - `true-false` uses `statement:` (NOT `text:`)
+        - `quiz` options use `text:` and `correct:` (bool)
+        - `classify` uses `categories:` with `label:` and `items:`
+        - `group-sort` uses `groups:` with `name:` and `items:`
+        - NO `id` field on any activity — the system generates IDs
+        - Minimum 6 items per activity
+        - Minimum 8 activities total
 
-Use the post-generation verification block below to confirm you hit the required item counts. If any type is short, add more items before outputting.
+        ## Vocabulary Rules
+        - Extract ALL Ukrainian words taught in the content
+        - Each entry: word, translation, part of speech, example sentence
+        - Include words from vocabulary_hints.required (mandatory)
+        - Include words from vocabulary_hints.recommended if used in content
 
-## Activity Focus Override
+        ## Output Format
 
-If the plan's `activity_hints` includes a `focus` description, it is a HARD OVERRIDE of the default pattern for that activity type. Read the focus carefully and implement it literally.
+        Output activities between these delimiters:
+        ===ACTIVITIES_START===
+        (bare YAML list — no `activities:` wrapper)
+        ===ACTIVITIES_END===
 
-Example: If focus says "Match Ukrainian letter to its sound (for false friends: Н≠H, С≠C)" → your match-up pairs MUST be letter→sound, NOT word→translation.
-
-## Post-Generation Verification (MANDATORY)
-
-After generating all activities, output this verification block:
-
-```
-===ACTIVITY_VERIFY_START===
-Activity counts vs plan:
-  - {type}: {actual} items (plan: {required}) ✅|❌
-  - ...
-Focus compliance:
-  - {type}: {focus description} → implemented as: {what you actually built} ✅|❌
-===ACTIVITY_VERIFY_END===
-```
-
-If any line shows ❌, output a corrected `===ACTIVITIES_START===` to `===ACTIVITIES_END===` block with the fixes applied, THEN output the friction report.
-
-## Boundaries
-
-- Do NOT modify lesson content — only generate activities and vocabulary
-- Do NOT add fields not in the schema (check schema carefully!)
-- Do NOT wrap in `activities:` or `vocabulary:` dictionary keys
-- Do NOT request skills or delegate to Claude
-
+        Output vocabulary between these delimiters:
+        ===VOCABULARY_START===
+        (YAML list of vocabulary entries)
+        ===VOCABULARY_END===

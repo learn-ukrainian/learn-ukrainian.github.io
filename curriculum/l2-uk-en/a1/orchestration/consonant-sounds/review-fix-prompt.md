@@ -351,7 +351,7 @@ You have learned so much vital information in this module! Let's put your excell
 * **Тут є хліб і вода́.** (Here is bread and water.)
 * **Це сіль, а це цибу́ля.** (This is salt, and this is an onion.)
 * **Це паву́к.** (This is a spider.)
-* **Там є ґа́нок і люк.** (There is a porch and a hatch там.)
+* **Там є ґа́нок і люк.** (There is a porch and a hatch there.)
 
 You are making wonderful, steady progress. Your reading is getting smoother and more confident with every single sentence. 
 
@@ -514,59 +514,66 @@ Great job! In the next module, you will learn a few final special symbols to com
     right: Х
   - left: Ґ
     right: К
-- type: multiple-choice
-  title: 'Hand-on-Throat Test: Voiced or Voiceless?'
+- type: quiz
+  title: Hand-on-Throat Test
+  instruction: Виберіть правильний варіант.
   items:
   - question: Is the first sound in 'зуб' (З) voiced, voiceless, or sonorant?
     options:
-    - Voiced (Дзвінкий)
-    - Voiceless (Глухий)
-    - Sonorant (Сонорний)
-    answer: Voiced (Дзвінкий)
+    - text: Voiced (Дзвінкий)
+      correct: true
+    - text: Voiceless (Глухий)
+      correct: false
+    - text: Sonorant (Сонорний)
+      correct: false
+    - text: None of the above
+      correct: false
     explanation: З is a voiced consonant. Your vocal cords vibrate.
   - question: Is the first sound in 'суп' (С) voiced, voiceless, or sonorant?
     options:
-    - Voiced (Дзвінкий)
-    - Voiceless (Глухий)
-    - Sonorant (Сонорний)
-    answer: Voiceless (Глухий)
+    - text: Voiced (Дзвінкий)
+      correct: false
+    - text: Voiceless (Глухий)
+      correct: true
+    - text: Sonorant (Сонорний)
+      correct: false
+    - text: None of the above
+      correct: false
     explanation: С is a voiceless consonant. Only air rushes out.
   - question: Is the first sound in 'бабуся' (Б) voiced, voiceless, or sonorant?
     options:
-    - Voiced (Дзвінкий)
-    - Voiceless (Глухий)
-    - Sonorant (Сонорний)
-    answer: Voiced (Дзвінкий)
+    - text: Voiced (Дзвінкий)
+      correct: true
+    - text: Voiceless (Глухий)
+      correct: false
+    - text: Sonorant (Сонорний)
+      correct: false
+    - text: None of the above
+      correct: false
     explanation: Б is a voiced consonant.
   - question: Is the first sound in 'павук' (П) voiced, voiceless, or sonorant?
     options:
-    - Voiced (Дзвінкий)
-    - Voiceless (Глухий)
-    - Sonorant (Сонорний)
-    answer: Voiceless (Глухий)
+    - text: Voiced (Дзвінкий)
+      correct: false
+    - text: Voiceless (Глухий)
+      correct: true
+    - text: Sonorant (Сонорний)
+      correct: false
+    - text: None of the above
+      correct: false
     explanation: П is the voiceless partner to Б.
   - question: Is the first sound in 'дім' (Д) voiced, voiceless, or sonorant?
     options:
-    - Voiced (Дзвінкий)
-    - Voiceless (Глухий)
-    - Sonorant (Сонорний)
-    answer: Voiced (Дзвінкий)
+    - text: Voiced (Дзвінкий)
+      correct: true
+    - text: Voiceless (Глухий)
+      correct: false
+    - text: Sonorant (Сонорний)
+      correct: false
+    - text: None of the above
+      correct: false
     explanation: Д is a voiced consonant.
-  - question: Is the first sound in 'тато' (Т) voiced, voiceless, or sonorant?
-    options:
-    - Voiced (Дзвінкий)
-    - Voiceless (Глухий)
-    - Sonorant (Сонорний)
-    answer: Voiceless (Глухий)
-    explanation: Т is the voiceless partner to Д.
-  - question: Is the first sound in 'жук' (Ж) voiced, voiceless, or sonorant?
-    options:
-    - Voiced (Дзвінкий)
-    - Voiceless (Глухий)
-    - Sonorant (Сонорний)
-    answer: Voiced (Дзвінкий)
-    explanation: Ж is a voiced consonant.
-  - question: Is the first sound
+  - qu
         ```
 
         ## Current Vocabulary
@@ -751,22 +758,20 @@ Saving log to: curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log
      Підсумок — Summary                                   159 /  100  ✅ (+59)
      ───────────────────────────────────────────────────────────────────────────
      TOTAL                                               2179 / 1200  ✅ (+979)
-  ❌ YAML schema violations: 1
-     ❌ [YAML_SCHEMA_VIOLATION] Schema error in consonant-sounds.yaml: Schema validation error at key '0': 'Voiced (Дзвінкий)' is not of type 'object'
-  📋 Found YAML activities file (7 activities)
+  📋 Found YAML activities file (8 activities)
   > Pronunciation Practice: 12 items (min 1)
   > Sort Consonant Types: 15 items (min 1)
   > Match Picture to Starting Letter: 8 items (min 5)
   > Match Voiced and Voiceless Partners: 6 items (min 6)
+  > Hand-on-Throat Test: 10 items (min 6)
   > Hard or Soft Consonants?: 8 items (min 1)
   > Ukrainian Consonant Rules: 8 items (min 6)
   > Vocabulary Matching: 8 items (min 6)
-  ❌ Missing required activity types from meta.yaml: quiz
 
 --- STRICT GATES (Level A1) ---
 Persona      ✅ Persona Defined
 Words        ✅ 2138/1200 (raw: 2220)
-Activities   ❌ 7/8
+Activities   ✅ 8/8
 Density      ✅ All > 6
 Unique_types ✅ 6/4 types
 Priority     ✅ Priority types used
@@ -775,7 +780,7 @@ Audio        ℹ️ No audio
 Vocab        ✅ 38/1
 Structure    ✅ Valid Structure
 Lint         ✅ Clean Format
-Pedagogy     ❌ 1 violations
+Pedagogy     ✅ Level-appropriate
 Content_heavy ℹ️ N/A (standard module)
 Grammar      ℹ️ N/A (covered by naturalness)
 Naturalness  ℹ️ PENDING — awaiting review
@@ -783,17 +788,11 @@ Activity_quality ℹ️ Quality validation N/A (A1/A2)
 Research     ✅ Content aligned with research
 Immersion    🇺🇦 5.7% (target 5-15% (M03))
 
-📚 PEDAGOGICAL VIOLATIONS FOUND:
-  [YAML_SCHEMA_VIOLATION] Schema error in consonant-sounds.yaml: Schema validation error at key '0': 'Voiced (Дзвінкий)' is not of type 'object'
-     → FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-
-📝 RECOMMENDATION: UPDATE (patch fixes) (severity 20/100)
-   → 1 violations (minor)
-   → Activity count below minimum
-
-
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.md
+  🎭 Review Gaming: 2 critical, 0 warnings
+     ❌ [REVIEW_LOW_SECTION_COVERAGE] Review only covers 1/6 (17%) content sections. Missed: Вступ — Introduction, Сонорні — Sonorant Consonants, Дзвінкі та глухі пари — Voiced and Voiceless Pairs, Тверді та м'які — Hard and Soft Consonants, Читання — Reading Practice. A thorough review must address each major section of the content.
+     ❌ [MISSING_REVIEWER_ID] Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance.
+Status: /Users/krisztiankoos/projects/le
         ```
 
         ## Review Criteria
@@ -805,9 +804,18 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/
 
         ## Output Format
 
-        First, output your review:
+        First, output your review. The review MUST cover EVERY section in the content:
         ===REVIEW_START===
-        (Your structured review with scores and specific issues found)
+        **Reviewed-By:** (your model name)
+
+        ## Section-by-Section Review
+        (For EACH H2 section in the content, write 2-3 sentences about quality, accuracy, pedagogy)
+
+        ## Audit Fixes Applied
+        (List every audit failure you fixed, with before/after)
+
+        ## Overall Assessment
+        (Overall quality score and summary)
         ===REVIEW_END===
 
         Then, output ALL corrected files (even if unchanged):

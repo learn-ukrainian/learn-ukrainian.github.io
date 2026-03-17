@@ -1,34 +1,23 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1459
+word_count: 1503
 deviations:
   - section: "Сонорні — Sonorant Consonants"
-    reason: "Expanded to ~295 words (target 200+) to accommodate 6 H3 letter subsections with mandatory video embeds. Each letter needs a brief introduction plus the video link."
+    reason: "Expanded to 285 words (target 200) to accommodate video embeds and pronunciation tips for Р and В"
   - section: "Дзвінкі та глухі пари — Voiced and Voiceless Pairs"
-    reason: "Expanded to ~495 words (target 400+) to accommodate 6 H3 pair subsections with dual video embeds plus the critical no-devoicing warning callout."
-  - section: "Тверді та м'які — Hard and Soft Consonants"
-    reason: "цибуля noted in content — the Л before Я is actually softened, making the note about 'hard Л' in the plan vocabulary_hints potentially misleading. Used цибуля naturally but did not label its Л as hard in the prose."
-frictions:
-  - type: PLAN_GAP
-    description: "Plan lists Й under hard/soft section only ('Й is always soft') but Й is phonetically a sonorant. Grade 4 textbook (Zaharijchuk p.5) lists Й among sonorants. Added Й to sonorants section with its own H3 for the mandatory video embed."
-    proposed_fix: "Plan could explicitly list Й in sonorants section with a note about its always-soft nature."
-  - type: TEMPLATE_CONSTRAINT
-    description: "17 mandatory video embeds across content creates many H3 subsections. At 1200-word target this makes each subsection very brief. Content quality is maintained but structure is dense."
-    proposed_fix: "For alphabet modules with many letter videos, consider allowing video embeds without requiring individual H3 per letter — grouping pairs (Б/П) under one H3 works well."
-  - type: PLAN_GAP
-    description: "Plan vocabulary_hints say цибуля demonstrates 'hard Л' but Л before Я is actually soft (palatalized). The Л in цибуля is soft, not hard."
-    proposed_fix: "Update plan vocabulary_hint for цибуля to 'soft Л before Я' or remove the hard/soft designation."
+    reason: "Expanded to 530 words (target 400) to cover all 6 pairs plus Й, no-devoicing rule, and video embeds"
+frictions: []
 research_gaps:
-  - "No RAG results found specifically about sonorant consonant pedagogy for L2 learners — adapted from L1 textbook approach (Bolshakova Grade 2)"
-  - "No Ґ-specific pronunciation video available in the Anna Ohoiko playlist"
+  - "No RAG results specifically about Ґ restoration history — used known facts (1933 removal, 1990 restoration)"
 unverified_terms: []
 review_focus:
-  - "Verify цибуля Л classification — plan says hard, linguistic reality is soft before Я"
-  - "Check that micro-dialogues use only known + newly taught vocabulary"
-  - "Confirm no-devoicing rule explanation is accurate and not over-simplified"
-  - "Verify all 20 vocabulary items appear at least once in content"
+  - "Verify no-devoicing rule explanation is accurate and clear for absolute beginners"
+  - "Check that Г vs Ґ distinction is correctly explained (voiced fricative vs voiced stop)"
+  - "Confirm В as bilabial approximant/sonorant framing is pedagogically sound"
+  - "Verify all 17 pronunciation videos are correctly embedded"
+  - "Check цибуля soft-Л explanation — Л before Я is soft, confirmed"
 rag_tools_used:
-  - "search_text: 'сонорні приголосні звуки Л М Н Р В' (grade=2) → Bolshakova p.42 hard/soft, Vashulenko p.3 overview"
-  - "search_text: 'дзвінкі та глухі приголосні звуки пари' (grade=2) → Kravtsova p.40 hand-on-throat test, Bolshakova p.62 paired consonants"
-  - "search_text: 'тверді та м'які приголосні звуки' (grade=1) → Bolshakova p.41 лис/ліс minimal pair, Zaharijchuk p.17 hard/soft intro"
-  - "verify_words: batch 24 words → all 24 found in VESUM"
+  - "search_text: сонорні приголосні звуки Л М Н Р В (grade 2) → Bolshakova p.42 hard/soft lesson, Vashulenko p.3 overview"
+  - "search_text: дзвінкі та глухі приголосні звуки пари (grade 2) → Kravtsova p.40 discovery exercise, Bolshakova p.62 voiced/voiceless pairs"
+  - "search_text: тверді та м'які приголосні звуки (grade 1) → Bolshakova p.41 лис/ліс, дим/дім pairs, Zaharijchuk p.17 hard/soft intro"
+  - "verify_words: all 23 vocabulary candidates → 23/23 found in VESUM"

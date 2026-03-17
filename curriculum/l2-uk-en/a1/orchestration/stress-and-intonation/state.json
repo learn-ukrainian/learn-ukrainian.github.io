@@ -1,66 +1,53 @@
 {
-  "track": "a1",
-  "slug": "stress-and-intonation",
-  "mode": "v5",
   "phases": {
-    "research": {
+    "preflight": {
       "status": "complete",
-      "ts": "2026-03-12T08:44:02Z",
-      "note": "rebuild-kept",
+      "ts": "2026-03-17T19:15:39Z",
+      "attempts": 1,
       "executor": {
         "type": "llm",
         "agent": "gemini",
-        "model": "unknown"
-      }
-    },
-    "discover": {
-      "status": "complete",
-      "ts": "2026-03-12T08:44:24Z",
-      "note": "merged-into-research",
-      "executor": {
-        "type": "script",
-        "name": "discover_passthrough"
+        "model": "gemini-3-flash-preview"
       }
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T15:38:18Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "failed",
-      "ts": "2026-03-17T15:51:02Z",
-      "attempts": 2,
-      "note": "dedup-exhausted",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-17T15:53:17Z",
-      "task_id": "v5-stress-and-intonation-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-17T16:06:33Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
+      "ts": "2026-03-17T19:19:48Z",
+      "attempts": 1,
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-17T19:21:50Z",
+      "attempts": 1,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-17T19:23:56Z",
+      "attempts": 1,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "final_audit": {
+      "status": "failed",
+      "ts": "2026-03-17T19:24:25Z",
+      "attempts": 2,
+      "note": "final-audit-failed",
+      "executor": {
+        "type": "deterministic",
+        "name": "audit"
       }
     }
   }

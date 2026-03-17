@@ -24,7 +24,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-16T10:29:28Z",
+      "ts": "2026-03-17T22:34:41Z",
       "executor": {
         "type": "llm",
         "agent": "claude",
@@ -32,18 +32,18 @@
       }
     },
     "validate": {
-      "status": "complete",
-      "ts": "2026-03-16T10:31:02Z",
-      "attempts": 1,
+      "status": "failed",
+      "ts": "2026-03-17T22:34:46Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-9-failures",
       "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
+        "type": "deterministic",
+        "name": "morphological_validator"
       }
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-16T10:33:55Z",
+      "ts": "2026-03-17T22:38:19Z",
       "task_id": "v5-the-ukrainian-alphabet-pC",
       "executor": {
         "type": "llm",
@@ -52,11 +52,10 @@
       }
     },
     "review": {
-      "status": "complete",
-      "ts": "2026-03-16T10:37:05Z",
+      "status": "failed",
+      "ts": "2026-03-17T22:41:45Z",
       "attempts": 1,
-      "note": "gemini-inline-fixes",
-      "review_grounding": "rag-textbook",
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",

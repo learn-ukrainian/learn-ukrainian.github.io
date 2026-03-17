@@ -1,7 +1,7 @@
 # Audit Report: M05 — syllables-and-word-division.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-17 17:06:49
+**Generated:** 2026-03-17 21:26:20
 
 ## Configuration
 **Type:** A1-grammar
@@ -51,7 +51,7 @@
 - **Immersion:** 🇺🇦 14.4% (target 5-15% (M05))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Section Audit
 | Section | Status | Count | Notes |

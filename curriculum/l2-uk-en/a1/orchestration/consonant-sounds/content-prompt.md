@@ -4,7 +4,7 @@
 
 ## 1. Goal
 
-> **You are , writing in the voice of Patient Supportive Tutor.**
+> **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Patient Supportive Tutor.**
 >
 > Build a complete beginner module for English-speaking teens and adults learning Ukrainian at the a1 level. Your job: **search Ukrainian school textbooks using RAG tools**, then **adapt** the pedagogy for L2 learners.
 >
@@ -79,7 +79,7 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 
 
 
-**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your {VOCAB_COUNT_TARGET} vocabulary target:
+**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your 20 vocabulary target:
 
 ### Vocabulary from Plan (MANDATORY — include ALL required items)
 
@@ -111,7 +111,13 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-
+TARGET: 5-15% Ukrainian.
+LANGUAGE ROLES:
+- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
+- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
+- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
+- TABLES: Simple letter-sound or word-meaning tables.
+Ukrainian sentences max 10 words.
 
 ### Blog Articles & Guides
 - **Ukrainian Cyrillic Alphabet — Letters and Sounds** (ukrainianlessons.com)
@@ -224,23 +230,56 @@ ____________________
 
 ## 4. Outline
 
-Write **** for the a1 track.
+Write **Consonant Sounds** for the a1 track.
 
-**Targets:** 1200–1800 words | {ENGAGEMENT_MIN}+ callout boxes | **{ACTIVITY_MIN}–{ACTIVITY_MAX} activities total** (required types + additional types to reach minimum) | {VOCAB_COUNT_TARGET} vocab items
+**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
+## REQUIRED H2 Sections and Points (MANDATORY)
 
+Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says *айтішник*, use *айтішник*, not a synonym).
+
+- `## Вступ — Introduction` (~100 words)
+  - Review: M1 gave you the alphabet, M2 mastered vowels. Today: the 22 consonant letters — how they're organized by sound production.
+  - All 10 vowels from M2 are available. Focus is on consonant pronunciation and classification.
+- `## Сонорні — Sonorant Consonants` (~200 words)
+  - Sonorants are the 'musical' consonants — voice dominates over noise. 5 sonorants: Л М Н Р В. You already know Л М Н from M1.
+  - Р — the rolled/trilled R! Words: риба (fish), рука (hand). Practice the tongue-tip trill. Looks like English P but sounds completely different.
+  - В — a sonorant in Ukrainian — closer to English W than English V. Lips rounded, NOT teeth on lip. Words: вода (water), вовк (wolf).
+- `## Дзвінкі та глухі пари — Voiced and Voiceless Pairs` (~400 words)
+  - Hand-on-throat test: voiced (дзвінкий) = throat vibrates. Voiceless (глухий) = only air. Each pair is identical mouth position, different voicing.
+  - Б/П — бабуся (grandma) / павук (spider). Б = voiced, П = voiceless.
+  - Д/Т — дім (house) / тато (M1 review). Д = voiced, Т = voiceless.
+  - З/С — зуб (tooth) / суп (soup). З = voiced, С = voiceless.
+  - Ж/Ш — жук (beetle) / шапка (hat). Ж = voiced sibilant (like 'zh' in 'measure'), Ш = voiceless (like English 'sh').
+  - Г/Х — гора (mountain) / хліб (bread). Г is a soft throaty sound (voiced glottal fricative), NOT a hard 'g' like English 'go'. Х like German 'ch' in 'ach'.
+  - Ґ/К — ґанок (porch) / кіт (M1 review). Ґ IS the hard 'g' (like English 'go') — very rare (~400 native words). Removed from alphabet in 1933, restored 1990.
+  - CRITICAL RULE: voiced consonants stay voiced at word end! зуб = зу[б], NOT зу[п]. хліб = хлі[б], NOT хлі[п]. Different from Russian and German.
+- `## Тверді та м'які — Hard and Soft Consonants` (~250 words)
+  - Most Ukrainian consonants come in hard/soft variants. A consonant becomes soft (palatalized) before І, Я, Ю, Є or when followed by Ь (covered in M4).
+  - Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л).
+  - Compare: лук (hard Л — bow (weapon)) vs люк (soft Л — hatch). The consonant changes, not the vowel!
+  - Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft sign that forces softening) in M4.
+- `## Читання — Reading Practice` (~150 words)
+  - Words using the full consonant inventory. All vowels from M2 available.
+  - NO full sentences with verbs — grammar is not taught yet. Use word groups, noun phrases, and labeling: Це дім. Це хліб. Ось бабуся.
+  - Voiced/voiceless pair drills: зуб/суп, жук/шапка, гора/хор.
+  - Minimal pair practice: лук/люк (hard/soft), дим/дім (И/І).
+- `## Підсумок — Summary` (~100 words)
+  - 5 sonorants (Л М Н Р В), 6 voiced/voiceless pairs, hard/soft system.
+  - Self-check: What are the 5 sonorants? What is the voiceless partner of Б? Is Г a hard 'g' or a soft throaty sound? Do voiced consonants devoice at word end?
+  - Next: M4 completes the alphabet — soft sign (Ь), apostrophe, affricates (Ц Ч Щ), digraphs (ДЖ ДЗ), and rare Ф.
 
 ### Section Word Budgets
 
-| Section | Target Words |
-|---|---|
+| Section | Minimum |
+|---------|---------|
 | Вступ — Introduction | 100+ |
 | Сонорні — Sonorant Consonants | 200+ |
 | Дзвінкі та глухі пари — Voiced and Voiceless Pairs | 400+ |
 | Тверді та м'які — Hard and Soft Consonants | 250+ |
 | Читання — Reading Practice | 150+ |
 | Підсумок — Summary | 100+ |
-| **TOTAL** | **1200+** (aim for ~1440) |
+| **Total** | **1200+ (aim for ~1440)** |
 
 ---
 
@@ -340,8 +379,8 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
-**Allowed types:** {ALLOWED_ACTIVITY_TYPES}
-**Forbidden types:** {FORBIDDEN_ACTIVITY_TYPES}
+**Allowed types:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
+**Forbidden types:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
 **Required types:** watch-and-repeat, classify, image-to-letter, match-up, quiz
 
 | Module range | Use these | Avoid these |

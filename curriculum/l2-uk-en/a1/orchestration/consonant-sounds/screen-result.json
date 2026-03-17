@@ -1,71 +1,38 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1557",
+    "COMPUTED_WORD_COUNT": "1682",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "129.8",
-    "COMPUTED_ACTIVITY_COUNT": "8",
-    "COMPUTED_VOCAB_COUNT": "24",
+    "COMPUTED_WORD_PERCENT": "140.2",
+    "COMPUTED_ACTIVITY_COUNT": "0",
+    "COMPUTED_VOCAB_COUNT": "0",
     "COMPUTED_ENGAGEMENT_COUNT": "6",
-    "COMPUTED_IMMERSION_PERCENT": "10.6",
+    "COMPUTED_IMMERSION_PERCENT": "9.4",
     "COMPUTED_IMMERSION_TARGET": "5-15%",
-    "COMPUTED_RICHNESS_SCORE": "76",
+    "COMPUTED_RICHNESS_SCORE": "71",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "cultural: 2/3, examples: 8/24, tables: 0/2",
+    "COMPUTED_RICHNESS_GAPS": "cultural: 1/3, examples: 9/24, proverbs: 0/1, tables: 0/2",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
-  "deterministic_issues": [
-    {
-      "type": "ACTIVITY_VESUM_FAIL",
-      "severity": "HIGH",
-      "location": "consonant-sounds.yaml",
-      "text": "Activity answers contain VESUM-failed words: Д, П",
-      "fix": "Fix spelling or replace these words — students will practice non-existent forms."
-    }
-  ],
+  "deterministic_issues": [],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/consonant-sounds.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M03 — Consonant Sounds\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md | Target: 1200 words\n  📋 Required activity types from meta: classify, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n  ⚠️  Outline compliance: 0 errors, 1 warnings\n     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Вправи — Activities' found in markdown but not in outline.\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                                 121 /  100  ✅ (+21)\n     Сонорні — Sonorant Consonants                        394 /  200  ✅ (+194)\n     Дзвінкі та глухі пари — Voiced and Voiceless Pairs   540 /  400  ✅ (+140)\n     Тверді та м'які — Hard and Soft Consonants           285 /  250  ✅ (+35)\n     Читання — Reading Practice                           153 /  150  ✅ (+3)\n     Підсумок — Summary                                   128 /  100  ✅ (+28)\n     ───────────────────────────────────────────────────────────────────────────\n     TOTAL                                               1621 / 1200  ✅ (+421)\n  > Читання — Reading Practice: 21 items (min 2)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1557/1200 (raw: 1798)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 6/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 10.6% (target 5-15% (M03))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/consonant-sounds.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: consonant-sounds.md\n  VESUM misses: 6 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 59046.98it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 60 | VESUM: 54 (90.0%) | RAG: 2 | Not found: 4\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 73/82 (89%) verified\n⚠️ VESUM not found (9): Д, д-д-д, ДЖ, ДЗ, ззз, П, ссс, хліп, Ш",
-  "h2_sections": "1. Вступ — Introduction\n2. Сонорні — Sonorant Consonants\n3. Дзвінкі та глухі пари — Voiced and Voiceless Pairs\n4. Тверді та м'які — Hard and Soft Consonants\n5. Читання — Reading Practice\n6. Підсумок — Summary\n7. Вправи — Activities",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/consonant-sounds.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M03 — Consonant Sounds\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md | Target: 1200 words\n  📋 Required activity types from meta: classify, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                                 121 /  100  ✅ (+21)\n     Сонорні — Sonorant Consonants                        377 /  200  ✅ (+177)\n     Дзвінкі та глухі пари — Voiced and Voiceless Pairs   610 /  400  ✅ (+210)\n     Тверді та м'які — Hard and Soft Consonants           287 /  250  ✅ (+37)\n     Читання — Reading Practice                           157 /  150  ✅ (+7)\n     Підсумок — Summary                                   154 /  100  ✅ (+54)\n     ───────────────────────────────────────────────────────────────────────────\n     TOTAL                                               1706 / 1200  ✅ (+506)\n  > Читання — Reading Practice: 57 items (min 2)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1682/1200 (raw: 1792)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 6/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 9.4% (target 5-15% (M03))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/consonant-sounds.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: consonant-sounds.md\n  VESUM misses: 3 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 73713.60it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 61 | VESUM: 58 (95.1%) | RAG: 2 | Not found: 1\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 58/61 (95%) verified\n⚠️ VESUM not found (3): ДЖ, ДЗ, хліп",
+  "h2_sections": "1. Вступ — Introduction\n2. Сонорні — Sonorant Consonants\n3. Дзвінкі та глухі пари — Voiced and Voiceless Pairs\n4. Тверді та м'які — Hard and Soft Consonants\n5. Читання — Reading Practice\n6. Підсумок — Summary",
   "vesum_stats": {
-    "total": 82,
-    "vesum_hits": 73,
+    "total": 61,
+    "vesum_hits": 58,
     "rag_hits": 0,
-    "not_found": 9,
+    "not_found": 3,
     "rag_errors": 0,
     "proper_names": 0,
     "by_source": {
-      "activities": {
-        "total": 22,
-        "vesum_hits": 19,
-        "not_found": 3
-      },
       "prose": {
-        "total": 60,
-        "vesum_hits": 54,
-        "not_found": 6
+        "total": 61,
+        "vesum_hits": 58,
+        "not_found": 3
       }
     }
   },
   "vesum_not_found": [
-    {
-      "original": "Д",
-      "clean": "д",
-      "source": "activities",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "д-д-д",
-      "clean": "д-д-д",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
     {
       "original": "ДЖ",
       "clean": "дж",
@@ -87,36 +54,6 @@
       "status": "❌"
     },
     {
-      "original": "ззз",
-      "clean": "ззз",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "П",
-      "clean": "п",
-      "source": "activities",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
-      "original": "ссс",
-      "clean": "ссс",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
-    },
-    {
       "original": "хліп",
       "clean": "хліп",
       "source": "prose",
@@ -125,17 +62,7 @@
       "literary": false,
       "vesum_info": [],
       "status": "❌"
-    },
-    {
-      "original": "Ш",
-      "clean": "ш",
-      "source": "activities",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
     }
   ],
-  "content_hash": "3a1a9b69afda05c2"
+  "content_hash": "157e1a591a3bb374"
 }

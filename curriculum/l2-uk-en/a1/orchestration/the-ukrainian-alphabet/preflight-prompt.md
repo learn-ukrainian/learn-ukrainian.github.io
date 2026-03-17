@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 1 of the A1 track (Ukrainian for English speakers). Title: "The Ukrainian Alphabet" — 33 Letters, One System — Your Map to Reading Ukrainian. Phase: A1.1 [First Contact]. Next module: Vowel Sounds.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -197,7 +199,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 2. **PREVIEW** — "By the end of this module, you'll be able to..."
 3. **PRESENT** — the main content sections
 4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in Summary, tell learners what they can now do
+5. **CELEBRATE** — in the final `## Підсумок — Summary` section, tell learners what they can now do
 
 ### Emotional Safety (scored — Beginner Safety dimension)
 
@@ -221,7 +223,15 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 
 ### Dialogue Quality
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each. For alphabet modules (M1-M10): dialogues are OPTIONAL — only include them if they feel natural with the available vocabulary. Do NOT force nonsensical dialogues just to hit a count.
+**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
+
+**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
+- Greeting: `— Привіт! — Привіт!`
+- Identification: `— Це кіт? — Так, це кіт.`
+- Location: `— Молоко тут? — Ні, молоко там.`
+- Combined: `— Мама тут? — Так, мама тут. А тато там.`
+
+Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
 
 **Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
 
@@ -395,18 +405,193 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [MODULE] Activity distractors СОК and СОЛ are Russianisms. Replace with VESUM- verified Ukrainian syllables or words built from the 10 practice letters (А О У І М Н Т К С Л).
+- [MODULE] Wrong stress: ау́діо should be а́удіо, приголо́сні should be при́голосні. Verify all stress marks against ukrainian-word-stress dictionary.
+- [MODULE] Pass 2 language review was NEVER completed — the review file contains only an empty template. Must run a complete tier-1-beginner review.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-001
+level: A1
+sequence: 1
+slug: the-ukrainian-alphabet
+version: '2.0'
+title: The Ukrainian Alphabet
+subtitle: "33 Letters, One System — Your Map to Reading Ukrainian"
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner sees the full 33-letter Ukrainian alphabet as a coherent system
+- "Learner understands letter ≠ sound (букви vs звуки)"
+- Learner distinguishes vowels (голосні) from consonants (приголосні) as categories
+- "Learner can read and write words using 10 practice letters: А О У І М Н Т К С Л"
+- Learner recognizes 3 sight words (привіт, дякую, це) and uses decodable так/ні
+content_outline:
+- section: Вступ — Introduction
+  words: 150
+  points:
+  - "Ukrainian uses Cyrillic script — descended from Greek via the First Bulgarian
+    Empire. 33 letters, highly phonetic: each letter usually maps to one sound
+    (unlike English where 'ough' can sound 5 different ways)."
+  - "Show the full 33-letter alphabet chart (COPY EXACTLY):
+    А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я
+    Learners don't memorize it all now — master each group in M2-M4."
+  - "Cultural hook: Cyrillic was created by students of Saints Cyril and Methodius.
+    It is NOT derived from Latin — it descends from the Greek alphabet."
+- section: "Букви і звуки — Letters and Sounds"
+  words: 200
+  points:
+  - "Letters (букви) are written symbols. Sounds (звуки) are what you hear and
+    pronounce. They are not the same thing — Ukrainian has 38 phonemes but 33 letters."
+  - "Key insight: Ukrainian spelling is highly phonetic — one letter almost always
+    represents one sound. This makes Ukrainian FAR easier to read than English.
+    Once you learn the 33 letters, you can sound out any word."
+  - "Some letters do double duty: iotated vowels (Я Ю Є Ї) can represent two sounds.
+    The soft sign (Ь) modifies the consonant before it. Details in M2 and M4."
+- section: "Голосні та приголосні — Vowels and Consonants"
+  words: 200
+  points:
+  - "10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї).
+    Vowels = voice only, no obstruction. Every Ukrainian syllable has exactly one vowel."
+  - "22 consonant letters + the soft sign Ь (modifier, no sound of its own).
+    Consonants = air is obstructed (lips, tongue, teeth)."
+  - "Preview chart organized by category (COPY EXACTLY):
+    Голосні (Base): А, О, У, Е, И, І
+    Голосні (Iotated): Я, Ю, Є, Ї
+    Приголосні: Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ
+    Modifier: Ь
+    M2 will master vowels, M3 consonants, M4 special signs."
+- section: "Перші 10 літер — First 10 Letters"
+  words: 350
+  points:
+  - "Today's practice set: А О У І (4 vowels) + М Н Т К С Л (6 consonants).
+    These 10 high-frequency letters let you read real Ukrainian words immediately."
+  - "Letter-by-letter introduction with pronunciation guidance:
+    А — open 'a' as in 'father'. М — like English M. О — rounded 'o' as in 'more'.
+    Н — like English N (looks like H but is NOT H!). У — 'oo' as in 'moon'.
+    Т — like English T. І — 'ee' as in 'see'. К — like English K.
+    С — like English S. Л — like English L (tongue position differs slightly)."
+  - "Decodable words (use ONLY these 10 letters): мама (mom), тато (dad),
+    кіт (cat), молоко (milk), масло (butter), око (eye), ніс (nose),
+    місто (city), ліс (forest), сон (dream), мак (poppy), сік (juice),
+    сало (lard), стіл (table), тут (here), там (there)."
+  - "Detailed phonetic walkthroughs: how to blend М+А→МА, then МА+МА→МАМА.
+    How to read К+І+Т→КІТ. Build from letters → syllables → words."
+- section: "Перші слова — First Words in Context"
+  words: 200
+  points:
+  - "Micro-dialogues using decodable words + sight words:
+    — Це кіт? — Так, це кіт. / — Це місто? — Ні, це ліс."
+  - "Sight words (contain untaught letters — recognize as wholes):
+    привіт (hello), дякую (thank you), це (this is).
+    так (yes) and ні (no) are fully decodable with the 10 practice letters."
+  - "Reading practice: short sentences mixing decodable words and sight words.
+    Мама тут. Кіт там. Це молоко. Це масло."
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "33 letters: 10 vowels, 22 consonants, 1 modifier (Ь). Highly phonetic system."
+  - "You mastered 10 letters today. You can read: мама, тато, кіт, молоко, місто, ліс."
+  - "Self-check: Can you find all 10 vowel letters on the chart? Can you read
+    мама and кіт? What is the difference between букви and звуки?"
+  - "Next: M2 deep-dives into the vowel system — all 10 vowel letters."
+vocabulary_hints:
+  required:
+  - "мама (mom) — decodable (М+А+М+А); universal first word; Bolshakova p.14"
+  - "тато (dad) — decodable (Т+А+Т+О); high-frequency family word"
+  - "кіт (cat) — decodable (К+І+Т); high-frequency; Bolshakova"
+  - "молоко (milk) — decodable (М+О+Л+О+К+О); Bolshakova p.14"
+  - "масло (butter) — decodable (М+А+С+Л+О); Bolshakova p.15"
+  - "ліс (forest) — decodable (Л+І+С); high-frequency"
+  - "місто (city) — decodable (М+І+С+Т+О); high-frequency"
+  - "око (eye) — decodable (О+К+О); Bolshakova p.13"
+  - "так (yes) — decodable (Т+А+К); survival word"
+  - "ні (no) — decodable (Н+І); survival word"
+  recommended:
+  - "сон (dream/sleep) — decodable (С+О+Н); Bolshakova p.22"
+  - "сом (catfish) — decodable (С+О+М); Bolshakova p.22"
+  - "ніс (nose) — decodable (Н+І+С); body vocabulary"
+  - "мак (poppy) — decodable (М+А+К); Bolshakova"
+  - "сік (juice) — decodable (С+І+К); everyday food word"
+  - "стіл (table) — decodable (С+Т+І+Л); everyday object"
+  - "тут (here) — decodable (Т+У+Т); high-frequency adverb"
+  - "там (there) — decodable (Т+А+М); high-frequency adverb"
+  - "сало (lard) — decodable (С+А+Л+О); everyday food word"
+  - "кіно (cinema) — decodable (К+І+Н+О); everyday word"
+  sight_words:
+  - "привіт (hello) — sight word; greeting; uses letters П Р И В І Т"
+  - "дякую (thank you) — sight word; politeness; uses letters Д Я К У Ю"
+  - "це (this is) — sight word; demonstrative; uses letter Ц"
+activity_hints:
+- type: watch-and-repeat
+  focus: "Letter pronunciation — hear and repeat each of the 10 practice letters"
+  items: 10
+- type: image-to-letter
+  focus: "Match picture to Ukrainian word — мама, кіт, молоко, око, ліс, місто"
+  items: 8
+- type: classify
+  focus: "Sort the 10 practice letters into vowels (А О У І) vs consonants (М Н Т К С Л)"
+  items: 10
+- type: match-up
+  focus: "Match Ukrainian letter to its sound (for false friends: Н≠H, С≠C)"
+  items: 10
+- type: fill-in
+  focus: "Blend letters into syllables and words: М+А→МА, МА+МА→?"
+  items: 8
+- type: quiz
+  focus: "Read and identify — which word matches the picture?"
+  items: 8
+connects_to:
+- a1-02 (Vowel Sounds)
+prerequisites: []
+persona:
+  voice: Patient Supportive Tutor
+  role: Typography Artist
+grammar:
+- "Full alphabet overview (33 letters)"
+- "Sound-letter correspondence (букви vs звуки)"
+- "Vowel vs consonant classification"
+- "Basic syllable blending and word reading"
+register: розмовний
+pronunciation_videos:
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  poster: https://www.youtube.com/watch?v=grL2s5e2AGI
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: "Anna Ohoiko — Ukrainian Lessons"
+  letters:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    О: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -435,18 +620,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -454,18 +666,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

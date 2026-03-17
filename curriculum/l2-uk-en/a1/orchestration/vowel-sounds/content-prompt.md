@@ -1,3 +1,5 @@
+**Curriculum context:** This is Module 2 of the A1 track (Ukrainian for English speakers). Title: "Vowel Sounds" — Голосні звуки — The Heartbeat of Every Ukrainian Word. Phase: A1.1 [First Contact]. Previous module: The Ukrainian Alphabet. Next module: Consonant Sounds.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -50,10 +52,6 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 **Modules completed before this one:** 1
 **Previous module:** The Ukrainian Alphabet
-
-**Cumulative vocabulary (20 words):**
-мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 
 **Grammar already taught (4 topics):**
 - Full alphabet overview (33 letters)
@@ -205,7 +203,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 2. **PREVIEW** — "By the end of this module, you'll be able to..."
 3. **PRESENT** — the main content sections
 4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in Summary, tell learners what they can now do
+5. **CELEBRATE** — in the final `## Підсумок — Summary` section, tell learners what they can now do
 
 ### Emotional Safety (scored — Beginner Safety dimension)
 
@@ -410,3 +408,14 @@ rag_tools_used:
 **Proposed Fix**: {how to fix the template/pipeline}
 ===FRICTION_END===
 ```
+
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [MODULE] Hallucinated word "сір" claimed as Ukrainian for "grey". The correct word is "сірий". Replace the сир/сір minimal pair with a verified pair like кит/кіт in both prose and quiz activity.
+- [MODULE] Reversed stress marks: яйце́ (singular, final stress) and я́йця (plural, initial stress). Module had them backwards.
+- [MODULE] image-to-letter activity asks "What vowel does it start with?" but 4/8 items have consonant answers (Р, М, С). Change title to "What letter does it start with?" or replace items with vowel-initial words.
+- [MODULE] Wrong stress: ї́жак should be їжа́к.
+- [MODULE] Syllable counting explanation for Ї is nonsensical: "Ї counts as one syllable because the Й part is a consonant". Correct: Ї forms a syllable because it contains the vowel І.

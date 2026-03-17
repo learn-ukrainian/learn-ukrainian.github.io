@@ -2,13 +2,13 @@
   "module": "the-ukrainian-alphabet",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-17T07:49:51.711758Z",
+  "last_audit": "2026-03-17T23:46:47.728574Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-16T12:59:30.403860Z",
+    "md": "2026-03-17T23:41:43.958453Z",
     "meta": "2026-03-12T10:15:04.257510Z",
-    "activities": "2026-03-16T11:36:51.635011Z",
-    "vocabulary": "2026-03-16T11:33:55.549623Z",
+    "activities": "2026-03-17T23:38:19.707569Z",
+    "vocabulary": "2026-03-17T23:38:19.636637Z",
     "research": "2026-03-12T09:42:03.524845Z",
     "plan": "2026-03-15T22:24:44.642998Z"
   },
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2072/1200 (raw: 2171)"
+      "message": "1774/1200 (raw: 1874)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/8"
+      "message": "9/0"
     },
     "vocabulary": {
       "status": "pass",

@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 2 of the A1 track (Ukrainian for English speakers). Title: "Vowel Sounds" — Голосні звуки — The Heartbeat of Every Ukrainian Word. Phase: A1.1 [First Contact]. Previous module: The Ukrainian Alphabet. Next module: Consonant Sounds.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -57,10 +59,6 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 **Modules completed before this one:** 1
 **Previous module:** The Ukrainian Alphabet
-
-**Cumulative vocabulary (20 words):**
-мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 
 **Grammar already taught (4 topics):**
 - Full alphabet overview (33 letters)
@@ -212,7 +210,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 2. **PREVIEW** — "By the end of this module, you'll be able to..."
 3. **PRESENT** — the main content sections
 4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in Summary, tell learners what they can now do
+5. **CELEBRATE** — in the final `## Підсумок — Summary` section, tell learners what they can now do
 
 ### Emotional Safety (scored — Beginner Safety dimension)
 
@@ -418,18 +416,184 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [MODULE] Hallucinated word "сір" claimed as Ukrainian for "grey". The correct word is "сірий". Replace the сир/сір minimal pair with a verified pair like кит/кіт in both prose and quiz activity.
+- [MODULE] Reversed stress marks: яйце́ (singular, final stress) and я́йця (plural, initial stress). Module had them backwards.
+- [MODULE] image-to-letter activity asks "What vowel does it start with?" but 4/8 items have consonant answers (Р, М, С). Change title to "What letter does it start with?" or replace items with vowel-initial words.
+- [MODULE] Wrong stress: ї́жак should be їжа́к.
+- [MODULE] Syllable counting explanation for Ї is nonsensical: "Ї counts as one syllable because the Й part is a consonant". Correct: Ї forms a syllable because it contains the vowel І.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-002
+level: A1
+sequence: 2
+slug: vowel-sounds
+version: '2.0'
+title: Vowel Sounds
+subtitle: "Голосні звуки — The Heartbeat of Every Ukrainian Word"
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner masters pronunciation of 6 base vowels (А О У Е И І)
+- Learner understands iotated vowels (Я Ю Є Ї) and their dual function
+- Learner understands Й as a semi-vowel
+- Learner can read words containing all 10 vowel letters
+- "Golden Rule: Ukrainian vowels stay pure — never reduce like English or Russian"
+content_outline:
+- section: Вступ — Introduction
+  words: 100
+  points:
+  - "Review: M1 gave you the alphabet map and 10 practice letters. Today: the vowel
+    system — 10 letters that carry every Ukrainian syllable."
+  - "Why vowels matter: every syllable has exactly one vowel. Count the vowels
+    and you know how many syllables a word has."
+- section: "Шість основних голосних — Six Base Vowels"
+  words: 300
+  points:
+  - "А — open, like 'a' in 'father'. Never reduces. Words: мама (M1 review),
+    каша (porridge), сало (lard)."
+  - "О — rounded, like 'o' in 'more'. Stays О even when unstressed (unlike Russian!).
+    Words: око (M1 review), молоко (M1 review), село (village)."
+  - "У — like 'oo' in 'moon'. Words: тут (M1 review), лук (M1 review), вухо (ear)."
+  - "Е — like 'e' in 'set'. NOT like English 'ee'. Words: небо (sky), село (village).
+    New consonants Д, В, Р appear in examples — focus is on the vowel sound."
+  - "И — uniquely Ukrainian. No exact English equivalent. Jaw relaxed, tongue lower
+    than І. Words: риба (fish), сир (cheese), син (son)."
+  - "І — like 'ee' in 'see'. Brighter and higher than И. Words: ліс (M1 review),
+    кіт (M1 review), сік (M1 review)."
+  - "The И vs І distinction is the hardest vowel contrast for English speakers.
+    Drill with minimal pairs: сир (cheese) vs сір (grey). Feel the jaw position."
+- section: "Наголос — Word Stress"
+  words: 150
+  points:
+  - "Every Ukrainian word has one stressed syllable. The stressed vowel is louder
+    and slightly longer, but its quality does NOT change."
+  - "Golden Rule: Ukrainian vowels stay pure in any position — stressed or unstressed.
+    English speakers naturally swallow unstressed vowels into schwa (uh). Fight this!"
+  - "Example: молоко — stress on last syllable (молокО), but all three О's sound
+    the same. Compare English 'photograph' where vowels shift with stress."
+- section: "Йотовані голосні — Iotated Vowels"
+  words: 350
+  points:
+  - "Я, Ю, Є, Ї are 'double-duty' vowels. At word start or after another vowel,
+    they represent TWO sounds: Й + base vowel."
+  - "Я = й+а. At start: яблуко (apple). After vowel: моя (my-f).
+    After consonant: softens it (мати vs м'яти — apostrophe preserves Й)."
+  - "Ю = й+у. At start: юнак (young man), юшка (broth). After consonant: softens it
+    (люди — Л becomes soft)."
+  - "Є = й+е. At start: Європа (Europe). After vowel: моє (my-n)."
+  - "Ї = ALWAYS two sounds й+і, never softens a consonant. Words: їжак (hedgehog),
+    їжа (food), Україна. Cultural note: the letter Ї as a symbol of Ukrainian identity."
+  - "Й — the semi-vowel itself. Short consonant-like sound. Words: край (edge/land),
+    йогурт. Never forms a syllable alone."
+- section: "Голосні в словах — Vowels in Words"
+  words: 200
+  points:
+  - "Reading practice — words organized by vowel focus. Use any consonants freely
+    (consonant system is covered in M3)."
+  - "Short sentences: Це яблуко. Це моє село. Мама каже 'так'. Де мій кіт?"
+  - "Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (5 vowels
+    = 5 syllables), кіт (1 vowel = 1 syllable)."
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї) + semi-vowel Й."
+  - "Golden Rule reinforced: Ukrainian vowels stay pure — never swallow or reduce them."
+  - "Self-check: Can you pronounce all 6 base vowels? What two sounds does Я make
+    at word start? What is the difference between И and І?"
+  - "Next: M3 masters the consonant system — voiced/voiceless pairs, sonorants,
+    hard vs soft."
+vocabulary_hints:
+  required:
+  - "яблуко (apple) — key word for Я; Bolshakova p.18"
+  - "риба (fish) — key word for И; high-frequency; Bolshakova"
+  - "село (village) — demonstrates unstressed Е staying pure; high-frequency"
+  - "Україна (Ukraine) — key word for Ї; cultural significance"
+  - "їжак (hedgehog) — key word for Ї; children's literature staple"
+  - "юнак (young man) — key word for Ю; State Standard vocabulary"
+  - "край (edge/land) — demonstrates Й at word end; high-frequency"
+  - "день (day) — demonstrates Е; top 50 word"
+  - "син (son) — demonstrates И; high-frequency family word"
+  - "моя (my-f) — demonstrates Я after vowel; possessive sight word"
+  recommended:
+  - "вухо (ear) — demonstrates У; body vocabulary"
+  - "їжа (food) — demonstrates Ї; everyday vocabulary"
+  - "моє (my-n) — demonstrates Є after vowel; possessive sight word"
+  - "яйце (egg) — demonstrates Я at word start; everyday vocabulary"
+  - "юшка (soup/broth) — demonstrates Ю; everyday vocabulary"
+  - "каша (porridge) — demonstrates А; everyday food word; Bolshakova"
+  - "небо (sky) — demonstrates Е; high-frequency"
+  - "сир (cheese) — demonstrates И; everyday food; minimal pair with сір"
+activity_hints:
+- type: watch-and-repeat
+  focus: "Vowel pronunciation drill — hear and repeat each of the 10 vowel letters"
+  items: 10
+- type: classify
+  focus: "Sort letters into base vowels (А О У Е И І) vs iotated (Я Ю Є Ї)"
+  items: 10
+- type: image-to-letter
+  focus: "Match picture to the vowel letter it starts with — яблуко→Я, їжак→Ї, око→О"
+  items: 8
+- type: quiz
+  focus: "И vs І discrimination — listen and identify which vowel you hear"
+  items: 10
+- type: classify
+  focus: "Iotated vowel dual function — does it represent 1 sound or 2 in this word?"
+  items: 8
+- type: fill-in
+  focus: "Count the vowels / syllables in a word: молоко = ? syllables"
+  items: 8
+connects_to:
+- a1-03 (Consonant Sounds)
+prerequisites:
+- a1-01 (The Ukrainian Alphabet)
+persona:
+  voice: Patient Supportive Tutor
+  role: Typography Artist
+grammar:
+- "Base vowel pronunciation (А О У Е И І)"
+- "Iotated vowels dual function (Я Ю Є Ї)"
+- "И vs І distinction"
+- "Word stress basics (наголос)"
+- "Vowel purity rule (no reduction)"
+register: розмовний
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: "Anna Ohoiko — Ukrainian Lessons"
+  letters:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    О: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    Е: https://www.youtube.com/watch?v=KFlsroBW0dk
+    И: https://www.youtube.com/watch?v=W-1rCu0indE
+    І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    Я: https://www.youtube.com/watch?v=yhSAf41LX8I
+    Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    Є: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -458,18 +622,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -477,18 +668,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

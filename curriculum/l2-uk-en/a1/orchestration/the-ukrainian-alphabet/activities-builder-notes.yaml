@@ -1,15 +1,16 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 8
+activity_count: 9
 deviations:
-  - "Added anagram and true-false activities beyond plan's 6 hints to reach 8 total and improve variety"
-  - "image-to-letter uses 8 items (plan: 8) — two items share answer М (мама, місто) since many decodable words start with М"
+  - "Added 3 activity types beyond plan hints (anagram, true-false, group-sort) to meet 8-activity minimum and reinforce learning through varied practice"
+  - "Vocabulary includes 3 sight words (привіт, дякую, це) in place of 3 recommended decodable words (сом, сало, кіно) to cover all word categories in the lesson"
 frictions:
   - type: PLAN_GAP
-    description: "Plan vocabulary_hints lists 3 sight words (привіт, дякую, це) but these contain untaught letters and were not included in the 20-item vocabulary to keep focus on decodable words"
-    proposed_fix: "Consider adding sight words as a separate vocabulary category in future plan versions"
+    description: "Plan specifies 6 activity types but module minimum is 8 activities"
+    proposed_fix: "Added anagram, true-false, and group-sort — all appropriate for letter/word-level practice"
 unverified_terms:
-  - "All vocabulary items use only the 10 practice letters (А О У І М Н Т К С Л) and are taken directly from the lesson content"
+  - "None — all Ukrainian words are from the lesson's decodable word list or sight word list"
 review_focus:
-  - "fill-in activity uses letter blending format (М + А → ___) — verify this renders correctly in the activity UI"
-  - "anagram scrambled letters should be verified to contain exactly the same letters as the answer"
+  - "fill-in: Verify that letter-blending format (М + А = ___) renders correctly in the activity UI"
+  - "anagram: Verify all scrambled letters match answer letters exactly (manually checked)"
+  - "image-to-letter: Verify emoji rendering across platforms (especially 👁️ for око)"

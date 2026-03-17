@@ -1,152 +1,120 @@
-- word: мама
-  translation: mom
-  pos: noun
-  example: Мама тут.
-- word: місто
-  translation: city
-  pos: noun
-  example: Це гарне місто.
-- word: молоко
-  translation: milk
-  pos: noun
-  example: Де молоко?
-- word: мак
-  translation: poppy
-  pos: noun
-  example: Це червоний мак.
-- word: небо
-  translation: sky
-  pos: noun
-  example: Небо блакитне.
-- word: ніс
-  translation: nose
-  pos: noun
-  example: Це мій ніс.
-- word: ні
-  translation: no
-  pos: particle
-  example: Ні, вовк у лісі!
-- word: сон
-  translation: dream
-  pos: noun
-  example: Це гарний сон.
-- word: ліс
-  translation: forest
-  pos: noun
-  example: Там гора і ліс.
-- word: сало
-  translation: pork fat
-  pos: noun
-  example: Це смачне сало.
-- word: рука
-  translation: hand
-  pos: noun
-  example: Це моя рука.
-- word: риба
-  translation: fish
-  pos: noun
-  example: Тут є риба.
-- word: сир
-  translation: cheese
-  pos: noun
-  example: Де сир?
-- word: вода
-  translation: water
-  pos: noun
-  example: Вода тут.
-- word: вовк
-  translation: wolf
-  pos: noun
-  example: Тут вовк і жук.
-- word: вухо
-  translation: ear
-  pos: noun
-  example: Це моє вухо.
-- word: край
-  translation: edge/region
-  pos: noun
-  example: Це мій рідний край.
-- word: мій
-  translation: my
-  pos: pronoun
-  example: Це мій дім.
-- word: бабуся
-  translation: grandma
-  pos: noun
-  example: Бабуся там.
-- word: павук
-  translation: spider
-  pos: noun
-  example: Це великий павук.
-- word: зуб
-  translation: tooth
-  pos: noun
-  example: Це мій зуб.
-- word: суп
-  translation: soup
-  pos: noun
-  example: Це гарячий суп.
-- word: дім
-  translation: house
-  pos: noun
-  example: Це мій дім.
-- word: тато
-  translation: dad
-  pos: noun
-  example: Тато тут.
-- word: стіл
-  translation: table
-  pos: noun
-  example: Де стіл?
-- word: село
-  translation: village
-  pos: noun
-  example: Це моє село.
-- word: сік
-  translation: juice
-  pos: noun
-  example: Де мій сік?
-- word: жук
-  translation: beetle
-  pos: noun
-  example: Тут вовк і жук.
-- word: шапка
-  translation: hat
-  pos: noun
-  example: Де моя шапка?
-- word: каша
-  translation: porridge
-  pos: noun
-  example: Це смачна каша.
-- word: гора
-  translation: mountain
-  pos: noun
-  example: Там гора і ліс.
-- word: хліб
-  translation: bread
-  pos: noun
-  example: Тут є хліб і вода.
-- word: ґанок
-  translation: porch
-  pos: noun
-  example: Там є ґанок і люк.
-- word: кіт
-  translation: cat
-  pos: noun
-  example: Це мій кіт.
-- word: люди
-  translation: people
-  pos: noun
-  example: Тут люди.
-- word: люк
-  translation: hatch
-  pos: noun
-  example: Там є ґанок і люк.
-- word: сіль
-  translation: salt
-  pos: noun
-  example: Це сіль, а це цибуля.
-- word: цибуля
-  translation: onion
-  pos: noun
-  example: Це цибуля.
+items:
+  - lemma: "хліб"
+    translation: "bread"
+    pos: "noun"
+    gender: "m"
+    notes: "Cultural staple; demonstrates Х; no-devoicing rule"
+    usage: "Це хліб."
+  - lemma: "зуб"
+    translation: "tooth"
+    pos: "noun"
+    gender: "m"
+    notes: "Demonstrates З; no-devoicing drill with суп"
+    usage: "Це зуб."
+  - lemma: "дім"
+    translation: "house"
+    pos: "noun"
+    gender: "m"
+    notes: "Ultra high-frequency; demonstrates Д"
+    usage: "Це дім."
+  - lemma: "вовк"
+    translation: "wolf"
+    pos: "noun"
+    gender: "m"
+    notes: "Fairy-tale vocabulary; demonstrates В as sonorant"
+    usage: "Ось вовк."
+  - lemma: "жук"
+    translation: "beetle"
+    pos: "noun"
+    gender: "m"
+    notes: "Demonstrates Ж; voiced sibilant"
+    usage: "Це жук."
+  - lemma: "шапка"
+    translation: "hat"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates Ш; everyday clothing"
+    usage: "Це шапка."
+  - lemma: "гора"
+    translation: "mountain"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates Г (throaty fricative); high-frequency"
+    usage: "Це гора."
+  - lemma: "небо"
+    translation: "sky"
+    pos: "noun"
+    gender: "n"
+    notes: "Demonstrates Н; high-frequency"
+    usage: "Це небо."
+  - lemma: "рука"
+    translation: "hand"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates Р (rolled trill); body vocabulary"
+    usage: "Це рука."
+  - lemma: "бабуся"
+    translation: "grandma"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates Б; high-frequency family word"
+    usage: "Ось бабуся."
+  - lemma: "павук"
+    translation: "spider"
+    pos: "noun"
+    gender: "m"
+    notes: "Demonstrates П (voiceless)"
+    usage: "Це павук."
+  - lemma: "ґанок"
+    translation: "porch"
+    pos: "noun"
+    gender: "m"
+    notes: "Demonstrates rare Ґ (hard g sound)"
+    usage: "Це ґанок."
+  - lemma: "сіль"
+    translation: "salt"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates soft С and soft Л; everyday kitchen word"
+    usage: "Це сіль."
+  - lemma: "люди"
+    translation: "people"
+    pos: "noun"
+    notes: "Demonstrates soft Л; high-frequency; plural only"
+    usage: "Це люди."
+  - lemma: "суп"
+    translation: "soup"
+    pos: "noun"
+    gender: "m"
+    notes: "Voiceless pair drill with зуб; everyday food"
+    usage: "Це суп."
+  - lemma: "вода"
+    translation: "water"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates В as sonorant; high-frequency"
+    usage: "Це вода."
+  - lemma: "цибуля"
+    translation: "onion"
+    pos: "noun"
+    gender: "f"
+    notes: "Soft Л before Я"
+    usage: "Це цибуля."
+  - lemma: "люк"
+    translation: "hatch"
+    pos: "noun"
+    gender: "m"
+    notes: "Soft Л; minimal pair with лук"
+    usage: "Це люк."
+  - lemma: "риба"
+    translation: "fish"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates Р (rolled trill); from Module 2"
+    usage: "Це риба."
+  - lemma: "кіт"
+    translation: "cat"
+    pos: "noun"
+    gender: "m"
+    notes: "Demonstrates К (voiceless partner of Ґ); from Module 1"
+    usage: "Це кіт."

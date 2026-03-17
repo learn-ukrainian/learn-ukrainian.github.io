@@ -1,22 +1,15 @@
 # RAG Verification: the-ukrainian-alphabet
 
-**Date:** 2026-03-17 06:50 UTC | **Words checked:** 60 | **VESUM coverage:** 58/60 (96.7%)
+**Date:** 2026-03-17 22:41 UTC | **Words checked:** 40 | **VESUM coverage:** 40/40 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 58
+- ✅ Verified (VESUM): 40
 - ⚠️ Partial (RAG only): 0
-- ❌ Not found: 2
-
-## ❌ Not Found (action required)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| СОП | activities | ✗ | ✗ | ✗ |
-| ТУЖ | activities | ✗ | ✗ | ✗ |
+- ❌ Not found: 0
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 36 | 36 | 0 |
-| Activities (.yaml) | 24 | 22 | 2 |
+| Prose (.md) | 16 | 16 | 0 |
+| Activities (.yaml) | 24 | 24 | 0 |

@@ -1,8 +1,10 @@
+**Curriculum context:** This is Module 6 of the A1 track (Ukrainian for English speakers). Title: "Stress and Intonation" — The Music of Ukrainian. Phase: A1.1 [First Contact]. Previous module: Syllables And Word Division. Next module: The Gender Code.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
 
-> **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Patient Supportive Tutor.**
+> **You are , writing in the voice of Patient Supportive Tutor.**
 >
 > Build a complete beginner module for English-speaking teens and adults learning Ukrainian at the a1 level. Your job: **search Ukrainian school textbooks using RAG tools**, then **adapt** the pedagogy for L2 learners.
 >
@@ -51,15 +53,14 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 5
 **Previous module:** Syllables and Word Division
 
-**Cumulative vocabulary (74 words):**
+**Cumulative vocabulary (69 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
 сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
-зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, цибуля, люк, лук, дим, Львів, кінь, осінь
-м'ясо, п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя
-факт, джерело, бджола, дзвін
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, сіль
+Львів, кінь, осінь, м'ясо, п'ять, сім'я, м'яч, цукор, цибуля, час
+чай, черепаха, що, щастя, факт, джерело, бджола, дзвін, склад, голосний
+приголосний, перенесення, сестра, вікно, ґудзик, пальці, книга, вулиця, автобус
 
 **Grammar already taught (23 topics):**
 - Full alphabet overview (33 letters)
@@ -95,7 +96,7 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 
 
 
-**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your 20 vocabulary target:
+**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your {VOCAB_COUNT_TARGET} vocabulary target:
 
 ### Vocabulary from Plan (MANDATORY — include ALL required items)
 
@@ -121,13 +122,7 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 5-15% Ukrainian.
-LANGUAGE ROLES:
-- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
-- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
-- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
-- TABLES: Simple letter-sound or word-meaning tables.
-Ukrainian sentences max 10 words.
+
 
 ### Textbook References
 - **Grade 4, Сторінка 171**
@@ -190,55 +185,23 @@ Ukrainian sentences max 10 words.
 
 ## 4. Outline
 
-Write **Stress and Intonation** for the a1 track.
+Write **** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | {ENGAGEMENT_MIN}+ callout boxes | **{ACTIVITY_MIN}–{ACTIVITY_MAX} activities total** (required types + additional types to reach minimum) | {VOCAB_COUNT_TARGET} vocab items
 
-## REQUIRED H2 Sections and Points (MANDATORY)
 
-Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says *айтішник*, use *айтішник*, not a synonym).
-
-- `## Наголос — Stress` (~350 words)
-  - Free and mobile stress concept: unlike Polish (penultimate) or French (final), Ukrainian stress can fall on any syllable — there is no fixed rule.
-  - Stress changes meaning: зАмок (castle) vs замОк (lock), мУка (torment) vs мукА (flour) — minimal pairs that demonstrate the functional load of stress.
-  - How stress is marked in dictionaries and textbooks: the acute accent (´) over the stressed vowel; practice reading dictionary entries.
-  - Learner strategy: when encountering a new word, always check stress placement — guessing from spelling will often be wrong.
-- `## Типові наголоси — Common Stress Patterns` (~250 words)
-  - First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and household words.
-  - Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some verb forms.
-  - Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable words.
-  - No fixed rule: the same ending can have different stress (кнИга vs водА, both -а ending) — stress must be learned per word.
-- `## Рухомий наголос — Mobile Stress` (~250 words)
-  - Stress shifts in declension: рукА (nominative) → рУки (genitive/plural) — the stress moves when the word form changes.
-  - Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш (you write) — verb stress can shift between stems and endings.
-  - Preview note: mobile stress will matter more when learning cases and verb conjugation — for now, awareness is the goal.
-  - Practical tip: listening to native speakers is the best way to internalize stress patterns.
-- `## Інтонація — Intonation` (~250 words)
-  - Declarative intonation: pitch falls at the end of the sentence — Це кафе. with a downward contour.
-  - Interrogative with question word: pitch rises on the question word, then falls — ДЕ кафе?
-  - Yes/no questions (without question word): pitch rises sharply at the end — Це кафе? with an upward contour.
-  - Exclamatory intonation: sharp rise with emphasis — Це кафе! expressing surprise or excitement.
-  - Contrast drill: practicing the same sentence with all four intonation patterns.
-- `## Практика — Practice` (~100 words)
-  - Stress placement drills: identify which syllable carries the stress in common words.
-  - Minimal pairs practice: distinguish words that differ only in stress (зАмок/замОк, мУка/мукА).
-  - Intonation reading exercises: read the same sentence as a statement, question, and exclamation.
-- `## Підсумок — Summary` (~100 words)
-  - Recap: stress is free and mobile, vowel purity under stress, rising intonation for questions, stress minimal pairs.
-  - Self-check: Where is the stress in вода? What happens to vowel quality when unstressed? How does question intonation differ from statement?
-  - Next: M7 — greetings and basic phrases.
 
 ### Section Word Budgets
 
-| Section | Minimum |
-|---------|---------|
+| Section | Target Words |
+|---|---|
 | Наголос — Stress | 350+ |
 | Типові наголоси — Common Stress Patterns | 250+ |
 | Рухомий наголос — Mobile Stress | 250+ |
 | Інтонація — Intonation | 250+ |
 | Практика — Practice | 100+ |
 | Підсумок — Summary | 100+ |
-| **Total** | **1200+ (aim for ~1440)** |
+| **TOTAL** | **1200+** (aim for ~1440) |
 
 ---
 
@@ -338,8 +301,8 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
-**Allowed types:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
-**Forbidden types:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
+**Allowed types:** {ALLOWED_ACTIVITY_TYPES}
+**Forbidden types:** {FORBIDDEN_ACTIVITY_TYPES}
 **Required types:** quiz, match-up, true-false, fill-in
 
 | Module range | Use these | Avoid these |

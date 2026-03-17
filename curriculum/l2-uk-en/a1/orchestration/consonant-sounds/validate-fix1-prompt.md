@@ -1,27 +1,33 @@
-        # Fix ALL 3 issue(s) in `consonant-sounds`
+        # Fix ALL 5 issue(s) in `consonant-sounds`
 
         **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
-        **There are 3 issues. You must produce fixes for all 3.**
-        **After you finish, count your fixes. If the count is less than 3, go back and fix the ones you missed.**
+        **There are 5 issues. You must produce fixes for all 5.**
+        **After you finish, count your fixes. If the count is less than 5, go back and fix the ones you missed.**
 
-        ### Fix: Gate `Pedagogy` FAIL — 2 violations
+        ### Fix 1: IPA_BANNED
+**What:** Banned IPA transcription: [Н]
+**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+**Where:** ~line 47
 
-### Fix 2: PEDAGOGICAL_VIOLATION
-**What:** [HEADING_LEVEL] Main section 'Vocabulary' uses H2 (##) but spec requires H1 (#)
-**How to fix:** Change '## Vocabulary' to '# Vocabulary' for top-level TOC compliance
+### Fix 2: IPA_BANNED
+**What:** Banned IPA transcription: [Л]
+**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+**Where:** ~line 47
 
-### Fix 3: PEDAGOGICAL_VIOLATION
-**What:** [FORBIDDEN_HEADER] Forbidden header '## Vocabulary' violates Clean MD standard (Issue #398)
-**How to fix:** Remove '## Vocabulary' header. Template 'a1-module-template.md' specifies this section is auto-injected from YAML sidecars.
+### Fix 3: IPA_BANNED
+**What:** Banned IPA transcription: [П]
+**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+**Where:** ~line 68
 
-### Other Audit Failures
+### Fix 4: IPA_BANNED
+**What:** Banned IPA transcription: [Т]
+**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+**Where:** ~line 77
 
-```
-📚 PEDAGOGICAL VIOLATIONS FOUND:
-📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log for details)
-```
+### Fix 5: IPA_BANNED
+**What:** Banned IPA transcription: [С]
+**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
+**Where:** ~line 86
 
 
 ## Constraints (do NOT violate while fixing)
@@ -94,7 +100,7 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ALL 3 issues listed above — every single one, not a subset
+        1. Fix ALL 5 issues listed above — every single one, not a subset
         2. Do not rewrite working content — only touch what's broken
         3. Preserve section structure and word counts
         4. Do NOT add or remove sections

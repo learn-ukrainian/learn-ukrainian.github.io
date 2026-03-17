@@ -1,3 +1,5 @@
+**Curriculum context:** This is Module 1 of the A1 track (Ukrainian for English speakers). Title: "The Ukrainian Alphabet" — 33 Letters, One System — Your Map to Reading Ukrainian. Phase: A1.1 [First Contact]. Next module: Vowel Sounds.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -190,7 +192,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 2. **PREVIEW** — "By the end of this module, you'll be able to..."
 3. **PRESENT** — the main content sections
 4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in Summary, tell learners what they can now do
+5. **CELEBRATE** — in the final `## Підсумок — Summary` section, tell learners what they can now do
 
 ### Emotional Safety (scored — Beginner Safety dimension)
 
@@ -214,7 +216,15 @@ Tables contribute zero to immersion. Use **dialogues** and **bulleted examples**
 
 ### Dialogue Quality
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each. For alphabet modules (M1-M10): dialogues are OPTIONAL — only include them if they feel natural with the available vocabulary. Do NOT force nonsensical dialogues just to hit a count.
+**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
+
+**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
+- Greeting: `— Привіт! — Привіт!`
+- Identification: `— Це кіт? — Так, це кіт.`
+- Location: `— Молоко тут? — Ні, молоко там.`
+- Combined: `— Мама тут? — Так, мама тут. А тато там.`
+
+Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
 
 **Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
 
@@ -387,3 +397,12 @@ rag_tools_used:
 **Proposed Fix**: {how to fix the template/pipeline}
 ===FRICTION_END===
 ```
+
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [MODULE] Activity distractors СОК and СОЛ are Russianisms. Replace with VESUM- verified Ukrainian syllables or words built from the 10 practice letters (А О У І М Н Т К С Л).
+- [MODULE] Wrong stress: ау́діо should be а́удіо, приголо́сні should be при́голосні. Verify all stress marks against ukrainian-word-stress dictionary.
+- [MODULE] Pass 2 language review was NEVER completed — the review file contains only an empty template. Must run a complete tier-1-beginner review.

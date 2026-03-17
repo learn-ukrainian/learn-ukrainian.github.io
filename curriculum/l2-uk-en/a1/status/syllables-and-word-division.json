@@ -2,15 +2,15 @@
   "module": "syllables-and-word-division",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-17T17:06:49.242090Z",
+  "last_audit": "2026-03-17T21:26:20.681510Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-17T16:55:09.105790Z",
     "meta": "2026-03-17T16:42:30.387503Z",
     "activities": "2026-03-17T16:55:09.106316Z",
     "vocabulary": "2026-03-17T16:40:57.679416Z",
-    "research": "2026-03-12T09:44:02.496181Z",
-    "plan": "2026-03-16T22:57:55.599794Z"
+    "research": "2026-03-17T18:14:13.115179Z",
+    "plan": "2026-03-17T18:13:53.269692Z"
   },
   "gates": {
     "meta": {
@@ -41,7 +41,7 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
       "status": "pass",

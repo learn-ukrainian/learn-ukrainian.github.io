@@ -1,7 +1,7 @@
 # Audit Report: M02 — vowel-sounds.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-17 07:50:05
+**Generated:** 2026-03-17 21:26:19
 
 ## Configuration
 **Type:** A1-grammar
