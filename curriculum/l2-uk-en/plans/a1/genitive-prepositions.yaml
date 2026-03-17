@@ -1,10 +1,10 @@
-module: a1-033
+module: a1-032
 level: A1
-sequence: 33
-slug: prepositions-of-place
+sequence: 32
+slug: genitive-prepositions
 version: '2.0'
-title: Prepositions of Place
-subtitle: Where Things Are
+title: Genitive Prepositions
+subtitle: "біля, без, від, для, до + Родовий"
 focus: grammar
 pedagogy: PPP
 phase: A1.3 [Cases & Navigation]

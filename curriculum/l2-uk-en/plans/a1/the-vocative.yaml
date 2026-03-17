@@ -1,0 +1,119 @@
+module: a1-025
+level: A1
+sequence: 25
+slug: the-vocative
+version: '1.0'
+title: The Vocative
+subtitle: "Кличний відмінок — Calling and Addressing People"
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Cases & Navigation]
+word_target: 1200
+objectives:
+- Learner understands that Ukrainian changes word endings depending on function (case system)
+- Learner can form basic vocative for feminine names/titles (-о ending)
+- Learner can form basic vocative for masculine names/titles (-е, -у endings)
+- Learner uses пане/пані correctly in formal address
+- Learner understands vocative is the first of 7 cases they will learn
+content_outline:
+- section: "Вступ — Introduction"
+  words: 150
+  points:
+  - "In M8 you learned to address people: Мамо! Тату! пане Петре! You memorized
+    those forms. Now you'll understand WHY the endings change."
+  - "Ukrainian has 7 cases — 7 different forms a noun can take depending on its
+    job in the sentence. The form you've been using (мама, тато, книга) is called
+    називний відмінок (nominative) — the 'naming' case."
+  - "Today: кличний відмінок (vocative) — the 'calling' case. Used when you
+    address someone directly. This is the easiest case to learn."
+- section: "Кличний для жіночих імен — Vocative for Feminine Names"
+  words: 250
+  points:
+  - "Rule: feminine names/titles ending in -а change to -о in vocative.
+    мама → Мамо! Оксана → Оксано! бабуся → Бабусю! (soft -я → -ю)"
+  - "Examples with common names: Іра → Іро! Катерина → Катерино!
+    Марія → Маріє! (names ending in -ія → -іє)"
+  - "пані stays пані (no change) — Добрий день, пані Оксано!"
+  - "Practice: calling family members and friends by name."
+- section: "Кличний для чоловічих імен — Vocative for Masculine Names"
+  words: 250
+  points:
+  - "Rule: masculine names/titles ending in a consonant add -е or -у.
+    друг → Друже! Петро → Петре! тато → Тату! (already ends in -о, adds -у)"
+  - "пан → пане — Добрий день, пане Петре! пане Іване!"
+  - "дідусь → Дідусю! (soft consonant + -ю)"
+  - "Common pattern: most masculine names take -е (Іване, Петре, Андрію)
+    but some take -у (тату, дідусю, синку)."
+- section: "Кличний у житті — Vocative in Real Life"
+  words: 250
+  points:
+  - "Vocative is everywhere in Ukrainian — every time you call someone, write
+    a letter (Дорога Оксано!), or get someone's attention."
+  - "Dialogues: at home (Мамо, де моя книга?), at school (пане вчителю!),
+    with friends (Іро, привіт!), formal letter opening (Шановний пане Петре!)"
+  - "Compare with English: English lost its vocative centuries ago. Ukrainian
+    keeps it alive — it shows respect and warmth when you use someone's proper
+    vocative form."
+  - "Common mistake: using називний instead of кличний (saying 'Мама!' instead
+    of 'Мамо!'). This sounds unnatural to Ukrainian speakers."
+- section: "Практика — Practice"
+  words: 200
+  points:
+  - "Transform names: називний → кличний drills with the names learned so far."
+  - "Mini-dialogues using vocative in greetings, requests, getting attention."
+  - "Reading practice: short messages and letters with vocative openings."
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "Recap: кличний відмінок changes the ending when you address someone directly.
+    Feminine -а → -о, masculine consonant → -е/-у."
+  - "Self-check: What is the vocative of мама? Of Петро? Of друг?
+    Which case is the 'naming' case? How many cases does Ukrainian have?"
+  - "Next: M26 — знахідний відмінок (accusative) — what happens when a noun
+    becomes the object of a verb (Я бачу книгу)."
+vocabulary_hints:
+  required:
+  - "мамо (vocative of мама) — most common vocative form; demonstrates -а → -о"
+  - "тату (vocative of тато) — demonstrates masculine -о → -у"
+  - "друже (vocative of друг) — demonstrates masculine consonant → -е"
+  - "пане (vocative of пан) — formal masculine address"
+  - "пані (no change) — formal feminine address"
+  - "Оксано (vocative of Оксана) — feminine name pattern"
+  - "Петре (vocative of Петро) — masculine name pattern"
+  - "бабусю (vocative of бабуся) — soft feminine -я → -ю"
+  - "дідусю (vocative of дідусь) — soft masculine -ь → -ю"
+  recommended:
+  - "Іро (vocative of Іра) — short feminine name"
+  - "Іване (vocative of Іван) — common masculine name"
+  - "Андрію (vocative of Андрій) — soft masculine name -й → -ю"
+  - "синку (vocative of синок) — 'son' address form -ок → -ку"
+  - "доню (vocative of донька/доня) — 'daughter' address form"
+activity_hints:
+- type: fill-in
+  focus: "Transform називний to кличний — мама → ?"
+  items: 10
+- type: quiz
+  focus: "Choose the correct vocative form from options"
+  items: 10
+- type: match-up
+  focus: "Match називний form to its кличний form"
+  items: 8
+- type: unjumble
+  focus: "Put dialogue lines with vocative in correct order"
+  items: 6
+- type: fill-in
+  focus: "Complete letter openings — Дорога ___! Шановний ___!"
+  items: 6
+connects_to:
+- a1-26 (The Accusative I)
+prerequisites:
+- a1-08 (Greetings and Politeness)
+- a1-24 (Checkpoint: Sentences)
+persona:
+  voice: Patient Supportive Tutor
+  role: Friendly Neighbor
+grammar:
+- "Vocative case (кличний відмінок)"
+- "Nominative as base form (називний відмінок)"
+- "Case system introduction (7 cases overview)"
+register: розмовний

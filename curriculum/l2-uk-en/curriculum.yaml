@@ -31,16 +31,16 @@ levels:
       - what-time-is-it              # 23 Time, days, months
       - checkpoint-sentences         # 24 Checkpoint: verbs, questions, possessives
       # Phase A1.3: Cases & Navigation (25-34)
-      - the-accusative-i-things      # 25 Acc: inanimate direct objects
-      - the-accusative-ii-people     # 26 Acc: animate nouns
-      - accusative-prepositions      # 27 Acc with в/на (direction), за, через, про
-      - the-locative-where-things-are # 28 Loc: в/у + Loc, на + Loc
-      - around-the-city              # 29 City vocabulary + locative
-      - adjective-case-forms         # 30 Adj declension in Acc + Loc
-      - pronoun-declension           # 31 мене/мені, тебе/тобі, нас/нам
-      - the-genitive-i-absence       # 32 Gen: немає + Gen, у мене є
-      - prepositions-of-place        # 33 Static: Де? в/у + Loc, на + Loc
-      - checkpoint-cases             # 34 Checkpoint: cases, prepositions
+      - the-vocative                 # 25 Voc: address forms — Мамо! пане Петре! (easiest case)
+      - the-accusative-i-things      # 26 Acc: inanimate direct objects (intro establishes nominative)
+      - the-accusative-ii-people     # 27 Acc: animate nouns + pronouns in acc
+      - accusative-prepositions      # 28 Acc with в/на (direction), за, через, про
+      - the-locative-where-things-are # 29 Loc: в/у + Loc, на + Loc + pronouns in loc
+      - around-the-city              # 30 City vocabulary + locative + acc/loc prepositions
+      - the-genitive-i-absence       # 31 Gen: немає + Gen, у мене є + pronouns in gen
+      - genitive-prepositions        # 32 Gen: біля, без, від, для, до + Gen
+      - adjective-case-forms         # 33 Adj agreement in nom/acc/loc (3 cases known)
+      - checkpoint-cases             # 34 Checkpoint: 4 required cases (nom/acc/loc/voc) + gen
       # Phase A1.4: Tenses & Daily Life (35-44)
       - direction-and-origin         # 35 Куди? (Acc, до+Gen), Звідки? (з+Gen)
       - yesterday-past-tense         # 36 Past tense: -в/-ла/-ло/-ли
