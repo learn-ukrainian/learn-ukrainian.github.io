@@ -609,6 +609,14 @@ def _fix_yaml_syntax(ctx: ModuleContext) -> None:
             path.write_text(text, "utf-8")
 
 
+def _load_activity_examples() -> str:
+    """Load activity schema examples YAML for the prompt."""
+    examples_path = PHASES_DIR / "activity-schema-examples.yaml"
+    if examples_path.exists():
+        return examples_path.read_text("utf-8")
+    return "(activity examples not found)"
+
+
 def _build_activities_prompt(
     ctx: ModuleContext, content_text: str, plan_yaml: str,
     activity_hints: list, vocab_hints: dict,
@@ -616,6 +624,7 @@ def _build_activities_prompt(
     """Build prompt for activities + vocabulary generation."""
     hints_text = yaml.dump(activity_hints, allow_unicode=True, default_flow_style=False) if activity_hints else "No activity hints in plan."
     vocab_text = yaml.dump(vocab_hints, allow_unicode=True, default_flow_style=False) if vocab_hints else "No vocabulary hints in plan."
+    examples = _load_activity_examples()
 
     return textwrap.dedent(f"""\
         # Generate Activities and Vocabulary for: {ctx.slug}
@@ -642,38 +651,25 @@ def _build_activities_prompt(
         {vocab_text}
         ```
 
-        ## Activity YAML Schema (CRITICAL — follow exactly)
+        ## Activity YAML Schema — COPY THIS FORMAT EXACTLY
 
-        Bare YAML list at root (NOT `activities:` wrapper). Each activity requires `type` and `title`.
+        Below are working examples for EVERY activity type. Your output MUST use the same
+        field names. Wrong field names (e.g., `prompt` instead of `left`, `text` instead of
+        `statement`) will cause validation failure.
 
-        **quiz**: `items:` array, each: `question` (str), `options` (array of str), `explanation` (str, optional)
-        **match-up**: `pairs:` array (NOT items), each: `left` (str), `right` (str)
-        **fill-in**: `items:` array, each: `sentence` (str with ___ blank), `answer` (str), `options` (array of str)
-        **group-sort**: `groups:` array, each: `name` (str), `items` (array of str)
-        **true-false**: `items:` array, each: `statement` (str), `correct` (bool)
-        **classify**: `categories:` array, each: `label` (str), `items` (array of str)
-        **watch-and-repeat**: `items:` array, each: `video` (YouTube URL, required), `letter` (str), `word` (str), `note` (str)
-        **image-to-letter**: `items:` array, each: `emoji` (str), `answer` (str), `distractors` (array of str)
-        **anagram**: `items:` array, each: `scrambled` (str), `answer` (str)
-        **unjumble**: `items:` array, each: `words` (array of str), `answer` (str)
-
-        Example match-up:
         ```yaml
-        - type: match-up
-          title: "Voiced and Voiceless Partners"
-          pairs:
-            - left: "Б"
-              right: "П"
-            - left: "Д"
-              right: "Т"
+        {examples}
         ```
 
-        ## Activity Rules
-        - Activities test LANGUAGE skills, not content recall
-        - NO `id` field — the system generates IDs automatically
-        - Minimum items per activity: 6
-        - Include variety from the plan's activity_hints
-        - All Ukrainian text must be real, correct Ukrainian
+        **KEY RULES:**
+        - `match-up` uses `pairs:` with `left:` / `right:` (NOT `items:` with `prompt:` / `answer:`)
+        - `true-false` uses `statement:` (NOT `text:`)
+        - `quiz` options use `text:` and `correct:` (bool)
+        - `classify` uses `categories:` with `label:` and `items:`
+        - `group-sort` uses `groups:` with `name:` and `items:`
+        - NO `id` field on any activity — the system generates IDs
+        - Minimum 6 items per activity
+        - Minimum 8 activities total
 
         ## Vocabulary Rules
         - Extract ALL Ukrainian words taught in the content
