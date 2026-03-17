@@ -31,6 +31,7 @@ from batch_gemini_config import (
     FLASH_MODEL,
     PHASES_DIR,
     PRO_MODEL,
+    slug_for_num,
 )
 from pipeline.core import (
     ModuleContext,
@@ -189,10 +190,37 @@ def phase_write_content(ctx: ModuleContext, state: dict) -> bool:
         log("  content: Template fill failed")
         return False
 
+    # Prepend curriculum context so the writer knows where this module sits
+    prompt_text = prompt_file.read_text("utf-8")
+    level = ctx.track.upper()
+    title = ctx.plan.get("title", ctx.slug)
+    subtitle = ctx.plan.get("subtitle", "")
+    phase_label = ctx.plan.get("phase", "")
+    prev_slug = slug_for_num(ctx.track, ctx.module_num - 1) if ctx.module_num > 1 else None
+    next_slug = slug_for_num(ctx.track, ctx.module_num + 1)
+
+    curriculum_header = (
+        f"**Curriculum context:** This is Module {ctx.module_num} of the {level} track "
+        f"(Ukrainian for English speakers). "
+        f"Title: \"{title}\""
+    )
+    if subtitle:
+        curriculum_header += f" — {subtitle}"
+    if phase_label:
+        curriculum_header += f". Phase: {phase_label}"
+    if prev_slug:
+        curriculum_header += f". Previous module: {prev_slug.replace('-', ' ').title()}"
+    if next_slug:
+        curriculum_header += f". Next module: {next_slug.replace('-', ' ').title()}"
+    curriculum_header += ".\n\n"
+
+    prompt_text = curriculum_header + prompt_text
+    prompt_file.write_text(prompt_text, "utf-8")
+
     writer_model = getattr(ctx, "writer_model", ctx.model)
     log(f"  content: Dispatching write ({word_target}w target, {overshoot}w overshoot, model={writer_model})...")
     ok, raw = _dispatch(
-        prompt_file.read_text("utf-8"),
+        prompt_text,
         task_id=f"v6-{ctx.slug}-content",
         model=writer_model, timeout=900,
     )

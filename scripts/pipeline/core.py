@@ -1627,6 +1627,30 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not fill_template(template, ctx.placeholders, prompt_file, overrides=overrides):
         return False
 
+    # Prepend curriculum context so the writer knows where this module sits
+    _prompt_text = prompt_file.read_text("utf-8")
+    _level = ctx.track.upper()
+    _title = ctx.plan.get("title", ctx.slug)
+    _subtitle = ctx.plan.get("subtitle", "")
+    _phase_label = ctx.plan.get("phase", "")
+    _prev = slug_for_num(ctx.track, ctx.module_num - 1) if ctx.module_num > 1 else None
+    _next = slug_for_num(ctx.track, ctx.module_num + 1)
+    _header = (
+        f"**Curriculum context:** This is Module {ctx.module_num} of the {_level} track "
+        f"(Ukrainian for English speakers). Title: \"{_title}\""
+    )
+    if _subtitle:
+        _header += f" — {_subtitle}"
+    if _phase_label:
+        _header += f". Phase: {_phase_label}"
+    if _prev:
+        _header += f". Previous module: {_prev.replace('-', ' ').title()}"
+    if _next:
+        _header += f". Next module: {_next.replace('-', ' ').title()}"
+    _header += ".\n\n"
+    _prompt_text = _header + _prompt_text
+    prompt_file.write_text(_prompt_text, "utf-8")
+
     # Pre-dispatch health check: catch template/placeholder bugs before wasting a Gemini call
     prompt_text = prompt_file.read_text("utf-8")
     health_issues = check_prompt_health(ctx, prompt_text, "content")
