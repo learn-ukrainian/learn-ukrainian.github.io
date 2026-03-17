@@ -165,8 +165,7 @@ word_target: 1200
         ## Current Content
 
         ```markdown
-        [watchdog] Output resumed after 144s stall
-## Вступ — Introduction
+        ## Вступ — Introduction
 
 Welcome to Module 3! Hello and welcome back! You are doing an absolutely amazing job so far. You have already learned the beautiful, melodic Ukrainian vowels, and now it is time to explore the rest of the alphabet. In this lesson, your goal is to master the Ukrainian consonants. By the end of this module, you will be able to read and pronounce almost any basic Ukrainian word with confidence.
 
@@ -248,18 +247,18 @@ Let's explore your consonant pairs.
 ### Літери Б та П
 [Anna Ohoiko — Ukrainian Lessons — Б](https://www.youtube.com/watch?v=V1hxBE_JbGg)
 [Anna Ohoiko — Ukrainian Lessons — П](https://www.youtube.com/watch?v=JksSjjxyW5Y)
-**Б** is voiced and makes the «b» sound, while **П** is voiceless and makes the «p» sound. They look different, but they are made using the exact same lip movement.
+The letter **Б** produces a strong vocalized labial sound, whereas **П** is entirely unvoiced. Both require identical lip positioning to produce, yet they yield completely different acoustic results.
 * **бабу́ся** (grandma)
 * **паву́к** (spider)
 * **зуб** (tooth)
 * **суп** (soup)
 
-Notice the massive difference between **зуб** and **суп**. You must keep the «b» vibrating strongly in **зуб**. Do not let it turn into a whisper!
+Notice the massive difference between **зуб** and **суп**. You must keep the vocal cords vibrating strongly in **зуб**. Do not let it turn into a whisper!
 
 ### Літери Д та Т
 [Anna Ohoiko — Ukrainian Lessons — Д](https://www.youtube.com/watch?v=g4Bh-lqzd48)
 [Anna Ohoiko — Ukrainian Lessons — Т](https://www.youtube.com/watch?v=m-jcLR_gK0k)
-**Д** makes the voiced «d» sound, and **Т** makes the voiceless «t» sound. Your tongue should touch the back of your upper teeth, not the roof of your mouth like it does in English.
+The letter **Д** represents a vibrating dental stop, while **Т** acts as its silent counterpart. When pronouncing these, press your tongue flat against the back of your upper teeth, deliberately avoiding the upper gum ridge (alveolar ridge) used in English.
 * **дім** (house)
 * **та́то** (dad)
 * **вода́** (water)
@@ -268,7 +267,7 @@ Notice the massive difference between **зуб** and **суп**. You must keep t
 ### Літери З та С
 [Anna Ohoiko — Ukrainian Lessons — З](https://www.youtube.com/watch?v=BhASNxitC1A)
 [Anna Ohoiko — Ukrainian Lessons — С](https://www.youtube.com/watch?v=7UsFBgSL91E)
-**З** makes the voiced «z» sound, and **С** makes the voiceless «s» sound. Again, keep the «z» strong and buzzing, even at the end of words!
+With **З**, your vocal cords create a noticeable buzzing effect, which is completely absent in the breathy **С**. Remember to maintain the buzz of **З** fully through to the absolute end of any word!
 * **зуб** (tooth)
 * **село́** (village)
 * **сон** (dream)
@@ -277,7 +276,7 @@ Notice the massive difference between **зуб** and **суп**. You must keep t
 ### Літери Ж та Ш
 [Anna Ohoiko — Ukrainian Lessons — Ж](https://www.youtube.com/watch?v=dIrGVcqPwqM)
 [Anna Ohoiko — Ukrainian Lessons — Ш](https://www.youtube.com/watch?v=1D-6MIw3OXY)
-**Ж** looks a bit like a beetle and makes the voiced «zh» sound (like the «s» in the English word «measure»). **Ш** is its voiceless partner and makes the «sh» sound.
+Resembling a small insect visually, **Ж** delivers a rich, buzzing fricative similar to the 's' in "measure". Its purely unvoiced equivalent is **Ш**, matching the English 'sh' sound perfectly.
 * **жук** (beetle)
 * **ша́пка** (hat)
 * **ка́ша** (porridge)
@@ -352,7 +351,7 @@ You have learned so much vital information in this module! Let's put your excell
 * **Тут є хліб і вода́.** (Here is bread and water.)
 * **Це сіль, а це цибу́ля.** (This is salt, and this is an onion.)
 * **Це паву́к.** (This is a spider.)
-* **Там є ґа́нок і люк.** (There is a porch and a hatch there.)
+* **Там є ґа́нок і люк.** (There is a porch and a hatch там.)
 
 You are making wonderful, steady progress. Your reading is getting smoother and more confident with every single sentence. 
 
@@ -373,136 +372,135 @@ Great job! In the next module, you will learn a few final special symbols to com
 
         ```yaml
         - type: watch-and-repeat
-  title: Consonant Pronunciation Practice
+  title: Pronunciation Practice
   items:
-  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    letter: М
-    word: ма́ма
+  - letter: М
+    word: мама
+    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
     note: Press your lips together and let your voice hum.
-  - video: https://www.youtube.com/watch?v=vNUfiKHPYaU
-    letter: Н
-    word: не́бо
+  - letter: Н
+    word: небо
+    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
     note: Press the tip of your tongue against your upper teeth.
-  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    letter: Л
+  - letter: Л
     word: ліс
-    note: When you say the hard Л, make sure the back of your tongue is slightly lowered.
-  - video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-    letter: Р
-    word: рука́
+    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    note: Make sure the back of your tongue is slightly lowered for the hard Л.
+  - letter: Р
+    word: рука
+    video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
     note: Flutter or roll your tongue against the roof of your mouth.
-  - video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-    letter: В
-    word: вода́
+  - letter: В
+    word: вода
+    video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
     note: Makes a 'v' or sometimes a soft 'w' sound.
-  - video: https://www.youtube.com/watch?v=aq0cjB90s3w
-    letter: Й
+  - letter: Й
     word: мій
-    note: Short 'y' sound, exactly like the 'y' at the end of 'boy'.
-  - video: https://www.youtube.com/watch?v=V1hxBE_JbGg
-    letter: Б
-    word: бабу́ся
-    note: Voiced 'b' sound.
-  - video: https://www.youtube.com/watch?v=JksSjjxyW5Y
-    letter: П
-    word: паву́к
+    video: https://www.youtube.com/watch?v=aq0cjB90s3w
+    note: Always a short and brisk 'y' sound.
+  - letter: Б
+    word: бабуся
+    video: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    note: Voiced 'b' sound. Keep it vibrating!
+  - letter: П
+    word: павук
+    video: https://www.youtube.com/watch?v=JksSjjxyW5Y
     note: Voiceless 'p' sound.
-  - video: https://www.youtube.com/watch?v=g4Bh-lqzd48
-    letter: Д
+  - letter: Д
     word: дім
-    note: Voiced 'd' sound. Tongue touches the back of upper teeth.
-  - video: https://www.youtube.com/watch?v=m-jcLR_gK0k
-    letter: Т
-    word: та́то
-    note: Voiceless 't' sound.
-  - video: https://www.youtube.com/watch?v=BhASNxitC1A
-    letter: З
+    video: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    note: Voiced 'd'. Tongue touches the back of upper teeth.
+  - letter: Т
+    word: тато
+    video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    note: Voiceless 't'. Tongue touches the back of upper teeth.
+  - letter: З
     word: зуб
-    note: Voiced 'z' sound. Keep it buzzing!
-  - video: https://www.youtube.com/watch?v=7UsFBgSL91E
-    letter: С
-    word: суп
+    video: https://www.youtube.com/watch?v=BhASNxitC1A
+    note: Voiced 'z'. Keep it buzzing to the end.
+  - letter: С
+    word: село
+    video: https://www.youtube.com/watch?v=7UsFBgSL91E
     note: Voiceless 's' sound.
 - type: classify
-  title: Sort the Consonants
+  title: Sort Consonant Types
+  instruction: Розподіліть елементи за групами.
   categories:
-  - label: Сонорні (Sonorant - always voiced)
+  - label: Сонорні (Sonorant)
     items:
     - М
     - Н
     - Л
     - Р
     - В
-    - Й
-  - label: Дзвінкі (Voiced pairs)
+  - label: Дзвінкі (Voiced)
     items:
     - Б
     - Д
     - З
     - Ж
     - Г
-    - Ґ
-  - label: Глухі (Voiceless pairs)
+  - label: Глухі (Voiceless)
     items:
     - П
     - Т
     - С
     - Ш
-    - Х
     - К
 - type: image-to-letter
-  title: Match Picture to Starting Consonant
+  title: Match Picture to Starting Letter
   items:
   - emoji: 🪲
     answer: Ж
     distractors:
-    - З
     - Ш
-    - С
+    - З
+    note: жук starts with Ж
   - emoji: 🧢
     answer: Ш
     distractors:
+    - Ж
     - С
-    - Ч
-    - Щ
+    note: шапка starts with Ш
   - emoji: 🖐️
     answer: Р
     distractors:
-    - Л
     - П
     - В
-  - emoji: 🍞
-    answer: Х
+    note: рука starts with Р
+  - emoji: 👵
+    answer: Б
     distractors:
-    - Г
-    - К
-    - Ґ
-  - emoji: 🐺
-    answer: В
-    distractors:
-    - Б
-    - Ф
-    - М
-  - emoji: 🏔️
-    answer: Г
-    distractors:
-    - Х
-    - К
-    - Р
+    - П
+    - В
+    note: бабуся starts with Б
   - emoji: 🕷️
     answer: П
     distractors:
     - Б
     - Т
-    - Д
-  - emoji: 🧅
-    answer: Ц
+    note: павук starts with П
+  - emoji: ⛰️
+    answer: Г
     distractors:
-    - С
-    - З
-    - Ч
+    - Х
+    - К
+    note: гора starts with Г
+  - emoji: 🍞
+    answer: Х
+    distractors:
+    - Г
+    - К
+    note: хліб starts with Х
+  - emoji: 🐺
+    answer: В
+    distractors:
+    - Б
+    - Ф
+    note: вовк starts with В
 - type: match-up
-  title: Match the Voiced and Voiceless Partners
+  title: Match Voiced and Voiceless Partners
+  instruction: З'єднайте відповідні елементи.
   pairs:
   - left: Б
     right: П
@@ -516,234 +514,216 @@ Great job! In the next module, you will learn a few final special symbols to com
     right: Х
   - left: Ґ
     right: К
-  instruction: З'єднайте відповідні елементи.
-- type: quiz
+- type: multiple-choice
   title: 'Hand-on-Throat Test: Voiced or Voiceless?'
   items:
-  - question: Say the first sound in 'зуб'. Is it voiced or voiceless?
+  - question: Is the first sound in 'зуб' (З) voiced, voiceless, or sonorant?
     options:
-    - Voiced
-    - Voiceless
-    explanation: З is voiced. You should feel your vocal cords vibrate.
-  - question: Say the first sound in 'суп'. Is it voiced or voiceless?
+    - Voiced (Дзвінкий)
+    - Voiceless (Глухий)
+    - Sonorant (Сонорний)
+    answer: Voiced (Дзвінкий)
+    explanation: З is a voiced consonant. Your vocal cords vibrate.
+  - question: Is the first sound in 'суп' (С) voiced, voiceless, or sonorant?
     options:
-    - Voiceless
-    - Voiced
-    explanation: С is voiceless. You only hear the air rushing out.
-  - question: Look at the word 'хліб'. What happens to the final 'б'?
+    - Voiced (Дзвінкий)
+    - Voiceless (Глухий)
+    - Sonorant (Сонорний)
+    answer: Voiceless (Глухий)
+    explanation: С is a voiceless consonant. Only air rushes out.
+  - question: Is the first sound in 'бабуся' (Б) voiced, voiceless, or sonorant?
     options:
-    - It stays fully voiced
-    - It becomes voiceless like 'p'
-    - It becomes silent
-    explanation: In Ukrainian, voiced consonants at the end of a word NEVER lose their
-      voice! You must pronounce the 'b' clearly.
-  - question: Is the letter 'Д' voiced or voiceless?
+    - Voiced (Дзвінкий)
+    - Voiceless (Глухий)
+    - Sonorant (Сонорний)
+    answer: Voiced (Дзвінкий)
+    explanation: Б is a voiced consonant.
+  - question: Is the first sound in 'павук' (П) voiced, voiceless, or sonorant?
     options:
-    - Voiced
-    - Voiceless
-  - question: Is the letter 'Т' voiced or voiceless?
+    - Voiced (Дзвінкий)
+    - Voiceless (Глухий)
+    - Sonorant (Сонорний)
+    answer: Voiceless (Глухий)
+    explanation: П is the voiceless partner to Б.
+  - question: Is the first sound in 'дім' (Д) voiced, voiceless, or sonorant?
     options:
-    - Voiceless
-    - Voiced
-  - question: Say the first sound in 'жук'. Is it voiced or voiceless?
+    - Voiced (Дзвінкий)
+    - Voiceless (Глухий)
+    - Sonorant (Сонорний)
+    answer: Voiced (Дзвінкий)
+    explanation: Д is a voiced consonant.
+  - question: Is the first sound in 'тато' (Т) voiced, voiceless, or sonorant?
     options:
-    - Voiced
-    - Voiceless
-  - question: Say the first sound in 'шапка'. Is it voiced or voiceless?
+    - Voiced (Дзвінкий)
+    - Voiceless (Глухий)
+    - Sonorant (Сонорний)
+    answer: Voiceless (Глухий)
+    explanation: Т is the voiceless partner to Д.
+  - question: Is the first sound in 'жук' (Ж) voiced, voiceless, or sonorant?
     options:
-    - Voiceless
-    - Voiced
-  - question: Is the letter 'Г' (as in гора) voiced or voiceless?
-    options:
-    - Voiced
-    - Voiceless
-    explanation: Г is a soft, throaty 'h' sound, but it is voiced! You engage your
-      vocal cords.
-  - question: Is the letter 'Х' (as in хліб) voiced or voiceless?
-    options:
-    - Voiceless
-    - Voiced
-  - question: The sonorant consonants (М, Н, Л, Р, В, Й) are always...
-    options:
-    - Voiced
-    - Voiceless
-    - Soft
-    explanation: Sonorant consonants ring out clearly and are always voiced. They
-      never lose their voice.
-  instruction: Оберіть правильну відповідь.
-- type: classify
-  title: Hard or Soft? (First Consonant)
-  categories:
-  - label: First consonant is HARD
-    items:
-    - са́ло
-    - зуб
-    - не́бо
-    - вода́
-    - ма́ма
-  - label: First consonant is SOFT
-    items:
-    - лю́ди
-    - люк
-    - сіль
-
+    - Voiced (Дзвінкий)
+    - Voiceless (Глухий)
+    - Sonorant (Сонорний)
+    answer: Voiced (Дзвінкий)
+    explanation: Ж is a voiced consonant.
+  - question: Is the first sound
         ```
 
         ## Current Vocabulary
 
         ```yaml
-        - word: "хліб"
-  translation: "bread"
-  pos: "noun"
-  example: "Тут є хліб і вода́."
-- word: "зуб"
-  translation: "tooth"
-  pos: "noun"
-  example: "Це мій зуб."
-- word: "дім"
-  translation: "house"
-  pos: "noun"
-  example: "Це мій дім."
-- word: "вовк"
-  translation: "wolf"
-  pos: "noun"
-  example: "Тут вовк і жук."
-- word: "жук"
-  translation: "beetle"
-  pos: "noun"
-  example: "Тут вовк і жук."
-- word: "шапка"
-  translation: "hat"
-  pos: "noun"
-  example: "Де моя́ ша́пка?"
-- word: "гора"
-  translation: "mountain"
-  pos: "noun"
-  example: "Там гора́ і ліс."
-- word: "небо"
-  translation: "sky"
-  pos: "noun"
-  example: "Це не́бо."
-- word: "рука"
-  translation: "hand"
-  pos: "noun"
-  example: "Це моя́ рука́."
-- word: "бабуся"
-  translation: "grandma"
-  pos: "noun"
-  example: "Бабу́ся там."
-- word: "павук"
-  translation: "spider"
-  pos: "noun"
-  example: "Це паву́к."
-- word: "ґанок"
-  translation: "porch"
-  pos: "noun"
-  example: "Там є ґа́нок і люк."
-- word: "сіль"
-  translation: "salt"
-  pos: "noun"
-  example: "Це сіль, а це цибу́ля."
-- word: "люди"
-  translation: "people"
-  pos: "noun"
-  example: "Там лю́ди."
-- word: "суп"
-  translation: "soup"
-  pos: "noun"
-  example: "Це суп."
-- word: "вода"
-  translation: "water"
-  pos: "noun"
-  example: "А вода́ тут?"
-- word: "цибуля"
-  translation: "onion"
-  pos: "noun"
-  example: "Це сіль, а це цибу́ля."
-- word: "люк"
-  translation: "hatch"
-  pos: "noun"
-  example: "Там є ґа́нок і люк."
-- word: "мама"
-  translation: "mom"
-  pos: "noun"
-  example: "Ма́ма тут?"
-- word: "місто"
-  translation: "city"
-  pos: "noun"
-  example: "Це мі́сто."
-- word: "молоко"
-  translation: "milk"
-  pos: "noun"
-  example: "Де молоко́?"
-- word: "мак"
-  translation: "poppy"
-  pos: "noun"
-  example: "Це мак."
-- word: "ніс"
-  translation: "nose"
-  pos: "noun"
-  example: "Це мій ніс."
-- word: "ні"
-  translation: "no"
-  pos: "particle"
-  example: "Ні, вовк у лі́сі!"
-- word: "сон"
-  translation: "dream"
-  pos: "noun"
-  example: "Це сон."
-- word: "ліс"
-  translation: "forest"
-  pos: "noun"
-  example: "Там гора́ і ліс."
-- word: "сало"
-  translation: "pork fat"
-  pos: "noun"
-  example: "Це са́ло."
-- word: "риба"
-  translation: "fish"
-  pos: "noun"
-  example: "Це ри́ба."
-- word: "сир"
-  translation: "cheese"
-  pos: "noun"
-  example: "Це сир."
-- word: "вухо"
-  translation: "ear"
-  pos: "noun"
-  example: "Це ву́хо."
-- word: "край"
-  translation: "edge/region"
-  pos: "noun"
-  example: "Це мій край."
-- word: "мій"
-  translation: "my"
-  pos: "pronoun"
-  example: "Це мій дім."
-- word: "тато"
-  translation: "dad"
-  pos: "noun"
-  example: "Та́то тут."
-- word: "стіл"
-  translation: "table"
-  pos: "noun"
-  example: "Це стіл."
-- word: "село"
-  translation: "village"
-  pos: "noun"
-  example: "Це село́."
-- word: "сік"
-  translation: "juice"
-  pos: "noun"
-  example: "Де сік?"
-- word: "каша"
-  translation: "porridge"
-  pos: "noun"
-  example: "Це ка́ша."
-- word: "кіт"
-  translation: "cat"
-  pos: "noun"
-  example: "Це кіт."
+        - word: мама
+  translation: mom
+  pos: noun
+  example: Мама тут.
+- word: місто
+  translation: city
+  pos: noun
+  example: Це гарне місто.
+- word: молоко
+  translation: milk
+  pos: noun
+  example: Де молоко?
+- word: мак
+  translation: poppy
+  pos: noun
+  example: Це червоний мак.
+- word: небо
+  translation: sky
+  pos: noun
+  example: Небо блакитне.
+- word: ніс
+  translation: nose
+  pos: noun
+  example: Це мій ніс.
+- word: ні
+  translation: no
+  pos: particle
+  example: Ні, вовк у лісі!
+- word: сон
+  translation: dream
+  pos: noun
+  example: Це гарний сон.
+- word: ліс
+  translation: forest
+  pos: noun
+  example: Там гора і ліс.
+- word: сало
+  translation: pork fat
+  pos: noun
+  example: Це смачне сало.
+- word: рука
+  translation: hand
+  pos: noun
+  example: Це моя рука.
+- word: риба
+  translation: fish
+  pos: noun
+  example: Тут є риба.
+- word: сир
+  translation: cheese
+  pos: noun
+  example: Де сир?
+- word: вода
+  translation: water
+  pos: noun
+  example: Вода тут.
+- word: вовк
+  translation: wolf
+  pos: noun
+  example: Тут вовк і жук.
+- word: вухо
+  translation: ear
+  pos: noun
+  example: Це моє вухо.
+- word: край
+  translation: edge/region
+  pos: noun
+  example: Це мій рідний край.
+- word: мій
+  translation: my
+  pos: pronoun
+  example: Це мій дім.
+- word: бабуся
+  translation: grandma
+  pos: noun
+  example: Бабуся там.
+- word: павук
+  translation: spider
+  pos: noun
+  example: Це великий павук.
+- word: зуб
+  translation: tooth
+  pos: noun
+  example: Це мій зуб.
+- word: суп
+  translation: soup
+  pos: noun
+  example: Це гарячий суп.
+- word: дім
+  translation: house
+  pos: noun
+  example: Це мій дім.
+- word: тато
+  translation: dad
+  pos: noun
+  example: Тато тут.
+- word: стіл
+  translation: table
+  pos: noun
+  example: Де стіл?
+- word: село
+  translation: village
+  pos: noun
+  example: Це моє село.
+- word: сік
+  translation: juice
+  pos: noun
+  example: Де мій сік?
+- word: жук
+  translation: beetle
+  pos: noun
+  example: Тут вовк і жук.
+- word: шапка
+  translation: hat
+  pos: noun
+  example: Де моя шапка?
+- word: каша
+  translation: porridge
+  pos: noun
+  example: Це смачна каша.
+- word: гора
+  translation: mountain
+  pos: noun
+  example: Там гора і ліс.
+- word: хліб
+  translation: bread
+  pos: noun
+  example: Тут є хліб і вода.
+- word: ґанок
+  translation: porch
+  pos: noun
+  example: Там є ґанок і люк.
+- word: кіт
+  translation: cat
+  pos: noun
+  example: Це мій кіт.
+- word: люди
+  translation: people
+  pos: noun
+  example: Тут люди.
+- word: люк
+  translation: hatch
+  pos: noun
+  example: Там є ґанок і люк.
+- word: сіль
+  translation: salt
+  pos: noun
+  example: Це сіль, а це цибуля.
+- word: цибуля
+  translation: onion
+  pos: noun
+  example: Це цибуля.
         ```
 
         ## Audit Results (MUST FIX ALL)
@@ -765,37 +745,55 @@ Saving log to: curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log
   📊 Section Word Analysis:
      Вступ — Introduction                                 233 /  100  ✅ (+133)
      Сонорні — Sonorant Consonants                        502 /  200  ✅ (+302)
-     Дзвінкі та глухі пари — Voiced and Voiceless Pairs   658 /  400  ✅ (+258)
+     Дзвінкі та глухі пари — Voiced and Voiceless Pairs   669 /  400  ✅ (+269)
      Тверді та м'які — Hard and Soft Consonants           446 /  250  ✅ (+196)
      Читання — Reading Practice                           170 /  150  ✅ (+20)
      Підсумок — Summary                                   159 /  100  ✅ (+59)
      ───────────────────────────────────────────────────────────────────────────
-     TOTAL                                               2168 / 1200  ✅ (+968)
+     TOTAL                                               2179 / 1200  ✅ (+979)
   ❌ YAML schema violations: 1
-     ❌ [YAML_SCHEMA_VIOLATION] Schema error in consonant-sounds.yaml: Schema validation error at key '0': 'Voiced' is not of type 'object'
-  ⚠️  Activity answer correctness issues: 10
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Throat Test: Voiced or Voiceless?
-        Issue: Question 1 has 0 correct options (must be exactly 1).
-        Fix: Mark exactly one option as correct: true per question.
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Throat Test: Voiced or Voiceless?
-        Issue: Question 2 has 0 correct options (must be exactly 1).
-        Fix: Mark exactly one option as correct: true per question.
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Throat Test: Voiced or Voiceless?
-        Issue: Question 3 has 0 correct options (must be exactly 1).
-        Fix: Mark exactly one option as correct: true per question.
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Throat Test: Voiced or Voiceless?
-        Issue: Question 4 has 0 correct options (must be exactly 1).
-        Fix: Mark exactly one option as correct: true per question.
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Throat Test: Voiced or Voiceless?
-        Issue: Question 5 has 0 correct options (must be exactly 1).
-        Fix: Mark exactly one option as correct: true per question.
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Throat Test: Voiced or Voiceless?
-        Issue: Question 6 has 0 correct options (must be exactly 1).
-        Fix: Mark exactly one option as correct: true per question.
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Throat Test: Voiced or Voiceless?
-        Issue: Question 7 has 0 correct options (must be exactly 1).
-        Fix: Mark exactly one option as correct: true per question.
-     🔴 [QUIZ_CORRECT_COUNT] Hand-on-Thro
+     ❌ [YAML_SCHEMA_VIOLATION] Schema error in consonant-sounds.yaml: Schema validation error at key '0': 'Voiced (Дзвінкий)' is not of type 'object'
+  📋 Found YAML activities file (7 activities)
+  > Pronunciation Practice: 12 items (min 1)
+  > Sort Consonant Types: 15 items (min 1)
+  > Match Picture to Starting Letter: 8 items (min 5)
+  > Match Voiced and Voiceless Partners: 6 items (min 6)
+  > Hard or Soft Consonants?: 8 items (min 1)
+  > Ukrainian Consonant Rules: 8 items (min 6)
+  > Vocabulary Matching: 8 items (min 6)
+  ❌ Missing required activity types from meta.yaml: quiz
+
+--- STRICT GATES (Level A1) ---
+Persona      ✅ Persona Defined
+Words        ✅ 2138/1200 (raw: 2220)
+Activities   ❌ 7/8
+Density      ✅ All > 6
+Unique_types ✅ 6/4 types
+Priority     ✅ Priority types used
+Engagement   ✅ 4/3
+Audio        ℹ️ No audio
+Vocab        ✅ 38/1
+Structure    ✅ Valid Structure
+Lint         ✅ Clean Format
+Pedagogy     ❌ 1 violations
+Content_heavy ℹ️ N/A (standard module)
+Grammar      ℹ️ N/A (covered by naturalness)
+Naturalness  ℹ️ PENDING — awaiting review
+Activity_quality ℹ️ Quality validation N/A (A1/A2)
+Research     ✅ Content aligned with research
+Immersion    🇺🇦 5.7% (target 5-15% (M03))
+
+📚 PEDAGOGICAL VIOLATIONS FOUND:
+  [YAML_SCHEMA_VIOLATION] Schema error in consonant-sounds.yaml: Schema validation error at key '0': 'Voiced (Дзвінкий)' is not of type 'object'
+     → FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+
+📝 RECOMMENDATION: UPDATE (patch fixes) (severity 20/100)
+   → 1 violations (minor)
+   → Activity count below minimum
+
+
+Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/
         ```
 
         ## Review Criteria

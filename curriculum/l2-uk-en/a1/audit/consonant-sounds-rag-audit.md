@@ -1,22 +1,21 @@
 # RAG Verification: consonant-sounds
 
-**Date:** 2026-03-17 18:26 UTC | **Words checked:** 71 | **VESUM coverage:** 69/71 (97.2%)
+**Date:** 2026-03-17 18:59 UTC | **Words checked:** 84 | **VESUM coverage:** 83/84 (98.8%)
 
 ## Summary
-- ✅ Verified (VESUM): 69
-- ⚠️ Partial (RAG only): 2
+- ✅ Verified (VESUM): 83
+- ⚠️ Partial (RAG only): 1
 - ❌ Not found: 0
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Д | activities | ✗ | ✓ | ✗ |
-| Х | activities | ✗ | ✓ | ✗ |
+| ю | activities | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
 | Prose (.md) | 60 | 60 | 0 |
-| Activities (.yaml) | 11 | 9 | 0 |
+| Activities (.yaml) | 24 | 23 | 0 |

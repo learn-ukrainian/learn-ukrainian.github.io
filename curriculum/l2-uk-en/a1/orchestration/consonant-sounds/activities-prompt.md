@@ -7,8 +7,7 @@
         ## Module Content
 
         ```markdown
-        [watchdog] Output resumed after 144s stall
-## Вступ — Introduction
+        ## Вступ — Introduction
 
 Welcome to Module 3! Hello and welcome back! You are doing an absolutely amazing job so far. You have already learned the beautiful, melodic Ukrainian vowels, and now it is time to explore the rest of the alphabet. In this lesson, your goal is to master the Ukrainian consonants. By the end of this module, you will be able to read and pronounce almost any basic Ukrainian word with confidence.
 
@@ -261,38 +260,115 @@ required:
 
         ```
 
-        ## Activity YAML Schema (CRITICAL — follow exactly)
+        ## Activity YAML Schema — COPY THIS FORMAT EXACTLY
 
-        Bare YAML list at root (NOT `activities:` wrapper). Each activity requires `type` and `title`.
+        Below are working examples for EVERY activity type. Your output MUST use the same
+        field names. Wrong field names (e.g., `prompt` instead of `left`, `text` instead of
+        `statement`) will cause validation failure.
 
-        **quiz**: `items:` array, each: `question` (str), `options` (array of str), `explanation` (str, optional)
-        **match-up**: `pairs:` array (NOT items), each: `left` (str), `right` (str)
-        **fill-in**: `items:` array, each: `sentence` (str with ___ blank), `answer` (str), `options` (array of str)
-        **group-sort**: `groups:` array, each: `name` (str), `items` (array of str)
-        **true-false**: `items:` array, each: `statement` (str), `correct` (bool)
-        **classify**: `categories:` array, each: `label` (str), `items` (array of str)
-        **watch-and-repeat**: `items:` array, each: `video` (YouTube URL, required), `letter` (str), `word` (str), `note` (str)
-        **image-to-letter**: `items:` array, each: `emoji` (str), `answer` (str), `distractors` (array of str)
-        **anagram**: `items:` array, each: `scrambled` (str), `answer` (str)
-        **unjumble**: `items:` array, each: `words` (array of str), `answer` (str)
-
-        Example match-up:
         ```yaml
-        - type: match-up
-          title: "Voiced and Voiceless Partners"
-          pairs:
-            - left: "Б"
-              right: "П"
-            - left: "Д"
-              right: "Т"
+        # Activity YAML examples — one per type, exact schema
+# Used by v6 activities prompt to show the LLM correct field names
+
+- type: quiz
+  title: "Apostrophe Rules"
+  items:
+    - question: "Which Ukrainian word means meat?"
+      options:
+        - text: "м'ясо"
+          correct: true
+        - text: "молоко"
+          correct: false
+      explanation: "М'ясо means meat."
+
+- type: match-up
+  title: "Voiced and Voiceless Partners"
+  pairs:
+    - left: "Б"
+      right: "П"
+    - left: "Д"
+      right: "Т"
+    - left: "З"
+      right: "С"
+    - left: "Ж"
+      right: "Ш"
+    - left: "Г"
+      right: "Х"
+    - left: "Ґ"
+      right: "К"
+
+- type: fill-in
+  title: "Complete the Word"
+  items:
+    - sentence: "Це мій ___."
+      answer: "дім"
+      options: ["дім", "дом", "дам"]
+
+- type: group-sort
+  title: "Sonorant or Not?"
+  groups:
+    - name: "Сонорні"
+      items: ["М", "Н", "Л", "Р", "В"]
+    - name: "Не сонорні"
+      items: ["Б", "Д", "З", "Ж", "Г"]
+
+- type: classify
+  title: "Find the Soft Sign"
+  categories:
+    - label: "Soft Н (Н + Ь)"
+      items: ["день", "кінь", "осінь"]
+    - label: "Soft Л (Л + Ь)"
+      items: ["сіль", "Львів"]
+    - label: "No soft sign"
+      items: ["час", "цукор"]
+
+- type: true-false
+  title: "True or False?"
+  items:
+    - statement: "Б is a voiced consonant."
+      correct: true
+    - statement: "Ш is a sonorant consonant."
+      correct: false
+
+- type: watch-and-repeat
+  title: "Pronunciation Practice"
+  items:
+    - letter: "М"
+      word: "мама"
+      video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+      note: "Press your lips together."
+
+- type: image-to-letter
+  title: "Picture to Letter"
+  items:
+    - emoji: "🐝"
+      answer: "Б"
+      distractors: ["П", "В"]
+      note: "бджола starts with Б"
+
+- type: anagram
+  title: "Unscramble"
+  items:
+    - scrambled: "імд"
+      answer: "дім"
+
+- type: unjumble
+  title: "Put in Order"
+  items:
+    - words: ["мій", "Це", "дім"]
+      answer: "Це мій дім"
+
         ```
 
-        ## Activity Rules
-        - Activities test LANGUAGE skills, not content recall
-        - NO `id` field — the system generates IDs automatically
-        - Minimum items per activity: 6
-        - Include variety from the plan's activity_hints
-        - All Ukrainian text must be real, correct Ukrainian
+        **KEY RULES:**
+        - `match-up` uses `pairs:` with `left:` / `right:` (NOT `items:` with `prompt:` / `answer:`)
+        - `true-false` uses `statement:` (NOT `text:`)
+        - `quiz` options use `text:` and `correct:` (bool)
+        - `classify` uses `categories:` with `label:` and `items:`
+        - `group-sort` uses `groups:` with `name:` and `items:`
+        - NO `id` field on any activity — the system generates IDs
+        - Minimum 6 items per activity
+        - Minimum 8 activities total
 
         ## Vocabulary Rules
         - Extract ALL Ukrainian words taught in the content

@@ -25,7 +25,7 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-17T18:23:58Z",
+      "ts": "2026-03-17T18:44:26Z",
       "attempts": 1,
       "executor": {
         "type": "llm",
@@ -35,7 +35,7 @@
     },
     "review": {
       "status": "complete",
-      "ts": "2026-03-17T18:25:59Z",
+      "ts": "2026-03-17T18:58:13Z",
       "attempts": 1,
       "executor": {
         "type": "llm",
@@ -45,7 +45,7 @@
     },
     "final_audit": {
       "status": "failed",
-      "ts": "2026-03-17T18:26:26Z",
+      "ts": "2026-03-17T18:59:30Z",
       "attempts": 2,
       "note": "final-audit-failed",
       "executor": {

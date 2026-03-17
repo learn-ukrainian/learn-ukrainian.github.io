@@ -2,13 +2,13 @@
   "module": "consonant-sounds",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-17T19:26:40.313172Z",
+  "last_audit": "2026-03-17T20:00:30.065814Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-17T19:25:59.166264Z",
+    "md": "2026-03-17T19:58:13.561528Z",
     "meta": "2026-03-16T21:59:34.088224Z",
-    "activities": "2026-03-17T19:25:59.166492Z",
-    "vocabulary": "2026-03-17T19:25:59.166659Z",
+    "activities": "2026-03-17T19:58:14.394250Z",
+    "vocabulary": "2026-03-17T19:58:13.564083Z",
     "research": "2026-03-17T09:25:18.987508Z",
     "plan": "2026-03-17T14:35:05.210171Z"
   },
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2127/1200 (raw: 2209) | pedagogy: 9 violations"
+      "message": "2138/1200 (raw: 2220) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "6/8"
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
     },
     "vocabulary": {
       "status": "pass",
@@ -52,8 +52,8 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 2,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

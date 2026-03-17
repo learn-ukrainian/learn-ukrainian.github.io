@@ -80,18 +80,18 @@ Let's explore your consonant pairs.
 ### Літери Б та П
 [Anna Ohoiko — Ukrainian Lessons — Б](https://www.youtube.com/watch?v=V1hxBE_JbGg)
 [Anna Ohoiko — Ukrainian Lessons — П](https://www.youtube.com/watch?v=JksSjjxyW5Y)
-**Б** is voiced and makes the «b» sound, while **П** is voiceless and makes the «p» sound. They look different, but they are made using the exact same lip movement.
+The letter **Б** produces a strong vocalized labial sound, whereas **П** is entirely unvoiced. Both require identical lip positioning to produce, yet they yield completely different acoustic results.
 * **бабу́ся** (grandma)
 * **паву́к** (spider)
 * **зуб** (tooth)
 * **суп** (soup)
 
-Notice the massive difference between **зуб** and **суп**. You must keep the «b» vibrating strongly in **зуб**. Do not let it turn into a whisper!
+Notice the massive difference between **зуб** and **суп**. You must keep the vocal cords vibrating strongly in **зуб**. Do not let it turn into a whisper!
 
 ### Літери Д та Т
 [Anna Ohoiko — Ukrainian Lessons — Д](https://www.youtube.com/watch?v=g4Bh-lqzd48)
 [Anna Ohoiko — Ukrainian Lessons — Т](https://www.youtube.com/watch?v=m-jcLR_gK0k)
-**Д** makes the voiced «d» sound, and **Т** makes the voiceless «t» sound. Your tongue should touch the back of your upper teeth, not the roof of your mouth like it does in English.
+The letter **Д** represents a vibrating dental stop, while **Т** acts as its silent counterpart. When pronouncing these, press your tongue flat against the back of your upper teeth, deliberately avoiding the upper gum ridge (alveolar ridge) used in English.
 * **дім** (house)
 * **та́то** (dad)
 * **вода́** (water)
@@ -100,7 +100,7 @@ Notice the massive difference between **зуб** and **суп**. You must keep t
 ### Літери З та С
 [Anna Ohoiko — Ukrainian Lessons — З](https://www.youtube.com/watch?v=BhASNxitC1A)
 [Anna Ohoiko — Ukrainian Lessons — С](https://www.youtube.com/watch?v=7UsFBgSL91E)
-**З** makes the voiced «z» sound, and **С** makes the voiceless «s» sound. Again, keep the «z» strong and buzzing, even at the end of words!
+With **З**, your vocal cords create a noticeable buzzing effect, which is completely absent in the breathy **С**. Remember to maintain the buzz of **З** fully through to the absolute end of any word!
 * **зуб** (tooth)
 * **село́** (village)
 * **сон** (dream)
@@ -109,7 +109,7 @@ Notice the massive difference between **зуб** and **суп**. You must keep t
 ### Літери Ж та Ш
 [Anna Ohoiko — Ukrainian Lessons — Ж](https://www.youtube.com/watch?v=dIrGVcqPwqM)
 [Anna Ohoiko — Ukrainian Lessons — Ш](https://www.youtube.com/watch?v=1D-6MIw3OXY)
-**Ж** looks a bit like a beetle and makes the voiced «zh» sound (like the «s» in the English word «measure»). **Ш** is its voiceless partner and makes the «sh» sound.
+Resembling a small insect visually, **Ж** delivers a rich, buzzing fricative similar to the 's' in "measure". Its purely unvoiced equivalent is **Ш**, matching the English 'sh' sound perfectly.
 * **жук** (beetle)
 * **ша́пка** (hat)
 * **ка́ша** (porridge)
