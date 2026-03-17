@@ -396,6 +396,12 @@ def _run_morphological_validator(content_text: str, ctx: ModuleContext) -> list[
                                plan=getattr(ctx, "plan", None))
 
 
+def _run_stress_verification(content_text: str, ctx: ModuleContext) -> list[dict]:
+    """Run stress mark verification using ukrainian-word-stress. Returns list of issue dicts."""
+    from audit.checks.stress_verification import verify_stress_marks
+    return verify_stress_marks(content_text, ctx.module_num)
+
+
 def _run_content_quality_checks(content_text: str, ctx: ModuleContext,
                                  vesum_not_found: list[dict]) -> list[dict]:
     """Run content quality pipeline checks. Returns list of issue dicts."""
@@ -513,6 +519,18 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False,
         except Exception as e:
             logger.warning("D.0: Morphological validator failed: %s", e)
 
+    # 8.5 Stress mark verification (after VESUM, uses ukrainian-word-stress + Stanza)
+    if content_text is not None:
+        try:
+            stress_issues = _run_stress_verification(content_text, ctx)
+            result.deterministic_issues.extend(stress_issues)
+            if stress_issues:
+                n_mismatch = sum(1 for i in stress_issues if i["type"] == "STRESS_MISMATCH")
+                n_unknown = sum(1 for i in stress_issues if i["type"] == "STRESS_UNKNOWN")
+                _log(f"  D.0: Stress verification: {n_mismatch} mismatch(es), {n_unknown} unknown")
+        except Exception as e:
+            logger.warning("D.0: Stress verification failed: %s", e)
+
     # 9. Content quality pipeline checks
     if content_text is not None:
         try:
@@ -530,9 +548,10 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False,
         n_cq = sum(1 for i in result.deterministic_issues if i["type"] in (
             "UNTRANSLATED_NON_DECODABLE", "WALL_OF_TEXT", "LOW_ENGAGEMENT",
             "REPETITIVE_TRANSITIONS", "PLAN_SECTION_MISSING", "ACTIVITY_VESUM_FAIL"))
+        n_stress = sum(1 for i in result.deterministic_issues if i["type"] in ("STRESS_MISMATCH", "STRESS_UNKNOWN"))
         _log(f"  D.0: {det_count} deterministic issue(s) found "
              f"({sum(1 for i in result.deterministic_issues if i['type'] == 'RUSSIANISM')} Russianisms, "
              f"{sum(1 for i in result.deterministic_issues if i['type'] == 'LLM_FILLER')} filler, "
-             f"{n_rules} rule-engine, {n_cq} content-quality)")
+             f"{n_stress} stress, {n_rules} rule-engine, {n_cq} content-quality)")
 
     return result

@@ -11,13 +11,11 @@ Targets 13 modules with 0% coverage:
 
 import json
 import os
-import re
 import sqlite3
-import tempfile
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -350,15 +348,15 @@ class TestBroker:
         from scripts.ai_agent_bridge._broker import _categorize_pid_files
         pf = tmp_path / "gemini-task-1.json"
         pf.write_text(json.dumps({"pid": 99999999}))
-        alive, stale = _categorize_pid_files([pf])
-        assert len(alive) == 0
+        _alive, stale = _categorize_pid_files([pf])
+        assert len(_alive) == 0
         assert len(stale) == 1
 
     def test_categorize_pid_files_corrupt(self, tmp_path):
         from scripts.ai_agent_bridge._broker import _categorize_pid_files
         pf = tmp_path / "bad.json"
         pf.write_text("not json")
-        alive, stale = _categorize_pid_files([pf])
+        _alive, stale = _categorize_pid_files([pf])
         assert len(stale) == 1
 
     def test_print_process_info(self, capsys, tmp_path):
@@ -549,8 +547,9 @@ class TestModel:
     """Tests for scripts/ai_agent_bridge/_model.py."""
 
     def test_handle_model_check_failure_not_found(self, capsys):
-        from scripts.ai_agent_bridge._model import _handle_model_check_failure
         import time
+
+        from scripts.ai_agent_bridge._model import _handle_model_check_failure
         result = MagicMock()
         result.stderr = "model not found"
         result.returncode = 1
@@ -558,8 +557,9 @@ class TestModel:
         assert "not available" in capsys.readouterr().out
 
     def test_handle_model_check_failure_quota(self, capsys):
-        from scripts.ai_agent_bridge._model import _handle_model_check_failure
         import time
+
+        from scripts.ai_agent_bridge._model import _handle_model_check_failure
         result = MagicMock()
         result.stderr = "quota exhausted"
         result.returncode = 1
@@ -567,8 +567,9 @@ class TestModel:
         assert "quota" in capsys.readouterr().out.lower()
 
     def test_handle_model_check_failure_generic(self, capsys):
-        from scripts.ai_agent_bridge._model import _handle_model_check_failure
         import time
+
+        from scripts.ai_agent_bridge._model import _handle_model_check_failure
         result = MagicMock()
         result.stderr = "something weird"
         result.returncode = 2
@@ -587,9 +588,10 @@ class TestModel:
         assert result is None
 
     def test_check_model_cached(self, capsys):
+        import time
+
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        import time
         _MODEL_CACHE["cached-model"] = (True, time.time())
         try:
             result = check_model("cached-model")
@@ -599,9 +601,10 @@ class TestModel:
             _MODEL_CACHE.pop("cached-model", None)
 
     def test_check_model_cached_expired(self):
+        import time
+
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        import time
         _MODEL_CACHE["old-model"] = (True, time.time() - 7200)  # 2 hours old
         try:
             with patch("subprocess.run", side_effect=FileNotFoundError):
@@ -612,6 +615,7 @@ class TestModel:
 
     def test_check_model_timeout(self, capsys):
         import subprocess
+
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
         _MODEL_CACHE.pop("timeout-model", None)
@@ -765,14 +769,14 @@ class TestGitHub:
             result = _post_review_to_github("issue-42", "review text", "flash")
         assert result == 42
 
-    def test_post_review_to_github_new_issue(self):
+    def test_post_review_to_github_no_issue_skips(self):
+        """When task_id doesn't map to an issue, don't create a new one (#970)."""
         from scripts.ai_agent_bridge._github import _post_review_to_github
-        mock_result = MagicMock()
-        mock_result.returncode = 0
-        mock_result.stdout = "https://github.com/user/repo/issues/99\n"
-        with patch("subprocess.run", return_value=mock_result):
+        # No subprocess should be called — we skip GH posting entirely
+        with patch("subprocess.run") as mock_run:
             result = _post_review_to_github("random-task", "review text", "opus")
-        assert result == 99
+        assert result is None
+        mock_run.assert_not_called()
 
     def test_post_review_to_github_gh_not_found(self):
         from scripts.ai_agent_bridge._github import _post_review_to_github
@@ -782,6 +786,7 @@ class TestGitHub:
 
     def test_post_review_to_github_timeout(self):
         import subprocess
+
         from scripts.ai_agent_bridge._github import _post_review_to_github
         with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 15)):
             result = _post_review_to_github("issue-1", "text", "model")
@@ -1268,6 +1273,7 @@ class TestNaturalnessCheck:
 
     def test_update_meta_naturalness(self, tmp_path):
         import yaml
+
         from scripts.audit.naturalness_check import update_meta_naturalness
         meta_file = tmp_path / "test.yaml"
         meta_file.write_text("version: 1\n")

@@ -60,7 +60,11 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
         if issue_num:
             return _post_to_existing_issue(issue_num, chunks, model, total_parts)
         else:
-            return _post_as_new_issue(task_id, chunks, model, total_parts)
+            # Don't auto-create GH issues for reviews without a target issue.
+            # Review artifacts live in orchestration/ folders. GH issues are for
+            # work items only. See #970.
+            print(f"   ℹ️  No issue number in task_id '{task_id}' — skipping GH posting (review saved to orchestration/)")
+            return None
 
     except FileNotFoundError:
         print("⚠️  gh CLI not found — skipping GitHub posting")
