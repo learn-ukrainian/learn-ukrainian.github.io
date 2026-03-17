@@ -17,6 +17,7 @@ from .yaml_item_fixers import (
     fix_cloze_blank_lines,
     fix_invalid_top_level_properties,
     fix_missing_instruction,
+    fix_quiz_answer_field,
     fix_quiz_select_items,
     fix_select_property_renames,
 )
@@ -49,6 +50,10 @@ def fix_activity_violations(activity: dict, base_schema: dict) -> tuple[bool, li
         all_fixes.extend(fixer(activity))
     elif activity_type in ('quiz', 'select'):
         all_fixes.extend(fix_quiz_select_items(activity, activity_type))
+
+    # Always run quiz answer field fix for quiz/select
+    if activity_type in ('quiz', 'select'):
+        all_fixes.extend(fix_quiz_answer_field(activity))
 
     if activity_type == 'select':
         all_fixes.extend(fix_select_property_renames(activity))

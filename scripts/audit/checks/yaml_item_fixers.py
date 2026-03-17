@@ -139,6 +139,26 @@ def fix_quiz_select_items(activity: dict, activity_type: str) -> list[str]:
     return fixes
 
 
+def fix_quiz_answer_field(activity: dict) -> list[str]:
+    """Fix: remove standalone 'answer' field from quiz items, mark matching option correct."""
+    fixes = []
+    if activity.get('type') not in ('quiz', 'select'):
+        return fixes
+    for i, item in enumerate(activity.get('items', [])):
+        if not isinstance(item, dict) or 'answer' not in item:
+            continue
+        answer_text = str(item['answer']).strip().lower()
+        # Mark the matching option as correct
+        for opt in item.get('options', []):
+            if isinstance(opt, dict) and str(opt.get('text', '')).strip().lower() == answer_text:
+                opt['correct'] = True
+                fixes.append(f"Marked correct option from 'answer' field in quiz item {i+1}")
+                break
+        del item['answer']
+        fixes.append(f"Removed standalone 'answer' field from quiz item {i+1}")
+    return fixes
+
+
 def fix_match_up_pairs(activity: dict) -> list[str]:
     """Fix 5c: Type coercion for match-up pairs."""
     fixes = []
@@ -311,4 +331,5 @@ TYPE_FIXERS = {
     'error-correction': fix_error_correction_items,
     'group-sort': fix_group_sort_groups,
     'classify': fix_classify_groups_to_categories,
+    'quiz-answer': fix_quiz_answer_field,
 }

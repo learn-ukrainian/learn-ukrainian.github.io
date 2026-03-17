@@ -1,7 +1,7 @@
 # Audit Report: M03 — consonant-sounds.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-17 20:00:30
+**Generated:** 2026-03-17 20:14:13
 
 ## Configuration
 **Type:** A1-grammar
