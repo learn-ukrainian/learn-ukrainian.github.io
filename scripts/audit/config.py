@@ -547,9 +547,9 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 LEVEL_CONFIG = {
     'A1': {
         'target_words': 1200,  # Mar 2026: lowered from 2000 — A1 teaches letters/basics, activities do the heavy lifting
-        'min_activities': 8,
+        'min_activities': 0,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
         'min_items_per_activity': 6,  # Mar 2026: aligned with ACTIVITY_COMPLEXITY per-type floors (6-8)
-        'min_types_unique': 4,
+        'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 3,
         'immersion_graduated': True,
@@ -558,9 +558,9 @@ LEVEL_CONFIG = {
     },
     'A2': {
         'target_words': 2000,  # Mar 2026: lowered from 3000 — prose should be concise at A2
-        'min_activities': 10,
+        'min_activities': 0,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
         'min_items_per_activity': 8,  # Feb 2026: relaxed from 12 — was stricter than B1-grammar (6)
-        'min_types_unique': 4,
+        'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 4,
         'immersion_graduated': True,  # Phase-based: A2.1 40-45%, A2.2 45-50%, A2.3 50-55%
@@ -569,9 +569,9 @@ LEVEL_CONFIG = {
     },
     'A1-checkpoint': {
         'target_words': 1000,  # Mar 2026: proportional to A1 base (1200)
-        'min_activities': 8,
+        'min_activities': 0,   # Mar 2026: dropped — quality over quantity (#969)
         'min_items_per_activity': 10,
-        'min_types_unique': 4,
+        'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: most vocab is review
         'min_engagement': 2,
         # NO immersion gate - comes naturally from practice
@@ -580,9 +580,9 @@ LEVEL_CONFIG = {
     },
     'A2-checkpoint': {
         'target_words': 1500,  # Mar 2026: proportional to A2 base (2000)
-        'min_activities': 10,
+        'min_activities': 0,   # Mar 2026: dropped — quality over quantity (#969)
         'min_items_per_activity': 10,
-        'min_types_unique': 4,
+        'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: most vocab is review
         'min_engagement': 3,
         # NO immersion gate - comes naturally from practice
@@ -592,7 +592,7 @@ LEVEL_CONFIG = {
     'B1-bridge': {
         # Bridge modules (M01-05) teach grammar metalanguage
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 4,   # Feb 2026: reduced — quality over quantity, 7 reliable types
+        'min_activities': 0,   # Mar 2026: dropped — plan activity_hints guide count, not audit gate (#969)
         'min_items_per_activity': 6,
         'min_types_unique': 3,
         'min_vocab': 20,  # Metalanguage vocabulary
@@ -603,7 +603,7 @@ LEVEL_CONFIG = {
     },
     'B1-grammar': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 4,   # Feb 2026: reduced — quality over quantity, 7 reliable types
+        'min_activities': 0,   # Mar 2026: dropped — plan activity_hints guide count, not audit gate (#969)
         'min_items_per_activity': 6,
         'min_types_unique': 3,
         'min_vocab': 25,  # Increased for grammar terminology
@@ -615,7 +615,7 @@ LEVEL_CONFIG = {
     },
     'B1-vocab': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 35,
@@ -627,7 +627,7 @@ LEVEL_CONFIG = {
     },
     'B1': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,
@@ -639,7 +639,7 @@ LEVEL_CONFIG = {
     },
     'B1-culture': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,
@@ -651,7 +651,7 @@ LEVEL_CONFIG = {
     },
     'B1-skills': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 10,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -663,7 +663,7 @@ LEVEL_CONFIG = {
     },
     'B1-checkpoint': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 10,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 10,
@@ -674,7 +674,7 @@ LEVEL_CONFIG = {
     },
     'B1-capstone': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 5,  # Reduced from 12 (Jan 2026) - capstone has 5-8 traditional activities + 5 tasks
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 10,
@@ -686,7 +686,7 @@ LEVEL_CONFIG = {
     },
     'B2-grammar': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,  # Increased for advanced grammar terminology
@@ -698,7 +698,7 @@ LEVEL_CONFIG = {
     },
     'B2-vocab': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 35,
@@ -710,7 +710,7 @@ LEVEL_CONFIG = {
     },
     'B2': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,
@@ -723,7 +723,7 @@ LEVEL_CONFIG = {
     'history': {
         # HIST Track: History seminar style
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -740,7 +740,7 @@ LEVEL_CONFIG = {
     },
     'B2-biography': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 10,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 14,
         'min_types_unique': 4,
         'min_vocab': 20,
@@ -752,7 +752,7 @@ LEVEL_CONFIG = {
     },
     'B2-checkpoint': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 15,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 14,
         'min_types_unique': 4,
         'min_vocab': 10,
@@ -766,7 +766,7 @@ LEVEL_CONFIG = {
         # Communication skills modules (M85-94: B2.4 phase)
         # Focus on practical language use in professional/real-world contexts
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 14,  # Higher than base B2 (practical scenarios need variety)
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 14,
         'min_types_unique': 5,  # Variety important for skills practice
         'min_vocab': 20,  # Context-specific vocabulary
@@ -780,7 +780,7 @@ LEVEL_CONFIG = {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
         # Focus on cross-era analysis and historical argumentation, not recall
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 14,  # Increased from 12 (Jan 2026) for consistency
         'min_types_unique': 4,
         'min_vocab': 20,  # Review vocabulary from covered modules
@@ -792,7 +792,7 @@ LEVEL_CONFIG = {
     },
     'B2-capstone': {
         'target_words': 4000,  # Raised from 2714 (Mar 2026) — module content needs expansion
-        'min_activities': 10,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Kept at 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 10,
@@ -806,7 +806,7 @@ LEVEL_CONFIG = {
         # B2-PRO Professional Track (M01-40) - Seminar style
         # ESP (English for Specific Purposes adapted for Ukrainian)
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -821,7 +821,7 @@ LEVEL_CONFIG = {
     },
     'C1': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 25,
@@ -833,7 +833,7 @@ LEVEL_CONFIG = {
     },
     'C1-academic': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 24,
@@ -847,7 +847,7 @@ LEVEL_CONFIG = {
         # C1-PRO Professional Mastery Track (M01-50) - Seminar style
         # ESP + CLIL approach for executives, academics, specialists
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -862,7 +862,7 @@ LEVEL_CONFIG = {
     },
     'C1-stylistics': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 24,
@@ -874,7 +874,7 @@ LEVEL_CONFIG = {
     },
     'C1-folk': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 24,
@@ -889,7 +889,7 @@ LEVEL_CONFIG = {
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: biographical analysis, legacy evaluation, era context
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
@@ -909,7 +909,7 @@ LEVEL_CONFIG = {
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: historical analysis, source criticism, historiographical debate
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
@@ -926,7 +926,7 @@ LEVEL_CONFIG = {
     },
     'C1-literature': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 24,
@@ -938,7 +938,7 @@ LEVEL_CONFIG = {
     },
     'C1-checkpoint': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 14,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 14,
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -950,7 +950,7 @@ LEVEL_CONFIG = {
     },
     'C1-capstone': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -963,7 +963,7 @@ LEVEL_CONFIG = {
     'C2': {
         # C2 Track: Seminar style - production-focused
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -979,7 +979,7 @@ LEVEL_CONFIG = {
     'C2-stylistic': {
         # C2 Stylistic Track: Seminar style - style mastery
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -995,7 +995,7 @@ LEVEL_CONFIG = {
     'C2-literary': {
         # C2 Literary Track: Seminar style - literary production
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1011,7 +1011,7 @@ LEVEL_CONFIG = {
     'C2-professional': {
         # C2 Professional Track: Seminar style - professional mastery
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1026,7 +1026,7 @@ LEVEL_CONFIG = {
     },
     'C2-checkpoint': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -1037,7 +1037,7 @@ LEVEL_CONFIG = {
     },
     'C2-capstone': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -1052,7 +1052,7 @@ LEVEL_CONFIG = {
         # Activities: reading + essay-response + critical-analysis + comparative-study
         # NO traditional activities (quiz, match-up, fill-in)
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient
         'min_types_unique': 2,
@@ -1069,7 +1069,7 @@ LEVEL_CONFIG = {
     'LIT-ESSAY': {
         # Essay/non-fiction track: longer analytical pieces
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1085,7 +1085,7 @@ LEVEL_CONFIG = {
     'LIT-HIST-FIC': {
         # Historical fiction: narrative analysis focus
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1101,7 +1101,7 @@ LEVEL_CONFIG = {
     'LIT-FANTASTIKA': {
         # Sci-fi/fantasy: genre analysis
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1117,7 +1117,7 @@ LEVEL_CONFIG = {
     'LIT-WAR': {
         # War literature: urgent, contemporary focus
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1133,7 +1133,7 @@ LEVEL_CONFIG = {
     'LIT-HUMOR': {
         # Humor/satire
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1149,7 +1149,7 @@ LEVEL_CONFIG = {
     'LIT-YOUTH': {
         # Children's/YA lit
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1165,7 +1165,7 @@ LEVEL_CONFIG = {
     'LIT-DOC': {
         # Fact & Testimony
         'target_words': 5000,
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1181,7 +1181,7 @@ LEVEL_CONFIG = {
     'LIT-DRAMA': {
         # Modern Stage
         'target_words': 5000,
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1197,7 +1197,7 @@ LEVEL_CONFIG = {
     'LIT-CRIMEA': {
         # Crimean Voices
         'target_words': 5000,
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1214,7 +1214,7 @@ LEVEL_CONFIG = {
         # OES Track: Historical Linguistics (post-B2)
         # Source: Gemini Research ISSUE-490, ISSUE-491, ISSUE-492, ISSUE-501
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 6,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
@@ -1238,7 +1238,7 @@ LEVEL_CONFIG = {
         # RUTH Track: Ruthenian/Middle Ukrainian (post-B2)
         # Source: Gemini Research ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 6,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 3,
@@ -1266,7 +1266,7 @@ LEVEL_CONFIG = {
         # Activities: reading + essay-response (shorter) + critical-analysis + true-false (factual)
         # Easier than LIT: shorter essays, some factual checks allowed
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
@@ -1286,7 +1286,7 @@ LEVEL_CONFIG = {
         # Activities: reading + essay-response (full) + critical-analysis + comparative-study
         # Academic rigor: longer essays, source criticism, historiographical analysis
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 3,
+        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
         'min_types_unique': 2,
