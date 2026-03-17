@@ -1,0 +1,38 @@
+# Module Friction Log: M06 stress-and-intonation
+
+frictions:
+  - id: m06-001
+    status: active
+    type: structural
+    description: >
+      Only 4 activities (needs 8+). Missing activity types: watch-and-repeat,
+      classify, anagram, unjumble. Must rebuild from activities phase.
+    source: "M06 audit — activities gate 4/8"
+    date_added: "2026-03-17"
+
+  - id: m06-002
+    status: active
+    type: structural
+    description: >
+      YAML schema violation: bare string 'за́мок' instead of activity object.
+      Fix YAML structure.
+    source: "M06 audit — pedagogy gate"
+    date_added: "2026-03-17"
+
+  - id: m06-003
+    status: active
+    type: linguistic
+    description: >
+      Wrong stress: далеко́ should be дале́ко.
+    source: "Stress verification tool"
+    date_added: "2026-03-17"
+
+  - id: m06-004
+    status: active
+    type: structural
+    description: >
+      Review-fix claimed "all audit gates should pass cleanly" when they
+      don't — 4/8 activities is a clear fail. Review-fix prompt must
+      actually check audit gates, not self-declare success.
+    source: "M06 review result vs audit comparison"
+    date_added: "2026-03-17"

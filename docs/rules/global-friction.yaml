@@ -1,0 +1,75 @@
+# Global Friction Log — project-wide linguistic and pedagogical constraints
+# These apply to ALL modules across ALL tracks.
+# Source: adversarial review findings that are universal, not module-specific.
+#
+# Schema:
+#   id: unique identifier (gf-NNN)
+#   status: active | resolved
+#   type: linguistic | pedagogical | structural
+#   description: what the constraint is
+#   source: where this was discovered (issue/module/review)
+#   date_added: ISO date
+
+frictions:
+  - id: gf-001
+    status: active
+    type: linguistic
+    description: >
+      сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it
+      as an error. Phonetic syllabification (се-стра) and typographic word
+      division (сес-тра) follow different rules — both are correct in their
+      respective contexts.
+    source: "M05 review (syllables-and-word-division) — #969"
+    date_added: "2026-03-17"
+
+  - id: gf-002
+    status: active
+    type: linguistic
+    description: >
+      Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий
+      долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is
+      a valid phonetics technique but must NOT be attributed to Ukrainian
+      textbooks. Source: Кравцова 2019, Grade 2, p.39.
+    source: "M03 review (consonant-sounds) — #969"
+    date_added: "2026-03-17"
+
+  - id: gf-003
+    status: active
+    type: pedagogical
+    description: >
+      A1.1 modules (M01-M14) must NOT contain conjugated verbs. Fixed chunks
+      like "дякую", "будь ласка", "до побачення" are exempt as memorized
+      phrases. Verbs are formally introduced at M15.
+    source: "M04 review (completing-the-alphabet) — #969"
+    date_added: "2026-03-17"
+
+  - id: gf-004
+    status: active
+    type: linguistic
+    description: >
+      Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word
+      meaning "grey" — the correct form is "сірий". Use verified minimal
+      pairs only: кит/кіт, бити/біти, лис/ліс.
+    source: "M02 review (vowel-sounds) — #969"
+    date_added: "2026-03-17"
+
+  - id: gf-005
+    status: active
+    type: linguistic
+    description: >
+      All stress marks must be verified against the ukrainian-word-stress
+      dictionary. Common errors: яйце́ (not я́йце), молоко́ (not моло́ко),
+      їжа́к (not ї́жак), дале́ко (not далеко́), при́голосні (not приголо́сні).
+    source: "Stress verification tool — #961"
+    date_added: "2026-03-17"
+
+  - id: gf-006
+    status: active
+    type: pedagogical
+    description: >
+      Activity distractors/options must be real Ukrainian words verified
+      against VESUM. Do NOT use misspelled words (м'асо, мьясо) or
+      Russianisms (СОК, СОЛ) as distractors — they cause negative transfer
+      and fail VESUM validation.
+    source: "M01/M04 reviews — #969"
+    date_added: "2026-03-17"
