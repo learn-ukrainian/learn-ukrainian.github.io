@@ -92,10 +92,10 @@ activity_hints:
   focus: Complete with correct accusative
   items: 20
 connects_to:
-- a1-28 (The Locative)
+- a1-28 (Accusative Prepositions)
 - a1-49 (My Family)
 prerequisites:
-- a1-11 (The Accusative I - Things)
+- a1-26 (The Accusative I: Things)
 persona:
   voice: Patient Supportive Tutor
   role: HR Recruiter

@@ -105,7 +105,7 @@ activity_hints:
   focus: "Complete letter openings — Дорога ___! Шановний ___!"
   items: 6
 connects_to:
-- a1-26 (The Accusative I)
+- a1-26 (The Accusative I: Things)
 prerequisites:
 - a1-08 (Greetings and Politeness)
 - a1-24 (Checkpoint: Sentences)

@@ -85,10 +85,9 @@ activity_hints:
   focus: Label locations in pictures
   items: 15
 connects_to:
-- a1-20 (Mine and Yours)
-- a1-29 (Around the City)
+- a1-30 (Around the City)
 prerequisites:
-- a1-26 (The Accusative II)
+- a1-28 (Accusative Prepositions)
 persona:
   voice: Patient Supportive Tutor
   role: Kyiv City Guide

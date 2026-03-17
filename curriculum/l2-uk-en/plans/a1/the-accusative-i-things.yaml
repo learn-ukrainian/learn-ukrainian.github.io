@@ -80,10 +80,9 @@ activity_hints:
   focus: Identify correct case
   items: 15
 connects_to:
-- 'a1-26 (The Accusative II: People)'
-- a1-39 (Food and Drink)
+- a1-27 (The Accusative II: People)
 prerequisites:
-- 'a1-14 (Checkpoint: First Contact)'
+- a1-25 (The Vocative)
 persona:
   voice: Patient Supportive Tutor
   role: Logistics Expert

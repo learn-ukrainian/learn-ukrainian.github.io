@@ -80,10 +80,9 @@ activity_hints:
   focus: I don't have... conversations
   items: 6
 connects_to:
-- a1-22 (Numbers and Money)
-- a1-39 (Food and Drink)
+- a1-32 (Genitive Prepositions)
 prerequisites:
-- a1-29 (Around the City)
+- a1-30 (Around the City)
 persona:
   voice: Patient Supportive Tutor
   role: Inventory Specialist

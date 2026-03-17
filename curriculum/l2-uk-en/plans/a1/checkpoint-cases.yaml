@@ -74,7 +74,7 @@ activity_hints:
 connects_to:
 - a1-35 (Direction and Origin)
 prerequisites:
-- a1-33 (Prepositions of Place)
+- a1-33 (Adjective Case Forms)
 persona:
   voice: Patient Supportive Tutor
   role: City Navigator

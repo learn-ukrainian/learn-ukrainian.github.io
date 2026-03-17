@@ -83,11 +83,9 @@ activity_hints:
   focus: Place → description
   items: 15
 connects_to:
-- a1-32 (The Genitive I)
-- a1-57 (Taking Transport)
+- a1-31 (The Genitive I: Absence)
 prerequisites:
-- a1-28 (The Locative)
-- a1-20 (Mine and Yours)
+- a1-29 (The Locative)
 persona:
   voice: Patient Supportive Tutor
   role: Taxi Driver

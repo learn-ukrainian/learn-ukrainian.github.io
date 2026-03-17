@@ -75,9 +75,9 @@ activity_hints:
   focus: Reorder direction sentences
   items: 6
 connects_to:
-- a1-28 (The Locative)
+- a1-29 (The Locative)
 prerequisites:
-- a1-26 (The Accusative II)
+- a1-27 (The Accusative II: People)
 persona:
   voice: Patient Supportive Tutor
   role: Travel Agent

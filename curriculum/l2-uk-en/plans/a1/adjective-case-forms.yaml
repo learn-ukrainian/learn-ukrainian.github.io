@@ -77,9 +77,9 @@ activity_hints:
   focus: Check adjective-noun agreement correctness
   items: 8
 connects_to:
-- a1-31 (Pronoun Declension)
+- a1-34 (Checkpoint: Cases)
 prerequisites:
-- a1-29 (Around the City)
+- a1-32 (Genitive Prepositions)
 persona:
   voice: Patient Supportive Tutor
   role: Fashion Advisor

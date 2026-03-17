@@ -84,9 +84,9 @@ activity_hints:
   focus: Evaluate location statements for correctness
   items: 8
 connects_to:
-- a1-34 (Checkpoint Cases)
+- a1-33 (Adjective Case Forms)
 prerequisites:
-- a1-32 (The Genitive I)
+- a1-31 (The Genitive I: Absence)
 persona:
   voice: Patient Supportive Tutor
   role: City Cartographer
