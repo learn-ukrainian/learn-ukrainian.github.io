@@ -68,7 +68,7 @@ def _build_ctx(args: argparse.Namespace) -> ModuleContext:
 
     # Resolve writer/reviewer models
     writer_model = _resolve_model(args.writer) if args.writer else track_config.get("model", "gemini-3-flash-preview")
-    reviewer_model = _resolve_model(args.reviewer) if args.reviewer else "gemini-3.1-pro-preview"
+    reviewer_model = _resolve_model(args.reviewer) if args.reviewer else _auto_reviewer(writer_model)
 
     ctx = ModuleContext(
         track=track,
@@ -111,6 +111,13 @@ _MODEL_ALIASES = {
 def _resolve_model(name: str) -> str:
     """Resolve model alias to actual model ID."""
     return _MODEL_ALIASES.get(name.lower(), name)
+
+
+def _auto_reviewer(writer_model: str) -> str:
+    """Pick the opposite agent's strong model as reviewer."""
+    if writer_model.startswith("claude"):
+        return "gemini-3.1-pro-preview"
+    return "claude-opus-4-6"
 
 
 def main() -> int:
