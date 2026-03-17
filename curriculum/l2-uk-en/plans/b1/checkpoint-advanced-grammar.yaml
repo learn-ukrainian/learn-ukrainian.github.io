@@ -1,6 +1,6 @@
-module: b1-055
+module: b1-056
 level: B1
-sequence: 55
+sequence: 56
 slug: checkpoint-advanced-grammar
 version: '2.0'
 title: 'Контрольна точка: Просунута граматика'
@@ -96,9 +96,9 @@ activity_hints:
   focus: Write integrated paragraphs
   items: 10
 connects_to:
-- 'b1-63 (Абстрактні концепції: ідеї та думки)'
+- 'b1-66 (Абстрактні концепції: ідеї та думки)'
 prerequisites:
-- b1-54 (Інтегрована граматична лабораторія)
+- b1-55 (Інтегрована граматична лабораторія)
 persona:
   voice: Senior Language & Culture Specialist
   role: University Philologist

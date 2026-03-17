@@ -1,6 +1,6 @@
-module: b2-060
+module: b2-064
 level: B2
-sequence: 60
+sequence: 64
 slug: idioms-somatic
 version: '2.0'
 title: 'Соматичні фразеологізми: Голова, обличчя, руки, ноги, тіло'
@@ -86,9 +86,9 @@ activity_hints:
 - type: essay-response
   focus: Use 5+ idioms in a coherent paragraph
 connects_to:
-- b2-61 (Idioms Animals)
+- b2-65 (Idioms Animals)
 prerequisites:
-- b2-59 (Set Expressions Combined)
+- b2-63 (Set Expressions Combined)
 persona:
   voice: Professional Language Coach
   role: Portrait Painter (Портретист)

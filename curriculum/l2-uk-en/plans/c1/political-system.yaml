@@ -2,7 +2,7 @@ module: c1-025
 level: C1
 sequence: 25
 slug: political-system
-version: '2.0'
+version: '3.0'
 title: Політична система України
 subtitle: 'Introduction: State System and Constitution'
 content_outline:
@@ -35,6 +35,17 @@ content_outline:
   - 'Реформа децентралізації: створення об''єднаних територіальних громад (ОТГ) як ключовий етап модернізації управління на
     місцях.'
   - 'Місцеве самоврядування: повноваження громад, місцеві вибори та питання фінансової децентралізації.'
+- section: 'Геополітична лексика та міжнародні інституції (Geopolitical Vocabulary and International Institutions)'
+  words: 300
+  points:
+  - 'Дипломатична мова: ноти протесту, меморандуми, ультиматуми, санкції — офіційний регістр міжнародних відносин та типові колокації
+    (запровадити/зняти санкції, висловити протест)'
+  - 'Міжнародні організації: ООН (Організація Об''єднаних Націй), ЄС (Європейський Союз), НАТО (Північноатлантичний Альянс), ОБСЄ,
+    Рада Європи, Міжнародний кримінальний суд — абревіатури та повні назви українською'
+  - 'Зовнішньополітична термінологія: дипломатичні відносини, територіальна цілісність, суверенітет, анексія, окупація, деокупація,
+    миротворча місія — лексика актуального геополітичного контексту України'
+  - 'Конструкції офіційних заяв: «рішуче засуджуємо», «закликаємо до», «вимагаємо негайного», «висловлюємо глибоке занепокоєння»
+    — кліше дипломатичного стилю'
 - section: Практичний аналіз та мовна компетенція (Practical Analysis and Language Competency)
   words: 700
   points:
@@ -64,6 +75,9 @@ vocabulary_hints:
   - імпічмент (impeachment) — процедура імпічменту; правовий термін
   - 'вето (veto) — накласти вето, подолати вето; частотність: середня'
   - референдум (referendum) — загальнонаціональний референдум; засіб прямої демократії
+  - санкція (sanction) — запровадити/зняти санкції, пакет санкцій; geopolitical term
+  - суверенітет (sovereignty) — державний суверенітет, порушення суверенітету; international law term
+  - територіальна цілісність (territorial integrity) — принцип територіальної цілісності; fundamental geopolitical concept
 activity_hints:
 - type: quiz
   focus: Political system structure
@@ -107,14 +121,16 @@ phase: C1.2 [Professional Communication]
 objectives:
 - Learner can use appropriate language for Законодавча влада та Парламентаризм
 - Learner can produce professional texts in the domain of Політична система України
+- Learner can use diplomatic vocabulary and international institution terminology in Ukrainian
 - Learner can evaluate and correct register in Державний устрій та Конституція contexts
 persona:
   voice: Senior Specialist
   role: Політичний оглядач
-word_target: 4000
+word_target: 4300
 grammar:
 - Державний устрій та Конституція
 - Законодавча влада та Парламентаризм
 - Виконавча влада та інститут президентства
 - Судова система та Децентралізація
+- Геополітична лексика та міжнародні інституції
 register: літературний

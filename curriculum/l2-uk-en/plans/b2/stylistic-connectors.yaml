@@ -112,8 +112,8 @@ activity_hints:
   focus: Write argumentative paragraph using varied connectors
   output: Model answer provided
 connects_to:
-- b2-25 (Register Introduction)
-- 'b2-30 (Register: Literary Ukrainian)'
+- b2-28 (Register Introduction)
+- 'b2-33 (Register: Literary Ukrainian)'
 - b2-24 (Checkpoint Syntax)
 prerequisites:
 - b2-18 (Multi-clause Sentences)

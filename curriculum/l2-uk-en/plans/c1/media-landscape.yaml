@@ -2,7 +2,7 @@ module: c1-026
 level: C1
 sequence: 26
 slug: media-landscape
-version: '2.0'
+version: '3.0'
 title: 'Медіаландшафт: Як не потонути в інформації'
 subtitle: 'Introduction: The Role of Media in Modern Society'
 content_outline:
@@ -41,6 +41,17 @@ content_outline:
   - 'Практичний аналіз новинних статей за структурою тексту (§4.4.4): заголовки, ліди, бекграунд та цитування.'
   - 'Верифікація інформації: алгоритм перевірки достовірності новини перед поширенням (фактчекінг).'
   - Порівняльний аналіз висвітлення однієї події різними медіа-ресурсами для виявлення маніпулятивних прийомів.
+- section: 'Геополітична медіааналітика: Міжнародні новини (Geopolitical Media Analysis: International News)'
+  words: 300
+  points:
+  - 'Міжнародна новинна термінологія: кореспондент, спецкореспондент, репортаж із зони бойових дій, ексклюзив, брифінг, прес-конференція
+    — лексика міжнародної журналістики'
+  - 'Мова конфліктного репортажу: обстріл, ракетний удар, евакуація, гуманітарний коридор, перемир''я, деескалація — точна термінологія
+    замість емоційних кліше'
+  - 'Аналіз міжнародних ЗМІ про Україну: порівняння висвітлення подій у BBC, Deutsche Welle, Укрінформ — виявлення фреймів та
+    наративів'
+  - 'Learner error: «конфлікт» vs «війна» vs «вторгнення» — семантична точність у контексті російсько-української війни, уникнення
+    евфемізмів пропаганди'
 - section: Свобода слова в умовах війни (Freedom of Speech in Wartime Conditions)
   words: 550
   points:
@@ -66,6 +77,9 @@ vocabulary_hints:
   - клікбейт (clickbait) — маніпулятивний заголовок для залучення уваги; лексика соцмереж.
   - верифікація (verification) — процес перевірки даних на відповідність дійсності.
   - першоджерело (primary source) — оригінальний документ або пряме свідчення події.
+  - кореспондент (correspondent) — спеціальний кореспондент, воєнний кореспондент; international journalism.
+  - вторгнення (invasion) — повномасштабне вторгнення; precise terminology for Russia's war against Ukraine.
+  - деескалація (de-escalation) — деескалація конфлікту; international relations and conflict reporting.
 activity_hints:
 - type: quiz
   focus: Media literacy concepts
@@ -108,11 +122,12 @@ phase: C1.2 [Professional Communication]
 objectives:
 - Learner can use appropriate language for Структура власності та типи медіа
 - Learner can produce professional texts in the domain of Медіаландшафт: Як не потонути в інформації
+- Learner can analyze international news coverage using geopolitical media vocabulary
 - Learner can evaluate and correct register in Роль медіа в сучасному суспільстві contexts
 persona:
   voice: Senior Specialist
   role: Медіа-експерт
-word_target: 4000
+word_target: 4300
 grammar:
 - Роль медіа в сучасному суспільстві
 - Структура власності та типи медіа

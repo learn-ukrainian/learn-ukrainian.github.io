@@ -1,0 +1,99 @@
+module: b2-025
+level: B2
+sequence: 25
+slug: phonetic-stylistic-devices
+version: '1.0'
+title: 'Фонетичні стилістичні засоби'
+subtitle: 'Alliteration, Assonance, and Onomatopoeia'
+focus: grammar
+pedagogy: PPP
+phase: 'B2.2b [Stylistic Foundations]'
+word_target: 4000
+objectives:
+  - Learner can identify alliteration, assonance, and onomatopoeia in Ukrainian literary and media texts
+  - Learner can explain the communicative and aesthetic effects of phonetic stylistic devices
+  - Learner can produce original sentences and short texts using phonetic devices for emphasis and imagery
+  - Learner can distinguish phonetic devices from accidental sound repetition in authentic texts
+content_outline:
+  - section: 'Вступ: Звукова організація мовлення (Introduction: Sound Organization of Speech)'
+    words: 600
+    points:
+      - 'Роль звукопису у створенні художньої виразності: від народних замовлянь до сучасної поезії'
+      - 'Різниця між фонетичними засобами та випадковим повторенням звуків: критерії системності та авторського задуму'
+      - 'Зв''язок із Держстандартом (§4.4): фонетичні засоби як складова стилістичної компетенції на рівні B2'
+  - section: 'Алітерація: повторення приголосних (Alliteration: Consonant Repetition)'
+    words: 800
+    points:
+      - 'Визначення та механізм дії: повторення однакових або подібних приголосних на початку слів або у наголошених складах'
+      - 'Ефекти алітерації: твердість (р, д, т), м''якість (л, н, м), шиплячі для тривоги (ш, щ, ж)'
+      - 'Аналіз прикладів із Шевченка, Лесі Українки, Ліни Костенко: конкретні рядки з розбором звукових ефектів'
+      - 'Алітерація в сучасних медіа: заголовки новин, рекламні слогани, назви брендів'
+  - section: 'Асонанс: повторення голосних (Assonance: Vowel Repetition)'
+    words: 700
+    points:
+      - 'Визначення та відмінність від рими: повторення голосних у серединах слів для створення мелодійності'
+      - 'Українська специфіка: багатство голосних (а, о, у, е, и, і) та їхні емоційні конотації'
+      - 'Аналіз народних пісень та колискових: асонанс як засіб гіпнотичного ритму'
+      - 'Практичне розпізнавання: вправи на виділення асонансних ланцюжків у поетичних уривках'
+  - section: 'Ономатопея: звуконаслідування (Onomatopoeia: Sound Imitation)'
+    words: 800
+    points:
+      - 'Звуконаслідувальні слова в українській мові: шелестіти, дзвеніти, гуркотіти, цвірінькати, гавкати'
+      - 'Морфологія ономатопей: творення дієслів від звуконаслідувальних основ (бух → бухати, тук → тукати)'
+      - 'Порівняння з англійськими ономатопеями: українські звуконаслідування як дзеркало національного сприйняття звуку'
+      - 'Ономатопея в дитячій літературі та фольклорі: забавлянки, лічилки, казки'
+  - section: 'Комбіновані фонетичні засоби в тексті (Combined Phonetic Devices in Text)'
+    words: 700
+    points:
+      - 'Взаємодія алітерації та асонансу: створення звукового образу (звукопис) у поетичному тексті'
+      - 'Евфонія та какофонія: свідоме створення милозвучності або дисгармонії для стилістичного ефекту'
+      - 'Аналіз фрагмента прози: розбір звукових засобів у прозовому тексті (Коцюбинський, Стефаник)'
+  - section: 'Практикум: Розпізнавання та творення (Workshop: Recognition and Creation)'
+    words: 400
+    points:
+      - 'Аналіз автентичних текстів: визначення фонетичних засобів та оцінювання їхнього стилістичного ефекту'
+      - 'Творче завдання: написання короткого поетичного опису з використанням усіх трьох фонетичних засобів'
+      - 'Підготовка до наступного модуля: як фонетичні засоби взаємодіють із лексичними стилістичними засобами'
+vocabulary_hints:
+  required:
+    - 'алітерація (alliteration) — повторення приголосних звуків; термін стилістики'
+    - 'асонанс (assonance) — повторення голосних звуків; засіб мелодійності'
+    - 'ономатопея (onomatopoeia) — звуконаслідування; відтворення природних звуків'
+    - 'звукопис (sound painting) — комплексне використання фонетичних засобів для створення образу'
+    - 'евфонія (euphony) — милозвучність; гармонійне поєднання звуків'
+    - 'какофонія (cacophony) — дисгармонія звуків; навмисна немилозвучність'
+  recommended:
+    - 'шелестіти (to rustle) — звуконаслідувальне дієслово'
+    - 'дзвеніти (to ring/jingle) — звуконаслідувальне дієслово'
+    - 'гуркотіти (to rumble/thunder) — звуконаслідувальне дієслово'
+    - 'цвірінькати (to chirp) — звуконаслідувальне дієслово'
+    - 'мелодійність (melodiousness) — якість звучання мовлення'
+activity_hints:
+  - type: quiz
+    focus: Identify phonetic devices in literary excerpts
+    items: 12
+  - type: fill-in
+    focus: Complete sentences with appropriate onomatopoeic verbs
+    items: 10
+  - type: match-up
+    focus: Match phonetic device type to literary example
+    items: 12
+  - type: group-sort
+    focus: Classify examples by alliteration, assonance, or onomatopoeia
+    items: 12
+  - type: error-correction
+    focus: Identify misused or misidentified phonetic devices
+    items: 8
+  - type: essay-response
+    focus: Write a descriptive paragraph using at least two phonetic devices
+prerequisites:
+  - checkpoint-syntax
+connects_to:
+  - lexical-stylistic-devices
+  - register-literary-ukrainian
+grammar:
+  - alliteration patterns
+  - assonance patterns
+  - onomatopoeic word formation
+  - sound symbolism
+register: літературний

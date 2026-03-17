@@ -1,6 +1,6 @@
-module: b1-071
+module: b1-074
 level: B1
-sequence: 71
+sequence: 74
 slug: society-politics
 version: '2.0'
 title: Суспільство та політика
@@ -96,7 +96,7 @@ activity_hints:
 connects_to:
 - b1-72 (Професійна комунікація)
 prerequisites:
-- b1-70 (Медіа та новини)
+- b1-73 (Медіа та новини)
 persona:
   voice: Senior Language & Culture Specialist
   role: Political Analyst

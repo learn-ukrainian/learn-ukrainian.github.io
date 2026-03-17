@@ -1,6 +1,6 @@
-module: c2-067
+module: c2-068
 level: C2
-sequence: 67
+sequence: 68
 slug: ekonomika-i-dobrobut
 version: '2.0'
 title: Економіка і добробут
@@ -134,12 +134,12 @@ activity_hints:
   focus: Заповнення пропусків економічною лексикою в аналітичних текстах
   items: 12
 connects_to:
-- c2-065 (Society & Citizenship — social inequality and reform discourse)
-- c2-066 (Foreign Policy & Diaspora — economic dimensions of migration)
+- c2-066 (Society & Citizenship — social inequality and reform discourse)
+- c2-067 (Foreign Policy & Diaspora — economic dimensions of migration)
 - c2-022 (Practical Rhetoric — argumentation for economic policy debates)
 - c2-029 (Writing Literary Essays — analytical writing applied to economic topics)
 prerequisites:
-- c2-065 (Society & Citizenship)
+- c2-066 (Society & Citizenship)
 persona:
   voice: Senior Specialist
   role: Economic Analyst

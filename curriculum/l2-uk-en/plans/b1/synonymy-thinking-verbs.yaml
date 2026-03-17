@@ -1,6 +1,6 @@
-module: b1-058
+module: b1-061
 level: B1
-sequence: 58
+sequence: 61
 slug: synonymy-thinking-verbs
 version: '2.0'
 title: 'Синонімія I: Дієслова мислення'
@@ -94,7 +94,7 @@ activity_hints:
   focus: Express thoughts precisely
   items: 10
 connects_to:
-- 'b1-59 (Синоніми II: дієслова мовлення)'
+- 'b1-62 (Синоніми II: дієслова мовлення)'
 prerequisites:
 - b1-78 (Подорожі та географія)
 persona:

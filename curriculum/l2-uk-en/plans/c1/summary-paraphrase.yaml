@@ -2,7 +2,7 @@ module: c1-011
 level: C1
 sequence: 11
 slug: summary-paraphrase
-version: '2.0'
+version: '2.1'
 title: Резюме та парафраз
 subtitle: 'Introduction: The Art of Retelling'
 content_outline:
@@ -16,6 +16,10 @@ content_outline:
     ''стислий'' (concise) types.'
   - 'Role in academic writing: Following the State Standard §1.3.1.1 for using tools
     of indirect speech (іномовлення) to create secondary texts.'
+  - 'Three distinct secondary text types in Ukrainian academia: анотація (brief abstract
+    describing content), реферат (detailed summary preserving source logic), and рецензія
+    (critical evaluation with judgment) — each has its own structure, register, and purpose;
+    this module focuses on the first two, while рецензія is treated in c1-19.'
 - section: Техніки резюмування та анотування (Summarizing and Abstracting Techniques)
   words: 800
   points:

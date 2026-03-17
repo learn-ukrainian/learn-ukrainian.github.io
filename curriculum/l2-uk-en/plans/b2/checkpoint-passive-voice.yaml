@@ -120,7 +120,7 @@ activity_hints:
   output: Self-evaluate against rubric
 connects_to:
 - b2-18 (Multi-clause Sentences)
-- b2-25 (Register Introduction)
+- b2-28 (Register Introduction)
 - b2-24 (Checkpoint Syntax)
 prerequisites:
 - b2-01 through b2-09 (all passive voice modules)

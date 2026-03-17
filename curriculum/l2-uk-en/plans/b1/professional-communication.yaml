@@ -1,6 +1,6 @@
-module: b1-072
+module: b1-075
 level: B1
-sequence: 72
+sequence: 75
 slug: professional-communication
 version: '2.0'
 title: Професійна комунікація
@@ -114,7 +114,7 @@ activity_hints:
 connects_to:
 - b1-73 (Довкілля та екологія)
 prerequisites:
-- b1-71 (Суспільство та політика)
+- b1-74 (Суспільство та політика)
 persona:
   voice: Senior Language & Culture Specialist
   role: Corporate HR Manager

@@ -1,6 +1,6 @@
-module: b1-059
+module: b1-062
 level: B1
-sequence: 59
+sequence: 62
 slug: synonymy-speaking-verbs
 version: '2.0'
 title: 'Синоніми II: дієслова мовлення'
@@ -84,9 +84,9 @@ activity_hints:
   focus: Report dialogues
   items: 10
 connects_to:
-- b1-62 (Колокації та вирази)
+- b1-65 (Колокації та вирази)
 prerequisites:
-- 'b1-58 (Синонімія I: Дієслова мислення)'
+- 'b1-61 (Синонімія I: Дієслова мислення)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Theater Actor

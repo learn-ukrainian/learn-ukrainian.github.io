@@ -1,6 +1,6 @@
-module: b2-043
+module: b2-046
 level: B2
-sequence: 43
+sequence: 46
 slug: conditional-mood-particles
 version: '2.0'
 title: Умовний спосіб, частки та вигуки
@@ -98,9 +98,9 @@ activity_hints:
   focus: Аналіз функції часток та вигуків в автентичних текстах
   items: 4
 connects_to:
-- b2-44 (Numeral Declension Time Dates)
+- b2-47 (Numeral Declension Time Dates)
 prerequisites:
-- b2-42 (Pluperfect Tense)
+- b2-45 (Pluperfect Tense)
 persona:
   voice: Professional Language Coach
   role: Linguist (Мовознавець)

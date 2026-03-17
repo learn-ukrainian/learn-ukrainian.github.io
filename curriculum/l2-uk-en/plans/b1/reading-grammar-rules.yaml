@@ -2,13 +2,13 @@ module: b1-003
 level: B1
 sequence: 3
 slug: reading-grammar-rules
-version: '2.0'
+version: '2.1'
 title: Читаємо граматичні правила
 subtitle: Understanding grammar explanations in Ukrainian
 focus: integration
 pedagogy: PPP
 phase: B1.0 Bridge
-word_target: 4000
+word_target: 4300
 objectives:
 - Learner can understand standard grammar explanation patterns
 - Learner can follow Ukrainian grammar instructions
@@ -72,6 +72,15 @@ content_outline:
     purity and standard language norms'
   - 'Word structure terms: «корінь», «префікс», «суфікс», «закінчення» — understanding the ''building blocks'' of Ukrainian
     words'
+- section: 'Скорочення та абревіатури (Abbreviations: §4.1.5)'
+  words: 300
+  points:
+  - 'Common textbook abbreviations: т. д. (і так далі), ін. (інші), напр. (наприклад), див. (дивіться), пор. (порівняйте)
+    — essential for reading grammar explanations and reference materials'
+  - 'Title and measurement abbreviations: проф. (професор), с. (сторінка), р. (рік), грн (гривня), м. (місто/метр) — frequent
+    in academic and official texts'
+  - 'Abbreviation punctuation rules: when to use periods (т. д.) vs when not (грн, км) — Ukrainian conventions differ from English'
+  - 'Acronyms vs abbreviations: МОН, ЗНО, ООН — how to read and decline acronyms in Ukrainian'
 - section: Практика та підсумок (Practice and Summary)
   words: 300
   points:

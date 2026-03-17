@@ -1,6 +1,6 @@
-module: b1-048
+module: b1-049
 level: B1
-sequence: 48
+sequence: 49
 slug: passive-constructions
 version: '2.0'
 title: 'Пасивні конструкції: повна система'
@@ -86,7 +86,7 @@ activity_hints:
   focus: Write using varied passives
   items: 10
 connects_to:
-- 'b1-52 (Демінутиви: майстер-клас)'
+- 'b1-53 (Демінутиви: майстер-клас)'
 prerequisites:
 - b1-46 (Past Passive Participles 2)
 persona:

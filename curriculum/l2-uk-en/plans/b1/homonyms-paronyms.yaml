@@ -1,6 +1,6 @@
-module: b1-061
+module: b1-064
 level: B1
-sequence: 61
+sequence: 64
 slug: homonyms-paronyms
 version: '2.0'
 title: Омоніми та пароніми
@@ -95,9 +95,9 @@ activity_hints:
   focus: Classify as homonym vs polysemy
   items: 10
 connects_to:
-- b1-62 (Collocations and Expressions)
+- b1-65 (Collocations and Expressions)
 prerequisites:
-- b1-60 (Antonyms and Polysemy)
+- b1-63 (Antonyms and Polysemy)
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher

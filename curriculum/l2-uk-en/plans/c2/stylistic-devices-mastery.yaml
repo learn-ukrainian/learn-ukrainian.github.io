@@ -2,7 +2,7 @@ module: c2-017
 level: C2
 sequence: 17
 slug: stylistic-devices-mastery
-version: '2.0'
+version: '2.1'
 title: Стилістичні засоби — Повне володіння
 subtitle: Introduction — Tropes & Figures in the Language System
 focus: stylistics
@@ -156,6 +156,9 @@ persona:
   role: Rhetorician
 prerequisites:
 - text-coherence
+- phonetic-stylistic-devices (B2 — фонетичні стилістичні засоби: алітерація, асонанс, ономатопея)
+- lexical-stylistic-devices (B2 — лексичні стилістичні засоби: метафора, метонімія, синекдоха, епітет, оксиморон)
+- syntactic-stylistic-devices (B2 — синтаксичні стилістичні засоби: анафора, епіфора, паралелізм, хіазм)
 grammar:
 - Вступ — Тропи та фігури в системі мови
 - від побутової мови до поетичного образу

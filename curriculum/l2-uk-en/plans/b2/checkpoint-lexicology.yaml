@@ -1,6 +1,6 @@
-module: b2-064
+module: b2-068
 level: B2
-sequence: 64
+sequence: 68
 slug: checkpoint-lexicology
 version: '2.0'
 title: 'Контрольна точка: лексикологія'
@@ -89,9 +89,9 @@ activity_hints:
 - type: essay-response
   focus: Integrative writing task combining all topics
 connects_to:
-- b2-65 (Professional Email Basics)
+- b2-69 (Professional Email Basics)
 prerequisites:
-- b2-63 (Neologisms Borrowings)
+- b2-67 (Neologisms Borrowings)
 persona:
   voice: Professional Language Coach
   role: Invigilator (Екзаменатор)

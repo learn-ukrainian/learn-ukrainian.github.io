@@ -1,6 +1,6 @@
-module: b1-062
+module: b1-065
 level: B1
-sequence: 62
+sequence: 65
 slug: collocations-expressions
 version: '2.0'
 title: Колокації та вирази
@@ -101,7 +101,7 @@ activity_hints:
 connects_to:
 - b1-79 (Емоційний інтелект та міжособистісні навички)
 prerequisites:
-- 'b1-59 (Синоніми II: дієслова мовлення)'
+- 'b1-62 (Синоніми II: дієслова мовлення)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Literary Translator

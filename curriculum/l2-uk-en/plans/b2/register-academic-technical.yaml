@@ -1,6 +1,6 @@
-module: b2-028
+module: b2-031
 level: B2
-sequence: 28
+sequence: 31
 slug: register-academic-technical
 version: '2.0'
 title: Науковий та науково-технічний стилі
@@ -109,9 +109,9 @@ activity_hints:
   focus: Зіставлення загальновживаних слів із їхніми науковими термінами-відповідниками
   items: 12
 connects_to:
-- b2-29 (Register Official Legal)
+- b2-32 (Register Official Legal)
 prerequisites:
-- b2-27 (Register Business Ukrainian)
+- b2-30 (Register Business Ukrainian)
 persona:
   voice: Professional Language Coach
   role: Research Supervisor (Науковий керівник)

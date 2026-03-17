@@ -1,6 +1,6 @@
-module: b1-079
+module: b1-082
 level: B1
-sequence: 79
+sequence: 82
 slug: emotional-intelligence
 version: '2.0'
 title: Емоційний інтелект та міжособистісні навички
@@ -101,7 +101,7 @@ activity_hints:
 connects_to:
 - 'b1-80 (Українські регіони: Захід)'
 prerequisites:
-- b1-62 (Колокації та вирази)
+- b1-65 (Колокації та вирази)
 persona:
   voice: Senior Language & Culture Specialist
   role: Conflict Mediator

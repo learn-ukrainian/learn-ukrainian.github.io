@@ -1,6 +1,6 @@
-module: b2-042
+module: b2-045
 level: B2
-sequence: 42
+sequence: 45
 slug: pluperfect-tense
 version: '2.0'
 title: Давноминулий час
@@ -103,9 +103,9 @@ activity_hints:
   focus: Match temporal sequence to correct tense pair
   items: 12
 connects_to:
-- b2-85 (B2 Final Exam)
+- b2-89 (B2 Final Exam)
 prerequisites:
-- b2-75 (Discussion & Debate)
+- b2-79 (Discussion & Debate)
 persona:
   voice: Professional Language Coach
   role: Literary Historian

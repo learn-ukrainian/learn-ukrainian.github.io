@@ -1,6 +1,6 @@
-module: b1-069
+module: b1-072
 level: B1
-sequence: 69
+sequence: 72
 slug: describing-changes
 version: '2.0'
 title: Опис змін
@@ -91,9 +91,9 @@ activity_hints:
   focus: Narrate trends
   items: 10
 connects_to:
-- b1-70 (Медіа та новини)
+- b1-73 (Медіа та новини)
 prerequisites:
-- 'b1-68 (Дискурсивні маркери II: складна організація)'
+- 'b1-71 (Дискурсивні маркери II: складна організація)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Climate Scientist

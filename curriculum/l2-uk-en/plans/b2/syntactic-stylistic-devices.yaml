@@ -1,0 +1,101 @@
+module: b2-027
+level: B2
+sequence: 27
+slug: syntactic-stylistic-devices
+version: '1.0'
+title: 'Синтаксичні стилістичні засоби'
+subtitle: 'Anaphora, Epistrophe, Parallelism, and Chiasmus'
+focus: grammar
+pedagogy: PPP
+phase: 'B2.2b [Stylistic Foundations]'
+word_target: 4000
+objectives:
+  - Learner can identify anaphora, epistrophe, parallelism, and chiasmus in Ukrainian literary and rhetorical texts
+  - Learner can explain the rhetorical and emotional effects of each syntactic device
+  - Learner can produce original sentences and short texts using syntactic stylistic devices
+  - Learner can analyze how syntactic devices interact with phonetic and lexical devices for cumulative effect
+content_outline:
+  - section: 'Вступ: Синтаксис як інструмент виразності (Introduction: Syntax as a Tool of Expressiveness)'
+    words: 500
+    points:
+      - 'Стилістичний синтаксис: як структура речення створює ритм, напруження та емоційний вплив'
+      - 'Класифікація синтаксичних фігур у Держстандарті: повтори, паралелізм, зміна порядку'
+      - 'Зв''язок із попередніми модулями: фонетичні + лексичні + синтаксичні засоби як єдина система виразності'
+  - section: 'Анафора: єдинопочаток (Anaphora: Repetition at the Beginning)'
+    words: 800
+    points:
+      - 'Визначення: повторення одного або кількох слів на початку суміжних речень, рядків, строф'
+      - 'Ефекти анафори: наростання емоції, ритмічність, переконливість (ораторський прийом)'
+      - 'Анафора у Шевченка: аналіз «Мені однаково» та інших текстів із систематичним єдинопочатком'
+      - 'Анафора в політичній та публіцистичній риториці: сучасні промови та маніфести'
+  - section: 'Епіфора та симплока (Epistrophe and Symploce)'
+    words: 700
+    points:
+      - 'Епіфора: повторення слів наприкінці суміжних речень або рядків (єдинозакінчення)'
+      - 'Симплока: поєднання анафори та епіфори — повторення і на початку, і в кінці'
+      - 'Стилістичні ефекти: кільцевість, завершеність думки, емфатичне підсилення'
+      - 'Приклади з української поезії та прози: Леся Українка, Олександр Олесь'
+  - section: 'Паралелізм: синтаксична симетрія (Parallelism: Syntactic Symmetry)'
+    words: 800
+    points:
+      - 'Визначення: побудова суміжних речень або частин за однаковою синтаксичною схемою'
+      - 'Повний та частковий паралелізм: ступені синтаксичної подібності'
+      - 'Паралелізм у народній пісні: зв''язок природи та людини (Ой у лузі червона калина..., Ой у полі...) '
+      - 'Паралелізм у науковому та діловому стилях: структурування аргументації'
+      - 'Антитеза як особливий вид паралелізму: протиставлення паралельних конструкцій'
+  - section: 'Хіазм: перехресна побудова (Chiasmus: Cross Structure)'
+    words: 600
+    points:
+      - 'Визначення: зворотний паралелізм (AB → BA), дзеркальна побудова фрази'
+      - 'Хіазм у латинській та українській риторичній традиції: від античності до сучасності'
+      - 'Приклади: «Не хлібом єдиним живе людина» vs «Людина живе не хлібом єдиним» — зміна акценту'
+      - 'Хіазм як інтелектуальна фігура: ефект парадоксу та запам''ятовуваності'
+  - section: 'Практикум: Комплексний аналіз та створення тексту (Workshop: Comprehensive Analysis and Text Creation)'
+    words: 600
+    points:
+      - 'Аналіз поетичного тексту: визначення всіх синтаксичних фігур та оцінка їх взаємодії'
+      - 'Аналіз ораторського тексту: як синтаксичні фігури створюють переконливість у промовах'
+      - 'Творче завдання: написання короткого промовного фрагмента з анафорою, паралелізмом та хіазмом'
+      - 'Підсумок стилістичного блоку: як три рівні засобів (фонетичні, лексичні, синтаксичні) працюють разом'
+vocabulary_hints:
+  required:
+    - 'анафора (anaphora) — повторення слів на початку суміжних речень; єдинопочаток'
+    - 'епіфора (epistrophe) — повторення слів наприкінці суміжних речень; єдинозакінчення'
+    - 'паралелізм (parallelism) — однакова синтаксична побудова суміжних речень'
+    - 'хіазм (chiasmus) — зворотний паралелізм; дзеркальна побудова (AB → BA)'
+    - 'антитеза (antithesis) — протиставлення понять у паралельній конструкції'
+    - 'симплока (symploce) — поєднання анафори та епіфори'
+  recommended:
+    - 'градація (gradation/climax) — поступове наростання або спадання'
+    - 'риторичне запитання (rhetorical question) — запитання без очікуваної відповіді'
+    - 'синтаксична фігура (syntactic figure) — загальна назва для стилістичних засобів синтаксису'
+    - 'ритм (rhythm) — регулярне чергування наголошених і ненаголошених складів'
+activity_hints:
+  - type: quiz
+    focus: Identify type of syntactic device in excerpts
+    items: 15
+  - type: fill-in
+    focus: Complete parallel constructions in sentences
+    items: 10
+  - type: match-up
+    focus: Match syntactic device to its effect
+    items: 12
+  - type: group-sort
+    focus: Classify examples into anaphora, epistrophe, parallelism, chiasmus
+    items: 12
+  - type: error-correction
+    focus: Fix broken parallelism in sentences
+    items: 8
+  - type: essay-response
+    focus: Write a short persuasive paragraph using at least two syntactic devices
+prerequisites:
+  - lexical-stylistic-devices
+connects_to:
+  - register-literary-ukrainian
+  - emphasis-and-inversion
+grammar:
+  - anaphora and epistrophe patterns
+  - syntactic parallelism
+  - chiasmus construction
+  - antithesis as parallel contrast
+register: літературний

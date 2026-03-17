@@ -2,7 +2,7 @@ module: c1-019
 level: C1
 sequence: 19
 slug: practice-ii-article-critique
-version: '2.0'
+version: '2.1'
 title: Практика II — Критика статті
 subtitle: 'Introduction: Traditions of Ukrainian Scientific Critique'
 content_outline:
@@ -15,6 +15,10 @@ content_outline:
     discussion.
   - 'Defining the goal of critical reading according to State Standard §4.4.5: transition from comprehension to stylistic
     production.'
+  - 'Рецензія as a distinct text type: unlike анотація (which describes content neutrally)
+    and реферат (which summarizes source logic in detail), рецензія requires critical judgment
+    — evaluating strengths, weaknesses, and scholarly contribution; conflating these three
+    genres is a common error at C1 level.'
 - section: 'Від переказу до аналізу: Дієслова оцінки (From Summary to Analysis: Evaluation Verbs)'
   words: 700
   points:

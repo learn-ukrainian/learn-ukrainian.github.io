@@ -2,13 +2,13 @@ module: b2-004
 level: B2
 sequence: 4
 slug: reflexive-passive
-version: '2.0'
+version: '3.0'
 title: Зворотний пасив із -ся
 subtitle: 'Passive with -ся Verbs'
 focus: grammar
 pedagogy: TTT
 phase: B2.1
-word_target: 4000
+word_target: 4400
 objectives:
 - Learner can identify and apply зворотний пасив із -ся
 - Learner can form and use зворотний пасив
@@ -55,6 +55,16 @@ content_outline:
     створюється жінкою»).'
   - 'Ігор Сікорський та київська авіаконструкторська школа: опис розробки гелікоптера («гелікоптер розробляється винахідником»).'
   - 'Практичне застосування в технічній документації: «Програма встановлюється», «Технологія застосовується».'
+- section: 'Синтез зворотних займенників: себе, один одного, сам/весь (Reflexive Pronoun Synthesis: себе, one another, сам/весь)'
+  words: 400
+  points:
+  - 'Зворотний займенник себе за межами пасиву: рефлексивне вживання (бачити себе, довіряти собі) та ідіоматичні конструкції
+    (почувати себе, поводити себе)'
+  - 'Реципрокальний займенник один одного: взаємна дія (вони допомагають один одному, ми бачимо одне одного) та відмінювання
+    за відмінками'
+  - 'Означальні займенники сам/сама/саме та весь/вся/все: підсилення суб''єкта дії (він сам зробив) та відмінність від емфатичного
+    «саме» (частка)'
+  - 'Розмежування функцій: себе (рефлексив), один одного (реципрокал), -ся (пасив або медіум) — системна таблиця з прикладами'
 - section: Стилістика та запобігання помилкам (Stylistics and Error Prevention)
   words: 800
   points:
@@ -109,7 +119,7 @@ activity_hints:
 connects_to:
 - b2-05 (3rd Person Plural Passive)
 - b2-06 (Passive in Context)
-- 'b2-28 (Register: Academic/Technical)'
+- 'b2-31 (Register: Academic/Technical)'
 - b2-10 (B2.1a Checkpoint)
 prerequisites:
 - b2-01 (Passive Voice System)

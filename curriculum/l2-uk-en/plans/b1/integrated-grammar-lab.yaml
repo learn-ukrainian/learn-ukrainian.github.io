@@ -1,6 +1,6 @@
-module: b1-054
+module: b1-055
 level: B1
-sequence: 54
+sequence: 55
 slug: integrated-grammar-lab
 version: '2.0'
 title: Інтегрована граматична лабораторія
@@ -45,7 +45,7 @@ content_outline:
   words: 600
   points:
   - 'News register syntax: Implementing ellipsis and concise sentence structure for brevity and impact in headlines and bulletins
-    (one-member sentences covered in dedicated module b1-51).'
+    (one-member sentences covered in dedicated module b1-50).'
   - 'Synthesizing B1.6 features: Combining aspectual nuances with the concise syntax required for modern Ukrainian journalism.'
 - section: 'Практика: Лабораторія редагування (Practice: Editing Laboratory)'
   words: 600
@@ -96,9 +96,9 @@ activity_hints:
   focus: Choose appropriate form
   items: 20
 connects_to:
-- b1-55 (Checkpoint Advanced Grammar)
+- b1-56 (Checkpoint Advanced Grammar)
 prerequisites:
-- b1-53 (Numerals Collectives Fractions)
+- b1-54 (Numerals Collectives Fractions)
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher

@@ -83,7 +83,7 @@ activity_hints:
   focus: Аналіз автентичного тексту з визначенням усіх синтаксичних конструкцій
   items: 4
 connects_to:
-- b2-25 (Register Introduction)
+- b2-28 (Register Introduction)
 prerequisites:
 - b2-23 (Direct Indirect Speech)
 persona:

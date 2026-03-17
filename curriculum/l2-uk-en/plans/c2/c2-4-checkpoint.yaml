@@ -1,6 +1,6 @@
-module: c2-078
+module: c2-079
 level: C2
-sequence: 78
+sequence: 79
 slug: c2-4-checkpoint
 version: '2.0'
 title: Контрольна точка C2.4 — Тематичний дискурс
@@ -27,7 +27,7 @@ sources:
   url: https://mon.gov.ua/
   type: reference
   notes: Standards for C2-level assessment of thematic discourse competency
-- name: Modules c2-065 through c2-077
+- name: Modules c2-066 through c2-078
   url: internal
   type: reference
   notes: All C2.4 content, practice, and integration modules assessed in this checkpoint
@@ -131,11 +131,11 @@ activity_hints:
   focus: Крос-текстовий аналіз та порівняння аргументаційних стратегій
   items: 8
 connects_to:
-- c2-079 (first module of C2.5 — Meta-Skills & Capstone)
-- c2-065 (Society & Citizenship — first C2.4 content module)
-- c2-077 (C2.4 Practice — integration practice preceding this checkpoint)
+- c2-080 (first module of C2.5 — Meta-Skills & Capstone)
+- c2-066 (Society & Citizenship — first C2.4 content module)
+- c2-078 (C2.4 Practice — integration practice preceding this checkpoint)
 prerequisites:
-- c2-077 (C2.4 Practice — Thematic Discourse)
+- c2-078 (C2.4 Practice — Thematic Discourse)
 persona:
   voice: Senior Specialist
   role: Assessment Specialist

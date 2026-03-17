@@ -1,6 +1,6 @@
-module: c2-104
+module: c2-105
 level: C2
-sequence: 104
+sequence: 105
 slug: c2-certification-preparation
 version: '2.0'
 title: Підготовка до сертифікації C2
@@ -129,8 +129,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-105 (C2 РІВЕНЬ ЗАВЕРШЕНО)
-- c2-078 (C2.4 Checkpoint — certification tests all 21 State Standard themes from C2.4)
+- c2-106 (C2 РІВЕНЬ ЗАВЕРШЕНО)
+- c2-079 (C2.4 Checkpoint — certification tests all 21 State Standard themes from C2.4)
 persona:
   voice: Senior Specialist
   role: Certification Candidate

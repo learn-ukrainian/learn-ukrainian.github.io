@@ -1,6 +1,6 @@
-module: b1-008
+module: b1-009
 level: B1
-sequence: 8
+sequence: 9
 slug: aspect-complete-system
 version: '2.0'
 title: 'Вид дієслова: повна система'

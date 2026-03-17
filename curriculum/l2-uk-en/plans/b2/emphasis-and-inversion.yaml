@@ -2,13 +2,13 @@ module: b2-020
 level: B2
 sequence: 20
 slug: emphasis-and-inversion
-version: '2.0'
+version: '3.0'
 title: Емфаза та інверсія
 subtitle: 'Word Order for Effect'
 focus: grammar
 pedagogy: TTT
 phase: B2.2
-word_target: 4000
+word_target: 4300
 objectives:
 - Learner can identify and apply емфаза та інверсія
 - Learner can form and use порядок слів в українській мові
@@ -42,6 +42,13 @@ content_outline:
   - 'Правило «Рема в кінці»: чому найважливіше слово зазвичай замикає нейтральне речення (на відміну від англійського вокального
     наголосу).'
   - 'Контекстуальний вплив: як одне й те саме речення змінює структуру залежно від поставленого питання.'
+- section: 'Формальна теорія інформаційної структури (Formal Topic-Comment / Information Structure Theory)'
+  words: 300
+  points:
+  - 'Функціональна перспектива речення (FSP): теорія Празької школи та її застосування до українського синтаксису'
+  - 'Комунікативний динамізм: градація елементів речення від найнижчого (тема) до найвищого (рема) рівня комунікативної навантаженості'
+  - 'Дискурсивна топікалізація: механізми виведення елемента в позицію теми через прийменникові конструкції (щодо X, стосовно Y)'
+  - 'Контрастивний фокус: виділення елемента для протиставлення (Саме ІВАН це зробив, а не Петро) — взаємодія синтаксису та інтонації'
 - section: Емфатичний порядок та логічний наголос (Emphatic Order and Logical Stress)
   words: 800
   points:
@@ -113,7 +120,7 @@ activity_hints:
   output: Model answer with analysis
 connects_to:
 - b2-21 (Stylistic Connectors)
-- 'b2-30 (Register: Literary Ukrainian)'
+- 'b2-33 (Register: Literary Ukrainian)'
 - b2-24 (Checkpoint Syntax)
 prerequisites:
 - b2-18 (Multi-clause Sentences)

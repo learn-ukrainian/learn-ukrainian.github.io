@@ -1,6 +1,6 @@
-module: b2-076
+module: b2-080
 level: B2
-sequence: 76
+sequence: 80
 slug: checkpoint-communication
 version: '2.0'
 title: 'Контрольна точка: комунікативні навички'
@@ -83,9 +83,9 @@ activity_hints:
   focus: Оцінка відповідності мовленнєвих актів ситуації спілкування
   items: 10
 connects_to:
-- b2-77 (Tekhnolohii ta ShI)
+- b2-81 (Tekhnolohii ta ShI)
 prerequisites:
-- b2-75 (Discussion Debate)
+- b2-79 (Discussion Debate)
 persona:
   voice: Professional Language Coach
   role: Communication Assessor (Експерт з комунікації)

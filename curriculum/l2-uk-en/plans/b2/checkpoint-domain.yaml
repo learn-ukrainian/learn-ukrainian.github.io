@@ -1,6 +1,6 @@
-module: b2-039
+module: b2-042
 level: B2
-sequence: 39
+sequence: 42
 slug: checkpoint-domain
 version: '2.0'
 title: 'Контрольна точка: фахова лексика'
@@ -84,9 +84,9 @@ activity_hints:
 - type: essay-response
   focus: Integrative writing task combining all topics
 connects_to:
-- b2-40 (Aspect Nuances Secondary Imperfectivization)
+- b2-43 (Aspect Nuances Secondary Imperfectivization)
 prerequisites:
-- b2-38 (Economics Business Vocabulary)
+- b2-41 (Economics Business Vocabulary)
 persona:
   voice: Professional Language Coach
   role: Quality Control Officer (Контролер якості)

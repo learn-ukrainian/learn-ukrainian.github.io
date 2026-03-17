@@ -1,6 +1,6 @@
-module: b2-063
+module: b2-067
 level: B2
-sequence: 63
+sequence: 67
 slug: neologisms-borrowings
 version: '2.0'
 title: Неологізми та запозичення
@@ -101,9 +101,9 @@ activity_hints:
   focus: Написання тексту з використанням неологізмів та обґрунтуванням лексичного вибору
   items: 4
 connects_to:
-- b2-64 (Checkpoint Lexicology)
+- b2-68 (Checkpoint Lexicology)
 prerequisites:
-- b2-62 (Idioms Nature)
+- b2-66 (Idioms Nature)
 persona:
   voice: Professional Language Coach
   role: Neologist (Неолог-дослідник)

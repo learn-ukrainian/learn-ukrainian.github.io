@@ -1,6 +1,6 @@
-module: b1-015
+module: b1-016
 level: B1
-sequence: 15
+sequence: 16
 slug: work-week-aspect-in-action
 version: '2.0'
 title: 'Робочий тиждень: вид у дії'
@@ -70,7 +70,7 @@ content_outline:
     tasks, future plans).'
   - Review of 'Доконаний/Недоконаний вид' pairs essential for professional life, building on b1-12 pairs.
   - Self-correction checklist for workplace aspect usage based on the 'Process vs. Result' framework.
-  - Preview of b1-61 (Professional Communication) and the b2-pro business track.
+  - Preview of b1-75 (Professional Communication) and the b2-pro business track.
 vocabulary_hints:
   required:
   - 'завдання (task) — collocations: виконувати завдання (НДВ), поставити завдання (ДВ), технічне завдання (technical assignment),

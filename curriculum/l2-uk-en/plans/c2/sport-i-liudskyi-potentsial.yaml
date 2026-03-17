@@ -1,6 +1,6 @@
-module: c2-072
+module: c2-073
 level: C2
-sequence: 72
+sequence: 73
 slug: sport-i-liudskyi-potentsial
 version: '2.0'
 title: Спорт і людський потенціал
@@ -130,12 +130,12 @@ activity_hints:
   focus: Зіставлення спортивних дисциплін, термінів та їхніх визначень
   items: 10
 connects_to:
-- c2-065 (Society & Citizenship — sport as societal phenomenon and national identity)
-- c2-066 (Foreign Policy & Diaspora — international sports diplomacy)
+- c2-066 (Society & Citizenship — sport as societal phenomenon and national identity)
+- c2-067 (Foreign Policy & Diaspora — international sports diplomacy)
 - c2-022 (Practical Rhetoric — argumentation for doping ethics debates)
 - c2-005 (Journalistic Style — sports commentary and reporting register)
 prerequisites:
-- c2-064 (C2.3 Checkpoint)
+- c2-065 (C2.3 Checkpoint)
 persona:
   voice: Senior Specialist
   role: Sports Analyst

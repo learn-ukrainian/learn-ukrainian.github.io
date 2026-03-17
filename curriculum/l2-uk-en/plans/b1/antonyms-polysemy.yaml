@@ -1,6 +1,6 @@
-module: b1-060
+module: b1-063
 level: B1
-sequence: 60
+sequence: 63
 slug: antonyms-polysemy
 version: '2.0'
 title: Антоніми та багатозначність
@@ -88,9 +88,9 @@ activity_hints:
   focus: Classify antonym type (gradual, complementary, converse)
   items: 10
 connects_to:
-- b1-61 (Homonyms and Paronyms)
+- b1-64 (Homonyms and Paronyms)
 prerequisites:
-- 'b1-59 (Synonymy: Speaking Verbs)'
+- 'b1-62 (Synonymy: Speaking Verbs)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher

@@ -1,6 +1,6 @@
-module: b2-025
+module: b2-028
 level: B2
-sequence: 25
+sequence: 28
 slug: register-introduction
 version: '2.0'
 title: Функціональні стилі мови
@@ -106,10 +106,10 @@ activity_hints:
   focus: Write same news in two different styles
   output: Model answers for comparison
 connects_to:
-- 'b2-26 (Register: Formal/Informal)'
-- 'b2-27 (Register: Business Ukrainian)'
-- 'b2-28 (Register: Academic Ukrainian)'
-- 'b2-29 (Register: Official-Legal)'
+- 'b2-29 (Register: Formal/Informal)'
+- 'b2-30 (Register: Business Ukrainian)'
+- 'b2-31 (Register: Academic Ukrainian)'
+- 'b2-32 (Register: Official-Legal)'
 - b2-24 (Checkpoint Syntax)
 prerequisites:
 - b2-01 through b2-22 (Grammar & Syntax foundations)

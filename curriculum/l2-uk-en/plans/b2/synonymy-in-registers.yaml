@@ -1,6 +1,6 @@
-module: b2-055
+module: b2-059
 level: B2
-sequence: 55
+sequence: 59
 slug: synonymy-in-registers
 version: '2.0'
 title: Синонімія у функціональних стилях
@@ -101,9 +101,9 @@ activity_hints:
   focus: Порівняльний аналіз синонімічного вибору в публіцистичному та художньому текстах
   items: 4
 connects_to:
-- b2-56 (Synonymy Practice Precision)
+- b2-60 (Synonymy Practice Precision)
 prerequisites:
-- b2-54 (Synonymy Types and Rows)
+- b2-58 (Synonymy Types and Rows)
 persona:
   voice: Professional Language Coach
   role: Stylistics Professor (Професор стилістики)

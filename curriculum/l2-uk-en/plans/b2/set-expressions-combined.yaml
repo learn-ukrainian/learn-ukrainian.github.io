@@ -1,6 +1,6 @@
-module: b2-059
+module: b2-063
 level: B2
-sequence: 59
+sequence: 63
 slug: set-expressions-combined
 version: '2.0'
 title: 'Сталі вирази: Тіло, тварини, предмети та абстракції'
@@ -98,9 +98,9 @@ activity_hints:
 - type: essay-response
   focus: Use 5+ idioms in a coherent paragraph
 connects_to:
-- b2-60 (Idioms Somatic)
+- b2-64 (Idioms Somatic)
 prerequisites:
-- b2-58 (Proverbs Nature Time Caution)
+- b2-62 (Proverbs Nature Time Caution)
 persona:
   voice: Professional Language Coach
   role: Folk Tale Narrator (Казкар)

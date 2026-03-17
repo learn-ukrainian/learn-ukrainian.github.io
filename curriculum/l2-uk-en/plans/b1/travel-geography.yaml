@@ -1,6 +1,6 @@
-module: b1-078
+module: b1-081
 level: B1
-sequence: 78
+sequence: 81
 slug: travel-geography
 version: '2.0'
 title: Подорожі та географія
@@ -92,7 +92,7 @@ activity_hints:
   focus: Discuss travel experiences
   items: 10
 connects_to:
-- 'b1-58 (Синонімія I: Дієслова мислення)'
+- 'b1-61 (Синонімія I: Дієслова мислення)'
 prerequisites:
 - b1-77 (Основи бізнесу)
 persona:

@@ -102,7 +102,7 @@ activity_hints:
 connects_to:
 - b2-10 (B2.1a Checkpoint)
 - b2-18 (Multi-clause Sentences)
-- 'b2-30 (Register: Literary Ukrainian)'
+- 'b2-33 (Register: Literary Ukrainian)'
 prerequisites:
 - b2-07 (Active Participles Present)
 - b2-08 (Active Participles Past)

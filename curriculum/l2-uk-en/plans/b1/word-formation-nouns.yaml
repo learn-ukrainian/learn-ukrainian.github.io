@@ -1,6 +1,6 @@
-module: b1-056
+module: b1-057
 level: B1
-sequence: 56
+sequence: 57
 slug: word-formation-nouns
 version: '2.0'
 title: Словотвір іменників
@@ -27,7 +27,7 @@ content_outline:
   - 'Agent nouns: -ник (працівник), -ець (борець), -ач (читач), -тель (учитель)'
   - 'Abstract nouns: -ість (радість), -ння (читання), -ство (мистецтво), -ота (доброта)'
   - 'Place nouns: -ня (читальня, пекарня), -ище (летовище, стрільбище) — note: diminutive suffixes covered in dedicated module
-    b1-52 (diminutives-master-class)'
+    b1-53 (diminutives-master-class)'
   - 'Feminine counterparts: -ка (студентка), -иня (майстриня), -еса (поетеса)'
   - 'Learner drill: verb stem + suffix → noun (читати→читання→читач→читальня)'
 - section: Префіксальний словотвір (Prefixation)
@@ -87,9 +87,9 @@ activity_hints:
   focus: Fix incorrect suffix/prefix usage
   items: 10
 connects_to:
-- 'b1-57 (Word Formation: Modifiers)'
+- 'b1-58 (Word Formation: Modifiers)'
 prerequisites:
-- 'b1-55 (Checkpoint: Advanced Grammar)'
+- 'b1-56 (Checkpoint: Advanced Grammar)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher

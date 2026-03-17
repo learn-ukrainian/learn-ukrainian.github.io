@@ -1,6 +1,6 @@
-module: b2-029
+module: b2-032
 level: B2
-sequence: 29
+sequence: 32
 slug: register-official-legal
 version: '2.0'
 title: 'Офіційно-діловий стиль: документи, закони, заяви'
@@ -118,13 +118,13 @@ activity_hints:
   focus: Write formal application (заява)
   output: Model answer with annotations
 connects_to:
-- 'b2-28 (Register: Academic/Technical)'
+- 'b2-31 (Register: Academic/Technical)'
 - b2-24 (Checkpoint Syntax)
-- b2-81 (Professional Communication II)
+- b2-85 (Professional Communication II)
 prerequisites:
-- b2-25 (Register Introduction)
+- b2-28 (Register Introduction)
 - b2-03 (Impersonal -но/-то)
-- 'b2-27 (Register: Business Ukrainian)'
+- 'b2-30 (Register: Business Ukrainian)'
 persona:
   voice: Professional Language Coach
   role: Notary (Нотаріус)

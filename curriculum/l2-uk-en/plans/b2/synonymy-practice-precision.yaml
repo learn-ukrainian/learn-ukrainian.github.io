@@ -1,6 +1,6 @@
-module: b2-056
+module: b2-060
 level: B2
-sequence: 56
+sequence: 60
 slug: synonymy-practice-precision
 version: '2.0'
 title: Точність слововживання
@@ -102,9 +102,9 @@ activity_hints:
   focus: Порівняльний аналіз двох версій тексту (до і після редагування)
   items: 4
 connects_to:
-- b2-57 (Proverbs Work Wisdom Character)
+- b2-61 (Proverbs Work Wisdom Character)
 prerequisites:
-- b2-55 (Synonymy in Registers)
+- b2-59 (Synonymy in Registers)
 persona:
   voice: Professional Language Coach
   role: Editor-in-Chief (Головний редактор)

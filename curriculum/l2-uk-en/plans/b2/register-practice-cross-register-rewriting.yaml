@@ -1,6 +1,6 @@
-module: b2-034
+module: b2-037
 level: B2
-sequence: 34
+sequence: 37
 slug: register-practice-cross-register-rewriting
 version: '2.0'
 title: 'Регістрова практика: Перенесення тексту між стилями'

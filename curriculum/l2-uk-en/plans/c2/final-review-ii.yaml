@@ -1,6 +1,6 @@
-module: c2-101
+module: c2-102
 level: C2
-sequence: 101
+sequence: 102
 slug: final-review-ii
 version: '2.0'
 title: Фінальне повторення II — Лексична консолідація
@@ -136,8 +136,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-102 (Фінальне повторення III — Інтегровані навички)
-- c2-103 (Final Exam)
+- c2-103 (Фінальне повторення III — Інтегровані навички)
+- c2-104 (Final Exam)
 persona:
   voice: Senior Specialist
   role: Dictionary Editor

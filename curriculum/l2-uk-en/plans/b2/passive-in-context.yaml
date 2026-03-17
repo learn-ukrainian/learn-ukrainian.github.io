@@ -107,7 +107,7 @@ activity_hints:
   output: Model answers for each register
 connects_to:
 - b2-07 (Active Participles Present)
-- b2-25 (Register Introduction)
+- b2-28 (Register Introduction)
 - b2-10 (B2.1a Checkpoint)
 prerequisites:
 - b2-01 (Passive Voice System)

@@ -1,6 +1,6 @@
-module: b2-026
+module: b2-029
 level: B2
-sequence: 26
+sequence: 29
 slug: register-formal-informal
 version: '2.0'
 title: Формальне та неформальне спілкування
@@ -109,12 +109,12 @@ activity_hints:
   focus: Write same request formally and informally
   output: Model answers for both registers
 connects_to:
-- 'b2-27 (Register: Business Ukrainian)'
-- 'b2-28 (Register: Academic Ukrainian)'
-- 'b2-29 (Register: Official-Legal)'
+- 'b2-30 (Register: Business Ukrainian)'
+- 'b2-31 (Register: Academic Ukrainian)'
+- 'b2-32 (Register: Official-Legal)'
 - b2-24 (Checkpoint Syntax)
 prerequisites:
-- b2-25 (Register Introduction)
+- b2-28 (Register Introduction)
 - Basic pronoun usage
 - Social context awareness
 persona:

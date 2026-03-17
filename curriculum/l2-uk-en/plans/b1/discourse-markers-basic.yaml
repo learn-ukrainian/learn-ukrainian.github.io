@@ -1,6 +1,6 @@
-module: b1-067
+module: b1-070
 level: B1
-sequence: 67
+sequence: 70
 slug: discourse-markers-basic
 version: '2.0'
 title: 'Дискурсивні маркери: базові конектори'
@@ -102,9 +102,9 @@ activity_hints:
   focus: Write cohesive paragraphs
   items: 10
 connects_to:
-- 'b1-68 (Дискурсивні маркери II: складна організація)'
+- 'b1-71 (Дискурсивні маркери II: складна організація)'
 prerequisites:
-- b1-66 (Згода і незгода)
+- b1-69 (Згода і незгода)
 persona:
   voice: Senior Language & Culture Specialist
   role: Public Speaking Coach

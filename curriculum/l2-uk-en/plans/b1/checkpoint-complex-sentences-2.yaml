@@ -1,6 +1,6 @@
-module: b1-044
+module: b1-045
 level: B1
-sequence: 44
+sequence: 45
 slug: checkpoint-complex-sentences-2
 version: '2.0'
 title: 'Контрольна точка: складні речення (частина 2)'
@@ -87,7 +87,7 @@ activity_hints:
   focus: Write complex paragraphs
   items: 10
 connects_to:
-- b1-50 (Дієприслівники недоконаного виду)
+- b1-51 (Дієприслівники недоконаного виду)
 prerequisites:
 - b1-43 (Непрямі питання та накази)
 persona:

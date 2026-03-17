@@ -1,0 +1,94 @@
+module: c1-051
+level: C1
+sequence: 51
+slug: one-member-sentences-c1
+version: '2.0'
+title: 'Односкладні речення: Стилістичне застосування'
+subtitle: 'One-Member Sentences: Stylistic Application'
+content_outline:
+- section: 'Стилістичні функції односкладних речень (Stylistic Functions of One-Member Sentences)'
+  words: 700
+  points:
+  - 'Чому автори обирають односкладні речення: лаконічність, динамізм, емоційна напруга, фокусування на дії чи стані — стилістична мотивація вибору'
+  - 'Односкладні речення як інструмент ритму: чергування коротких односкладних та розгорнутих двоскладних для створення темпоритмічного малюнка тексту'
+  - 'Прийом «кінематографічної мови»: називні речення як монтажні кадри (Ніч. Вулиця. Ліхтар.) — аналіз прийому від Тичини до сучасної прози'
+  - 'Контрастивний стилістичний ефект: «Мені було страшно» (безособове — фокус на стані) vs «Я боявся» (двоскладне — фокус на суб''єкті) — свідомий вибір'
+- section: 'Односкладні речення в різних функціональних стилях (One-Member Sentences across Registers)'
+  words: 800
+  points:
+  - 'Науковий стиль: безособові та неозначено-особові як засіб об''єктивації (Встановлено, що... Доведено, що... Вважається, що...) — деперсоналізація автора'
+  - 'Публіцистичний стиль: називні як заголовки та ліди (Реформа. Очікування. Результат.), узагальнено-особові для залучення читача — журналістські прийоми'
+  - 'Художній стиль: означено-особові для інтимізації (Сідаю. Пишу. Думаю.), безособові для опису станів природи — поетика прози'
+  - 'Офіційно-діловий стиль: інфінітивні речення в наказах та інструкціях (Не палити! Заповнити анкету.), безособові в нормативних документах (Заборонено. Дозволено.)'
+- section: 'Інфінітивні речення: єдиний по-справжньому новий тип (Infinitive Sentences: The Truly New Sub-Type)'
+  words: 700
+  points:
+  - 'Модальна палітра інфінітивних речень: наказ (Мовчати!), неможливість (Не збагнути цього!), побажання (Побачити б!), роздум (Бути чи не бути?) — семантична типологія'
+  - 'Інфінітивні речення з частками: б/би (Відпочити б!), не (Не зупинити!), чи (Чи варто?) — модальне забарвлення через частки'
+  - 'Інфінітивні речення у військовому та службовому дискурсі: Встати! Лягти! Не рухатися! — категоричність без адресата як прагматичний прийом'
+  - 'Інфінітивні речення в поезії та філософському дискурсі: Жити — означає боротися (Франко), Творити — значить існувати — аналіз літературних зразків'
+- section: 'Трансформаційна практика: двоскладне ↔ односкладне (Transformation Practice: Two-Member ↔ One-Member)'
+  words: 800
+  points:
+  - 'Трансформація для зміни стилю: «Ми провели аналіз» → «Проведено аналіз» (науковий об''єктивізм), «Я відчуваю холод» → «Мені холодно» (стан без суб''єкта)'
+  - 'Трансформація для зміни фокусу: «Люди кажуть» → «Кажуть» (деперсоналізація), «Ти бачиш цю красу?» → «Бачиш цю красу?» (інтимізація) — свідомий вибір автора'
+  - 'Зворотна трансформація: коли двоскладне речення краще — випадки, де односкладне створює небажану двозначність або знеособлює текст'
+  - 'Вправи на редагування: переписування фрагментів наукового тексту, публіцистики та художньої прози зі зміною частки односкладних речень для досягнення різних ефектів'
+- section: 'Аналіз реальних текстів: майстерність стилю (Analysis of Real Texts: Stylistic Mastery)'
+  words: 600
+  points:
+  - 'Аналіз уривка з Коцюбинського «Intermezzo»: «Тихо. Нікого нема. Ліси, ліси, ліси.» — називні та безособові як засіб створення настрою самотності'
+  - 'Аналіз наукової статті: виявлення та класифікація безособових та неозначено-особових речень, оцінка їхньої стилістичної доцільності'
+  - 'Аналіз журналістського тексту: називні речення в заголовках, означено-особові в репортажах — функціональне навантаження у сучасній публіцистиці'
+  - 'Творче завдання: написання 3 версій одного епізоду — з переважанням двоскладних, односкладних, та збалансованої суміші — рефлексія щодо стилістичного ефекту'
+- section: 'Підсумок: односкладне речення як інструмент стилю (Summary: One-Member Sentence as Style Tool)'
+  words: 400
+  points:
+  - 'Матриця «тип речення × стиль × ефект»: практична схема для свідомого вибору речень при написанні текстів різних жанрів'
+  - 'Контрастивний підсумок: чому англійська не може обійтися без підмета (It rains), а українська активно використовує безпідметні конструкції — глибинна типологічна відмінність'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Analyze why authors choose one-member over two-member sentences in specific literary, academic, and journalistic contexts
+- Transform texts between two-member and one-member sentence structures to achieve targeted stylistic effects
+- Produce infinitive sentences with appropriate modal nuance (command, impossibility, wish, deliberation)
+- Evaluate the stylistic appropriateness of one-member sentence types across scientific, journalistic, literary, and official registers
+grammar:
+- Stylistic functions of all one-member sentence types
+- Infinitive sentences (modal semantics, particles б/не/чи)
+- Two-member ↔ one-member transformation for register shift
+- One-member sentences across functional styles (scientific, journalistic, literary, official)
+phase: C1.4 [Syntax]
+persona:
+  voice: Senior Specialist
+  role: Синтаксист-стиліст
+word_target: 4000
+vocabulary_hints:
+  required:
+  - інфінітивне речення (infinitive sentence) — модальне значення інфінітива, категоричність без адресата; New sub-type for C1
+  - стилістична функція (stylistic function) — стилістична функція речення, стилістичне навантаження; Core analytical term
+  - деперсоналізація (depersonalization) — деперсоналізація автора, деперсоналізація висловлення; Scientific writing strategy
+  - об'єктивація (objectivation) — об'єктивація висловлення, засіб об'єктивації; Academic writing device
+  - темпоритміка (tempo-rhythm) — темпоритмічний малюнок тексту; Text analysis term
+  recommended:
+  - інтимізація (intimization) — інтимізація розповіді, засіб інтимізації; Literary device using definite-personal sentences
+  - монтажність (montage quality) — монтажний прийом, кінематографічна мова; Nominative sentence as cinematic cut
+  - модальне забарвлення (modal coloring) — модальне забарвлення інфінітива; Semantic nuance term
+  - редагування (editing) — стилістичне редагування, редагування тексту; Practical skill term
+activity_hints:
+- type: quiz
+  focus: identifying stylistic motivation for one-member sentence choice in real texts
+  items: 20
+- type: fill-in
+  focus: transforming two-member sentences into one-member for specific stylistic effects
+  items: 15
+- type: group-sort
+  focus: sorting one-member sentences by functional style (scientific, literary, journalistic, official)
+  items: 15
+- type: essay-response
+  focus: rewriting a text passage using one-member sentences for stylistic effect
+prerequisites:
+- complex-sentence-practice
+connects_to:
+- checkpoint-complex-sentences
+register: літературний

@@ -95,7 +95,7 @@ activity_hints:
   output: Model answer provided
 connects_to:
 - b2-06 (Passive in Context)
-- 'b2-32 (Register: Colloquial Style)'
+- 'b2-35 (Register: Colloquial Style)'
 - b2-10 (B2.1a Checkpoint)
 prerequisites:
 - b2-01 (Passive Voice System)

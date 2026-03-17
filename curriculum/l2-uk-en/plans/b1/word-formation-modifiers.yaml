@@ -1,14 +1,14 @@
-module: b1-057
+module: b1-058
 level: B1
-sequence: 57
+sequence: 58
 slug: word-formation-modifiers
-version: '2.0'
+version: '2.1'
 title: Словотвір прикметників та прислівників
 subtitle: Adjective & Adverb Word Formation
 focus: grammar
 pedagogy: PPP
 phase: B1.7 [Word Formation and Lexicology]
-word_target: 4000
+word_target: 4300
 objectives:
 - Learner can form adjectives using productive Ukrainian suffixes
 - Learner can use adjective prefixes for negation and intensity
@@ -52,6 +52,13 @@ content_outline:
   - 'Prefix adverbs: на- (надворі, нагорі), по- (повсюди, помалу)'
   - 'Compound adverbs: мимохідь, мимоволі, спохвату'
   - 'Learner error: по-українськи vs *по українському'
+- section: Ступені порівняння прислівників (Adverb Comparison Paradigms)
+  words: 300
+  points:
+  - 'Synthetic comparative: -ше/-іше — швидко→швидше, гарно→гарніше, далеко→далі (irregular)'
+  - 'Analytic comparative: більш/менш + adverb — більш детально, менш ефективно — used in formal and academic registers'
+  - 'Superlative: най- + comparative — найшвидше, найгарніше; analytic найбільш/найменш + adverb'
+  - 'Irregular adverb comparatives: добре→краще, погано→гірше, багато→більше, мало→менше — parallel to adjective irregulars'
 - section: 'Практика: Словотвірний аналіз (Practice: Word Formation Analysis)'
   words: 600
   points:
@@ -88,9 +95,10 @@ activity_hints:
   focus: Match suffix to meaning (relational, qualitative, material)
   items: 12
 connects_to:
-- 'b1-58 (Synonymy: Thinking Verbs)'
+- 'b1-60 (Adjective Comparison)'
+- 'b1-61 (Synonymy: Thinking Verbs)'
 prerequisites:
-- 'b1-56 (Word Formation: Nouns)'
+- 'b1-57 (Word Formation: Nouns)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher

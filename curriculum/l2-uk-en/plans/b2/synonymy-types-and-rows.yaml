@@ -1,6 +1,6 @@
-module: b2-054
+module: b2-058
 level: B2
-sequence: 54
+sequence: 58
 slug: synonymy-types-and-rows
 version: '2.0'
 title: 'Синонімія: типи та синонімічні ряди'
@@ -100,9 +100,9 @@ activity_hints:
   focus: Виправлення помилок у вживанні синонімів (змішування з паронімами)
   items: 10
 connects_to:
-- b2-55 (Synonymy in Registers)
+- b2-59 (Synonymy in Registers)
 prerequisites:
-- b2-53 (Checkpoint Morphology)
+- b2-56 (Checkpoint Morphology)
 persona:
   voice: Professional Language Coach
   role: Lexicographer (Лексикограф)

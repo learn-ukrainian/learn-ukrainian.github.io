@@ -1,6 +1,6 @@
-module: b1-052
+module: b1-053
 level: B1
-sequence: 52
+sequence: 53
 slug: diminutives-master-class
 version: '2.0'
 title: 'Демінутиви: майстер-клас'
@@ -100,7 +100,7 @@ activity_hints:
   focus: Match diminutive to situation
   items: 10
 connects_to:
-- 'b1-53 (Числівники: збірні та дроби)'
+- 'b1-54 (Числівники: збірні та дроби)'
 prerequisites:
 - b1-47 (Passive Constructions)
 persona:

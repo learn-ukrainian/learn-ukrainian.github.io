@@ -1,6 +1,6 @@
-module: b1-063
+module: b1-066
 level: B1
-sequence: 63
+sequence: 66
 slug: abstract-concepts-ideas
 version: '2.0'
 title: 'Абстрактні концепції: ідеї та думки'
@@ -95,9 +95,9 @@ activity_hints:
   focus: Discuss abstract topics
   items: 10
 connects_to:
-- 'b1-64 (Абстрактні концепції: процеси та зміни)'
+- 'b1-67 (Абстрактні концепції: процеси та зміни)'
 prerequisites:
-- 'b1-55 (Контрольна точка: Просунута граматика)'
+- 'b1-56 (Контрольна точка: Просунута граматика)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Academic Researcher
