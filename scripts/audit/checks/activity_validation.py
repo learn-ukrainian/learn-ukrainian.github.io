@@ -769,7 +769,60 @@ def check_unjumble_out_of_scope_dative(yaml_activities: list) -> list:
     return violations
 
 
+def check_duplicate_options(yaml_activities: list) -> list:
+    """Detect activities where the same option appears multiple times in an item.
+
+    Bug pattern from M05: options: [о-те-ка, бібліотека, о-те-ка, о-те-ка]
+    — three identical distractors due to lazy LLM generation.
+
+    Issue: #969 AC4
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
+
+        for idx, item in enumerate(items, 1):
+            options = _get_item_options(item)
+            if not options or len(options) < 2:
+                continue
+
+            # Normalize options to strings for comparison
+            str_options = [str(o).strip().lower() if not isinstance(o, dict)
+                          else str(o.get('text', '')).strip().lower()
+                          for o in options]
+
+            seen = {}
+            duplicates = []
+            for opt in str_options:
+                if not opt:
+                    continue
+                if opt in seen:
+                    seen[opt] += 1
+                    if seen[opt] == 2:  # Report once per duplicate
+                        duplicates.append(opt)
+                else:
+                    seen[opt] = 1
+
+            if duplicates:
+                violations.append({
+                    'type': 'DUPLICATE_OPTIONS',
+                    'severity': 'critical',
+                    'activity': title,
+                    'message': (
+                        f'Item {idx} ({act_type}): duplicate option(s) '
+                        f'{duplicates}. LLM copy-pasted the same distractor.'
+                    ),
+                    'suggestion': 'Replace duplicates with unique, pedagogically sound distractors.',
+                })
+
+    return violations
+
+
 __all__ = [
+    'check_duplicate_options',
     'check_english_hints_in_activities',
     'check_fill_in_answer_in_options',
     'check_mark_the_words_answers_in_text',

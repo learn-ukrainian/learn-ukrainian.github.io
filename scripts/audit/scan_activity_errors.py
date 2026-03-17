@@ -21,6 +21,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / 'scripts'))
 
 from audit.checks.activity_validation import (
+    check_duplicate_options,
     check_fill_in_answer_in_options,
     check_mark_the_words_answers_in_text,
     check_quiz_single_correct,
@@ -55,6 +56,7 @@ def scan_file(yaml_path: Path) -> list[dict]:
         + check_fill_in_answer_in_options(activities)
         + check_translate_single_correct(activities)
         + check_mark_the_words_answers_in_text(activities)
+        + check_duplicate_options(activities)
     ):
         v['file'] = str(yaml_path.relative_to(PROJECT_ROOT))
         violations.append(v)

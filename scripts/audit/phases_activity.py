@@ -27,6 +27,7 @@ from .checks.activities import (
     check_yaml_activity_types,
 )
 from .checks.activity_validation import (
+    check_duplicate_options,
     check_english_hints_in_activities,
     check_fill_in_answer_in_options,
     check_mark_the_words_answers_in_text,
@@ -174,6 +175,7 @@ def _check_answer_correctness(activities: list) -> list:
     violations.extend(check_mark_the_words_answers_in_text(activities))
     violations.extend(check_unjumble_runon_answer(activities))
     violations.extend(check_unjumble_out_of_scope_dative(activities))
+    violations.extend(check_duplicate_options(activities))
     return violations
 
 
