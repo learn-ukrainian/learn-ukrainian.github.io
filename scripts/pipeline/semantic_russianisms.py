@@ -175,9 +175,20 @@ def scan_research_for_russianisms(research_path: Path) -> list[dict]:
     return findings
 
 
+# Negation patterns that indicate the line is WARNING about the false friend, not using it
+_NEGATION_PATTERNS = re.compile(
+    r"(?:not|NOT|≠|!=|не\b|НЕ\b|false.friend|trap|common.error|common.mistake|помилк)",
+    re.IGNORECASE,
+)
+
+
 def _check_vocab_entry(entry: str, category: str, findings: list[dict]) -> None:
     """Check a single vocabulary_hints entry for semantic Russianisms."""
     entry_lower = entry.lower()
+
+    # Skip lines that warn ABOUT the false friend (negation context)
+    if category == "research" and _NEGATION_PATTERNS.search(entry):
+        return
 
     for ff in SEMANTIC_FALSE_FRIENDS:
         word = ff["word"]
