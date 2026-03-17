@@ -1,24 +1,17 @@
-"""Prompt preflight — split feasibility + coherence checks before content generation.
+"""Prompt preflight — single writer call checks feasibility, Russianisms, and plan coherence.
 
-**Feasibility** (Gemini Flash, writer self-check): Can the writer execute these
-instructions without hitting contradictions or impossible targets?
+One LLM call to the writer agent before content generation. Checks:
+1. Prompt feasibility (contradictions, impossible targets, missing instructions)
+2. Semantic false friends (Russianisms in vocabulary/content)
+3. Plan-prompt coherence (section coverage, word target, vocabulary — when plan available)
 
-**Coherence** (Claude Sonnet, reviewer check): Does the rendered prompt actually
-implement the plan YAML? Are all plan sections, objectives, and vocabulary
-represented?
-
-Both checks run in parallel. Results merge into CombinedPreflightResult with the
-same .high_issues / .status / .issues interface as the old PreflightResult.
-
-Auto-fix applies ONLY to feasibility issues. Coherence HIGH issues cause an
-immediate pipeline failure (human must fix the template or plan).
+Returns structured PreflightResult with auto-fixable issues.
 """
 
 from __future__ import annotations
 
 import re
 import sys
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -33,17 +26,17 @@ from pipeline.core import log
 @dataclass
 class PreflightIssue:
     """A single issue found during prompt preflight."""
-    issue_type: str  # CONTRADICTION | MISSING_INSTRUCTION | IMPOSSIBLE_TARGET | UNCLEAR
+    issue_type: str  # CONTRADICTION | MISSING_INSTRUCTION | IMPOSSIBLE_TARGET | UNCLEAR | RUSSICISM | MISSING_PLAN_SECTION | ...
     location: str  # where in the prompt
     problem: str  # what's wrong
     suggested_fix: str  # how to fix it
     severity: str  # HIGH | MEDIUM | LOW
-    source: str = "unknown"  # "feasibility" | "coherence"
+    source: str = "preflight"
 
 
 @dataclass
 class PreflightResult:
-    """Result of a single preflight check (feasibility OR coherence)."""
+    """Result of the preflight check."""
     status: str  # PASS | ISSUES_FOUND | DISPATCH_ERROR | PARSE_ERROR
     issues: list[PreflightIssue] = field(default_factory=list)
     raw_output: str = ""
@@ -51,60 +44,6 @@ class PreflightResult:
     @property
     def high_issues(self) -> list[PreflightIssue]:
         return [i for i in self.issues if i.severity == "HIGH"]
-
-
-@dataclass
-class CombinedPreflightResult:
-    """Merged result from feasibility + coherence checks.
-
-    Provides the same interface as PreflightResult for backward compatibility.
-    """
-    feasibility: PreflightResult
-    coherence: PreflightResult | None  # None when plan unavailable (skipped)
-
-    @property
-    def status(self) -> str:
-        statuses = [self.feasibility.status]
-        if self.coherence is not None:
-            statuses.append(self.coherence.status)
-        if any(s == "ISSUES_FOUND" for s in statuses):
-            return "ISSUES_FOUND"
-        if all(s == "PASS" for s in statuses):
-            return "PASS"
-        # Propagate the worst non-PASS status (errors > issues > pass)
-        _ERROR_STATUSES = {"DISPATCH_ERROR", "PARSE_ERROR"}
-        for s in statuses:
-            if s in _ERROR_STATUSES:
-                return s
-        return statuses[0]
-
-    @property
-    def issues(self) -> list[PreflightIssue]:
-        result = list(self.feasibility.issues)
-        if self.coherence is not None:
-            result.extend(self.coherence.issues)
-        return result
-
-    @property
-    def high_issues(self) -> list[PreflightIssue]:
-        return [i for i in self.issues if i.severity == "HIGH"]
-
-    @property
-    def feasibility_high_issues(self) -> list[PreflightIssue]:
-        return [i for i in self.feasibility.issues if i.severity == "HIGH"]
-
-    @property
-    def coherence_high_issues(self) -> list[PreflightIssue]:
-        if self.coherence is None:
-            return []
-        return [i for i in self.coherence.issues if i.severity == "HIGH"]
-
-    @property
-    def raw_output(self) -> str:
-        parts = [self.feasibility.raw_output]
-        if self.coherence is not None:
-            parts.append(self.coherence.raw_output)
-        return "\n\n---\n\n".join(parts)
 
 
 # ---------------------------------------------------------------------------
@@ -218,12 +157,12 @@ Your content will be scored on these dimensions (9-10 = PASS):
 
 
 # ---------------------------------------------------------------------------
-# Prompt builders
+# Prompt builder (single unified prompt)
 # ---------------------------------------------------------------------------
 
-_FEASIBILITY_PROMPT = """You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm you can execute it AND that no semantic Russianisms are present.
+_PREFLIGHT_PROMPT = """You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely prevent you from building content that passes all audit gates, OR if vocabulary contains a semantic false friend.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
@@ -231,7 +170,9 @@ _FEASIBILITY_PROMPT = """You are about to build a module using the prompt below.
 {RENDERED_PROMPT}
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+{PLAN_SECTION}
+
+## Audit Gates
 
 {AUDIT_CONTEXT}
 
@@ -239,25 +180,25 @@ _FEASIBILITY_PROMPT = """You are about to build a module using the prompt below.
 
 ## Check 1: Prompt Feasibility
 
-Read the prompt carefully. Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved."
-
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
 ## Check 2: Semantic False Friends (Russianisms)
 
-These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings. Check the prompt's vocabulary lists, example words, and content outline for misuse.
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
 
 {FALSE_FRIENDS_TABLE}
 
-**Only flag a word if the prompt USES or DEFINES it with the Russian meaning.** Do NOT flag:
-- Warnings about the false friend (e.g., "неділя ≠ week" or "лук means bow, not onion")
-- Discussions explaining the difference between Ukrainian and Russian meanings
-- Correct Ukrainian usage of the word
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+{COHERENCE_SECTION}
 
 ## Output Format (YAML)
 
@@ -265,94 +206,31 @@ These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT mea
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR, RUSSICISM
-      location: "vocabulary_hints, required list"
-      problem: "город paired with 'city' — this is the Russian meaning. Ukrainian город = garden/vegetable patch"
-      suggested_fix: "Replace город (city) with місто (city), or change meaning to 'garden'"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {{status: PASS, issues: []}}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES or introduce Russianisms."""
+Be SPECIFIC. Cite exact text."""
 
 
-_COHERENCE_PROMPT = """You are a curriculum reviewer checking whether a content generation prompt correctly implements its plan.
+_COHERENCE_SECTION = """## Check 3: Plan-Prompt Coherence
 
-## The Plan
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
 
-<plan>
-{PLAN_YAML}
-</plan>
-
-## The Rendered Prompt
-
-<prompt>
-{RENDERED_PROMPT}
-</prompt>
-
-## Audit Gates
-
-{AUDIT_CONTEXT}
-
-## Instructions
-
-You MUST complete ALL checks below before producing your verdict. Work through them one by one.
-
-### Step 1: Section coverage checklist
-For EACH section in the plan's `content_outline`, find the matching section header or word budget in the prompt. List every plan section and whether it has a match:
-
-Plan section → Prompt match (YES/NO + where)
-
-### Step 2: Word target check
-Compare the plan's `word_target` with the prompt's word budget. Do they match?
-
-### Step 3: Vocabulary check
-Scan the plan's `vocabulary_hints.required` list. Are all items present or referenced in the prompt?
-
-### Step 4: Objective check
-For each plan `objective`, confirm the prompt contains instructions that would achieve it.
-
-## Verdict Rules
-
-After completing the checklist, report issues ONLY for:
-- A plan section **completely missing** from the prompt (not just reworded)
-- The prompt **contradicts** a plan objective or constraint
-- The word target in the prompt **differs** from the plan
-- Required vocabulary items **absent** from the prompt
-
-Do NOT flag: minor wording differences, section reordering, extra scaffolding the prompt adds beyond the plan.
-
-## Output Format
-
-First output your checklist (Steps 1-4), then the YAML verdict:
-
-```yaml
-prompt_preflight:
-  status: PASS  # or ISSUES_FOUND
-  issues:
-    - type: MISSING_PLAN_SECTION  # or PLAN_CONTRADICTION, WORD_TARGET_MISMATCH, MISSING_VOCABULARY
-      location: "content_outline section 3: Verb Conjugation Patterns"
-      problem: "Plan section 'Verb Conjugation Patterns' has no corresponding section in the prompt"
-      suggested_fix: "Add a section header and word budget for verb conjugation patterns"
-      severity: HIGH  # or MEDIUM, LOW
-```
-
-If all checks pass:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```"""
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding."""
 
 
 def _build_false_friends_table() -> str:
-    """Build a markdown reference table of semantic false friends for the feasibility check."""
+    """Build a markdown reference table of semantic false friends."""
     try:
         from pipeline.semantic_russianisms import SEMANTIC_FALSE_FRIENDS
     except ImportError:
@@ -369,8 +247,16 @@ def _build_false_friends_table() -> str:
     return "\n".join(lines)
 
 
-def build_feasibility_prompt(rendered_prompt: str, track: str, module_num: int) -> str:
-    """Build the feasibility check prompt (writer self-check + Russicism detection)."""
+def build_preflight_prompt(
+    rendered_prompt: str,
+    track: str,
+    module_num: int,
+    plan_yaml: str | None = None,
+) -> str:
+    """Build the unified preflight prompt (feasibility + Russianisms + coherence).
+
+    When plan_yaml is provided, includes the plan and coherence check.
+    """
     if len(rendered_prompt) > 40000:
         rendered_prompt = rendered_prompt[:40000] + "\n\n... (prompt truncated for review) ..."
 
@@ -378,36 +264,28 @@ def build_feasibility_prompt(rendered_prompt: str, track: str, module_num: int) 
     dim_ctx = build_dimension_context(track, module_num)
     ff_table = _build_false_friends_table()
 
-    return _FEASIBILITY_PROMPT.format(
+    if plan_yaml:
+        if len(plan_yaml) > 10000:
+            plan_yaml = plan_yaml[:10000] + "\n\n... (plan truncated) ..."
+        plan_section = f"## The Plan\n\n<plan>\n{plan_yaml}\n</plan>"
+        coherence_section = _COHERENCE_SECTION
+    else:
+        plan_section = ""
+        coherence_section = ""
+
+    return _PREFLIGHT_PROMPT.format(
         RENDERED_PROMPT=rendered_prompt,
+        PLAN_SECTION=plan_section,
         AUDIT_CONTEXT=audit_ctx,
         DIMENSION_CONTEXT=dim_ctx,
         FALSE_FRIENDS_TABLE=ff_table,
+        COHERENCE_SECTION=coherence_section,
     )
 
 
-def build_coherence_prompt(
-    rendered_prompt: str, plan_yaml: str, track: str, module_num: int,
-) -> str:
-    """Build the coherence check prompt (reviewer plan-prompt alignment)."""
-    if len(rendered_prompt) > 40000:
-        rendered_prompt = rendered_prompt[:40000] + "\n\n... (prompt truncated for review) ..."
-    if len(plan_yaml) > 10000:
-        plan_yaml = plan_yaml[:10000] + "\n\n... (plan truncated) ..."
-
-    audit_ctx = build_audit_context(track, module_num)
-
-    return _COHERENCE_PROMPT.format(
-        RENDERED_PROMPT=rendered_prompt,
-        PLAN_YAML=plan_yaml,
-        AUDIT_CONTEXT=audit_ctx,
-    )
-
-
-# Keep backward compat alias
-def build_preflight_prompt(rendered_prompt: str, track: str, module_num: int) -> str:
-    """Build the full preflight check prompt (backward compat — uses feasibility prompt)."""
-    return build_feasibility_prompt(rendered_prompt, track, module_num)
+# Backward compat aliases
+build_feasibility_prompt = build_preflight_prompt
+build_coherence_prompt = None  # removed — use build_preflight_prompt with plan_yaml
 
 
 # ---------------------------------------------------------------------------
@@ -415,13 +293,8 @@ def build_preflight_prompt(rendered_prompt: str, track: str, module_num: int) ->
 # ---------------------------------------------------------------------------
 
 
-def parse_preflight_response(text: str, source: str = "unknown") -> PreflightResult:
-    """Parse a preflight review response into structured result.
-
-    Args:
-        text: Raw LLM output (YAML with optional markdown fences).
-        source: Label for issue provenance ("feasibility" or "coherence").
-    """
+def parse_preflight_response(text: str, source: str = "preflight") -> PreflightResult:
+    """Parse preflight review response into structured result."""
     if not text or not text.strip():
         return PreflightResult(status="PASS", raw_output="(empty response)")
 
@@ -437,7 +310,6 @@ def parse_preflight_response(text: str, source: str = "unknown") -> PreflightRes
     try:
         data = yaml.safe_load(yaml_text)
     except yaml.YAMLError:
-        # Try the whole text
         try:
             data = yaml.safe_load(cleaned)
         except yaml.YAMLError:
@@ -471,24 +343,19 @@ def parse_preflight_response(text: str, source: str = "unknown") -> PreflightRes
 
 
 # ---------------------------------------------------------------------------
-# Auto-fix (feasibility issues only)
+# Auto-fix (prompt pattern fixes)
 # ---------------------------------------------------------------------------
 
-
-# Known fix patterns: maps issue keywords to prompt sections to remove/replace.
-# Each entry: (trigger_keywords, section_header_pattern, action)
 _FIX_PATTERNS: list[tuple[list[str], str, str]] = [
-    # Contradiction: immersion target mismatch
     (
         ["45-65%", "45–65%", "immersion target"],
         r"(?i)this high volume is REQUIRED to hit the \d+-\d+% immersion target",
         "this high volume is REQUIRED to hit the immersion target specified above",
     ),
-    # Contradiction: verb ban vs verb warning
     (
         ["verb", "imperative", "banned", "Irregular Forms"],
         r"### Irregular Forms Warning.*?(?=\n###|\n---|\Z)",
-        "",  # remove entire section
+        "",
     ),
 ]
 
@@ -498,27 +365,20 @@ def apply_preflight_fixes(
     high_issues: list[PreflightIssue],
     orch_dir: Path,
 ) -> Path | None:
-    """Apply suggested fixes from preflight HIGH issues to the rendered prompt.
+    """Apply pattern-based fixes to the rendered prompt for non-RUSSICISM issues.
 
-    Only applies fixes from feasibility issues. Coherence issues require human
-    intervention (template/plan rework).
-
-    Saves the fixed prompt to orch_dir/content-prompt-fixed.md.
-    Returns the path to the fixed prompt, or None if no fixes could be applied.
+    Returns path to fixed prompt, or None if no fixes applied.
     """
-    # Filter to feasibility issues only — coherence issues can't be auto-fixed
-    fixable_issues = [i for i in high_issues if i.source != "coherence"]
-    if not fixable_issues:
+    fixable = [i for i in high_issues if i.issue_type != "RUSSICISM"]
+    if not fixable:
         return None
 
     prompt_text = prompt_path.read_text("utf-8")
     original = prompt_text
     fixes_applied = 0
 
-    for issue in fixable_issues:
+    for issue in fixable:
         combined = f"{issue.problem} {issue.suggested_fix}".lower()
-
-        # Try pattern-based fixes first
         for trigger_words, pattern, replacement in _FIX_PATTERNS:
             if any(w.lower() in combined for w in trigger_words):
                 new_text = re.sub(pattern, replacement, prompt_text, flags=re.DOTALL)
@@ -528,14 +388,10 @@ def apply_preflight_fixes(
                     log(f"  preflight: Applied pattern fix for [{issue.issue_type}] {issue.location}")
                     break
 
-        # If no pattern matched but the fix suggests removing a section,
-        # try to find and remove the section by header
         if "remove" in issue.suggested_fix.lower() and fixes_applied == 0:
-            # Extract section name from the location field
             section_match = re.search(r"###?\s+(.+?)(?:\s+vs|\s+section|\Z)", issue.location)
             if section_match:
                 section_name = section_match.group(1).strip()
-                # Remove the section (header + content until next section)
                 section_pattern = rf"###\s+{re.escape(section_name)}.*?(?=\n###|\n---|\n##[^#]|\Z)"
                 new_text = re.sub(section_pattern, "", prompt_text, flags=re.DOTALL)
                 if new_text != prompt_text:
@@ -546,22 +402,14 @@ def apply_preflight_fixes(
     if fixes_applied == 0:
         return None
 
-    # Clean up multiple blank lines left by removals
     prompt_text = re.sub(r"\n{4,}", "\n\n\n", prompt_text)
-
-    # Save the fixed prompt
     fixed_path = orch_dir / "content-prompt-fixed.md"
     fixed_path.write_text(prompt_text, "utf-8")
 
-    # Also save a diff for verification
     import difflib
-    orig_lines = original.splitlines()
-    fixed_lines = prompt_text.splitlines()
     diff = difflib.unified_diff(
-        orig_lines, fixed_lines,
-        fromfile="original-prompt.md",
-        tofile="content-prompt-fixed.md",
-        n=2,
+        original.splitlines(), prompt_text.splitlines(),
+        fromfile="original-prompt.md", tofile="content-prompt-fixed.md", n=2,
     )
     diff_text = "\n".join(diff)
     if diff_text:
@@ -573,177 +421,7 @@ def apply_preflight_fixes(
 
 
 # ---------------------------------------------------------------------------
-# Individual check runners
-# ---------------------------------------------------------------------------
-
-
-def _log_and_save_result(
-    result: PreflightResult,
-    label: str,
-    result_path: Path,
-) -> None:
-    """Log and save a single preflight check result."""
-    if result.status == "PASS":
-        log(f"  preflight-{label}: PASS — no issues found")
-    elif result.status == "ISSUES_FOUND":
-        high = len(result.high_issues)
-        total = len(result.issues)
-        log(f"  preflight-{label}: {total} issue(s) found ({high} HIGH)")
-        for issue in result.issues:
-            severity_marker = "!!" if issue.severity == "HIGH" else "?"
-            log(f"    {severity_marker} [{issue.issue_type}] {issue.problem[:120]}")
-    else:
-        log(f"  preflight-{label}: {result.status} — could not parse response")
-
-    result_data = {
-        "status": result.status,
-        "source": label,
-        "issue_count": len(result.issues),
-        "high_count": len(result.high_issues),
-        "issues": [
-            {
-                "type": i.issue_type,
-                "location": i.location,
-                "problem": i.problem,
-                "suggested_fix": i.suggested_fix,
-                "severity": i.severity,
-                "source": i.source,
-            }
-            for i in result.issues
-        ],
-    }
-    result_path.write_text(
-        yaml.dump(result_data, allow_unicode=True, default_flow_style=False, sort_keys=False),
-        "utf-8",
-    )
-
-
-def _dispatch_gemini_simple(
-    prompt: str, model: str | None = None, timeout: int = 300,
-) -> tuple[bool, str]:
-    """Call Gemini via the standard dispatch — simple (prompt_text) → (ok, output) interface."""
-    from batch_gemini_config import FLASH_MODEL
-    from pipeline.core import dispatch_gemini
-    return dispatch_gemini(
-        prompt, task_id="preflight-feasibility",
-        model=model or FLASH_MODEL, stdout_only=True, timeout=timeout,
-    )
-
-
-def run_feasibility_check(
-    rendered_prompt_path: Path,
-    track: str,
-    module_num: int,
-    orch_dir: Path,
-    dispatch_fn=None,
-) -> PreflightResult:
-    """Run the feasibility check (writer self-check + Russicism detection).
-
-    dispatch_fn signature: (prompt_text: str) -> tuple[bool, str]
-    """
-    if dispatch_fn is None:
-        dispatch_fn = _dispatch_gemini_simple
-
-    rendered_prompt = rendered_prompt_path.read_text("utf-8")
-    prompt_text = build_feasibility_prompt(rendered_prompt, track, module_num)
-
-    prompt_path = orch_dir / "preflight-feasibility-prompt.md"
-    prompt_path.write_text(prompt_text, "utf-8")
-
-    log("  preflight-feasibility: Dispatching to writer agent...")
-
-    ok, raw = dispatch_fn(prompt_text)
-
-    if not ok:
-        log("  preflight-feasibility: Dispatch failed")
-        return PreflightResult(status="DISPATCH_ERROR", raw_output=raw or "")
-
-    raw_output = raw or ""
-    # Save output for debugging
-    output_path = orch_dir / "preflight-feasibility-output.md"
-    output_path.write_text(raw_output, "utf-8")
-    result = parse_preflight_response(raw_output, source="feasibility")
-
-    result_path = orch_dir / "preflight-feasibility-result.yaml"
-    _log_and_save_result(result, "feasibility", result_path)
-
-    return result
-
-
-def _dispatch_claude_simple(
-    prompt: str, model: str = "claude-sonnet-4-6", timeout: int = 300,
-) -> tuple[bool, str]:
-    """Call Claude CLI with a plain prompt — no delimiters, no review-phase baggage.
-
-    Unlike dispatch_claude_phase (which injects ===REVIEW_START=== delimiters and
-    review-specific system prompts), this sends the prompt as-is and returns the
-    full response text.
-    """
-    import shutil
-    import subprocess as _sp
-
-    claude_bin = shutil.which("claude") or "claude"
-    cmd = [claude_bin, "--model", model, "-p", "--output-format", "text"]
-
-    try:
-        result = _sp.run(
-            cmd, input=prompt, capture_output=True, text=True, timeout=timeout,
-        )
-        if result.returncode != 0:
-            err = (result.stderr or "").strip()
-            log(f"  preflight-coherence: Claude CLI error (rc={result.returncode}): {err[:200]}")
-            return False, ""
-        return True, result.stdout.strip()
-    except FileNotFoundError:
-        log("  preflight-coherence: Claude CLI not found")
-        return False, ""
-    except _sp.TimeoutExpired:
-        log(f"  preflight-coherence: Claude CLI timeout ({timeout}s)")
-        return False, ""
-
-
-def run_coherence_check(
-    rendered_prompt_path: Path,
-    plan_path: Path,
-    track: str,
-    module_num: int,
-    orch_dir: Path,
-    dispatch_fn=None,
-) -> PreflightResult:
-    """Run the coherence check (reviewer plan-prompt alignment via Claude Sonnet)."""
-    if dispatch_fn is None:
-        dispatch_fn = _dispatch_claude_simple
-
-    rendered_prompt = rendered_prompt_path.read_text("utf-8")
-    plan_yaml = plan_path.read_text("utf-8")
-    prompt_text = build_coherence_prompt(rendered_prompt, plan_yaml, track, module_num)
-
-    prompt_path = orch_dir / "preflight-coherence-prompt.md"
-    prompt_path.write_text(prompt_text, "utf-8")
-
-    log("  preflight-coherence: Dispatching to reviewer agent (Claude Sonnet)...")
-
-    ok, raw = dispatch_fn(prompt_text)
-
-    if not ok:
-        log("  preflight-coherence: Dispatch failed")
-        return PreflightResult(status="DISPATCH_ERROR", raw_output=raw or "")
-
-    raw_output = raw or ""
-    # Save output for debugging
-    output_path = orch_dir / "preflight-coherence-output.md"
-    output_path.write_text(raw_output, "utf-8")
-
-    result = parse_preflight_response(raw_output, source="coherence")
-
-    result_path = orch_dir / "preflight-coherence-result.yaml"
-    _log_and_save_result(result, "coherence", result_path)
-
-    return result
-
-
-# ---------------------------------------------------------------------------
-# Combined runner (main entry point)
+# Runner (single call)
 # ---------------------------------------------------------------------------
 
 
@@ -753,76 +431,76 @@ def run_prompt_preflight(
     module_num: int,
     orch_dir: Path,
     dispatch_fn=None,
-    coherence_dispatch_fn=None,
     plan_path: Path | None = None,
-    coherence_model: str | None = None,
-) -> CombinedPreflightResult:
-    """Run both preflight checks in parallel and return combined result.
+    **_kwargs,
+) -> PreflightResult:
+    """Run the preflight check — single call to the writer agent.
+
+    Checks feasibility, Russianisms, and plan-prompt coherence (when plan available).
 
     Args:
         rendered_prompt_path: Path to the rendered content prompt.
-        track: Track identifier (e.g. "a1").
+        track: Track identifier.
         module_num: Module sequence number.
         orch_dir: Orchestration directory for saving artifacts.
-        dispatch_fn: Gemini dispatch function for feasibility (default: dispatch_gemini with Flash).
-        coherence_dispatch_fn: Claude dispatch function for coherence.
-            Signature: (prompt_text: str) -> tuple[bool, str].
-            Default: _dispatch_claude_simple with coherence_model.
-        plan_path: Path to plan YAML. If None, coherence check is skipped.
-        coherence_model: Override model for coherence check (default: claude-sonnet-4-6).
+        dispatch_fn: Writer dispatch function. Signature: (prompt_text: str) -> tuple[bool, str].
+        plan_path: Path to plan YAML. If provided, coherence check is included.
 
     Returns:
-        CombinedPreflightResult with merged issues from both checks.
+        PreflightResult with status and issues.
     """
-    # Build coherence dispatch with model override
-    if coherence_dispatch_fn is None and plan_path is not None:
-        model = coherence_model or "claude-sonnet-4-6"
+    if dispatch_fn is None:
+        from batch_gemini_config import FLASH_MODEL
+        from pipeline.core import dispatch_gemini
 
-        def coherence_dispatch_fn(prompt_text: str) -> tuple[bool, str]:
-            return _dispatch_claude_simple(prompt_text, model=model)
-
-    # Run checks in parallel if coherence is available
-    if plan_path is not None and plan_path.exists():
-        log("  preflight: Running feasibility + coherence checks in parallel...")
-
-        executor = ThreadPoolExecutor(max_workers=2)
-        try:
-            feas_future = executor.submit(
-                run_feasibility_check,
-                rendered_prompt_path, track, module_num, orch_dir, dispatch_fn,
+        def dispatch_fn(prompt_text):
+            return dispatch_gemini(
+                prompt_text, task_id="preflight",
+                model=FLASH_MODEL, stdout_only=True, timeout=300,
             )
-            coh_future = executor.submit(
-                run_coherence_check,
-                rendered_prompt_path, plan_path, track, module_num, orch_dir,
-                coherence_dispatch_fn,
-            )
-            feasibility = feas_future.result()
-            coherence = coh_future.result()
-        except KeyboardInterrupt:
-            log("  preflight: Interrupted — cancelling checks...")
-            executor.shutdown(wait=False, cancel_futures=True)
-            raise
-        finally:
-            executor.shutdown(wait=False)
+
+    rendered_prompt = rendered_prompt_path.read_text("utf-8")
+    plan_yaml = None
+    if plan_path and plan_path.exists():
+        plan_yaml = plan_path.read_text("utf-8")
+
+    prompt_text = build_preflight_prompt(rendered_prompt, track, module_num, plan_yaml)
+
+    # Save prompt for debugging
+    prompt_save_path = orch_dir / "preflight-prompt.md"
+    prompt_save_path.write_text(prompt_text, "utf-8")
+
+    log("  preflight: Dispatching to writer agent...")
+
+    ok, raw = dispatch_fn(prompt_text)
+
+    if not ok:
+        log("  preflight: Dispatch failed")
+        return PreflightResult(status="DISPATCH_ERROR", raw_output=raw or "")
+
+    raw_output = raw or ""
+    output_path = orch_dir / "preflight-output.md"
+    output_path.write_text(raw_output, "utf-8")
+
+    result = parse_preflight_response(raw_output)
+
+    # Log and save
+    if result.status == "PASS":
+        log("  preflight: PASS — no issues found")
+    elif result.status == "ISSUES_FOUND":
+        high = len(result.high_issues)
+        total = len(result.issues)
+        log(f"  preflight: {total} issue(s) found ({high} HIGH)")
+        for issue in result.issues:
+            severity_marker = "!!" if issue.severity == "HIGH" else "?"
+            log(f"    {severity_marker} [{issue.issue_type}] {issue.problem[:120]}")
     else:
-        if plan_path is None:
-            log("  preflight: No plan path — skipping coherence check")
-        elif not plan_path.exists():
-            log(f"  preflight: Plan not found at {plan_path} — skipping coherence check")
-        feasibility = run_feasibility_check(
-            rendered_prompt_path, track, module_num, orch_dir, dispatch_fn,
-        )
-        coherence = None
+        log(f"  preflight: {result.status} — could not parse response")
 
-    combined = CombinedPreflightResult(feasibility=feasibility, coherence=coherence)
-
-    # Save combined result (backward compat)
-    combined_data = {
-        "status": combined.status,
-        "feasibility_status": feasibility.status,
-        "coherence_status": coherence.status if coherence else "SKIPPED",
-        "issue_count": len(combined.issues),
-        "high_count": len(combined.high_issues),
+    result_data = {
+        "status": result.status,
+        "issue_count": len(result.issues),
+        "high_count": len(result.high_issues),
         "issues": [
             {
                 "type": i.issue_type,
@@ -830,15 +508,14 @@ def run_prompt_preflight(
                 "problem": i.problem,
                 "suggested_fix": i.suggested_fix,
                 "severity": i.severity,
-                "source": i.source,
             }
-            for i in combined.issues
+            for i in result.issues
         ],
     }
-    combined_path = orch_dir / "preflight-result.yaml"
-    combined_path.write_text(
-        yaml.dump(combined_data, allow_unicode=True, default_flow_style=False, sort_keys=False),
+    result_path = orch_dir / "preflight-result.yaml"
+    result_path.write_text(
+        yaml.dump(result_data, allow_unicode=True, default_flow_style=False, sort_keys=False),
         "utf-8",
     )
 
-    return combined
+    return result

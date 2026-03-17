@@ -42,6 +42,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from batch_gemini_config import (
+    FLASH_MODEL,
     PHASES_DIR,
     PRO_MODEL,
     PRO_TRACKS,
@@ -1688,78 +1689,36 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     except Exception as e:
         log(f"  pre-content: Research quality check skipped — {e}")
 
-    # Prompt preflight: feasibility (writer self-check) + coherence (reviewer) in parallel
+    # Prompt preflight: single writer call (feasibility + Russianisms + coherence)
     if not getattr(ctx, "skip_prompt_preflight", False):
         try:
             from pipeline.prompt_preflight import apply_preflight_fixes, run_prompt_preflight
 
-            # Feasibility = writer's self-check (same agent that builds content)
-            # Coherence = reviewer (opposite of writer)
-            # Both use simple signature: (prompt_text: str) -> tuple[bool, str]
-            writer = getattr(ctx, "writer", "gemini")
-            coherence_model = getattr(ctx, "coherence_model", None)
-
-            if writer == "claude":
-                from pipeline.prompt_preflight import _dispatch_claude_simple, _dispatch_gemini_simple
-                _feasibility_dispatch = _dispatch_claude_simple
-                # Reviewer = Gemini
-                _coherence_dispatch = _dispatch_gemini_simple
-            else:
-                from pipeline.prompt_preflight import _dispatch_gemini_simple
-                # Writer = Gemini (default)
-                _feasibility_dispatch = _dispatch_gemini_simple
-                # Reviewer = Claude (default)
-                _coherence_dispatch = None  # uses _dispatch_claude_simple in run_prompt_preflight
+            # Writer dispatch — same agent that builds content
+            def _preflight_dispatch(prompt_text):
+                return dispatch_gemini(
+                    prompt_text, task_id="preflight",
+                    model=FLASH_MODEL, stdout_only=True, timeout=300,
+                )
 
             preflight = run_prompt_preflight(
                 prompt_file, ctx.track, ctx.module_num, ctx.orch_dir,
-                dispatch_fn=_feasibility_dispatch,
-                coherence_dispatch_fn=_coherence_dispatch,
+                dispatch_fn=_preflight_dispatch,
                 plan_path=ctx.paths.get("plan"),
-                coherence_model=coherence_model,
             )
 
-            # Helper to persist preflight state before any early return
-            def _save_preflight_state(auto_fixed: bool = False) -> None:
-                feas_status = preflight.feasibility.status
-                coh_status = preflight.coherence.status if preflight.coherence else "SKIPPED"
-                ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
-                    "status": preflight.status,
-                    "feasibility_status": feas_status,
-                    "coherence_status": coh_status,
-                    "issues": len(preflight.issues),
-                    "high": len(preflight.high_issues),
-                    "auto_fixed": auto_fixed,
-                }
-
-            # Coherence HIGH issues → immediate failure (human must fix)
-            if preflight.coherence_high_issues:
-                log(f"  preflight: BLOCKED — {len(preflight.coherence_high_issues)} "
-                    "coherence HIGH issue(s) (plan-prompt misalignment)")
-                for ci in preflight.coherence_high_issues:
-                    log(f"    → {ci.problem[:150]}")
-                log("  preflight: Fix the template or plan, then re-run")
-                _save_preflight_state()
-                return False
-
-            # Feasibility HIGH issues → try auto-fix
-            if preflight.feasibility_high_issues:
-                log(f"  preflight: WARNING — {len(preflight.feasibility_high_issues)} "
-                    "feasibility HIGH issue(s)")
-                for hi in preflight.feasibility_high_issues:
+            # HIGH issues → try auto-fix
+            if preflight.high_issues:
+                for hi in preflight.high_issues:
                     log(f"    → {hi.problem[:150]}")
                     if hi.suggested_fix:
                         log(f"      FIX: {hi.suggested_fix[:150]}")
 
-                # Split issues by type
-                russicism_issues = [i for i in preflight.feasibility_high_issues
-                                    if i.issue_type == "RUSSICISM"]
-                prompt_issues = [i for i in preflight.feasibility_high_issues
-                                 if i.issue_type != "RUSSICISM"]
-
+                russicism_issues = [i for i in preflight.high_issues if i.issue_type == "RUSSICISM"]
+                prompt_issues = [i for i in preflight.high_issues if i.issue_type != "RUSSICISM"]
                 auto_fixed = False
 
-                # Fix Russianisms in the plan (not the prompt)
+                # Fix Russianisms in the plan
                 if russicism_issues:
                     plan_path = ctx.paths.get("plan")
                     if plan_path and plan_path.exists():
@@ -1772,18 +1731,23 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                                 log(f"  preflight: Fixed {n_fixes} Russicism(s) in plan")
                                 for c in changes:
                                     log(f"    ✅ {c}")
+                                # Re-read plan and re-render prompt
+                                ctx.plan = yaml.safe_load(plan_path.read_text("utf-8"))
+                                ctx.placeholders = {}
+                                build_placeholders(ctx)
+                                if not fill_template(template, ctx.placeholders, prompt_file, overrides=overrides):
+                                    log("  preflight: BLOCKED — re-render after Russicism fix failed")
+                                    return False
+                                log("  preflight: Prompt re-rendered from fixed plan")
                                 auto_fixed = True
                             else:
-                                log("  preflight: BLOCKED — Russicism(s) found but auto-fix could not resolve them")
-                                log("  preflight: Fix plan vocabulary_hints manually, then re-run")
-                                _save_preflight_state()
+                                log("  preflight: BLOCKED — Russicism(s) found but auto-fix failed")
                                 return False
                         except Exception as e:
                             log(f"  preflight: Russicism auto-fix failed — {e}")
-                            _save_preflight_state()
                             return False
 
-                # Fix prompt contradictions (existing pattern-based fix)
+                # Fix prompt contradictions
                 if prompt_issues:
                     fixed_prompt_path = apply_preflight_fixes(
                         prompt_file, prompt_issues, ctx.orch_dir,
@@ -1792,13 +1756,16 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                         log(f"  preflight: Auto-fixed prompt saved → {fixed_prompt_path.name}")
                         prompt_file = fixed_prompt_path
                         auto_fixed = True
-                    else:
-                        log("  preflight: BLOCKED — prompt issues but auto-fix failed")
-                        log("  preflight: Fix the template or pipeline code, then re-run")
-                        _save_preflight_state()
+                    elif not auto_fixed:
+                        log("  preflight: BLOCKED — HIGH issues but auto-fix failed")
                         return False
 
-            _save_preflight_state(auto_fixed=auto_fixed if preflight.feasibility_high_issues else False)
+            # Save preflight state
+            ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
+                "status": preflight.status,
+                "issues": len(preflight.issues),
+                "high": len(preflight.high_issues),
+            }
         except Exception as e:
             log(f"  preflight: Skipped — {e}")
 
