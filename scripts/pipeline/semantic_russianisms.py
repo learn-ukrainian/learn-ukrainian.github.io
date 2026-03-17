@@ -219,22 +219,38 @@ def fix_plan_russianisms(plan_path: Path, findings: list[dict]) -> int:
             continue
 
         old = finding["original_entry"]
-        # Build replacement entry
         new = old
-        # Replace the word
-        new = re.sub(
-            rf"\b{re.escape(finding['word'])}\b",
-            finding["replacement"],
-            new,
-            count=1,
-        )
-        # Replace the translation if we have one
-        if finding["replacement_translation"] and finding["meaning_found"]:
-            new = new.replace(
-                f"({finding['meaning_found']}",
-                f"({finding['replacement_translation']}",
-                1,
+        category = finding.get("category", "")
+
+        if category.startswith("content_outline") or category == "research":
+            # In content_outline/research: the Ukrainian word is correct, the English
+            # meaning is wrong. Do a direct text replacement in the file content —
+            # find the word+meaning pattern and replace the meaning.
+            # Use the simple pattern: word ... meaning (handles YAML wrapping)
+            pattern = rf"(\b{re.escape(finding['word'])}\b[^)]*?){re.escape(finding['meaning_found'])}"
+            replacement = rf"\g<1>{finding['ukrainian_meaning'].split(',')[0].strip()}"
+            new_content = re.sub(pattern, replacement, content, count=1, flags=re.IGNORECASE)
+            if new_content != content:
+                content = new_content
+                fixes += 1
+                log(f"  preflight-russicism: FIXED — '{finding['word']}' meaning "
+                    f"'{finding['meaning_found']}' → '{finding['ukrainian_meaning']}' "
+                    f"in {category}")
+            continue
+        else:
+            # In vocabulary_hints: replace the word AND the translation.
+            new = re.sub(
+                rf"\b{re.escape(finding['word'])}\b",
+                finding["replacement"],
+                new,
+                count=1,
             )
+            if finding["replacement_translation"] and finding["meaning_found"]:
+                new = new.replace(
+                    f"({finding['meaning_found']}",
+                    f"({finding['replacement_translation']}",
+                    1,
+                )
 
         if old != new and old in content:
             content = content.replace(old, new, 1)
