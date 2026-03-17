@@ -2,10 +2,10 @@
   "module": "the-ukrainian-alphabet",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-16T11:37:07.351434Z",
+  "last_audit": "2026-03-17T07:49:51.711758Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-16T11:30:36.691120Z",
+    "md": "2026-03-16T12:59:30.403860Z",
     "meta": "2026-03-12T10:15:04.257510Z",
     "activities": "2026-03-16T11:36:51.635011Z",
     "vocabulary": "2026-03-16T11:33:55.549623Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2052/1200 (raw: 2151)"
+      "message": "2072/1200 (raw: 2171)"
     },
     "activities": {
       "status": "pass",

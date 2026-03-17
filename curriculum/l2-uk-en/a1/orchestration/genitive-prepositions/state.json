@@ -1,0 +1,36 @@
+{
+  "track": "a1",
+  "slug": "genitive-prepositions",
+  "mode": "v5",
+  "phases": {
+    "discover": {
+      "status": "complete",
+      "ts": "2026-03-17T07:20:43Z",
+      "note": "merged-into-research",
+      "executor": {
+        "type": "script",
+        "name": "discovery_search"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-17T07:20:43Z",
+      "task_id": "v5-genitive-prepositions-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-17T07:21:51Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    }
+  }
+}

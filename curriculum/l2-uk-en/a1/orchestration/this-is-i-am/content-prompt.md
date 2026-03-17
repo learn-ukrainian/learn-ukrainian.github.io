@@ -1,0 +1,510 @@
+# Module Build: Content + Activities + Vocabulary
+
+## 1. Goal
+
+> **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Patient Supportive Tutor.**
+>
+> Build a complete beginner module for English-speaking teens and adults learning Ukrainian at the a1 level. Your job: **search Ukrainian school textbooks using RAG tools**, then **adapt** the pedagogy for L2 learners.
+>
+> **Output capacity: 65,000+ tokens.** Do NOT truncate.
+
+**What L2 learners need** (that L1 textbooks assume):
+1. Explicit grammar rules in English (L1 learners know intuitively)
+2. Level-appropriate vocabulary only
+3. Setting/purpose for dialogues (L1 assumes shared cultural context)
+
+## 2. Scoring Dimensions
+
+Your content will be scored on these 7 dimensions (see GEMINI.md for details):
+1. **Experience Quality** — would the learner continue?
+2. **Language Accuracy** — correct Ukrainian, no Russianisms
+3. **Pedagogy** — clear progression, quick wins
+4. **Activities** — variety, appropriate difficulty
+5. **Beginner Safety** — warm tone, not overwhelming
+6. **LLM Fingerprint** — natural voice, not robotic
+7. **Linguistic Accuracy** — factual correctness
+
+---
+
+## 3. Context
+
+### Input Files (read ALL before writing)
+
+| File | What to extract |
+|------|----------------|
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/research/this-is-i-am-research.md` | Background knowledge, engagement hooks |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/this-is-i-am.yaml` | Objectives, vocabulary_hints (source of truth) |
+| `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A1.md` | Level constraints, immersion band |
+| `schemas/activities-a1.schema.json` | Activity field definitions (`additionalProperties: false`) |
+
+### RAG Tools
+
+| Tool | When | Example |
+|------|------|---------|
+| `search_text` | Find textbook pedagogy | `search_text("Personal pronouns Zero copula construction", grade=1-2)` |
+| `verify_words` | Check words exist in VESUM | `verify_words(["книга", "великий"])` |
+| `verify_lemma` | Get inflected forms | `verify_lemma("книга")` |
+| `query_pravopys` | Spelling/grammar rules | `query_pravopys("апостроф")` |
+
+### What the Learner Already Knows
+
+**Modules completed before this one:** 8
+**Previous module:** Greetings and Politeness
+
+**Cumulative vocabulary (103 words):**
+мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
+сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, сестра
+дерево, вулиця, автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів
+сім'я, ґудзик, вода, кава, чай, замок, рука, писати, школа, добрий
+далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
+вона, воно, книга, слово, мова, дім, вікно, брат, ніч, час
+море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую
+Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово
+Смачного, На здоров'я, Добраніч
+
+**Grammar already taught (31 topics):**
+- Full alphabet overview (33 letters)
+- Sound-letter correspondence (букви vs звуки)
+- Vowel vs consonant classification
+- Basic syllable blending and word reading
+- Base vowel pronunciation (А О У Е И І)
+- Iotated vowels dual function (Я Ю Є Ї)
+- И vs І distinction
+- Word stress basics (наголос)
+- Vowel purity rule (no reduction)
+- Sonorant consonants (Л М Н Р В)
+- Voiced/voiceless consonant pairs
+- No final devoicing rule
+- Hard/soft consonant distinction
+- Г vs Ґ distinction
+- Soft sign palatalization (Ь)
+- Apostrophe function and rules
+- Affricates (Ц, Ч, Щ)
+- Digraphs (ДЖ, ДЗ)
+- Ф — rare native, common in borrowings
+- Full alphabet mastery
+- Syllable structure
+- Open and closed syllables
+- Word division rules
+- Word stress
+- Stress mobility
+- Intonation patterns
+- Three-gender system
+- Declension families overview
+- Gender prediction rules
+- T-V distinction
+- Imperative forms in politeness expressions
+
+**Coming next (module after this):** Demonstratives цей/ця/це/ці (this), Demonstratives той/та/те/ті (that), Gender agreement with demonstratives
+You may use related words as fixed phrases for foreshadowing, but do NOT explain the grammar rule.
+
+**Rule:** Do not re-explain grammar already taught. Do not use vocabulary words the learner hasn't seen unless you introduce them explicitly.
+
+### Vocabulary
+
+
+
+**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your 20 vocabulary target:
+
+### Vocabulary from Plan (MANDATORY — include ALL required items)
+
+**Required** (MUST appear in vocabulary YAML):
+- це (this is) — collocations: це (noun), хто це?, що це?; Top 10 frequency per Leipzig corpora
+- я (I) — collocations: я студент, я тут; Top 20 frequency; used for identity statements
+- ти (you) — collocations: ти хто?, ти де?; informal register for peers/friends
+- він (he) — collocations: він там, він українець; replaces masculine nouns
+- вона (she) — collocations: вона тут, вона вчителька; replaces feminine nouns
+- хто (who) — collocations: хто це?; used for identifying persons per §4.2.3.1
+- що (what) — collocations: що це?, що там?; used for identifying objects
+- студент / студентка (student) — high frequency thematic noun; used to practice zero copula
+
+**Recommended** (use in your content to reach the vocabulary target):
+- ви (you formal/pl.) — mandatory default for strangers/elders; 'Safety Net' register
+- ми (we) — Top 20 frequency; collective identity
+- вони (they) — Top 20 frequency; identifying groups
+- воно (it) — usage note: only for neuter nouns; avoid 'It Trap' with inanimate objects
+- українець / українка (Ukrainian) — nationality identification; gender-specific forms
+- вчитель / вчителька (teacher) — high frequency thematic noun for roles
+- ось (here/over here) — collocation: ось там (over there); per State Standard §4.2.3.1
+
+These are your TARGET words — teach them all and use them heavily. For the rest of the text, use natural, level-appropriate Ukrainian.
+
+**VOCAB-IN-CONTENT RULE:** All vocabulary words from vocabulary_hints MUST appear at least once in the module content. Orphaned vocabulary (listed but never used in content) is a validation failure.
+
+### Immersion Target
+
+TARGET: 15-35% Ukrainian.
+LANGUAGE ROLES:
+- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
+- UKRAINIAN CONTENT: Words and phrases inline bolded. Short example sentences in bulleted lists or tables — each with English gloss on the same line.
+- TABLES: Word families, vocabulary groups, simple paradigm tables.
+- PATTERN BOXES: Show transformations: `слово → слова` (word → words).
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian vocabulary. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+Ukrainian sentences max 10 words.
+
+### Blog Articles & Guides
+- **Ukrainian Personal Pronouns** (ukrainianlessons.com)
+  URL: https://www.ukrainianlessons.com/ukrainian-personal-pronouns/
+  Relevance: 0.6
+  Topics: pronouns, grammar, declension
+
+- **Dobra Forma: Personal Pronouns (Nominative and Accusative Cases)** (dobraforma)
+  URL: https://opentext.ku.edu/dobraforma/chapter/13-1/
+  Relevance: 0.6
+  Topics: pronouns, accusative, grammar
+
+- **Talk Ukrainian: Personal Pronouns** (talkukrainian)
+  URL: https://talkukrainian.com/personal-pronouns/
+  Relevance: 0.6
+  Topics: pronouns, personal, grammar
+
+- **Ukrainian Personal Pronouns** (verba.school)
+  URL: https://www.verba.school/post/ukrainian-personal-pronouns
+  Relevance: 0.6
+  Topics: grammar, pronouns
+
+- **Dobra Forma: Personal Pronouns (Accusative and Genitive Cases)** (dobraforma)
+  URL: https://opentext.ku.edu/dobraforma/chapter/13-2/
+  Relevance: 0.5
+  Topics: pronouns, accusative, genitive, grammar
+
+
+### Textbook References
+- **Grade 4, Сторінка 88**
+  1
+( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ
+241. Зіскануй ОЯ-код та переглянь відеоролик про 
+займенники. Що нового ти дізнався / дізнала­
+ся?
+242.1. Розглянь малюнки. Добери до них займенники.
+з—-**
+2. Досліди...
+
+- **Grade 2, Сторінка 45**
+  ч ч
+>
+✓
+✓
+Слова — назви
+(предметів, ознак, дій, чисел)
+У розділі ти дізнаєшся про:
+/
+< ч ч
+СЛОВА - НАЗВИ ПРЕДМЕТІВ 
+(ІМЕННИКИ)
+хто? що?
+СЛОВА - НАЗВИ ОЗНАК 
+\
+ПРЕДМЕТІВ (ПРИКМЕТНИКИ)
+який? яка? 
+яке? ...
+
+- **Grade 1, Сторінка 23**
+  21
+Хто це?
+Слова — назви живих предметів
+	 Який у тебе сьогодні настрій? Вибери.
+ [ –    –|–  ] 
+ [ =    –|–   ] 
+ [ –  |–  |– ] 
+ [ =  |–   – ] 
+Що?
+Хто?...
+
+- **Grade 3, Сторінка 101**
+  Частини  мови
+У розділі ти будеш вивчати:
+ІМЕННИКИ
+хто? що?
+який? яка? 
+яке? які?
+що робить? 
+що роблять?
+скільки?  
+котрий?
+ЧИСЛІВНИКИ
+ДІЄСЛОВА
+ПРИКМЕТНИКИ...
+
+- **Grade 4, Сторінка 122**
+  •  Спишіть текст, уставляючи на місці крапок пропущені займен­
+ники я, ти, він, вона, воно, ми, ви, вони. Поміркуйте, на що 
+вказують (на яких осіб) ці займенники. Звірте свої міркуван­
+ня з таблицею,...
+
+
+
+
+
+
+---
+
+## 4. Outline
+
+Write **This Is / I Am** for the a1 track.
+
+**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+
+## REQUIRED H2 Sections and Points (MANDATORY)
+
+Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says *айтішник*, use *айтішник*, not a synonym).
+
+- `## Вступ: Хто це? Що це? (Introduction: Who is this? What is this?)` (~200 words)
+  - Simple identification sentences following State Standard §4.2.3.1: 'Це Ірина', 'Це підручник', 'Це новий телевізор'
+  - Pattern focus: Identifying people (хто) vs objects (що) using the demonstrative 'це'
+  - Concept of naming: Introduction to 'Мене звати...' (Standard requirement) as a precursor to identity statements
+- `## Презентація: Особові займенники (Presentation: Personal Pronouns)` (~275 words)
+  - Introduction to personal pronouns (я, ти, він, вона, воно, ми, ви, вони) aligns with State Standard §4.2.1.4
+  - Formal vs Informal Register: The 'Ви' Safety Net — why starting with 'Ви' is mandatory for strangers and elders in Ukrainian culture
+  - The 'Vi' to 'Ty' transition: Introduction to the 'Bruderschaft' concept and the social milestone of shifting registers ('Давай на ти?')
+  - Learner error: Register Mix-up — using 'ти' with officials or elders due to lack of T-V distinction in English
+- `## Граматика: Секрет нульової зв'язки (Grammar: The Zero Copula Secret)` (~350 words)
+  - The Zero Copula rule: Subject + Predicate without 'to be' (Standard §4.2.3.1 simple identification)
+  - Visualizing the gap: Using the 'Ø' or '—' symbol to map 'I [Ø] student' (Я студент) vs English 'I am a student'
+  - Learner error: The Phantom 'Is' — interference from English causing students to insert 'є' unnecessarily (e.g., *Я є студент)
+  - Note on 'є': Explanation that while the linking verb exists, it is rarely used in identification sentences in modern speech
+- `## Робота над помилками та практика (Error Correction and Practice)` (~200 words)
+  - Learner error: The 'It' Trap — using 'воно' (it) for all inanimate objects (tables, lamps) instead of gendered pronouns (він/вона) from a1-03
+  - Drill: Replacing nouns with correct gendered pronouns (Стіл -> він, Книга -> вона) to reinforce that everything in Ukrainian has gender
+  - Transformation drills: Converting 'Це Іван' to 'Він студент' to practice noun-to-pronoun mapping
+- `## Продакшн: Хто я і Хто ви? (Production: Who am I and Who are you?)` (~175 words)
+  - Task: Self-introduction using zero copula patterns for name, role, and nationality (Я студент, Я українець)
+  - Roleplay: Meeting a stranger (using 'Ви' Safety Net) vs meeting a peer, identifying others in the room
+  - Summary: Reviewing the simple Subject + Predicate identification structure as the foundation for A1.1 communication
+- `## Підсумок — Summary` (~150 words) — recap + 3-4 self-check questions
+
+### Section Word Budgets
+
+| Section | Minimum |
+|---------|---------|
+| Вступ: Хто це? Що це? (Introduction: Who is this? What is this?) | 200+ |
+| Презентація: Особові займенники (Presentation: Personal Pronouns) | 275+ |
+| Граматика: Секрет нульової зв'язки (Grammar: The Zero Copula Secret) | 350+ |
+| Робота над помилками та практика (Error Correction and Practice) | 200+ |
+| Продакшн: Хто я і Хто ви? (Production: Who am I and Who are you?) | 175+ |
+| **Total** | **1200+ (aim for ~1440)** |
+
+---
+
+## 5. Guidelines
+
+### Workflow
+1. **Research first**: `search_text("Personal pronouns Zero copula construction", grade=1-2)` — find how textbooks teach this
+2. **Write content** following the outline and lesson arc below
+3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
+4. **Create activities** from your content
+5. **Verify activities**: batch `verify_words` on all activity items
+
+### Beginner Lesson Arc
+
+1. **WELCOME** — warm greeting, set context
+2. **PREVIEW** — "By the end of this module, you'll be able to..."
+3. **PRESENT** — the main content sections
+4. **PRACTICE** — examples, dialogues, reading practice
+5. **CELEBRATE** — in the final `## Підсумок — Summary` section, tell learners what they can now do
+
+### Emotional Safety (scored — Beginner Safety dimension)
+
+Use direct address ("you", "your") at least 15 times throughout the module. Include encouragement ("Great job!", "You're doing well", "Don't worry"), quick wins (learner reads their first word early), and reassurance ("This is normal", "Take your time"). The learner should feel supported, not overwhelmed.
+
+### Writing Style
+
+English explains; Ukrainian is what they're learning. In each section:
+1. **Explain** the concept in English (with Ukrainian vocabulary **bolded inline**). Short Ukrainian phrases are fine inline.
+2. **Show** with **5-10 Ukrainian examples** per grammar point using bulleted lists, dialogues, and pattern boxes.
+3. **Reinforce** with a callout box (`[!tip]`, `[!warning]`, `[!note]`, `[!culture]`, `[!challenge]`, `[!practice]`)
+
+Tables contribute zero to immersion. Use **dialogues** and **bulleted examples** for Ukrainian content.
+
+**MANDATORY for A2+:** Reading Practice blocks after each major section (5-8 Ukrainian sentences + English translation).
+
+**Grammar terminology by level:**
+- A1 M1-M10: English terms in prose, bilingual section headings with em-dash: `## Голосні — Vowels`
+- A1 M11+: Introduce Ukrainian terms with gloss: **іменник** (noun)
+- A2+: Ukrainian terms freely after first gloss
+
+### Dialogue Quality
+
+**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
+
+**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
+- Greeting: `— Привіт! — Привіт!`
+- Identification: `— Це кіт? — Так, це кіт.`
+- Location: `— Молоко тут? — Ні, молоко там.`
+- Combined: `— Мама тут? — Так, мама тут. А тато там.`
+
+Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
+
+**Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
+
+## Language Quality Rules (Beginner Tier)
+
+### Russian Characters (HARD FAIL)
+
+**ы, э, ё, ъ** must NEVER appear in Ukrainian text. These are Russian-only characters.
+
+### Stress Mark Typography
+
+Use lowercase letters with a combining acute accent (´) on the stressed vowel:
+- Correct: ма́ма, анана́с, оса́, сосна́
+- Wrong: мА́ма, ананА́с, осА́, соснА́ (do NOT capitalize the stressed vowel)
+
+### IPA and Latin Transliteration (BANNED at ALL levels)
+
+Never include IPA symbols (ɑ, ɛ, ʃ, etc.) or bracketed pronunciation guides like `[ma-ma]`, `[a-na-nas]`, `[ˈmɑmɑ]`. The ONLY pronunciation aid is the stress mark (´) on the vowel.
+
+Latin transliterations are BANNED: never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
+
+```markdown
+❌ WRONG: "мама [ˈmɑmɑ]" or "хліб (khlib)"
+✅ RIGHT: "**ма́ма** (mom)" or "**Х**, like the «ch» in Scottish «loch»"
+```
+
+### Typography
+
+- **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
+- Base content vocabulary on the plan's `vocabulary_hints`. Function words (pronouns, conjunctions, particles, question words) are always allowed
+
+### No Word Salad (HARD FAIL)
+
+Every paragraph must have ONE clear point and logical flow between sentences. Do NOT string together unrelated observations.
+
+### LLM Writing Patterns to Avoid
+
+1. **Grandiose openers** — don't inflate every topic
+2. **Stacked identical callouts** — same title max twice, vary types
+3. **"In this lesson, we will..."** — ALWAYS banned (formulaic opener)
+
+
+### Activity Rules
+
+- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
+- Read `schemas/activities-a1.schema.json` for full field definitions.
+
+**Allowed types:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
+**Forbidden types:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
+**Required types:** fill-in, fill-in, fill-in
+
+| Module range | Use these | Avoid these |
+|-------------|-----------|-------------|
+| M1-M4 (alphabet) | quiz, match-up, group-sort, anagram, true-false, fill-in, watch-and-repeat, image-to-letter, classify | unjumble, cloze, translate |
+| M5-M10 | + unjumble, fill-in with sentences | cloze, translate |
+| M11+ | all types including translate | cloze (needs 14+ blanks) |
+
+### Item Minimums (HARD FAIL if under)
+
+| Type | Minimum |
+|------|--------|
+| quiz | ≥6 items |
+| true-false | ≥6 items |
+| fill-in | ≥6 items |
+| match-up | ≥6 pairs |
+| anagram | ≥6 items |
+| unjumble | ≥6 items |
+| group-sort | ≥8 items |
+| watch-and-repeat | ≥1 items |
+| classify | ≥1 items |
+| image-to-letter | ≥5 items |
+
+### Vocabulary YAML
+
+Object with `items:` wrapper. Each entry: `lemma` (dictionary form), `translation`, `pos`. Optional: `gender`, `notes`, `usage`, `example`. No `ipa` field.
+
+---
+
+## 6. Hard Constraints
+
+GRAMMAR CONSTRAINTS (A1.1 — First Contact):
+Keep grammar simple — this is the learner's first exposure to Ukrainian.
+
+ALLOWED:
+- Це + noun: «Це кіт», «Це мама»
+- Simple present tense (я читаю, я бачу)
+- Basic imperatives (читай, слухай, дивись)
+- Question words: «Хто це?», «Що це?», «Де?»
+- Так/Ні answers
+- Adj + noun: «великий дім», «нова книга»
+
+BANNED (too complex for first contact):
+- Past tense, future tense, conditionals
+- Participles, passive voice, gerunds
+- Compound/complex sentences — max 1 clause per sentence (no і/а/але joining clauses)
+- Do not explicitly teach cases — use nouns in natural contexts
+
+METALANGUAGE:
+- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'
+- Section headings MUST be bilingual (e.g., '## Голосні — Vowels')
+- Explanatory prose in English, Ukrainian for examples and dialogues
+
+- **No Russianisms**: кушати→їсти, получати→отримувати, самий→найкращий
+- **No Russian characters**: ы, э, ё, ъ — never
+- **No colonial framing**: never define Ukrainian by comparing it to Russian. Don't say "unlike Russian..." or "not found in Russian." Present Ukrainian on its own terms
+- **No IPA or Latin transliteration** — stress marks (´) only
+- **Ukrainian quotes** in content: «...» | **YAML values**: plain text or single quotes (never «»)
+- **Euphony** (у/в, і/й alternation): follow rules in the shared content rules section below — audit flags violations
+- **YAML colon values**: quote with single quotes: `'text: with colon'`
+- H2 titles must match the outline EXACTLY. You MAY add H3 sub-headings within H2 sections (e.g., for individual letters, grammar sub-topics)
+- **MUST end with `## Підсумок — Summary`** with self-check questions
+
+### Common Irregular Imperatives
+
+If your module uses imperative verbs:
+- взяти → **візьми/візьміть** (NOT ~~взяй~~)
+- стояти → **стій/стійте** (NOT ~~стояй~~)
+- сісти → **сядь/сядьте** (NOT ~~сісь~~)
+- їсти → **їж/їжте** (NOT ~~їсь~~)
+
+The Russian conjunction **"и"** (meaning "and") is forbidden. Use Ukrainian conjunctions **і**, **й** (after vowels), or **та**.
+
+---
+
+## 7. Output Format
+
+> **Content outside delimiters is automatically discarded.**
+
+Output FIVE blocks in this exact order (plus optional friction report):
+
+**Block 1: Content** — `===CONTENT_START===` ... `===CONTENT_END===`
+**Block 2: Word Counts** — `===WORD_COUNTS_START===` ... `===WORD_COUNTS_END===`
+**Block 3: Activities** — `===ACTIVITIES_START===` ... `===ACTIVITIES_END===` (bare list, no wrapper)
+**Block 4: Vocabulary** — `===VOCABULARY_START===` ... `===VOCABULARY_END===` (object with `items:`)
+**Block 5: Builder Notes** — `===BUILDER_NOTES_START===` ... `===BUILDER_NOTES_END===`
+
+### Builder Notes (MANDATORY)
+
+```
+===BUILDER_NOTES_START===
+phase: CONTENT
+status: SUCCESS | PARTIAL | BLOCKED
+word_count: {actual}
+deviations:
+  - section: "{section}"
+    reason: "{why}"
+frictions:
+  - type: TEMPLATE_CONSTRAINT | SCHEMA_MISMATCH | PLAN_GAP | RAG_FAILURE
+    description: "{what went wrong}"
+    proposed_fix: "{fix}"
+research_gaps:
+  - "{what you couldn't find}"
+unverified_terms:
+  - "{words you couldn't verify}"
+review_focus:
+  - "{what reviewer should check}"
+rag_tools_used:
+  - "{tool}: {query} → {result}"
+===BUILDER_NOTES_END===
+```
+
+### Friction Report (OPTIONAL — only if you hit pipeline/schema issues)
+
+```
+===FRICTION_START===
+**Phase**: Full Build
+**Friction Type**: YAML_SCHEMA_VIOLATION | PLAN_GAP | CONTRADICTION
+**Problem**: {what went wrong}
+**Proposed Fix**: {how to fix the template/pipeline}
+===FRICTION_END===
+```

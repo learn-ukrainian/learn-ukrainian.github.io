@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-ukrainian-alphabet.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-16 11:37:07
+**Generated:** 2026-03-17 07:49:51
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2052/1200 (raw: 2151)
+- **Words:** ✅ 2072/1200 (raw: 2171)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 8/4 types
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 9.9% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 10.2% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,5 +60,5 @@
 | **Букви і звуки — Letters and Sounds** | ✅ | 266 | Included in Core |
 | **Голосні та приголосні — Vowels and Consonants** | ✅ | 265 | Included in Core |
 | **Перші 10 літер — First 10 Letters** | ✅ | 764 | Included in Core |
-| **Перші слова — First Words in Context** | ✅ | 284 | Included in Core |
+| **Перші слова — First Words in Context** | ✅ | 304 | Included in Core |
 | **Підсумок — Summary** | ✅ | 182 | Included in Core |

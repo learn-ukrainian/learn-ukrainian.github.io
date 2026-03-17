@@ -21,6 +21,48 @@
         "type": "script",
         "name": "discover_passthrough"
       }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-16T22:36:40Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-16T23:05:39Z",
+      "attempts": 3,
+      "note": "escalation-claude-dedup",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-16T23:10:09Z",
+      "task_id": "v5-completing-the-alphabet-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-16T23:12:53Z",
+      "attempts": 1,
+      "note": "gemini-inline-fixes",
+      "review_grounding": "rag-textbook",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
     }
   }
 }

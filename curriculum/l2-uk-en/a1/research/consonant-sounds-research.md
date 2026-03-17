@@ -21,7 +21,7 @@ Alignment: This module directly addresses the A1 phonetics requirement — learn
 | гора (mountain) | High-frequency; demonstrates Г as voiced glottal fricative — critical distinction from Ґ | висока гора |
 | ґанок (porch) | Rare Ґ; classic textbook example for the restored letter; extremely rare in running text (~400 native words) | на ґанку |
 | сіль (salt) | Kitchen/everyday; showcases BOTH soft С and soft Л in one word — ideal hard/soft demonstration | дрібна сіль |
-| лук / люк | Minimal pair: лук (onion, hard Л) vs люк (hatch, soft Л); single consonant change, dramatic meaning shift | — |
+| лук / люк | Minimal pair: лук (bow (weapon), hard Л) vs люк (hatch, soft Л); single consonant change, dramatic meaning shift | — |
 
 ---
 

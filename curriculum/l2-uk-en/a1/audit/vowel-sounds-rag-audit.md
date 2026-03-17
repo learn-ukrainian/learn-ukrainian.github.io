@@ -1,6 +1,6 @@
 # RAG Verification: vowel-sounds
 
-**Date:** 2026-03-16 20:29 UTC | **Words checked:** 86 | **VESUM coverage:** 73/86 (84.9%)
+**Date:** 2026-03-17 06:50 UTC | **Words checked:** 86 | **VESUM coverage:** 73/86 (84.9%)
 
 ## Summary
 - ✅ Verified (VESUM): 73

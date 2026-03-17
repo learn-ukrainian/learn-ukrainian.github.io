@@ -1,83 +1,41 @@
 # Дослідження: Likes and Preferences
 
 ## State Standard Reference
-
 §4.2.4.1: "Indicative mood — present, past, future tenses; conjugation I/II; reflexive verbs (-ся/-сь)"
-Alignment: This module teaches present tense conjugation of two conjugation classes (любити — II, хотіти — irregular) plus a reflexive verb (подобатися). The Dative chunk «мені подобається» is a LEVEL_CONSTRAINTS exception: Dative forms taught as frozen lexical chunks, not formal case grammar (per plan scope_note). Thematic grounding: §3 topic "дозвілля" (leisure) is an explicit A1 theme.
-
-Note on Dative: Formally A2 (allowed: false in mapping). However, the plan explicitly exempts this as memorized chunks — mені/тобі/йому/їй/нам/вам/їм are presented as vocabulary items, not a case paradigm. This is pedagogically sound and pre-approved in the plan.
-
----
+Alignment: Introduces present tense conjugations of "любити" and "хотіти", and the reflexive "подобатися". (Note: Dative pronouns "мені/тобі" are taught as lexical chunks here, anticipating formal A2 §4.2.2.3 Dative).
 
 ## Vocabulary Frequency
-
 | Word | Notes | Key collocations |
 |------|-------|------------------|
-| подобатися | Reflexive verb; Dative subject construction; very high frequency | мені подобається кава; подобається читати; подобаються квіти (plural!) |
-| любити | Conjugation II (люблю, любиш, любить, любимо, любите, люблять); universally high freq | я люблю каву; я люблю маму; він/вона любить музику |
-| хотіти | Irregular: хочу, хочеш, хоче, хочемо, хочете, хочуть; extremely high freq | я хочу їсти; я хочу піти; ти хочеш каву? |
-| кава | Feminine noun; top-10 beverage word; culturally iconic in Ukraine | мені подобається кава; я люблю каву; хочу каву |
-| музика | Feminine noun; high cultural frequency; note stress: му́зика | мені подобається музика; я люблю музику |
-| читати | Imperfective infinitive; high frequency; follows подобається naturally | мені подобається читати; я люблю читати |
-| їсти | Imperfective infinitive; irregular (їм, їси, їсть, їмо, їсте, їдять); very high freq | я хочу їсти; ти хочеш їсти? |
-| піти | Perfective infinitive; follows хочу for intentional movement; note: not іти | я хочу піти; вона хоче піти |
-| цікавий | Soft-stem adjective: цікавий/цікава/цікаве; agreement needed | цікава книга; цікавий фільм |
-| смачний | Food preference adjective; culturally loaded with Ukrainian cuisine | смачна кава; смачний борщ |
-| улюблений | "Favourite" — functions as preference intensifier | моя улюблена музика; улюблений фільм |
-
----
+| подобатися | Takes dative experiencer, nominative subject | мені подобається, тобі подобається |
+| любити | II conjugation, takes accusative object | люблю музику, люблю читати |
+| хотіти | Irregular, takes infinitive or accusative | хочу їсти, хочу каву |
+| улюблений | Superlative adjective for preferences | улюблена пора року, улюблена книга |
+| цікавий/нудний | Key adjectives for expressing opinions | цікавий фільм, нудна книга |
 
 ## Cultural Hooks
-
-1. **Борщ as a sentence** — "Я люблю борщ" is possibly the most natural first Ukrainian sentence for foreigners. Борщ received UNESCO intangible cultural heritage recognition in 2022 (urgent safeguarding list), making it a living cultural topic. Opens naturally to "А ти любиш борщ?"
-
-2. **Lviv coffee culture** — Lviv (Львів) is Ukraine's coffee capital, famous for dozens of atmospheric coffee shops. "Мені подобається ця кава" anchors the key Dative construction in an immediately real scenario. Learners can picture a street café on Ринкова площа.
-
-3. **Folk saying**: *"Хто що любить, той те й хвалить"* — "Everyone praises what they love." A genuine Ukrainian proverb about personal taste; short enough to memorize, perfect to introduce the idea that preferences are personal.
-
----
+1. Discussing favorite seasons ("улюблена пора року") is a standard Ukrainian conversational topic, often used in schools (e.g., Golub Grade 5: "Тоді я відчайдушно любив літо...").
+2. Hospitality norms: Hosts frequently use "Ви хочете...?" to offer food or drinks ("Ви хочете каву чи чай?") rather than just asking what someone likes in general.
+3. Common proverb: "На колір і смак товариш не всяк" (Tastes differ / To each their own) — perfect for introducing the concept of comparing different preferences.
 
 ## Common Learner Errors
-
-1. **Subject error with подобатися**: *Я подобаюся музику* → **Мені подобається музика** — English "I like music" maps to subject=I, but Ukrainian subject is the thing liked. Dative person (мені) is the experiencer, not the grammatical subject. This is the #1 error.
-
-2. **Plural agreement skipped**: *Мені подобається квіти* → **Мені подобаються квіти** — learners use singular verb with plural noun. Must teach: подобається (singular thing) vs подобаються (plural things). Textbook model: the golub Grade 5 excerpt models self-assessment ("чи задоволений/задоволена") — the agreement principle applies similarly.
-
-3. **Aspect confusion with хотіти**: *Я хочу іти зараз* (acceptable but weak) vs **Я хочу піти зараз** (natural) — imperfective іти implies ongoing walking, perfective піти implies a completed intended departure. At A1 the distinction is lexical: teach піти as the canonical "want to go" form.
-
-4. **Mixing constructions**: *Мені люблю каву* → **Я люблю каву** — learners over-extend the Dative pattern from подобається to люблю. Люблю takes a regular nominative subject (я).
-
----
+1. **"Я подобаюся каву"** → **"Мені подобається кава"** — English speakers try to map "I like" directly word-for-word, using a nominative pronoun ("я") and making the object accusative ("каву").
+2. **"Я люблю слухаю музику"** → **"Я люблю слухати музику"** — Conjugating both verbs instead of using the infinitive for the second verb.
+3. **"Мені подобається квіти"** → **"Мені подобаються квіти"** — Failing to pluralize the verb "подобатися" when the liked object (the grammatical subject) is plural.
 
 ## Cross-References
-
-- **Builds on**: a1-018 (questions-and-negation) — learners can now ask "Ти любиш...?" and negate "Я не люблю..."
-- **Prepares for**: a1-020 (mine-and-yours) — possessive pronouns extend naturally to "моя улюблена музика"; food/leisure vocabulary feeds into later modules (food, daily routine)
-
----
+- Builds on: a1-18 (Questions and Negation)
+- Prepares for: a1-20 (Mine and Yours)
 
 ## Teaching Strategy
-
-- **Discovery exercise**: Present two speech bubbles over a café photo: Person A says *"Мені подобається ця кава!"* and Person B says *"Я люблю каву!"* Ask learners: who uses "Мені" and who uses "Я"? What is different? Let them notice the construction gap before explaining. The textbook golub Grade 5 (p.165) models discovery through authentic text before rule ("Довго я не любив осені") — same inductive pattern works here.
-
-- **Best context**: A café or market conversation: *— А тобі подобається борщ? — Так, я люблю борщ! А ти хочеш чай?* This single exchange demonstrates all three target constructions in a natural sequence.
-
-- **Contrastive pairs to highlight**:
-  - *Мені подобається ця пісня* (I find this song appealing — momentary impression) vs *Я люблю цю пісню* (I love this song — ongoing feeling)
-  - *Хочу каву* (accusative object) vs *Хочу читати* (infinitive action) — both after хочу
-  - *подобається* (sg noun) vs *подобаються* (pl noun) — verb must agree with the THING liked
-
----
+- **Discovery exercise**: Present a short dialogue offering a drink: "— Ти любиш каву? — Так, я дуже люблю каву! — А цей торт тобі подобається? — Так, він дуже смачний." Have learners identify which pronoun goes with which verb (я + люблю, тобі + подобається) before explaining the rule.
+- **Best context**: A café scenario ordering drinks ("Я хочу каву") and discussing preferences with friends ("Яку музику ти любиш?").
+- **Contrastive pairs**: "Я люблю книгу" (I love the book - active, Accusative) vs. "Мені подобається книга" (The book appeals to me - state, Nominative). Highlight that the thing liked drives the verb in the second sentence.
 
 ## Notes for Content Writing
-
-- Dative paradigm (мені/тобі/йому/їй/нам/вам/їм) should appear in a **table**, not prose — learners need the full chunk set visible together for memorization
-- Keep любити conjugation in a **pattern box**: the mutation люблю (not любю) is unexpected and worth flagging
-- хотіти's irregular plural (хочуть, not хотять) merits a brief callout
-- The contrast section (подобається vs люблю vs хочу) is the pedagogical core — allocate a clear comparison table
-- Register: all examples should be розмовний, matching the plan's register field
-- Imperative forms are banned — use "Notice that..." / "Remember that..." for instructions per sequence constraints
-
+- Keep grammar explanations light. Do not explain the full Dative case system; strictly treat "мені/тобі/йому" as fixed phrases meaning "to me / to you".
+- Ensure Ukrainian sentences in paragraphs are strictly structural (bolded inline or in example boxes).
+- Follow the 10-word maximum for Ukrainian sentences and stick to simple clauses.
 
 ## Resource Discovery
 

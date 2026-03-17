@@ -1,0 +1,19 @@
+phase: ACTIVITIES
+status: PARTIAL
+activity_count: 8
+deviations:
+  - "watch-and-repeat: plan requested 10 items but only 6 pronunciation video URLs are available (Ь, Ц, Ч, Щ, Ф, Ґ). No Anna Ohoiko videos found for ДЖ and ДЗ digraphs. Generated 6 items matching available videos."
+  - "classify (Ь): plan requested 8 items. Achieved 8 by including хлопець (softened Ц) and вчителька (softened Л) from lesson content."
+  - "Added anagram activity (not in plan hints) to reach minimum 8 activities and reinforce letter recognition for M1-M10 Cyrillic scaffolding."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints specify 10 watch-and-repeat items but only 6 letter-specific video URLs exist in the plan's pronunciation_videos.letters section. No ДЖ or ДЗ videos available."
+    proposed_fix: "Find Anna Ohoiko videos for ДЖ and ДЗ digraphs, or use the playlist/overview video URL for those items."
+unverified_terms:
+  - "вчителька — used in classify activity, appears in lesson content but not in vocabulary_hints"
+  - "хлопець — used in classify activity, appears in lesson content but not in vocabulary_hints"
+  - "ґанок — used in watch-and-repeat, referenced in lesson content"
+review_focus:
+  - "Quiz item 5 and 6 test rule knowledge (which consonants/vowels) rather than word-level application — verify this aligns with A1.1 pedagogy"
+  - "fill-in item 3 has bare sentence '___!' — ensure renderer handles single-blank sentences gracefully"
+  - "Verify anagram scrambled letters are sufficiently shuffled (3-letter words like час, чай may be trivially easy)"

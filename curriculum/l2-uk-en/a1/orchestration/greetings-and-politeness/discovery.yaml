@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:45:06.424419+00:00'
+discovered_at: '2026-03-16T23:01:10.958595+00:00'
 query_keywords:
 - Greetings and Politeness
 - вітання
@@ -11,62 +11,42 @@ query_keywords:
 - T-V distinction
 - Ввічливість
 - Politeness
-- Знайомство
+- Звертання
 error: null
 warning: null
 videos:
-- url: https://www.youtube.com/watch?v=3zZWCCS7igw
-  channel: Ukrainian with Olha
-  title: 'Start learning UKRAINIAN: Greetings! How are you? What is your name? Personal
-    pronouns in Ukrainian'
-  relevance_score: 1.0
-  relevance_note: This video comprehensively covers greetings, politeness phrases,
-    and introductions, aligning perfectly with multiple sections of the module including
-    Вітання, Ввічливість, and Знайомство.
-  transcript_excerpt: Today we will learn personal pronouns, phrases of politess,
-    how to say how are you and answer to it and keep a small talk conversation and
-    also how to introduce yourself. Here we have greetings in the first column.
-  embed_suggestion: After Знайомство (Introductions) - as it covers an extensive range
-    of module topics.
+- url: https://www.youtube.com/watch?v=qUCBYbBk9h8
+  channel: Bright Kids Ukrainian
+  title: Ukraine Defender Day greetings from Bright Kids Ukrainian Online School
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=cQQB8GX3zxM
+  channel: Ukrainian Lessons
+  title: ULP 2-63 | Вітання зі святами | Ukrainian Holiday Greetings
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
 - url: https://www.youtube.com/watch?v=dtufctJhBrY
   channel: Ukrainian Lessons
   title: 'FMU 1-50 | Greetings in Ukrainian: informal, formal and fun! | 5 Minute
     Ukrainian'
-  relevance_score: 0.9
-  relevance_note: Directly covers informal and formal greetings, which is highly relevant
-    to the Вітання and potentially the Ти і Ви sections of the module.
-  transcript_excerpt: How to greet Someone in Ukrainian Привітик це Анна і новий епізод
-    подкасту 5 хвилин української Today we will Talk more about thatвіtic and Other
-    Ways To greet Someone вітатися to greet It Will Be formal informal and Some Fun
-    Ways
-  embed_suggestion: After Вітання (Greetings) - as it explicitly discusses various
-    ways to greet.
-- url: https://www.youtube.com/watch?v=yXoHXF7Q6x8
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=R2QCNVJ0SY4
   channel: Ukrainian with Olha
-  title: 'Greetings & Farewell + Words of Politeness 💙💛 #ukrainianlanguage #ukrainianlessons'
-  relevance_score: 0.9
-  relevance_note: Provides a good overview of common greetings and politeness words,
-    directly relevant to the Вітання and Ввічливість sections.
-  transcript_excerpt: Добрий день. Good afternoon. Добрий вечір. Good evening. Доброго
-    ранку. Good morning. Привіт. Hello. Будь ласка. Please or you welcome. Прошу.
-    Here you go.
-  embed_suggestion: After Ввічливість (Politeness) - as it clearly lists phrases for
-    greetings and politeness.
-- url: https://www.youtube.com/watch?v=cQQB8GX3zxM
-  channel: Ukrainian Lessons
-  title: ULP 2-63 | Вітання зі святами | Ukrainian Holiday Greetings
-  relevance_score: 0.5
-  relevance_note: The video focuses on holiday-specific greetings, which is a sub-category
-    of greetings, but not the primary focus of general greetings and politeness in
-    this module.
-  transcript_excerpt: я хочу вас навчити Як вітати зі святами українською щоб ви могли
-    написати комусь повідомлення електронний лист чи надіслати листівку українцям
-    тому якщо вам цікаво як українці вітають зі святами слухайте Цей урок
-  embed_suggestion: After Вітання (Greetings) - as an extension covering specific
-    greeting contexts.
-- url: https://www.youtube.com/watch?v=qUCBYbBk9h8
-  channel: Bright Kids Ukrainian
-  title: Ukraine Defender Day greetings from Bright Kids Ukrainian Online School
+  title: Діалог. Форми привітання (спікери Т.Шарова та А.Землянська)
+  relevance_score: 0.0
+  relevance_note: ''
+  transcript_excerpt: ''
+  embed_suggestion: ''
+- url: https://www.youtube.com/watch?v=uMt3KDxVjCY
+  channel: Ukrainian with Olha
+  title: 🎊 НОВОРІЧНА ПРЕМ'ЄРА - Єдиний Квартал 2026 🎄
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''
@@ -78,77 +58,39 @@ videos:
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=LEi78wrXxTs
+- url: https://www.youtube.com/watch?v=b5Z8fP9RafY
   channel: Let's Learn Ukrainian
-  title: Добрий вечір тобі, пане господарю! Learn Ukrainian Traditional Christmas
-    Song (колядка) with me!
+  title: How to say Happy New Year in Ukrainian?
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
 blogs:
-- url: https://talkukrainian.com/greetings/
-  title: 'Talk Ukrainian: Greetings in Ukrainian'
-  source: talkukrainian
-  relevance_score: 0.7
-  topics:
-  - greetings
-  - hello
-  - привіт
-  - introductions
 - url: https://www.verba.school/post/polite-phrases-in-ukrainian
   title: Polite Phrases in Ukrainian
   source: verba.school
-  relevance_score: 0.6
-  topics:
-  - vocabulary
-  - phrases
-  - greetings
-  - politeness
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode1/
   title: Informal Greetings in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.5499999999999999
-  topics:
-  - phrases
-  - greetings
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 1
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode2/
   title: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
   source: ukrainianlessons.com
-  relevance_score: 0.5499999999999999
-  topics:
-  - grammar
-  - pronouns
-  - phrases
-  - greetings
-  - goodbyes
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 2
-- url: https://www.ukrainianlessons.com/episode63/
-  title: Ukrainian Holiday Greetings
+  relevance_score: 1.0
+  topics: []
+- url: https://www.ukrainianlessons.com/greetings/
+  title: Greetings in Ukrainian
   source: ukrainianlessons.com
-  relevance_score: 0.5
-  topics:
-  - grammar
-  - cases
-  - genitive
-  - instrumental
-  - culture
-  - holidays
-  - phrases
-  - greetings
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 63
+  relevance_score: 1.0
+  topics: []
+- url: https://talkukrainian.com/greetings/
+  title: 'Talk Ukrainian: Greetings in Ukrainian'
+  source: talkukrainian
+  relevance_score: 1.0
+  topics: []
 rag_chunks:
 - score: 0.5
   chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0095

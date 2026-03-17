@@ -1,6 +1,6 @@
 # RAG Verification: the-ukrainian-alphabet
 
-**Date:** 2026-03-16 10:37 UTC | **Words checked:** 60 | **VESUM coverage:** 58/60 (96.7%)
+**Date:** 2026-03-17 06:50 UTC | **Words checked:** 60 | **VESUM coverage:** 58/60 (96.7%)
 
 ## Summary
 - ✅ Verified (VESUM): 58

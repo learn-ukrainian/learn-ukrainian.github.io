@@ -3,23 +3,33 @@
   "slug": "the-accusative-i-things",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:55:31Z",
-      "note": "rebuild-kept",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "unknown"
-      }
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:55:54Z",
+      "ts": "2026-03-16T23:06:28Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
-        "name": "discover_passthrough"
+        "name": "discovery_search"
+      }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-17T07:04:36Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-16T23:06:28Z",
+      "task_id": "v5-the-accusative-i-things-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

@@ -3,23 +3,33 @@
   "slug": "greetings-and-politeness",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:45:06Z",
-      "note": "rebuild-kept",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "unknown"
-      }
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:46:01Z",
+      "ts": "2026-03-16T23:02:25Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
-        "name": "discover_passthrough"
+        "name": "discovery_search"
+      }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-16T21:17:12Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-16T23:02:25Z",
+      "task_id": "v5-greetings-and-politeness-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

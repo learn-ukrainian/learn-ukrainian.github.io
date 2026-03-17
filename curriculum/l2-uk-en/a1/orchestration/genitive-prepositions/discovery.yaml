@@ -1,0 +1,162 @@
+discovered_at: '2026-03-17T07:17:31.803696+00:00'
+query_keywords:
+- Genitive Prepositions
+- біля, без, від, для, до + Родовий
+- родовий відмінок
+- Біля/навпроти + Genitive
+- магазин
+- школа
+- вулиця
+- В/У + Місцевий
+- In + Locative
+- На + Місцевий
+- On + Locative
+- Біля/Поруч/Між
+error: null
+warning: No videos found across channels
+videos: []
+blogs:
+- url: https://www.ukrainianlessons.com/episode46/
+  title: At the grocery store + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 1.0
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 46
+- url: https://www.ukrainianlessons.com/episode48/
+  title: Eating habits + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.75
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - prepositions
+  - plural
+  - phrases
+  - introductions
+  - conversation
+  - interview
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 48
+- url: https://opentext.ku.edu/dobraforma/chapter/7-1/
+  title: 'Dobra Forma: Genitive Case after Prepositions з, до, and в/у'
+  source: dobraforma
+  relevance_score: 0.7
+  topics:
+  - genitive
+  - cases
+  - prepositions
+  - grammar
+- url: https://opentext.ku.edu/dobraforma/chapter/7-2/
+  title: 'Dobra Forma: Genitive Case after Prepositions біля, після, для and без'
+  source: dobraforma
+  relevance_score: 0.7
+  topics:
+  - genitive
+  - cases
+  - prepositions
+  - grammar
+- url: https://www.ukrainianlessons.com/episode47/
+  title: Food festivals + Genitive case
+  source: ukrainianlessons.com
+  relevance_score: 0.5
+  topics:
+  - grammar
+  - cases
+  - genitive
+  - vocabulary
+  - food
+  - phrases
+  - introductions
+  - listening
+  content_type: podcast_episode
+  series: ULP
+  season: 2
+  episode: 47
+rag_chunks:
+- score: 0.3333333432674408
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0073
+  text: "І У називному відмінку іменники вживаються без при- \nі йменників, у місцевому\
+    \ — тільки з прийменниками, \n1 \nа в усіх інших відмінках можуть уживатися з\
+    \ приймен- \n« никами або без них. Наприклад: (біля) озер (Р. в.), і \nі (із)\
+    \ синами (Ор. в.). \nі\n163. Прочитайте іменники.\nВерби, будинки, сонце, канали,\
+    \ дуб, пенал, степ, поля, \nкомп’ютер, телефон.\n•  Визначте рід і число іменників.\
+    \ Провідміняйте іменники, що \nвжиті в множині.\n164. Прочитайте текст, уставляючи\
+    \ слова з довідки. Перекажіть.\nБув зимов"
+  section_title: Сторінка 74
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.1428571492433548
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0082
+  text: "біле поле\nбілі ліси, хустки, поля \nсиній олівець \nсиня кулька \nсинє озеро\n\
+    сині олівці, кульки, озёра\nбілому полю\n(у) білих лісах, хустках, полях\nсинім\
+    \ олівцем\nсиньою кулькою\n(у) синьому озері\nсиніх олівців, кульок, озер\n• \
+    \ Спишіть словосполучення прикметників з іменниками. \nВизначте рід, число й відмінок\
+    \ іменників і прикметників.\nЩ\nе '\nНазвіть закінчення прикметників чоловічого,\
+    \ жіночого та \nсереднього роду в однині. Чи змінюються прикметники в \nмножині\
+    \ за родами? Назвіть закінчення прикметників"
+  section_title: Сторінка 83
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.125
+  chunk_id: 4-klas-ukrmova-zaharijchuk_s0098
+  text: "Село, чумак, завод, учитель, лікар, француз, грузин.\n•  Утворіть від іменників\
+    \ прикметники на -ський, -цький, -зький. \nЗапишіть парами.\n•  Складіть і запишіть\
+    \ 5 речень з утвореними прикметниками.\n223. Прочитайте іменники.\nВідмінювання\
+    \ прикм етників у множині\n224. Розгляньте таблицю відмінювання прикметників у\
+    \ множині.\nВід­\nмінок\nПитання\nОснова на твердий і м ’який приголосний\nн.\n\
+    ЯКІ?\nщасливі діти, могутні дуби\nр.\nяких?\nщасливих дітей, могутніх дубів\n\
+    д.\nяким?\nщасливим дітям, могутнім дубам\nЗн.\nяк"
+  section_title: Сторінка 99
+  grade: 4
+  author: ''
+  page: ''
+  trust_tier: 2
+- score: 0.5
+  chunk_id: 7-klas-ukrmova-litvinova-2024_s0182
+  text: "§ 29  Синонімічні й антонімічні прийменники  \n175\n§ 29  Синонімічні й \
+    \ антонімічні прийменники\nВправа 247 \n1  Прочитайте речення \nКрай/біля/обабіч\
+    \ дороги проклали велодоріжку.\nЦей магазин розташований праворуч, якщо йти від/до\
+    \ зу-\nпинки в напрямку до/від спортивного клубу.\n2  Поміркуйте, як змінюється\
+    \ зміст кожного речення залежно від зміни при-\nйменника \n3  Згадайте, як називаються\
+    \ такі слова: синонімами, антонімами, омонімами \nчи паронімами \nПопри те, що\
+    \ прийменники не мають лексичного зна-\nче"
+  section_title: Сторінка 178
+  grade: 7
+  author: litvinova
+  page: ''
+  trust_tier: 1
+- score: 0.20000000298023224
+  chunk_id: 6-klas-ukrmova-litvinova-2023_s0199
+  text: "Розділ 6. Прикметник \n192\n2. Підкресліть усі прикметники відповідно до\
+    \ ролі в  реченні.\n3. Обведіть прикметники, ужиті в  короткій формі. Запишіть\
+    \ повну форму \nкожного. Надпишіть над прикметниками відмінок.\n4. Поміркуйте,\
+    \ з текстів яких стилів узято речення.\nВідносні прикметники завжди похідні, тобто\
+    \ утво-\nрені від інших слів: срібний ← срібло, осінній ← осінь.\nСловосполучення\
+    \ відносного прикметника з імен-\nником здебільшого можна переробити на словосполу-\n\
+    чення з двох іменників: срібні прикраси"
+  section_title: Сторінка 192
+  grade: 6
+  author: litvinova
+  page: ''
+  trust_tier: 1
+rag_images: []
+rag_literary: []

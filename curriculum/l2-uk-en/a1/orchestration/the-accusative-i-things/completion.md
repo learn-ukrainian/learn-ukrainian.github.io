@@ -1,4 +1,4 @@
-PASS: pipeline a1 25
+PASS: pipeline a1 26
 
   Module:   the-accusative-i-things
   Track:    a1
@@ -7,4 +7,4 @@ PASS: pipeline a1 25
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-12T08:55:54Z
+  Date:     2026-03-17T07:04:36Z

@@ -1,0 +1,25 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1851
+deviations:
+  - section: "Сонорні — Sonorant Consonants"
+    reason: "Expanded from 200 to ~374 words to accommodate individual letter H3 subsections with video embeds and pronunciation guidance for Р, В, and Й"
+  - section: "Дзвінкі та глухі пари — Voiced and Voiceless Pairs"
+    reason: "Expanded from 400 to ~583 words to include all six pairs with video embeds and the critical no-devoicing rule with callout"
+  - section: "Читання — Reading Practice"
+    reason: "Expanded from 150 to ~258 words to include micro-dialogues and labeling practice per plan requirements"
+frictions: []
+research_gaps:
+  - "No dedicated Grade 1-2 textbook page specifically listing the 5 sonorants as a named group — the classification is implicit across exercises"
+unverified_terms: []
+review_focus:
+  - "Verify all 17 video URLs are correct and match the letter labels"
+  - "Check that no grammar beyond A1.1 scope slipped in (no verbs in Ukrainian sentences except Це/Ось)"
+  - "Confirm no IPA, no Latin transliteration anywhere in content"
+  - "Verify all 20 vocabulary items appear at least once in content (VOCAB-IN-CONTENT rule)"
+  - "Check цибуля appears in content — it is mentioned in the Hard/Soft section via the лук reference but could be strengthened"
+rag_tools_used:
+  - "search_text: 'сонорні приголосні звуки Л М Н Р В' grade=2 → Bolshakova p42-43 (hard/soft), Kravtsova p40-42 (voiced/voiceless drills)"
+  - "search_text: 'дзвінкі та глухі приголосні звуки пари' grade=2 → Kravtsova p40 (hand-on-ear test), Bolshakova p62 (pairs table)"
+  - "search_text: 'тверді та м'які приголосні звуки' grade=1 → Bolshakova p41 (лис/ліс, дим/дім), Zaharijchuk p17 (hard/soft intro)"
+  - "verify_words: all 19 vocabulary words → 19/19 FOUND in VESUM"

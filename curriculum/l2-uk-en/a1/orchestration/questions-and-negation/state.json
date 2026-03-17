@@ -3,23 +3,33 @@
   "slug": "questions-and-negation",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:50:27Z",
-      "note": "rebuild-kept",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "unknown"
-      }
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:50:49Z",
+      "ts": "2026-03-17T06:38:44Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
-        "name": "discover_passthrough"
+        "name": "discovery_search"
+      }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-16T21:23:44Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-17T06:38:44Z",
+      "task_id": "v5-questions-and-negation-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

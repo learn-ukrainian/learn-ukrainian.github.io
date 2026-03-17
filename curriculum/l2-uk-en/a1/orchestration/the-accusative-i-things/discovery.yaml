@@ -1,4 +1,4 @@
-discovered_at: '2026-03-12T08:55:31.902458+00:00'
+discovered_at: '2026-03-16T23:04:17.695772+00:00'
 query_keywords:
 - 'The Accusative I: Things'
 - знахідний відмінок
@@ -22,10 +22,10 @@ videos:
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=XaGcakHYd2Y
+- url: https://www.youtube.com/watch?v=AJo7tgtSwGo
   channel: Ukrainian Lessons
-  title: ULP 2-66 | Спогади + Місцевий відмінок з місцями | Sharing memories + Locative
-    case with places
+  title: ULP 2-52 | Купівля телефона + Давальний відмінок | Buying a phone in Ukraine
+    + Dative case
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''
@@ -45,64 +45,41 @@ videos:
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=YeW8bsiubh8
-  channel: Let's Learn Ukrainian
-  title: 'Ukrainian Cases #5. Accusative Case (Знахідний відмінок)'
+- url: https://www.youtube.com/watch?v=D_-Y5kfanl0
+  channel: Speak Ukrainian
+  title: The Accusative case in the Ukrainian language
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
-- url: https://www.youtube.com/watch?v=YTqVxLihICc
-  channel: Let's Learn Ukrainian
-  title: 'Ukrainian Cases #5: Locative Case Practice (Місцевий відмінок в українській
-    мові)'
+- url: https://www.youtube.com/watch?v=kQof_vYOdm8
+  channel: Speak Ukrainian
+  title: The Locative Case in the Ukrainian language
   relevance_score: 0.0
   relevance_note: ''
   transcript_excerpt: ''
   embed_suggestion: ''
 blogs:
+- url: https://www.ukrainianlessons.com/accusativecase/
+  title: Accusative Case in Ukrainian
+  source: Complete guide with tables and examples
+  relevance_score: 1.0
+  topics: []
 - url: https://www.ukrainianlessons.com/episode32/
   title: Shopping for clothes — Accusative case in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - vocabulary
-  - clothing
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 32
+  topics: []
 - url: https://www.ukrainianlessons.com/episode33/
   title: Talking about books in Ukrainian — Accusative case of people
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics:
-  - grammar
-  - cases
-  - accusative
-  content_type: podcast_episode
-  series: ULP
-  season: 1
-  episode: 33
+  topics: []
 - url: https://www.ukrainianlessons.com/episode56/
   title: Asking for advice + Accusative case in Ukrainian
   source: ukrainianlessons.com
   relevance_score: 1.0
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - adjectives
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 56
+  topics: []
 - url: https://www.ukrainianlessons.com/episode57/
   title: Your schedule in Ukrainian + Accusative case with prepositions
   source: ukrainianlessons.com
@@ -121,23 +98,6 @@ blogs:
   series: ULP
   season: 2
   episode: 57
-- url: https://www.ukrainianlessons.com/episode58/
-  title: Inviting to a party in Ukrainian + Accusative case of pronouns
-  source: ukrainianlessons.com
-  relevance_score: 1.0
-  topics:
-  - grammar
-  - cases
-  - accusative
-  - genitive
-  - pronouns
-  - phrases
-  - introductions
-  - listening
-  content_type: podcast_episode
-  series: ULP
-  season: 2
-  episode: 58
 rag_chunks:
 - score: 0.5
   chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0158

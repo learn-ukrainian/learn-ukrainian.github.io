@@ -1,0 +1,13 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan requested watch-and-repeat with 12 items — delivered 12 items using available Anna Ohoiko YouTube URLs for voiced/voiceless pairs plus sonorants Р and В"
+  - "Plan requested classify with 15 items for consonant types — delivered 15 items across 3 categories (sonorants/voiced/voiceless)"
+  - "Plan requested classify with 8 items for hard/soft — delivered 10 items across 2 categories for better coverage"
+  - "Added true-false (8 items) and anagram (8 items) beyond plan hints to reach 8 activity minimum and reinforce key concepts"
+frictions: []
+unverified_terms: []
+review_focus:
+  - "Anagram scrambled letters — verify each scramble contains exactly the same letters as the answer"
+  - "image-to-letter emoji choices — verify emoji render correctly on all platforms"

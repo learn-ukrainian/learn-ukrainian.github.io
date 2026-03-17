@@ -1,94 +1,51 @@
 # Дослідження: The Accusative I: Things
 
 ## State Standard Reference
-§4.2.3.2: "Accusative — direct object, with prepositions (в/у, на, за, через, про)" (lines 678–688)
-Alignment: This module covers the foundational accusative direct-object use (inanimate nouns only). Prepositions with accusative are deferred to later modules per scope.
-
----
+§2.2: "Розуміння та вживання базових граматичних конструкцій (знахідний відмінок для прямого додатка)"
+Alignment: This module introduces the accusative case for inanimate nouns (things) as direct objects of common transitive verbs (бачити, мати, читати, пити).
 
 ## Vocabulary Frequency
-
 | Word | Notes | Key collocations |
-|------|-------|-----------------|
-| бачити | Core A1 verb; irregular 1sg **бачу** | бачити проблему, я бачу вікно |
-| чути | Core A1; 1sg **чую** | чути музику, чути голос |
-| брати | Core; consonant stem, 1sg **беру** | брати каву, брати участь, брати трубку |
-| мати | Very high freq; also modal "have to" | мати рацію, мати час, мати можливість |
-| хотіти | Very high freq; irregular 1sg **хочу** | хочу їсти, хочу каву, хочу купити |
-| купувати | High freq; -увати class, 1sg **купую** | купувати хліб, купувати продукти |
-| книга | Paradigm Fem: книга → книгу | читати книгу, брати книгу |
-| кава | Fem -а → -у; daily staple | пити каву, замовляти каву |
-| хліб | Masc inanimate → NO change; cultural staple | купувати хліб, хотіти хліб |
-| гречка | Fem -а → -у; iconic Ukrainian staple | купити гречку, мати гречку |
-| пакет | Masc inanimate → NO change | Пакет потрібен? брати пакет |
-
----
+|------|-------|------------------|
+| книгу | Feminine -а → -у | читати книгу |
+| воду | Feminine -а → -у | пити воду |
+| каву | Feminine -а → -у | пити каву |
+| чай | Masculine inanimate (no change) | пити чай |
+| стіл | Masculine inanimate (no change) | бачити стіл |
+| яблуко | Neuter inanimate (no change) | їсти яблуко |
 
 ## Cultural Hooks
-
-1. **"Пакет потрібен?" meme** — The cashier's question at every Ukrainian supermarket checkout became a cultural meme during and after 2014. Perfect real-life trigger: learner hears "Пакет потрібен?" → learns masculine inanimate accusative (пакет = no change). Concrete, instantly memorable.
-
-2. **Гречка as national symbol** — Гречка (buckwheat) is considered a Ukrainian pantry staple and appears in political humor ("гречкосій" = someone who buys votes with buckwheat). Using "хочу купити гречку" anchors the feminine accusative in authentic cultural context.
-
-3. **Базар vs. супермаркет** — Ukrainian daily life divides grocery shopping between impersonal supermarkets and the lively social ritual of the базар (market). Short shopping-list production exercise ("Я хочу купити...") maps onto a real scenario learners will encounter.
-
----
+1. Traditional proverb: "Хліб на стіл, так і стіл престіл" (Bread on the table, and the table is a throne) - shows "стіл" in Accusative (masculine inanimate).
+2. Daily life scenario: Ordering in a Lviv кав'ярня ("Я буду каву і чай").
+3. Common riddle: "Має крила, а не літає" (книга - highlights "має" + accusative).
 
 ## Common Learner Errors
-
-1. **Conceptual Nominative** — *Я читаю книга* → *Я читаю книгу* — English has no case inflection, so learners default to the dictionary form. Most common error at A1. Must be drilled explicitly.
-
-2. **Over-applying Fem ending to Masc/Neut** — *бачу столу, маю часу* → *бачу стіл, маю час* — After learning that feminine nouns change, learners incorrectly extend the rule to all direct objects. "Safe harbor" framing (masc/neut inanimate = no change) is essential.
-
-3. **Confusing мати (to have) direct object with copular usage** — *Я маю правильно* → *Я маю рацію* — The fixed expression "мати рацію" trips learners who try to literally translate "to be right" and omit the accusative noun entirely.
-
-4. **Брати stem-change ignored** — *я брати → я брату* → *я беру* — Learners may not recognize that брати has a consonant-stem 1sg (беру) separate from the accusative question.
-
----
+1. Changing masculine inanimate endings → English speakers often over-apply the feminine -у/-ю ending to all direct objects (e.g., "Я бачу столу" instead of "Я бачу стіл").
+2. Forgetting feminine -а → -у shift → Using the nominative form instead (e.g., "Я п'ю кава" instead of "Я п'ю каву").
+3. Confusing animate and inanimate → Applying animate rules (which look like genitive) to inanimate masculine objects.
 
 ## Cross-References
-- Builds on: a1-06 (Verbs I — the trigger verbs бачити, чути, брати, хотіти are already known), a1-14 (Checkpoint: First Contact — nominative forms consolidated)
-- Prepares for: a1-026 (The Accusative II: People — animate masculine adds complexity), a1-039 (Food and Drink — heavy accusative usage in ordering/shopping context)
-
----
+- Builds on: Basic nouns and genders, present tense of basic verbs (читати, пити, бачити, мати).
+- Prepares for: The Accusative II: People (animate nouns), Plural Accusative.
 
 ## Teaching Strategy
-
-- **Discovery exercise**: Show a two-column mini-table before any explanation:
-  | On the table | I see... |
-  |---|---|
-  | Книга | Я бачу **книгу** |
-  | Кава | Я хочу **каву** |
-  | Стіл | Я бачу **стіл** |
-  | Хліб | Я купую **хліб** |
-  Ask: "What changed? What stayed the same?" Let learners spot the pattern (Fem changes, Masc doesn't) before naming it. This matches the Zabolotnyi-style inductive exercise pattern common in Gr. 5–6 textbooks.
-
-- **Best context**: Supermarket checkout / shopping list. The verb chain "хочу купити → купую → маю" maps directly onto a realistic transaction. Every item on a shopping list is an accusative direct object.
-
-- **Contrastive pairs** (essential for disambiguation):
-  - *Книга* (nom, subject) vs. *Я читаю книгу* (acc, object)
-  - *Стіл* (nom) vs. *Я бачу стіл* (acc — same form, different role)
-  - *Кава гаряча* (nom predicate) vs. *Я хочу каву* (acc object)
-
----
+- **Discovery exercise**: Present a short dialogue in a café where characters order drinks: "Я буду каву. А я буду чай. Я маю воду." Ask learners to identify which words changed from their dictionary forms (кава -> каву, вода -> воду) and which stayed the same (чай).
+- **Best context**: Ordering food/drinks in a café or restaurant, or talking about things you have in your bag/room.
+- **Contrastive pairs**: "Це кава. Я п'ю каву." vs "Це чай. Я п'ю чай." - Highlights the difference in behavior between feminine and masculine inanimate nouns.
 
 ## Notes for Content Writing
-
-- The "safe harbor" metaphor for Masc/Neut inanimate is worth naming explicitly — learners find it reassuring that not everything changes.
-- Lead with feminine nouns (visible change) for maximum discovery impact; introduce the "no-change" rule second as a relief.
-- Avoid колись / раніше / зазвичай — adverbs of habitual time are fine at A1 but don't over-complicate the verb-object focus.
-- Word budget is tight (1200). Keep cultural section lean — one hook (пакет) + shopping list production is sufficient. Don't try to cover базар ethnography at length.
-
+- Emphasize that for neuter and inanimate masculine nouns, Nominative = Accusative. Only feminine nouns (-а to -у, -я to -ю) change in this beginner phase.
+- Keep the verbs simple and familiar: читати, писати, бачити, мати, їсти, пити.
 
 ## Resource Discovery
 
 
 ### Blog Articles
+- [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) (Complete guide with tables and examples)
 - [Shopping for clothes — Accusative case in Ukrainian](https://www.ukrainianlessons.com/episode32/) (ukrainianlessons.com)
 - [Talking about books in Ukrainian — Accusative case of people](https://www.ukrainianlessons.com/episode33/) (ukrainianlessons.com)
 - [Asking for advice + Accusative case in Ukrainian](https://www.ukrainianlessons.com/episode56/) (ukrainianlessons.com)
 - [Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/episode57/) (ukrainianlessons.com)
-- [Inviting to a party in Ukrainian + Accusative case of pronouns](https://www.ukrainianlessons.com/episode58/) (ukrainianlessons.com)
 
 ### Textbook References (RAG)
 

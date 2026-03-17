@@ -1,4 +1,4 @@
-PASS: pipeline a1 27
+PASS: pipeline a1 28
 
   Module:   accusative-prepositions
   Track:    a1
@@ -7,4 +7,4 @@ PASS: pipeline a1 27
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-12T09:02:52Z
+  Date:     2026-03-17T07:13:03Z

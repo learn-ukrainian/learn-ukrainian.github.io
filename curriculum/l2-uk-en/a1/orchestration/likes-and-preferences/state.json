@@ -3,23 +3,33 @@
   "slug": "likes-and-preferences",
   "mode": "v5",
   "phases": {
-    "research": {
-      "status": "complete",
-      "ts": "2026-03-12T08:50:51Z",
-      "note": "rebuild-kept",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "unknown"
-      }
-    },
     "discover": {
       "status": "complete",
-      "ts": "2026-03-12T08:51:12Z",
+      "ts": "2026-03-17T06:43:27Z",
       "note": "merged-into-research",
       "executor": {
         "type": "script",
-        "name": "discover_passthrough"
+        "name": "discovery_search"
+      }
+    },
+    "content": {
+      "status": "complete",
+      "ts": "2026-03-16T21:24:00Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-03-17T06:43:27Z",
+      "task_id": "v5-likes-and-preferences-pA",
+      "mode": "full",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

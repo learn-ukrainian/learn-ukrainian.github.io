@@ -1,4 +1,4 @@
-PASS: pipeline a1 26
+PASS: pipeline a1 27
 
   Module:   the-accusative-ii-people
   Track:    a1
@@ -7,4 +7,4 @@ PASS: pipeline a1 26
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-12T08:57:08Z
+  Date:     2026-03-17T07:04:38Z

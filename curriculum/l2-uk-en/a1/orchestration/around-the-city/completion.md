@@ -1,4 +1,4 @@
-PASS: pipeline a1 29
+FAIL: pipeline a1 30
 
   Module:   around-the-city
   Track:    a1
@@ -6,5 +6,5 @@ PASS: pipeline a1 29
   Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-03-12T09:09:48Z
+  Verdict:  FAIL
+  Date:     2026-03-17T07:16:36Z

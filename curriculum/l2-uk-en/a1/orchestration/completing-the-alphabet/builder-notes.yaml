@@ -1,0 +1,26 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1514
+deviations:
+  - section: "Весь алфавіт! — The Full Alphabet Mastered"
+    reason: "Added H3 for Ґ (review from M3) to embed the mandatory Ґ video, since Ґ has no dedicated section in this module's outline"
+frictions:
+  - type: TEMPLATE_CONSTRAINT
+    description: "Ґ video is mandatory per plan but Ґ was taught in M3 — no natural H3 section exists in M4 outline"
+    proposed_fix: "Embedded as review H3 in the full-alphabet section; alternatively, plan could specify video-only embed without H3"
+research_gaps: []
+unverified_terms: []
+review_focus:
+  - "Verify all 6 YouTube video URLs are still active"
+  - "Check that stress marks (combining acute) render correctly on all platforms"
+  - "Confirm image-to-letter emoji render across devices (especially 🫖 teapot, 🧅 onion)"
+  - "Validate that classify activity item counts satisfy audit minimums"
+rag_tools_used:
+  - "search_text: м'який знак пом'якшення приголосних Ь (grade 2) → Bolshakova p.43-48, Kravtsova p.30-32 on soft sign patterns"
+  - "search_text: апостроф перед я ю є ї правила (grade 2) → Bolshakova p.57-58, Kravtsova p.44-45, Vashulenko p.12 on apostrophe rules"
+  - "search_text: африкати Ц Ч Щ звуки букви (grade 1) → Bolshakova p.62-74 on Ч, Щ, Ц letter pages"
+  - "search_text: диграфи ДЖ ДЗ один звук дві букви (grade 3) → Vashulenko p.80, Kravtsova p.8 on ДЖ/ДЗ pronunciation"
+  - "query_pravopys: апостроф → §7 apostrophe rules (after Б,П,В,М,Ф,Р before Я,Ю,Є,Ї)"
+  - "query_pravopys: м-який-знак → §26 soft sign rules (after д,т,з,с,дз,ц,л,н)"
+  - "verify_words: 25/25 vocabulary items VESUM-verified"
+  - "verify_words: 19/20 additional content words verified (Будь ласка is two words, expected)"

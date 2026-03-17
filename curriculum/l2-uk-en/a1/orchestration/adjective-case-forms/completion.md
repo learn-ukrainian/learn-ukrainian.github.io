@@ -1,4 +1,4 @@
-PASS: pipeline a1 30
+PASS: pipeline a1 33
 
   Module:   adjective-case-forms
   Track:    a1
@@ -7,4 +7,4 @@ PASS: pipeline a1 30
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-03-12T09:10:17Z
+  Date:     2026-03-17T07:23:17Z

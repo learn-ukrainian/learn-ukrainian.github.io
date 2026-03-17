@@ -1,101 +1,53 @@
 # Дослідження: Greetings and Politeness
 
 ## State Standard Reference
-
-§3 (Thematic Catalogue, A1, lines 479–556): Covers "людина" (human interaction) — the thematic home for greetings, introductions, and social formulas.
-
-§4.2.3.1 (Nominative case): "Мене звати..." formula falls under nominative usage — subject-predicate-nominative pattern. Plan explicitly cites this reference.
-
-§4.2.4.2 (Imperative, 2nd person at A1): "Будь ласка", "Вибачте/Вибач" contain imperative morphology but are treated as **fixed formulaic chunks**, not productive verb conjugation. This is pedagogically appropriate — learners acquire them as lexical items, not verb forms.
-
-Alignment: Module delivers A1 communicative competence for basic social interaction — greeting, introducing oneself, expressing gratitude and apology. Directly prepares learners for real-life Ukrainian encounters.
-
----
+No specific § — foundational communicative competence.
+Alignment: This module establishes the absolute baseline for social interaction, allowing learners to initiate and conclude simple communicative acts as required for A1 proficiency.
 
 ## Vocabulary Frequency
-
 | Word | Notes | Key collocations |
-|------|-------|-----------------|
-| привіт | Top 200; universal casual greeting | Привіт! Як справи? |
-| добрий день | Top 100 collocation; safest formal default | Добрий день, пане/пані! |
-| добрий ранок | Time-marked formal greeting (until ~12:00) | Добрий ранок усім! |
-| добрий вечір | Time-marked formal greeting (after ~18:00) | Добрий вечір, як ви? |
-| до побачення | Top 300; formal farewell | До побачення! На все добре. |
-| дякую | Top 100; universal gratitude | Дуже дякую. Щиро дякую. |
-| будь ласка | Top 100 collocation; dual: request + response to thanks | Будь ласка, каву. / — Дякую! — Будь ласка! |
-| вибачте | Top 500; formal attention-getter or minor apology | Вибачте, де... ? |
-| вибач | Informal counterpart of вибачте | Вибач, не чув. |
-| перепрошую | Sincerer formal apology than вибачте | Перепрошую за запізнення. |
-| дуже приємно | Introduction formula | Дуже приємно познайомитись. |
-| бувай / бувайте | Casual farewell; buvay (sg) / buvajte (pl/formal) | Бувай! / Бувайте! |
-| на все добре | Warm semi-formal farewell | На все добре! |
-| ласкаво просимо | Welcome (receiving guests) | Ласкаво просимо до України! |
-
----
+|------|-------|------------------|
+| Привіт | Informal greeting (Hi) | Привіт, Анно! |
+| Добрий день | Formal/neutral greeting (Good day) | Добрий день, Олено! |
+| Дякую | Thank you | Дуже дякую |
+| Будь ласка | Please / You're welcome | Дайте, будь ласка |
+| До побачення | Formal goodbye | До побачення, мамо! |
+| Вибачте | Excuse me / Sorry | Вибачте, де метро? |
 
 ## Cultural Hooks
-
-1. **Добрий день as the native default**: "Здрастуйте" is borrowed from Russian ("здравствуйте") and, while still used, is considered old-fashioned by many Ukrainians. The native Ukrainian forms — Добрий ранок/день/вечір — are the authentic choices. Textbook Grade 4 (ponomarova, p.141) explicitly presents "Привіт! Будь ласка. До побачення. Дякую." as the core Ukrainian politeness set.
-
-2. **Ти/Ви is a social marker, not just grammar**: Ukrainian T-V distinction is stricter than in most Western European cultures. Using Ти to an elderly stranger or a teacher is not merely informal — it is considered rude and disrespectful. The phrase "Давай на ти?" (Shall we switch to informal?) is a social ritual that must be explicitly offered before switching. Grade 5 (golub, p.210–211) focuses on the *social function* of greeting and what makes it effective — register-awareness is explicitly taught.
-
-3. **Будь ласка's dual function**: English speakers have separate words for "please" and "you're welcome." Будь ласка covers both: "Будь ласка, каву" (please, a coffee) and "— Дякую! — Будь ласка!" (— Thank you! — You're welcome!). This surprises English speakers and is a useful discovery moment.
-
----
+1. **Wishing well as a greeting**: As noted in Grade 5 textbooks, a "привітання" (greeting) in Ukrainian is historically tied to wishing someone well or health ("побажання усіляких гараздів").
+2. **Holiday specifics**: Ukrainians have very specific greetings for holidays that carry deep cultural weight, such as "З Новим роком!" (Happy New Year) accompanied by wishes like "На щастя, на здоров'я" (Grade 3 textbook excerpt).
+3. **Welcoming guests**: Ukrainian politeness emphasizes how guests are received. The Grade 4 textbook highlights meeting people "радісно й привітно" (joyfully and affably), reflecting the cultural value of warm hospitality.
 
 ## Common Learner Errors
-
-1. **Default to informal Ти with strangers** → Use Ви until explicitly invited to switch. Happens because English has no T-V distinction; learners mirror casual English defaults. Grade 5 golub targets this explicitly (p.211 — dialogue where children must figure out how to address Poліna appropriately).
-
-2. **Будь ласка only means "please"** → Also means "you're welcome." English speakers omit it as a response to дякую, leaving an awkward silence.
-
-3. **Wrong time-of-day greeting** → "Добрий день" used at 8pm or "Добрий вечір" at noon. Learners need explicit time-window anchors (ранок = until 12:00, день = 12:00–18:00, вечір = after 18:00).
-
-4. **Вибачте vs Перепрошую confusion** → Both translate as "excuse me / I'm sorry" but differ in sincerity level. Вибачте = minor interruption/attention-getter; Перепрошую = genuine apology for real inconvenience.
-
----
+1. **Using "Привіт" in formal contexts** → English speakers often use "Привіт" (Hi) with shop assistants or teachers. It must be explicitly taught that "Привіт" is strictly for friends, family, and children. "Добрий день" is the safe default.
+2. **Misspelling "Будь ласка"** → Often written as one word or missing the soft sign (ь). It should be emphasized as two distinct words.
+3. **Over-translating "How are you?"** → Beginners try to literally translate English small talk. Teach them that a simple greeting is often enough, or introduce the fixed phrase "Як справи?" without analyzing its grammar.
 
 ## Cross-References
-
-- **Builds on**: a1-07 (The Gender Code) — gendered address forms (пан/пані) appear in greetings; this module uses gender-aware address without teaching it
-- **Prepares for**: a1-09 (This Is, I Am) — introduces "Мене звати..." as a nominative formula; the next module expands Це + noun constructions into fuller "Це є..." patterns
-
----
+- Builds on: First alphabet/phonetics modules (foundational literacy)
+- Prepares for: Introductions, Basic small talk, and "Як справи?" (How are you?)
 
 ## Teaching Strategy
-
-- **Discovery exercise**: Show two short dialogues side by side in blockquote format. Dialogue A: two friends meet (Привіт! Як справи? — Добре, дякую! Бувай!). Dialogue B: student meets professor (Добрий день. Як вас звати? — Мене звати Тарас. — Дуже приємно.). Ask in English: *What's different about these two conversations? How does each person show who they're talking to?* Let learners notice Ти/Ви vocabulary difference, different greetings, different farewell — before explaining the T-V rule. Then the rule emerges from observation, not memorization.
-
-- **Best context**: Café or street encounter. "Вибачте, де метро?" naturally triggers вибачте for attention-getting; receiving coffee triggers "Будь ласка, каву" + "Дякую" + "Будь ласка" exchange. This single scenario chains 4 target vocabulary items in realistic sequence.
-
-- **Contrastive pairs**: Вибачте (attention/minor apology) vs Перепрошую (sincere apology); Ти (informal/one person) vs Ви (formal OR plural); Добрий день (safe default, any time of day in doubt) vs time-specific Ранок/Вечір. Grade 4 (p.176) models explicit contrastive adverb usage for social situations — same contrastive method applies here.
-
----
+- **Discovery exercise**: Show two short visual dialogues. 1: A teenager waves to a friend and says "Привіт!". 2: A student walks into a classroom, stands straight, and says "Добрий день!" to the teacher. Ask the learner: "Which greeting is for friends, and which is for showing respect?"
+- **Best context**: Entering a café, buying something at a market, or meeting a Ukrainian colleague for the first time.
+- **Contrastive pairs**: Привіт (informal) vs. Добрий день (formal); Па-па (informal goodbye) vs. До побачення (formal goodbye).
 
 ## Notes for Content Writing
-
-- All classroom instructions must be in English ("Listen carefully", "Read aloud", "Repeat") — this is module 8, pre-verbal phase.
-- Section headers: bilingual format required (`## Вітання — Greetings`) as per M1-14 rule in quick-ref.
-- "Будь ласка", "Вибачте", "Вибач" are fixed formulas — present as memorized chunks, not as verb conjugation. Do NOT explain the imperative morphology.
-- "Здрастуйте" should appear only as a note ("still used but old-fashioned") — do not teach it as the primary formal greeting. Authentic Ukrainian prefers Добрий день.
-- The Ті/Ви section is the pedagogical heart of this module — give it full word budget even if other sections run slightly short.
-- Dialogues (Section 5) must be in blockquote containers per A1 immersion rule; no raw Ukrainian prose.
-
+- Keep grammar strictly to `Це + noun` or isolated phrases. Do not explain cases.
+- Use English for all explanatory prose and metalanguage.
+- Section headings MUST be bilingual (e.g., "## Вітання — Greetings").
+- Reinforce that "Будь ласка" is a magic word that means both "Please" and "You're welcome" (as seen in the Grade 4 excerpts).
 
 ## Resource Discovery
 
-### Videos
-- [Start learning UKRAINIAN: Greetings! How are you? What is your name? Personal pronouns in Ukrainian](https://www.youtube.com/watch?v=3zZWCCS7igw) (Ukrainian with Olha) — This video comprehensively covers greetings, politeness phrases, and introductions, aligning perfectly with multiple sections of the module including Вітання, Ввічливість, and Знайомство.
-- [FMU 1-50 | Greetings in Ukrainian: informal, formal and fun! | 5 Minute Ukrainian](https://www.youtube.com/watch?v=dtufctJhBrY) (Ukrainian Lessons) — Directly covers informal and formal greetings, which is highly relevant to the Вітання and potentially the Ти і Ви sections of the module.
-- [Greetings & Farewell + Words of Politeness 💙💛 #ukrainianlanguage #ukrainianlessons](https://www.youtube.com/watch?v=yXoHXF7Q6x8) (Ukrainian with Olha) — Provides a good overview of common greetings and politeness words, directly relevant to the Вітання and Ввічливість sections.
-- [ULP 2-63 | Вітання зі святами | Ukrainian Holiday Greetings](https://www.youtube.com/watch?v=cQQB8GX3zxM) (Ukrainian Lessons) — The video focuses on holiday-specific greetings, which is a sub-category of greetings, but not the primary focus of general greetings and politeness in this module.
 
 ### Blog Articles
-- [Talk Ukrainian: Greetings in Ukrainian](https://talkukrainian.com/greetings/) (talkukrainian)
 - [Polite Phrases in Ukrainian](https://www.verba.school/post/polite-phrases-in-ukrainian) (verba.school)
 - [Informal Greetings in Ukrainian](https://www.ukrainianlessons.com/episode1/) (ukrainianlessons.com)
 - [Formal Greetings and Saying Goodbye in Ukrainian + Pronouns](https://www.ukrainianlessons.com/episode2/) (ukrainianlessons.com)
-- [Ukrainian Holiday Greetings](https://www.ukrainianlessons.com/episode63/) (ukrainianlessons.com)
+- [Greetings in Ukrainian](https://www.ukrainianlessons.com/greetings/) (ukrainianlessons.com)
+- [Talk Ukrainian: Greetings in Ukrainian](https://talkukrainian.com/greetings/) (talkukrainian)
 
 ### Textbook References (RAG)
 
