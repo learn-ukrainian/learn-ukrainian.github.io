@@ -51,6 +51,12 @@
 
 ---
 
+## Friction Constraints (Past Review Findings — DO NOT reintroduce)
+
+{FRICTION_CONSTRAINTS}
+
+---
+
 ## Instructions
 
 **CRITICAL: Fix ALL issues. Partial fixes are REJECTED. Count your fixes — if you missed one, go back.**

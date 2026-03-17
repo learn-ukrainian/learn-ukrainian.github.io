@@ -39,6 +39,12 @@ Compare claims against the provided reference sources. Do NOT evaluate from your
 
 ---
 
+## Friction Constraints (Past Review Findings)
+
+{FRICTION_CONSTRAINTS}
+
+---
+
 ## Tier 1 Reference Sources (Ground Truth)
 
 The following reference material comes from authoritative sources. Use it as ground truth.

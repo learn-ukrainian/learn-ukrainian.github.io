@@ -1031,6 +1031,49 @@ def _check_archive_fits_outline(ctx: ModuleContext) -> tuple[bool, list[str], li
 # 17. Phase 2 Content Generation (from v1, used as fallback by Phase B)
 # ============================================================================
 
+def _load_friction_constraints(ctx: ModuleContext) -> str:
+    """Load active frictions from module + global friction files.
+
+    Returns formatted text for injection into content/review prompts.
+    Returns empty string if no friction files exist (graceful for new modules).
+
+    Issue: #970 AC3-AC4
+    """
+    import yaml as yaml_lib
+
+    constraints: list[str] = []
+
+    # 1. Global friction (project-wide)
+    global_path = Path(__file__).parent.parent.parent / "docs" / "rules" / "global-friction.yaml"
+    if global_path.exists():
+        try:
+            data = yaml_lib.safe_load(global_path.read_text("utf-8"))
+            for f in data.get("frictions", []):
+                if f.get("status") == "active":
+                    constraints.append(f"- [GLOBAL] {f['description'].strip()}")
+        except Exception:
+            pass
+
+    # 2. Module-specific friction
+    friction_path = ctx.orch_dir / "friction.yaml"
+    if friction_path.exists():
+        try:
+            data = yaml_lib.safe_load(friction_path.read_text("utf-8"))
+            for f in data.get("frictions", []):
+                if f.get("status") == "active":
+                    constraints.append(f"- [MODULE] {f['description'].strip()}")
+        except Exception:
+            pass
+
+    if not constraints:
+        return ""
+
+    header = (
+        "FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):\n"
+    )
+    return header + "\n".join(constraints)
+
+
 def _build_section_budget_table(sections: list, word_target: int) -> str:
     """Build a markdown table of section word budgets."""
     rows = ["| Section | Minimum |", "|---------|---------|"]
@@ -1623,6 +1666,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             if research_errors else ""
         ),
         "FOLK_MATERIAL": getattr(ctx, "_folk_material", ""),
+        "FRICTION_CONSTRAINTS": _load_friction_constraints(ctx),
     }
     if not fill_template(template, ctx.placeholders, prompt_file, overrides=overrides):
         return False
@@ -1649,6 +1693,13 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         _header += f". Next module: {_next.replace('-', ' ').title()}"
     _header += ".\n\n"
     _prompt_text = _header + _prompt_text
+
+    # Inject friction constraints (from past reviews) — #970 AC3
+    _friction = _load_friction_constraints(ctx)
+    if _friction:
+        _prompt_text += f"\n\n{_friction}\n"
+        log(f"  content: Injected friction constraints ({_friction.count(chr(10))} lines)")
+
     prompt_file.write_text(_prompt_text, "utf-8")
 
     # Pre-dispatch health check: catch template/placeholder bugs before wasting a Gemini call

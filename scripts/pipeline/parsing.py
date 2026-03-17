@@ -160,6 +160,13 @@ def _inject_file_contents(prompt_text: str, ctx: ModuleContext) -> str:
     prompt_text = prompt_text.replace("{CONTENT_FILE_CONTENT}", content_text)
     prompt_text = prompt_text.replace("{ACTIVITIES_FILE_CONTENT}", act_text)
     prompt_text = prompt_text.replace("{VOCAB_FILE_CONTENT}", vocab_text)
+
+    # Inject friction constraints if placeholder exists (#970 AC4)
+    if "{FRICTION_CONSTRAINTS}" in prompt_text:
+        from pipeline.core import _load_friction_constraints
+        friction = _load_friction_constraints(ctx)
+        prompt_text = prompt_text.replace("{FRICTION_CONSTRAINTS}", friction)
+
     return prompt_text
 
 

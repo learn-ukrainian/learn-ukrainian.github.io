@@ -57,6 +57,12 @@ Audit status:     {COMPUTED_AUDIT_STATUS}
 
 ---
 
+## Friction Constraints (Past Review Findings)
+
+{FRICTION_CONSTRAINTS}
+
+---
+
 ## Tier-Specific Guidance
 
 {TRACK_CALIBRATION}

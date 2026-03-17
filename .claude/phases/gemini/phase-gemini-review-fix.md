@@ -51,9 +51,17 @@
 
 ---
 
+## Friction Constraints (Past Review Findings — DO NOT reintroduce)
+
+{FRICTION_CONSTRAINTS}
+
+---
+
 ## Instructions
 
-1. For each issue in the Fix Plan or audit failures, locate the exact text in the file contents above
+**CRITICAL: Fix ALL issues. Partial fixes are REJECTED. Count your fixes — if you missed one, go back.**
+
+1. For EVERY issue in the Fix Plan AND audit failures, locate the exact text in the file contents above
 2. Output a FIND/REPLACE pair with the exact text and the corrected version
 3. Prioritize: **audit gate failures first**, then review issues
 4. Only fix issues documented above — no silent extra changes
