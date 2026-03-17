@@ -3303,6 +3303,11 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
     else:
         fix_plan = _extract_fix_plan(review_text)
 
+    # Inject structured review findings for targeted fixes (#937)
+    if not audit_only_fix:
+        from pipeline.review_findings import inject_findings_into_fix_plan
+        fix_plan = inject_findings_into_fix_plan(ctx.orch_dir, fix_plan, "review")
+
     # Inject plan adherence issues (deterministic, HIGH severity)
     if plan_adherence_text:
         fix_plan = plan_adherence_text + "\n\n---\n\n" + fix_plan
@@ -3717,6 +3722,11 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         )
     else:
         fix_plan = _extract_fix_plan(review_text)
+
+    # Inject structured review findings for targeted fixes (#937)
+    if not _audit_only_fix:
+        from pipeline.review_findings import inject_findings_into_fix_plan
+        fix_plan = inject_findings_into_fix_plan(ctx.orch_dir, fix_plan, "review-gemini")
 
     return _run_review_fix_loop(ctx, state, phase, fix_plan, audit_out, review_grounding)
 

@@ -1632,91 +1632,19 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     if not log_prompt_health(health_issues, "Phase 2"):
         return False
 
-    # Pre-content gate: Semantic Russicism scan on plan vocabulary
+    # Pre-content gate: Deterministic Russicism scan on plan vocabulary
+    # (LLM-based contextual Russicism detection is now in the feasibility preflight check)
     try:
-        from pipeline.semantic_russianisms import scan_plan_for_russianisms, scan_with_llm
-        all_findings = []
+        from pipeline.semantic_russianisms import scan_plan_for_russianisms
         plan_path = ctx.paths.get("plan")
-        research_path = ctx.paths.get("research")
-
-        # 1. Deterministic scan of vocabulary_hints (fast, no LLM)
         if plan_path and plan_path.exists():
             vocab_findings = scan_plan_for_russianisms(plan_path)
-            all_findings.extend(("plan-vocab", f) for f in vocab_findings)
-
-        # 2. LLM scan of content_outline + research (understands context)
-        review_agent = getattr(ctx, "review_agent", "gemini")
-        if review_agent == "claude":
-            _scan_dispatch = getattr(ctx, "preflight_dispatch_fn", None) or dispatch_gemini
-        else:
-            _scan_dispatch = dispatch_gemini
-        llm_findings = scan_with_llm(
-            plan_path, research_path,
-            dispatch_fn=_scan_dispatch, slug=ctx.slug, model=ctx.model,
-        )
-        all_findings.extend((f.get("category", "llm-scan"), f) for f in llm_findings)
-        if all_findings:
-            log(f"  pre-content: SEMANTIC RUSSICISM — {len(all_findings)} false friend(s) detected")
-            # Group findings by source file
-            plan_fixes: list[str] = []
-            research_fixes: list[str] = []
-            for source, f in all_findings:
-                log(f"    ❌ [{source}] '{f['word']}' used as '{f['meaning_found']}' "
-                    f"(Ukrainian meaning: {f['ukrainian_meaning']}) [{f['category']}]")
-                instruction = (
-                    f"- Word '{f['word']}' is paired with '{f['meaning_found']}'. "
-                    f"This is the RUSSIAN meaning. In Ukrainian, '{f['word']}' means "
-                    f"'{f['ukrainian_meaning']}'. Fix the English meaning."
-                )
-                if source == "plan":
-                    plan_fixes.append(instruction)
-                else:
-                    research_fixes.append(instruction)
-
-            review_agent = getattr(ctx, "review_agent", "gemini")
-            if review_agent == "claude":
-                _fix_dispatch = getattr(ctx, "preflight_dispatch_fn", None) or dispatch_gemini
-            else:
-                _fix_dispatch = dispatch_gemini
-
-            # Fix each affected file separately
-            fixed_all = True
-            for file_path, fixes, label in [
-                (plan_path, plan_fixes, "plan"),
-                (research_path, research_fixes, "research"),
-            ]:
-                if not fixes or not file_path or not file_path.exists():
-                    continue
-                fix_prompt = (
-                    f"Fix semantic false friends in: {file_path}\n\n"
-                    "These Ukrainian words exist in both Ukrainian and Russian but have "
-                    "DIFFERENT meanings. The file uses the Russian meaning.\n\n"
-                    + "\n".join(fixes) + "\n\n"
-                    "Read the file, find each issue, and fix ONLY the English "
-                    "meaning/translation. Keep the Ukrainian word unchanged. "
-                    "Do NOT change any other part of the file. Write the fixed file."
-                )
-                log(f"  pre-content: Dispatching {label} fix to {review_agent}...")
-                ok, _ = _fix_dispatch(
-                    fix_prompt,
-                    task_id=f"russicism-fix-{ctx.slug}-{label}",
-                    model=ctx.model, stdout_only=False,
-                    allow_write=True, timeout=300,
-                )
-                if not ok:
-                    log(f"  pre-content: {label} fix FAILED")
-                    fixed_all = False
-
-            if fixed_all:
-                # Re-scan vocabulary_hints (deterministic) to verify
-                re_plan = scan_plan_for_russianisms(plan_path) if plan_path and plan_path.exists() else []
-                if re_plan:
-                    log(f"  pre-content: STILL {len(re_plan)} false friend(s) in vocabulary after fix — BLOCKED")
-                    return False
-                # LLM findings trusted after fix (re-scanning would double LLM cost)
-                log("  pre-content: All false friends fixed ✅")
-            else:
-                log("  pre-content: BLOCKED — fix failed. Fix plan/research manually.")
+            if vocab_findings:
+                log(f"  pre-content: SEMANTIC RUSSICISM — {len(vocab_findings)} false friend(s) in vocabulary_hints")
+                for f in vocab_findings:
+                    log(f"    ❌ '{f['word']}' used as '{f['meaning_found']}' "
+                        f"(Ukrainian meaning: {f['ukrainian_meaning']})")
+                log("  pre-content: Fix plan vocabulary_hints manually, then re-run")
                 return False
     except Exception as e:
         log(f"  pre-content: Russicism scan skipped — {e}")
@@ -1735,49 +1663,81 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     except Exception as e:
         log(f"  pre-content: Research quality check skipped — {e}")
 
-    # Prompt preflight: reviewer agent checks the writer's prompt
+    # Prompt preflight: feasibility (writer self-check) + coherence (reviewer) in parallel
     if not getattr(ctx, "skip_prompt_preflight", False):
         try:
             from pipeline.prompt_preflight import apply_preflight_fixes, run_prompt_preflight
-            # Preflight goes to the review agent (opposite of writer)
-            _preflight_dispatch = dispatch_gemini  # default
-            review_agent = getattr(ctx, "review_agent", "gemini")
-            if review_agent == "claude":
-                _preflight_dispatch = getattr(ctx, "preflight_dispatch_fn", None) or dispatch_gemini
+
+            # Feasibility = writer's self-check (same agent that builds content)
+            # Coherence = reviewer (opposite of writer)
+            # Both use simple signature: (prompt_text: str) -> tuple[bool, str]
+            writer = getattr(ctx, "writer", "gemini")
+            coherence_model = getattr(ctx, "coherence_model", None)
+
+            if writer == "claude":
+                from pipeline.prompt_preflight import _dispatch_claude_simple, _dispatch_gemini_simple
+                _feasibility_dispatch = _dispatch_claude_simple
+                # Reviewer = Gemini
+                _coherence_dispatch = _dispatch_gemini_simple
+            else:
+                from pipeline.prompt_preflight import _dispatch_gemini_simple
+                # Writer = Gemini (default)
+                _feasibility_dispatch = _dispatch_gemini_simple
+                # Reviewer = Claude (default)
+                _coherence_dispatch = None  # uses _dispatch_claude_simple in run_prompt_preflight
+
             preflight = run_prompt_preflight(
                 prompt_file, ctx.track, ctx.module_num, ctx.orch_dir,
-                dispatch_fn=_preflight_dispatch,
+                dispatch_fn=_feasibility_dispatch,
+                coherence_dispatch_fn=_coherence_dispatch,
+                plan_path=ctx.paths.get("plan"),
+                coherence_model=coherence_model,
             )
-            if preflight.high_issues:
-                log(f"  preflight: WARNING — {len(preflight.high_issues)} HIGH issue(s) in prompt")
-                for hi in preflight.high_issues:
+
+            # Helper to persist preflight state before any early return
+            def _save_preflight_state(auto_fixed: bool = False) -> None:
+                feas_status = preflight.feasibility.status
+                coh_status = preflight.coherence.status if preflight.coherence else "SKIPPED"
+                ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
+                    "status": preflight.status,
+                    "feasibility_status": feas_status,
+                    "coherence_status": coh_status,
+                    "issues": len(preflight.issues),
+                    "high": len(preflight.high_issues),
+                    "auto_fixed": auto_fixed,
+                }
+
+            # Coherence HIGH issues → immediate failure (human must fix)
+            if preflight.coherence_high_issues:
+                log(f"  preflight: BLOCKED — {len(preflight.coherence_high_issues)} "
+                    "coherence HIGH issue(s) (plan-prompt misalignment)")
+                for ci in preflight.coherence_high_issues:
+                    log(f"    → {ci.problem[:150]}")
+                log("  preflight: Fix the template or plan, then re-run")
+                _save_preflight_state()
+                return False
+
+            # Feasibility HIGH issues → try auto-fix
+            if preflight.feasibility_high_issues:
+                log(f"  preflight: WARNING — {len(preflight.feasibility_high_issues)} "
+                    "feasibility HIGH issue(s)")
+                for hi in preflight.feasibility_high_issues:
                     log(f"    → {hi.problem[:150]}")
                     if hi.suggested_fix:
                         log(f"      FIX: {hi.suggested_fix[:150]}")
-                # Auto-fix: apply suggested fixes to the prompt
                 fixed_prompt_path = apply_preflight_fixes(
-                    prompt_file, preflight.high_issues, ctx.orch_dir,
+                    prompt_file, preflight.feasibility_high_issues, ctx.orch_dir,
                 )
                 if fixed_prompt_path:
                     log(f"  preflight: Auto-fixed prompt saved → {fixed_prompt_path.name}")
                     prompt_file = fixed_prompt_path
                 else:
-                    log("  preflight: BLOCKED — HIGH issues found but auto-fix could not resolve them")
+                    log("  preflight: BLOCKED — feasibility HIGH issues but auto-fix failed")
                     log("  preflight: Fix the template or pipeline code, then re-run")
+                    _save_preflight_state()
                     return False
-                # Save preflight state
-                ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
-                    "status": preflight.status,
-                    "issues": len(preflight.issues),
-                    "high": len(preflight.high_issues),
-                    "auto_fixed": fixed_prompt_path is not None,
-                }
-            else:
-                ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
-                    "status": preflight.status,
-                    "issues": 0,
-                    "high": 0,
-                }
+
+            _save_preflight_state(auto_fixed=bool(preflight.feasibility_high_issues))
         except Exception as e:
             log(f"  preflight: Skipped — {e}")
 

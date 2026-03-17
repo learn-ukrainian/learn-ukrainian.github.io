@@ -190,9 +190,10 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
     # Research-only mode
     ctx.research_only = getattr(args, "research_only", False)  # type: ignore[attr-defined]
 
-    # Prompt preflight: Gemini reviews its own prompt before content generation
+    # Prompt preflight: feasibility (Gemini Flash) + coherence (Claude Sonnet)
     ctx.skip_prompt_preflight = getattr(args, "skip_prompt_preflight", False)  # type: ignore[attr-defined]
     ctx.preflight_only = getattr(args, "preflight_only", False)  # type: ignore[attr-defined]
+    ctx.coherence_model = getattr(args, "coherence_model", None)  # type: ignore[attr-defined]
     if ctx.preflight_only:
         ctx.stop_before_phase = "validate"  # type: ignore[attr-defined]
 
@@ -506,6 +507,8 @@ def main() -> int:
                         help="Skip Gemini prompt self-review before content generation")
     parser.add_argument("--preflight-only", action="store_true", dest="preflight_only",
                         help="Run through research + preflight, then stop before content dispatch")
+    parser.add_argument("--coherence-model", type=str, default=None, dest="coherence_model",
+                        help="Override model for coherence preflight check (default: claude-sonnet-4-6)")
 
     # Writer selection
     parser.add_argument("--writer", type=str, default=None, choices=["claude", "gemini"],
