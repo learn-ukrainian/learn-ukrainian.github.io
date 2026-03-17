@@ -1633,7 +1633,8 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         return False
 
     # Pre-content gate: Deterministic Russicism scan on plan vocabulary
-    # (LLM-based contextual Russicism detection is now in the feasibility preflight check)
+    # Deterministic Russicism scan → auto-fix if found
+    # (LLM-based contextual detection is in the feasibility preflight check)
     try:
         from pipeline.semantic_russianisms import scan_plan_for_russianisms
         plan_path = ctx.paths.get("plan")
@@ -1644,8 +1645,32 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                 for f in vocab_findings:
                     log(f"    ❌ '{f['word']}' used as '{f['meaning_found']}' "
                         f"(Ukrainian meaning: {f['ukrainian_meaning']})")
-                log("  pre-content: Fix plan vocabulary_hints manually, then re-run")
-                return False
+                # Auto-fix: replace using the false friends table
+                try:
+                    from plan_autofix import fix_russianisms_in_plan
+                    issue_dicts = [{"issue_type": "RUSSICISM", "problem": f"'{f['word']}' paired with '{f['meaning_found']}'"}
+                                   for f in vocab_findings]
+                    n_fixes, changes = fix_russianisms_in_plan(plan_path, issue_dicts)
+                    if n_fixes > 0:
+                        log(f"  pre-content: Auto-fixed {n_fixes} Russicism(s) in plan")
+                        for c in changes:
+                            log(f"    ✅ {c}")
+                        # Re-read plan and re-render prompt
+                        ctx.plan = yaml.safe_load(plan_path.read_text("utf-8"))
+                        ctx.placeholders = {}  # force rebuild
+                        build_placeholders(ctx)
+                        if not fill_template(template, ctx.placeholders, prompt_file, overrides=overrides):
+                            log("  pre-content: BLOCKED — re-render after Russicism fix failed")
+                            return False
+                        log("  pre-content: Prompt re-rendered from fixed plan")
+                    else:
+                        log("  pre-content: BLOCKED — Russicism(s) found but auto-fix failed")
+                        log("  pre-content: Fix plan vocabulary_hints manually, then re-run")
+                        return False
+                except Exception as fix_err:
+                    log(f"  pre-content: Russicism auto-fix failed — {fix_err}")
+                    log("  pre-content: Fix plan vocabulary_hints manually, then re-run")
+                    return False
     except Exception as e:
         log(f"  pre-content: Russicism scan skipped — {e}")
 
