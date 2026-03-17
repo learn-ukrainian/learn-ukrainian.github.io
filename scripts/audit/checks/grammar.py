@@ -49,6 +49,9 @@ def is_fixed_phrase(match: str, text: str, phrase_set: set) -> bool:
 def check_grammar_violations(text: str, level_code: str, module_num: int) -> list[dict]:
     """Check for grammar violations based on level constraints."""
     violations = []
+    # Strip HTML comments — citations like <!-- Bolshakova: "які позначають..." -->
+    # contain Ukrainian text that triggers false positives (#969)
+    text = re.sub(r'<!--.*?-->', '', text, flags=re.DOTALL)
     constraints = GRAMMAR_CONSTRAINTS.get(level_code, GRAMMAR_CONSTRAINTS.get('B2'))
 
     # Check forbidden cases at A1

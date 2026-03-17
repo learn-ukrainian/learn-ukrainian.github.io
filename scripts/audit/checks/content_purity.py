@@ -44,8 +44,11 @@ def check_duplicate_sentences(content: str, yaml_content: str = "") -> list[dict
             union = words.union(prev_words)
             similarity = len(intersection) / len(union) if union else 0
 
-            # RELAXED Threshold: 0.7 (70% word overlap is suspicious for different sentences)
-            if similarity > 0.7:
+            # Threshold: 0.7 for long sentences, 0.85 for short ones.
+            # Short sentences (< 15 words) in phonetics modules legitimately
+            # repeat articulation descriptions for different letters (#969).
+            threshold = 0.85 if len(words) < 15 else 0.7
+            if similarity > threshold:
                 display_s = s[:100] + "..." if len(s) > 100 else s
                 violations.append({
                     'type': 'CONTENT_REDUNDANCY',
