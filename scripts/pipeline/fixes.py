@@ -78,22 +78,48 @@ def _log_d1_edits(ctx: ModuleContext, pre_snapshots: dict[str, str]) -> None:
         log("  D.1 edit: No file changes detected (Edit tool not used or all edits reverted)")
 
 
+def _extract_content_rewrite(raw_output: str) -> str | None:
+    """Extract full content rewrite from ===CONTENT_START===/===CONTENT_END=== delimiters."""
+    m = re.search(
+        r"===CONTENT_START===\s*\n(.*?)===CONTENT_END===",
+        raw_output, re.DOTALL,
+    )
+    return m.group(1).strip() if m else None
+
+
 def _apply_module_fixes(ctx: ModuleContext, raw_output: str) -> int:
-    """Apply FIND/REPLACE fix pairs from LLM output to all module files."""
-    if "===SECTION_FIX_START===" not in raw_output:
-        return 0
-    total = 0
-    for _label, p in _module_file_paths(ctx):
-        if p and p.exists():
-            total += _apply_find_replace_fixes(p, raw_output)
-    return total
+    """Apply FIND/REPLACE fix pairs from LLM output to all module files.
+
+    Fallback: if no FIND/REPLACE pairs but a ===CONTENT_START=== rewrite
+    exists, apply the rewrite directly (#969 — fix loop producing full
+    rewrites instead of surgical fixes).
+    """
+    if "===SECTION_FIX_START===" in raw_output:
+        total = 0
+        for _label, p in _module_file_paths(ctx):
+            if p and p.exists():
+                total += _apply_find_replace_fixes(p, raw_output)
+        return total
+
+    # Fallback: accept full content rewrite if present
+    rewrite = _extract_content_rewrite(raw_output)
+    if rewrite and len(rewrite) > 200:
+        md_path = ctx.paths.get("md")
+        if md_path and md_path.exists():
+            md_path.write_text(rewrite, "utf-8")
+            log("    Applied full content rewrite (LLM used ===CONTENT_START=== instead of FIND/REPLACE)")
+            return 1
+
+    return 0
 
 
 def _apply_fixes_with_rollback(
     ctx: ModuleContext, raw_output: str, log_prefix: str,
 ) -> tuple[bool, int]:
     """Apply FIND/REPLACE fixes with diff-size guard and rollback."""
-    if "===SECTION_FIX_START===" not in raw_output:
+    has_find_replace = "===SECTION_FIX_START===" in raw_output
+    has_content_rewrite = "===CONTENT_START===" in raw_output
+    if not has_find_replace and not has_content_rewrite:
         return True, 0
 
     before = _snapshot_module_files(ctx)
