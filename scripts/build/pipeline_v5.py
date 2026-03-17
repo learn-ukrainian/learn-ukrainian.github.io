@@ -81,9 +81,9 @@ from pipeline_lib import (
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-MAX_AUDIT_FIX_ITERS_CORE = 2
-MAX_AUDIT_FIX_ITERS_SEMINAR = 3
-MAX_REVIEW_FIX_ITERS = 2
+MAX_AUDIT_FIX_ITERS_CORE = 1   # Mar 2026: 1 shot — if fix fails, flag for human (#969)
+MAX_AUDIT_FIX_ITERS_SEMINAR = 1  # Mar 2026: same — stop burning tokens on repeated failures
+MAX_REVIEW_FIX_ITERS = 1       # Mar 2026: same
 
 # Dispatch timeouts (seconds)
 TIMEOUT_CONTENT = 600
