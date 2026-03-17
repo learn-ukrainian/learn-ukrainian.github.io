@@ -160,3 +160,107 @@ def auto_fix_plan(
         return 0, []
 
     return n_fixes, changelog
+
+
+def fix_russianisms_in_plan(
+    plan_path: Path,
+    issues: list[dict],
+) -> tuple[int, list[str]]:
+    """Fix semantic Russianisms in plan vocabulary_hints using the false friends table.
+
+    For each issue with type=RUSSICISM, finds the misused word in vocabulary_hints
+    and replaces the Russian meaning with the correct Ukrainian meaning.
+
+    Args:
+        plan_path: Path to the plan YAML file.
+        issues: PreflightIssue dicts with keys: issue_type, problem, suggested_fix.
+
+    Returns:
+        (n_fixes, changelog): Number of fixes applied and list of change descriptions.
+    """
+    from pipeline.semantic_russianisms import SEMANTIC_FALSE_FRIENDS
+
+    changelog: list[str] = []
+    russicism_issues = [i for i in issues if i.get("issue_type") == "RUSSICISM"]
+    if not russicism_issues or not plan_path.exists():
+        return 0, changelog
+
+    # Build lookup: word → false friend entry
+    ff_lookup: dict[str, dict] = {}
+    for ff in SEMANTIC_FALSE_FRIENDS:
+        ff_lookup[ff["word"].lower()] = ff
+
+    try:
+        raw = plan_path.read_text("utf-8")
+    except Exception as e:
+        logger.warning("fix_russianisms: Failed to read plan %s: %s", plan_path, e)
+        return 0, changelog
+
+    n_fixes = 0
+    fixed_raw = raw
+
+    for issue in russicism_issues:
+        # Extract the misused word from the problem description
+        problem = issue.get("problem", "")
+        word = _extract_russicism_word(problem, ff_lookup)
+        if not word:
+            continue
+
+        ff = ff_lookup.get(word.lower())
+        if not ff:
+            continue
+
+        # Find and fix in the raw YAML text (preserves formatting better than parse+dump)
+        # Pattern: "город (city)" → "місто (city)" or replace meaning
+        for russian_meaning in ff["russian_meanings"]:
+            # Match: word (russian_meaning) with optional surrounding text
+            old_pattern = f"{ff['word']} ({russian_meaning})"
+            new_text = f"{ff['replacement']} ({ff['replacement_translation']})"
+            if old_pattern in fixed_raw:
+                fixed_raw = fixed_raw.replace(old_pattern, new_text)
+                n_fixes += 1
+                changelog.append(
+                    f"Replaced '{old_pattern}' → '{new_text}' (semantic false friend)"
+                )
+                break
+
+    if n_fixes == 0:
+        return 0, changelog
+
+    # Bump version in the YAML
+    try:
+        plan = yaml.safe_load(fixed_raw)
+        if isinstance(plan, dict):
+            old_version = str(plan.get("version", "1.0"))
+            new_version = _bump_version(old_version)
+            fixed_raw = fixed_raw.replace(
+                f"version: '{old_version}'", f"version: '{new_version}'"
+            ).replace(
+                f'version: "{old_version}"', f'version: "{new_version}"'
+            ).replace(
+                f"version: {old_version}", f"version: {new_version}"
+            )
+    except Exception:
+        pass  # Version bump is best-effort
+
+    try:
+        plan_path.write_text(fixed_raw, encoding="utf-8")
+        logger.info("fix_russianisms: %s — %d fix(es): %s",
+                     plan_path.name, n_fixes, "; ".join(changelog[:5]))
+    except Exception as e:
+        logger.warning("fix_russianisms: Failed to write plan %s: %s", plan_path, e)
+        return 0, []
+
+    return n_fixes, changelog
+
+
+def _extract_russicism_word(problem: str, ff_lookup: dict[str, dict]) -> str | None:
+    """Extract the misused Ukrainian word from a RUSSICISM issue's problem text.
+
+    Looks for known false friend words in the problem description.
+    """
+    problem_lower = problem.lower()
+    for word in ff_lookup:
+        if word in problem_lower:
+            return word
+    return None

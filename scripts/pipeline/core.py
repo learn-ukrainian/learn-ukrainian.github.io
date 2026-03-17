@@ -1725,19 +1725,55 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     log(f"    → {hi.problem[:150]}")
                     if hi.suggested_fix:
                         log(f"      FIX: {hi.suggested_fix[:150]}")
-                fixed_prompt_path = apply_preflight_fixes(
-                    prompt_file, preflight.feasibility_high_issues, ctx.orch_dir,
-                )
-                if fixed_prompt_path:
-                    log(f"  preflight: Auto-fixed prompt saved → {fixed_prompt_path.name}")
-                    prompt_file = fixed_prompt_path
-                else:
-                    log("  preflight: BLOCKED — feasibility HIGH issues but auto-fix failed")
-                    log("  preflight: Fix the template or pipeline code, then re-run")
-                    _save_preflight_state()
-                    return False
 
-            _save_preflight_state(auto_fixed=bool(preflight.feasibility_high_issues))
+                # Split issues by type
+                russicism_issues = [i for i in preflight.feasibility_high_issues
+                                    if i.issue_type == "RUSSICISM"]
+                prompt_issues = [i for i in preflight.feasibility_high_issues
+                                 if i.issue_type != "RUSSICISM"]
+
+                auto_fixed = False
+
+                # Fix Russianisms in the plan (not the prompt)
+                if russicism_issues:
+                    plan_path = ctx.paths.get("plan")
+                    if plan_path and plan_path.exists():
+                        try:
+                            from plan_autofix import fix_russianisms_in_plan
+                            issue_dicts = [{"issue_type": i.issue_type, "problem": i.problem,
+                                            "suggested_fix": i.suggested_fix} for i in russicism_issues]
+                            n_fixes, changes = fix_russianisms_in_plan(plan_path, issue_dicts)
+                            if n_fixes > 0:
+                                log(f"  preflight: Fixed {n_fixes} Russicism(s) in plan")
+                                for c in changes:
+                                    log(f"    ✅ {c}")
+                                auto_fixed = True
+                            else:
+                                log("  preflight: BLOCKED — Russicism(s) found but auto-fix could not resolve them")
+                                log("  preflight: Fix plan vocabulary_hints manually, then re-run")
+                                _save_preflight_state()
+                                return False
+                        except Exception as e:
+                            log(f"  preflight: Russicism auto-fix failed — {e}")
+                            _save_preflight_state()
+                            return False
+
+                # Fix prompt contradictions (existing pattern-based fix)
+                if prompt_issues:
+                    fixed_prompt_path = apply_preflight_fixes(
+                        prompt_file, prompt_issues, ctx.orch_dir,
+                    )
+                    if fixed_prompt_path:
+                        log(f"  preflight: Auto-fixed prompt saved → {fixed_prompt_path.name}")
+                        prompt_file = fixed_prompt_path
+                        auto_fixed = True
+                    else:
+                        log("  preflight: BLOCKED — prompt issues but auto-fix failed")
+                        log("  preflight: Fix the template or pipeline code, then re-run")
+                        _save_preflight_state()
+                        return False
+
+            _save_preflight_state(auto_fixed=auto_fixed if preflight.feasibility_high_issues else False)
         except Exception as e:
             log(f"  preflight: Skipped — {e}")
 
