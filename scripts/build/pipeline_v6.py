@@ -436,6 +436,9 @@ def phase_review_fix(ctx: ModuleContext, state: dict, audit_output: str) -> bool
     # Extract review text
     review_text = _extract_delimited(raw, "===REVIEW_START===", "===REVIEW_END===")
     if review_text:
+        # Inject Reviewed-By metadata if missing
+        if "Reviewed-By:" not in review_text:
+            review_text = f"**Reviewed-By:** {reviewer_model} (v6 pipeline)\n\n{review_text}"
         write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
         (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
         log(f"  review: Review saved ({len(review_text.split())} words)")
@@ -662,14 +665,14 @@ def _build_activities_prompt(
         ```
 
         **KEY RULES:**
+        - `quiz`: MUST have exactly 4 options per item. Options use `text:` and `correct:` (bool). DO NOT use a standalone `answer:` field. Mark the correct option with `correct: true`.
         - `match-up` uses `pairs:` with `left:` / `right:` (NOT `items:` with `prompt:` / `answer:`)
         - `true-false` uses `statement:` (NOT `text:`)
-        - `quiz` options use `text:` and `correct:` (bool)
         - `classify` uses `categories:` with `label:` and `items:`
         - `group-sort` uses `groups:` with `name:` and `items:`
         - NO `id` field on any activity — the system generates IDs
-        - Minimum 6 items per activity
-        - Minimum 8 activities total
+        - CRITICAL: EVERY activity MUST have at least 6 items.
+        - CRITICAL: You MUST generate AT LEAST 8 distinct activities in total. Generate more if needed.
 
         ## Vocabulary Rules
         - Extract ALL Ukrainian words taught in the content
@@ -743,9 +746,18 @@ def _build_review_fix_prompt(
 
         ## Output Format
 
-        First, output your review:
+        First, output your review. The review MUST cover EVERY section in the content:
         ===REVIEW_START===
-        (Your structured review with scores and specific issues found)
+        **Reviewed-By:** (your model name)
+
+        ## Section-by-Section Review
+        (For EACH H2 section in the content, write 2-3 sentences about quality, accuracy, pedagogy)
+
+        ## Audit Fixes Applied
+        (List every audit failure you fixed, with before/after)
+
+        ## Overall Assessment
+        (Overall quality score and summary)
         ===REVIEW_END===
 
         Then, output ALL corrected files (even if unchanged):

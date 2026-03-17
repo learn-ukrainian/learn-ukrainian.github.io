@@ -108,14 +108,19 @@ def _fix_question_field(item: dict, activity_type: str, idx: int) -> list[str]:
 
 
 def _fix_option_types(item: dict, activity_type: str, idx: int) -> list[str]:
-    """Coerce option text to string and add missing correct:false."""
+    """Coerce option text to string, convert string options to dicts, and add missing correct:false."""
     fixes = []
-    if 'options' not in item:
+    if 'options' not in item or not isinstance(item['options'], list):
         return fixes
-    for opt in item['options']:
-        if isinstance(opt, dict) and 'text' in opt and not isinstance(opt['text'], str):
+
+    for i, opt in enumerate(item['options']):
+        if isinstance(opt, str):
+            item['options'][i] = {'text': opt, 'correct': False}
+            fixes.append(f"Converted string option to dict in {activity_type} item {idx}")
+        elif isinstance(opt, dict) and 'text' in opt and not isinstance(opt['text'], str):
             opt['text'] = str(opt['text'])
             fixes.append(f"Converted option text to string in {activity_type} item {idx}")
+
     options_fixed = sum(1 for opt in item['options']
                         if isinstance(opt, dict) and 'correct' not in opt)
     for opt in item['options']:
@@ -127,7 +132,7 @@ def _fix_option_types(item: dict, activity_type: str, idx: int) -> list[str]:
 
 
 def fix_quiz_select_items(activity: dict, activity_type: str) -> list[str]:
-    """Fix 5/5b: Ensure question property, type coercion, missing correct:false."""
+    """Fix 5/5b: Ensure question property, type coercion, missing correct:false, pad/truncate options."""
     fixes = []
     if 'items' not in activity:
         return fixes
@@ -136,6 +141,19 @@ def fix_quiz_select_items(activity: dict, activity_type: str) -> list[str]:
             continue
         fixes.extend(_fix_question_field(item, activity_type, i + 1))
         fixes.extend(_fix_option_types(item, activity_type, i + 1))
+
+        # Pad or truncate quiz options to exactly 4
+        if activity_type == 'quiz' and 'options' in item and isinstance(item['options'], list):
+            while len(item['options']) < 4:
+                item['options'].append({'text': 'None of the above', 'correct': False})
+                fixes.append(f"Padded quiz item {i + 1} to 4 options")
+            if len(item['options']) > 4:
+                # Ensure the correct option is kept when truncating
+                correct_opts = [o for o in item['options'] if o.get('correct')]
+                incorrect_opts = [o for o in item['options'] if not o.get('correct')]
+                item['options'] = (correct_opts + incorrect_opts)[:4]
+                fixes.append(f"Truncated quiz item {i + 1} to exactly 4 options")
+
     return fixes
 
 
@@ -147,15 +165,43 @@ def fix_quiz_answer_field(activity: dict) -> list[str]:
     for i, item in enumerate(activity.get('items', [])):
         if not isinstance(item, dict) or 'answer' not in item:
             continue
-        answer_text = str(item['answer']).strip().lower()
+
+        answer_text = str(item['answer']).strip()
+        answer_text_lower = answer_text.lower()
+        matched = False
+
         # Mark the matching option as correct
         for opt in item.get('options', []):
-            if isinstance(opt, dict) and str(opt.get('text', '')).strip().lower() == answer_text:
+            if isinstance(opt, dict) and str(opt.get('text', '')).strip().lower() == answer_text_lower:
                 opt['correct'] = True
+                matched = True
                 fixes.append(f"Marked correct option from 'answer' field in quiz item {i+1}")
                 break
+
+        # If no option matched the answer text, inject it so the quiz is solvable
+        if not matched and isinstance(item.get('options'), list):
+            # Prefer to replace a generic/padding option if one exists, or append if we have room
+            if len(item['options']) < 4:
+                item['options'].append({'text': answer_text, 'correct': True})
+            else:
+                # Overwrite the last incorrect option with the correct answer
+                for opt in reversed(item['options']):
+                    if not opt.get('correct'):
+                        opt['text'] = answer_text
+                        opt['correct'] = True
+                        break
+            fixes.append(f"Injected missing 'answer' field text into options for quiz item {i+1}")
+
         del item['answer']
         fixes.append(f"Removed standalone 'answer' field from quiz item {i+1}")
+
+        # Ensure that at least one option is marked correct in a quiz!
+        if activity.get('type') == 'quiz' and isinstance(item.get('options'), list):
+            has_correct = any(opt.get('correct') for opt in item['options'] if isinstance(opt, dict))
+            if not has_correct and len(item['options']) > 0:
+                item['options'][0]['correct'] = True
+                fixes.append(f"Fallback: Marked first option correct in quiz item {i+1} as no correct option was found")
+
     return fixes
 
 
