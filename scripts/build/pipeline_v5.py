@@ -758,6 +758,11 @@ def _build_pass1_prompt(ctx: ModuleContext, screen: DScreenResult, rag_data: dic
 
     prompt_text = _inject_metrics_into_prompt(prompt_text, screen.metrics)
 
+    # Inject friction constraints (#970)
+    from pipeline.core import _load_friction_constraints
+    prompt_text = prompt_text.replace("{FRICTION_CONSTRAINTS}",
+                                      _load_friction_constraints(ctx))
+
     return prompt_text
 
 
@@ -799,6 +804,11 @@ def _build_pass2_prompt(ctx: ModuleContext, screen: DScreenResult) -> str:
 
     prompt_text = prompt_text.replace("{SCORING_SECTION}", _get_scoring_section(ctx.track))
     prompt_text = prompt_text.replace("{SCORING_OUTPUT_TABLE}", _get_scoring_output_table(ctx.track))
+
+    # Inject friction constraints (#970)
+    from pipeline.core import _load_friction_constraints
+    prompt_text = prompt_text.replace("{FRICTION_CONSTRAINTS}",
+                                      _load_friction_constraints(ctx))
 
     return prompt_text
 
@@ -1530,6 +1540,11 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         3. Never use a word that returns NOT FOUND — rephrase in English instead
     """)
 
+    # Friction constraints (#970)
+    from pipeline.core import _load_friction_constraints
+    friction_text = _load_friction_constraints(ctx)
+    friction_section = f"\n## Friction Constraints (DO NOT reintroduce)\n\n{friction_text}\n" if friction_text else ""
+
     return textwrap.dedent(f"""\
         # Fix ALL {total_fixes} issue(s) in `{ctx.slug}`
 
@@ -1544,6 +1559,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
         {sandbox_section}
         {immersion_section}
         {level_section}
+        {friction_section}
         {vesum_section}
 
         ## Files
