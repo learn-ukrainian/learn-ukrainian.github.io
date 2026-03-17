@@ -4140,6 +4140,31 @@ def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -
                 if p and p.exists():
                     p.unlink()
                     log(f"  --restart-from: deleted {p.name}")
+        # Clean stale orchestration artifacts for restarted phases (#969 AC7)
+        # Keeps: friction.yaml, state.json, research/discovery files
+        _RESTART_KEEP = {"friction.yaml", "state.json", "completion.md",
+                         "builder-notes.yaml", "discovery.yaml"}
+        _RESTART_KEEP_PREFIXES = ("research-", "discover-")
+        if ctx.orch_dir.is_dir():
+            removed_orch = 0
+            for f in ctx.orch_dir.iterdir():
+                if not f.is_file():
+                    continue
+                if f.name in _RESTART_KEEP:
+                    continue
+                if f.name.startswith(_RESTART_KEEP_PREFIXES):
+                    continue
+                if f.name.endswith("-gemini-session.json"):
+                    continue
+                # Only clean artifacts from restarted phases
+                is_content_artifact = any(f.name.startswith(p) for p in
+                    ("content-", "validate-", "activities-", "review-", "screen-",
+                     "preflight-output", "preflight-prompt"))
+                if "content" in remaining and is_content_artifact:
+                    f.unlink()
+                    removed_orch += 1
+            if removed_orch:
+                log(f"  --restart-from: cleaned {removed_orch} stale orchestration artifact(s)")
         save_state(ctx, state)
         if "research" in remaining:
             ctx.force_research = True  # type: ignore[attr-defined]
