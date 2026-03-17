@@ -1634,16 +1634,27 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
     # Pre-content gate: Semantic Russicism scan on plan vocabulary
     try:
-        from pipeline.semantic_russianisms import scan_plan_for_russianisms, scan_research_for_russianisms
+        from pipeline.semantic_russianisms import scan_plan_for_russianisms, scan_with_llm
         all_findings = []
         plan_path = ctx.paths.get("plan")
-        if plan_path and plan_path.exists():
-            plan_findings = scan_plan_for_russianisms(plan_path)
-            all_findings.extend(("plan", f) for f in plan_findings)
         research_path = ctx.paths.get("research")
-        if research_path and research_path.exists():
-            r_findings = scan_research_for_russianisms(research_path)
-            all_findings.extend(("research", f) for f in r_findings)
+
+        # 1. Deterministic scan of vocabulary_hints (fast, no LLM)
+        if plan_path and plan_path.exists():
+            vocab_findings = scan_plan_for_russianisms(plan_path)
+            all_findings.extend(("plan-vocab", f) for f in vocab_findings)
+
+        # 2. LLM scan of content_outline + research (understands context)
+        review_agent = getattr(ctx, "review_agent", "gemini")
+        if review_agent == "claude":
+            _scan_dispatch = getattr(ctx, "preflight_dispatch_fn", None) or dispatch_gemini
+        else:
+            _scan_dispatch = dispatch_gemini
+        llm_findings = scan_with_llm(
+            plan_path, research_path,
+            dispatch_fn=_scan_dispatch, slug=ctx.slug, model=ctx.model,
+        )
+        all_findings.extend((f.get("category", "llm-scan"), f) for f in llm_findings)
         if all_findings:
             log(f"  pre-content: SEMANTIC RUSSICISM — {len(all_findings)} false friend(s) detected")
             # Group findings by source file
@@ -1697,13 +1708,12 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                     fixed_all = False
 
             if fixed_all:
-                # Re-scan all to verify
+                # Re-scan vocabulary_hints (deterministic) to verify
                 re_plan = scan_plan_for_russianisms(plan_path) if plan_path and plan_path.exists() else []
-                re_research = scan_research_for_russianisms(research_path) if research_path and research_path.exists() else []
-                remaining = len(re_plan) + len(re_research)
-                if remaining:
-                    log(f"  pre-content: STILL {remaining} false friend(s) after fix — BLOCKED")
+                if re_plan:
+                    log(f"  pre-content: STILL {len(re_plan)} false friend(s) in vocabulary after fix — BLOCKED")
                     return False
+                # LLM findings trusted after fix (re-scanning would double LLM cost)
                 log("  pre-content: All false friends fixed ✅")
             else:
                 log("  pre-content: BLOCKED — fix failed. Fix plan/research manually.")

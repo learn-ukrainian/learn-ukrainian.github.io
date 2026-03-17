@@ -105,7 +105,10 @@ SEMANTIC_FALSE_FRIENDS: list[dict] = [
 
 
 def scan_plan_for_russianisms(plan_path: Path) -> list[dict]:
-    """Scan a plan's vocabulary_hints AND content_outline for semantic Russianisms.
+    """Scan a plan's vocabulary_hints for semantic Russianisms (deterministic).
+
+    Content_outline and research are scanned by LLM via scan_with_llm() — the LLM
+    understands context and avoids false positives on warnings.
 
     Returns list of findings: [{word, meaning_found, fix, category, original_entry, ...}]
     """
@@ -139,68 +142,149 @@ def scan_plan_for_russianisms(plan_path: Path) -> list[dict]:
                     continue
                 _check_vocab_entry(item, f"vocabulary_hints.{category}", findings)
 
-    # 2. Scan content_outline points
-    outline = plan.get("content_outline", [])
-    if isinstance(outline, list):
-        for section in outline:
-            if not isinstance(section, dict):
-                continue
-            section_name = section.get("section", "")
-            points = section.get("points", [])
-            if not isinstance(points, list):
-                continue
-            for point in points:
-                if isinstance(point, str):
-                    _check_vocab_entry(point, f"content_outline.{section_name}", findings)
+    # Content_outline scanning moved to scan_with_llm() — LLM understands context
 
     return findings
 
 
-def scan_research_for_russianisms(research_path: Path) -> list[dict]:
-    """Scan research output for semantic Russianisms.
+def scan_with_llm(
+    plan_path: Path | None,
+    research_path: Path | None,
+    dispatch_fn,
+    slug: str,
+    model: str,
+) -> list[dict]:
+    """Use LLM to check plan content_outline and research for semantic false friends.
 
-    Returns list of findings (same format as plan scanner).
+    The LLM understands context — it can distinguish between:
+    - "лук (onion)" = MISUSE (translating with Russian meaning)
+    - "неділя ≠ week" = CORRECT (warning about the false friend)
+
+    Returns list of findings: [{word, meaning_found, ukrainian_meaning, source, context}]
     """
-    if not research_path or not research_path.exists():
+    # Build the false friends reference for the prompt
+    ff_table = "\n".join(
+        f"- {ff['word']}: Russian meaning = {', '.join(ff['russian_meanings'])}; "
+        f"Ukrainian meaning = {ff['ukrainian_meaning']}"
+        for ff in SEMANTIC_FALSE_FRIENDS
+    )
+
+    files_section = ""
+    if plan_path and plan_path.exists():
+        plan_text = plan_path.read_text("utf-8")
+        # Only send content_outline, not the whole plan
+        try:
+            plan_data = yaml.safe_load(plan_text)
+            outline = plan_data.get("content_outline", [])
+            outline_text = yaml.dump(outline, allow_unicode=True, default_flow_style=False)
+        except Exception:
+            outline_text = plan_text[:3000]
+        files_section += f"\n### Plan content_outline ({plan_path.name}):\n```yaml\n{outline_text}\n```\n"
+
+    if research_path and research_path.exists():
+        research_text = research_path.read_text("utf-8")
+        # Truncate if too long
+        if len(research_text) > 4000:
+            research_text = research_text[:4000] + "\n...(truncated)"
+        files_section += f"\n### Research ({research_path.name}):\n```markdown\n{research_text}\n```\n"
+
+    if not files_section:
         return []
 
-    try:
-        text = research_path.read_text("utf-8")
-    except Exception:
+    prompt = (
+        "Check these files for SEMANTIC FALSE FRIENDS — Ukrainian words paired "
+        "with their RUSSIAN meaning instead of the correct Ukrainian meaning.\n\n"
+        "False friends reference:\n" + ff_table + "\n\n"
+        "IMPORTANT: Only flag cases where the word is being USED or DEFINED with "
+        "the Russian meaning. Do NOT flag:\n"
+        "- Warnings about the false friend (e.g., 'неділя ≠ week')\n"
+        "- Discussions explaining the difference between meanings\n"
+        "- Correct Ukrainian usage of the word\n\n"
+        "Files to check:" + files_section + "\n\n"
+        "Output format — ONLY if you find real misuses:\n"
+        "===FINDINGS_START===\n"
+        "- word: лук\n"
+        "  meaning_found: onion\n"
+        "  source: plan OR research\n"
+        "  context: the exact text containing the misuse\n"
+        "===FINDINGS_END===\n\n"
+        "If NO misuses found, output:\n"
+        "===FINDINGS_START===\nNONE\n===FINDINGS_END===\n"
+    )
+
+    ok, output = dispatch_fn(
+        prompt,
+        task_id=f"russicism-scan-{slug}",
+        model=model, stdout_only=True, timeout=120,
+    )
+    if not ok:
+        log("  pre-content: LLM russicism scan failed — skipping")
         return []
 
+    # Parse findings
+    import re as _re
+    match = _re.search(r"===FINDINGS_START===\s*\n(.*?)\n\s*===FINDINGS_END===", output, _re.DOTALL)
+    if not match:
+        return []
+
+    body = match.group(1).strip()
+    if body == "NONE" or not body:
+        return []
+
+    # Parse YAML-like findings
     findings = []
-    for line in text.split("\n"):
-        _check_vocab_entry(line.strip(), "research", findings)
+    current: dict = {}
+    for line in body.split("\n"):
+        line = line.strip()
+        if line.startswith("- word:"):
+            if current:
+                findings.append(current)
+            current = {"word": line.split(":", 1)[1].strip()}
+        elif line.startswith("meaning_found:") and current:
+            current["meaning_found"] = line.split(":", 1)[1].strip()
+        elif line.startswith("source:") and current:
+            current["category"] = line.split(":", 1)[1].strip()
+        elif line.startswith("context:") and current:
+            current["original_entry"] = line.split(":", 1)[1].strip()
+    if current and "word" in current:
+        findings.append(current)
+
+    # Enrich with dictionary data
+    for f in findings:
+        for ff in SEMANTIC_FALSE_FRIENDS:
+            if ff["word"] == f.get("word"):
+                f["ukrainian_meaning"] = ff["ukrainian_meaning"]
+                f["replacement"] = ff["replacement"]
+                f["replacement_translation"] = ff["replacement_translation"]
+                break
+        f.setdefault("ukrainian_meaning", "unknown")
+        f.setdefault("replacement", None)
+        f.setdefault("replacement_translation", None)
+        f.setdefault("category", "llm-scan")
+        f.setdefault("meaning_found", "unknown")
+        f.setdefault("original_entry", "")
+
     return findings
-
-
-# Negation patterns that indicate the line is WARNING about the false friend, not using it
-_NEGATION_PATTERNS = re.compile(
-    r"(?:not|NOT|≠|!=|не\b|НЕ\b|false.friend|trap|common.error|common.mistake|помилк)",
-    re.IGNORECASE,
-)
 
 
 def _check_vocab_entry(entry: str, category: str, findings: list[dict]) -> None:
-    """Check a single vocabulary_hints entry for semantic Russianisms."""
-    entry_lower = entry.lower()
+    """Check a single vocabulary_hints entry for semantic Russianisms.
 
-    # Skip lines that warn ABOUT the false friend (negation context)
-    if category == "research" and _NEGATION_PATTERNS.search(entry):
-        return
+    Uses simple substring matching — vocabulary_hints have predictable format
+    like 'лук (onion)'. For content_outline and research, use LLM-based
+    checking via scan_with_llm() instead.
+    """
+    entry_lower = entry.lower()
 
     for ff in SEMANTIC_FALSE_FRIENDS:
         word = ff["word"]
-        # Check if this entry is about this word
         if not re.search(rf"\b{re.escape(word)}\b", entry_lower):
             continue
 
-        # Check if the translation matches a Russian meaning
         for russian_meaning in ff["russian_meanings"]:
             if russian_meaning.lower() in entry_lower:
                 findings.append({
-                    "word": word,
+                    "word": ff["word"],
                     "meaning_found": russian_meaning,
                     "ukrainian_meaning": ff["ukrainian_meaning"],
                     "replacement": ff["replacement"],
@@ -208,7 +292,7 @@ def _check_vocab_entry(entry: str, category: str, findings: list[dict]) -> None:
                     "category": category,
                     "original_entry": entry,
                 })
-                break
+                return
 
 
 def fix_plan_russianisms(plan_path: Path, findings: list[dict]) -> int:
