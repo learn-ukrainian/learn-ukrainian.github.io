@@ -1634,22 +1634,25 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
     # Pre-content gate: Semantic Russicism scan on plan vocabulary
     try:
-        from pipeline.semantic_russianisms import scan_and_fix_plan, scan_research_for_russianisms
+        from pipeline.semantic_russianisms import scan_plan_for_russianisms, scan_research_for_russianisms
+        all_findings = []
         plan_path = ctx.paths.get("plan")
         if plan_path and plan_path.exists():
-            findings, fixes = scan_and_fix_plan(plan_path)
-            if findings:
-                log(f"  pre-content: Semantic Russicism scan (plan): {len(findings)} finding(s), {fixes} auto-fixed")
-                for f in findings:
-                    log(f"    {f['category']}: '{f['word']}' as '{f['meaning_found']}' "
-                        f"(Ukrainian: {f['ukrainian_meaning']})")
+            plan_findings = scan_plan_for_russianisms(plan_path)
+            all_findings.extend(plan_findings)
         research_path = ctx.paths.get("research")
         if research_path and research_path.exists():
             r_findings = scan_research_for_russianisms(research_path)
-            if r_findings:
-                log(f"  pre-content: Semantic Russicism scan (research): {len(r_findings)} finding(s)")
-                for f in r_findings:
-                    log(f"    '{f['word']}' as '{f['meaning_found']}' (Ukrainian: {f['ukrainian_meaning']})")
+            all_findings.extend(r_findings)
+        if all_findings:
+            log(f"  pre-content: SEMANTIC RUSSICISM — {len(all_findings)} false friend(s) detected:")
+            for f in all_findings:
+                log(f"    ❌ '{f['word']}' used as '{f['meaning_found']}' "
+                    f"(Ukrainian meaning: {f['ukrainian_meaning']}) "
+                    f"[{f['category']}]")
+            log("  pre-content: BLOCKED — fix the plan/research before building.")
+            log("  pre-content: The Ukrainian word is valid but the English meaning is Russian.")
+            return False
     except Exception as e:
         log(f"  pre-content: Russicism scan skipped — {e}")
 
