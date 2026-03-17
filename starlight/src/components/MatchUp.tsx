@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
-import { parseMarkdown } from './utils';
+import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 interface MatchPair {
@@ -19,14 +19,10 @@ export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProp
   const [matched, setMatched] = useState<Set<number>>(new Set());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
 
-  // Shuffle right side
+  // Shuffle right side (deterministic — seeded by content)
   const shuffledRight = useMemo(() => {
     const indices = pairs.map((_, i) => i);
-    for (let i = indices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [indices[i], indices[j]] = [indices[j], indices[i]];
-    }
-    return indices;
+    return shuffle(indices);
   }, [pairs]);
 
   const handleLeftClick = (index: number) => {

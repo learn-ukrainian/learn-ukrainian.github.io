@@ -272,10 +272,9 @@ resources:
       source: dobraforma
   a1-questions-and-negation:
     youtube:
-    - title: Negative sentences/Double negative in Ukrainian language
-      url: https://www.youtube.com/watch?v=93NJlqXegFw
-      relevance: high
-      channel: Speak Ukrainian
+    - title: 'Ukrainian listening practice: What do you like to eat? Що ви любите їсти? 🥐 Slow vs. Fast input'
+      url: https://www.youtube.com/watch?v=QE9JOcQfLE0
+      source: Ukrainian with Olha
     articles:
     - title: Питальні слова
       url: https://www.ukrainianlessons.com/question-words/
@@ -362,6 +361,10 @@ resources:
       source: ukrainianlessons.com
     - title: Asking for advice + Accusative case in Ukrainian
       url: https://www.ukrainianlessons.com/episode56/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Your schedule in Ukrainian + Accusative case with prepositions
+      url: https://www.ukrainianlessons.com/episode57/
       relevance: high
       source: ukrainianlessons.com
   a1-the-accusative-ii-people:
@@ -7565,3 +7568,53 @@ resources:
     - title: Павло Вишебаба – Тільки не пиши мені про війну | День, якого не повинно бути
       url: https://www.youtube.com/watch?v=qFKRtDiGk5U
       source: Суспільне Культура
+  a1-the-vocative:
+    articles:
+    - title: Ukrainian Children’s Poem + Vocative case in Ukrainian
+      url: https://www.ukrainianlessons.com/episode69/
+      relevance: high
+      source: ukrainianlessons.com
+  a1-genitive-prepositions:
+    articles:
+    - title: At the grocery store + Genitive case
+      url: https://www.ukrainianlessons.com/episode46/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: Eating habits + Genitive case
+      url: https://www.ukrainianlessons.com/episode48/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Dobra Forma: Genitive Case after Prepositions з, до, and в/у'
+      url: https://opentext.ku.edu/dobraforma/chapter/7-1/
+      relevance: high
+      source: dobraforma
+    - title: 'Dobra Forma: Genitive Case after Prepositions біля, після, для and без'
+      url: https://opentext.ku.edu/dobraforma/chapter/7-2/
+      relevance: high
+      source: dobraforma
+    - title: Food festivals + Genitive case
+      url: https://www.ukrainianlessons.com/episode47/
+      relevance: medium
+      source: ukrainianlessons.com
+  b1-adjective-comparison:
+    articles:
+    - title: Healthy lifestyle + Degrees of comparison in Ukrainian
+      url: https://www.ukrainianlessons.com/episode104/
+      relevance: high
+      source: ukrainianlessons.com
+    - title: 'Dobra Forma: Comparative Degree of Adjectives'
+      url: https://opentext.ku.edu/dobraforma/chapter/20-1/
+      relevance: medium
+      source: dobraforma
+    - title: 'Dobra Forma: Comparative Degree of Adjectives (Exceptions)'
+      url: https://opentext.ku.edu/dobraforma/chapter/20-2/
+      relevance: medium
+      source: dobraforma
+    - title: 'Dobra Forma: Superlative Degree of Adjectives'
+      url: https://opentext.ku.edu/dobraforma/chapter/20-3/
+      relevance: medium
+      source: dobraforma
+    - title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian
+      url: https://www.ukrainianlessons.com/lesson/104/
+      relevance: medium
+      source: ukrainianlessons.com

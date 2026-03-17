@@ -1,0 +1,495 @@
+---
+title: "Consonant Sounds"
+description: "Приголосні звуки — Voiced, Voiceless, Hard, and Soft"
+sidebar:
+  order: 3
+  label: "03. Consonant Sounds"
+pipeline: v5
+build_status: draft
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+## Вступ — Introduction
+
+Welcome back! In Module 1, you met all 33 letters of the Ukrainian alphabet. In Module 2, you mastered the 10 vowel sounds — the open, singing heart of every Ukrainian word. Today you take the next big step: the 22 consonant letters.
+
+Consonants are the skeleton of Ukrainian words. They give words their shape, their crunch, their rhythm. You will learn how Ukrainian organizes its consonants into three clear families: the musical sonorants, the voiced and voiceless pairs, and the hard and soft variants. By the end of this module, you will be able to read and pronounce any Ukrainian word that uses these sounds.
+
+Every vowel you learned in Module 2 is still available — your full toolkit of А, О, У, Е, И, І, Я, Ю, Є, Ї is ready. Now you are adding the consonant sounds that wrap around those vowels to build real words.
+
+:::tip[💡 Quick Orientation]
+You already know some consonants from Module 1: **М** (as in **ма́ма**), **Н** (as in **ні́с**), **Л** (as in **лі́с**), **К** (as in **кі́т**), **С** (as in **сі́к**), **Т** (as in **та́то**). Today you will meet the rest and learn how they all connect.
+:::
+
+---
+
+## Сонорні — Sonorant Consonants
+
+Some consonants are more musical than others. Ukrainian has five special consonants called sonorants — when you say them, your voice dominates and the noise is minimal. Think of them as the consonants closest to vowels. The five sonorants are: **Л**, **М**, **Н**, **Р**, and **В**.
+
+You already know three of them well from Module 1:
+
+- **М** — as in **ма́ма** (mom), **ма́сло** (butter), **молоко́** (milk)
+- **Н** — as in **ні́с** (nose), **не́бо** (sky)
+- **Л** — as in **лі́с** (forest), **молоко́** (milk)
+
+📹 *Watch and repeat:*
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=Ez95H4ibuJo" label="Anna Ohoiko — Ukrainian Lessons — М" />
+
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=vNUfiKHPYaU" label="Anna Ohoiko — Ukrainian Lessons — Н" />
+
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=v6-3Xg52Buk" label="Anna Ohoiko — Ukrainian Lessons — Л" />
+
+Now meet the two new sonorants:
+
+### Літера Р
+
+The Ukrainian **Р** is a rolled, trilled sound — your tongue tip taps rapidly against the ridge behind your upper teeth. It looks exactly like the English letter P, but sounds completely different! There is no connection to the English P sound whatsoever.
+
+- **ри́ба** (fish) — you learned this word in Module 1
+- **рука́** (hand) — your hand, **рука́**
+
+Don't worry if the trill feels difficult at first. Many learners need weeks of practice. Start with a single tap and build up. You are training a muscle, not memorizing a rule.
+
+📹 *Watch and repeat:*
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=fMGsQ5KPQgg" label="Anna Ohoiko — Ukrainian Lessons — Р" />
+
+### Літера В
+
+Here is a surprise: Ukrainian **В** is NOT like English V. In English, you press your upper teeth against your lower lip to make V. In Ukrainian, **В** is a sonorant — you round your lips gently, closer to the English W sound. No teeth touch your lip.
+
+- **вода́** (water) — lips round softly, no teeth
+- **во́вк** (wolf) — the grey wolf of Ukrainian fairy tales
+
+Try this: hold a finger in front of your lips and say **вода́**. You should feel a gentle puff of air, not the buzzing friction of English V.
+
+📹 *Watch and repeat:*
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=aFcvYfvQ2X4" label="Anna Ohoiko — Ukrainian Lessons — В" />
+
+### Літера Й
+
+There is one more consonant that behaves like a sonorant: **Й**. This is a short, gliding sound — like the Y in English «yes». You already met it hiding inside the iotated vowels (Я, Ю, Є, Ї) in Module 2. As a standalone letter, **Й** appears in words like **край** (edge, region) and **яйце́** (egg).
+
+📹 *Watch and repeat:*
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=aq0cjB90s3w" label="Anna Ohoiko — Ukrainian Lessons — Й" />
+
+:::note[📝 The Sonorant Family]
+Five sonorants: **Л, М, Н, Р, В**. Plus **Й**, which is always soft. These consonants are voiced with very little noise. Ukrainian textbooks group them separately because they never have voiceless partners — they are always «дзвінкі» (voiced).
+:::
+
+{/**/}
+
+---
+
+## Дзвінкі та глухі пари — Voiced and Voiceless Pairs
+
+Now for the largest group of consonants. Many Ukrainian consonants come in pairs: one voiced, one voiceless. The mouth and tongue are in exactly the same position for both — the only difference is whether your vocal cords vibrate.
+
+### The Hand-on-Throat Test
+
+Try this right now. Place your hand on your throat and say «zzzzz» (like a buzzing bee). Feel the vibration? That is a voiced sound — in Ukrainian, **дзві́нкий**. Now say «sssss» (like a hissing snake). The vibration stops — only air. That is a voiceless sound — **глу́хий**.
+
+Every pair below works the same way: identical mouth position, different voicing.
+
+:::note[Try It Yourself]
+Put your hand on your throat. Say each pair below slowly: the first sound in each pair should make your throat buzz, the second should not. If both feel the same, try again more slowly.
+:::
+
+### Б / П
+
+**Б** is voiced, **П** is voiceless. Same lip position — both are made by pressing your lips together and releasing.
+
+- **Б** — **бабу́ся** (grandma), a warm family word
+- **П** — **паву́к** (spider), a little creature on the wall
+
+📹 *Watch and repeat:*
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=V1hxBE_JbGg" label="Anna Ohoiko — Ukrainian Lessons — Б" />
+
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=JksSjjxyW5Y" label="Anna Ohoiko — Ukrainian Lessons — П" />
+
+### Д / Т
+
+**Д** is voiced, **Т** is voiceless. Your tongue touches the same spot behind your upper teeth for both.
+
+- **Д** — **дім** (house), a place you know well
+- **Т** — **та́то** (dad), from Module 1
+
+📹 *Watch and repeat:*
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=g4Bh-lqzd48" label="Anna Ohoiko — Ukrainian Lessons — Д" />
+
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=m-jcLR_gK0k" label="Anna Ohoiko — Ukrainian Lessons — Т" />
+
+### З / С
+
+**З** is voiced, **С** is voiceless. Both are made with the tongue near the upper teeth, letting air hiss through.
+
+- **З** — **зуб** (tooth)
+- **С** — **суп** (soup)
+
+Notice the pair **зуб** / **суп** — same final letter position, opposite voicing. This pair is perfect for practice.
+
+📹 *Watch and repeat:*
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=BhASNxitC1A" label="Anna Ohoiko — Ukrainian Lessons — З" />
+
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=7UsFBgSL91E" label="Anna Ohoiko — Ukrainian Lessons — С" />
+
+### Ж / Ш
+
+**Ж** is voiced, **Ш** is voiceless. Both are sibilants — you shape your tongue like a shallow bowl and push air over it.
+
+- **Ж** — **жук** (beetle), like the «zh» in English «measure»
+- **Ш** — **ша́пка** (hat), like the «sh» in English «ship»
+
+📹 *Watch and repeat:*
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=dIrGVcqPwqM" label="Anna Ohoiko — Ukrainian Lessons — Ж" />
+
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=1D-6MIw3OXY" label="Anna Ohoiko — Ukrainian Lessons — Ш" />
+
+### Г / Х
+
+This pair surprises most English speakers. Ukrainian **Г** is NOT a hard «g» like English «go». It is a soft, throaty sound — a voiced glottal fricative. Imagine a gentle, breathy «h» with your voice added. **Х** is its voiceless partner — like the «ch» in Scottish «loch» or German «ach».
+
+- **Г** — **гора́** (mountain), soft and throaty
+- **Х** — **хліб** (bread), the sacred staple of Ukrainian cuisine
+
+📹 *Watch and repeat:*
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=gVnclpSI0DU" label="Anna Ohoiko — Ukrainian Lessons — Г" />
+
+-
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=vpr58zJSJKc" label="Anna Ohoiko — Ukrainian Lessons — Х" />
+
+### Ґ / К
+
+So where is the hard «g» sound? It exists in Ukrainian — but it is the rare letter **Ґ** (with an upturn). **Ґ** is the voiced partner of **К**.
+
+- **Ґ** — **ґа́нок** (porch), a classic textbook word
+- **К** — **кіт** (cat), from Module 1
+
+**Ґ** is the rarest letter in the Ukrainian alphabet — only about 400 native Ukrainian words use it. It was removed from the alphabet in 1933 and restored in 1990. When you see **Ґ**, you know you are looking at a genuinely Ukrainian word.
+
+📹 *Watch and repeat:*
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=J7sGEI4-xJo" label="Anna Ohoiko — Ukrainian Lessons — К" />
+
+### The No-Devoicing Rule
+
+:::warning[⚠️ Critical Rule — Voiced Consonants Stay Voiced!]
+In Ukrainian, voiced consonants do NOT become voiceless at the end of a word. This is different from English, German, and many other languages.
+
+- **зуб** — say зуб, NOT зуп
+- **хліб** — say хліб, NOT хліп
+- **во́вк** — say вовк with the В voiced
+
+If you come from English, Russian, or German, your instinct is to soften the final consonant. Resist that instinct! Every consonant keeps its voice, beginning to end.
+:::
+
+{/**/}
+
+This is one of the most important pronunciation rules in Ukrainian. Practice with these pairs — the first word ends in a voiced consonant, the second in a voiceless one. They should sound different at the end:
+
+- **зуб** (tooth) / **суп** (soup) — Б vs П
+- **хліб** (bread) / **сік** (juice) — Б vs К
+
+---
+
+## Тверді та м'які — Hard and Soft Consonants
+
+Ukrainian has one more layer of consonant organization: most consonants come in **hard** and **soft** variants. A hard consonant is the default — your tongue sits in its normal position. A soft consonant (also called palatalized) means you raise the middle of your tongue toward the roof of your mouth, adding a slight «y» quality to the sound.
+
+How does a consonant become soft? It happens automatically before certain vowels:
+
+- Before **І**: the consonant softens — **лі́с** (forest) has a soft Л
+- Before **Я, Ю, Є**: the consonant softens — **лю́ди** (people) has a soft Л
+- Before **Ь** (soft sign): the consonant softens — but the soft sign is covered in Module 4
+
+The back vowels **А, О, У, Е, И** keep the consonant hard.
+
+### The лук / люк Minimal Pair
+
+The best way to hear the hard/soft difference is with a minimal pair — two words that differ by only one sound:
+
+- **лук** (bow) — hard Л, tongue stays low
+- **люк** (hatch) — soft Л, tongue rises toward the palate
+
+Same word length, same vowel sound after the Л — but the consonant quality changes, and so does the meaning completely. This is how powerful the hard/soft distinction is in Ukrainian.
+
+Here are more examples of soft consonants:
+
+- **день** (day) — soft Д and soft Н
+- **сіль** (salt) — soft С and soft Л
+- **сі́к** (juice) — soft С (before І)
+
+:::tip[💡 Hard and Soft — A Preview]
+You do not need to master every hard/soft pattern today. The key idea is simple: **the vowel after a consonant controls whether it is hard or soft.** Module 4 will complete this picture with the soft sign **Ь**, which can soften a consonant even without a following vowel.
+:::
+
+### Always-Hard and Always-Soft
+
+Not every consonant plays the hard/soft game:
+
+- **Ж** and **Ш** are **always hard** — even before І, they stay hard. The word **жі́нка** has a hard Ж despite the І.
+- **Й** is **always soft** — it never has a hard variant.
+
+{/**/}
+
+---
+
+## Читання — Reading Practice
+
+Time to put all your consonant knowledge to work. Read these words aloud, paying attention to the consonant sounds. Remember: no devoicing at word end, and watch for hard/soft differences.
+
+### Sonorant Words
+
+- **ма́ма** (mom) — **не́бо** (sky) — **ри́ба** (fish)
+- **рука́** (hand) — **вода́** (water) — **во́вк** (wolf)
+- **молоко́** (milk) — **лі́с** (forest)
+
+### Voiced/Voiceless Pair Drills
+
+Read each pair aloud. The first word starts (or features) a voiced consonant, the second its voiceless partner:
+
+- **зуб** / **суп** — feel the difference at the end: Б stays voiced, П is voiceless
+- **жук** / **ша́пка** — Ж buzzes, Ш hisses
+- **гора́** / **хор** — Г is soft and throaty, Х is a voiceless whisper
+- **бабу́ся** / **паву́к** — lips together for both, voice on for Б, off for П
+- **дім** / **та́то** — tongue in the same place, voice on for Д, off for Т
+
+### Hard/Soft Minimal Pairs
+
+- **лук** (bow) / **люк** (hatch) — hard Л vs soft Л
+- **ди́м** (smoke) / **дім** (house) — И keeps Д hard, І makes Д soft
+
+### Labeling Practice
+
+Try reading these simple phrases. No verbs yet — just identifying things:
+
+- **Це хліб.** (This is bread.)
+- **Це дім.** (This is a house.)
+- **Це жук.** (This is a beetle.)
+- **Ось бабу́ся.** (Here is grandma.)
+- **Це гора́.** (This is a mountain.)
+- **Ось ша́пка.** (Here is a hat.)
+- **Це во́вк.** (This is a wolf.)
+- **Це суп.** (This is soup.)
+
+:::note[Reading Challenge]
+Can you read all eight labeling phrases above without hesitation? Try timing yourself. Then read them again, faster. You are building your reading fluency with every repetition. Great job getting this far!
+:::
+
+### Micro-Dialogues
+
+Practice these short exchanges using words you know:
+
+<div className="conversation">
+
+— Це кіт?
+
+— Так, це кіт.
+
+</div>
+
+<div className="conversation">
+
+— Це суп?
+
+— Ні, це молоко́.
+
+</div>
+
+<div className="conversation">
+
+— Ша́пка тут?
+
+— Так, ша́пка тут.
+
+</div>
+
+<div className="conversation">
+
+— Хліб там?
+
+— Ні, хліб тут. А сіль там.
+
+</div>
+
+---
+
+## 📋 Підсумок — Summary
+
+You have just learned the entire consonant system of Ukrainian. Here is what you now know:
+
+- **5 sonorants**: Л, М, Н, Р, В — the musical consonants that are always voiced
+- **6 voiced/voiceless pairs**: Б/П, Д/Т, З/С, Ж/Ш, Г/Х, Ґ/К
+- **Hard and soft variants**: consonants change quality depending on the following vowel
+- **The no-devoicing rule**: voiced consonants stay voiced at word end — **зуб** is зуб, never зуп
+
+:::tip[💡 Self-Check]
+Test yourself with these questions:
+1. What are the 5 sonorant consonants?
+2. What is the voiceless partner of **Б**?
+3. Is **Г** a hard «g» or a soft throaty sound?
+4. Do voiced consonants devoice at the end of a word in Ukrainian?
+5. What is the difference between **лук** and **люк**?
+
+If you can answer all five, you are ready for Module 4!
+:::
+
+**What is next?** Module 4 completes the Ukrainian alphabet. You will meet the soft sign **Ь** (which forces consonants to become soft), the apostrophe **'**, the affricates **Ц**, **Ч**, **Щ**, the digraphs **ДЖ** and **ДЗ**, and the rare letter **Ф**. After that, you will know every letter and sound in Ukrainian. You are doing wonderfully — keep going!
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| хліб |  | bread | noun | ч |  |
+| зуб |  | tooth | noun | ч |  |
+| дім |  | house | noun | ч |  |
+| вовк |  | wolf | noun | ч |  |
+| жук |  | beetle | noun | ч |  |
+| шапка |  | hat | noun | ж |  |
+| гора |  | mountain | noun | ж |  |
+| небо |  | sky | noun | с |  |
+| рука |  | hand | noun | ж |  |
+| бабуся |  | grandma | noun | ж |  |
+| павук |  | spider | noun | ч |  |
+| ґанок |  | porch | noun | ч |  |
+| сіль |  | salt | noun | ж |  |
+| люди |  | people | noun |  |  |
+| суп |  | soup | noun | ч |  |
+| вода |  | water | noun | ж |  |
+| лук |  | bow | noun | ч |  |
+| люк |  | hatch | noun | ч |  |
+| молоко |  | milk | noun | с |  |
+| риба |  | fish | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
+
+### Voiced and Voiceless Consonant Pairs
+
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=V1hxBE_JbGg", "letter": "Б", "word": "бабуся", "note": "Voiced — feel your throat vibrate"}, {"video": "https://www.youtube.com/watch?v=JksSjjxyW5Y", "letter": "П", "word": "павук", "note": "Voiceless partner of Б — no vibration"}, {"video": "https://www.youtube.com/watch?v=g4Bh-lqzd48", "letter": "Д", "word": "дім", "note": "Voiced — tongue behind upper teeth"}, {"video": "https://www.youtube.com/watch?v=m-jcLR_gK0k", "letter": "Т", "word": "тато", "note": "Voiceless partner of Д"}, {"video": "https://www.youtube.com/watch?v=BhASNxitC1A", "letter": "З", "word": "зуб", "note": "Voiced — like a buzzing bee"}, {"video": "https://www.youtube.com/watch?v=7UsFBgSL91E", "letter": "С", "word": "суп", "note": "Voiceless partner of З — like a hissing snake"}, {"video": "https://www.youtube.com/watch?v=dIrGVcqPwqM", "letter": "Ж", "word": "жук", "note": "Voiced — like zh in English measure"}, {"video": "https://www.youtube.com/watch?v=1D-6MIw3OXY", "letter": "Ш", "word": "шапка", "note": "Voiceless partner of Ж — like sh in English ship"}, {"video": "https://www.youtube.com/watch?v=gVnclpSI0DU", "letter": "Г", "word": "гора", "note": "Voiced — soft throaty sound, NOT like English G"}, {"video": "https://www.youtube.com/watch?v=vpr58zJSJKc", "letter": "Х", "word": "хліб", "note": "Voiceless partner of Г — like ch in Scottish loch"}, {"video": "https://www.youtube.com/watch?v=J7sGEI4-xJo", "letter": "К", "word": "кіт", "note": "Voiceless partner of Ґ"}, {"video": "https://www.youtube.com/watch?v=fMGsQ5KPQgg", "letter": "Р", "word": "риба", "note": "Sonorant — rolled/trilled R, tongue tip taps rapidly"}]`)} title="Voiced and Voiceless Consonant Pairs" />
+
+### Sort the Consonants by Type
+
+<Classify client:only='react' categories={JSON.parse(`[{"label": "Sonorants (сонорні)", "items": ["Л", "М", "Н", "Р", "В"]}, {"label": "Voiced (дзвінкі)", "items": ["Б", "Д", "З", "Ж", "Г"]}, {"label": "Voiceless (глухі)", "items": ["П", "Т", "С", "Ш", "Х"]}]`)} title="Sort the Consonants by Type" instruction="Drag each consonant letter into the correct category. Sonorants are musical and always voiced. Voiced consonants make your throat vibrate. Voiceless consonants use only air." />
+
+### What Letter Does It Start With?
+
+<ImageToLetter client:only='react' items={JSON.parse(`[{"emoji": "🐛", "answer": "Ж", "distractors": ["Ш", "З"]}, {"emoji": "🧢", "answer": "Ш", "distractors": ["Ж", "С"]}, {"emoji": "✋", "answer": "Р", "distractors": ["Л", "М"]}, {"emoji": "🐺", "answer": "В", "distractors": ["Б", "М"]}, {"emoji": "⛰️", "answer": "Г", "distractors": ["Х", "К"]}, {"emoji": "🍞", "answer": "Х", "distractors": ["Г", "К"]}, {"emoji": "🐱", "answer": "К", "distractors": ["Г", "Т"]}, {"emoji": "🕷️", "answer": "П", "distractors": ["Б", "В"]}]`)} title="What Letter Does It Start With?" />
+
+### Match Voiced to Voiceless Partner
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Б (voiced)", "right": "П (voiceless)"}, {"left": "Д (voiced)", "right": "Т (voiceless)"}, {"left": "З (voiced)", "right": "С (voiceless)"}, {"left": "Ж (voiced)", "right": "Ш (voiceless)"}, {"left": "Г (voiced)", "right": "Х (voiceless)"}, {"left": "Ґ (voiced)", "right": "К (voiceless)"}]`)} />
+
+### Consonant Knowledge Check
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which type of consonant is Б?", "options": [{"text": "Voiced (дзвінкий)", "correct": true}, {"text": "Voiceless (глухий)", "correct": false}, {"text": "Sonorant (сонорний)", "correct": false}, {"text": "Always soft", "correct": false}], "explanation": "Б is a voiced consonant. Its voiceless partner is П."}, {"question": "What is the voiceless partner of Д?", "options": [{"text": "Т", "correct": true}, {"text": "П", "correct": false}, {"text": "С", "correct": false}, {"text": "К", "correct": false}], "explanation": "Д and Т are a voiced/voiceless pair. Same tongue position, different voicing."}, {"question": "Which consonant is the Ukrainian rolled, trilled sound?", "options": [{"text": "Р", "correct": true}, {"text": "Л", "correct": false}, {"text": "В", "correct": false}, {"text": "Г", "correct": false}], "explanation": "Р is a rolled trill — your tongue tip taps against the ridge behind your upper teeth."}, {"question": "How does Ukrainian Г sound?", "options": [{"text": "A soft, throaty sound — not like English G", "correct": true}, {"text": "Like the G in English go", "correct": false}, {"text": "Like the H in English hat", "correct": false}, {"text": "Like the K in English kit", "correct": false}], "explanation": "Ukrainian Г is a soft, throaty sound (voiced glottal fricative), NOT a hard g like English go."}, {"question": "Which consonant is always hard, even before the vowel І?", "options": [{"text": "Ш", "correct": true}, {"text": "Л", "correct": false}, {"text": "Н", "correct": false}, {"text": "Д", "correct": false}], "explanation": "Ш is always hard. Even in a word like жінка, Ж stays hard despite the І."}, {"question": "Which type of consonant is М?", "options": [{"text": "Sonorant (сонорний)", "correct": true}, {"text": "Voiced (дзвінкий)", "correct": false}, {"text": "Voiceless (глухий)", "correct": false}, {"text": "Always hard", "correct": false}], "explanation": "М is a sonorant — one of the five musical consonants (Л, М, Н, Р, В) that are always voiced."}, {"question": "What is the voiceless partner of З?", "options": [{"text": "С", "correct": true}, {"text": "Ш", "correct": false}, {"text": "Х", "correct": false}, {"text": "Т", "correct": false}], "explanation": "З and С are a voiced/voiceless pair. Compare зуб (tooth) and суп (soup)."}, {"question": "Ukrainian В sounds closest to which English sound?", "options": [{"text": "W (as in water)", "correct": true}, {"text": "V (as in very)", "correct": false}, {"text": "B (as in boy)", "correct": false}, {"text": "F (as in fun)", "correct": false}], "explanation": "Ukrainian В is a sonorant — lips round softly, closer to English W. No teeth touch your lip."}, {"question": "Which letter represents the hard G sound (like English go)?", "options": [{"text": "Ґ", "correct": true}, {"text": "Г", "correct": false}, {"text": "К", "correct": false}, {"text": "Х", "correct": false}], "explanation": "Ґ (with an upturn) is the hard G. It is the rarest letter in the Ukrainian alphabet."}, {"question": "Do voiced consonants become voiceless at the end of a Ukrainian word?", "options": [{"text": "No — they stay voiced", "correct": true}, {"text": "Yes — they always devoice", "correct": false}, {"text": "Only before a pause", "correct": false}, {"text": "Only sonorants stay voiced", "correct": false}], "explanation": "No! Ukrainian voiced consonants stay voiced at word end. зуб is зуб, not зуп."}]`)} />
+
+### Hard or Soft Consonant?
+
+<Classify client:only='react' categories={JSON.parse(`[{"label": "Hard consonant", "items": ["лук (Л before У)", "зуб (З before У)", "шапка (Ш — always hard)", "жук (Ж — always hard)"]}, {"label": "Soft consonant", "items": ["люк (Л before Ю)", "ліс (Л before І)", "сіль (С before І)", "день (Д before Е+Ь)"]}]`)} title="Hard or Soft Consonant?" instruction="In each word below, the highlighted consonant is either hard or soft. Remember: consonants become soft before І, Я, Ю, Є. Sort each word into the correct category." />
+
+### True or False?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ukrainian Р is pronounced like English P.", "isTrue": false, "explanation": "Р looks like English P but is a completely different sound — a rolled, trilled R."}, {"statement": "Ukrainian В sounds closer to English W than English V.", "isTrue": true, "explanation": "В is a sonorant — lips round softly, no teeth touch your lip."}, {"statement": "Б and П are a voiced/voiceless pair.", "isTrue": true, "explanation": "Same lip position for both. Б is voiced (throat vibrates), П is voiceless (only air)."}, {"statement": "Ukrainian Г sounds like a hard G as in English go.", "isTrue": false, "explanation": "Г is a soft, throaty sound (voiced glottal fricative). The hard G sound is the rare letter Ґ."}, {"statement": "Sonorant consonants (Л, М, Н, Р, В) are always voiced.", "isTrue": true, "explanation": "Sonorants never have voiceless partners — they are always voiced."}, {"statement": "In Ukrainian, voiced consonants become voiceless at the end of a word.", "isTrue": false, "explanation": "Ukrainian voiced consonants stay voiced at word end. зуб is зуб, never зуп."}, {"statement": "Ж and Ш are always hard, even before the vowel І.", "isTrue": true, "explanation": "Ж and Ш never soften. Even in жінка, the Ж stays hard."}, {"statement": "Й is always soft.", "isTrue": true, "explanation": "Й is a short gliding sound (like Y in yes) and never has a hard variant."}]`)} />
+
+### Unscramble the Word
+
+<Anagram client:only='react' items={JSON.parse(`[{"scrambled": "б і х л", "answer": "хліб", "hint": ""}, {"scrambled": "к в о в", "answer": "вовк", "hint": ""}, {"scrambled": "а п ш к а", "answer": "шапка", "hint": ""}, {"scrambled": "б о н е", "answer": "небо", "hint": ""}, {"scrambled": "р а г о", "answer": "гора", "hint": ""}, {"scrambled": "а к у р", "answer": "рука", "hint": ""}, {"scrambled": "б у з", "answer": "зуб", "hint": ""}, {"scrambled": "п у с", "answer": "суп", "hint": ""}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**📺 YouTube:**
+- [Letter Pronunciation Playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
+- [Літера Б](https://www.youtube.com/watch?v=V1hxBE_JbGg)
+- [Літера В](https://www.youtube.com/watch?v=aFcvYfvQ2X4)
+- [Літера Г](https://www.youtube.com/watch?v=gVnclpSI0DU)
+- [Літера Д](https://www.youtube.com/watch?v=g4Bh-lqzd48)
+- [Літера Ж](https://www.youtube.com/watch?v=dIrGVcqPwqM)
+- [Літера З](https://www.youtube.com/watch?v=BhASNxitC1A)
+- [Літера Й](https://www.youtube.com/watch?v=aq0cjB90s3w)
+- [Літера К](https://www.youtube.com/watch?v=J7sGEI4-xJo)
+- [Літера Л](https://www.youtube.com/watch?v=v6-3Xg52Buk)
+- [Літера М](https://www.youtube.com/watch?v=Ez95H4ibuJo)
+- [Літера Н](https://www.youtube.com/watch?v=vNUfiKHPYaU)
+- [Літера П](https://www.youtube.com/watch?v=JksSjjxyW5Y)
+- [Літера Р](https://www.youtube.com/watch?v=fMGsQ5KPQgg)
+- [Літера С](https://www.youtube.com/watch?v=7UsFBgSL91E)
+- [Літера Т](https://www.youtube.com/watch?v=m-jcLR_gK0k)
+- [Літера Х](https://www.youtube.com/watch?v=vpr58zJSJKc)
+- [Літера Ш](https://www.youtube.com/watch?v=1D-6MIw3OXY)
+
+**📖 Articles:**
+- [Ukrainian Cyrillic Alphabet — Letters and Sounds](https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/) — ukrainianlessons.com
+:::
+
+</TabItem>
+</Tabs>

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
+import { shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 // Generate consistent colors for words
@@ -38,12 +39,8 @@ export default function GroupSort({ groups, instruction, isUkrainian }: GroupSor
         idx++;
       }
     }
-    // Shuffle
-    for (let i = items.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [items[i], items[j]] = [items[j], items[i]];
-    }
-    return items;
+    // Shuffle (deterministic — seeded by content)
+    return shuffle(items);
   }, [groups]);
 
   const [sorted, setSorted] = useState<{ [key: string]: typeof allItems }>(() => {
