@@ -1634,12 +1634,22 @@ def phase_2_content(ctx: ModuleContext) -> bool:
 
     # Pre-content gate: Semantic Russicism scan on plan vocabulary
     try:
-        from pipeline.semantic_russianisms import scan_and_fix_plan
+        from pipeline.semantic_russianisms import scan_and_fix_plan, scan_research_for_russianisms
         plan_path = ctx.paths.get("plan")
         if plan_path and plan_path.exists():
             findings, fixes = scan_and_fix_plan(plan_path)
             if findings:
-                log(f"  pre-content: Semantic Russicism scan: {len(findings)} finding(s), {fixes} auto-fixed")
+                log(f"  pre-content: Semantic Russicism scan (plan): {len(findings)} finding(s), {fixes} auto-fixed")
+                for f in findings:
+                    log(f"    {f['category']}: '{f['word']}' as '{f['meaning_found']}' "
+                        f"(Ukrainian: {f['ukrainian_meaning']})")
+        research_path = ctx.paths.get("research")
+        if research_path and research_path.exists():
+            r_findings = scan_research_for_russianisms(research_path)
+            if r_findings:
+                log(f"  pre-content: Semantic Russicism scan (research): {len(r_findings)} finding(s)")
+                for f in r_findings:
+                    log(f"    '{f['word']}' as '{f['meaning_found']}' (Ukrainian: {f['ukrainian_meaning']})")
     except Exception as e:
         log(f"  pre-content: Russicism scan skipped — {e}")
 

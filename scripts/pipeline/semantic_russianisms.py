@@ -105,9 +105,9 @@ SEMANTIC_FALSE_FRIENDS: list[dict] = [
 
 
 def scan_plan_for_russianisms(plan_path: Path) -> list[dict]:
-    """Scan a plan's vocabulary_hints for semantic Russianisms.
+    """Scan a plan's vocabulary_hints AND content_outline for semantic Russianisms.
 
-    Returns list of findings: [{word, meaning_found, fix, line}]
+    Returns list of findings: [{word, meaning_found, fix, category, original_entry, ...}]
     """
     if not plan_path.exists():
         return []
@@ -122,13 +122,13 @@ def scan_plan_for_russianisms(plan_path: Path) -> list[dict]:
         return []
 
     findings = []
-    vocab = plan.get("vocabulary_hints", {})
 
-    # vocabulary_hints can be a dict with categories or a flat list
+    # 1. Scan vocabulary_hints
+    vocab = plan.get("vocabulary_hints", {})
     if isinstance(vocab, list):
         for item in vocab:
             if isinstance(item, str):
-                _check_vocab_entry(item, "flat", findings)
+                _check_vocab_entry(item, "vocabulary_hints", findings)
     elif isinstance(vocab, dict):
         for category in ["required", "recommended", "sight_words"]:
             items = vocab.get(category, [])
@@ -137,8 +137,41 @@ def scan_plan_for_russianisms(plan_path: Path) -> list[dict]:
             for item in items:
                 if not isinstance(item, str):
                     continue
-                _check_vocab_entry(item, category, findings)
+                _check_vocab_entry(item, f"vocabulary_hints.{category}", findings)
 
+    # 2. Scan content_outline points
+    outline = plan.get("content_outline", [])
+    if isinstance(outline, list):
+        for section in outline:
+            if not isinstance(section, dict):
+                continue
+            section_name = section.get("section", "")
+            points = section.get("points", [])
+            if not isinstance(points, list):
+                continue
+            for point in points:
+                if isinstance(point, str):
+                    _check_vocab_entry(point, f"content_outline.{section_name}", findings)
+
+    return findings
+
+
+def scan_research_for_russianisms(research_path: Path) -> list[dict]:
+    """Scan research output for semantic Russianisms.
+
+    Returns list of findings (same format as plan scanner).
+    """
+    if not research_path or not research_path.exists():
+        return []
+
+    try:
+        text = research_path.read_text("utf-8")
+    except Exception:
+        return []
+
+    findings = []
+    for line in text.split("\n"):
+        _check_vocab_entry(line.strip(), "research", findings)
     return findings
 
 

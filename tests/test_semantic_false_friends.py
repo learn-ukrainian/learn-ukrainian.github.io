@@ -177,3 +177,51 @@ class TestSemanticFalseFriendsPlanScanner:
         )
         findings = scan_plan_for_russianisms(plan_file)
         assert len(findings) == 0
+
+    def test_scan_plan_content_outline(self, tmp_path):
+        """Scanner should also check content_outline points."""
+        from pipeline.semantic_russianisms import scan_plan_for_russianisms
+        plan_file = tmp_path / "test-plan.yaml"
+        plan_file.write_text(
+            "content_outline:\n"
+            "- section: Test\n"
+            "  points:\n"
+            "    - 'лук (hard Л — onion) vs люк'\n"
+        )
+        findings = scan_plan_for_russianisms(plan_file)
+        assert len(findings) == 1
+        assert findings[0]["word"] == "лук"
+        assert "content_outline" in findings[0]["category"]
+
+    def test_scan_plan_content_outline_no_false_positive(self, tmp_path):
+        from pipeline.semantic_russianisms import scan_plan_for_russianisms
+        plan_file = tmp_path / "test-plan.yaml"
+        plan_file.write_text(
+            "content_outline:\n"
+            "- section: Test\n"
+            "  points:\n"
+            "    - 'лук (bow) vs люк (hatch)'\n"
+        )
+        findings = scan_plan_for_russianisms(plan_file)
+        assert len(findings) == 0
+
+    def test_scan_research(self, tmp_path):
+        from pipeline.semantic_russianisms import scan_research_for_russianisms
+        research_file = tmp_path / "research.md"
+        research_file.write_text(
+            "## Vocabulary\n"
+            "- город (city) is a common word\n"
+        )
+        findings = scan_research_for_russianisms(research_file)
+        assert len(findings) == 1
+        assert findings[0]["word"] == "город"
+
+    def test_scan_research_no_false_positive(self, tmp_path):
+        from pipeline.semantic_russianisms import scan_research_for_russianisms
+        research_file = tmp_path / "research.md"
+        research_file.write_text(
+            "## Vocabulary\n"
+            "- місто (city) is a common word\n"
+        )
+        findings = scan_research_for_russianisms(research_file)
+        assert len(findings) == 0
