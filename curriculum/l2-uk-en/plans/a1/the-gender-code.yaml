@@ -101,9 +101,9 @@ activity_hints:
   items: 20
 connects_to:
 - a1-09 (This Is, I Am)
-- a1-26 (Adjectives)
+- a1-11 (Adjectives)
 prerequisites:
-- a1-02 (The Cyrillic Code II)
+- a1-02 (Vowel Sounds)
 persona:
   voice: Patient Supportive Tutor
   role: Linguistic Taxonomist

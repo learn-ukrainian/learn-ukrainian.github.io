@@ -1,6 +1,6 @@
-module: c1-044
+module: c1-048
 level: C1
-sequence: 44
+sequence: 48
 slug: asyndetic-semantics
 version: '2.0'
 title: 'Безсполучникове речення: логіка тире і двокрапки'
@@ -99,9 +99,9 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- c1-43 (skladnopidriadne-obstavynne)
+- c1-47 (skladnopidriadne-obstavynne)
 connects_to:
-- c1-45 (combined-complex-sentences)
+- c1-49 (combined-complex-sentences)
 - c1-016 (Advanced Punctuation)
 objectives:
 - Learner can identify the semantic relationship in asyndetic sentences

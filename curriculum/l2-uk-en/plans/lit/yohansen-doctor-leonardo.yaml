@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-105
-prerequisites:
-- lit-103
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Landscape Traveler

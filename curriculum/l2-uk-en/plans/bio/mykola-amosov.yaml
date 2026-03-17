@@ -93,9 +93,9 @@ activity_hints:
   focus: How did Amosov combine medicine with philosophy?
   output: Analysis of holistic approach to health
 connects_to:
-- bio-113 (Boris Paton - contemporary scientist)
-- bio-111 (Sukhomlynskyi - humanist of same era)
-- bio-112 (Yevhen Paton - contemporary)
+- bio-69 (Boris Paton - contemporary scientist)
+- bio-131 (Sukhomlynskyi - humanist of same era)
+- bio-69 (Yevhen Paton - contemporary)
 prerequisites:
 - Basic medical vocabulary
 - Understanding of Soviet-era medicine

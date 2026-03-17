@@ -103,12 +103,12 @@ activity_hints:
   focus: Evaluate different interpretations of Roksolana
   output: Ukrainian vs. Turkish perspectives
 connects_to:
-- bio-10 (Bohdan Khmelnytskyi - later Cossack period)
-- bio-12 (Ivan Mazepa - patronage theme)
-- bio-41 (Solomiya Krushelnytska - later fame abroad)
+- bio-21 (Bohdan Khmelnytskyi - later Cossack period)
+- bio-27 (Ivan Mazepa - patronage theme)
+- bio-74 (Solomiya Krushelnytska - later fame abroad)
 prerequisites:
 - bio-05 (Anna Yaroslavna - earlier Ukrainian woman abroad)
-- 'bio-09 (Михайло Чернігівський: Князь-мученик)'
+- 'bio-09 (Mykhailo Chernihivskyi)'
 persona:
   voice: Senior Biographer
   role: Imperial Consort

@@ -114,11 +114,11 @@ activity_hints:
 - type: essay-response
   focus: Чому депортація кримських татар є геноцидом?
 connects_to:
-- hist-110 (Депортації українців)
-- hist-128 (Кримські татари після 2014)
+- hist-110 (Deportatsii Ukraintsiv)
+- hist-128 (Krymski Tatary Pislia 2014)
 - hist-128 (Анексія Криму 2014)
 prerequisites:
-- 'hist-105 (Друга світова: Початок)'
+- 'hist-105 (Druha Svitova Pochatok)'
 persona:
   voice: Senior Professor of History
   role: Elder Witness

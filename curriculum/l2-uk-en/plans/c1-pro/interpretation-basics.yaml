@@ -88,9 +88,9 @@ activity_hints:
   focus: Підготуватися до усного перекладу конференції за матеріалами
   items: 1
 connects_to:
-- c1-pro-43 (Міжкультурна комунікація)
+- c1-pro-43 (Cross Cultural Communication)
 prerequisites:
-- c1-pro-41 (Основи перекладу)
+- c1-pro-41 (Translation Basics)
 persona:
   voice: Senior Specialist
   role: Синхронний перекладач

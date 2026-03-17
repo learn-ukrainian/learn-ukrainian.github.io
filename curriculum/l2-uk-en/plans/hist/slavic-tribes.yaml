@@ -122,9 +122,9 @@ activity_hints:
 - type: comparative-study
   focus: Порівняння полян і древлян
 connects_to:
-- hist-06 (Founding of Kyiv)
+- hist-06 (Zasnuvannia Kyieva)
 - hist-09 (Oleh and Ihor)
-- 'hist-08 (Synthesis: Origins to Kyiv)'
+- 'hist-04 (Synthesis: Origins to Kyiv)'
 prerequisites:
 - hist-04 (Slavic origins)
 - Understanding of tribal society

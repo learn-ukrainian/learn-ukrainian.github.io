@@ -74,12 +74,12 @@ activity_hints:
 focus: grammar
 pedagogy: TTT
 prerequisites:
-- c1-01 to c1-12 (Academic Foundation)
+- c1-02 to c1-12 (Academic Foundation)
 - Academic register mastery
 connects_to:
 - c1-16 (Advanced Punctuation)
 - c1-18 (Essay Writing Practice)
-- c1-39 (Мовний практикум)
+- c1-43 (Speaking Practice)
 module_type: grammar
 sources:
 - name: Академічна риторика

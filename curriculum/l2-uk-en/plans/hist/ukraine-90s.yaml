@@ -84,10 +84,10 @@ activity_hints:
 - type: essay-response
   focus: Як формування олігархії вплинуло на розвиток України?
 connects_to:
-- hist-123 (Помаранчева революція)
-- 'hist-124 (Епоха Януковича: Реванш)'
+- hist-123 (Pomarancheva Revoliutsiia)
+- 'hist-124 (Yanukovych)'
 prerequisites:
-- hist-120 (Незалежність 1991)
+- hist-121 (Незалежність 1991)
 persona:
   voice: Senior Professor of History
   role: Economic Reformer

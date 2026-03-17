@@ -121,8 +121,8 @@ activity_hints:
   output: Comparison table
 connects_to:
 - hist-02 (Scythians — trade partners)
-- hist-11 (Volodymyr's baptism in Chersonesus)
-- 'hist-08 (Synthesis: Origins to Kyiv)'
+- hist-11 (Volodymyr Khreshchennia)
+- 'hist-04 (Synthesis: Origins to Kyiv)'
 prerequisites:
 - hist-02 (Scythians and Sarmatians)
 - Basic classical history knowledge

@@ -90,9 +90,9 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- b1-40 (Часові підрядні речення)
+- b1-40 (Causal Result Clauses)
 prerequisites:
-- 'b1-38 (Допустові речення: хоча, незважаючи на)'
+- 'b1-38 (Checkpoint Complex Sentences 1)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Science Teacher

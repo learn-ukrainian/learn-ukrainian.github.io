@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 7
+deviations:
+  - "Added anagram activity (6 items) beyond the 4 planned types for Cyrillic reinforcement — appropriate for M1-M10 range"
+  - "Added second quiz activity (6 items) focused specifically on intonation patterns to separate stress and intonation testing"
+  - "Added group-sort activity (10 items) to reinforce stress position categories visually"
+frictions:
+  - type: PLAN_GAP
+    description: "Match-up focus says 'stress minimal pairs' but content only has 2 true minimal pairs (замок, мука). Extended to include mobile stress pairs (рука/руки, писати/пишу) to reach 8 pairs."
+    proposed_fix: "N/A — the extension is pedagogically sound and uses lesson content"
+unverified_terms: []
+review_focus:
+  - "Fill-in activity uses stress marks (acute accents) as distinguishing features — verify rendering supports combining acute accent on Cyrillic"
+  - "Anagram scrambled letters must be verified to match answer letters exactly"

@@ -129,10 +129,10 @@ activity_hints:
   focus: Heritage and security
   items: 1
 connects_to:
-- hist-18 (People of Rus — everyday life)
+- hist-19 (People of Rus — everyday life)
 - 'hist-20 (Synthesis: Kyivan Rus)'
 prerequisites:
-- hist-14 (St. Sophia Cathedral)
+- hist-14 (Sofiya Kyivska)
 - hist-12 (Yaroslav the Wise)
 persona:
   voice: Senior Professor of History

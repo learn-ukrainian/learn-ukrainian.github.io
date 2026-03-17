@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-107
-prerequisites:
-- lit-105
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Paradoxist

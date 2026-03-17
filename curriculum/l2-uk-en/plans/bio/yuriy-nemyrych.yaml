@@ -72,10 +72,10 @@ activity_hints:
 - type: critical-analysis
   focus: 'Конфлікт ідентичностей: шляхтич vs козак'
 connects_to:
-- bio-28 (Пилип Орлик)
+- bio-28 (Danylo Apostol)
 - hist ruina-i module
 prerequisites:
-- bio-24 (Іван Виговський)
+- bio-24 (Ivan Vyhovskyi)
 - Знання про Хотинську війну та Гадяч
 persona:
   voice: Senior Biographer

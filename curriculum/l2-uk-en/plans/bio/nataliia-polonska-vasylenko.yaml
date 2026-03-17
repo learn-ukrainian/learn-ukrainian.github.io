@@ -93,10 +93,10 @@ activity_hints:
   focus: Як еміграція впливає на наукову творчість?
   output: Аналітичне есе
 connects_to:
-- bio-87 (Ярослав Грицак)
-- bio-22 (Михайло Драгоманов)
+- bio-87 (Nataliia Polonska Vasylenko)
+- bio-22 (Petro Mohyla)
 prerequisites:
-- bio-35 (Михайло Грушевський)
+- bio-35 (Dmytro Bortnyanskyy)
 persona:
   voice: Senior Biographer
   role: Archeologist

@@ -91,10 +91,10 @@ activity_hints:
   focus: Актуальність для сучасної родини
   output: Аналітичне есе
 connects_to:
-- lit-29 (Мова реалізму)
-- lit-08 (Конотопська відьма — порівняння гумору)
+- lit-29 (Language Of Realism)
+- lit-08 (Konotop Witch)
 prerequisites:
-- lit-27 (Кайдашева сім'я — персонажі)
+- lit-27 (Kaidash Family Characters)
 persona:
   voice: Senior Philologist & Critic
   role: Family Mediator

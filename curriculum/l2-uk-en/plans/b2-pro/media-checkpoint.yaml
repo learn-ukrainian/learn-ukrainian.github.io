@@ -83,7 +83,7 @@ activity_hints:
   focus: Заповнити чек-лист медіакомпетентності
   items: 1
 connects_to:
-- 'b2-pro-39 (Інтеграція: Професійна практика)'
+- 'b2-pro-39 (B2 Pro Integration)'
 prerequisites:
 - 'b2-pro-37 (Інтерв''ю: Мистецтво розмови)'
 persona:

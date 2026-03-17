@@ -95,9 +95,9 @@ activity_hints:
   focus: Business scenarios
   items: 10
 connects_to:
-- b1-78 (Подорожі та географія)
+- b1-78 (Emotions Deep Dive)
 prerequisites:
-- b1-76 (Стосунки та зв'язки)
+- b1-76 (Environment Ecology)
 persona:
   voice: Senior Language & Culture Specialist
   role: Kyiv Entrepreneur

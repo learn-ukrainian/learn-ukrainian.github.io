@@ -130,8 +130,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-14 (Individual voice includes colloquial elements)
-- c2-24 (Style blending uses colloquial markers)
-- c2-72 (Володіння на рівні носія)
+- c2-20 (Style blending uses colloquial markers)
+- c2-72 (Media I Dezinformatsiya)
 persona:
   voice: Senior Specialist
   role: Talk Show Host

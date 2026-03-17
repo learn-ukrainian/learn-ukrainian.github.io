@@ -88,9 +88,9 @@ activity_hints:
   focus: Discuss current events
   items: 10
 connects_to:
-- b1-74 (Суспільство та політика)
+- b1-74 (Society Politics)
 prerequisites:
-- b1-72 (Опис змін)
+- b1-72 (Describing Changes)
 persona:
   voice: Senior Language & Culture Specialist
   role: Investigative Journalist

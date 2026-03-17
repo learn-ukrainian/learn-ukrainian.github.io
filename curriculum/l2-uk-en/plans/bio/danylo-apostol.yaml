@@ -74,10 +74,9 @@ activity_hints:
 - type: critical-analysis
   focus: Успішність господарських реформ
 connects_to:
-- bio-31 (Кирило Розумовський)
+- bio-31 (Pylyp Orlyk)
 - hist danylo-apostol module
 prerequisites:
-- bio-29 (Павло Полуботок)
 - Знання про Першу Малоросійську колегію
 persona:
   voice: Senior Biographer

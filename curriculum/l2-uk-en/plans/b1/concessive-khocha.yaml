@@ -96,9 +96,9 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- b1-39 (Причинові та наслідкові речення)
+- b1-39 (Concessive Khocha)
 prerequisites:
-- 'b1-37 (Контрольна точка: складні речення (частина 1))'
+- 'b1-37 (Conditionals Mixed Complex))'
 persona:
   voice: Senior Language & Culture Specialist
   role: Debate Champion

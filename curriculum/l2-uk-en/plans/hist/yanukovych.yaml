@@ -82,10 +82,10 @@ activity_hints:
 - type: essay-response
   focus: Як політика Януковича призвела до Революції Гідності?
 connects_to:
-- 'hist-126 (Революція Гідності: Євромайдан)'
-- hist-128 (Анексія Криму)
+- 'hist-126 (Revoliutsiia Hidnosti)'
+- hist-128 (Krymski Tatary Pislia 2014)
 prerequisites:
-- hist-123 (Помаранчева революція)
+- hist-123 (Pomarancheva Revoliutsiia)
 persona:
   voice: Senior Professor of History
   role: Investigative Journalist

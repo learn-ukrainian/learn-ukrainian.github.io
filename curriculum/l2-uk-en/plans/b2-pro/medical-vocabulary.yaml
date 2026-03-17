@@ -90,9 +90,9 @@ activity_hints:
   focus: Прослухати рекомендації лікаря та відповісти на питання
   items: 6
 connects_to:
-- b2-pro-24 (Медичні консультації)
+- b2-pro-24 (Medical Consultation)
 prerequisites:
-- b2-pro-22 (Читання договорів)
+- b2-pro-22 (Contract Reading)
 persona:
   voice: Senior Specialist
   role: Студент-медик

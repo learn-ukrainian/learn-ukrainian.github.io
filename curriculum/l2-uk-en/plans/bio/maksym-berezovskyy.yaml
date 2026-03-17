@@ -101,11 +101,11 @@ activity_hints:
   focus: How does imperial context explain his tragedy?
   output: Decolonial interpretation
 connects_to:
-- bio-18 (Dmytro Bortnyanskyy - contemporary composer)
-- 'bio-38 (Семен Гулак-Артемовський: Оперний співак)'
-- bio-23 (Mykola Lysenko - national music tradition)
+- bio-35 (Dmytro Bortnyanskyy - contemporary composer)
+- 'bio-38 (Semen Hulak Artemovskyy)'
+- bio-48 (Mykola Lysenko - national music tradition)
 prerequisites:
-- 'bio-33 (Григорій Сковорода: Мандрівний філософ)'
+- 'bio-33 (Hryhoriy Skovoroda)'
 - Basic understanding of classical music
 persona:
   voice: Senior Biographer

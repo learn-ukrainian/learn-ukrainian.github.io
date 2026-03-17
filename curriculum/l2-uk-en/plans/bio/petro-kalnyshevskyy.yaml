@@ -102,12 +102,12 @@ activity_hints:
   focus: Evaluate the claim that he lived to 112
   output: Historical source criticism
 connects_to:
-- bio-16 (Hryhoriy Skovoroda - same era, different path)
-- bio-71 (Levko Lukyanenko - later political prisoner)
-- bio-77 (Vasyl Stus - prison martyrdom)
+- bio-33 (Hryhoriy Skovoroda - same era, different path)
+- bio-134 (Levko Lukyanenko - later political prisoner)
+- bio-143 (Vasyl Stus - prison martyrdom)
 prerequisites:
-- bio-13 (Kost Hordiyenko - earlier Sich leader)
-- bio-14 (Pylyp Orlyk - emigration alternative)
+- bio-29 (Kost Hordiyenko - earlier Sich leader)
+- bio-31 (Pylyp Orlyk - emigration alternative)
 - Understanding of 18th century Russian imperialism
 persona:
   voice: Senior Biographer

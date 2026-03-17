@@ -84,10 +84,9 @@ activity_hints:
 - type: essay-response
   focus: Яку роль відіграла УГГ у боротьбі за незалежність?
 connects_to:
-- hist-117 (Чорнобиль)
-- hist-118 (Рух)
-prerequisites:
-- hist-115 (Шістдесятники)
+- hist-117 (Chornobyl)
+- hist-118 (Diaspora)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Human Rights Defender

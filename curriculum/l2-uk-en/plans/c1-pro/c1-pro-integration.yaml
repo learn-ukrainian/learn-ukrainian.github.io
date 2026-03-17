@@ -90,7 +90,7 @@ activity_hints:
 connects_to:
 - 'c1-pro-50 (Підсумок: C1-PRO)'
 prerequisites:
-- c1-pro-48 (Кар'єрний розвиток)
+- c1-pro-48 (Career Development)
 persona:
   voice: Senior Specialist
   role: Стратегічний радник

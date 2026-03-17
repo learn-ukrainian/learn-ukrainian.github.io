@@ -141,8 +141,8 @@ activity_hints:
   focus: Зіставлення типів туризму з відповідними регіонами та інституціями
   items: 12
 connects_to:
-- c2-075 (Urban & Rural Space — places and landmarks as tourism destinations)
-- c2-077 (Identity, Traditions & Family — cultural identity expressed through festivals and traditions)
+- c2-075 (Misto Selo Prostir)
+- c2-63 (Identity, Traditions & Family — cultural identity expressed through festivals and traditions)
 - c2-022 (Practical Rhetoric — argumentation models for tourism discourse analysis)
 prerequisites:
 - c2-065 (C2.3 Checkpoint)

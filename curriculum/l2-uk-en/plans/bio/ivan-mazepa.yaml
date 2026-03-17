@@ -102,12 +102,12 @@ activity_hints:
   focus: Analyze Mazepa in Ukrainian vs. Russian historiography
   output: Comparative historiography
 connects_to:
-- 'bio-29 (Кость Гордієнко: Запорозький кошовий)'
-- bio-14 (Pylyp Orlyk - successor)
-- bio-15 (Petro Kalnyshevskyy - end of autonomy)
+- 'bio-29 (Kost Hordiyenko)'
+- bio-31 (Pylyp Orlyk - successor)
+- bio-32 (Petro Kalnyshevskyy - end of autonomy)
 prerequisites:
-- bio-10 (Bohdan Khmelnytskyi - earlier hetman)
-- bio-11 (Yuriy Nemyrych - European orientation)
+- bio-21 (Bohdan Khmelnytskyi - earlier hetman)
+- bio-26 (Yuriy Nemyrych - European orientation)
 persona:
   voice: Senior Biographer
   role: Patron of Arts

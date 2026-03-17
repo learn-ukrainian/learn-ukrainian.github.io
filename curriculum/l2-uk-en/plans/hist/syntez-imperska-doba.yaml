@@ -91,10 +91,10 @@ activity_hints:
 - type: essay-response
   focus: Як імперська доба вплинула на формування української нації?
 connects_to:
-- hist-87 (Грушевський)
-- hist-88 (Перша світова)
+- hist-87 (Hrushevskyi)
+- hist-88 (Persha Svitova)
 prerequisites:
-- hist-85 (Франко, Леся, Грінченко)
+- hist-85 (Franko Lesia Hrinchenko)
 persona:
   voice: Senior Professor of History
   role: Historical Sociologist

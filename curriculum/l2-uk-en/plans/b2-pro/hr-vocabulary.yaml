@@ -89,9 +89,9 @@ activity_hints:
   focus: Провести міні-співбесіду
   items: 1
 connects_to:
-- b2-pro-26 (Працевлаштування)
+- b2-pro-26 (Job Applications)
 prerequisites:
-- b2-pro-24 (Медичні консультації)
+- b2-pro-24 (Medical Consultation)
 persona:
   voice: Senior Specialist
   role: HR Business Partner

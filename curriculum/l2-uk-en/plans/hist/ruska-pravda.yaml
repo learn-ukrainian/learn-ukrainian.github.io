@@ -126,8 +126,8 @@ activity_hints:
 - type: essay-response
   focus: Чи була Руська Правда справедливою для всіх верств населення?
 connects_to:
-- hist-14 (St. Sophia — cultural context)
-- hist-18 (People of Rus — social life)
+- hist-14 (Sofiya Kyivska)
+- hist-19 (People of Rus — social life)
 - 'hist-20 (Synthesis: Kyivan Rus)'
 prerequisites:
 - hist-12 (Yaroslav the Wise)

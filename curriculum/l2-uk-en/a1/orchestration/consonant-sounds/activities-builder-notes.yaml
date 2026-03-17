@@ -2,12 +2,17 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 8
 deviations:
-  - "Plan requested watch-and-repeat with 12 items — delivered 12 items using available Anna Ohoiko YouTube URLs for voiced/voiceless pairs plus sonorants Р and В"
-  - "Plan requested classify with 15 items for consonant types — delivered 15 items across 3 categories (sonorants/voiced/voiceless)"
-  - "Plan requested classify with 8 items for hard/soft — delivered 10 items across 2 categories for better coverage"
-  - "Added true-false (8 items) and anagram (8 items) beyond plan hints to reach 8 activity minimum and reinforce key concepts"
-frictions: []
-unverified_terms: []
+  - "Added true-false (8 items) and anagram (8 items) beyond the 6 plan hints to reach the 8-activity minimum"
+  - "Plan hint for classify #1 said 15 items but used exactly 15 across 3 categories (5+5+5)"
+  - "Plan hint for classify #2 said 8 items, used exactly 8 across 2 categories (4+4)"
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints only specify 6 activities but minimum is 8. Added true-false and anagram."
+    proposed_fix: "Update plan activity_hints to include 8+ activities to avoid builder deviation."
+unverified_terms:
+  - "люк (hatch) — used in content but less common at A1"
+  - "цибуля (onion) — present in content but complex word"
 review_focus:
-  - "Anagram scrambled letters — verify each scramble contains exactly the same letters as the answer"
-  - "image-to-letter emoji choices — verify emoji render correctly on all platforms"
+  - "Classify #2 (hard/soft) — verify that the consonant classifications are linguistically accurate"
+  - "Anagram letter scrambles — verify all scrambled letters match answer letters exactly"
+  - "True-false item about Ґ having ~400 native words — verify factual accuracy"

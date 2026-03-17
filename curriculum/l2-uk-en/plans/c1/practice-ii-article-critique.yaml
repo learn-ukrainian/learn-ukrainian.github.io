@@ -101,7 +101,7 @@ prerequisites:
 - c1-18 (Essay Writing Practice)
 connects_to:
 - c1-20 (C1.1 Checkpoint)
-- c1-37 (Практичні кейси)
+- c1-41 (Case Studies)
 module_type: practice
 sources:
 - name: Academic Review Writing

@@ -91,7 +91,7 @@ activity_hints:
 connects_to:
 - 'b2-pro-40 (Підсумок: B2-PRO)'
 prerequisites:
-- 'b2-pro-38 (Контрольна точка: Медіа)'
+- 'b2-pro-38 (Media Checkpoint)'
 persona:
   voice: Senior Specialist
   role: Регіональний директор

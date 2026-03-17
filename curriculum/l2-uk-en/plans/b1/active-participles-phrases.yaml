@@ -92,8 +92,7 @@ activity_hints:
   items: 10
 connects_to:
 - b1-46 (Past Passive Participles 1)
-prerequisites:
-- b1-52 (Дієприслівники доконаного виду)
+prerequisites: []
 persona:
   voice: Senior Language & Culture Specialist
   role: Poet

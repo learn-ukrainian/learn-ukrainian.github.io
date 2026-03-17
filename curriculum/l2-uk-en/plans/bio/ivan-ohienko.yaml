@@ -96,8 +96,7 @@ connects_to:
 - bio-99-volodymyr-vernadskyi
 - bio-30-borys-hrinchenko
 - bio-20-taras-shevchenko
-prerequisites:
-- bio-97-panteleimon-kulish
+prerequisites: []
 persona:
   voice: Senior Biographer
   role: Language Standardizer

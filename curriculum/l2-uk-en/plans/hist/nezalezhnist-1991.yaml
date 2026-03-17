@@ -101,10 +101,10 @@ activity_hints:
 - type: essay-response
   focus: Чому незалежність 1991 року не принесла швидкого добробуту?
 connects_to:
-- hist-123 (Помаранчева революція)
-- hist-125 (Мовна політика)
+- hist-123 (Pomarancheva Revoliutsiia)
+- hist-125 (Movna Polityka)
 prerequisites:
-- hist-119 (Шлях до незалежності)
+- hist-119 (Shliakh Nezalezhnosti)
 persona:
   voice: Senior Professor of History
   role: Parliamentary Deputy

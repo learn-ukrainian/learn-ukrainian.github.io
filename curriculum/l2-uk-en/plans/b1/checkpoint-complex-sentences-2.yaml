@@ -87,9 +87,9 @@ activity_hints:
   focus: Write complex paragraphs
   items: 10
 connects_to:
-- b1-51 (Дієприслівники недоконаного виду)
+- b1-51 (Adverbial Participles Imperfective)
 prerequisites:
-- b1-43 (Непрямі питання та накази)
+- b1-43 (Reported Statements)
 persona:
   voice: Senior Language & Culture Specialist
   role: Senior Editor

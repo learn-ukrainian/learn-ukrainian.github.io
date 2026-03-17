@@ -85,9 +85,9 @@ activity_hints:
   focus: Оцінити власний прогрес за компетенціями фази
   items: 1
 connects_to:
-- 'c1-pro-29 (Інтеграція: Наукова комунікація)'
+- 'c1-pro-29 (Academic Integration)'
 prerequisites:
-- c1-pro-27 (Дипломна робота)
+- c1-pro-27 (Thesis Dissertation)
 persona:
   voice: Senior Specialist
   role: Завідувач кафедри

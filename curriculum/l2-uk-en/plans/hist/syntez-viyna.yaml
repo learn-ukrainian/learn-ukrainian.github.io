@@ -96,10 +96,10 @@ activity_hints:
 - type: essay-response
   focus: Чому Україна чинить спротив російській агресії?
 connects_to:
-- hist-139 (Шлях до перемоги)
-- hist-140 (Підсумок курсу)
+- hist-139 (Zlochyny Stiikist)
+- hist-140 (Syntez Viyna)
 prerequisites:
-- hist-139 (Злочини і стійкість)
+- hist-139 (Zlochyny Stiikist)
 persona:
   voice: Senior Professor of History
   role: Military Historian

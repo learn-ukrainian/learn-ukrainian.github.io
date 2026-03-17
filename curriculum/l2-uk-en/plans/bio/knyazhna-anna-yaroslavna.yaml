@@ -72,10 +72,10 @@ activity_hints:
 - type: creative-writing
   focus: Лист Анни до батька (уявний)
 connects_to:
-- bio-05 (Всеволод Ярославич)
+- bio-05 (Knyazhna Anna Yaroslavna)
 - hist kyivan-rus-europe module
 prerequisites:
-- bio-01 (Ярослав Мудрий)
+- bio-01 (Knyahynia Olha)
 - hist anna-yaroslavna module
 persona:
   voice: Senior Biographer

@@ -100,7 +100,7 @@ activity_hints:
   focus: Match diminutive to situation
   items: 10
 connects_to:
-- 'b1-54 (Числівники: збірні та дроби)'
+- 'b1-54 (Numerals Collectives Fractions)'
 prerequisites:
 - b1-47 (Passive Constructions)
 persona:

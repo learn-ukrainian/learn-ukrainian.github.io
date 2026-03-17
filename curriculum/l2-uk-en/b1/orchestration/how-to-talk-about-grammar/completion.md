@@ -1,4 +1,4 @@
-PASS: pipeline b1 1
+FAIL: pipeline b1 1
 
   Module:   how-to-talk-about-grammar
   Track:    b1
@@ -6,5 +6,5 @@ PASS: pipeline b1 1
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-03-12T20:32:18Z
+  Verdict:  FAIL
+  Date:     2026-03-17T15:45:51Z

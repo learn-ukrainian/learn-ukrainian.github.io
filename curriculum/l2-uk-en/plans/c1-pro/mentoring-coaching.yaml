@@ -88,9 +88,9 @@ activity_hints:
   focus: Розробити план менторства для нового співробітника
   items: 1
 connects_to:
-- c1-pro-11 (Виконавчий нетворкінг)
+- c1-pro-11 (Executive Networking)
 prerequisites:
-- c1-pro-09 (Врегулювання конфліктів)
+- c1-pro-09 (Conflict Resolution)
 persona:
   voice: Senior Specialist
   role: Корпоративний ментор

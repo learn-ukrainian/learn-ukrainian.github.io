@@ -129,7 +129,7 @@ activities:
 connects_to:
 - c2-57 (Professional Discussions)
 - c2-58 (Cross-Domain Communication)
-- c2-60 (Професійне портфоліо I — Демонстрація компетентності)
+- c2-10 (Професійне портфоліо I — Демонстрація компетентності)
 persona:
   voice: Senior Specialist
   role: Diplomat

@@ -1,10 +1,13 @@
-        # Fix 1 issue(s) in `consonant-sounds`
+        # Fix ALL 1 issue(s) in `consonant-sounds`
 
-        ### Other Audit Failures
+        **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
+        **There are 1 issues. You must produce fixes for all 1.**
+        **After you finish, count your fixes. If the count is less than 1, go back and fix the ones you missed.**
 
-```
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log for details)
-```
+        ### Fix 1: ACTIVITY_VESUM_FAIL
+**What:** Activity answers contain VESUM-failed words: Д, П, Ш
+**How to fix:** Fix spelling or replace these words — students will practice non-existent forms.
+**Where:** consonant-sounds.yaml
 
 
 ## Constraints (do NOT violate while fixing)
@@ -36,7 +39,7 @@ METALANGUAGE:
 
 ## Immersion Rules
 
-TARGET: 10-25% Ukrainian.
+TARGET: 5-15% Ukrainian.
 
 **Structural containment**: English prose in paragraphs. Ukrainian in CONTAINERS ONLY (tables, blockquotes, numbered lists, dialogues). Do NOT mix Ukrainian words into English sentences.
 
@@ -77,8 +80,9 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ONLY the issues listed above — do not rewrite working content
-        2. Preserve section structure and word counts
-        3. Do NOT add or remove sections
-        4. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
+        1. Fix ALL 1 issues listed above — every single one, not a subset
+        2. Do not rewrite working content — only touch what's broken
+        3. Preserve section structure and word counts
+        4. Do NOT add or remove sections
+        5. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
 

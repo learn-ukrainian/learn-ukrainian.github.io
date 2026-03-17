@@ -91,9 +91,9 @@ activity_hints:
   focus: Написати follow-up лист після знайомства на конференції
   items: 1
 connects_to:
-- 'b2-pro-13 (Контрольна точка: Бізнес)'
+- 'b2-pro-13 (Business Checkpoint)'
 prerequisites:
-- 'b2-pro-11 (Переговори: Тактика)'
+- 'b2-pro-11 (Negotiations Tactics)'
 persona:
   voice: Senior Specialist
   role: Учасник бізнес-сніданку

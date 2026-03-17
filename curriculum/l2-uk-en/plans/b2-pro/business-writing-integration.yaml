@@ -87,9 +87,9 @@ activity_hints:
   focus: З'єднати документи з етапами проєкту
   items: 6
 connects_to:
-- 'b2-pro-15 (Підсумок: Ділова комунікація)'
+- 'b2-pro-15 (Business Communication Capstone)'
 prerequisites:
-- 'b2-pro-13 (Контрольна точка: Бізнес)'
+- 'b2-pro-13 (Business Checkpoint)'
 persona:
   voice: Senior Specialist
   role: Редактор корпоративного блогу

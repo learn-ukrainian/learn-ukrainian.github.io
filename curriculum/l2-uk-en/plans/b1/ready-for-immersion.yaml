@@ -111,11 +111,11 @@ activity_hints:
   focus: Term → definition (all in Ukrainian)
   items: 15+
 connects_to:
-- b1-06 (Aspect complete system - first full immersion module)
+- b1-09 (Aspect complete system - first full immersion module)
 - b1-15 (Aspect mastery checkpoint)
 prerequisites:
 - b1-01 (Grammar terminology)
-- b1-02 (Verb terminology)
+- b1-02 (Language About Verbs)
 - b1-03 (Reading grammar rules)
 - b1-04 (Sentence structure)
 persona:

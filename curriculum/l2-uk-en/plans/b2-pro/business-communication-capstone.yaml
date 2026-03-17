@@ -81,9 +81,9 @@ activity_hints:
   focus: Заповнити чек-лист навичок B2-PRO.1
   items: 1
 connects_to:
-- 'b2-pro-16 (ІТ-лексика I: Апаратне забезпечення)'
+- 'b2-pro-16 (It Vocabulary 1)'
 prerequisites:
-- 'b2-pro-14 (Інтеграція: Ділове письмо)'
+- 'b2-pro-14 (Business Writing Integration)'
 persona:
   voice: Senior Specialist
   role: Директор з комунікацій

@@ -84,10 +84,10 @@ activity_hints:
 - type: essay-response
   focus: Як військова колонізація допомогла імперії знищити Січ?
 connects_to:
-- hist-74 (Кінець Гетьманщини)
-- 'hist-77 (Південь: «Новоросія»)'
+- hist-74 (Kinets Hetmanshchyny)
+- 'hist-77 (Pivden Novorosiia)'
 prerequisites:
-- hist-71 (Коліївщина)
+- hist-71 (Koliivshchyna)
 persona:
   voice: Senior Professor of History
   role: Fortress Commandant

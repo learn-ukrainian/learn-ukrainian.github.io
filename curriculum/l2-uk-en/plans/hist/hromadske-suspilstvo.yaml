@@ -94,10 +94,10 @@ activity_hints:
 - type: essay-response
   focus: Як громадянське суспільство допомагає Україні вистояти у війні?
 connects_to:
-- hist-138 (Міжнародна підтримка)
-- 'hist-140 (Синтез: Війна за існування)'
+- hist-138 (Mizhnarodna Pidtrymka)
+- 'hist-140 (Syntez Viyna)'
 prerequisites:
-- hist-136 (Воєнна економіка)
+- hist-136 (Voienna Ekonomika)
 persona:
   voice: Senior Professor of History
   role: Volunteer Coordinator

@@ -94,9 +94,9 @@ activity_hints:
   focus: Скласти список питань перед підписанням договору
   items: 1
 connects_to:
-- b2-pro-23 (Медична лексика)
+- b2-pro-23 (Medical Vocabulary)
 prerequisites:
-- b2-pro-21 (Юридична лексика)
+- b2-pro-21 (Legal Vocabulary)
 persona:
   voice: Senior Specialist
   role: Нотаріус

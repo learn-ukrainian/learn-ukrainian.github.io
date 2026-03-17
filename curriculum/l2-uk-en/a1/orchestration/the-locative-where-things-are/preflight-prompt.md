@@ -1,6 +1,6 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
@@ -58,41 +58,38 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 28
 **Previous module:** Accusative Prepositions
 
-**Cumulative vocabulary (368 words):**
+**Cumulative vocabulary (338 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
 сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
-зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк, Львів, м'ясо, п'ять, сім'я, цукор
-час, що, джерело, дзвін, осінь, м'яч, щастя, бджола, дзеркало, черепаха
-цибуля, хлопець, вчителька, факт, фото, чай, кінь, сестра, дерево, вулиця
-автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів, ґудзик, кава
-замок, писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата
-книжка, дорога, кафе, він, вона, воно, книга, слово, мова, вікно
-брат, ніч, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення
-Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано
-Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми, ви
-вони, хто, студент, студентка, українець, українка, вчитель, ось, мене звати, особовий займенник
-займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт
-цей, ця, ці, той, та, те, ті, кімната, стілець, ліжко
-лампа, шафа, двері, квартира, новий, старий, гарний, великий, малий, поганий
-цікавий, синій, червоний, молодий, дорогий, дешевий, смачний, зелений, який, множина
-білий, чорний, жовтий, бордо, беж, хакі, колір, сорочка, штани, сукня
-плаття, куртка, светр, джинси, окуляри, носити, одягати, розмір, дієслово, друг
-музей, машина, пісня, зошит, ручка, словник, читати, говорити, знати, розуміти
-питати, відповідати, перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати
-думати, вивчати, відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити
-любити, їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, гість
-природа, домашнє завдання, дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися
-знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе
-часто, швидко, як, скільки, завжди, ніколи, подобатися, хотіти, піти, нудний
-хороший, фільм, борщ, квіти, мені, тобі, хобі, інфінітив, мій, твій
-твоя, твоє, його, її, наш, наша, ваш, ваша, їхній, свій
-чий, чия, чиє, річ, сумка, будинок, озеро, такий, інший, кожний
-сам, дівчина, година, хвилина, тиждень, місяць, рік, ранок, вечір, вчасно
-понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя, зараз, пізно, рано
-січень, мати, чути, брати, купувати, гречка, пакет, шукати, знаходити, відкривати
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, сіль
+Львів, м'ясо, п'ять, сім'я, цукор, час, що, джерело, дзвін, осінь
+м'яч, щастя, бджола, дзеркало, черепаха, цибуля, хлопець, вчителька, факт, фото
+чай, кінь, сестра, дерево, вулиця, автобус, бібліотека, університет, склад, переніс
+голосний, приголосний, острів, ґудзик, вода, кава, замок, рука, писати, школа
+добрий, далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе
+він, вона, воно, книга, слово, мова, дім, вікно, брат, ніч
+море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую
+Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово
+Смачного, На здоров'я, Добраніч, це, я, ти, ми, ви, вони, хто
+студент, студентка, українець, українка, вчитель, ось, мене звати, особовий займенник, займенник, граматичний рід
+рід, телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт, цей, ця
+ці, той, та, те, ті, кімната, стілець, ліжко, лампа, шафа
+двері, квартира, новий, старий, гарний, великий, малий, поганий, цікавий, синій
+червоний, молодий, дорогий, дешевий, смачний, зелений, який, множина, білий, чорний
+жовтий, бордо, беж, хакі, колір, сорочка, штани, сукня, плаття, куртка
+светр, джинси, окуляри, носити, одягати, розмір, дієслово, друг, музей, машина
+пісня, зошит, ручка, словник, читати, говорити, знати, розуміти, питати, відповідати
+перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати, думати, вивчати
+відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити, любити, їсти
+пити, ходити, просити, сидіти, стояти, платити, вчити, хліб, гість, природа
+домашнє завдання, дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися, знайомитися
+зустрічатися, вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе, часто
+швидко, як, скільки, завжди, ніколи, подобатися, хотіти, піти, нудний, хороший
+фільм, борщ, квіти, мені, тобі, хобі, інфінітив, мій, твій, твоя
+твоє, його, її, наш, наша, ваш, ваша, їхній, свій, чий
+чия, чиє, річ, сумка, будинок, озеро, такий, інший, кожний, сам
+дівчина, мати, чути, брати, купувати, гречка, пакет, шукати, знаходити, відкривати
 проблема, голос, подруга, лікар, пес, колега, сусід, дитина, матуся, татусь
 братик, сестричка, знайомий, в, на, через, про, за, готель, вокзал
 країна, міст, парк, екскурсія, квиток, іти, їхати, дякувати
@@ -557,7 +554,111 @@ rag_tools_used:
 
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-029
+level: A1
+sequence: 29
+slug: the-locative-where-things-are
+version: '2.0'
+title: 'The Locative: Where Things Are'
+subtitle: Finding Your Way Around Ukrainian Spaces
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Cases & Navigation]
+word_target: 1200
+objectives:
+- Learner can ask and answer 'Where is X?' using locative case
+- Learner can distinguish between в/у and на prepositions
+- Learner can describe locations of people and objects
+- Learner can name common places in Ukrainian
+content_outline:
+- section: Вступ (Introduction)
+  words: 250
+  points:
+  - 'Introduction to the question «Де?» (Where?) as the functional trigger for the Locative case, focusing on high-frequency
+    survival collocations: «Де ти?», «Де ви?», «Де це?», and «Де туалет?».'
+  - 'Cultural Hook: The ''Shoes Off'' Rule. Explain the mandatory ritual of removing street shoes and entering with «капці»
+    (slippers) to establish the domestic spatial context (вдома, у кімнаті).'
+- section: Презентація (Presentation)
+  words: 350
+  points:
+  - 'Grammar: Locative endings -і/-ї for most nouns per State Standard §4.2.3.3. Detailed presentation of velar mutations
+    (к→ц, г→з, х→с) using the ''Hand and Leg'' mnemonic: рука → у руці, нога → на нозі, вухо → у вусі.'
+  - 'Preposition logic: у/в (container/interior) vs. на (surface/activity/event). Explicitly address the rule of euphony (13j)
+    to avoid clusters, e.g., correcting «В Львові» to «У Львові».'
+  - 'Mapping the activity exception: Contrast «у банку» (building) with the frequent social exception «на роботі» (work) to
+    prevent English calques like «*в роботі».'
+- section: Практика (Practice)
+  words: 300
+  points:
+  - 'Drills on consonant mutations: Transformation tasks from Nominative to Locative targeting common learner errors like
+    «*на ногі» vs. the correct «на нозі».'
+  - 'Discrimination exercise: Static Location (Locative) vs. Directional Motion (Accusative). Contrast «Я у парку» (I am in
+    the park) with the common error «*Я в парк» to reinforce static case usage.'
+  - 'Roleplay: ''Where is...?'' using city vocabulary (вокзал, пошта, парк). Focus on preposition selection and correct vocalic
+    flow (в vs. у).'
+- section: "Займенники у місцевому (Pronouns in Locative)"
+  words: 125
+  points:
+  - "Personal pronouns in locative: на мені, на тобі, на ньому, на ній, на нас,
+    на вас, на них. У мене вдома. У тебе на столі."
+  - "3rd person adds н- after prepositions: у нього, на ньому, у ній, на них.
+    Same rule as accusative — preposition triggers н-."
+- section: Виробництво та підсумок (Production and Summary)
+  words: 175
+  points:
+  - 'Describing your environment: Vocabulary for room and table (в кімнаті, на столі). Introduction to housing types (Stalinka,
+    Khrushchevka, Novobudova) as authentic descriptors for describing ''where I live''.'
+  - 'Kyiv City Guide Task: Describe the location of people and objects in a city map context, applying mutations and preposition
+    rules to landmarks (на вокзалі, у школі, на вулиці).'
+vocabulary_hints:
+  required:
+  - 'де (where) — primary question; collocations: Де ти? Де ви? Де це? Де туалет?'
+  - 'в/у (in) — Top 10 frequency; euphony rules are critical: У Львові (avoid clusters)'
+  - 'на (on/at) — usage for surfaces and activities: на роботі, на столі, на вулиці, на вокзалі'
+  - 'кімната (room) — locative: у кімнаті; cultural context: housing types'
+  - 'стіл (table) — usage: на столі'
+  - 'магазин (store) — usage: в магазині'
+  - 'школа (school) — usage: у школі'
+  - 'робота (work) — social/activity exception: на роботі (Learner error: *в роботі)'
+  recommended:
+  - 'банк (bank) — usage: у банку'
+  - 'вокзал (station) — usage: на вокзалі'
+  - 'підлога (floor) — triggers mutation г→з: на підлозі'
+  - 'стіна (wall) — usage: на стіні'
+  - 'вулиця (street) — high frequency: на вулиці'
+  - 'парк (park) — usage: у парку'
+activity_hints:
+- type: fill-in
+  focus: Change nouns to locative
+  items: 25
+- type: fill-in
+  focus: Choose в/у or на
+  items: 20
+- type: fill-in
+  focus: Where is...? conversations
+  items: 8
+- type: match-up
+  focus: Label locations in pictures
+  items: 15
+connects_to:
+- a1-30 (Around the City)
+prerequisites:
+- a1-28 (Accusative Prepositions)
+persona:
+  voice: Patient Supportive Tutor
+  role: Kyiv City Guide
+grammar:
+- Locative case endings
+- Prepositions в/у and на
+- Location expressions
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
@@ -595,18 +696,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -614,18 +742,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

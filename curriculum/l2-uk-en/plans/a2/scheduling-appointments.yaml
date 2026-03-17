@@ -90,7 +90,7 @@ activity_hints:
   items: 10
 connects_to:
 - a2-67 (Scheduling Interviews)
-- a2-59 (Medical Care)
+- a2-59 (Sports Fitness)
 prerequisites:
 - a2-65 (Rental Accommodation)
 persona:

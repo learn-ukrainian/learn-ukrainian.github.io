@@ -130,10 +130,10 @@ activity_hints:
   focus: Заповнення пропусків споживчою та фінансовою лексикою в контексті
   items: 12
 connects_to:
-- c2-066 (Society & Citizenship — consumer rights as civic participation)
-- c2-075 (Urban & Rural Space — housing services and infrastructure)
+- c2-066 (Suspilstvo I Hromadyanstvo)
+- c2-075 (Misto Selo Prostir)
 - c2-022 (Practical Rhetoric — advertising rhetoric analysis and consumer advocacy)
-- c2-004 (Official Style — formal complaints and consumer rights documents)
+- c2-20 (Official Style — formal complaints and consumer rights documents)
 prerequisites:
 - c2-065 (C2.3 Checkpoint)
 persona:

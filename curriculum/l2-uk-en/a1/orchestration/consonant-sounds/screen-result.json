@@ -1,77 +1,64 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "2225",
+    "COMPUTED_WORD_COUNT": "1557",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "185.4",
-    "COMPUTED_ACTIVITY_COUNT": "0",
-    "COMPUTED_VOCAB_COUNT": "0",
-    "COMPUTED_ENGAGEMENT_COUNT": "5",
-    "COMPUTED_IMMERSION_PERCENT": "7.2",
-    "COMPUTED_IMMERSION_TARGET": "10-25%",
-    "COMPUTED_RICHNESS_SCORE": "80",
+    "COMPUTED_WORD_PERCENT": "129.8",
+    "COMPUTED_ACTIVITY_COUNT": "8",
+    "COMPUTED_VOCAB_COUNT": "24",
+    "COMPUTED_ENGAGEMENT_COUNT": "6",
+    "COMPUTED_IMMERSION_PERCENT": "10.6",
+    "COMPUTED_IMMERSION_TARGET": "5-15%",
+    "COMPUTED_RICHNESS_SCORE": "76",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "cultural: 0/3, proverbs: 0/1, tables: 0/2",
-    "COMPUTED_AUDIT_STATUS": "FAIL"
+    "COMPUTED_RICHNESS_GAPS": "cultural: 2/3, examples: 8/24, tables: 0/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
   },
   "deterministic_issues": [
     {
-      "type": "IPA_BANNED",
+      "type": "ACTIVITY_VESUM_FAIL",
       "severity": "HIGH",
-      "location": "~line 151",
-      "text": "Banned IPA transcription: [б]",
-      "fix": "Remove phonetic brackets. Use only stress marks (´) for pronunciation."
-    },
-    {
-      "type": "IPA_BANNED",
-      "severity": "HIGH",
-      "location": "~line 151",
-      "text": "Banned IPA transcription: [п]",
-      "fix": "Remove phonetic brackets. Use only stress marks (´) for pronunciation."
-    },
-    {
-      "type": "IPA_BANNED",
-      "severity": "HIGH",
-      "location": "~line 152",
-      "text": "Banned IPA transcription: [б]",
-      "fix": "Remove phonetic brackets. Use only stress marks (´) for pronunciation."
-    },
-    {
-      "type": "IPA_BANNED",
-      "severity": "HIGH",
-      "location": "~line 152",
-      "text": "Banned IPA transcription: [п]",
-      "fix": "Remove phonetic brackets. Use only stress marks (´) for pronunciation."
-    },
-    {
-      "type": "IPA_BANNED",
-      "severity": "HIGH",
-      "location": "~line 153",
-      "text": "Banned IPA transcription: [в]",
-      "fix": "Remove phonetic brackets. Use only stress marks (´) for pronunciation."
+      "location": "consonant-sounds.yaml",
+      "text": "Activity answers contain VESUM-failed words: Д, П",
+      "fix": "Fix spelling or replace these words — students will practice non-existent forms."
     }
   ],
-  "audit_passed": false,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/consonant-sounds.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M03 — Consonant Sounds\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md | Target: 1200 words\n  📋 Required activity types from meta: classify, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                                 190 /  100  ✅ (+90)\n     Сонорні — Sonorant Consonants                        462 /  200  ✅ (+262)\n     Дзвінкі та глухі пари — Voiced and Voiceless Pairs   723 /  400  ✅ (+323)\n     Тверді та м'які — Hard and Soft Consonants           312 /  250  ✅ (+62)\n     Читання — Reading Practice                           279 /  150  ✅ (+129)\n     Підсумок — Summary                                   187 /  100  ✅ (+87)\n     ───────────────────────────────────────────────────────────────────────────\n     TOTAL                                               2153 / 1200  ✅ (+953)\n  > Читання — Reading Practice: 65 items (min 2)\n     ❌ [SEMANTIC_FALSE_FRIEND] Found 1 semantic false friend(s): 'лук' translated as 'onion' (Ukrainian meaning: bow (weapon), use цибуля instead)\n\n📚 IMMERSION TOO LOW (7.2% vs 10-25% target)\n   FIX: Convert simple explanations to Ukrainian\n   FIX: Add more Ukrainian narratives/dialogues\n   FIX: Use Ukrainian for engagement boxes (💡🎬🌍)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 2225/1200 (raw: 2356)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 5/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ❌ 13 Format Errors\nPedagogy     ❌ 1 violations\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section\nImmersion    ❌ 7.2% LOW (target 10-25% (M03))\n\n❌ LINT ERRORS FOUND:\n  - Line 25: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 26: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 27: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 86: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 87: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 97: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 98: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 110: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 111: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 121: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 122: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 132: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n  - Line 133: Invalid Checkbox format. Use '- [ ]' or '- [x]'.\n\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [SEMANTIC_FALSE_FRIEND] Found 1 semantic false friend(s): 'лук' translated as 'onion' (Ukrainian meaning: bow (weapon), use цибуля instead)\n     → FIX: The word exists in Ukrainian but the English translation uses the Russian meaning. Replace the word or fix the translation to match Ukrainian semantics.\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)\n   → 1 violations (minor)\n   → 13 format errors (many)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/consonant-sounds.json\n\n❌ AUDIT FAILED. Correct errors before proceeding.\n\n❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log for details)\n\nRunning RAG word verification...\nVerifying: consonant-sounds.md\n  VESUM misses: 2 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 254200.24it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 43 | VESUM: 41 (95.3%) | RAG: 1 | Not found: 1\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nProse-relevant failures:\n  meta: Valid Structure | Lint: 13 Format Errors\n  lesson: 2225/1200 (raw: 2356) | pedagogy: 1 violations | immersion: 7.2% LOW (target 10-25% (M03))\nVESUM: 41/43 (95%) verified\n⚠️ VESUM not found (2): зу, хлі",
-  "h2_sections": "1. Вступ — Introduction\n2. Сонорні — Sonorant Consonants\n3. Дзвінкі та глухі пари — Voiced and Voiceless Pairs\n4. Тверді та м'які — Hard and Soft Consonants\n5. Читання — Reading Practice\n6. Підсумок — Summary",
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/consonant-sounds.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M03 — Consonant Sounds\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/consonant-sounds.md | Target: 1200 words\n  📋 Required activity types from meta: classify, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n  ⚠️  Outline compliance: 0 errors, 1 warnings\n     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Вправи — Activities' found in markdown but not in outline.\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                                 121 /  100  ✅ (+21)\n     Сонорні — Sonorant Consonants                        394 /  200  ✅ (+194)\n     Дзвінкі та глухі пари — Voiced and Voiceless Pairs   540 /  400  ✅ (+140)\n     Тверді та м'які — Hard and Soft Consonants           285 /  250  ✅ (+35)\n     Читання — Reading Practice                           153 /  150  ✅ (+3)\n     Підсумок — Summary                                   128 /  100  ✅ (+28)\n     ───────────────────────────────────────────────────────────────────────────\n     TOTAL                                               1621 / 1200  ✅ (+421)\n  > Читання — Reading Practice: 21 items (min 2)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1557/1200 (raw: 1798)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 6/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 10.6% (target 5-15% (M03))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/consonant-sounds.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: consonant-sounds.md\n  VESUM misses: 6 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 59046.98it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 60 | VESUM: 54 (90.0%) | RAG: 2 | Not found: 4\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/consonant-sounds-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 73/82 (89%) verified\n⚠️ VESUM not found (9): Д, д-д-д, ДЖ, ДЗ, ззз, П, ссс, хліп, Ш",
+  "h2_sections": "1. Вступ — Introduction\n2. Сонорні — Sonorant Consonants\n3. Дзвінкі та глухі пари — Voiced and Voiceless Pairs\n4. Тверді та м'які — Hard and Soft Consonants\n5. Читання — Reading Practice\n6. Підсумок — Summary\n7. Вправи — Activities",
   "vesum_stats": {
-    "total": 43,
-    "vesum_hits": 41,
+    "total": 82,
+    "vesum_hits": 73,
     "rag_hits": 0,
-    "not_found": 2,
+    "not_found": 9,
     "rag_errors": 0,
     "proper_names": 0,
     "by_source": {
+      "activities": {
+        "total": 22,
+        "vesum_hits": 19,
+        "not_found": 3
+      },
       "prose": {
-        "total": 43,
-        "vesum_hits": 41,
-        "not_found": 2
+        "total": 60,
+        "vesum_hits": 54,
+        "not_found": 6
       }
     }
   },
   "vesum_not_found": [
     {
-      "original": "зу",
-      "clean": "зу",
+      "original": "Д",
+      "clean": "д",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "д-д-д",
+      "clean": "д-д-д",
       "source": "prose",
       "vesum": false,
       "textbook": false,
@@ -80,9 +67,69 @@
       "status": "❌"
     },
     {
-      "original": "хлі",
-      "clean": "хлі",
+      "original": "ДЖ",
+      "clean": "дж",
       "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ДЗ",
+      "clean": "дз",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ззз",
+      "clean": "ззз",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "П",
+      "clean": "п",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ссс",
+      "clean": "ссс",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "хліп",
+      "clean": "хліп",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Ш",
+      "clean": "ш",
+      "source": "activities",
       "vesum": false,
       "textbook": false,
       "literary": false,
@@ -90,5 +137,5 @@
       "status": "❌"
     }
   ],
-  "content_hash": "b66e9bc13de86e38"
+  "content_hash": "3a1a9b69afda05c2"
 }

@@ -80,9 +80,9 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- 'b1-29 (Підрядні означальні: який)'
+- 'b1-29 (Indefinite Negative Pronouns)'
 prerequisites:
-- 'b1-29 (Підрядні означальні: який)'
+- 'b1-29 (Indefinite Negative Pronouns)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Geographer

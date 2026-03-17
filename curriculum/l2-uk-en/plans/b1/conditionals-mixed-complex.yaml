@@ -82,9 +82,9 @@ activity_hints:
   focus: Discuss hypothetical scenarios
   items: 10
 connects_to:
-- 'b1-37 (Контрольна точка: складні речення (частина 1))'
+- 'b1-37 (Conditionals Mixed Complex))'
 prerequisites:
-- 'b1-35 (Умовні речення: нереальна умова (якби))'
+- 'b1-35 (Conditionals Real Yakshcho))'
 persona:
   voice: Senior Language & Culture Specialist
   role: Chess Grandmaster

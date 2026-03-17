@@ -123,7 +123,7 @@ activity_hints:
 - type: essay-response
   focus: Чому Софія Київська є символом України?
 connects_to:
-- hist-16 (Kyivan Rus culture)
+- hist-19 (Kyivan Rus culture)
 - 'hist-20 (Synthesis: Kyivan Rus)'
 prerequisites:
 - hist-12 (Yaroslav the Wise)

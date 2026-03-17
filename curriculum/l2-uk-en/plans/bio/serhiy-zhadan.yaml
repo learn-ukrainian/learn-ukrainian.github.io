@@ -93,11 +93,11 @@ activity_hints:
   focus: Як війна змінює літературу та письменника?
   output: Літературознавче есе
 connects_to:
-- bio-86 (Оксана Забужко)
-- bio-91 (Олег Сенцов)
-- bio-93 (Катерина Калитко)
+- bio-86 (Petro Bolbochan)
+- bio-91 (Olha Basarab)
+- bio-93 (Oleksa Slisarenko)
 prerequisites:
-- bio-74 (Ліна Костенко)
+- bio-74 (Solomiya Krushelnytska)
 persona:
   voice: Senior Biographer
   role: Voice of the East

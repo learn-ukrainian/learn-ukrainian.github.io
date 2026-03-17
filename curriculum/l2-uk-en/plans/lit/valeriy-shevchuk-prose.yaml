@@ -1,6 +1,6 @@
-module: lit-223
+module: lit-166
 level: LIT
-sequence: 223
+sequence: 166
 slug: valeriy-shevchuk-prose
 version: '2.0'
 title: 'Валерій Шевчук: Три листки за вікном та інша проза'
@@ -69,8 +69,7 @@ activity_hints:
   focus: Химерна проза як жанр
 connects_to:
 - lit-222
-prerequisites:
-- lit-222
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Gothic Literature Specialist

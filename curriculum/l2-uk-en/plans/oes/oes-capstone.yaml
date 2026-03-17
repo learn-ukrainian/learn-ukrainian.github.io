@@ -1,6 +1,6 @@
-module: oes-100
+module: oes-102
 level: OES
-sequence: 100
+sequence: 102
 slug: oes-capstone
 version: '2.0'
 title: Капстоун OES

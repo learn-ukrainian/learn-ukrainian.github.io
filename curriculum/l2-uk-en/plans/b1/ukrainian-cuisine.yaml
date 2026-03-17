@@ -79,9 +79,9 @@ activity_hints:
   focus: Share food preferences
   items: 10
 connects_to:
-- b1-94 (Українські свята та фестивалі)
+- b1-94 (Cycling Water)
 prerequisites:
-- b1-92 (Зимові види спорту)
+- b1-92 (Running In Ukraine)
 persona:
   voice: Senior Language & Culture Specialist
   role: Ukrainian Chef

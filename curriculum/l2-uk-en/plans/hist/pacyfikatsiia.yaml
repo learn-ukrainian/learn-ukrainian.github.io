@@ -91,10 +91,9 @@ activity_hints:
 - type: essay-response
   focus: Як пацифікація вплинула на радикалізацію українського руху?
 connects_to:
-- 'hist-105 (Друга світова: початок)'
-- hist-108 (Волинська трагедія)
-prerequisites:
-- 'hist-100 (ОУН: Формування)'
+- 'hist-105 (Druha Svitova Pochatok)'
+- hist-108 (Syntez Trahedii)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Village Teacher

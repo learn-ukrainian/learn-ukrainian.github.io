@@ -91,9 +91,9 @@ activity_hints:
   focus: Проаналізувати кейс невдалих переговорів — що пішло не так?
   items: 1
 connects_to:
-- 'b2-pro-12 (Нетворкінг: Налагодження контактів)'
+- 'b2-pro-12 (Small Talk Networking)'
 prerequisites:
-- 'b2-pro-10 (Переговори: Основи)'
+- 'b2-pro-10 (Negotiations Basics)'
 persona:
   voice: Senior Specialist
   role: Медіатор конфліктів

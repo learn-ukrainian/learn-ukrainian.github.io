@@ -93,9 +93,9 @@ activity_hints:
   focus: Discuss relationship topics
   items: 10
 connects_to:
-- b1-77 (Основи бізнесу)
+- b1-77 (Health Wellness)
 prerequisites:
-- 'b1-75 (Емоції: глибоке занурення)'
+- 'b1-75 (Professional Communication)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Family Psychologist

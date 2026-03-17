@@ -1,6 +1,6 @@
-module: c1-031
+module: c1-033
 level: C1
-sequence: 31
+sequence: 33
 slug: history-of-language
 version: '2.0'
 title: 'Історія мови: Від Русі до сьогодення'
@@ -82,12 +82,12 @@ activity_hints:
 focus: history
 pedagogy: CBI
 prerequisites:
-- c1-28 (Dialects)
-- 'c1-30 (Суржик: Феномен змішування)'
+- c1-31 (Dialects)
+- 'c1-32 (Surzhyk)'
 connects_to:
-- c1-32 (Українська діаспора)
-- c1-47 (Archaic Verb Forms)
-- c1-20 (Контрольна точка — Академічна база)
+- c1-34 (Diaspora Ukrainian)
+- c1-52 (Checkpoint Complex Sentences)
+- c1-20 (C1 1 Checkpoint)
 module_type: cultural
 sources:
 - name: Історія української мови

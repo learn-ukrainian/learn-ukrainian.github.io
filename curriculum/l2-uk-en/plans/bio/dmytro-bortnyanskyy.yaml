@@ -102,11 +102,11 @@ activity_hints:
   focus: How did empire appropriate Ukrainian talent?
   output: Decolonial perspective
 connects_to:
-- 'bio-38 (Семен Гулак-Артемовський: Оперний співак)'
-- bio-23 (Mykola Lysenko - national music)
-- bio-43 (Mykola Leontovych - choral tradition)
+- 'bio-38 (Semen Hulak Artemovskyy)'
+- bio-48 (Mykola Lysenko - national music)
+- bio-77 (Mykola Leontovych - choral tradition)
 prerequisites:
-- 'bio-34 (Максим Березовський: Композитор барокко)'
+- 'bio-34 (Maksym Berezovskyy)'
 - Understanding of 18th century imperial culture
 persona:
   voice: Senior Biographer

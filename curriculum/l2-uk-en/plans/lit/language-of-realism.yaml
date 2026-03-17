@@ -91,11 +91,11 @@ activity_hints:
   focus: Мова як засіб характеризації
   output: Лінгвостилістичне есе
 connects_to:
-- lit-30 (Микола Джеря)
-- lit-10 (Мова Квітки)
-- lit-24 (Мовне питання)
+- lit-30 (Mykola Dzherya)
+- lit-10 (Kvitka Language)
+- lit-24 (Language Question Linguistics)
 prerequisites:
-- lit-28 (Кайдашева сім'я — конфлікти)
+- lit-28 (Kaidash Family Conflict)
 persona:
   voice: Senior Philologist & Critic
   role: Realist Linguist

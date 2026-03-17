@@ -111,11 +111,11 @@ activity_hints:
   focus: Compare Kvitka's sentimentalism with European models
   output: Comparative literature analysis
 connects_to:
-- bio-103 (Nechuy-Levytsky - artistic heir)
-- bio-47 (Marko Vovchok - female prose pioneer)
+- bio-44 (Nechuy-Levytsky - artistic heir)
+- bio-42 (Marko Vovchok - female prose pioneer)
 - lit-06 through lit-10 (Literary analysis of Kvitka's works)
 prerequisites:
-- 'bio-36 (Іван Котляревський: Батько нової літератури)'
+- 'bio-36 (Ivan Kotliarevskyi)'
 - Understanding of sentimentalism and early realism
 persona:
   voice: Senior Biographer

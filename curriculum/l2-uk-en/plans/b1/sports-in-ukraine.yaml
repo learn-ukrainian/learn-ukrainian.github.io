@@ -86,9 +86,9 @@ activity_hints:
   focus: Discuss sports preferences
   items: 10
 connects_to:
-- b1-88 (Активний відпочинок)
+- b1-88 (Ukrainian Cinema And Tv)
 prerequisites:
-- b1-86 (Технології та стартапи)
+- b1-86 (Regions Center)
 persona:
   voice: Senior Language & Culture Specialist
   role: Olympiad Commentator

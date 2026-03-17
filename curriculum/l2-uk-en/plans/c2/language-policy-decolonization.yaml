@@ -134,9 +134,9 @@ activity_hints:
   focus: Дискусія навколо деколонізації та мовного питання
   items: 1
 connects_to:
-- c2-81 (Regional Varieties — dialectal diversity as context for policy)
+- c2-82 (Regional Varieties — dialectal diversity as context for policy)
 - c2-84 (Corpus Linguistics — empirical data for policy analysis)
-- c2-82 (Sociolinguistic Mastery — theoretical foundations applied to policy)
+- c2-83 (Sociolinguistic Mastery — theoretical foundations applied to policy)
 prerequisites:
 - c2-083 (Sociolinguistic Mastery)
 persona:

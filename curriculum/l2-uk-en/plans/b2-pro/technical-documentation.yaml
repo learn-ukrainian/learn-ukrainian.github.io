@@ -90,9 +90,9 @@ activity_hints:
   focus: Знайти двозначні або неточні формулювання в техдокументації
   items: 6
 connects_to:
-- b2-pro-19 (Фінансова лексика)
+- b2-pro-19 (Finance Vocabulary)
 prerequisites:
-- 'b2-pro-17 (ІТ-лексика II: Розробка)'
+- 'b2-pro-17 (It Vocabulary 2)'
 persona:
   voice: Senior Specialist
   role: Технічний письменник

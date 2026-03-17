@@ -88,9 +88,9 @@ activity_hints:
   focus: Написати короткий аналіз достовірності джерел у статті
   items: 1
 connects_to:
-- b2-pro-33 (Журналістське письмо)
+- b2-pro-33 (Journalism Writing)
 prerequisites:
-- 'b2-pro-31 (Аналіз новин I: Критичне читання)'
+- 'b2-pro-31 (News Analysis 1)'
 persona:
   voice: Senior Specialist
   role: Фактчекер

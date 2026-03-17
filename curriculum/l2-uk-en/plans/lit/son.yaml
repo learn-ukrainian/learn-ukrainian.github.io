@@ -90,7 +90,7 @@ activity_hints:
   focus: Роль сатири в десакралізації влади
   output: Політологічне есе
 connects_to:
-- lit-15 (Zapovit — політичний заповіт)
+- lit-15 (The Testament)
 - lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
 prerequisites:
 - lit-11 to lit-13 (Shevchenko biography and early works)

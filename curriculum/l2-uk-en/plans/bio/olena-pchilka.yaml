@@ -93,12 +93,12 @@ activity_hints:
   focus: Яку роль відіграла Олена Пчілка у вихованні Лесі Українки?
   output: Біографічне есе
 connects_to:
-- bio-40 (Леся Українка)
-- bio-25 (Наталія Кобринська)
-- 'bio-54 (Іван Франко: Каменяр)'
+- bio-40 (Panteleimon Kulish)
+- bio-25 (Ivan Sirko)
+- 'bio-54 (Ivan Franko)'
 prerequisites:
-- bio-20 (Тарас Шевченко)
-- bio-22 (Михайло Драгоманов)
+- bio-20 (Petro Sahaidachny)
+- bio-22 (Petro Mohyla)
 persona:
   voice: Senior Biographer
   role: Cultural Matriarch

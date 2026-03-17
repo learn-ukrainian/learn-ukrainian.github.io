@@ -95,8 +95,7 @@ activity_hints:
 connects_to:
 - bio-26-mariya-zankovetska
 - bio-57-les-kurbas
-prerequisites:
-- bio-46-ivan-kotliarevskyi
+prerequisites: []
 persona:
   voice: Senior Biographer
   role: Troupe Manager

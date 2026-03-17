@@ -74,7 +74,7 @@ activity_hints:
   focus: A1.2 grammar and vocabulary comprehensive test
   items: 30
 connects_to:
-- a1-25 (The Accusative I)
+- a1-26 (The Accusative I)
 prerequisites:
 - a1-23 (What Time Is It)
 persona:

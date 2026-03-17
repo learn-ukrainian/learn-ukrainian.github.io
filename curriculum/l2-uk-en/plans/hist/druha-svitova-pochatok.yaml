@@ -100,11 +100,11 @@ activity_hints:
 - type: essay-response
   focus: Чому «возз'єднання» 1939 року — це окупація?
 connects_to:
-- hist-106 (Бабин Яр)
-- hist-107 (УПА)
+- hist-106 (Babyn Yar)
+- hist-107 (Upa)
 prerequisites:
-- hist-104 (ОУН)
-- hist-104 (Карпатська Україна 1938-1939)
+- hist-104 (Karpatska Ukraina)
+- hist-104 (Karpatska Ukraina)
 persona:
   voice: Senior Professor of History
   role: War Diarist

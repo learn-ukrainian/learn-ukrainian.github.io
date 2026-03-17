@@ -1,6 +1,6 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
@@ -58,13 +58,11 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 3
 **Previous module:** Consonant Sounds
 
-**Cumulative vocabulary (55 words):**
+**Cumulative vocabulary (39 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
 сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
-зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп
 
 **Grammar already taught (14 topics):**
 - Full alphabet overview (33 letters)
@@ -126,12 +124,12 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 10-25% Ukrainian.
+TARGET: 5-15% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: 100% English.
-- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
-- TABLES: Vocabulary tables, letter groups, simple word families.
-- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
+- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
+- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
+- TABLES: Simple letter-sound or word-meaning tables.
 Ukrainian sentences max 10 words.
 
 ### Blog Articles & Guides
@@ -513,7 +511,167 @@ rag_tools_used:
 
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-004
+level: A1
+sequence: 4
+slug: completing-the-alphabet
+version: '2.0'
+title: Completing the Alphabet
+subtitle: "Завершуємо алфавіт — Soft Sign, Apostrophe, Affricates, and Digraphs"
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner understands the soft sign (Ь) as a consonant modifier with no sound of its own
+- Learner understands the apostrophe as a separator preserving the Й-sound
+- "Learner can pronounce affricates Ц, Ч, Щ and digraphs ДЖ, ДЗ"
+- Learner knows Ф appears mostly in borrowed words
+- "Learner can read any Ukrainian word — the full 33-letter alphabet is mastered"
+content_outline:
+- section: Вступ — Introduction
+  words: 100
+  points:
+  - "Review: M1 gave you the map, M2 mastered vowels, M3 mastered consonants. Today:
+    the final pieces — modifiers (Ь, apostrophe), affricates (Ц Ч Щ), digraphs
+    (ДЖ ДЗ), and the rare Ф. After this, you can read ANY Ukrainian word."
+- section: "М'який знак — The Soft Sign"
+  words: 250
+  points:
+  - "Ь has no sound of its own — it softens (palatalizes) the consonant before it.
+    Place your tongue closer to the roof of your mouth."
+  - "Words: сіль (salt), день (day), Львів (Lviv), мідь (copper), осінь (autumn)."
+  - "Pattern: Ь appears after consonants at word end (сіль, день) or before another
+    consonant (Львів). Never at word start, never after vowels."
+  - "Minimal pair: кінь (horse) vs кін (a stake in a game) — Ь changes the preceding
+    consonant's quality, creating a different word."
+- section: "Апостроф — The Apostrophe"
+  words: 250
+  points:
+  - "The apostrophe separates a consonant from a following iotated vowel (Я Ю Є Ї),
+    preserving the Й-sound that would otherwise be absorbed into softening."
+  - "Words: м'ясо (meat), п'ять (five), сім'я (family), м'яч (ball), об'єкт (object)."
+  - "Rule: apostrophe appears after Б, П, В, М, Ф, Р before Я, Ю, Є, Ї."
+  - "Compare: without apostrophe, М+Я would mean 'soft М + А'. With apostrophe,
+    М'Я means 'hard М + Й + А'. The apostrophe is NOT optional."
+- section: "Африкати, Щ та Ф — Affricates, Щ, and Ф"
+  words: 300
+  points:
+  - "Ц — a true affricate: Т+С fused into one sound. Like English 'ts' in 'cats'.
+    Words: цукор (sugar), цибуля (onion). Common in endings: -ець, -иця."
+  - "Ч — a true affricate: like English 'ch' in 'church'. Very frequent. Words:
+    час (time/hour), черепаха (turtle), чай (tea)."
+  - "Щ — NOT an affricate. It represents TWO separate sounds: Ш+Ч (a consonant
+    cluster written as one letter). Words: що (what), ще (still/more), щастя
+    (happiness). що appears in almost every conversation."
+  - "Ф — like English 'f'. Rare in native Ukrainian words — appears mostly in
+    borrowings: факт (fact), фото (photo). Voiceless partner of В."
+- section: "Диграфи ДЖ, ДЗ — Digraphs"
+  words: 150
+  points:
+  - "Two letters, one sound each. These are single phonemes written with two characters."
+  - "ДЖ — like English 'j' in 'jungle'. Words: джерело (spring/source),
+    бджола (bee). Voiced partner of Ч."
+  - "ДЗ — no English equivalent. Voiced partner of Ц. Words: дзвін (bell),
+    дзеркало (mirror). Uniquely Ukrainian — absent from Russian."
+- section: "Весь алфавіт! — The Full Alphabet Mastered"
+  words: 150
+  points:
+  - "The complete 33-letter Ukrainian alphabet: А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М
+    Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я. Plus digraphs ДЖ, ДЗ and the apostrophe."
+  - "Full-alphabet reading challenge: a short paragraph using all letter types —
+    vowels, consonants, soft sign, apostrophe, affricates, digraphs."
+  - "Survival phrases using the full alphabet: Добрий день! (Good day!) Як справи?
+    (How are you?) Дякую! (Thank you!) Будь ласка! (Please!) До побачення! (Goodbye!)"
+  - "Celebration: you can now decode any Ukrainian word. The reading skills from
+    M1-M4 are the foundation for everything that follows."
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "Recap: Ь softens consonants, apostrophe preserves Й-sound, Ц and Ч are
+    affricates, Щ is a Ш+Ч cluster, ДЖ and ДЗ are digraphs, Ф is rare."
+  - "Self-check: What does Ь do? When do you use an apostrophe? What two sounds
+    does Щ represent? Can you read any Ukrainian word now?"
+  - "Next: M5 — syllables and word division."
+vocabulary_hints:
+  required:
+  - "сіль (salt) — demonstrates Ь softening; everyday kitchen word"
+  - "день (day) — demonstrates Ь; top 50 word; collocation: добрий день"
+  - "Львів (Lviv) — demonstrates Ь before consonant; cultural significance"
+  - "м'ясо (meat) — demonstrates apostrophe; everyday food"
+  - "п'ять (five) — demonstrates apostrophe; number"
+  - "сім'я (family) — demonstrates apostrophe; high-frequency"
+  - "цукор (sugar) — demonstrates Ц; everyday kitchen word"
+  - "час (time/hour) — demonstrates Ч; top 100 word"
+  - "що (what) — demonstrates Щ; top 10 word"
+  - "джерело (spring/source) — demonstrates ДЖ digraph"
+  - "дзвін (bell) — demonstrates ДЗ digraph; cultural (church bells)"
+  recommended:
+  - "осінь (autumn) — demonstrates Ь; seasonal vocabulary"
+  - "м'яч (ball) — demonstrates apostrophe; children's vocabulary"
+  - "щастя (happiness) — demonstrates Щ; high-frequency"
+  - "факт (fact) — demonstrates Ф; internationalism"
+  - "бджола (bee) — demonstrates ДЖ; nature vocabulary"
+  - "дзеркало (mirror) — demonstrates ДЗ; everyday object"
+  - "черепаха (turtle) — demonstrates Ч; children's literature"
+  - "цибуля (onion) — demonstrates Ц; everyday food"
+  - "чай (tea) — demonstrates Ч; high-frequency"
+  - "кінь (horse) — Ь minimal pair; Bolshakova"
+activity_hints:
+- type: watch-and-repeat
+  focus: "Pronunciation of Ь-softened consonants, affricates Ц Ч Щ, digraphs ДЖ ДЗ"
+  items: 10
+- type: classify
+  focus: "Identify words containing Ь — which consonant is softened?"
+  items: 8
+- type: image-to-letter
+  focus: "Match picture to word with target letter — цукор→Ц, час→Ч, джерело→ДЖ"
+  items: 8
+- type: quiz
+  focus: "Apostrophe rule — does this word need an apostrophe? (м_ясо, п_ять, сім_я)"
+  items: 10
+- type: classify
+  focus: "Affricate identification — Ц, Ч, or Щ?"
+  items: 8
+- type: fill-in
+  focus: "Full-alphabet reading challenge — decode survival phrases"
+  items: 6
+- type: match-up
+  focus: "Match survival phrase to meaning (Добрий день = Good day, Дякую = Thank you)"
+  items: 6
+connects_to:
+- a1-05 (Syllables and Word Division)
+prerequisites:
+- a1-03 (Consonant Sounds)
+persona:
+  voice: Patient Supportive Tutor
+  role: Typography Artist
+grammar:
+- "Soft sign palatalization (Ь)"
+- "Apostrophe function and rules"
+- "Affricates (Ц, Ч, Щ)"
+- "Digraphs (ДЖ, ДЗ)"
+- "Ф — rare native, common in borrowings"
+- "Full alphabet mastery"
+register: розмовний
+pronunciation_videos:
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: "Anna Ohoiko — Ukrainian Lessons"
+  letters:
+    Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
+    Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
@@ -551,18 +709,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -570,18 +755,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

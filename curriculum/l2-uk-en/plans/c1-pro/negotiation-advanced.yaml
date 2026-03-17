@@ -88,9 +88,9 @@ activity_hints:
   focus: Написати підсумковий меморандум за результатами переговорів
   items: 1
 connects_to:
-- c1-pro-09 (Врегулювання конфліктів)
+- c1-pro-09 (Conflict Resolution)
 prerequisites:
-- c1-pro-07 (Риторика лідерства)
+- c1-pro-07 (Leadership Rhetoric)
 persona:
   voice: Senior Specialist
   role: Кризовий перемовник

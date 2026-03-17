@@ -93,13 +93,13 @@ activity_hints:
   focus: Why is Korolyov considered Ukrainian heritage?
   output: Analysis of reclaimed identity
 connects_to:
-- bio-118 (Kondratiuk - intellectual predecessor)
-- bio-119 (Puliui - earlier reclaimed figure)
-- bio-112 (Yevhen Paton - contemporary engineer)
+- bio-109 (Kondratiuk - intellectual predecessor)
+- bio-49 (Puliui - earlier reclaimed figure)
+- bio-69 (Yevhen Paton - contemporary engineer)
 prerequisites:
 - Space race historical context
 - Soviet repression understanding
-- bio-118 (Kondratiuk - space theorist)
+- bio-109 (Kondratiuk - space theorist)
 persona:
   voice: Senior Biographer
   role: Chief Constructor

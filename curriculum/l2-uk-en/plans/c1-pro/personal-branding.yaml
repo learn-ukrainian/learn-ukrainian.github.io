@@ -88,9 +88,9 @@ activity_hints:
   focus: Розробити контент-план для особистого бренду
   items: 1
 connects_to:
-- c1-pro-48 (Кар'єрний розвиток)
+- c1-pro-48 (Career Development)
 prerequisites:
-- c1-pro-46 (Професійне портфоліо)
+- c1-pro-46 (Professional Portfolio)
 persona:
   voice: Senior Specialist
   role: Бренд-стратег

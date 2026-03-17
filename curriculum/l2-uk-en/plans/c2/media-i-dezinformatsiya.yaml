@@ -130,11 +130,11 @@ activity_hints:
   focus: Заповнення пропусків медійною та інформаційною лексикою в контексті
   items: 12
 connects_to:
-- c2-066 (Society & Citizenship — political discourse and media's role in democracy)
+- c2-66 (Suspilstvo I Hromadyanstvo — political discourse and media's role in democracy)
 - c2-022 (Practical Rhetoric — propaganda analysis and argumentation techniques)
-- c2-067 (Foreign Policy & Diaspora — information warfare in international context)
+- c2-84 (Foreign Policy & Diaspora — information warfare in international context)
 prerequisites:
-- c2-066 (Society & Citizenship)
+- c2-066 (Suspilstvo I Hromadyanstvo)
 persona:
   voice: Senior Specialist
   role: Media Analyst

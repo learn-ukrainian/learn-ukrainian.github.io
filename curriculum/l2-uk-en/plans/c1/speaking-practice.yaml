@@ -1,6 +1,6 @@
-module: c1-039
+module: c1-043
 level: C1
-sequence: 39
+sequence: 43
 slug: speaking-practice
 version: '2.0'
 title: Мовний практикум
@@ -81,12 +81,12 @@ activity_hints:
 focus: checkpoint
 pedagogy: Assessment
 prerequisites:
-- c1-21 to c1-34 (Complete Phase C1.2)
+- c1-35 to c1-36 (Complete Phase C1.2)
 - All professional and sociolinguistic skills
 connects_to:
-- 'c1-48 (Метафора та порівняння: Образна мова)'
-- c1-20 (Контрольна точка — Академічна база)
-- c1-106 (Final C1 Checkpoint)
+- 'c1-53 (Metaphor Simile)'
+- c1-20 (C1 1 Checkpoint)
+- c1-111 (Final C1 Checkpoint)
 module_type: checkpoint
 sources:
 - name: CEFR C1 Assessment Criteria

@@ -93,10 +93,9 @@ activity_hints:
 - type: essay-response
   focus: Чому оборона Маріуполя стала символом українського спротиву?
 connects_to:
-- hist-135 (Каховська ГЕС)
-- hist-139 (Злочини і стійкість)
-prerequisites:
-- 'hist-133 (Війна 2022: початок)'
+- hist-135 (Kakhovska Hes)
+- hist-139 (Zlochyny Stiikist)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Steelworks Defender

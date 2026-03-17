@@ -85,10 +85,9 @@ activity_hints:
 - type: essay-response
   focus: Чому повоєнна відбудова означала продовження експлуатації України?
 connects_to:
-- hist-113 (Десталінізація)
-- hist-114 (Крим 1954)
-prerequisites:
-- hist-111 (Завершення війни)
+- hist-113 (Destalinizatsiia)
+- hist-112 (Крим 1954)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Chief Architect

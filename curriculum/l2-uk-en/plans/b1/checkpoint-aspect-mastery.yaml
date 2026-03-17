@@ -98,7 +98,7 @@ activity_hints:
   focus: Context → aspect selection rule
   items: 12+
 connects_to:
-- 'b1-18 (Дієслова руху: повна система)'
+- 'b1-18 (Checkpoint Aspect Mastery)'
 - b1-25 (Motion verbs checkpoint)
 prerequisites:
 - All B1.1 modules (M06-14)

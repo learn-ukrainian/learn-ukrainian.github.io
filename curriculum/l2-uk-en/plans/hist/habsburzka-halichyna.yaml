@@ -104,10 +104,10 @@ activity_hints:
 - type: essay-response
   focus: Чому Галичина стала «Українським П'ємонтом»?
 connects_to:
-- hist-85 (Франко, Леся, Грінченко)
-- hist-88 (Перша світова)
+- hist-85 (Franko Lesia Hrinchenko)
+- hist-88 (Persha Svitova)
 prerequisites:
-- hist-75 (Україна в Російській імперії)
+- hist-75 (Rosiiska Imperiia Ukraina)
 persona:
   voice: Senior Professor of History
   role: Diet Deputy

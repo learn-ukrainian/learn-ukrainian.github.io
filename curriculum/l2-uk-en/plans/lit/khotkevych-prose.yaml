@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-206
-prerequisites:
-- lit-204
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Hutsul Storyteller

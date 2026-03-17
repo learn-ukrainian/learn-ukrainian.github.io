@@ -88,11 +88,11 @@ activity_hints:
 - type: essay-response
   focus: Які внутрішні та зовнішні причини призвели до поразки Директорії?
 connects_to:
-- hist-94 (Симон Петлюра)
-- hist-95 (Більшовицько-українська війна)
+- hist-94 (Symon Petliura Revolution)
+- hist-95 (Bilshovytsko Ukrainska Viyna)
 prerequisites:
-- hist-91 (Скоропадський)
-- hist-92 (ЗУНР)
+- hist-91 (Skoropadskyi)
+- hist-92 (Zunr)
 persona:
   voice: Senior Professor of History
   role: Diplomatic Envoy

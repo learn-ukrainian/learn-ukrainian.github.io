@@ -2,9 +2,7 @@ FAIL: pipeline a1 3
 
   Module:   consonant-sounds
   Track:    a1
-  Mode:     v5
-  Words:    0 (target: 1200)
-  Sections: ?/?
-  Archive:  no
+  Mode:     v6
+  Words:    2209 (target: 1200)
   Verdict:  FAIL
-  Date:     2026-03-17T12:28:15Z
+  Date:     2026-03-17T18:26:26.330751+00:00

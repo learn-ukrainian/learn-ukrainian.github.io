@@ -78,7 +78,7 @@ activity_hints:
   focus: Schedule a meeting
   items: 6
 connects_to:
-- a1-24 (Can, Must, Want - Modals)
+- a1-46 (Can, Must, Want - Modals)
 - a1-38 (My Daily Routine)
 prerequisites:
 - a1-22 (Numbers and Money)

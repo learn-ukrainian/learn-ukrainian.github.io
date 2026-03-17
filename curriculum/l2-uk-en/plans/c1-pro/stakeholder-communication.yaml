@@ -88,9 +88,9 @@ activity_hints:
   focus: Провести зустріч із невдоволеним стейкхолдером
   items: 1
 connects_to:
-- c1-pro-03 (Презентації для ради)
+- c1-pro-03 (Board Presentations)
 prerequisites:
-- c1-pro-01 (Виконавче листування)
+- c1-pro-01 (Executive Email)
 persona:
   voice: Senior Specialist
   role: Директор із зв'язків з інвесторами

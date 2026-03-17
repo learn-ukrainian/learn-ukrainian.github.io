@@ -104,10 +104,9 @@ activity_hints:
 - type: essay-response
   focus: Чому більшовики називали повстанців «бандитами»?
 connects_to:
-- hist-98 (Українізація)
-- hist-107 (УПА)
-prerequisites:
-- hist-96 (Голод 1921-1923)
+- hist-98 (Rozstriliane Vidrodzennia)
+- hist-107 (Upa)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Forest Partisan

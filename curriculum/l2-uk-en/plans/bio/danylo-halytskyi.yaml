@@ -62,10 +62,10 @@ vocabulary_hints:
   required: []
   recommended: []
 connects_to:
-- bio-09 (Лев Данилович)
+- bio-09 (Mykhailo Chernihivskyi)
 - hist mongolska-navala module
 prerequisites:
-- bio-07 (Роман Мстиславич)
+- bio-07 (Nestor Litopysets)
 - hist danylo-halytskyi module
 persona:
   voice: Senior Biographer

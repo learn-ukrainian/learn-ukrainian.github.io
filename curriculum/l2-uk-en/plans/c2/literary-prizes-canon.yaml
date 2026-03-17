@@ -143,7 +143,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-39 (Літературна спільнота)
+- c2-39 (Literary Community)
 - c2-42 (Повторення C2.2 — Літературна майстерність)
 - c2-43 (Контрольна точка C2.2 — Літературна майстерність)
 persona:

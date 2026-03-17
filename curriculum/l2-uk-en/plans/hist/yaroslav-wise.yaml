@@ -125,8 +125,8 @@ activity_hints:
   focus: Чому Ярослава називають 'тестем Європи'?
 connects_to:
 - hist-13 (Ruska Pravda in detail)
-- hist-14 (St. Sophia and cultural flowering)
-- hist-17 (Princely feuds)
+- hist-14 (Sofiya Kyivska)
+- hist-17 (Kniazivski Usobiytsi)
 - 'hist-20 (Synthesis: Kyivan Rus)'
 prerequisites:
 - hist-11 (Volodymyr and Baptism)

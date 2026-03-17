@@ -85,9 +85,9 @@ activity_hints:
   focus: Оцінити власний прогрес за компетенціями фази
   items: 1
 connects_to:
-- 'c1-pro-14 (Інтеграція: Виконавча комунікація)'
+- 'c1-pro-14 (Executive Integration)'
 prerequisites:
-- c1-pro-12 (Робота з медіа)
+- c1-pro-12 (Media Relations)
 persona:
   voice: Senior Specialist
   role: Екзекьютів-коуч

@@ -134,10 +134,10 @@ activity_hints:
   focus: Зіставлення типів житла, послуг і містобудівних термінів з визначеннями
   items: 10
 connects_to:
-- c2-066 (Society & Citizenship — housing as social policy issue)
-- c2-074 (Consumer Culture & Services — housing services and utilities)
+- c2-84 (Society & Citizenship — housing as social policy issue)
+- c2-074 (Spozhyvannya I Posluhy)
 - c2-022 (Practical Rhetoric — argumentation for urban planning proposals)
-- c2-005 (Journalistic Style — urban development reporting)
+- c2-20 (Journalistic Style — urban development reporting)
 prerequisites:
 - c2-065 (C2.3 Checkpoint)
 persona:

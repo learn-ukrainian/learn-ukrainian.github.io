@@ -88,9 +88,9 @@ activity_hints:
   focus: Оцінити економіку проєкту сонячної електростанції
   items: 1
 connects_to:
-- c1-pro-40 (Агробізнес)
+- c1-pro-40 (Agriculture Agribusiness)
 prerequisites:
-- c1-pro-38 (Фармацевтика)
+- c1-pro-38 (Pharmaceutical)
 persona:
   voice: Senior Specialist
   role: Експерт з енергоефективності

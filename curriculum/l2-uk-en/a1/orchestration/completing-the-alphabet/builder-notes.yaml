@@ -1,26 +1,26 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1514
+word_count: 1683
 deviations:
-  - section: "Весь алфавіт! — The Full Alphabet Mastered"
-    reason: "Added H3 for Ґ (review from M3) to embed the mandatory Ґ video, since Ґ has no dedicated section in this module's outline"
+  - section: "All sections"
+    reason: "Slightly above minimums across all sections to ensure rich examples and natural flow — total ~1683 vs 1200 target (within 1200-1800 aim range)"
 frictions:
   - type: TEMPLATE_CONSTRAINT
-    description: "Ґ video is mandatory per plan but Ґ was taught in M3 — no natural H3 section exists in M4 outline"
-    proposed_fix: "Embedded as review H3 in the full-alphabet section; alternatively, plan could specify video-only embed without H3"
-research_gaps: []
+    description: "The ДЗ digraph section references the Ґ video from Anna Ohoiko because no dedicated ДЖ/ДЗ video was provided in the plan. Used the Ґ video as the closest available reference for voiced/voiceless pair discussion."
+    proposed_fix: "Consider adding dedicated ДЖ and ДЗ pronunciation videos to the plan's pronunciation_videos section"
+research_gaps:
+  - "No dedicated Grade 1-2 textbook pages found specifically for ДЖ/ДЗ digraph teaching — these are typically introduced in Grade 3+"
+  - "No Anna Ohoiko video specifically for ДЖ or ДЗ was available in the plan"
 unverified_terms: []
 review_focus:
-  - "Verify all 6 YouTube video URLs are still active"
-  - "Check that stress marks (combining acute) render correctly on all platforms"
-  - "Confirm image-to-letter emoji render across devices (especially 🫖 teapot, 🧅 onion)"
-  - "Validate that classify activity item counts satisfy audit minimums"
+  - "Verify the кін minimal pair is accurate — VESUM shows кін as noun but the 'stake in a game' gloss should be confirmed"
+  - "Check that об'єкт is appropriate for A1 level — it's an internationalism but may feel advanced"
+  - "Confirm all 21 vocabulary items are used in content (VOCAB-IN-CONTENT rule)"
+  - "Verify the reading challenge paragraph uses only known + newly taught vocabulary"
 rag_tools_used:
-  - "search_text: м'який знак пом'якшення приголосних Ь (grade 2) → Bolshakova p.43-48, Kravtsova p.30-32 on soft sign patterns"
-  - "search_text: апостроф перед я ю є ї правила (grade 2) → Bolshakova p.57-58, Kravtsova p.44-45, Vashulenko p.12 on apostrophe rules"
-  - "search_text: африкати Ц Ч Щ звуки букви (grade 1) → Bolshakova p.62-74 on Ч, Щ, Ц letter pages"
-  - "search_text: диграфи ДЖ ДЗ один звук дві букви (grade 3) → Vashulenko p.80, Kravtsova p.8 on ДЖ/ДЗ pronunciation"
-  - "query_pravopys: апостроф → §7 apostrophe rules (after Б,П,В,М,Ф,Р before Я,Ю,Є,Ї)"
-  - "query_pravopys: м-який-знак → §26 soft sign rules (after д,т,з,с,дз,ц,л,н)"
-  - "verify_words: 25/25 vocabulary items VESUM-verified"
-  - "verify_words: 19/20 additional content words verified (Будь ласка is two words, expected)"
+  - "search_text: 'м'який знак пом'якшення приголосних' grade=2 → Kravtsova p.30 (Ь softening rule), Bolshakova p.43-48 (hard/soft pairs, transfer rules)"
+  - "search_text: 'апостроф перед я ю є ї правило' grade=2 → Bolshakova p.57-58 (apostrophe rule explanation), Kravtsova p.44-45 (apostrophe exercises), Vashulenko p.12 (apostrophe poem)"
+  - "search_text: 'африкати ц ч щ дж дз приголосні' grade=1 → Bolshakova Grade 1 (letter sequence in bukvar), table of contents showing Ч/Щ placement"
+  - "query_pravopys: 'апостроф' → §7 full apostrophe rules (Б, П, В, М, Ф, Р before Я, Ю, Є, Ї)"
+  - "query_pravopys: 'м-який-знак' → §26 full soft sign rules (after д, т, з, с, дз, ц, л, н at end of word/syllable)"
+  - "verify_words: 26 words batch-verified → all 26 FOUND in VESUM"

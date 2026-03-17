@@ -134,8 +134,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-86 (Володіння на рівні носія)
-- c2-87 (Викладання української мови I — Педагогічні основи)
+- c2-86 (Error Analysis)
+- c2-10 (Викладання української мови I — Педагогічні основи)
 - c2-101 (Фінальне повторення I — Граматична консолідація)
 persona:
   voice: Senior Specialist

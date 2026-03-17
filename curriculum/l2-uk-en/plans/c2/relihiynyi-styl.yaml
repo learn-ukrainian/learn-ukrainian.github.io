@@ -143,9 +143,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-23 (Intertextuality includes biblical allusions)
-- c2-66 (Рідкісні та архаїчні форми)
-- c2-19 (Інтертекстуальність)
+- c2-19 (Intertextuality includes biblical allusions)
+- c2-66 (Suspilstvo I Hromadyanstvo)
+- c2-19 (Intertextuality)
 persona:
   voice: Senior Specialist
   role: Theologian

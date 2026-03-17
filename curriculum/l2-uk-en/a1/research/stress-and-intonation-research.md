@@ -10,14 +10,15 @@ Alignment: This module directly addresses both §4.1.5 (free/mobile Ukrainian wo
 | Word | Notes | Key collocations |
 |------|-------|------------------|
 | замок | Minimal stress pair: зАмок (castle) vs замОк (lock). HIGH pedagogical value — same spelling, meaning changes with stress | зАмок у горах, замОк на дверях |
-| вода | Top 300; last-syllable stress водА; stress shifts in genitive вОди → pedagogical preview | холодна вода, пити воду |
-| рука | Top 200; mobile stress рукА → рУки (gen./pl.) — key example of mobile stress | права рука, моя рука |
+| вода | Top 300; last-syllable stress водА; stress shifts in plural вОди → pedagogical preview | холодна вода, пити воду |
+| рука | Top 200; mobile stress рукА → рУки (nom./acc. pl.) — key example of mobile stress | права рука, моя рука |
 | школа | Top 200; penultimate stress шкОла — common two-syllable pattern | моя школа, нова школа |
 | молоко | Last-syllable stress молокО — three-syllable exemplar | свіже молоко |
 | добрий | Top 100; first-syllable stress дОбрий — collocations: добрий день (greeting already known) | добрий день, добрий ранок |
 | наголос | Metalanguage term; used to talk about stress in Ukrainian; not everyday vocabulary | наголос на першому складі |
 | інтонація | Metalanguage; near-cognate with English "intonation" | правильна інтонація |
 | питання | High-frequency; question intonation context | гарне питання |
+| писати | Top 200; mobile stress in conjugation: писАти → пишУ → пИшеш | писати лист |
 | далеко | Last-syllable stress далекО; useful contrast with дОбрий (first-syllable) | дуже далеко |
 
 ## Cultural Hooks
@@ -30,7 +31,7 @@ Alignment: This module directly addresses both §4.1.5 (free/mobile Ukrainian wo
 
 1. **Applying English/Polish fixed-stress rules** → guessing final or penultimate syllable for every word — e.g., saying молОко (Polish-like penultimate) instead of молокО. Root cause: English word stress is partially predictable by syllable weight; Ukrainian has no such shortcut.
 2. **Ignoring stress on minimal pairs** → saying замОк when meaning "castle" (зАмок). The textbook (Vashulenko, p.69) targets exactly this error with the "образи" poem — stress errors are meaning errors, not just pronunciation slips.
-3. **Rising intonation on all questions** (English L1 transfer) → applying rising intonation to WH-questions (Де кафе? ДЕ кафе? — pitch should rise on the question word, then fall). English speakers tend to rise at sentence end; Ukrainian WH-questions fall after the question word.
+3. **Misapplying question intonation** → English and Ukrainian both use falling intonation for WH-questions, but nervous learners often mistakenly apply a yes/no rising contour to all questions. For Ukrainian WH-questions (Де кафе?), pitch must peak on the question word (Де) and fall.
 4. **Flat/monotone reading** → not distinguishing declarative vs exclamatory contour. Це кафе. vs Це кафе! sound identical to untrained ears — exercises should isolate the pitch peak.
 
 ## Cross-References
@@ -41,7 +42,7 @@ Alignment: This module directly addresses both §4.1.5 (free/mobile Ukrainian wo
 
 - **Discovery exercise**: Present three words on screen: мАма, школА, молокО. Ask learner: "Where does the stress fall?" They observe: different words → different positions. Then show: зАмок — "a castle" and замОк — "a lock." Same letters, different meaning. *The rule reveals itself: Ukrainian stress is free and must be learned per word.* Mirrors the Vashulenko Grade 3 exercise (p.68-69) which uses the poem "образи / образи / образи" as the noticing anchor.
 - **Best context**: Dictionary reading — stress marks (´) appear in dictionaries; learners who plan to use Ukrainian dictionaries need to read the acute accent correctly from the start. Also: reading signs and menus (Café contexts introduced in earlier modules).
-- **Contrastive pairs**: зАмок ↔ замОк (castle vs lock); мУка ↔ мукА (torment vs flour); рукА ↔ рУки (hand nom. vs gen.pl.). For intonation: Це кафе. ↔ Це кафе? ↔ Це кафе! (same words, three sentence types).
+- **Contrastive pairs**: зАмок ↔ замОк (castle vs lock); мУка ↔ мукА (torment vs flour); рукА ↔ рУки (hand nom.sg. vs nom./acc.pl.). For intonation: Це мама. ↔ Це мама? ↔ Це мама! (using a word with non-final stress clearly demonstrates the rise-fall IK-3 pattern for questions).
 
 ## Notes for Content Writing
 - This is Module 6 (pre-verbal phase): NO conjugated verb forms, NO imperatives. All Ukrainian examples must be bare nouns, noun phrases, or Це + noun. Classroom instructions ("Listen carefully", "Read aloud") in English only.

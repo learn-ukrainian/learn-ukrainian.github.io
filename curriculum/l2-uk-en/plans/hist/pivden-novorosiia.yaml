@@ -93,10 +93,10 @@ activity_hints:
 - type: essay-response
   focus: Чому російський міф «Новоросія» — це пропаганда?
 connects_to:
-- hist-78 (Слобожанщина)
-- hist-131 (Крим 2014)
+- hist-78 (Nova Serbiya)
+- hist-128 (Крим 2014)
 prerequisites:
-- hist-76 (Габсбурзька Галичина)
+- hist-76 (Habsburzka Halichyna)
 persona:
   voice: Senior Professor of History
   role: Steppe Cartographer

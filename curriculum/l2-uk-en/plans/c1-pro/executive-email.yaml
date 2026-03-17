@@ -89,7 +89,7 @@ activity_hints:
   focus: Знайти проблеми тону та структури у виконавчих листах
   items: 6
 connects_to:
-- c1-pro-02 (Комунікація зі стейкхолдерами)
+- c1-pro-02 (Stakeholder Communication)
 prerequisites:
 - B2-PRO completion or B2 Core + professional need
 persona:

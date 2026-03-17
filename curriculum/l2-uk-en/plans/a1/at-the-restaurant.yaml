@@ -81,7 +81,7 @@ connects_to:
 - a1-60 (At the Market)
 - a1-61 (At the Store)
 prerequisites:
-- a1-35 (At the Café Practical)
+- a1-35 (Direction And Origin)
 persona:
   voice: Patient Supportive Tutor
   role: Maître d'hôtel

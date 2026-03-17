@@ -93,8 +93,8 @@ prerequisites:
 connects_to:
 - c1-17 (Irregular Verbs Complete)
 - c1-18 (Essay Writing Practice)
-- c1-48 (Literary Syntax)
-- 'c1-44 (Безсполучникове речення: логіка тире і двокрапки)'
+- c1-53 (Metaphor Simile)
+- 'c1-48 (Asyndetic Semantics)'
 module_type: grammar
 sources:
 - name: Український правопис 2019

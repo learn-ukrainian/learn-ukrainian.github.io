@@ -77,7 +77,7 @@ activity_hints:
   focus: Weather conversations
   items: 6
 connects_to:
-- 'a1-30 (Prepositions: Direction & Origin)'
+- 'a1-35 (Prepositions: Direction & Origin)'
 - a1-50 (Holidays and Traditions)
 prerequisites:
 - 'a1-42 (Description: Adverbs)'

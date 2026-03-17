@@ -149,8 +149,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-54 (Професійна кореспонденція)
-- c2-75 (C2.3 Complete Checkpoint — end of phase)
+- c2-54 (Professional Correspondence)
+- c2-65 (C2.3 Complete Checkpoint — end of phase)
 persona:
   voice: Senior Specialist
   role: External Auditor

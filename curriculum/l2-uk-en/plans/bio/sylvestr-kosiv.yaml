@@ -72,10 +72,9 @@ activity_hints:
 - type: essay-response
   focus: Церква як гарант суверенітету
 connects_to:
-- bio-20 (Богдан Хмельницький)
+- bio-20 (Petro Sahaidachny)
 - hist hmelnychyna module
 prerequisites:
-- bio-23 (Петро Могила)
 - Знання контексту Хотинської війни
 persona:
   voice: Senior Biographer

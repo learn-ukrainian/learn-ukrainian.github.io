@@ -93,10 +93,9 @@ activity_hints:
 - type: essay-response
   focus: Чому Українська революція 1917-1921 зазнала поразки?
 connects_to:
-- hist-99 (Радянська Україна)
-- hist-100 (Механізм терору)
-prerequisites:
-- hist-97 (Кінець визвольних змагань)
+- hist-99 (Pacyfikatsiia)
+- hist-100 (Oun)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Archive Keeper

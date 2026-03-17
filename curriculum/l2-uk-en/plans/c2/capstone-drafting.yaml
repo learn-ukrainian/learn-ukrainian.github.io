@@ -127,8 +127,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-97 (Дипломний проєкт — Редагування)
-- c2-98 (Дипломний проєкт — Фінальне шліфування)
+- c2-97 (Capstone Drafting)
+- c2-98 (Capstone Revision)
 persona:
   voice: Senior Specialist
   role: Dissertation Writer

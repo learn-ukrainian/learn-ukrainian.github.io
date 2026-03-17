@@ -95,10 +95,10 @@ activity_hints:
   focus: Prefix → meaning
   items: 12+
 connects_to:
-- b1-18 (Motion - passing & crossing)
+- b1-21 (Motion - passing & crossing)
 - b1-22 (Motion full prefix integration)
 prerequisites:
-- 'b1-18 (Дієслова руху: повна система)'
+- 'b1-18 (Checkpoint Aspect Mastery)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Hotel Concierge

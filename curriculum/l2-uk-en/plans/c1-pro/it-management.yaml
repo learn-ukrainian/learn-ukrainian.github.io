@@ -88,9 +88,9 @@ activity_hints:
   focus: Провести sprint planning зустріч
   items: 1
 connects_to:
-- c1-pro-32 (ІТ-архітектура)
+- c1-pro-32 (It Architecture)
 prerequisites:
-- 'c1-pro-30 (Підсумок: Академічний рівень)'
+- 'c1-pro-30 (Academic Capstone)'
 persona:
   voice: Senior Specialist
   role: Технічний директор (CTO)

@@ -137,7 +137,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-10 (Transforming academic to popular)
+- c2-59 (Transforming academic to popular)
 - c2-32 (Writing literary essays uses academic conventions)
 - c2-52 (Professional documents build on formal structures)
 persona:

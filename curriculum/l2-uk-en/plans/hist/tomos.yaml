@@ -103,10 +103,10 @@ activity_hints:
 - type: essay-response
   focus: Чому отримання Томосу називають духовною незалежністю?
 connects_to:
-- hist-125 (Мовна політика)
-- hist-127 (Революція Гідності) [контекст]
+- hist-125 (Movna Polityka)
+- hist-127 (Aneksiia Krymu) [контекст]
 prerequisites:
-- hist-123 (Україна 2014-2019)
+- hist-128 (Україна 2014-2019)
 persona:
   voice: Senior Professor of History
   role: Ecclesiastical Scholar

@@ -1,6 +1,6 @@
-module: c1-040
+module: c1-044
 level: C1
-sequence: 40
+sequence: 44
 slug: checkpoint-movoznavstvo
 version: '2.0'
 title: Контрольна точка C1.3

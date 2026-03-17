@@ -98,10 +98,9 @@ activity_hints:
 - type: essay-response
   focus: Як історичний контекст вплинув на радикалізацію українського націоналізму?
 connects_to:
-- hist-104 (Карпатська Україна)
-- hist-107 (УПА)
-prerequisites:
-- 'hist-102 (Голодомор: пам''ять)'
+- hist-104 (Karpatska Ukraina)
+- hist-107 (Upa)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Political Analyst

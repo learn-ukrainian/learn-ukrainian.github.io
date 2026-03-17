@@ -140,9 +140,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-11 (Transforming official to journalistic)
-- c2-61 (Legal Ukrainian specialization)
-- c2-54 (Професійна кореспонденція)
+- c2-11 (Style Transformation Ii)
+- c2-88 (Legal Ukrainian specialization)
+- c2-54 (Professional Correspondence)
 persona:
   voice: Senior Specialist
   role: State Secretary

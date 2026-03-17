@@ -95,10 +95,10 @@ activity_hints:
 - type: essay-response
   focus: Чому війна 1917-1921 років — це не «громадянська війна»?
 connects_to:
-- hist-96 (Холодний Яр)
-- 'hist-97 (Синтез: Українська революція)'
+- hist-96 (Kholodnyi Yar)
+- 'hist-97 (Syntez Revoliutsiia)'
 prerequisites:
-- hist-94 (Симон Петлюра)
+- hist-94 (Symon Petliura Revolution)
 persona:
   voice: Senior Professor of History
   role: Armored Train Commander

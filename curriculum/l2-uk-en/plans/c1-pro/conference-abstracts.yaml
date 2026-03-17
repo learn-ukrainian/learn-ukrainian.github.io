@@ -88,9 +88,9 @@ activity_hints:
   focus: З'єднати елементи тез з їхніми функціями
   items: 6
 connects_to:
-- c1-pro-23 (Конференційні виступи)
+- c1-pro-23 (Conference Presentations)
 prerequisites:
-- c1-pro-21 (Рецензування)
+- c1-pro-21 (Peer Review Process)
 persona:
   voice: Senior Specialist
   role: Секретар оргкомітету

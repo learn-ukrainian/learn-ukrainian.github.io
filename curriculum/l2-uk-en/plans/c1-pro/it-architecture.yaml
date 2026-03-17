@@ -88,9 +88,9 @@ activity_hints:
   focus: Презентувати архітектурне рішення нетехнічним стейкхолдерам
   items: 1
 connects_to:
-- c1-pro-33 (Фінтех та банківництво)
+- c1-pro-33 (Fintech Banking)
 prerequisites:
-- c1-pro-31 (ІТ-менеджмент)
+- c1-pro-31 (It Management)
 persona:
   voice: Senior Specialist
   role: Головний IT-архітектор

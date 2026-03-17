@@ -88,9 +88,9 @@ activity_hints:
   focus: Описати проєкт для портфоліо за шаблоном
   items: 1
 connects_to:
-- c1-pro-47 (Особистий бренд)
+- c1-pro-47 (Personal Branding)
 prerequisites:
-- 'c1-pro-45 (Інтеграція: Галузева практика)'
+- 'c1-pro-45 (Industry Integration)'
 persona:
   voice: Senior Specialist
   role: Агент талантів

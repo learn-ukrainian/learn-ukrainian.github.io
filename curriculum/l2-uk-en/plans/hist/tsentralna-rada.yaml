@@ -84,10 +84,9 @@ activity_hints:
 - type: essay-response
   focus: Чому Центральна Рада еволюціонувала від автономії до незалежності?
 connects_to:
-- hist-92 (Гетьманат Скоропадського)
-- hist-93 (ЗУНР)
-prerequisites:
-- hist-90 (Революція 1917)
+- hist-92 (Zunr)
+- hist-93 (Dyrektoriia)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Rada Delegate

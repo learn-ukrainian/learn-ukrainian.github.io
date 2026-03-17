@@ -85,9 +85,9 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- 'b1-35 (Умовні речення: нереальна умова (якби))'
+- 'b1-35 (Conditionals Real Yakshcho))'
 prerequisites:
-- b1-29 (Purpose Clauses щоб + infinitive)
+- b1-33 (Purpose Clauses щоб + infinitive)
 persona:
   voice: Senior Language & Culture Specialist
   role: Business Analyst

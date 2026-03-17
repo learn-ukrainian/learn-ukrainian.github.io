@@ -92,12 +92,12 @@ activity_hints:
   focus: Why was restoring the hierarchy so important?
   output: Historical and spiritual analysis
 connects_to:
-- 'bio-23 (Сильвестр Косів: Освітянин і будівничий)'
-- bio-10 (Bohdan Khmelnytskyi - religious dimension of uprising)
-- bio-98 (Ivan Ohienko - later Orthodox defender)
+- 'bio-23 (Sylvestr Kosiv)'
+- bio-21 (Bohdan Khmelnytskyi - religious dimension of uprising)
+- bio-82 (Ivan Ohienko - later Orthodox defender)
 prerequisites:
 - bio-03 (Volodymyr Velykyi - original Christianization)
-- 'bio-09 (Михайло Чернігівський: Князь-мученик)'
+- 'bio-09 (Mykhailo Chernihivskyi)'
 - Understanding of Reformation/Counter-Reformation context
 persona:
   voice: Senior Biographer

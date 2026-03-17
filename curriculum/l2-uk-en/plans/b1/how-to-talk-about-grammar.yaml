@@ -123,9 +123,9 @@ activity_hints:
   focus: Fix common metalanguage mistakes
   items: 8+
 connects_to:
-- b1-02 (Verb-specific terminology)
+- b1-02 (Language About Verbs)
 - b1-03 (Reading grammar rules)
-- b1-05 (Metalanguage checkpoint)
+- b1-18 (Metalanguage checkpoint)
 prerequisites:
 - A2 completion required
 - Familiarity with all 7 cases (conceptually)

@@ -104,8 +104,7 @@ activity_hints:
   items: 12
 connects_to:
 - b2-89 (B2 Final Exam)
-prerequisites:
-- b2-79 (Discussion & Debate)
+prerequisites: []
 persona:
   voice: Professional Language Coach
   role: Literary Historian

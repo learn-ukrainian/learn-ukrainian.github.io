@@ -85,10 +85,10 @@ activity_hints:
 - type: essay-response
   focus: Чому Україна пережила дві революції за 10 років?
 connects_to:
-- 'hist-126 (Революція Гідності: Євромайдан)'
-- hist-128 (Анексія Криму)
+- 'hist-126 (Revoliutsiia Hidnosti)'
+- hist-128 (Krymski Tatary Pislia 2014)
 prerequisites:
-- hist-124 (Томос)
+- hist-124 (Yanukovych)
 persona:
   voice: Senior Professor of History
   role: Political Scientist

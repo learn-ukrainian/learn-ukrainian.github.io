@@ -116,9 +116,9 @@ connects_to:
 - b1-22 (Motion full prefix integration)
 - b1-25 (Checkpoint - motion verbs)
 prerequisites:
-- 'b1-18 (Дієслова руху: повна система)'
-- 'b1-19 (Рух: Прибуття та вихід)'
-- b1-18 (Motion - passing & crossing)
+- 'b1-18 (Checkpoint Aspect Mastery)'
+- 'b1-19 (Motion Verbs Full System)'
+- b1-21 (Motion - passing & crossing)
 - b1-19 (Motion - starting & returning)
 - b1-20 (Motion - approaching & departing)
 persona:

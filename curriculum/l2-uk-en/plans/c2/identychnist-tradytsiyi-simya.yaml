@@ -144,8 +144,8 @@ activity_hints:
   focus: Формули побажань та співчуття у відповідному регістрі
   items: 12
 connects_to:
-- c2-066 (Society & Citizenship — societal context for traditions and identity)
-- c2-076 (Travel, Leisure & Culture — cultural festivals and leisure traditions)
+- c2-63 (Society & Citizenship — societal context for traditions and identity)
+- c2-076 (Podoroz Dozvillya Kultura)
 - c2-022 (Practical Rhetoric — argumentation in cultural discourse)
 - c2-034 (Creative Writing: Prose — cultural expression through narrative)
 prerequisites:

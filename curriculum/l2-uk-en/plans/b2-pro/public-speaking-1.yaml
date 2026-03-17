@@ -92,9 +92,9 @@ activity_hints:
   focus: З'єднати мету виступу з відповідним прийомом вступу
   items: 6
 connects_to:
-- 'b2-pro-35 (Ораторство II: Переконання)'
+- 'b2-pro-35 (Public Speaking 2)'
 prerequisites:
-- b2-pro-33 (Журналістське письмо)
+- b2-pro-33 (Journalism Writing)
 persona:
   voice: Senior Specialist
   role: Викладач риторики

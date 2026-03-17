@@ -84,9 +84,9 @@ activity_hints:
   focus: Discuss Eastern Ukrainian identity
   items: 10
 connects_to:
-- 'b1-82 (Українські регіони: Південь)'
+- 'b1-82 (Emotional Intelligence)'
 prerequisites:
-- 'b1-80 (Українські регіони: Захід)'
+- 'b1-80 (Business Basics)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Kharkiv Industrial Engineer

@@ -1,21 +1,56 @@
-        # Fix 4 issue(s) in `completing-the-alphabet`
+        # Fix 12 issue(s) in `completing-the-alphabet`
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'дзвони́ти' (VESUM: verb:imperf:inf) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'дзвони́ти' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 140
+**What:** Verb 'показує' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'показує' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 89
 
 ### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'Дя́кую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'Дя́кую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 186
+**What:** Verb 'позначають' (VESUM: verb:imperf:pres:p:3) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'позначають' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 89
 
 ### Fix 3: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'бачу' (VESUM: verb:imperf:pres:s:1:insert) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'бачу' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 198
+
+### Fix 4: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 208
+
+### Fix 5: MORPHOLOGICAL_VIOLATION
 **What:** Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
 **How to fix:** Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 187
+**Where:** ~line 209
 
-### Fix 4: PEDAGOGICAL_VIOLATION
+### Fix 6: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 212
+
+### Fix 7: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'приголосний' (m) + 'що' (n)
+**How to fix:** Change 'приголосний' to match the gender/case of 'що', or vice versa.
+**Where:** ~line 89
+
+### Fix 8: AGREEMENT_ERROR
+**What:** Agreement mismatch: 'твердий' (m) + 'апострофом' (m)
+**How to fix:** Change 'твердий' to match the gender/case of 'апострофом', or vice versa.
+**Where:** ~line 89
+
+### Fix: Gate `Pedagogy` FAIL — 2 violations
+
+### Fix 10: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Instrumental case used at A1: 'перед апострофом'
+**How to fix:** Instrumental case not allowed until A2 (M36+). Restructure sentence.
+
+### Fix 11: PEDAGOGICAL_VIOLATION
+**What:** [GRAMMAR] Subordinate clause marker at A1: 'є, що п'
+**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
+
+### Fix 12: PEDAGOGICAL_VIOLATION
 **What:** [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
 **How to fix:** Vary sentence structure.
 
@@ -24,6 +59,8 @@
 ```
 ❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
 📚 PEDAGOGICAL VIOLATIONS FOUND:
+❌ AUDIT FAILED. Correct errors before proceeding.
+❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/completing-the-alphabet-audit.log for details)
 ```
 
 
@@ -56,7 +93,7 @@ METALANGUAGE:
 
 ## Immersion Rules
 
-TARGET: 10-25% Ukrainian.
+TARGET: 5-15% Ukrainian.
 
 **Structural containment**: English prose in paragraphs. Ukrainian in CONTAINERS ONLY (tables, blockquotes, numbered lists, dialogues). Do NOT mix Ukrainian words into English sentences.
 

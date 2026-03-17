@@ -89,9 +89,9 @@ activity_hints:
   focus: Адаптувати операційний звіт у формат для ради
   items: 3
 connects_to:
-- c1-pro-04 (Стратегічні звіти)
+- c1-pro-04 (Strategic Reports)
 prerequisites:
-- c1-pro-02 (Комунікація зі стейкхолдерами)
+- c1-pro-02 (Stakeholder Communication)
 persona:
   voice: Senior Specialist
   role: Генеральний директор (CEO)

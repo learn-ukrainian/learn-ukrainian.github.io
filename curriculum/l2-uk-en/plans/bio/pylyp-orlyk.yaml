@@ -97,10 +97,10 @@ activity_hints:
 - type: critical-analysis
   focus: Evaluate claims of "first European constitution"
 connects_to:
-- bio-32 (Петро Калнишевський)
+- bio-32 (Petro Kalnyshevskyy)
 prerequisites:
-- bio-27 (Іван Мазепа)
-- bio-30 (Кость Гордієнко)
+- bio-27 (Ivan Mazepa)
+- bio-30 (Pavlo Polubotok)
 persona:
   voice: Senior Biographer
   role: Constitution Drafter

@@ -1,6 +1,6 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
@@ -494,7 +494,100 @@ Total: {total} words (target: 1200)
 
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-034
+level: A1
+sequence: 34
+slug: checkpoint-cases
+version: '2.0'
+title: 'Checkpoint: Cases'
+subtitle: Can You Handle the Cases?
+focus: checkpoint
+pedagogy: TTT
+phase: A1.3 [Cases & Navigation]
+word_target: 1200
+objectives:
+- Demonstrate correct case usage for Accusative, Locative, and Genitive
+- Select the correct preposition for direction, location, and other functions
+- Apply adjective and pronoun agreement in oblique cases
+- Navigate practical scenarios using integrated case knowledge
+content_outline:
+- section: Огляд (Overview)
+  words: 180
+  points:
+  - 'Структура контрольної точки TTT: перевірка Знахідного, Місцевого та Родового
+    відмінків, прийменників, відмінювання прикметників та займенників.'
+  - 'Мета: виявлення прогалин у відмінковій системі перед переходом до A1.4. Фокус
+    на практичному застосуванні в комунікативних ситуаціях.'
+- section: 'Навичка 1: Відмінки (Skill 1: Cases)'
+  words: 300
+  points:
+  - 'Знахідний відмінок: неживий (= Називний для чол./серед., -у/-ю для жін.) та живий
+    (= Родовий для чол.). Вибір відмінка за питальним словом: Кого? Що?'
+  - 'Місцевий відмінок: в/у/на + Місцевий для місцезнаходження. Питання: Де? Родовий
+    відмінок: немає + Родовий для відсутності. Питання: Чого? Кого немає?'
+- section: 'Навичка 2: Прийменники (Skill 2: Prepositions)'
+  words: 240
+  points:
+  - 'Прийменники напрямку: в/у/на + Знахідний (Куди?). Прийменники місцезнаходження:
+    в/у/на + Місцевий (Де?). Контраст напрямок vs місце.'
+  - 'Інші прийменники зі Знахідним: за (for/behind), через (through/because of), про
+    (about). Відповідність прийменник-відмінок як система.'
+- section: 'Навичка 3: Узгодження (Skill 3: Agreement)'
+  words: 240
+  points:
+  - 'Прикметники у Знахідному та Місцевому: нову книгу (Зн. жін.), у новому місті
+    (Місц. чол./серед.), у новій книзі (Місц. жін.). Ланцюжки узгодження.'
+  - 'Відмінювання займенників: мене/мені/мені, тебе/тобі, його/нього. Правило префікса
+    н- після прийменників. Інтеграція з прикметниковими формами.'
+- section: Інтеграційне завдання (Integration Task)
+  words: 240
+  points:
+  - 'Навігаційний сценарій із використанням усіх відмінків, прийменників та узгодження:
+    опис маршруту, місцезнаходження об''єктів, запитання дороги.'
+  - 'Самооцінка відмінкової компетенції: виявлення найслабших відмінків для додаткового
+    опрацювання перед продовженням курсу.'
+vocabulary_hints:
+  required:
+  - де (where) — Де ти? Де кафе?; Location question
+  - куди (where to) — Куди ти йдеш? Куди їдеш?; Direction question
+  - звідки (from where) — Звідки ти? Звідки це?; Origin question
+  - немає (there is no) — Немає кави, немає часу; Genitive trigger
+  - новий (new) — новий/нову/новому/новій; Paradigm adjective
+  - великий (big) — великий/велику/великому/великій; Paradigm adjective
+  - мене (me) — бачить мене, для мене, у мене; Pronoun declension
+  - тебе (you) — знаю тебе, без тебе, у тебе; Pronoun declension
+  - його (him/his) — бачу його, у нього; н-prefix review
+  recommended:
+  - через (through) — через парк, через дощ; Acc preposition
+  - за (for) — дякую за, за годину; Acc preposition
+  - про (about) — книга про, думати про; Acc preposition
+  - красивий (beautiful) — красиву книгу, у красивому місті; Agreement practice
+  - маленький (small) — маленьку каву, у маленькому кафе; Agreement practice
+activity_hints:
+- type: quiz
+  focus: Comprehensive case and preposition test
+  items: 30
+connects_to:
+- a1-35 (Direction and Origin)
+prerequisites:
+- a1-33 (Adjective Case Forms)
+persona:
+  voice: Patient Supportive Tutor
+  role: City Navigator
+grammar:
+- Accusative case (inanimate and animate)
+- Locative case (location)
+- Genitive case (absence)
+- Prepositions with Accusative and Locative
+- Adjective and pronoun declension in oblique cases
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
@@ -532,18 +625,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -551,18 +671,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

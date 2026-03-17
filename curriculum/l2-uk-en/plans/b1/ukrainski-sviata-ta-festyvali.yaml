@@ -90,9 +90,9 @@ activity_hints:
   focus: Test cultural knowledge from M72-86
   items: 30
 connects_to:
-- b1-87 (News Reading)
+- b1-03 (News Reading)
 prerequisites:
-- b1-85 (Ukrainian Cuisine)
+- b1-96 (Ukrainian Cuisine)
 persona:
   voice: Senior Language & Culture Specialist
   role: Ethno-Festival Organizer

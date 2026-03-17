@@ -1,6 +1,6 @@
-module: c1-065
+module: c1-070
 level: C1
-sequence: 65
+sequence: 70
 slug: analiz-poezii
 version: '2.0'
 title: Аналіз поезії

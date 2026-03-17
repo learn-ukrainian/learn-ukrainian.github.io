@@ -93,11 +93,11 @@ activity_hints:
   focus: What gave Slipyj strength to survive 18 years?
   output: Analysis of faith and resistance
 connects_to:
-- bio-106 (Sheptytsky - predecessor)
-- bio-77 (Vasyl Stus - fellow Soviet prisoner)
-- bio-71 (Levko Lukyanenko - fellow dissident)
+- bio-62 (Sheptytsky - predecessor)
+- bio-143 (Vasyl Stus - fellow Soviet prisoner)
+- bio-134 (Levko Lukyanenko - fellow dissident)
 prerequisites:
-- bio-106 (Andrey Sheptytsky - his predecessor)
+- bio-62 (Andrey Sheptytsky - his predecessor)
 - Understanding of Soviet religious persecution
 - Cold War historical context
 persona:

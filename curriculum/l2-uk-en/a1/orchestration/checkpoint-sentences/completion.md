@@ -1,4 +1,4 @@
-FAIL: pipeline a1 24
+PASS: pipeline a1 24
 
   Module:   checkpoint-sentences
   Track:    a1
@@ -6,5 +6,5 @@ FAIL: pipeline a1 24
   Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-17T07:03:28Z
+  Verdict:  PASS
+  Date:     2026-03-17T14:28:10Z

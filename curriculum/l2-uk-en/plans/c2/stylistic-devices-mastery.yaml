@@ -148,9 +148,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-22 (Rhythm & prosody builds on devices)
-- c2-23 (Intertextuality uses allusion as device)
-- 'c2-28 (Poetics: verse analysis uses devices)'
+- c2-18 (Rhythm & prosody builds on devices)
+- c2-19 (Intertextuality uses allusion as device)
+- 'c2-86 (Poetics: verse analysis uses devices)'
 persona:
   voice: Senior Specialist
   role: Rhetorician

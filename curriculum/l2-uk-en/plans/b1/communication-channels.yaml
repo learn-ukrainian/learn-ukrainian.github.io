@@ -101,9 +101,9 @@ activity_hints:
   focus: Reorder dialogue sentences
   items: 8
 connects_to:
-- b1-98 (Презентації та візуалізація)
+- b1-98 (Novyny Yak Chytaty)
 prerequisites:
-- b1-96 (Інтерв'ю та подкасти)
+- b1-96 (Ukrainian Cuisine)
 persona:
   voice: Senior Language & Culture Specialist
   role: SMM Manager

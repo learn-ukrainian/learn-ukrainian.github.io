@@ -93,11 +93,11 @@ activity_hints:
   focus: How does Plokhy challenge traditional narratives?
   output: Historiographical analysis
 connects_to:
-- bio-105 (Shevelov - intellectual predecessor)
-- bio-100 (Krymsky - earlier historian)
+- bio-122 (Shevelov - intellectual predecessor)
+- bio-100 (Mykola Khvylovyi)
 - Contemporary Ukrainian historians
 prerequisites:
-- bio-105 (Shevelov - earlier diaspora scholar)
+- bio-122 (Shevelov - earlier diaspora scholar)
 - Understanding of modern historiography
 - Current Ukraine context
 persona:

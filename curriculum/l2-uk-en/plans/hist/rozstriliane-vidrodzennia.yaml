@@ -91,10 +91,9 @@ activity_hints:
 - type: essay-response
   focus: Чому радянська влада знищила покоління українських митців 1920-х років?
 connects_to:
-- hist-102 (Голодомор)
-- hist-115 (Шістдесятники)
-prerequisites:
-- hist-100 (Механізм терору)
+- hist-102 (Holodomor Pamiat)
+- hist-115 (Ukrainska Helsinska Hrupa)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Avant-garde Director

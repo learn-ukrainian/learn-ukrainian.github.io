@@ -89,7 +89,6 @@ connects_to:
 - 'a1-42 (Description: Adverbs)'
 prerequisites:
 - a1-07 (The Gender Code)
-- a1-38 (My Daily Routine)
 persona:
   voice: Patient Supportive Tutor
   role: Real Estate Agent

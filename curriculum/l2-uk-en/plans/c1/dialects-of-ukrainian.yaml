@@ -1,6 +1,6 @@
-module: c1-029
+module: c1-031
 level: C1
-sequence: 29
+sequence: 31
 slug: dialects-of-ukrainian
 version: '2.0'
 title: Діалекти та наріччя
@@ -95,9 +95,9 @@ prerequisites:
 - c1-27 (Global Context)
 - B2 register awareness
 connects_to:
-- 'c1-30 (Суржик: Феномен змішування)'
-- 'c1-31 (Історія мови: Від Русі до сьогодення)'
-- c1-32 (Українська діаспора)
+- 'c1-32 (Surzhyk)'
+- 'c1-33 (History Of Language)'
+- c1-34 (Diaspora Ukrainian)
 module_type: grammar
 sources:
 - name: Атлас української мови

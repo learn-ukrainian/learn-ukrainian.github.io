@@ -91,8 +91,8 @@ activity_hints:
   focus: Роль Нечуя у становленні реалізму
   output: Літературознавче есе
 connects_to:
-- lit-27 (Кайдашева сім'я — персонажі)
-- lit-30 (Микола Джеря)
+- lit-27 (Kaidash Family Characters)
+- lit-30 (Mykola Dzherya)
 prerequisites:
 - lit-21 to lit-25 (Kulish phase)
 persona:

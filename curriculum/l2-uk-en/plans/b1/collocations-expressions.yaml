@@ -99,9 +99,9 @@ activity_hints:
   focus: Use collocations in context
   items: 10
 connects_to:
-- b1-79 (Емоційний інтелект та міжособистісні навички)
+- b1-79 (Relationships)
 prerequisites:
-- 'b1-62 (Синоніми II: дієслова мовлення)'
+- 'b1-62 (Synonymy Speaking Verbs)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Literary Translator

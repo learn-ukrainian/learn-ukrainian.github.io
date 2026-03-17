@@ -1,6 +1,6 @@
-module: lit-229
+module: lit-220
 level: LIT
-sequence: 229
+sequence: 220
 slug: nariman-dzhelyal-publicistics
 version: '2.0'
 title: 'Наріман Джеляль: Листи з ув''язнення'
@@ -69,8 +69,7 @@ activity_hints:
   focus: Традиція листів з ув'язнення в українській літературі
 connects_to:
 - lit-228
-prerequisites:
-- lit-228
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Human Rights Literature Specialist

@@ -135,9 +135,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-19 (C2.1 Review consolidates skills)
-- c2-20 (C2.1 Checkpoint assesses transformation ability)
-- c2-24 (Style blending builds on transformation)
+- c2-25 (C2.1 Review consolidates skills)
+- c2-26 (C2.1 Checkpoint assesses transformation ability)
+- c2-20 (Style blending builds on transformation)
 persona:
   voice: Senior Specialist
   role: Style Consultant

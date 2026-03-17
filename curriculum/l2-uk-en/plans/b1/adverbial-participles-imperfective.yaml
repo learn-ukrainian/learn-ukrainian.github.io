@@ -96,9 +96,9 @@ activity_hints:
   focus: Fix participle formation errors
   items: 10
 connects_to:
-- b1-52 (Дієприслівники доконаного виду)
+- b1-52 (Adverbial Participles Perfective)
 prerequisites:
-- b1-41 (Checkpoint Complex Sentences 2)
+- b1-45 (Checkpoint Complex Sentences 2)
 persona:
   voice: Senior Language & Culture Specialist
   role: Screenwriter

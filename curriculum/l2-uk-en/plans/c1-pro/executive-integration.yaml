@@ -91,9 +91,9 @@ activity_hints:
   focus: Зібрати та оцінити портфоліо виконавчої комунікації
   items: 1
 connects_to:
-- 'c1-pro-15 (Підсумок: Виконавчий рівень)'
+- 'c1-pro-15 (Executive Capstone)'
 prerequisites:
-- 'c1-pro-13 (Контрольна точка: Виконавчий рівень)'
+- 'c1-pro-13 (Executive Checkpoint)'
 persona:
   voice: Senior Specialist
   role: Член наглядової ради

@@ -130,13 +130,13 @@ activity_hints:
   focus: Заповнення пропусків лексикою з різних тематичних модулів у єдиному тексті
   items: 12
 connects_to:
-- c2-066 (Society & Citizenship — societal analysis domain)
-- c2-067 (Foreign Policy & Diaspora — international relations domain)
-- c2-076 (Travel, Leisure & Culture — cultural domain)
-- c2-077 (Identity, Traditions & Family — identity and traditions domain)
+- c2-86 (Society & Citizenship — societal analysis domain)
+- c2-56 (Foreign Policy & Diaspora — international relations domain)
+- c2-56 (Travel, Leisure & Culture — cultural domain)
+- c2-63 (Identity, Traditions & Family — identity and traditions domain)
 - c2-079 (C2.4 Checkpoint — assessment this practice prepares for)
 prerequisites:
-- c2-077 (Identity, Traditions & Family — last content module of C2.4)
+- c2-077 (Identychnist Tradytsiyi Simya)
 persona:
   voice: Senior Specialist
   role: Integration Coach

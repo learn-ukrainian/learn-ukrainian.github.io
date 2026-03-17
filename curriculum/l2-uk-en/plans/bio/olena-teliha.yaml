@@ -93,11 +93,11 @@ activity_hints:
   focus: Як поезія може бути формою національної боротьби?
   output: Літературознавче есе
 connects_to:
-- bio-59 (Ольга Басараб)
-- bio-61 (Олена Степанів)
-- bio-74 (Ліна Костенко)
+- bio-59 (Volodymyr Samiilenko)
+- bio-61 (Mykhailo Kotsiubynsky)
+- bio-74 (Solomiya Krushelnytska)
 prerequisites:
-- bio-40 (Леся Українка)
+- bio-40 (Panteleimon Kulish)
 persona:
   voice: Senior Biographer
   role: Underground Poet

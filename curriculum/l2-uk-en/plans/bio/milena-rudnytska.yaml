@@ -93,12 +93,12 @@ activity_hints:
   focus: How did Rudnytska combine feminism with national liberation?
   output: Analysis of intersectional activism
 connects_to:
-- bio-59 (Olha Basarab - earlier generation)
-- bio-68 (Olena Teliha - contemporary activist)
-- bio-108 (Konovalets - same political era)
+- bio-91 (Olha Basarab - earlier generation)
+- bio-118 (Olena Teliha - contemporary activist)
+- bio-95 (Konovalets - same political era)
 prerequisites:
-- bio-59 (Olha Basarab - earlier activist)
-- bio-68 (Olena Teliha - contemporary)
+- bio-91 (Olha Basarab - earlier activist)
+- bio-68 (Mariia Voiakovska)
 - Understanding of interwar Galicia
 persona:
   voice: Senior Biographer

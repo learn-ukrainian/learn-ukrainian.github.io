@@ -148,7 +148,7 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-13 (Syntactic stylistics complements lexical)
-- c2-17 (Стилістичні засоби — Повне володіння)
+- c2-17 (Stylistic Devices Mastery)
 - c2-14 (Individual voice through word choice)
 persona:
   voice: Senior Specialist

@@ -135,8 +135,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-94 (Дипломний проєкт — Вибір теми)
-- c2-99 (Дипломний проєкт — Захист)
+- c2-94 (Interpretation Advanced)
+- c2-99 (Capstone Polish)
 persona:
   voice: Senior Specialist
   role: Interpreter

@@ -95,10 +95,10 @@ activity_hints:
 - type: essay-response
   focus: Чому Мінські угоди не зупинили війну?
 connects_to:
-- hist-132 (Повномасштабне вторгнення)
-- hist-134 (Маріуполь)
+- hist-132 (Povnomasshtabne Vtorhnessnia)
+- hist-134 (Bucha Irpin)
 prerequisites:
-- hist-128 (Анексія Криму)
+- hist-128 (Krymski Tatary Pislia 2014)
 persona:
   voice: Senior Professor of History
   role: Combat Medic

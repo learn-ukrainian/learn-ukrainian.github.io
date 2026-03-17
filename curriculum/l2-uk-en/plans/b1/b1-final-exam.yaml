@@ -86,7 +86,7 @@ activity_hints:
 connects_to:
 - b2-01 (Start of B2)
 prerequisites:
-- 'b1-06 (Фонетика: асиміляція)'
+- 'b1-06 (Phonetics Assimilation)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Certification Examiner

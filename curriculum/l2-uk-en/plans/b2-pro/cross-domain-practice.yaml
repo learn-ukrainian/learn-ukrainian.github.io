@@ -87,9 +87,9 @@ activity_hints:
   focus: З'єднати терміни з галуззю (ІТ/фінанси/право)
   items: 12
 connects_to:
-- 'b2-pro-30 (Інтеграція: Фахова мова)'
+- 'b2-pro-30 (Technical Integration)'
 prerequisites:
-- 'b2-pro-28 (Контрольна точка: Фахова мова)'
+- 'b2-pro-28 (Technical Checkpoint)'
 persona:
   voice: Senior Specialist
   role: Бізнес-консультант

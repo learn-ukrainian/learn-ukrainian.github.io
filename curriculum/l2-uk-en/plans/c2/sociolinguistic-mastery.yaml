@@ -163,8 +163,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-086 (Аналіз помилок)
-- c2-087 (Володіння на рівні носія)
+- c2-086 (Error Analysis)
+- c2-087 (Native Like Fluency)
 - c2-088 (Викладання української мови I — Педагогічні основи)
 persona:
   voice: Senior Specialist

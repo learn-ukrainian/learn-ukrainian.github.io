@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-111
-prerequisites:
-- lit-109
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Urban Mystic

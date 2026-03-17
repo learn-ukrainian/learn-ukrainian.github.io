@@ -109,12 +109,12 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 10-25% Ukrainian.
+TARGET: 5-15% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: 100% English.
-- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
-- TABLES: Vocabulary tables, letter groups, simple word families.
-- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
+- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
+- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
+- TABLES: Simple letter-sound or word-meaning tables.
 Ukrainian sentences max 10 words.
 
 ### Blog Articles & Guides
@@ -255,7 +255,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 - `## Тверді та м'які — Hard and Soft Consonants` (~250 words)
   - Most Ukrainian consonants come in hard/soft variants. A consonant becomes soft (palatalized) before І, Я, Ю, Є or when followed by Ь (covered in M4).
   - Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л).
-  - Compare: лук (hard Л — onion) vs люк (soft Л — hatch). The consonant changes, not the vowel!
+  - Compare: лук (hard Л — bow (weapon)) vs люк (soft Л — hatch). The consonant changes, not the vowel!
   - Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft sign that forces softening) in M4.
 - `## Читання — Reading Practice` (~150 words)
   - Words using the full consonant inventory. All vowels from M2 available.

@@ -93,11 +93,11 @@ activity_hints:
   focus: Чому Басараб стала символом?
   output: Історичне есе
 connects_to:
-- bio-61 (Олена Степанів)
-- bio-68 (Олена Теліга)
-- bio-108 (Євген Коновалець)
+- bio-61 (Mykhailo Kotsiubynsky)
+- bio-68 (Mariia Voiakovska)
+- bio-108 (Klavdiya Latysheva)
 prerequisites:
-- bio-44 (Симон Петлюра)
+- bio-44 (Ivan Nechuy Levytskyi)
 persona:
   voice: Senior Biographer
   role: Underground Liaison

@@ -109,7 +109,7 @@ activity_hints:
   focus: Хто більше вплинув на розвиток Русі — Ольга чи Святослав?
 connects_to:
 - hist-11 (Volodymyr and Baptism)
-- hist-07 (Khazar Khaganate — defeat)
+- hist-07 (Khozary I Sloviany)
 - 'hist-20 (Synthesis: Kyivan Rus)'
 prerequisites:
 - hist-09 (Oleh and Ihor)

@@ -78,9 +78,9 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- b1-29 (Purpose Clauses щоб + infinitive)
+- b1-33 (Purpose Clauses щоб + infinitive)
 prerequisites:
-- 'b1-29 (Підрядні означальні: який)'
+- 'b1-29 (Indefinite Negative Pronouns)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Storyteller

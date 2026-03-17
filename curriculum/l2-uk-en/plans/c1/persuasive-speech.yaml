@@ -1,6 +1,6 @@
-module: c1-062
+module: c1-067
 level: C1
-sequence: 62
+sequence: 67
 slug: persuasive-speech
 version: '2.0'
 title: Переконлива промова
@@ -92,9 +92,9 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- 'c1-44 (Безсполучникове речення: логіка тире і двокрапки)'
+- 'c1-48 (Asyndetic Semantics)'
 connects_to:
-- c1-106 (Підсумковий контроль C1)
+- c1-111 (Підсумковий контроль C1)
 objectives:
 - Learner can structure a persuasive argument using thesis-antithesis-synthesis
 - Learner can use anaphora, epiphora, gradation, and antithesis effectively

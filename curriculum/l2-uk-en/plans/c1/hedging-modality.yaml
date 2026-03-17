@@ -89,7 +89,7 @@ prerequisites:
 connects_to:
 - c1-07 (Citation & Reference)
 - c1-09 (Thesis Development)
-- 'c1-57 (Ступені впевненості: Модальність та хеджування)'
+- 'c1-62 (Degrees Of Certainty)'
 module_type: grammar
 sources:
 - name: Academic Hedging in Ukrainian

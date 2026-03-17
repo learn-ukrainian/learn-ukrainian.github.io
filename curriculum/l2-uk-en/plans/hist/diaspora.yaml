@@ -92,10 +92,10 @@ activity_hints:
 - type: essay-response
   focus: Яку роль відіграла діаспора у збереженні української ідентичності?
 connects_to:
-- hist-119 (Шлях до незалежності)
+- hist-119 (Shliakh Nezalezhnosti)
 - 'hist-102 (Голодомор: Пам''ять)'
 prerequisites:
-- hist-117 (Чорнобиль)
+- hist-117 (Chornobyl)
 persona:
   voice: Senior Professor of History
   role: Cultural Archivist

@@ -89,9 +89,9 @@ activity_hints:
   focus: З'єднати елементи IMRAD з їхніми функціями
   items: 6
 connects_to:
-- c1-pro-17 (Огляд літератури)
+- c1-pro-17 (Literature Review Academic)
 prerequisites:
-- 'c1-pro-15 (Підсумок: Виконавчий рівень)'
+- 'c1-pro-15 (Executive Capstone)'
 persona:
   voice: Senior Specialist
   role: Науковий редактор

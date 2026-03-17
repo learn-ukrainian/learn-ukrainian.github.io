@@ -97,12 +97,12 @@ activity_hints:
   focus: How did Konovalets transform military defeat into political movement?
   output: Strategic analysis
 connects_to:
-- bio-109 (Roman Shukhevych - his successor)
-- bio-52 (Dmytro Dontsov - ideologist)
-- bio-44 (Symon Petliura - earlier leader)
+- bio-120 (Roman Shukhevych - his successor)
+- bio-85 (Dmytro Dontsov - ideologist)
+- bio-80 (Symon Petliura - earlier leader)
 prerequisites:
-- bio-44 (Symon Petliura - UNR leader)
-- bio-53 (Petro Bolbochan - military figure)
+- bio-80 (Symon Petliura - UNR leader)
+- bio-86 (Petro Bolbochan - military figure)
 - Understanding of interwar Ukrainian politics
 persona:
   voice: Senior Biographer

@@ -84,9 +84,9 @@ activity_hints:
   focus: Report dialogues
   items: 10
 connects_to:
-- b1-65 (Колокації та вирази)
+- b1-65 (Collocations Expressions)
 prerequisites:
-- 'b1-61 (Синонімія I: Дієслова мислення)'
+- 'b1-61 (Synonymy Thinking Verbs)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Theater Actor

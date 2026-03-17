@@ -88,9 +88,9 @@ activity_hints:
   focus: Перетворити грубу критику на конструктивне зауваження
   items: 6
 connects_to:
-- c1-pro-22 (Тези конференцій)
+- c1-pro-22 (Conference Abstracts)
 prerequisites:
-- c1-pro-20 (Написання дискусії)
+- c1-pro-20 (Discussion Writing)
 persona:
   voice: Senior Specialist
   role: Рецензент наукового журналу

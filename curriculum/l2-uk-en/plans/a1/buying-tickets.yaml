@@ -78,7 +78,6 @@ connects_to:
 - a1-57 (Taking Transport)
 prerequisites:
 - a1-22 (Numbers and Money)
-- a1-61 (At the Store)
 persona:
   voice: Patient Supportive Tutor
   role: Theater Box Office Manager

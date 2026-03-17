@@ -89,9 +89,9 @@ activity_hints:
   focus: Перетворити операційні дані на стратегічні висновки
   items: 5
 connects_to:
-- c1-pro-05 (Кризова комунікація)
+- c1-pro-05 (Crisis Communication)
 prerequisites:
-- c1-pro-03 (Презентації для ради)
+- c1-pro-03 (Board Presentations)
 persona:
   voice: Senior Specialist
   role: Старший бізнес-аналітик

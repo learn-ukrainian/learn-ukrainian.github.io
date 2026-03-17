@@ -124,9 +124,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-58 (Побудова галузевої експертизи)
+- c2-58 (Building Domain Expertise)
 - c2-71-72 (Professional Portfolio I-II)
-- c2-89-94 (Capstone Project)
+- c2-96-94 (Capstone Project)
 persona:
   voice: Senior Specialist
   role: Research Librarian

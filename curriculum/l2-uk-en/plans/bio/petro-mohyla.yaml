@@ -73,10 +73,10 @@ activity_hints:
 - type: essay-response
   focus: Освіта як зброя
 connects_to:
-- bio-20 (Богдан Хмельницький)
+- bio-20 (Petro Sahaidachny)
 - hist mohylianska-doba module
 prerequisites:
-- bio-19 (Петро Сагайдачний)
+- bio-19 (Meletii Smotrytskyi)
 - Розуміння Берестейської унії
 persona:
   voice: Senior Biographer

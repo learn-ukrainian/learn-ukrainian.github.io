@@ -1,19 +1,22 @@
 phase: ACTIVITIES
-status: PARTIAL
+status: SUCCESS
 activity_count: 8
 deviations:
-  - "watch-and-repeat: plan requested 10 items but only 6 pronunciation video URLs are available (Ь, Ц, Ч, Щ, Ф, Ґ). No Anna Ohoiko videos found for ДЖ and ДЗ digraphs. Generated 6 items matching available videos."
-  - "classify (Ь): plan requested 8 items. Achieved 8 by including хлопець (softened Ц) and вчителька (softened Л) from lesson content."
-  - "Added anagram activity (not in plan hints) to reach minimum 8 activities and reinforce letter recognition for M1-M10 Cyrillic scaffolding."
+  - "Added true-false activity (not in plan hints) to meet the 8-activity minimum. The plan listed 7 activity hints but the target range is 8-15."
+  - "watch-and-repeat item 10 (ДЖ/джерело) uses the overview video URL since no dedicated ДЖ pronunciation video exists in the plan."
+  - "Dropped дзеркало from vocabulary to hit exactly 20 items. All 11 required hints included plus 9 of 10 recommended."
 frictions:
   - type: PLAN_GAP
-    description: "Plan activity_hints specify 10 watch-and-repeat items but only 6 letter-specific video URLs exist in the plan's pronunciation_videos.letters section. No ДЖ or ДЗ videos available."
-    proposed_fix: "Find Anna Ohoiko videos for ДЖ and ДЗ digraphs, or use the playlist/overview video URL for those items."
+    description: "Plan lists 7 activity_hints but module target requires 8-15 activities."
+    proposed_fix: "Added true-false as 8th activity covering module concepts. Plan could add this to activity_hints."
+  - type: PLAN_GAP
+    description: "watch-and-repeat focus requests 10 items but only 6 unique pronunciation videos exist in the plan. Had to reuse videos with different example words."
+    proposed_fix: "Accept video reuse for different words — pedagogically sound since learners practice different words with the same sound."
 unverified_terms:
-  - "вчителька — used in classify activity, appears in lesson content but not in vocabulary_hints"
-  - "хлопець — used in classify activity, appears in lesson content but not in vocabulary_hints"
-  - "ґанок — used in watch-and-repeat, referenced in lesson content"
+  - "побачення (used in fill-in activity — До побачення!)"
+  - "ще (used in classify activity)"
+  - "ласка (used in fill-in activity — Будь ласка!)"
 review_focus:
-  - "Quiz item 5 and 6 test rule knowledge (which consonants/vowels) rather than word-level application — verify this aligns with A1.1 pedagogy"
-  - "fill-in item 3 has bare sentence '___!' — ensure renderer handles single-blank sentences gracefully"
-  - "Verify anagram scrambled letters are sufficiently shuffled (3-letter words like час, чай may be trivially easy)"
+  - "Quiz item 9 (мати does NOT need apostrophe) — verify this is clear for A1 learners who haven't learned the word мати yet"
+  - "image-to-letter: emoji choices may render differently across platforms. 💧 for джерело (spring/source) is approximate."
+  - "classify activity 1 has only 2 items in 'Soft Л' category and 3 in 'No soft sign' — verify the imbalance is acceptable"

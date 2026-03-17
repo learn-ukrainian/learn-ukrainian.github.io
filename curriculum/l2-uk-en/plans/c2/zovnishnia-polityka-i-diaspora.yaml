@@ -126,11 +126,11 @@ activity_hints:
   focus: Зіставлення дипломатичних формул та їхніх функцій
   items: 10
 connects_to:
-- c2-066 (Society & Citizenship — internal dimension of politics)
-- c2-080 (Language Policy & Decolonization — diaspora language maintenance)
-- c2-079 (Sociolinguistic Mastery — language contact in migration contexts)
+- c2-066 (Suspilstvo I Hromadyanstvo)
+- c2-84 (Language Policy & Decolonization — diaspora language maintenance)
+- c2-83 (Sociolinguistic Mastery — language contact in migration contexts)
 prerequisites:
-- c2-066 (Society & Citizenship)
+- c2-066 (Suspilstvo I Hromadyanstvo)
 persona:
   voice: Senior Specialist
   role: Foreign Policy Analyst

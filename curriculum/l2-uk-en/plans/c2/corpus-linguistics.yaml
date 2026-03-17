@@ -126,8 +126,8 @@ activity_hints:
   items: 6
 connects_to:
 - c2-85 (Error Analysis — corpus methods applied to error identification)
-- c2-79 (Complete Grammar Review — corpus evidence for grammar mastery)
-- c2-83 (Language Policy and Decolonization — empirical data informing policy analysis)
+- c2-80 (Complete Grammar Review — corpus evidence for grammar mastery)
+- c2-84 (Language Policy and Decolonization — empirical data informing policy analysis)
 prerequisites:
 - c2-084 (Language Policy and Decolonization)
 persona:

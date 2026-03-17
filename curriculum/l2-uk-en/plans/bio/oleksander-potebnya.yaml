@@ -97,12 +97,12 @@ activity_hints:
   focus: How did Potebnya defend Ukrainian language rights?
   output: Analysis of his linguistic arguments
 connects_to:
-- bio-105 (George Shevelov - his intellectual heir)
-- bio-100 (Ahatanhel Krymsky - contemporary linguist)
-- bio-98 (Ivan Ohienko - language defender)
+- bio-122 (George Shevelov - his intellectual heir)
+- bio-71 (Ahatanhel Krymsky - contemporary linguist)
+- bio-82 (Ivan Ohienko - language defender)
 prerequisites:
-- bio-30 (Borys Hrinchenko - lexicographer)
-- bio-97 (Panteleimon Kulish - language reformer)
+- bio-30 (Pavlo Polubotok)
+- bio-40 (Panteleimon Kulish - language reformer)
 - Understanding of basic linguistic concepts
 persona:
   voice: Senior Biographer

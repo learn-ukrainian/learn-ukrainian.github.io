@@ -88,9 +88,9 @@ activity_hints:
   focus: З'єднати тип конфлікту з оптимальним підходом до врегулювання
   items: 6
 connects_to:
-- c1-pro-10 (Менторство та коучинг)
+- c1-pro-10 (Mentoring Coaching)
 prerequisites:
-- 'c1-pro-08 (Переговори: Високий рівень)'
+- 'c1-pro-08 (Negotiation Advanced)'
 persona:
   voice: Senior Specialist
   role: Корпоративний медіатор

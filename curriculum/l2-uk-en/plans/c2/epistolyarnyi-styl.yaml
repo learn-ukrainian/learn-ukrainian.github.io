@@ -144,8 +144,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-54 (Професійна кореспонденція)
-- c2-24 (Style blending in hybrid letters)
+- c2-54 (Professional Correspondence)
+- c2-20 (Style blending in hybrid letters)
 - c2-14 (Personal voice in correspondence)
 persona:
   voice: Senior Specialist

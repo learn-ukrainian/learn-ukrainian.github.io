@@ -72,10 +72,10 @@ activity_hints:
 - type: critical-analysis
   focus: Доля вченого в тоталітарній системі
 connects_to:
-- bio-54 (Іван Пулюй)
+- bio-54 (Ivan Franko)
 - hist ukrainians-world module
 prerequisites:
-- bio-45 (Микола Амосов)
+- bio-45 (Marko Kropyvnytskyi)
 - Знання про розвиток авіації на поч. XX ст.
 persona:
   voice: Senior Biographer

@@ -88,9 +88,9 @@ activity_hints:
   focus: Fix too aggressive/passive phrases
   items: 10
 connects_to:
-- b1-28 (Невизначені та заперечні займенники)
+- b1-28 (Checkpoint Motion Verbs)
 prerequisites:
-- b1-98 (Презентації та візуалізація)
+- b1-98 (Novyny Yak Chytaty)
 persona:
   voice: Senior Language & Culture Specialist
   role: Customer Support Lead

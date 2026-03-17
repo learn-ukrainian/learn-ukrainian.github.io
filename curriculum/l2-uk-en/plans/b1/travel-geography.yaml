@@ -92,9 +92,9 @@ activity_hints:
   focus: Discuss travel experiences
   items: 10
 connects_to:
-- 'b1-61 (Синонімія I: Дієслова мислення)'
+- 'b1-61 (Synonymy Thinking Verbs)'
 prerequisites:
-- b1-77 (Основи бізнесу)
+- b1-77 (Health Wellness)
 persona:
   voice: Senior Language & Culture Specialist
   role: Travel Agency Owner

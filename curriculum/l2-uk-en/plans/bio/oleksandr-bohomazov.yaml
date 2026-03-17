@@ -93,11 +93,11 @@ activity_hints:
   focus: Чим український авангард відрізнявся від західного?
   output: Порівняльне есе
 connects_to:
-- bio-56 (Олександр Архипенко)
-- bio-57 (Лесь Курбас)
-- bio-72 (Алла Горська)
+- bio-56 (Borys Hrinchenko)
+- bio-57 (Olha Kobylianska)
+- bio-72 (Lesya Ukrainka)
 prerequisites:
-- bio-45 (Казимир Малевич)
+- bio-45 (Marko Kropyvnytskyi)
 persona:
   voice: Senior Biographer
   role: Art Theorist

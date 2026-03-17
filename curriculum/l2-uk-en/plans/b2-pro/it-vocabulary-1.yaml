@@ -89,9 +89,9 @@ activity_hints:
   focus: Знайти помилки в термінології (жаргон замість офіційних термінів)
   items: 6
 connects_to:
-- 'b2-pro-17 (ІТ-лексика II: Розробка)'
+- 'b2-pro-17 (It Vocabulary 2)'
 prerequisites:
-- 'b2-pro-15 (Підсумок: Ділова комунікація)'
+- 'b2-pro-15 (Business Communication Capstone)'
 persona:
   voice: Senior Specialist
   role: Системний адміністратор

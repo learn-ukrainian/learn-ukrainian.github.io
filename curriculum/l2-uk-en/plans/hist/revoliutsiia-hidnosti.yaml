@@ -88,10 +88,10 @@ activity_hints:
 - type: essay-response
   focus: Чому Революцію 2014 року називають «Революцією Гідності»?
 connects_to:
-- hist-128 (Анексія Криму)
-- hist-131 (Війна на Донбасі 2014-2022)
+- hist-128 (Krymski Tatary Pislia 2014)
+- hist-131 (Viyna Donbas)
 prerequisites:
-- 'hist-124 (Епоха Януковича: Реванш)'
+- 'hist-124 (Yanukovych)'
 persona:
   voice: Senior Professor of History
   role: Maidan Medic

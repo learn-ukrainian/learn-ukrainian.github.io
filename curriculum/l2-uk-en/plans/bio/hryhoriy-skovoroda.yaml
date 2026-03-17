@@ -76,10 +76,10 @@ activity_hints:
 - type: creative-writing
   focus: Тлумачення афоризмів
 connects_to:
-- bio-34 (Іван Котляревський)
+- bio-34 (Maksym Berezovskyy)
 - hist prosvitnytstvo module
 prerequisites:
-- bio-31 (Кирило Розумовський)
+- bio-31 (Pylyp Orlyk)
 - Знання барокової культури
 persona:
   voice: Senior Biographer

@@ -89,9 +89,9 @@ activity_hints:
   focus: Write temporal narratives
   items: 10
 connects_to:
-- b1-41 (Інтеграція складних речень)
+- b1-41 (Temporal Clauses)
 prerequisites:
-- b1-39 (Причинові та наслідкові речення)
+- b1-39 (Concessive Khocha)
 persona:
   voice: Senior Language & Culture Specialist
   role: Biographer

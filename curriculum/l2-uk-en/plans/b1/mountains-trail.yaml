@@ -89,9 +89,9 @@ activity_hints:
   focus: Plan mountain trips
   items: 10
 connects_to:
-- b1-91 (Велосипед та водні види)
+- b1-91 (Active Lifestyle)
 prerequisites:
-- b1-89 (Біг в Україні)
+- b1-89 (Technology And Startups)
 persona:
   voice: Senior Language & Culture Specialist
   role: Carpathian Trail Guide

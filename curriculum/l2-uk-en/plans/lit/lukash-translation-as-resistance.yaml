@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-125
-prerequisites:
-- lit-123
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Polyglot Resister

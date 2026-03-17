@@ -89,10 +89,10 @@ activity_hints:
 - type: essay-response
   focus: Чому операція «Вісла» — це етнічна чистка?
 connects_to:
-- hist-111 (Сургунлік)
-- hist-107 (УПА)
+- hist-111 (Surgunlik)
+- hist-107 (Upa)
 prerequisites:
-- hist-109 (Повоєнна відбудова)
+- hist-109 (Povoienne Vidbudova)
 persona:
   voice: Senior Professor of History
   role: Oral Historian

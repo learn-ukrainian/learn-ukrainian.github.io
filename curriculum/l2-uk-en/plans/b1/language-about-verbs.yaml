@@ -119,7 +119,7 @@ activity_hints:
   items: 8+
 connects_to:
 - b1-03 (Reading grammar rules)
-- 'b1-08 (Вид дієслова: повна система)'
+- 'b1-08 (Stress Mobility Euphony)'
 - b1-09 (Aspect in future)
 prerequisites:
 - b1-01 (Basic grammar terminology)

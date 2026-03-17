@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-209
-prerequisites:
-- lit-207
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Exile Poet

@@ -88,10 +88,10 @@ activity_hints:
 - type: essay-response
   focus: Як Мазепа зміцнював гетьманську владу?
 connects_to:
-- 'hist-64 (Іван Мазепа II: Культура)'
-- 'hist-66 (Іван Мазепа III: Полтава)'
+- 'hist-59 (Іван Мазепа II: Культура)'
+- 'hist-66 (Ivan Mazepa Poltava)'
 prerequisites:
-- 'hist-62 (Синтез: Козацька революція)'
+- 'hist-62 (Syntez Khmelnychchyna)'
 persona:
   voice: Senior Professor of History
   role: Chancellor

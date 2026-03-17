@@ -93,11 +93,11 @@ activity_hints:
   focus: Як порожнеча може бути елементом скульптури?
   output: Мистецтвознавче есе
 connects_to:
-- bio-50 (Олександр Богомазов)
-- bio-57 (Лесь Курбас)
-- bio-66 (Катерина Білокур)
+- bio-50 (Olena Pchilka)
+- bio-57 (Olha Kobylianska)
+- bio-66 (Mykola Vasylenko)
 prerequisites:
-- bio-45 (Казимир Малевич)
+- bio-45 (Marko Kropyvnytskyi)
 persona:
   voice: Senior Biographer
   role: Cubist Sculptor

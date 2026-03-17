@@ -2,7 +2,7 @@ module: a1-005
 level: A1
 sequence: 5
 slug: syllables-and-word-division
-version: '3.1'
+version: '3.2'
 title: Syllables and Word Division
 subtitle: Breaking Words into Pieces
 focus: grammar
@@ -26,9 +26,10 @@ content_outline:
   words: 300
   points:
   - Open syllables end in a vowel (ма-, но-, мо-ло-ко) — the default and most common type in Ukrainian.
-  - Closed syllables end in a consonant (кін-, бук-, кіт) — occur at word boundaries and before consonant clusters.
-  - 'Consonant clusters: how Ukrainians split them — се-стра (not *сес-тра), о-стрів (not *ос-трів); the principle of maximal
-    onset.'
+  - Closed syllables end in a consonant (кіт, там) — occur at word boundaries and when a sonorant (й, в, р, л, м, н) precedes
+    another consonant (e.g., чай-ка).
+  - 'Consonant clusters: phonetic syllables follow maximal onset (се-стра, о-стрів). Orthographic hyphenation (переніс) is
+    more flexible per Pravopys 2019 (се-стра, сес-тра, сест-ра), but learners focus on phonetic boundaries first.'
   - 'Practice identifying open and closed syllables in high-frequency words: ву-ли-ця, ав-то-бус, де-ре-во.'
 - section: Правила переносу — Word Division Rules
   words: 400
@@ -86,7 +87,7 @@ activity_hints:
 connects_to:
 - a1-06 (Stress and Intonation)
 prerequisites:
-- a1-04 (The Cyrillic Code IV)
+- a1-04 (Completing The Alphabet)
 persona:
   voice: Patient Supportive Tutor
   role: Rhythm Coach

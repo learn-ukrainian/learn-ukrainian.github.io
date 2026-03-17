@@ -89,9 +89,9 @@ activity_hints:
   focus: Розташувати листи ланцюжка у правильному порядку
   items: 6
 connects_to:
-- 'b2-pro-04 (Звітність: Написання звітів)'
+- 'b2-pro-04 (Reports Writing)'
 prerequisites:
-- 'b2-pro-02 (Листування: Запити та пропозиції)'
+- 'b2-pro-02 (Email Requests Proposals)'
 persona:
   voice: Senior Specialist
   role: Акаунт-менеджер

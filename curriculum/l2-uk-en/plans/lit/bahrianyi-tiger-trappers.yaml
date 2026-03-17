@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-127
-prerequisites:
-- lit-125
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Taiga Hunter

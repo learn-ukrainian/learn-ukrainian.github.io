@@ -91,9 +91,9 @@ activity_hints:
   focus: З'єднати ситуацію з відповідною тактикою
   items: 8
 connects_to:
-- 'b2-pro-11 (Переговори: Тактика)'
+- 'b2-pro-11 (Negotiations Tactics)'
 prerequisites:
-- 'b2-pro-09 (Презентації: Виступ)'
+- 'b2-pro-09 (Presentations Delivery)'
 persona:
   voice: Senior Specialist
   role: Менеджер із закупівель

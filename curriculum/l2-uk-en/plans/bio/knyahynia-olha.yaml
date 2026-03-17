@@ -81,10 +81,9 @@ activity_hints:
 - type: critical-analysis
   focus: Сутність податкової реформи
 connects_to:
-- bio-03 (Святослав Хоробрий)
+- bio-03 (Volodymyr Velykii)
 - hist hrystyianstvo module
 prerequisites:
-- bio-01 (Олег Віщий)
 - hist knyahynia-olha module
 persona:
   voice: Senior Biographer

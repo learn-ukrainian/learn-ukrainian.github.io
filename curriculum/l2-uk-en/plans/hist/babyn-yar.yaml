@@ -76,10 +76,10 @@ activity_hints:
 - type: essay-response
   focus: Чому пам'ять про Голокост важлива для України
 connects_to:
-- hist-107 (УПА)
-- 'hist-108 (Синтез: Трагедії)'
+- hist-107 (Upa)
+- 'hist-108 (Syntez Trahedii)'
 prerequisites:
-- 'hist-105 (Друга світова: Початок)'
+- 'hist-105 (Druha Svitova Pochatok)'
 persona:
   voice: Senior Professor of History
   role: Local Witness

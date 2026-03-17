@@ -91,10 +91,10 @@ activity_hints:
   focus: Еволюція українського героя (курсовий підсумок)
   output: Підсумкове есе
 connects_to:
-- lit-11 (Молодий Шевченко — кріпацтво)
-- lit-01 (Котляревський — початок курсу)
+- lit-11 (Young Shevchenko)
+- lit-01 (Introduction To Kotliarevsky)
 prerequisites:
-- lit-29 (Мова реалізму)
+- lit-29 (Language Of Realism)
 persona:
   voice: Senior Philologist & Critic
   role: Fugitive Serf

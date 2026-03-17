@@ -72,10 +72,10 @@ activity_hints:
 - type: critical-analysis
   focus: Чому Смотрицький перейшов в унію?
 connects_to:
-- bio-19 (Петро Сагайдачний)
+- bio-19 (Meletii Smotrytskyi)
 - hist ostrozka-akademiia module
 prerequisites:
-- bio-17 (Іван Вишенський)
+- bio-17 (Iov Boretskyi)
 - Знання про Острозьку академію
 persona:
   voice: Senior Biographer

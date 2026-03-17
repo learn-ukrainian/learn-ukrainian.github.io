@@ -94,9 +94,8 @@ activity_hints:
   focus: Express thoughts precisely
   items: 10
 connects_to:
-- 'b1-62 (Синоніми II: дієслова мовлення)'
-prerequisites:
-- b1-78 (Подорожі та географія)
+- 'b1-62 (Synonymy Speaking Verbs)'
+prerequisites: []
 persona:
   voice: Senior Language & Culture Specialist
   role: Philosopher

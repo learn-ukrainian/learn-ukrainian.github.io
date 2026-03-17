@@ -86,7 +86,7 @@ activity_hints:
   focus: Answer questions orally
   items: 10
 connects_to:
-- a2-59 (Medical Care)
+- a2-59 (Sports Fitness)
 prerequisites:
 - a2-61 (Practical Intro)
 persona:

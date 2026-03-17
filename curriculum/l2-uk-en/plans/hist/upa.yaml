@@ -96,10 +96,10 @@ activity_hints:
 - type: essay-response
   focus: Чому історія УПА залишається контроверсійною?
 connects_to:
-- hist-107 (Завершення війни)
-- hist-109 (Депортації)
+- hist-107 (Upa)
+- hist-109 (Povoienne Vidbudova)
 prerequisites:
-- hist-105 (ОУН)
+- hist-105 (Druha Svitova Pochatok)
 persona:
   voice: Senior Professor of History
   role: Bunker Commander

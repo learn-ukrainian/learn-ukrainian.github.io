@@ -92,9 +92,9 @@ activity_hints:
   focus: Discuss podcast topics
   items: 10
 connects_to:
-- b1-89 (Checkpoint Grammar Synthesis)
+- b1-56 (Checkpoint Grammar Synthesis)
 prerequisites:
-- b1-87 (News Reading)
+- b1-03 (News Reading)
 persona:
   voice: Senior Language & Culture Specialist
   role: Podcast Host

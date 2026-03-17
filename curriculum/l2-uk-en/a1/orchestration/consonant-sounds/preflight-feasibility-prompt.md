@@ -1,6 +1,6 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm you can execute it.
+You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm you can execute it AND that no semantic Russianisms are present.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely prevent you from building content that passes all audit gates.
+**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely prevent you from building content that passes all audit gates, OR if vocabulary contains a semantic false friend.
 
 ## The Prompt
 
@@ -99,7 +99,6 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 - небо (sky) — demonstrates Н; high-frequency
 - рука (hand) — demonstrates Р (rolled); body vocabulary
 - бабуся (grandma) — demonstrates Б; high-frequency family word
-- город (city) — demonstrates Г and Р; everyday word
 
 **Recommended** (use in your content to reach the vocabulary target):
 - павук (spider) — demonstrates П; Bolshakova
@@ -265,9 +264,6 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л).
   - Compare: лук (hard Л — bow (weapon)) vs люк (soft Л — hatch). The consonant changes, not the vowel!
   - Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft sign that forces softening) in M4.
-- `## Порівняння з англійською — English Comparison` (~150 words)
-  - Compare each Ukrainian consonant pair with English equivalents
-  - Table showing shared and unique sounds between English and Ukrainian
 - `## Читання — Reading Practice` (~150 words)
   - Words using the full consonant inventory. All vowels from M2 available.
   - NO full sentences with verbs — grammar is not taught yet. Use word groups, noun phrases, and labeling: Це дім. Це хліб. Ось бабуся.
@@ -286,7 +282,6 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 | Сонорні — Sonorant Consonants | 200+ |
 | Дзвінкі та глухі пари — Voiced and Voiceless Pairs | 400+ |
 | Тверді та м'які — Hard and Soft Consonants | 250+ |
-| Порівняння з англійською — English Comparison | 150+ |
 | Читання — Reading Practice | 150+ |
 | Підсумок — Summary | 100+ |
 | **Total** | **1200+ (aim for ~1440)** |
@@ -554,18 +549,37 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Read the prompt carefully. Only report an issue if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
 - A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved."
 
 **Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings. Check the prompt's vocabulary lists, example words, and content outline for misuse.
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag a word if the prompt USES or DEFINES it with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week" or "лук means bow, not onion")
+- Discussions explaining the difference between Ukrainian and Russian meanings
+- Correct Ukrainian usage of the word
 
 ## Output Format (YAML)
 
@@ -573,10 +587,10 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR, RUSSICISM
+      location: "vocabulary_hints, required list"
+      problem: "город paired with 'city' — this is the Russian meaning. Ukrainian город = garden/vegetable patch"
+      suggested_fix: "Replace город (city) with місто (city), or change meaning to 'garden'"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
@@ -587,4 +601,4 @@ prompt_preflight:
   issues: []
 ```
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES or introduce Russianisms.

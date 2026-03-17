@@ -115,11 +115,11 @@ activity_hints:
   focus: Mixed case selection in paragraphs
   items: 10+
 connects_to:
-- a2-10 (Post Office & Bank - application)
+- a2-12 (Post Office & Bank - application)
 - a2-11 (Checkpoint - Cases)
 - All subsequent A2 modules
 prerequisites:
-- a2-01 through a2-08 (all case modules)
+- a2-01 through a2-08 (The Dative I Pronouns)
 - A1 case basics (Nom, Acc, Gen, Loc)
 persona:
   voice: Encouraging Cultural Guide

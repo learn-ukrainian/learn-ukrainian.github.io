@@ -91,7 +91,7 @@ activity_hints:
   items: 15+
 connects_to:
 - b1-15 (Checkpoint - aspect mastery)
-- b1-40 (Часові підрядні речення)
+- b1-40 (Causal Result Clauses)
 prerequisites:
 - b1-13 (Work week - aspect in action)
 - All aspect modules M06-13

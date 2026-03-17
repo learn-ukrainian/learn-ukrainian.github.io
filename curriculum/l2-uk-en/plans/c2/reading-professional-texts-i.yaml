@@ -139,9 +139,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-50 (Reading Professional Texts II — Critical analysis)
+- c2-48 (Reading Professional Texts II — Critical analysis)
 - c2-51 (Professional Document Types)
-- c2-57 (Професійні дослідницькі навички)
+- c2-57 (Professional Research Skills)
 persona:
   voice: Senior Specialist
   role: Information Broker

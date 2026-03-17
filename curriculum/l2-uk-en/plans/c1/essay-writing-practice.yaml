@@ -81,12 +81,12 @@ activity_hints:
 focus: practice
 pedagogy: PPP
 prerequisites:
-- c1-01 to c1-17 (Full C1.1 foundation)
+- c1-01 to c1-17 (B2 Review Bridge)
 - All academic writing skills
 connects_to:
 - c1-19 (Article Critique)
 - c1-20 (C1.1 Checkpoint)
-- c1-36 (Професійні сценарії)
+- c1-40 (Professional Scenarios)
 module_type: practice
 sources:
 - name: C1 Writing Assessment Criteria

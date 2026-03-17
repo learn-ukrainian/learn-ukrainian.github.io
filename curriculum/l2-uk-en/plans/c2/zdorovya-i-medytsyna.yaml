@@ -136,10 +136,10 @@ activity_hints:
   focus: Зіставлення медичних термінів та їхніх визначень
   items: 10
 connects_to:
-- c2-066 (Society & Citizenship — social welfare and public health policy)
-- c2-068 (Economy & Welfare — healthcare financing and social insurance)
+- c2-84 (Society & Citizenship — social welfare and public health policy)
+- c2-068 (Ekonomika I Dobrobut)
 - c2-022 (Practical Rhetoric — argumentation for health policy discourse)
-- c2-003 (Scientific Style — medical and scientific register from C2.1)
+- c2-25 (Scientific Style — medical and scientific register from C2.1)
 prerequisites:
 - c2-065 (C2.3 Checkpoint)
 persona:

@@ -1,0 +1,306 @@
+- type: quiz
+  title: Syllable Counting 1
+  items:
+  - question: Syllables in 'молоко' (milk)?
+    options:
+    - text: '1'
+      correct: false
+    - text: '2'
+      correct: false
+    - text: '3'
+      correct: true
+    - text: '4'
+      correct: false
+    explanation: There are three vowels (о, о, о).
+  - question: Syllables in 'кіт' (cat)?
+    options:
+    - text: '1'
+      correct: true
+    - text: '2'
+      correct: false
+    - text: '3'
+      correct: false
+    - text: '4'
+      correct: false
+    explanation: There is only one vowel (і).
+  - question: Correct split for 'Україна'?
+    options:
+    - text: У-країна
+      correct: false
+    - text: Укра-їна
+      correct: true
+    - text: Ук-раїна
+      correct: false
+    - text: Україн-а
+      correct: false
+    explanation: You cannot leave a single letter alone.
+  - question: Divide 'ґудзик' (button)?
+    options:
+    - text: ґуд-зик
+      correct: false
+    - text: ґу-дзик
+      correct: true
+    - text: ґ-удзик
+      correct: false
+    - text: ґудзи-к
+      correct: false
+    explanation: Digraph 'дз' stays together.
+  - question: Divide 'пальці' (fingers)?
+    options:
+    - text: пал-ьці
+      correct: false
+    - text: паль-ці
+      correct: true
+    - text: пальц-і
+      correct: false
+    - text: п-альці
+      correct: false
+    explanation: Soft sign (ь) stays with consonant.
+  - question: Syllables in 'автобус'?
+    options:
+    - text: '1'
+      correct: false
+    - text: '2'
+      correct: false
+    - text: '3'
+      correct: true
+    - text: '4'
+      correct: false
+    explanation: 'Three vowels: а, о, у.'
+  instruction: Оберіть правильну відповідь.
+- type: quiz
+  title: Syllable Counting 2
+  items:
+  - question: Is 'й' a vowel?
+    options:
+    - text: 'Yes'
+      correct: false
+    - text: 'No'
+      correct: true
+    - text: Sometimes
+      correct: false
+    - text: Always
+      correct: false
+    explanation: '''й'' is a consonant in Ukrainian syllable rules.'
+  - question: Syllables in 'сім'я'?
+    options:
+    - text: '1'
+      correct: false
+    - text: '2'
+      correct: true
+    - text: '3'
+      correct: false
+    - text: '4'
+      correct: false
+    explanation: 'Two vowels: і, я.'
+  - question: Every vowel creates how many syllables?
+    options:
+    - text: '0'
+      correct: false
+    - text: '1'
+      correct: true
+    - text: '2'
+      correct: false
+    - text: '3'
+      correct: false
+    explanation: One vowel = one syllable.
+  - question: Syllables in 'вулиця'?
+    options:
+    - text: '1'
+      correct: false
+    - text: '2'
+      correct: false
+    - text: '3'
+      correct: true
+    - text: '4'
+      correct: false
+    explanation: 'Three vowels: у, и, я.'
+  - question: Split 'сестра' correctly?
+    options:
+    - text: сес-тра
+      correct: false
+    - text: се-стра
+      correct: true
+    - text: сест-ра
+      correct: false
+    - text: с-естра
+      correct: false
+    explanation: Consonants go to the next syllable.
+  - question: Split 'вікно' correctly?
+    options:
+    - text: вік-но
+      correct: false
+    - text: ві-кно
+      correct: true
+    - text: в-ікно
+      correct: false
+    - text: вікно-
+      correct: false
+    explanation: Push consonants forward.
+  instruction: Оберіть правильну відповідь.
+- type: group-sort
+  title: Syllable Types 1
+  instruction: Sort syllables into Open or Closed categories.
+  groups:
+  - name: Open
+    items:
+    - то
+    - ма
+    - ло
+    - ко
+    - се
+    - ре
+  - name: Closed
+    items:
+    - ав
+    - бус
+    - кіт
+    - сон
+    - дім
+    - хліб
+- type: group-sort
+  title: Syllable Types 2
+  instruction: Sort more syllables into Open or Closed categories.
+  groups:
+  - name: Open
+    items:
+    - ву
+    - ли
+    - ця
+    - кни
+    - га
+    - не
+  - name: Closed
+    items:
+    - вер
+    - тет
+    - лай
+    - ка
+    - сіль
+    - день
+- type: fill-in
+  title: Syllable Boundaries 1
+  instruction: Complete the syllable breakdown.
+  items:
+  - sentence: бі-блі-___
+    answer: о-те-ка
+    options:
+    - о-те-ка
+    - о-тек
+    - те-ка
+    - ка
+    explanation: бі-блі-о-те-ка
+  - sentence: у-ні-___
+    answer: вер-си-тет
+    options:
+    - вер-си-тет
+    - вер-си
+    - си-тет
+    - тет
+    explanation: у-ні-вер-си-тет
+  - sentence: мо-ло-___
+    answer: ко
+    options:
+    - ко
+    - к
+    - мов
+    - ми
+  - sentence: ву-ли-___
+    answer: ця
+    options:
+    - ця
+    - ц
+    - що
+    - де
+  - sentence: У-кра-___
+    answer: ї-на
+    options:
+    - ї-на
+    - Україна
+    - на
+    - та
+  - sentence: се-___
+    answer: стра
+    options:
+    - стра
+    - ст
+    - це
+    - а
+- type: fill-in
+  title: Syllable Boundaries 2
+  instruction: More syllable breakdowns.
+  items:
+  - sentence: ві-___
+    answer: кно
+    options:
+    - кно
+    - н
+    - он
+    - о
+  - sentence: кни-___
+    answer: га
+    options:
+    - га
+    - г
+    - аг
+    - а
+  - sentence: ав-то-___
+    answer: бус
+    options:
+    - бус
+    - лоб
+    - низ
+    - ми
+  - sentence: ма-___
+    answer: ма
+    options:
+    - ма
+    - ми
+    - та
+    - на
+  - sentence: сіль-___
+    answer: ський
+    options:
+    - ський
+    - и
+    - й
+    - це
+  - sentence: я-блу-___
+    answer: ко
+    options:
+    - ко
+    - к
+    - ту
+    - за
+- type: match-up
+  title: Syllable Count Match 1
+  instruction: Match word to syllable count.
+  pairs:
+  - left: сир
+    right: '1'
+  - left: мама
+    right: '2'
+  - left: вулиця
+    right: '3'
+  - left: книга
+    right: '2'
+  - left: молоко
+    right: '3'
+  - left: університет
+    right: '5'
+- type: match-up
+  title: Syllable Count Match 2
+  instruction: More syllable count matches.
+  pairs:
+  - left: автобус
+    right: '3'
+  - left: бібліотека
+    right: '5'
+  - left: кіт
+    right: '1'
+  - left: небо
+    right: '2'
+  - left: Україна
+    right: '4'
+  - left: сестра
+    right: '2'

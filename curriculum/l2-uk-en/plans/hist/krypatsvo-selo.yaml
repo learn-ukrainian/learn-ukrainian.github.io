@@ -88,10 +88,10 @@ activity_hints:
 - type: essay-response
   focus: Як кріпацтво знищило козацьку вільну Україну?
 connects_to:
-- hist-80 (Кирило-Мефодіївське братство)
-- 'hist-81 (Шевченко: Пробудження)'
+- hist-80 (Kyrylo Mefodiivtsi)
+- 'hist-81 (Shevchenko Awakening)'
 prerequisites:
-- hist-78 (Слобожанщина)
+- hist-78 (Nova Serbiya)
 persona:
   voice: Senior Professor of History
   role: Ethnographer of the South

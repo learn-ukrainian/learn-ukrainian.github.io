@@ -88,9 +88,9 @@ activity_hints:
   focus: Переписати нечіткий опис методології в точний та відтворюваний
   items: 4
 connects_to:
-- c1-pro-19 (Презентація результатів)
+- c1-pro-19 (Results Presentation)
 prerequisites:
-- c1-pro-17 (Огляд літератури)
+- c1-pro-17 (Literature Review Academic)
 persona:
   voice: Senior Specialist
   role: Провідний методолог

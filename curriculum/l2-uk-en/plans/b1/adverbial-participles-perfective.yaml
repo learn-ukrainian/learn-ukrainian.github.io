@@ -81,9 +81,9 @@ activity_hints:
   focus: Write sequential narratives
   items: 10
 connects_to:
-- b1-45 (Активні дієприкметники та їхній стиль)
+- b1-45 (Checkpoint Complex Sentences 2)
 prerequisites:
-- b1-51 (Дієприслівники недоконаного виду)
+- b1-51 (Adverbial Participles Imperfective)
 persona:
   voice: Senior Language & Culture Specialist
   role: Film Director

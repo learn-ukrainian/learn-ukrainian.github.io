@@ -89,9 +89,9 @@ activity_hints:
   focus: Відповісти на запитання журналістів під час кризи
   items: 4
 connects_to:
-- c1-pro-06 (Управління змінами)
+- c1-pro-06 (Change Management)
 prerequisites:
-- c1-pro-04 (Стратегічні звіти)
+- c1-pro-04 (Strategic Reports)
 persona:
   voice: Senior Specialist
   role: Менеджер з репутаційних ризиків

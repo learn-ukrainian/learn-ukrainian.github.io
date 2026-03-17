@@ -88,9 +88,9 @@ activity_hints:
   focus: Адаптувати термінологію для різних аудиторій
   items: 10
 connects_to:
-- c1-pro-46 (Професійне портфоліо)
+- c1-pro-46 (Professional Portfolio)
 prerequisites:
-- 'c1-pro-44 (Контрольна точка: Галузева спеціалізація)'
+- 'c1-pro-44 (Industry Checkpoint)'
 persona:
   voice: Senior Specialist
   role: Операційний директор (COO)

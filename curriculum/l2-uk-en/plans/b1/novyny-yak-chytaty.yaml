@@ -84,9 +84,9 @@ activity_hints:
   focus: Complete news summaries
   items: 15
 connects_to:
-- b1-96 (Інтерв'ю та подкасти)
+- b1-96 (Ukrainian Cuisine)
 prerequisites:
-- b1-94 (Українські свята та фестивалі)
+- b1-94 (Cycling Water)
 persona:
   voice: Senior Language & Culture Specialist
   role: News Analyst

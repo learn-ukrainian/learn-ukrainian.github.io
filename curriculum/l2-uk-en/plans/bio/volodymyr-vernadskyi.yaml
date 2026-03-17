@@ -74,10 +74,10 @@ activity_hints:
 - type: critical-analysis
   focus: Співвідношення науки та політики в житті вченого
 connects_to:
-- bio-56 (Борис Патон)
+- bio-56 (Borys Hrinchenko)
 - hist ukrainians-world module
 prerequisites:
-- bio-54 (Іван Пулюй)
+- bio-54 (Ivan Franko)
 - Розуміння глобальних екологічних проблем
 persona:
   voice: Senior Biographer

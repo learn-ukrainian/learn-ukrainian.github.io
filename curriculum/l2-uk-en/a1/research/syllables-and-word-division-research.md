@@ -26,8 +26,8 @@ Alignment: This module directly fulfills §4.1.6 — syllable structure and word
 3. **Word division in handwriting**: Ukrainian handwritten text uses переніс visibly in copybooks. The Grade 5 Zabolotnyi textbook (textbook excerpt p.90) explicitly models «о-лі-вець» and «книж-ка» as canonical division examples — real words from Ukrainian school culture.
 
 ## Common Learner Errors
-1. **Treating consonant clusters as unsplittable** → «сес-тра» instead of «се-стра» — English phonotactics make learners split at the first consonant; Ukrainian maximal onset principle moves consonants forward. Zabolotnyi exercise (p.90) targets this: "observe whether vowel count = syllable count."
-2. **Not counting ї as its own vowel** → «Украї-на» (3 syllables) instead of «у-кра-ї-на» (4). ї is always a full vowel. Also й is NOT a vowel — learners confuse й/ї.
+1. **Confusing phonetic syllables with orthographic hyphenation** → Phonetically, it is «се-стра» (maximal onset). Orthographically, Pravopys 2019 allows multiple hyphenations («се-стра», «сес-тра», «сест-ра»). Learners should learn the phonetic «се-стра» for pronunciation, but recognize the flexible writing rules. Zabolotnyi exercise (p.90) targets this: "observe whether vowel count = syllable count."
+2. **Not counting ї as its own vowel** → thinking «Україна» has 3 syllables instead of 4 (у-кра-ї-на). (Note: «Украї-на» is a valid orthographic hyphenation, but phonetically it has 4 syllables). ї is always a full vowel. Also й is NOT a vowel — learners confuse й/ї.
 3. **Splitting single letters at word edges** → «У-країна» — forbidden; a single letter cannot be carried over alone. This mirrors English "don't leave one letter" but learners still make it, especially with У- prefixed words.
 4. **Splitting дж/дз digraphs** → «ґуд-зик» instead of «ґу-дзик» — learners see two letters and split them; digraphs representing one sound are inseparable.
 

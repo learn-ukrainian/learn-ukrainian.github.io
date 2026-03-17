@@ -22,6 +22,15 @@
         "agent": "gemini",
         "model": "unknown"
       }
+    },
+    "content": {
+      "status": "failed",
+      "ts": "2026-03-17T15:45:51Z",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
     }
   }
 }

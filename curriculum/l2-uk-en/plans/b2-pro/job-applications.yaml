@@ -93,7 +93,7 @@ activity_hints:
   focus: З'єднати питання співбесіди з типом відповіді
   items: 8
 connects_to:
-- b2-pro-27 (Основи наукового письма)
+- b2-pro-27 (Scientific Writing Basics)
 prerequisites:
 - b2-pro-25 (HR-лексика)
 persona:

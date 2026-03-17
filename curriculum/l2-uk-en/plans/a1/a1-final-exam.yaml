@@ -84,7 +84,7 @@ activity_hints:
 connects_to:
 - a2-01 (A2 Introduction)
 prerequisites:
-- a1-43 (Combined Practice)
+- a1-43 (Weather And Nature)
 persona:
   voice: Patient Supportive Tutor
   role: Language Olympiad Judge

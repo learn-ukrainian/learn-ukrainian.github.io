@@ -84,9 +84,9 @@ activity_hints:
   focus: Заповнити інструмент самооцінки
   items: 1
 connects_to:
-- 'c1-pro-45 (Інтеграція: Галузева практика)'
+- 'c1-pro-45 (Industry Integration)'
 prerequisites:
-- c1-pro-43 (Міжкультурна комунікація)
+- c1-pro-43 (Cross Cultural Communication)
 persona:
   voice: Senior Specialist
   role: Галузевий аудитор

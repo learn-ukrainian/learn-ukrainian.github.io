@@ -88,9 +88,9 @@ activity_hints:
   focus: З'єднати перекладацькі трансформації з прикладами
   items: 6
 connects_to:
-- c1-pro-42 (Основи усного перекладу)
+- c1-pro-42 (Interpretation Basics)
 prerequisites:
-- c1-pro-40 (Агробізнес)
+- c1-pro-40 (Agriculture Agribusiness)
 persona:
   voice: Senior Specialist
   role: Літературний перекладач

@@ -90,9 +90,9 @@ activity_hints:
   focus: Знайти юридичні неточності у формулюваннях
   items: 6
 connects_to:
-- b2-pro-22 (Читання договорів)
+- b2-pro-22 (Contract Reading)
 prerequisites:
-- b2-pro-20 (Фінансова звітність)
+- b2-pro-20 (Financial Reports)
 persona:
   voice: Senior Specialist
   role: Корпоративний юрист

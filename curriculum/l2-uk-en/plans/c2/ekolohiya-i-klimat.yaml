@@ -141,10 +141,10 @@ activity_hints:
   focus: Зіставлення екологічних термінів та їхніх визначень
   items: 10
 connects_to:
-- c2-066 (Society & Citizenship — environmental policy as civic discourse)
-- c2-068 (Economy & Welfare — ecological economics and green transition)
+- c2-84 (Society & Citizenship — environmental policy as civic discourse)
+- c2-068 (Ekonomika I Dobrobut)
 - c2-022 (Practical Rhetoric — argumentation for environmental advocacy)
-- c2-005 (Journalistic Style — environmental reporting register)
+- c2-20 (Journalistic Style — environmental reporting register)
 prerequisites:
 - c2-065 (C2.3 Checkpoint)
 persona:

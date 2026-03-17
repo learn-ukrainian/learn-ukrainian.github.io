@@ -118,10 +118,10 @@ activity_hints:
   items: 6+
 connects_to:
 - b1-04 (Sentence structure)
-- b1-05 (Metalanguage checkpoint)
+- b1-18 (Metalanguage checkpoint)
 prerequisites:
 - b1-01 (Basic grammar terminology)
-- b1-02 (Verb terminology)
+- b1-02 (Language About Verbs)
 persona:
   voice: Senior Language & Culture Specialist
   role: Law Student

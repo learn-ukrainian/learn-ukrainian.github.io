@@ -1,0 +1,391 @@
+- type: quiz
+  title: Where Does the Stress Fall?
+  instruction: Choose the syllable that carries the stress in each word.
+  items:
+  - question: Where is the stress in the word вода (water)?
+    options:
+    - text: First syllable
+      correct: false
+    - text: Last syllable
+      correct: true
+    - text: Both syllables equally
+      correct: false
+    - text: Ukrainian words have no stress
+      correct: false
+    explanation: 'Вода has last-syllable stress: вода́.'
+  - question: Where is the stress in the word мама (mom)?
+    options:
+    - text: First syllable
+      correct: true
+    - text: Last syllable
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: It changes every time
+      correct: false
+    explanation: 'Мама has first-syllable stress: ма́ма.'
+  - question: Where is the stress in the word молоко (milk)?
+    options:
+    - text: First syllable
+      correct: false
+    - text: Second syllable
+      correct: false
+    - text: Last syllable
+      correct: true
+    - text: Second and third equally
+      correct: false
+    explanation: 'Молоко has last-syllable stress: молоко́.'
+  - question: Where is the stress in the word школа (school)?
+    options:
+    - text: First syllable
+      correct: true
+    - text: Last syllable
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    - text: There is no stress
+      correct: false
+    explanation: 'Школа has first-syllable stress (penultimate): шко́ла.'
+  - question: Where is the stress in the word далеко (far)?
+    options:
+    - text: First syllable
+      correct: false
+    - text: Second syllable
+      correct: false
+    - text: Last syllable
+      correct: true
+    - text: First and last equally
+      correct: false
+    explanation: 'Далеко has last-syllable stress: далеко́.'
+  - question: Where is the stress in the word добрий (good)?
+    options:
+    - text: First syllable
+      correct: true
+    - text: Last syllable
+      correct: false
+    - text: Both syllables
+      correct: false
+    - text: No stress in this word
+      correct: false
+    explanation: 'Добрий has first-syllable stress: до́брий.'
+  - question: Where is the stress in the word книжка (book)?
+    options:
+    - text: Last syllable
+      correct: false
+    - text: First syllable
+      correct: true
+    - text: Both syllables equally
+      correct: false
+    - text: The middle sound
+      correct: false
+    explanation: 'Книжка has first-syllable stress: кни́жка.'
+  - question: Where is the stress in the word рука (hand)?
+    options:
+    - text: First syllable
+      correct: false
+    - text: Last syllable
+      correct: true
+    - text: Both equally
+      correct: false
+    - text: It has no stress
+      correct: false
+    explanation: 'Рука has last-syllable stress: рука́.'
+  - question: Where is the stress in the word дорога (road)?
+    options:
+    - text: First syllable
+      correct: false
+    - text: Second syllable
+      correct: true
+    - text: Last syllable
+      correct: false
+    - text: First and second equally
+      correct: false
+    explanation: 'Дорога has penultimate stress: доро́га.'
+  - question: Where is the stress in the word кава (coffee)?
+    options:
+    - text: First syllable
+      correct: true
+    - text: Last syllable
+      correct: false
+    - text: Both equally
+      correct: false
+    - text: No stress in short words
+      correct: false
+    explanation: 'Кава has first-syllable stress: ка́ва.'
+  - question: Where is the stress in the word хата (house)?
+    options:
+    - text: Last syllable
+      correct: false
+    - text: First syllable
+      correct: true
+    - text: Both syllables
+      correct: false
+    - text: It depends on the sentence
+      correct: false
+    explanation: 'Хата has first-syllable stress: ха́та.'
+  - question: Where is the stress in the word тато (dad)?
+    options:
+    - text: First syllable
+      correct: true
+    - text: Last syllable
+      correct: false
+    - text: Both equally
+      correct: false
+    - text: No fixed stress
+      correct: false
+    explanation: 'Тато has first-syllable stress: та́то.'
+- type: match-up
+  title: Stress Minimal Pairs
+  instruction: Match each stressed word to its correct English meaning. Pay attention
+    to where the stress falls!
+  pairs:
+  - left: за́мок (first syllable)
+    right: castle
+  - left: замо́к (last syllable)
+    right: lock
+  - left: му́ка (first syllable)
+    right: torment
+  - left: мука́ (last syllable)
+    right: flour
+  - left: рука́ (last syllable)
+    right: hand (singular)
+  - left: ру́ки (first syllable)
+    right: hands (plural)
+  - left: сестра́ (last syllable)
+    right: sister
+  - left: се́стри (first syllable)
+    right: sisters
+- type: true-false
+  title: Stress and Intonation Facts
+  instruction: Decide whether each statement about Ukrainian stress and intonation
+    is true or false.
+  items:
+  - statement: In Ukrainian, stress always falls on the first syllable of a word.
+    correct: false
+    explanation: Ukrainian stress is free — it can fall on any syllable. There is
+      no fixed rule.
+  - statement: The words за́мок (castle) and замо́к (lock) are spelled with the same
+      letters but have different stress.
+    correct: true
+    explanation: These are stress minimal pairs — same spelling, different stress,
+      different meaning.
+  - statement: When you say a yes/no question in Ukrainian, your pitch rises at the
+      end.
+    correct: true
+    explanation: Yes/no questions (without a question word) use rising intonation
+      at the end.
+  - statement: When you ask a question with де (where), your pitch rises at the end
+      of the sentence.
+    correct: false
+    explanation: With a question word like де, the pitch rises on the question word
+      and then falls.
+  - statement: Ukrainian stress can move to a different syllable when a word changes
+      form.
+    correct: true
+    explanation: This is called mobile stress. For example, рука́ becomes ру́ки in
+      the plural.
+  - statement: In a Ukrainian statement, your pitch rises at the end of the sentence.
+    correct: false
+    explanation: In statements, pitch gently falls at the end — like a calm landing.
+  - statement: Unstressed Ukrainian vowels become unclear and mumbled, like in English.
+    correct: false
+    explanation: Ukrainian vowels stay clear and pure whether stressed or not — there
+      is no vowel reduction.
+  - statement: You can always predict Ukrainian stress from the spelling of a word.
+    correct: false
+    explanation: You cannot predict stress from spelling. Words like кни́га and вода́
+      both end in -а but have different stress.
+- type: fill-in
+  title: Choose the Correct Stress
+  instruction: Select the word with the stress mark on the correct syllable.
+  items:
+  - sentence: The word for 'water' with correct stress is ___.
+    answer: вода́
+    options:
+    - во́да
+    - вода́
+    - вод́а
+    - вода
+    explanation: 'Вода has stress on the last syllable: вода́.'
+  - sentence: The word for 'castle' with correct stress is ___.
+    answer: за́мок
+    options:
+    - за́мок
+    - замо́к
+    - замоќ
+    - замок
+    explanation: Castle is за́мок with stress on the first syllable. Замо́к means
+      lock.
+  - sentence: The word for 'lock' with correct stress is ___.
+    answer: замо́к
+    options:
+    - за́мок
+    - замо́к
+    - замоќ
+    - замок
+    explanation: Lock is замо́к with stress on the last syllable. За́мок means castle.
+  - sentence: The word for 'milk' with correct stress is ___.
+    answer: молоко́
+    options:
+    - мо́локо
+    - моло́ко
+    - молоко́
+    - молоко
+    explanation: 'Молоко has stress on the last syllable: молоко́.'
+  - sentence: The word for 'school' with correct stress is ___.
+    answer: шко́ла
+    options:
+    - шко́ла
+    - школа́
+    - школ́а
+    - школа
+    explanation: 'Школа has stress on the first syllable: шко́ла.'
+  - sentence: The word for 'flour' with correct stress is ___.
+    answer: мука́
+    options:
+    - му́ка
+    - мука́
+    - муќа
+    - мука
+    explanation: Flour is мука́ with stress on the last syllable. Му́ка means torment.
+  - sentence: The word for 'coffee' with correct stress is ___.
+    answer: ка́ва
+    options:
+    - ка́ва
+    - кава́
+    - кав́а
+    - кава
+    explanation: 'Кава has stress on the first syllable: ка́ва.'
+  - sentence: The word for 'good' with correct stress is ___.
+    answer: до́брий
+    options:
+    - до́брий
+    - добри́й
+    - добрий́
+    - добрий
+    explanation: 'Добрий has stress on the first syllable: до́брий.'
+  - sentence: The word for 'far' with correct stress is ___.
+    answer: далеко́
+    options:
+    - да́леко
+    - дале́ко
+    - далеко́
+    - далеко
+    explanation: 'Далеко has stress on the last syllable: далеко́.'
+  - sentence: The word for 'road' with correct stress is ___.
+    answer: доро́га
+    options:
+    - до́рога
+    - доро́га
+    - дорога́
+    - дорога
+    explanation: 'Дорога has stress on the second syllable: доро́га.'
+- type: group-sort
+  title: Sort Words by Stress Position
+  instruction: Sort these words into groups based on which syllable carries the stress.
+  groups:
+  - name: First-syllable stress
+    items:
+    - ма́ма
+    - та́то
+    - ха́та
+    - ка́ва
+    - до́брий
+  - name: Last-syllable stress
+    items:
+    - вода́
+    - молоко́
+    - далеко́
+    - рука́
+    - мука́
+- type: quiz
+  title: Intonation Patterns
+  instruction: Choose the correct intonation pattern for each sentence type.
+  items:
+  - question: You say 'Це кафе.' as a simple statement. What does your pitch do?
+    options:
+    - text: Rises at the end
+      correct: false
+    - text: Falls at the end
+      correct: true
+    - text: Stays flat
+      correct: false
+    - text: Rises then falls then rises
+      correct: false
+    explanation: Statements use falling intonation at the end.
+  - question: You ask 'Це кафе?' (Is this a cafe?) — a yes/no question. What does
+      your pitch do?
+    options:
+    - text: Falls at the end
+      correct: false
+    - text: Stays flat
+      correct: false
+    - text: Rises sharply at the end
+      correct: true
+    - text: Falls then rises then falls
+      correct: false
+    explanation: Yes/no questions (without a question word) rise at the end.
+  - question: You ask 'Де кафе?' (Where is the cafe?) with a question word. What does
+      your pitch do?
+    options:
+    - text: Rises at the end
+      correct: false
+    - text: Rises on де, then falls
+      correct: true
+    - text: Falls the whole time
+      correct: false
+    - text: Stays flat throughout
+      correct: false
+    explanation: Questions with a question word rise on the question word, then fall.
+  - question: You exclaim 'Це кафе!' with excitement. What does your pitch do?
+    options:
+    - text: Falls at the end
+      correct: false
+    - text: Stays flat
+      correct: false
+    - text: Falls then rises
+      correct: false
+    - text: Rises with strong emphasis
+      correct: true
+    explanation: Exclamations use rising pitch with energy and emphasis.
+  - question: How is the intonation of 'Це школа?' different from 'Де школа?'
+    options:
+    - text: They use the same intonation
+      correct: false
+    - text: '''Це школа?'' rises at the end; ''Де школа?'' rises on де then falls'
+      correct: true
+    - text: '''Це школа?'' falls at the end; ''Де школа?'' rises at the end'
+      correct: false
+    - text: Both fall at the end
+      correct: false
+    explanation: Yes/no questions rise at the end. Questions with a question word
+      rise on the question word and then fall.
+  - question: An English speaker raises their pitch at the end of every question.
+      Is this correct for Ukrainian?
+    options:
+    - text: Yes, Ukrainian works the same as English
+      correct: false
+    - text: No — only yes/no questions rise at the end in Ukrainian
+      correct: true
+    - text: No — Ukrainian questions always fall
+      correct: false
+    - text: No — Ukrainian has no intonation patterns
+      correct: false
+    explanation: In Ukrainian, only yes/no questions rise at the end. Questions with
+      a question word rise on the question word then fall.
+- type: anagram
+  title: Unscramble the Word
+  instruction: Rearrange the letters to form a Ukrainian word from this lesson.
+  items:
+  - scrambled: о д а в
+    answer: вода
+  - scrambled: о к о л о м
+    answer: молоко
+  - scrambled: а л о к ш
+    answer: школа
+  - scrambled: а к у р
+    answer: рука
+  - scrambled: а г о р о д
+    answer: дорога
+  - scrambled: а в а к
+    answer: кава

@@ -92,9 +92,9 @@ activity_hints:
   focus: З'єднати ситуацію з відповідною сигнальною фразою
   items: 10
 connects_to:
-- 'b2-pro-09 (Презентації: Виступ)'
+- 'b2-pro-09 (Presentations Delivery)'
 prerequisites:
-- 'b2-pro-07 (Наради: Протоколювання)'
+- 'b2-pro-07 (Meeting Minutes)'
 persona:
   voice: Senior Specialist
   role: Бренд-менеджер

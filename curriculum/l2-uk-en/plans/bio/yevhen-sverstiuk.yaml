@@ -93,8 +93,7 @@ activity_hints:
 connects_to:
 - bio-149
 - bio-117
-prerequisites:
-- bio-150
+prerequisites: []
 persona:
   voice: Senior Biographer
   role: Moral Essayist

@@ -87,9 +87,9 @@ activity_hints:
   focus: Discuss wellness topics
   items: 10
 connects_to:
-- 'b1-75 (Емоції: глибоке занурення)'
+- 'b1-75 (Professional Communication)'
 prerequisites:
-- b1-73 (Довкілля та екологія)
+- b1-73 (Media News)
 persona:
   voice: Senior Language & Culture Specialist
   role: Family Doctor

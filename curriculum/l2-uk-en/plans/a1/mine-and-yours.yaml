@@ -87,10 +87,9 @@ activity_hints:
   focus: Свій in context
   items: 6
 connects_to:
-- a1-29 (Around the City)
+- a1-30 (Around the City)
 - a1-49 (My Family)
-prerequisites:
-- a1-28 (The Locative)
+prerequisites: []
 persona:
   voice: Patient Supportive Tutor
   role: Kindergarten Teacher

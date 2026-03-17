@@ -86,7 +86,7 @@ activity_hints:
 connects_to:
 - Завершення B2-PRO / Перехід до C1-PRO
 prerequisites:
-- 'b2-pro-39 (Інтеграція: Професійна практика)'
+- 'b2-pro-39 (B2 Pro Integration)'
 persona:
   voice: Senior Specialist
   role: Засновник стартапу

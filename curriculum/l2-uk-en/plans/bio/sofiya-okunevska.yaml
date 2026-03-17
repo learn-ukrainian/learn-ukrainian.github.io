@@ -93,11 +93,11 @@ activity_hints:
   focus: Чому жінкам було важко здобути освіту в XIX столітті?
   output: Історичне есе
 connects_to:
-- bio-24 (Олена Пчілка)
-- bio-31 (Ольга Кобилянська)
-- bio-60 (Берта Рапопорт)
+- bio-24 (Ivan Vyhovskyi)
+- bio-31 (Pylyp Orlyk)
+- bio-60 (Kyrylo Trylovskyi)
 prerequisites:
-- bio-25 (Наталія Кобринська)
+- bio-25 (Ivan Sirko)
 persona:
   voice: Senior Biographer
   role: Medical Pioneer

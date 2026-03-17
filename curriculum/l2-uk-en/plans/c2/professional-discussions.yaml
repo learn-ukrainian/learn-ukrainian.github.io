@@ -130,8 +130,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-58 (Cross-Domain Communication)
-- c2-61-65 (Legal Ukrainian — negotiations in legal context)
-- c2-62 (Професійна ідентичність — Особистий бренд українською)
+- c2-88-65 (Legal Ukrainian — negotiations in legal context)
+- c2-62 (Professional Portfolio Ii)
 persona:
   voice: Senior Specialist
   role: Moderator

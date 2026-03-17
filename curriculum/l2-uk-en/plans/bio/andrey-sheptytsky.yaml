@@ -97,11 +97,11 @@ activity_hints:
   focus: Why did Sheptytsky risk his life to save Jews?
   output: Moral and theological analysis
 connects_to:
-- bio-107 (Patriarch Josyf Slipyj - his successor)
-- bio-98 (Ivan Ohienko - contemporary church leader)
-- bio-68 (Olena Teliha - same era)
+- bio-96 (Patriarch Josyf Slipyj - his successor)
+- bio-82 (Ivan Ohienko - contemporary church leader)
+- bio-118 (Olena Teliha - same era)
 prerequisites:
-- bio-08 (Iov Boretskyi - earlier church leader)
+- bio-17 (Iov Boretskyi - earlier church leader)
 - Understanding of UGCC history
 - WWII historical context
 persona:

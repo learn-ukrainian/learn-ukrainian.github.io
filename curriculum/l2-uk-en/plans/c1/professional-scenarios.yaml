@@ -1,6 +1,6 @@
-module: c1-036
+module: c1-040
 level: C1
-sequence: 36
+sequence: 40
 slug: professional-scenarios
 version: '2.0'
 title: Професійні сценарії
@@ -84,12 +84,12 @@ activity_hints:
 focus: practice
 pedagogy: PPP
 prerequisites:
-- c1-21 to c1-31 (Complete C1.2 content)
+- c1-35 to c1-33 (Complete C1.2 content)
 - All professional skills
 connects_to:
-- c1-37 (Практичні кейси)
-- 'c1-38 (Огляд і повторення: Професійна комунікація)'
-- c1-20 (Контрольна точка — Академічна база)
+- c1-41 (Case Studies)
+- 'c1-42 (Review)'
+- c1-20 (C1 1 Checkpoint)
 module_type: practice
 sources:
 - name: Ukrainian Professional Standards

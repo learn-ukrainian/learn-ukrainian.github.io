@@ -102,12 +102,12 @@ activity_hints:
   focus: How does "Zaporozhets" represent Ukrainian identity?
   output: Cultural analysis
 connects_to:
-- bio-23 (Mykola Lysenko - later national music)
-- 'bio-52 (Марія Заньковецька: Перша леді сцени)'
-- 'bio-74 (Соломія Крушельницька: Оперна діва)'
+- bio-48 (Mykola Lysenko - later national music)
+- 'bio-52 (Mariya Zankovetska)'
+- 'bio-74 (Solomiya Krushelnytska)'
 prerequisites:
-- bio-17 (Maksym Berezovskyy - earlier opera)
-- 'bio-35 (Дмитро Бортнянський: Придворний маестро)'
+- bio-34 (Maksym Berezovskyy - earlier opera)
+- 'bio-35 (Dmytro Bortnyanskyy)'
 persona:
   voice: Senior Biographer
   role: Baritone

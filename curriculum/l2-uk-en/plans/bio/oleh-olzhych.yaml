@@ -99,12 +99,12 @@ activity_hints:
   focus: Як поєднувалися наука, поезія та політична боротьба в житті Ольжича?
   output: Біографічне есе
 connects_to:
-- bio-95 (Євген Коновалець)
-- bio-118 (Олена Теліга)
-- bio-123 (Богдан-Ігор Антонич)
-- bio-92 (Микола Зеров)
+- bio-95 (Yevhen Konovalets)
+- bio-118 (Olena Teliha)
+- bio-123 (Bohdan Ihor Antonych)
+- bio-92 (Mykola Zerov)
 prerequisites:
-- bio-95 (Євген Коновалець)
+- bio-95 (Yevhen Konovalets)
 persona:
   voice: Senior Historian
   role: Resistance Intellectual Specialist

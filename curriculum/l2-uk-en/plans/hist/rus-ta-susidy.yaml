@@ -98,9 +98,9 @@ activity_hints:
   focus: Чи була Русь частиною Європи?
 connects_to:
 - 'hist-20 (Synthesis: Kyivan Rus)'
-- hist-24 (Galicia-Volhynia — Hungarian influence)
+- hist-24 (Galytsko Volynska Derzhava)
 prerequisites:
-- hist-17 (Princely feuds)
+- hist-17 (Kniazivski Usobiytsi)
 - hist-11 (Volodymyr and Baptism — Byzantine connection)
 persona:
   voice: Senior Professor of History

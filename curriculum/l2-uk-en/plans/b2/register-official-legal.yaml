@@ -120,7 +120,7 @@ activity_hints:
 connects_to:
 - 'b2-31 (Register: Academic/Technical)'
 - b2-24 (Checkpoint Syntax)
-- b2-85 (Professional Communication II)
+- b2-80 (Professional Communication II)
 prerequisites:
 - b2-28 (Register Introduction)
 - b2-03 (Impersonal -но/-то)

@@ -1,0 +1,25 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1648
+deviations:
+  - section: "Правила переносу — Word Division Rules"
+    reason: "Expanded to 502 words (target 400) to adequately cover all four cannot-split rules with examples and common errors"
+  - section: "Підсумок — Summary"
+    reason: "Expanded to 168 words (target 100) to include proper self-check questions and next-module teaser"
+frictions:
+  - type: TEMPLATE_CONSTRAINT
+    description: "A1 quick-ref says 'No grammar terminology in Ukrainian (іменник, дієслово, голосний)' but the plan explicitly requires teaching голосний, приголосний, склад, перенос as metalinguistic vocabulary. The plan overrides."
+    proposed_fix: "A1 quick-ref should note exception for modules where the plan explicitly requires metalinguistic terms as vocabulary items."
+research_gaps: []
+unverified_terms: []
+review_focus:
+  - "Verify that consonant cluster splitting examples (се-стра, о-стрів, ві-кно) follow standard Ukrainian syllabification rules"
+  - "Check that word division examples comply with Правопис 2019 transfer rules"
+  - "Confirm й vs ї distinction is pedagogically clear"
+rag_tools_used:
+  - "search_text: 'склад поділ слів на склади голосний звук утворює склад' grade=2 → Found Vashulenko Grade 2 p.18-19 rule boxes confirming golden rule"
+  - "search_text: 'правила переносу слів дж дз апостроф м'який знак' grade=5 → Found Litvinova Grade 5 p.150-159 on ь and apostrophe rules"
+  - "search_text: 'відкритий закритий склад голосний приголосний' grade=5 → Found Zabolotnyi Grade 5 p.87-90 with open/closed definitions"
+  - "verify_words: batch verified all 20 vocabulary items — all found in VESUM"
+  - "verify_words: batch verified 15 additional content words (ґудзик, пальці, острів, etc.) — all found"
+  - "query_pravopys: 'перенос' → no section found (transfer rules not in Pravopys 2019 orthography sections)"

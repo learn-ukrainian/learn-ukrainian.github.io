@@ -1,6 +1,6 @@
 # RAG Verification: being-and-becoming
 
-**Date:** 2026-03-14 15:27 UTC | **Words checked:** 615 | **VESUM coverage:** 606/615 (98.5%)
+**Date:** 2026-03-17 15:45 UTC | **Words checked:** 615 | **VESUM coverage:** 606/615 (98.5%)
 
 ## Summary
 - ✅ Verified (VESUM): 606

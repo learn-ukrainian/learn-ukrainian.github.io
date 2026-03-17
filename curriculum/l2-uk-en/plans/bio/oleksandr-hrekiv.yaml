@@ -93,11 +93,11 @@ activity_hints:
   focus: Чому українська армія програла війну за незалежність?
   output: Аналітичне есе
 connects_to:
-- bio-53 (Петро Болбочан)
-- bio-51 (В'ячеслав Липинський)
-- bio-35 (Михайло Грушевський)
+- bio-53 (Nataliya Kobrynska)
+- bio-51 (Mariya Pavlova)
+- bio-35 (Dmytro Bortnyanskyy)
 prerequisites:
-- bio-44 (Симон Петлюра)
+- bio-44 (Ivan Nechuy Levytskyi)
 persona:
   voice: Senior Biographer
   role: Army General

@@ -104,10 +104,10 @@ activity_hints:
 - type: essay-response
   focus: Хто є справжнім спадкоємцем Київської Русі?
 connects_to:
-- hist-21 (Mongol invasion — Phase 3)
-- 'hist-28 (Synthesis: Mongol era and Galicia)'
+- hist-21 (Mongolska Navala)
+- 'hist-28 (Syntez Dvokniazivstvo)'
 prerequisites:
-- All Phase 2 modules (hist-09 through hist-19)
+- All Phase 2 modules (Oleh Ihor)
 persona:
   voice: Senior Professor of History
   role: Dynastic Historian

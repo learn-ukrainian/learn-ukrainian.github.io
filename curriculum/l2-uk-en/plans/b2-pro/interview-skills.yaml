@@ -93,9 +93,9 @@ activity_hints:
   focus: Знайти помилки в техніці інтерв'ю (занадто довгі відповіді, ухиляння)
   items: 6
 connects_to:
-- 'b2-pro-38 (Контрольна точка: Медіа)'
+- 'b2-pro-38 (Media Checkpoint)'
 prerequisites:
-- 'b2-pro-36 (Дебати: Формальна структура)'
+- 'b2-pro-36 (Debate Skills Advanced)'
 persona:
   voice: Senior Specialist
   role: Телеведучий

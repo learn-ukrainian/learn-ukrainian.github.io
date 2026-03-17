@@ -99,7 +99,7 @@ activity_hints:
 focus: grammar
 pedagogy: TTT
 prerequisites:
-- c1-01 to c1-07 (Academic Foundation)
+- c1-02 to c1-07 (Academic Foundation)
 - Logical connectors mastery
 connects_to:
 - c1-09 (Thesis Development)

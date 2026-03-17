@@ -93,11 +93,11 @@ activity_hints:
   focus: Чи була страта Болбочана справедливою?
   output: Історичне есе
 connects_to:
-- bio-49 (Олександр Греків)
-- bio-51 (В'ячеслав Липинський)
-- bio-52 (Дмитро Донцов)
+- bio-49 (Ivan Puliui)
+- bio-51 (Mariya Pavlova)
+- bio-52 (Mariya Zankovetska)
 prerequisites:
-- bio-44 (Симон Петлюра)
+- bio-44 (Ivan Nechuy Levytskyi)
 persona:
   voice: Senior Biographer
   role: Liberator of Crimea

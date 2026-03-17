@@ -83,10 +83,10 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- 'b1-30 (Підрядні означальні: де, куди, звідки)'
-- "b1-31 (Підрядні з'ясувальні: що, щоб)"
+- 'b1-30 (Relative Clauses Yakyi)'
+- "b1-31 (Relative Clauses De Kudy Zvidky)"
 prerequisites:
-- 'b1-17 (Контрольна точка: Опанування виду)'
+- 'b1-17 (Aspect Integration Practice)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Portrait Photographer

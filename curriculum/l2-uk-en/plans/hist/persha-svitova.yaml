@@ -89,10 +89,10 @@ activity_hints:
 - type: essay-response
   focus: Чому Перша світова війна стала каталізатором українського національного руху?
 connects_to:
-- hist-89 (Революція 1917)
-- hist-91 (Центральна Рада)
+- hist-89 (Sichovi Striltsi)
+- hist-91 (Skoropadskyi)
 prerequisites:
-- hist-87 (Грушевський)
+- hist-87 (Hrushevskyi)
 persona:
   voice: Senior Professor of History
   role: Sich Rifleman

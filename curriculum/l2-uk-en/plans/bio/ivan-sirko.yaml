@@ -72,10 +72,10 @@ activity_hints:
 - type: essay-response
   focus: Феномен непереможності Сірка
 connects_to:
-- bio-26 (Юрій Немирич)
+- bio-26 (Yuriy Nemyrych)
 - hist ruina-ii module
 prerequisites:
-- bio-24 (Іван Виговський)
+- bio-24 (Ivan Vyhovskyi)
 - Розуміння контексту турецько-татарських набігів
 persona:
   voice: Senior Biographer

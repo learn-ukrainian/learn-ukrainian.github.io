@@ -89,9 +89,9 @@ activity_hints:
   focus: Рефлексія над capstone-проєктом та планування розвитку
   items: 1
 connects_to:
-- c1-pro-31 (ІТ-менеджмент)
+- c1-pro-31 (It Management)
 prerequisites:
-- 'c1-pro-29 (Інтеграція: Наукова комунікація)'
+- 'c1-pro-29 (Academic Integration)'
 persona:
   voice: Senior Specialist
   role: Голова дисертаційної комісії

@@ -130,10 +130,10 @@ activity_hints:
   focus: Зіставлення спортивних дисциплін, термінів та їхніх визначень
   items: 10
 connects_to:
-- c2-066 (Society & Citizenship — sport as societal phenomenon and national identity)
-- c2-067 (Foreign Policy & Diaspora — international sports diplomacy)
+- c2-63 (Society & Citizenship — sport as societal phenomenon and national identity)
+- c2-84 (Foreign Policy & Diaspora — international sports diplomacy)
 - c2-022 (Practical Rhetoric — argumentation for doping ethics debates)
-- c2-005 (Journalistic Style — sports commentary and reporting register)
+- c2-20 (Journalistic Style — sports commentary and reporting register)
 prerequisites:
 - c2-065 (C2.3 Checkpoint)
 persona:

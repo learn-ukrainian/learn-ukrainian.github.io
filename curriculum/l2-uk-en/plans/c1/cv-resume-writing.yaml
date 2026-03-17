@@ -86,12 +86,12 @@ activity_hints:
 focus: style
 pedagogy: TTT
 prerequisites:
-- c1-01 to c1-20 (Complete C1.1)
+- c1-20 to c1-20 (Complete C1.1)
 - Academic writing foundation
 connects_to:
 - c1-22 (Job Interview)
 - c1-23 (Business Etiquette)
-- c1-36 (Професійні сценарії)
+- c1-40 (Professional Scenarios)
 module_type: skills
 sources:
 - name: Ukrainian CV Standards

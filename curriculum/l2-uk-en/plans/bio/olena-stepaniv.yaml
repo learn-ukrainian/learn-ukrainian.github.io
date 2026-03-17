@@ -93,11 +93,11 @@ activity_hints:
   focus: Чому участь жінок у війні була революційною?
   output: Історичне есе
 connects_to:
-- bio-59 (Ольга Басараб)
-- bio-68 (Олена Теліга)
-- bio-110 (Мілена Рудницька)
+- bio-59 (Volodymyr Samiilenko)
+- bio-68 (Mariia Voiakovska)
+- bio-110 (Dmytro Falkivskyi)
 prerequisites:
-- 'bio-60 (Кирило Трильовський: Засновник Січі)'
+- 'bio-60 (Kyrylo Trylovskyi)'
 persona:
   voice: Senior Biographer
   role: Legionary Officer

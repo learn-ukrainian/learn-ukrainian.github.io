@@ -90,10 +90,10 @@ activity_hints:
 - type: essay-response
   focus: Чому заборони української мови можна вважати культурним геноцидом?
 connects_to:
-- hist-84 (Михайло Драгоманов)
-- hist-84 (Громади)
+- hist-84 (Drahomanov)
+- hist-84 (Drahomanov)
 prerequisites:
-- hist-81 (Шевченко)
+- hist-81 (Shevchenko Awakening)
 persona:
   voice: Senior Professor of History
   role: Secret Publisher

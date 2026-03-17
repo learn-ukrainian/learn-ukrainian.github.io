@@ -86,7 +86,7 @@ connects_to:
 - a1-58 (Phone Basics)
 - a1-62 (Emergencies)
 prerequisites:
-- a1-29 (Around the City)
+- a1-30 (Around the City)
 - a1-56 (Buying Tickets)
 persona:
   voice: Patient Supportive Tutor

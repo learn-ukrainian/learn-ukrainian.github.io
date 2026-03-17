@@ -80,10 +80,10 @@ activity_hints:
 - type: essay-response
   focus: Чому російський план «три дні до Києва» провалився?
 connects_to:
-- hist-133 (Маріуполь та Азовсталь)
-- hist-136 (Воєнна економіка)
+- hist-133 (Mariupol Azovstal)
+- hist-136 (Voienna Ekonomika)
 prerequisites:
-- hist-131 (Війна на Донбасі 2014-2022)
+- hist-131 (Viyna Donbas)
 persona:
   voice: Senior Professor of History
   role: Territorial Defense Fighter

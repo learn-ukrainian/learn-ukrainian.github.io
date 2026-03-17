@@ -129,8 +129,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-87 (Викладання української мови I — Педагогічні основи)
-- c2-94 (Дипломний проєкт — Вибір теми)
+- c2-10 (Викладання української мови I — Педагогічні основи)
+- c2-94 (Interpretation Advanced)
 - c2-105 (Підготовка до сертифікації C2)
 persona:
   voice: Senior Specialist

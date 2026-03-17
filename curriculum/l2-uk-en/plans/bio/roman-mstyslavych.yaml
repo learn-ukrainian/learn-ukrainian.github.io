@@ -105,10 +105,10 @@ activity_hints:
 connects_to:
 - bio-danylo-halytskyi (Danylo - son)
 - bio-lev-danylovych (Lev - grandson)
-- 'bio-09 (Михайло Чернігівський: Князь-мученик)'
+- 'bio-09 (Mykhailo Chernihivskyi)'
 prerequisites:
 - bio-05 (Anna Yaroslavna - earlier period)
-- bio-06 (Mykhailo Chernihivskyi - later consequence)
+- bio-06 (Volodymyr Monomakh)
 - Understanding of Kyivan Rus fragmentation
 persona:
   voice: Senior Biographer

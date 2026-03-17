@@ -93,9 +93,9 @@ activity_hints:
   focus: Сформулювати доручення на основі ухвалених рішень
   items: 4
 connects_to:
-- 'b2-pro-08 (Презентації: Структура)'
+- 'b2-pro-08 (Presentations Structure)'
 prerequisites:
-- 'b2-pro-06 (Наради: Участь та дискусія)'
+- 'b2-pro-06 (Meeting Participation)'
 persona:
   voice: Senior Specialist
   role: Секретар ради директорів

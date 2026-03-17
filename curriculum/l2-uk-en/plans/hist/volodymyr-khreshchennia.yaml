@@ -108,11 +108,11 @@ activity_hints:
   focus: Чи був вибір православ'я історичною необхідністю?
 connects_to:
 - hist-12 (Yaroslav the Wise)
-- hist-14 (St. Sophia Cathedral)
+- hist-14 (Sofiya Kyivska)
 - 'hist-20 (Synthesis: Kyivan Rus)'
 prerequisites:
 - hist-10 (Olha and Sviatoslav)
-- hist-03 (Greek city-states — Chersonesus)
+- hist-03 (Greeks Crimea Olbia)
 persona:
   voice: Senior Professor of History
   role: Byzantine Priest

@@ -97,10 +97,10 @@ activity_hints:
 - type: essay-response
   focus: Чому постать Петлюри залишається контроверсійною?
 connects_to:
-- hist-95 (Більшовицько-українська війна)
-- hist-97 (Кінець визвольних змагань)
+- hist-95 (Bilshovytsko Ukrainska Viyna)
+- hist-97 (Syntez Revoliutsiia)
 prerequisites:
-- hist-93 (Директорія УНР)
+- hist-93 (Dyrektoriia)
 persona:
   voice: Senior Professor of History
   role: Chief of Staff

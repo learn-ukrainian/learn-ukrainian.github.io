@@ -93,11 +93,11 @@ activity_hints:
   focus: Чому жіночий рух важливий для національного пробудження?
   output: Аргументативне есе
 connects_to:
-- bio-24 (Олена Пчілка)
-- 'bio-54 (Іван Франко: Каменяр)'
-- bio-31 (Ольга Кобилянська)
+- bio-24 (Ivan Vyhovskyi)
+- 'bio-54 (Ivan Franko)'
+- bio-31 (Pylyp Orlyk)
 prerequisites:
-- bio-20 (Тарас Шевченко)
+- bio-20 (Petro Sahaidachny)
 persona:
   voice: Senior Biographer
   role: Feminist Pioneer

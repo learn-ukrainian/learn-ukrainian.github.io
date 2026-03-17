@@ -137,8 +137,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-96 (Дипломний проєкт — Написання чернетки)
-- c2-97 (Дипломний проєкт — Редагування)
+- c2-96 (Capstone Research Project)
+- c2-97 (Capstone Drafting)
 persona:
   voice: Senior Specialist
   role: PhD Candidate

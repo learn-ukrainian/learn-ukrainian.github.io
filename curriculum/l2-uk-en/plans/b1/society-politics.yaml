@@ -94,9 +94,9 @@ activity_hints:
   focus: Discuss civic topics
   items: 10
 connects_to:
-- b1-72 (Професійна комунікація)
+- b1-72 (Describing Changes)
 prerequisites:
-- b1-73 (Медіа та новини)
+- b1-73 (Media News)
 persona:
   voice: Senior Language & Culture Specialist
   role: Political Analyst

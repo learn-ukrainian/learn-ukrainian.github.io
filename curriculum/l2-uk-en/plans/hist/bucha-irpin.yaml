@@ -89,11 +89,11 @@ activity_hints:
 - type: essay-response
   focus: Чому документування злочинів важливе для майбутнього правосуддя?
 connects_to:
-- hist-135 (Каховська ГЕС)
-- hist-139 (Злочини і стійкість)
+- hist-135 (Kakhovska Hes)
+- hist-139 (Zlochyny Stiikist)
 prerequisites:
-- hist-132 (Повномасштабне вторгнення)
-- hist-133 (Маріуполь та Азовсталь)
+- hist-132 (Povnomasshtabne Vtorhnessnia)
+- hist-133 (Mariupol Azovstal)
 persona:
   voice: Senior Professor of History
   role: Forensic Investigator

@@ -90,10 +90,10 @@ activity_hints:
 - type: essay-response
   focus: Чому підтримка України — це захист демократії у світі?
 connects_to:
-- hist-139 (Злочини і стійкість)
-- 'hist-140 (Синтез: Війна)'
+- hist-139 (Zlochyny Stiikist)
+- 'hist-140 (Syntez Viyna)'
 prerequisites:
-- hist-137 (Громадянське суспільство)
+- hist-137 (Hromadske Suspilstvo)
 persona:
   voice: Senior Professor of History
   role: Foreign Affairs Minister

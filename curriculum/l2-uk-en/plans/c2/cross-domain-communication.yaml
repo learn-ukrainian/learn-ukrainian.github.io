@@ -138,9 +138,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-57 (Професійні дослідницькі навички)
-- c2-58 (Побудова галузевої експертизи)
-- c2-05 (Публіцистичний стиль — Journalism)
+- c2-57 (Professional Research Skills)
+- c2-58 (Building Domain Expertise)
+- c2-05 (Publitsystychnyi Styl)
 persona:
   voice: Senior Specialist
   role: Conflict Mediator

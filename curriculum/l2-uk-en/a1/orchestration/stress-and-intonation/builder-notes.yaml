@@ -1,0 +1,25 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1680
+deviations:
+  - section: "Інтонація — Intonation"
+    reason: "Expanded beyond 250 target to 382 words — intonation needed extra contrast drills and the English-speaker warning. Total still well within 1200-1800 range."
+  - section: "Наголос — Stress"
+    reason: "Expanded to 412 words to include the замок/мука minimal pairs with proper context and the dictionary reading strategy."
+frictions: []
+research_gaps:
+  - "Could not find Grade 1 textbook pages specifically teaching intonation patterns (розповідне/питальне/окличне) — found them in Grade 2 Vashulenko instead"
+unverified_terms: []
+review_focus:
+  - "Stress marks use combining acute (´) — verify rendering in final MDX"
+  - "Mobile stress preview (рука/писати) is deliberately light — check it doesn't over-teach declension/conjugation"
+  - "Intonation arrows (↘ ↗) are visual aids — verify they render in the content system"
+  - "Grammar constraint compliance: no past/future tense, no compound sentences, Це+noun pattern only"
+rag_tools_used:
+  - "search_text: 'наголос рухомий наголос вільний наголос' grade=2 → Vashulenko Grade 2 stress exercises (p.14-17)"
+  - "search_text: 'інтонація речення розповідне питальне окличне' grade=2 → Vashulenko Grade 2 intonation (p.108-116)"
+  - "search_text: 'наголос змінює значення слова замок мука' → Avramenko Grade 5 p.88 замок pair; Kravtsova Grade 2 p.23 stress meaning change"
+  - "search_text: 'інтонація розповідне питальне окличне речення' grade=1 → Bolshakova Grade 1 (limited intonation coverage)"
+  - "verify_words: all 20 vocabulary items → 20/20 found in VESUM"
+  - "verify_lemma: писати → 26 forms confirmed (пишу, пишеш verified)"
+  - "verify_lemma: рука → 14 forms confirmed (руки plural/genitive verified)"

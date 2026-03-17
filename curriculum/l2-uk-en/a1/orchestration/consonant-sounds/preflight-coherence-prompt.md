@@ -63,11 +63,6 @@ content_outline:
     not the vowel!"
   - "Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft
     sign that forces softening) in M4."
-- section: "Порівняння з англійською — English Comparison"
-  words: 150
-  points:
-  - "Compare each Ukrainian consonant pair with English equivalents"
-  - "Table showing shared and unique sounds between English and Ukrainian"
 - section: "Читання — Reading Practice"
   words: 150
   points:
@@ -96,7 +91,6 @@ vocabulary_hints:
   - "небо (sky) — demonstrates Н; high-frequency"
   - "рука (hand) — demonstrates Р (rolled); body vocabulary"
   - "бабуся (grandma) — demonstrates Б; high-frequency family word"
-  - "город (city) — demonstrates Г and Р; everyday word"
   recommended:
   - "павук (spider) — demonstrates П; Bolshakova"
   - "ґанок (porch) — demonstrates rare Ґ; classic textbook word"
@@ -260,7 +254,6 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 - небо (sky) — demonstrates Н; high-frequency
 - рука (hand) — demonstrates Р (rolled); body vocabulary
 - бабуся (grandma) — demonstrates Б; high-frequency family word
-- город (city) — demonstrates Г and Р; everyday word
 
 **Recommended** (use in your content to reach the vocabulary target):
 - павук (spider) — demonstrates П; Bolshakova
@@ -426,9 +419,6 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л).
   - Compare: лук (hard Л — bow (weapon)) vs люк (soft Л — hatch). The consonant changes, not the vowel!
   - Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft sign that forces softening) in M4.
-- `## Порівняння з англійською — English Comparison` (~150 words)
-  - Compare each Ukrainian consonant pair with English equivalents
-  - Table showing shared and unique sounds between English and Ukrainian
 - `## Читання — Reading Practice` (~150 words)
   - Words using the full consonant inventory. All vowels from M2 available.
   - NO full sentences with verbs — grammar is not taught yet. Use word groups, noun phrases, and labeling: Це дім. Це хліб. Ось бабуся.
@@ -447,7 +437,6 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 | Сонорні — Sonorant Consonants | 200+ |
 | Дзвінкі та глухі пари — Voiced and Voiceless Pairs | 400+ |
 | Тверді та м'які — Hard and Soft Consonants | 250+ |
-| Порівняння з англійською — English Comparison | 150+ |
 | Читання — Reading Practice | 150+ |
 | Підсумок — Summary | 100+ |
 | **Total** | **1200+ (aim for ~1440)** |

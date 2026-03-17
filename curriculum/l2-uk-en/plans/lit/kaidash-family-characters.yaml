@@ -91,10 +91,10 @@ activity_hints:
   focus: Архетип свекрухи в українській культурі
   output: Літературознавче есе
 connects_to:
-- lit-28 (Кайдашева сім'я — конфлікти)
-- lit-05 (Наталка Полтавка — порівняння персонажів)
+- lit-28 (Kaidash Family Conflict)
+- lit-05 (Natalka Poltavka)
 prerequisites:
-- lit-26 (Нечуй-Левицький біографія)
+- lit-26 (Nechuy Levytsky)
 persona:
   voice: Senior Philologist & Critic
   role: Character Analyst

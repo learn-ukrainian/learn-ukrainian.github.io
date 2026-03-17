@@ -1,6 +1,6 @@
-module: c1-032
+module: c1-034
 level: C1
-sequence: 32
+sequence: 34
 slug: diaspora-ukrainian
 version: '2.0'
 title: Українська діаспора
@@ -83,13 +83,13 @@ activity_hints:
 focus: linguistics
 pedagogy: TTT
 prerequisites:
-- c1-28 (Dialects)
-- 'c1-30 (Суржик: Феномен змішування)'
-- 'c1-31 (Історія мови: Від Русі до сьогодення)'
+- c1-31 (Dialects)
+- 'c1-32 (Surzhyk)'
+- 'c1-33 (History Of Language)'
 connects_to:
-- c1-36 (Професійні сценарії)
-- c1-20 (Контрольна точка — Академічна база)
-- c1-49 (Church Slavonicisms)
+- c1-40 (Professional Scenarios)
+- c1-20 (C1 1 Checkpoint)
+- c1-54 (Irony Sarcasm)
 module_type: cultural
 sources:
 - name: Українська діаспора

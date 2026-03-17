@@ -83,9 +83,9 @@ activity_hints:
   focus: Створити глосарій ключових термінів фази
   items: 20
 connects_to:
-- 'b2-pro-31 (Аналіз новин I: Критичне читання)'
+- 'b2-pro-31 (News Analysis 1)'
 prerequisites:
-- b2-pro-29 (Міжгалузева практика)
+- b2-pro-29 (Cross Domain Practice)
 persona:
   voice: Senior Specialist
   role: Технічний перекладач

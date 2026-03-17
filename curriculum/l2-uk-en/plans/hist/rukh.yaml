@@ -100,10 +100,10 @@ activity_hints:
 - type: essay-response
   focus: Яку роль відіграв Рух у здобутті незалежності України?
 connects_to:
-- hist-119 (Ланцюг єднання)
-- hist-120 (Незалежність 1991)
+- hist-119 (Shliakh Nezalezhnosti)
+- hist-121 (Незалежність 1991)
 prerequisites:
-- hist-117 (Шістдесятники)
+- hist-117 (Chornobyl)
 persona:
   voice: Senior Professor of History
   role: Civic Organizer

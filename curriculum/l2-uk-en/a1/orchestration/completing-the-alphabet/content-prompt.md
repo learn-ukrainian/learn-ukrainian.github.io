@@ -51,13 +51,11 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 3
 **Previous module:** Consonant Sounds
 
-**Cumulative vocabulary (55 words):**
+**Cumulative vocabulary (39 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
 сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
-зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп
 
 **Grammar already taught (14 topics):**
 - Full alphabet overview (33 letters)
@@ -119,12 +117,12 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 10-25% Ukrainian.
+TARGET: 5-15% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: 100% English.
-- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
-- TABLES: Vocabulary tables, letter groups, simple word families.
-- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
+- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
+- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
+- TABLES: Simple letter-sound or word-meaning tables.
 Ukrainian sentences max 10 words.
 
 ### Blog Articles & Guides

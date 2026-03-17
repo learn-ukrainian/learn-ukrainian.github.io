@@ -88,9 +88,9 @@ activity_hints:
   focus: Провести переговори про контракт на поставку зерна
   items: 1
 connects_to:
-- c1-pro-41 (Основи перекладу)
+- c1-pro-41 (Translation Basics)
 prerequisites:
-- c1-pro-39 (Енергетичний сектор)
+- c1-pro-39 (Energy Sector)
 persona:
   voice: Senior Specialist
   role: Керівник агрохолдингу

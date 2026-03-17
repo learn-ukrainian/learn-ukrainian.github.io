@@ -134,8 +134,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-36-37 (Creative Writing)
-- c2-87 (C2.4 Translation Practice II)
+- c2-33-37 (Creative Writing)
+- c2-78 (C2.4 Translation Practice II)
 - c2-43 (Контрольна точка C2.2 — Літературна майстерність)
 persona:
   voice: Senior Specialist

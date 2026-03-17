@@ -88,9 +88,9 @@ activity_hints:
   focus: Підготувати legal opinion щодо корпоративного питання
   items: 1
 connects_to:
-- c1-pro-36 (Міжнародне право)
+- c1-pro-36 (International Law)
 prerequisites:
-- c1-pro-34 (Інвестиційний аналіз)
+- c1-pro-34 (Investment Analysis)
 persona:
   voice: Senior Specialist
   role: Головний юрисконсульт

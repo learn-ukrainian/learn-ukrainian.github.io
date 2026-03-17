@@ -93,8 +93,8 @@ activity_hints:
   focus: How did Sukhomlynskyi challenge Soviet educational orthodoxy?
   output: Analysis of humanist pedagogy
 connects_to:
-- bio-98 (Ivan Ohienko - earlier educator)
-- bio-105 (Shevelov - intellectual of same era)
+- bio-82 (Ivan Ohienko - earlier educator)
+- bio-122 (Shevelov - intellectual of same era)
 - Contemporary Ukrainian educators
 prerequisites:
 - Understanding of Soviet educational system

@@ -1,6 +1,6 @@
-module: lit-226
+module: lit-169
 level: LIT
-sequence: 226
+sequence: 169
 slug: yuriy-tarnavsky-new-york-group
 version: '2.0'
 title: 'Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи'
@@ -69,8 +69,7 @@ activity_hints:
   focus: Урбанізм в українській літературі
 connects_to:
 - lit-225
-prerequisites:
-- lit-225
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Diaspora Literature Specialist

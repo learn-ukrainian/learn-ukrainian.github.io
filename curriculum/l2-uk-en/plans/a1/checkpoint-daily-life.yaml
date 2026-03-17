@@ -2,7 +2,7 @@ module: a1-044
 level: A1
 sequence: 44
 slug: checkpoint-daily-life
-version: '2.0'
+version: '2.1'
 title: 'Checkpoint: Daily Life'
 subtitle: Can You Manage the Day?
 focus: checkpoint
@@ -27,8 +27,8 @@ content_outline:
   points:
   - 'Past tense review: suffix pattern -в/-ла/-ло/-ли. Gender agreement in past tense.
     Learner error: using wrong gender suffix (він ходила → він ходив).'
-  - 'Analytical future review: буду + infinitive (Я буду читати). Perfective future
-    preview for common verbs (Я прочитаю, Я зроблю).'
+  - 'Analytical future review: буду + infinitive (Я буду читати, Ми будемо гуляти).
+    Common errors: omitting буду, wrong infinitive form.'
   - 'Direction expressions: Куди?/Звідки?/Де? three-question paradigm with correct
     case forms. Integration of spatial grammar with tense usage.'
 - section: 'Навичка 2: Повсякденне життя (Skill 2: Daily Life)'

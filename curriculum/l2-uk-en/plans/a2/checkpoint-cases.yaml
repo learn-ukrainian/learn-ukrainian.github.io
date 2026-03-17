@@ -122,9 +122,9 @@ activity_hints:
 connects_to:
 - a2-14 (Aspect Introduction)
 - 'a2-30 (Checkpoint: Aspect, Comparison & Modality)'
-- a2-35 (Checkpoint - Complex Ideas)
+- a2-40 (Checkpoint - Complex Ideas)
 prerequisites:
-- a2-01 through a2-10 (all A2.1 modules)
+- a2-11 through a2-10 (all A2.1 modules)
 persona:
   voice: Encouraging Cultural Guide
   role: Manuscript Proofreader

@@ -88,9 +88,9 @@ activity_hints:
   focus: Вставити правильні фрази для bridging у відповідях
   items: 8
 connects_to:
-- 'c1-pro-13 (Контрольна точка: Виконавчий рівень)'
+- 'c1-pro-13 (Executive Checkpoint)'
 prerequisites:
-- c1-pro-11 (Виконавчий нетворкінг)
+- c1-pro-11 (Executive Networking)
 persona:
   voice: Senior Specialist
   role: Прес-секретар корпорації

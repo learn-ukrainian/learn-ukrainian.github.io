@@ -1,6 +1,6 @@
-module: c1-038
+module: c1-042
 level: C1
-sequence: 38
+sequence: 42
 slug: review
 version: '2.0'
 title: 'Огляд і повторення: Професійна комунікація'
@@ -86,12 +86,12 @@ activity_hints:
 focus: review
 pedagogy: Assessment
 prerequisites:
-- c1-21 to c1-33 (Complete C1.2 content)
+- c1-35 to c1-35 (Complete C1.2 content)
 - All professional and sociolinguistic skills
 connects_to:
-- c1-20 (Контрольна точка — Академічна база)
-- 'c1-48 (Метафора та порівняння: Образна мова)'
-- c1-20 (Контрольна точка — Академічна база)
+- c1-20 (C1 1 Checkpoint)
+- 'c1-53 (Metaphor Simile)'
+- c1-20 (C1 1 Checkpoint)
 module_type: review
 sources:
 - name: CEFR C1 Assessment Criteria

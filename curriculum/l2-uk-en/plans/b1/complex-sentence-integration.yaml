@@ -89,9 +89,9 @@ activity_hints:
   focus: Write complex paragraphs
   items: 10
 connects_to:
-- 'b1-42 (Непряма мова: твердження)'
+- 'b1-42 (Complex Sentence Integration)'
 prerequisites:
-- b1-40 (Часові підрядні речення)
+- b1-40 (Causal Result Clauses)
 persona:
   voice: Senior Language & Culture Specialist
   role: Novel Editor

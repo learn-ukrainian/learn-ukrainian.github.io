@@ -106,7 +106,7 @@ activity_hints:
 connects_to:
 - 'a2-49 (Checkpoint: Word Formation)'
 prerequisites:
-- a2-47 (Adjective Suffixes — Qualities)
+- a2-44 (Adjective Suffixes — Qualities)
 persona:
   voice: Encouraging Cultural Guide
   role: Scrabble Champion

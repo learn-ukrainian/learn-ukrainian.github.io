@@ -97,12 +97,12 @@ activity_hints:
   focus: Як Вільде поєднувала виживання в радянській системі з підтримкою опозиції?
   output: Критичне есе
 connects_to:
-- bio-72 (Леся Українка)
-- bio-42 (Марко Вовчок)
-- bio-123 (Богдан-Ігор Антонич)
-- bio-135 (Євген Сверстюк)
+- bio-72 (Lesya Ukrainka)
+- bio-42 (Marko Vovchok)
+- bio-123 (Bohdan Ihor Antonych)
+- bio-135 (Yevhen Sverstiuk)
 prerequisites:
-- bio-54 (Іван Франко)
+- bio-54 (Ivan Franko)
 persona:
   voice: Senior Historian
   role: Women's Literature Specialist

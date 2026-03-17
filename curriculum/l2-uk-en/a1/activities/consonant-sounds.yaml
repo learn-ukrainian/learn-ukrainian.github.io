@@ -1,0 +1,233 @@
+- type: watch-and-repeat
+  title: Consonant Pronunciation Practice
+  items:
+  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    letter: М
+    word: ма́ма
+    note: Press your lips together and let your voice hum.
+  - video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    letter: Н
+    word: не́бо
+    note: Press the tip of your tongue against your upper teeth.
+  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    letter: Л
+    word: ліс
+    note: When you say the hard Л, make sure the back of your tongue is slightly lowered.
+  - video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    letter: Р
+    word: рука́
+    note: Flutter or roll your tongue against the roof of your mouth.
+  - video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    letter: В
+    word: вода́
+    note: Makes a 'v' or sometimes a soft 'w' sound.
+  - video: https://www.youtube.com/watch?v=aq0cjB90s3w
+    letter: Й
+    word: мій
+    note: Short 'y' sound, exactly like the 'y' at the end of 'boy'.
+  - video: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    letter: Б
+    word: бабу́ся
+    note: Voiced 'b' sound.
+  - video: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    letter: П
+    word: паву́к
+    note: Voiceless 'p' sound.
+  - video: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    letter: Д
+    word: дім
+    note: Voiced 'd' sound. Tongue touches the back of upper teeth.
+  - video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    letter: Т
+    word: та́то
+    note: Voiceless 't' sound.
+  - video: https://www.youtube.com/watch?v=BhASNxitC1A
+    letter: З
+    word: зуб
+    note: Voiced 'z' sound. Keep it buzzing!
+  - video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    letter: С
+    word: суп
+    note: Voiceless 's' sound.
+- type: classify
+  title: Sort the Consonants
+  categories:
+  - label: Сонорні (Sonorant - always voiced)
+    items:
+    - М
+    - Н
+    - Л
+    - Р
+    - В
+    - Й
+  - label: Дзвінкі (Voiced pairs)
+    items:
+    - Б
+    - Д
+    - З
+    - Ж
+    - Г
+    - Ґ
+  - label: Глухі (Voiceless pairs)
+    items:
+    - П
+    - Т
+    - С
+    - Ш
+    - Х
+    - К
+- type: image-to-letter
+  title: Match Picture to Starting Consonant
+  items:
+  - emoji: 🪲
+    answer: Ж
+    distractors:
+    - З
+    - Ш
+    - С
+  - emoji: 🧢
+    answer: Ш
+    distractors:
+    - С
+    - Ч
+    - Щ
+  - emoji: 🖐️
+    answer: Р
+    distractors:
+    - Л
+    - П
+    - В
+  - emoji: 🍞
+    answer: Х
+    distractors:
+    - Г
+    - К
+    - Ґ
+  - emoji: 🐺
+    answer: В
+    distractors:
+    - Б
+    - Ф
+    - М
+  - emoji: 🏔️
+    answer: Г
+    distractors:
+    - Х
+    - К
+    - Р
+  - emoji: 🕷️
+    answer: П
+    distractors:
+    - Б
+    - Т
+    - Д
+  - emoji: 🧅
+    answer: Ц
+    distractors:
+    - С
+    - З
+    - Ч
+- type: match-up
+  title: Match the Voiced and Voiceless Partners
+  pairs:
+  - left: Б
+    right: П
+  - left: Д
+    right: Т
+  - left: З
+    right: С
+  - left: Ж
+    right: Ш
+  - left: Г
+    right: Х
+  - left: Ґ
+    right: К
+  instruction: З'єднайте відповідні елементи.
+- type: quiz
+  title: 'Hand-on-Throat Test: Voiced or Voiceless?'
+  instruction: Оберіть правильну відповідь.
+  items:
+  - question: Say the first sound in 'зуб'. Is it voiced or voiceless?
+    options:
+    - text: Voiced
+      correct: true
+    - text: Voiceless
+      correct: false
+    explanation: З is voiced. You should feel your vocal cords vibrate.
+  - question: Say the first sound in 'суп'. Is it voiced or voiceless?
+    options:
+    - text: Voiceless
+      correct: true
+    - text: Voiced
+      correct: false
+    explanation: С is voiceless. You only hear the air rushing out.
+  - question: Look at the word 'хліб'. What happens to the final 'б'?
+    options:
+    - text: It stays fully voiced
+      correct: true
+    - text: It becomes voiceless like 'p'
+      correct: false
+    - text: It becomes silent
+      correct: false
+    explanation: In Ukrainian, voiced consonants at the end of a word NEVER lose their voice! You must pronounce the 'b' clearly.
+  - question: Is the letter 'Д' voiced or voiceless?
+    options:
+    - text: Voiced
+      correct: true
+    - text: Voiceless
+      correct: false
+  - question: Is the letter 'Т' voiced or voiceless?
+    options:
+    - text: Voiceless
+      correct: true
+    - text: Voiced
+      correct: false
+  - question: Say the first sound in 'жук'. Is it voiced or voiceless?
+    options:
+    - text: Voiced
+      correct: true
+    - text: Voiceless
+      correct: false
+  - question: Say the first sound in 'шапка'. Is it voiced or voiceless?
+    options:
+    - text: Voiceless
+      correct: true
+    - text: Voiced
+      correct: false
+  - question: Is the letter 'Г' (as in гора) voiced or voiceless?
+    options:
+    - text: Voiced
+      correct: true
+    - text: Voiceless
+      correct: false
+    explanation: Г is a soft, throaty 'h' sound, but it is voiced! You engage your vocal cords.
+  - question: Is the letter 'Х' (as in хліб) voiced or voiceless?
+    options:
+    - text: Voiceless
+      correct: true
+    - text: Voiced
+      correct: false
+  - question: The sonorant consonants (М, Н, Л, Р, В, Й) are always...
+    options:
+    - text: Voiced
+      correct: true
+    - text: Voiceless
+      correct: false
+    - text: Soft
+      correct: false
+    explanation: Sonorant consonants ring out clearly and are always voiced. They never lose their voice.
+- type: classify
+  title: Hard or Soft? (First Consonant)
+  categories:
+  - label: First consonant is HARD
+    items:
+    - са́ло
+    - зуб
+    - не́бо
+    - вода́
+    - ма́ма
+  - label: First consonant is SOFT
+    items:
+    - лю́ди
+    - люк
+    - сіль

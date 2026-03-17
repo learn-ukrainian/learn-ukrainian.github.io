@@ -1,6 +1,6 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
@@ -58,11 +58,15 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 4
 **Previous module:** Completing the Alphabet
 
-**Cumulative vocabulary (39 words):**
+**Cumulative vocabulary (74 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
 сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
+сіль, люди, вода, цибуля, люк, лук, дим, Львів, кінь, осінь
+м'ясо, п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя
+факт, джерело, бджола, дзвін
 
 **Grammar already taught (20 topics):**
 - Full alphabet overview (33 letters)
@@ -121,12 +125,12 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 10-25% Ukrainian.
+TARGET: 5-15% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: 100% English.
-- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
-- TABLES: Vocabulary tables, letter groups, simple word families.
-- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
+- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
+- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
+- TABLES: Simple letter-sound or word-meaning tables.
 Ukrainian sentences max 10 words.
 
 ### Textbook References
@@ -209,7 +213,10 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - Syllable counting drills: given a word, count the vowels and identify each syllable boundary.
   - Word division exercises: mark correct division points in multi-syllable words (бі-блі-о-те-ка, у-ні-вер-си-тет).
   - Reading multi-syllable words aloud: building fluency by reading words syllable-by-syllable, then at full speed.
-- `## Підсумок — Summary` (~150 words) — recap + 3-4 self-check questions
+- `## Підсумок — Summary` (~100 words)
+  - Recap: every vowel = one syllable, open vs closed syllables, consonant cluster split rules, word division for writing.
+  - Self-check: How many syllables in Україна? What is an open syllable? Where do you split a consonant cluster?
+  - Next: M6 — stress and intonation.
 
 ### Section Word Budgets
 
@@ -219,6 +226,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 | Типи складів — Syllable Types | 300+ |
 | Правила переносу — Word Division Rules | 400+ |
 | Практика — Practice | 200+ |
+| Підсумок — Summary | 100+ |
 | **Total** | **1200+ (aim for ~1440)** |
 
 ---
@@ -446,7 +454,110 @@ rag_tools_used:
 
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-005
+level: A1
+sequence: 5
+slug: syllables-and-word-division
+version: '3.1'
+title: Syllables and Word Division
+subtitle: Breaking Words into Pieces
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Count syllables in Ukrainian words by identifying vowels
+- Identify open and closed syllables
+- Apply word division (переніс/hyphenation) rules correctly
+- Read multi-syllable words fluently
+content_outline:
+- section: Що таке склад? — What Is a Syllable?
+  words: 300
+  points:
+  - 'Vowel as the syllable core — every vowel creates one syllable, so counting syllables means counting vowels.'
+  - 'Counting syllables by vowels: мо-ло-ко (3 vowels = 3 syllables), кіт (1 vowel = 1 syllable), у-кра-ї-на (4 vowels = 4
+    syllables).'
+  - 'Contrast with English syllable intuition: Ukrainian syllable boundaries follow different rules.'
+- section: Типи складів — Syllable Types
+  words: 300
+  points:
+  - Open syllables end in a vowel (ма-, но-, мо-ло-ко) — the default and most common type in Ukrainian.
+  - Closed syllables end in a consonant (кін-, бук-, кіт) — occur at word boundaries and before consonant clusters.
+  - 'Consonant clusters: how Ukrainians split them — се-стра (not *сес-тра), о-стрів (not *ос-трів); the principle of maximal
+    onset.'
+  - 'Practice identifying open and closed syllables in high-frequency words: ву-ли-ця, ав-то-бус, де-ре-во.'
+- section: Правила переносу — Word Division Rules
+  words: 400
+  points:
+  - 'Word division (переніс) rules for writing: why correct division matters in Ukrainian handwriting and printing.'
+  - 'Cannot split: a single letter from the rest of the word (*У-країна), the digraphs дж/дз when they represent one sound (ґу-дзик,
+    not *ґуд-зик).'
+  - 'Cannot separate: Ь from the preceding consonant (паль-ці, not *пал-ьці), the apostrophe group from the consonant before
+    it (сім''я → сі-м''я, not *сім-''я).'
+  - 'Can split: between two consonants (сіль-ський — ль is inseparable), between a vowel and a consonant (мо-ло-ко).'
+  - 'Common learner errors: applying English hyphenation habits to Ukrainian words; drill with problem words like бібліотека,
+    університет.'
+- section: Практика — Practice
+  words: 200
+  points:
+  - 'Syllable counting drills: given a word, count the vowels and identify each syllable boundary.'
+  - 'Word division exercises: mark correct division points in multi-syllable words (бі-блі-о-те-ка, у-ні-вер-си-тет).'
+  - 'Reading multi-syllable words aloud: building fluency by reading words syllable-by-syllable, then at full speed.'
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "Recap: every vowel = one syllable, open vs closed syllables, consonant cluster
+    split rules, word division for writing."
+  - "Self-check: How many syllables in Україна? What is an open syllable? Where do
+    you split a consonant cluster?"
+  - "Next: M6 — stress and intonation."
+vocabulary_hints:
+  required:
+  - 'молоко (milk) — 3 open syllables мо-ло-ко; Top 500 word; collocations: пити молоко, склянка молока'
+  - 'Україна (Ukraine) — 4 syllables у-кра-ї-на; Top 100 word; collocations: жити в Україні, рідна Україна'
+  - 'сестра (sister) — consonant cluster split се-стра; Top 500 word; collocations: моя сестра, старша сестра'
+  - 'дерево (tree) — 3 syllables де-ре-во; collocations: старе дерево, зелене дерево'
+  - 'вулиця (street) — 3 syllables ву-ли-ця; Top 500 word; collocations: на вулиці, головна вулиця'
+  - 'автобус (bus) — 3 syllables ав-то-бус (closed final syllable); collocations: їхати автобусом'
+  recommended:
+  - 'бібліотека (library) — 5 syllables бі-блі-о-те-ка; collocations: у бібліотеці'
+  - 'університет (university) — 5 syllables у-ні-вер-си-тет; collocations: навчатися в університеті'
+  - склад (syllable) — metalinguistic term; essential for understanding lesson content
+  - перенос (word division/hyphenation) — metalinguistic term for the writing rule
+  - голосний (vowel) — metalinguistic term; every голосний creates a syllable
+  - приголосний (consonant) — metalinguistic term; consonant clusters follow specific split rules
+activity_hints:
+- type: quiz
+  focus: Count syllables in Ukrainian words
+  items: 10
+- type: fill-in
+  focus: Mark correct word division points
+  items: 8
+- type: group-sort
+  focus: Sort syllables into open vs closed
+  items: 12
+- type: match-up
+  focus: Match words to their syllable count
+  items: 10
+connects_to:
+- a1-06 (Stress and Intonation)
+prerequisites:
+- a1-04 (The Cyrillic Code IV)
+persona:
+  voice: Patient Supportive Tutor
+  role: Rhythm Coach
+grammar:
+- Syllable structure
+- Open and closed syllables
+- Word division rules
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
@@ -484,18 +595,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -503,18 +641,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

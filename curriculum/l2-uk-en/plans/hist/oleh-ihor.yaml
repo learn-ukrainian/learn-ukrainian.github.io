@@ -119,7 +119,7 @@ connects_to:
 - hist-11 (Volodymyr and Baptism)
 - 'hist-20 (Synthesis: Kyivan Rus)'
 prerequisites:
-- 'hist-08 (Synthesis: Origins to Kyiv)'
+- 'hist-04 (Synthesis: Origins to Kyiv)'
 - Understanding of tribal society
 persona:
   voice: Senior Professor of History

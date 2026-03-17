@@ -135,8 +135,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-90 (Теорія перекладу II — Поглиблений курс)
-- c2-94 (Дипломний проєкт — Вибір теми)
+- c2-11 (Теорія перекладу II — Поглиблений курс)
+- c2-94 (Interpretation Advanced)
 persona:
   voice: Senior Specialist
   role: Curriculum Architect

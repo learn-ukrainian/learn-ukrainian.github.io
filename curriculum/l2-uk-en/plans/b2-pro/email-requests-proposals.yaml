@@ -86,9 +86,9 @@ activity_hints:
   focus: Знайти занадто прямі або грубі формулювання в листах
   items: 6
 connects_to:
-- 'b2-pro-03 (Листування: Продовження переписки)'
+- 'b2-pro-03 (Email Followups Threads)'
 prerequisites:
-- 'b2-pro-01 (Ділові листи: Основи)'
+- 'b2-pro-01 (Business Email Foundations)'
 persona:
   voice: Senior Specialist
   role: Менеджер з розвитку бізнесу

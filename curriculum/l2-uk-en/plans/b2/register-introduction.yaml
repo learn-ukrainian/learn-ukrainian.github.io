@@ -112,7 +112,7 @@ connects_to:
 - 'b2-32 (Register: Official-Legal)'
 - b2-24 (Checkpoint Syntax)
 prerequisites:
-- b2-01 through b2-22 (Grammar & Syntax foundations)
+- b2-24 through b2-22 (Grammar & Syntax foundations)
 - Basic understanding of formality levels
 - Connector usage
 persona:

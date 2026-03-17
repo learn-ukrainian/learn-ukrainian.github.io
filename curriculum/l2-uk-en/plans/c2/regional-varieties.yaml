@@ -132,8 +132,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-82 (Соціолінгвістична майстерність)
-- c2-86 (Володіння на рівні носія)
+- c2-82 (Regional Varieties)
+- c2-86 (Error Analysis)
 - c2-101 (Фінальне повторення I — Граматична консолідація)
 persona:
   voice: Senior Specialist

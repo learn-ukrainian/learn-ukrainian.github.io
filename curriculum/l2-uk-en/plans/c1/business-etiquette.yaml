@@ -95,8 +95,8 @@ prerequisites:
 - c1-22 (Job Interview)
 connects_to:
 - c1-24 (Digital Communication)
-- c1-36 (Професійні сценарії)
-- c1-20 (Контрольна точка — Академічна база)
+- c1-40 (Professional Scenarios)
+- c1-20 (C1 1 Checkpoint)
 module_type: cultural
 sources:
 - name: Ukrainian Business Culture

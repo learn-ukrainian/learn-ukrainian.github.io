@@ -93,8 +93,7 @@ activity_hints:
 connects_to:
 - bio-060
 - bio-087
-prerequisites:
-- bio-078
+prerequisites: []
 persona:
   voice: Senior Biographer
   role: Cultural Historian

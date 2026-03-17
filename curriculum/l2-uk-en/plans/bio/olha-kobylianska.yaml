@@ -93,11 +93,11 @@ activity_hints:
   focus: Як Кобилянська змінила українську прозу?
   output: Літературознавче есе
 connects_to:
-- bio-40 (Леся Українка)
-- 'bio-54 (Іван Франко: Каменяр)'
-- bio-86 (Оксана Забужко)
+- bio-40 (Panteleimon Kulish)
+- 'bio-54 (Ivan Franko)'
+- bio-86 (Petro Bolbochan)
 prerequisites:
-- bio-25 (Наталія Кобринська)
+- bio-25 (Ivan Sirko)
 persona:
   voice: Senior Biographer
   role: Salon Hostess

@@ -102,12 +102,12 @@ activity_hints:
   focus: Як літературна цензура формувала або деформувала українську прозу XX століття?
   output: Критичне есе
 connects_to:
-- bio-102 (Олександр Довженко)
-- bio-115 (Валер'ян Підмогильний)
-- bio-138 (Ліна Костенко)
-- bio-113 (Катерина Білокур)
+- bio-102 (Oleksandr Dovzhenko)
+- bio-115 (Valerian Pidmohylnyi)
+- bio-138 (Lina Kostenko)
+- bio-113 (Kateryna Bilokur)
 prerequisites:
-- bio-98 (Микола Куліш)
+- bio-98 (Mykola Kulish)
 persona:
   voice: Senior Historian
   role: Soviet-Era Literary Resistance Specialist

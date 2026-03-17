@@ -72,10 +72,10 @@ activity_hints:
 - type: comparative-study
   focus: Хмельницький vs Кромвель
 connects_to:
-- bio-24 (Іван Виговський)
+- bio-24 (Ivan Vyhovskyi)
 - hist ruina-i module
 prerequisites:
-- bio-10 (Данило Галицький)
+- bio-10 (Danylo Halytskyi)
 - hist hmelnychyna module
 persona:
   voice: Senior Biographer

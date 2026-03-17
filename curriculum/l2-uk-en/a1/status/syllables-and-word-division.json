@@ -1,0 +1,59 @@
+{
+  "module": "syllables-and-word-division",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-03-17T17:06:49.242090Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-17T16:55:09.105790Z",
+    "meta": "2026-03-17T16:42:30.387503Z",
+    "activities": "2026-03-17T16:55:09.106316Z",
+    "vocabulary": "2026-03-17T16:40:57.679416Z",
+    "research": "2026-03-12T09:44:02.496181Z",
+    "plan": "2026-03-16T22:57:55.599794Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2020/1200 (raw: 2128)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "15/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

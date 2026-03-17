@@ -94,11 +94,11 @@ activity_hints:
   focus: Change aspect and explain meaning difference
   items: 8+
 connects_to:
-- 'b1-09 (Вид у минулому: одного разу vs щодня)'
+- 'b1-09 (Aspect Complete System)'
 - b1-10 (Aspect in past - result vs process)
 - b1-15 (Aspect mastery checkpoint)
 prerequisites:
-- b1-05 (Metalanguage checkpoint)
+- b1-05 (Ready For Immersion)
 - A2 aspect basics (impf/pf recognition)
 persona:
   voice: Senior Language & Culture Specialist

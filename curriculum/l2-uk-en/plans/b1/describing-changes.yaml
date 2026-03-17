@@ -91,9 +91,9 @@ activity_hints:
   focus: Narrate trends
   items: 10
 connects_to:
-- b1-73 (Медіа та новини)
+- b1-73 (Media News)
 prerequisites:
-- 'b1-71 (Дискурсивні маркери II: складна організація)'
+- 'b1-71 (Discourse Markers Advanced)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Climate Scientist

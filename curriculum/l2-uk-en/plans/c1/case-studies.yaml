@@ -1,6 +1,6 @@
-module: c1-037
+module: c1-041
 level: C1
-sequence: 37
+sequence: 41
 slug: case-studies
 version: '2.0'
 title: Практичні кейси
@@ -83,11 +83,11 @@ activity_hints:
 focus: practice
 pedagogy: PPP
 prerequisites:
-- c1-25 to c1-31 (Sociolinguistic knowledge)
-- c1-36 (Професійні сценарії)
+- c1-25 to c1-33 (Political System)
+- c1-40 (Professional Scenarios)
 connects_to:
-- 'c1-38 (Огляд і повторення: Професійна комунікація)'
-- c1-20 (Контрольна точка — Академічна база)
+- 'c1-42 (Review)'
+- c1-20 (C1 1 Checkpoint)
 - c1-19 (Article Critique skills)
 module_type: practice
 sources:

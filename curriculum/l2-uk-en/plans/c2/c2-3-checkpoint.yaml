@@ -155,8 +155,8 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-066 (Суспільство і громадянство — перший модуль C2.4 Тематичний дискурс)
-- c2-095 (Дипломний проєкт — Вибір теми)
+- c2-78 (Суспільство і громадянство — перший модуль C2.4 Тематичний дискурс)
+- c2-095 (Capstone Topic Selection)
 - c2-105 (Підготовка до сертифікації C2)
 persona:
   voice: Senior Specialist

@@ -143,8 +143,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-32 (Літературний переклад II — проза)
-- c2-33 (Творче письмо — поезія)
-- c2-86 (C2.4 Translation Practice I)
+- c2-33 (Creative Writing Poetry)
+- c2-78 (C2.4 Translation Practice I)
 persona:
   voice: Senior Specialist
   role: Poetry Translator

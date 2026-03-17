@@ -106,7 +106,7 @@ connects_to:
 - b1-20 (Motion - approaching & departing)
 - b1-22 (Motion full prefix integration)
 prerequisites:
-- b1-18 (Motion - passing & crossing)
+- b1-21 (Motion - passing & crossing)
 persona:
   voice: Senior Language & Culture Specialist
   role: Commuter

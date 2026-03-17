@@ -75,8 +75,7 @@ activity_hints:
   output: Аналітичне есе
 connects_to:
 - lit-126
-prerequisites:
-- lit-124
+prerequisites: []
 persona:
   voice: Senior Philologist & Critic
   role: Cultural Weaponizer

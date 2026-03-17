@@ -95,10 +95,9 @@ activity_hints:
 - type: essay-response
   focus: Чи був Гетьманат Скоропадського українською державою?
 connects_to:
-- hist-93 (ЗУНР)
-- hist-93 (Директорія УНР)
-prerequisites:
-- hist-91 (Центральна Рада)
+- hist-93 (Dyrektoriia)
+- hist-93 (Dyrektoriia)
+prerequisites: []
 persona:
   voice: Senior Professor of History
   role: Diplomat of the Ukrainian State

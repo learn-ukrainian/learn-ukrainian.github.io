@@ -92,9 +92,9 @@ activity_hints:
   focus: Знайти непрофесійні формулювання у відповідях на запитання
   items: 6
 connects_to:
-- 'b2-pro-10 (Переговори: Основи)'
+- 'b2-pro-10 (Negotiations Basics)'
 prerequisites:
-- 'b2-pro-08 (Презентації: Структура)'
+- 'b2-pro-08 (Presentations Structure)'
 persona:
   voice: Senior Specialist
   role: Спікер на iForum

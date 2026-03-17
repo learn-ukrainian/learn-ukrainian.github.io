@@ -100,8 +100,8 @@ activity_hints:
 - type: essay-response
   focus: Чому десталінізація не призвела до деколонізації?
 connects_to:
-- hist-114 (Шістдесятники)
-- 'hist-98 (Розстріляне відродження: Постаті)'
+- hist-114 (Shistdesiatnyky)
+- 'hist-98 (Rozstriliane Vidrodzennia)'
 prerequisites:
 - hist-112 (Крим 1954)
 persona:

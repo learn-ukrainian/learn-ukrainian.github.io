@@ -106,7 +106,7 @@ connects_to:
 - b1-19 (Motion - starting & returning)
 - b1-22 (Motion full prefix integration)
 prerequisites:
-- 'b1-19 (Рух: Прибуття та вихід)'
+- 'b1-19 (Motion Verbs Full System)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Kyiv Traffic Controller

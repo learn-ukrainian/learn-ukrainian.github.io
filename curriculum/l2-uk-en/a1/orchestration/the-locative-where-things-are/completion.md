@@ -1,4 +1,4 @@
-FAIL: pipeline a1 29
+PASS: pipeline a1 29
 
   Module:   the-locative-where-things-are
   Track:    a1
@@ -6,5 +6,5 @@ FAIL: pipeline a1 29
   Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-03-17T07:15:28Z
+  Verdict:  PASS
+  Date:     2026-03-17T14:28:38Z

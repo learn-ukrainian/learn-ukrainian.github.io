@@ -90,9 +90,9 @@ activity_hints:
   focus: Прочитати виписку з рахунку та відповісти на питання
   items: 6
 connects_to:
-- b2-pro-20 (Фінансова звітність)
+- b2-pro-20 (Financial Reports)
 prerequisites:
-- b2-pro-18 (Технічна документація)
+- b2-pro-18 (Technical Documentation)
 persona:
   voice: Senior Specialist
   role: Фінансовий директор (CFO)

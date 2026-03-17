@@ -131,7 +131,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-34 (Творче письмо — проза)
+- c2-34 (Creative Writing Prose)
 - c2-43 (C2.2 Practice II — Creative Portfolio)
 - c2-43 (Контрольна точка C2.2 — Літературна майстерність)
 persona:

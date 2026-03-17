@@ -90,9 +90,9 @@ activity_hints:
   focus: З'єднати показник з його значенням/інтерпретацією
   items: 8
 connects_to:
-- b2-pro-21 (Юридична лексика)
+- b2-pro-21 (Legal Vocabulary)
 prerequisites:
-- b2-pro-19 (Фінансова лексика)
+- b2-pro-19 (Finance Vocabulary)
 persona:
   voice: Senior Specialist
   role: Старший аудитор

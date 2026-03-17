@@ -93,12 +93,12 @@ activity_hints:
   focus: How did UPA fight on two fronts simultaneously?
   output: Military strategy analysis
 connects_to:
-- bio-108 (Konovalets - predecessor)
-- bio-59 (Olha Basarab - earlier resistance)
-- bio-68 (Olena Teliha - contemporary)
+- bio-95 (Konovalets - predecessor)
+- bio-91 (Olha Basarab - earlier resistance)
+- bio-118 (Olena Teliha - contemporary)
 prerequisites:
-- 'bio-95 (Євген Коновалець: Полковник і організатор)'
-- bio-52 (Dmytro Dontsov - ideologist)
+- 'bio-95 (Yevhen Konovalets)'
+- bio-85 (Dmytro Dontsov - ideologist)
 - Understanding of WWII in Ukraine
 persona:
   voice: Senior Biographer

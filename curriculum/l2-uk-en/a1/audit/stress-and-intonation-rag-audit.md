@@ -1,20 +1,15 @@
 # RAG Verification: stress-and-intonation
 
-**Date:** 2026-03-05 20:30 UTC | **Words checked:** 56 | **VESUM coverage:** 55/56 (98.2%)
+**Date:** 2026-03-17 16:06 UTC | **Words checked:** 49 | **VESUM coverage:** 49/49 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 55
-- ⚠️ Partial (RAG only): 1
+- ✅ Verified (VESUM): 49
+- ⚠️ Partial (RAG only): 0
 - ❌ Not found: 0
-
-## ⚠️ Partial Match (human review)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| са | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 56 | 55 | 0 |
+| Prose (.md) | 46 | 46 | 0 |
+| Activities (.yaml) | 3 | 3 | 0 |

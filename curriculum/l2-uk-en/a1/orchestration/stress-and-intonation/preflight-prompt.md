@@ -1,6 +1,6 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
@@ -58,13 +58,15 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 5
 **Previous module:** Syllables and Word Division
 
-**Cumulative vocabulary (55 words):**
+**Cumulative vocabulary (74 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
 сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, сестра
-дерево, вулиця, автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів
-сім'я, ґудзик, вода, кава, чай
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
+сіль, люди, вода, цибуля, люк, лук, дим, Львів, кінь, осінь
+м'ясо, п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя
+факт, джерело, бджола, дзвін
 
 **Grammar already taught (23 topics):**
 - Full alphabet overview (33 letters)
@@ -126,13 +128,12 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 15-35% Ukrainian.
+TARGET: 5-15% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
-- UKRAINIAN CONTENT: Words and phrases inline bolded. Short example sentences in bulleted lists or tables — each with English gloss on the same line.
-- TABLES: Word families, vocabulary groups, simple paradigm tables.
-- PATTERN BOXES: Show transformations: `слово → слова` (word → words).
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian vocabulary. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
+- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
+- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
+- TABLES: Simple letter-sound or word-meaning tables.
 Ukrainian sentences max 10 words.
 
 ### Textbook References
@@ -229,7 +230,10 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - Stress placement drills: identify which syllable carries the stress in common words.
   - Minimal pairs practice: distinguish words that differ only in stress (зАмок/замОк, мУка/мукА).
   - Intonation reading exercises: read the same sentence as a statement, question, and exclamation.
-- `## Підсумок — Summary` (~150 words) — recap + 3-4 self-check questions
+- `## Підсумок — Summary` (~100 words)
+  - Recap: stress is free and mobile, vowel purity under stress, rising intonation for questions, stress minimal pairs.
+  - Self-check: Where is the stress in вода? What happens to vowel quality when unstressed? How does question intonation differ from statement?
+  - Next: M7 — greetings and basic phrases.
 
 ### Section Word Budgets
 
@@ -240,6 +244,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 | Рухомий наголос — Mobile Stress | 250+ |
 | Інтонація — Intonation | 250+ |
 | Практика — Practice | 100+ |
+| Підсумок — Summary | 100+ |
 | **Total** | **1200+ (aim for ~1440)** |
 
 ---
@@ -467,7 +472,117 @@ rag_tools_used:
 
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-006
+level: A1
+sequence: 6
+slug: stress-and-intonation
+version: '3.0'
+title: Stress and Intonation
+subtitle: The Music of Ukrainian
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Identify the stressed syllable in common Ukrainian words
+- Understand that Ukrainian stress is free and mobile
+- Produce correct intonation for statements, questions, and exclamations
+- Use stress marks when reading dictionary entries
+content_outline:
+- section: Наголос — Stress
+  words: 350
+  points:
+  - 'Free and mobile stress concept: unlike Polish (penultimate) or French (final), Ukrainian stress can fall on any syllable
+    — there is no fixed rule.'
+  - 'Stress changes meaning: зАмок (castle) vs замОк (lock), мУка (torment) vs мукА (flour) — minimal pairs that demonstrate
+    the functional load of stress.'
+  - 'How stress is marked in dictionaries and textbooks: the acute accent (´) over the stressed vowel; practice reading dictionary
+    entries.'
+  - 'Learner strategy: when encountering a new word, always check stress placement — guessing from spelling will often be wrong.'
+- section: Типові наголоси — Common Stress Patterns
+  words: 250
+  points:
+  - 'First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and household words.'
+  - 'Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some verb forms.'
+  - 'Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable words.'
+  - 'No fixed rule: the same ending can have different stress (кнИга vs водА, both -а ending) — stress must be learned per word.'
+- section: Рухомий наголос — Mobile Stress
+  words: 250
+  points:
+  - 'Stress shifts in declension: рукА (nominative) → рУки (genitive/plural) — the stress moves when the word form changes.'
+  - 'Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш (you write) — verb stress can shift between
+    stems and endings.'
+  - 'Preview note: mobile stress will matter more when learning cases and verb conjugation — for now, awareness is the goal.'
+  - 'Practical tip: listening to native speakers is the best way to internalize stress patterns.'
+- section: Інтонація — Intonation
+  words: 250
+  points:
+  - 'Declarative intonation: pitch falls at the end of the sentence — Це кафе. with a downward contour.'
+  - 'Interrogative with question word: pitch rises on the question word, then falls — ДЕ кафе?'
+  - 'Yes/no questions (without question word): pitch rises sharply at the end — Це кафе? with an upward contour.'
+  - 'Exclamatory intonation: sharp rise with emphasis — Це кафе! expressing surprise or excitement.'
+  - 'Contrast drill: practicing the same sentence with all four intonation patterns.'
+- section: Практика — Practice
+  words: 100
+  points:
+  - 'Stress placement drills: identify which syllable carries the stress in common words.'
+  - 'Minimal pairs practice: distinguish words that differ only in stress (зАмок/замОк, мУка/мукА).'
+  - 'Intonation reading exercises: read the same sentence as a statement, question, and exclamation.'
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "Recap: stress is free and mobile, vowel purity under stress, rising intonation
+    for questions, stress minimal pairs."
+  - "Self-check: Where is the stress in вода? What happens to vowel quality when
+    unstressed? How does question intonation differ from statement?"
+  - "Next: M7 — greetings and basic phrases."
+vocabulary_hints:
+  required:
+  - 'замок (castle/lock) — stress minimal pair: зАмок (castle) vs замОк (lock)'
+  - 'вода (water) — last-syllable stress водА; Top 300 word; collocations: пити воду, холодна вода'
+  - 'рука (hand/arm) — mobile stress рукА → рУки; Top 200 word'
+  - писати (to write) — mobile stress in conjugation писАти → пишУ → пИшеш; Top 200 word
+  - 'школа (school) — penultimate stress шкОла; Top 200 word'
+  - 'молоко (milk) — last-syllable stress молокО'
+  - 'добрий (good) — first-syllable stress дОбрий; Top 100 word; collocations: добрий день'
+  recommended:
+  - 'далеко (far) — last-syllable stress далекО'
+  - наголос (stress/accent) — metalinguistic term
+  - інтонація (intonation) — metalinguistic term
+  - 'питання (question) — high-frequency word'
+  - 'відповідь (answer) — high-frequency word'
+activity_hints:
+- type: quiz
+  focus: Identify which syllable carries the stress
+  items: 12
+- type: match-up
+  focus: Match stress minimal pairs to their meanings
+  items: 8
+- type: true-false
+  focus: Recognize correct intonation patterns for sentence types
+  items: 8
+- type: fill-in
+  focus: Place stress marks on common words
+  items: 10
+connects_to:
+- a1-07 (The Gender Code)
+prerequisites:
+- a1-05 (Syllables and Word Division)
+persona:
+  voice: Patient Supportive Tutor
+  role: Orchestra Conductor
+grammar:
+- Word stress
+- Stress mobility
+- Intonation patterns
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
@@ -505,18 +620,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -524,18 +666,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

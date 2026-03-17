@@ -80,9 +80,9 @@ activity_hints:
   focus: Plan summer activities
   items: 10
 connects_to:
-- b1-92 (Зимові види спорту)
+- b1-92 (Running In Ukraine)
 prerequisites:
-- b1-90 (Гори та трейлраннінг)
+- b1-90 (Sports In Ukraine)
 persona:
   voice: Senior Language & Culture Specialist
   role: Dnipro Kayak Guide

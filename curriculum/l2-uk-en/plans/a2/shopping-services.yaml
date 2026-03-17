@@ -93,7 +93,7 @@ activity_hints:
   items: 8
 connects_to:
 - a2-59 (Sports and Fitness)
-- a2-63 (At the Bank)
+- a2-12 (At the Bank)
 prerequisites:
 - a2-57 (Education and Learning)
 persona:

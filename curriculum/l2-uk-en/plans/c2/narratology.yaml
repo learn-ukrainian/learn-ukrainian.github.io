@@ -144,9 +144,9 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- 'c2-28 (Poetyka: Verse Analysis)'
-- 'c2-29 (Poetyka: Prose Analysis)'
-- c2-34 (Творче письмо — проза)
+- 'c2-86 (Poetyka: Verse Analysis)'
+- 'c2-86 (Poetyka: Prose Analysis)'
+- c2-34 (Creative Writing Prose)
 persona:
   voice: Senior Specialist
   role: Master Storyteller

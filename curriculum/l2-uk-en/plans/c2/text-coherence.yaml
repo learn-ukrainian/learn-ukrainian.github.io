@@ -128,7 +128,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-17 (Practice I uses coherence in portfolio)
+- c2-61 (Practice I uses coherence in portfolio)
 - c2-32 (Writing literary essays requires coherence)
 - c2-52 (Professional documents need flow)
 persona:

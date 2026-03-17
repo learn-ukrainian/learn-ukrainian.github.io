@@ -105,7 +105,7 @@ prerequisites:
 connects_to:
 - c1-26 (Media Landscape)
 - c1-27 (Global Context)
-- c1-20 (Контрольна точка — Академічна база)
+- c1-20 (C1 1 Checkpoint)
 module_type: cultural
 sources:
 - name: Конституція України

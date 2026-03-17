@@ -93,12 +93,12 @@ activity_hints:
   focus: Як література допомагає опрацювати колективну травму?
   output: Аналітичне есе
 connects_to:
-- bio-84 (Галина Пагутяк)
-- bio-85 (Марія Матіос)
-- bio-94 (Софія Андрухович)
+- bio-84 (Viacheslav Lypynskyi)
+- bio-85 (Dmytro Dontsov)
+- bio-94 (Pavlo Fylypovych)
 prerequisites:
-- bio-40 (Леся Українка)
-- bio-74 (Ліна Костенко)
+- bio-40 (Panteleimon Kulish)
+- bio-74 (Solomiya Krushelnytska)
 persona:
   voice: Senior Biographer
   role: Public Intellectual

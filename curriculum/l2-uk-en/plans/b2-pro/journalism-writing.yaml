@@ -93,9 +93,9 @@ activity_hints:
   focus: Написати заголовок та лід до наданої інформації
   items: 3
 connects_to:
-- 'b2-pro-34 (Ораторство I: Структура)'
+- 'b2-pro-34 (Public Speaking 1)'
 prerequisites:
-- 'b2-pro-32 (Аналіз новин II: Джерела)'
+- 'b2-pro-32 (News Analysis 2)'
 persona:
   voice: Senior Specialist
   role: Колумніст «Української правди»

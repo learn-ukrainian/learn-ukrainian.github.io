@@ -1,7 +1,7 @@
 # Audit Report: M06 — being-and-becoming.md
 **Level:** A2 | **Module:** M06 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-14 16:31:50
+**Generated:** 2026-03-17 16:45:14
 
 ## Configuration
 **Type:** A2-grammar

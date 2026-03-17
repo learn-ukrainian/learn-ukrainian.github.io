@@ -92,12 +92,12 @@ activity_hints:
   focus: Чому моральний авторитет важливий у часи кризи?
   output: Аргументативне есе
 connects_to:
-- bio-71 (Левко Лук'яненко)
-- bio-72 (Алла Горська)
-- bio-95 (Олександра Матвійчук)
+- bio-71 (Ahatanhel Krymskyi)
+- bio-72 (Lesya Ukrainka)
+- bio-95 (Yevhen Konovalets)
 prerequisites:
-- bio-76 (В'ячеслав Чорновіл)
-- bio-77 (Василь Стус)
+- bio-76 (Oleksandr Hrekiv)
+- bio-77 (Mykola Leontovych)
 persona:
   voice: Senior Biographer
   role: Gulag Survivor

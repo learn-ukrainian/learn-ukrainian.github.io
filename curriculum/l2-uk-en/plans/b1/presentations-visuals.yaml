@@ -98,9 +98,9 @@ activity_hints:
   focus: Reorder presentation sentences
   items: 8
 connects_to:
-- b1-99 (Зворотний зв'язок, переговори, скарги)
+- b1-99 (Interviu Ta Podkasty)
 prerequisites:
-- b1-97 (Канали комунікації)
+- b1-97 (Ukrainski Sviata Ta Festyvali)
 persona:
   voice: Senior Language & Culture Specialist
   role: Creative Director

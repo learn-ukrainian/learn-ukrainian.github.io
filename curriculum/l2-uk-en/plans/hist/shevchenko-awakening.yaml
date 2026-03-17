@@ -95,10 +95,10 @@ activity_hints:
 - type: essay-response
   focus: Чому Шевченка називають творцем української нації?
 connects_to:
-- hist-82 (Валуєвський та Емський укази)
-- hist-84 (Михайло Драгоманов)
+- hist-82 (Valuevskyi Emskyi)
+- hist-84 (Drahomanov)
 prerequisites:
-- hist-80 (Кирило-Мефодіївське братство)
+- hist-80 (Kyrylo Mefodiivtsi)
 persona:
   voice: Senior Professor of History
   role: Brotherhood Member

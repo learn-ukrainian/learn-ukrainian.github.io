@@ -62,10 +62,10 @@ vocabulary_hints:
   required: []
   recommended: []
 connects_to:
-- bio-10 (Данило Галицький)
+- bio-10 (Danylo Halytskyi)
 - hist hrystyianstvo module
 prerequisites:
-- bio-08 (Роман Мстиславич)
+- bio-08 (Roman Mstyslavych)
 - hist mongolska-navala module
 persona:
   voice: Senior Biographer

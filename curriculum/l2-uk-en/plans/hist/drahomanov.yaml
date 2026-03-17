@@ -96,10 +96,10 @@ activity_hints:
 - type: essay-response
   focus: Чому ідеї Драгоманова залишаються актуальними для сучасної України?
 connects_to:
-- hist-85 (Франко, Леся, Грінченко)
-- 'hist-86 (Синтез: Імперська доба)'
+- hist-85 (Franko Lesia Hrinchenko)
+- 'hist-86 (Syntez Imperska Doba)'
 prerequisites:
-- hist-83 (Громади)
+- hist-83 (Hromady)
 persona:
   voice: Senior Professor of History
   role: Political Philosopher

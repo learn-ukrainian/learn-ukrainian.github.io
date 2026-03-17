@@ -87,7 +87,7 @@ activity_hints:
   items: 6
 connects_to:
 - a1-15 (The Living Verb I)
-- a1-29 (Around the City)
+- a1-30 (Around the City)
 prerequisites:
 - a1-09 (This Is, I Am)
 persona:

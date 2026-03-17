@@ -88,9 +88,9 @@ activity_hints:
   focus: Ідентифікувати прогалину в літературі та сформулювати її
   items: 1
 connects_to:
-- c1-pro-18 (Опис методології)
+- c1-pro-18 (Methodology Writing)
 prerequisites:
-- 'c1-pro-16 (Наукове письмо: Структура)'
+- 'c1-pro-16 (Academic Writing Structure)'
 persona:
   voice: Senior Specialist
   role: Куратор дослідницького проєкту

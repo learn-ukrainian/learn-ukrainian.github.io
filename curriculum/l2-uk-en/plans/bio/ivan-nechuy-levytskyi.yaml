@@ -114,11 +114,11 @@ activity_hints:
   output: Comparative literature analysis
 connects_to:
 - lit-26 through lit-30 (Literary analysis of Nechuy's works)
-- bio-47 (Marko Vovchok - contemporary)
-- bio-31 (Olha Kobylianska - later realist)
+- bio-42 (Marko Vovchok - contemporary)
+- bio-57 (Olha Kobylianska - later realist)
 prerequisites:
-- bio-102 (Kvitka-Osnovianenko - predecessor)
-- bio-28 (Ivan Franko - contemporary)
+- bio-37 (Kvitka-Osnovianenko - predecessor)
+- bio-28 (Danylo Apostol)
 - Understanding of literary realism
 persona:
   voice: Senior Biographer

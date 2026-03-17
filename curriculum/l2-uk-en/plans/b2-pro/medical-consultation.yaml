@@ -93,7 +93,7 @@ activity_hints:
 connects_to:
 - b2-pro-25 (HR-лексика)
 prerequisites:
-- b2-pro-23 (Медична лексика)
+- b2-pro-23 (Medical Vocabulary)
 persona:
   voice: Senior Specialist
   role: Лікар-терапевт

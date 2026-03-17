@@ -88,9 +88,9 @@ activity_hints:
   focus: Презентувати інвестиційну можливість потенційному інвестору
   items: 1
 connects_to:
-- c1-pro-35 (Корпоративне право)
+- c1-pro-35 (Corporate Law)
 prerequisites:
-- c1-pro-33 (Фінтех та банківництво)
+- c1-pro-33 (Fintech Banking)
 persona:
   voice: Senior Specialist
   role: Венчурний аналітик

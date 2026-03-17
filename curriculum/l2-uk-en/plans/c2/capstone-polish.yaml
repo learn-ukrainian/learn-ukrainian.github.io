@@ -124,7 +124,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-99 (Дипломний проєкт — Захист)
+- c2-99 (Capstone Polish)
 - c2-101 (Фінальне повторення I — Граматична консолідація)
 persona:
   voice: Senior Specialist

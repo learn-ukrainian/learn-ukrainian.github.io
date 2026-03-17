@@ -92,9 +92,9 @@ activity_hints:
   focus: Recommend Ukrainian films
   items: 10
 connects_to:
-- b1-86 (Технології та стартапи)
+- b1-86 (Regions Center)
 prerequisites:
-- b1-84 (Українська музика сьогодні)
+- b1-84 (Regions East)
 persona:
   voice: Senior Language & Culture Specialist
   role: Film Critic

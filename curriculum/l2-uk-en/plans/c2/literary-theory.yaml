@@ -142,7 +142,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-28 (Наратологія)
+- c2-28 (Narratology)
 - c2-31 (Literary Criticism Methods)
 - c2-32 (Writing Literary Essays)
 persona:

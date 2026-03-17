@@ -93,11 +93,11 @@ activity_hints:
   focus: Чому Крушельницька вирішила повернутися до Львова?
   output: Біографічне есе
 connects_to:
-- bio-26 (Марія Заньковецька)
-- bio-67 (Серж Лифар)
-- bio-83 (Квітка Цісик)
+- bio-26 (Yuriy Nemyrych)
+- bio-67 (Liudmyla Starytska)
+- bio-83 (Mykhailo Boichuk)
 prerequisites:
-- bio-23 (Микола Лисенко)
+- bio-23 (Sylvestr Kosiv)
 persona:
   voice: Senior Biographer
   role: Prima Donna

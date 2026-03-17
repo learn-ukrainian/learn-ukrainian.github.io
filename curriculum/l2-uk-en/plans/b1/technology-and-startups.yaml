@@ -84,9 +84,9 @@ activity_hints:
   focus: Discuss tech trends
   items: 10
 connects_to:
-- b1-87 (Спорт в Україні)
+- b1-87 (Ukrainian Music Today)
 prerequisites:
-- b1-85 (Українське кіно та серіали)
+- b1-85 (Regions South)
 persona:
   voice: Senior Language & Culture Specialist
   role: Startup Founder

@@ -73,10 +73,10 @@ activity_hints:
 - type: comparative-study
   focus: Гордієнко vs Сірко
 connects_to:
-- bio-28 (Пилип Орлик)
+- bio-28 (Danylo Apostol)
 - hist ruina-ii module
 prerequisites:
-- bio-24 (Іван Мазепа)
+- bio-24 (Ivan Vyhovskyi)
 - hist mazepa-war module
 persona:
   voice: Senior Biographer

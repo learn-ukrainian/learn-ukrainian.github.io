@@ -1,6 +1,6 @@
-module: c1-035
+module: c1-039
 level: C1
-sequence: 35
+sequence: 39
 slug: tekstoznavstvo
 version: '3.0'
 title: 'Текстознавство: Будова та типи текстів'

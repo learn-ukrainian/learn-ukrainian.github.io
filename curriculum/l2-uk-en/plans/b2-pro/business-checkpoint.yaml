@@ -80,9 +80,9 @@ activity_hints:
   focus: Заповнити чек-лист навичок B2-PRO.1
   items: 1
 connects_to:
-- 'b2-pro-14 (Інтеграція: Ділове письмо)'
+- 'b2-pro-14 (Business Writing Integration)'
 prerequisites:
-- 'b2-pro-12 (Нетворкінг: Налагодження контактів)'
+- 'b2-pro-12 (Small Talk Networking)'
 persona:
   voice: Senior Specialist
   role: Генеральний директор

@@ -93,10 +93,10 @@ activity_hints:
 - type: essay-response
   focus: Як волонтерський рух допоміг українській економіці вистояти?
 connects_to:
-- hist-139 (Злочини і стійкість)
-- hist-138 (Міжнародна підтримка)
+- hist-139 (Zlochyny Stiikist)
+- hist-138 (Mizhnarodna Pidtrymka)
 prerequisites:
-- hist-135 (Каховська ГЕС)
+- hist-135 (Kakhovska Hes)
 persona:
   voice: Senior Professor of History
   role: Logistics Strategist

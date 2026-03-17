@@ -95,7 +95,7 @@ activity_hints:
   focus: English to Ukrainian
   items: 15
 connects_to:
-- 'b1-35 (Умовні речення: нереальна умова (якби))'
+- 'b1-35 (Conditionals Real Yakshcho))'
 prerequisites:
 - b1-30 (Purpose Clauses щоб + past form)
 persona:

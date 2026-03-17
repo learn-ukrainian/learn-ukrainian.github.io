@@ -72,10 +72,9 @@ activity_hints:
 - type: critical-analysis
   focus: Чому Нобелівську премію отримав не Пулюй?
 connects_to:
-- bio-165 (Володимир Вакуленко)
+- bio-165 (Volodymyr Vakulenko)
 - hist ukrainians-world module
 prerequisites:
-- bio-50 (Юрій Кондратюк)
 - Розуміння наукового контексту XIX ст.
 persona:
   voice: Senior Biographer

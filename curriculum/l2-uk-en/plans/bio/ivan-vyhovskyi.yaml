@@ -83,10 +83,10 @@ activity_hints:
 - type: essay-response
   focus: Альтернативна історія
 connects_to:
-- bio-22 (Іван Сірко)
+- bio-22 (Petro Mohyla)
 - hist ruina-i module
 prerequisites:
-- bio-20 (Богдан Хмельницький)
+- bio-20 (Petro Sahaidachny)
 - Розуміння Переяславської угоди
 persona:
   voice: Senior Biographer

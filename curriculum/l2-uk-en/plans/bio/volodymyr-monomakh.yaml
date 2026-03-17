@@ -73,10 +73,10 @@ activity_hints:
 - type: critical-analysis
   focus: Причини київського повстання 1113 р.
 connects_to:
-- bio-07 (Мстислав Великий)
+- bio-07 (Nestor Litopysets)
 - hist rozdroblenist module
 prerequisites:
-- bio-05 (Всеволод Ярославич)
+- bio-05 (Knyazhna Anna Yaroslavna)
 - hist monomakh module
 persona:
   voice: Senior Biographer

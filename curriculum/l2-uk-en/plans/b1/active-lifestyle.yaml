@@ -87,9 +87,9 @@ activity_hints:
   focus: Share fitness routines
   items: 10
 connects_to:
-- b1-89 (Біг в Україні)
+- b1-89 (Technology And Startups)
 prerequisites:
-- b1-87 (Спорт в Україні)
+- b1-87 (Ukrainian Music Today)
 persona:
   voice: Senior Language & Culture Specialist
   role: Wellness Coach

@@ -1,38 +1,25 @@
-        # Fix 6 issue(s) in `consonant-sounds`
+        # Fix ALL 3 issue(s) in `consonant-sounds`
 
-        ### Fix 1: IPA_BANNED
-**What:** Banned IPA transcription: [k]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 146
+        **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
+        **There are 3 issues. You must produce fixes for all 3.**
+        **After you finish, count your fixes. If the count is less than 3, go back and fix the ones you missed.**
 
-### Fix 2: IPA_BANNED
-**What:** Banned IPA transcription: [б]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 150
+        ### Fix: Gate `Pedagogy` FAIL — 2 violations
 
-### Fix 3: IPA_BANNED
-**What:** Banned IPA transcription: [п]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 150
+### Fix 2: PEDAGOGICAL_VIOLATION
+**What:** [HEADING_LEVEL] Main section 'Vocabulary' uses H2 (##) but spec requires H1 (#)
+**How to fix:** Change '## Vocabulary' to '# Vocabulary' for top-level TOC compliance
 
-### Fix 4: IPA_BANNED
-**What:** Banned IPA transcription: [б]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 151
-
-### Fix 5: IPA_BANNED
-**What:** Banned IPA transcription: [п]
-**How to fix:** Remove phonetic brackets. Use only stress marks (´) for pronunciation.
-**Where:** ~line 151
-
-### Fix 6: LOW_ENGAGEMENT
-**What:** Only 2 engagement boxes (minimum: 3 for A1)
-**How to fix:** Add 1 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
-**Where:** (whole module)
+### Fix 3: PEDAGOGICAL_VIOLATION
+**What:** [FORBIDDEN_HEADER] Forbidden header '## Vocabulary' violates Clean MD standard (Issue #398)
+**How to fix:** Remove '## Vocabulary' header. Template 'a1-module-template.md' specifies this section is auto-injected from YAML sidecars.
 
 ### Other Audit Failures
 
 ```
+📚 PEDAGOGICAL VIOLATIONS FOUND:
+📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:
+❌ AUDIT FAILED. Correct errors before proceeding.
 ❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/consonant-sounds-audit.log for details)
 ```
 
@@ -66,7 +53,7 @@ METALANGUAGE:
 
 ## Immersion Rules
 
-TARGET: 10-25% Ukrainian.
+TARGET: 5-15% Ukrainian.
 
 **Structural containment**: English prose in paragraphs. Ukrainian in CONTAINERS ONLY (tables, blockquotes, numbered lists, dialogues). Do NOT mix Ukrainian words into English sentences.
 
@@ -107,8 +94,9 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ONLY the issues listed above — do not rewrite working content
-        2. Preserve section structure and word counts
-        3. Do NOT add or remove sections
-        4. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
+        1. Fix ALL 3 issues listed above — every single one, not a subset
+        2. Do not rewrite working content — only touch what's broken
+        3. Preserve section structure and word counts
+        4. Do NOT add or remove sections
+        5. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
 

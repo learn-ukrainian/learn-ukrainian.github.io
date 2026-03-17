@@ -93,11 +93,11 @@ activity_hints:
   focus: Чи виправдовує геніальність суперечливі рішення?
   output: Етичне есе
 connects_to:
-- bio-56 (Олександр Архипенко)
-- bio-62 (Віра Холодна)
-- 'bio-104 (Борис Лятошинський: Симфоніст)'
+- bio-56 (Borys Hrinchenko)
+- bio-62 (Andrey Sheptytsky)
+- 'bio-104 (Borys Liatoshynskyi)'
 prerequisites:
-- 'bio-74 (Соломія Крушельницька: Оперна діва)'
+- 'bio-74 (Solomiya Krushelnytska)'
 persona:
   voice: Senior Biographer
   role: Ballet Master

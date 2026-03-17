@@ -88,7 +88,7 @@ prerequisites:
 connects_to:
 - c1-23 (Business Etiquette)
 - c1-24 (Digital Communication)
-- c1-36 (Професійні сценарії)
+- c1-40 (Professional Scenarios)
 module_type: skills
 sources:
 - name: Ukrainian HR Standards

@@ -93,9 +93,9 @@ activity_hints:
   focus: Відповісти на скептичні запитання аудиторії
   items: 4
 connects_to:
-- 'b2-pro-36 (Дебати: Формальна структура)'
+- 'b2-pro-36 (Debate Skills Advanced)'
 prerequisites:
-- 'b2-pro-34 (Ораторство I: Структура)'
+- 'b2-pro-34 (Public Speaking 1)'
 persona:
   voice: Senior Specialist
   role: Громадський лідер

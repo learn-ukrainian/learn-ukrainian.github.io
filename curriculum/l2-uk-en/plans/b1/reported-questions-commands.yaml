@@ -93,9 +93,9 @@ activity_hints:
   focus: Report conversations
   items: 10
 connects_to:
-- b1-41 (Checkpoint Complex Sentences 2)
+- b1-45 (Checkpoint Complex Sentences 2)
 prerequisites:
-- 'b1-42 (Непряма мова: твердження)'
+- 'b1-42 (Complex Sentence Integration)'
 persona:
   voice: Senior Language & Culture Specialist
   role: Executive Assistant

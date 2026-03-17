@@ -138,8 +138,8 @@ activities:
   no_mirroring: true
 connects_to:
 - c2-52 (Writing Professional Documents I)
-- c2-51 (Написання професійних документів II — Пропозиції та презентації)
-- c2-54 (Професійна кореспонденція)
+- c2-11 (Написання професійних документів II — Пропозиції та презентації)
+- c2-54 (Professional Correspondence)
 persona:
   voice: Senior Specialist
   role: Chief of Staff

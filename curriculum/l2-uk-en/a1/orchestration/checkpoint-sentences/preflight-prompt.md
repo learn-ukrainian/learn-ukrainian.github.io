@@ -1,6 +1,6 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
@@ -459,7 +459,102 @@ Total: {total} words (target: 1200)
 
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-024
+level: A1
+sequence: 24
+slug: checkpoint-sentences
+version: '2.0'
+title: 'Checkpoint: Sentences'
+subtitle: Can You Do the A1.2 Skills?
+focus: checkpoint
+pedagogy: TTT
+phase: A1.2 [Verbs & Sentences]
+word_target: 1200
+objectives:
+- Demonstrate verb conjugation fluency for I and II conjugation
+- Form questions and negations correctly with appropriate word order
+- Express preferences using three constructions (подобається, люблю, хочу)
+- Use possessives and demonstratives with correct gender and number agreement
+content_outline:
+- section: Огляд (Overview)
+  words: 180
+  points:
+  - 'Структура контрольної точки TTT: консолідація навичок A1.2 — дієвідмінювання,
+    формування питань, вираження уподобань, присвійні та вказівні займенники.'
+  - 'Мета: виявлення прогалин перед переходом до знахідного відмінка (A1.3). Практичний
+    підхід до перевірки через реальні комунікативні завдання.'
+- section: 'Навичка 1: Дієслова (Skill 1: Verbs)'
+  words: 300
+  points:
+  - 'Теперішній час I та II дієвідміни: повторення парадигм (читаю/читаєш/читає vs
+    говорю/говориш/говорить). Зворотні дієслова (-ся/-сь).'
+  - 'Типові помилки: закінчення 3-ї особи множини (-уть/-ють vs -ать/-ять). Контрастні
+    вправи на найчастіші дієвідмінювальні помилки початківців.'
+- section: 'Навичка 2: Питання та заперечення (Skill 2: Questions & Negation)'
+  words: 240
+  points:
+  - 'Питальні слова: Хто/Що/Де/Куди/Звідки. Чи-питання з інтонацією. Побудова питальних
+    речень із правильним порядком слів.'
+  - 'Заперечення з «не» та причинні конструкції: тому що/бо. Побудова складнопідрядних
+    речень причини.'
+- section: 'Навичка 3: Уподобання та присвійні (Skill 3: Preferences & Possessives)'
+  words: 240
+  points:
+  - 'Три конструкції уподобань: Мені подобається (Dative), Я люблю (Acc), Я хочу (+
+    inf/Acc). Контрастний вибір залежно від ситуації.'
+  - 'Присвійні займенники: мій/моя/моє/мої, твій/твоя. Вказівні займенники: цей/ця/це/ці,
+    той/та/те/ті. Узгодження за родом та числом.'
+- section: Інтеграційне завдання (Integration Task)
+  words: 240
+  points:
+  - 'Комбінований діалог із використанням усіх навичок A1.2: дієвідмінювання, питання,
+    уподобання, присвійні та вказівні займенники в одному комунікативному сценарії.'
+  - 'Самооцінка готовності до переходу на A1.3 (Cases & Navigation): підбиття підсумків
+    засвоєних структур.'
+vocabulary_hints:
+  required:
+  - читати (to read) — читати книгу, я читаю; I conjugation review
+  - писати (to write) — писати лист, я пишу; I conjugation review
+  - говорити (to speak) — говорити українською, я говорю; II conjugation review
+  - подобатися (to like) — мені подобається, тобі подобається; Dative construction
+  - хотіти (to want) — я хочу їсти, я хочу каву; Irregular conjugation
+  - мій (my m.) — мій телефон, мій друг; Possessive review
+  - твій (your m.) — твій будинок, твоя книга; Possessive review
+  - цей (this m.) — цей стілець, ця книга; Demonstrative review
+  - той (that m.) — той будинок, та вулиця; Demonstrative review
+  - хто (who) — Хто це? Хто говорить?; Question word review
+  - що (what) — Що це? Що ти хочеш?; Question word review
+  - де (where) — Де ти? Де кафе?; Question word review
+  recommended:
+  - тому що (because) — тому що я хочу; Causal conjunction
+  - бо (because) — бо мені подобається; Colloquial causal conjunction
+  - звідки (from where) — Звідки ти?; Question word
+  - куди (where to) — Куди ти йдеш?; Direction question word
+activity_hints:
+- type: quiz
+  focus: A1.2 grammar and vocabulary comprehensive test
+  items: 30
+connects_to:
+- a1-25 (The Accusative I)
+prerequisites:
+- a1-23 (What Time Is It)
+persona:
+  voice: Patient Supportive Tutor
+  role: Language Examiner
+grammar:
+- Present tense conjugation (I and II)
+- Question words and Чи-questions
+- Preference constructions (Dative, Accusative, Infinitive)
+- Possessive pronouns
+- Demonstrative pronouns
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
@@ -497,18 +592,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -516,18 +638,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

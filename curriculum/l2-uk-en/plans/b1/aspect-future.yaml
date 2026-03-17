@@ -107,9 +107,9 @@ connects_to:
 - b1-10 (Aspect in negation)
 - b1-13 (Aspect in imperatives)
 prerequisites:
-- 'b1-08 (Вид дієслова: повна система)'
-- 'b1-09 (Вид у минулому: одного разу vs щодня)'
-- b1-08 (Aspect past - result vs process)
+- 'b1-08 (Stress Mobility Euphony)'
+- 'b1-09 (Aspect Complete System)'
+- b1-11 (Aspect past - result vs process)
 persona:
   voice: Senior Language & Culture Specialist
   role: Strategic Planner

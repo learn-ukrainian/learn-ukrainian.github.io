@@ -93,11 +93,11 @@ activity_hints:
   focus: How did Borys Paton preserve Ukrainian science through political changes?
   output: Science and politics analysis
 connects_to:
-- 'bio-69 (Євген Патон: Батько українського мостобудування)'
-- bio-117 (Korolyov - space technology)
-- bio-114 (Amosov - medical innovations)
+- 'bio-69 (Yevhen Paton)'
+- bio-121 (Korolyov - space technology)
+- bio-127 (Amosov - medical innovations)
 prerequisites:
-- bio-112 (Yevhen Paton - his father)
+- bio-69 (Yevhen Paton - his father)
 - Understanding of Soviet/Ukrainian science
 - Space race context
 persona:

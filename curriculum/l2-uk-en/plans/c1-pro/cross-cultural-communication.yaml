@@ -88,9 +88,9 @@ activity_hints:
   focus: Провести переговори з партнером з іншої культури
   items: 1
 connects_to:
-- 'c1-pro-44 (Контрольна точка: Галузева спеціалізація)'
+- 'c1-pro-44 (Industry Checkpoint)'
 prerequisites:
-- c1-pro-42 (Основи усного перекладу)
+- c1-pro-42 (Interpretation Basics)
 persona:
   voice: Senior Specialist
   role: Культурний аташе

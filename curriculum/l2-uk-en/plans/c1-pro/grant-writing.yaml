@@ -88,9 +88,9 @@ activity_hints:
   focus: Переписати слабкі формулювання цілей у SMART формат
   items: 6
 connects_to:
-- c1-pro-25 (Наукове листування)
+- c1-pro-25 (Academic Correspondence)
 prerequisites:
-- c1-pro-23 (Конференційні виступи)
+- c1-pro-23 (Conference Presentations)
 persona:
   voice: Senior Specialist
   role: Експерт з фандрейзингу

@@ -144,7 +144,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-22 (Rhythm & prosody builds on syntax)
+- c2-18 (Rhythm & prosody builds on syntax)
 - c2-16 (Text coherence uses syntactic linking)
 - c2-14 (Individual voice through syntactic preferences)
 persona:

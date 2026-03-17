@@ -84,7 +84,7 @@ activity_hints:
   items: 15
 connects_to:
 - a1-17 (Reflexive Verbs)
-- a1-21 (Past Tense)
+- a1-36 (Past Tense)
 prerequisites:
 - a1-15 (The Living Verb I)
 persona:

@@ -84,7 +84,7 @@ activity_hints:
   items: 12
 connects_to:
 - a1-62 (Emergencies)
-- a1-43 (Combined Practice)
+- a1-43 (Weather And Nature)
 prerequisites:
 - a1-18 (Questions and Negation)
 - a1-57 (Taking Transport)

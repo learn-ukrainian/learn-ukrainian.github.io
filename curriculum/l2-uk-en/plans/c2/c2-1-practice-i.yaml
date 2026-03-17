@@ -128,7 +128,7 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-18 (Practice II — transformation exercises)
+- c2-11 (Practice II — transformation exercises)
 - c2-25 (Повторення C2.1 — Консолідація стилістики)
 - c2-26 (Контрольна точка C2.1 — Стилістика та риторика)
 persona:

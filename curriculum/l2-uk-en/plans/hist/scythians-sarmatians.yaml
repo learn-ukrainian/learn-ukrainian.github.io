@@ -103,7 +103,7 @@ activity_hints:
 connects_to:
 - hist-03 (Greek city-states in Crimea)
 - hist-04 (Slavic origins)
-- 'hist-08 (Synthesis: Origins to Kyiv)'
+- 'hist-04 (Synthesis: Origins to Kyiv)'
 prerequisites:
 - hist-01 (Trypillia civilization)
 - Basic historical vocabulary

@@ -1,42 +1,91 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1562",
+    "COMPUTED_WORD_COUNT": "1664",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "130.2",
+    "COMPUTED_WORD_PERCENT": "138.7",
     "COMPUTED_ACTIVITY_COUNT": "0",
     "COMPUTED_VOCAB_COUNT": "0",
-    "COMPUTED_ENGAGEMENT_COUNT": "5",
-    "COMPUTED_IMMERSION_PERCENT": "9.4",
-    "COMPUTED_IMMERSION_TARGET": "10-25%",
-    "COMPUTED_RICHNESS_SCORE": "84",
+    "COMPUTED_ENGAGEMENT_COUNT": "7",
+    "COMPUTED_IMMERSION_PERCENT": "9.7",
+    "COMPUTED_IMMERSION_TARGET": "5-15%",
+    "COMPUTED_RICHNESS_SCORE": "79",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 4/5, cultural: 1/3, tables: 0/2",
-    "COMPUTED_AUDIT_STATUS": "PASS"
+    "COMPUTED_RICHNESS_GAPS": "dialogues: 0/4, tables: 0/2",
+    "COMPUTED_AUDIT_STATUS": "FAIL"
   },
   "deterministic_issues": [
     {
       "type": "MORPHOLOGICAL_VIOLATION",
       "severity": "HIGH",
-      "location": "~line 188",
+      "location": "~line 89",
+      "text": "Verb 'показує' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'показує' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 89",
+      "text": "Verb 'позначають' (VESUM: verb:imperf:pres:p:3) in pre-verb module M4. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'позначають' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 198",
+      "text": "Verb 'бачу' (VESUM: verb:imperf:pres:s:1:insert) in pre-verb module M4. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'бачу' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 208",
+      "text": "Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 209",
       "text": "Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.",
       "fix": "Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 212",
+      "text": "Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "AGREEMENT_ERROR",
+      "severity": "HIGH",
+      "location": "~line 89",
+      "text": "Agreement mismatch: 'приголосний' (m) + 'що' (n)",
+      "fix": "Change 'приголосний' to match the gender/case of 'що', or vice versa."
+    },
+    {
+      "type": "AGREEMENT_ERROR",
+      "severity": "HIGH",
+      "location": "~line 89",
+      "text": "Agreement mismatch: 'твердий' (m) + 'апострофом' (m)",
+      "fix": "Change 'твердий' to match the gender/case of 'апострофом', or vice versa."
     }
   ],
-  "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/completing-the-alphabet.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/completing-the-alphabet-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/completing-the-alphabet.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M04 — Completing the Alphabet\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/completing-the-alphabet.md | Target: 1200 words\n  📋 Required activity types from meta: classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n  ⚠️  Outline compliance: 0 errors, 1 warnings\n     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Підсумок — Summary' found in markdown but not in outline.\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                         122 /  100  ✅ (+22)\n     М'який знак — The Soft Sign                  235 /  250  ✅ (-15)\n     Апостроф — The Apostrophe                    238 /  250  ✅ (-12)\n     Африкати та Ф — Affricates and Ф             340 /  300  ✅ (+40)\n     Диграфи ДЖ, ДЗ — Digraphs                    167 /  150  ✅ (+17)\n     Весь алфавіт! — The Full Alphabet Mastered   241 /  150  ✅ (+91)\n     ───────────────────────────────────────────────────────────────────\n     TOTAL                                       1343 / 1200  ✅ (+143)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1562/1200 (raw: 1644)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 5/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 9.4% (target 5-15% (M04))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/completing-the-alphabet-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/completing-the-alphabet.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: completing-the-alphabet.md\n  VESUM misses: 3 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 30430.26it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 61 | VESUM: 58 (95.1%) | RAG: 3 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/completing-the-alphabet-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 58/61 (95%) verified\n⚠️ VESUM not found (2): ДЖ, ДЗ",
+  "audit_passed": false,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/completing-the-alphabet.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/completing-the-alphabet-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/completing-the-alphabet.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M04 — Completing the Alphabet\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/completing-the-alphabet.md | Target: 1200 words\n  📋 Required activity types from meta: classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n  ⚠️  Outline compliance: 0 errors, 1 warnings\n     ⚠️ [EXTRA_SECTION_IN_MARKDOWN] Section 'Підсумок — Summary' found in markdown but not in outline.\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                          85 /  100  ⚠️ (-15)\n     М'який знак — The Soft Sign                  265 /  250  ✅ (+15)\n     Апостроф — The Apostrophe                    271 /  250  ✅ (+21)\n     Африкати та Ф — Affricates and Ф             365 /  300  ✅ (+65)\n     Диграфи ДЖ, ДЗ — Digraphs                    186 /  150  ✅ (+36)\n     Весь алфавіт! — The Full Alphabet Mastered   219 /  150  ✅ (+69)\n     ───────────────────────────────────────────────────────────────────\n     TOTAL                                       1391 / 1200  ✅ (+191)\n  ✨ Purity violations found: 1\n     ❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1664/1200 (raw: 1820)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 7/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ❌ 2 violations\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 9.7% (target 5-15% (M04))\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [GRAMMAR] Instrumental case used at A1: 'перед апострофом'\n     → FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.\n  [GRAMMAR] Subordinate clause marker at A1: 'є, що п'\n     → FIX: Complex sentences not allowed at A1. Use simple SVO sentences.\n  [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.\n     → FIX: Vary sentence structure.\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 3 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/completing-the-alphabet-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/completing-the-alphabet.json\n\n❌ AUDIT FAILED. Correct errors before proceeding.\n\n❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/completing-the-alphabet-audit.log for details)\n\nRunning RAG word verification...\nVerifying: completing-the-alphabet.md\n  VESUM misses: 6 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 74631.74it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 68 | VESUM: 62 (91.2%) | RAG: 4 | Not found: 2\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/completing-the-alphabet-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nProse-relevant failures:\n  lesson: 1664/1200 (raw: 1820) | pedagogy: 2 violations\nVESUM: 62/68 (91%) verified\n⚠️ VESUM not found (5): ДЖ, ДЗ, ець, иця, шо",
   "h2_sections": "1. Вступ — Introduction\n2. М'який знак — The Soft Sign\n3. Апостроф — The Apostrophe\n4. Африкати, Щ та Ф — Affricates, Щ, and Ф\n5. Диграфи ДЖ, ДЗ — Digraphs\n6. Весь алфавіт! — The Full Alphabet Mastered\n7. Підсумок — Summary",
   "vesum_stats": {
-    "total": 61,
-    "vesum_hits": 58,
+    "total": 68,
+    "vesum_hits": 62,
     "rag_hits": 0,
-    "not_found": 2,
+    "not_found": 5,
     "rag_errors": 0,
     "proper_names": 1,
     "by_source": {
       "prose": {
-        "total": 61,
-        "vesum_hits": 58,
-        "not_found": 2
+        "total": 68,
+        "vesum_hits": 62,
+        "not_found": 5
       }
     }
   },
@@ -60,7 +109,37 @@
       "literary": false,
       "vesum_info": [],
       "status": "❌"
+    },
+    {
+      "original": "ець",
+      "clean": "ець",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "иця",
+      "clean": "иця",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "шо",
+      "clean": "шо",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
     }
   ],
-  "content_hash": "8ab80d05e342c008"
+  "content_hash": "0ac225010071a293"
 }

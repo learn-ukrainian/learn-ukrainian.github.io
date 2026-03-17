@@ -131,8 +131,8 @@ activity_hints:
   focus: Крос-текстовий аналіз та порівняння аргументаційних стратегій
   items: 8
 connects_to:
-- c2-080 (first module of C2.5 — Meta-Skills & Capstone)
-- c2-066 (Society & Citizenship — first C2.4 content module)
+- c2-97 (first module of C2.5 — Meta-Skills & Capstone)
+- c2-78 (Society & Citizenship — first C2.4 content module)
 - c2-078 (C2.4 Practice — integration practice preceding this checkpoint)
 prerequisites:
 - c2-078 (C2.4 Practice — Thematic Discourse)

@@ -96,12 +96,12 @@ activity_hints:
   focus: Як поєднання юриспруденції та літератури служило національній справі?
   output: Аналітичне есе
 connects_to:
-- bio-54 (Іван Франко)
-- bio-60 (Кирило Трильовський)
-- bio-65 (Михайло Грушевський)
-- bio-73 (Василь Стефанік)
+- bio-54 (Ivan Franko)
+- bio-60 (Kyrylo Trylovskyi)
+- bio-65 (Mykhailo Hrushevskyi)
+- bio-73 (Vasyl Stefanyk)
 prerequisites:
-- bio-54 (Іван Франко)
+- bio-54 (Ivan Franko)
 persona:
   voice: Senior Historian
   role: Galician Statehood Specialist

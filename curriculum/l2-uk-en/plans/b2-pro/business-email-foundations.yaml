@@ -83,7 +83,7 @@ activity_hints:
   focus: Знайти помилки регістру в листах
   items: 8
 connects_to:
-- b2-pro-02 (Листування — Запити та пропозиції)
+- b2-pro-02 (Email Requests Proposals)
 prerequisites:
 - B2 Core completion (formal register basics)
 persona:

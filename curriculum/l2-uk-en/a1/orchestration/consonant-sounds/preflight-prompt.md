@@ -1,15 +1,17 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 3 of the A1 track (Ukrainian for English speakers). Title: "Consonant Sounds" — Приголосні звуки — Voiced, Voiceless, Hard, and Soft. Phase: A1.1 [First Contact]. Previous module: Vowel Sounds. Next module: Completing The Alphabet.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
 
-> **You are Patient & Supportive Ukrainian Tutor, writing in the voice of Patient Supportive Tutor.**
+> **You are , writing in the voice of Patient Supportive Tutor.**
 >
 > Build a complete beginner module for English-speaking teens and adults learning Ukrainian at the a1 level. Your job: **search Ukrainian school textbooks using RAG tools**, then **adapt** the pedagogy for L2 learners.
 >
@@ -84,7 +86,7 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 
 
 
-**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your 20 vocabulary target:
+**Target vocabulary** (from the plan — teach and use these). Include ALL required words. Include recommended words by using them naturally in your content — they count toward your {VOCAB_COUNT_TARGET} vocabulary target:
 
 ### Vocabulary from Plan (MANDATORY — include ALL required items)
 
@@ -116,13 +118,7 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 5-15% Ukrainian.
-LANGUAGE ROLES:
-- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.
-- UKRAINIAN CONTENT: Words and short phrases inline: "The letter **Н** looks like H but sounds like N."
-- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.
-- TABLES: Simple letter-sound or word-meaning tables.
-Ukrainian sentences max 10 words.
+
 
 ### Blog Articles & Guides
 - **Ukrainian Cyrillic Alphabet — Letters and Sounds** (ukrainianlessons.com)
@@ -235,56 +231,23 @@ ____________________
 
 ## 4. Outline
 
-Write **Consonant Sounds** for the a1 track.
+Write **** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | {ENGAGEMENT_MIN}+ callout boxes | **{ACTIVITY_MIN}–{ACTIVITY_MAX} activities total** (required types + additional types to reach minimum) | {VOCAB_COUNT_TARGET} vocab items
 
-## REQUIRED H2 Sections and Points (MANDATORY)
 
-Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says *айтішник*, use *айтішник*, not a synonym).
-
-- `## Вступ — Introduction` (~100 words)
-  - Review: M1 gave you the alphabet, M2 mastered vowels. Today: the 22 consonant letters — how they're organized by sound production.
-  - All 10 vowels from M2 are available. Focus is on consonant pronunciation and classification.
-- `## Сонорні — Sonorant Consonants` (~200 words)
-  - Sonorants are the 'musical' consonants — voice dominates over noise. 5 sonorants: Л М Н Р В. You already know Л М Н from M1.
-  - Р — the rolled/trilled R! Words: риба (fish), рука (hand). Practice the tongue-tip trill. Looks like English P but sounds completely different.
-  - В — a sonorant in Ukrainian — closer to English W than English V. Lips rounded, NOT teeth on lip. Words: вода (water), вовк (wolf).
-- `## Дзвінкі та глухі пари — Voiced and Voiceless Pairs` (~400 words)
-  - Hand-on-throat test: voiced (дзвінкий) = throat vibrates. Voiceless (глухий) = only air. Each pair is identical mouth position, different voicing.
-  - Б/П — бабуся (grandma) / павук (spider). Б = voiced, П = voiceless.
-  - Д/Т — дім (house) / тато (M1 review). Д = voiced, Т = voiceless.
-  - З/С — зуб (tooth) / суп (soup). З = voiced, С = voiceless.
-  - Ж/Ш — жук (beetle) / шапка (hat). Ж = voiced sibilant (like 'zh' in 'measure'), Ш = voiceless (like English 'sh').
-  - Г/Х — гора (mountain) / хліб (bread). Г is a soft throaty sound (voiced glottal fricative), NOT a hard 'g' like English 'go'. Х like German 'ch' in 'ach'.
-  - Ґ/К — ґанок (porch) / кіт (M1 review). Ґ IS the hard 'g' (like English 'go') — very rare (~400 native words). Removed from alphabet in 1933, restored 1990.
-  - CRITICAL RULE: voiced consonants stay voiced at word end! зуб = зу[б], NOT зу[п]. хліб = хлі[б], NOT хлі[п]. Different from Russian and German.
-- `## Тверді та м'які — Hard and Soft Consonants` (~250 words)
-  - Most Ukrainian consonants come in hard/soft variants. A consonant becomes soft (palatalized) before І, Я, Ю, Є or when followed by Ь (covered in M4).
-  - Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л).
-  - Compare: лук (hard Л — onion) vs люк (soft Л — hatch). The consonant changes, not the vowel!
-  - Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft sign that forces softening) in M4.
-- `## Читання — Reading Practice` (~150 words)
-  - Words using the full consonant inventory. All vowels from M2 available.
-  - NO full sentences with verbs — grammar is not taught yet. Use word groups, noun phrases, and labeling: Це дім. Це хліб. Ось бабуся.
-  - Voiced/voiceless pair drills: зуб/суп, жук/шапка, гора/хор.
-  - Minimal pair practice: лук/люк (hard/soft), дим/дім (И/І).
-- `## Підсумок — Summary` (~100 words)
-  - 5 sonorants (Л М Н Р В), 6 voiced/voiceless pairs, hard/soft system.
-  - Self-check: What are the 5 sonorants? What is the voiceless partner of Б? Is Г a hard 'g' or a soft throaty sound? Do voiced consonants devoice at word end?
-  - Next: M4 completes the alphabet — soft sign (Ь), apostrophe, affricates (Ц Ч Щ), digraphs (ДЖ ДЗ), and rare Ф.
 
 ### Section Word Budgets
 
-| Section | Minimum |
-|---------|---------|
+| Section | Target Words |
+|---|---|
 | Вступ — Introduction | 100+ |
 | Сонорні — Sonorant Consonants | 200+ |
 | Дзвінкі та глухі пари — Voiced and Voiceless Pairs | 400+ |
 | Тверді та м'які — Hard and Soft Consonants | 250+ |
 | Читання — Reading Practice | 150+ |
 | Підсумок — Summary | 100+ |
-| **Total** | **1200+ (aim for ~1440)** |
+| **TOTAL** | **1200+** (aim for ~1440) |
 
 ---
 
@@ -384,8 +347,8 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
-**Allowed types:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
-**Forbidden types:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
+**Allowed types:** {ALLOWED_ACTIVITY_TYPES}
+**Forbidden types:** {FORBIDDEN_ACTIVITY_TYPES}
 **Required types:** watch-and-repeat, classify, image-to-letter, match-up, quiz
 
 | Module range | Use these | Avoid these |
@@ -511,7 +474,164 @@ rag_tools_used:
 
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-003
+level: A1
+sequence: 3
+slug: consonant-sounds
+version: '2.0'
+title: Consonant Sounds
+subtitle: "Приголосні звуки — Voiced, Voiceless, Hard, and Soft"
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner masters sonorant consonants (Л М Н Р В)
+- "Learner understands voiced/voiceless pairs (Б/П Д/Т З/С Ж/Ш Г/Х Ґ/К)"
+- Learner knows the hard vs soft consonant distinction
+- Learner can read words with all consonants
+- "Key rule: Ukrainian voiced consonants do NOT devoice at word end (зуб = зу[б], not зу[п])"
+content_outline:
+- section: Вступ — Introduction
+  words: 100
+  points:
+  - "Review: M1 gave you the alphabet, M2 mastered vowels. Today: the 22 consonant
+    letters — how they're organized by sound production."
+  - "All 10 vowels from M2 are available. Focus is on consonant pronunciation
+    and classification."
+- section: "Сонорні — Sonorant Consonants"
+  words: 200
+  points:
+  - "Sonorants are the 'musical' consonants — voice dominates over noise.
+    5 sonorants: Л М Н Р В. You already know Л М Н from M1."
+  - "Р — the rolled/trilled R! Words: риба (fish), рука (hand). Practice the
+    tongue-tip trill. Looks like English P but sounds completely different."
+  - "В — a sonorant in Ukrainian — closer to English W than English V. Lips rounded,
+    NOT teeth on lip. Words: вода (water), вовк (wolf)."
+- section: "Дзвінкі та глухі пари — Voiced and Voiceless Pairs"
+  words: 400
+  points:
+  - "Hand-on-throat test: voiced (дзвінкий) = throat vibrates. Voiceless (глухий)
+    = only air. Each pair is identical mouth position, different voicing."
+  - "Б/П — бабуся (grandma) / павук (spider). Б = voiced, П = voiceless."
+  - "Д/Т — дім (house) / тато (M1 review). Д = voiced, Т = voiceless."
+  - "З/С — зуб (tooth) / суп (soup). З = voiced, С = voiceless."
+  - "Ж/Ш — жук (beetle) / шапка (hat). Ж = voiced sibilant (like 'zh' in 'measure'),
+    Ш = voiceless (like English 'sh')."
+  - "Г/Х — гора (mountain) / хліб (bread). Г is a soft throaty sound (voiced glottal
+    fricative), NOT a hard 'g' like English 'go'. Х like German 'ch' in 'ach'."
+  - "Ґ/К — ґанок (porch) / кіт (M1 review). Ґ IS the hard 'g' (like English 'go') —
+    very rare (~400 native words). Removed from alphabet in 1933, restored 1990."
+  - "CRITICAL RULE: voiced consonants stay voiced at word end! зуб = зу[б], NOT
+    зу[п]. хліб = хлі[б], NOT хлі[п]. Different from Russian and German."
+- section: "Тверді та м'які — Hard and Soft Consonants"
+  words: 250
+  points:
+  - "Most Ukrainian consonants come in hard/soft variants. A consonant becomes soft
+    (palatalized) before І, Я, Ю, Є or when followed by Ь (covered in M4)."
+  - "Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л)."
+  - "Compare: лук (hard Л — bow (weapon)) vs люк (soft Л — hatch). The consonant changes,
+    not the vowel!"
+  - "Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft
+    sign that forces softening) in M4."
+- section: "Читання — Reading Practice"
+  words: 150
+  points:
+  - "Words using the full consonant inventory. All vowels from M2 available."
+  - "NO full sentences with verbs — grammar is not taught yet. Use word groups,
+    noun phrases, and labeling: Це дім. Це хліб. Ось бабуся."
+  - "Voiced/voiceless pair drills: зуб/суп, жук/шапка, гора/хор."
+  - "Minimal pair practice: лук/люк (hard/soft), дим/дім (И/І)."
+- section: "Підсумок — Summary"
+  words: 100
+  points:
+  - "5 sonorants (Л М Н Р В), 6 voiced/voiceless pairs, hard/soft system."
+  - "Self-check: What are the 5 sonorants? What is the voiceless partner of Б?
+    Is Г a hard 'g' or a soft throaty sound? Do voiced consonants devoice at word end?"
+  - "Next: M4 completes the alphabet — soft sign (Ь), apostrophe, affricates
+    (Ц Ч Щ), digraphs (ДЖ ДЗ), and rare Ф."
+vocabulary_hints:
+  required:
+  - "хліб (bread) — cultural staple; demonstrates Х; no-devoicing rule"
+  - "зуб (tooth) — demonstrates З; no-devoicing drill with суп"
+  - "дім (house) — high-frequency; demonstrates Д"
+  - "вовк (wolf) — tale vocabulary; demonstrates В (sonorant)"
+  - "жук (beetle) — demonstrates Ж; Bolshakova"
+  - "шапка (hat) — demonstrates Ш; everyday clothing"
+  - "гора (mountain) — demonstrates Г (throaty fricative); high-frequency"
+  - "небо (sky) — demonstrates Н; high-frequency"
+  - "рука (hand) — demonstrates Р (rolled); body vocabulary"
+  - "бабуся (grandma) — demonstrates Б; high-frequency family word"
+  recommended:
+  - "павук (spider) — demonstrates П; Bolshakova"
+  - "ґанок (porch) — demonstrates rare Ґ; classic textbook word"
+  - "сіль (salt) — demonstrates soft С and Л; everyday kitchen word"
+  - "люди (people) — demonstrates soft Л; high-frequency"
+  - "суп (soup) — voiceless pair drill with зуб; everyday food"
+  - "вода (water) — demonstrates В; high-frequency"
+  - "цибуля (onion) — hard Л; minimal pair with люк"
+  - "люк (hatch) — soft Л; minimal pair with лук"
+activity_hints:
+- type: watch-and-repeat
+  focus: "Consonant pronunciation — hear and repeat each voiced/voiceless pair"
+  items: 12
+- type: classify
+  focus: "Sort consonants into сонорні / дзвінкі / глухі"
+  items: 15
+- type: image-to-letter
+  focus: "Match picture to consonant it starts with — жук→Ж, шапка→Ш, рука→Р"
+  items: 8
+- type: match-up
+  focus: "Match voiced consonant to its voiceless partner (Б↔П, Д↔Т, З↔С, Ж↔Ш, Г↔Х)"
+  items: 6
+- type: quiz
+  focus: "Hand-on-throat test — is this consonant voiced or voiceless?"
+  items: 10
+- type: classify
+  focus: "Hard or soft? Identify consonant quality in context (лук vs люк)"
+  items: 8
+connects_to:
+- a1-04 (Completing the Alphabet)
+prerequisites:
+- a1-02 (Vowel Sounds)
+persona:
+  voice: Patient Supportive Tutor
+  role: Typography Artist
+grammar:
+- "Sonorant consonants (Л М Н Р В)"
+- "Voiced/voiceless consonant pairs"
+- "No final devoicing rule"
+- "Hard/soft consonant distinction"
+- "Г vs Ґ distinction"
+register: розмовний
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: "Anna Ohoiko — Ukrainian Lessons"
+  letters:
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    Й: https://www.youtube.com/watch?v=aq0cjB90s3w
+    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    П: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    З: https://www.youtube.com/watch?v=BhASNxitC1A
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
+    Х: https://www.youtube.com/watch?v=vpr58zJSJKc
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
@@ -549,18 +669,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -568,18 +715,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

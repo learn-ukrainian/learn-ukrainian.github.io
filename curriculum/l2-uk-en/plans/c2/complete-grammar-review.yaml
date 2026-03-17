@@ -162,14 +162,14 @@ activities:
   total_min_items: 30
   no_mirroring: true
 connects_to:
-- c2-081 (Рідкісні та архаїчні форми)
-- c2-086 (Аналіз помилок)
-- c2-087 (Володіння на рівні носія)
+- c2-081 (Rare Archaic Forms)
+- c2-086 (Error Analysis)
+- c2-087 (Native Like Fluency)
 persona:
   voice: Senior Specialist
   role: Grammar Expert
 prerequisites:
-- c2-080 (C2.4 Checkpoint — Thematic Discourse Assessment)
+- c2-79 (C2.4 Checkpoint — Thematic Discourse Assessment)
 - imperative-mastery (C1 — повний наказовий спосіб)
 - one-member-sentences-c1 (C1 — односкладні речення)
 - numeral-mastery-c1 (C1 — числівники у всіх відмінках)

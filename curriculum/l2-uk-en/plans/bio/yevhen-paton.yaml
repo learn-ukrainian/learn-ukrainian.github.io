@@ -93,9 +93,9 @@ activity_hints:
   focus: How did Paton's welding technology change industry?
   output: Technical impact analysis
 connects_to:
-- bio-113 (Boris Paton - his son)
-- bio-117 (Korolyov - contemporary engineer)
-- bio-114 (Amosov - same era scientist)
+- bio-69 (Boris Paton - his son)
+- bio-121 (Korolyov - contemporary engineer)
+- bio-127 (Amosov - same era scientist)
 prerequisites:
 - Basic understanding of engineering
 - WWII industrial context

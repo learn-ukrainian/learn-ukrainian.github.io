@@ -87,9 +87,9 @@ activity_hints:
   focus: Написати короткий аналіз новинної статті
   items: 1
 connects_to:
-- 'b2-pro-32 (Аналіз новин II: Джерела)'
+- 'b2-pro-32 (News Analysis 2)'
 prerequisites:
-- 'b2-pro-30 (Інтеграція: Фахова мова)'
+- 'b2-pro-30 (Technical Integration)'
 persona:
   voice: Senior Specialist
   role: Медіаексперт

@@ -98,11 +98,11 @@ activity_hints:
   focus: Чому свідомий вибір мови є політичним актом?
   output: Аналітичне есе
 connects_to:
-- bio-138 (Ліна Костенко)
-- bio-135 (Євген Сверстюк)
-- bio-159 (Юрій Андрухович)
+- bio-138 (Lina Kostenko)
+- bio-135 (Yevhen Sverstiuk)
+- bio-159 (Yuri Andrukhovych)
 prerequisites:
-- bio-92 (Микола Зеров)
+- bio-92 (Mykola Zerov)
 persona:
   voice: Senior Historian
   role: Jewish-Ukrainian Cultural Bridge Specialist

@@ -84,10 +84,10 @@ activity_hints:
 - type: essay-response
   focus: Чому знищення Каховської ГЕС — це екоцид?
 connects_to:
-- hist-136 (Воєнна економіка)
-- hist-139 (Злочини і стійкість)
+- hist-136 (Voienna Ekonomika)
+- hist-139 (Zlochyny Stiikist)
 prerequisites:
-- hist-134 (Буча та Ірпінь)
+- hist-134 (Bucha Irpin)
 persona:
   voice: Senior Professor of History
   role: Environmental Inspector
