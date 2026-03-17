@@ -91,7 +91,7 @@ activity_hints:
 connects_to:
 - a2-53 (Emotions and Personality)
 prerequisites:
-- a1-29 (Weather and Nature)
+- a1-43 (Weather and Nature)
 - a2-51 (Home and Furniture)
 persona:
   voice: Encouraging Cultural Guide

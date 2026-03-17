@@ -97,7 +97,7 @@ activity_hints:
 connects_to:
 - a2-54 (Work and Professions)
 prerequisites:
-- a1-26 (Describing Things - Adjectives)
+- a1-11 (Describing Things - Adjectives)
 - a2-52 (Nature and Weather)
 persona:
   voice: Encouraging Cultural Guide
