@@ -34,12 +34,13 @@ frictions:
     date_added: "2026-03-17"
 
   - id: gf-003
-    status: active
+    status: resolved
     type: pedagogical
     description: >
       A1.1 modules (M01-M14) must NOT contain conjugated verbs. Fixed chunks
       like "дякую", "будь ласка", "до побачення" are exempt as memorized
       phrases. Verbs are formally introduced at M15.
+    resolved_by: "morphological_validator.py no_verbs=True for A1.1 phase"
     source: "M04 review (completing-the-alphabet) — #969"
     date_added: "2026-03-17"
 
@@ -54,22 +55,24 @@ frictions:
     date_added: "2026-03-17"
 
   - id: gf-005
-    status: active
+    status: resolved
     type: linguistic
     description: >
       All stress marks must be verified against the ukrainian-word-stress
       dictionary. Common errors: яйце́ (not я́йце), молоко́ (not моло́ко),
       їжа́к (not ї́жак), дале́ко (not далеко́), при́голосні (not приголо́сні).
+    resolved_by: "stress_verification.py in D.0 screen pipeline"
     source: "Stress verification tool — #961"
     date_added: "2026-03-17"
 
   - id: gf-006
-    status: active
+    status: resolved
     type: pedagogical
     description: >
       Activity distractors/options must be real Ukrainian words verified
       against VESUM. Do NOT use misspelled words (м'асо, мьясо) or
       Russianisms (СОК, СОЛ) as distractors — they cause negative transfer
       and fail VESUM validation.
+    resolved_by: "ACTIVITY_VESUM_FAIL check in content_quality_pipeline.py"
     source: "M01/M04 reviews — #969"
     date_added: "2026-03-17"
