@@ -81,8 +81,8 @@ from pipeline_lib import (
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-MAX_AUDIT_FIX_ITERS_CORE = 6
-MAX_AUDIT_FIX_ITERS_SEMINAR = 8
+MAX_AUDIT_FIX_ITERS_CORE = 2
+MAX_AUDIT_FIX_ITERS_SEMINAR = 3
 MAX_REVIEW_FIX_ITERS = 2
 
 # Dispatch timeouts (seconds)
@@ -1531,7 +1531,11 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
     """)
 
     return textwrap.dedent(f"""\
-        # Fix {total_fixes} issue(s) in `{ctx.slug}`
+        # Fix ALL {total_fixes} issue(s) in `{ctx.slug}`
+
+        **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
+        **There are {total_fixes} issues. You must produce fixes for all {total_fixes}.**
+        **After you finish, count your fixes. If the count is less than {total_fixes}, go back and fix the ones you missed.**
 
         {fixes_text}
         {schema_hint}
@@ -1548,10 +1552,11 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool,
 
         ## Rules
 
-        1. Fix ONLY the issues listed above — do not rewrite working content
-        2. Preserve section structure and word counts
-        3. Do NOT add or remove sections
-        4. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
+        1. Fix ALL {total_fixes} issues listed above — every single one, not a subset
+        2. Do not rewrite working content — only touch what's broken
+        3. Preserve section structure and word counts
+        4. Do NOT add or remove sections
+        5. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
         {section_fix}
     """)
 
