@@ -172,6 +172,10 @@ def fix_true_false_items(activity: dict) -> list[str]:
             item['correct'] = item['answer']
             del item['answer']
             fixes.append(f"Renamed 'answer' to 'correct' in true-false item {i+1}")
+        if 'is_true' in item and 'correct' not in item:
+            item['correct'] = item['is_true']
+            del item['is_true']
+            fixes.append(f"Renamed 'is_true' to 'correct' in true-false item {i+1}")
     return fixes
 
 
