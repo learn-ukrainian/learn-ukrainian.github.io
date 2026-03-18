@@ -101,6 +101,12 @@ def _apply_module_fixes(ctx: ModuleContext, raw_output: str) -> int:
                 total += _apply_find_replace_fixes(p, raw_output)
         return total
 
+    # XML tag format: <find>...</find> <replace>...</replace> (#975)
+    if "<find>" in raw_output and "<replace>" in raw_output:
+        total = _apply_xml_find_replace(ctx, raw_output)
+        if total > 0:
+            return total
+
     # Fallback: accept full content rewrite if present
     rewrite = _extract_content_rewrite(raw_output)
     if rewrite and len(rewrite) > 200:
@@ -113,13 +119,99 @@ def _apply_module_fixes(ctx: ModuleContext, raw_output: str) -> int:
     return 0
 
 
+def _apply_xml_find_replace(ctx: ModuleContext, raw_output: str) -> int:
+    """Apply <find>/<replace> XML tag pairs from review output to module files.
+
+    Gemini outputs these inline with each issue (#975). Full-sentence
+    replacements are more reliable than the old SECTION_FIX word-level pairs.
+    """
+    find_pairs = re.findall(
+        r"<find>\n?(.*?)\n?</find>\s*<replace>\n?(.*?)\n?</replace>",
+        raw_output, re.DOTALL,
+    )
+    if not find_pairs:
+        return 0
+
+    total = 0
+    for _label, p in _module_file_paths(ctx):
+        if not p or not p.exists():
+            continue
+        content = p.read_text("utf-8")
+        applied = 0
+        skipped = []
+
+        for i, (find_text, replace_text) in enumerate(find_pairs, 1):
+            find_text = find_text.strip()
+            replace_text = replace_text.strip()
+            if not find_text or find_text == replace_text:
+                continue
+            # Skip template placeholders
+            if find_text.startswith("[") and find_text.endswith("]"):
+                continue
+
+            if find_text in content:
+                content = content.replace(find_text, replace_text, 1)
+                applied += 1
+            else:
+                # Try normalized whitespace match
+                norm_find = re.sub(r'\s+', ' ', find_text).strip()
+                norm_content = re.sub(r'\s+', ' ', content)
+                if norm_find in norm_content:
+                    # Find original position and replace
+                    idx = norm_content.index(norm_find)
+                    # Map back to original content position
+                    char_count = 0
+                    orig_start = 0
+                    for ci, ch in enumerate(content):
+                        if char_count >= idx:
+                            orig_start = ci
+                            break
+                        if ch in (' ', '\t', '\n', '\r'):
+                            if ci == 0 or content[ci - 1] not in (' ', '\t', '\n', '\r'):
+                                char_count += 1
+                        else:
+                            char_count += 1
+                    end_count = 0
+                    orig_end = orig_start
+                    target_len = len(norm_find)
+                    for ci in range(orig_start, len(content)):
+                        ch = content[ci]
+                        if ch in (' ', '\t', '\n', '\r'):
+                            if ci == orig_start or content[ci - 1] not in (' ', '\t', '\n', '\r'):
+                                end_count += 1
+                        else:
+                            end_count += 1
+                        if end_count >= target_len:
+                            orig_end = ci + 1
+                            break
+                    content = content[:orig_start] + replace_text + content[orig_end:]
+                    applied += 1
+                else:
+                    skipped.append((i, find_text[:60].replace('\n', ' ')))
+
+        if applied > 0:
+            p.write_text(content, "utf-8")
+            total += applied
+
+        if applied or skipped:
+            parts = [f"{applied}/{applied + len(skipped)} applied"]
+            if skipped:
+                parts.append(f"{len(skipped)} skipped")
+            log(f"    <find>/<replace> {p.name}: {', '.join(parts)}")
+            for idx_s, preview in skipped:
+                log(f"      ⚠ #{idx_s} no match: {preview}...")
+
+    return total
+
+
 def _apply_fixes_with_rollback(
     ctx: ModuleContext, raw_output: str, log_prefix: str,
 ) -> tuple[bool, int]:
     """Apply FIND/REPLACE fixes with diff-size guard and rollback."""
     has_find_replace = "===SECTION_FIX_START===" in raw_output
+    has_xml_fixes = "<find>" in raw_output and "<replace>" in raw_output
     has_content_rewrite = "===CONTENT_START===" in raw_output
-    if not has_find_replace and not has_content_rewrite:
+    if not has_find_replace and not has_xml_fixes and not has_content_rewrite:
         return True, 0
 
     before = _snapshot_module_files(ctx)
