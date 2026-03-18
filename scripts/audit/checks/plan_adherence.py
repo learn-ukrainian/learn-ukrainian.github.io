@@ -96,9 +96,19 @@ def _load_activities(activities_path: Path) -> list[dict]:
 _VOCAB_HINT_WORD_RE = re.compile(r"^(\S+)")
 
 
-def _extract_word_from_hint(hint: str) -> str:
-    """Extract the first word from a vocabulary hint string like 'мама (mom) — ...'."""
-    m = _VOCAB_HINT_WORD_RE.match(hint.strip())
+def _extract_word_from_hint(hint) -> str:
+    """Extract the first word from a vocabulary hint (string or dict).
+
+    Handles both formats:
+    - String: 'мама (mom) — ...'
+    - Dict: {word: 'мама', ...} or {lemma: 'мама', ...}
+    """
+    if isinstance(hint, dict):
+        # Dict format — try common keys
+        word = hint.get("word") or hint.get("lemma") or hint.get("text") or ""
+        return str(word).strip().split("(")[0].strip().split("—")[0].strip()
+    hint_str = str(hint).strip()
+    m = _VOCAB_HINT_WORD_RE.match(hint_str)
     return m.group(1) if m else ""
 
 
