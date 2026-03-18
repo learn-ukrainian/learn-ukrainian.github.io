@@ -354,6 +354,41 @@ def get_pedagogical_constraints(track: str, module_num: int, plan: dict | None =
 # ---------------------------------------------------------------------------
 
 
+def _build_vocabulary_bank(ctx) -> str:
+    """Build a flat Ukrainian vocabulary bank from plan vocabulary_hints.
+
+    Extracts the first Ukrainian word from each hint, providing a clean
+    word list that Gemini should use instead of pulling from memory.
+    This prevents Russianisms (дом→дім) by giving exact Ukrainian lemmas.
+
+    Issue: #979 AC3
+    """
+    import re as _re
+    if not ctx.plan:
+        return "(No vocabulary bank available)"
+    hints = ctx.plan.get("vocabulary_hints", {})
+    if not hints:
+        return "(No vocabulary hints in plan)"
+
+    words = []
+    for category in ("required", "recommended", "sight_words"):
+        for hint in hints.get(category, []):
+            if isinstance(hint, str):
+                # Extract first word: "мама (mom) — ..." → "мама"
+                word = hint.split("(")[0].strip().split("—")[0].strip().split(" ")[0].strip()
+                if word and _re.search(r'[\u0400-\u04ff]', word):
+                    words.append(word)
+            elif isinstance(hint, dict):
+                word = hint.get("word") or hint.get("lemma") or ""
+                if word:
+                    words.append(str(word).strip())
+
+    if not words:
+        return "(No Ukrainian vocabulary found in plan)"
+
+    return "**Allowed Ukrainian words:** " + ", ".join(words)
+
+
 def _build_exact_section_titles(ctx) -> str:
     """Build an explicit list of required H2 section titles from the content outline.
 

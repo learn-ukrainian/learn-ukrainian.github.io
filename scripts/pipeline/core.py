@@ -155,6 +155,7 @@ from pipeline.config_tables import (  # noqa: F401
     LEVEL_CONSTRAINTS,
     TRACK_SKILLS,
     _build_exact_section_titles,
+    _build_vocabulary_bank,
     _get_checkpoint_guidance,
     _get_checkpoint_review_guidance,
     _get_writing_style,
@@ -705,6 +706,7 @@ def build_placeholders(ctx: ModuleContext) -> None:
         "CHECKPOINT_GUIDANCE": _get_checkpoint_guidance(ctx),
         "CHECKPOINT_REVIEW_GUIDANCE": _get_checkpoint_review_guidance(ctx),
         "EXACT_SECTION_TITLES": _build_exact_section_titles(ctx),
+        "VOCABULARY_BANK": _build_vocabulary_bank(ctx),
         "INTRO_HOOK": (
             "Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 4)
             else "Чому це важливо? — Why does this matter?" if (ctx.track.startswith("a1") and ctx.module_num <= 14)
