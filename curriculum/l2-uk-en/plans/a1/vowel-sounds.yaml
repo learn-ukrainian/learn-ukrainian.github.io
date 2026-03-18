@@ -2,7 +2,7 @@ module: a1-002
 level: A1
 sequence: 2
 slug: vowel-sounds
-version: '2.3'
+version: '2.4'
 title: Vowel Sounds
 subtitle: "Голосні звуки — The Heartbeat of Every Ukrainian Word"
 focus: grammar
@@ -68,8 +68,8 @@ content_outline:
   - "Reading practice — words organized by vowel focus. Use any consonants freely
     (consonant system is covered in M3)."
   - "Short sentences: Це яблуко. Це моє село. Мама каже 'так'. Де мій кіт?"
-  - "Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (5 vowels
-    = 5 syllables), кіт (1 vowel = 1 syllable)."
+  - "Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (4 vowels
+    = 4 syllables: У-кра-ї-на), кіт (1 vowel = 1 syllable)."
 - section: "Підсумок — Summary"
   words: 100
   points:
