@@ -1,34 +1,70 @@
 {
   "metrics": {
-    "COMPUTED_WORD_COUNT": "1524",
+    "COMPUTED_WORD_COUNT": "1639",
     "COMPUTED_WORD_TARGET": "1200",
-    "COMPUTED_WORD_PERCENT": "127.0",
+    "COMPUTED_WORD_PERCENT": "136.6",
     "COMPUTED_ACTIVITY_COUNT": "0",
     "COMPUTED_VOCAB_COUNT": "0",
     "COMPUTED_ENGAGEMENT_COUNT": "4",
-    "COMPUTED_IMMERSION_PERCENT": "10.3",
+    "COMPUTED_IMMERSION_PERCENT": "9.0",
     "COMPUTED_IMMERSION_TARGET": "5-15%",
-    "COMPUTED_RICHNESS_SCORE": "63",
+    "COMPUTED_RICHNESS_SCORE": "78",
     "COMPUTED_RICHNESS_THRESHOLD": "95",
-    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 2/3, examples: 10/24, realworld: 1/3, proverbs: 0/1, tables: 0/2",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 3/5, cultural: 1/3, proverbs: 0/1, tables: 0/2",
     "COMPUTED_AUDIT_STATUS": "PASS"
   },
-  "deterministic_issues": [],
+  "deterministic_issues": [
+    {
+      "type": "LLM_FILLER",
+      "severity": "MEDIUM",
+      "location": "~line 4",
+      "text": "In this module, we will",
+      "fix": "Rephrase -- formulaic opener"
+    },
+    {
+      "type": "LLM_FILLER",
+      "severity": "MEDIUM",
+      "location": "~line 4",
+      "text": "In this module, we will explore",
+      "fix": "Rephrase -- formulaic opener"
+    },
+    {
+      "type": "IPA_BANNED",
+      "severity": "HIGH",
+      "location": "~line 1",
+      "text": "Banned IPA transcription: [watchdog]",
+      "fix": "Remove phonetic brackets. Use only stress marks (´) for pronunciation."
+    },
+    {
+      "type": "STRESS_MISMATCH",
+      "severity": "HIGH",
+      "location": "~line 38",
+      "text": "Wrong stress: 'приголо́сні' → should be 'при́голосні'",
+      "fix": "Replace 'приголо́сні' with 'при́голосні'."
+    },
+    {
+      "type": "STRESS_UNKNOWN",
+      "severity": "INFO",
+      "location": "~line 133",
+      "text": "Stressed word not in dictionary: дя́кую (дякую)",
+      "fix": "Verify stress manually — word not found in ukrainian-word-stress dictionary."
+    }
+  ],
   "audit_passed": true,
-  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-ukrainian-alphabet.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M01 — The Ukrainian Alphabet\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md | Target: 1200 words\n  📋 Required activity types from meta: classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                            278 /  150  ✅ (+128)\n     Букви і звуки — Letters and Sounds              183 /  200  ✅ (-17)\n     Голосні та приголосні — Vowels and Consonants   171 /  200  ⚠️ (-29)\n     Перші 10 літер — First 10 Letters               524 /  350  ✅ (+174)\n     Перші слова — First Words in Context            149 /  200  ❌ (-51)\n     Підсумок — Summary                              144 /  100  ✅ (+44)\n     ──────────────────────────────────────────────────────────────────────\n     TOTAL                                          1449 / 1200  ✅ (+249)\n  ✨ Purity violations found: 5\n     ❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера Н\n\nThe letter **Н** sounds like English N.\". Shares significant keywords with sentence at index 38.\n     ❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера Т\n\nThe letter **Т** sounds like English T.\". Shares significant keywords with sentence at index 38.\n     ❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера К\n\nThe letter **К** sounds like English K.\". Shares significant keywords with sentence at index 38.\n     ❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера С\n\nThe letter **С** sounds like English S.\". Shares significant keywords with sentence at index 38.\n     ❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with '📺 [watch:...'.\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1524/1200 (raw: 1640)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 10.3% (target 5-15% (M01))\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера Н\n\nThe letter **Н** sounds like English N.\". Shares significant keywords with sentence at index 38.\n     → FIX: Remove redundant paragraphs. Ensure each section adds new unique value.\n  [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера Т\n\nThe letter **Т** sounds like English T.\". Shares significant keywords with sentence at index 38.\n     → FIX: Remove redundant paragraphs. Ensure each section adds new unique value.\n  [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера К\n\nThe letter **К** sounds like English K.\". Shares significant keywords with sentence at index 38.\n     → FIX: Remove redundant paragraphs. Ensure each section adds new unique value.\n  [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"📺 \n\n### Літера С\n\nThe letter **С** sounds like English S.\". Shares significant keywords with sentence at index 38.\n     → FIX: Remove redundant paragraphs. Ensure each section adds new unique value.\n  [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with '📺 [watch:...'.\n     → FIX: Vary sentence structure.\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 15/100)\n   → 5 violations (moderate)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-ukrainian-alphabet.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-ukrainian-alphabet.md\n  VESUM misses: 2 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 49912.38it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 40 | VESUM: 38 (95.0%) | RAG: 0 | Not found: 2\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 38/40 (95%) verified\n⚠️ VESUM not found (2): КІ, ЛО",
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-ukrainian-alphabet.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M01 — The Ukrainian Alphabet\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-ukrainian-alphabet.md | Target: 1200 words\n  📋 Required activity types from meta: classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                            262 /  150  ✅ (+112)\n     Букви і звуки — Letters and Sounds              280 /  200  ✅ (+80)\n     Голосні та приголосні — Vowels and Consonants   264 /  200  ✅ (+64)\n     Перші 10 літер — First 10 Letters               486 /  350  ✅ (+136)\n     Перші слова — First Words in Context            206 /  200  ✅ (+6)\n     Підсумок — Summary                              127 /  100  ✅ (+27)\n     ──────────────────────────────────────────────────────────────────────\n     TOTAL                                          1625 / 1200  ✅ (+425)\n  ✨ Purity violations found: 2\n     ❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (86% overlap): \"**Літера Т**\n\nThe letter Т looks and sounds like the English T.\". Shares significant keywords with sentence at index 46.\n     ❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (86% overlap): \"**Літера К**\n\nThe letter К looks and sounds like the English K.\". Shares significant keywords with sentence at index 46.\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1639/1200 (raw: 1679)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 4/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 9.0% (target 5-15% (M01))\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [CONTENT_REDUNDANCY] Redundant information detected in lesson (86% overlap): \"**Літера Т**\n\nThe letter Т looks and sounds like the English T.\". Shares significant keywords with sentence at index 46.\n     → FIX: Remove redundant paragraphs. Ensure each section adds new unique value.\n  [CONTENT_REDUNDANCY] Redundant information detected in lesson (86% overlap): \"**Літера К**\n\nThe letter К looks and sounds like the English K.\". Shares significant keywords with sentence at index 46.\n     → FIX: Remove redundant paragraphs. Ensure each section adds new unique value.\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 2 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-ukrainian-alphabet.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-ukrainian-alphabet.md\n  VESUM misses: 1 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 39482.00it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 41 | VESUM: 40 (97.6%) | RAG: 0 | Not found: 1\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-ukrainian-alphabet-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 40/41 (98%) verified\n⚠️ VESUM not found (1): КІ",
   "h2_sections": "1. Вступ — Introduction\n2. Букви і звуки — Letters and Sounds\n3. Голосні та приголосні — Vowels and Consonants\n4. Перші 10 літер — First 10 Letters\n5. Перші слова — First Words in Context\n6. Підсумок — Summary",
   "vesum_stats": {
-    "total": 40,
-    "vesum_hits": 38,
+    "total": 41,
+    "vesum_hits": 40,
     "rag_hits": 0,
-    "not_found": 2,
+    "not_found": 1,
     "rag_errors": 0,
     "proper_names": 0,
     "by_source": {
       "prose": {
-        "total": 40,
-        "vesum_hits": 38,
-        "not_found": 2
+        "total": 41,
+        "vesum_hits": 40,
+        "not_found": 1
       }
     }
   },
@@ -42,17 +78,7 @@
       "literary": false,
       "vesum_info": [],
       "status": "❌"
-    },
-    {
-      "original": "ЛО",
-      "clean": "ло",
-      "source": "prose",
-      "vesum": false,
-      "textbook": false,
-      "literary": false,
-      "vesum_info": [],
-      "status": "❌"
     }
   ],
-  "content_hash": "1a9d8995b23702d3"
+  "content_hash": "769b66bc4f127d80"
 }

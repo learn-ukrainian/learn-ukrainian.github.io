@@ -24,17 +24,18 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T12:12:26Z",
+      "ts": "2026-03-18T14:57:25Z",
       "executor": {
         "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     },
     "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T12:12:44Z",
+      "status": "failed",
+      "ts": "2026-03-18T14:57:53Z",
       "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-7-failures",
       "executor": {
         "type": "deterministic",
         "name": "morphological_validator"
@@ -42,24 +43,23 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-18T12:15:21Z",
+      "ts": "2026-03-18T15:09:27Z",
       "task_id": "v5-the-ukrainian-alphabet-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "complete",
-      "ts": "2026-03-18T12:22:32Z",
-      "attempts": 1,
-      "note": "gemini-inline-fixes",
-      "review_grounding": "rag-textbook",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-18T15:18:21Z",
+      "attempts": 3,
+      "note": "fix-iter2",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   },

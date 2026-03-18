@@ -1,22 +1,13 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1413
-deviations:
-  - section: "Перші 10 літер — First 10 Letters"
-    reason: "Section runs ~90 words over minimum (438 vs 350) to accommodate 10 individual letter H3 sub-sections with video embeds and the blending walkthrough. No section is under target."
+word_count: 1655
+deviations: []
 frictions: []
-research_gaps:
-  - "No RAG results for Bolshakova Grade 1 pp.13-15 individual letter pages (мама, молоко, масло, око labeling exercises) — referenced from research notes but not returned by search_text. Used research file descriptions instead."
+research_gaps: []
 unverified_terms: []
 review_focus:
-  - "All 23 vocabulary words verified via VESUM batch (23/23 found). No unverified terms."
-  - "Stress marks: none used in content (alphabet module — stress is not the focus). No risk of wrong stress."
-  - "False friend warnings (Н≠H, С≠C) — verify these are pedagogically prominent enough."
-  - "Sight words (привіт, дякую, це) are clearly labeled as containing untaught letters."
-  - "Activity distractors all come from the verified vocabulary list — no Russianisms (fixed prior friction with СОК/СОЛ)."
-  - "No IPA, no Latin transliteration, no Russian characters used anywhere."
-  - "Confirm all 20 vocabulary items appear at least once in content (VOCAB-IN-CONTENT rule)."
+  - "Check that tone is encouraging and direct address ('you') is used frequently as targeted (found >30 instances)."
+  - "Verify zero Russian characters and zero Latin transliteration of Ukrainian."
+  - "Verify appropriate use of angular quotes «» to describe sounds to avoid transliteration rules."
 rag_tools_used:
-  - "search_text: 'букви і звуки абетка алфавіт голосні приголосні' grade=1 → Bolshakova p.24 (vowels/consonants intro), Zaharijchuk p.13 (vowel/consonant sounds)"
-  - "search_text: 'букви звуки різниця голосні приголосні' grade=2 → Bolshakova p.34 (6 vowel sounds, 10 vowel letters chart), Kravtsova p.40 (voiced/voiceless)"
-  - "verify_words: batch 23 words → 23/23 FOUND (мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні, сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно, привіт, дякую, це)"
+  - "search_text: 'Full alphabet overview (33 letters)' → Used textbook examples of букви vs звуки."

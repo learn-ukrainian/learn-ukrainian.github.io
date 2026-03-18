@@ -1,85 +1,61 @@
 items:
-  - lemma: "мама"
-    translation: "mom"
-    pos: "noun"
-    gender: "f"
-    notes: "Decodable with first 10 letters"
-  - lemma: "тато"
-    translation: "dad"
-    pos: "noun"
-    gender: "m"
-    notes: "Decodable with first 10 letters"
-  - lemma: "кіт"
-    translation: "cat"
-    pos: "noun"
-    gender: "m"
-    notes: "Decodable with first 10 letters"
-  - lemma: "молоко"
-    translation: "milk"
-    pos: "noun"
-    gender: "n"
-    notes: "Three syllables: мо-ло-ко"
-  - lemma: "масло"
-    translation: "butter"
-    pos: "noun"
-    gender: "n"
-    notes: "Decodable with first 10 letters"
-  - lemma: "ліс"
-    translation: "forest"
-    pos: "noun"
-    gender: "m"
-  - lemma: "місто"
-    translation: "city"
-    pos: "noun"
-    gender: "n"
-  - lemma: "око"
-    translation: "eye"
-    pos: "noun"
-    gender: "n"
-  - lemma: "так"
-    translation: "yes"
-    pos: "adverb"
-    notes: "Survival word, fully decodable"
-  - lemma: "ні"
-    translation: "no"
-    pos: "particle"
-    notes: "Survival word, fully decodable"
-  - lemma: "сон"
-    translation: "dream, sleep"
-    pos: "noun"
-    gender: "m"
-  - lemma: "сом"
-    translation: "catfish"
-    pos: "noun"
-    gender: "m"
-  - lemma: "ніс"
-    translation: "nose"
-    pos: "noun"
-    gender: "m"
-  - lemma: "мак"
-    translation: "poppy"
-    pos: "noun"
-    gender: "m"
-  - lemma: "сік"
-    translation: "juice"
-    pos: "noun"
-    gender: "m"
-  - lemma: "стіл"
-    translation: "table"
-    pos: "noun"
-    gender: "m"
-  - lemma: "тут"
-    translation: "here"
-    pos: "adverb"
-  - lemma: "там"
-    translation: "there"
-    pos: "adverb"
-  - lemma: "сало"
-    translation: "lard"
-    pos: "noun"
-    gender: "n"
-  - lemma: "кіно"
-    translation: "cinema"
-    pos: "noun"
-    gender: "n"
-    notes: "Indeclinable noun"
+  - lemma: 'мама'
+    translation: 'mom'
+    pos: 'noun'
+  - lemma: 'тато'
+    translation: 'dad'
+    pos: 'noun'
+  - lemma: 'кіт'
+    translation: 'cat'
+    pos: 'noun'
+  - lemma: 'молоко'
+    translation: 'milk'
+    pos: 'noun'
+  - lemma: 'масло'
+    translation: 'butter'
+    pos: 'noun'
+  - lemma: 'ліс'
+    translation: 'forest'
+    pos: 'noun'
+  - lemma: 'місто'
+    translation: 'city'
+    pos: 'noun'
+  - lemma: 'око'
+    translation: 'eye'
+    pos: 'noun'
+  - lemma: 'ніс'
+    translation: 'nose'
+    pos: 'noun'
+  - lemma: 'сон'
+    translation: 'dream / sleep'
+    pos: 'noun'
+  - lemma: 'сік'
+    translation: 'juice'
+    pos: 'noun'
+  - lemma: 'стіл'
+    translation: 'table'
+    pos: 'noun'
+  - lemma: 'кіно'
+    translation: 'cinema'
+    pos: 'noun'
+  - lemma: 'тут'
+    translation: 'here'
+    pos: 'adverb'
+  - lemma: 'там'
+    translation: 'there'
+    pos: 'adverb'
+  - lemma: 'так'
+    translation: 'yes'
+    pos: 'particle'
+  - lemma: 'ні'
+    translation: 'no'
+    pos: 'particle'
+  - lemma: 'привіт'
+    translation: 'hello'
+    pos: 'interjection'
+  - lemma: 'дякую'
+    translation: 'thank you'
+    pos: 'interjection'
+  - lemma: 'це'
+    translation: 'this is'
+    pos: 'pronoun'
