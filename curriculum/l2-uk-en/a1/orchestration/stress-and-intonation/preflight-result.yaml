@@ -1,13 +1,4 @@
-status: ISSUES_FOUND
-issue_count: 1
-high_count: 1
-issues:
-- type: PLAN_CONTRADICTION
-  location: vocabulary_hints in Plan/Prompt vs FRICTION CONSTRAINTS
-  problem: The plan and prompt vocabulary section specify last-syllable stress for
-    the word 'далеко' (далеко́), but the Friction Constraints section (listing past
-    errors to avoid) explicitly states that 'далеко́ should be дале́ко' (penultimate
-    stress). Following the plan will likely result in a Language Accuracy audit failure.
-  suggested_fix: Use 'дале́ко' as the primary stress form throughout the module content
-    and vocabulary YAML to align with the corrective feedback in the Friction Constraints.
-  severity: HIGH
+status: PASS
+issue_count: 0
+high_count: 0
+issues: []

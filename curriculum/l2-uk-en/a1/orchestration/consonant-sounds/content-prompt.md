@@ -53,9 +53,11 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 2
 **Previous module:** Vowel Sounds
 
-**Cumulative vocabulary (20 words):**
-мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
+**Cumulative vocabulary (39 words):**
+мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
+сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
+яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, кит
 
 **Grammar already taught (9 topics):**
 - Full alphabet overview (33 letters)
@@ -96,11 +98,11 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 **Recommended** (use in your content to reach the vocabulary target):
 - павук (spider) — demonstrates П; Bolshakova
 - ґанок (porch) — demonstrates rare Ґ; classic textbook word
-- сіль (salt) — demonstrates soft С and Л; everyday kitchen word
+- кінь (horse) — demonstrates soft Н; minimal pair with кін
 - люди (people) — demonstrates soft Л; high-frequency
 - суп (soup) — voiceless pair drill with зуб; everyday food
 - вода (water) — demonstrates В; high-frequency
-- цибуля (onion) — hard Л; minimal pair with люк
+- дим (smoke) — voiced Д; minimal pair with дім
 - люк (hatch) — soft Л; minimal pair with лук
 
 These are your TARGET words — teach them all and use them heavily. For the rest of the text, use natural, level-appropriate Ukrainian.
@@ -230,7 +232,7 @@ ____________________
 
 Write **Consonant Sounds** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 3+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -244,7 +246,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - Р — the rolled/trilled R! Words: риба (fish), рука (hand). Practice the tongue-tip trill. Looks like English P but sounds completely different.
   - В — a sonorant in Ukrainian — closer to English W than English V. Lips rounded, NOT teeth on lip. Words: вода (water), вовк (wolf).
 - `## Дзвінкі та глухі пари — Voiced and Voiceless Pairs` (~400 words)
-  - Hand-on-throat test: voiced (дзвінкий) = throat vibrates. Voiceless (глухий) = only air. Each pair is identical mouth position, different voicing.
+  - Hands-on-ears test (закрий долонями вуха): voiced (дзвінкий) = you hear a buzz. Voiceless (глухий) = only air. Each pair is identical mouth position, different voicing.
   - Б/П — бабуся (grandma) / павук (spider). Б = voiced, П = voiceless.
   - Д/Т — дім (house) / тато (M1 review). Д = voiced, Т = voiceless.
   - З/С — зуб (tooth) / суп (soup). З = voiced, С = voiceless.
@@ -254,7 +256,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - CRITICAL RULE: voiced consonants stay voiced at word end! зуб = зу[б], NOT зу[п]. хліб = хлі[б], NOT хлі[п]. Different from Russian and German.
 - `## Тверді та м'які — Hard and Soft Consonants` (~250 words)
   - Most Ukrainian consonants come in hard/soft variants. A consonant becomes soft (palatalized) before І, Я, Ю, Є or when followed by Ь (covered in M4).
-  - Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л).
+  - Examples: ліс (soft Л), день (soft Д and Н), кінь (soft Н).
   - Compare: лук (hard Л — bow (weapon)) vs люк (soft Л — hatch). The consonant changes, not the vowel!
   - Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft sign that forces softening) in M4.
 - `## Читання — Reading Practice` (~150 words)
@@ -285,10 +287,24 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 
 ### Workflow
 1. **Research first**: `search_text("Sonorant consonants (Л М Н Р В) Voiced/voiceless consonant pairs", grade=1-2)` — find how textbooks teach this
-2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+2. **Write content** — focus on being a warm, patient tutor. Make it engaging. Vary your transitions.
+3. **Create activities** from your content
+4. **Use vocabulary from the plan** — stick to words from `vocabulary_hints`
+
+### Your Priority: Teaching Quality
+
+You are a warm, patient Ukrainian tutor writing for beginners. Your #1 job is making the learner feel capable and excited. Write like a human teacher, not a textbook.
+
+**Anti-robotics (scored — LLM Fingerprint dimension):**
+- NEVER use "Here is / Here are" more than once in a module
+- NEVER start 3+ sections with the same phrase pattern
+- Use direct, conversational transitions: "Now try this", "Ready?", "Let's practice", "Good — next..."
+- Weave Ukrainian examples into flowing prose, not bullet-point dumps
+- Read your text back — if it sounds like a Wikipedia article, rewrite it
+
+**Trust the pipeline**: After you write, the validate phase automatically checks every Ukrainian word against VESUM, verifies stress marks, and scans for Russianisms. You do NOT need to verify words yourself — focus on writing naturally and engagingly. The pipeline catches errors; your job is making the lesson feel alive.
+
+**Tools if needed**: `search_text` for textbook pedagogy, `verify_words` if genuinely unsure about a specific word. But don't let verification interrupt your creative flow.
 
 ### Beginner Lesson Arc
 
@@ -373,7 +389,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
@@ -507,7 +523,4 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [MODULE] False textbook attribution: module claims "Ukrainian textbooks teach a hand-on-throat test" for voicing. The actual textbook (Кравцова 2019, Grade 2, p.39) teaches covering ears with palms. Keep the hand-on-throat technique (plan mandates it) but remove the false attribution to textbooks.
-- [MODULE] Plan requires explicit Russian comparison for voiced consonants at word end: "Different from Russian". Module substituted "English, German, and many other languages" instead. Must mention Russian as the plan specifies.
-- [MODULE] Wrong stress on 4 words: моло́ко→молоко́, дзві́нкий→дзвінки́й, глу́хий→глухи́й, тве́рдий→тверди́й.
-- [MODULE] Review file missing required Scores/Assessment and Issues/Critique sections. Needs full redo with tier-1-beginner review template.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.

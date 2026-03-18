@@ -2,13 +2,13 @@
   "module": "completing-the-alphabet",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T00:10:34.205156Z",
+  "last_audit": "2026-03-18T21:31:57.587537Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-17T15:53:32.975860Z",
+    "md": "2026-03-18T21:31:37.088428Z",
     "meta": "2026-03-16T21:57:03.204919Z",
-    "activities": "2026-03-17T15:53:32.967431Z",
-    "vocabulary": "2026-03-17T15:42:40.713463Z",
+    "activities": "2026-03-18T21:24:38.644027Z",
+    "vocabulary": "2026-03-18T21:30:16.109390Z",
     "research": "2026-03-12T09:43:28.783566Z",
     "plan": "2026-03-16T22:57:05.772146Z"
   },
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1673/1200 (raw: 1829)"
+      "message": "1737/1200 (raw: 1873)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "7/0"
     },
     "vocabulary": {
       "status": "pass",

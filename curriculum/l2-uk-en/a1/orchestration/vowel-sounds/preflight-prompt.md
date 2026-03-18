@@ -61,8 +61,8 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Previous module:** The Ukrainian Alphabet
 
 **Cumulative vocabulary (20 words):**
-мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
+мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
+сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
 
 **Grammar already taught (4 topics):**
 - Full alphabet overview (33 letters)
@@ -178,7 +178,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 - `## Голосні в словах — Vowels in Words` (~200 words)
   - Reading practice — words organized by vowel focus. Use any consonants freely (consonant system is covered in M3).
   - Short sentences: Це яблуко. Це моє село. Мама каже 'так'. Де мій кіт?
-  - Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (5 vowels = 5 syllables), кіт (1 vowel = 1 syllable).
+  - Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (4 vowels = 4 syllables: У-кра-ї-на), кіт (1 vowel = 1 syllable).
 - `## Підсумок — Summary` (~100 words)
   - 10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї) + semi-vowel Й.
   - Golden Rule reinforced: Ukrainian vowels stay pure — never swallow or reduce them.
@@ -203,10 +203,24 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 
 ### Workflow
 1. **Research first**: `search_text("Base vowel pronunciation (А О У Е И І) Iotated vowels dual function (Я Ю Є Ї)", grade=1-2)` — find how textbooks teach this
-2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+2. **Write content** — focus on being a warm, patient tutor. Make it engaging. Vary your transitions.
+3. **Create activities** from your content
+4. **Use vocabulary from the plan** — stick to words from `vocabulary_hints`
+
+### Your Priority: Teaching Quality
+
+You are a warm, patient Ukrainian tutor writing for beginners. Your #1 job is making the learner feel capable and excited. Write like a human teacher, not a textbook.
+
+**Anti-robotics (scored — LLM Fingerprint dimension):**
+- NEVER use "Here is / Here are" more than once in a module
+- NEVER start 3+ sections with the same phrase pattern
+- Use direct, conversational transitions: "Now try this", "Ready?", "Let's practice", "Good — next..."
+- Weave Ukrainian examples into flowing prose, not bullet-point dumps
+- Read your text back — if it sounds like a Wikipedia article, rewrite it
+
+**Trust the pipeline**: After you write, the validate phase automatically checks every Ukrainian word against VESUM, verifies stress marks, and scans for Russianisms. You do NOT need to verify words yourself — focus on writing naturally and engagingly. The pipeline catches errors; your job is making the lesson feel alive.
+
+**Tools if needed**: `search_text` for textbook pedagogy, `verify_words` if genuinely unsure about a specific word. But don't let verification interrupt your creative flow.
 
 ### Beginner Lesson Arc
 
@@ -291,7 +305,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
@@ -425,11 +439,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [MODULE] Hallucinated word "сір" claimed as Ukrainian for "grey". The correct word is "сірий". Replace the сир/сір minimal pair with a verified pair like кит/кіт in both prose and quiz activity.
-- [MODULE] Reversed stress marks: яйце́ (singular, final stress) and я́йця (plural, initial stress). Module had them backwards.
-- [MODULE] image-to-letter activity asks "What vowel does it start with?" but 4/8 items have consonant answers (Р, М, С). Change title to "What letter does it start with?" or replace items with vowel-initial words.
-- [MODULE] Wrong stress: ї́жак should be їжа́к.
-- [MODULE] Syllable counting explanation for Ї is nonsensical: "Ї counts as one syllable because the Й part is a consonant". Correct: Ї forms a syllable because it contains the vowel І.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 </prompt>
 
@@ -440,7 +450,7 @@ module: a1-002
 level: A1
 sequence: 2
 slug: vowel-sounds
-version: '2.3'
+version: '2.4'
 title: Vowel Sounds
 subtitle: "Голосні звуки — The Heartbeat of Every Ukrainian Word"
 focus: grammar
@@ -506,8 +516,8 @@ content_outline:
   - "Reading practice — words organized by vowel focus. Use any consonants freely
     (consonant system is covered in M3)."
   - "Short sentences: Це яблуко. Це моє село. Мама каже 'так'. Де мій кіт?"
-  - "Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (5 vowels
-    = 5 syllables), кіт (1 vowel = 1 syllable)."
+  - "Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (4 vowels
+    = 4 syllables: У-кра-ї-на), кіт (1 vowel = 1 syllable)."
 - section: "Підсумок — Summary"
   words: 100
   points:

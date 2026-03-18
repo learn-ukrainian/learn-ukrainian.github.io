@@ -2,13 +2,13 @@
   "module": "syllables-and-word-division",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T00:10:55.399078Z",
+  "last_audit": "2026-03-18T23:17:54.949926Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-17T16:55:09.105790Z",
+    "md": "2026-03-18T22:54:51.829523Z",
     "meta": "2026-03-17T16:42:30.387503Z",
-    "activities": "2026-03-17T16:55:09.106316Z",
-    "vocabulary": "2026-03-17T16:40:57.679416Z",
+    "activities": "2026-03-18T22:53:31.886348Z",
+    "vocabulary": "2026-03-18T22:46:43.297032Z",
     "research": "2026-03-17T18:14:13.115179Z",
     "plan": "2026-03-17T18:13:53.269692Z"
   },
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2020/1200 (raw: 2128)"
+      "message": "1840/1200 (raw: 1954)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/0"
+      "message": "6/0"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "15/1"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
@@ -41,7 +41,7 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Content predates research (research file is newer)"
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
     },
     "review": {
       "status": "pass",

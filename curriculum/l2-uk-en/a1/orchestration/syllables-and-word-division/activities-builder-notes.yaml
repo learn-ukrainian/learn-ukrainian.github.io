@@ -1,0 +1,16 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 6
+deviations:
+  - "Added true-false (8 items) and anagram (8 items) beyond the 4 plan-specified types, to reinforce syllable/word-division rules and provide variety."
+  - "fill-in uses English frame sentences with Ukrainian word-division answers, since the focus is on marking correct division points rather than sentence completion."
+  - "match-up has some right-side duplicates (e.g., '3 syllables') which is unavoidable when matching words to syllable counts — each pair is unique as a left-right combination."
+frictions:
+  - type: SCHEMA_MISMATCH
+    description: "fill-in schema requires 'sentence' field with a blank (___), but the plan focus is 'mark correct word division points' — not a traditional sentence completion task. Adapted by using English frame sentences."
+    proposed_fix: "N/A — the adaptation works within schema constraints."
+unverified_terms: []
+review_focus:
+  - "fill-in activity: verify that the English-frame approach (choosing correct Ukrainian word division) is pedagogically clear for A1 learners."
+  - "group-sort: items include parenthetical context (e.g., 'мо (from мо-ло-ко)') — verify this renders well in the Starlight UI."
+  - "match-up: multiple words map to the same syllable count — verify the matching UI handles non-unique right-side values."

@@ -24,7 +24,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T15:36:55Z",
+      "ts": "2026-03-18T21:44:17Z",
       "executor": {
         "type": "llm",
         "agent": "claude",
@@ -32,31 +32,30 @@
       }
     },
     "validate": {
+      "status": "failed",
+      "ts": "2026-03-18T21:44:47Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-7-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
       "status": "complete",
-      "ts": "2026-03-17T15:48:33Z",
-      "attempts": 2,
-      "note": "escalation-claude",
+      "ts": "2026-03-18T21:46:43Z",
+      "task_id": "v5-syllables-and-word-division-pC",
       "executor": {
         "type": "llm",
         "agent": "claude",
         "model": "claude-opus-4-6"
       }
     },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-17T15:48:33Z",
-      "note": "adopted-existing",
-      "executor": {
-        "type": "script",
-        "name": "adopted_existing"
-      }
-    },
     "review": {
-      "status": "complete",
-      "ts": "2026-03-17T15:55:25Z",
-      "attempts": 1,
-      "note": "gemini-inline-fixes",
-      "review_grounding": "rag-textbook",
+      "status": "failed",
+      "ts": "2026-03-18T21:55:04Z",
+      "attempts": 4,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",

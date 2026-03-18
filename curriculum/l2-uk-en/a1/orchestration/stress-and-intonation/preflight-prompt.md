@@ -61,15 +61,15 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Previous module:** Syllables and Word Division
 
 **Cumulative vocabulary (84 words):**
-мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
-яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
-зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
-п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
-джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
-пальці, книга, вулиця, автобус
+мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
+сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
+яблуко, риба, село, Україна, їжак, юнак, край, день, син, мій
+вухо, їжа, яйце, юшка, каша, небо, сир, хліб, зуб, дім
+вовк, жук, шапка, гора, рука, бабуся, павук, ґанок, кінь, людина
+суп, вода, дим, люк, сіль, Львів, м'ясо, п'ять, сім'я, цукор
+час, що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола, дзеркало
+черепаха, цибуля, чай, склад, голосний, приголосний, перенос, сестра, дерево, вулиця
+автобус, бібліотека, університет, ґудзик
 
 **Grammar already taught (23 topics):**
 - Full alphabet overview (33 letters)
@@ -119,7 +119,7 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 - добрий (good) — first-syllable stress дОбрий; Top 100 word; collocations: добрий день
 
 **Recommended** (use in your content to reach the vocabulary target):
-- далеко (far) — last-syllable stress далекО
+- далеко (far) — penultimate stress дале́ко
 - наголос (stress/accent) — metalinguistic term
 - інтонація (intonation) — metalinguistic term
 - питання (question) — high-frequency word
@@ -202,7 +202,7 @@ Ukrainian sentences max 10 words.
 
 Write **Stress and Intonation** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 2+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -215,18 +215,18 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - Learner strategy: when encountering a new word, always check stress placement — guessing from spelling will often be wrong.
 - `## Типові наголоси — Common Stress Patterns` (~250 words)
   - First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and household words.
-  - Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some verb forms.
+  - Last-syllable stress: молокО, далекО, Україна — common in longer words.
   - Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable words.
   - No fixed rule: the same ending can have different stress (кнИжка vs водА, both -а ending) — stress must be learned per word.
 - `## Рухомий наголос — Mobile Stress` (~250 words)
   - Stress shifts in declension: рукА (nominative singular) → рУки (nominative/accusative plural) — the stress moves when the word form changes. (Note: genitive singular is рукИ — stress stays).
-  - Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш (you write) — verb stress can shift between stems and endings.
+  - Stress shifts in number: водА (singular) → вОди (plural) — noun stress can shift between singular and plural forms. (Preview — details in later modules.)
   - Preview note: mobile stress will matter more when learning cases and verb conjugation — for now, awareness is the goal.
   - Practical tip: listening to native speakers is the best way to internalize stress patterns.
 - `## Інтонація — Intonation` (~250 words)
   - Declarative intonation: pitch falls at the end of the sentence — Це кафе. with a downward contour.
   - Interrogative with question word: pitch rises on the question word, then falls — ДЕ кафе?
-  - Yes/no questions (without question word): pitch rises sharply on the stressed syllable of the key word, then falls (IK-3 pattern) — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.
+  - Yes/no questions (without question word): pitch rises sharply on the stressed syllable of the key word, then falls — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.
   - Exclamatory intonation: sharp rise with emphasis — Це кафе! expressing surprise or excitement.
   - Contrast drill: practicing the same sentence with all four intonation patterns.
 - `## Практика — Practice` (~100 words)
@@ -256,10 +256,24 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 
 ### Workflow
 1. **Research first**: `search_text("Word stress Stress mobility", grade=1-2)` — find how textbooks teach this
-2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+2. **Write content** — focus on being a warm, patient tutor. Make it engaging. Vary your transitions.
+3. **Create activities** from your content
+4. **Use vocabulary from the plan** — stick to words from `vocabulary_hints`
+
+### Your Priority: Teaching Quality
+
+You are a warm, patient Ukrainian tutor writing for beginners. Your #1 job is making the learner feel capable and excited. Write like a human teacher, not a textbook.
+
+**Anti-robotics (scored — LLM Fingerprint dimension):**
+- NEVER use "Here is / Here are" more than once in a module
+- NEVER start 3+ sections with the same phrase pattern
+- Use direct, conversational transitions: "Now try this", "Ready?", "Let's practice", "Good — next..."
+- Weave Ukrainian examples into flowing prose, not bullet-point dumps
+- Read your text back — if it sounds like a Wikipedia article, rewrite it
+
+**Trust the pipeline**: After you write, the validate phase automatically checks every Ukrainian word against VESUM, verifies stress marks, and scans for Russianisms. You do NOT need to verify words yourself — focus on writing naturally and engagingly. The pipeline catches errors; your job is making the lesson feel alive.
+
+**Tools if needed**: `search_text` for textbook pedagogy, `verify_words` if genuinely unsure about a specific word. But don't let verification interrupt your creative flow.
 
 ### Beginner Lesson Arc
 
@@ -344,7 +358,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
@@ -478,10 +492,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [MODULE] Only 4 activities (needs 8+). Missing activity types: watch-and-repeat, classify, anagram, unjumble. Must rebuild from activities phase.
-- [MODULE] YAML schema violation: bare string 'за́мок' instead of activity object. Fix YAML structure.
-- [MODULE] Wrong stress: далеко́ should be дале́ко.
-- [MODULE] Review-fix claimed "all audit gates should pass cleanly" when they don't — 4/8 activities is a clear fail. Review-fix prompt must actually check audit gates, not self-declare success.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 </prompt>
 
@@ -492,7 +503,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: stress-and-intonation
-version: '3.1'
+version: '3.3'
 title: Stress and Intonation
 subtitle: The Music of Ukrainian
 focus: grammar
@@ -519,7 +530,7 @@ content_outline:
   words: 250
   points:
   - 'First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and household words.'
-  - 'Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some verb forms.'
+  - 'Last-syllable stress: молокО, далекО, Україна — common in longer words.'
   - 'Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable words.'
   - 'No fixed rule: the same ending can have different stress (кнИжка vs водА, both -а ending) — stress must be learned per word.'
 - section: Рухомий наголос — Mobile Stress
@@ -527,8 +538,7 @@ content_outline:
   points:
   - 'Stress shifts in declension: рукА (nominative singular) → рУки (nominative/accusative plural) — the stress moves when
     the word form changes. (Note: genitive singular is рукИ — stress stays).'
-  - 'Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш (you write) — verb stress can shift between
-    stems and endings.'
+  - 'Stress shifts in number: водА (singular) → вОди (plural) — noun stress can shift between singular and plural forms. (Preview — details in later modules.)'
   - 'Preview note: mobile stress will matter more when learning cases and verb conjugation — for now, awareness is the goal.'
   - 'Practical tip: listening to native speakers is the best way to internalize stress patterns.'
 - section: Інтонація — Intonation
@@ -537,7 +547,7 @@ content_outline:
   - 'Declarative intonation: pitch falls at the end of the sentence — Це кафе. with a downward contour.'
   - 'Interrogative with question word: pitch rises on the question word, then falls — ДЕ кафе?'
   - 'Yes/no questions (without question word): pitch rises sharply on the stressed syllable of the key word, then falls
-    (IK-3 pattern) — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.'
+    — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.'
   - 'Exclamatory intonation: sharp rise with emphasis — Це кафе! expressing surprise or excitement.'
   - 'Contrast drill: practicing the same sentence with all four intonation patterns.'
 - section: Практика — Practice
@@ -564,7 +574,7 @@ vocabulary_hints:
   - 'молоко (milk) — last-syllable stress молокО'
   - 'добрий (good) — first-syllable stress дОбрий; Top 100 word; collocations: добрий день'
   recommended:
-  - 'далеко (far) — last-syllable stress далекО'
+  - 'далеко (far) — penultimate stress дале́ко'
   - наголос (stress/accent) — metalinguistic term
   - інтонація (intonation) — metalinguistic term
   - 'питання (question) — high-frequency word'
@@ -605,7 +615,7 @@ Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
 Min activities: 0
-Min engagement boxes: 3
+Min engagement boxes: 2
 Min activity types: 0
 
 ### Immersion
@@ -649,6 +659,7 @@ Only report if:
 These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
 
 - **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **луна**: Russian meaning = moon, місяць, lunar; Ukrainian meaning = echo (відлуння). Correct word for 'moon, місяць, lunar' → **місяць**
 - **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
 - **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
 - **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**

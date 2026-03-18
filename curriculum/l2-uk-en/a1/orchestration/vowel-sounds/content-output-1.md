@@ -1,213 +1,188 @@
 ## Вступ — Introduction
 
-Welcome back! In Module 1, you explored the full Ukrainian alphabet — all 33 letters — and practiced reading your first words. You learned that Ukrainian has two types of sounds: vowels and consonants. Today, you're going to master the complete vowel system.
+Ласкаво просимо! Welcome back to your Ukrainian journey. In our first module, you explored the alphabet map and practiced your first ten letters. You learned the difference between letters and sounds, and how basic syllables blend together. You did absolutely great! Today, we are focusing on the true heartbeat of the language: the vowel system. 
 
-Here's a powerful rule that will help you read any Ukrainian word: every syllable has exactly one vowel. Count the vowels, and you know how many syllables the word has. Take **молоко́** (milk) — three vowels, three syllables. That simple.
+In Ukrainian, vowels are everything. There are ten vowel letters that carry every single syllable in the language. Why do vowels matter so much? Because the rule is simple and absolute: every syllable has exactly one vowel. If you count the vowels in a Ukrainian word, you instantly know how many syllables it has. It is that straightforward! When you see a long word, you do not need to panic. You just find the vowels, and you will know exactly how to break it down. 
 
-Ukrainian has 10 vowel letters in total: six base vowels and four special «double-duty» vowels called iotated vowels. By the end of this module, you'll be able to pronounce and recognize every one of them. Let's get started!
-
----
+Take your time as we walk through these new sounds. You are building the foundation for beautiful, natural, and authentic Ukrainian pronunciation. Ready? Let's dive in!
 
 ## Шість основних голосних — Six Base Vowels
 
-These six vowels are the foundation of Ukrainian pronunciation. Each one has a clear, steady sound that never changes — no matter where it appears in a word.
+Let's start with the six base vowels. These are the core sounds that you will hear in almost every single Ukrainian sentence. They are the building blocks of the language, and mastering them early will make everything else much easier.
 
 ### Літера А
 
-[Anna Ohoiko — Ukrainian Lessons — А](https://www.youtube.com/watch?v=hvB3VpcR3ZE)
+The letter **А** is an open, wide sound, very much like the «a» in the English word «father». The key rule here is that it never reduces or changes its quality, no matter where it is in the word or whether it is stressed or not. Open your mouth wide and let the sound out clearly!
+*   **ма́ма** (mom) — You remember this from Module 1!
+*   **ка́ша** (porridge) — A staple of Ukrainian cuisine.
+*   **са́ло** (lard) — Another famous traditional food.
 
-**А** sounds like the «a» in «father» — open, clear, and steady. It never weakens or changes. You already know **ма́ма** (mom) from Module 1. Now meet two more:
-
-- **ка́ша** — porridge (a classic Ukrainian breakfast)
-- **са́ло** — cured pork fat (a beloved Ukrainian food)
-
-Say each word aloud. Feel how the **А** stays exactly the same every time.
+> [!video] Літера А
+> [Anna Ohoiko — Ukrainian Lessons — А](https://www.youtube.com/watch?v=hvB3VpcR3ZE)
 
 ### Літера О
 
-[Anna Ohoiko — Ukrainian Lessons — О](https://www.youtube.com/watch?v=gJFxRIPRZbI)
+The letter **О** is beautifully rounded, similar to the «o» in «more» or «door». Push your lips forward to make a perfect circle. The most important thing to remember is that it stays a crisp, clear **О** even when it is unstressed. This is a massive difference from Russian or English, where unstressed vowels often turn into a lazy, mumbled «uh» sound.
+*   **о́ко** (eye) — A simple, two-syllable word.
+*   **молоко́** (milk) — Three pure «o» sounds!
+*   **село́** (village) — The «o» stays pure at the end.
 
-**О** sounds like the «o» in «more» — rounded and full. Here's something important: Ukrainian **О** keeps its pure sound even when it's not stressed. It never fades into «uh.»
-
-- **о́ко** — eye (M1 review)
-- **молоко́** — milk (M1 review — three О sounds, all identical!)
-- **село́** — village
-
-Listen carefully to **село́** — the stress falls on the last syllable, but the first **Е** stays clear too. You'll learn more about stress soon.
+> [!video] Літера О
+> [Anna Ohoiko — Ukrainian Lessons — О](https://www.youtube.com/watch?v=gJFxRIPRZbI)
 
 ### Літера У
 
-[Anna Ohoiko — Ukrainian Lessons — У](https://www.youtube.com/watch?v=VB1O6PmtYRU)
+The letter **У** sounds like the «oo» in «moon» or «boot». Push your lips even further forward than for **О** to make it sound authentic. It is a deep, resonant sound that never wavers.
+*   **тут** (here) — A very useful little word.
+*   **ву́хо** (ear) — Notice how the «u» anchors the word.
+*   **суп** (soup) — Easy to remember!
 
-**У** sounds like «oo» in «moon» — deep and rounded.
-
-- **тут** — here (M1 review)
-- **ву́хо** — ear
-- **суп** — soup
+> [!video] Літера У
+> [Anna Ohoiko — Ukrainian Lessons — У](https://www.youtube.com/watch?v=VB1O6PmtYRU)
 
 ### Літера Е
 
-[Anna Ohoiko — Ukrainian Lessons — Е](https://www.youtube.com/watch?v=KFlsroBW0dk)
+The letter **Е** sounds like the «e» in «set» or «pet». Be extremely careful here: it is NOT like the English «ee». It is a short, crisp, and flat sound. Notice how it sounds in these words, paying attention to the vowel itself even as you see some new consonants like Д, В, and Р. Do not let those new letters distract you from the **Е**!
+*   **не́бо** (sky) — A beautiful, poetic word.
+*   **село́** (village) — Notice the crisp «e» at the start.
+*   **день** (day) — A word you will use all the time.
 
-**Е** sounds like the «e» in «set.» Be careful — this is NOT the English «ee» sound. Keep it short and open.
-
-- **не́бо** — sky
-- **село́** — village (notice **Е** stays clear even when unstressed)
-- **день** — day
-
-Don't worry if you see unfamiliar consonant letters like **Д**, **В**, or **Р** in these examples. Focus on the vowel sound — you'll master all the consonants in Module 3.
+> [!video] Літера Е
+> [Anna Ohoiko — Ukrainian Lessons — Е](https://www.youtube.com/watch?v=KFlsroBW0dk)
 
 ### Літера И
 
-[Anna Ohoiko — Ukrainian Lessons — И](https://www.youtube.com/watch?v=W-1rCu0indE)
+Now we meet a sound that is uniquely Ukrainian! The letter **И** has no exact English equivalent, which makes it fun to practice. To pronounce it, keep your jaw relaxed and your tongue slightly lower than when you say the English «ee». It sounds a bit like the «i» in «sit», but much deeper, almost coming from the back of your throat. Do not push your lips forward!
+*   **ри́ба** (fish) — A great word to practice this sound.
+*   **сир** (cheese) — Feel the vibration in your jaw.
+*   **син** (son) — Another everyday family word.
 
-**И** is uniquely Ukrainian — there is no exact match in English. To make this sound, relax your jaw and let your tongue sit lower than for **І**. Think of a sound somewhere between «i» in «bit» and «e» in «bet.»
-
-- **ри́ба** — fish
-- **сир** — cheese
-- **син** — son
+> [!video] Літера И
+> [Anna Ohoiko — Ukrainian Lessons — И](https://www.youtube.com/watch?v=W-1rCu0indE)
 
 ### Літера І
 
-[Anna Ohoiko — Ukrainian Lessons — І](https://www.youtube.com/watch?v=Z9TH0H4ShGo)
+The letter **І** is much brighter and higher than **И**. It sounds just like the English «ee» in «see» or «tree». Give a little smile when you say it to help place the sound right at the front of your mouth.
+*   **ліс** (forest) — From your previous lesson.
+*   **кіт** (cat) — Everyone loves a cat!
+*   **сік** (juice) — Perfect for breakfast.
 
-**І** sounds like «ee» in «see» — bright, high, and tense. Compare it to **И**: your tongue is higher and your lips spread wider for **І**.
+> [!video] Літера І
+> [Anna Ohoiko — Ukrainian Lessons — І](https://www.youtube.com/watch?v=Z9TH0H4ShGo)
 
-- **ліс** — forest (M1 review)
-- **кіт** — cat (M1 review)
-- **сік** — juice (M1 review)
-
-> [!tip] **The Big Challenge: И vs І**
-> This is the hardest vowel contrast for English speakers. Try this minimal pair: **кит** (whale) vs **кіт** (cat). For **кит**, relax your jaw and lower your tongue. For **кіт**, raise your tongue and spread your lips. Practice switching back and forth — feel the difference in your jaw position!
-
-<!-- adapted from: Кравцова, Grade 2, p.10 -->
-
----
+> [!challenge] The Hardest Contrast
+> The difference between **И** and **І** is often the hardest vowel contrast for English speakers to master. Let's drill it with a minimal pair. Try to feel your jaw position change as you say these two words!
+> *   **кит** (whale) — keep your jaw relaxed, and make a deeper, lower sound.
+> *   **кіт** (cat) — make a tight smile, producing a high and bright sound.
 
 ## Наголос — Word Stress
 
-Every Ukrainian word has one stressed syllable. The stressed vowel is louder and slightly longer — but its quality does NOT change. This is the most important thing to remember:
+Let's talk about word stress, or **на́голос**. Every Ukrainian word has exactly one stressed syllable. The stressed vowel is pronounced a little louder, slightly longer, and with a bit more energy than the other vowels in the word. However, there is a Golden Rule you must remember and apply every single time you speak: **Ukrainian vowels stay pure in any position**, whether they are stressed or unstressed. The essential quality of the sound does NOT change. 
 
-> [!warning] **Golden Rule: Ukrainian vowels stay pure**
-> Stressed or unstressed, every vowel keeps its full, clear sound. Never swallow an unstressed vowel into a lazy «uh» sound. This is non-negotiable!
+English speakers naturally tend to swallow unstressed vowels, turning them into a lazy «uh» sound, which linguists call a schwa. For example, think about the English word «photograph»—the vowels shift completely depending on where the stress lands. You must actively fight this instinct in Ukrainian! 
 
-This is very different from English. Think about how you say «photograph» versus «photography» — the vowels shift and blur depending on stress. In Ukrainian, that never happens.
+Let's look at the word **молоко́** (milk). The stress is on the last syllable: мо-ло-КО. But all three **О** letters sound exactly the same. They are all pure, rounded **О** sounds. Keep them crisp and clear, and your Ukrainian will instantly sound much more authentic and beautiful. Do not let your mouth get lazy!
 
-Take **молоко́** (milk). The stress falls on the last syllable: мо-ло-КО́. But all three **О** sounds are exactly the same — pure, rounded **О**. Your English habits will try to say something like «muh-luh-KO.» Fight that urge! Give every **О** its full, clear sound.
-
-Another example: **село́** (village). Stress on the last syllable, but the **Е** in the first syllable stays just as clear as in **не́бо** (sky), where **Е** is stressed.
-
-Take your time with this. Keeping vowels pure is a skill that takes practice, and you're building it right now.
-
-<!-- adapted from: Большакова, Grade 2, p.37 -->
-
----
+> [!tip] Golden Rule Reminder
+> Say it with me slowly: мо-ло-КО. Do not let those first two vowels lose their shape and become a lazy English mumble! You have to keep every single **О** perfectly pure.
 
 ## Йотовані голосні — Iotated Vowels
 
-Now for something special. Four Ukrainian vowel letters — **Я**, **Ю**, **Є**, **Ї** — are «double-duty» letters. At the start of a word or after another vowel, each one represents TWO sounds: the semi-vowel **Й** plus a base vowel. After a consonant, **Я**, **Ю**, and **Є** have a different job — they soften that consonant instead.
-
-<!-- adapted from: Кравцова, Grade 2, p.10 — exercise 30 -->
+Now we meet a fascinating and elegant group of letters: the iotated vowels **Я**, **Ю**, **Є**, and **Ї**. Think of these letters as clever «double-duty» vowels. When they appear at the start of a word, or immediately after another vowel, they actually represent TWO distinct sounds pushed together: the semi-vowel **Й** (which sounds like the English consonant «y» in «yes» or «yellow») plus one of the base vowels we just learned. 
 
 ### Літера Я
 
-[Anna Ohoiko — Ukrainian Lessons — Я](https://www.youtube.com/watch?v=yhSAf41LX8I)
+When the letter **Я** is at the start of a word, it blends the consonant sound «y» (as in «yes») directly into the open «a» sound.
+*   **я́блуко** (apple) — A crisp, sweet word.
+*   **яйце́** (egg) — Another common food item.
 
-**Я** = **Й** + **А** (two sounds at word start or after a vowel).
+When it comes after another vowel, it also keeps its two sounds, gliding easily from the previous vowel:
+*   **моя́** (my, used with feminine nouns)
 
-- At the start of a word: **я́блуко** (apple). You hear both sounds — «YAH-blu-ko.» You'll also find **Я** at the start of **яйце́** (egg).
-- After a vowel: **моя́** (my, for feminine nouns) — «mo-YAH.» Again, two sounds.
-- After a consonant: **дя́дько** (uncle) — here **Я** softens the **Д** instead. Only one vowel sound.
+When it comes after a consonant, it does something very special: it softens the consonant right before it. For example, in the word **дя́дько** (uncle), the **Д** becomes soft before the **Я**, and you just hear the pure «a» sound immediately afterward.
+
+> [!video] Літера Я
+> [Anna Ohoiko — Ukrainian Lessons — Я](https://www.youtube.com/watch?v=yhSAf41LX8I)
 
 ### Літера Ю
 
-[Anna Ohoiko — Ukrainian Lessons — Ю](https://www.youtube.com/watch?v=9JdIBYCTWGw)
+At the start of a word, the letter **Ю** blends the «y» sound directly into the deep «oo» sound, making it sound very much like the English word «you».
+*   **юна́к** (young man) — Notice the strong «y» sound.
+*   **ю́шка** (broth or fish soup) — A traditional dish.
 
-**Ю** = **Й** + **У** (two sounds at word start or after a vowel).
+After a consonant, it softens that consonant, just like **Я** does. Think of the word **лю́ди** (people), where the **Л** becomes soft before the vowel.
 
-- At the start: **юна́к** (young man), **ю́шка** (soup, broth).
-- After a consonant: **лю́ди** (people) — the **Л** becomes soft. Only one vowel sound.
+> [!video] Літера Ю
+> [Anna Ohoiko — Ukrainian Lessons — Ю](https://www.youtube.com/watch?v=9JdIBYCTWGw)
 
 ### Літера Є
 
-[Anna Ohoiko — Ukrainian Lessons — Є](https://www.youtube.com/watch?v=O0bwRyyBQSc)
+At the start of a word, the letter **Є** blends the «y» sound with the crisp «e» sound. It sounds similar to the beginning of the English word «yellow».
+*   **Євро́па** (Europe) — Very easy to recognize!
 
-**Є** = **Й** + **Е** (two sounds at word start or after a vowel).
+After another vowel, it gracefully maintains its two sounds:
+*   **моє́** (my, used with neuter nouns)
 
-- At the start: **Євро́па** (Europe).
-- After a vowel: **моє́** (my, for neuter nouns) — «mo-YE.» Two sounds.
-- After a consonant: **си́нє** (blue, neuter) — the **Н** becomes soft. One vowel sound.
+> [!video] Літера Є
+> [Anna Ohoiko — Ukrainian Lessons — Є](https://www.youtube.com/watch?v=O0bwRyyBQSc)
 
 ### Літера Ї
 
-[Anna Ohoiko — Ukrainian Lessons — Ї](https://www.youtube.com/watch?v=UcjdjQXhAY8)
+The letter **Ї** is incredibly special. Unlike the other iotated vowels, it ALWAYS makes two sounds (the semi-vowel plus the bright «ee» sound), no matter where it is located in the word! It never, ever softens a preceding consonant. It sounds similar to the beginning of the English word «yield».
+*   **їжа́к** (hedgehog) — A favorite animal in Ukrainian fairy tales.
+*   **ї́жа** (food) — A very important word to know!
+*   **Украї́на** (Ukraine) — The most beautiful word of all.
 
-**Ї** is the simplest iotated vowel — it ALWAYS represents two sounds: **Й** + **І**. It never softens a consonant, and it never reduces to one sound. When you see **Ї**, you always hear both parts.
+> [!culture] A Symbol of Identity
+> The letter **Ї** is completely unique to the Ukrainian alphabet. You will not find it in Russian or Belarusian. Because of this exclusivity, the letter **Ї** has become a powerful, modern symbol of Ukrainian identity, resistance, and cultural pride.
 
-- **їжа́к** — hedgehog
-- **їжа́** — food
-- **Украї́на** — Ukraine
+> [!video] Літера Ї
+> [Anna Ohoiko — Ukrainian Lessons — Ї](https://www.youtube.com/watch?v=UcjdjQXhAY8)
 
-> [!culture] **Ї — A Symbol of Ukrainian Identity**
-> The letter **Ї** exists only in the Ukrainian alphabet. No other Slavic language has it. For many Ukrainians, **Ї** is a proud symbol of their unique linguistic identity. When you pronounce it, you're making a sound that belongs only to Ukrainian.
+### The Semi-Vowel Й
 
-### Літера Й
-
-**Й** is the semi-vowel itself — a short, quick sound. It appears in words like:
-
-- **край** — edge, land, homeland
-- **йо́гурт** — yogurt
-
-Remember: **Й** never forms a syllable on its own. It always pairs with a vowel next to it.
-
----
+We have been talking a lot about the «y» sound hiding inside these iotated letters. That sound is actually represented by its very own letter: the semi-vowel **Й**. It is a short, sharp, consonant-like sound that you will often see at the end of words or syllables. It never forms a syllable on its own.
+*   **край** (edge or land) — A poetic word for homeland.
+*   **йо́гурт** (yogurt) — Tastes exactly like it sounds!
 
 ## Голосні в словах — Vowels in Words
 
-Let's put your vowel knowledge to work! Here are short sentences using words you know. Read them aloud and pay attention to every vowel. Don't worry about consonants you haven't formally studied — focus on the vowels.
+You are doing wonderfully! You have absorbed a lot of phonetic rules, and now it is time to put these vowels into real practice. Read these short dialogues and sentences out loud. Do not worry about the consonants you haven't formally learned yet—we will cover the entire consonant system in Module 3. Right now, I just want you to focus all your energy on making your vowels clear, bright, and pure. Read slowly and deliberately.
 
-> — Це я́блуко? (Is this an apple?)
-> — Так, це я́блуко. (Yes, this is an apple.)
+> **(Вдома / At home)**
+> — Це я́блуко.
+> — Так, це моє́ я́блуко.
 
-> — Молоко́ тут? (Is the milk here?)
-> — Ні, молоко́ там. (No, the milk is there.)
+> **(У місті / In the city)**
+> — Це село́?
+> — Ні, це мі́сто. Це мій край.
 
-> — Це моє́ село́. (This is my village.)
-> — А це мій край. (And this is my land.)
+> **(За столом / At the table)**
+> — Де мій сир?
+> — Сир тут! А ка́ша там.
 
-> — Де мій кіт? (Where is my cat?)
-> — Кіт тут! (The cat is here!)
+Let's try a quick, fun exercise together. Do you remember our rule from the introduction? The number of vowels in a word equals the exact number of syllables. Let's count them together and see how the rhythm of the language works!
+*   **кіт** (cat) — There is only 1 vowel, so it is 1 syllable.
+*   **молоко́** (milk) — There are 3 vowels (**О**, **О**, **О**), so it is exactly 3 syllables: мо-ло-ко.
+*   **Украї́на** (Ukraine) — There are 4 vowels (**У**, **А**, **Ї**, **А**), making it 4 syllables: У-кра-ї-на.
 
-> — Це моя́ ка́ша. (This is my porridge.)
-> — А це мій суп. (And this is my soup.)
-
-<!-- adapted from: Захарійчук, Grade 1 -->
-
-> [!practice] **Count the Vowels**
-> Every vowel = one syllable. Try counting:
-> - **кіт** — 1 vowel (І) = 1 syllable
-> - **ри́ба** — 2 vowels (И, А) = 2 syllables
-> - **молоко́** — 3 vowels (О, О, О) = 3 syllables
-> - **я́блуко** — 3 vowels (Я, У, О) = 3 syllables
-> - **Украї́на** — 4 vowels (У, А, Ї, А) = 4 syllables
-
-You're doing great! You can now read the heartbeat of any Ukrainian word.
-
----
+> [!practice] Reading Practice
+> Read these sentences out loud to yourself. Focus intensely on keeping every single vowel pure and preventing any lazy English schwa sounds from sneaking in!
+> *   Ма́ма ка́же «так». (Mom says «yes».)
+> *   Це моє́ село́. (This is my village.)
+> *   Де мій кіт? (Where is my cat?)
 
 ## Підсумок — Summary
 
-You've just learned the complete Ukrainian vowel system! Here's what you now know:
+Congratulations! You have just learned the entire foundation of Ukrainian pronunciation. Let's take a moment to review everything we've covered today:
 
-- **10 vowel letters**: 6 base (**А О У Е И І**) + 4 iotated (**Я Ю Є Ї**) + the semi-vowel **Й**
-- **The Golden Rule**: Ukrainian vowels stay pure — stressed or unstressed, they never reduce or blur. Fight the English instinct to swallow unstressed vowels!
-- **Iotated vowels** do double duty: two sounds at word start or after a vowel, one sound (softening) after a consonant. **Ї** always stays two sounds.
+*   You now know the 10 vowel letters: the 6 base vowels (**А О У Е И І**) and the 4 iotated vowels (**Я Ю Є Ї**), plus the important semi-vowel **Й**.
+*   You fully understand the Golden Rule: Ukrainian vowels stay pure! Never swallow or reduce them, even when they are unstressed.
+*   You know that counting the number of vowels in a word tells you exactly how many syllables it has.
 
-**Self-check** — can you answer these?
+Let's do a quick self-check before you move on to the next lesson:
+1.  Can you pronounce all 6 base vowels? Try saying them out loud right now, feeling the shape of your mouth.
+2.  What two sounds does the letter **Я** make when it appears at the very beginning of a word?
+3.  Can you feel the physical difference in your jaw position between the deep **И** and the bright **І**?
 
-1. Can you pronounce all six base vowels? Say them: А, О, У, Е, И, І.
-2. What two sounds does **Я** make at the start of a word?
-3. What is the difference between **И** and **І**? Which one is higher?
-4. How many syllables does **молоко́** have? How do you know?
-
-**Coming up next:** Module 3 takes you into the consonant system — voiced and voiceless pairs, sonorant consonants, and the difference between hard and soft. See you there!
+You are building a fantastic foundation. Next up, in Module 3, we will master the consonant system—including voiced and voiceless pairs, sonorants, and the crucial difference between hard and soft consonants. Keep up the great work, and I will see you there!

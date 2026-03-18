@@ -1,26 +1,26 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1683
+word_count: 1682
 deviations:
-  - section: "All sections"
-    reason: "Slightly above minimums across all sections to ensure rich examples and natural flow — total ~1683 vs 1200 target (within 1200-1800 aim range)"
-frictions:
-  - type: TEMPLATE_CONSTRAINT
-    description: "The ДЗ digraph section references the Ґ video from Anna Ohoiko because no dedicated ДЖ/ДЗ video was provided in the plan. Used the Ґ video as the closest available reference for voiced/voiceless pair discussion."
-    proposed_fix: "Consider adding dedicated ДЖ and ДЗ pronunciation videos to the plan's pronunciation_videos section"
+  - section: "Африкати, Щ та Ф — Affricates, Щ, and Ф"
+    reason: "Slightly over budget (370 vs 300 target) to properly cover all four letters with videos and examples"
+  - section: "Весь алфавіт! — The Full Alphabet Mastered"
+    reason: "Slightly over budget (218 vs 150) to include micro-dialogues and reading challenge"
+frictions: []
 research_gaps:
-  - "No dedicated Grade 1-2 textbook pages found specifically for ДЖ/ДЗ digraph teaching — these are typically introduced in Grade 3+"
-  - "No Anna Ohoiko video specifically for ДЖ or ДЗ was available in the plan"
+  - "No direct textbook page found for ДЖ/ДЗ digraph introduction at Grade 1-2 level — these are typically taught in Grade 5+ phonology"
 unverified_terms: []
 review_focus:
-  - "Verify the кін minimal pair is accurate — VESUM shows кін as noun but the 'stake in a game' gloss should be confirmed"
-  - "Check that об'єкт is appropriate for A1 level — it's an internationalism but may feel advanced"
-  - "Confirm all 21 vocabulary items are used in content (VOCAB-IN-CONTENT rule)"
-  - "Verify the reading challenge paragraph uses only known + newly taught vocabulary"
+  - "Verify the minimal pair кінь/кін is correctly presented (кін verified in VESUM as noun)"
+  - "Check apostrophe rule presentation — simplified for A1 (omits prefix apostrophe rules per plan)"
+  - "Confirm all 21 vocabulary items appear in content (11 required + 10 recommended = 21 target, 21 delivered including кінь)"
+  - "Verify no colonial framing — Ukrainian presented on its own terms throughout"
+  - "Check fill-in activity item 5 has duplicate чай in options — needs pipeline fix"
 rag_tools_used:
-  - "search_text: 'м'який знак пом'якшення приголосних' grade=2 → Kravtsova p.30 (Ь softening rule), Bolshakova p.43-48 (hard/soft pairs, transfer rules)"
-  - "search_text: 'апостроф перед я ю є ї правило' grade=2 → Bolshakova p.57-58 (apostrophe rule explanation), Kravtsova p.44-45 (apostrophe exercises), Vashulenko p.12 (apostrophe poem)"
-  - "search_text: 'африкати ц ч щ дж дз приголосні' grade=1 → Bolshakova Grade 1 (letter sequence in bukvar), table of contents showing Ч/Щ placement"
-  - "query_pravopys: 'апостроф' → §7 full apostrophe rules (Б, П, В, М, Ф, Р before Я, Ю, Є, Ї)"
-  - "query_pravopys: 'м-який-знак' → §26 full soft sign rules (after д, т, з, с, дз, ц, л, н at end of word/syllable)"
-  - "verify_words: 26 words batch-verified → all 26 FOUND in VESUM"
+  - "search_text: м'який знак палаталізація Ь (grade 2) → Большакова p.48 transfer rules, Кравцова p.30 minimal pairs рись/рис"
+  - "search_text: апостроф перед я ю є ї (grade 3) → Вашуленко p.90 apostrophe rules, Пономарьова p.60 prefix apostrophe"
+  - "search_text: африкати Ц Ч Щ диграфи ДЖ ДЗ → Limited results; Літвінова Grade 5 p.64 reference"
+  - "query_pravopys: м-який-знак → §26 full rules for Ь usage"
+  - "query_pravopys: апостроф → No result returned"
+  - "verify_words: all 26 vocabulary + example words → 26/26 FOUND"
+  - "verify_words: 22 distractor/supplementary words → 22/22 FOUND"

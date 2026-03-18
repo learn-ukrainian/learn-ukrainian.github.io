@@ -1,28 +1,21 @@
 # RAG Verification: vowel-sounds
 
-**Date:** 2026-03-17 23:11 UTC | **Words checked:** 48 | **VESUM coverage:** 45/48 (93.8%)
+**Date:** 2026-03-18 21:42 UTC | **Words checked:** 61 | **VESUM coverage:** 60/61 (98.4%)
 
 ## Summary
-- ✅ Verified (VESUM): 45
-- ⚠️ Partial (RAG only): 2
+- ✅ Verified (VESUM): 60
+- ⚠️ Partial (RAG only): 0
 - ❌ Not found: 1
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Європа | activities | ✗ | ✗ | ✗ |
-
-## ⚠️ Partial Match (human review)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| Большакова | prose | ✗ | ✓ | ✗ |
-| Захарійчук | prose | ✗ | ✓ | ✗ |
+| Європа | prose | ✗ | ✗ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 28 | 26 | 0 |
-| Activities (.yaml) | 20 | 19 | 1 |
+| Prose (.md) | 56 | 55 | 1 |
+| Activities (.yaml) | 5 | 5 | 0 |

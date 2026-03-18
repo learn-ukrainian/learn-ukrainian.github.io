@@ -2,15 +2,5 @@
   "track": "a1",
   "slug": "stress-and-intonation",
   "mode": "v5",
-  "phases": {
-    "content": {
-      "status": "failed",
-      "ts": "2026-03-17T23:12:15Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    }
-  }
+  "phases": {}
 }

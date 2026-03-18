@@ -1,18 +1,15 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 8
+activity_count: 6
 deviations:
-  - "Added true-false (8 items) and anagram (6 items) activities beyond the 6 plan hints to meet the 8-activity minimum requirement"
-  - "watch-and-repeat uses 12 items covering 6 voiced/voiceless pairs plus К and В, matching plan focus on voiced/voiceless pair pronunciation"
-  - "classify #1 has 15 items across 3 categories (5 sonorants + 5 voiced + 5 voiceless), matching plan exactly"
-  - "classify #2 has 8 items (4 hard + 4 soft) using minimal pairs from the lesson content"
+  - "None — all 6 activities match plan activity_hints exactly in type, focus, and item count"
 frictions:
-  - type: PLAN_GAP
-    description: "Plan specifies only 6 activity hints but module requires 8-15 activities minimum"
-    proposed_fix: "Added true-false and anagram activities aligned with lesson content to reach 8 total"
+  - type: NONE
+    description: "No frictions encountered"
+    proposed_fix: "N/A"
 unverified_terms:
-  - "цибуля — included from plan vocabulary_hints, appears in content reading list"
+  - "None — all 26 Ukrainian words verified against VESUM (26/26 found)"
 review_focus:
-  - "classify #2 (Hard or Soft) — items include parenthetical explanations for context; verify renderer handles these gracefully"
-  - "anagram items — verify scrambled letters match answer letters exactly"
-  - "watch-and-repeat video URLs — sourced from plan pronunciation_videos section"
+  - "classify (hard/soft): items include parenthetical context (e.g., 'лук (Л before У)') — verify renderer handles this gracefully"
+  - "match-up: pairs include parenthetical labels '(voiced)' / '(voiceless)' for clarity — verify this doesn't confuse the matching UI"
+  - "image-to-letter emoji for beetle: used 🪲 — verify cross-platform emoji support; fallback could be 🐞"

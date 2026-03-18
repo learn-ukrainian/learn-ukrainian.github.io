@@ -3,40 +3,20 @@
   "slug": "consonant-sounds",
   "mode": "v5",
   "phases": {
-    "preflight": {
+    "content": {
       "status": "complete",
-      "ts": "2026-03-17T18:19:29Z",
-      "attempts": 1,
+      "ts": "2026-03-18T20:19:20Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
-        "model": "gemini-3-flash-preview"
-      }
-    },
-    "final_audit": {
-      "status": "failed",
-      "ts": "2026-03-17T19:36:16Z",
-      "attempts": 2,
-      "note": "final-audit-failed",
-      "executor": {
-        "type": "deterministic",
-        "name": "audit"
-      }
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-17T22:58:39Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
+        "model": "gemini-3.1-pro-preview"
       }
     },
     "validate": {
       "status": "failed",
-      "ts": "2026-03-17T22:58:55Z",
+      "ts": "2026-03-18T20:20:06Z",
       "attempts": 0,
-      "note": "precheck-prompt-bug:systemic-7-failures",
+      "note": "precheck-prompt-bug:systemic-5-failures",
       "executor": {
         "type": "deterministic",
         "name": "morphological_validator"
@@ -44,19 +24,8 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-17T23:01:49Z",
+      "ts": "2026-03-18T21:06:48Z",
       "task_id": "v5-consonant-sounds-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-17T23:10:17Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",

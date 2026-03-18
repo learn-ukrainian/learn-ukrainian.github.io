@@ -1,18 +1,21 @@
 # RAG Verification: completing-the-alphabet
 
-**Date:** 2026-03-17 23:10 UTC | **Words checked:** 71 | **VESUM coverage:** 66/71 (93.0%)
+**Date:** 2026-03-18 20:32 UTC | **Words checked:** 75 | **VESUM coverage:** 65/75 (86.7%)
 
 ## Summary
-- ✅ Verified (VESUM): 66
-- ⚠️ Partial (RAG only): 3
-- ❌ Not found: 2
+- ✅ Verified (VESUM): 65
+- ⚠️ Partial (RAG only): 5
+- ❌ Not found: 5
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| сімья | activities | ✗ | ✗ | ✗ |
-| шо | activities | ✗ | ✗ | ✗ |
+| ець | prose | ✗ | ✗ | ✗ |
+| М'Я | prose | ✗ | ✗ | ✗ |
+| НЬ | prose | ✗ | ✗ | ✗ |
+| яч | activities | ✗ | ✗ | ✗ |
+| єкт | activities | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
@@ -20,11 +23,13 @@
 |------|--------|-------|----------|----------|
 | ДЖ | prose | ✗ | ✓ | ✗ |
 | ДЗ | prose | ✗ | ✓ | ✗ |
+| Захарійчук | prose | ✗ | ✓ | ✗ |
+| иця | prose | ✗ | ✓ | ✗ |
 | Львів | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 52 | 49 | 0 |
-| Activities (.yaml) | 19 | 17 | 2 |
+| Prose (.md) | 68 | 60 | 3 |
+| Activities (.yaml) | 7 | 5 | 2 |

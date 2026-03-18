@@ -2,15 +2,15 @@
   "module": "vowel-sounds",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T00:10:55.418042Z",
+  "last_audit": "2026-03-18T22:42:41.759225Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T00:10:34.407210Z",
+    "md": "2026-03-18T22:42:19.372963Z",
     "meta": "2026-03-16T13:35:34.753903Z",
-    "activities": "2026-03-18T00:06:31.529432Z",
-    "vocabulary": "2026-03-18T00:06:31.554648Z",
+    "activities": "2026-03-18T22:42:19.373473Z",
+    "vocabulary": "2026-03-18T22:10:49.369356Z",
     "research": "2026-03-12T09:42:26.793547Z",
-    "plan": "2026-03-17T23:56:00.761191Z"
+    "plan": "2026-03-18T21:18:07.126911Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1542/1200 (raw: 1649)"
+      "message": "2148/1200 (raw: 2257)"
     },
     "activities": {
       "status": "pass",

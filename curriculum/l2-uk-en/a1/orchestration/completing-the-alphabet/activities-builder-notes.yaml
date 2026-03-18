@@ -1,22 +1,15 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 8
+activity_count: 7
 deviations:
-  - "Added true-false activity (not in plan hints) to meet the 8-activity minimum. The plan listed 7 activity hints but the target range is 8-15."
-  - "watch-and-repeat item 10 (ДЖ/джерело) uses the overview video URL since no dedicated ДЖ pronunciation video exists in the plan."
-  - "Dropped дзеркало from vocabulary to hit exactly 20 items. All 11 required hints included plus 9 of 10 recommended."
+  - "watch-and-repeat item 10 uses Ґ review video instead of ДЖ/ДЗ — no individual Anna Ohoiko videos exist for digraphs ДЖ and ДЗ. Used the Ґ review video from the plan's pronunciation_videos section since it was listed in the content."
+  - "classify #2 has 10 items (exceeds plan's 8) — added місяць to Ц category for better coverage of the -яць ending pattern taught in the lesson."
+  - "кінь omitted from vocabulary (20 items already filled) — it appears in watch-and-repeat and is taught in the lesson's minimal pair section."
 frictions:
   - type: PLAN_GAP
-    description: "Plan lists 7 activity_hints but module target requires 8-15 activities."
-    proposed_fix: "Added true-false as 8th activity covering module concepts. Plan could add this to activity_hints."
-  - type: PLAN_GAP
-    description: "watch-and-repeat focus requests 10 items but only 6 unique pronunciation videos exist in the plan. Had to reuse videos with different example words."
-    proposed_fix: "Accept video reuse for different words — pedagogically sound since learners practice different words with the same sound."
-unverified_terms:
-  - "побачення (used in fill-in activity — До побачення!)"
-  - "ще (used in classify activity)"
-  - "ласка (used in fill-in activity — Будь ласка!)"
+    description: "Plan activity_hints specify 10 items for watch-and-repeat, but only 6 unique letter videos exist (Ь, Ц, Ч, Щ, Ф, Ґ). No individual videos for ДЖ or ДЗ digraphs."
+    proposed_fix: "Reuse letter videos with different example words (current approach). Alternatively, plan could reference the overview playlist video for digraph items."
+unverified_terms: []
 review_focus:
-  - "Quiz item 9 (мати does NOT need apostrophe) — verify this is clear for A1 learners who haven't learned the word мати yet"
-  - "image-to-letter: emoji choices may render differently across platforms. 💧 for джерело (spring/source) is approximate."
-  - "classify activity 1 has only 2 items in 'Soft Л' category and 3 in 'No soft sign' — verify the imbalance is acceptable"
+  - "fill-in activity: verify that survival phrase completions are unambiguous (e.g., Добрий ___ could be день/ранок/вечір — but the options array ensures only one correct answer per item)"
+  - "image-to-letter: verify emoji rendering across platforms (🪞 mirror emoji may not render on older systems)"

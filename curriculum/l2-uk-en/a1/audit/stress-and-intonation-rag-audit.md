@@ -1,23 +1,17 @@
 # RAG Verification: stress-and-intonation
 
-**Date:** 2026-03-17 23:11 UTC | **Words checked:** 77 | **VESUM coverage:** 69/77 (89.6%)
+**Date:** 2026-03-18 18:58 UTC | **Words checked:** 78 | **VESUM coverage:** 76/78 (97.4%)
 
 ## Summary
-- ✅ Verified (VESUM): 69
+- ✅ Verified (VESUM): 76
 - ⚠️ Partial (RAG only): 1
-- ❌ Not found: 7
+- ❌ Not found: 1
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| блу | activities | ✗ | ✗ | ✗ |
-| да | activities | ✗ | ✗ | ✗ |
-| кни | activities | ✗ | ✗ | ✗ |
-| кі | activities | ✗ | ✗ | ✗ |
-| ло | activities | ✗ | ✗ | ✗ |
-| молок | activities | ✗ | ✗ | ✗ |
-| шко | activities | ✗ | ✗ | ✗ |
+| да | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
@@ -29,5 +23,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 45 | 45 | 0 |
-| Activities (.yaml) | 32 | 24 | 7 |
+| Prose (.md) | 59 | 58 | 1 |
+| Activities (.yaml) | 19 | 18 | 0 |

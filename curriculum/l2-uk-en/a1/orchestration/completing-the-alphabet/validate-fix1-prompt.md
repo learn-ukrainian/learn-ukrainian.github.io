@@ -1,67 +1,38 @@
-        # Fix 12 issue(s) in `completing-the-alphabet`
+        # Fix ALL 6 issue(s) in `completing-the-alphabet`
+
+        **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
+        **There are 6 issues. You must produce fixes for all 6.**
+        **After you finish, count your fixes. If the count is less than 6, go back and fix the ones you missed.**
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'показує' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'показує' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 89
+**What:** Verb 'п'є' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'п'є' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 182
 
 ### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'позначають' (VESUM: verb:imperf:pres:p:3) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'позначають' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 89
+**What:** Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 192
 
 ### Fix 3: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'бачу' (VESUM: verb:imperf:pres:s:1:insert) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'бачу' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 198
+**What:** Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 193
 
 ### Fix 4: MORPHOLOGICAL_VIOLATION
+**What:** Verb 'п'є' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'п'є' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 197
+
+### Fix 5: MORPHOLOGICAL_VIOLATION
 **What:** Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
 **How to fix:** Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
 **Where:** ~line 208
 
-### Fix 5: MORPHOLOGICAL_VIOLATION
+### Fix 6: MORPHOLOGICAL_VIOLATION
 **What:** Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
 **How to fix:** Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 209
-
-### Fix 6: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 212
-
-### Fix 7: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'приголосний' (m) + 'що' (n)
-**How to fix:** Change 'приголосний' to match the gender/case of 'що', or vice versa.
-**Where:** ~line 89
-
-### Fix 8: AGREEMENT_ERROR
-**What:** Agreement mismatch: 'твердий' (m) + 'апострофом' (m)
-**How to fix:** Change 'твердий' to match the gender/case of 'апострофом', or vice versa.
-**Where:** ~line 89
-
-### Fix: Gate `Pedagogy` FAIL — 2 violations
-
-### Fix 10: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Instrumental case used at A1: 'перед апострофом'
-**How to fix:** Instrumental case not allowed until A2 (M36+). Restructure sentence.
-
-### Fix 11: PEDAGOGICAL_VIOLATION
-**What:** [GRAMMAR] Subordinate clause marker at A1: 'є, що п'
-**How to fix:** Complex sentences not allowed at A1. Use simple SVO sentences.
-
-### Fix 12: PEDAGOGICAL_VIOLATION
-**What:** [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
-**How to fix:** Vary sentence structure.
-
-### Other Audit Failures
-
-```
-❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
-📚 PEDAGOGICAL VIOLATIONS FOUND:
-❌ AUDIT FAILED. Correct errors before proceeding.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/a1/audit/completing-the-alphabet-audit.log for details)
-```
+**Where:** ~line 211
 
 
 ## Constraints (do NOT violate while fixing)
@@ -115,6 +86,15 @@ HARD GRAMMAR RULES (audit will reject violations):
 - Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics), Vocative
 
 
+## Friction Constraints (DO NOT reintroduce)
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
+
+
 ## Verification Tools (USE THEM)
 
 You have MCP tools for Ukrainian language verification. **Use them before fixing.**
@@ -134,8 +114,9 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ONLY the issues listed above — do not rewrite working content
-        2. Preserve section structure and word counts
-        3. Do NOT add or remove sections
-        4. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
+        1. Fix ALL 6 issues listed above — every single one, not a subset
+        2. Do not rewrite working content — only touch what's broken
+        3. Preserve section structure and word counts
+        4. Do NOT add or remove sections
+        5. IMMERSION RULE: When fixing issues, preserve the Ukrainian/English ratio. Do NOT replace Ukrainian text with English. If you must rewrite a section, maintain the same percentage of Ukrainian content.
 

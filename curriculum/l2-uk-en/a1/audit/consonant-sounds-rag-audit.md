@@ -1,9 +1,9 @@
 # RAG Verification: consonant-sounds
 
-**Date:** 2026-03-17 23:10 UTC | **Words checked:** 54 | **VESUM coverage:** 51/54 (94.4%)
+**Date:** 2026-03-18 22:12 UTC | **Words checked:** 61 | **VESUM coverage:** 58/61 (95.1%)
 
 ## Summary
-- ✅ Verified (VESUM): 51
+- ✅ Verified (VESUM): 58
 - ⚠️ Partial (RAG only): 2
 - ❌ Not found: 1
 
@@ -11,7 +11,7 @@
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| хліП | prose | ✗ | ✗ | ✗ |
+| хліп | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
@@ -24,4 +24,4 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 54 | 51 | 1 |
+| Prose (.md) | 61 | 58 | 1 |
