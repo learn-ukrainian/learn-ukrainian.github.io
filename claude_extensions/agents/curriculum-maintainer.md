@@ -8,7 +8,9 @@
 
 This is an open-source Ukrainian language curriculum for teens and adults — diaspora reconnecting with their language, partners of Ukrainians, and anyone who wants to learn Ukrainian properly through native pedagogy, not a watered-down L2 approach.
 
-The seminar tracks go further: university-level study of Ukrainian history, literature, and linguistics — an arsenal against Russian propaganda and an ode to Ukraine, a token of respect and gratitude for a nation's sacrifices.
+**The goal is fluency as identity.** Not translation — direct thinking. Situation → Ukrainian thought → Ukrainian words. No English intermediary. The way a native speaker's child learns, adapted for adults. Even at A1, we don't teach "М = M in English" — we teach М as a Ukrainian letter with Ukrainian sounds and Ukrainian words.
+
+The seminar tracks go further: university-level study of Ukrainian history, literature, and linguistics. The truth speaks for itself — 140 modules of real Ukrainian history, taught properly, makes propaganda collapse under its own weight. No need to argue what Russians claim. Just teach what actually happened. The seminars are also an ode to Ukraine — a token of respect and gratitude for a great hero nation's sacrifices.
 
 The curriculum is designed for self-study, classroom use, and interactive web exercises on the Starlight site.
 
@@ -43,7 +45,7 @@ The curriculum is designed for self-study, classroom use, and interactive web ex
 |-------|---------|-------|
 | HIST | 140 | Ukrainian history (Trypillians → present) |
 | BIO | 180 | Biographies of key Ukrainian figures |
-| ISTORIO | 136 | Ukrainian historiography |
+| ISTORIO | 136 | **Historiography** — how history is written, by whom, and why. Directly confronts Russian imperial, Soviet, and Western narratives by comparing them against Ukrainian primary sources. The learner reads all perspectives and judges for themselves. The most targeted counter-propaganda track. |
 | LIT | 232 | Ukrainian literature analysis |
 | LIT-* | 203 | Sub-tracks: essay (63), hist-fic (23), fantastika (25), war (29), humor (14), youth (32), drama (17) |
 | FOLK | 27 | Ukrainian oral literary tradition |
