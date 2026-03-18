@@ -164,10 +164,16 @@ def _get_review_score(track_dir: Path, slug: str) -> dict:
         return {"exists": False, "score": None, "verdict": None}
     text = review_path.read_text("utf-8")
     score = None
-    m = re.search(r"Overall Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
-    if m:
+    # Prefer post-fix score estimate (reflects actual quality after fixes)
+    m_post = re.search(r"Estimated Post-Fix Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
+    if m_post:
         with contextlib.suppress(ValueError):
-            score = float(m.group(1))
+            score = float(m_post.group(1))
+    if score is None:
+        m = re.search(r"Overall Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
+        if m:
+            with contextlib.suppress(ValueError):
+                score = float(m.group(1))
     verdict = None
     # Last Status: PASS/FAIL in the file
     for vm in re.finditer(r"\*\*Status:\*\*\s*(PASS|FAIL)", text):

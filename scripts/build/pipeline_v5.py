@@ -901,11 +901,65 @@ def _complete_gemini_review(
     *, grounding: str = "rag-textbook",
 ) -> bool:
     """Mark Gemini review as complete — shared across all success paths."""
+    # Append post-fix score estimate to review file (#975)
+    _append_post_fix_score(ctx)
     mark_complete(state, phase, ctx, attempts=attempts,
                   note=note, review_grounding=grounding,
                   executor=executor_llm("gemini", ctx.model))
     _update_pipeline_status(ctx, "reviewed")
     return True
+
+
+def _append_post_fix_score(ctx: ModuleContext) -> None:
+    """Estimate post-fix score based on which review issues were resolved.
+
+    Reads the review file, counts issues, checks which FIND/REPLACE pairs
+    were applied, and appends an adjusted score estimate.
+    """
+    review_path = ctx.paths.get("review")
+    if not review_path or not review_path.exists():
+        return
+    try:
+        import re as _re
+        text = review_path.read_text("utf-8")
+
+        # Extract original score
+        m = _re.search(r"Overall Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
+        if not m:
+            return
+        original_score = float(m.group(1))
+
+        # Count total issues and estimate fixed ones
+        issues = _re.findall(r"### Issue \d+:", text)
+        total_issues = len(issues)
+        if total_issues == 0:
+            return
+
+        # Check orchestration for applied fix count
+        fix_files = list(ctx.orch_dir.glob("review-fix-*-raw.md"))
+        applied_total = 0
+        for ff in fix_files:
+            raw = ff.read_text("utf-8")
+            applied_total += raw.count("applied")
+
+        # Rough estimate: each fixed issue improves score by ~0.3-0.5 points
+        # Conservative: 0.3 per fixed issue, capped at 1.5 total boost
+        fixed_ratio = min(applied_total / max(total_issues, 1), 1.0)
+        boost = min(fixed_ratio * total_issues * 0.3, 1.5)
+        adjusted = min(original_score + boost, 10.0)
+
+        # Append to review file
+        post_fix_note = (
+            f"\n\n---\n\n## Post-Fix Score Estimate\n\n"
+            f"**Original Score:** {original_score}/10\n"
+            f"**Issues Found:** {total_issues}\n"
+            f"**Fix Iterations:** {len(fix_files)}\n"
+            f"**Estimated Post-Fix Score:** {adjusted:.1f}/10\n"
+        )
+        review_path.write_text(text + post_fix_note, "utf-8")
+        log(f"  review: Post-fix score estimate: {original_score} → {adjusted:.1f}/10")
+    except Exception as e:
+        log(f"  review: Post-fix score estimation failed: {e}")
 
 
 # ---------------------------------------------------------------------------
@@ -3324,6 +3378,7 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
     passed, new_audit_out = run_verify(ctx.paths["md"])
 
     if passed:
+        _append_post_fix_score(ctx)
         log(f"  review: PASS (after fix {fix_iter + 1})")
         return True, new_audit_out
 
@@ -3358,6 +3413,7 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
     if auto_fix_count > 0:
         passed_after_autofix, audit_out = run_verify(ctx.paths["md"])
         if passed_after_autofix and not review_says_fail:
+            _append_post_fix_score(ctx)
             mark_complete(state, phase, ctx, attempts=1, note="autofix",
                           executor=_rev_exec)
             _update_pipeline_status(ctx, "reviewed")

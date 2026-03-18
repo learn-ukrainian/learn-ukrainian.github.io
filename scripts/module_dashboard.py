@@ -56,6 +56,10 @@ def _extract_review_score(level: str, slug: str) -> str | None:
     m = re.search(r"Overall Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
     if m:
         return m.group(1)
+    # Look for post-fix score estimate (preferred — reflects actual quality)
+    m_post = re.search(r"Estimated Post-Fix Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
+    if m_post:
+        return m_post.group(1)
     # Look for "Status: PASS" or "Status: FAIL"
     m = re.search(r"\*\*Status:\*\*\s*(PASS|FAIL)", text)
     if m:
