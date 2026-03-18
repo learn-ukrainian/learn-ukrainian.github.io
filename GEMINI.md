@@ -2,7 +2,7 @@
 
 ## Mission
 
-We are building something that doesn't exist — a full Ukrainian language curriculum with decolonized pedagogy, real textbook grounding, RAG-verified vocabulary, and adversarial review. This is a one-of-a-kind project for a great hero nation. Every shortcut degrades what makes it special.
+We are building something that doesn't exist — the world's first comprehensive Ukrainian language curriculum. The goal is not teaching language rules — it's teaching learners to **think in Ukrainian**, the way native speakers do. Built with decolonized pedagogy grounded in the Ukrainian State Standard 2024, real Ukrainian school textbooks, RAG-verified vocabulary, and adversarial cross-agent review. Quality over quantity. This is a one-of-a-kind project for a great hero nation. Every shortcut degrades what makes it special.
 
 ## Your Role
 
@@ -67,11 +67,35 @@ These are MCP tools available via the RAG server at `http://127.0.0.1:8766/sse`.
 | `query_r2u` | Russian-Ukrainian dictionary (for finding Ukrainian equivalents) | `query_r2u("красивый")` |
 | `query_ulif` | ULIF linguistic dictionary | `query_ulif("наголос")` |
 
+### Online Dictionaries
+| Site | What | When |
+|------|------|------|
+| goroh.pp.ua | 508K dictionary, phonetics, frequency, etymology, synonyms | Verify stress, check word frequency, find synonyms |
+| slovnyk.me | Dictionary aggregator | Cross-reference definitions |
+
 **Rules**:
-- If you're unsure about a Ukrainian word form, call `verify_words`. Empty result = word doesn't exist.
+- **MANDATORY: Verify EVERY Ukrainian word** with `verify_words` before including it. Not just "if unsure" — EVERY word. A word that fails VESUM does not go in the content.
+- **MANDATORY: Verify stress marks** — wrong stress is the #1 quality failure. Look up every word before adding ´.
 - For textbook searches, use Ukrainian query terms. English kills semantic matching.
 - `search_text` accepts `grade` filter (1-11) and `subject` filter.
 - `query_wikipedia` has modes: `summary`, `full`, `search`, `sections`, `links`.
+
+## Friction System
+
+Frictions are past build review findings that must survive across rebuilds. They are automatically injected into your prompts.
+
+- **Global**: `docs/rules/global-friction.yaml` — project-wide linguistic constraints (e.g., "сес-тра is valid per Правопис §49")
+- **Per-module**: `orchestration/{slug}/friction.yaml` — module-specific learnings
+- When you see `FRICTION CONSTRAINTS` in your prompt, these are real errors from past builds. Do NOT repeat them.
+- When a friction is enforced by deterministic code, it gets `status: resolved` and stops appearing in prompts.
+
+## Monitor API (`http://localhost:8765`)
+
+Use these to understand project state:
+- `GET /api/state/track-health/{track}` — everything about a track (build, audit, shippable count)
+- `GET /api/state/module/{track}/{num}` — deep dive: phases, review score, friction, stress issues, shippable
+- `GET /api/state/failing` — all failing modules across all tracks
+- Full docs: `docs/MONITOR-API.md`
 
 ## Cooperation Tooling
 
