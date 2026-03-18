@@ -97,11 +97,19 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 ### Tools Available During Writing
 You have MCP tools (`verify_words`, `search_text`, `query_pravopys`), `WebFetch` (goroh.pp.ua, slovnyk.me), `Read` (plan, research, other modules), `Grep` (search patterns), and `Bash` (agent bridge to consult Gemini).
 
-**When unsure about Ukrainian grammar, stress, or vocabulary:**
-- First: `verify_words` or `query_pravopys`
-- Second: `WebFetch` goroh.pp.ua
-- Third: ask Gemini via `Bash`: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "Is X correct in Ukrainian?" --task-id {SLUG}-consultation`
-- **Never guess. Use the tools.**
+**Verification escalation — MANDATORY, not optional:**
+1. Every Ukrainian word → `verify_words`
+2. Every stress mark → `WebFetch` goroh.pp.ua to confirm
+3. Any grammar rule claim → `query_pravopys` or `search_text`
+4. **MANDATORY Gemini consultation** for these HIGH-RISK items:
+   - Minimal pairs (e.g., кит/кіт) → ask Gemini to verify both words exist and mean what you think
+   - Phonetic rules (e.g., "voiced consonants don't devoice") → ask Gemini to confirm with textbook reference
+   - Cultural/historical claims → ask Gemini to verify
+   - Any word you cannot find in `verify_words` → ask Gemini before inventing an alternative
+
+   Command: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "Verify: [specific claim]" --task-id {SLUG}-consult`
+
+**You WILL hallucinate if you skip verification. Every past build proves this. Use the tools.**
 
 ### Beginner Lesson Arc
 
