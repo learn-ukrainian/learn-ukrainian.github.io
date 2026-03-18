@@ -551,7 +551,7 @@ LEVEL_CONFIG = {
         'min_items_per_activity': 6,  # Mar 2026: aligned with ACTIVITY_COMPLEXITY per-type floors (6-8)
         'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
-        'min_engagement': 3,
+        'min_engagement': 2,  # Mar 2026: lowered from 3 — beginner phonetics modules have fewer natural callout points
         'immersion_graduated': True,
         'transliteration_allowed': True,
         'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'classify', 'image-to-letter'}

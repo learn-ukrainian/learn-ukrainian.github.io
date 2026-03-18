@@ -52,6 +52,9 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
     # Strip HTML comments — citations like <!-- Bolshakova: "які позначають..." -->
     # contain Ukrainian text that triggers false positives (#969)
     text = re.sub(r'<!--.*?-->', '', text, flags=re.DOTALL)
+    # Strip dialogue location labels — **(За столом / At the table)** is bilingual
+    # context, not grammar being taught (#975)
+    text = re.sub(r'\*\*\(.*?/.*?\)\*\*', '', text)
     constraints = GRAMMAR_CONSTRAINTS.get(level_code, GRAMMAR_CONSTRAINTS.get('B2'))
 
     # Check forbidden cases at A1

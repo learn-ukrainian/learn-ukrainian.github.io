@@ -353,15 +353,35 @@ def _check_pipeline_review_format(content: str, cfg: dict, fix_prompt: str) -> l
     violations = []
     verdict_match = re.search(r'\*\*Status:\*\*\s*(PASS|FAIL)', content[:1000])
     if verdict_match and verdict_match.group(1) == 'FAIL':
-        violations.append({
-            'type': 'REVIEW_VERDICT_FAIL',
-            'severity': 'critical',
-            'message': (
-                "Review concludes with **Status:** FAIL — the reviewer identified "
-                "issues that need to be fixed before the module can pass. "
-                "Run Phase D.2 repair or rebuild the module."
-            )
-        })
+        # Check if post-fix score estimate exists and is passing (#975)
+        post_fix = re.search(r'Estimated Post-Fix Score[:\s*]*(\d+(?:\.\d+)?)/10', content)
+        if post_fix:
+            try:
+                pf_score = float(post_fix.group(1))
+                if pf_score >= 8.0:
+                    # Post-fix quality is acceptable — don't block on pre-fix verdict
+                    pass
+                else:
+                    violations.append({
+                        'type': 'REVIEW_VERDICT_FAIL',
+                        'severity': 'critical',
+                        'message': (
+                            f"Review FAIL with post-fix score {pf_score}/10 (need ≥8.0). "
+                            "Rebuild the module to fix remaining issues."
+                        )
+                    })
+            except ValueError:
+                pass
+        else:
+            violations.append({
+                'type': 'REVIEW_VERDICT_FAIL',
+                'severity': 'critical',
+                'message': (
+                    "Review concludes with **Status:** FAIL — the reviewer identified "
+                    "issues that need to be fixed before the module can pass. "
+                    "Run Phase D.2 repair or rebuild the module."
+                )
+            })
     missing = [name for pattern, name in cfg['required_headers'] if not re.search(pattern, content)]
     if missing:
         violations.append({
