@@ -3765,10 +3765,17 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         return _complete_gemini_review(ctx, state, phase, 1, "gemini-review-only", grounding=review_grounding)
 
     if passed and review_says_fail and n_fixes > 0:
-        # Re-run audit after fixes to get accurate post-fix status (#975 AC1)
-        _post_fix_passed, _post_fix_output = run_verify(ctx.paths["md"])
-        log(f"  review-gemini: PASS (inline fixes resolved review issues — {n_fixes} fix(es), post-fix audit: {'PASS' if _post_fix_passed else 'FAIL'})")
-        return _complete_gemini_review(ctx, state, phase, 1, "gemini-inline-fixes", grounding=review_grounding)
+        # Check if all review issues were resolved by inline fixes (#975)
+        _review_score = merged.scores.get("overall", 10)
+        _n_issues = len(merged.issues or [])
+        if n_fixes >= _n_issues or _review_score >= 9.0:
+            # All issues fixed or score high enough — done
+            _post_fix_passed, _post_fix_output = run_verify(ctx.paths["md"])
+            log(f"  review-gemini: PASS (inline fixes resolved review issues — {n_fixes} fix(es), post-fix audit: {'PASS' if _post_fix_passed else 'FAIL'})")
+            return _complete_gemini_review(ctx, state, phase, 1, "gemini-inline-fixes", grounding=review_grounding)
+        else:
+            # Partial fix — unresolved issues remain, enter fix loop
+            log(f"  review-gemini: {n_fixes}/{_n_issues} issues fixed inline (score {_review_score}/10) — entering fix loop for remaining")
 
     if _all_issues_diffuse(audit_out):
         log("  review-gemini: SKIPPED fix \u2014 all issues diffuse (needs manual review)")

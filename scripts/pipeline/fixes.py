@@ -247,6 +247,10 @@ def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
         if not find_text or find_text == replace_text:
             skipped.append((i, "empty/identical", find_text[:60].replace('\n', ' ') if find_text else ""))
             continue
+        # Skip template placeholders that Gemini copies from the prompt (#975)
+        if find_text.startswith("[") and find_text.endswith("]"):
+            skipped.append((i, "template placeholder", find_text[:60]))
+            continue
 
         if find_text in content:
             content = content.replace(find_text, replace_text, 1)
