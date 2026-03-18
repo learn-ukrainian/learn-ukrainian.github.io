@@ -2,7 +2,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: stress-and-intonation
-version: '3.1'
+version: '3.2'
 title: Stress and Intonation
 subtitle: The Music of Ukrainian
 focus: grammar
@@ -74,7 +74,7 @@ vocabulary_hints:
   - 'молоко (milk) — last-syllable stress молокО'
   - 'добрий (good) — first-syllable stress дОбрий; Top 100 word; collocations: добрий день'
   recommended:
-  - 'далеко (far) — last-syllable stress далекО'
+  - 'далеко (far) — penultimate stress дале́ко'
   - наголос (stress/accent) — metalinguistic term
   - інтонація (intonation) — metalinguistic term
   - 'питання (question) — high-frequency word'
