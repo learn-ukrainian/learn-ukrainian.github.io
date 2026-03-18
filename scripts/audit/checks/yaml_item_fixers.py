@@ -403,13 +403,15 @@ def fix_image_to_letter_items(activity: dict) -> list[str]:
             item['image'] = '📝'
             fixes.append(f"Replaced non-emoji image '{item['note']}' with placeholder")
 
-        # Rename 'word' to 'note' if no emoji — the word is context, not the image
-        if 'word' in item and 'emoji' not in item and 'image' not in item:
-            item['note'] = item.get('note', '') or item.pop('word')
-            if 'word' in item:
-                del item['word']
-            item['emoji'] = '📝'
-            fixes.append("Added placeholder emoji, moved 'word' to 'note'")
+        # Rename 'word' or 'text' to 'note' if no emoji
+        for wrong_field in ('word', 'text'):
+            if wrong_field in item and 'emoji' not in item and 'image' not in item:
+                item['note'] = item.get('note', '') or item.pop(wrong_field)
+                if wrong_field in item:
+                    del item[wrong_field]
+                item['emoji'] = '📝'
+                fixes.append(f"Added placeholder emoji, moved '{wrong_field}' to 'note'")
+                break
 
         # Uppercase answer
         if 'answer' in item and len(item['answer']) == 1 and item['answer'].islower():
