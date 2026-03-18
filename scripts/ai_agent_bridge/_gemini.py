@@ -378,7 +378,7 @@ def _stream_with_watchdog(proc, timeout_val):
             now = time.time()
             stall_duration = now - _last_output_time
             if stall_duration > _STALL_THRESHOLD:
-                print(f"\n  [watchdog] Output resumed after {stall_duration:.0f}s stall", flush=True)
+                print(f"\n  [watchdog] Output resumed after {stall_duration:.0f}s stall", file=sys.stderr, flush=True)
             _last_output_time = now
     except (OSError, ValueError):
         pass
@@ -387,7 +387,7 @@ def _stream_with_watchdog(proc, timeout_val):
     final_stall = time.time() - _last_output_time
     if final_stall > _STALL_THRESHOLD and not _timed_out:
         print(f"\n  [watchdog] Stream ended after {final_stall:.0f}s of silence "
-              f"({len(output_lines)} lines received)", flush=True)
+              f"({len(output_lines)} lines received)", file=sys.stderr, flush=True)
 
     proc.wait()
     if _watchdog_timer:
