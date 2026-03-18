@@ -366,6 +366,48 @@ DEFAULT_INSTRUCTIONS = {
 }
 
 
+def fix_image_to_letter_items(activity: dict) -> list[str]:
+    """Fix: image-to-letter items missing emoji/distractors, using wrong field names.
+
+    Common Gemini errors:
+    - Uses 'word:' instead of 'emoji:' (or no emoji at all)
+    - Missing 'distractors:' array
+    - Lowercase answer ('к' instead of 'К')
+    """
+    fixes = []
+    if activity.get('type') != 'image-to-letter':
+        return fixes
+
+    # Ukrainian letters for generating distractors
+    all_letters = list("АБВГҐДЕЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩ")
+
+    for item in activity.get('items', []):
+        if not isinstance(item, dict):
+            continue
+
+        # Rename 'word' to 'note' if no emoji — the word is context, not the image
+        if 'word' in item and 'emoji' not in item and 'image' not in item:
+            item['note'] = item.get('note', '') or item.pop('word')
+            if 'word' in item:
+                del item['word']
+            item['emoji'] = '📝'  # placeholder — better than nothing
+            fixes.append("Added placeholder emoji, moved 'word' to 'note'")
+
+        # Uppercase answer
+        if 'answer' in item and len(item['answer']) == 1 and item['answer'].islower():
+            item['answer'] = item['answer'].upper()
+            fixes.append(f"Uppercased answer '{item['answer']}'")
+
+        # Add distractors if missing
+        if 'distractors' not in item and 'answer' in item:
+            answer = item['answer'].upper()
+            distractors = [l for l in all_letters if l != answer][:3]
+            item['distractors'] = distractors
+            fixes.append(f"Added distractors {distractors} for answer '{answer}'")
+
+    return fixes
+
+
 # Dispatch table mapping activity type -> fixer function
 TYPE_FIXERS = {
     'mark-the-words': fix_mark_the_words,
@@ -377,5 +419,6 @@ TYPE_FIXERS = {
     'error-correction': fix_error_correction_items,
     'group-sort': fix_group_sort_groups,
     'classify': fix_classify_groups_to_categories,
+    'image-to-letter': fix_image_to_letter_items,
     'quiz-answer': fix_quiz_answer_field,
 }

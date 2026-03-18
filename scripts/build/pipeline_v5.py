@@ -2671,8 +2671,18 @@ def phase_activities(ctx: ModuleContext, state: dict) -> bool:
                     executor=_act_exec)
         return False
 
-    # Post-C schema validation gate
+    # Post-C: auto-fix YAML before schema validation (#977)
     act_path = ctx.paths.get("activities")
+    if act_path and act_path.exists():
+        try:
+            from pipeline.screen import _fix_yaml_activities
+            n_yaml_fixes = _fix_yaml_activities(act_path)
+            if n_yaml_fixes > 0:
+                log(f"  activities: Auto-fixed {n_yaml_fixes} YAML schema issue(s) before validation")
+        except Exception as e:
+            log(f"  activities: YAML auto-fix failed: {e}")
+
+    # Post-C schema validation gate
     if act_path and act_path.exists() and not _validate_activities_yaml(act_path):
         log("  activities: FAILED — activities YAML failed schema validation")
         mark_failed(state, "activities", ctx, note="activities-schema-invalid",

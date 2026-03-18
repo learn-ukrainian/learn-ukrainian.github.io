@@ -2,7 +2,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: stress-and-intonation
-version: '3.2'
+version: '3.3'
 title: Stress and Intonation
 subtitle: The Music of Ukrainian
 focus: grammar
@@ -29,7 +29,7 @@ content_outline:
   words: 250
   points:
   - 'First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and household words.'
-  - 'Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some verb forms.'
+  - 'Last-syllable stress: молокО, далекО, Україна — common in longer words.'
   - 'Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable words.'
   - 'No fixed rule: the same ending can have different stress (кнИжка vs водА, both -а ending) — stress must be learned per word.'
 - section: Рухомий наголос — Mobile Stress
@@ -37,8 +37,7 @@ content_outline:
   points:
   - 'Stress shifts in declension: рукА (nominative singular) → рУки (nominative/accusative plural) — the stress moves when
     the word form changes. (Note: genitive singular is рукИ — stress stays).'
-  - 'Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш (you write) — verb stress can shift between
-    stems and endings.'
+  - 'Stress shifts in number: водА (singular) → вОди (plural) — noun stress can shift between singular and plural forms. (Preview — details in later modules.)'
   - 'Preview note: mobile stress will matter more when learning cases and verb conjugation — for now, awareness is the goal.'
   - 'Practical tip: listening to native speakers is the best way to internalize stress patterns.'
 - section: Інтонація — Intonation
@@ -47,7 +46,7 @@ content_outline:
   - 'Declarative intonation: pitch falls at the end of the sentence — Це кафе. with a downward contour.'
   - 'Interrogative with question word: pitch rises on the question word, then falls — ДЕ кафе?'
   - 'Yes/no questions (without question word): pitch rises sharply on the stressed syllable of the key word, then falls
-    (IK-3 pattern) — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.'
+    — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.'
   - 'Exclamatory intonation: sharp rise with emphasis — Це кафе! expressing surprise or excitement.'
   - 'Contrast drill: practicing the same sentence with all four intonation patterns.'
 - section: Практика — Practice

@@ -184,7 +184,7 @@ def _compute_richness_metrics(
                     act_types = [a.get("type", "") for a in act_data_rich if isinstance(a, dict)]
             except Exception:
                 pass
-        level_code_rich = track.split("-")[0].lower() if "-" not in track else track.lower()
+        level_code_rich = track.split("-")[0].upper() if "-" not in track else track.upper()
         richness = calculate_richness_score(content, level_code_rich, str(content_path), act_types)
         metrics["COMPUTED_RICHNESS_SCORE"] = str(richness.get("score", 0))
         metrics["COMPUTED_RICHNESS_THRESHOLD"] = str(richness.get("threshold", 95))
