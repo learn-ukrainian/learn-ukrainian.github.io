@@ -89,9 +89,10 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 ### Workflow
 1. **Research first**: `search_text("{TOPIC_KEYWORDS}", grade={TEXTBOOK_GRADE})` — find how textbooks teach this
 2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+3. **MANDATORY: Verify EVERY Ukrainian word** — call `verify_words` on ALL Ukrainian words before finalizing each section. Do NOT skip this. If a word is NOT FOUND, replace it with a verified alternative. Never guess.
+4. **MANDATORY: Verify stress marks** — if you add a stress mark (´), look up the word first. Wrong stress marks are the #1 quality failure.
+5. **Create activities** from your content
+6. **MANDATORY: Verify activity items** — batch `verify_words` on ALL answers, distractors, and options. Every item must pass VESUM. If a distractor fails, replace it — do NOT include unverified words.
 
 ### Beginner Lesson Arc
 
@@ -139,7 +140,7 @@ Every line must make conversational sense. Do NOT pair unrelated speech acts (e.
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `{SCHEMA_PATH}` for full field definitions.
 
