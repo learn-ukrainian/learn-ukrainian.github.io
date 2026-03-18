@@ -99,7 +99,7 @@ You have MCP tools (`verify_words`, `search_text`, `query_pravopys`), `WebFetch`
 
 **Verification escalation — MANDATORY, not optional:**
 1. Every Ukrainian word → `verify_words`
-2. Every stress mark → `WebFetch` goroh.pp.ua to confirm
+2. Every stress mark → `WebFetch` `https://goroh.pp.ua/Транскрипція/{word}` to confirm
 3. Any grammar rule claim → `query_pravopys` or `search_text`
 4. **MANDATORY Gemini consultation** for these HIGH-RISK items:
    - Minimal pairs (e.g., кит/кіт) → ask Gemini to verify both words exist and mean what you think
