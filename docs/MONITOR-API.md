@@ -236,7 +236,9 @@ Returns:
 - `phases` — v5/v4: named phases (`research`..`mdx`) with executor provenance; v3: letter-coded (`A`..`F`)
 - `audit` — status, word_count, word_target, blocking_issues
 - `research` — exists, quality score (0-10)
-- `review` — exists
+- `review` — exists, **score** (numeric, e.g. 8.7), **verdict** (PASS/FAIL) *(#971)*
+- `friction` — **active** count, **resolved** count, **items** list with id/type/description *(#970/#971)*
+- `shippable` — **true/false** (audit PASS + review >= 8.0) *(#971)*
 - `prompt_review` — whether `/prompt-review` has been run (bool, checks `audit/{slug}-prompt-review.md`)
 - `content_review` — whether `/content-review` has been run (bool, checks `audit/{slug}-content-review.md`)
 - `final_review` — verdict (APPROVE/NEEDS_WORK), issue count, issue summaries
