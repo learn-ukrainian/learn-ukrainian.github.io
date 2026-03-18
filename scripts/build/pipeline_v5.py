@@ -949,7 +949,7 @@ def _rescore_post_fix(ctx: ModuleContext) -> None:
 
         ok, raw = dispatch_claude_phase(
             prompt_path, "Post-fix scoring",
-            model="claude-opus-4-6", timeout=120,
+            model="claude-opus-4-6", timeout=300,
         )
         prompt_path.unlink(missing_ok=True)
 
