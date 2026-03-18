@@ -366,6 +366,17 @@ DEFAULT_INSTRUCTIONS = {
 }
 
 
+def _is_emoji(text: str) -> bool:
+    """Check if text is likely an emoji (not a filename or plain text)."""
+    if not text or len(text) > 10:
+        return False
+    # Filenames have dots
+    if '.' in text:
+        return False
+    # Plain ASCII = not emoji
+    return not all(ord(c) < 128 for c in text)
+
+
 def fix_image_to_letter_items(activity: dict) -> list[str]:
     """Fix: image-to-letter items missing emoji/distractors, using wrong field names.
 
@@ -385,12 +396,19 @@ def fix_image_to_letter_items(activity: dict) -> list[str]:
         if not isinstance(item, dict):
             continue
 
+        # Fix 'image: cat.jpg' — non-emoji string in image field
+        if 'image' in item and not _is_emoji(item['image']):
+            # Move the fake image to note, replace with placeholder emoji
+            item['note'] = item.get('note', '') or item['image']
+            item['image'] = '📝'
+            fixes.append(f"Replaced non-emoji image '{item['note']}' with placeholder")
+
         # Rename 'word' to 'note' if no emoji — the word is context, not the image
         if 'word' in item and 'emoji' not in item and 'image' not in item:
             item['note'] = item.get('note', '') or item.pop('word')
             if 'word' in item:
                 del item['word']
-            item['emoji'] = '📝'  # placeholder — better than nothing
+            item['emoji'] = '📝'
             fixes.append("Added placeholder emoji, moved 'word' to 'note'")
 
         # Uppercase answer
