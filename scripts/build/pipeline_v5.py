@@ -2419,18 +2419,22 @@ def _extract_activities_output(ctx: ModuleContext, raw_output: str) -> tuple[boo
     # Post-extraction VESUM check on activity distractors (#975 AC2)
     if wrote_activities and act_path and act_path.exists():
         try:
-            _verify_activity_distractors(act_path)
+            _verify_activity_distractors(act_path, ctx.module_num)
         except Exception as e:
             log(f"  activities: Distractor verification failed: {e}")
 
     return wrote_activities, wrote_vocab
 
 
-def _verify_activity_distractors(act_path: Path) -> None:
+def _verify_activity_distractors(act_path: Path, module_num: int = 0) -> None:
     """Post-extraction VESUM check on all activity text fields.
 
     Extracts all Ukrainian words from options/distractors/answers,
     verifies against VESUM, and logs failures.
+
+    A1.1 phonetics modules (M01-M06): skip words ≤ 3 chars — these are
+    syllable fragments (МА, КІ, МО) used in blending exercises, not
+    standalone words. VESUM correctly reports them as not-found.
 
     Issue: #975 AC2
     """
@@ -2440,8 +2444,10 @@ def _verify_activity_distractors(act_path: Path) -> None:
     if not words:
         return
 
-    # Filter to words with 2+ chars (skip single letters)
-    check_words = [clean for clean in words if len(clean) > 1]
+    # A1.1 (M01-M06): skip syllable fragments (≤ 3 chars)
+    # Other modules: skip single letters only (≤ 1 char)
+    min_len = 4 if module_num <= 6 else 2
+    check_words = [clean for clean in words if len(clean) >= min_len]
     if not check_words:
         return
 
