@@ -73,12 +73,23 @@ These are MCP tools available via the RAG server at `http://127.0.0.1:8766/sse`.
 | goroh.pp.ua | 508K dictionary, phonetics, frequency, etymology, synonyms | Verify stress, check word frequency, find synonyms |
 | slovnyk.me | Dictionary aggregator | Cross-reference definitions |
 
-**Rules**:
-- **MANDATORY: Verify EVERY Ukrainian word** with `verify_words` before including it. Not just "if unsure" — EVERY word. A word that fails VESUM does not go in the content.
-- **MANDATORY: Verify stress marks** — wrong stress is the #1 quality failure. Look up every word before adding ´.
+**Verification escalation — MANDATORY, not optional:**
+1. Every Ukrainian word → `verify_words`. A word that fails VESUM does not go in the content.
+2. Every stress mark → `web_fetch` `https://goroh.pp.ua/Транскрипція/{word}` to confirm. Wrong stress is the #1 quality failure.
+3. Any grammar rule claim → `query_pravopys` or `search_text`
+4. **MANDATORY Claude consultation** for HIGH-RISK items:
+   - Minimal pairs → verify both words exist and mean what you think
+   - Phonetic rules → confirm with textbook reference
+   - Cultural/historical claims → verify
+   - Any word not found in `verify_words` → consult before inventing alternatives
+
+   You WILL hallucinate if you skip verification. Every past build proves this.
+
+**Other rules:**
 - For textbook searches, use Ukrainian query terms. English kills semantic matching.
 - `search_text` accepts `grade` filter (1-11) and `subject` filter.
 - `query_wikipedia` has modes: `summary`, `full`, `search`, `sections`, `links`.
+- goroh.pp.ua URL patterns: `/Транскрипція/{word}` (stress), `/Тлумачення/{word}` (definition), `/Словозміна/{word}` (forms), `/Синонімія/{word}` (synonyms)
 
 ## Friction System
 
