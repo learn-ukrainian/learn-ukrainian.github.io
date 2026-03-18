@@ -1,0 +1,261 @@
+- type: match-up
+  title: Match the Time
+  instruction: Match each Ukrainian time expression to its digital equivalent.
+  pairs:
+    - left: "перша година"
+      right: "1:00"
+    - left: "друга година"
+      right: "2:00"
+    - left: "третя година"
+      right: "3:00"
+    - left: "п'ята година"
+      right: "5:00"
+    - left: "сьома година"
+      right: "7:00"
+    - left: "восьма година"
+      right: "8:00"
+    - left: "десята година"
+      right: "10:00"
+    - left: "дванадцята година"
+      right: "12:00"
+    - left: "восьма тридцять"
+      right: "8:30"
+    - left: "дев'ята п'ятнадцять"
+      right: "9:15"
+
+- type: fill-in
+  title: Complete the Time Expression
+  instruction: Fill in the missing word to complete each time expression.
+  items:
+    - sentence: "Зараз ___ година."
+      answer: "перша"
+      options: ["перша", "друга", "один", "першій"]
+      explanation: "1:00 is перша година — use the feminine ordinal, not the cardinal number."
+    - sentence: "Зараз ___ година."
+      answer: "восьма"
+      options: ["восьма", "вісім", "восьмій", "восьмого"]
+      explanation: "8:00 is восьма година — feminine ordinal for the hour."
+    - sentence: "___ котра година?"
+      answer: "Зараз"
+      options: ["Зараз", "Завтра", "Добре", "Тут"]
+      explanation: "Зараз means now — used when stating the current time."
+    - sentence: "О ___ поїзд на Львів?"
+      answer: "котрій"
+      options: ["котрій", "котра", "скільки", "який"]
+      explanation: "О котрій? means At what time? — used for scheduled events."
+    - sentence: "Поїзд о ___ тридцять."
+      answer: "десятій"
+      options: ["десятій", "десята", "десять", "десятого"]
+      explanation: "With the preposition о (at), the hour takes a special ending — о десятій."
+    - sentence: "Я працюю ___ п'ятої."
+      answer: "до"
+      options: ["до", "о", "після", "у"]
+      explanation: "До means until — я працюю до п'ятої (I work until five)."
+    - sentence: "___ шостої я вдома."
+      answer: "Після"
+      options: ["Після", "До", "О", "У"]
+      explanation: "Після means after — після шостої (after six)."
+    - sentence: "Дев'ята ___."
+      answer: "ранку"
+      options: ["ранку", "ранок", "вранці", "рано"]
+      explanation: "Дев'ята ранку means 9 in the morning — ранку is the genitive form used with time."
+
+- type: quiz
+  title: Days, Months, and Time
+  instruction: Choose the correct answer.
+  items:
+    - question: "Which day of the week does the Ukrainian week start with?"
+      options:
+        - text: "понеділок"
+          correct: true
+        - text: "неділя"
+          correct: false
+        - text: "субота"
+          correct: false
+        - text: "середа"
+          correct: false
+      explanation: "The Ukrainian week starts with понеділок (Monday), not Sunday."
+    - question: "What does неділя mean?"
+      options:
+        - text: "Sunday"
+          correct: true
+        - text: "week"
+          correct: false
+        - text: "Saturday"
+          correct: false
+        - text: "holiday"
+          correct: false
+      explanation: "Неділя is a false friend — it means Sunday, not week. The word for week is тиждень."
+    - question: "Which month name comes from береза (birch tree)?"
+      options:
+        - text: "березень"
+          correct: true
+        - text: "липень"
+          correct: false
+        - text: "листопад"
+          correct: false
+        - text: "вересень"
+          correct: false
+      explanation: "Березень (March) comes from береза (birch) — birch sap starts flowing in spring."
+    - question: "What does листопад literally mean?"
+      options:
+        - text: "leaf-fall"
+          correct: true
+        - text: "snow-fall"
+          correct: false
+        - text: "rain-fall"
+          correct: false
+        - text: "wind-blow"
+          correct: false
+      explanation: "Листопад (November) literally means leaf-fall — лист (leaf) + пад (fall)."
+    - question: "How do you say 'on Monday' in Ukrainian?"
+      options:
+        - text: "у понеділок"
+          correct: true
+        - text: "на понеділок"
+          correct: false
+        - text: "в понеділку"
+          correct: false
+        - text: "о понеділок"
+          correct: false
+      explanation: "Days of the week use у/в + the day name: у понеділок."
+    - question: "How do you say 'in January' in Ukrainian?"
+      options:
+        - text: "у січні"
+          correct: true
+        - text: "у січень"
+          correct: false
+        - text: "в січня"
+          correct: false
+        - text: "на січень"
+          correct: false
+      explanation: "Months use у/в + the Locative form: у січні."
+    - question: "Which word means 'on time' in Ukrainian?"
+      options:
+        - text: "вчасно"
+          correct: true
+        - text: "зараз"
+          correct: false
+        - text: "рано"
+          correct: false
+        - text: "пізно"
+          correct: false
+      explanation: "Вчасно means on time — бути вчасно (to be on time)."
+    - question: "In Ukrainian, are months and days written with a capital or lowercase letter?"
+      options:
+        - text: "lowercase"
+          correct: true
+        - text: "capital letter"
+          correct: false
+        - text: "both are acceptable"
+          correct: false
+        - text: "capital only for months"
+          correct: false
+      explanation: "Unlike English, Ukrainian writes months and days in lowercase: січень, понеділок."
+
+- type: fill-in
+  title: Plan Your Schedule
+  instruction: Complete each sentence with the correct word to build a weekly schedule.
+  items:
+    - sentence: "Поїзд ___ понеділок о десятій."
+      answer: "у"
+      options: ["у", "о", "на", "до"]
+      explanation: "Days of the week use у/в: у понеділок (on Monday)."
+    - sentence: "О котрій ти працюєш ___ середу?"
+      answer: "у"
+      options: ["у", "о", "на", "до"]
+      explanation: "У середу means on Wednesday — same pattern as all days of the week."
+    - sentence: "У суботу я не працюю. ___ день!"
+      answer: "Вихідний"
+      options: ["Вихідний", "Робочий", "Перший", "Останній"]
+      explanation: "Вихідний день means a day off — у суботу вихідний день (Saturday is a day off)."
+    - sentence: "У ___ холодно."
+      answer: "січні"
+      options: ["січні", "січень", "січня", "січню"]
+      explanation: "In January uses the Locative form: у січні."
+    - sentence: "Я працюю о восьмій ___ до п'ятої вечора."
+      answer: "ранку"
+      options: ["ранку", "ранок", "рано", "вранці"]
+      explanation: "О восьмій ранку means at eight in the morning."
+    - sentence: "У ___ тепло."
+      answer: "липні"
+      options: ["липні", "липень", "липня", "липню"]
+      explanation: "In July uses the Locative form: у липні."
+
+- type: true-false
+  title: True or False?
+  instruction: Decide if each statement about Ukrainian time is true or false.
+  items:
+    - statement: "In Ukrainian, you say the hour using ordinal numbers like перша, друга, третя."
+      correct: true
+      explanation: "Ukrainian uses feminine ordinal numbers for hours because година is feminine."
+    - statement: "To say 2:00 in Ukrainian, you say два година."
+      correct: false
+      explanation: "Never use cardinal numbers for time. Say друга година (second hour), not два година."
+    - statement: "Восьма тридцять means 8:30."
+      correct: true
+      explanation: "This is the telegraphic style — just the hour ordinal followed by minutes."
+    - statement: "The word тиждень means Sunday."
+      correct: false
+      explanation: "Тиждень means week. Sunday is неділя."
+    - statement: "The preposition о means 'at' when talking about time."
+      correct: true
+      explanation: "О котрій? (At what time?) and о восьмій (at eight) use о for scheduled times."
+    - statement: "In Ukrainian, months are written with a capital letter like in English."
+      correct: false
+      explanation: "Ukrainian writes months and days in lowercase: січень, лютий, понеділок."
+    - statement: "Середа means Wednesday, because it is the middle of the week."
+      correct: true
+      explanation: "Середа comes from середина (middle) — it is the middle day of the work week."
+    - statement: "Ранок, день, вечір, ніч are the four parts of a Ukrainian day."
+      correct: true
+      explanation: "Morning, daytime, evening, night — used to clarify 12-hour time (дев'ята ранку)."
+
+- type: group-sort
+  title: Sort the Months by Season
+  instruction: Place each month into the correct season.
+  groups:
+    - name: "Зима (Winter)"
+      items: ["грудень", "січень", "лютий"]
+    - name: "Весна (Spring)"
+      items: ["березень", "квітень", "травень"]
+    - name: "Літо (Summer)"
+      items: ["червень", "липень", "серпень"]
+    - name: "Осінь (Autumn)"
+      items: ["вересень", "жовтень", "листопад"]
+
+- type: match-up
+  title: Match the Day to Its Meaning
+  instruction: Match each Ukrainian day of the week to its English equivalent.
+  pairs:
+    - left: "понеділок"
+      right: "Monday"
+    - left: "вівторок"
+      right: "Tuesday"
+    - left: "середа"
+      right: "Wednesday"
+    - left: "четвер"
+      right: "Thursday"
+    - left: "п'ятниця"
+      right: "Friday"
+    - left: "субота"
+      right: "Saturday"
+    - left: "неділя"
+      right: "Sunday"
+
+- type: unjumble
+  title: Put the Words in Order
+  instruction: Arrange the words to form a correct Ukrainian sentence about time or schedule.
+  items:
+    - words: ["година", "Зараз", "восьма"]
+      answer: "Зараз восьма година"
+    - words: ["котра", "година", "Скажіть,"]
+      answer: "Скажіть, котра година"
+    - words: ["поїзд", "О", "котрій"]
+      answer: "О котрій поїзд"
+    - words: ["понеділок", "працюю", "Я", "у"]
+      answer: "Я працюю у понеділок"
+    - words: ["холодно", "січні", "У"]
+      answer: "У січні холодно"
+    - words: ["п'ятої", "до", "працюю", "Я"]
+      answer: "Я працюю до п'ятої"

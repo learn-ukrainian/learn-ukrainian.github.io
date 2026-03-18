@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 7 of the A1 track (Ukrainian for English speakers). Title: "The Gender Code" — Unlocking Ukrainian Gender Patterns. Phase: A1.1 [First Contact]. Previous module: Stress And Intonation. Next module: Greetings And Politeness.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,14 +60,16 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 6
 **Previous module:** Stress and Intonation
 
-**Cumulative vocabulary (69 words):**
+**Cumulative vocabulary (84 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, сестра
-дерево, вулиця, автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів
-сім'я, ґудзик, вода, кава, чай, замок, рука, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
+зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус
 
 **Grammar already taught (26 topics):**
 - Full alphabet overview (33 letters)
@@ -138,13 +142,12 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 15-35% Ukrainian.
+TARGET: 10-20% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
-- UKRAINIAN CONTENT: Words and phrases inline bolded. Short example sentences in bulleted lists or tables — each with English gloss on the same line.
-- TABLES: Word families, vocabulary groups, simple paradigm tables.
-- PATTERN BOXES: Show transformations: `слово → слова` (word → words).
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian vocabulary. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
 Ukrainian sentences max 10 words.
 
 ### Videos
@@ -514,18 +517,144 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-007
+level: A1
+sequence: 7
+slug: the-gender-code
+version: '2.0'
+title: The Gender Code
+subtitle: Unlocking Ukrainian Gender Patterns
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner can identify noun gender by word ending
+- Learner can categorize nouns into 4 declension families
+- 'Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)'
+- Learner can identify common exceptions
+content_outline:
+- section: Вступ (Introduction)
+  words: 175
+  points:
+  - 'Introduction to the Ukrainian three-gender system: Masculine, Feminine, and Neuter — stressing that gender is a linguistic
+    category for all nouns, not just people.'
+  - 'Cultural Hook: The Neuter Sun (сонце) — explain its role as an impartial, gentle life-giver in Ukrainian folklore, contrasting
+    it with the masculine sun in Romance languages (el sol/le soleil).'
+  - 'Visual Mnemonic Framework: Categorization logic using color codes — Blue for Masculine (Hard/Consonant), Red for Feminine
+    (Open/A-ending), and Yellow for Neuter (Round/O-E-ending).'
+- section: Презентація правил (Presentation of Rules)
+  words: 300
+  points:
+  - 'Pattern Recognition for Endings: Masculine (consonant: стіл, хліб, дім), Feminine (-а/-я: книга, кімната, земля), and
+    Neuter (-о/-е: вікно, місто, море).'
+  - 'State Standard §4.2.2 Integration: Introduction of possessive pronouns ''мій, моя, моє'' as the primary diagnostic tool
+    for gender agreement and identity.'
+  - 'Syntactic Agreement: How gender dictates the form of adjectives and pronouns — examples with ''великий стіл'' (M), ''цікава
+    книга'' (F), and ''чисте вікно'' (N).'
+  - 'Identity and Family Dialogue: High-frequency context using ''брат'' (M), ''сестра'' (F), ''мама'' (F), and ''тато'' (M)
+    to demonstrate natural vs. grammatical gender.'
+- section: Практичні вправи (Practice Exercises)
+  words: 300
+  points:
+  - 'Natural Gender Override Trap: The case of ''тато'' — explain that biological sex overrides the ''-o'' ending, making
+    it Masculine (мій тато); contrast with ''місто'' (N).'
+  - 'The Soft Sign Ambiguity (Ь): Drill with the high-frequency minimal pair ''день'' (Masculine) vs. ''ніч'' (Feminine);
+    strategy for memorizing these essential ''soft'' exceptions.'
+  - 'The ''Name'' Trap and Family 4: Explaining why ''ім''я'' (name) is Neuter despite ending in ''-я'' — contrast with Feminine
+    ''земля'' to avoid common learner confusion.'
+  - 'State Standard §4.2.1.1 Drill: Categorizing high-frequency nouns ''чоловік'' (man), ''жінка'' (woman), and ''місто''
+    (city) into their respective gender buckets.'
+- section: Самостійна робота (Independent Work/Production)
+  words: 250
+  points:
+  - 'The ''It'' Trap Correction: Targeted drill to stop learners from using neuter ''воно'' for all objects; reinforcing ''стіл
+    = він'' and ''книга = вона''.'
+  - 'Mapping Gender to Modern Contexts: Using S.T.A.L.K.E.R. vocabulary — ''Артефакт'' (M), ''Зона'' (F), and ''Укриття''
+    (N) as classification anchors.'
+  - 'Applying Agreement: Creating simple descriptive phrases for personal items and nature terms using ''мій/моя/моє'' and
+    basic adjectives (новий, цікавий, великий).'
+- section: Культурний код та підсумок (Cultural Code and Summary)
+  words: 175
+  points:
+  - 'Summary of gender prediction from endings: 95% predictability rule — reinforcement of the ''Soft Sign'' and ''Natural
+    Gender'' exceptions.'
+  - 'Cultural Reflection: How gendered language shapes the Ukrainian worldview — personification of nature (земля-мати, сонце-життя).'
+  - 'Final Competency Check: Identification of gender for core identity vocabulary (ім''я, тато, мама, місто) as per State
+    Standard requirements.'
+vocabulary_hints:
+  required:
+  - брат (brother) — старший брат (older brother); high-frequency family term
+  - сестра (sister) — молодша сестра (younger sister); high-frequency family term
+  - мама (mother) — моя мама; люба мама; high-frequency feminine
+  - тато (father) — мій тато (my dad); natural gender overrides -o ending; masculine trap
+  - дім (house) — новий дім; рідний дім; high-frequency masculine
+  - вікно (window) — відкрите вікно; велике вікно; чисте вікно; high-frequency neuter
+  - книга (book) — цікава книга; стара книга; електронна книга; high-frequency feminine
+  - місто (city) — моє місто; велике місто; State Standard §4.2.1.1 example
+  recommended:
+  - стіл (table) — дерев'яний стіл; великий стіл; новий стіл; core masculine
+  - море (sea) — синє море; тепле море; high-frequency neuter
+  - ніч (night) — добра ніч (good night); feminine exception with soft sign
+  - день (day) — гарний день (good day); masculine contrast with 'ніч'
+  - земля (earth) — рідна земля; чорна земля; feminine ending in -я
+  - серце (heart) — добре серце; моє серце; high-frequency neuter
+  - сонце (sun) — ясне сонце; cultural hook; neuter life-giver
+  - собака (dog) — моя собака (my dog); feminine despite some colloquial masculine usage
+  - ім'я (name) — моє повне ім'я; гарне ім'я; neuter exception (Family 4)
+  - артефакт (artifact) — S.T.A.L.K.E.R. hook; masculine consonant ending
+  - зона (zone) — S.T.A.L.K.E.R. hook; feminine -a ending
+  - укриття (shelter) — S.T.A.L.K.E.R. hook; neuter -я ending with stem change
+activity_hints:
+- type: match-up
+  focus: Sort nouns by gender
+  items: 30
+- type: quiz
+  focus: Identify gender by ending
+  items: 20
+- type: fill-in
+  focus: Choose correct gender
+  items: 15
+- type: match-up
+  focus: Noun → gender
+  items: 20
+connects_to:
+- a1-09 (This Is, I Am)
+- a1-11 (Adjectives)
+prerequisites:
+- a1-02 (Vowel Sounds)
+persona:
+  voice: Patient Supportive Tutor
+  role: Linguistic Taxonomist
+grammar:
+- Three-gender system
+- Declension families overview
+- Gender prediction rules
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -554,18 +683,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -573,18 +729,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

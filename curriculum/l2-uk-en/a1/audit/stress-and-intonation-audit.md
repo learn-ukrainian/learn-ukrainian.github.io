@@ -1,7 +1,7 @@
 # Audit Report: M06 — stress-and-intonation.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-17 23:39:01
+**Generated:** 2026-03-18 00:11:17
 
 ## Configuration
 **Type:** A1-grammar

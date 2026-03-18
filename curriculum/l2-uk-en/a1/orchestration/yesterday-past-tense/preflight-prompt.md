@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 36 of the A1 track (Ukrainian for English speakers). Title: "Yesterday - Past Tense" — Talking About What Happened. Phase: A1.4 [Tenses & Daily Life]. Previous module: Direction And Origin. Next module: Tomorrow Future Tense.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,49 +60,46 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 35
 **Previous module:** Direction and Origin
 
-**Cumulative vocabulary (417 words):**
+**Cumulative vocabulary (385 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк, Львів, м'ясо, п'ять, сім'я, цукор
-час, що, джерело, дзвін, осінь, м'яч, щастя, бджола, дзеркало, черепаха
-цибуля, хлопець, вчителька, факт, фото, чай, кінь, сестра, дерево, вулиця
-автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів, ґудзик, кава
-замок, писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата
-книжка, дорога, кафе, він, вона, воно, книга, слово, мова, вікно
-брат, ніч, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення
-Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано
-Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми, ви
-вони, хто, студент, студентка, українець, українка, вчитель, ось, мене звати, особовий займенник
-займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт
-цей, ця, ці, той, та, те, ті, кімната, стілець, ліжко
-лампа, шафа, двері, квартира, новий, старий, гарний, великий, малий, поганий
-цікавий, синій, червоний, молодий, дорогий, дешевий, смачний, зелений, який, множина
-білий, чорний, жовтий, бордо, беж, хакі, колір, сорочка, штани, сукня
-плаття, куртка, светр, джинси, окуляри, носити, одягати, розмір, дієслово, друг
-музей, машина, пісня, зошит, ручка, словник, читати, говорити, знати, розуміти
-питати, відповідати, перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати
-думати, вивчати, відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити
-любити, їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, гість
-природа, домашнє завдання, дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися
-знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе
-часто, швидко, як, скільки, завжди, ніколи, подобатися, хотіти, піти, нудний
-хороший, фільм, борщ, квіти, мені, тобі, хобі, інфінітив, мій, твій
-твоя, твоє, його, її, наш, наша, ваш, ваша, їхній, свій
-чий, чия, чиє, річ, сумка, будинок, озеро, такий, інший, кожний
-сам, дівчина, година, хвилина, тиждень, місяць, рік, ранок, вечір, вчасно
-понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя, зараз, пізно, рано
-січень, мати, чути, брати, купувати, гречка, пакет, шукати, знаходити, відкривати
-проблема, голос, подруга, лікар, пес, колега, сусід, дитина, матуся, татусь
-братик, сестричка, знайомий, в, на, через, про, за, готель, вокзал
-країна, міст, парк, екскурсія, квиток, іти, їхати, дякувати, у, магазин
-робота, банк, підлога, стіна, туалет, нога, маяти, куди, дуже, дужий
-йти, людина, метро, багато, використовувати, аптека, простий, український, жаль, відсутність
-гроші, сьогодні, українська, означати, форма, водити, закінчення, відмінок, опис, знахідний
-правило, правити, жіночий, ом, веліти, вести, йога, зараза, кий, краса
-красити, нове, до, місцевий, звідки, рух, додому
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па
+Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально
+Чудово, Смачного, На здоров'я, Добраніч, я, ти, він, вона, воно, ми
+ви, вони, хто, студент, студентка, українець, українка, вчитель, вчителька, ось
+мене звати, особовий займенник, займенник, граматичний рід, рід, брат, телефон, дуже приємно, давай на ти, удома
+на роботі, підручник, паспорт, цей, ця, ці, той, та, те, ті
+кімната, стілець, ліжко, лампа, шафа, двері, хата, квартира, новий, старий
+гарний, великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий
+дешевий, смачний, зелений, який, множина, білий, чорний, жовтий, бордо, беж
+хакі, колір, сорочка, штани, сукня, плаття, куртка, светр, джинси, окуляри
+носити, одягати, розмір, дієслово, друг, музей, машина, пісня, ніч, море
+слово, хлопець, зошит, ручка, словник, читати, писати, говорити, знати, розуміти
+питати, відповідати, перевіряти, де, кава, рахунок, смачного, працювати, слухати, грати
+чекати, думати, вивчати, відпочивати, лист, повідомлення, новини, музика, радіо, відповідь
+робити, бачити, любити, їсти, пити, ходити, просити, сидіти, стояти, платити
+вчити, гість, природа, домашнє завдання, мова, дивитися, сміятися, вмиватися, одягатися, називатися
+вчитися, займатися, повертатися, знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися, цікавитися
+мити, називати, себе, часто, швидко, як, скільки, завжди, ніколи, подобатися
+хотіти, піти, нудний, хороший, кіно, фільм, борщ, квіти, мені, тобі
+хобі, інфінітив, мій, твій, твоя, твоє, його, її, наш, наша
+ваш, ваша, їхній, свій, чий, чия, чиє, річ, сумка, будинок
+озеро, такий, інший, кожний, сам, дівчина, мати, чути, брати, купувати
+гречка, пакет, шукати, знаходити, відкривати, проблема, голос, подруга, лікар, пес
+колега, сусід, дитина, матуся, татусь, братик, сестричка, знайомий, в, на
+через, про, за, готель, вокзал, країна, міст, парк, екскурсія, квиток
+іти, їхати, дякувати, у, магазин, школа, робота, банк, підлога, стіна
+туалет, нога, маяти, куди, дуже, дужий, йти, людина, метро, багато
+використовувати, аптека, простий, український, жаль, відсутність, гроші, сьогодні, українська, означати
+форма, водити, закінчення, відмінок, опис, знахідний, правило, правити, жіночий, ом
+звідки, немає, мене, тебе, красивий, маленький, до, від, з, пошта
+Київ, виходити, аеропорт, лікарня, додому
 
 **Grammar already taught (116 topics):**
 - Full alphabet overview (33 letters)
@@ -352,7 +351,7 @@ Ukrainian sentences max 10 words. Mix container types.
 
 Write **Yesterday - Past Tense** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 3+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -593,18 +592,123 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-036
+level: A1
+sequence: 36
+slug: yesterday-past-tense
+version: '2.0'
+title: Yesterday - Past Tense
+subtitle: Talking About What Happened
+focus: grammar
+pedagogy: PPP
+phase: A1.4 [Tenses & Daily Life]
+word_target: 1200
+objectives:
+- Learner can form past tense using L-participle
+- Learner can use correct gender ending (-в/-ла/-ло/-ли)
+- Learner can describe past events using time expressions
+- Learner can talk about what they did yesterday
+content_outline:
+- section: 'Вступ: Що було вчора? (Introduction: What Happened Yesterday?)'
+  words: 250
+  points:
+  - 'Контраст теперішнього і минулого часу через культурний контекст: подія 15 лютого 1574 року, коли Іван Федоров «надрукував»
+    першу книгу (Апостол) у Львові.'
+  - 'Часові вирази для минулого: вчора, минулого тижня, минулого місяця, минулого року. Важливе граматичне зауваження: вживання
+    ''минулого'' без прийменника ''в''.'
+  - 'Мотиваційний блок: як розповісти про свій день та історичні події, використовуючи лише один час.'
+- section: 'Основи минулого часу (Grammar: Past Tense Formation)'
+  words: 400
+  points:
+  - 'Правила утворення форм за Державним стандартом §4.2.4.1: основа інфінітива + суфікси -в, -ла, -ло, -ли. Використання
+    таблиць для наочності закінчень.'
+  - 'Узгодження за родом: він читав / вона читала / воно читало. Акцент на закінченні -ла для жіночого роду (він читав vs
+    вона читала).'
+  - 'Типова помилка: порушення родового узгодження. Корекція фрази ''я писав'', якщо говорить жінка, на правильну форму ''я
+    писала''.'
+  - 'Застереження щодо кальки з англійської: пояснення, що ''I was working'' перекладається як ''Я працював'', а форма ''Я
+    був працював'' є помилковою.'
+- section: Складні випадки та практика (Irregular Verbs and Practice)
+  words: 350
+  points:
+  - 'Неправильні дієслова та суплетивізм: їсти (їв/їла), йти (ішов/ішла/ішли). Опрацювання чергування голосних у корені дієслів
+    руху.'
+  - 'Практика в контексті музею: опис експонатів та подій. Культурний гачок: закон ЗУНР про державну мову від 15 лютого 1919
+    року (''ЗУНР прийняла закон'').'
+  - 'Дрилі на розрізнення форм: він пив / вона пила, він ішов / вона йшла. Автоматизація навичок вживання дієслів бути, робити,
+    читати.'
+- section: 'Підсумок: Мій день (Summary and Production)'
+  words: 200
+  points:
+  - 'Продуктивне завдання: розповідь про вчорашній день з використанням вивчених колокацій (робити каву, ішов додому, ходила
+    в магазин).'
+  - 'Діалогічна практика: запитання ''Що ти робив вчора?'' та відповіді про дозвілля (дивитися фільм, читати новини).'
+  - 'Фінальний чек: повторення правил узгодження за родом та числом для запобігання типовим помилкам (він був / вона була
+    / вони були).'
+vocabulary_hints:
+  required:
+  - вчора (yesterday) — вчора ввечері, вчора зранку, тільки вчора; High frequency adverb (Top 100)
+  - бути (to be) — був удома, була на роботі, було цікаво; Very High frequency (Top 10)
+  - робити (to do) — робити каву, робити уроки, що ти робив?; Very High frequency (Top 20)
+  - їсти (to eat) — їв обід, вона їла яблуко, ми їли в ресторані; irregular forms їв/їла
+  - пити (to drink) — пив воду, вона пила чай; High frequency verb
+  - читати (to read) — читав книгу, читала новини; High frequency (Top 50)
+  - дивитися (to watch) — дивився фільм, дивилася телевізор; reflexive -ся endings
+  - ходити (to go) — ходила в магазин, ішов додому; distinction between ішов/ходила
+  recommended:
+  - минулий (last, past) — минулого тижня, минулого року, минулої ночі; note usage without 'в'; High frequency adj
+  - раніше (earlier) — adverb of time; common time expression
+  - тиждень (week) — masculine noun; context 'минулого тижня'
+  - місяць (month) — masculine noun; context 'минулого місяця'
+  - спати (to sleep) — спав довго, вона спала; past tense endings drill
+  - працювати (to work) — працював у офісі, вона працювала; conjugation in the past tense
+activity_hints:
+- type: fill-in
+  focus: Change verbs to past tense
+  items: 25
+- type: fill-in
+  focus: Complete with correct gender ending
+  items: 20
+- type: fill-in
+  focus: What did you do yesterday?
+  items: 6
+connects_to:
+- a1-37 (Tomorrow - Future Tense)
+- a1-38 (My Daily Routine)
+prerequisites:
+- a1-35 (Direction and Origin)
+persona:
+  voice: Patient Supportive Tutor
+  role: Museum Curator
+grammar:
+- Past tense formation with L-participle
+- Gender agreement in past tense
+- Time expressions for past events
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -633,18 +737,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -652,18 +783,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

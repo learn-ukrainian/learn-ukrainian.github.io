@@ -1,0 +1,25 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1487
+deviations:
+  - section: 'Презентація: Тверда група'
+    reason: 'Plan mentions predicative position with бути. Reframed using zero copula (already taught grammar) instead, since бути as a verb has not been formally introduced at M11. Used «Погода гарна.» rather than «Погода є гарна.»'
+frictions:
+  - type: PLAN_GAP
+    description: 'Plan section 2 references predicative position after бути, but A1 Quick Reference shows present tense verbs start at M15. Zero copula is already in known grammar, so used that instead.'
+    proposed_fix: 'Update plan to reference zero copula instead of бути for predicative position at M11.'
+research_gaps:
+  - 'Софійський (proper adjective) not in VESUM — expected for proper nouns. Used as cultural reference only, not as vocabulary item.'
+unverified_terms: []
+review_focus:
+  - 'Verify that all 20 vocabulary items appear at least once in content (VOCAB-IN-CONTENT rule)'
+  - 'Check hard/soft group classification — зелений is hard group despite ending in -ений'
+  - 'Verify Mavka cultural section is factually accurate re: Lesya Ukrainka'
+  - 'Confirm adjective forms in activities match VESUM-verified forms'
+rag_tools_used:
+  - 'search_text: "прикметник закінчення роду чоловічий жіночий середній тверда група м''яка група" grade=3 → Vashulenko Grade 3 p.130 paradigm table (hard/soft endings)'
+  - 'search_text: "прикметник рід іменник узгодження який яка яке які" grade=2 → Vashulenko Grade 2 p.70 question framework'
+  - 'verify_words: all 60 adjective forms (15 adjectives × 4 genders) → 60/60 FOUND'
+  - 'verify_words: 10 nouns used in content → 10/10 FOUND'
+  - 'verify_lemma: синій → 44 forms confirmed (soft-stem paradigm)'
+  - 'verify_words: рідний/рідна/рідне/рідні + cultural nouns → 27/28 FOUND (Софійський not in VESUM — proper adjective)'

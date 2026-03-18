@@ -1,18 +1,23 @@
 # RAG Verification: the-living-verb-i
 
-**Date:** 2026-03-07 02:57 UTC | **Words checked:** 246 | **VESUM coverage:** 238/246 (96.7%)
+**Date:** 2026-03-18 03:06 UTC | **Words checked:** 159 | **VESUM coverage:** 147/159 (92.5%)
 
 ## Summary
-- ✅ Verified (VESUM): 238
-- ⚠️ Partial (RAG only): 2
-- ❌ Not found: 6
+- ✅ Verified (VESUM): 147
+- ⚠️ Partial (RAG only): 1
+- ❌ Not found: 11
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
 | ати | prose | ✗ | ✗ | ✗ |
-| ити | prose | ✗ | ✗ | ✗ |
+| еш | prose | ✗ | ✗ | ✗ |
+| писа | prose | ✗ | ✗ | ✗ |
+| пиш | prose | ✗ | ✗ | ✗ |
+| працюваю | prose | ✗ | ✗ | ✗ |
+| увати | prose | ✗ | ✗ | ✗ |
+| уть | prose | ✗ | ✗ | ✗ |
 | ють | prose | ✗ | ✗ | ✗ |
 | ємо | prose | ✗ | ✗ | ✗ |
 | єте | prose | ✗ | ✗ | ✗ |
@@ -22,12 +27,11 @@
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Федоров | prose | ✗ | ✓ | ✗ |
-| Іван | prose | ✗ | ✓ | ✗ |
+| ва | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 198 | 190 | 6 |
-| Activities (.yaml) | 48 | 48 | 0 |
+| Prose (.md) | 98 | 86 | 11 |
+| Activities (.yaml) | 61 | 61 | 0 |

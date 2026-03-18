@@ -2,15 +2,15 @@
   "module": "vowel-sounds",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-17T21:26:19.056478Z",
+  "last_audit": "2026-03-18T00:10:55.418042Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-16T21:28:59.602375Z",
+    "md": "2026-03-18T00:10:34.407210Z",
     "meta": "2026-03-16T13:35:34.753903Z",
-    "activities": "2026-03-16T21:28:59.602812Z",
-    "vocabulary": "2026-03-16T21:26:48.151403Z",
+    "activities": "2026-03-18T00:06:31.529432Z",
+    "vocabulary": "2026-03-18T00:06:31.554648Z",
     "research": "2026-03-12T09:42:26.793547Z",
-    "plan": "2026-03-12T08:40:33.655862Z"
+    "plan": "2026-03-17T23:56:00.761191Z"
   },
   "gates": {
     "meta": {
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2003/1200 (raw: 2116)"
+      "message": "1542/1200 (raw: 1649)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "9/8"
+      "message": "6/0"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+      "message": "Content aligned with research"
     },
     "review": {
       "status": "pass",
@@ -52,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

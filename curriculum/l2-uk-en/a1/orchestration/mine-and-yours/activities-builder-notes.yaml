@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan suggests 25/20/15 items for first three activities — reduced to 8/10/8 items respectively. Plan item counts are aspirational; schema minimums are 6. Activities remain pedagogically complete with good coverage."
+  - "Added group-sort activity (variable vs invariable possessives) not in plan to reach 8-activity minimum and reinforce a key module concept."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints item counts (25, 20, 15) are unusually high for A1 fill-in activities. Generating 25 fill-in items would be repetitive."
+    proposed_fix: "Plan could specify more realistic item counts (6-10) for A1."
+unverified_terms:
+  - "All possessive pronoun forms are standard Ukrainian and appear in the lesson content"
+review_focus:
+  - "Activity 7 (Свій in context) — verify that свою/свій/своє agreement is correct in each item"
+  - "Activity 5 (Quiz on свій) — ensure explanations clearly distinguish reflexive vs non-reflexive possession"

@@ -1,0 +1,63 @@
+{
+  "module": "checkpoint-cases",
+  "level": "A1",
+  "plan_version": "1.0",
+  "last_audit": "2026-03-18T00:11:42.490323Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-18T00:11:28.144075Z",
+    "meta": "2026-03-18T00:11:12.293043Z",
+    "activities": null,
+    "vocabulary": null,
+    "research": "2026-03-12T10:17:14.349967Z",
+    "plan": "2026-03-17T07:30:09.792797Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "1337/1000 (raw: 1562)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING — awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Checkpoint Format Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  },
+  "pipeline_status": "draft",
+  "pipeline_status_ts": "2026-03-17T23:11:55Z"
+}

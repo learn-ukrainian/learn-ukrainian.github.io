@@ -1,0 +1,59 @@
+{
+  "module": "likes-and-preferences",
+  "level": "A1",
+  "plan_version": "2.1",
+  "last_audit": "2026-03-18T06:02:29.256512Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-03-18T06:00:39.023315Z",
+    "meta": "2026-03-18T05:27:23.429608Z",
+    "activities": "2026-03-18T06:00:39.023642Z",
+    "vocabulary": "2026-03-18T05:57:22.349585Z",
+    "research": "2026-03-17T07:43:27.501707Z",
+    "plan": "2026-03-17T07:26:31.557531Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "1935/1200 (raw: 2119) | pedagogy: 5 violations"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "8/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "pass",
+      "violations": 0,
+      "message": "9/10 (High)"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

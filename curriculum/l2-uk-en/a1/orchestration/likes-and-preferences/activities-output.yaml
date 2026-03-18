@@ -1,0 +1,345 @@
+- type: quiz
+  title: "Which Construction?"
+  instruction: "Choose the correct construction for each situation."
+  items:
+    - question: "You discover a beautiful park and want to say it appeals to you. Which construction do you use?"
+      options:
+        - text: "Мені подобається цей парк."
+          correct: true
+        - text: "Я люблю цей парк."
+          correct: false
+        - text: "Я хочу цей парк."
+          correct: false
+        - text: "Мені люблю цей парк."
+          correct: false
+      explanation: "When something appeals to you (a reaction), use the Dative + подобається construction."
+    - question: "You want to tell someone that you love reading as a habit. Which sentence is correct?"
+      options:
+        - text: "Мені подобається читати."
+          correct: false
+        - text: "Я люблю читати."
+          correct: true
+        - text: "Я хочу читати."
+          correct: false
+        - text: "Читати люблю мені."
+          correct: false
+      explanation: "For a strong, lasting feeling about something you enjoy, use Я люблю + infinitive."
+    - question: "You are at a cafe and want coffee right now. What do you say?"
+      options:
+        - text: "Мені подобається кава."
+          correct: false
+        - text: "Я люблю каву."
+          correct: false
+        - text: "Я хочу каву."
+          correct: true
+        - text: "Каву подобається."
+          correct: false
+      explanation: "For an immediate desire, use Я хочу + noun (Accusative)."
+    - question: "In the sentence 'Мені подобається кава', what is the subject?"
+      options:
+        - text: "Мені"
+          correct: false
+        - text: "кава"
+          correct: true
+        - text: "подобається"
+          correct: false
+        - text: "There is no subject"
+          correct: false
+      explanation: "In the подобається construction, the thing that is pleasing (кава) is the subject."
+    - question: "Which is the correct Dative form for 'to her'?"
+      options:
+        - text: "йому"
+          correct: false
+        - text: "їй"
+          correct: true
+        - text: "їм"
+          correct: false
+        - text: "вам"
+          correct: false
+      explanation: "Їй is the Dative form of вона (she), meaning 'to her'."
+    - question: "What happens to подобається when you like multiple things?"
+      options:
+        - text: "It stays подобається"
+          correct: false
+        - text: "It changes to подобаються"
+          correct: true
+        - text: "It changes to подобаюся"
+          correct: false
+        - text: "It changes to подобатися"
+          correct: false
+      explanation: "With plural subjects, the verb becomes подобаються (plural agreement)."
+    - question: "Which sentence correctly uses люблю with the right verb form?"
+      options:
+        - text: "Вони люблять борщ."
+          correct: true
+        - text: "Вони любить борщ."
+          correct: false
+        - text: "Вони любимо борщ."
+          correct: false
+        - text: "Вони люблю борщ."
+          correct: false
+      explanation: "Вони (they) takes люблять — the third person plural form of любити."
+    - question: "How do you say 'She wants to eat' in Ukrainian?"
+      options:
+        - text: "Вона хочу їсти."
+          correct: false
+        - text: "Вона хоче їсти."
+          correct: true
+        - text: "Вона хочемо їсти."
+          correct: false
+        - text: "Їй хоче їсти."
+          correct: false
+      explanation: "Вона (she) takes хоче — the third person singular of хотіти."
+    - question: "Which construction makes YOU the subject of the sentence?"
+      options:
+        - text: "Мені подобається"
+          correct: false
+        - text: "Я люблю"
+          correct: true
+        - text: "Both make you the subject"
+          correct: false
+        - text: "Neither makes you the subject"
+          correct: false
+      explanation: "With люблю and хочу, YOU (я) are the subject. With подобається, the THING you like is the subject."
+    - question: "What is the difference between подобається and люблю?"
+      options:
+        - text: "подобається is a reaction, люблю is a strong feeling"
+          correct: true
+        - text: "They mean exactly the same thing"
+          correct: false
+        - text: "подобається is formal, люблю is informal"
+          correct: false
+        - text: "подобається is for people, люблю is for things"
+          correct: false
+      explanation: "Подобається describes a reaction (something appeals to you), while люблю expresses an active, lasting feeling."
+
+- type: fill-in
+  title: "Complete the Sentence"
+  instruction: "Choose the correct word to complete each sentence about preferences."
+  items:
+    - sentence: "___ подобається музика."
+      answer: "Мені"
+      options: ["Мені", "Я", "Мене", "Моя"]
+      explanation: "The подобається construction uses the Dative form: Мені (to me)."
+    - sentence: "Ти ___ читати."
+      answer: "любиш"
+      options: ["любиш", "люблю", "любить", "люблять"]
+      explanation: "Ти (you, singular) takes любиш — the second person singular form."
+    - sentence: "Ми ___ каву."
+      answer: "хочемо"
+      options: ["хочемо", "хочу", "хочуть", "хоче"]
+      explanation: "Ми (we) takes хочемо — the first person plural form of хотіти."
+    - sentence: "___ подобається цей парк."
+      answer: "Тобі"
+      options: ["Тобі", "Ти", "Тебе", "Твій"]
+      explanation: "With подобається, use the Dative form: Тобі (to you)."
+    - sentence: "Вона ___ співати."
+      answer: "любить"
+      options: ["любить", "люблю", "любиш", "любимо"]
+      explanation: "Вона (she) takes любить — the third person singular of любити."
+    - sentence: "Вони ___ борщ."
+      answer: "хочуть"
+      options: ["хочуть", "хочу", "хоче", "хочемо"]
+      explanation: "Вони (they) takes хочуть — the third person plural of хотіти."
+    - sentence: "___ подобається гуляти."
+      answer: "Нам"
+      options: ["Нам", "Ми", "Нас", "Наш"]
+      explanation: "With подобається, use the Dative form: Нам (to us)."
+    - sentence: "Він ___ торт."
+      answer: "любить"
+      options: ["любить", "люблю", "любиш", "люблять"]
+      explanation: "Він (he) takes любить — the third person singular of любити."
+
+- type: match-up
+  title: "Match Construction to Meaning"
+  instruction: "Match each Ukrainian sentence to its English meaning."
+  pairs:
+    - left: "Мені подобається кава."
+      right: "Coffee appeals to me."
+    - left: "Я люблю каву."
+      right: "I love coffee."
+    - left: "Я хочу каву."
+      right: "I want coffee."
+    - left: "Тобі подобається музика?"
+      right: "Does music appeal to you?"
+    - left: "Ти любиш читати?"
+      right: "Do you love reading?"
+    - left: "Ви хочете чай?"
+      right: "Do you want tea?"
+    - left: "Їй подобається парк."
+      right: "The park appeals to her."
+    - left: "Він любить борщ."
+      right: "He loves borshch."
+    - left: "Ми хочемо гуляти."
+      right: "We want to walk."
+    - left: "Їм подобаються квіти."
+      right: "Flowers appeal to them."
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["подобається", "Мені", "кава"]
+      answer: "Мені подобається кава."
+    - words: ["люблю", "читати", "Я"]
+      answer: "Я люблю читати."
+    - words: ["хочу", "Я", "їсти"]
+      answer: "Я хочу їсти."
+    - words: ["подобається", "Тобі", "музика", "?"]
+      answer: "Тобі подобається музика?"
+    - words: ["любить", "Вона", "співати"]
+      answer: "Вона любить співати."
+    - words: ["хочете", "Ви", "чай", "?"]
+      answer: "Ви хочете чай?"
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement about Ukrainian preference constructions is true or false."
+  items:
+    - statement: "In the sentence 'Мені подобається кава', the word кава is the subject."
+      correct: true
+      explanation: "Correct! With подобається, the thing that is pleasing (кава) is the grammatical subject."
+    - statement: "The Dative form of я is мене."
+      correct: false
+      explanation: "The Dative form of я is мені (to me). Мене is the Accusative/Genitive form."
+    - statement: "Любити is a Second Conjugation verb."
+      correct: true
+      explanation: "Correct! Любити follows the Second Conjugation pattern: люблю, любиш, любить..."
+    - statement: "You can use подобається with an infinitive, for example: Читати подобається."
+      correct: true
+      explanation: "Correct! Подобається works with both nouns and infinitives."
+    - statement: "The verb хотіти follows a regular First Conjugation pattern."
+      correct: false
+      explanation: "Хотіти is irregular — it doesn't follow standard First or Second Conjugation patterns neatly."
+    - statement: "When you like multiple things, подобається changes to подобаються."
+      correct: true
+      explanation: "Correct! Подобається (singular) becomes подобаються (plural) to agree with a plural subject."
+    - statement: "In 'Я люблю каву', the word я is in the Dative case."
+      correct: false
+      explanation: "With люблю, я is the Nominative subject — YOU are the one loving. Dative is used with подобається."
+    - statement: "Хочу can be followed by either an infinitive or a noun."
+      correct: true
+      explanation: "Correct! Я хочу їсти (infinitive) and Я хочу каву (noun) are both valid."
+
+- type: group-sort
+  title: "Sort by Construction"
+  instruction: "Sort each sentence into the correct construction group."
+  groups:
+    - name: "подобається (Dative construction)"
+      items:
+        - "Мені подобається чай."
+        - "Тобі подобається парк?"
+        - "Їй подобається музика."
+        - "Нам подобається гуляти."
+    - name: "люблю (I love/enjoy)"
+      items:
+        - "Я люблю читати."
+        - "Вона любить співати."
+        - "Ми любимо борщ."
+        - "Вони люблять торт."
+    - name: "хочу (I want)"
+      items:
+        - "Я хочу каву."
+        - "Він хоче їсти."
+        - "Ви хочете чай?"
+        - "Ми хочемо гуляти."
+
+- type: quiz
+  title: "Dative Pronouns"
+  instruction: "Choose the correct Dative pronoun for each sentence."
+  items:
+    - question: "Which Dative pronoun completes '___ подобається борщ'? (to him)"
+      options:
+        - text: "Йому"
+          correct: true
+        - text: "Він"
+          correct: false
+        - text: "Його"
+          correct: false
+        - text: "Їй"
+          correct: false
+      explanation: "Йому is the Dative form of він (he), meaning 'to him'."
+    - question: "Which Dative pronoun means 'to them'?"
+      options:
+        - text: "Нам"
+          correct: false
+        - text: "Вам"
+          correct: false
+        - text: "Їм"
+          correct: true
+        - text: "Їй"
+          correct: false
+      explanation: "Їм is the Dative form of вони (they), meaning 'to them'."
+    - question: "Which Dative pronoun completes '___ подобається книга'? (to us)"
+      options:
+        - text: "Нам"
+          correct: true
+        - text: "Ми"
+          correct: false
+        - text: "Нас"
+          correct: false
+        - text: "Вам"
+          correct: false
+      explanation: "Нам is the Dative form of ми (we), meaning 'to us'."
+    - question: "'___ подобається школа.' Fill in with 'to you' (formal)."
+      options:
+        - text: "Тобі"
+          correct: false
+        - text: "Вам"
+          correct: true
+        - text: "Ви"
+          correct: false
+        - text: "Вас"
+          correct: false
+      explanation: "Вам is the formal Dative form, meaning 'to you (formal/plural)'."
+    - question: "Which pair shows the correct Dative forms for 'to me' and 'to you' (informal)?"
+      options:
+        - text: "мені / тобі"
+          correct: true
+        - text: "я / ти"
+          correct: false
+        - text: "мене / тебе"
+          correct: false
+        - text: "мій / твій"
+          correct: false
+      explanation: "Мені (to me) and тобі (to you) are the Dative forms of я and ти."
+    - question: "Which Dative pronoun completes '___ подобається торт'? (to her)"
+      options:
+        - text: "Йому"
+          correct: false
+        - text: "Їм"
+          correct: false
+        - text: "Їй"
+          correct: true
+        - text: "Вам"
+          correct: false
+      explanation: "Їй is the Dative form of вона (she), meaning 'to her'."
+
+- type: fill-in
+  title: "Verb Conjugation Practice"
+  instruction: "Choose the correct verb form for each sentence."
+  items:
+    - sentence: "Я ___ каву."
+      answer: "люблю"
+      options: ["люблю", "любиш", "любить", "люблять"]
+      explanation: "Я (I) takes люблю — the first person singular of любити."
+    - sentence: "Ми ___ гуляти."
+      answer: "любимо"
+      options: ["любимо", "люблю", "любиш", "люблять"]
+      explanation: "Ми (we) takes любимо — the first person plural of любити."
+    - sentence: "Ти ___ чай?"
+      answer: "хочеш"
+      options: ["хочеш", "хочу", "хоче", "хочуть"]
+      explanation: "Ти (you) takes хочеш — the second person singular of хотіти."
+    - sentence: "Вони ___ торт."
+      answer: "люблять"
+      options: ["люблять", "люблю", "любить", "любимо"]
+      explanation: "Вони (they) takes люблять — the third person plural of любити."
+    - sentence: "Він ___ їсти."
+      answer: "хоче"
+      options: ["хоче", "хочу", "хочеш", "хочемо"]
+      explanation: "Він (he) takes хоче — the third person singular of хотіти."
+    - sentence: "Ви ___ читати?"
+      answer: "любите"
+      options: ["любите", "люблю", "любиш", "любимо"]
+      explanation: "Ви (you, formal/plural) takes любите — the second person plural of любити."

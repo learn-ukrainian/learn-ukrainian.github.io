@@ -60,6 +60,10 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 1
 **Previous module:** The Ukrainian Alphabet
 
+**Cumulative vocabulary (20 words):**
+мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
+
 **Grammar already taught (4 topics):**
 - Full alphabet overview (33 letters)
 - Sound-letter correspondence (букви vs звуки)
@@ -99,7 +103,7 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 - юшка (soup/broth) — demonstrates Ю; everyday vocabulary
 - каша (porridge) — demonstrates А; everyday food word; Bolshakova
 - небо (sky) — demonstrates Е; high-frequency
-- сир (cheese) — demonstrates И; everyday food; minimal pair with сір
+- сир (cheese) — demonstrates И; everyday food word
 
 These are your TARGET words — teach them all and use them heavily. For the rest of the text, use natural, level-appropriate Ukrainian.
 
@@ -143,7 +147,7 @@ Ukrainian sentences max 10 words.
 
 Write **Vowel Sounds** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 3+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -155,18 +159,18 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 - `## Шість основних голосних — Six Base Vowels` (~300 words)
   - А — open, like 'a' in 'father'. Never reduces. Words: мама (M1 review), каша (porridge), сало (lard).
   - О — rounded, like 'o' in 'more'. Stays О even when unstressed (unlike Russian!). Words: око (M1 review), молоко (M1 review), село (village).
-  - У — like 'oo' in 'moon'. Words: тут (M1 review), лук (M1 review), вухо (ear).
+  - У — like 'oo' in 'moon'. Words: тут (M1 review), вухо (ear), суп (soup).
   - Е — like 'e' in 'set'. NOT like English 'ee'. Words: небо (sky), село (village). New consonants Д, В, Р appear in examples — focus is on the vowel sound.
   - И — uniquely Ukrainian. No exact English equivalent. Jaw relaxed, tongue lower than І. Words: риба (fish), сир (cheese), син (son).
   - І — like 'ee' in 'see'. Brighter and higher than И. Words: ліс (M1 review), кіт (M1 review), сік (M1 review).
-  - The И vs І distinction is the hardest vowel contrast for English speakers. Drill with minimal pairs: сир (cheese) vs сір (grey). Feel the jaw position.
+  - The И vs І distinction is the hardest vowel contrast for English speakers. Drill with minimal pairs: кит (whale) vs кіт (cat). Feel the jaw position.
 - `## Наголос — Word Stress` (~150 words)
   - Every Ukrainian word has one stressed syllable. The stressed vowel is louder and slightly longer, but its quality does NOT change.
   - Golden Rule: Ukrainian vowels stay pure in any position — stressed or unstressed. English speakers naturally swallow unstressed vowels into schwa (uh). Fight this!
   - Example: молоко — stress on last syllable (молокО), but all three О's sound the same. Compare English 'photograph' where vowels shift with stress.
 - `## Йотовані голосні — Iotated Vowels` (~350 words)
   - Я, Ю, Є, Ї are 'double-duty' vowels. At word start or after another vowel, they represent TWO sounds: Й + base vowel.
-  - Я = й+а. At start: яблуко (apple). After vowel: моя (my-f). After consonant: softens it (мати vs м'яти — apostrophe preserves Й).
+  - Я = й+а. At start: яблуко (apple). After vowel: моя (my-f). After consonant: softens it (дядько — Д becomes soft before Я).
   - Ю = й+у. At start: юнак (young man), юшка (broth). After consonant: softens it (люди — Л becomes soft).
   - Є = й+е. At start: Європа (Europe). After vowel: моє (my-n).
   - Ї = ALWAYS two sounds й+і, never softens a consonant. Words: їжак (hedgehog), їжа (food), Україна. Cultural note: the letter Ї as a symbol of Ukrainian identity.
@@ -293,7 +297,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 **Allowed types:** quiz, true-false, fill-in, match-up, anagram, unjumble, group-sort, watch-and-repeat, classify, image-to-letter
 **Forbidden types:** cloze, error-correction, mark-the-words, select, translate, essay-response, critical-analysis, comparative-study, authorial-intent
-**Required types:** watch-and-repeat, classify, image-to-letter, quiz, classify
+**Required types:** watch-and-repeat, classify, image-to-letter, quiz, group-sort
 
 | Module range | Use these | Avoid these |
 |-------------|-----------|-------------|
@@ -436,7 +440,7 @@ module: a1-002
 level: A1
 sequence: 2
 slug: vowel-sounds
-version: '2.0'
+version: '2.3'
 title: Vowel Sounds
 subtitle: "Голосні звуки — The Heartbeat of Every Ukrainian Word"
 focus: grammar
@@ -464,7 +468,7 @@ content_outline:
     каша (porridge), сало (lard)."
   - "О — rounded, like 'o' in 'more'. Stays О even when unstressed (unlike Russian!).
     Words: око (M1 review), молоко (M1 review), село (village)."
-  - "У — like 'oo' in 'moon'. Words: тут (M1 review), лук (M1 review), вухо (ear)."
+  - "У — like 'oo' in 'moon'. Words: тут (M1 review), вухо (ear), суп (soup)."
   - "Е — like 'e' in 'set'. NOT like English 'ee'. Words: небо (sky), село (village).
     New consonants Д, В, Р appear in examples — focus is on the vowel sound."
   - "И — uniquely Ukrainian. No exact English equivalent. Jaw relaxed, tongue lower
@@ -472,7 +476,7 @@ content_outline:
   - "І — like 'ee' in 'see'. Brighter and higher than И. Words: ліс (M1 review),
     кіт (M1 review), сік (M1 review)."
   - "The И vs І distinction is the hardest vowel contrast for English speakers.
-    Drill with minimal pairs: сир (cheese) vs сір (grey). Feel the jaw position."
+    Drill with minimal pairs: кит (whale) vs кіт (cat). Feel the jaw position."
 - section: "Наголос — Word Stress"
   words: 150
   points:
@@ -488,7 +492,7 @@ content_outline:
   - "Я, Ю, Є, Ї are 'double-duty' vowels. At word start or after another vowel,
     they represent TWO sounds: Й + base vowel."
   - "Я = й+а. At start: яблуко (apple). After vowel: моя (my-f).
-    After consonant: softens it (мати vs м'яти — apostrophe preserves Й)."
+    After consonant: softens it (дядько — Д becomes soft before Я)."
   - "Ю = й+у. At start: юнак (young man), юшка (broth). After consonant: softens it
     (люди — Л becomes soft)."
   - "Є = й+е. At start: Європа (Europe). After vowel: моє (my-n)."
@@ -533,7 +537,7 @@ vocabulary_hints:
   - "юшка (soup/broth) — demonstrates Ю; everyday vocabulary"
   - "каша (porridge) — demonstrates А; everyday food word; Bolshakova"
   - "небо (sky) — demonstrates Е; high-frequency"
-  - "сир (cheese) — demonstrates И; everyday food; minimal pair with сір"
+  - "сир (cheese) — demonstrates И; everyday food word"
 activity_hints:
 - type: watch-and-repeat
   focus: "Vowel pronunciation drill — hear and repeat each of the 10 vowel letters"
@@ -547,7 +551,7 @@ activity_hints:
 - type: quiz
   focus: "И vs І discrimination — listen and identify which vowel you hear"
   items: 10
-- type: classify
+- type: group-sort
   focus: "Iotated vowel dual function — does it represent 1 sound or 2 in this word?"
   items: 8
 - type: fill-in

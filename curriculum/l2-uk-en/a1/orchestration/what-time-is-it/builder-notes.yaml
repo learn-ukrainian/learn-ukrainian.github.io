@@ -1,0 +1,28 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1620
+deviations:
+  - section: "Презентація часу"
+    reason: "Went ~70 words over target (420 vs 350) to include full ordinal table (1-12) and two dialogues — essential for time-telling comprehension."
+  - section: "Дні та місяці"
+    reason: "Went ~100 words over target (450 vs 350) to list all 7 days with у/в forms and all 12 months with Locative forms — core vocabulary that cannot be cut."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan says Accusative case for days of week, but A1 quick-ref says Accusative is formally introduced at M25 (this is M23). Research file says treat as frozen phrases."
+    proposed_fix: "Followed research guidance: presented у понеділок etc. as memorized chunks, not case-analyzed forms. Added a [!note] box explaining endings change without requiring case knowledge."
+  - type: TEMPLATE_CONSTRAINT
+    description: "Plan persona says 'Ukrzaliznytsia Conductor' but module is written in tutor voice. Used conductor as a character in dialogues rather than as the narrator voice."
+    proposed_fix: "Conductor appears in station dialogues and schedule examples while the tutor voice explains. This is consistent with how other A1 modules handle personas."
+research_gaps:
+  - "Could not find Grade 4 textbook content showing full list of days-of-week with prepositions — reconstructed from grammar rules and verified forms."
+unverified_terms: []
+review_focus:
+  - "Verify all Locative month forms are correct (у січні, у лютому, у березні, etc.)"
+  - "Check that no past/future tense verbs slipped in — module should be present tense only"
+  - "Confirm ordinal feminine forms (перша through дванадцята) are accurate"
+  - "Validate that Accusative day-of-week forms are correct (у середу, у п'ятницю, у суботу, у неділю)"
+rag_tools_used:
+  - "search_text: 'Котра година? Позначення часу числівники година хвилина' grade=4 → Found Загарійчук Grade 4 pp.85-86 with time formulas"
+  - "search_text: 'дні тижня понеділок вівторок середа місяці року' grade=4 → Found Загарійчук Grade 4 p.110 with числівник exercises"
+  - "verify_words: 46 core vocabulary words → all 46 found in VESUM"
+  - "verify_words: 29 additional words (adverbs, seasons, ordinals, transport vocab) → all 29 found in VESUM"

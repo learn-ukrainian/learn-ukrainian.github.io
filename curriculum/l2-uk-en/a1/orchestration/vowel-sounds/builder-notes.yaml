@@ -1,27 +1,26 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1701
+word_count: 1483
 deviations:
-  - section: "Шість основних голосних — Six Base Vowels"
-    reason: "Exceeded 300-word target (~502 words) because each of 6 vowels + И/І contrast needs dedicated H3 subsection with video embed, examples, and callout. Redistributed from budget surplus."
-  - section: "Vocabulary"
-    reason: "Plan vocabulary_hints lists моя as required. Since моя/моє are forms of мій, listed мій as the lemma with note about all three forms. Added Європа, йогурт, and лук to reach 20 items."
+  - section: "Голосні в словах — Vowels in Words"
+    reason: "Plan says Україна has 5 vowels = 5 syllables. Correct count is 4 vowels (У, А, Ї, А) = 4 syllables. Ї contains one vowel sound (І), not two. Used correct count to avoid factual error."
 frictions:
   - type: PLAN_GAP
-    description: "Plan says лук is an M1 review word for У, but лук does not appear in the cumulative vocabulary list (20 words). Used it anyway as it's a natural У-demonstrator — reviewer should verify if лук was taught in M1."
+    description: "Plan vocabulary_hints list моя and моє as separate items, but both are forms of the same lemma мій. Vocabulary YAML lists мій twice with different usage notes to track both forms."
+    proposed_fix: "Plan could specify inflected forms separately from lemma-based vocabulary, or note that моя/моє are forms of мій."
   - type: TEMPLATE_CONSTRAINT
-    description: "Plan lists 'Україна (5 vowels = 5 syllables)' but phonologically Україна has 4 syllables (У-кра-ї-на) since Ї is one syllable position despite being two phonemes. Corrected to 4 syllables in content."
-research_gaps:
-  - "No RAG results for explicit и vs і minimal pair pedagogy in Grade 1-2 textbooks — used contrastive approach from research notes"
+    description: "image-to-letter activity — only 5 of 20 vocab words start with vowel letters, making it difficult to fill 8 items with vowel-initial words only. Used mixed approach with title 'What letter does it start with?' per friction fix from previous build."
+    proposed_fix: "Plan could reduce image-to-letter items to 5 (vowel-initial only) or explicitly allow consonant-initial items."
+research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Україна syllable count: content says 4 syllables (У-кра-ї-на). Plan outline says 5. Verify which is correct."
-  - "Check that all 18 plan vocabulary words appear in content body (VOCAB-IN-CONTENT rule)"
-  - "Verify immersion percentage is within 5-15% band"
-  - "И vs І section — confirm jaw position description is pedagogically accurate"
+  - "Verify all stress marks are on correct syllables (especially їжа́к, яйце́, село́, молоко́)"
+  - "Check И vs І minimal pair кит/кіт is used correctly (not the invalid сир/сір pair)"
+  - "Confirm Україна syllable count = 4 (not 5 as stated in plan)"
+  - "Verify group-sort activity: синє correctly categorized as one-sound (Є softens Н)"
+  - "Check that all 20 vocabulary items appear at least once in content"
 rag_tools_used:
-  - "search_text: 'голосні звуки букви позначення голосних звуків буквами' grade=1 → Bolshakova p.24 (vowel/consonant intro), Zaharijchuk p.13-15"
-  - "search_text: 'йотовані голосні я ю є ї два звуки' grade=2 → Kravtsova p.10 (iotated discovery exercise), Bolshakova p.34-35"
-  - "search_text: 'наголос наголошений склад голосний звук' grade=1 → Bolshakova p.28 (stress intro), p.25 (syllable counting)"
-  - "verify_words: all 20 vocabulary items → 20/20 found in VESUM"
-  - "verify_words: лук, Європа, люди, мати, каже, мій → 6/6 found"
+  - "search_text: 'голосні звуки шість основних букви позначення' grade=1 → Bolshakova p.24 (vowel/consonant intro poem), Захарійчук p.13-15"
+  - "search_text: 'йотовані голосні я ю є ї два звуки' grade=2 → Кравцова p.10 (exercise 30 — iotated vowel discovery), Большакова p.34-35"
+  - "search_text: 'наголос голосний звук склад' grade=2 → Вашуленко p.14 (stress definition), Кравцова p.19 (stress discovery), Большакова p.37 (stress determination methods)"
+  - "verify_words: batch 24 words → 24/24 FOUND in VESUM"

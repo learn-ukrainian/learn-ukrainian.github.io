@@ -1,27 +1,21 @@
 # RAG Verification: questions-and-negation
 
-**Date:** 2026-03-06 05:40 UTC | **Words checked:** 191 | **VESUM coverage:** 189/191 (99.0%)
+**Date:** 2026-03-18 04:21 UTC | **Words checked:** 133 | **VESUM coverage:** 132/133 (99.2%)
 
 ## Summary
-- ✅ Verified (VESUM): 189
+- ✅ Verified (VESUM): 132
 - ⚠️ Partial (RAG only): 1
-- ❌ Not found: 1
-
-## ❌ Not Found (action required)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| шо | prose | ✗ | ✗ | ✗ |
+- ❌ Not found: 0
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| щу | activities | ✗ | ✓ | ✗ |
+| Олег | activities | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 181 | 180 | 1 |
-| Activities (.yaml) | 10 | 9 | 0 |
+| Prose (.md) | 110 | 110 | 0 |
+| Activities (.yaml) | 23 | 22 | 0 |

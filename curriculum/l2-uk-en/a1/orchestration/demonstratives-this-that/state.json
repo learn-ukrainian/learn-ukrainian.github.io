@@ -24,7 +24,39 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-16T21:56:47Z",
+      "ts": "2026-03-18T05:42:04Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-18T05:52:13Z",
+      "attempts": 2,
+      "note": "dedup-exhausted",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-18T05:55:11Z",
+      "task_id": "v5-demonstratives-this-that-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-18T06:00:15Z",
+      "attempts": 4,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",

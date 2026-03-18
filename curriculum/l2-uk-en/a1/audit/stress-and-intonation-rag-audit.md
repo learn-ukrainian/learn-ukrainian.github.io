@@ -1,6 +1,6 @@
 # RAG Verification: stress-and-intonation
 
-**Date:** 2026-03-17 19:24 UTC | **Words checked:** 77 | **VESUM coverage:** 69/77 (89.6%)
+**Date:** 2026-03-17 23:11 UTC | **Words checked:** 77 | **VESUM coverage:** 69/77 (89.6%)
 
 ## Summary
 - ✅ Verified (VESUM): 69

@@ -1,0 +1,655 @@
+- type: fill-in
+  title: "Form Yes/No Questions with Чи"
+  instruction: "Add the correct word to form a yes/no question."
+  items:
+    - sentence: "___ ти розумієш?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Ні", "Що"]
+      explanation: "Чи marks a yes/no question and goes at the beginning."
+    - sentence: "___ це кава?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Де", "Як"]
+      explanation: "Use чи to ask whether something is true."
+    - sentence: "___ він студент?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Хто", "Що"]
+      explanation: "Чи turns a statement into a yes/no question."
+    - sentence: "___ вона тут?"
+      answer: "Чи"
+      options: ["Чи", "Ні", "Де", "Як"]
+      explanation: "Чи asks whether she is here — a yes/no question."
+    - sentence: "___ ви говорите?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Що", "Хто"]
+      explanation: "Чи at the start forms a polite yes/no question."
+    - sentence: "___ це молоко?"
+      answer: "Чи"
+      options: ["Чи", "Ні", "Де", "Як"]
+      explanation: "Use чи to ask 'Is this milk?'"
+    - sentence: "___ ти знаєш?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Що", "Де"]
+      explanation: "Чи ти знаєш? = Do you know?"
+    - sentence: "___ вони ходять у парк?"
+      answer: "Чи"
+      options: ["Чи", "Ні", "Де", "Куди"]
+      explanation: "Чи forms a yes/no question about whether they go."
+    - sentence: "___ він читає книгу?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Що", "Коли"]
+      explanation: "Чи він читає? asks whether he reads."
+    - sentence: "___ ви вдома?"
+      answer: "Чи"
+      options: ["Чи", "Ні", "Де", "Коли"]
+      explanation: "Чи ви вдома? = Are you at home?"
+    - sentence: "___ є цукор?"
+      answer: "Чи"
+      options: ["Чи", "Де", "Що", "Хто"]
+      explanation: "Чи є цукор? asks about availability — Is there sugar?"
+    - sentence: "___ вона розуміє?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Що", "Де"]
+      explanation: "Чи forms a yes/no question: Does she understand?"
+    - sentence: "___ він читає?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Що", "Як"]
+      explanation: "Чи він читає? = Does he read?"
+    - sentence: "___ він працює?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Де", "Коли"]
+      explanation: "Чи він працює? = Does he work?"
+    - sentence: "___ вони тут?"
+      answer: "Чи"
+      options: ["Чи", "Ні", "Де", "Хто"]
+      explanation: "Чи вони тут? asks whether they are here."
+    - sentence: "___ це чай?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Де", "Що"]
+      explanation: "Чи це чай? = Is this tea?"
+    - sentence: "___ ви знаєте?"
+      answer: "Чи"
+      options: ["Чи", "Ні", "Хто", "Що"]
+      explanation: "Чи ви знаєте? = Do you know?"
+    - sentence: "___ вона читає?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Як", "Де"]
+      explanation: "Чи вона читає? = Does she read?"
+    - sentence: "___ ти тут?"
+      answer: "Чи"
+      options: ["Чи", "Ні", "Що", "Коли"]
+      explanation: "Чи ти тут? = Are you here?"
+    - sentence: "___ він говорить?"
+      answer: "Чи"
+      options: ["Чи", "Не", "Де", "Що"]
+      explanation: "Чи він говорить? = Does he speak?"
+
+- type: fill-in
+  title: "Complete with Question Words"
+  instruction: "Choose the correct question word to complete each question."
+  items:
+    - sentence: "___ це? — Це книга."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Коли"]
+      explanation: "Що means 'what' — asking about a thing."
+    - sentence: "___ там? — Це Олег."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Коли"]
+      explanation: "Хто means 'who' — asking about a person."
+    - sentence: "___ ти? — Я тут."
+      answer: "Де"
+      options: ["Де", "Що", "Хто", "Коли"]
+      explanation: "Де means 'where' — asking about location."
+    - sentence: "___ сніданок? — О восьмій."
+      answer: "Коли"
+      options: ["Коли", "Де", "Що", "Хто"]
+      explanation: "Коли means 'when' — asking about time."
+    - sentence: "___ ви їдете? — Додому."
+      answer: "Куди"
+      options: ["Куди", "Де", "Звідки", "Коли"]
+      explanation: "Куди means 'where to' — asking about direction."
+    - sentence: "___ ти йдеш? — Я звідти."
+      answer: "Звідки"
+      options: ["Звідки", "Де", "Куди", "Хто"]
+      explanation: "Звідки means 'where from' — asking about origin."
+    - sentence: "___ ти тут? — Я читаю."
+      answer: "Чому"
+      options: ["Чому", "Що", "Де", "Коли"]
+      explanation: "Чому means 'why' — asking about reason."
+    - sentence: "___ справи? — Добре."
+      answer: "Як"
+      options: ["Як", "Що", "Де", "Хто"]
+      explanation: "Як means 'how' — Як справи? is 'How are things?'"
+    - sentence: "___ це коштує? — Одна гривня."
+      answer: "Скільки"
+      options: ["Скільки", "Що", "Де", "Як"]
+      explanation: "Скільки means 'how much' — asking about price."
+    - sentence: "___ це? — Це кава."
+      answer: "Що"
+      options: ["Що", "Хто", "Як", "Де"]
+      explanation: "Що asks about things — What is this?"
+    - sentence: "___ туалет? — Там."
+      answer: "Де"
+      options: ["Де", "Що", "Хто", "Куди"]
+      explanation: "Де asks about location — Where is the toilet?"
+    - sentence: "___ він? — Він студент."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Як"]
+      explanation: "Хто asks about identity — Who is he?"
+    - sentence: "___ ви? — Ми звідти."
+      answer: "Звідки"
+      options: ["Звідки", "Де", "Куди", "Хто"]
+      explanation: "Звідки asks about origin — Where are you from?"
+    - sentence: "___ він іде? — Додому."
+      answer: "Куди"
+      options: ["Куди", "Де", "Звідки", "Коли"]
+      explanation: "Куди asks about direction — Where is he going?"
+    - sentence: "___ ти робиш? — Я працюю."
+      answer: "Що"
+      options: ["Що", "Хто", "Де", "Як"]
+      explanation: "Що asks about an action — What are you doing?"
+    - sentence: "___ вона тут? — Вона читає."
+      answer: "Чому"
+      options: ["Чому", "Що", "Де", "Коли"]
+      explanation: "Чому asks about reason — Why is she here?"
+    - sentence: "___ вони? — Вони вдома."
+      answer: "Де"
+      options: ["Де", "Хто", "Що", "Куди"]
+      explanation: "Де asks about location — Where are they?"
+    - sentence: "___ ти це робиш? — Добре."
+      answer: "Як"
+      options: ["Як", "Що", "Де", "Коли"]
+      explanation: "Як asks about manner — How do you do this?"
+    - sentence: "___ стукає? — Це Олег."
+      answer: "Хто"
+      options: ["Хто", "Що", "Де", "Чому"]
+      explanation: "Хто asks about a person — Who is knocking?"
+    - sentence: "___ вона їде? — Туди."
+      answer: "Куди"
+      options: ["Куди", "Де", "Звідки", "Як"]
+      explanation: "Куди asks about direction — Where is she going?"
+
+- type: fill-in
+  title: "Make Sentences Negative"
+  instruction: "Choose the correct word to make the sentence negative."
+  items:
+    - sentence: "Я ___ знаю."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не goes before the verb to negate it: Я не знаю = I don't know."
+    - sentence: "Він ___ розуміє."
+      answer: "не"
+      options: ["не", "ні", "чи", "де"]
+      explanation: "Не before the verb: Він не розуміє = He doesn't understand."
+    - sentence: "Вона ___ тут."
+      answer: "не"
+      options: ["не", "ні", "так", "де"]
+      explanation: "Не negates 'тут': Вона не тут = She is not here."
+    - sentence: "Ми ___ ходимо в парк."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не before the verb: Ми не ходимо = We don't go."
+    - sentence: "___, я не знаю."
+      answer: "Ні"
+      options: ["Ні", "Не", "Чи", "Так"]
+      explanation: "Ні is a standalone 'no' response at the start of the answer."
+    - sentence: "Ти ___ говориш."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не before the verb: Ти не говориш = You don't speak."
+    - sentence: "___, це не молоко."
+      answer: "Ні"
+      options: ["Ні", "Не", "Так", "Чи"]
+      explanation: "Ні starts a negative response: No, this is not milk."
+    - sentence: "Вони ___ ходять."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не before the verb: Вони не ходять = They don't walk."
+    - sentence: "Я ніколи ___ сплю."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Double negation is required: ніколи + не before the verb."
+    - sentence: "Він ніколи ___ сидить."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Ніколи always requires не before the verb — double negation."
+    - sentence: "Це ___ кава."
+      answer: "не"
+      options: ["не", "ні", "чи", "як"]
+      explanation: "Не negates the noun: Це не кава = This is not coffee."
+    - sentence: "___, я не розумію."
+      answer: "Ні"
+      options: ["Ні", "Не", "Де", "Чи"]
+      explanation: "Ні is the standalone 'no' at the start: No, I don't understand."
+    - sentence: "Вона ___ працює."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не before the verb: Вона не працює = She doesn't work."
+    - sentence: "Я ___ хочу."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не before the verb: Я не хочу = I don't want."
+    - sentence: "Вони ніколи ___ їдять."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Double negation: ніколи + не. Вони ніколи не їдять = They never eat."
+    - sentence: "Я ніколи ___ читаю."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Double negation: ніколи + не."
+    - sentence: "Він ___ студент."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не negates the noun."
+    - sentence: "Це ___ книга."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не negates the noun."
+    - sentence: "___, це не так."
+      answer: "Ні"
+      options: ["Ні", "Не", "Так", "Чи"]
+      explanation: "Ні starts the negative response."
+    - sentence: "Ми ___ знаємо."
+      answer: "не"
+      options: ["не", "ні", "чи", "так"]
+      explanation: "Не before the verb."
+
+- type: fill-in
+  title: "Question-Answer Pairs"
+  instruction: "Choose the correct word to complete the answer."
+  items:
+    - sentence: "Чи ти розумієш? — ___, я розумію."
+      answer: "Так"
+      options: ["Так", "Ні", "Не", "Чи"]
+      explanation: "Так means 'yes' — confirming a positive answer."
+    - sentence: "Де ти? — Я ___."
+      answer: "вдома"
+      options: ["вдома", "тут", "книга", "ні"]
+      explanation: "Де asks about location. Вдома means 'at home.'"
+    - sentence: "Хто це? — ___ Олег."
+      answer: "Це"
+      options: ["Це", "Він", "Де", "Чи"]
+      explanation: "Це Олег = This is Oleh — answering 'who is this?'"
+    - sentence: "Чи це молоко? — ___, це не молоко."
+      answer: "Ні"
+      options: ["Ні", "Так", "Не", "Що"]
+      explanation: "Ні starts a negative answer: No, this is not milk."
+    - sentence: "Що ти робиш? — Я ___."
+      answer: "читаю"
+      options: ["читаю", "де", "так", "чи"]
+      explanation: "Що asks what you do. Читаю = I read."
+    - sentence: "Звідки ви? — Ми ___."
+      answer: "звідти"
+      options: ["звідти", "тут", "ні", "де"]
+      explanation: "Звідки asks about origin. Звідти = From there."
+    - sentence: "Чи він студент? — ___, він студент."
+      answer: "Так"
+      options: ["Так", "Ні", "Не", "Хто"]
+      explanation: "Так confirms: Yes, he is a student."
+    - sentence: "Як справи? — ___."
+      answer: "Добре"
+      options: ["Добре", "Ні", "Не", "Так"]
+      explanation: "Як справи? = How are things? Добре = Good/Well."
+    - sentence: "Де він? — Він ___."
+      answer: "тут"
+      options: ["тут", "так", "ні", "не"]
+      explanation: "Де asks about location. Тут = here."
+    - sentence: "Що це? — Це ___."
+      answer: "кава"
+      options: ["кава", "так", "ні", "де"]
+      explanation: "Що asks about things. Кава = coffee."
+    - sentence: "Коли сніданок? — ___."
+      answer: "Зараз"
+      options: ["Зараз", "Так", "Ні", "Де"]
+      explanation: "Коли asks about time. Зараз = now."
+    - sentence: "Куди ти йдеш? — ___."
+      answer: "Туди"
+      options: ["Туди", "Так", "Ні", "Не"]
+      explanation: "Куди asks about direction. Туди = there."
+    - sentence: "Чому ти тут? — ___ я читаю."
+      answer: "Бо"
+      options: ["Бо", "Так", "Ні", "Де"]
+      explanation: "Чому asks why. Бо = because."
+    - sentence: "Хто там? — Це ___."
+      answer: "вона"
+      options: ["вона", "так", "ні", "де"]
+      explanation: "Хто asks who. Вона = she."
+    - sentence: "Чи ви розумієте? — ___, я не розумію."
+      answer: "Ні"
+      options: ["Ні", "Так", "Не", "Де"]
+      explanation: "Ні starts a negative answer."
+    - sentence: "Чи він тут? — ___, він тут."
+      answer: "Так"
+      options: ["Так", "Ні", "Не", "Де"]
+      explanation: "Так confirms a positive answer."
+    - sentence: "Звідки вона? — Вона ___."
+      answer: "звідти"
+      options: ["звідти", "так", "ні", "де"]
+      explanation: "Звідки asks about origin. Звідти = from there."
+    - sentence: "Що ти читаєш? — Я читаю ___."
+      answer: "книгу"
+      options: ["книгу", "так", "ні", "де"]
+      explanation: "Що asks what. Книгу = book."
+    - sentence: "Як ти? — Я ___."
+      answer: "добре"
+      options: ["добре", "так", "ні", "де"]
+      explanation: "Як asks how. Добре = well."
+    - sentence: "Чи це чай? — Ні, це ___ чай."
+      answer: "не"
+      options: ["не", "ні", "так", "чи"]
+      explanation: "Не negates the noun inside the sentence."
+
+- type: quiz
+  title: "Questions and Negation Rules"
+  instruction: "Choose the correct answer."
+  items:
+    - question: "What does the particle чи do in a Ukrainian sentence?"
+      options:
+        - text: "Marks a yes/no question"
+          correct: true
+        - text: "Negates a verb"
+          correct: false
+        - text: "Means 'because'"
+          correct: false
+        - text: "Means 'where'"
+          correct: false
+      explanation: "Чи is a question particle that marks yes/no questions, placed at the beginning of the sentence."
+    - question: "How do you negate a verb in Ukrainian?"
+      options:
+        - text: "Place не before the verb"
+          correct: true
+        - text: "Place ні before the verb"
+          correct: false
+        - text: "Add не after the verb"
+          correct: false
+        - text: "Use чи before the verb"
+          correct: false
+      explanation: "Не goes directly before the verb: Я не знаю, Він не розуміє."
+    - question: "What is the difference between не and ні?"
+      options:
+        - text: "Не negates a specific word, ні is a standalone 'no'"
+          correct: true
+        - text: "They mean the same thing"
+          correct: false
+        - text: "Не means 'no', ні negates a verb"
+          correct: false
+        - text: "Не is formal, ні is informal"
+          correct: false
+      explanation: "Не crosses out one word (negation). Ні slams the door shut — it's a standalone 'no' response."
+    - question: "Which question word means 'where'?"
+      options:
+        - text: "де"
+          correct: true
+        - text: "що"
+          correct: false
+        - text: "хто"
+          correct: false
+        - text: "коли"
+          correct: false
+      explanation: "Де means 'where' — Де ти? = Where are you?"
+    - question: "What does Ukrainian require when using ніколи (never)?"
+      options:
+        - text: "Double negation — ніколи не + verb"
+          correct: true
+        - text: "Only ніколи without не"
+          correct: false
+        - text: "Triple negation"
+          correct: false
+        - text: "Nothing special"
+          correct: false
+      explanation: "Ukrainian requires double negation: Я ніколи не сплю = I never sleep."
+    - question: "How can you form a yes/no question without using чи?"
+      options:
+        - text: "Raise your voice at the end of the sentence"
+          correct: true
+        - text: "Add до before the verb"
+          correct: false
+        - text: "Use не at the start"
+          correct: false
+        - text: "Say ні first"
+          correct: false
+      explanation: "In spoken Ukrainian, rising intonation alone turns a statement into a question: Ти розумієш? ↗"
+    - question: "Which word means 'when'?"
+      options:
+        - text: "Коли"
+          correct: true
+        - text: "Що"
+          correct: false
+        - text: "Хто"
+          correct: false
+        - text: "Де"
+          correct: false
+      explanation: "Коли is the question word for 'when'."
+    - question: "Which word means 'who'?"
+      options:
+        - text: "Хто"
+          correct: true
+        - text: "Що"
+          correct: false
+        - text: "Як"
+          correct: false
+        - text: "Де"
+          correct: false
+      explanation: "Хто is used to ask about people."
+    - question: "What does 'чому' mean?"
+      options:
+        - text: "Why"
+          correct: true
+        - text: "Where"
+          correct: false
+        - text: "When"
+          correct: false
+        - text: "How"
+          correct: false
+      explanation: "Чому is used to ask for a reason."
+    - question: "Which of these means 'always'?"
+      options:
+        - text: "Завжди"
+          correct: true
+        - text: "Часто"
+          correct: false
+        - text: "Іноді"
+          correct: false
+        - text: "Ніколи"
+          correct: false
+      explanation: "Завжди means 'always'."
+    - question: "Which of these means 'sometimes'?"
+      options:
+        - text: "Іноді"
+          correct: true
+        - text: "Завжди"
+          correct: false
+        - text: "Часто"
+          correct: false
+        - text: "Ніколи"
+          correct: false
+      explanation: "Іноді means 'sometimes'."
+    - question: "How do you say 'I don't know'?"
+      options:
+        - text: "Я не знаю"
+          correct: true
+        - text: "Я ні знаю"
+          correct: false
+        - text: "Я знаю не"
+          correct: false
+        - text: "Не я знаю"
+          correct: false
+      explanation: "Не goes directly before the verb."
+    - question: "What is the opposite of 'так'?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Не"
+          correct: false
+        - text: "Чи"
+          correct: false
+        - text: "Але"
+          correct: false
+      explanation: "Так means yes, and ні means no."
+    - question: "Which word means 'how much' or 'how many'?"
+      options:
+        - text: "Скільки"
+          correct: true
+        - text: "Як"
+          correct: false
+        - text: "Що"
+          correct: false
+        - text: "Хто"
+          correct: false
+      explanation: "Скільки is used for quantity or price."
+    - question: "Which word is a connector meaning 'but'?"
+      options:
+        - text: "Але"
+          correct: true
+        - text: "І"
+          correct: false
+        - text: "Так"
+          correct: false
+        - text: "Бо"
+          correct: false
+      explanation: "Але means 'but' and provides strong contrast."
+
+- type: match-up
+  title: "Match Question Words to Meanings"
+  instruction: "Match each Ukrainian question word to its English meaning."
+  pairs:
+    - left: "що"
+      right: "what"
+    - left: "хто"
+      right: "who"
+    - left: "де"
+      right: "where"
+    - left: "коли"
+      right: "when"
+    - left: "куди"
+      right: "where to"
+    - left: "звідки"
+      right: "where from"
+    - left: "чому"
+      right: "why"
+    - left: "як"
+      right: "how"
+    - left: "скільки"
+      right: "how much/many"
+
+- type: true-false
+  title: "True or False? Questions and Negation"
+  instruction: "Decide whether each statement is true or false."
+  items:
+    - statement: "In Ukrainian, you need 'do' or 'does' to form a question."
+      correct: false
+      explanation: "Ukrainian has no auxiliary verbs like 'do/does'. Use чи or rising intonation instead."
+    - statement: "The particle чи goes at the beginning of a yes/no question."
+      correct: true
+      explanation: "Чи sits at the very beginning: Чи ти розумієш?"
+    - statement: "Не and ні mean the same thing in Ukrainian."
+      correct: false
+      explanation: "Не negates a specific word (not). Ні is a standalone response (no)."
+    - statement: "You can form a question just by raising your voice at the end."
+      correct: true
+      explanation: "In spoken Ukrainian, rising intonation turns a statement into a question: Ти розумієш? ↗"
+    - statement: "Не goes directly before the word it negates."
+      correct: true
+      explanation: "Не always clings to the next word: Я не знаю, Це не кава."
+    - statement: "With ніколи (never), you must also use не before the verb."
+      correct: true
+      explanation: "Double negation is required: Я ніколи не сплю (I never sleep)."
+    - statement: "The question word що is only used in formal writing."
+      correct: false
+      explanation: "Що is standard in all registers."
+    - statement: "Ні is used as a standalone 'no' response."
+      correct: true
+      explanation: "Ні stands alone at the beginning of a negative answer: Ні, я не знаю."
+    - statement: "The word коли means 'where'."
+      correct: false
+      explanation: "Коли means 'when', while 'where' is де."
+    - statement: "The word чому means 'why'."
+      correct: true
+      explanation: "Чому asks for a reason or cause."
+    - statement: "You must always use чи to ask a question."
+      correct: false
+      explanation: "You can also ask a question using only rising intonation."
+    - statement: "Часто means 'often'."
+      correct: true
+      explanation: "Часто indicates something happens frequently."
+    - statement: "The conjunction але means 'because'."
+      correct: false
+      explanation: "Але means 'but'. Because is 'тому що' or 'бо'."
+    - statement: "Звідки asks about the origin of someone or something."
+      correct: true
+      explanation: "Звідки means 'where from'."
+    - statement: "The particle не is placed after the verb."
+      correct: false
+      explanation: "Не is always placed directly before the word it negates."
+    - statement: "Куди means 'where to'."
+      correct: true
+      explanation: "Куди is used to ask about the direction of movement."
+    - statement: "Так means 'no'."
+      correct: false
+      explanation: "Так means 'yes'."
+    - statement: "Завжди means 'never'."
+      correct: false
+      explanation: "Завжди means 'always'. Ніколи means 'never'."
+    - statement: "Іноді means 'sometimes'."
+      correct: true
+      explanation: "Іноді is used for actions that happen occasionally."
+    - statement: "You can say Ні, я не знаю."
+      correct: true
+      explanation: "This is a correct and full negative response."
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["розумієш", "Чи", "ти"]
+      answer: "Чи ти розумієш"
+    - words: ["не", "Я", "знаю"]
+      answer: "Я не знаю"
+    - words: ["кава", "це", "Чи"]
+      answer: "Чи це кава"
+    - words: ["я", "Ні", "розумію", "не"]
+      answer: "Ні, я не розумію"
+    - words: ["це", "коштує", "Скільки"]
+      answer: "Скільки це коштує"
+    - words: ["не", "Він", "говорить"]
+      answer: "Він не говорить"
+    - words: ["ходжу", "часто", "Я", "в", "парк"]
+      answer: "Я часто ходжу в парк"
+    - words: ["не", "ніколи", "сплю", "Я"]
+      answer: "Я ніколи не сплю"
+    - words: ["ти", "тут", "Чому"]
+      answer: "Чому ти тут"
+    - words: ["сніданок", "Коли"]
+      answer: "Коли сніданок"
+    - words: ["студент", "Він", "не"]
+      answer: "Він не студент"
+    - words: ["йдеш", "Куди", "ти"]
+      answer: "Куди ти йдеш"
+    - words: ["тут", "Я", "читаю"]
+      answer: "Я тут читаю"
+    - words: ["працює", "Вона", "не"]
+      answer: "Вона не працює"
+    - words: ["ти", "Де", "зараз"]
+      answer: "Де ти зараз"
+    - words: ["коштує", "Скільки", "це"]
+      answer: "Скільки це коштує"
+    - words: ["кава", "моя", "Де"]
+      answer: "Де моя кава"
+    - words: ["не", "Це", "добре"]
+      answer: "Це не добре"
+    - words: ["там", "Хто", "є"]
+      answer: "Хто там є"
+    - words: ["йдемо", "Куди", "ми"]
+      answer: "Куди ми йдемо"
+
+- type: group-sort
+  title: "Sort the Words by Category"
+  instruction: "Sort these words into the correct category."
+  groups:
+    - name: "Question words about place"
+      items: ["де", "куди", "звідки"]
+    - name: "Question words about people and things"
+      items: ["хто", "що", "скільки"]
+    - name: "Question words about time and reason"
+      items: ["коли", "чому", "як"]
+    - name: "Not question words"
+      items: ["так", "ні", "не"]

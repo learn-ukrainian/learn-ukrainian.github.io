@@ -1,0 +1,17 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 9
+deviations:
+  - "Plan specifies 3 fill-in activities only, but minimum is 8 activities total. Added quiz, match-up, true-false, group-sort, unjumble, and anagram to reach 9."
+  - "Plan fill-in #2 says 15 items — implemented as 15. Plan fill-in #3 says 4 items — expanded to 6 to meet schema minItems:6."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints only specify 3 fill-in activities (25 items total), but audit requires 8+ activities with type variety."
+    proposed_fix: "Plan should include additional activity types to meet the 8-activity minimum."
+unverified_terms:
+  - "Дуже (used in fill-in options — common word, not in vocabulary list)"
+  - "місто (used in group-sort — referenced in lesson content as neuter example)"
+review_focus:
+  - "unjumble items have only 2-3 words each — very simple but appropriate for A1 zero-copula sentences"
+  - "group-sort has 10 items (minimum is 8) — місто from the lesson's воно examples"
+  - "anagram letter counts verified manually"

@@ -1,0 +1,66 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1532",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "127.7",
+    "COMPUTED_ACTIVITY_COUNT": "0",
+    "COMPUTED_VOCAB_COUNT": "0",
+    "COMPUTED_ENGAGEMENT_COUNT": "3",
+    "COMPUTED_IMMERSION_PERCENT": "7.3",
+    "COMPUTED_IMMERSION_TARGET": "5-15%",
+    "COMPUTED_RICHNESS_SCORE": "76",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 1/3, examples: 22/24, tables: 0/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [
+    {
+      "type": "STRESS_MISMATCH",
+      "severity": "HIGH",
+      "location": "~line 148",
+      "text": "Wrong stress: 'їжа́' → should be 'ї́жа'",
+      "fix": "Replace 'їжа́' with 'ї́жа'."
+    }
+  ],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vowel-sounds.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/vowel-sounds-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/vowel-sounds.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M02 — Vowel Sounds\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vowel-sounds.md | Target: 1200 words\n  📋 Required activity types from meta: classify, fill-in, image-to-letter, quiz, watch-and-repeat\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ — Introduction                        120 /  100  ✅ (+20)\n     Шість основних голосних — Six Base Vowels   459 /  300  ✅ (+159)\n     Наголос — Word Stress                       182 /  150  ✅ (+32)\n     Йотовані голосні — Iotated Vowels           385 /  350  ✅ (+35)\n     Голосні в словах — Vowels in Words          170 /  200  ⚠️ (-30)\n     Підсумок — Summary                          162 /  100  ✅ (+62)\n     ──────────────────────────────────────────────────────────────────\n     TOTAL                                      1478 / 1200  ✅ (+278)\n  ✨ Purity violations found: 2\n     ❌ [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"### Літера Є\n\n\n\n**Є** = **Й** + **Е** (two sounds at word start or after a vowel).\". Shares significant keywords with sentence at index 45.\n     ❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'this is...'.\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1532/1200 (raw: 1639)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 3/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 7.3% (target 5-15% (M02))\n\n📚 PEDAGOGICAL VIOLATIONS FOUND:\n  [CONTENT_REDUNDANCY] Redundant information detected in lesson (100% overlap): \"### Літера Є\n\n\n\n**Є** = **Й** + **Е** (two sounds at word start or after a vowel).\". Shares significant keywords with sentence at index 45.\n     → FIX: Remove redundant paragraphs. Ensure each section adds new unique value.\n  [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'this is...'.\n     → FIX: Vary sentence structure.\n\n\n📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)\n   → 2 violations (minor)\n\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/vowel-sounds-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/vowel-sounds.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: vowel-sounds.md\n  VESUM misses: 2 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 34923.43it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 26 | VESUM: 24 (92.3%) | RAG: 2 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/vowel-sounds-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 24/26 (92%) verified\n⚠️ VESUM not found (2): Большакова, Захарійчук",
+  "h2_sections": "1. Вступ — Introduction\n2. Шість основних голосних — Six Base Vowels\n3. Наголос — Word Stress\n4. Йотовані голосні — Iotated Vowels\n5. Голосні в словах — Vowels in Words\n6. Підсумок — Summary",
+  "vesum_stats": {
+    "total": 26,
+    "vesum_hits": 24,
+    "rag_hits": 0,
+    "not_found": 2,
+    "rag_errors": 0,
+    "proper_names": 0,
+    "by_source": {
+      "prose": {
+        "total": 26,
+        "vesum_hits": 24,
+        "not_found": 2
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "Большакова",
+      "clean": "большакова",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "Захарійчук",
+      "clean": "захарійчук",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "4a32c38248966a30"
+}

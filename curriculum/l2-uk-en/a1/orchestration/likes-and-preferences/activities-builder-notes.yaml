@@ -1,0 +1,14 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Added true-false (8 items) and group-sort (12 items) beyond plan's 4 activity types to meet 8-activity minimum"
+  - "Added second quiz (Dative Pronouns, 6 items) and second fill-in (Verb Conjugation, 6 items) for comprehensive coverage"
+frictions:
+  - type: PLAN_GAP
+    description: "Plan specifies only 4 activity types but target is 8-15 activities"
+    proposed_fix: "Added true-false, group-sort, and additional quiz/fill-in variants — all test lesson content"
+unverified_terms: []
+review_focus:
+  - "Unjumble activity: verify word order flexibility in Ukrainian (some sentences may have valid alternative orders)"
+  - "Group-sort: verify all 12 sentences are unambiguously assigned to one construction type"

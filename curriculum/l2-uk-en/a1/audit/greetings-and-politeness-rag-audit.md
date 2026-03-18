@@ -1,25 +1,39 @@
 # RAG Verification: greetings-and-politeness
 
-**Date:** 2026-03-05 20:59 UTC | **Words checked:** 83 | **VESUM coverage:** 78/83 (94.0%)
+**Date:** 2026-03-18 02:15 UTC | **Words checked:** 93 | **VESUM coverage:** 79/93 (84.9%)
 
 ## Summary
-- ✅ Verified (VESUM): 78
-- ⚠️ Partial (RAG only): 5
-- ❌ Not found: 0
+- ✅ Verified (VESUM): 79
+- ⚠️ Partial (RAG only): 7
+- ❌ Not found: 7
+
+## ❌ Not Found (action required)
+
+| Word | Source | VESUM | Textbook | Literary |
+|------|--------|-------|----------|----------|
+| Оксані | activities | ✗ | ✗ | ✗ |
+| Петре | prose | ✗ | ✗ | ✗ |
+| Софіє | prose | ✗ | ✗ | ✗ |
+| Тарасе | prose | ✗ | ✗ | ✗ |
+| Іванівна | prose | ✗ | ✗ | ✗ |
+| Ірина | prose | ✗ | ✗ | ✗ |
+| Іро | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Анна | prose | ✗ | ✓ | ✗ |
-| Марія | prose | ✗ | ✓ | ✗ |
+| Андрій | prose | ✗ | ✓ | ✗ |
 | Оксана | prose | ✗ | ✗ | ✓ |
+| Оксано | prose | ✗ | ✓ | ✗ |
 | Олена | prose | ✗ | ✓ | ✗ |
-| Іван | prose | ✗ | ✓ | ✗ |
+| Софія | prose | ✗ | ✓ | ✗ |
+| Тарас | prose | ✗ | ✗ | ✓ |
+| Тетяно | prose | ✗ | ✗ | ✓ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 75 | 70 | 0 |
-| Activities (.yaml) | 8 | 8 | 0 |
+| Prose (.md) | 80 | 67 | 6 |
+| Activities (.yaml) | 13 | 12 | 1 |

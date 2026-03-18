@@ -1,0 +1,65 @@
+module: a1-024
+level: A1
+sequence: 24
+slug: checkpoint-sentences
+version: '1.0'
+title: "Checkpoint: Sentences"
+subtitle: "Can You Do the A1.2 Skills?"
+focus: checkpoint
+pedagogy: TTT
+phase: A1.2 [Verbs & Sentences]
+word_target: 1000
+objectives:
+- Demonstrate verb conjugation fluency for I and II conjugation
+- Form questions and negations correctly with appropriate word order
+- Express preferences using three constructions (подобається, люблю, хочу)
+- Use possessives and demonstratives with correct gender and number agreement
+content_outline:
+- section: "Огляд (Overview)"
+  words: 100
+  points:
+  - "TTT structure: consolidation of A1.2 skills"
+  - "Scope: conjugation, questions, preferences, possessives/demonstratives"
+- section: "Навичка 1: Дієслова (Skill 1: Verbs)"
+  words: 250
+  points:
+  - "I and II conjugation paradigm review"
+  - "Common errors: 3rd person plural endings"
+  - "Reflexive verbs: -ся/-сь"
+- section: "Навичка 2: Питання та заперечення (Skill 2: Questions & Negation)"
+  words: 200
+  points:
+  - "Question words: Хто/Що/Де/Куди/Звідки"
+  - "Negation with не, causal conjunctions бо/тому що"
+- section: "Навичка 3: Уподобання та присвійні (Skill 3: Preferences & Possessives)"
+  words: 250
+  points:
+  - "Three preference constructions: подобається, люблю, хочу"
+  - "Possessive and demonstrative pronouns with gender agreement"
+- section: "Інтеграційне завдання (Integration Task)"
+  words: 150
+  points:
+  - "Combined café dialogue using all four skills"
+  - "Self-assessment guidance"
+- section: "Підсумок"
+  words: 50
+  points:
+  - "Self-check questions"
+  - "Readiness assessment for A1.3"
+connects_to:
+- a1-025 (The Vocative)
+prerequisites:
+- a1-023 (What Time Is It)
+persona:
+  voice: Patient Supportive Tutor
+  role: Checkpoint Coach
+register: розмовний
+duration: "30 min"
+transliteration: no
+tags:
+- checkpoint
+- verbs
+- questions
+- possessives
+- demonstratives
+- review

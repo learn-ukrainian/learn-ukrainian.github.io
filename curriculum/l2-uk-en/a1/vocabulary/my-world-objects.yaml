@@ -1,82 +1,81 @@
 items:
-  - lemma: "цей"
-    translation: "this (masculine)"
-    pos: "pronoun"
-    gender: "m"
-  - lemma: "ця"
-    translation: "this (feminine)"
-    pos: "pronoun"
-    gender: "f"
-  - lemma: "це"
-    translation: "this (neuter) / this is"
-    pos: "pronoun"
-    gender: "n"
-  - lemma: "ці"
-    translation: "these (plural)"
-    pos: "pronoun"
-  - lemma: "той"
-    translation: "that (masculine)"
-    pos: "pronoun"
-    gender: "m"
-  - lemma: "та"
-    translation: "that (feminine)"
-    pos: "pronoun"
-    gender: "f"
-  - lemma: "те"
-    translation: "that (neuter)"
-    pos: "pronoun"
-    gender: "n"
-  - lemma: "ті"
-    translation: "those (plural)"
-    pos: "pronoun"
-  - lemma: "стіл"
-    translation: "table"
-    pos: "noun"
-    gender: "m"
-  - lemma: "книга"
-    translation: "book"
-    pos: "noun"
-    gender: "f"
-  - lemma: "телефон"
-    translation: "phone"
-    pos: "noun"
-    gender: "m"
-  - lemma: "кімната"
-    translation: "room"
-    pos: "noun"
-    gender: "f"
-  - lemma: "стілець"
-    translation: "chair"
-    pos: "noun"
-    gender: "m"
-  - lemma: "ліжко"
-    translation: "bed"
-    pos: "noun"
-    gender: "n"
-  - lemma: "лампа"
-    translation: "lamp"
-    pos: "noun"
-    gender: "f"
-  - lemma: "вікно"
-    translation: "window"
-    pos: "noun"
-    gender: "n"
-  - lemma: "шафа"
-    translation: "wardrobe"
-    pos: "noun"
-    gender: "f"
-  - lemma: "двері"
-    translation: "door"
-    pos: "noun"
-  - lemma: "дім"
-    translation: "home / house"
-    pos: "noun"
-    gender: "m"
-  - lemma: "хата"
-    translation: "traditional house"
-    pos: "noun"
-    gender: "f"
-  - lemma: "квартира"
-    translation: "apartment"
-    pos: "noun"
-    gender: "f"
+  - lemma: цей
+    translation: this (m)
+    pos: pronoun
+  - lemma: ця
+    translation: this (f)
+    pos: pronoun
+  - lemma: це
+    translation: this (n)
+    pos: pronoun
+  - lemma: ці
+    translation: these (pl)
+    pos: pronoun
+  - lemma: той
+    translation: that (m)
+    pos: pronoun
+  - lemma: та
+    translation: that (f)
+    pos: pronoun
+  - lemma: те
+    translation: that (n)
+    pos: pronoun
+  - lemma: ті
+    translation: those (pl)
+    pos: pronoun
+  - lemma: стіл
+    translation: table
+    pos: noun
+    gender: m
+  - lemma: книга
+    translation: book
+    pos: noun
+    gender: f
+  - lemma: телефон
+    translation: phone
+    pos: noun
+    gender: m
+  - lemma: кімната
+    translation: room
+    pos: noun
+    gender: f
+  - lemma: стілець
+    translation: chair
+    pos: noun
+    gender: m
+  - lemma: ліжко
+    translation: bed
+    pos: noun
+    gender: n
+  - lemma: лампа
+    translation: lamp
+    pos: noun
+    gender: f
+  - lemma: вікно
+    translation: window
+    pos: noun
+    gender: n
+  - lemma: шафа
+    translation: wardrobe
+    pos: noun
+    gender: f
+  - lemma: двері
+    translation: door
+    pos: noun
+    gender: pl
+  - lemma: ніж
+    translation: knife
+    pos: noun
+    gender: m
+  - lemma: ложка
+    translation: spoon
+    pos: noun
+    gender: f
+  - lemma: крісло
+    translation: armchair
+    pos: noun
+    gender: n
+  - lemma: диван
+    translation: sofa
+    pos: noun
+    gender: m

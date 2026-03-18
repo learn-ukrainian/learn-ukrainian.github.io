@@ -1,0 +1,457 @@
+- type: quiz
+  title: "Comprehensive Case and Preposition Test"
+  instruction: "Choose the correct answer. Each question tests your understanding of Ukrainian cases, prepositions, and agreement."
+  items:
+    - question: "Which case does the underlined word use? Я бачу КНИГУ."
+      options:
+        - text: "Accusative"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "Бачу (I see) takes a direct object in the Accusative case. Книга becomes книгу."
+    - question: "Which case does the underlined word use? Книга на СТОЛІ."
+      options:
+        - text: "Accusative"
+          correct: false
+        - text: "Locative"
+          correct: true
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "На + location answers Де? and requires the Locative case. Стіл becomes столі."
+    - question: "Which case does the underlined word use? Немає КАВИ."
+      options:
+        - text: "Accusative"
+          correct: false
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: true
+        - text: "Nominative"
+          correct: false
+      explanation: "Немає (there is no) always triggers the Genitive case. Кава becomes кави."
+    - question: "Which case does the underlined word use? Немає ЧАСУ."
+      options:
+        - text: "Nominative"
+          correct: false
+        - text: "Accusative"
+          correct: false
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: true
+      explanation: "Немає requires the Genitive case. Час becomes часу."
+    - question: "Which case does the underlined word use? Ми у великому МІСТІ."
+      options:
+        - text: "Locative"
+          correct: true
+        - text: "Accusative"
+          correct: false
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "У + location answers Де? and requires the Locative case. Місто becomes місті."
+    - question: "Which case does the underlined word use? Я бачу СТУДЕНТА."
+      options:
+        - text: "Genitive"
+          correct: false
+        - text: "Accusative"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "Бачу takes the Accusative. For animate masculine nouns, Accusative looks like Genitive, but the function is Accusative (direct object)."
+    - question: "Which question word helps you choose the Locative case?"
+      options:
+        - text: "Де?"
+          correct: true
+        - text: "Кого?"
+          correct: false
+        - text: "Куди?"
+          correct: false
+        - text: "Що?"
+          correct: false
+      explanation: "Де? (Where?) asks about location and signals the Locative case."
+    - question: "Which question word signals the Accusative case for direction?"
+      options:
+        - text: "Де?"
+          correct: false
+        - text: "Звідки?"
+          correct: false
+        - text: "Куди?"
+          correct: true
+        - text: "Чого?"
+          correct: false
+      explanation: "Куди? (Where to?) asks about direction and uses the Accusative case."
+    - question: 'What case does the preposition через require? Example: Йду через парк.'
+      options:
+        - text: "Accusative"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "Через (through) always takes the Accusative case."
+    - question: 'What case does the preposition про require? Example: Книга про місто.'
+      options:
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: false
+        - text: "Accusative"
+          correct: true
+        - text: "Nominative"
+          correct: false
+      explanation: "Про (about) always takes the Accusative case."
+    - question: "In Я йду в парк, what case is парк in?"
+      options:
+        - text: "Accusative"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "Йду в парк expresses direction (Куди?), so парк is in the Accusative. For inanimate masculine nouns, Accusative looks like Nominative."
+    - question: "In Я в парку, what case is парку in?"
+      options:
+        - text: "Accusative"
+          correct: false
+        - text: "Locative"
+          correct: true
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "В парку answers Де? (location), so it is the Locative case."
+    - question: 'Вона їде на роботу. Which case is роботу in?'
+      options:
+        - text: "Locative"
+          correct: false
+        - text: "Accusative"
+          correct: true
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "На + Accusative expresses direction (Куди?). Робота becomes роботу."
+    - question: 'Вона на роботі. Which case is роботі in?'
+      options:
+        - text: "Accusative"
+          correct: false
+        - text: "Locative"
+          correct: true
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "На + Locative expresses location (Де?). Робота becomes роботі."
+    - question: 'What is the correct Accusative feminine form of нова книга?'
+      options:
+        - text: "нову книгу"
+          correct: true
+        - text: "новій книзі"
+          correct: false
+        - text: "нової книги"
+          correct: false
+        - text: "нова книга"
+          correct: false
+      explanation: "In the Accusative, feminine -а becomes -у for both the adjective and the noun: нова книга becomes нову книгу."
+    - question: 'What is the correct Locative form of нове місто after the preposition у?'
+      options:
+        - text: "у новому місті"
+          correct: true
+        - text: "у нове місто"
+          correct: false
+        - text: "у нового міста"
+          correct: false
+        - text: "у нова місто"
+          correct: false
+      explanation: "In the Locative, the adjective takes -ому and the neuter noun takes -і: у новому місті."
+    - question: 'What is the correct Locative feminine form of нова книга after у?'
+      options:
+        - text: "у нову книгу"
+          correct: false
+        - text: "у новій книзі"
+          correct: true
+        - text: "у нової книги"
+          correct: false
+        - text: "у нова книга"
+          correct: false
+      explanation: "In the Locative feminine, the adjective takes -ій and the noun changes: у новій книзі."
+    - question: "Complete with the correct form: Я бачу ___ вулицю. (beautiful)"
+      options:
+        - text: "красиву"
+          correct: true
+        - text: "красивий"
+          correct: false
+        - text: "красивому"
+          correct: false
+        - text: "красивій"
+          correct: false
+      explanation: "Вулицю is Accusative feminine, so the adjective takes the feminine Accusative ending: красиву."
+    - question: "Complete with the correct form: Ми у ___ кафе. (small)"
+      options:
+        - text: "маленькому"
+          correct: true
+        - text: "маленьку"
+          correct: false
+        - text: "маленьке"
+          correct: false
+        - text: "маленький"
+          correct: false
+      explanation: "Кафе after у answers Де? (Locative). The adjective takes the Locative ending: маленькому."
+    - question: "Complete with the correct form: Він у ___ місті. (big)"
+      options:
+        - text: "великому"
+          correct: true
+        - text: "великий"
+          correct: false
+        - text: "велику"
+          correct: false
+        - text: "великої"
+          correct: false
+      explanation: "У місті is Locative. The adjective agrees: великому."
+    - question: "What is the Accusative/Genitive form of the pronoun я?"
+      options:
+        - text: "мене"
+          correct: true
+        - text: "мені"
+          correct: false
+        - text: "мною"
+          correct: false
+        - text: "я"
+          correct: false
+      explanation: "The pronoun я becomes мене in both the Accusative and Genitive cases."
+    - question: "What is the Accusative/Genitive form of the pronoun ти?"
+      options:
+        - text: "тобі"
+          correct: false
+        - text: "тебе"
+          correct: true
+        - text: "ти"
+          correct: false
+        - text: "тобою"
+          correct: false
+      explanation: "The pronoun ти becomes тебе in both the Accusative and Genitive cases."
+    - question: "What happens to його after a preposition like у?"
+      options:
+        - text: "It stays його"
+          correct: false
+        - text: "It becomes нього"
+          correct: true
+        - text: "It becomes йому"
+          correct: false
+        - text: "It becomes ньому"
+          correct: false
+      explanation: "After a preposition, його gains an н- prefix: у нього. This is a pronunciation feature, not a grammar change."
+    - question: "Choose the correct sentence for: There is no coffee."
+      options:
+        - text: "Немає кави."
+          correct: true
+        - text: "Немає кава."
+          correct: false
+        - text: "Немає каву."
+          correct: false
+        - text: "Немає кафе."
+          correct: false
+      explanation: "Немає triggers the Genitive case. Кава becomes кави in the Genitive."
+    - question: "Choose the correct sentence for: I see a new book."
+      options:
+        - text: "Я бачу нова книга."
+          correct: false
+        - text: "Я бачу нову книгу."
+          correct: true
+        - text: "Я бачу новій книзі."
+          correct: false
+        - text: "Я бачу нової книги."
+          correct: false
+      explanation: "Бачу takes the Accusative. Feminine Accusative: нова книга becomes нову книгу."
+    - question: 'Дякую за каву. What does за require here?'
+      options:
+        - text: "Accusative"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Genitive"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "За (for) takes the Accusative case. Кава becomes каву."
+    - question: "Which sentence correctly uses both a preposition and adjective agreement in the Locative?"
+      options:
+        - text: "Ми у новій красивій кімнаті."
+          correct: true
+        - text: "Ми у нова красива кімната."
+          correct: false
+        - text: "Ми у нову красиву кімнату."
+          correct: false
+        - text: "Ми у новий красивий кімнат."
+          correct: false
+      explanation: "У + Locative for location. Feminine Locative: нова красива кімната becomes новій красивій кімнаті."
+    - question: "Я з маленького міста. What case is маленького міста in?"
+      options:
+        - text: "Genitive"
+          correct: true
+        - text: "Locative"
+          correct: false
+        - text: "Accusative"
+          correct: false
+        - text: "Nominative"
+          correct: false
+      explanation: "З (from) + Genitive answers Звідки? (Where from?). Both adjective and noun take Genitive forms."
+    - question: "Which sentence correctly combines direction (Accusative) with adjective agreement?"
+      options:
+        - text: "Йди на красиву вулицю."
+          correct: true
+        - text: "Йди на красивій вулиці."
+          correct: false
+        - text: "Йди на красива вулиця."
+          correct: false
+        - text: "Йди на красивому вулиці."
+          correct: false
+      explanation: "На + Accusative for direction (Куди?). Feminine Accusative: красива вулиця becomes красиву вулицю."
+    - question: "Немає вільного столу. Which TWO grammar features are combined here?"
+      options:
+        - text: "Genitive case + adjective agreement"
+          correct: true
+        - text: "Accusative case + pronoun declension"
+          correct: false
+        - text: "Locative case + adjective agreement"
+          correct: false
+        - text: "Nominative case + preposition"
+          correct: false
+      explanation: "Немає triggers the Genitive, and the adjective вільний agrees with стіл in the Genitive: вільного столу."
+
+- type: fill-in
+  title: "Complete with the Correct Case Form"
+  instruction: "Choose the correct word form to complete each sentence."
+  items:
+    - sentence: "Я бачу нову ___."
+      answer: "книгу"
+      options: ["книгу", "книга", "книзі", "книги"]
+      explanation: "Бачу takes Accusative. Feminine Accusative: книга becomes книгу."
+    - sentence: "Книга на ___."
+      answer: "столі"
+      options: ["столі", "стіл", "столу", "стола"]
+      explanation: "На + Locative for location (Де?). Стіл becomes столі."
+    - sentence: "Немає ___."
+      answer: "часу"
+      options: ["часу", "час", "часі", "часом"]
+      explanation: "Немає requires the Genitive case. Час becomes часу."
+    - sentence: "Ми у великому ___."
+      answer: "місті"
+      options: ["місті", "місто", "міста", "містом"]
+      explanation: "У + Locative for location. Місто becomes місті."
+    - sentence: "Вона їде на ___."
+      answer: "роботу"
+      options: ["роботу", "роботі", "робота", "роботи"]
+      explanation: "На + Accusative for direction (Куди?). Робота becomes роботу."
+    - sentence: "Він йде через великий ___."
+      answer: "парк"
+      options: ["парк", "парку", "парці", "парком"]
+      explanation: "Через takes Accusative. For inanimate masculine nouns, Accusative equals Nominative: парк stays парк."
+    - sentence: "Дякую за ___."
+      answer: "каву"
+      options: ["каву", "кава", "каві", "кави"]
+      explanation: "За (for) takes the Accusative. Feminine: кава becomes каву."
+    - sentence: "У ___ є карта."
+      answer: "нього"
+      options: ["нього", "його", "йому", "ньому"]
+      explanation: "After preposition у, the pronoun його gains н-: у нього."
+
+- type: group-sort
+  title: "Sort by Case"
+  instruction: "Sort each phrase into the correct case category."
+  groups:
+    - name: "Accusative"
+      items:
+        - "бачу книгу"
+        - "йду в парк"
+        - "їде на роботу"
+        - "через місто"
+    - name: "Locative"
+      items:
+        - "на столі"
+        - "у парку"
+        - "на роботі"
+        - "у місті"
+    - name: "Genitive"
+      items:
+        - "немає кави"
+        - "немає часу"
+        - "з міста"
+        - "у нього"
+
+- type: match-up
+  title: "Match Preposition to Its Case"
+  instruction: "Match each preposition + meaning to the case it requires."
+  pairs:
+    - left: "в/у (direction — Куди?)"
+      right: "Accusative"
+    - left: "в/у (location — Де?)"
+      right: "Locative"
+    - left: "через (through)"
+      right: "Accusative"
+    - left: "за (for)"
+      right: "Accusative"
+    - left: "про (about)"
+      right: "Accusative"
+    - left: "на (location — Де?)"
+      right: "Locative"
+
+- type: true-false
+  title: "True or False? Case Rules"
+  instruction: "Decide whether each statement about Ukrainian cases is true or false."
+  items:
+    - statement: "Немає always requires the Genitive case."
+      correct: true
+      explanation: "Correct. Немає (there is no) always triggers the Genitive: немає кави, немає часу."
+    - statement: "The preposition через requires the Locative case."
+      correct: false
+      explanation: "Через (through) requires the Accusative case, not the Locative."
+    - statement: "In Я в парку, the word парку is in the Locative case."
+      correct: true
+      explanation: "Correct. В + location (Де?) uses the Locative. Парк becomes парку."
+    - statement: "For inanimate masculine nouns, the Accusative form looks the same as the Nominative."
+      correct: true
+      explanation: "Correct. Парк (Nom.) = парк (Acc.). The form only changes for animate masculine nouns."
+    - statement: "The pronoun його stays unchanged after prepositions."
+      correct: false
+      explanation: "After prepositions, його gains an н- prefix: у нього, від нього."
+    - statement: "The question Куди? signals the Locative case."
+      correct: false
+      explanation: "Куди? (Where to?) signals the Accusative case for direction. Де? signals the Locative."
+    - statement: "In Я бачу нову книгу, both the adjective and noun are in the Accusative case."
+      correct: true
+      explanation: "Correct. The adjective agrees with the noun: нова книга becomes нову книгу (both Accusative feminine)."
+    - statement: "The Locative feminine adjective ending is -ому."
+      correct: false
+      explanation: "The Locative feminine adjective ending is -ій (у новій книзі). The ending -ому is for masculine and neuter Locative."
+
+- type: unjumble
+  title: "Build the Sentence"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["бачу", "Я", "нову", "книгу"]
+      answer: "Я бачу нову книгу"
+    - words: ["на", "Книга", "столі"]
+      answer: "Книга на столі"
+    - words: ["кави", "Немає"]
+      answer: "Немає кави"
+    - words: ["у", "Ми", "великому", "місті"]
+      answer: "Ми у великому місті"
+    - words: ["парк", "в", "Я", "йду"]
+      answer: "Я йду в парк"
+    - words: ["на", "їде", "Вона", "роботу"]
+      answer: "Вона їде на роботу"

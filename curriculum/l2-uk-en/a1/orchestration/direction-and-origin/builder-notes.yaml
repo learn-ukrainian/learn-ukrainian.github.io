@@ -1,0 +1,21 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1655
+deviations:
+  - section: "All sections"
+    reason: "Slightly over word targets to ensure robust content — total ~1655 vs 1200 minimum"
+frictions: []
+research_gaps:
+  - "Could not find Grade 3-4 textbook pages specifically teaching Куди?/Звідки? paradigm — used Grade 5 з/із/зі rules and Grade 3 example sentence instead"
+unverified_terms: []
+review_focus:
+  - "Verify з/із/зі euphonic rules match Pravopys §25 exactly — Pravopys query returned no results, used Litvinova Grade 5 p.177 table instead"
+  - "Check that all 20 vocabulary items appear in content (VOCAB-IN-CONTENT rule)"
+  - "Verify Genitive forms: лікаря, Києва, України, Львова, Одеси, друга, школи, роботи, магазину, аеропорту, вокзалу"
+rag_tools_used:
+  - "search_text: 'куди звідки напрямок прийменники знахідний родовий відмінок' → general case declension pages, no direct match for direction paradigm"
+  - "search_text: 'до від з із зі прийменники напрямок походження' grade=5 → Zabolotnyi Grade 5 p.127 (з/із/зі rules), Litvinova Grade 5 p.177 (з/із/зі table), Avramenko Grade 5 p.119 (exercises)"
+  - "search_text: 'іти їхати дієслова руху напрямок куди' grade=3 → Vashulenko Grade 3 p.31 ('Діти йдуть до школи'), p.148 (іти synonyms)"
+  - "query_pravopys: 'з із зі' → no result"
+  - "verify_words: batch 20 words (іти, їхати, лікар, робота, пошта, аеропорт, вокзал, повертатися, виходити, etc.) → all 20 FOUND"
+  - "verify_words: batch 17 forms (лікарні, магазині, магазин, Львова, Одеси, друга, дому, школи, etc.) → all 17 FOUND"

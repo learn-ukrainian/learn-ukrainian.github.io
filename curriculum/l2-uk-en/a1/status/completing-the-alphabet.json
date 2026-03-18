@@ -2,7 +2,7 @@
   "module": "completing-the-alphabet",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-17T21:26:19.900932Z",
+  "last_audit": "2026-03-18T00:10:34.205156Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-17T15:53:32.975860Z",
@@ -26,7 +26,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/8"
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",

@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 6
+deviations:
+  - "None — all 6 activity types from plan activity_hints implemented with specified focus areas"
+frictions:
+  - type: CONTENT_VOCABULARY_GAP
+    description: "group-sort 'one sound' category has only 3 items (дядько, люди, синє) vs 7 for 'two sounds' — the content provides limited consonant+iotated examples"
+    proposed_fix: "Imbalance is pedagogically honest; content only introduces 3 consonant-softening examples. Future modules could expand this."
+unverified_terms:
+  - "All vocabulary items are from the lesson content — no external words introduced"
+review_focus:
+  - "group-sort imbalance (7 vs 3 items) — verify this is acceptable pedagogically"
+  - "fill-in uses number strings as answers ('1', '2', '3', '4') — verify schema accepts this for syllable-counting activity"
+  - "quiz items 7-10 test conceptual knowledge about И vs І rather than word identification — verify this aligns with plan focus"

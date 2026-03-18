@@ -1,0 +1,17 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan hints suggest 30 pairs for match-up #1 and 20 pairs for match-up #2 — reduced to 10 and 8 pairs respectively. 30+ pairs in a single match-up is pedagogically unwieldy for A1 learners and would overwhelm working memory."
+  - "Plan hints suggest 10 items for fill-in #1 — implemented 8 items (well above the 6-item minimum). Each item tests a distinct gender agreement pattern."
+  - "Added 4 extra activity types (quiz, true-false, group-sort, unjumble) beyond the 4 required types to reach 8 total activities and provide variety."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints specify very high item counts (30, 20) for match-up activities, which would create a poor learner experience at A1 level."
+    proposed_fix: "Consider capping plan hints at 12-15 pairs for match-up activities."
+unverified_terms:
+  - "None — all Ukrainian words come directly from the lesson content"
+review_focus:
+  - "fill-in activity #1 and #2: verify all color agreement forms are correct"
+  - "unjumble: verify word order is natural Ukrainian"
+  - "group-sort: verify gender assignments are correct"

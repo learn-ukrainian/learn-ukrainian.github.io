@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 37 of the A1 track (Ukrainian for English speakers). Title: "Tomorrow - Future Tense" — Talking About What Will Happen. Phase: A1.4 [Tenses & Daily Life]. Previous module: Yesterday Past Tense. Next module: My Daily Routine.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,50 +60,46 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 36
 **Previous module:** Yesterday - Past Tense
 
-**Cumulative vocabulary (423 words):**
+**Cumulative vocabulary (382 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк, сестра, дерево, вулиця, автобус, бібліотека
-університет, склад, переніс, голосний, приголосний, острів, сім'я, ґудзик, кава, чай
-замок, писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата
-книжка, дорога, кафе, він, вона, воно, книга, слово, мова, вікно
-брат, ніч, час, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт
-До побачення, Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре
-Погано, Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми
-ви, вони, хто, що, студент, студентка, українець, українка, вчитель, вчителька
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, я, ти, він, вона, воно
+ми, ви, вони, хто, студент, студентка, українець, українка, вчитель, вчителька
 ось, мене звати, особовий займенник, займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома
 на роботі, підручник, паспорт, цей, ця, ці, той, та, те, ті
-кімната, стілець, ліжко, лампа, шафа, двері, квартира, новий, старий, гарний
-великий, малий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий, смачний
-зелений, який, множина, білий, чорний, жовтий, бордо, беж, хакі, колір
-сорочка, штани, сукня, плаття, куртка, светр, джинси, окуляри, носити, одягати
-розмір, дієслово, друг, музей, машина, пісня, хлопець, зошит, ручка, словник
-читати, говорити, знати, розуміти, питати, відповідати, перевіряти, де, рахунок, смачного
-працювати, слухати, грати, чекати, думати, вивчати, відпочивати, лист, повідомлення, новини
-музика, радіо, робити, бачити, любити, їсти, пити, ходити, просити, сидіти
-стояти, платити, вчити, гість, природа, домашнє завдання, дивитися, сміятися, вмиватися, одягатися
-називатися, вчитися, займатися, повертатися, знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися
-цікавитися, мити, називати, себе, часто, швидко, як, скільки, завжди, ніколи
-цукор, подобатися, хотіти, піти, нудний, хороший, фільм, борщ, квіти, мені
-тобі, хобі, інфінітив, мій, твій, твоя, твоє, його, її, наш
-наша, ваш, ваша, їхній, свій, чий, чия, чиє, річ, сумка
-будинок, озеро, такий, інший, кожний, сам, дівчина, година, хвилина, тиждень
-місяць, рік, ранок, вечір, вчасно, понеділок, вівторок, середа, четвер, п'ятниця
-субота, неділя, зараз, пізно, рано, січень, мати, чути, брати, купувати
-гречка, пакет, шукати, знаходити, відкривати, проблема, голос, подруга, лікар, пес
-колега, сусід, дитина, матуся, татусь, братик, сестричка, знайомий, в, на
-через, про, за, готель, вокзал, країна, міст, парк, екскурсія, квиток
-іти, їхати, дякувати, у, магазин, робота, банк, підлога, стіна, туалет
-нога, маяти, куди, дуже, дужий, йти, людина, метро, багато, використовувати
-аптека, простий, український, закінчення, відмінок, форма, опис, знахідний, правило, правити
-жіночий, ом, йога, баба, го, приклад, прикласти, давати, тепло, до
-чек, чека, купа, жаль, відсутність, гроші, сьогодні, українська, означати, водити
-знаходитися, прийменник, ля, лежати, прямо, зараза, веліти, вести, кий, краса
-красити, нове, місцевий, звідки, рух, додому, вчора, бути, минулий, раніше
-спати, чоловічий, середній
+кімната, стілець, ліжко, лампа, шафа, двері, хата, квартира, новий, старий
+гарний, великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий
+дешевий, смачний, зелений, який, множина, білий, чорний, жовтий, бордо, беж
+хакі, колір, сорочка, штани, сукня, плаття, куртка, светр, джинси, окуляри
+носити, одягати, розмір, дієслово, друг, музей, пісня, слово, хлопець, зошит
+ручка, словник, читати, писати, говорити, знати, розуміти, питати, відповідати, перевіряти
+де, кава, рахунок, смачного, працювати, слухати, грати, чекати, думати, вивчати
+відпочивати, лист, повідомлення, новини, музика, радіо, відповідь, робити, бачити, любити
+їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, гість, природа
+домашнє завдання, мова, дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися
+знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе
+часто, швидко, як, скільки, завжди, ніколи, подобатися, хотіти, піти, нудний
+хороший, кіно, фільм, борщ, квіти, мені, тобі, хобі, інфінітив, мій
+твій, твоя, твоє, його, її, наш, наша, ваш, ваша, їхній
+свій, чий, чия, чиє, річ, сумка, будинок, озеро, такий, інший
+кожний, сам, дівчина, мати, чути, брати, купувати, гречка, пакет, шукати
+знаходити, відкривати, проблема, голос, подруга, лікар, пес, колега, сусід, дитина
+матуся, татусь, братик, сестричка, знайомий, в, на, через, про, за
+готель, вокзал, країна, міст, парк, екскурсія, квиток, іти, їхати, дякувати
+у, магазин, школа, робота, банк, підлога, стіна, туалет, нога, маяти
+куди, дуже, дужий, йти, людина, метро, багато, використовувати, аптека, простий
+український, жаль, відсутність, гроші, сьогодні, українська, означати, форма, водити, закінчення
+відмінок, опис, знахідний, правило, правити, жіночий, ом, звідки, немає, мене
+тебе, красивий, маленький, до, від, з, пошта, Київ, виходити, аеропорт
+лікарня, додому, вчора, бути, минулий, раніше, тиждень, місяць, спати, зранку
+ввечері, надрукувати
 
 **Grammar already taught (119 topics):**
 - Full alphabet overview (33 letters)
@@ -184,6 +182,9 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 - Present tense conjugation (I and II)
 - Question words and Чи-questions
 - Preference constructions (Dative, Accusative, Infinitive)
+- Vocative case (кличний відмінок)
+- Nominative as base form (називний відмінок)
+- Case system introduction (7 cases overview)
 - Accusative case (inanimate)
 - Feminine: -а → -у, -я → -ю
 - Masculine/Neuter: no change
@@ -199,18 +200,15 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 - Locative case in context
 - Directional expressions
 - Prepositions of location
-- Adjective declension in Accusative
-- Adjective declension in Locative
-- Gender-case agreement patterns
-- Personal pronoun declension (Acc, Loc, Dat, Gen)
-- Prefix н- after prepositions for 3rd person
-- Pronoun case paradigm and form overlaps
 - Genitive case for absence
 - Genitive endings
 - Немає + genitive
 - Locative prepositions (в/у, на)
 - Euphonic в/у alternation
 - Біля/навпроти + Genitive
+- Adjective declension in Accusative
+- Adjective declension in Locative
+- Gender-case agreement patterns
 - Accusative case (inanimate and animate)
 - Locative case (location)
 - Genitive case (absence)
@@ -261,40 +259,16 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 30-55% Ukrainian.
+TARGET: 20-35% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. You must explain grammar primarily by demonstrating it. Show, don't tell.
-- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian. This is the highest-density immersion tool. Do not explain usage nuances in English prose — instead, create dual-column tables (Ukrainian Sentence | English Context/Translation) that map out the nuances. Move the teaching logic inside the tables.
+- THEORY & EXPLANATION: English prose — brief and clear. Show, don't tell.
+- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.
 - EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
 - DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
 - PATTERN BOXES: Show transformations: `читати → читай → читайте`.
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- IMMERSION BLOCKS: Every major H2 section MUST conclude with a substantial Ukrainian-only dialogue or narrative blockquote (>) of at least 80-150 words demonstrating the concepts in context. If translations are needed, place them in a separate table BELOW the blockquote.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. Vary your containers — never use the same type twice in a row.
-Ukrainian sentences max 10 words.
-NOTE: When the lexical sandbox has fewer than 20 lemmas, the immersion floor is lowered to prevent repetitive padding. Focus on quality immersion with the available vocabulary rather than forcing high percentages.
-
-BEFORE/AFTER EXAMPLE — follow the AFTER pattern:
-
-❌ BAD (too much English, ~10% immersion):
-To form the imperative mood in Ukrainian, you take the infinitive form of the verb and remove the -ти ending. Then you add the appropriate suffix depending on whether you are speaking to one person informally or to multiple people formally. For the informal singular form, you simply use the stem. For the formal or plural form, you add -те to the informal form.
-
-✅ GOOD (tables + dialogue + examples, ~45% immersion):
-Drop **-ти** from the infinitive to form commands.
-
-| Infinitive | ти-command | ви-command |
-|---|---|---|
-| читати | читай | читайте |
-| писати | пиши | пишіть |
-
-> — **Читай** текст! — Read the text!
-> — **Пишіть** відповідь. — Write the answer.
-> — **Слухайте** уважно! — Listen carefully!
-
-Add **будь ласка** to soften any command.
-
-- **Дайте, будь ласка, воду.** — Please give water.
-- **Скажіть, будь ласка, де метро?** — Please tell me, where is the metro?
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes.
+Ukrainian sentences max 10 words. Mix container types.
 
 ### Videos
 - **ULP 1-28 | Making plans – Future tense in Ukrainian** (Ukrainian Lessons)
@@ -426,7 +400,7 @@ Add **будь ласка** to soften any command.
 
 Write **Tomorrow - Future Tense** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 3+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -664,18 +638,113 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-037
+level: A1
+sequence: 37
+slug: tomorrow-future-tense
+version: '2.0'
+title: Tomorrow - Future Tense
+subtitle: Talking About What Will Happen
+focus: grammar
+pedagogy: PPP
+phase: A1.4 [Tenses & Daily Life]
+word_target: 1200
+objectives:
+- Learner can form compound future using буду + infinitive
+- Learner can conjugate буду for all persons
+- Learner can express plans and intentions
+- Learner can use future time expressions correctly
+content_outline:
+- section: Вступ (Introduction)
+  words: 250
+  points:
+  - 'Контраст теперішнього, минулого та майбутнього часу — посилання на модуль A1-21 (Yesterday). Повторення логіки часової
+    лінії: де ми зараз і де ми будемо.'
+  - 'Культурний контекст оптимізму: розбір фрази «Завтра буде новий день» як приклад використання майбутнього часу для вираження
+    надії та стійкості.'
+- section: Презентація граматики (Grammar Presentation)
+  words: 350
+  points:
+  - Складений майбутній час (буду + інфінітив) згідно з Державним стандартом §4.2.4.1. Повна таблиця дієвідміни допоміжного
+    дієслова «бути» (буду, будеш, буде, будемо, будете, будуть).
+  - 'Попередження про помилку (Learner Error): Конфлікт видів. Чітке правило — «буду» вживається лише з дієсловами недоконаного
+    виду. Тренування на розрізнення: «буду читати» (correct) vs «буду прочитати» (wrong).'
+  - Синтетичний майбутній час (працюватиму, працюватимеш) — ознайомчий огляд (FYI) для розпізнавання в автентичних текстах
+    без глибокого вивчення на рівні A1.
+- section: Лексика та культурний контекст (Vocabulary and Culture)
+  words: 350
+  points:
+  - 'Часові маркери майбутнього: завтра, післязавтра, скоро. Специфіка вживання виразів: завтра вранці, завтра вдень, завтра
+    ввечері (висока частотність).'
+  - 'Конструкція «наступного тижня/року»: вивчення родового відмінка (Genitive) для часових виразів. Learner Error: уникнення
+    прямого перекладу з англійської «next week» (Nominative).'
+  - 'Вираження планів та намірів: різниця між «буду» (впевненість) та «хочу/збираюся» (намір). Культурний аспект: «Не кажи
+    ''гоп'', поки не перескочиш» — обережність українців у плануванні (superstition hook).'
+- section: Практика та підсумок (Practice and Summary)
+  words: 250
+  points:
+  - 'Відпрацювання розмовних конструкцій: плани на вихідні та вечір. Використання словосполучень: мати плани, складати план,
+    плани на майбутнє.'
+  - 'Підсумковий діалог: рольова гра «Організатор подій». Планування канікул або робочого тижня з фокусом на правильну дієвідміну
+    «бути» та використання родового відмінка часу.'
+vocabulary_hints:
+  required:
+  - завтра (tomorrow) — завтра вранці, завтра вдень, завтра ввечері; High frequency (Top 100)
+  - буду (I will) — я буду там, будемо працювати; граматичний маркер лише для недоконаного виду
+  - наступний (next) — наступного тижня, наступного року, наступного разу; вимагає родового відмінка у часових виразах
+  - план (plan) — мати плани, складати план, плани на майбутнє; High frequency
+  - хотіти (to want) — хочу знати, хочу сказати, дуже хочу; вираження наміру (High frequency)
+  - збиратися (to be going to) — збираюся їхати, збираюся вчити; вираження інтенції (також: збиратися додому = to get ready to go home)
+  - скоро (soon) — скоро буду, дуже скоро, як скоро; висока частотність у розмовах про плани
+  - потім (then, later) — а потім, потім скажу; вживання для послідовності дій
+  recommended:
+  - тиждень (week) — наступного тижня
+  - рік (year) — наступного року
+  - сподіватися (to hope) — сподіваюся, що все буде добре
+  - мріяти (to dream) — мріяти про відпустку
+  - планувати (to plan) — планувати час, планувати подорож
+  - пізніше (later) — трохи пізніше
+activity_hints:
+- type: fill-in
+  focus: Complete future tense sentences
+  items: 20
+connects_to:
+- a1-23 (What Time Is It)
+- a1-38 (My Daily Routine)
+prerequisites:
+- a1-36 (Yesterday - Past Tense)
+persona:
+  voice: Patient Supportive Tutor
+  role: Event Planner
+grammar:
+- Compound future (буду + infinitive)
+- Буду conjugation for all persons
+- Future time expressions
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -704,18 +773,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -723,18 +819,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

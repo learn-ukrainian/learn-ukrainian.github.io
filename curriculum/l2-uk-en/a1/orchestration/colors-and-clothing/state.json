@@ -24,7 +24,39 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-16T21:19:34Z",
+      "ts": "2026-03-18T01:29:33Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-18T01:48:58Z",
+      "attempts": 2,
+      "note": "exhausted",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-18T01:50:41Z",
+      "task_id": "v5-colors-and-clothing-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-18T01:55:01Z",
+      "attempts": 1,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",

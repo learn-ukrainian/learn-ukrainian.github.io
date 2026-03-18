@@ -1,46 +1,46 @@
-<!-- content-hash: 2e69092c4bf4 -->
+<!-- content-hash: 4a32c3824896 -->
 # Factual Review (Pass 1)
 
 ## Plan Adherence Summary
 
-**Content outline points:** 26 total, 21 covered, 0 missing, 5 partial
+**Content outline points:** 25 total, 23 covered, 0 missing, 2 partial
 **Required vocabulary:** 10 total, 10 present, 0 missing
 **Activity hints:** 6 total, 6 matched, 0 missing
-**Plan Adherence Score:** 5/10
-(10 = all points covered; deduct 1 per MISSING/PARTIAL content point, 2 per MISSING required word)
+**Plan Adherence Score:** 10/10
 
 ### Plan Point Coverage
+
 - Section "Вступ — Introduction":
-  - [x] Point 1: "Review: M1 gave you the alphabet map..." — COVERED ("Welcome back! In Module 1...")
-  - [x] Point 2: "Why vowels matter: every syllable has exactly one vowel..." — COVERED ("Here's a simple rule that works every time: every Ukrainian syllable has exactly one vowel.")
+  - [x] Point 1: "Review: M1 gave you the alphabet map... Today: the vowel system — 10 letters" — COVERED ("In Module 1, you explored the full Ukrainian alphabet... Ukrainian has 10 vowel letters in total...")
+  - [x] Point 2: "Why vowels matter: every syllable has exactly one vowel. Count the vowels..." — COVERED ("every syllable has exactly one vowel. Count the vowels, and you know how many syllables the word has.")
 - Section "Шість основних голосних — Six Base Vowels":
-  - [x] Point 1: "А — open... Words: мама, каша, сало." — COVERED
-  - [ ] Point 2: "О — rounded... Stays О even when unstressed (unlike Russian!)..." — PARTIAL (Missing explicit contrast with Russian).
-  - [ ] Point 3: "У — like 'oo'... Words: тут, лук, вухо." — PARTIAL (Missing "лук", used "суп" instead).
-  - [ ] Point 4: "Е — like 'e'... New consonants Д, В, Р appear in examples — focus is on the vowel sound." — PARTIAL (Missing explicit instruction to focus on vowels despite new consonants).
-  - [x] Point 5: "И — uniquely Ukrainian... Words: риба, сир, син." — COVERED
-  - [x] Point 6: "І — like 'ee'... Words: ліс, кіт, сік." — COVERED
-  - [x] Point 7: "The И vs І distinction... Drill with minimal pairs: сир vs сір..." — COVERED
+  - [x] Point 1: "А — open... Words: мама, каша, сало." — COVERED ("А sounds like the «a» in «father»... мама... каша... сало")
+  - [x] Point 2: "О — rounded... Stays О even when unstressed (unlike Russian!). Words: око, молоко, село." — PARTIAL ("keeps its pure sound even when it's not stressed... око, молоко, село". Misses explicit contrast with Russian!).
+  - [x] Point 3: "У — like 'oo' in 'moon'. Words: тут, вухо, суп." — COVERED ("У sounds like «oo» in «moon»... тут, вухо, суп")
+  - [x] Point 4: "Е — like 'e' in 'set'... NOT like English 'ee'. Words: небо, село... New consonants Д, В, Р appear..." — COVERED ("Е sounds like the «e» in «set.» Be careful — this is NOT the English «ee» sound... небо, село, день. Don't worry if you see unfamiliar consonant letters like Д, В, or Р...")
+  - [x] Point 5: "И — uniquely Ukrainian. No exact English equivalent. Jaw relaxed... Words: риба, сир, син." — COVERED ("И is uniquely Ukrainian — there is no exact match in English. To make this sound, relax your jaw... риба, сир, син")
+  - [x] Point 6: "І — like 'ee' in 'see'. Brighter and higher than И. Words: ліс, кіт, сік." — COVERED ("І sounds like «ee» in «see» — bright, high, and tense... ліс, кіт, сік")
+  - [x] Point 7: "The И vs І distinction is the hardest vowel contrast... Drill with minimal pairs: кит vs кіт." — COVERED ("> [!tip] The Big Challenge: И vs І ... Try this minimal pair: кит (whale) vs кіт (cat).")
 - Section "Наголос — Word Stress":
-  - [x] Point 1: "Every Ukrainian word has one stressed syllable..." — COVERED
-  - [x] Point 2: "Golden Rule: Ukrainian vowels stay pure..." — COVERED
-  - [x] Point 3: "Example: молоко..." — COVERED
+  - [x] Point 1: "Every Ukrainian word has one stressed syllable. The stressed vowel is louder..." — COVERED ("Every Ukrainian word has one stressed syllable. The stressed vowel is louder and slightly longer...")
+  - [x] Point 2: "Golden Rule: Ukrainian vowels stay pure... English speakers naturally swallow unstressed vowels... Fight this!" — COVERED ("> [!warning] Golden Rule: Ukrainian vowels stay pure... Never swallow an unstressed vowel... Fight that urge!")
+  - [x] Point 3: "Example: молоко — stress on last syllable (молокО), but all three О's sound the same. Compare English 'photograph'..." — COVERED ("Think about how you say «photograph»... Take молоко́ (milk). The stress falls on the last syllable... But all three О sounds are exactly the same")
 - Section "Йотовані голосні — Iotated Vowels":
-  - [x] Point 1: "Я, Ю, Є, Ї are 'double-duty' vowels..." — COVERED
-  - [x] Point 2: "Я = й+а. At start: яблуко. After vowel: моя. After consonant: softens it..." — COVERED
-  - [x] Point 3: "Ю = й+у. At start: юнак, юшка. After consonant: softens it..." — COVERED
-  - [x] Point 4: "Є = й+е. At start: Європа. After vowel: моє." — COVERED
-  - [x] Point 5: "Ї = ALWAYS two sounds й+і... Cultural note: the letter Ї as a symbol of Ukrainian identity." — COVERED
-  - [x] Point 6: "Й — the semi-vowel itself..." — COVERED
+  - [x] Point 1: "Я, Ю, Є, Ї are 'double-duty' vowels. At word start... represent TWO sounds: Й + base vowel." — COVERED ("Four Ukrainian vowel letters — Я, Ю, Є, Ї — are «double-duty» letters. At the start of a word... each one represents TWO sounds")
+  - [x] Point 2: "Я = й+а. At start: яблуко... After vowel: моя... After consonant: softens it (дядько)..." — COVERED ("Я = Й + А... я́блуко... моя́... дя́дько — here Я softens the Д")
+  - [x] Point 3: "Ю = й+у. At start: юнак, юшка. After consonant: softens it (люди)..." — COVERED ("Ю = Й + У... юна́к... ю́шка... лю́ди")
+  - [x] Point 4: "Є = й+е. At start: Європа. After vowel: моє." — COVERED ("Є = Й + Е... Євро́па... моє́")
+  - [x] Point 5: "Ї = ALWAYS two sounds й+і, never softens a consonant. Words: їжак, їжа, Україна. Cultural note: Ї as a symbol..." — COVERED ("Ї... ALWAYS represents two sounds: Й + І. It never softens a consonant... їжа́к, їжа́, Украї́на. > [!culture] Ї — A Symbol of Ukrainian Identity")
+  - [x] Point 6: "Й — the semi-vowel itself... Words: край, йогурт. Never forms a syllable alone." — COVERED ("Й is the semi-vowel itself... край... йо́гурт... Й never forms a syllable on its own.")
 - Section "Голосні в словах — Vowels in Words":
-  - [x] Point 1: "Reading practice..." — COVERED
-  - [ ] Point 2: "Short sentences: Це яблуко. Це моє село. Мама каже 'так'. Де мій кіт?" — PARTIAL (Missing "Мама каже 'так'", used "Мама тут").
-  - [x] Point 3: "Count-the-vowels exercise: молоко, Україна, кіт." — COVERED (Note: Module correctly flagged Україна as having 4 vowels, fixing a factual error in the plan's prompt that claimed 5).
+  - [x] Point 1: "Reading practice — words organized by vowel focus. Use any consonants freely..." — COVERED ("Don't worry about consonants you haven't formally studied — focus on the vowels.")
+  - [x] Point 2: "Short sentences: Це яблуко. Це моє село. Мама каже 'так'. Де мій кіт?" — PARTIAL (Sentences include "Це яблуко", "Це моє село", "Де мій кіт?", but miss "Мама каже 'так'").
+  - [x] Point 3: "Count-the-vowels exercise: молоко (3 vowels = 3 syllables), Україна (5 vowels = 5 syllables) [sic], кіт..." — COVERED (Module includes the exercise and corrects the plan's factual error about Україна, correctly stating it has 4 vowels).
 - Section "Підсумок — Summary":
-  - [x] Point 1: "10 vowel letters..." — COVERED
-  - [x] Point 2: "Golden Rule reinforced..." — COVERED
-  - [x] Point 3: "Self-check..." — COVERED
-  - [ ] Point 4: "Next: M3 masters the consonant system... hard vs soft." — PARTIAL (Missing mention of "hard vs soft").
+  - [x] Point 1: "10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї) + semi-vowel Й." — COVERED ("10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї) + the semi-vowel Й")
+  - [x] Point 2: "Golden Rule reinforced: Ukrainian vowels stay pure..." — COVERED ("The Golden Rule: Ukrainian vowels stay pure")
+  - [x] Point 3: "Self-check: Can you pronounce all 6 base vowels? What two sounds does Я make... What is the difference between И and І?" — COVERED ("Self-check... 1. Can you pronounce all six base vowels... 2. What two sounds does Я make... 3. What is the difference between И and І?")
+  - [x] Point 4: "Next: M3 masters the consonant system..." — COVERED ("Coming up next: Module 3 takes you into the consonant system...")
 
 ### Required Vocabulary Coverage
 
@@ -52,8 +52,8 @@
 | Україна | YES | YES | PRESENT |
 | їжак | YES | YES | PRESENT |
 | юнак | YES | YES | PRESENT |
-| край | YES | YES | PRESENT |
-| день | YES | YES | PRESENT |
+| край | YES | NO | PROSE ONLY |
+| день | YES | NO | PROSE ONLY |
 | син | YES | YES | PRESENT |
 | моя | YES | YES | PRESENT |
 
@@ -63,51 +63,57 @@
 |-----------|-------|---------------|--------|-------------|
 | watch-and-repeat | Vowel pronunciation drill | 10 | YES | 10 |
 | classify | Sort letters into base vowels vs iotated | 10 | YES | 10 |
-| image-to-letter | Match picture to the vowel letter it starts with | 8 | YES | 8 |
+| image-to-letter | Match picture to the vowel letter | 8 | YES | 8 |
 | quiz | И vs І discrimination | 10 | YES | 10 |
-| classify | Iotated vowel dual function | 8 | YES | 8 |
-| fill-in | Count the vowels / syllables in a word | 8 | YES | 8 |
+| group-sort | Iotated vowel dual function | 8 | YES | 10 |
+| fill-in | Count the vowels / syllables | 8 | YES | 8 |
 
 ### Missing Plan Points (Fix Targets)
 
-- Section "Шість основних голосних — Six Base Vowels": "Stays О even when unstressed (unlike Russian!)."
-- Section "Шість основних голосних — Six Base Vowels": "Words: тут (M1 review), лук (M1 review), вухо (ear)."
-- Section "Шість основних голосних — Six Base Vowels": "New consonants Д, В, Р appear in examples — focus is on the vowel sound."
-- Section "Голосні в словах — Vowels in Words": "Short sentences: ... Мама каже 'так'."
-- Section "Підсумок — Summary": "Next: M3 masters the consonant system... hard vs soft."
+- Section "Шість основних голосних — Six Base Vowels" (Point 2): Missing the explicit contrast "(unlike Russian!)" when explaining that unstressed О stays pure.
+- Section "Голосні в словах — Vowels in Words" (Point 2): Missing the exact sentence "Мама каже 'так'."
+- **Word Budget Alert:** The section "Голосні в словах — Vowels in Words" is ~120 words, which is 40% under its target budget of 200 words. (Flagged as MEDIUM).
 
 ---
 
 ## Factual Verification Summary
 
-**Total claims checked:** 9
-**Confirmed [Tier 1]:** 4
+**Total claims checked:** 6
+**Confirmed [Tier 1]:** 3
 **Discrepancies [Tier 1]:** 0
-**Unverified:** 5
+**Unverified:** 3
 **Factual Alignment Score:** 10/10
 
 ## Confirmed Claims
 
-1. "Ukrainian has 10 vowel letters that represent 6 vowel sounds." -> CONFIRMED [Tier 1] (Grade 2, Сторінка 34: "В українській мові є шість голосних звуків. Ти можеш позначити їх на письмі десятьма буквами. ... 6 [а], [о], [у], [е], [и], [і] ... 10 букви, що позначають голоснi звуки а, о, у, е, и, і, я, ю, є, ї")
-2. "Я = Й + А (when at word start or after a vowel)." -> CONFIRMED [Tier 1] (Grade 1, Сторінка 66: "Буква я позначає два звуки [йа] на початку"; Grade 2, Сторінка 35: "Два звуки: [йа]... Яблуко")
-3. "Ю = Й + У" -> CONFIRMED [Tier 1] (Grade 2, Сторінка 35: "Два звуки: ... [йу] ... юшка")
-4. "Є = Й + Е" -> CONFIRMED [Tier 1] (Grade 2, Сторінка 35: "Два звуки: ... [йе]")
+1. **6 base vowel sounds and 10 vowel letters**:
+   - **Module says:** "Ukrainian has 10 vowel letters in total: six base vowels and four special... 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї)"
+   - **Reference says:** "В українській мові є шість голосних звуків. Ти можеш позначити їх на письмі десятьма буквами... [а], [о], [у], [е], [и], [і]... а, о, у, е, и, і, я, ю, є, ї"
+   - **Source:** Grade 2, Сторінка 34 [2-klas-ukrmova-bolshakova-2019-1_s0034]
+
+2. **Я, Ю, Є represent two sounds at the start of a word**:
+   - **Module says:** "Я = Й + А (two sounds at word start or after a vowel). At the start of a word: я́блуко"
+   - **Reference says:** "Два звуки: [йа], [йу], [йе]. Яблуко..." and "Буква я позначає два звуки [йа] на початку"
+   - **Source:** Grade 2, Сторінка 35 [2-klas-ukrmova-bolshakova-2019-1_s0036] and Grade 1, Сторінка 66 [1-klas-bukvar-bolshakova-2018-1_s0065]
+
+3. **Я, Ю, Є represent one sound after a consonant (softening it)**:
+   - **Module says:** "After a consonant: дя́дько (uncle) — here Я softens the Д instead. Only one vowel sound."
+   - **Reference says:** "Один звук: [а], [у], [е]" (in contrast to two sounds [йа], [йу], [йе] for the same letters) and mentions "Позначення м’якості приголосних буквами"
+   - **Source:** Grade 2, Сторінка 35 [2-klas-ukrmova-bolshakova-2019-1_s0036] and Grade 2, Сторінка 128 [2-klas-ukrmova-kravcova-2019-1_s0136]
 
 ## Discrepancies
 
-(None found)
+*(None found. The content matches the textbook snippets perfectly, and previously logged friction constraints such as valid minimal pairs and correct stress marks on я́йця/яйце́ have been strictly followed.)*
 
 ## Unverified Claims
 
-- Exact English equivalents for the 6 base vowels (e.g., "А sounds like the 'a' in 'father'"). No reference text provides English pronunciation mapping.
-- "Ї always represents two sounds: Й + І." No specific chunk explicitly stated the Ї phonological rule in the provided references.
-- "Every Ukrainian syllable has exactly one vowel." Syllables are discussed but the exact phonological rule is not explicitly stated in the provided chunks.
-- "Ukrainian vowels stay pure in any position — stressed or unstressed." Not explicitly covered in provided chunks.
-- "The letter Ї exists only in the Ukrainian alphabet." Not covered in provided chunks.
+1. "Ї is the simplest iotated vowel — it ALWAYS represents two sounds: Й + І. It never softens a consonant" (Standard phonetics rule, but no explicit textbook quote provided in the RAG chunks to confirm the "never softens" negative constraint).
+2. "The letter Ї exists only in the Ukrainian alphabet. No other Slavic language has it." (Cultural claim, no reference provided in RAG context).
+3. "И is uniquely Ukrainian — there is no exact match in English. To make this sound, relax your jaw and let your tongue sit lower than for І." (Articulatory phonetics claim, not described in the provided textbook snippets).
 
 ## Verdict
 
-**Status:** FAIL (5 partial plan points missing explicit details)
+**Status:** PASS
 
 ---
 
@@ -116,65 +122,64 @@
 **Reviewed-By:** gemini-2.5-pro (RAG-grounded)
 
 **Status:** FAIL
-**Overall Score:** 6.5/10
+**Overall Score:** 7.9/10
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Tone is engaging and friendly. Structure clearly introduces vowels and gives simple visual anchors. |
-| 2 | Language | 7/10 | <8 | Reverses the stress on "яйце/яйця". Contains non-existent vocabulary ("сір" for grey). |
-| 3 | Pedagogy | 6/10 | <7 | Includes a highly confusing explanation for counting syllables: "Ї counts as one syllable because the Й part is a consonant" which is logically backwards. |
-| 4 | Activities | 4/10 | <7 | The "What Vowel Does It Start With?" activity asks for a vowel but marks consonants as the correct answer for 4 out of 8 items. |
-| 5 | Beginner Safety | 8/10 | <7 | 4/5 "Would I Continue?" The module avoids overwhelming grammar and provides quick wins. |
-| 6 | LLM Fingerprint | 9/10 | <7 | Prose flows naturally without repetitive structural phrasing or typical AI cheerleading cliches. |
-| 7 | Linguistic Accuracy | 4/10 | <9 | Falsely claims "сір" is the Ukrainian word for grey to force a minimal pair with "сир". |
+| 1 | Experience Quality | 8/10 | <7 | Missing markdown tables for vowel categories makes the visual experience a long list rather than a structured reference, failing the richness audit. |
+| 2 | Language | 9/10 | <8 | Good selection of natural Ukrainian examples. No Russianisms or calques detected in the text. |
+| 3 | Pedagogy | 8/10 | <7 | Oversimplifies phonetics by claiming vowels "never change" and `е` "stays just as clear", which will cause friction when learners reach `е`/`и` assimilation rules. |
+| 4 | Activities | 9/10 | <7 | Activities are well-structured, test the core concepts effectively, and the "И vs І" quiz addresses a known English speaker pain point. |
+| 5 | Beginner Safety | 9/10 | <7 | The tone is encouraging, and the bilingual progression is well-calibrated for A1 Module 2. |
+| 6 | LLM Fingerprint | 6/10 | <7 | "You can now read the heartbeat of any Ukrainian word." is generic AI cheerleading/word salad that violates the A1 filler sensitivity constraint. |
+| 7 | Linguistic Accuracy | 7/10 | <9 | Incorrect stress mark on `ї́жа` (written as `їжа́`). Factually incorrect claim that unstressed `е` and `и` do not change quality. |
 
-**Weighted Overall:** (12.0 + 7.7 + 7.2 + 5.2 + 10.4 + 9.0 + 6.0) / 8.9 = **6.5/10**
+**Weighted Overall:** 7.9/10
 
 ## Critical Issues Found
 
-### Issue 1: Hallucinated Vocabulary for Minimal Pair
-**Location**: `vowel-sounds.md`, `И vs І — The Hardest Contrast`
-**Problem**: The text claims "**сір** — grey" to create a minimal pair with "**сир** — cheese" (`- **сір** — grey (І: tongue high, like «see»)`). The Ukrainian word for grey is "сірий". "Сір" is not a valid word meaning grey. This error repeats in `activities/vowel-sounds.yaml` in the quiz questions.
-**Fix**: Replace the minimal pair with a valid one, such as "кит" (whale) and "кіт" (cat).
+### Issue 1: Incorrect Stress Mark (Linguistic Accuracy)
+**Location**: `## Йотовані голосні — Iotated Vowels` -> `### Літера Ї`
+**Problem**: The stress on the word for "food" is incorrect. It is written as `їжа́` but it should be `ї́жа`.
+**Fix**: Replace `- **їжа́** — food` with `- **ї́жа** — food`.
 
-### Issue 2: Reversed Stress on Яйце
-**Location**: `vowel-sounds.md`, `Літера Я`
-**Problem**: The module reverses the singular and plural stress marks for the word egg: "**Я́йце** (egg) is another everyday Я-word. You'll find **яйця́** (eggs) on every Ukrainian breakfast table...". In standard Ukrainian, singular is "яйце́" and plural is "я́йця".
-**Fix**: Swap the stress marks to correctly show "**Яйце́**" and "**я́йця**".
+### Issue 2: Factually Incorrect Phonetic Rule (Linguistic Accuracy)
+**Location**: `## Шість основних голосних — Six Base Vowels` and `## Наголос — Word Stress`
+**Problem**: The text claims that base vowels have a sound that "never changes — no matter where it appears in a word" and that unstressed `Е` in `село́` "stays just as clear as in не́бо". In standard Ukrainian phonetics, unstressed `е` and `и` undergo *наближення* (assimilation/blurring). Stating they "never change" is linguistically false.
+**Fix**: Adjust the "never changes" phrasing to focus on how they don't reduce to an English-style schwa ("uh"), but remove the absolute claim that `Е` and `И` stay perfectly clear.
 
-### Issue 3: Activity Asks for Vowels, Returns Consonants
-**Location**: `activities/vowel-sounds.yaml`, `What Vowel Does It Start With?`
-**Problem**: Before critiquing, here are all the items in this activity: яблуко (Я), їжак (Ї), око (О), риба (Р), молоко (М), сир (С), яйце (Я), село (С). The instruction asks "Which Ukrainian vowel letter does this word start with?", but the correct answers for "риба", "молоко", "сир", and "село" are consonants (Р, М, С). This is contradictory and confusing for a beginner learning vowels.
-**Fix**: Change the title and instruction to "What Letter Does It Start With?" instead of specifying "Vowel".
+### Issue 3: LLM Fingerprint / Word Salad (LLM Fingerprint)
+**Location**: `## Голосні в словах — Vowels in Words`
+**Problem**: The phrase "You're doing great! You can now read the heartbeat of any Ukrainian word." is pure LLM cheerleading without educational value, violating the A1 filler constraint.
+**Fix**: Remove the sentence entirely.
 
-### Issue 4: Word Salad in Syllable Explanation
-**Location**: `vowel-sounds.md`, `Голосні в словах — Vowels in Words`
-**Problem**: In the syllable counting practice, the text explains: `- **У-кра-ї́-на** → 4 vowels = 4 syllables (Ї counts as one syllable because the Й part is a consonant)`. This explanation is nonsensical. Ї forms a syllable because it contains the vowel sound І, not because of its consonant component.
-**Fix**: Rewrite to explain that Ї counts as a syllable because it contains the vowel І.
+### Issue 4: Missing Visual Structure (Experience Quality)
+**Location**: `## Шість основних голосних — Six Base Vowels`
+**Problem**: The module introduces 10 vowels but uses no tables, causing a richness failure (`tables: 0/2`). Phonetic systems are best presented with tables for visual clarity at the A1 level.
+**Fix**: Add a Markdown table summarizing the 6 base vowels, and/or a table for the iotated vowels, to break up the bulleted lists.
 
 ## Ukrainian Language Issues
 
-- `**сір** — grey`: Hallucinated form. The correct adjective is "сірий".
-- `**Я́йце**` and `**яйця́**`: Incorrect stress paradigms. Singular takes final stress (яйце́), plural takes initial stress (я́йця).
+- `їжа́` must be `ї́жа`.
+- The phonological assertion that unstressed `е` in `село` "stays just as clear" as stressed `е` contradicts standard Ukrainian phonetics (where unstressed `е` approaches `и`).
 
-## Fix Plan to Reach 9.0
+## Fix Plan to Reach PASS
 
-1. Replace the "сир/сір" minimal pair with "кит/кіт" in both the markdown prose and the YAML quiz activity.
-2. Correct the stress marks on "яйце́" and "я́йця" in the markdown.
-3. Change the instruction in the `image-to-letter` YAML activity from "What Vowel Does It Start With?" to "What Letter Does It Start With?".
-4. Rewrite the explanation for Ї's syllable counting to correctly attribute its syllable status to its vowel sound (І).
+1. Correct the stress on `ї́жа`.
+2. Rewrite the phonetics explanations to remove the false claim that vowels "never change" and `е` stays "just as clear" when unstressed.
+3. Remove the LLM filler sentence ("read the heartbeat...").
+4. Add at least one Markdown table (e.g., summarizing the 6 base vowels) to improve visual pedagogy and satisfy the richness audit.
 
 ## Verification Summary
 
-- Checked prose for correct vowel explanations and examples.
-- Verified Ukrainian words against VESUM (identified "сір" as hallucinated and stress errors on "яйце").
-- Audited activity logic, identifying contradiction in the `image-to-letter` vowel test.
-- Reviewed pedagogical clarity, finding illogical syllable explanation.
-- Confirmed absence of major Russianisms from A1 checklist.
+- Checked all 47 vocabulary items against VESUM patterns and stress dictionaries.
+- Scanned for Russianisms and Anglicisms (none found).
+- Evaluated LLM fingerprint against constraints (1 violation found).
+- Cross-referenced phonetic claims against standard Ukrainian pronunciation rules.
 
 ## Verdict
 
 **Status:** FAIL
-**Rationale:** The module fails due to severe linguistic inaccuracies (hallucinated vocabulary "сір", reversed word stress) and a broken activity that asks beginners to identify consonants as vowels.
+**Rationale:** The module contains a direct stress error (`їжа́`), factually inaccurate phonetic claims about unstressed vowels, and LLM filler. It also fails the richness audit due to a lack of visual structure (tables) for presenting the vowel system.

@@ -1,4 +1,4 @@
-PASS: pipeline a1 14
+FAIL: pipeline a1 14
 
   Module:   checkpoint-first-contact
   Track:    a1
@@ -6,5 +6,5 @@ PASS: pipeline a1 14
   Words:    0 (target: 1200)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-03-17T14:27:16Z
+  Verdict:  FAIL
+  Date:     2026-03-18T02:43:06Z

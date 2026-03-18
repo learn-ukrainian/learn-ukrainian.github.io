@@ -1,0 +1,84 @@
+- type: fill-in
+  title: Complete the Future Tense
+  instruction: Choose the correct form to complete each sentence about future plans.
+  items:
+    - sentence: "Я ___ читати книгу завтра."
+      answer: "буду"
+      options: ["буду", "будеш", "буде", "будуть"]
+      explanation: "Я (I) takes the form буду."
+    - sentence: "Ти ___ працювати завтра вранці."
+      answer: "будеш"
+      options: ["буду", "будеш", "будемо", "будете"]
+      explanation: "Ти (you, singular) takes the form будеш."
+    - sentence: "Вона ___ слухати музику ввечері."
+      answer: "буде"
+      options: ["буду", "будеш", "буде", "будуть"]
+      explanation: "Вона (she) takes the form буде."
+    - sentence: "Ми ___ вивчати українську наступного тижня."
+      answer: "будемо"
+      options: ["будемо", "будете", "будуть", "буду"]
+      explanation: "Ми (we) takes the form будемо."
+    - sentence: "Ви ___ читати книгу пізніше."
+      answer: "будете"
+      options: ["будемо", "будете", "будуть", "будеш"]
+      explanation: "Ви (you, plural/formal) takes the form будете."
+    - sentence: "Вони ___ грати у парку."
+      answer: "будуть"
+      options: ["буде", "будемо", "будете", "будуть"]
+      explanation: "Вони (they) takes the form будуть."
+    - sentence: "Він ___ говорити потім."
+      answer: "буде"
+      options: ["буду", "будеш", "буде", "будемо"]
+      explanation: "Він (he) takes the form буде."
+    - sentence: "___ я буду пити каву."
+      answer: "Завтра вранці"
+      options: ["Завтра вранці", "Наступного року", "Вчора", "Сьогодні"]
+      explanation: "Завтра вранці means tomorrow morning — a future time expression."
+    - sentence: "Я ___ їхати до Львова."
+      answer: "збираюся"
+      options: ["збираюся", "збирається", "збираємося", "збираєтеся"]
+      explanation: "Збираюся (I'm going to) expresses an intention with я."
+    - sentence: "Вона ___ про подорож."
+      answer: "мріє"
+      options: ["мріє", "мрію", "мріємо", "мрієш"]
+      explanation: "Мріє is the third person singular form of мріяти (to dream)."
+    - sentence: "Я ___ знати більше про Україну."
+      answer: "хочу"
+      options: ["хочу", "хоче", "хочемо", "хочете"]
+      explanation: "Хочу (I want) is used with я to express a desire."
+    - sentence: "___ буде літо."
+      answer: "Скоро"
+      options: ["Скоро", "Вчора", "Завтра вранці", "Наступного тижня"]
+      explanation: "Скоро means soon — it will be summer soon."
+    - sentence: "Я буду їсти, а ___ буду читати."
+      answer: "потім"
+      options: ["потім", "вчора", "завтра", "скоро"]
+      explanation: "Потім means then/afterwards, showing sequence of actions."
+    - sentence: "___ ми будемо працювати вдень."
+      answer: "Завтра"
+      options: ["Завтра", "Вчора", "Потім", "Пізніше"]
+      explanation: "Завтра (tomorrow) is the most common future time expression."
+    - sentence: "Ми ___ вивчати більше наступного року."
+      answer: "будемо"
+      options: ["буду", "будеш", "будемо", "будуть"]
+      explanation: "Ми (we) takes the form будемо."
+    - sentence: "___ я буду вдома."
+      answer: "Післязавтра"
+      options: ["Післязавтра", "Вчора", "Сьогодні", "Потім"]
+      explanation: "Післязавтра means the day after tomorrow."
+    - sentence: "Я ___, що завтра буде тепло."
+      answer: "сподіваюся"
+      options: ["сподіваюся", "сподівається", "сподіваємося", "збираюся"]
+      explanation: "Сподіваюся (I hope) expresses hope about the future."
+    - sentence: "Ми ___ подорож на вихідні."
+      answer: "плануємо"
+      options: ["плануємо", "планую", "планує", "плануєте"]
+      explanation: "Плануємо (we plan) is the ми form of планувати."
+    - sentence: "___ будемо дивитися фільм?"
+      answer: "Потім"
+      options: ["Потім", "Вчора", "Зараз", "Сьогодні"]
+      explanation: "Потім (then/afterwards) connects future actions in sequence."
+    - sentence: "___ ми будемо разом."
+      answer: "Пізніше"
+      options: ["Пізніше", "Вчора", "Раніше", "Давно"]
+      explanation: "Пізніше means later — another future time expression."

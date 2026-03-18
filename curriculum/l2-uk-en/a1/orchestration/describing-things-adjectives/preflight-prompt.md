@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 11 of the A1 track (Ukrainian for English speakers). Title: "Describing Things - Adjectives" — Adjective Agreement in Gender and Number. Phase: A1.1 [First Contact]. Previous module: My World Objects. Next module: Colors And Clothing.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,23 +60,22 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 10
 **Previous module:** My World: Objects
 
-**Cumulative vocabulary (156 words):**
+**Cumulative vocabulary (147 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, люк, сестра, дерево, вулиця, автобус, бібліотека, університет
-склад, переніс, голосний, приголосний, острів, сім'я, ґудзик, кава, чай, замок
-писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата, книжка
-дорога, кафе, він, вона, воно, книга, слово, мова, вікно, брат
-ніч, час, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення
-Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано
-Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми, ви
-вони, хто, що, студент, студентка, українець, українка, вчитель, вчителька, ось
-мене звати, особовий займенник, займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома, на роботі
-підручник, паспорт, цей, ця, ці, той, та, те, ті, кімната
-стілець, ліжко, лампа, шафа, двері, квартира
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван
 
 **Grammar already taught (37 topics):**
 - Full alphabet overview (33 letters)
@@ -153,15 +154,13 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 10-20% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
-- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
-- TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
-- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
-- INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+Ukrainian sentences max 10 words.
 
 ### Podcast Episodes
 *Each episode has audio + transcript + vocabulary list -- recommend to students as supplementary listening.*
@@ -502,18 +501,129 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-011
+level: A1
+sequence: 11
+slug: describing-things-adjectives
+version: '2.0'
+title: Describing Things - Adjectives
+subtitle: Adjective Agreement in Gender and Number
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner can use correct adjective endings for masculine nouns
+- Learner can use correct adjective endings for feminine nouns
+- Learner can use correct adjective endings for neuter nouns
+- Learner can form plural adjective forms
+content_outline:
+- section: 'Вступ: Світ прикметників (Introduction: The World of Adjectives)'
+  words: 250
+  points:
+  - 'Warm-up activity: Asking questions ''Який? Яка? Яке? Які?'' to describe classroom objects, reinforcing State Standard
+    §4.2.1.2 requirements for adjective agreement in the Nominative case.'
+  - 'Cultural Hook: Introduce St. Sophia''s Cathedral (Софійський собор) as the ''старий'' (ancient) and ''великий'' (grand)
+    heart of Kyiv, establishing the need for descriptive language in historical contexts.'
+  - 'Bridge to A1-03: Quick review of the ''Gender Code'' (masculine, feminine, neuter nouns) as the mandatory foundation
+    for adjective agreement rules.'
+- section: 'Презентація: Тверда група (Presentation: Hard Stem Adjectives)'
+  words: 350
+  points:
+  - Introduction to Hard Stem endings (-ий, -а, -е, -і) using high-frequency vocabulary like 'новий' and 'гарний'; include
+    visual scaffolding with color-coded gender markers (Blue/Red/Yellow/Green).
+  - 'Explaining Adjective Placement: Contrast attributive position (''гарна погода'') with predicative position after ''бути''
+    (''Погода гарна''), emphasizing that gender endings remain consistent.'
+  - 'Correction of Gender Mismatch: Explicitly address the common error of using masculine dictionary forms for all nouns
+    (e.g., correcting *''новий машина''* to *''нова машина''*) with focused minimal pair drills.'
+  - 'Expanding the Descriptive Toolkit: Introduction of high-frequency opposites like ''великий/малий'' and ''добрий/поганий''
+    as identified in frequency research.'
+- section: 'Презентація 2: М''яка група та Специфіка (Presentation 2: Soft Stem and Nuances)'
+  words: 300
+  points:
+  - Introduction to Soft Stem endings (-ій, -я, -є, -і) focusing on 'синій' as the primary example; use the Kyiv Metro 'синя
+    лінія' (Blue Line) as a practical mnemonic anchor for A1 learners.
+  - 'Targeting Hard/Soft Stem Confusion: Correcting the learner error of writing *''синий''* (influenced by phonetic patterns)
+    vs. the correct Ukrainian orthography *''синій''*.'
+  - 'Plural Consistency: Highlight that plural adjectives take the ending ''-і'' regardless of gender (e.g., ''гарні дні'',
+    ''гарні дівчата'', ''гарні вікна'') to prevent the common error of using singular forms for plural nouns.'
+- section: Практика та Культурний контекст (Practice and Cultural Context)
+  words: 300
+  points:
+  - 'Cultural Portrait: Describe the folklore figure Mavka (Мавка) from Lesya Ukrainka''s ''Forest Song'' using ''молода'',
+    ''гарна'', ''цікава'', and ''зелена'' to practice feminine adjective agreement.'
+  - 'Real Estate Persona Practice: Roleplay describing a ''нова квартира'' or ''великий будинок'' using vocabulary from A1-25
+    (Daily Routine) to solidify functional usage in physical descriptions.'
+  - 'Final Synthesis: A summary of the ''Який?'' question-answer pattern for all three genders and plural, preparing learners
+    for the upcoming color vocabulary in A1-27.'
+vocabulary_hints:
+  required:
+  - 'новий (new) — Collocations: новий рік, новий день, нове життя; Top 100 high-frequency adjective.'
+  - 'старий (old/ancient) — Collocations: старий будинок, стара книга; used for describing St. Sophia''s Cathedral.'
+  - 'гарний (beautiful/nice) — Collocations: гарна погода, гарний день, гарна дівчина; high-frequency social descriptor.'
+  - 'великий (big/grand) — Collocations: велике місто, велика родина, великий привіт; essential for scale.'
+  - 'малий (small) — Collocations: малий бізнес, мале вікно, мале дитя; high-frequency antonym.'
+  - 'добрий (good/kind) — Collocations: добрий день, добрий вечір, добра людина; essential for greetings and character.'
+  - 'поганий (bad) — Collocations: погана погода, поганий настрій; primary descriptor for negative states.'
+  - 'цікавий (interesting) — Collocations: цікава книга, цікаве питання, цікава людина; essential for personal expression.'
+  recommended:
+  - 'синій (blue) — Primary example for soft stem (-ій); practical anchor: Kyiv Metro tokens/lines.'
+  - червоний (red) — Common hard stem adjective for color contrast.
+  - молодий (young) — Useful for describing people and folklore figures like Mavka.
+  - дорогий (expensive) — High frequency in shopping and real estate contexts.
+  - дешевий (cheap) — Essential antonym for shopping scenarios.
+  - смачний (tasty) — High-frequency descriptor for food and hospitality.
+  - зелений (green) — Cultural descriptor for nature and Mavka's forest context.
+activity_hints:
+- type: fill-in
+  focus: Change adjective gender
+  items: 25
+- type: fill-in
+  focus: Complete with correct adjective form
+  items: 20
+- type: match-up
+  focus: Match adjectives to nouns
+  items: 15
+- type: fill-in
+  focus: Describe pictures using adjectives
+  items: 8
+connects_to:
+- a1-12 (Colors and Clothing)
+- 'a1-42 (Description: Adverbs)'
+prerequisites:
+- a1-07 (The Gender Code)
+persona:
+  voice: Patient Supportive Tutor
+  role: Real Estate Agent
+grammar:
+- Adjective endings for gender (m/f/n)
+- Hard stem adjectives (-ий/-а/-е/-і)
+- Soft stem adjectives (-ій/-я/-є/-і)
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -542,18 +652,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -561,18 +698,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

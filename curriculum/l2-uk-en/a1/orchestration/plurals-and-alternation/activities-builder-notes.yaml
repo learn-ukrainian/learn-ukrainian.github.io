@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Added true-false (8 items), unjumble (6 items), adjective match-up (6 pairs), and special-cases quiz (6 items) beyond the 4 plan-specified activities to reach the 8-activity minimum"
+  - "fill-in uses sentence context rather than bare 'singular → plural' drills, since fill-in schema requires sentence field"
+frictions:
+  - type: NONE
+    description: "No friction encountered"
+    proposed_fix: "N/A"
+unverified_terms:
+  - "повітря (used in group-sort, from lesson content)"
+review_focus:
+  - "fill-in options: verify all distractors are plausible but clearly wrong"
+  - "unjumble: word order is flexible in Ukrainian — verify the given answer is the most natural order"

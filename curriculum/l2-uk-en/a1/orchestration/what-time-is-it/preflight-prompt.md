@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 23 of the A1 track (Ukrainian for English speakers). Title: "What Time Is It?" — Telling Time, Days, and Months. Phase: A1.2 [Verbs & Sentences]. Previous module: Numbers And Money. Next module: Checkpoint Sentences.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,39 +60,33 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 22
 **Previous module:** Numbers & Money
 
-**Cumulative vocabulary (312 words):**
+**Cumulative vocabulary (254 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк, Львів, м'ясо, п'ять, сім'я, цукор
-час, що, джерело, дзвін, осінь, м'яч, щастя, бджола, дзеркало, черепаха
-цибуля, хлопець, вчителька, факт, фото, чай, кінь, сестра, дерево, вулиця
-автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів, ґудзик, кава
-замок, писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата
-книжка, дорога, кафе, він, вона, воно, книга, слово, мова, вікно
-брат, ніч, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення
-Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано
-Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми, ви
-вони, хто, студент, студентка, українець, українка, вчитель, ось, мене звати, особовий займенник
-займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт
-цей, ця, ці, той, та, те, ті, кімната, стілець, ліжко
-лампа, шафа, двері, квартира, новий, старий, гарний, великий, малий, поганий
-цікавий, синій, червоний, молодий, дорогий, дешевий, смачний, зелений, який, множина
-білий, чорний, жовтий, бордо, беж, хакі, колір, сорочка, штани, сукня
-плаття, куртка, светр, джинси, окуляри, носити, одягати, розмір, дієслово, друг
-музей, машина, пісня, зошит, ручка, словник, читати, говорити, знати, розуміти
-питати, відповідати, перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати
-думати, вивчати, відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити
-любити, їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, гість
-природа, домашнє завдання, дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися
-знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе
-часто, швидко, як, скільки, завжди, ніколи, подобатися, хотіти, піти, нудний
-хороший, фільм, борщ, квіти, мені, тобі, хобі, інфінітив, мій, твій
-твоя, твоє, його, її, наш, наша, ваш, ваша, їхній, свій
-чий, чия, чиє, річ, сумка, будинок, озеро, такий, інший, кожний
-сам, дівчина
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван, новий, старий, гарний
+великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий
+смачний, зелений, рідний, білий, чорний, жовтий, сорочка, штани, сукня, куртка
+светр, плаття, джинси, окуляри, вишиванка, колір, одяг, прапор, бордо, одні
+дитина, людина, гроші, очі, ножиці, маленький, говорити, робити, бачити, любити
+їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, дивитися, борщ
+парк, школа, чи, де, коли, не, куди, звідки, чому, як
+скільки, завжди, ніколи, часто, іноді, але, а, бо, подобатися, хотіти
+кава, музика, читати, піти, нудний, улюблений, гуляти, співати, торт, слухати
+мій, твій, його, її, наш, ваш, їхній, свій, чий, чия
+чиє, річ, сумка, ключі, паспорт, адреса, прізвище, будинок, озеро, такий
+інший, кожний, сам, кафе
 
 **Grammar already taught (74 topics):**
 - Full alphabet overview (33 letters)
@@ -545,18 +541,122 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-023
+level: A1
+sequence: 23
+slug: what-time-is-it
+version: '2.0'
+title: What Time Is It?
+subtitle: Telling Time, Days, and Months
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [Verbs & Sentences]
+word_target: 1200
+objectives:
+- Learner can ask and tell the time
+- Learner can name all days of the week
+- Learner can name all months of the year
+- Learner can use time prepositions correctly
+content_outline:
+- section: Вступ (Introduction)
+  words: 250
+  points:
+  - 'Cultural hook: Ukrzaliznytsia (90%+ punctuality) as the backbone of Ukrainian resilience; learning to be «вчасно» (on
+    time) as a core value.'
+  - 'Communicative competence (Standard §4.2.3.4): Using the Vocative case and polite address forms: «Пане / пані, скажіть,
+    будь ласка, котра година?».'
+- section: Презентація часу (Time Presentation)
+  words: 350
+  points:
+  - 'Asking for time: Distinction between «Котра година?» (current time) and «О котрій?» (scheduled time for events or train
+    arrivals).'
+  - 'Hour identification: Using ordinal numbers in feminine gender (перша, друга). Learner error correction: translate ''It
+    is two o''clock'' as «Зараз друга година», not «два годин».'
+  - 'A1 simplicity (Standard §3.4): Prioritize ''telegraphic style'' (вісім тридцять) for minutes before introducing complex
+    fractions like «пів на» or «чверть».'
+- section: Дні та місяці (Days and Months)
+  words: 350
+  points:
+  - 'Days of the week: Grammar focus (§4.2.3.2.2) on «у/в» + Accusative case. Learner error: mimicking ''in/at'' with Locative
+    (*у понеділку) instead of correct «у понеділок».'
+  - 'Months and Seasons: Locative case (§4.2.3.3) for months (у січні). Note on orthography: unlike English, months and days
+    are lowercase in Ukrainian.'
+  - Associating months with weather and seasonal cycles in Ukraine to aid memorization.
+- section: Практика та розклад (Practice and Schedule)
+  words: 250
+  points:
+  - 'Register distinction: 24-hour format for official schedules (transport, digital) vs. 12-hour format for colloquial speech
+    («друга година дня» vs. «чотирнадцята година»).'
+  - 'Prepositions for planning: Using «о» (at), «до» (until), and «після» (after) to create a simple conductor''s shift schedule
+    or a daily routine.'
+vocabulary_hints:
+  required:
+  - година (hour) — котра година?, о першій годині, ціла година; High frequency (Core A1)
+  - хвилина (minute) — за п'ять хвилин, одна хвилина, 30 хвилин; High frequency (Core A1)
+  - день (day) — добрий день, робочий день, вихідний день; High frequency (Core A1)
+  - тиждень (week) — на цьому тижні, наступного тижня, дні тижня; High frequency (Core A1)
+  - місяць (month) — у цьому місяці, минулого місяця, зимові місяці; High frequency (Core A1)
+  - рік (year) — новий рік, цього року, минулого року; High frequency (Core A1)
+  - ранок (morning) — доброго ранку, о восьмій ранку, завтра вранці
+  - вечір (evening) — добрий вечір, сьогодні ввечері, о сьомій вечора
+  recommended:
+  - вчасно (on time) — бути вчасно, прийти вчасно, поїзд прибув вчасно; Med frequency (A1/A2)
+  - понеділок (Monday) — у понеділок, важкий понеділок; usage with Accusative
+  - січень (January) — у січні, перше січня; usage with Locative
+  - зараз (now)
+  - пізно (late)
+  - рано (early)
+  - о котрій (at what time)
+activity_hints:
+- type: match-up
+  focus: Match times to clock faces
+  items: 20
+- type: fill-in
+  focus: Complete time expressions
+  items: 20
+- type: quiz
+  focus: Order days and months
+  items: 15
+- type: fill-in
+  focus: Schedule a meeting
+  items: 6
+connects_to:
+- a1-46 (Can, Must, Want - Modals)
+- a1-38 (My Daily Routine)
+prerequisites:
+- a1-22 (Numbers and Money)
+persona:
+  voice: Patient Supportive Tutor
+  role: Ukrzaliznytsia Conductor
+grammar:
+- Clock time expressions (Котра година?)
+- Time prepositions (о, до, після)
+- Days and months in context
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -585,18 +685,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -604,18 +731,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

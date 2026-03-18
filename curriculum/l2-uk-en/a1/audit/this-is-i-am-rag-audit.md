@@ -1,24 +1,33 @@
 # RAG Verification: this-is-i-am
 
-**Date:** 2026-03-05 21:15 UTC | **Words checked:** 79 | **VESUM coverage:** 75/79 (94.9%)
+**Date:** 2026-03-18 02:15 UTC | **Words checked:** 69 | **VESUM coverage:** 61/69 (88.4%)
 
 ## Summary
-- ✅ Verified (VESUM): 75
-- ⚠️ Partial (RAG only): 4
-- ❌ Not found: 0
+- ✅ Verified (VESUM): 61
+- ⚠️ Partial (RAG only): 6
+- ❌ Not found: 2
+
+## ❌ Not Found (action required)
+
+| Word | Source | VESUM | Textbook | Literary |
+|------|--------|-------|----------|----------|
+| Сара | prose | ✗ | ✗ | ✗ |
+| Ірина | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Анна | prose | ✗ | ✓ | ✗ |
+| Захарійчук | prose | ✗ | ✓ | ✗ |
+| Кравцова | prose | ✗ | ✓ | ✗ |
 | Марія | prose | ✗ | ✓ | ✗ |
-| Ольга | prose | ✗ | ✓ | ✗ |
+| Оксана | prose | ✗ | ✗ | ✓ |
+| Тарас | prose | ✗ | ✗ | ✓ |
 | Іван | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 78 | 74 | 0 |
-| Activities (.yaml) | 1 | 1 | 0 |
+| Prose (.md) | 67 | 59 | 2 |
+| Activities (.yaml) | 2 | 2 | 0 |

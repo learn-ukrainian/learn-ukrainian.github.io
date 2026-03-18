@@ -5,6 +5,8 @@ You are about to build a module using the prompt below. Before you start, verify
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 6 of the A1 track (Ukrainian for English speakers). Title: "Stress and Intonation" — The Music of Ukrainian. Phase: A1.1 [First Contact]. Previous module: Syllables And Word Division. Next module: The Gender Code.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,15 +60,16 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 5
 **Previous module:** Syllables and Word Division
 
-**Cumulative vocabulary (74 words):**
+**Cumulative vocabulary (84 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, цибуля, люк, лук, дим, Львів, кінь, осінь
-м'ясо, п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя
-факт, джерело, бджола, дзвін
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус
 
 **Grammar already taught (23 topics):**
 - Full alphabet overview (33 letters)
@@ -206,7 +209,7 @@ Write **Stress and Intonation** for the a1 track.
 Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed under each section. Missing sections or missing points = review FAIL. Use EXACT vocabulary from the points (e.g., if the plan says *айтішник*, use *айтішник*, not a synonym).
 
 - `## Наголос — Stress` (~350 words)
-  - Free and mobile stress concept: unlike Polish (penultimate) or French (final), Ukrainian stress can fall on any syllable — there is no fixed rule.
+  - Free and mobile stress concept: unlike Polish (penultimate) or French (final), Ukrainian stress can fall on any syllable of a content word (note: clitics like short prepositions/conjunctions typically lack stress) — there is no fixed rule.
   - Stress changes meaning: зАмок (castle) vs замОк (lock), мУка (torment) vs мукА (flour) — minimal pairs that demonstrate the functional load of stress.
   - How stress is marked in dictionaries and textbooks: the acute accent (´) over the stressed vowel; practice reading dictionary entries.
   - Learner strategy: when encountering a new word, always check stress placement — guessing from spelling will often be wrong.
@@ -214,16 +217,16 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and household words.
   - Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some verb forms.
   - Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable words.
-  - No fixed rule: the same ending can have different stress (кнИга vs водА, both -а ending) — stress must be learned per word.
+  - No fixed rule: the same ending can have different stress (кнИжка vs водА, both -а ending) — stress must be learned per word.
 - `## Рухомий наголос — Mobile Stress` (~250 words)
-  - Stress shifts in declension: рукА (nominative) → рУки (genitive/plural) — the stress moves when the word form changes.
+  - Stress shifts in declension: рукА (nominative singular) → рУки (nominative/accusative plural) — the stress moves when the word form changes. (Note: genitive singular is рукИ — stress stays).
   - Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш (you write) — verb stress can shift between stems and endings.
   - Preview note: mobile stress will matter more when learning cases and verb conjugation — for now, awareness is the goal.
   - Practical tip: listening to native speakers is the best way to internalize stress patterns.
 - `## Інтонація — Intonation` (~250 words)
   - Declarative intonation: pitch falls at the end of the sentence — Це кафе. with a downward contour.
   - Interrogative with question word: pitch rises on the question word, then falls — ДЕ кафе?
-  - Yes/no questions (without question word): pitch rises sharply at the end — Це кафе? with an upward contour.
+  - Yes/no questions (without question word): pitch rises sharply on the stressed syllable of the key word, then falls (IK-3 pattern) — Це МАма? (rise on МА, fall on ма). Not a simple terminal rise like English.
   - Exclamatory intonation: sharp rise with emphasis — Це кафе! expressing surprise or excitement.
   - Contrast drill: practicing the same sentence with all four intonation patterns.
 - `## Практика — Practice` (~100 words)
@@ -470,6 +473,16 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [MODULE] Only 4 activities (needs 8+). Missing activity types: watch-and-repeat, classify, anagram, unjumble. Must rebuild from activities phase.
+- [MODULE] YAML schema violation: bare string 'за́мок' instead of activity object. Fix YAML structure.
+- [MODULE] Wrong stress: далеко́ should be дале́ко.
+- [MODULE] Review-fix claimed "all audit gates should pass cleanly" when they don't — 4/8 activities is a clear fail. Review-fix prompt must actually check audit gates, not self-declare success.
+
 </prompt>
 
 ## The Plan
@@ -591,9 +604,9 @@ register: розмовний
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).

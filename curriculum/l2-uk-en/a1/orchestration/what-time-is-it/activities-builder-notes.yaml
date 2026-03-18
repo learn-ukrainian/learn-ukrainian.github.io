@@ -1,0 +1,18 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan hint 1 (match-up) asked for 20 items — generated 10 pairs covering all 12 hours plus telegraphic-style times. 20 pairs would be excessive repetition."
+  - "Plan hint 2 (fill-in) asked for 20 items — generated 8 high-quality items covering time expressions, prepositions, and parts of day. 20 fill-ins would be padding."
+  - "Plan hint 3 (quiz) asked for 15 items — generated 8 items covering days, months, capitalization, false friends, and vocabulary. 15 items would overlap heavily."
+  - "Added true-false (8 items), group-sort (12 items across 4 seasons), second match-up (7 pairs for days), and unjumble (6 items) to reach 8 activities and provide variety."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan focus 'Match times to clock faces' cannot be literally implemented — YAML has no clock face rendering. Adapted to match Ukrainian time expressions to digital format strings."
+    proposed_fix: "N/A — digital format matching achieves the same pedagogical goal."
+unverified_terms:
+  - "All terms come directly from lesson content — no external terms introduced."
+review_focus:
+  - "fill-in items: verify that preposition о + Locative endings (десятій, котрій) are correct"
+  - "unjumble: verify word order is natural Ukrainian, not calqued from English"
+  - "Vocabulary: verify після takes genitive as stated in notes"

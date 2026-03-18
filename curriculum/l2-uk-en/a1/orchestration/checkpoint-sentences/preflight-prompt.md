@@ -5,6 +5,8 @@ You are about to build a module using the prompt below. Before you start, verify
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 24 of the A1 track (Ukrainian for English speakers). Title: "Checkpoint: Sentences" — Can You Do the A1.2 Skills?. Phase: A1.2 [Verbs & Sentences]. Previous module: What Time Is It. Next module: The Vocative.
+
 # Beginner Checkpoint: Synthesis & Review
 
 > **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor.
@@ -457,6 +459,12 @@ Total: {total} words (target: 1200)
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT re-explain concepts in detail — brief reminders only, then synthesize
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
 ## The Plan
@@ -538,7 +546,7 @@ activity_hints:
   focus: A1.2 grammar and vocabulary comprehensive test
   items: 30
 connects_to:
-- a1-25 (The Accusative I)
+- a1-26 (The Accusative I)
 prerequisites:
 - a1-23 (What Time Is It)
 persona:
@@ -561,9 +569,9 @@ register: розмовний
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).

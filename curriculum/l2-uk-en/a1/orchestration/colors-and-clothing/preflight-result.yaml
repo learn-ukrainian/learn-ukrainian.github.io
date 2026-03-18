@@ -1,4 +1,13 @@
-status: PASS
-issue_count: 0
+status: ISSUES_FOUND
+issue_count: 1
 high_count: 0
-issues: []
+issues:
+- type: CONTRADICTION
+  location: Section 5. Guidelines -> Activity Rules vs Activity Rules Table
+  problem: The 'Forbidden types' list explicitly bans 'translate', while the 'Activity
+    Rules' table states 'M11+ | all types including translate' are allowed. Since
+    this is Module 12, the generator may be confused as to whether translation activities
+    are permissible.
+  suggested_fix: Remove 'translate' from the Forbidden types list for modules 11+
+    or clarify in the prose that it becomes available at this level.
+  severity: MEDIUM

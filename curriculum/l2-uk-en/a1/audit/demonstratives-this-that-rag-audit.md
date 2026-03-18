@@ -1,21 +1,21 @@
 # RAG Verification: demonstratives-this-that
 
-**Date:** 2026-03-06 07:37 UTC | **Words checked:** 218 | **VESUM coverage:** 217/218 (99.5%)
+**Date:** 2026-03-18 06:00 UTC | **Words checked:** 80 | **VESUM coverage:** 79/80 (98.8%)
 
 ## Summary
-- ✅ Verified (VESUM): 217
-- ⚠️ Partial (RAG only): 0
-- ❌ Not found: 1
+- ✅ Verified (VESUM): 79
+- ⚠️ Partial (RAG only): 1
+- ❌ Not found: 0
 
-## ❌ Not Found (action required)
+## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| слово-зв'язка | prose | ✗ | ✗ | ✗ |
+| Львів | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 213 | 212 | 1 |
-| Activities (.yaml) | 5 | 5 | 0 |
+| Prose (.md) | 79 | 78 | 0 |
+| Activities (.yaml) | 1 | 1 | 0 |

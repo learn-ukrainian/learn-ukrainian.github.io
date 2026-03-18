@@ -1,0 +1,198 @@
+- type: match-up
+  title: Match pronoun to verb form
+  pairs:
+  - left: я (читати)
+    right: читаю
+  - left: ти (знати)
+    right: знаєш
+  - left: він (слухати)
+    right: слухає
+  - left: ми (працювати)
+    right: працюємо
+  - left: ви (вивчати)
+    right: вивчаєте
+  - left: вони (грати)
+    right: грають
+  - left: вона (думати)
+    right: думає
+  - left: ми (питати)
+    right: питаємо
+  - left: ви (чекати)
+    right: чекаєте
+  - left: вони (розуміти)
+    right: розуміють
+  - left: я (відпочивати)
+    right: відпочиваю
+  - left: ти (працювати)
+    right: працюєш
+  - left: він (грати)
+    right: грає
+  - left: ми (знати)
+    right: знаємо
+  - left: ви (слухати)
+    right: слухаєте
+  - left: вони (читати)
+    right: читають
+  - left: я (писати)
+    right: пишу
+  - left: ти (писати)
+    right: пишеш
+  instruction: З'єднайте відповідні елементи.
+- type: fill-in
+  title: Choose the correct verb form
+  instruction: Вставте правильну форму дієслова.
+  items:
+  - sentence: Я ___ книгу. (читати)
+    answer: читаю
+    translation: I am reading a book.
+  - sentence: Ти ___ це. (знати)
+    answer: знаєш
+    translation: You know this.
+  - sentence: Він ___ вдома. (працювати)
+    answer: працює
+    translation: He works at home.
+  - sentence: Ми ___ радіо. (слухати)
+    answer: слухаємо
+    translation: We listen to the radio.
+  - sentence: Ви ___ багато. (питати)
+    answer: питаєте
+    translation: You ask a lot.
+  - sentence: Вони ___ у футбол. (грати)
+    answer: грають
+    translation: They play football.
+  - sentence: Я ___ на тебе. (чекати)
+    answer: чекаю
+    translation: I am waiting for you.
+  - sentence: Ти ___ про це. (думати)
+    answer: думаєш
+    translation: You think about this.
+  - sentence: Вона ___ все. (розуміти)
+    answer: розуміє
+    translation: She understands everything.
+  - sentence: Ми ___ українську. (вивчати)
+    answer: вивчаємо
+    translation: We study Ukrainian.
+  - sentence: Ви ___ тут. (відпочивати)
+    answer: відпочиваєте
+    translation: You rest here.
+  - sentence: Вони ___ новини. (читати)
+    answer: читають
+    translation: They read the news.
+  - sentence: Я ___ лист. (писати)
+    answer: пишу
+    translation: I am writing a letter.
+  - sentence: Ти ___ повідомлення. (писати)
+    answer: пишеш
+    translation: You are writing a message.
+  - sentence: Він ___ текст. (писати)
+    answer: пише
+    translation: He is writing a text.
+  - sentence: Ми ___ слова. (писати)
+    answer: пишемо
+    translation: We write words.
+  - sentence: Ви ___ гарно. (писати)
+    answer: пишете
+    translation: You write beautifully.
+  - sentence: Вони ___ швидко. (писати)
+    answer: пишуть
+    translation: They write fast.
+  - sentence: Я ___ відповідь. (знати)
+    answer: знаю
+    translation: I know the answer.
+  - sentence: Ти ___ багато. (працювати)
+    answer: працюєш
+    translation: You work a lot.
+  - sentence: Вона ___ музику. (слухати)
+    answer: слухає
+    translation: She listens to music.
+  - sentence: Ми ___ вчителя. (питати)
+    answer: питаємо
+    translation: We ask the teacher.
+  - sentence: Ви ___ добре. (грати)
+    answer: граєте
+    translation: You play well.
+  - sentence: Вони ___ автобус. (чекати)
+    answer: чекають
+    translation: They are waiting for the bus.
+  - sentence: Я ___ так. (думати)
+    answer: думаю
+    translation: I think so.
+  - sentence: Ти ___ мене? (розуміти)
+    answer: розумієш
+    translation: Do you understand me?
+  - sentence: Він ___ мову. (вивчати)
+    answer: вивчає
+    translation: He studies the language.
+  - sentence: Ми ___ вдома. (відпочивати)
+    answer: відпочиваємо
+    translation: We rest at home.
+  - sentence: Ви ___ текст. (читати)
+    answer: читаєте
+    translation: You are reading the text.
+  - sentence: Вони ___ правду. (знати)
+    answer: знають
+    translation: They know the truth.
+- type: fill-in
+  title: Conjugate correctly
+  instruction: Вставте правильну форму дієслова.
+  items:
+  - sentence: Що ти ___? (читати)
+    answer: читаєш
+    translation: What are you reading?
+  - sentence: Я ___ зараз. (працювати)
+    answer: працюю
+    translation: I am working now.
+  - sentence: Де він ___? (відпочивати)
+    answer: відпочиває
+    translation: Where is he resting?
+  - sentence: Ми ___ вас. (розуміти)
+    answer: розуміємо
+    translation: We understand you.
+  - sentence: Що ви ___? (вивчати)
+    answer: вивчаєте
+    translation: What are you studying?
+  - sentence: Вони ___ листи. (писати)
+    answer: пишуть
+    translation: They write letters.
+  - sentence: Я не ___. (знати)
+    answer: знаю
+    translation: I don't know.
+  - sentence: Ти ___ на гітарі? (грати)
+    answer: граєш
+    translation: Do you play the guitar?
+  - sentence: Вона ___ друга. (чекати)
+    answer: чекає
+    translation: She is waiting for a friend.
+  - sentence: Ми ___ про це. (думати)
+    answer: думаємо
+    translation: We think about this.
+  - sentence: Ви ___ радіо? (слухати)
+    answer: слухаєте
+    translation: Are you listening to the radio?
+  - sentence: Вони ___ мене. (питати)
+    answer: питають
+    translation: They ask me.
+  - sentence: Я ___ швидко. (читати)
+    answer: читаю
+    translation: I read fast.
+  - sentence: Ти ___ гарно. (писати)
+    answer: пишеш
+    translation: You write beautifully.
+  - sentence: Він ___ все. (знати)
+    answer: знає
+    translation: He knows everything.
+  - sentence: Ми ___ разом. (працювати)
+    answer: працюємо
+    translation: We work together.
+  - sentence: Ви ___ добре. (відпочивати)
+    answer: відпочиваєте
+    translation: You are resting well.
+  - sentence: Вони ___ українську. (розуміти)
+    answer: розуміють
+    translation: They understand Ukrainian.
+  - sentence: Я ___ слова. (вивчати)
+    answer: вивчаю
+    translation: I am studying words.
+  - sentence: Ти ___ тут. (чекати)
+    answer: чекаєш
+    translation: You wait here.

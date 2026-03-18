@@ -1,0 +1,14 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 6
+deviations:
+  - "Plan hints at 1 quiz with 30 items. Delivered the 30-item quiz plus 5 additional activities (fill-in, group-sort, match-up, true-false, unjumble) for checkpoint integration practice."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints only specifies one quiz. For a checkpoint module testing integration across 3 cases, prepositions, and agreement, additional activity types provide better skill coverage."
+    proposed_fix: "N/A — supplementary activities added within the 0-15 allowed range."
+unverified_terms:
+  - "None — all Ukrainian words come directly from the module content (checkpoint-cases.md)"
+review_focus:
+  - "Quiz items 15-20 (adjective agreement) — verify that all case forms are linguistically correct"
+  - "Unjumble item 3 has only 2 words (Немає кави) — may be too simple but is valid Ukrainian"

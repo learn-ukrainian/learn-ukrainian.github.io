@@ -1,9 +1,9 @@
 # RAG Verification: likes-and-preferences
 
-**Date:** 2026-03-06 22:11 UTC | **Words checked:** 99 | **VESUM coverage:** 99/99 (100.0%)
+**Date:** 2026-03-18 05:02 UTC | **Words checked:** 111 | **VESUM coverage:** 111/111 (100.0%)
 
 ## Summary
-- ✅ Verified (VESUM): 99
+- ✅ Verified (VESUM): 111
 - ⚠️ Partial (RAG only): 0
 - ❌ Not found: 0
 
@@ -11,5 +11,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 88 | 88 | 0 |
-| Activities (.yaml) | 11 | 11 | 0 |
+| Prose (.md) | 101 | 101 | 0 |
+| Activities (.yaml) | 10 | 10 | 0 |

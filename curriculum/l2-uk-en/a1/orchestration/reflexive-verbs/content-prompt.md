@@ -1,3 +1,5 @@
+**Curriculum context:** This is Module 17 of the A1 track (Ukrainian for English speakers). Title: "Reflexive Verbs (-ся)" — Actions Directed at Oneself. Phase: A1.2 [Verbs & Sentences]. Previous module: The Living Verb Ii. Next module: Questions And Negation.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -51,32 +53,28 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 16
 **Previous module:** The Living Verb II
 
-**Cumulative vocabulary (250 words):**
+**Cumulative vocabulary (202 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, люк, Львів, м'ясо, п'ять, сім'я, цукор, час
-що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола, дзеркало, черепаха
-цибуля, кінь, сестра, дерево, вулиця, автобус, бібліотека, університет, склад, переніс
-голосний, приголосний, острів, ґудзик, кава, чай, замок, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
-вона, воно, книга, слово, мова, вікно, брат, ніч, море, сонце
-земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую, Будь ласка, Вибачте
-Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово, Смачного, На здоров'я
-Добраніч, це, я, ти, ми, ви, вони, хто, студент, студентка
-українець, українка, вчитель, вчителька, ось, мене звати, особовий займенник, займенник, граматичний рід, рід
-телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт, цей, ця, ці
-той, та, те, ті, кімната, стілець, ліжко, лампа, шафа, двері
-квартира, новий, старий, гарний, великий, малий, поганий, цікавий, синій, червоний
-молодий, дорогий, дешевий, смачний, зелений, який, множина, білий, чорний, жовтий
-бордо, беж, хакі, колір, сорочка, штани, сукня, плаття, куртка, светр
-джинси, окуляри, носити, одягати, розмір, дієслово, друг, музей, машина, пісня
-хлопець, зошит, ручка, словник, читати, говорити, знати, розуміти, питати, відповідати
-перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати, думати, вивчати
-відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити, любити, їсти
-пити, ходити, просити, сидіти, стояти, платити, вчити, гість, природа, домашнє завдання
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван, новий, старий, гарний
+великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий
+смачний, зелений, рідний, білий, чорний, жовтий, сорочка, штани, сукня, куртка
+светр, плаття, джинси, окуляри, вишиванка, колір, одяг, прапор, бордо, одні
+дитина, людина, гроші, очі, ножиці, маленький, говорити, робити, бачити, любити
+їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, дивитися, борщ
+парк, школа
 
 **Grammar already taught (56 topics):**
 - Full alphabet overview (33 letters)
@@ -171,15 +169,15 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 15-25% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
 - EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
 - TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
 - PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+Ukrainian sentences max 10 words. Mix container types.
 
 ### Videos
 - **ULP 3-109 На побаченні – On a date in Ukrainian + Reflexive verbs** (Ukrainian Lessons)
@@ -513,3 +511,9 @@ rag_tools_used:
 **Proposed Fix**: {how to fix the template/pipeline}
 ===FRICTION_END===
 ```
+
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.

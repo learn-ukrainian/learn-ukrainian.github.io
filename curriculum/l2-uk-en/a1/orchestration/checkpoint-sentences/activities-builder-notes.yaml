@@ -1,0 +1,15 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 10
+deviations:
+  - "Plan suggested 1 quiz with 30 items. Split into multiple activity types (quiz, fill-in, match-up, group-sort, true-false, unjumble) for pedagogical variety and better integration testing. Total quiz items across 2 quizzes = 14; other types add breadth."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints only specified quiz (30 items). A checkpoint benefits from diverse activity types to test integration across skills."
+    proposed_fix: "Generated 10 activities across 6 types while keeping quiz as required type. Each activity integrates 2+ skills."
+unverified_terms:
+  - "просять (3rd person plural of просити — used in group-sort)"
+review_focus:
+  - "Group-sort conjugation activity: verify робить and просять are from prior modules"
+  - "Unjumble: confirm word order is natural for all sentences"
+  - "Fill-in negation activity: verify all options are plausible distractors"

@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 14 of the A1 track (Ukrainian for English speakers). Title: "Checkpoint: First Contact" — Can You Do the A1.1 Skills?. Phase: A1.1 [First Contact]. Previous module: Plurals And Alternation. Next module: The Living Verb I.
+
 # Beginner Checkpoint: Synthesis & Review
 
 > **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor.
@@ -435,15 +437,13 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 10-20% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
-- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
-- TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
-- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
-- INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+Ukrainian sentences max 10 words.
 
 ### Structural Containment (how to achieve immersion without code-switching)
 
@@ -604,18 +604,127 @@ Total: {total} words (target: 1200)
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT re-explain concepts in detail — brief reminders only, then synthesize
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-014
+level: A1
+sequence: 14
+slug: checkpoint-first-contact
+version: '2.1'
+title: 'Checkpoint: First Contact'
+subtitle: Can You Do the A1.1 Skills?
+focus: checkpoint
+pedagogy: TTT
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Demonstrate Cyrillic reading fluency
+- Identify noun gender by word ending
+- Use adjective-noun agreement with correct gender endings
+- Form basic noun phrases using Це + adjective + noun patterns
+content_outline:
+- section: Огляд (Overview)
+  words: 180
+  points:
+  - 'Привітання від господаря хостелу (Friendly Hostel Host) — пояснення мети контрольної
+    точки: консолідація фонології (§4.1.1), морфології (§4.2.1.1, §4.2.4.1) та синтаксису
+    (§4.3.1) рівня A1.1'
+  - Практичний підхід до перевірки знань — стратегія 'Test-Teach-Test' (TTT) для виявлення
+    прогалин перед переходом до знахідного відмінка (a1-11)
+- section: 'Навичка 1: Читання та Рід (Skill 1: Reading and Gender)'
+  words: 300
+  points:
+  - 'Фонологічний виклик: розрізнення звуків И /ɪ/ (bit) та І /i/ (bee) — вправи на
+    мінімальні пари та читання слів зі стандарту (§4.1.1: Київ, київський, Україна,
+    українець, Олена, олівець)'
+  - Класифікація іменників за родом (§4.2.1.1) — фокус на 'тато' (чоловічий рід),
+    який часто помилково вважають середнім через закінчення -о, на відміну від слова
+    'місто'
+  - Швидка перевірка вміння впізнавати всі 33 літери українського алфавіту без використання
+    транслітерації
+- section: 'Навичка 2: Прикметники та Множина (Skill 2: Adjectives and Plurals)'
+  words: 300
+  points:
+  - 'Узгодження прикметників з іменниками за родом (M11 review): великий стіл (M),
+    нова книга (F), гарне місто (N). Drill на правильні закінчення -ий/-а/-е.'
+  - 'Утворення множини (M13 review): стіл → столи, книга → книги, місто → міста.
+    Чергування приголосних та голосних у множині.'
+  - 'Кольори + одяг (M12 review): червона сукня, сині штани, білий светр.
+    Поєднання прикметників з іменниками одягу.'
+- section: 'Культурний контекст: Кафе (Cultural Context: Cafe)'
+  words: 240
+  points:
+  - Львівська культура кави — історична довідка про Юрія Кульчицького та віденську
+    кав'ярню «Під синьою пляшкою» (1683), що пов'язує Україну з європейською традицією
+  - 'Етикет замовлення їжі (§3.9) — обов''язкове вживання фрази «Смачного!» (Bon appetit)
+    та ввічливих форм запиту: «Дайте, будь ласка...», «Можна рахунок?»'
+- section: Інтеграційне завдання (Integration Task)
+  words: 180
+  points:
+  - 'Інтеграція навичок: опис кафе та меню через Це + adj + noun (Це чорна кава,
+    Це великий торт, Це нове кафе). Визначення роду іменників та правильне узгодження.'
+  - Самооцінка готовності до переходу на рівень A1.2 — підбиття підсумків засвоєння
+    модулів M1-M13
+vocabulary_hints:
+  required:
+  - великий (big) — великий стіл, великий дім; Review from M11
+  - новий (new) — нова книга, нове місто; Review from M11
+  - гарний (beautiful/nice) — гарна книга, гарне місто; Review from M11
+  - червоний (red) — червона сукня, червоний светр; Review from M12
+  - хто (who) — Хто це?; Interrogative focus
+  - що (what) — Що це?; Interrogative focus
+  - де (where) — Де кафе?; Interrogative focus
+  - так/ні (yes/no) — базові ствердні та заперечні відповіді
+  recommended:
+  - синій (blue) — сині штани, синій светр; Review from M12
+  - білий (white) — біла сорочка, білий сніг; Review from M12
+  - 'кава (coffee) — чорна кава, кава з молоком; Cultural hook: Lviv tradition'
+  - Смачного! (Bon appetit) — Essential cultural phrase for dining
+  - маленький (small) — маленький кіт, маленька книга; Adjective practice
+activity_hints:
+- type: quiz
+  focus: A1.1 grammar and vocabulary
+  items: 30
+connects_to:
+- a1-26 (The Accusative I)
+prerequisites:
+- a1-13 (Plurals and Alternation)
+persona:
+  voice: Patient Supportive Tutor
+  role: Friendly Hostel Host
+grammar:
+- Cyrillic alphabet (all 33 letters)
+- Noun gender (m/f/n)
+- Adjective-noun agreement
+- Plural formation
+register: розмовний
+pronunciation_videos:
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  poster: https://www.youtube.com/watch?v=grL2s5e2AGI
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  credit: "Anna Ohoiko — Ukrainian Lessons"
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -644,18 +753,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -663,18 +799,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

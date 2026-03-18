@@ -1,0 +1,80 @@
+- type: match-up
+  title: Match adjectives to nouns
+  pairs:
+  - left: новий
+    right: дім
+  - left: нова
+    right: машина
+  - left: нове
+    right: вікно
+  - left: нові
+    right: книги
+  - left: старий
+    right: телефон
+  - left: стара
+    right: лампа
+  - left: старе
+    right: місто
+  - left: старі
+    right: друзі
+  instruction: З'єднайте відповідні елементи.
+- type: fill-in
+  title: Choose the correct adjective form
+  items:
+  - sentence: Яблуко ___ (смачний).
+    answer: смачне
+    options:
+    - смачний
+    - смачна
+    - смачне
+    - смачні
+  - sentence: Каша ___ (смачний).
+    answer: смачна
+    options:
+    - смачний
+    - смачна
+    - смачне
+    - смачні
+  - sentence: Борщ ___ (смачний).
+    answer: смачний
+    options:
+    - смачний
+    - смачна
+    - смачне
+    - смачні
+  - sentence: Кімната ___ (малий).
+    answer: мала
+    options:
+    - малий
+    - мала
+    - мале
+    - малі
+  - sentence: Вікно ___ (малий).
+    answer: мале
+    options:
+    - малий
+    - мала
+    - мале
+    - малі
+  - sentence: Дім ___ (малий).
+    answer: малий
+    options:
+    - малий
+    - мала
+    - мале
+    - малі
+  - sentence: Книги ___ (цікавий).
+    answer: цікаві
+    options:
+    - цікавий
+    - цікава
+    - цікаве
+    - цікаві
+  - sentence: Дівчина ___ (молодий).
+    answer: молода
+    options:
+    - молодий
+    - молода
+    - молоде
+    - молоді
+  instruction: Оберіть правильне слово для заповнення пропуску.

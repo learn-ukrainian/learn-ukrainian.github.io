@@ -1,0 +1,14 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 4
+deviations:
+  - "None — all four activity types from plan implemented with specified focus areas"
+frictions:
+  - type: NONE
+    description: "No friction encountered"
+    proposed_fix: "N/A"
+unverified_terms:
+  - "None — all Ukrainian words come directly from the lesson content"
+review_focus:
+  - "fill-in item 12 (додому): verify the distractor options are pedagogically sound"
+  - "match-up: some right-side labels include English context in parentheses — verify this is acceptable for A1"

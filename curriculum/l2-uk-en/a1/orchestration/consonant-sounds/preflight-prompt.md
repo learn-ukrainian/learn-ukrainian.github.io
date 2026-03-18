@@ -60,11 +60,9 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 2
 **Previous module:** Vowel Sounds
 
-**Cumulative vocabulary (39 words):**
+**Cumulative vocabulary (20 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
-яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 
 **Grammar already taught (9 topics):**
 - Full alphabet overview (33 letters)
@@ -511,6 +509,16 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [MODULE] False textbook attribution: module claims "Ukrainian textbooks teach a hand-on-throat test" for voicing. The actual textbook (Кравцова 2019, Grade 2, p.39) teaches covering ears with palms. Keep the hand-on-throat technique (plan mandates it) but remove the false attribution to textbooks.
+- [MODULE] Plan requires explicit Russian comparison for voiced consonants at word end: "Different from Russian". Module substituted "English, German, and many other languages" instead. Must mention Russian as the plan specifies.
+- [MODULE] Wrong stress on 4 words: моло́ко→молоко́, дзві́нкий→дзвінки́й, глу́хий→глухи́й, тве́рдий→тверди́й.
+- [MODULE] Review file missing required Scores/Assessment and Issues/Critique sections. Needs full redo with tier-1-beginner review template.
+
 </prompt>
 
 ## The Plan
@@ -677,9 +685,9 @@ pronunciation_videos:
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).

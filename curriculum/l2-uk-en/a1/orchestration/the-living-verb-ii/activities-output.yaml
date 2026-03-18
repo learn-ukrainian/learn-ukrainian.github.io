@@ -1,0 +1,343 @@
+- type: fill-in
+  title: "Conjugate Second Conjugation Verbs"
+  instruction: "Fill in the correct present tense form of the Second Conjugation verb."
+  items:
+    - sentence: "Я ___ українською мовою. (говорити)"
+      answer: "говорю"
+      options: ["говорю", "говоряю", "говоріть", "говорять"]
+      explanation: "Говорити is Second Conjugation: я говорю."
+    - sentence: "Ти ___ домашнє завдання. (робити)"
+      answer: "робиш"
+      options: ["робиш", "робеш", "робіть", "роблю"]
+      explanation: "Second Conjugation ти-form uses -иш: ти робиш."
+    - sentence: "Він ___ гарний парк. (бачити)"
+      answer: "бачить"
+      options: ["бачить", "бачить", "бачає", "бачу"]
+      explanation: "Second Conjugation він-form uses -ить: він бачить."
+    - sentence: "Ми ___ мову. (вчити)"
+      answer: "вчимо"
+      options: ["вчимо", "вчаємо", "вчемо", "вчить"]
+      explanation: "Second Conjugation ми-form uses -имо: ми вчимо."
+    - sentence: "Ви ___ правду. (говорити)"
+      answer: "говорите"
+      options: ["говорите", "говоряєте", "говоріть", "говорять"]
+      explanation: "Second Conjugation ви-form uses -ите: ви говорите."
+    - sentence: "Вони ___ до школи. (ходити)"
+      answer: "ходять"
+      options: ["ходять", "ходють", "ходимо", "ходжу"]
+      explanation: "Second Conjugation вони-form uses -ять: вони ходять."
+    - sentence: "Вона ___ природу. (любити)"
+      answer: "любить"
+      options: ["любить", "любає", "люблю", "любимо"]
+      explanation: "Second Conjugation він/вона-form uses -ить: вона любить."
+    - sentence: "Ми ___ допомоги. (просити)"
+      answer: "просимо"
+      options: ["просимо", "просаємо", "прошу", "просять"]
+      explanation: "Second Conjugation ми-form uses -имо: ми просимо."
+
+- type: fill-in
+  title: "The Tricky Я-Form"
+  instruction: "Fill in the correct я-form. Watch for consonant mutations and the labial л!"
+  items:
+    - sentence: "Я ___ до школи. (ходити)"
+      answer: "ходжу"
+      options: ["ходжу", "ходю", "ходю", "ходить"]
+      explanation: "Mutation д → дж in the я-form: я ходжу."
+    - sentence: "Я ___ на стільці. (сидіти)"
+      answer: "сиджу"
+      options: ["сиджу", "сидю", "сидіть", "сидять"]
+      explanation: "Mutation д → дж: я сиджу (not сидю)."
+    - sentence: "Я ___ допомоги. (просити)"
+      answer: "прошу"
+      options: ["прошу", "просю", "просить", "просимо"]
+      explanation: "Mutation с → ш: я прошу (not просю)."
+    - sentence: "Я ___ за каву. (платити)"
+      answer: "плачу"
+      options: ["плачу", "платю", "платить", "платимо"]
+      explanation: "Mutation т → ч: я плачу (not платю)."
+    - sentence: "Я ___ домашнє завдання. (робити)"
+      answer: "роблю"
+      options: ["роблю", "робю", "робиш", "робить"]
+      explanation: "Labial б + л: я роблю (not робю)."
+    - sentence: "Я ___ маму. (любити)"
+      answer: "люблю"
+      options: ["люблю", "любю", "любиш", "любить"]
+      explanation: "Labial б + л: я люблю (not любю)."
+
+- type: fill-in
+  title: "Irregular Verbs: Їсти and Пити"
+  instruction: "Fill in the correct form of їсти or пити."
+  items:
+    - sentence: "Я ___ борщ. (їсти)"
+      answer: "їм"
+      options: ["їм", "їджу", "їстю", "їсти"]
+      explanation: "Їсти is irregular: я їм (not їджу or їстю)."
+    - sentence: "Ти ___ каву. (пити)"
+      answer: "п'єш"
+      options: ["п'єш", "пиш", "пиєш", "п'ю"]
+      explanation: "Пити follows First Conjugation endings: ти п'єш."
+    - sentence: "Він ___ обід. (їсти)"
+      answer: "їсть"
+      options: ["їсть", "їдить", "їстить", "їм"]
+      explanation: "Irregular: він їсть."
+    - sentence: "Ми ___ чай. (пити)"
+      answer: "п'ємо"
+      options: ["п'ємо", "пимо", "п'єте", "п'ють"]
+      explanation: "Пити with First Conjugation endings: ми п'ємо."
+    - sentence: "Вони ___ борщ. (їсти)"
+      answer: "їдять"
+      options: ["їдять", "їстять", "їмо", "їсть"]
+      explanation: "Irregular: вони їдять."
+    - sentence: "Я ___ воду. (пити)"
+      answer: "п'ю"
+      options: ["п'ю", "пию", "пиєш", "п'ємо"]
+      explanation: "Пити follows First Conjugation: я п'ю."
+
+- type: match-up
+  title: "Match Infinitive to Я-Form"
+  instruction: "Match each verb infinitive to its correct я-form."
+  pairs:
+    - left: "говорити"
+      right: "говорю"
+    - left: "ходити"
+      right: "ходжу"
+    - left: "сидіти"
+      right: "сиджу"
+    - left: "просити"
+      right: "прошу"
+    - left: "платити"
+      right: "плачу"
+    - left: "робити"
+      right: "роблю"
+    - left: "любити"
+      right: "люблю"
+    - left: "їсти"
+      right: "їм"
+
+- type: match-up
+  title: "Match Verb to Translation"
+  instruction: "Match each Ukrainian verb to its English meaning."
+  pairs:
+    - left: "говорити"
+      right: "to speak"
+    - left: "робити"
+      right: "to do / to make"
+    - left: "бачити"
+      right: "to see"
+    - left: "любити"
+      right: "to love"
+    - left: "їсти"
+      right: "to eat"
+    - left: "пити"
+      right: "to drink"
+    - left: "ходити"
+      right: "to walk / to go"
+    - left: "просити"
+      right: "to ask / to request"
+
+- type: group-sort
+  title: "First or Second Conjugation?"
+  instruction: "Sort these verbs into the correct conjugation group based on their endings."
+  groups:
+    - name: "First Conjugation (-єш, -є, -ємо)"
+      items:
+        - "читати"
+        - "знати"
+        - "пити"
+    - name: "Second Conjugation (-иш, -ить, -имо)"
+      items:
+        - "говорити"
+        - "робити"
+        - "бачити"
+        - "любити"
+        - "ходити"
+        - "просити"
+        - "вчити"
+
+- type: quiz
+  title: "Conjugation Knowledge Check"
+  instruction: "Choose the correct answer."
+  items:
+    - question: "What are the characteristic endings of Second Conjugation verbs?"
+      options:
+        - text: "-иш, -ить, -имо, -ите, -ять"
+          correct: true
+        - text: "-єш, -є, -ємо, -єте, -ють"
+          correct: false
+        - text: "-аш, -ать, -амо, -ате, -ають"
+          correct: false
+        - text: "-іш, -ість, -імо, -іте, -іять"
+          correct: false
+      explanation: "Second Conjugation uses -иш, -ить, -имо, -ите, -ять. First Conjugation uses -єш, -є, -ємо, -єте, -ють."
+    - question: "What happens to д in the я-form of ходити?"
+      options:
+        - text: "д changes to дж (я ходжу)"
+          correct: true
+        - text: "д stays the same (я ходю)"
+          correct: false
+        - text: "д changes to ж (я хожу)"
+          correct: false
+        - text: "д disappears (я хою)"
+          correct: false
+      explanation: "Consonant mutation: д → дж. So ходити → я ходжу."
+    - question: "Why does робити become роблю in the я-form?"
+      options:
+        - text: "A л is inserted between the labial б and ю"
+          correct: true
+        - text: "The б changes to бл"
+          correct: false
+        - text: "It is completely irregular"
+          correct: false
+        - text: "The о changes to ол"
+          correct: false
+      explanation: "When the stem ends in a labial consonant (б, п, в, м, ф), Ukrainian inserts л before ю."
+    - question: "What is the correct я-form of їсти?"
+      options:
+        - text: "я їм"
+          correct: true
+        - text: "я їджу"
+          correct: false
+        - text: "я їстю"
+          correct: false
+        - text: "я їсю"
+          correct: false
+      explanation: "Їсти is irregular. The correct form is simply я їм."
+    - question: "Пити ends in -ити, so which conjugation does it follow?"
+      options:
+        - text: "First Conjugation (п'єш, п'є, п'ємо)"
+          correct: true
+        - text: "Second Conjugation (пиш, пить, пимо)"
+          correct: false
+        - text: "It is completely irregular"
+          correct: false
+        - text: "It follows both conjugations"
+          correct: false
+      explanation: "Despite ending in -ити, пити conjugates with First Conjugation endings: п'ю, п'єш, п'є."
+    - question: "Which mutation pattern does просити follow in the я-form?"
+      options:
+        - text: "с → ш (я прошу)"
+          correct: true
+        - text: "с → з (я прозю)"
+          correct: false
+        - text: "с → сь (я просью)"
+          correct: false
+        - text: "No mutation (я просю)"
+          correct: false
+      explanation: "The mutation is с → ш: просити → я прошу."
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement about Ukrainian verbs is true or false."
+  items:
+    - statement: "Second Conjugation verbs use the ending -ять in the вони-form."
+      correct: true
+      explanation: "Correct! Вони говорять, ходять, бачать — Second Conjugation uses -ять."
+    - statement: "Consonant mutations happen in ALL forms of Second Conjugation verbs."
+      correct: false
+      explanation: "Mutations only happen in the я-form. Other forms keep the original consonant: ти ходиш, він ходить."
+    - statement: "The correct я-form of їсти is я їджу."
+      correct: false
+      explanation: "Їсти is irregular: the correct form is я їм."
+    - statement: "Пити conjugates like a First Conjugation verb despite ending in -ити."
+      correct: true
+      explanation: "Correct! Пити uses First Conjugation endings: п'ю, п'єш, п'є, п'ємо, п'єте, п'ють."
+    - statement: "When a verb stem ends in a labial consonant (б, п, в, м, ф), a л is inserted before ю in the я-form."
+      correct: true
+      explanation: "Correct! This gives us роблю (not робю) and люблю (not любю)."
+    - statement: "The verb бачити means 'to watch' in Ukrainian."
+      correct: false
+      explanation: "Бачити means 'to see' (result/ability). Дивитися means 'to watch' (deliberate action)."
+    - statement: "If the ти-form has the ending -иш, the verb is Second Conjugation."
+      correct: true
+      explanation: "Correct! The -иш ending is the hallmark of Second Conjugation: ти робиш, ти говориш."
+    - statement: "The mutation pattern for платити in the я-form is т → ч."
+      correct: true
+      explanation: "Correct! Платити → я плачу (т → ч)."
+
+- type: unjumble
+  title: "Build Ukrainian Sentences"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["українською", "Я", "говорю"]
+      answer: "Я говорю українською"
+    - words: ["бачу", "парк", "Я", "гарний"]
+      answer: "Я бачу гарний парк"
+    - words: ["робиш", "завдання", "Ти", "домашнє"]
+      answer: "Ти робиш домашнє завдання"
+    - words: ["природу", "любить", "Вона"]
+      answer: "Вона любить природу"
+    - words: ["ходять", "школи", "Вони", "до"]
+      answer: "Вони ходять до школи"
+    - words: ["мову", "вчимо", "Ми"]
+      answer: "Ми вчимо мову"
+
+- type: quiz
+  title: "Spot the Wrong Form"
+  instruction: "Which verb form contains an error?"
+  items:
+    - question: "Which form is INCORRECT?"
+      options:
+        - text: "ти робеш"
+          correct: true
+        - text: "ти робиш"
+          correct: false
+        - text: "він робить"
+          correct: false
+        - text: "ми робимо"
+          correct: false
+      explanation: "Робити is Second Conjugation, so ти-form is робиш (not робеш with First Conjugation ending)."
+    - question: "Which form is INCORRECT?"
+      options:
+        - text: "вони ходють"
+          correct: true
+        - text: "вони ходять"
+          correct: false
+        - text: "ти ходиш"
+          correct: false
+        - text: "він ходить"
+          correct: false
+      explanation: "Second Conjugation вони-form is -ять: вони ходять (not ходють)."
+    - question: "Which form is INCORRECT?"
+      options:
+        - text: "я ходю"
+          correct: true
+        - text: "я ходжу"
+          correct: false
+        - text: "ти ходиш"
+          correct: false
+        - text: "ми ходимо"
+          correct: false
+      explanation: "Mutation д → дж in the я-form: я ходжу (not ходю)."
+    - question: "Which form is INCORRECT?"
+      options:
+        - text: "я робю"
+          correct: true
+        - text: "я роблю"
+          correct: false
+        - text: "він робить"
+          correct: false
+        - text: "вони роблять"
+          correct: false
+      explanation: "Labial б needs л before ю: я роблю (not робю)."
+    - question: "Which form is INCORRECT?"
+      options:
+        - text: "він любе"
+          correct: true
+        - text: "він любить"
+          correct: false
+        - text: "я люблю"
+          correct: false
+        - text: "ти любиш"
+          correct: false
+      explanation: "Любити is Second Conjugation: він любить (not любе with First Conjugation ending)."
+    - question: "Which form is INCORRECT?"
+      options:
+        - text: "я їджу"
+          correct: true
+        - text: "я їм"
+          correct: false
+        - text: "ти їси"
+          correct: false
+        - text: "він їсть"
+          correct: false
+      explanation: "Їсти is irregular: я їм (not їджу)."

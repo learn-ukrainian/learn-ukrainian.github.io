@@ -2,11 +2,17 @@ phase: ACTIVITIES
 status: SUCCESS
 activity_count: 8
 deviations:
-  - "Added true-false activity (8 items) beyond plan hints to reach 8-activity minimum and reinforce key rules"
-  - "Added anagram activity (6 items) for Cyrillic letter-level practice as scaffolding"
-  - "Classify 2 (hard/soft) has 8 items total across 2 categories — 4 per category matches the focus on minimal pairs from the content"
+  - "Added true-false (8 items) and anagram (6 items) activities beyond the 6 plan hints to meet the 8-activity minimum requirement"
+  - "watch-and-repeat uses 12 items covering 6 voiced/voiceless pairs plus К and В, matching plan focus on voiced/voiceless pair pronunciation"
+  - "classify #1 has 15 items across 3 categories (5 sonorants + 5 voiced + 5 voiceless), matching plan exactly"
+  - "classify #2 has 8 items (4 hard + 4 soft) using minimal pairs from the lesson content"
+frictions:
+  - type: PLAN_GAP
+    description: "Plan specifies only 6 activity hints but module requires 8-15 activities minimum"
+    proposed_fix: "Added true-false and anagram activities aligned with lesson content to reach 8 total"
 unverified_terms:
-  - "All vocabulary words appear in the lesson content and are standard Ukrainian"
+  - "цибуля — included from plan vocabulary_hints, appears in content reading list"
 review_focus:
-  - "Classify hard/soft activity: verify that ніс has hard Н (Н before І should be soft — but ніс demonstrates Н from the content, and і makes it soft). CORRECTION: moved ніс to soft category would create imbalance. Actually Н in ніс IS soft before і. Let me note this needs reviewer check."
-  - "Anagram: verify letter counts match between scrambled and answer"
+  - "classify #2 (Hard or Soft) — items include parenthetical explanations for context; verify renderer handles these gracefully"
+  - "anagram items — verify scrambled letters match answer letters exactly"
+  - "watch-and-repeat video URLs — sourced from plan pronunciation_videos section"

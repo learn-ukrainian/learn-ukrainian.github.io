@@ -1,32 +1,27 @@
 # RAG Verification: mine-and-yours
 
-**Date:** 2026-03-06 07:01 UTC | **Words checked:** 179 | **VESUM coverage:** 172/179 (96.1%)
+**Date:** 2026-03-18 05:33 UTC | **Words checked:** 120 | **VESUM coverage:** 118/120 (98.3%)
 
 ## Summary
-- ✅ Verified (VESUM): 172
-- ⚠️ Partial (RAG only): 3
-- ❌ Not found: 4
+- ✅ Verified (VESUM): 118
+- ⚠️ Partial (RAG only): 1
+- ❌ Not found: 1
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| мія | activities | ✗ | ✗ | ✗ |
-| папка | prose | ✗ | ✗ | ✗ |
-| твія | activities | ✗ | ✗ | ✗ |
-| Іване | prose | ✗ | ✗ | ✗ |
+| их | activities | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| Анна | activities | ✗ | ✓ | ✗ |
-| Іван | prose | ✗ | ✓ | ✗ |
-| ім | prose | ✗ | ✓ | ✗ |
+| Оксана | activities | ✗ | ✗ | ✓ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 161 | 157 | 2 |
-| Activities (.yaml) | 18 | 15 | 2 |
+| Prose (.md) | 95 | 95 | 0 |
+| Activities (.yaml) | 25 | 23 | 1 |

@@ -24,7 +24,38 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-16T21:18:28Z",
+      "ts": "2026-03-18T00:59:56Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-18T01:01:30Z",
+      "attempts": 1,
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-18T01:01:30Z",
+      "note": "adopted-existing",
+      "executor": {
+        "type": "script",
+        "name": "adopted_existing"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-18T01:05:20Z",
+      "attempts": 1,
+      "note": "gemini-inline-fixes",
+      "review_grounding": "rag-textbook",
       "executor": {
         "type": "llm",
         "agent": "gemini",

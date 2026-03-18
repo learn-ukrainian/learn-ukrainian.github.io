@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 17 of the A1 track (Ukrainian for English speakers). Title: "Reflexive Verbs (-ся)" — Actions Directed at Oneself. Phase: A1.2 [Verbs & Sentences]. Previous module: The Living Verb Ii. Next module: Questions And Negation.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,32 +60,28 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 16
 **Previous module:** The Living Verb II
 
-**Cumulative vocabulary (250 words):**
+**Cumulative vocabulary (202 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, люк, Львів, м'ясо, п'ять, сім'я, цукор, час
-що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола, дзеркало, черепаха
-цибуля, кінь, сестра, дерево, вулиця, автобус, бібліотека, університет, склад, переніс
-голосний, приголосний, острів, ґудзик, кава, чай, замок, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
-вона, воно, книга, слово, мова, вікно, брат, ніч, море, сонце
-земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую, Будь ласка, Вибачте
-Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово, Смачного, На здоров'я
-Добраніч, це, я, ти, ми, ви, вони, хто, студент, студентка
-українець, українка, вчитель, вчителька, ось, мене звати, особовий займенник, займенник, граматичний рід, рід
-телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт, цей, ця, ці
-той, та, те, ті, кімната, стілець, ліжко, лампа, шафа, двері
-квартира, новий, старий, гарний, великий, малий, поганий, цікавий, синій, червоний
-молодий, дорогий, дешевий, смачний, зелений, який, множина, білий, чорний, жовтий
-бордо, беж, хакі, колір, сорочка, штани, сукня, плаття, куртка, светр
-джинси, окуляри, носити, одягати, розмір, дієслово, друг, музей, машина, пісня
-хлопець, зошит, ручка, словник, читати, говорити, знати, розуміти, питати, відповідати
-перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати, думати, вивчати
-відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити, любити, їсти
-пити, ходити, просити, сидіти, стояти, платити, вчити, гість, природа, домашнє завдання
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван, новий, старий, гарний
+великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий
+смачний, зелений, рідний, білий, чорний, жовтий, сорочка, штани, сукня, куртка
+светр, плаття, джинси, окуляри, вишиванка, колір, одяг, прапор, бордо, одні
+дитина, людина, гроші, очі, ножиці, маленький, говорити, робити, бачити, любити
+їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, дивитися, борщ
+парк, школа
 
 **Grammar already taught (56 topics):**
 - Full alphabet overview (33 letters)
@@ -178,15 +176,15 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 15-25% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
 - EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
 - TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
 - PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+Ukrainian sentences max 10 words. Mix container types.
 
 ### Videos
 - **ULP 3-109 На побаченні – On a date in Ukrainian + Reflexive verbs** (Ukrainian Lessons)
@@ -521,18 +519,130 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-017
+level: A1
+sequence: 17
+slug: reflexive-verbs
+version: '2.0'
+title: Reflexive Verbs (-ся)
+subtitle: Actions Directed at Oneself
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [Verbs & Sentences]
+word_target: 1200
+objectives:
+- Learner can identify reflexive verbs ending in -ся
+- Learner can conjugate reflexive verbs in present tense
+- Learner can explain difference between transitive and reflexive verbs
+- Learner can use common reflexive verbs like дивитися, сміятися
+content_outline:
+- section: 'Вступ: Дзеркало дії (Introduction: Mirroring Action)'
+  words: 250
+  points:
+  - Suffix -ся turns action back onto subject (мити → митися) — use the 'mirror' analogy to explain -ся (action reflecting
+    back) per research notes.
+  - -ся is short for 'себе' (self) — historically a separate word, now a bound morpheme that signals the action stays with
+    the agent.
+  - 'Cultural Hook: The ''Apology'' Logic — contrast ''Вибачаюсь'' (I excuse myself, implying self-forgiveness) vs correct
+    ''Вибачте'' (Excuse me, asking another) to show the semantic logic of -ся.'
+  - 'Learner error: The ''Myself'' Redundancy — address the common mistake of saying ''Я мию себе'' instead of the natural
+    ''Я миюся''.'
+- section: 'Презентація: Форми та відмінювання (Presentation: Forms and Conjugation)'
+  words: 350
+  points:
+  - 'Phonetic Rule: Two forms based on the preceding sound — -ся (after consonants like ''миється'') and -сь (after vowels
+    like ''миюсь'').'
+  - 'State Standard §4.2.4.1 alignment: Focus on present tense conjugation patterns using ''дивитися'' (дивлюся, дивишся,
+    дивиться, дивимося, дивитеся, дивляться).'
+  - 'Morphological Note: Mention past tense forms per Standard examples (сміявся, сміялася, сміялося, сміялися) to show the
+    suffix persists across tenses.'
+  - 'Shibboleth Pronunciation: Mastering the long soft [ц'':а] for ''-ться'' is a critical phonetic marker of Ukrainian identity,
+    distinct from the hard Russian [ца].'
+- section: Семантичні групи (Semantic Groups)
+  words: 300
+  points:
+  - 'Type 1 — True Reflexive: Focus on daily routine (вмиватися, одягатися) — collocations: вмиватися холодною водою, одягатися
+    стильно.'
+  - 'Type 2 — Reciprocal: Actions between two people (зустрічатися, вітатися, цілуватися) — emphasize that -ся here means
+    ''each other''.'
+  - 'Type 3 — Lexicalized: Verbs that are always reflexive (сміятися, подобатися) — both ''сміятися з когось'' and ''сміятися
+    над кимось'' are standard Ukrainian with slightly different nuances (з = laughing at/about, над = mocking/ridiculing).'
+  - 'Agent Confusion: Explicitly contrast ''називати'' (to name something) with high-frequency ''називатися'' (to be called/identified).'
+- section: Практика та застосування (Practice and Application)
+  words: 300
+  points:
+  - 'Transitive ↔ Reflexive Contrast: Drill pairs like ''мити тарілку'' (washing a plate) vs ''митися'' (washing oneself)
+    to reinforce the ''mirror'' concept.'
+  - 'Daily Routine Integration: Heavy application in routine contexts (вчитися в школі, повертатися додому, займатися спортом)
+    preparing for module a1-25.'
+  - 'Conjugation Drills: Focus on the High-frequency verbs ''дивитися'' and ''вчитися'' to ensure automaticity in the present
+    tense.'
+  - 'Social Interaction: Using ''знайомитися'' and ''вітатися'' in short dialogues to build confidence in reciprocal forms.'
+vocabulary_hints:
+  required:
+  - дивитися (to watch/look) — дивитися телевізор, дивитися на мене, дивитися у вікно; High Frequency (Top 100)
+  - сміятися (to laugh) — сміятися голосно, сміятися з жарту (Standard Ukrainian), сміятися до сліз; Medium-High frequency
+  - вмиватися (to wash oneself) — вмиватися холодною водою, вмиватися вранці; Medium frequency (Routine)
+  - одягатися (to dress oneself) — одягатися тепло, одягатися стильно, швидко одягатися; Medium frequency (Routine)
+  - називатися (to be called) — як це називається?, вулиця називається...; High Frequency (Identification)
+  - вчитися (to study) — вчитися в школі, вчитися добре, вчитися грати на гітарі; High Frequency (Academic)
+  - займатися (to do/engage in) — займатися спортом, займатися йогою, займатися бізнесом; Medium-High frequency
+  - повертатися (to return) — повертатися додому, повертатися з роботи пізно; High Frequency (Motion)
+  recommended:
+  - голитися (to shave) — routine context
+  - зупинятися (to stop) — physical motion
+  - знайомитися (to get acquainted) — reciprocal interaction
+  - цікавитися (to be interested) — psychological state; usually takes Instrumental case
+activity_hints:
+- type: fill-in
+  focus: Conjugate reflexive verbs
+  items: 25
+- type: fill-in
+  focus: Choose -ся or -сь
+  items: 15
+- type: match-up
+  focus: Transitive ↔ reflexive pairs
+  items: 12
+- type: fill-in
+  focus: Daily routine conversations
+  items: 6
+connects_to:
+- 'a1-14 (Checkpoint: First Contact)'
+- a1-38 (My Daily Routine)
+prerequisites:
+- a1-16 (The Living Verb II)
+persona:
+  voice: Patient Supportive Tutor
+  role: Yoga Instructor
+grammar:
+- Reflexive particle -ся/-сь
+- Conjugation of reflexive verbs
+- Transitive vs reflexive pairs
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -561,18 +671,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -580,18 +717,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

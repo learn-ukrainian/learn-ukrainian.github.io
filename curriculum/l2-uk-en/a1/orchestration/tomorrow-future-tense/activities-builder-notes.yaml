@@ -1,0 +1,14 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 1
+deviations:
+  - "Plan requested 20 fill-in items; delivered exactly 20 items covering all six бути conjugation forms, time expressions, and intention verbs (збиратися, хотіти, сподіватися, мріяти, планувати)."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan specifies only 1 activity type (fill-in) with 20 items, which is unusual for A1 modules that typically need 8+ activities. However, the activity_hints target of 0-15 activities with fill-in as required type was respected."
+    proposed_fix: "Consider adding quiz, match-up, or unjumble activities in a future plan revision for better variety."
+unverified_terms:
+  - "None — all vocabulary comes directly from the lesson content."
+review_focus:
+  - "Fill-in items 8-20 test time expressions and intention verbs — verify distractors are plausible but clearly wrong."
+  - "Vocabulary item збиратися has dual meaning (intention + get ready) — verify notes are pedagogically clear."

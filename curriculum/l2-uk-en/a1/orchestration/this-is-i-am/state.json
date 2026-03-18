@@ -24,11 +24,32 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-16T21:17:43Z",
+      "ts": "2026-03-18T00:35:34Z",
       "executor": {
         "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-18T00:52:38Z",
+      "attempts": 2,
+      "note": "exhausted",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "failed",
+      "ts": "2026-03-18T00:54:38Z",
+      "note": "activities-schema-invalid",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }

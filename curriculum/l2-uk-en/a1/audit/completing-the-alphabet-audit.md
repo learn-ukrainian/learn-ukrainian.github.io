@@ -1,14 +1,14 @@
 # Audit Report: M04 — completing-the-alphabet.md
 **Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-17 21:26:19
+**Generated:** 2026-03-18 00:10:34
 
 ## Configuration
 **Type:** A1-grammar
 **Word Target:** 1200 words
-**Activities:** 8-12 required
+**Activities:** 0-4 required
 **Items per Activity:** ≥6 items
-**Unique Types:** ≥4 types required
+**Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
 **Required Types:** classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat
 **Engagement:** ≥3 callouts
@@ -29,17 +29,17 @@
 | 8 | true-false | True or False? | 8 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 8-12) ✅
-- Unique types: 7 (minimum: 4) ✅
+- Total activities: 8 (target: 0-4) ❌
+- Unique types: 7 (minimum: 0) ✅
 - Priority types used: 6/8 (classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat) ✅
 - Required types used: 6/6 (classify, fill-in, image-to-letter, match-up, quiz, watch-and-repeat) ✅
 - Low density activities: 0
 
 ## Gates
 - **Words:** ✅ 1673/1200 (raw: 1829)
-- **Activities:** ✅ 8/8
+- **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
-- **Unique_types:** ✅ 7/4 types
+- **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio

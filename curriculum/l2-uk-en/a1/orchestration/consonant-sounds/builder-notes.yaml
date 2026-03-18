@@ -1,23 +1,29 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1503
+word_count: 1582
 deviations:
   - section: "Сонорні — Sonorant Consonants"
-    reason: "Expanded to 285 words (target 200) to accommodate video embeds and pronunciation tips for Р and В"
+    reason: "Slightly over budget (310 vs 200 target) to accommodate individual H3 letter sections with video embeds for М, Н, Л, Р, Й, В"
   - section: "Дзвінкі та глухі пари — Voiced and Voiceless Pairs"
-    reason: "Expanded to 530 words (target 400) to cover all 6 pairs plus Й, no-devoicing rule, and video embeds"
-frictions: []
+    reason: "Over budget (560 vs 400 target) to accommodate 7 letter-pair H3 subsections with video embeds and the no-devoicing rule"
+frictions:
+  - type: PLAN_GAP
+    description: "Plan lists цибуля as 'hard Л; minimal pair with люк' but цибуля ends in -ля where Л is soft (before Я). The Л in цибуля is NOT hard."
+    proposed_fix: "Correct plan vocabulary_hints to say 'soft Л before Я' for цибуля, or replace with a word that genuinely has hard Л (e.g., лампа, лук)"
+  - type: TEMPLATE_CONSTRAINT
+    description: "17 pronunciation videos must each be embedded in an H3 section, creating many short subsections. This inflates word count and fragments the reading flow."
+    proposed_fix: "Consider grouping some videos into combined H3 sections (e.g., all sonorants in one watch-and-repeat block) for future modules with many letters"
 research_gaps:
-  - "No RAG results specifically about Ґ restoration history — used known facts (1933 removal, 1990 restoration)"
+  - "No RAG results specifically about sonorant consonants as a category — textbooks cover them implicitly within voiced/voiceless classification (Grade 4, p.5 lists В, Л, М, Н, Р, Й as unpaired voiced)"
 unverified_terms: []
 review_focus:
-  - "Verify no-devoicing rule explanation is accurate and clear for absolute beginners"
-  - "Check that Г vs Ґ distinction is correctly explained (voiced fricative vs voiced stop)"
-  - "Confirm В as bilabial approximant/sonorant framing is pedagogically sound"
-  - "Verify all 17 pronunciation videos are correctly embedded"
-  - "Check цибуля soft-Л explanation — Л before Я is soft, confirmed"
+  - "Stress placement on all Ukrainian words — friction history flags молоко́, дзвінки́й, глухи́й, тверди́й"
+  - "No-devoicing rule: must mention Russian explicitly per friction constraint — done"
+  - "Hand-on-throat test NOT attributed to textbooks (textbooks use ears test per Kravtsova 2019, p.39) — done, presented as general phonetics technique"
+  - "Verify all micro-dialogues make conversational sense"
+  - "Verify anagram scrambles actually unscramble to the correct words (зубі→зуб may confuse — it's the locative form)"
 rag_tools_used:
-  - "search_text: сонорні приголосні звуки Л М Н Р В (grade 2) → Bolshakova p.42 hard/soft lesson, Vashulenko p.3 overview"
-  - "search_text: дзвінкі та глухі приголосні звуки пари (grade 2) → Kravtsova p.40 discovery exercise, Bolshakova p.62 voiced/voiceless pairs"
-  - "search_text: тверді та м'які приголосні звуки (grade 1) → Bolshakova p.41 лис/ліс, дим/дім pairs, Zaharijchuk p.17 hard/soft intro"
-  - "verify_words: all 23 vocabulary candidates → 23/23 found in VESUM"
+  - "search_text: 'сонорні приголосні звуки Л М Н Р В' grade=2 → Bolshakova p.42 (hard/soft intro), Vashulenko p.3 (TOC), Bolshakova p.43 (soft consonant rules)"
+  - "search_text: 'дзвінкі та глухі приголосні звуки пари' grade=2 → Kravtsova p.40 (ears test for voicing), Bolshakova p.62 (voiced/voiceless pairs list + жабка/шапка, дуб/суп, ґава/кава)"
+  - "search_text: 'тверді та м'які приголосні звуки' grade=1 → Bolshakova p.41 (лис/ліс, дим/дім minimal pairs), Zaharijchuk p.17 (hard/soft intro)"
+  - "verify_words: 24 words → 24/24 found in VESUM"

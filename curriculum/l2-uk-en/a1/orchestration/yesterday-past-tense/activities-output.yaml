@@ -1,0 +1,124 @@
+- type: fill-in
+  title: "Change the Verb to Past Tense"
+  instruction: "Each sentence needs a past tense verb. Choose the correct form."
+  items:
+    - sentence: "Вчора він ___ книгу."
+      answer: "читав"
+      options: ["читав", "читати", "читає", "читала"]
+      explanation: "Він (he) takes the masculine ending -в: читав."
+    - sentence: "Вона ___ каву зранку."
+      answer: "пила"
+      options: ["пив", "пила", "пити", "п'є"]
+      explanation: "Вона (she) takes the feminine ending -ла: пила."
+    - sentence: "Вони ___ обід у ресторані."
+      answer: "їли"
+      options: ["їсти", "їв", "їла", "їли"]
+      explanation: "Вони (they) takes the plural ending -ли: їли."
+    - sentence: "Він ___ у офісі."
+      answer: "працював"
+      options: ["працювати", "працює", "працював", "працювала"]
+      explanation: "Він takes the masculine ending -в: працював."
+    - sentence: "Вона ___ додому."
+      answer: "ішла"
+      options: ["ішла", "ішов", "йти", "іде"]
+      explanation: "Вона takes the feminine form: ішла."
+    - sentence: "Він ___ довго."
+      answer: "спав"
+      options: ["спати", "спав", "спала", "спить"]
+      explanation: "Він takes the masculine ending -в: спав."
+    - sentence: "Вони ___ фільм ввечері."
+      answer: "дивилися"
+      options: ["дивитися", "дивився", "дивилася", "дивилися"]
+      explanation: "Вони takes the plural form: дивилися."
+    - sentence: "Воно ___ цікаво."
+      answer: "було"
+      options: ["був", "була", "було", "бути"]
+      explanation: "Воно (it/neuter) takes the neuter ending -ло: було."
+    - sentence: "Він ___ яблуко."
+      answer: "їв"
+      options: ["їсти", "їв", "їла", "їли"]
+      explanation: "Він takes the irregular masculine form: їв (not їстив)."
+    - sentence: "Вона ___ листа."
+      answer: "писала"
+      options: ["писати", "писав", "писала", "пише"]
+      explanation: "Вона takes the feminine ending -ла: писала."
+    - sentence: "Він ___ в магазин."
+      answer: "ходив"
+      options: ["ходити", "ходив", "ходила", "ходить"]
+      explanation: "Він takes the masculine ending -в: ходив."
+    - sentence: "Вона ___ уроки."
+      answer: "робила"
+      options: ["робити", "робив", "робила", "робить"]
+      explanation: "Вона takes the feminine ending -ла: робила."
+- type: fill-in
+  title: "Choose the Correct Gender Form"
+  instruction: "The subject tells you the gender. Pick the past tense form that matches."
+  items:
+    - sentence: "Я ___ книгу. (female speaker)"
+      answer: "читала"
+      options: ["читав", "читала", "читало", "читали"]
+      explanation: "A female speaker uses the feminine ending -ла: я читала."
+    - sentence: "Я ___ удома. (male speaker)"
+      answer: "був"
+      options: ["був", "була", "було", "були"]
+      explanation: "A male speaker uses the masculine form: я був."
+    - sentence: "Ти ___ на роботі? (asking a woman)"
+      answer: "була"
+      options: ["був", "була", "було", "були"]
+      explanation: "Asking a woman, so use feminine -ла: ти була."
+    - sentence: "Я ___ каву. (male speaker)"
+      answer: "пив"
+      options: ["пив", "пила", "пило", "пили"]
+      explanation: "A male speaker uses the masculine form: я пив."
+    - sentence: "Ти ___ фільм? (asking a man)"
+      answer: "дивився"
+      options: ["дивився", "дивилася", "дивилося", "дивилися"]
+      explanation: "Asking a man, so use masculine -ся: ти дивився."
+    - sentence: "Я ___ у офісі. (female speaker)"
+      answer: "працювала"
+      options: ["працював", "працювала", "працювало", "працювали"]
+      explanation: "A female speaker uses the feminine ending -ла: я працювала."
+    - sentence: "Ти ___ вчора? (asking a man)"
+      answer: "спав"
+      options: ["спав", "спала", "спало", "спали"]
+      explanation: "Asking a man, so use masculine -в: ти спав."
+    - sentence: "Я ___ в музей. (female speaker)"
+      answer: "ходила"
+      options: ["ходив", "ходила", "ходило", "ходили"]
+      explanation: "A female speaker uses the feminine ending -ла: я ходила."
+    - sentence: "Ти ___ листа? (asking a woman)"
+      answer: "писала"
+      options: ["писав", "писала", "писало", "писали"]
+      explanation: "Asking a woman, so use feminine -ла: ти писала."
+    - sentence: "Я ___ серіал. (male speaker)"
+      answer: "дивився"
+      options: ["дивився", "дивилася", "дивилося", "дивилися"]
+      explanation: "A male speaker uses the masculine form: я дивився."
+- type: fill-in
+  title: "What Did You Do Yesterday?"
+  instruction: "Complete the sentences about yesterday using the correct past tense form."
+  items:
+    - sentence: "Вчора зранку я ___ каву. (male speaker)"
+      answer: "пив"
+      options: ["пив", "пила", "пити", "п'є"]
+      explanation: "A male speaker talking about yesterday morning: я пив каву."
+    - sentence: "Вчора ввечері вона ___ серіал."
+      answer: "дивилася"
+      options: ["дивився", "дивилася", "дивитися", "дивиться"]
+      explanation: "Вона takes the feminine reflexive form: дивилася."
+    - sentence: "Минулого тижня ми ___ в ресторані."
+      answer: "їли"
+      options: ["їсти", "їв", "їла", "їли"]
+      explanation: "Ми (we) takes the plural ending -ли: їли."
+    - sentence: "Вчора він ___ на роботу."
+      answer: "ходив"
+      options: ["ходив", "ходила", "ходити", "ходить"]
+      explanation: "Він takes the masculine ending -в: ходив."
+    - sentence: "Що ти ___ вчора? (asking a woman)"
+      answer: "робила"
+      options: ["робив", "робила", "робити", "робить"]
+      explanation: "Asking a woman, so use feminine -ла: що ти робила?"
+    - sentence: "Вчора ___ дуже цікаво!"
+      answer: "було"
+      options: ["був", "була", "було", "були"]
+      explanation: "Impersonal sentences use neuter було: вчора було цікаво."

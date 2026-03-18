@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 15 of the A1 track (Ukrainian for English speakers). Title: "The Living Verb I" — First Conjugation (-ати/-яти). Phase: A1.2 [Verbs & Sentences]. Previous module: Checkpoint First Contact. Next module: The Living Verb Ii.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,30 +60,26 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 14
 **Previous module:** Checkpoint: First Contact
 
-**Cumulative vocabulary (224 words):**
+**Cumulative vocabulary (186 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, люк, Львів, м'ясо, п'ять, сім'я, цукор, час
-що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола, дзеркало, черепаха
-цибуля, кінь, сестра, дерево, вулиця, автобус, бібліотека, університет, склад, переніс
-голосний, приголосний, острів, ґудзик, кава, чай, замок, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
-вона, воно, книга, слово, мова, вікно, брат, ніч, море, сонце
-земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую, Будь ласка, Вибачте
-Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово, Смачного, На здоров'я
-Добраніч, це, я, ти, ми, ви, вони, хто, студент, студентка
-українець, українка, вчитель, вчителька, ось, мене звати, особовий займенник, займенник, граматичний рід, рід
-телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт, цей, ця, ці
-той, та, те, ті, кімната, стілець, ліжко, лампа, шафа, двері
-квартира, новий, старий, гарний, великий, малий, поганий, цікавий, синій, червоний
-молодий, дорогий, дешевий, смачний, зелений, який, множина, білий, чорний, жовтий
-бордо, беж, хакі, колір, сорочка, штани, сукня, плаття, куртка, светр
-джинси, окуляри, носити, одягати, розмір, дієслово, друг, музей, машина, пісня
-хлопець, зошит, ручка, словник, читати, говорити, знати, розуміти, питати, відповідати
-перевіряти, де, рахунок, смачного
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван, новий, старий, гарний
+великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий
+смачний, зелений, рідний, білий, чорний, жовтий, сорочка, штани, сукня, куртка
+светр, плаття, джинси, окуляри, вишиванка, колір, одяг, прапор, бордо, одні
+дитина, людина, гроші, очі, ножиці, маленький
 
 **Grammar already taught (50 topics):**
 - Full alphabet overview (33 letters)
@@ -170,15 +168,15 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 15-25% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
 - EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
 - TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
 - PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+Ukrainian sentences max 10 words. Mix container types.
 
 ### Textbook References
 - **Grade 2, Сторінка 80**
@@ -484,18 +482,123 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-015
+level: A1
+sequence: 15
+slug: the-living-verb-i
+version: '2.0'
+title: The Living Verb I
+subtitle: First Conjugation (-ати/-яти)
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [Verbs & Sentences]
+word_target: 1200
+objectives:
+- Learner can conjugate First Conjugation verbs in present tense
+- Learner can form basic action statements
+- Learner can describe daily activities using -ати verbs
+- Learner can explain basic concept of imperfective aspect
+content_outline:
+- section: Вступ (Introduction)
+  words: 250
+  points:
+  - Transition from static descriptions (a1-05 'My World - Objects') to dynamic action verbs — the shift from 'this is' to
+    'I do'.
+  - 'Historical hook: The ''Apostol'' (1574) by Ivan Fedorov, the first printed book in Ukraine, symbolizing a deep-rooted
+    literacy tradition and the importance of the verb ''читати''.'
+  - 'Aligning with State Standard §4.2.4.1: Introduction to indicative mood conjugation in the present tense using high-frequency
+    examples like читати and працювати.'
+- section: Презентація (Presentation)
+  words: 350
+  points:
+  - 'Visualizing the First Conjugation pattern: -ати → -аю, -аєш, -ає, -аємо, -аєте, -ають — using a ''Stem + Ending'' table
+    (e.g., чит + аю).'
+  - 'Concept of Imperfective Aspect: Focus on ongoing or habitual actions (process vs. result) — explaining that these verbs
+    describe what you are doing now or usually.'
+  - 'Pro-drop feature: Explain that the ending ''is'' the pronoun; while English requires ''I/You/He'', Ukrainian verb endings
+    allow pronouns to be optional.'
+  - 'Visual aid for regularity: Applying the pattern to the State Standard examples (читати, працювати) to show universal
+    application across hundreds of verbs.'
+- section: Практика (Practice)
+  words: 350
+  points:
+  - 'Error Correction: Addressing ''Infinitive Abuse'' — drill replacing the infinitive base ''Я читати'' with the conjugated
+    ''Я читаю'' to break English transfer habits.'
+  - 'Error Correction: Reducing ''Pronoun Overuse'' — exercises that strip away the constant ''Я'' to achieve natural flow:
+    ''Читаю. Працюю. Знаю.'''
+  - 'SVO Sentence Drills: Use inanimate masculine and neuter objects (журнал, лист, радіо) where Nominative equals Accusative
+    to avoid early case confusion while building fluency.'
+  - 'Contextual application: Describing a daily routine using common verbs (працювати вдома, слухати радіо, писати повідомлення).'
+- section: Культурний аспект та підсумок (Cultural Insight and Summary)
+  words: 250
+  points:
+  - 'Cultural Proverb: ''Птицю пізнати по пір''ю, а людину по мові'' (A bird is known by its feathers, a person by their speech)
+    — linking grammatical accuracy to personal character.'
+  - 'The ''Master Key'' metaphor: Summarizing how this one conjugation pattern unlocks the vast majority of everyday Ukrainian
+    verbs.'
+  - Summary of the transition from English instructional scaffolding to initial Ukrainian immersion through action statements.
+vocabulary_hints:
+  required:
+  - читати (to read) — читати книгу, читати вголос, читати новини; High frequency (Top 100 verbs)
+  - писати (to write) — писати листа, писати повідомлення, гарно писати; High frequency (Top 100 verbs)
+  - знати (to know) — знати все, знати правду, не знати; Very High frequency (Top 20 verbs)
+  - працювати (to work) — працювати вдома, працювати багато, працювати над проєктом; High frequency (Top 50 verbs)
+  - слухати (to listen) — слухати музику, слухати уважно, слухати радіо; High frequency verb
+  - 'питати (to ask) — питати про це; warning: requires accusative for the person being asked'
+  - грати (to play) — грати в ігри; грати на гітарі
+  - чекати (to wait) — чекати на автобус; чекати на відповідь
+  recommended:
+  - думати (to think) — думати про це; думати багато
+  - розуміти (to understand) — розуміти все; не розуміти
+  - вивчати (to study) — вивчати мову; вивчати слова
+  - відпочивати (to rest) — відпочивати вдома; відпочивати влітку
+activity_hints:
+- type: fill-in
+  focus: Conjugate First Conjugation verbs
+  items: 30
+- type: fill-in
+  focus: Complete with correct verb form
+  items: 20
+- type: match-up
+  focus: Match pronoun to verb form
+  items: 18
+connects_to:
+- a1-18 (Questions and Negation)
+- a1-16 (The Living Verb II)
+prerequisites:
+- 'a1-10 (My World: Objects)'
+persona:
+  voice: Patient Supportive Tutor
+  role: Sports Commentator
+grammar:
+- First Conjugation pattern (-ати → -аю, -аєш...)
+- Personal verb endings
+- Imperfective aspect introduction
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -524,18 +627,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -543,18 +673,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

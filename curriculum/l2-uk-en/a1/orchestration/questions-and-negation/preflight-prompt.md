@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 18 of the A1 track (Ukrainian for English speakers). Title: "Questions & Negation" — Asking Questions and Saying No. Phase: A1.2 [Verbs & Sentences]. Previous module: Reflexive Verbs. Next module: Likes And Preferences.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,34 +60,28 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 17
 **Previous module:** Reflexive Verbs (-ся)
 
-**Cumulative vocabulary (270 words):**
+**Cumulative vocabulary (202 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, люк, Львів, м'ясо, п'ять, сім'я, цукор, час
-що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола, дзеркало, черепаха
-цибуля, кінь, сестра, дерево, вулиця, автобус, бібліотека, університет, склад, переніс
-голосний, приголосний, острів, ґудзик, кава, чай, замок, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
-вона, воно, книга, слово, мова, вікно, брат, ніч, море, сонце
-земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую, Будь ласка, Вибачте
-Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово, Смачного, На здоров'я
-Добраніч, це, я, ти, ми, ви, вони, хто, студент, студентка
-українець, українка, вчитель, вчителька, ось, мене звати, особовий займенник, займенник, граматичний рід, рід
-телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт, цей, ця, ці
-той, та, те, ті, кімната, стілець, ліжко, лампа, шафа, двері
-квартира, новий, старий, гарний, великий, малий, поганий, цікавий, синій, червоний
-молодий, дорогий, дешевий, смачний, зелений, який, множина, білий, чорний, жовтий
-бордо, беж, хакі, колір, сорочка, штани, сукня, плаття, куртка, светр
-джинси, окуляри, носити, одягати, розмір, дієслово, друг, музей, машина, пісня
-хлопець, зошит, ручка, словник, читати, говорити, знати, розуміти, питати, відповідати
-перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати, думати, вивчати
-відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити, любити, їсти
-пити, ходити, просити, сидіти, стояти, платити, вчити, гість, природа, домашнє завдання
-дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися, знайомитися, зустрічатися
-вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе, часто, швидко
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван, новий, старий, гарний
+великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий
+смачний, зелений, рідний, білий, чорний, жовтий, сорочка, штани, сукня, куртка
+светр, плаття, джинси, окуляри, вишиванка, колір, одяг, прапор, бордо, одні
+дитина, людина, гроші, очі, ножиці, маленький, говорити, робити, бачити, любити
+їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, дивитися, борщ
+парк, школа
 
 **Grammar already taught (59 topics):**
 - Full alphabet overview (33 letters)
@@ -186,21 +182,36 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 15-25% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
 - EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
 - TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
 - PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+Ukrainian sentences max 10 words. Mix container types.
+
+### Videos
+- **Ukrainian listening practice: What do you like to eat? Що ви любите їсти? 🥐 Slow vs. Fast input** (Ukrainian with Olha)
+  URL: https://www.youtube.com/watch?v=QE9JOcQfLE0
+  Score: 0.8 -- The video provides excellent listening practice using core module concepts: questions with 'що' and 'які', and negation with 'не'. It reinforces the grammar taught in the module.
+  Suggested placement: After section 'Practice: The Interrogation Game' — as an additional listening comprehension exercise reinforcing question words and negation in context.
+  Key excerpt: Вітаю. Сьогодні я вам розповім про те, що я зазвичай їм щодня. ... А які ваші улюблені страви та напої?
+
 
 ### Blog Articles & Guides
-- **Useful Ukrainian Questions** (ukrainianlessons.com)
+- **Питальні слова** (All question words with examples)
+  URL: https://www.ukrainianlessons.com/question-words/
+  Relevance: 1.0
+
+- **Double Negation Rules** (Master Ukrainian negative sentences)
+  URL: https://www.ukrainianlessons.com/negation-in-ukrainian/
+  Relevance: 1.0
+
+- **Short Ukrainian Questions** (Practical phrases for travelers)
   URL: https://www.ukrainianlessons.com/useful-ukrainian-questions/
-  Relevance: 0.4
-  Topics: questions, phrases, communication
+  Relevance: 1.0
 
 - **Dobra Forma: Genitive Case for Direct Objects after Negation (Neuter and Masculine)** (dobraforma)
   URL: https://opentext.ku.edu/dobraforma/chapter/5-3/
@@ -306,6 +317,10 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - The Café Scenario: asking questions about the menu, availability, and prices (e.g., 'Де кава?', 'Скільки це коштує?', 'Чи є цукор?').
   - Roleplay: 'The Investigative Journalist' (Persona). Students interview each other using a checklist of question words to uncover basic facts about their partners.
   - Negative responses and frequency: practicing 'Ні, я ніколи не...' to integrate frequency adverbs like 'ніколи', 'завжди', and 'часто' into negative statements.
+- `## З'єднуємо речення (Joining Sentences)` (~200 words)
+  - Compound sentences with і/й (and), а (and/but), але (but): Я люблю каву, і він любить каву. Я люблю каву, але він любить чай. State Standard §4.3.2 requires these at A1.
+  - Causal clauses with тому що / бо (because): Я не йду, тому що я хворий. Він не прийшов, бо холодно. бо is more colloquial, тому що is neutral/formal.
+  - Pattern: [sentence 1] + [conjunction] + [sentence 2]. The word order within each sentence stays the same — just add the connector.
 - `## Культурний контекст та ALF (Cultural Context and ALF)` (~125 words)
   - Register nuances: when to use the formal 'чи' (standard/polite) versus intonation-only questions (conversational/casual) in various Ukrainian social settings.
   - Pop culture integration: the iconic ALF quote 'Ти не любиш котів? Ти просто не вмієш їх готувати!'. Use this to demonstrate negation, rhetorical intonation, and a touch of dark Ukrainian humor.
@@ -319,6 +334,7 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 | Презентація: Питальні конструкції (Presentation: Interrogative Structures) | 325+ |
 | Практика: Тренування заперечень та запитань (Practice: Drilling Negation and Questions) | 250+ |
 | Продукція: Комунікативні сценарії (Production: Communicative Scenarios) | 250+ |
+| З'єднуємо речення (Joining Sentences) | 200+ |
 | Культурний контекст та ALF (Cultural Context and ALF) | 125+ |
 | **Total** | **1200+ (aim for ~1440)** |
 
@@ -537,18 +553,147 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-018
+level: A1
+sequence: 18
+slug: questions-and-negation
+version: '2.0'
+title: Questions & Negation
+subtitle: Asking Questions and Saying No
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [Verbs & Sentences]
+word_target: 1200
+objectives:
+- Learner can ask yes/no questions using 'чи'
+- Learner can form questions with question words (що, хто, де, коли)
+- Learner can make negative statements with 'не'
+- Learner can explain frequency adverbs (завжди, часто, іноді, ніколи)
+content_outline:
+- section: 'Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation and Intonation)'
+  words: 250
+  points:
+  - 'The simplicity of Ukrainian syntax: unlike English, there is no auxiliary ''do/does''. This section explicitly addresses
+    the ''Do Trap'' by comparing direct statement-to-question transformations.'
+  - 'Introducing the negation particle ''не'' (not) vs the response ''ні'' (no). Learner error focus: avoiding the phonetic
+    and functional confusion between these two essential words (''Ні, я не знаю'').'
+  - 'Visualizing the voice: using arrows (↗) to illustrate rising intonation in questions without ''чи'', contrasting with
+    the falling tone (↘) of negative statements.'
+- section: 'Презентація: Питальні конструкції (Presentation: Interrogative Structures)'
+  words: 325
+  points:
+  - Standard yes/no questions using the particle 'чи'. Contextualizing 'чи' as a marker of politeness, emphasis, or formal
+    register in sentences like 'Чи ви розумієте?'.
+  - 'The spoken alternative: rising intonation alone. Explain that dropping ''чи'' is standard in casual conversation but
+    requires a sharp pitch rise (↗) on the focus word to avoid sounding like a statement.'
+  - 'Comprehensive set of interrogative words aligned with State Standard §4.3.1 (A1): що, хто, де, коли, куди, звідки. Note
+    on the standard ''що'' vs the ubiquitous spoken variant ''шо''.'
+  - 'Answering patterns: ''Так'' vs ''Ні''. Practice responding to ''чи''-questions with confirmation or negation using ''так''
+    or ''ні'' + ''не'' + verb.'
+- section: 'Практика: Тренування заперечень та запитань (Practice: Drilling Negation and Questions)'
+  words: 250
+  points:
+  - 'Sentence transformation drills: turning positive statements into negative ones and then into interrogative forms (e.g.,
+    ''Ти знаєш'' -> ''Ти не знаєш'' -> ''Чи ти знаєш?'').'
+  - 'Error correction lab: identifying and fixing ''English-transfer'' questions that incorrectly use auxiliary verbs or flat
+    intonation patterns.'
+  - 'Matching exercise: pairing question words (''хто'', ''що'', ''де'', ''куди'') with appropriate situational answers to
+    build contextual syntactic intuition.'
+- section: 'Продукція: Комунікативні сценарії (Production: Communicative Scenarios)'
+  words: 250
+  points:
+  - 'The Café Scenario: asking questions about the menu, availability, and prices (e.g., ''Де кава?'', ''Скільки це коштує?'',
+    ''Чи є цукор?'').'
+  - 'Roleplay: ''The Investigative Journalist'' (Persona). Students interview each other using a checklist of question words
+    to uncover basic facts about their partners.'
+  - 'Negative responses and frequency: practicing ''Ні, я ніколи не...'' to integrate frequency adverbs like ''ніколи'', ''завжди'',
+    and ''часто'' into negative statements.'
+- section: "З'єднуємо речення (Joining Sentences)"
+  words: 200
+  points:
+  - "Compound sentences with і/й (and), а (and/but), але (but):
+    Я люблю каву, і він любить каву. Я люблю каву, але він любить чай.
+    State Standard §4.3.2 requires these at A1."
+  - "Causal clauses with тому що / бо (because):
+    Я не йду, тому що я хворий. Він не прийшов, бо холодно.
+    бо is more colloquial, тому що is neutral/formal."
+  - "Pattern: [sentence 1] + [conjunction] + [sentence 2]. The word order
+    within each sentence stays the same — just add the connector."
+- section: Культурний контекст та ALF (Cultural Context and ALF)
+  words: 125
+  points:
+  - 'Register nuances: when to use the formal ''чи'' (standard/polite) versus intonation-only questions (conversational/casual)
+    in various Ukrainian social settings.'
+  - 'Pop culture integration: the iconic ALF quote ''Ти не любиш котів? Ти просто не вмієш їх готувати!''. Use this to demonstrate
+    negation, rhetorical intonation, and a touch of dark Ukrainian humor.'
+vocabulary_hints:
+  required:
+  - чи (question particle) — Чи ти...? Чи це...? (Polite/Standard question marker)
+  - що (what) — Що це? Що ти робиш?; mention spoken variant 'шо' (Top 10 word)
+  - хто (who) — Хто це? Хто там? (Top 50 word)
+  - де (where) — Де ти? Де туалет? (High frequency adverb)
+  - коли (when) — Коли сніданок? Коли ти вдома?
+  - не (not) — не знаю, не розумію, не хочу (Top 5 particle; always before the verb)
+  - так (yes) — так, звичайно; так, будь ласка
+  - ні (no) — ні, дякую; ні, не... (Phonetic contrast with 'не')
+  recommended:
+  - куди (where to) — Куди ви їдете? (Standard §4.3.1)
+  - звідки (from where) — Звідки ти? (Standard §4.3.1)
+  - чому (why) — Чому ти тут? Чому ні?
+  - як (how) — Як справи? Як це?
+  - скільки (how much) — Скільки це коштує?
+  - завжди (always) — я завжди тут
+  - ніколи (never) — я ніколи не... (Requires double negation)
+activity_hints:
+- type: fill-in
+  focus: Form questions with чи
+  items: 15
+- type: fill-in
+  focus: Complete with question words
+  items: 20
+- type: fill-in
+  focus: Make sentences negative
+  items: 15
+- type: fill-in
+  focus: Question-answer pairs
+  items: 8
+connects_to:
+- a1-16 (The Living Verb II)
+- a1-41 (At The Cafe)
+prerequisites:
+- a1-15 (The Living Verb I)
+persona:
+  voice: Patient Supportive Tutor
+  role: Investigative Journalist
+grammar:
+- Yes/no questions with чи
+- Question words
+- Negation with не
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -577,18 +722,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -596,18 +768,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

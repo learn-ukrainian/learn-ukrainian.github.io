@@ -1,0 +1,82 @@
+module: a1-034
+level: A1
+sequence: 34
+slug: checkpoint-cases
+version: '1.0'
+title: "Checkpoint: Cases"
+subtitle: "Контрольна точка: відмінки — Review of Accusative, Locative, and Genitive"
+focus: checkpoint
+pedagogy: TTT
+phase: A1.3 [Cases & Prepositions]
+word_target: 1000
+objectives:
+- Review and consolidate Accusative, Locative, and Genitive cases
+- Practice preposition-case pairings (в/у, на, через, за, про)
+- Reinforce adjective agreement across oblique cases
+- Reinforce pronoun declension including н-prefix after prepositions
+content_outline:
+- section: "Огляд (Overview)"
+  words: 100
+  points:
+  - "TTT structure: Test, Teach, Test"
+  - "Scope: Accusative, Locative, Genitive + prepositions + agreement"
+- section: "Навичка 1: Відмінки (Skill 1: Cases)"
+  words: 250
+  points:
+  - "Accusative: Кого? Що? — direct object, feminine -а→-у, animate masc = Gen"
+  - "Locative: Де? — location after в/у, на"
+  - "Genitive: немає + Gen for absence"
+  - "Combined café scenario using all three cases"
+- section: "Навичка 2: Прийменники (Skill 2: Prepositions)"
+  words: 200
+  points:
+  - "Direction (Куди?) → Accusative vs Location (Де?) → Locative"
+  - "Additional Accusative prepositions: за, через, про"
+- section: "Навичка 3: Узгодження (Skill 3: Agreement)"
+  words: 250
+  points:
+  - "Adjective agreement in Accusative and Locative"
+  - "Pronoun declension: я/ти/він across cases"
+  - "The н-prefix on pronouns after prepositions"
+- section: "Інтеграційне завдання (Integration Task)"
+  words: 150
+  points:
+  - "Navigation dialogue combining all three cases"
+  - "Self-assessment guidance"
+- section: "Підсумок"
+  words: 50
+  points:
+  - "Self-check questions"
+  - "Readiness assessment for A1.4"
+vocabulary_hints:
+  required:
+  - "парк — park (Acc/Loc examples)"
+  - "книга — book (feminine Acc example)"
+  - "кафе — café (neuter, indeclinable)"
+  - "місто — city (Loc example)"
+  - "вулиця — street (feminine Acc/Loc)"
+  recommended:
+  - "зупинка — stop (navigation dialogue)"
+  - "карта — map"
+  - "кава — coffee (Gen with немає)"
+connects_to:
+- a1-033 (Adjective Case Forms)
+- a1-035 (Direction and Origin)
+prerequisites:
+- a1-025 (Accusative)
+- a1-029 (Locative)
+- a1-031 (Genitive)
+- a1-033 (Adjective Case Forms)
+persona:
+  voice: Patient Supportive Tutor
+  role: Checkpoint Coach
+register: розмовний
+duration: "30 min"
+transliteration: no
+tags:
+- checkpoint
+- cases
+- accusative
+- locative
+- genitive
+- review

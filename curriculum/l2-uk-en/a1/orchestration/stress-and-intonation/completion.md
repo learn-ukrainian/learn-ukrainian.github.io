@@ -2,7 +2,9 @@ FAIL: pipeline a1 6
 
   Module:   stress-and-intonation
   Track:    a1
-  Mode:     v6
-  Words:    1909 (target: 1200)
+  Mode:     v5
+  Words:    0 (target: 1200)
+  Sections: ?/?
+  Archive:  no
   Verdict:  FAIL
-  Date:     2026-03-17T19:24:25.128986+00:00
+  Date:     2026-03-17T23:12:15Z

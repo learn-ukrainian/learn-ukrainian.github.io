@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 8 of the A1 track (Ukrainian for English speakers). Title: "Greetings and Politeness" — Hello and Thank You. Phase: A1.1 [First Contact]. Previous module: The Gender Code. Next module: This Is I Am.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,16 +60,17 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 7
 **Previous module:** The Gender Code
 
-**Cumulative vocabulary (83 words):**
+**Cumulative vocabulary (95 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, сестра
-дерево, вулиця, автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів
-сім'я, ґудзик, вода, кава, чай, замок, рука, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
-вона, воно, книга, слово, мова, дім, вікно, брат, ніч, час
-море, сонце, земля
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
+зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття
 
 **Grammar already taught (29 topics):**
 - Full alphabet overview (33 letters)
@@ -124,6 +127,8 @@ You may use related words as fixed phrases for foreshadowing, but do NOT explain
 - вибачте (excuse me, formal) — Top 500 word; used to get attention or apologize politely
 - перепрошую (I apologize) — formal apology; more sincere than вибачте
 - дуже приємно (pleased to meet you) — introduction formula; literally 'very pleasant'
+- пане (Mr., formal address) — vocative form used before male names/titles
+- пані (Ms., formal address) — vocative form used before female names/titles
 
 **Recommended** (use in your content to reach the vocabulary target):
 - бувай/бувайте (bye, informal/formal plural) — casual farewell; literally 'be well'
@@ -137,69 +142,34 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 15-35% Ukrainian.
+TARGET: 10-20% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
-- UKRAINIAN CONTENT: Words and phrases inline bolded. Short example sentences in bulleted lists or tables — each with English gloss on the same line.
-- TABLES: Word families, vocabulary groups, simple paradigm tables.
-- PATTERN BOXES: Show transformations: `слово → слова` (word → words).
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian vocabulary. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
 Ukrainian sentences max 10 words.
 
-### Videos
-- **Start learning UKRAINIAN: Greetings! How are you? What is your name? Personal pronouns in Ukrainian** (Ukrainian with Olha)
-  URL: https://www.youtube.com/watch?v=3zZWCCS7igw
-  Score: 1.0 -- This video comprehensively covers greetings, politeness phrases, and introductions, aligning perfectly with multiple sections of the module including Вітання, Ввічливість, and Знайомство.
-  Suggested placement: After Знайомство (Introductions) - as it covers an extensive range of module topics.
-  Key excerpt: Today we will learn personal pronouns, phrases of politess, how to say how are you and answer to it and keep a small talk conversation and also how to introduce yourself. Here we have greetings in the first column.
-
-- **FMU 1-50 | Greetings in Ukrainian: informal, formal and fun! | 5 Minute Ukrainian** (Ukrainian Lessons)
-  URL: https://www.youtube.com/watch?v=dtufctJhBrY
-  Score: 0.9 -- Directly covers informal and formal greetings, which is highly relevant to the Вітання and potentially the Ти і Ви sections of the module.
-  Suggested placement: After Вітання (Greetings) - as it explicitly discusses various ways to greet.
-  Key excerpt: How to greet Someone in Ukrainian Привітик це Анна і новий епізод подкасту 5 хвилин української Today we will Talk more about thatвіtic and Other Ways To greet Someone вітатися to greet It Will Be formal informal and Some Fun Ways
-
-- **Greetings & Farewell + Words of Politeness 💙💛 #ukrainianlanguage #ukrainianlessons** (Ukrainian with Olha)
-  URL: https://www.youtube.com/watch?v=yXoHXF7Q6x8
-  Score: 0.9 -- Provides a good overview of common greetings and politeness words, directly relevant to the Вітання and Ввічливість sections.
-  Suggested placement: After Ввічливість (Politeness) - as it clearly lists phrases for greetings and politeness.
-  Key excerpt: Добрий день. Good afternoon. Добрий вечір. Good evening. Доброго ранку. Good morning. Привіт. Hello. Будь ласка. Please or you welcome. Прошу. Here you go.
-
-- **ULP 2-63 | Вітання зі святами | Ukrainian Holiday Greetings** (Ukrainian Lessons)
-  URL: https://www.youtube.com/watch?v=cQQB8GX3zxM
-  Score: 0.5 -- The video focuses on holiday-specific greetings, which is a sub-category of greetings, but not the primary focus of general greetings and politeness in this module.
-  Suggested placement: After Вітання (Greetings) - as an extension covering specific greeting contexts.
-  Key excerpt: я хочу вас навчити Як вітати зі святами українською щоб ви могли написати комусь повідомлення електронний лист чи надіслати листівку українцям тому якщо вам цікаво як українці вітають зі святами слухайте Цей урок
-
-
-### Podcast Episodes
-*Each episode has audio + transcript + vocabulary list -- recommend to students as supplementary listening.*
-
-- **ULP S1 Ep1: Informal Greetings in Ukrainian**
-  URL: https://www.ukrainianlessons.com/episode1/
-  Relevance: 0.5
-  Topics: phrases, greetings
-
-- **ULP S1 Ep2: Formal Greetings and Saying Goodbye in Ukrainian + Pronouns**
-  URL: https://www.ukrainianlessons.com/episode2/
-  Relevance: 0.5
-  Topics: grammar, pronouns, phrases, greetings, goodbyes
-
-- **ULP S2 Ep63: Ukrainian Holiday Greetings**
-  URL: https://www.ukrainianlessons.com/episode63/
-  Relevance: 0.5
-  Topics: grammar, cases, genitive, instrumental, culture
-
 ### Blog Articles & Guides
-- **Talk Ukrainian: Greetings in Ukrainian** (talkukrainian)
-  URL: https://talkukrainian.com/greetings/
-  Relevance: 0.7
-  Topics: greetings, hello, привіт, introductions
-
 - **Polite Phrases in Ukrainian** (verba.school)
   URL: https://www.verba.school/post/polite-phrases-in-ukrainian
-  Relevance: 0.6
-  Topics: vocabulary, phrases, greetings, politeness
+  Relevance: 1.0
+
+- **Informal Greetings in Ukrainian** (ukrainianlessons.com)
+  URL: https://www.ukrainianlessons.com/episode1/
+  Relevance: 1.0
+
+- **Formal Greetings and Saying Goodbye in Ukrainian + Pronouns** (ukrainianlessons.com)
+  URL: https://www.ukrainianlessons.com/episode2/
+  Relevance: 1.0
+
+- **Greetings in Ukrainian** (ukrainianlessons.com)
+  URL: https://www.ukrainianlessons.com/greetings/
+  Relevance: 1.0
+
+- **Talk Ukrainian: Greetings in Ukrainian** (talkukrainian)
+  URL: https://talkukrainian.com/greetings/
+  Relevance: 1.0
 
 
 ### Textbook References
@@ -283,7 +253,12 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
   - Вибачте (excuse me, formal) vs Вибач (excuse me, informal) — used to get attention, apologize for a minor inconvenience, or interrupt politely
   - Перепрошую (I apologize) — a more formal and sincere apology than Вибачте; used when you have genuinely inconvenienced someone
   - Usage contexts: ordering at a cafe (Будь ласка, каву), bumping into someone (Вибачте!), receiving a gift (Дуже дякую!)
-- `## Знайомство (Introductions)` (~250 words)
+- `## Звертання (Addressing People)` (~150 words)
+  - When you address someone directly, Ukrainian changes the name form. This is called the vocative (кличний відмінок). For now, just memorize these forms as fixed phrases — we will cover the full vocative rules later.
+  - Common address forms: Мамо! Тату! Бабусю! Дідусю! — used when calling family members. Друже! — when addressing a friend.
+  - Formal address: пане (Mr.), пані (Ms.) — Добрий день, пане Петре! Добрий день, пані Оксано! Notice how the name also changes.
+  - Key pattern: most feminine names/titles end in -о (Мамо, Оксано, пані Іро), most masculine in -е or -у (Друже, Тату, пане Петре).
+- `## Знайомство (Introductions)` (~200 words)
   - Asking names: Як вас звати? (formal) vs Як тебе звати? (informal) — literally 'How do they call you?'
   - Responding: Мене звати... (My name is...) — the standard self-introduction formula from State Standard §4.2.3.1
   - Pleased to meet you: Дуже приємно (very pleasant) or Приємно познайомитись (pleasant to meet) — said after exchanging names
@@ -302,7 +277,8 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 | Вітання (Greetings) | 200+ |
 | Ти і Ви (T-V distinction) | 250+ |
 | Ввічливість (Politeness) | 250+ |
-| Знайомство (Introductions) | 250+ |
+| Звертання (Addressing People) | 150+ |
+| Знайомство (Introductions) | 200+ |
 | Діалоги (Dialogues) | 250+ |
 | **Total** | **1200+ (aim for ~1440)** |
 
@@ -529,18 +505,151 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-008
+level: A1
+sequence: 8
+slug: greetings-and-politeness
+version: '2.0'
+title: Greetings and Politeness
+subtitle: Hello and Thank You
+focus: vocabulary
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Greet people appropriately by time of day
+- Choose correctly between Ти and Ви based on social context
+- Use basic politeness expressions (thank you, please, excuse me)
+- Introduce yourself and respond to introductions
+content_outline:
+- section: Вітання (Greetings)
+  words: 200
+  points:
+  - 'Informal greeting: Привіт — used with friends, peers, and children; the universal casual hello'
+  - 'Formal time-based greetings: Добрий ранок (morning, until ~12:00), Добрий день (afternoon, ~12:00-18:00), Добрий вечір
+    (evening, after ~18:00) — used with strangers, elders, and in professional settings'
+  - 'Goodbyes: До побачення (formal goodbye, literally ''until seeing''), Бувай/Бувайте (informal goodbye, literally ''be
+    well''), На все добре (all the best)'
+  - 'When to use which: matching the greeting to the social context and time of day — using Добрий день as the safe default
+    when unsure'
+- section: Ти і Ви (T-V distinction)
+  words: 250
+  points:
+  - 'Ти = singular informal: used with one person you know well — friends, family members, children, peers of your age'
+  - 'Ви = singular formal OR plural: used with one person you respect (stranger, teacher, elder, boss) OR with any group of
+    two or more people'
+  - 'The safety rule: always start with Ви until explicitly invited to switch — the phrase ''Давай на ти?'' (Shall we switch
+    to ти?) signals the transition'
+  - 'Cultural importance: using Ти with a stranger or elder is considered rude and disrespectful in Ukrainian culture; this
+    is more strictly observed than in many Western European cultures'
+- section: Ввічливість (Politeness)
+  words: 250
+  points:
+  - Дякую (thank you) — the universal expression of gratitude; can be intensified with Дуже дякую (thank you very much) or
+    Щиро дякую (sincerely thank you)
+  - 'Будь ласка (please/you''re welcome) — dual function: used both when requesting something and when responding to thanks'
+  - Вибачте (excuse me, formal) vs Вибач (excuse me, informal) — used to get attention, apologize for a minor inconvenience,
+    or interrupt politely
+  - Перепрошую (I apologize) — a more formal and sincere apology than Вибачте; used when you have genuinely inconvenienced
+    someone
+  - 'Usage contexts: ordering at a cafe (Будь ласка, каву), bumping into someone (Вибачте!), receiving a gift (Дуже дякую!)'
+- section: "Звертання (Addressing People)"
+  words: 150
+  points:
+  - "When you address someone directly, Ukrainian changes the name form. This is
+    called the vocative (кличний відмінок). For now, just memorize these forms
+    as fixed phrases — we will cover the full vocative rules later."
+  - "Common address forms: Мамо! Тату! Бабусю! Дідусю! — used when calling
+    family members. Друже! — when addressing a friend."
+  - "Formal address: пане (Mr.), пані (Ms.) — Добрий день, пане Петре!
+    Добрий день, пані Оксано! Notice how the name also changes."
+  - "Key pattern: most feminine names/titles end in -о (Мамо, Оксано, пані Іро),
+    most masculine in -е or -у (Друже, Тату, пане Петре)."
+- section: Знайомство (Introductions)
+  words: 200
+  points:
+  - 'Asking names: Як вас звати? (formal) vs Як тебе звати? (informal) — literally ''How do they call you?'''
+  - 'Responding: Мене звати... (My name is...) — the standard self-introduction formula from State Standard §4.2.3.1'
+  - 'Pleased to meet you: Дуже приємно (very pleasant) or Приємно познайомитись (pleasant to meet) — said after exchanging
+    names'
+  - 'Formal vs informal introductions: meeting a professor (Добрий день. Як вас звати? Мене звати... Дуже приємно.) vs meeting
+    a classmate (Привіт! Як тебе звати? Я... Приємно!)'
+- section: Діалоги (Dialogues)
+  words: 250
+  points:
+  - 'Dialogue 1 — Meeting someone for the first time (formal): full greeting-introduction-farewell sequence using Ви, Добрий
+    день, Як вас звати, До побачення'
+  - 'Dialogue 2 — Greeting a friend (informal): using Привіт, Як справи? (How are things?), Бувай with casual register'
+  - 'Dialogue 3 — Asking for something politely: using Вибачте to get attention, Будь ласка when requesting, Дякую when receiving'
+  - 'Dialogue 4 — Thanking and saying goodbye: combining gratitude expressions with appropriate farewell formulas for formal
+    and informal contexts'
+vocabulary_hints:
+  required:
+  - привіт (hello, informal) — Top 200 word; the universal casual greeting among friends and peers
+  - 'добрий ранок (good morning) — formal morning greeting; collocations: Добрий ранок, пане/пані!'
+  - добрий день (good afternoon) — formal daytime greeting; the safest default greeting; Top 100 collocation
+  - добрий вечір (good evening) — formal evening greeting; used after approximately 18:00
+  - до побачення (goodbye) — formal farewell; literally 'until seeing'; Top 300 collocation
+  - 'дякую (thank you) — Top 100 word; collocations: дуже дякую, щиро дякую'
+  - будь ласка (please/you're welcome) — Top 100 collocation; dual function as request marker and response to thanks
+  - вибачте (excuse me, formal) — Top 500 word; used to get attention or apologize politely
+  - перепрошую (I apologize) — formal apology; more sincere than вибачте
+  - дуже приємно (pleased to meet you) — introduction formula; literally 'very pleasant'
+  - пане (Mr., formal address) — vocative form used before male names/titles
+  - пані (Ms., formal address) — vocative form used before female names/titles
+  recommended:
+  - бувай/бувайте (bye, informal/formal plural) — casual farewell; literally 'be well'
+  - здрастуйте (hello, formal) — alternative formal greeting; slightly old-fashioned but still used
+  - 'ласкаво просимо (welcome) — used when receiving guests; collocations: Ласкаво просимо до України!'
+  - на все добре (all the best) — warm farewell formula; used in both formal and semi-formal contexts
+activity_hints:
+- type: match-up
+  focus: Match formal and informal greeting equivalents
+  items: 10
+- type: quiz
+  focus: Choose the appropriate greeting for a given social situation
+  items: 10
+- type: fill-in
+  focus: Complete greeting and introduction dialogues
+  items: 8
+- type: unjumble
+  focus: Put greeting dialogue lines in correct order
+  items: 6
+connects_to:
+- a1-09 (This Is, I Am)
+prerequisites:
+- a1-07 (The Gender Code)
+persona:
+  voice: Patient Supportive Tutor
+  role: Friendly Barista
+grammar:
+- T-V distinction
+- Imperative forms in politeness expressions
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -569,18 +678,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -588,18 +724,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

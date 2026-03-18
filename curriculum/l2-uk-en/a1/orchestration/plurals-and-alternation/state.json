@@ -24,7 +24,39 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-16T21:20:11Z",
+      "ts": "2026-03-18T02:06:30Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-18T02:26:24Z",
+      "attempts": 2,
+      "note": "escalation-claude",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-18T02:28:31Z",
+      "task_id": "v5-plurals-and-alternation-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-18T02:42:08Z",
+      "attempts": 4,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",

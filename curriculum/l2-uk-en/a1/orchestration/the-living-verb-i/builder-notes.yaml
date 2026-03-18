@@ -1,0 +1,33 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1420
+deviations:
+  - section: "Презентація (Presentation)"
+    reason: "Included писати stem change (с → ш) as preview since it appears in Practice section drills. Plan does not explicitly list it but it is a high-frequency required verb."
+  - section: "Activities"
+    reason: "Plan hints suggest 30/20/18 items for the three required activities. Reduced to 8/8/6 per activity for appropriate A1 cognitive load. Added 5 additional activities (quiz, true-false, unjumble, group-sort, match-up) to reach 8 total."
+frictions:
+  - type: PLAN_GAP
+    description: "розуміти is listed as recommended vocabulary but is not a First Conjugation (-ати) verb — it ends in -іти. Its present tense forms happen to follow I conjugation endings (розумію, розумієш), but this is an exception. Used it in content without deep conjugation analysis."
+    proposed_fix: "Plan could note розуміти's exceptional status or defer it to a later module."
+  - type: TEMPLATE_CONSTRAINT
+    description: "писати (required vocab) has a consonant alternation (с → ш) that makes it partially irregular for First Conjugation. Addressed with a callout box rather than full paradigm analysis."
+    proposed_fix: "No fix needed — the plan correctly includes it as a high-frequency verb learners need early."
+research_gaps:
+  - "No Grade 3-4 textbook content found specifically teaching I vs II conjugation distinction — most detailed treatment is Grade 7 (Litvinova, Avramenko)"
+unverified_terms: []
+review_focus:
+  - "Verify писати stem change explanation is clear enough for A1 without being overwhelming"
+  - "Check that працювати stem contraction is adequately drilled in activities"
+  - "Confirm dialogue naturalness — especially the library dialogue"
+  - "Check розуміти usage in content — appears only once (infinitive in summary) to avoid conjugation confusion"
+rag_tools_used:
+  - "search_text: 'дієслово першої дієвідміни теперішній час особові закінчення -ати' grade=3 → Grade 3 verb tense overview (Ponomarova, Vashulenko, Kravtsova)"
+  - "search_text: 'дієвідміна дієслова читати писати працювати особа число' grade=7 → Grade 7 conjugation tables (Litvinova §10, Avramenko)"
+  - "search_text: 'дієслово особа число закінчення читаю читаєш читає' grade=4 → Grade 4 personal endings table (Zaharijchuk p.155, Kravtsova p.107)"
+  - "verify_lemma: читати → 25 forms confirmed (all present tense forms verified)"
+  - "verify_lemma: працювати → 24 forms confirmed (stem contraction працю- verified)"
+  - "verify_lemma: слухати → 25 forms confirmed"
+  - "verify_lemma: знати → 25 forms confirmed"
+  - "verify_words: batch of 31 words — all 31 FOUND in VESUM"
+  - "verify_words: batch of 17 additional words (adverbs, nouns) — all 17 FOUND"

@@ -24,7 +24,38 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-16T21:21:25Z",
+      "ts": "2026-03-18T02:48:56Z",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-18T02:58:30Z",
+      "attempts": 2,
+      "note": "escalation-claude-dedup",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-18T02:58:30Z",
+      "note": "adopted-existing",
+      "executor": {
+        "type": "script",
+        "name": "adopted_existing"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-18T03:06:14Z",
+      "attempts": 4,
+      "note": "needs-manual-review",
       "executor": {
         "type": "llm",
         "agent": "gemini",

@@ -1,38 +1,28 @@
 # RAG Verification: vowel-sounds
 
-**Date:** 2026-03-17 06:50 UTC | **Words checked:** 86 | **VESUM coverage:** 73/86 (84.9%)
+**Date:** 2026-03-17 23:11 UTC | **Words checked:** 48 | **VESUM coverage:** 45/48 (93.8%)
 
 ## Summary
-- ✅ Verified (VESUM): 73
-- ⚠️ Partial (RAG only): 4
-- ❌ Not found: 9
+- ✅ Verified (VESUM): 45
+- ⚠️ Partial (RAG only): 2
+- ❌ Not found: 1
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| блу-ко | prose | ✗ | ✗ | ✗ |
-| И | prose | ✗ | ✗ | ✗ |
-| й-а | prose | ✗ | ✗ | ✗ |
-| й-у | prose | ✗ | ✗ | ✗ |
-| ЛО | prose | ✗ | ✗ | ✗ |
-| мо-ло | prose | ✗ | ✗ | ✗ |
-| Єв-ро-па | activities | ✗ | ✗ | ✗ |
-| Європа | prose | ✗ | ✗ | ✗ |
-| Ї | prose | ✗ | ✗ | ✗ |
+| Європа | activities | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| йа | prose | ✗ | ✓ | ✗ |
-| йе | prose | ✗ | ✓ | ✗ |
-| КА | prose | ✗ | ✓ | ✗ |
-| Ю | prose | ✗ | ✓ | ✗ |
+| Большакова | prose | ✗ | ✓ | ✗ |
+| Захарійчук | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 81 | 69 | 8 |
-| Activities (.yaml) | 5 | 4 | 1 |
+| Prose (.md) | 28 | 26 | 0 |
+| Activities (.yaml) | 20 | 19 | 1 |

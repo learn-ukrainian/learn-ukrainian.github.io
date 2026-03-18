@@ -1,0 +1,246 @@
+- type: match-up
+  title: "Colors and Clothing Names"
+  instruction: "Match each Ukrainian word to its English meaning."
+  pairs:
+    - left: "білий"
+      right: "white"
+    - left: "чорний"
+      right: "black"
+    - left: "червоний"
+      right: "red"
+    - left: "синій"
+      right: "blue"
+    - left: "зелений"
+      right: "green"
+    - left: "жовтий"
+      right: "yellow"
+    - left: "сорочка"
+      right: "shirt"
+    - left: "штани"
+      right: "pants"
+    - left: "куртка"
+      right: "jacket"
+    - left: "светр"
+      right: "sweater"
+
+- type: match-up
+  title: "Match Colors to Clothing Items"
+  instruction: "Match each color-clothing phrase to its English meaning."
+  pairs:
+    - left: "червона сукня"
+      right: "red dress"
+    - left: "синій светр"
+      right: "blue sweater"
+    - left: "білі штани"
+      right: "white pants"
+    - left: "чорна куртка"
+      right: "black jacket"
+    - left: "зелена сорочка"
+      right: "green shirt"
+    - left: "жовте плаття"
+      right: "yellow dress"
+    - left: "сині джинси"
+      right: "blue jeans"
+    - left: "чорні окуляри"
+      right: "black glasses"
+
+- type: fill-in
+  title: "Describe the Outfit"
+  instruction: "Choose the correct color form to complete each sentence."
+  items:
+    - sentence: "Це _____ сукня."
+      answer: "червона"
+      options: ["червоний", "червона", "червоне", "червоні"]
+      explanation: "Сукня is feminine, so the color takes the feminine ending -а."
+    - sentence: "Це _____ светр."
+      answer: "синій"
+      options: ["синій", "синя", "синє", "сині"]
+      explanation: "Светр is masculine, so синій keeps the masculine ending -ій."
+    - sentence: "Це _____ плаття."
+      answer: "чорне"
+      options: ["чорний", "чорна", "чорне", "чорні"]
+      explanation: "Плаття is neuter, so the color takes the neuter ending -е."
+    - sentence: "Це _____ штани."
+      answer: "білі"
+      options: ["білий", "біла", "біле", "білі"]
+      explanation: "Штани is always plural, so the color takes the plural ending -і."
+    - sentence: "Це _____ куртка."
+      answer: "зелена"
+      options: ["зелений", "зелена", "зелене", "зелені"]
+      explanation: "Куртка is feminine, so the color takes the feminine ending -а."
+    - sentence: "Це _____ сорочка."
+      answer: "жовта"
+      options: ["жовтий", "жовта", "жовте", "жовті"]
+      explanation: "Сорочка is feminine, so жовтий becomes жовта."
+    - sentence: "Це _____ небо."
+      answer: "синє"
+      options: ["синій", "синя", "синє", "сині"]
+      explanation: "Небо is neuter. Синій is soft-stem, so the neuter form is синє (not сине)."
+    - sentence: "Це _____ джинси."
+      answer: "сині"
+      options: ["синій", "синя", "синє", "сині"]
+      explanation: "Джинси is always plural, so the color takes the plural form сині."
+
+- type: fill-in
+  title: "Shopping for Clothes"
+  instruction: "Complete each sentence with the correct word."
+  items:
+    - sentence: "Ця сорочка — _____."
+      answer: "біла"
+      options: ["білий", "біла", "біле", "білі"]
+      explanation: "Сорочка is feminine, so the color is біла."
+    - sentence: "Ці штани — _____."
+      answer: "чорні"
+      options: ["чорний", "чорна", "чорне", "чорні"]
+      explanation: "Штани is plural, so the color takes the plural form чорні."
+    - sentence: "Мій светр — _____."
+      answer: "зелений"
+      options: ["зелений", "зелена", "зелене", "зелені"]
+      explanation: "Светр is masculine, so the color keeps the masculine ending -ий."
+    - sentence: "Ця куртка — _____."
+      answer: "синя"
+      options: ["синій", "синя", "синє", "сині"]
+      explanation: "Куртка is feminine. Синій is soft-stem, so the feminine form is синя."
+    - sentence: "Це плаття — _____."
+      answer: "червоне"
+      options: ["червоний", "червона", "червоне", "червоні"]
+      explanation: "Плаття is neuter, so the color takes the neuter ending -е."
+    - sentence: "Ці джинси — _____."
+      answer: "сині"
+      options: ["синій", "синя", "синє", "сині"]
+      explanation: "Джинси is always plural, so the color is сині."
+
+- type: quiz
+  title: "Color Agreement Check"
+  instruction: "Choose the correct answer."
+  items:
+    - question: "What is the feminine form of жовтий?"
+      options:
+        - text: "жовта"
+          correct: true
+        - text: "жовте"
+          correct: false
+        - text: "жовтій"
+          correct: false
+        - text: "жовті"
+          correct: false
+      explanation: "Feminine adjectives with hard stems end in -а, so жовтий becomes жовта."
+    - question: "Which color is a soft-stem adjective with different endings from the others?"
+      options:
+        - text: "синій"
+          correct: true
+        - text: "білий"
+          correct: false
+        - text: "жовтий"
+          correct: false
+        - text: "чорний"
+          correct: false
+      explanation: "Синій ends in -ій (soft stem), while the others end in -ий (hard stem)."
+    - question: "How do you say 'black jacket' in Ukrainian?"
+      options:
+        - text: "чорна куртка"
+          correct: true
+        - text: "чорний куртка"
+          correct: false
+        - text: "чорне куртка"
+          correct: false
+        - text: "чорні куртка"
+          correct: false
+      explanation: "Куртка is feminine, so the adjective takes the feminine ending -а."
+    - question: "Which of these clothing words is always plural in Ukrainian?"
+      options:
+        - text: "штани"
+          correct: true
+        - text: "сукня"
+          correct: false
+        - text: "куртка"
+          correct: false
+        - text: "светр"
+          correct: false
+      explanation: "Штани (pants) is always plural — there is no singular form."
+    - question: "What happens to the color бордо when describing different genders?"
+      options:
+        - text: "It stays the same — бордо never changes"
+          correct: true
+        - text: "It becomes борда for feminine"
+          correct: false
+        - text: "It becomes борде for neuter"
+          correct: false
+        - text: "It becomes борді for plural"
+          correct: false
+      explanation: "Бордо is a loan color (invariable) — it never changes its form."
+    - question: "How do you say 'one pair of jeans' in Ukrainian?"
+      options:
+        - text: "одні джинси"
+          correct: true
+        - text: "один джинси"
+          correct: false
+        - text: "одна джинси"
+          correct: false
+        - text: "одне джинси"
+          correct: false
+      explanation: "For plural-only nouns like джинси, use одні (not один/одна/одне)."
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement is true or false."
+  items:
+    - statement: "The Ukrainian word штани can be used in singular form."
+      correct: false
+      explanation: "Штани is always plural (pluralia tantum). There is no singular form."
+    - statement: "The color синій uses different endings than білий because it is a soft-stem adjective."
+      correct: true
+      explanation: "Синій is soft-stem (-ій/-я/-є/-і), while білий is hard-stem (-ий/-а/-е/-і)."
+    - statement: "To say 'red shirt' in Ukrainian, you say червоний сорочка."
+      correct: false
+      explanation: "Сорочка is feminine, so the correct form is червона сорочка."
+    - statement: "The word бордо changes its ending depending on the gender of the noun."
+      correct: false
+      explanation: "Бордо is an invariable loan color — it stays the same regardless of gender."
+    - statement: "The neuter form of синій is синє."
+      correct: true
+      explanation: "Soft-stem adjectives use -є for neuter, so синій becomes синє."
+    - statement: "Плаття and сукня both mean 'dress' but have different genders."
+      correct: true
+      explanation: "Сукня is feminine and плаття is neuter, which affects color agreement."
+
+- type: group-sort
+  title: "Sort by Gender"
+  instruction: "Sort these clothing and color phrases into the correct gender group."
+  groups:
+    - name: "Masculine (чоловічий)"
+      items:
+        - "чорний светр"
+        - "синій светр"
+        - "зелений светр"
+    - name: "Feminine (жіночий)"
+      items:
+        - "біла сорочка"
+        - "червона сукня"
+        - "чорна куртка"
+    - name: "Neuter (середній)"
+      items:
+        - "жовте плаття"
+        - "синє небо"
+    - name: "Plural (множина)"
+      items:
+        - "білі штани"
+        - "сині джинси"
+        - "чорні окуляри"
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["сукня", "Це", "червона"]
+      answer: "Це червона сукня"
+    - words: ["синій", "светр", "Це"]
+      answer: "Це синій светр"
+    - words: ["куртка", "чорна", "Ця"]
+      answer: "Ця куртка чорна"
+    - words: ["штани", "Ці", "білі"]
+      answer: "Ці штани білі"
+    - words: ["зелена", "Це", "сорочка"]
+      answer: "Це зелена сорочка"
+    - words: ["жовтий", "Мій", "светр"]
+      answer: "Мій светр жовтий"

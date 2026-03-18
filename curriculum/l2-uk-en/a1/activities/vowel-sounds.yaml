@@ -1,0 +1,263 @@
+- type: watch-and-repeat
+  title: "Vowel Pronunciation Drill"
+  instruction: "Watch each video, then repeat the vowel sound and example word aloud. Focus on keeping each vowel pure and clear."
+  items:
+    - letter: "А"
+      word: "мама"
+      video: "https://www.youtube.com/watch?v=hvB3VpcR3ZE"
+      note: "Open sound like 'a' in 'father'"
+    - letter: "О"
+      word: "око"
+      video: "https://www.youtube.com/watch?v=gJFxRIPRZbI"
+      note: "Rounded sound like 'o' in 'more' — stays pure even unstressed"
+    - letter: "У"
+      word: "тут"
+      video: "https://www.youtube.com/watch?v=VB1O6PmtYRU"
+      note: "Deep sound like 'oo' in 'moon'"
+    - letter: "Е"
+      word: "небо"
+      video: "https://www.youtube.com/watch?v=KFlsroBW0dk"
+      note: "Like 'e' in 'set' — NOT English 'ee'"
+    - letter: "И"
+      word: "риба"
+      video: "https://www.youtube.com/watch?v=W-1rCu0indE"
+      note: "Uniquely Ukrainian — jaw relaxed, tongue lower than for І"
+    - letter: "І"
+      word: "кіт"
+      video: "https://www.youtube.com/watch?v=Z9TH0H4ShGo"
+      note: "Like 'ee' in 'see' — tongue high, lips spread"
+    - letter: "Я"
+      word: "яблуко"
+      video: "https://www.youtube.com/watch?v=yhSAf41LX8I"
+      note: "At word start = Й + А (two sounds)"
+    - letter: "Ю"
+      word: "юнак"
+      video: "https://www.youtube.com/watch?v=9JdIBYCTWGw"
+      note: "At word start = Й + У (two sounds)"
+    - letter: "Є"
+      word: "Європа"
+      video: "https://www.youtube.com/watch?v=O0bwRyyBQSc"
+      note: "At word start = Й + Е (two sounds)"
+    - letter: "Ї"
+      word: "їжак"
+      video: "https://www.youtube.com/watch?v=UcjdjQXhAY8"
+      note: "ALWAYS two sounds Й + І — unique to Ukrainian"
+
+- type: classify
+  title: "Sort the Vowel Letters"
+  instruction: "Drag each letter into the correct category. Base vowels have one simple sound. Iotated vowels can represent two sounds."
+  categories:
+    - label: "Base Vowels"
+      symbol_hint: "vowel"
+      items: ["А", "О", "У", "Е", "И", "І"]
+    - label: "Iotated Vowels"
+      symbol_hint: "vowel"
+      items: ["Я", "Ю", "Є", "Ї"]
+
+- type: image-to-letter
+  title: "What Letter Does It Start With?"
+  instruction: "Look at the picture and tap the Ukrainian vowel letter the word starts with."
+  items:
+    - emoji: "🍎"
+      answer: "Я"
+      distractors: ["А", "Ю"]
+      note: "яблуко (apple)"
+    - emoji: "🦔"
+      answer: "Ї"
+      distractors: ["І", "Й"]
+      note: "їжак (hedgehog)"
+    - emoji: "👁️"
+      answer: "О"
+      distractors: ["А", "У"]
+      note: "око (eye)"
+    - emoji: "🥚"
+      answer: "Я"
+      distractors: ["Є", "А"]
+      note: "яйце (egg)"
+    - emoji: "🇺🇦"
+      answer: "У"
+      distractors: ["Ю", "О"]
+      note: "Україна (Ukraine)"
+    - emoji: "🌍"
+      answer: "Є"
+      distractors: ["Е", "Ю"]
+      note: "Європа (Europe)"
+    - emoji: "👨"
+      answer: "Ю"
+      distractors: ["У", "Я"]
+      note: "юнак (young man)"
+    - emoji: "🍽️"
+      answer: "Ї"
+      distractors: ["І", "Є"]
+      note: "їжа (food)"
+
+- type: quiz
+  title: "И vs І — Spot the Difference"
+  instruction: "These two vowels are the hardest contrast for English speakers. Test your knowledge!"
+  items:
+    - question: "Which vowel appears in the word риба (fish)?"
+      explanation: "Риба contains И — the uniquely Ukrainian vowel with a relaxed jaw position."
+      options:
+        - text: "И"
+          correct: true
+        - text: "І"
+          correct: false
+        - text: "Е"
+          correct: false
+        - text: "А"
+          correct: false
+    - question: "Which vowel appears in the word кіт (cat)?"
+      explanation: "Кіт contains І — the high, bright vowel like 'ee' in 'see'."
+      options:
+        - text: "І"
+          correct: true
+        - text: "И"
+          correct: false
+        - text: "У"
+          correct: false
+        - text: "О"
+          correct: false
+    - question: "Which vowel appears in the word сир (cheese)?"
+      explanation: "Сир contains И — tongue lower, jaw more relaxed than for І."
+      options:
+        - text: "И"
+          correct: true
+        - text: "І"
+          correct: false
+        - text: "Е"
+          correct: false
+        - text: "А"
+          correct: false
+    - question: "Which vowel appears in the word ліс (forest)?"
+      explanation: "Ліс contains І — tongue high, lips spread wide."
+      options:
+        - text: "І"
+          correct: true
+        - text: "И"
+          correct: false
+        - text: "Е"
+          correct: false
+        - text: "О"
+          correct: false
+    - question: "Which vowel appears in the word син (son)?"
+      explanation: "Син contains И — the distinctly Ukrainian vowel between English 'i' in 'bit' and 'e' in 'bet'."
+      options:
+        - text: "И"
+          correct: true
+        - text: "І"
+          correct: false
+        - text: "А"
+          correct: false
+        - text: "У"
+          correct: false
+    - question: "Which vowel appears in the word сік (juice)?"
+      explanation: "Сік contains І — bright and high, like 'ee' in 'see'."
+      options:
+        - text: "І"
+          correct: true
+        - text: "И"
+          correct: false
+        - text: "Е"
+          correct: false
+        - text: "О"
+          correct: false
+    - question: "The words кит (whale) and кіт (cat) differ by one vowel. Which word contains И?"
+      explanation: "Кит (whale) has И (relaxed jaw). Кіт (cat) has І (tongue high). This minimal pair is the key drill!"
+      options:
+        - text: "кит (whale)"
+          correct: true
+        - text: "кіт (cat)"
+          correct: false
+        - text: "Both words"
+          correct: false
+        - text: "Neither word"
+          correct: false
+    - question: "Which description matches the vowel І?"
+      explanation: "І is high and bright — tongue raised, lips spread. И is the opposite: jaw relaxed, tongue low."
+      options:
+        - text: "High, bright, tongue raised, lips spread"
+          correct: true
+        - text: "Relaxed jaw, tongue lower"
+          correct: false
+        - text: "Rounded, like 'oo' in 'moon'"
+          correct: false
+        - text: "Open, like 'a' in 'father'"
+          correct: false
+    - question: "Which vowel is uniquely Ukrainian — no exact match in English?"
+      explanation: "И has no exact English equivalent. It sits between 'i' in 'bit' and 'e' in 'bet'."
+      options:
+        - text: "И"
+          correct: true
+        - text: "І"
+          correct: false
+        - text: "А"
+          correct: false
+        - text: "О"
+          correct: false
+    - question: "Which vowel sounds like 'ee' in the English word 'see'?"
+      explanation: "І sounds like English 'ee' — bright, high, and tense."
+      options:
+        - text: "І"
+          correct: true
+        - text: "И"
+          correct: false
+        - text: "Е"
+          correct: false
+        - text: "У"
+          correct: false
+
+- type: group-sort
+  title: "Iotated Vowels — One Sound or Two?"
+  instruction: "Sort each word by whether its iotated vowel (Я, Ю, Є, or Ї) represents one sound or two sounds in that word."
+  groups:
+    - name: "Two sounds (at word start or after a vowel)"
+      items:
+        - "яблуко"
+        - "юнак"
+        - "їжак"
+        - "моя"
+        - "моє"
+        - "їжа"
+        - "яйце"
+    - name: "One sound (softens the consonant before it)"
+      items:
+        - "дядько"
+        - "люди"
+        - "синє"
+
+- type: fill-in
+  title: "Count the Vowels, Count the Syllables"
+  instruction: "Every vowel = one syllable. Count the vowels in each word and pick the correct number of syllables."
+  items:
+    - sentence: "молоко has ___ syllables."
+      answer: "3"
+      options: ["1", "2", "3", "4"]
+      explanation: "мо-ло-ко — three vowels (О, О, О), three syllables."
+    - sentence: "кіт has ___ syllable(s)."
+      answer: "1"
+      options: ["1", "2", "3", "4"]
+      explanation: "кіт — one vowel (І), one syllable."
+    - sentence: "риба has ___ syllables."
+      answer: "2"
+      options: ["1", "2", "3", "4"]
+      explanation: "ри-ба — two vowels (И, А), two syllables."
+    - sentence: "яблуко has ___ syllables."
+      answer: "3"
+      options: ["1", "2", "3", "4"]
+      explanation: "я-блу-ко — three vowels (Я, У, О), three syllables."
+    - sentence: "Україна has ___ syllables."
+      answer: "4"
+      options: ["2", "3", "4", "5"]
+      explanation: "У-кра-ї-на — four vowels (У, А, Ї, А), four syllables."
+    - sentence: "село has ___ syllable(s)."
+      answer: "2"
+      options: ["1", "2", "3", "4"]
+      explanation: "се-ло — two vowels (Е, О), two syllables."
+    - sentence: "мама has ___ syllables."
+      answer: "2"
+      options: ["1", "2", "3", "4"]
+      explanation: "ма-ма — two vowels (А, А), two syllables."
+    - sentence: "небо has ___ syllables."
+      answer: "2"
+      options: ["1", "2", "3", "4"]
+      explanation: "не-бо — two vowels (Е, О), two syllables."

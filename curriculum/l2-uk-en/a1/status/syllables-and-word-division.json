@@ -2,7 +2,7 @@
   "module": "syllables-and-word-division",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-17T21:26:20.681510Z",
+  "last_audit": "2026-03-18T00:10:55.399078Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-17T16:55:09.105790Z",
@@ -26,7 +26,7 @@
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/8"
+      "message": "8/0"
     },
     "vocabulary": {
       "status": "pass",

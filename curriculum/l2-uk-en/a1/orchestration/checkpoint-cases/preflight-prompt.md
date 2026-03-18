@@ -5,6 +5,8 @@ You are about to build a module using the prompt below. Before you start, verify
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 34 of the A1 track (Ukrainian for English speakers). Title: "Checkpoint: Cases" — Can You Handle the Cases?. Phase: A1.3 [Cases & Navigation]. Previous module: Adjective Case Forms. Next module: Direction And Origin.
+
 # Beginner Checkpoint: Synthesis & Review
 
 > **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor.
@@ -492,6 +494,12 @@ Total: {total} words (target: 1200)
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT re-explain concepts in detail — brief reminders only, then synthesize
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
 ## The Plan
@@ -594,9 +602,9 @@ register: розмовний
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).

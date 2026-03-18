@@ -1,0 +1,209 @@
+- type: fill-in
+  title: "Choose the Right Preposition and Form"
+  instruction: "Fill in the blank with the correct preposition + case form for direction or origin."
+  items:
+    - sentence: "Я іду ___ магазин."
+      answer: "в"
+      options: ["в", "на", "з", "до"]
+      explanation: "Use в + Accusative for going into a building like a store."
+    - sentence: "Вона їде ___ роботу."
+      answer: "на"
+      options: ["в", "на", "з", "до"]
+      explanation: "Робота uses на for both location and direction."
+    - sentence: "Він іде ___ лікаря."
+      answer: "до"
+      options: ["в", "на", "до", "з"]
+      explanation: "Use до + Genitive when going to see a person."
+    - sentence: "Я ___ України."
+      answer: "з"
+      options: ["з", "до", "в", "на"]
+      explanation: "Use з + Genitive for origin from a place."
+    - sentence: "Діти йдуть ___ школи."
+      answer: "до"
+      options: ["до", "в", "на", "з"]
+      explanation: "До + Genitive for heading towards school."
+    - sentence: "Вона ___ Львова."
+      answer: "зі"
+      options: ["з", "зі", "із", "від"]
+      explanation: "Use зі before words starting with Л + consonant cluster for smooth pronunciation."
+    - sentence: "Лист ___ мами."
+      answer: "від"
+      options: ["від", "з", "до", "на"]
+      explanation: "Use від + Genitive when something comes from a person."
+    - sentence: "Ми їдемо ___ Україну."
+      answer: "в"
+      options: ["в", "на", "до", "з"]
+      explanation: "Use в + Accusative for direction into a country."
+    - sentence: "Я іду ___ пошту."
+      answer: "на"
+      options: ["на", "в", "до", "з"]
+      explanation: "Пошта uses на for direction, just like for location."
+    - sentence: "Він виходить ___ дому."
+      answer: "з"
+      options: ["з", "від", "до", "в"]
+      explanation: "Use з + Genitive for going out of a place."
+    - sentence: "Подарунок ___ друга."
+      answer: "від"
+      options: ["від", "з", "до", "із"]
+      explanation: "Use від + Genitive when a gift comes from a person."
+    - sentence: "Я повертаюся ___."
+      answer: "додому"
+      options: ["додому", "до дому", "в дім", "на дім"]
+      explanation: "Додому is a special adverb meaning homeward, written as one word."
+
+- type: quiz
+  title: "Direction or Location?"
+  instruction: "Choose the correct answer for each question about Ukrainian direction and location."
+  items:
+    - question: "Which question word asks about direction (where to)?"
+      options:
+        - text: "Куди?"
+          correct: true
+        - text: "Де?"
+          correct: false
+        - text: "Звідки?"
+          correct: false
+        - text: "Коли?"
+          correct: false
+      explanation: "Куди? means where to? and asks about direction, using Accusative case."
+    - question: "What case does Куди? use with в/у and на?"
+      options:
+        - text: "Accusative (Знахідний)"
+          correct: true
+        - text: "Locative (Місцевий)"
+          correct: false
+        - text: "Genitive (Родовий)"
+          correct: false
+        - text: "Dative (Давальний)"
+          correct: false
+      explanation: "Куди? + в/у/на takes the Accusative case for direction."
+    - question: "'Я в магазині' answers which question?"
+      options:
+        - text: "Де?"
+          correct: true
+        - text: "Куди?"
+          correct: false
+        - text: "Звідки?"
+          correct: false
+        - text: "Як?"
+          correct: false
+      explanation: "В магазині uses Locative, answering Де? (where? — location)."
+    - question: "'Я іду в магазин' answers which question?"
+      options:
+        - text: "Куди?"
+          correct: true
+        - text: "Де?"
+          correct: false
+        - text: "Звідки?"
+          correct: false
+        - text: "Чому?"
+          correct: false
+      explanation: "В магазин uses Accusative, answering Куди? (where to? — direction)."
+    - question: "What is the difference between іти and їхати?"
+      options:
+        - text: "Іти = on foot, їхати = by vehicle"
+          correct: true
+        - text: "Іти = fast, їхати = slow"
+          correct: false
+        - text: "Іти = to arrive, їхати = to leave"
+          correct: false
+        - text: "They mean the same thing"
+          correct: false
+      explanation: "Іти is for walking, їхати is for traveling by vehicle (bus, train, car)."
+    - question: "Which preposition do you use when going to see a person?"
+      options:
+        - text: "до"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "з"
+          correct: false
+      explanation: "До + Genitive is used when heading towards a person: до лікаря, до друга."
+    - question: "What does Звідки? ask about?"
+      options:
+        - text: "Where from? (origin)"
+          correct: true
+        - text: "Where to? (direction)"
+          correct: false
+        - text: "Where? (location)"
+          correct: false
+        - text: "When? (time)"
+          correct: false
+      explanation: "Звідки? means where from? and uses Genitive with з/від."
+    - question: "'Зі школи' is the answer to which question?"
+      options:
+        - text: "Звідки?"
+          correct: true
+        - text: "Де?"
+          correct: false
+        - text: "Куди?"
+          correct: false
+        - text: "Як?"
+          correct: false
+      explanation: "Зі школи (from school) uses Genitive, answering Звідки? (where from?)."
+    - question: "Why do we say зі Львова instead of з Львова?"
+      options:
+        - text: "To avoid an awkward consonant cluster"
+          correct: true
+        - text: "Because Львів is a big city"
+          correct: false
+        - text: "Because it is a proper noun"
+          correct: false
+        - text: "There is no difference"
+          correct: false
+      explanation: "Ukrainian uses зі before words starting with Л + consonant for smooth pronunciation."
+    - question: "Which sentence correctly expresses direction to the post office?"
+      options:
+        - text: "Я іду на пошту."
+          correct: true
+        - text: "Я іду в пошту."
+          correct: false
+        - text: "Я іду з пошти."
+          correct: false
+        - text: "Я іду до пошті."
+          correct: false
+      explanation: "Пошта uses на for direction (на пошту), not в."
+
+- type: match-up
+  title: "Question, Case, and Preposition"
+  instruction: "Match each Ukrainian phrase to the question it answers."
+  pairs:
+    - left: "в магазині"
+      right: "Де? (location)"
+    - left: "в магазин"
+      right: "Куди? (direction)"
+    - left: "з магазину"
+      right: "Звідки? (origin)"
+    - left: "на роботі"
+      right: "Де? (at work)"
+    - left: "на роботу"
+      right: "Куди? (to work)"
+    - left: "з роботи"
+      right: "Звідки? (from work)"
+    - left: "до лікаря"
+      right: "Куди? (to the doctor)"
+    - left: "від лікаря"
+      right: "Звідки? (from the doctor)"
+    - left: "у Києві"
+      right: "Де? (in Kyiv)"
+    - left: "з Києва"
+      right: "Звідки? (from Kyiv)"
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence about direction or origin."
+  items:
+    - words: ["іду", "Я", "магазин", "в"]
+      answer: "Я іду в магазин"
+    - words: ["Вона", "на", "їде", "роботу"]
+      answer: "Вона їде на роботу"
+    - words: ["з", "Я", "України"]
+      answer: "Я з України"
+    - words: ["до", "іде", "Він", "лікаря"]
+      answer: "Він іде до лікаря"
+    - words: ["додому", "повертаюся", "Я"]
+      answer: "Я повертаюся додому"
+    - words: ["пошту", "іду", "на", "Я"]
+      answer: "Я іду на пошту"

@@ -1,0 +1,135 @@
+- type: match-up
+  title: Label room objects
+  instruction: Match the Ukrainian noun with its English translation.
+  pairs:
+    - left: стіл
+      right: table
+    - left: книга
+      right: book
+    - left: телефон
+      right: phone
+    - left: кімната
+      right: room
+    - left: стілець
+      right: chair
+    - left: ліжко
+      right: bed
+    - left: лампа
+      right: lamp
+    - left: вікно
+      right: window
+    - left: шафа
+      right: wardrobe
+    - left: двері
+      right: door
+
+- type: quiz
+  title: Match demonstrative to gender
+  instruction: Choose the correct demonstrative for the given noun.
+  items:
+    - question: "Оберіть правильну форму: ___ книга (feminine)"
+      options:
+        - text: цей
+          correct: false
+        - text: ця
+          correct: true
+        - text: це
+          correct: false
+        - text: ці
+          correct: false
+    - question: "Оберіть правильну форму: ___ стіл (masculine)"
+      options:
+        - text: цей
+          correct: true
+        - text: ця
+          correct: false
+        - text: це
+          correct: false
+        - text: ці
+          correct: false
+    - question: "Оберіть правильну форму: ___ вікно (neuter)"
+      options:
+        - text: цей
+          correct: false
+        - text: ця
+          correct: false
+        - text: це
+          correct: true
+        - text: ці
+          correct: false
+    - question: "Оберіть правильну форму: ___ двері (plural)"
+      options:
+        - text: цей
+          correct: false
+        - text: ця
+          correct: false
+        - text: це
+          correct: false
+        - text: ці
+          correct: true
+    - question: "Оберіть правильну форму: ___ кімната (feminine)"
+      options:
+        - text: той
+          correct: false
+        - text: та
+          correct: true
+        - text: те
+          correct: false
+        - text: ті
+          correct: false
+    - question: "Оберіть правильну форму: ___ крісло (neuter)"
+      options:
+        - text: той
+          correct: false
+        - text: та
+          correct: false
+        - text: те
+          correct: true
+        - text: ті
+          correct: false
+
+- type: fill-in
+  title: Complete with цей/ця/це
+  instruction: Fill in the blanks with the correct form of "цей" (this).
+  items:
+    - sentence: "___ ніж (masculine)"
+      answer: цей
+      options: [цей, ця, це, ці]
+    - sentence: "___ ложка (feminine)"
+      answer: ця
+      options: [цей, ця, це, ці]
+    - sentence: "___ ліжко (neuter)"
+      answer: це
+      options: [цей, ця, це, ці]
+    - sentence: "___ стільці (plural)"
+      answer: ці
+      options: [цей, ця, це, ці]
+    - sentence: "___ шафа (feminine)"
+      answer: ця
+      options: [цей, ця, це, ці]
+    - sentence: "___ диван (masculine)"
+      answer: цей
+      options: [цей, ця, це, ці]
+
+- type: fill-in
+  title: Що це? conversations
+  instruction: Complete the short dialogues based on the images or context.
+  items:
+    - sentence: "— Що це? — Це ___."
+      answer: стіл
+      options: [стіл, стілець, книга, лампа]
+    - sentence: "— А це? — Це ___."
+      answer: книга
+      options: [книга, шафа, вікно, ніж]
+    - sentence: "— Це вікно? — Так, це ___."
+      answer: вікно
+      options: [вікно, двері, ліжко, крісло]
+    - sentence: "— Де ніж? — Ось ___ ніж."
+      answer: цей
+      options: [цей, ця, це, ці]
+    - sentence: "— А ложка? — Ось ___ ложка."
+      answer: та
+      options: [той, та, те, ті]
+    - sentence: "— Ця кімната? — Так, ___ кімната."
+      answer: ця
+      options: [цей, ця, це, ці]

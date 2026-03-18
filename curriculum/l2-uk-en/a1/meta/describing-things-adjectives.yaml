@@ -1,0 +1,85 @@
+module: a1-011
+id: a1-011
+level: A1
+sequence: 11
+slug: describing-things-adjectives
+version: '2.0'
+title: Describing Things - Adjectives
+subtitle: Adjective Agreement in Gender and Number
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner can use correct adjective endings for masculine nouns
+- Learner can use correct adjective endings for feminine nouns
+- Learner can use correct adjective endings for neuter nouns
+- Learner can form plural adjective forms
+content_outline:
+- section: 'Вступ: Світ прикметників — Introduction: The World of Adjectives'
+  words: 250
+  points:
+  - Intro to adjective questions
+  - Agreement overview
+- section: 'Презентація: Тверда група — Presentation: Hard Stem Adjectives'
+  words: 350
+  points:
+  - Hard stem endings
+  - Agreement with m/f/n
+- section: 'Презентація 2: М''яка група та Специфіка (Presentation 2: Soft Stem and
+    Nuances)'
+  words: 300
+  points:
+  - Soft stem endings
+  - Blue color example
+- section: Практика та Культурний контекст (Practice and Cultural Context)
+  words: 300
+  points:
+  - Mavka example
+  - Real estate practice
+vocabulary_hints: null
+required:
+- новий (new)
+- старий (old)
+- гарний (nice)
+- великий (big)
+- малий (small)
+- добрий (good)
+- поганий (bad)
+- цікавий (interesting)
+recommended:
+- синій (blue)
+- червоний (red)
+- молодий (young)
+- дорогий (expensive)
+- дешевий (cheap)
+- смачний (tasty)
+- зелений (green)
+activity_hints:
+- type: fill-in
+  focus: Change adjective gender
+  items: 25
+- type: match-up
+  focus: Match adjectives to nouns
+  items: 15
+connects_to:
+- a1-12 (Colors and Clothing)
+- a1-42 (Description: Adverbs)
+prerequisites:
+- a1-07 (The Gender Code)
+persona:
+  voice: Patient Supportive Tutor
+  role: Real Estate Agent
+grammar:
+- Adjective endings for gender (m/f/n)
+- Hard stem adjectives (-ий/-а/-е/-і)
+- Soft stem adjectives (-ій/-я/-є/-і)
+register: розмовний
+naturalness:
+  score: 10
+  status: PASS
+  feedback: Текст написаний професійно та природно, з використанням влучних прикладів
+    (Київське метро, Софійський собор). Фрази відповідають реальному вжитку, а граматичні
+    конструкції подані чітко та без кальок.
+  checked_by: gemini-auto
+  checked_at: '2026-03-18T01:18:38.952454+00:00'

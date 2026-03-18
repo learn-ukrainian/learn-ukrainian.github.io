@@ -25,7 +25,7 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T20:28:03Z",
+      "ts": "2026-03-17T22:58:39Z",
       "executor": {
         "type": "llm",
         "agent": "claude",
@@ -33,18 +33,18 @@
       }
     },
     "validate": {
-      "status": "complete",
-      "ts": "2026-03-17T20:30:25Z",
-      "attempts": 1,
+      "status": "failed",
+      "ts": "2026-03-17T22:58:55Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-7-failures",
       "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
+        "type": "deterministic",
+        "name": "morphological_validator"
       }
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-17T20:32:32Z",
+      "ts": "2026-03-17T23:01:49Z",
       "task_id": "v5-consonant-sounds-pC",
       "executor": {
         "type": "llm",
@@ -54,7 +54,7 @@
     },
     "review": {
       "status": "failed",
-      "ts": "2026-03-17T20:48:21Z",
+      "ts": "2026-03-17T23:10:17Z",
       "attempts": 4,
       "note": "needs-manual-review",
       "executor": {

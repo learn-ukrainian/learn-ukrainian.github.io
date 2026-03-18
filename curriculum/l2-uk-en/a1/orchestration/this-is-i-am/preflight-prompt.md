@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 9 of the A1 track (Ukrainian for English speakers). Title: "This Is / I Am" — Zero Copula and Personal Pronouns. Phase: A1.1 [First Contact]. Previous module: Greetings And Politeness. Next module: My World Objects.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,18 +60,19 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 8
 **Previous module:** Greetings and Politeness
 
-**Cumulative vocabulary (103 words):**
+**Cumulative vocabulary (113 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, сестра
-дерево, вулиця, автобус, бібліотека, університет, склад, переніс, голосний, приголосний, острів
-сім'я, ґудзик, вода, кава, чай, замок, рука, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
-вона, воно, книга, слово, мова, дім, вікно, брат, ніч, час
-море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую
-Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово
-Смачного, На здоров'я, Добраніч
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
+зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи
 
 **Grammar already taught (31 topics):**
 - Full alphabet overview (33 letters)
@@ -142,13 +145,12 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 15-35% Ukrainian.
+TARGET: 10-20% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
-- UKRAINIAN CONTENT: Words and phrases inline bolded. Short example sentences in bulleted lists or tables — each with English gloss on the same line.
-- TABLES: Word families, vocabulary groups, simple paradigm tables.
-- PATTERN BOXES: Show transformations: `слово → слова` (word → words).
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian vocabulary. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
 Ukrainian sentences max 10 words.
 
 ### Blog Articles & Guides
@@ -516,18 +518,126 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-009
+level: A1
+sequence: 9
+slug: this-is-i-am
+version: '2.0'
+title: This Is / I Am
+subtitle: Zero Copula and Personal Pronouns
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Learner can use personal pronouns (я, ти, він, вона, etc.)
+- Learner can form identity statements without 'to be' (zero copula)
+- Learner can use це to point out people and objects
+- Learner can distinguish masculine/feminine nationality forms
+content_outline:
+- section: 'Вступ: Хто це? Що це? (Introduction: Who is this? What is this?)'
+  words: 200
+  points:
+  - 'Simple identification sentences following State Standard §4.2.3.1: ''Це Ірина'', ''Це підручник'', ''Це новий телевізор'''
+  - 'Pattern focus: Identifying people (хто) vs objects (що) using the demonstrative ''це'''
+  - 'Concept of naming: Introduction to ''Мене звати...'' (Standard requirement) as a precursor to identity statements'
+- section: 'Презентація: Особові займенники (Presentation: Personal Pronouns)'
+  words: 275
+  points:
+  - Introduction to personal pronouns (я, ти, він, вона, воно, ми, ви, вони) aligns with State Standard §4.2.1.4
+  - 'Formal vs Informal Register: The ''Ви'' Safety Net — why starting with ''Ви'' is mandatory for strangers and elders in
+    Ukrainian culture'
+  - 'The ''Vi'' to ''Ty'' transition: Introduction to the ''Bruderschaft'' concept and the social milestone of shifting registers
+    (''Давай на ти?'')'
+  - 'Learner error: Register Mix-up — using ''ти'' with officials or elders due to lack of T-V distinction in English'
+- section: 'Граматика: Секрет нульової зв''язки (Grammar: The Zero Copula Secret)'
+  words: 350
+  points:
+  - 'The Zero Copula rule: Subject + Predicate without ''to be'' (Standard §4.2.3.1 simple identification)'
+  - 'Visualizing the gap: Using the ''Ø'' or ''—'' symbol to map ''I [Ø] student'' (Я студент) vs English ''I am a student'''
+  - 'Learner error: The Phantom ''Is'' — interference from English causing students to insert ''є'' unnecessarily (e.g., *Я
+    є студент)'
+  - 'Note on ''є'': Explanation that while the linking verb exists, it is rarely used in identification sentences in modern
+    speech'
+- section: Робота над помилками та практика (Error Correction and Practice)
+  words: 200
+  points:
+  - 'Learner error: The ''It'' Trap — using ''воно'' (it) for all inanimate objects (tables, lamps) instead of gendered pronouns
+    (він/вона) from a1-03'
+  - 'Drill: Replacing nouns with correct gendered pronouns (Стіл -> він, Книга -> вона) to reinforce that everything in Ukrainian
+    has gender'
+  - 'Transformation drills: Converting ''Це Іван'' to ''Він студент'' to practice noun-to-pronoun mapping'
+- section: 'Продакшн: Хто я і Хто ви? (Production: Who am I and Who are you?)'
+  words: 175
+  points:
+  - 'Task: Self-introduction using zero copula patterns for name, role, and nationality (Я студент, Я українець)'
+  - 'Roleplay: Meeting a stranger (using ''Ви'' Safety Net) vs meeting a peer, identifying others in the room'
+  - 'Summary: Reviewing the simple Subject + Predicate identification structure as the foundation for A1.1 communication'
+vocabulary_hints:
+  required:
+  - 'це (this is) — collocations: це (noun), хто це?, що це?; Top 10 frequency per Leipzig corpora'
+  - 'я (I) — collocations: я студент, я тут; Top 20 frequency; used for identity statements'
+  - 'ти (you) — collocations: ти хто?, ти де?; informal register for peers/friends'
+  - 'він (he) — collocations: він там, він українець; replaces masculine nouns'
+  - 'вона (she) — collocations: вона тут, вона вчителька; replaces feminine nouns'
+  - 'хто (who) — collocations: хто це?; used for identifying persons per §4.2.3.1'
+  - 'що (what) — collocations: що це?, що там?; used for identifying objects'
+  - студент / студентка (student) — high frequency thematic noun; used to practice zero copula
+  recommended:
+  - ви (you formal/pl.) — mandatory default for strangers/elders; 'Safety Net' register
+  - ми (we) — Top 20 frequency; collective identity
+  - вони (they) — Top 20 frequency; identifying groups
+  - 'воно (it) — usage note: only for neuter nouns; avoid ''It Trap'' with inanimate objects'
+  - українець / українка (Ukrainian) — nationality identification; gender-specific forms
+  - вчитель / вчителька (teacher) — high frequency thematic noun for roles
+  - 'ось (here/over here) — collocation: ось там (over there); per State Standard §4.2.3.1'
+activity_hints:
+- type: fill-in
+  focus: Self-introduction practice
+  items: 6
+- type: fill-in
+  focus: Complete sentences with pronouns
+  items: 15
+- type: fill-in
+  focus: Meeting someone new
+  items: 4
+connects_to:
+- 'a1-10 (My World: Objects)'
+- a1-20 (Mine and Yours)
+prerequisites:
+- a1-07 (The Gender Code)
+persona:
+  voice: Patient Supportive Tutor
+  role: Passport Officer
+grammar:
+- Personal pronouns
+- Zero copula construction
+- Demonstrative це
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -556,18 +666,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -575,18 +712,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

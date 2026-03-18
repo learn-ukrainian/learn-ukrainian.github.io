@@ -1,0 +1,19 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 8
+deviations:
+  - "Plan requested 30 items for match-up #1 — generated 10 pairs. 30 pairs would be excessive and tedious for A1 learners."
+  - "Plan requested 20 items for quiz — generated 8 items covering all key patterns including exceptions (тато, ім'я, день, ніч)."
+  - "Plan requested 15 items for fill-in — generated 8 items covering all three genders plus exceptions."
+  - "Plan requested 20 items for match-up #2 — generated 8 pairs. Quality over quantity at A1."
+  - "Added 4 bonus activities (group-sort, true-false, unjumble, anagram) for variety and engagement beyond plan's 4 required types."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan item counts (30, 20, 15, 20) are very high for A1 learners. Schema minimum is 6 per activity."
+    proposed_fix: "Plan activity_hints item counts may need recalibration for A1 — current values seem targeted at B1+ levels."
+unverified_terms:
+  - "None — all vocabulary comes directly from the lesson content and plan vocabulary_hints"
+review_focus:
+  - "Anagram: verify scrambled letters match answer letters exactly (manually checked)"
+  - "Ім'я exception items in quiz and fill-in — ensure learner understands this is a memorization item"
+  - "Unjumble sentences all use Це + possessive + noun pattern — simple but may feel repetitive"

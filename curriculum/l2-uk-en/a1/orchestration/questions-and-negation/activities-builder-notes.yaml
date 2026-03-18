@@ -1,0 +1,16 @@
+phase: ACTIVITIES
+status: SUCCESS
+activity_count: 9
+deviations:
+  - "Plan requests 15+20+15+8 fill-in items; delivered exactly as specified."
+  - "Added 5 non-fill-in activities (quiz, match-up, true-false, unjumble, group-sort) for variety — plan only specifies 4 fill-in types but module needs 8-15 total."
+frictions:
+  - type: PLAN_GAP
+    description: "Plan activity_hints only lists 4 fill-in activities. Module target is 8-15 activities, so additional types were needed."
+    proposed_fix: "Consider adding variety types to activity_hints in future plan versions."
+unverified_terms:
+  - "All vocabulary comes directly from the lesson content — no external terms introduced."
+review_focus:
+  - "Fill-in #1 (чи questions): all 15 items have the same answer (Чи) — pedagogically intentional for pattern drilling but reviewer should confirm this isn't too repetitive."
+  - "Fill-in #3 items 5, 7, 12: answer is Ні (not не) — tests the ні vs не distinction as intended by the lesson."
+  - "Unjumble item 4: answer includes comma (Ні, я не розумію) but words array has no punctuation — verify renderer handles this."

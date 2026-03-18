@@ -1,0 +1,337 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1396",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "116.3",
+    "COMPUTED_ACTIVITY_COUNT": "2",
+    "COMPUTED_VOCAB_COUNT": "18",
+    "COMPUTED_ENGAGEMENT_COUNT": "3",
+    "COMPUTED_IMMERSION_PERCENT": "19.1",
+    "COMPUTED_IMMERSION_TARGET": "15-25%",
+    "COMPUTED_RICHNESS_SCORE": "86",
+    "COMPUTED_RICHNESS_THRESHOLD": "95",
+    "COMPUTED_RICHNESS_GAPS": "engagement: 2/5, cultural: 2/3",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 25",
+      "text": "Accusative 'українську' (VESUM: noun:inanim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'українську' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 25",
+      "text": "Accusative 'мову' (VESUM: noun:inanim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'мову' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 50",
+      "text": "Accusative 'природу' (VESUM: noun:inanim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'природу' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 51",
+      "text": "Accusative 'мову' (VESUM: noun:inanim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'мову' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 158",
+      "text": "Accusative 'каву' (VESUM: noun:inanim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'каву' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 170",
+      "text": "Accusative 'маму' (VESUM: noun:anim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'маму' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 171",
+      "text": "Accusative 'правду' (VESUM: noun:inanim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'правду' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 182",
+      "text": "Accusative 'Каву' (VESUM: noun:inanim:f:v_zna) in M16. Accusative not taught until M25.",
+      "fix": "Replace 'Каву' (accusative) with nominative form or use English equivalent."
+    },
+    {
+      "type": "ACTIVITY_VESUM_FAIL",
+      "severity": "HIGH",
+      "location": "the-living-verb-ii.yaml",
+      "text": "Activity answers contain VESUM-failed words: любю, платю, робю, сидю, ходю",
+      "fix": "Fix spelling or replace these words — students will practice non-existent forms."
+    }
+  ],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-ii.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/the-living-verb-ii-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/the-living-verb-ii.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M16 — The Living Verb II\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-living-verb-ii.md | Target: 1200 words\n  📋 Required activity types from meta: fill-in, match-up\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  📊 Section Word Analysis:\n     Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)       269 /  250  ✅ (+19)\n     Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)   500 /  375  ✅ (+125)\n     Практика: Помилки та автоматизація (Practice: Errors and Automation)     235 /  300  ❌ (-65)\n     Продукування та культурний контекст (Production and Cultural Context)    169 /  275  ❌ (-106)\n     ───────────────────────────────────────────────────────────────────────────────────────────────\n     TOTAL                                                                   1173 / 1200  ❌ (-27)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1396/1200 (raw: 1616)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 3/3\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ℹ️ PENDING — awaiting review\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ✅ Content aligned with research\nImmersion    🇺🇦 19.1% (target 15-25% (M16))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-ii-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/the-living-verb-ii.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: the-living-verb-ii.md\n  VESUM misses: 22 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 115439.56it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 124 | VESUM: 102 (82.3%) | RAG: 1 | Not found: 21\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-ii-rag-audit.md\n⚠️  RAG verification found unverified words (see audit report)\n\nVESUM: 120/143 (84%) verified\n⚠️ VESUM not found (23): аю, ає, аєш, дж, еш, имо, ите, ити, ить, иш",
+  "h2_sections": "1. Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)\n2. Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)\n3. Практика: Помилки та автоматизація (Practice: Errors and Automation)\n4. Продукування та культурний контекст (Production and Cultural Context)",
+  "vesum_stats": {
+    "total": 143,
+    "vesum_hits": 120,
+    "rag_hits": 0,
+    "not_found": 23,
+    "rag_errors": 0,
+    "proper_names": 0,
+    "by_source": {
+      "prose": {
+        "total": 124,
+        "vesum_hits": 102,
+        "not_found": 22
+      },
+      "activities": {
+        "total": 19,
+        "vesum_hits": 18,
+        "not_found": 1
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "аю",
+      "clean": "аю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ає",
+      "clean": "ає",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "аєш",
+      "clean": "аєш",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "дж",
+      "clean": "дж",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "еш",
+      "clean": "еш",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "имо",
+      "clean": "имо",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ите",
+      "clean": "ите",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ити",
+      "clean": "ити",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ить",
+      "clean": "ить",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "иш",
+      "clean": "иш",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "люб",
+      "clean": "люб",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "любю",
+      "clean": "любю",
+      "source": "activities",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "платю",
+      "clean": "платю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "робю",
+      "clean": "робю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сидю",
+      "clean": "сидю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "сь",
+      "clean": "сь",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ходю",
+      "clean": "ходю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ють",
+      "clean": "ють",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "ємо",
+      "clean": "ємо",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "єте",
+      "clean": "єте",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "єш",
+      "clean": "єш",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "їджу",
+      "clean": "їджу",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    },
+    {
+      "original": "їстю",
+      "clean": "їстю",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "427b92b42a95ab83"
+}

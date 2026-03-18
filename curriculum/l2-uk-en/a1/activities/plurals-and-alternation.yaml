@@ -1,0 +1,408 @@
+- type: fill-in
+  title: "Form the Plural"
+  instruction: "Choose the correct plural form to complete each sentence."
+  items:
+    - sentence: "Це один студент. Де ___?"
+      answer: "студенти"
+      options: ["студенти", "студента", "студентів", "студенту"]
+      explanation: "Masculine nouns ending in a consonant add -и for the plural."
+    - sentence: "Це одна книга. Ось нові ___."
+      answer: "книги"
+      options: ["книги", "книга", "книзі", "книгу"]
+      explanation: "Feminine nouns swap -а for -и in the plural."
+    - sentence: "Це одне місто. Це великі ___."
+      answer: "міста"
+      options: ["міста", "містом", "місті", "місту"]
+      explanation: "Neuter nouns swap -о for -а in the plural."
+    - sentence: "Це один кіт. Де ___?"
+      answer: "коти"
+      options: ["коти", "кити", "котів", "коту"]
+      explanation: "The vowel і alternates to о in the plural — this is the fleeting і."
+    - sentence: "Це один стіл. Ось нові ___."
+      answer: "столи"
+      options: ["столи", "столів", "стола", "столу"]
+      explanation: "Another fleeting і — стіл becomes столи in the plural."
+    - sentence: "Це одне море. Це великі ___."
+      answer: "моря"
+      options: ["моря", "морі", "мори", "море"]
+      explanation: "Neuter nouns ending in -е swap to -я in the plural."
+    - sentence: "Це один брат. Де ___?"
+      answer: "брати"
+      options: ["брати", "брата", "братів", "брату"]
+      explanation: "Regular masculine plural — add -и to the stem."
+    - sentence: "Це одна сестра. Ось ___."
+      answer: "сестри"
+      options: ["сестри", "сестра", "сестрі", "сестру"]
+      explanation: "Feminine nouns swap -а for -и."
+    - sentence: "Це одне яблуко. Де ___?"
+      answer: "яблука"
+      options: ["яблука", "яблуки", "яблуко", "яблуку"]
+      explanation: "Neuter nouns ending in -о swap to -а in the plural."
+    - sentence: "Це один ніж. Де нові ___?"
+      answer: "ножі"
+      options: ["ножі", "ножа", "ножем", "ножу"]
+      explanation: "The fleeting і alternates to о — ніж becomes ножі."
+    - sentence: "Це одна земля. Ось ___."
+      answer: "землі"
+      options: ["землі", "землею", "земля", "землю"]
+      explanation: "Feminine nouns ending in -я swap to -і in the plural."
+    - sentence: "Це один хлопець. Де ___?"
+      answer: "хлопці"
+      options: ["хлопці", "хлопцем", "хлопця", "хлопцю"]
+      explanation: "After soft consonants like ц, the plural ending is -і."
+
+- type: match-up
+  title: "Match Singular to Plural"
+  instruction: "Match each singular noun on the left with its correct plural form on the right."
+  pairs:
+    - left: "студент"
+      right: "студенти"
+    - left: "книга"
+      right: "книги"
+    - left: "місто"
+      right: "міста"
+    - left: "кіт"
+      right: "коти"
+    - left: "стіл"
+      right: "столи"
+    - left: "ніж"
+      right: "ножі"
+    - left: "дитина"
+      right: "діти"
+    - left: "людина"
+      right: "люди"
+    - left: "око"
+      right: "очі"
+    - left: "море"
+      right: "моря"
+    - left: "сестра"
+      right: "сестри"
+    - left: "яблуко"
+      right: "яблука"
+
+- type: quiz
+  title: "Choose the Correct Plural"
+  instruction: "Select the correct plural form for each noun."
+  items:
+    - question: "What is the plural of кіт (cat)?"
+      options:
+        - text: "коти"
+          correct: true
+        - text: "кити"
+          correct: false
+        - text: "кота"
+          correct: false
+        - text: "котів"
+          correct: false
+      explanation: "The і in кіт alternates to о in the plural — коти."
+    - question: "What is the plural of місто (city)?"
+      options:
+        - text: "міста"
+          correct: true
+        - text: "містом"
+          correct: false
+        - text: "місті"
+          correct: false
+        - text: "місту"
+          correct: false
+      explanation: "Neuter nouns ending in -о swap to -а in the plural."
+    - question: "What is the plural of стіл (table)?"
+      options:
+        - text: "столи"
+          correct: true
+        - text: "столів"
+          correct: false
+        - text: "стола"
+          correct: false
+        - text: "столі"
+          correct: false
+      explanation: "The fleeting і alternates to о — стіл becomes столи."
+    - question: "What is the plural of дитина (child)?"
+      options:
+        - text: "діти"
+          correct: true
+        - text: "дитини"
+          correct: false
+        - text: "дитина"
+          correct: false
+        - text: "дитинки"
+          correct: false
+      explanation: "Діти is an irregular plural — it must be memorized."
+    - question: "What is the plural of книга (book)?"
+      options:
+        - text: "книги"
+          correct: true
+        - text: "книга"
+          correct: false
+        - text: "книзі"
+          correct: false
+        - text: "книгу"
+          correct: false
+      explanation: "Feminine nouns swap -а for -и in the plural."
+    - question: "What is the plural of ніж (knife)?"
+      options:
+        - text: "ножі"
+          correct: true
+        - text: "ножа"
+          correct: false
+        - text: "ножем"
+          correct: false
+        - text: "ножу"
+          correct: false
+      explanation: "The fleeting і alternates to о — ніж becomes ножі."
+    - question: "What is the plural of людина (person)?"
+      options:
+        - text: "люди"
+          correct: true
+        - text: "людини"
+          correct: false
+        - text: "людина"
+          correct: false
+        - text: "людинки"
+          correct: false
+      explanation: "Люди is an irregular plural — it must be memorized."
+    - question: "What is the plural of око (eye)?"
+      options:
+        - text: "очі"
+          correct: true
+        - text: "ока"
+          correct: false
+        - text: "оку"
+          correct: false
+        - text: "очей"
+          correct: false
+      explanation: "Очі is an irregular plural — it must be memorized."
+    - question: "What is the plural of земля (land)?"
+      options:
+        - text: "землі"
+          correct: true
+        - text: "землею"
+          correct: false
+        - text: "земля"
+          correct: false
+        - text: "землю"
+          correct: false
+      explanation: "Feminine nouns ending in -я swap to -і in the plural."
+    - question: "What is the plural of піч (oven)?"
+      options:
+        - text: "печі"
+          correct: true
+        - text: "піч"
+          correct: false
+        - text: "піччю"
+          correct: false
+        - text: "печей"
+          correct: false
+      explanation: "The fleeting і alternates to е — піч becomes печі."
+
+- type: group-sort
+  title: "Sort the Nouns"
+  instruction: "Sort these nouns into the correct category."
+  groups:
+    - name: "Regular countable (has singular and plural)"
+      items:
+        - "книга"
+        - "студент"
+        - "місто"
+        - "яблуко"
+    - name: "Uncountable (singular only)"
+      items:
+        - "молоко"
+        - "цукор"
+        - "повітря"
+    - name: "Plural-only (no singular form)"
+      items:
+        - "гроші"
+        - "двері"
+        - "ножиці"
+        - "окуляри"
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement about Ukrainian plurals is true or false."
+  items:
+    - statement: "Masculine nouns usually form their plural by adding -и or -і."
+      correct: true
+      explanation: "Most masculine nouns add -и (or -і after soft consonants) to form the plural."
+    - statement: "The plural of кіт is кота."
+      correct: false
+      explanation: "The і alternates to о in the plural — the correct form is коти (кота is singular)."
+    - statement: "Neuter nouns ending in -о swap to -а in the plural."
+      correct: true
+      explanation: "For example, місто becomes міста and яблуко becomes яблука."
+    - statement: "The word гроші (money) has a singular form."
+      correct: false
+      explanation: "Гроші is a plural-only noun — it has no singular form."
+    - statement: "In the plural, adjectives have one ending for all three genders."
+      correct: true
+      explanation: "All three genders collapse into one plural form ending in -і."
+    - statement: "The plural of стіл is стола."
+      correct: false
+      explanation: "The fleeting і alternates to о — the correct plural is столи (стола is singular)."
+    - statement: "Feminine nouns ending in -а swap to -и in the plural."
+      correct: true
+      explanation: "For example, книга becomes книги and сестра becomes сестри."
+    - statement: "The word молоко (milk) can be made plural."
+      correct: false
+      explanation: "Молоко is an uncountable noun — it exists only in the singular."
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words: ["книги", "нові", "Це"]
+      answer: "Це нові книги"
+    - words: ["міста", "великі", "Це"]
+      answer: "Це великі міста"
+    - words: ["діти", "маленькі", "Де"]
+      answer: "Де маленькі діти"
+    - words: ["студенти", "молоді", "Ось"]
+      answer: "Ось молоді студенти"
+    - words: ["коти", "руді", "Це"]
+      answer: "Це руді коти"
+    - words: ["люди", "добрі", "Це"]
+      answer: "Це добрі люди"
+
+- type: match-up
+  title: "Match the Adjective to Its Plural"
+  instruction: "Match each singular adjective form with the correct plural."
+  pairs:
+    - left: "новий / нова / нове"
+      right: "нові"
+    - left: "великий / велика / велике"
+      right: "великі"
+    - left: "старий / стара / старе"
+      right: "старі"
+    - left: "синій / синя / синє"
+      right: "сині"
+    - left: "молодий / молода / молоде"
+      right: "молоді"
+    - left: "добрий / добра / добре"
+      right: "добрі"
+    - left: "гарний / гарна / гарне"
+      right: "гарні"
+    - left: "цікавий / цікава / цікаве"
+      right: "цікаві"
+    - left: "маленький / маленька / маленьке"
+      right: "маленькі"
+    - left: "дорогий / дорога / дороге"
+      right: "дорогі"
+    - left: "рудий / руда / руде"
+      right: "руді"
+    - left: "короткий / коротка / коротке"
+      right: "короткі"
+
+- type: quiz
+  title: "Plural Exceptions and Special Cases"
+  instruction: "Test your knowledge of irregular plurals and special noun categories."
+  items:
+    - question: "Which of these words is always plural in Ukrainian?"
+      options:
+        - text: "двері"
+          correct: true
+        - text: "книга"
+          correct: false
+        - text: "студент"
+          correct: false
+        - text: "яблуко"
+          correct: false
+      explanation: "Двері (door) is a plural-only noun — it has no singular form."
+    - question: "Which word CANNOT be made plural?"
+      options:
+        - text: "молоко"
+          correct: true
+        - text: "місто"
+          correct: false
+        - text: "море"
+          correct: false
+        - text: "кіт"
+          correct: false
+      explanation: "Молоко (milk) is uncountable — it exists only in the singular."
+    - question: "Why does кіт become коти (not кіти)?"
+      options:
+        - text: "The і alternates to о when the syllable opens"
+          correct: true
+        - text: "It is an irregular plural"
+          correct: false
+        - text: "All masculine nouns change і to о"
+          correct: false
+        - text: "It is a spelling mistake"
+          correct: false
+      explanation: "This is the fleeting і — it appears in closed syllables and reverts to о when the syllable opens."
+    - question: "What is the plural adjective form of великий?"
+      options:
+        - text: "великі"
+          correct: true
+        - text: "великий"
+          correct: false
+        - text: "велика"
+          correct: false
+        - text: "велике"
+          correct: false
+      explanation: "All three genders collapse into one plural form — великі."
+    - question: "Which pair is an irregular plural?"
+      options:
+        - text: "дитина — діти"
+          correct: true
+        - text: "студент — студенти"
+          correct: false
+        - text: "книга — книги"
+          correct: false
+        - text: "місто — міста"
+          correct: false
+      explanation: "Дитина — діти is irregular. The others follow regular plural patterns."
+    - question: "Which of these is a plural-only noun?"
+      options:
+        - text: "окуляри"
+          correct: true
+        - text: "яблуко"
+          correct: false
+        - text: "стіл"
+          correct: false
+        - text: "сестра"
+          correct: false
+      explanation: "Окуляри (glasses) exists only in the plural — there is no singular form."
+    - question: "What is the correct plural form of брат?"
+      options:
+        - text: "брати"
+          correct: true
+        - text: "братів"
+          correct: false
+        - text: "брату"
+          correct: false
+        - text: "брата"
+          correct: false
+      explanation: "Брат takes the regular masculine plural ending -и, forming брати."
+    - question: "Which noun is uncountable (exists only in the singular)?"
+      options:
+        - text: "цукор"
+          correct: true
+        - text: "стіл"
+          correct: false
+        - text: "студент"
+          correct: false
+        - text: "кіт"
+          correct: false
+      explanation: "Цукор (sugar) is an uncountable noun and does not have a plural form."
+    - question: "How does the noun сестра form its plural?"
+      options:
+        - text: "сестри"
+          correct: true
+        - text: "сестра"
+          correct: false
+        - text: "сестрою"
+          correct: false
+        - text: "сестрі"
+          correct: false
+      explanation: "Feminine nouns ending in -а swap it for -и, so сестра becomes сестри."
+    - question: "What is the plural form of the adjective синій?"
+      options:
+        - text: "сині"
+          correct: true
+        - text: "синя"
+          correct: false
+        - text: "синє"
+          correct: false
+        - text: "синіх"
+          correct: false
+      explanation: "Soft-stem adjectives take the plural ending -і, forming сині."

@@ -1,3 +1,5 @@
+**Curriculum context:** This is Module 14 of the A1 track (Ukrainian for English speakers). Title: "Checkpoint: First Contact" — Can You Do the A1.1 Skills?. Phase: A1.1 [First Contact]. Previous module: Plurals And Alternation. Next module: The Living Verb I.
+
 # Beginner Checkpoint: Synthesis & Review
 
 > **Persona reminder:** You are Patient & Supportive Ukrainian Tutor. Write in the voice of Patient Supportive Tutor.
@@ -428,15 +430,13 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 10-20% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
-- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
-- TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
-- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
-- INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+Ukrainian sentences max 10 words.
 
 ### Structural Containment (how to achieve immersion without code-switching)
 
@@ -596,3 +596,9 @@ Total: {total} words (target: 1200)
 - Do NOT write fewer than 1200 words
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT re-explain concepts in detail — brief reminders only, then synthesize
+
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.

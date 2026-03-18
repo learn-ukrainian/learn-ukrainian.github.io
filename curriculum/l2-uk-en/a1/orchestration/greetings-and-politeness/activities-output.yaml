@@ -1,0 +1,335 @@
+- type: match-up
+  title: "Match the Expression"
+  instruction: "Match each Ukrainian expression to its English meaning."
+  pairs:
+    - left: "Привіт"
+      right: "Hello (informal)"
+    - left: "Добрий ранок"
+      right: "Good morning"
+    - left: "Добрий день"
+      right: "Good afternoon"
+    - left: "Добрий вечір"
+      right: "Good evening"
+    - left: "До побачення"
+      right: "Goodbye (formal)"
+    - left: "Дякую"
+      right: "Thank you"
+    - left: "Будь ласка"
+      right: "Please / You're welcome"
+    - left: "Вибачте"
+      right: "Excuse me (formal)"
+    - left: "Дуже приємно"
+      right: "Pleased to meet you"
+    - left: "На все добре"
+      right: "All the best"
+
+- type: quiz
+  title: "Choose the Right Greeting"
+  instruction: "Pick the most appropriate expression for each situation."
+  items:
+    - question: "It's 9 AM. You meet your teacher at school. What do you say?"
+      options:
+        - text: "Добрий ранок!"
+          correct: true
+        - text: "Привіт!"
+          correct: false
+        - text: "Добрий вечір!"
+          correct: false
+        - text: "Добраніч!"
+          correct: false
+      explanation: "Добрий ранок is the formal morning greeting, appropriate for a teacher before noon."
+    - question: "You run into a close friend at a cafe. How do you greet them?"
+      options:
+        - text: "Добрий день!"
+          correct: false
+        - text: "Привіт!"
+          correct: true
+        - text: "До побачення!"
+          correct: false
+        - text: "Вибачте!"
+          correct: false
+      explanation: "Привіт is the informal greeting used with friends."
+    - question: "It's 7 PM. You arrive at a formal dinner. What do you say?"
+      options:
+        - text: "Добрий ранок!"
+          correct: false
+        - text: "Добрий день!"
+          correct: false
+        - text: "Добрий вечір!"
+          correct: true
+        - text: "Привіт!"
+          correct: false
+      explanation: "Добрий вечір is the formal evening greeting, used after approximately 18:00."
+    - question: "You want to address a stranger politely. Do you use ти or Ви?"
+      options:
+        - text: "Ти"
+          correct: false
+        - text: "Ви"
+          correct: true
+        - text: "Either is fine"
+          correct: false
+        - text: "Neither"
+          correct: false
+      explanation: "Always use Ви with strangers. It shows respect and is the safe default."
+    - question: "Someone thanks you for holding the door. What do you say?"
+      options:
+        - text: "Дякую!"
+          correct: false
+        - text: "Вибачте!"
+          correct: false
+        - text: "Будь ласка!"
+          correct: true
+        - text: "Привіт!"
+          correct: false
+      explanation: "Будь ласка means both 'please' and 'you're welcome.' Here it responds to thanks."
+    - question: "You accidentally bump into someone on the street. What do you say?"
+      options:
+        - text: "Дякую!"
+          correct: false
+        - text: "Привіт!"
+          correct: false
+        - text: "Будь ласка!"
+          correct: false
+        - text: "Вибачте!"
+          correct: true
+      explanation: "Вибачте is the formal 'excuse me,' perfect for apologizing to a stranger."
+    - question: "You're not sure what time it is. Which greeting is the safest default?"
+      options:
+        - text: "Добрий ранок!"
+          correct: false
+        - text: "Добрий день!"
+          correct: true
+        - text: "Добрий вечір!"
+          correct: false
+        - text: "Добраніч!"
+          correct: false
+      explanation: "Добрий день is the safest default greeting — it works in almost any daytime situation."
+    - question: "You've just been introduced to someone new. What do you say?"
+      options:
+        - text: "Вибачте!"
+          correct: false
+        - text: "Будь ласка!"
+          correct: false
+        - text: "Дуже приємно!"
+          correct: true
+        - text: "На все добре!"
+          correct: false
+      explanation: "Дуже приємно means 'pleased to meet you' — said after exchanging names."
+    - question: "You're leaving a formal meeting. What farewell do you use?"
+      options:
+        - text: "Привіт!"
+          correct: false
+        - text: "Бувай!"
+          correct: false
+        - text: "До побачення!"
+          correct: true
+        - text: "Добрий день!"
+          correct: false
+      explanation: "До побачення is the formal goodbye, appropriate for professional settings."
+    - question: "You arrive late to an important meeting. What is the most appropriate apology?"
+      options:
+        - text: "Вибач!"
+          correct: false
+        - text: "Привіт!"
+          correct: false
+        - text: "Перепрошую!"
+          correct: true
+        - text: "Будь ласка!"
+          correct: false
+      explanation: "Перепрошую is a sincere formal apology, appropriate when you have genuinely inconvenienced someone."
+
+- type: fill-in
+  title: "Complete the Dialogue"
+  instruction: "Choose the correct word to complete each line."
+  items:
+    - sentence: "— Добрий день! — Добрий ___!"
+      answer: "день"
+      options: ["день", "ранок", "вечір", "ніч"]
+      explanation: "When someone greets you with Добрий день, you echo the same greeting back."
+    - sentence: "— Дякую! — Будь ___!"
+      answer: "ласка"
+      options: ["ласка", "привіт", "день", "добре"]
+      explanation: "Будь ласка is the standard response to Дякую — it means 'you're welcome' here."
+    - sentence: "— Привіт! Хто ти? — ___ Олена."
+      answer: "Я"
+      options: ["Я", "Ви", "Ти", "Ми"]
+      explanation: "To introduce yourself, use Я (I) plus your name."
+    - sentence: "— Добрий вечір, ___ Петре!"
+      answer: "пане"
+      options: ["пане", "пані", "друже", "тату"]
+      explanation: "Пане is the formal title for men, used like 'Mr.' before a name."
+    - sentence: "— Вибачте! Хліб, ___ ласка."
+      answer: "будь"
+      options: ["будь", "дуже", "щиро", "добрий"]
+      explanation: "Будь ласка means 'please' when making a request."
+    - sentence: "— ___ дякую за вечір!"
+      answer: "Щиро"
+      options: ["Щиро", "Будь", "Добрий", "Привіт"]
+      explanation: "Щиро дякую means 'sincerely thank you' — a warm, emphatic expression of gratitude."
+    - sentence: "— Я Андрій. Дуже ___!"
+      answer: "приємно"
+      options: ["приємно", "дякую", "добре", "ласка"]
+      explanation: "Дуже приємно means 'pleased to meet you' — said right after introducing yourself."
+    - sentence: "— До побачення! — На все ___!"
+      answer: "добре"
+      options: ["добре", "ласка", "ранок", "дякую"]
+      explanation: "На все добре means 'all the best' — a warm farewell."
+
+- type: unjumble
+  title: "Put the Words in Order"
+  instruction: "Arrange the words to form a correct Ukrainian phrase."
+  items:
+    - words: ["ласка", "будь", "Каву"]
+      answer: "Каву, будь ласка"
+    - words: ["Петре", "день", "пане", "Добрий"]
+      answer: "Добрий день, пане Петре"
+    - words: ["дякую", "за", "Щиро", "вечір"]
+      answer: "Щиро дякую за вечір"
+    - words: ["все", "На", "добре"]
+      answer: "На все добре"
+    - words: ["де", "Вибачте", "метро"]
+      answer: "Вибачте, де метро"
+    - words: ["пані", "день", "Оксано", "Добрий"]
+      answer: "Добрий день, пані Оксано"
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement about Ukrainian greetings and politeness is true or false."
+  items:
+    - statement: "Привіт is a formal greeting used with strangers."
+      correct: false
+      explanation: "Привіт is informal — use it with friends, family, and children. For strangers, use Добрий день."
+    - statement: "You should always start with Ви when meeting someone new."
+      correct: true
+      explanation: "Ви is the respectful default. Always use it until the other person invites you to switch to ти."
+    - statement: "Будь ласка means only 'please' in Ukrainian."
+      correct: false
+      explanation: "Будь ласка has a dual function — it means both 'please' and 'you're welcome.'"
+    - statement: "Добрий день is the safest default greeting when you're unsure of the time."
+      correct: true
+      explanation: "Добрий день works in almost any daytime situation and is always appropriate with strangers."
+    - statement: "Using ти with a stranger in Ukraine is perfectly acceptable."
+      correct: false
+      explanation: "Using ти with a stranger is considered rude in Ukrainian culture. Always use Ви until invited to switch."
+    - statement: "Перепрошую is a more sincere apology than Вибачте."
+      correct: true
+      explanation: "Перепрошую is a formal, sincere apology used when you have genuinely inconvenienced someone."
+    - statement: "Добрий вечір is used in the morning."
+      correct: false
+      explanation: "Добрий вечір means 'good evening' and is used after approximately 18:00. For morning, use Добрий ранок."
+    - statement: "When you call someone directly in Ukrainian, the name form changes."
+      correct: true
+      explanation: "This is the vocative. For example, мама becomes Мамо! and друг becomes Друже!"
+
+- type: group-sort
+  title: "Formal or Informal?"
+  instruction: "Sort each expression into the correct category."
+  groups:
+    - name: "Formal (use with Ви)"
+      items:
+        - "Добрий день"
+        - "Добрий ранок"
+        - "Добрий вечір"
+        - "До побачення"
+        - "Вибачте"
+        - "Здрастуйте"
+        - "Перепрошую"
+    - name: "Informal (use with ти)"
+      items:
+        - "Привіт"
+        - "Бувай"
+        - "Вибач"
+
+- type: anagram
+  title: "Unscramble the Word"
+  instruction: "Rearrange the letters to form a Ukrainian greeting or polite expression."
+  items:
+    - scrambled: "т і в р п и"
+      answer: "привіт"
+      hint: "Hello (informal)"
+    - scrambled: "ю к я д у"
+      answer: "дякую"
+      hint: "Thank you"
+    - scrambled: "р е б о д"
+      answer: "добре"
+      hint: "Good / Well"
+    - scrambled: "е н а п"
+      answer: "пане"
+      hint: "Mr. (formal address)"
+    - scrambled: "і н а п"
+      answer: "пані"
+      hint: "Ms. (formal address)"
+    - scrambled: "е ж у р д"
+      answer: "друже"
+      hint: "Friend! (when calling someone)"
+
+- type: quiz
+  title: "Addressing People"
+  instruction: "Choose the correct answer about introductions and addressing people."
+  items:
+    - question: "How do you say 'Mom!' when calling her directly in Ukrainian?"
+      options:
+        - text: "Мама"
+          correct: false
+        - text: "Мамо"
+          correct: true
+        - text: "Маму"
+          correct: false
+        - text: "Мами"
+          correct: false
+      explanation: "When calling someone directly, Ukrainian uses the vocative form. Мама becomes Мамо!"
+    - question: "Which title do you use before a man's name in formal address?"
+      options:
+        - text: "Пані"
+          correct: false
+        - text: "Пане"
+          correct: true
+        - text: "Друже"
+          correct: false
+        - text: "Тату"
+          correct: false
+      explanation: "Пане is the formal title for men, used like 'Mr.' before a name."
+    - question: "How do you say 'Friend!' when addressing a friend directly?"
+      options:
+        - text: "Друг"
+          correct: false
+        - text: "Друже"
+          correct: true
+        - text: "Друга"
+          correct: false
+        - text: "Другу"
+          correct: false
+      explanation: "Друже is the vocative form of друг, used when calling a friend directly."
+    - question: "What is the correct formal way to address Ms. Oksana?"
+      options:
+        - text: "Пані Оксана"
+          correct: false
+        - text: "Пане Оксано"
+          correct: false
+        - text: "Пані Оксано"
+          correct: true
+        - text: "Пані Оксані"
+          correct: false
+      explanation: "Use пані (which does not change form) plus the vocative of the name — Оксана becomes Оксано."
+    - question: "How do you introduce yourself in Ukrainian?"
+      options:
+        - text: "Дякую Олена"
+          correct: false
+        - text: "Я Олена"
+          correct: true
+        - text: "Привіт Олена"
+          correct: false
+        - text: "Добре Олена"
+          correct: false
+      explanation: "The simple formula is Я + your name. Я Олена means 'I am Olena.'"
+    - question: "How do you say 'Dad!' when calling him directly?"
+      options:
+        - text: "Тато"
+          correct: false
+        - text: "Тата"
+          correct: false
+        - text: "Тату"
+          correct: true
+        - text: "Татом"
+          correct: false
+      explanation: "The vocative form of тато is Тату! — used when calling your dad directly."

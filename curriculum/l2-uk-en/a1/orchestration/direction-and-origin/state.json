@@ -24,11 +24,44 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T07:24:38Z",
+      "ts": "2026-03-17T23:17:57Z",
       "executor": {
         "type": "llm",
         "agent": "claude",
         "model": "claude-opus-4-6"
+      }
+    },
+    "validate": {
+      "status": "complete",
+      "ts": "2026-03-17T23:29:05Z",
+      "attempts": 2,
+      "note": "escalation-claude",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-17T23:30:31Z",
+      "task_id": "v5-direction-and-origin-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-17T23:34:07Z",
+      "attempts": 1,
+      "note": "gemini-inline-fixes",
+      "review_grounding": "rag-textbook",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     }
   }

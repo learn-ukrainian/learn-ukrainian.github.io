@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 20 of the A1 track (Ukrainian for English speakers). Title: "Mine and Yours" — Possessive Pronouns in Ukrainian. Phase: A1.2 [Verbs & Sentences]. Previous module: Likes And Preferences. Next module: Demonstratives This That.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,36 +60,30 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 19
 **Previous module:** Likes and Preferences
 
-**Cumulative vocabulary (286 words):**
+**Cumulative vocabulary (230 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, люк, Львів, м'ясо, п'ять, сім'я, цукор, час
-що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола, дзеркало, черепаха
-цибуля, кінь, сестра, дерево, вулиця, автобус, бібліотека, університет, склад, переніс
-голосний, приголосний, острів, ґудзик, кава, чай, замок, писати, школа, добрий
-далеко, наголос, інтонація, питання, відповідь, хата, книжка, дорога, кафе, він
-вона, воно, книга, слово, мова, вікно, брат, ніч, море, сонце
-земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення, Па-па, Дякую, Будь ласка, Вибачте
-Перепрошую, Так, Ні, Як справи?, Добре, Погано, Нормально, Чудово, Смачного, На здоров'я
-Добраніч, це, я, ти, ми, ви, вони, хто, студент, студентка
-українець, українка, вчитель, вчителька, ось, мене звати, особовий займенник, займенник, граматичний рід, рід
-телефон, дуже приємно, давай на ти, удома, на роботі, підручник, паспорт, цей, ця, ці
-той, та, те, ті, кімната, стілець, ліжко, лампа, шафа, двері
-квартира, новий, старий, гарний, великий, малий, поганий, цікавий, синій, червоний
-молодий, дорогий, дешевий, смачний, зелений, який, множина, білий, чорний, жовтий
-бордо, беж, хакі, колір, сорочка, штани, сукня, плаття, куртка, светр
-джинси, окуляри, носити, одягати, розмір, дієслово, друг, музей, машина, пісня
-хлопець, зошит, ручка, словник, читати, говорити, знати, розуміти, питати, відповідати
-перевіряти, де, рахунок, смачного, працювати, слухати, грати, чекати, думати, вивчати
-відпочивати, лист, повідомлення, новини, музика, радіо, робити, бачити, любити, їсти
-пити, ходити, просити, сидіти, стояти, платити, вчити, гість, природа, домашнє завдання
-дивитися, сміятися, вмиватися, одягатися, називатися, вчитися, займатися, повертатися, знайомитися, зустрічатися
-вітатися, митися, голитися, зупинятися, цікавитися, мити, називати, себе, часто, швидко
-як, скільки, завжди, ніколи, подобатися, хотіти, піти, нудний, хороший, фільм
-борщ, квіти, мені, тобі, хобі, інфінітив
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван, новий, старий, гарний
+великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий
+смачний, зелений, рідний, білий, чорний, жовтий, сорочка, штани, сукня, куртка
+светр, плаття, джинси, окуляри, вишиванка, колір, одяг, прапор, бордо, одні
+дитина, людина, гроші, очі, ножиці, маленький, говорити, робити, бачити, любити
+їсти, пити, ходити, просити, сидіти, стояти, платити, вчити, дивитися, борщ
+парк, школа, чи, де, коли, не, куди, звідки, чому, як
+скільки, завжди, ніколи, часто, іноді, але, а, бо, подобатися, хотіти
+кава, музика, читати, піти, нудний, улюблений, гуляти, співати, торт, слухати
 
 **Grammar already taught (65 topics):**
 - Full alphabet overview (33 letters)
@@ -192,15 +188,15 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 15-25% Ukrainian.
 LANGUAGE ROLES:
 - THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
 - EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
 - TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
 - PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.
+Ukrainian sentences max 10 words. Mix container types.
 
 ### Videos
 - **ULP 2-45 | Повторення: 41-44 + Мій дім | Review: 41-44 + My home** (Ukrainian Lessons)
@@ -574,18 +570,131 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-020
+level: A1
+sequence: 20
+slug: mine-and-yours
+version: '2.0'
+title: Mine and Yours
+subtitle: Possessive Pronouns in Ukrainian
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [Verbs & Sentences]
+word_target: 1200
+objectives:
+- Learner can use possessive pronouns мій/твій/його/її/наш/ваш/їхній
+- Learner can match possessive pronouns to noun gender (m/f/n/pl)
+- Learner can ask and answer questions about possession
+- Learner can distinguish variable and invariable possessives
+- Learner can use свій correctly to show reflexive possession
+content_outline:
+- section: 'Вступ: Чия це річ? (Introduction: Whose Thing is This?)'
+  words: 250
+  points:
+  - Ситуація «Бюро знахідок» (Lost and Found) для природної генерації обміну репліками про власність — використання реальних
+    побутових предметів (телефон, ключі, паспорт) як візуальної опори для відпрацювання питання «Чий? Чия? Чиє?».
+  - Пряме порівняння незмінних англійських займенників (my, your) з розгалуженою системою українського узгодження для підготовки
+    учнів до концепції граматичного роду присвійних займенників.
+- section: 'Презентація: Система форм та узгодження (Presentation: System of Forms and Agreement)'
+  words: 375
+  points:
+  - 'Вивчення змінюваних форм (мій, твій, наш, ваш) відповідно до §4.2.2 Державного стандарту: детальні парадигми узгодження
+    за родом (ч.р., ж.р., с.р.) та числом іменника з використанням колірного кодування для візуалізації.'
+  - Аналіз незмінюваних форм (його, її) — акцент на тому, що ці займенники залишаються стабільними незалежно від роду предмета
+    володіння, що є поширеною точкою полегшення для початківців.
+  - 'Специфіка займенника «їхній» як літературного стандарту: чітке розмежування з помилковим вживанням «їх» як присвійного
+    займенника (Russianism), що подається як важливий маркер деколонізації та чистоти мовлення.'
+  - Початкове ознайомлення з рефлексивним займенником «свій» — базовий контраст для уникнення помилок типу «Він бачить його
+    маму» (не свою) vs «Він бачить свою маму» (власну).
+- section: 'Культурний контекст: Етикет та еволюція стосунків (Cultural Context: Etiquette and Relationship Evolution)'
+  words: 250
+  points:
+  - 'Соціальна дистанція та етикет: суворе розрізнення «Твій» vs «Ваш». Опис ритуалу «переходу на ти» (switching to informal)
+    як важливої віхи у розвитку особистих стосунків.'
+  - 'Аналіз та виправлення типових помилок (Learner Errors): стратегії подолання ''Gender Mismatch'' (наприклад, помилкове
+    *мій мама*) та запобігання ''Case Freeze'' (вживання називного відмінка у випадках, де потрібен непрямий).'
+- section: Практика та продукція (Practice and Production)
+  words: 325
+  points:
+  - 'Керована практика (Guided Practice): вправи на заміну іменників займенниками та узгодження форм у контексті подорожей
+    та повсякдення (мій рюкзак, ваша адреса, наша країна).'
+  - 'Продуктивний етап (§3.1 Державного стандарту): створення діалогів про особисту власність та рольова гра «Чия це сумка?»,
+    спрямована на автоматизацію використання питальних та присвійних займенників.'
+vocabulary_hints:
+  required:
+  - мій (my m.) — мій друг, мій телефон, мій дім; High Frequency (Top 50)
+  - моя (my f.) — моя мама, моя книга, моя адреса; обов’язкове узгодження з жіночим родом
+  - моє (my n.) — моє ім'я, моє місто, моє рішення; узгодження з середнім родом
+  - його (his) — його батько, його машина, його робота; незмінна форма
+  - її (her) — її сумка, її кімната, її паспорт; незмінна форма
+  - наш (our) — наша країна, наше місто, наш клас; High Frequency (Top 100)
+  - чий (whose m.) — чий це?, чий телефон?, чий паспорт?; ключове питання для володіння
+  - чия (whose f.) — чия це сумка?, чия книга?; питання до жіночого роду
+  recommended:
+  - ваш (your formal/pl.) — ваш квиток, ваша адреса, ваше прізвище; High Frequency (Top 200)
+  - їхній (their) — їхній будинок, їхня сім’я, їхнє рішення; літературний стандарт (уникайте форми «їх»)
+  - свій (one's own) — свій час, своя справа, своє місце; рефлексивний присвійний займенник
+  - чиє (whose n.) — чиє це взуття?, чиє ім’я?; питання до середнього роду
+  - річ (thing) — ключовий контекстний іменник для сценаріїв «Бюро знахідок»
+activity_hints:
+- type: fill-in
+  focus: Complete with correct possessive
+  items: 25
+- type: match-up
+  focus: Match possessive to gender
+  items: 20
+- type: fill-in
+  focus: Change gender of possessives
+  items: 15
+- type: fill-in
+  focus: Whose is this? conversations
+  items: 6
+- type: quiz
+  focus: Свій vs його/її contrastive (reflexive possessive)
+  items: 8
+- type: true-false
+  focus: Свій key concepts
+  items: 8
+- type: fill-in
+  focus: Свій in context
+  items: 6
+connects_to:
+- a1-30 (Around the City)
+- a1-49 (My Family)
+prerequisites: []
+persona:
+  voice: Patient Supportive Tutor
+  role: Kindergarten Teacher
+grammar:
+- Possessive pronouns
+- Gender agreement
+- Variable vs invariable forms
+- Reflexive possessive свій (свій vs його/її)
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -614,18 +723,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -633,18 +769,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

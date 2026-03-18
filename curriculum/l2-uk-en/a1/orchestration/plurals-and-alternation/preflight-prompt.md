@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 13 of the A1 track (Ukrainian for English speakers). Title: "Plurals and Alternation" — More Than One. Phase: A1.1 [First Contact]. Previous module: Colors And Clothing. Next module: Checkpoint First Contact.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -58,27 +60,25 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 12
 **Previous module:** Colors & Clothing
 
-**Cumulative vocabulary (191 words):**
+**Cumulative vocabulary (180 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
+сон, ніс, мак, сік, стіл, тут, там, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
+вухо, їжа, моє, яйце, юшка, каша, небо, сир, сало, хліб
 зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, люк, сестра, дерево, вулиця, автобус, бібліотека, університет
-склад, переніс, голосний, приголосний, острів, сім'я, ґудзик, кава, чай, замок
-писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата, книжка
-дорога, кафе, він, вона, воно, книга, слово, мова, вікно, брат
-ніч, час, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт, До побачення
-Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре, Погано
-Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми, ви
-вони, хто, що, студент, студентка, українець, українка, вчитель, вчителька, ось
-мене звати, особовий займенник, займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома, на роботі
-підручник, паспорт, цей, ця, ці, той, та, те, ті, кімната
-стілець, ліжко, лампа, шафа, двері, квартира, новий, старий, гарний, великий
-малий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий, смачний, зелений
-який, множина, білий, чорний, жовтий, бордо, беж, хакі, колір, сорочка
-штани, сукня, плаття, куртка, светр, джинси, окуляри, носити, одягати, розмір
-дієслово
+сіль, люди, суп, вода, цибуля, люк, Львів, кінь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, час, чай, черепаха, що, щастя, факт
+джерело, бджола, дзвін, склад, голосний, приголосний, перенесення, сестра, вікно, ґудзик
+пальці, книга, вулиця, автобус, брат, море, ніч, земля, серце, сонце
+машина, ім'я, артефакт, зона, укриття, добрий ранок, добрий день, добрий вечір, до побачення, будь ласка
+вибачте, перепрошую, дуже приємно, пане, пані, бувай, здрастуйте, ласкаво просимо, на все добре, добраніч
+ти, ви, як справи, я, він, вона, воно, ми, вони, хто
+студент, студентка, українець, українка, вчитель, вчителька, звати, ось, друзі, цей
+ця, ці, той, та, те, ті, телефон, кімната, стілець, ліжко
+лампа, шафа, двері, ніж, ложка, крісло, диван, новий, старий, гарний
+великий, малий, добрий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий
+смачний, зелений, рідний, білий, чорний, жовтий, сорочка, штани, сукня, куртка
+светр, плаття, джинси, окуляри, вишиванка, колір, одяг, прапор, бордо, одні
 
 **Grammar already taught (43 topics):**
 - Full alphabet overview (33 letters)
@@ -160,15 +160,13 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 25-40% Ukrainian.
+TARGET: 10-20% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
-- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
-- TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.
-- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).
-- INLINE: Ukrainian words/phrases bolded in English prose.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences (3+ words with a verb) go in tables, bulleted example lists, or pattern boxes. Never write a Ukrainian sentence followed by its English translation in a prose paragraph.
-Ukrainian sentences max 10 words. Mix container types — don't use tables for everything.
+- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.
+- UKRAINIAN CONTENT: Words and short phrases bolded inline: "The word **книга** (book) is feminine."
+- TABLES: Vocabulary tables, word families, simple paradigm tables.
+- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.
+Ukrainian sentences max 10 words.
 
 ### Textbook References
 - **Grade 3, Сторінка 114**
@@ -499,18 +497,137 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-013
+level: A1
+sequence: 13
+slug: plurals-and-alternation
+version: '2.0'
+title: Plurals and Alternation
+subtitle: More Than One
+focus: grammar
+pedagogy: PPP
+phase: A1.1 [First Contact]
+word_target: 1200
+objectives:
+- Form plurals for common masculine, feminine, and neuter nouns
+- Recognize vowel alternation patterns (і → о/е) in plural formation
+- Make adjectives agree with plural nouns using the -і/-ї ending
+- Identify uncountable nouns and plural-only nouns
+content_outline:
+- section: Множина іменників (Noun plurals)
+  words: 275
+  points:
+  - 'Basic plural endings for masculine nouns: -и/-і (студент → студенти, хлопець → хлопці) — the most common and predictable
+    pattern'
+  - 'Basic plural endings for feminine nouns: -и/-і replacing -а/-я (книга → книги, земля → землі) — the final vowel changes
+    to -и or -і'
+  - 'Basic plural endings for neuter nouns: -а/-я replacing -о/-е (місто → міста, море → моря) — neuter plurals swap their
+    characteristic ending'
+  - 'Irregular plurals that must be memorized: діти (children, from дитина), люди (people, from людина), очі (eyes, from око)
+    — high-frequency exceptions'
+- section: Чергування (Alternation)
+  words: 250
+  points:
+  - 'Vowel alternation і → о/е in stems: when adding plural endings, the і in the stem may revert to о or е — кіт → коти,
+    піч → печі, ніж → ножі'
+  - 'Why alternation happens: historical vowel changes (the ''fleeting і'') — і appears in closed syllables but reverts when
+    the syllable opens in plural forms'
+  - 'Consonant alternation preview: к → ц, г → з, х → с before the ending -і — рука → руці, нога → нозі (this pattern returns
+    in the locative case)'
+  - 'Pattern recognition strategy: if a word has і in the last syllable of the stem, check whether it alternates in the plural
+    — most common with monosyllabic masculine nouns'
+- section: Множина прикметників (Adjective plurals)
+  words: 250
+  points:
+  - 'Simplification: all three genders collapse into one plural form ending in -і/-ї — новий (m) / нова (f) / нове (n) → нові
+    (plural for all genders)'
+  - 'Soft-stem adjectives: синій (m) / синя (f) / синє (n) → сині (plural) — the pattern is the same, just with the soft variant'
+  - 'Agreement with plural nouns: adjective must match the noun in number — нові книги, великі міста, молоді студенти'
+  - 'Practice forming noun phrases: combining plural adjectives with plural nouns in simple sentences — Це нові книги. Ті
+    великі будинки старі.'
+- section: Винятки та особливості (Exceptions and special cases)
+  words: 175
+  points:
+  - 'Uncountable nouns that have no plural: молоко (milk), цукор (sugar), вода (water in general sense), повітря (air) — these
+    exist only in singular'
+  - 'Plural-only nouns (pluralia tantum): гроші (money), двері (door), ножиці (scissors), окуляри (glasses) — these exist
+    only in plural'
+  - 'Stress shifts in plural: some nouns change stress when pluralized — рукА → рУки, сестрА → сЕстри, ногА → нОги (review
+    from a1-06 stress mobility)'
+- section: Практика (Practice)
+  words: 250
+  points:
+  - 'Plural formation drills: given singular nouns, produce the correct plural form with attention to ending changes and vowel
+    alternation'
+  - 'Matching singulars to plurals: identify which plural form belongs to which singular, including irregular pairs like дитина
+    → діти'
+  - 'Reading plural phrases: practice reading and understanding simple sentences with plural noun phrases — У мене є нові
+    книги. Це великі міста.'
+vocabulary_hints:
+  required:
+  - 'студент/студенти (student/students) — regular masculine plural -и; Top 500 word; collocations: нові студенти, молоді
+    студенти'
+  - 'книга/книги (book/books) — regular feminine plural -и replacing -а; Top 200 word; collocations: цікаві книги, старі книги'
+  - 'місто/міста (city/cities) — regular neuter plural -а replacing -о; Top 100 word; collocations: великі міста, нові міста'
+  - 'кіт/коти (cat/cats) — vowel alternation і → о; collocations: руді коти, домашні коти'
+  - 'діти (children) — irregular plural from дитина; Top 100 word; collocations: маленькі діти, наші діти'
+  - 'люди (people) — irregular plural from людина; Top 50 word; collocations: добрі люди, молоді люди'
+  - 'гроші (money) — plural-only noun; Top 300 word; collocations: багато грошей, заробляти гроші'
+  - 'двері (door) — plural-only noun; Top 500 word; collocations: відкрити двері, зачинити двері'
+  recommended:
+  - 'очі (eyes) — irregular plural from око; Top 300 word; collocations: сині очі, великі очі'
+  - ножиці (scissors) — plural-only noun; demonstrates pluralia tantum concept
+  - 'цукор (sugar) — uncountable noun; collocations: ложка цукру, без цукру'
+  - 'молоко (milk) — uncountable noun; collocations: склянка молока, пити молоко'
+activity_hints:
+- type: fill-in
+  focus: Form the correct plural from a given singular noun
+  items: 12
+- type: match-up
+  focus: Match singular nouns to their plural forms
+  items: 12
+- type: quiz
+  focus: Choose the correct plural form (including alternation)
+  items: 10
+- type: group-sort
+  focus: Sort nouns into countable vs uncountable/plural-only
+  items: 10
+connects_to:
+- a1-14 (Checkpoint First Contact)
+prerequisites:
+- a1-12 (Colors and Clothing)
+persona:
+  voice: Patient Supportive Tutor
+  role: Market Vendor
+grammar:
+- Noun plural formation
+- Vowel alternation (і → о/е)
+- Adjective plural agreement
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
+Min activities: 0
 Min engagement boxes: 3
-Min activity types: 4
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -539,18 +656,45 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -558,18 +702,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.
