@@ -90,9 +90,18 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 1. **Research first**: `search_text("{TOPIC_KEYWORDS}", grade={TEXTBOOK_GRADE})` — find how textbooks teach this
 2. **Write content** following the outline and lesson arc below
 3. **MANDATORY: Verify EVERY Ukrainian word** — call `verify_words` on ALL Ukrainian words before finalizing each section. Do NOT skip this. If a word is NOT FOUND, replace it with a verified alternative. Never guess.
-4. **MANDATORY: Verify stress marks** — if you add a stress mark (´), look up the word first. Wrong stress marks are the #1 quality failure.
+4. **MANDATORY: Verify stress marks** — if you add a stress mark (´), look up the word first. Wrong stress marks are the #1 quality failure. Use `WebFetch` on goroh.pp.ua to check stress if unsure.
 5. **Create activities** from your content
 6. **MANDATORY: Verify activity items** — batch `verify_words` on ALL answers, distractors, and options. Every item must pass VESUM. If a distractor fails, replace it — do NOT include unverified words.
+
+### Tools Available During Writing
+You have MCP tools (`verify_words`, `search_text`, `query_pravopys`), `WebFetch` (goroh.pp.ua, slovnyk.me), `Read` (plan, research, other modules), `Grep` (search patterns), and `Bash` (agent bridge to consult Gemini).
+
+**When unsure about Ukrainian grammar, stress, or vocabulary:**
+- First: `verify_words` or `query_pravopys`
+- Second: `WebFetch` goroh.pp.ua
+- Third: ask Gemini via `Bash`: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "Is X correct in Ukrainian?" --task-id {SLUG}-consultation`
+- **Never guess. Use the tools.**
 
 ### Beginner Lesson Arc
 

@@ -2055,6 +2055,12 @@ def _make_content_dispatch_fn(
                 prompt_path, "Phase B",
                 model=effective_model,
                 timeout=timeout,
+                allow_tools=[
+                    "mcp__rag__verify_word", "mcp__rag__verify_words",
+                    "mcp__rag__verify_lemma", "mcp__rag__search_text",
+                    "mcp__rag__query_pravopys",
+                    "WebFetch", "Bash", "Read", "Grep",
+                ],
             )
         finally:
             prompt_path.unlink(missing_ok=True)
@@ -2364,6 +2370,11 @@ def _dispatch_activities(ctx: ModuleContext, prompt_file: Path) -> tuple[bool, s
         log(f"  activities: Dispatching activities + vocab via Claude ({claude_model})...")
         return _dispatch_claude_phase(
             prompt_file, "Phase C", model=claude_model, timeout=600,
+            allow_tools=[
+                "mcp__rag__verify_word", "mcp__rag__verify_words",
+                "mcp__rag__verify_lemma", "mcp__rag__search_text",
+                "WebFetch", "Bash", "Read", "Grep",
+            ],
         )
     else:
         log("  activities: Dispatching activities + vocab...")
