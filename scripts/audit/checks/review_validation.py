@@ -437,7 +437,7 @@ def _check_gaming_language(content: str, fix_prompt: str) -> list[dict]:
         r'designed?\s+to\s+pass',
         r'ensuring?\s+.*pass(es|ing)?',
         r'reflect(s|ing)?\s+the\s+fix(es)?',
-        r'accurately\s+(citing|reflect)',
+        r'accurately\s+citing',  # "accurately reflect" removed — legitimate in fact-checking (#969)
         r'this\s+fresh\s+review\s+will',
         r'will\s+ensure\s+.*compli(ance|ant)',
         r'crafted?\s+to\s+(meet|satisfy|ensure)',
@@ -467,7 +467,7 @@ def _check_score_credibility(content: str, cfg: dict, issue_text: str | None,
                               issues_match, fix_prompt: str) -> list[dict]:
     """Check for suspiciously uniform high scores and praise-only citations."""
     violations = []
-    perfect, total = _count_perfect_scores(content)
+    _perfect, total = _count_perfect_scores(content)
 
     if total < cfg['min_dimensions']:
         return violations
