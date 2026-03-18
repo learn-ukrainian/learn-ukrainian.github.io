@@ -3507,9 +3507,19 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
             _update_pipeline_status(ctx, "needs-manual-review")
             return False
 
-    log("  review: EXHAUSTED — review + fix attempts all insufficient")
-    log("  review: Content preserved (no auto-rebuild). Use consultation loop for systemic fixes.")
+    # Re-score on exhaustion (#975)
+    _rescore_post_fix(ctx)
 
+    # Check content gates only (skip review verdict — it's stale during fix loop)
+    final_passed, _ = run_verify(ctx.paths["md"], skip_review=True)
+    if final_passed:
+        log("  review: Fix loop exhausted but content gates PASS — accepting with post-fix score")
+        mark_complete(state, phase, ctx, attempts=2 + MAX_REVIEW_FIX_ITERS,
+                      note="exhausted-content-passes", executor=_rev_exec)
+        _update_pipeline_status(ctx, "reviewed")
+        return True
+
+    log("  review: EXHAUSTED — content gates still failing")
     mark_failed(state, phase, ctx,
                 attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review",
                 executor=_rev_exec)
@@ -3768,7 +3778,7 @@ def _run_review_fix_loop(ctx: ModuleContext, state: dict, phase: str,
             log("  review-gemini: No fixes applied \u2014 trying once more")
 
         _run_deterministic_fixes(ctx)
-        passed, audit_out = run_verify(ctx.paths["md"])
+        passed, audit_out = run_verify(ctx.paths["md"], skip_review=True)
 
         if passed:
             log(f"  review-gemini: PASS (after fix {fix_iter + 1})")
@@ -3779,7 +3789,19 @@ def _run_review_fix_loop(ctx: ModuleContext, state: dict, phase: str,
         if fix_iter < MAX_REVIEW_FIX_ITERS - 1:
             log(f"  review-gemini: Fix {fix_iter + 1} insufficient \u2014 trying again...")
 
-    log("  review-gemini: EXHAUSTED \u2014 review + fix attempts all insufficient")
+    # Re-score on exhaustion — fixes may have improved quality (#975)
+    _rescore_post_fix(ctx)
+
+    # Check content gates only (skip review verdict — it's stale)
+    final_passed, _ = run_verify(ctx.paths["md"], skip_review=True)
+    if final_passed:
+        log("  review-gemini: Fix loop exhausted but content gates PASS — accepting with post-fix score")
+        return _complete_gemini_review(ctx, state, phase,
+                                       2 + MAX_REVIEW_FIX_ITERS,
+                                       "exhausted-content-passes",
+                                       grounding=review_grounding)
+
+    log("  review-gemini: EXHAUSTED — content gates still failing")
     mark_failed(state, phase, ctx,
                 attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review",
                 executor=executor_llm("gemini", ctx.model))
