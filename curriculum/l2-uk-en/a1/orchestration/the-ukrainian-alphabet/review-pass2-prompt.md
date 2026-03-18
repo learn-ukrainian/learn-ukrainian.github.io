@@ -15,222 +15,207 @@ Do not assume you wrote this content. Do not be generous.**
 ```markdown
 ## Вступ — Introduction
 
-Welcome to your first step into the Ukrainian language. You are about to learn a writing system that has served one of Europe's oldest literary traditions for over a thousand years.
+Welcome to your very first Ukrainian lesson! You are about to discover a writing system that has served the Ukrainian people for over a thousand years.
 
-Ukrainian uses the **Cyrillic** script — an alphabet descended from the Greek alphabet via the First Bulgarian Empire in the 9th century. Students of Saints Cyril and Methodius created this writing system to bring literacy to the Slavic world. Cyrillic is *not* derived from the Latin alphabet that English uses — it has its own history, its own logic, and its own beauty.
+Ukrainian uses the **Cyrillic** script — a writing system descended from the Greek alphabet via the First Bulgarian Empire in the 9th century. Cyrillic was created by students of Saints Cyril and Methodius, two Byzantine missionaries who adapted Greek letters to write Slavic languages. Cyrillic is not derived from the Latin alphabet that English uses — it has its own, separate heritage rooted in Greek.
 
-Here is the great news: Ukrainian has 33 letters, and the system is highly phonetic. Each letter usually maps to one sound. Compare that to English, where the letters *ough* can sound five different ways (*through*, *though*, *tough*, *cough*, *thought*). In Ukrainian, what you see is very close to what you say.
+The Ukrainian alphabet has exactly **33 letters**. Here is the full set:
 
-Here is the full 33-letter Ukrainian alphabet. You do not need to memorize it today — just see it as a map. You will master each group over the next three modules.
+**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
 
-> А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я
+Do not worry — you do not need to memorize all 33 today. You will master them group by group over the next few modules (M2 through M4). Today, you will learn your first 10 letters and start reading real Ukrainian words.
 
-That is your complete alphabet — 33 letters, one coherent system.
+Here is the great news: Ukrainian spelling is highly phonetic. Each letter usually maps to one sound. Compare that to English, where the letters «ough» can sound five different ways (*through, though, tough, cough, thought*). Ukrainian does not do that — once you know the letters, you can sound out almost any word.
 
-[!culture] **A script of their own**
-Cyrillic was purpose-built for Slavic languages. Ukrainian Cyrillic has letters that no other Slavic language uses in quite the same way — like **Ї** and **Ґ**. This alphabet belongs to Ukrainian on its own terms.
+> [!culture]
+> **Where does Cyrillic come from?** Students of Saints Cyril and Methodius created this script in the 9th century by adapting the Greek alphabet for Slavic languages. Ukrainian Cyrillic evolved over centuries into its own distinct system with unique letters like **Ґ**, **Є**, **Ї**, and **І** that no other Slavic language has in this combination.
 
 ## Букви і звуки — Letters and Sounds
 
-Before you start reading, you need one key distinction: the difference between **букви** (letters) and **звуки** (sounds).
+Before you dive into learning letters, you need to understand one key distinction. **Букви** (letters) are written symbols — what you see on paper or on a screen. **Звуки** (sounds) are what you hear and pronounce. They are not the same thing.
 
-**Букви** are written symbols — the shapes you see on the page. **Звуки** are what you hear and pronounce — the sounds that come out of your mouth. They are not the same thing. Ukrainian has 33 letters but produces 38 distinct sounds (phonemes). How? Some letters can represent more than one sound depending on their position in a word.
+Ukrainian has 33 letters but 38 distinct sounds. How is that possible? Some letters pull double duty. The four iotated vowels — **Я**, **Ю**, **Є**, **Ї** — can each represent two sounds in certain positions. The soft sign **Ь** does not produce a sound of its own — it modifies the consonant before it, making it soft. You will explore these details in Modules 2 and 4.
 
-<!-- adapted from: Bolshakova, Grade 1, p.11: "Букви — це умовні знаки, які позначають звуки мови" -->
+The key insight for you right now: Ukrainian spelling is highly phonetic. One letter almost always represents one sound. This makes Ukrainian far easier to read than English. Once you learn the 33 letters, you can sound out any Ukrainian word you encounter — and that is a powerful skill you will start building today.
 
-Here is the key insight that will make your life easier: Ukrainian spelling is highly phonetic. One letter almost always represents one sound. Once you learn the 33 letters, you can sound out almost any Ukrainian word — even words you have never seen before. This makes Ukrainian *far* easier to read than English.
+> [!tip]
+> **Букви** = what you **see** and **write**. **Звуки** = what you **hear** and **say**. Think of letters as the clothes that sounds wear.
 
-[!tip] **Why this matters for you**
-In English, you often have to memorize how each word is pronounced (*knight*, *enough*, *colonel*). In Ukrainian, you can look at a new word and read it aloud correctly on your first try. That is a genuine advantage — enjoy it!
-
-A few letters do double duty. The iotated vowels (**Я**, **Ю**, **Є**, **Ї**) can represent two sounds at once. The soft sign (**Ь**) has no sound of its own — it modifies the consonant before it. You will explore these details in Module 2 (vowels) and Module 4 (special signs). For now, just know they exist.
+<!-- adapted from: Bolshakova, Grade 1, p.11; Bolshakova, Grade 2, p.27 -->
 
 ## Голосні та приголосні — Vowels and Consonants
 
-Ukrainian letters fall into two main categories: **голосні** (vowels) and **приголосні** (consonants).
+Ukrainian sounds fall into two families: **голосні** (vowels) and **приголосні** (consonants).
 
-**Vowels** are sounds produced with your voice alone — air flows freely without obstruction. Ukrainian has 10 vowel letters, split into two groups:
+**Vowels** are sounds made with your voice alone — the air flows freely through your mouth without any obstruction. Ukrainian has 10 vowel letters:
 
 - **Base vowels (6):** А, О, У, Е, И, І
 - **Iotated vowels (4):** Я, Ю, Є, Ї
 
-Every Ukrainian syllable contains exactly one vowel. If you can count the vowels in a word, you know how many syllables it has. The word **мо-ло-ко́** has three vowels (О, О, О), so it has three syllables.
+Every Ukrainian syllable contains exactly one vowel. If you can spot the vowels in a word, you know how many syllables it has. The word **молоко** has three vowels (О, О, О), so it has three syllables: мо-ло-ко.
 
-**Consonants** are sounds where air is obstructed — by your lips, tongue, or teeth. Ukrainian has 22 consonant letters, plus the soft sign **Ь**, which is a modifier (it changes the consonant before it but makes no sound on its own).
+**Consonants** are sounds where the air meets obstruction — from your lips, tongue, or teeth. Ukrainian has 22 consonant letters plus one special modifier:
 
-Here is the full classification:
-
-- **Голосні (Base):** А, О, У, Е, И, І
-- **Голосні (Iotated):** Я, Ю, Є, Ї
 - **Приголосні:** Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ
-- **Modifier:** Ь
+- **Modifier:** Ь (soft sign — no sound of its own)
 
-Module 2 will master vowels. Module 3 will tackle consonants. Module 4 covers special signs. Today, you focus on your first 10 letters.
+Module 2 will master the vowel system. Module 3 tackles the consonants. Module 4 covers the special signs.
+
+> [!note]
+> **Quick count:** 10 vowel letters + 22 consonant letters + 1 modifier (Ь) = **33 letters** total.
+
+<!-- adapted from: Bolshakova, Grade 2, p.34 -->
 
 ## Перші 10 літер — First 10 Letters
 
-Your practice set for today: 4 vowels and 6 consonants. These 10 high-frequency letters let you read real Ukrainian words right now.
+Now for the exciting part — your first 10 Ukrainian letters! These are high-frequency letters that appear in countless words. With just these 10, you will read real Ukrainian words today.
 
-> **А О У І** — vowels
-> **М Н Т К С Л** — consonants
+Your practice set: **А О У І** (4 vowels) + **М Н Т К С Л** (6 consonants).
+
+📺 [Watch the full alphabet overview — Anna Ohoiko](https://www.youtube.com/watch?v=ksXIXj7CXwc)
 
 ### Літера А
 
-**А** — open «a» as in «father». Your mouth opens wide, and your voice flows freely. This is one of the easiest Ukrainian sounds for English speakers.
+The letter **А** sounds like the «a» in «father» — open and relaxed.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — А](https://www.youtube.com/watch?v=hvB3VpcR3ZE)
+📺 [Watch: Літера А — Anna Ohoiko](https://www.youtube.com/watch?v=hvB3VpcR3ZE)
 
 ### Літера О
 
-**О** — rounded «o» as in «more». Your lips round into a circle. Keep it pure — do not let it slide into «ow» the way some English dialects do.
+The letter **О** sounds like the «o» in «more» — your lips round slightly.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — О](https://www.youtube.com/watch?v=gJFxRIPRZbI)
+📺 [Watch: Літера О — Anna Ohoiko](https://www.youtube.com/watch?v=gJFxRIPRZbI)
 
 ### Літера У
 
-**У** — «oo» as in «moon». Your lips push forward into a tight circle. Be careful: **У** looks like English Y, but the sound is completely different!
+The letter **У** sounds like «oo» in «moon» — your lips push forward into a small circle.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — У](https://www.youtube.com/watch?v=VB1O6PmtYRU)
+📺 [Watch: Літера У — Anna Ohoiko](https://www.youtube.com/watch?v=VB1O6PmtYRU)
 
 ### Літера І
 
-**І** — «ee» as in «see». A bright, clear front vowel. Notice the dot on top — this is **І**, not the English letter I.
+The letter **І** sounds like «ee» in «see».
 
-📹 [Anna Ohoiko — Ukrainian Lessons — І](https://www.youtube.com/watch?v=Z9TH0H4ShGo)
+📺 [Watch: Літера І — Anna Ohoiko](https://www.youtube.com/watch?v=Z9TH0H4ShGo)
 
 ### Літера М
 
-**М** — like English M. Your lips press together, and sound hums through your nose. This letter looks and sounds familiar — a friendly start.
+The letter **М** sounds like English M. You already know this one — it looks and sounds the same.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — М](https://www.youtube.com/watch?v=Ez95H4ibuJo)
+📺 [Watch: Літера М — Anna Ohoiko](https://www.youtube.com/watch?v=Ez95H4ibuJo)
 
 ### Літера Н
 
-**Н** — like English N. Your tongue touches the ridge behind your upper teeth. **Warning:** **Н** *looks* like English H, but it is NOT H! This is the most common trap for English speakers. **Н** = N.
+The letter **Н** sounds like English N. Be careful — **Н** looks exactly like the English letter H, but it is NOT H! This is the number one trap for English speakers.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — Н](https://www.youtube.com/watch?v=vNUfiKHPYaU)
-
-[!warning] **The Н trap**
-When you see **Н** in Ukrainian, your brain will scream «H!» — resist it. **Н** always sounds like N. Write it on a sticky note if you have to: **Н = N, not H.**
+📺 [Watch: Літера Н — Anna Ohoiko](https://www.youtube.com/watch?v=vNUfiKHPYaU)
 
 ### Літера Т
 
-**Т** — like English T. Your tongue taps the ridge behind your upper teeth. This one looks and sounds the same as in English — no tricks.
+The letter **Т** sounds like English T.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — Т](https://www.youtube.com/watch?v=m-jcLR_gK0k)
+📺 [Watch: Літера Т — Anna Ohoiko](https://www.youtube.com/watch?v=m-jcLR_gK0k)
 
 ### Літера К
 
-**К** — like English K. The back of your tongue touches your soft palate. Another straightforward letter.
+The letter **К** sounds like English K.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — К](https://www.youtube.com/watch?v=J7sGEI4-xJo)
+📺 [Watch: Літера К — Anna Ohoiko](https://www.youtube.com/watch?v=J7sGEI4-xJo)
 
 ### Літера С
 
-**С** — like English S. Air hisses through a narrow gap between your tongue and the ridge behind your teeth. **С** looks like English C, but always sounds like S — never like K.
+The letter **С** sounds like English S. It looks like the English letter C, but it always makes an «s» sound in Ukrainian.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — С](https://www.youtube.com/watch?v=7UsFBgSL91E)
+📺 [Watch: Літера С — Anna Ohoiko](https://www.youtube.com/watch?v=7UsFBgSL91E)
 
 ### Літера Л
 
-**Л** — like English L, though your tongue position differs slightly. The tip of your tongue touches the ridge behind your upper teeth. You will hear a fuller, slightly darker quality than the English L.
+The letter **Л** sounds like English L, though your tongue position differs slightly — the tip touches behind your upper teeth.
 
-📹 [Anna Ohoiko — Ukrainian Lessons — Л](https://www.youtube.com/watch?v=v6-3Xg52Buk)
+📺 [Watch: Літера Л — Anna Ohoiko](https://www.youtube.com/watch?v=v6-3Xg52Buk)
 
----
+> [!warning]
+> **False friends!** The letter **Н** looks like English H but sounds like N. The letter **С** looks like English C but sounds like S. Do not let your eyes trick you — this is the most common mistake beginners make.
 
-Now for the magic — blending these letters into real words.
+Now let's blend letters into words. Watch how it works:
 
-<!-- adapted from: Bolshakova, Grade 1, p.28 — syllable blending pattern -->
+- **М** + **А** → **МА** ... then **МА** + **МА** → **мама** (mom)
+- **К** + **І** → **КІ** ... then **КІ** + **Т** → **кіт** (cat)
+- **М** + **О** → **МО** ... then **МО** + **ЛО** + **КО** → **молоко** (milk)
 
-Start with two letters: **М** + **А** → **МА**. Now double it: **МА** + **МА** → **ма́ма** (mom). You just read your first Ukrainian word!
+<!-- adapted from: Bolshakova, Grade 1, pp.13–22 (syllable blending pattern) -->
 
-Try another: **К** + **І** → **КІ**, then add **Т** → **кіт** (cat). Three letters, one syllable, one word.
+Here are all the words you can read using just these 10 letters:
 
-Here are all the decodable words you can read with your 10 letters. Every single one uses *only* А, О, У, І, М, Н, Т, К, С, Л:
+- **мама** (mom) — **тато** (dad) — **кіт** (cat)
+- **молоко** (milk) — **масло** (butter) — **око** (eye)
+- **ніс** (nose) — **місто** (city) — **ліс** (forest)
+- **сон** (dream) — **сом** (catfish) — **мак** (poppy)
+- **сік** (juice) — **стіл** (table) — **сало** (lard)
+- **тут** (here) — **там** (there) — **кіно** (cinema)
 
-- **ма́ма** (mom) — М+А+М+А
-- **та́то** (dad) — Т+А+Т+О
-- **кіт** (cat) — К+І+Т
-- **молоко́** (milk) — М+О+Л+О+К+О
-- **ма́сло** (butter) — М+А+С+Л+О
-- **о́ко** (eye) — О+К+О
-- **ніс** (nose) — Н+І+С
-- **мі́сто** (city) — М+І+С+Т+О
-- **ліс** (forest) — Л+І+С
-- **сон** (dream) — С+О+Н
-- **сом** (catfish) — С+О+М
-- **мак** (poppy) — М+А+К
-- **сік** (juice) — С+І+К
-- **са́ло** (lard) — С+А+Л+О
-- **стіл** (table) — С+Т+І+Л
-- **тут** (here) — Т+У+Т
-- **там** (there) — Т+А+М
-- **кіно́** (cinema) — К+І+Н+О
-- **так** (yes) — Т+А+К
-- **ні** (no) — Н+І
+That is 18 real Ukrainian words from just 10 letters!
 
-That is 20 words — and you have only learned 10 letters! Take a moment to appreciate that. You are already reading Ukrainian.
-
-[!practice] **Try it yourself**
-Pick any word from the list. Point to each letter, say its sound, then blend the sounds together. Start slow: С...О...Н → **сон**. Speed up until it flows naturally.
+> [!practice]
+> **Try it yourself!** Sound out each word letter by letter: **с** + **т** + **і** + **л** = **стіл** (table). Then try **м** + **а** + **к** = **мак** (poppy). And **с** + **а** + **л** + **о** = **сало** (lard). You are reading Ukrainian!
 
 ## Перші слова — First Words in Context
 
-Now you will put your words to work. Along with your 20 decodable words, you need three **sight words** — words that contain letters you have not learned yet. You will recognize them as whole shapes, the way young children learn to read «the» before they know all the rules.
+You now know 18 decodable words. But language lives in conversation, not in word lists. Let's put your new words to work.
 
-Your sight words:
-- **приві́т** (hello) — contains П, Р, В (untaught letters)
-- **дя́кую** (thank you) — contains Д, Я, Ю (untaught letters)
-- **це** (this is) — contains Ц (untaught letter)
+First, meet three important **sight words** — words that contain letters you have not learned yet. Recognize them as whole shapes for now:
 
-Notice that **так** (yes) and **ні** (no) are fully decodable — you can read every letter in them. They are survival words you will use from day one.
+- **Привіт!** (Hello!) — contains П, Р, В, which you have not studied yet
+- **Дякую!** (Thank you!) — contains Д, Я, Ю
+- **Це** (This is) — contains Ц
 
-Here are micro-dialogues mixing your decodable words and sight words:
+The words **так** (yes) and **ні** (no) are fully decodable with your 10 practice letters — you can already read them.
 
-> — Приві́т!
-> — Приві́т!
+### Micro-dialogues
+
+> — Привіт!
+> — Привіт!
 
 > — Це кіт?
 > — Так, це кіт.
 
-> — Це мі́сто?
+> — Це місто?
 > — Ні, це ліс.
 
-> — Молоко́ тут?
-> — Ні, молоко́ там.
+> — Молоко тут?
+> — Ні, молоко там.
 
-> — Це ма́ма?
-> — Так, це ма́ма. А та́то там.
+> — Мама тут?
+> — Так, мама тут. А тато там.
 
-Now try reading these short sentences on your own:
+<!-- adapted from: Bolshakova, Grade 1, pp.13–22 (object labeling + Це frame) -->
 
-- **Ма́ма тут.**
-- **Кіт там.**
-- **Це молоко́.**
-- **Це ма́сло.**
-- **Та́то тут. Ма́ма там.**
-- **Це сік. Дя́кую!**
-
-[!tip] **You are reading Ukrainian!**
-Every sentence above is real Ukrainian. You are not memorizing phrases from a phrasebook — you are *reading*. That is a completely different skill, and you just proved you can do it.
+> [!challenge]
+> **Reading practice!** Read these sentences aloud. You can decode every bold word:
+> - **Мама** тут.
+> - **Кіт** там.
+> - Це **молоко**.
+> - Це **масло**.
+> - **Око** тут. **Ніс** тут.
+> - **Стіл** там. **Сік** тут.
 
 ## Підсумок — Summary
 
-Here is what you accomplished today:
+Great job — you have taken your first real steps into Ukrainian! Here is what you accomplished today:
 
-The Ukrainian alphabet has **33 letters**: 10 vowels, 22 consonants, and 1 modifier (**Ь**). The system is highly phonetic — each letter almost always maps to one sound.
+- The Ukrainian alphabet has **33 letters**: 10 vowel letters, 22 consonant letters, and 1 modifier (**Ь**). It is a highly phonetic system — one letter usually maps to one sound.
+- You mastered **10 letters** today: А, О, У, І, М, Н, Т, К, С, Л.
+- You can now read real words: **мама**, **тато**, **кіт**, **молоко**, **місто**, **ліс**, and 12 more.
+- You know three sight words: **привіт**, **дякую**, **це**.
 
-You mastered **10 letters** — А, О, У, І, М, Н, Т, К, С, Л — and used them to read real words: **ма́ма**, **та́то**, **кіт**, **молоко́**, **мі́сто**, **ліс**, and more. You also learned three sight words: **приві́т**, **дя́кую**, **це**.
+**Self-check — can you do these?**
 
-**Self-check — ask yourself:**
+- Find all 10 vowel letters on the alphabet chart at the top of this module.
+- Read **мама** and **кіт** aloud, blending letter by letter.
+- Explain the difference between **букви** (letters) and **звуки** (sounds).
+- Read the sentence «Це молоко» aloud.
 
-- Can you find all 10 vowel letters on the alphabet chart?
-- Can you read **ма́ма** and **кіт** aloud?
-- What is the difference between **бу́кви** (letters) and **зву́ки** (sounds)?
-- Which Ukrainian letter looks like English H but sounds like N?
-
-If you answered those, you are ready. Next up: Module 2 deep-dives into the vowel system — all 10 vowel letters, including the iotated ones (**Я**, **Ю**, **Є**, **Ї**) that can represent two sounds at once.
+Your next step: Module 2 deep-dives into the vowel system — all 10 vowel letters, including the iotated ones. You are ready for it!
 ```
 
 ---
@@ -239,389 +224,292 @@ If you answered those, you are ready. Next up: Module 2 deep-dives into the vowe
 
 ```yaml
 - type: watch-and-repeat
-  title: Listen and Repeat the 10 Practice Letters
-  instruction: Watch each video, then repeat the letter sound aloud. Focus on mouth
-    position.
+  title: "Listen and Repeat: Your First 10 Letters"
+  instruction: "Watch each video, then repeat the letter sound aloud. Pay attention to mouth shape."
   items:
-  - letter: А
-    word: мама
-    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-    note: Open 'a' as in 'father' — mouth wide open
-  - letter: О
-    word: око
-    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
-    note: Rounded 'o' as in 'more' — keep lips in a circle
-  - letter: У
-    word: тут
-    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    note: '''oo'' as in ''moon'' — lips push forward. Looks like Y but sounds different!'
-  - letter: І
-    word: ліс
-    video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-    note: '''ee'' as in ''see'' — bright, clear front vowel'
-  - letter: М
-    word: мама
-    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    note: Like English M — lips press together
-  - letter: Н
-    word: ніс
-    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
-    note: Like English N — NOT H! This is the biggest trap for beginners
-  - letter: Т
-    word: тато
-    video: https://www.youtube.com/watch?v=m-jcLR_gK0k
-    note: Like English T — tongue taps the ridge behind upper teeth
-  - letter: К
-    word: кіт
-    video: https://www.youtube.com/watch?v=J7sGEI4-xJo
-    note: Like English K — back of tongue touches soft palate
-  - letter: С
-    word: сон
-    video: https://www.youtube.com/watch?v=7UsFBgSL91E
-    note: Like English S — always S, never K. Looks like C but sounds like S!
-  - letter: Л
-    word: ліс
-    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    note: Like English L — tongue tip behind upper teeth, slightly fuller sound
-- type: image-to-letter
-  title: What Letter Does It Start With?
-  instruction: Look at the picture. Which Ukrainian letter does the word start with?
-  items:
-  - emoji: 🐱
-    answer: К
-    distractors:
-    - М
-    - С
-    note: кіт (cat) starts with К
-  - emoji: 👩
-    answer: М
-    distractors:
-    - Н
-    - К
-    note: мама (mom) starts with М
-  - emoji: 🌲
-    answer: Л
-    distractors:
-    - М
-    - С
-    note: ліс (forest) starts with Л
-  - emoji: 👃
-    answer: Н
-    distractors:
-    - К
-    - Л
-    note: ніс (nose) starts with Н
-  - emoji: 💤
-    answer: С
-    distractors:
-    - М
-    - Т
-    note: сон (dream) starts with С
-  - emoji: 👁️
-    answer: О
-    distractors:
-    - А
-    - У
-    note: око (eye) starts with О
-  - emoji: 👨
-    answer: Т
-    distractors:
-    - К
-    - С
-    note: тато (dad) starts with Т
-  - emoji: 🧃
-    answer: С
-    distractors:
-    - М
-    - Л
-    note: сік (juice) starts with С
-- type: classify
-  title: Vowels or Consonants?
-  instruction: 'Sort each letter into the correct category. Remember: vowels are sounds
-    where air flows freely.'
-  categories:
-  - label: Vowels (голосні)
-    symbol_hint: vowel
-    items:
-    - А
-    - О
-    - У
-    - І
-  - label: Consonants (приголосні)
-    symbol_hint: consonant
-    items:
-    - М
-    - Н
-    - Т
-    - К
-    - С
-    - Л
-- type: match-up
-  title: Match the Letter to Its Sound
-  instruction: Match each Ukrainian letter to its English sound equivalent. Watch
-    out for visual traps!
-  pairs:
-  - left: А
-    right: '''a'' as in father'
-  - left: О
-    right: '''o'' as in more'
-  - left: У
-    right: '''oo'' as in moon'
-  - left: І
-    right: '''ee'' as in see'
-  - left: М
-    right: '''m'' as in mom'
-  - left: Н
-    right: '''n'' as in no (NOT h!)'
-  - left: Т
-    right: '''t'' as in top'
-  - left: К
-    right: '''k'' as in kit'
-  - left: С
-    right: '''s'' as in sun (NOT c!)'
-  - left: Л
-    right: '''l'' as in love'
-- type: fill-in
-  title: Blend the Letters
-  instruction: Combine the letters to form the correct syllable or word.
-  items:
-  - sentence: М + А = ___
-    answer: МА
-    options:
-    - МА
-    - МО
-    - НА
-    - ТА
-    explanation: М makes the 'm' sound, А makes the 'a' sound — together they form
-      МА.
-  - sentence: МА + МА = ___
-    answer: мама
-    options:
-    - мама
-    - тато
-    - масло
-    - мало
-    explanation: Two МА syllables blend into мама (mom) — your first Ukrainian word!
-  - sentence: К + І + Т = ___
-    answer: кіт
-    options:
-    - кіт
-    - кіно
-    - ніс
-    - сік
-    explanation: К + І + Т blends into кіт (cat) — one syllable, three letters.
-  - sentence: С + О + Н = ___
-    answer: сон
-    options:
-    - сон
-    - сом
-    - мак
-    - сік
-    explanation: С + О + Н blends into сон (dream).
-  - sentence: Т + А + М = ___
-    answer: там
-    options:
-    - там
-    - так
-    - тут
-    - мак
-    explanation: Т + А + М blends into там (there).
-  - sentence: Л + І + С = ___
-    answer: ліс
-    options:
-    - ліс
-    - ніс
-    - мак
-    - сік
-    explanation: Л + І + С blends into ліс (forest).
-  - sentence: М + І + С + Т + О = ___
-    answer: місто
-    options:
-    - місто
-    - масло
-    - молоко
-    - мало
-    explanation: 'Five letters blend into місто (city) — two syllables: МІ-СТО.'
-  - sentence: С + Т + І + Л = ___
-    answer: стіл
-    options:
-    - стіл
-    - місто
-    - масло
-    - ліс
-    explanation: С + Т + І + Л blends into стіл (table) — one syllable.
-- type: quiz
-  title: Read and Identify
-  instruction: Choose the correct answer for each question.
-  items:
-  - question: Which Ukrainian word means 'mom'?
-    options:
-    - text: мама
-      correct: true
-    - text: масло
-      correct: false
-    - text: місто
-      correct: false
-    - text: молоко
-      correct: false
-    explanation: Мама means mom — it was likely your first Ukrainian word!
-  - question: Which Ukrainian word means 'cat'?
-    options:
-    - text: мак
-      correct: false
-    - text: кіт
-      correct: true
-    - text: кіно
-      correct: false
-    - text: ліс
-      correct: false
-    explanation: Кіт means cat — К + І + Т.
-  - question: Which letter looks like English H but sounds like N?
-    options:
-    - text: Н
-      correct: true
-    - text: М
-      correct: false
-    - text: С
-      correct: false
-    - text: Т
-      correct: false
-    explanation: Н is the biggest visual trap — it looks like H but always sounds
-      like N.
-  - question: Which Ukrainian word means 'milk'?
-    options:
-    - text: масло
-      correct: false
-    - text: місто
-      correct: false
-    - text: молоко
-      correct: true
-    - text: мало
-      correct: false
-    explanation: Молоко means milk — М + О + Л + О + К + О, three syllables.
-  - question: How many letters are in the Ukrainian alphabet?
-    options:
-    - text: '26'
-      correct: false
-    - text: '33'
-      correct: true
-    - text: '28'
-      correct: false
-    - text: '36'
-      correct: false
-    explanation: The Ukrainian alphabet has 33 letters — 10 vowels, 22 consonants,
-      and 1 modifier.
-  - question: Which letter looks like English C but always sounds like S?
-    options:
-    - text: К
-      correct: false
-    - text: Л
-      correct: false
-    - text: С
-      correct: true
-    - text: Т
-      correct: false
-    explanation: С looks like English C but always makes the S sound — never K.
-  - question: Which Ukrainian word means 'forest'?
-    options:
-    - text: ліс
-      correct: true
-    - text: ніс
-      correct: false
-    - text: сон
-      correct: false
-    - text: сом
-      correct: false
-    explanation: Ліс means forest — Л + І + С.
-  - question: Which Ukrainian word means 'here'?
-    options:
-    - text: там
-      correct: false
-    - text: так
-      correct: false
-    - text: тут
-      correct: true
-    - text: ні
-      correct: false
-    explanation: Тут means here — Т + У + Т. Там means there.
-- type: anagram
-  title: Unscramble the Ukrainian Word
-  instruction: Rearrange the letters to form a real Ukrainian word you learned in
-    this lesson.
-  items:
-  - scrambled: А М А М
-    answer: МАМА
-  - scrambled: І К Т
-    answer: КІТ
-  - scrambled: О Т А Т
-    answer: ТАТО
-  - scrambled: С Л І
-    answer: ЛІС
-  - scrambled: А К М
-    answer: МАК
-  - scrambled: Н О С
-    answer: СОН
-  - scrambled: К І С
-    answer: СІК
-  - scrambled: С І Н
-    answer: НІС
-- type: true-false
-  title: True or False?
-  instruction: Decide whether each statement about the Ukrainian alphabet is true
-    or false.
-  items:
-  - statement: The Ukrainian alphabet has 33 letters.
-    correct: true
-    explanation: True! Ukrainian has 33 letters — 10 vowels, 22 consonants, and 1
-      modifier (Ь).
-  - statement: The Ukrainian letter Н makes the same sound as English H.
-    correct: false
-    explanation: False! Н looks like H but sounds like N. This is the most common
-      trap for English speakers.
-  - statement: Ukrainian has 10 vowel letters.
-    correct: true
-    explanation: True! There are 6 base vowels (А О У Е И І) and 4 iotated vowels
-      (Я Ю Є Ї).
-  - statement: The letter С in Ukrainian sounds like the English K sound.
-    correct: false
-    explanation: False! С looks like English C but always makes the S sound — never
-      K.
-  - statement: Every Ukrainian syllable contains exactly one vowel.
-    correct: true
-    explanation: True! Count the vowels in a word to know how many syllables it has.
-  - statement: The soft sign Ь makes its own sound.
-    correct: false
-    explanation: False! Ь has no sound of its own — it modifies the consonant before
-      it.
-  - statement: Ukrainian spelling is highly phonetic — each letter usually maps to
-      one sound.
-    correct: true
-    explanation: True! Unlike English, you can read almost any Ukrainian word aloud
-      just by knowing the letters.
-  - statement: The letter У in Ukrainian sounds like English Y.
-    correct: false
-    explanation: False! У looks a bit like Y but sounds like 'oo' as in 'moon'.
-- type: group-sort
-  title: Sort by Syllable Count
-  instruction: Sort these Ukrainian words into groups based on how many syllables
-    they have. Count the vowels!
-  groups:
-  - name: 1 syllable
-    items:
-    - кіт
-    - ліс
-    - сон
-    - мак
-    - сік
-    - ніс
-  - name: 2 or more syllables
-    items:
-    - мама
-    - тато
-    - масло
-    - місто
-    - молоко
+    - letter: "А"
+      word: "мама"
+      video: "https://www.youtube.com/watch?v=hvB3VpcR3ZE"
+      note: "Open sound like 'a' in 'father'"
+    - letter: "О"
+      word: "молоко"
+      video: "https://www.youtube.com/watch?v=gJFxRIPRZbI"
+      note: "Rounded lips, like 'o' in 'more'"
+    - letter: "У"
+      word: "тут"
+      video: "https://www.youtube.com/watch?v=VB1O6PmtYRU"
+      note: "Lips push forward, like 'oo' in 'moon'"
+    - letter: "І"
+      word: "кіт"
+      video: "https://www.youtube.com/watch?v=Z9TH0H4ShGo"
+      note: "Like 'ee' in 'see'"
+    - letter: "М"
+      word: "мама"
+      video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+      note: "Same as English M"
+    - letter: "Н"
+      word: "ніс"
+      video: "https://www.youtube.com/watch?v=vNUfiKHPYaU"
+      note: "Sounds like N — looks like English H but is NOT H"
+    - letter: "Т"
+      word: "тато"
+      video: "https://www.youtube.com/watch?v=m-jcLR_gK0k"
+      note: "Same as English T"
+    - letter: "К"
+      word: "кіно"
+      video: "https://www.youtube.com/watch?v=J7sGEI4-xJo"
+      note: "Same as English K"
+    - letter: "С"
+      word: "сон"
+      video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
+      note: "Sounds like S — looks like English C but always makes an S sound"
+    - letter: "Л"
+      word: "ліс"
+      video: "https://www.youtube.com/watch?v=v6-3Xg52Buk"
+      note: "Like English L, tongue tip touches behind upper teeth"
 
+- type: image-to-letter
+  title: "What Letter Does It Start With?"
+  instruction: "Look at the picture. What is the first letter of this word in Ukrainian?"
+  items:
+    - emoji: "👩"
+      answer: "М"
+      distractors: ["Н", "К"]
+      note: "мама (mom)"
+    - emoji: "🐱"
+      answer: "К"
+      distractors: ["С", "Л"]
+      note: "кіт (cat)"
+    - emoji: "🥛"
+      answer: "М"
+      distractors: ["Т", "Л"]
+      note: "молоко (milk)"
+    - emoji: "👁️"
+      answer: "О"
+      distractors: ["А", "У"]
+      note: "око (eye)"
+    - emoji: "🌲"
+      answer: "Л"
+      distractors: ["М", "Н"]
+      note: "ліс (forest)"
+    - emoji: "🏙️"
+      answer: "М"
+      distractors: ["Н", "Т"]
+      note: "місто (city)"
+    - emoji: "👃"
+      answer: "Н"
+      distractors: ["М", "Л"]
+      note: "ніс (nose)"
+    - emoji: "🪑"
+      answer: "С"
+      distractors: ["Т", "К"]
+      note: "стіл (table)"
+
+- type: classify
+  title: "Vowels or Consonants?"
+  instruction: "Sort each letter into the correct category. Vowels (голосні) make open sounds. Consonants (приголосні) use your lips, tongue, or teeth."
+  categories:
+    - label: "Vowels (голосні)"
+      symbol_hint: "vowel"
+      items: ["А", "О", "У", "І"]
+    - label: "Consonants (приголосні)"
+      symbol_hint: "consonant"
+      items: ["М", "Н", "Т", "К", "С", "Л"]
+
+- type: match-up
+  title: "Match the Letter to Its Sound"
+  instruction: "Connect each Ukrainian letter to the sound it makes. Watch out for false friends!"
+  pairs:
+    - left: "А"
+      right: "'a' as in father"
+    - left: "О"
+      right: "'o' as in more"
+    - left: "У"
+      right: "'oo' as in moon"
+    - left: "І"
+      right: "'ee' as in see"
+    - left: "М"
+      right: "/m/ sound"
+    - left: "Н"
+      right: "/n/ sound (looks like H!)"
+    - left: "Т"
+      right: "/t/ sound"
+    - left: "К"
+      right: "/k/ sound"
+    - left: "С"
+      right: "/s/ sound (looks like C!)"
+    - left: "Л"
+      right: "/l/ sound"
+
+- type: fill-in
+  title: "Blend the Letters"
+  instruction: "Combine the letters to form a Ukrainian word. Choose the correct word."
+  items:
+    - sentence: "М + А + М + А = ___"
+      answer: "мама"
+      options: ["мама", "масло", "мак", "місто"]
+      explanation: "М-А-М-А blends into мама (mom)."
+    - sentence: "К + І + Т = ___"
+      answer: "кіт"
+      options: ["кіт", "кіно", "кот", "мак"]
+      explanation: "К-І-Т blends into кіт (cat)."
+    - sentence: "Т + А + Т + О = ___"
+      answer: "тато"
+      options: ["тато", "тут", "там", "тон"]
+      explanation: "Т-А-Т-О blends into тато (dad)."
+    - sentence: "М + О + Л + О + К + О = ___"
+      answer: "молоко"
+      options: ["молоко", "масло", "місто", "мама"]
+      explanation: "М-О-Л-О-К-О blends into молоко (milk)."
+    - sentence: "Л + І + С = ___"
+      answer: "ліс"
+      options: ["ліс", "лом", "лак", "лот"]
+      explanation: "Л-І-С blends into ліс (forest)."
+    - sentence: "С + О + Н = ___"
+      answer: "сон"
+      options: ["сон", "сом", "сік", "сум"]
+      explanation: "С-О-Н blends into сон (dream)."
+    - sentence: "М + А + С + Л + О = ___"
+      answer: "масло"
+      options: ["масло", "місто", "молоко", "мама"]
+      explanation: "М-А-С-Л-О blends into масло (butter)."
+    - sentence: "М + І + С + Т + О = ___"
+      answer: "місто"
+      options: ["місто", "масло", "молоко", "мак"]
+      explanation: "М-І-С-Т-О blends into місто (city)."
+
+- type: quiz
+  title: "Read and Identify"
+  instruction: "Read the Ukrainian word and choose what it means."
+  items:
+    - question: "What does the word мама mean?"
+      options:
+        - text: "mom"
+          correct: true
+        - text: "cat"
+          correct: false
+        - text: "milk"
+          correct: false
+        - text: "city"
+          correct: false
+      explanation: "Мама means mom."
+    - question: "What does the word кіт mean?"
+      options:
+        - text: "table"
+          correct: false
+        - text: "cat"
+          correct: true
+        - text: "nose"
+          correct: false
+        - text: "forest"
+          correct: false
+      explanation: "Кіт means cat."
+    - question: "What does the word молоко mean?"
+      options:
+        - text: "butter"
+          correct: false
+        - text: "juice"
+          correct: false
+        - text: "milk"
+          correct: true
+        - text: "lard"
+          correct: false
+      explanation: "Молоко means milk."
+    - question: "Which letter looks like English H but sounds like N?"
+      options:
+        - text: "Н"
+          correct: true
+        - text: "М"
+          correct: false
+        - text: "К"
+          correct: false
+        - text: "Т"
+          correct: false
+      explanation: "Н is the number one false friend — it looks like H but sounds like N."
+    - question: "Which letter looks like English C but always sounds like S?"
+      options:
+        - text: "Л"
+          correct: false
+        - text: "К"
+          correct: false
+        - text: "С"
+          correct: true
+        - text: "Т"
+          correct: false
+      explanation: "С looks like C but always makes an S sound in Ukrainian."
+    - question: "What does the word місто mean?"
+      options:
+        - text: "dream"
+          correct: false
+        - text: "city"
+          correct: true
+        - text: "butter"
+          correct: false
+        - text: "poppy"
+          correct: false
+      explanation: "Місто means city."
+    - question: "What does the word ліс mean?"
+      options:
+        - text: "table"
+          correct: false
+        - text: "eye"
+          correct: false
+        - text: "catfish"
+          correct: false
+        - text: "forest"
+          correct: true
+      explanation: "Ліс means forest."
+    - question: "How many letters does the Ukrainian alphabet have?"
+      options:
+        - text: "26"
+          correct: false
+        - text: "33"
+          correct: true
+        - text: "38"
+          correct: false
+        - text: "30"
+          correct: false
+      explanation: "The Ukrainian alphabet has exactly 33 letters."
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Decide whether each statement about the Ukrainian alphabet is true or false."
+  items:
+    - statement: "The Ukrainian letter Н makes the same sound as English H."
+      correct: false
+      explanation: "Н looks like H but sounds like N — a common false friend."
+    - statement: "The Ukrainian alphabet has 33 letters."
+      correct: true
+      explanation: "Correct — 10 vowel letters, 22 consonant letters, and 1 modifier (Ь)."
+    - statement: "The letter С always sounds like S in Ukrainian."
+      correct: true
+      explanation: "С looks like English C but always makes an S sound."
+    - statement: "Ukrainian spelling is highly phonetic — one letter usually maps to one sound."
+      correct: true
+      explanation: "Unlike English, Ukrainian letters almost always represent the same sound."
+    - statement: "The word мама uses only consonant letters."
+      correct: false
+      explanation: "Мама has two vowels (А, А) and two consonants (М, М)."
+    - statement: "The letter І sounds like 'ee' in the English word 'see'."
+      correct: true
+      explanation: "І makes the 'ee' sound — it is one of the 10 vowel letters."
+    - statement: "Ukrainian has more sounds (38) than letters (33)."
+      correct: true
+      explanation: "Some letters represent two sounds in certain positions, like the iotated vowels."
+    - statement: "The letter А is a consonant."
+      correct: false
+      explanation: "А is a vowel — one of the 6 base vowels in Ukrainian."
+
+- type: group-sort
+  title: "Sort the Words"
+  instruction: "Sort these Ukrainian words into the correct category based on their meaning."
+  groups:
+    - name: "Food and Drink"
+      items: ["молоко", "масло", "сало", "сік", "мак"]
+    - name: "People and Animals"
+      items: ["мама", "тато", "кіт", "сом"]
+    - name: "Places and Things"
+      items: ["місто", "ліс", "стіл", "око", "ніс"]
 ```
 
 ---
@@ -634,95 +522,86 @@ items:
     translation: "mom"
     pos: "noun"
     gender: "f"
-    notes: "Decodable (М+А+М+А). Universal first word."
+    notes: "Decodable with first 10 letters"
   - lemma: "тато"
     translation: "dad"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (Т+А+Т+О). High-frequency family word."
+    notes: "Decodable with first 10 letters"
   - lemma: "кіт"
     translation: "cat"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (К+І+Т). High-frequency."
+    notes: "Decodable with first 10 letters"
   - lemma: "молоко"
     translation: "milk"
     pos: "noun"
     gender: "n"
-    notes: "Decodable (М+О+Л+О+К+О). Three syllables."
+    notes: "Three syllables: мо-ло-ко"
   - lemma: "масло"
     translation: "butter"
     pos: "noun"
     gender: "n"
-    notes: "Decodable (М+А+С+Л+О)."
+    notes: "Decodable with first 10 letters"
   - lemma: "ліс"
     translation: "forest"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (Л+І+С). High-frequency."
   - lemma: "місто"
     translation: "city"
     pos: "noun"
     gender: "n"
-    notes: "Decodable (М+І+С+Т+О). High-frequency."
   - lemma: "око"
     translation: "eye"
     pos: "noun"
     gender: "n"
-    notes: "Decodable (О+К+О)."
   - lemma: "так"
     translation: "yes"
-    pos: "particle"
-    notes: "Decodable (Т+А+К). Survival word."
+    pos: "adverb"
+    notes: "Survival word, fully decodable"
   - lemma: "ні"
     translation: "no"
     pos: "particle"
-    notes: "Decodable (Н+І). Survival word."
+    notes: "Survival word, fully decodable"
   - lemma: "сон"
     translation: "dream, sleep"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (С+О+Н)."
+  - lemma: "сом"
+    translation: "catfish"
+    pos: "noun"
+    gender: "m"
   - lemma: "ніс"
     translation: "nose"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (Н+І+С). Body vocabulary."
   - lemma: "мак"
     translation: "poppy"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (М+А+К)."
   - lemma: "сік"
     translation: "juice"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (С+І+К). Everyday food word."
   - lemma: "стіл"
     translation: "table"
     pos: "noun"
     gender: "m"
-    notes: "Decodable (С+Т+І+Л). Everyday object."
   - lemma: "тут"
     translation: "here"
     pos: "adverb"
-    notes: "Decodable (Т+У+Т). High-frequency."
   - lemma: "там"
     translation: "there"
     pos: "adverb"
-    notes: "Decodable (Т+А+М). High-frequency."
-  - lemma: "привіт"
-    translation: "hello"
-    pos: "interjection"
-    notes: "Sight word — contains untaught letters П, Р, В."
-  - lemma: "дякую"
-    translation: "thank you"
-    pos: "verb"
-    notes: "Sight word — contains untaught letters Д, Я, Ю. First person singular present."
-  - lemma: "це"
-    translation: "this is"
-    pos: "pronoun"
-    notes: "Sight word — contains untaught letter Ц. Used in 'Це кіт' (This is a cat)."
+  - lemma: "сало"
+    translation: "lard"
+    pos: "noun"
+    gender: "n"
+  - lemma: "кіно"
+    translation: "cinema"
+    pos: "noun"
+    gender: "n"
+    notes: "Indeclinable noun"
 ```
 
 ---
@@ -732,14 +611,14 @@ items:
 ```
 Skill identity:   {SKILL_IDENTITY}
 Module persona:   {PERSONA_VOICE}, acting as {PERSONA_ROLE}
-Word count:       1769 / 1200 (147.4%)
-Activities:       9
+Word count:       1524 / 1200 (127.0%)
+Activities:       8
 Vocabulary items: 20
-Engagement boxes: 0
-Immersion:        9.5% (target: 5-15%)
-Richness:         54% (threshold: 95%)
-Richness gaps:    engagement: 0/5, cultural: 0/3, visual: 0/3, realworld: 1/3, proverbs: 0/1, tables: 0/2
-Audit status:     FAIL
+Engagement boxes: 4
+Immersion:        10.3% (target: 5-15%)
+Richness:         63% (threshold: 95%)
+Richness gaps:    engagement: 3/5, cultural: 2/3, examples: 10/24, realworld: 1/3, proverbs: 0/1, tables: 0/2
+Audit status:     PASS
 ```
 
 ## Content Sections (H2 headers)
@@ -820,14 +699,10 @@ Do NOT penalize: friendly tone, bilingual explanations, basic vocabulary present
 
 ## Deterministic Pre-Screen Results
 
-1. **[STRESS_UNKNOWN]** (severity: INFO)
-   Location: ~line 169
-   Text: Stressed word not in dictionary: дя́кую (дякую)
-   Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
-2. **[LOW_ENGAGEMENT]** (severity: MEDIUM)
-   Location: (whole module)
-   Text: Only 0 engagement boxes (minimum: 3 for A1)
-   Fix: Add 3 more callout boxes (> [!tip], > [!example], > [!cultural-note], etc.)
+1. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
+   Location: the-ukrainian-alphabet.yaml
+   Text: Activity answers contain VESUM-failed words: кот
+   Fix: Fix spelling or replace these words — students will practice non-existent forms.
 
 ---
 
@@ -856,8 +731,14 @@ These appear frequently in A1 content. Flag as HIGH:
 
 ## VESUM Word Verification
 
-**Words checked:** 40 | **VESUM coverage:** 40/40 (100.0%)
-All words verified ✅ -- no morphological issues detected.
+**Words checked:** 54 | **VESUM coverage:** 51/54 (94.4%)
+
+**❌ Not found in VESUM or textbooks (3):**
+- `кот` (source: activities)
+- `КІ` (source: prose)
+- `ЛО` (source: prose)
+
+**Action:** Check if these are valid Ukrainian word forms. Proper nouns and vocative forms may be legitimate. Hallucinated forms or Russianisms must be flagged.
 
 ---
 

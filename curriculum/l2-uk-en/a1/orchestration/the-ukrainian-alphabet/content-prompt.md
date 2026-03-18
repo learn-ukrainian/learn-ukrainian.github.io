@@ -130,7 +130,7 @@ Ukrainian sentences max 10 words.
 
 Write **The Ukrainian Alphabet** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 3+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -182,9 +182,19 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 ### Workflow
 1. **Research first**: `search_text("Full alphabet overview (33 letters) Sound-letter correspondence (букви vs звуки)", grade=1-2)` — find how textbooks teach this
 2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+3. **MANDATORY: Verify EVERY Ukrainian word** — call `verify_words` on ALL Ukrainian words before finalizing each section. Do NOT skip this. If a word is NOT FOUND, replace it with a verified alternative. Never guess.
+4. **MANDATORY: Verify stress marks** — if you add a stress mark (´), look up the word first. Wrong stress marks are the #1 quality failure. Use `WebFetch` on goroh.pp.ua to check stress if unsure.
+5. **Create activities** from your content
+6. **MANDATORY: Verify activity items** — batch `verify_words` on ALL answers, distractors, and options. Every item must pass VESUM. If a distractor fails, replace it — do NOT include unverified words.
+
+### Tools Available During Writing
+You have MCP tools (`verify_words`, `search_text`, `query_pravopys`), `WebFetch` (goroh.pp.ua, slovnyk.me), `Read` (plan, research, other modules), `Grep` (search patterns), and `Bash` (agent bridge to consult Gemini).
+
+**When unsure about Ukrainian grammar, stress, or vocabulary:**
+- First: `verify_words` or `query_pravopys`
+- Second: `WebFetch` goroh.pp.ua
+- Third: ask Gemini via `Bash`: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "Is X correct in Ukrainian?" --task-id the-ukrainian-alphabet-consultation`
+- **Never guess. Use the tools.**
 
 ### Beginner Lesson Arc
 
@@ -269,7 +279,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 

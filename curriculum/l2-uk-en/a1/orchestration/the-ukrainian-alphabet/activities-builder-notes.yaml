@@ -1,16 +1,13 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 9
+activity_count: 8
 deviations:
-  - "Added 3 activity types beyond plan hints (anagram, true-false, group-sort) to meet 8-activity minimum and reinforce learning through varied practice"
-  - "Vocabulary includes 3 sight words (привіт, дякую, це) in place of 3 recommended decodable words (сом, сало, кіно) to cover all word categories in the lesson"
+  - "Added true-false and group-sort activities beyond the 6 plan hints to meet A1 minimum of 8 activities"
 frictions:
   - type: PLAN_GAP
-    description: "Plan specifies 6 activity types but module minimum is 8 activities"
-    proposed_fix: "Added anagram, true-false, and group-sort — all appropriate for letter/word-level practice"
-unverified_terms:
-  - "None — all Ukrainian words are from the lesson's decodable word list or sight word list"
+    description: "Plan activity_hints specify only 6 activities but A1 audit requires minimum 8"
+    proposed_fix: "Added true-false (alphabet facts) and group-sort (word categorization) as natural extensions"
+unverified_terms: []
 review_focus:
-  - "fill-in: Verify that letter-blending format (М + А = ___) renders correctly in the activity UI"
-  - "anagram: Verify all scrambled letters match answer letters exactly (manually checked)"
-  - "image-to-letter: Verify emoji rendering across platforms (especially 👁️ for око)"
+  - "fill-in: letter blending format (М + А + М + А = ___) is non-standard but matches plan focus"
+  - "quiz item 2 uses кот as distractor — verified NOT in VESUM (Russian form), used intentionally as wrong answer learners might confuse"

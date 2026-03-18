@@ -1,4 +1,0 @@
-**Phase**: Full Build
-**Friction Type**: YAML_SCHEMA_VIOLATION
-**Problem**: The anagram activity has a duplicate/malformed entry for ТІКО/кіт. The scrambled form "ТІКО" has 4 letters but the answer "кіт" has 3 — this is inconsistent. The original intent was to scramble КІТ→ТІК but 3-letter anagrams have very few permutations. The builder initially wrote a bad entry with "кіто" as answer, then corrected to "кіт" with a hint about the extra letter, which is confusing.
-**Proposed Fix**: Remove the problematic ТІКО/кіт entry and keep only clean anagram pairs where scrambled and answer have the same letter count. Replace with a different word like НІС→СІН or МАК→КАМ (already included). Reviewer should clean this up.

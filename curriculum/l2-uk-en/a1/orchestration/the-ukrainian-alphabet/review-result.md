@@ -2,59 +2,56 @@
 
 ## Plan Adherence Summary
 
-**Content outline points:** 20 total, 20 covered, 0 missing, 0 partial
+**Content outline points:** 20 total, 19 covered, 0 missing, 1 partial
 **Required vocabulary:** 10 total, 10 present, 0 missing
 **Activity hints:** 6 total, 6 matched, 0 missing
 **Plan Adherence Score:** 10/10
 
 ### Plan Point Coverage
-
 - Section "Вступ — Introduction":
-  - [x] Point 1: "Ukrainian uses Cyrillic script — descended from Greek via the First Bulgarian Empire..." — COVERED ("Ukrainian uses the Cyrillic script — an alphabet descended from the Greek alphabet via the First Bulgarian Empire in the 9th century... Ukrainian has 33 letters, and the system is highly phonetic.")
-  - [x] Point 2: "Show the full 33-letter alphabet chart..." — COVERED ("> А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я")
-  - [x] Point 3: "Cultural hook: Cyrillic was created by students of Saints Cyril and Methodius..." — COVERED ("Students of Saints Cyril and Methodius created this writing system to bring literacy to the Slavic world.")
-
+  - [x] Point 1: "Ukrainian uses Cyrillic script — descended from Greek via the First Bulgarian Empire..." — COVERED (line ~4: "Ukrainian uses the Cyrillic script — a writing system descended from the Greek alphabet...")
+  - [x] Point 2: "Show the full 33-letter alphabet chart (COPY EXACTLY)..." — COVERED (line ~10: "**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**")
+  - [x] Point 3: "Cultural hook: Cyrillic was created by students of Saints Cyril and Methodius..." — COVERED (line ~21: "Students of Saints Cyril and Methodius created this script in the 9th century...")
 - Section "Букви і звуки — Letters and Sounds":
-  - [x] Point 1: "Letters (букви) are written symbols. Sounds (звуки) are what you hear and pronounce..." — COVERED ("**Букви** are written symbols — the shapes you see on the page. **Звуки** are what you hear and pronounce...")
-  - [x] Point 2: "Key insight: Ukrainian spelling is highly phonetic..." — COVERED ("Ukrainian spelling is highly phonetic. One letter almost always represents one sound. Once you learn the 33 letters, you can sound out almost any Ukrainian word")
-  - [x] Point 3: "Some letters do double duty: iotated vowels (Я Ю Є Ї)... The soft sign (Ь)..." — COVERED ("The iotated vowels (**Я**, **Ю**, **Є**, **Ї**) can represent two sounds at once. The soft sign (**Ь**) has no sound of its own")
-
+  - [x] Point 1: "Letters (букви) are written symbols... Ukrainian has 38 phonemes but 33 letters." — COVERED (line ~27: "**Букви** (letters) are written symbols... Ukrainian has 33 letters but 38 distinct sounds.")
+  - [x] Point 2: "Key insight: Ukrainian spelling is highly phonetic..." — COVERED (line ~34: "The key insight for you right now: Ukrainian spelling is highly phonetic.")
+  - [x] Point 3: "Some letters do double duty: iotated vowels..." — COVERED (line ~31: "The four iotated vowels — **Я**, **Ю**, **Є**, **Ї** — can each represent two sounds...")
+  - [x] Word Budget: Target 200 words. Actual ~160. Flag: MEDIUM (Section is >10% under its target).
 - Section "Голосні та приголосні — Vowels and Consonants":
-  - [x] Point 1: "10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї)..." — COVERED ("Ukrainian has 10 vowel letters... **Base vowels (6):** А, О, У, Е, И, І - **Iotated vowels (4):** Я, Ю, Є, Ї")
-  - [x] Point 2: "22 consonant letters + the soft sign Ь..." — COVERED ("Ukrainian has 22 consonant letters, plus the soft sign **Ь**, which is a modifier")
-  - [x] Point 3: "Preview chart organized by category..." — COVERED (Includes exact requested chart for Голосні and Приголосні)
-
+  - [x] Point 1: "10 vowel letters: 6 base... + 4 iotated... Every Ukrainian syllable has exactly one vowel." — COVERED (line ~48: "Ukrainian has 10 vowel letters... Every Ukrainian syllable contains exactly one vowel.")
+  - [x] Point 2: "22 consonant letters + the soft sign Ь... Consonants = air is obstructed..." — COVERED (line ~55: "Ukrainian has 22 consonant letters plus one special modifier")
+  - [ ] Point 3: "Preview chart organized by category (COPY EXACTLY)..." — PARTIAL. The text split the list and modified the formatting, using bolding and English names (e.g., "**Base vowels (6):**") instead of exactly matching "Голосні (Base):".
+  - [x] Word Budget: Target 200 words. Actual ~145. Flag: MEDIUM (Section is >10% under its target).
 - Section "Перші 10 літер — First 10 Letters":
-  - [x] Point 1: "Today's practice set: А О У І (4 vowels) + М Н Т К С Л (6 consonants)..." — COVERED ("Your practice set for today: 4 vowels and 6 consonants... > **А О У І** — vowels > **М Н Т К С Л** — consonants")
-  - [x] Point 2: "Letter-by-letter introduction with pronunciation guidance..." — COVERED (Each letter is introduced with the exact phonetic guide, e.g., "А — open «a» as in «father»")
-  - [x] Point 3: "Decodable words (use ONLY these 10 letters): мама (mom), тато (dad)..." — COVERED (Lists all 16 words from the plan plus additional decodable ones)
-  - [x] Point 4: "Detailed phonetic walkthroughs: how to blend М+А→МА, then МА+МА→МАМА..." — COVERED ("Start with two letters: **М** + **А** → **МА**. Now double it: **МА** + **МА** → **ма́ма** (mom)... Try another: **К** + **І** → **КІ**, then add **Т** → **кіт** (cat).")
-
+  - [x] Point 1: "Today's practice set: А О У І (4 vowels) + М Н Т К С Л (6 consonants)." — COVERED (line ~67: "Your practice set: **А О У І** (4 vowels) + **М Н Т К С Л** (6 consonants).")
+  - [x] Point 2: "Letter-by-letter introduction with pronunciation guidance..." — COVERED (line ~71: Lists each letter with pronunciation rules and Anna Ohoiko videos.)
+  - [x] Point 3: "Decodable words (use ONLY these 10 letters)..." — COVERED (line ~119: "мама (mom) — тато (dad) — кіт (cat)...")
+  - [x] Point 4: "Detailed phonetic walkthroughs: how to blend..." — COVERED (line ~113: "**М** + **А** → **МА** ... then **МА** + **МА** → **мама**")
 - Section "Перші слова — First Words in Context":
-  - [x] Point 1: "Micro-dialogues using decodable words + sight words..." — COVERED ("> — Це кіт? > — Так, це кіт.")
-  - [x] Point 2: "Sight words (contain untaught letters — recognize as wholes): привіт, дякую, це..." — COVERED ("Your sight words: - **приві́т** (hello)... - **дя́кую** (thank you)... - **це** (this is)")
-  - [x] Point 3: "Reading practice: short sentences mixing decodable words and sight words..." — COVERED ("Now try reading these short sentences on your own: - **Ма́ма тут.** - **Кіт там.** - **Це молоко́.** - **Це ма́сло.**")
-
+  - [x] Point 1: "Micro-dialogues using decodable words + sight words..." — COVERED (line ~140: "> — Це кіт? > — Так, це кіт.")
+  - [x] Point 2: "Sight words... привіт (hello), дякую (thank you), це (this is)..." — COVERED (line ~133: "привіт... дякую... це")
+  - [x] Point 3: "Reading practice: short sentences mixing decodable words and sight words." — COVERED (line ~157: "> - **Мама** тут. > - **Кіт** там.")
+  - [x] Word Budget: Target 200 words. Actual ~165. Flag: MEDIUM (Section is >10% under its target).
 - Section "Підсумок — Summary":
-  - [x] Point 1: "33 letters: 10 vowels, 22 consonants, 1 modifier (Ь)..." — COVERED ("The Ukrainian alphabet has **33 letters**: 10 vowels, 22 consonants, and 1 modifier (**Ь**).")
-  - [x] Point 2: "You mastered 10 letters today. You can read: мама, тато, кіт, молоко, місто, ліс." — COVERED ("You mastered **10 letters**... and used them to read real words: **ма́ма**, **та́то**, **кіт**, **молоко́**, **мі́сто**, **ліс**")
-  - [x] Point 3: "Self-check: Can you find all 10 vowel letters... What is the difference between букви and звуки?" — COVERED (In the "Self-check — ask yourself" list)
-  - [x] Point 4: "Next: M2 deep-dives into the vowel system..." — COVERED ("Next up: Module 2 deep-dives into the vowel system — all 10 vowel letters")
+  - [x] Point 1: "33 letters: 10 vowels, 22 consonants, 1 modifier..." — COVERED (line ~167: "The Ukrainian alphabet has **33 letters**: 10 vowel letters, 22 consonant letters, and 1 modifier")
+  - [x] Point 2: "You mastered 10 letters today. You can read..." — COVERED (line ~168: "You mastered **10 letters** today... You can read real words: **мама**...")
+  - [x] Point 3: "Self-check: Can you find all 10 vowel letters..." — COVERED (line ~173: "Find all 10 vowel letters... Read **мама**... Explain the difference...")
+  - [x] Point 4: "Next: M2 deep-dives into the vowel system..." — COVERED (line ~179: "Your next step: Module 2 deep-dives into the vowel system...")
 
 ### Required Vocabulary Coverage
 
 | Word | In Prose? | In Activities? | Status |
 |------|-----------|---------------|--------|
-| мама (mom) | YES | YES | PRESENT |
-| тато (dad) | YES | YES | PRESENT |
-| кіт (cat) | YES | YES | PRESENT |
-| молоко (milk) | YES | YES | PRESENT |
-| масло (butter) | YES | YES | PRESENT |
-| ліс (forest) | YES | YES | PRESENT |
-| місто (city) | YES | YES | PRESENT |
-| око (eye) | YES | YES | PRESENT |
-| так (yes) | YES | YES | PRESENT |
-| ні (no) | YES | YES | PRESENT |
+| мама | YES | YES | PRESENT |
+| тато | YES | YES | PRESENT |
+| кіт | YES | YES | PRESENT |
+| молоко | YES | YES | PRESENT |
+| масло | YES | YES | PRESENT |
+| ліс | YES | YES | PRESENT |
+| місто | YES | YES | PRESENT |
+| око | YES | YES | PRESENT |
+| так | YES | NO | PROSE ONLY |
+| ні | YES | NO | PROSE ONLY |
 
 ### Activity Hints Coverage
 
@@ -64,124 +61,119 @@
 | image-to-letter | Match picture to Ukrainian word | 8 | YES | 8 |
 | classify | Sort the 10 practice letters | 10 | YES | 10 |
 | match-up | Match Ukrainian letter to its sound | 10 | YES | 10 |
-| fill-in | Blend letters into syllables and words | 8 | YES | 8 |
+| fill-in | Blend letters into syllables | 8 | YES | 8 |
 | quiz | Read and identify | 8 | YES | 8 |
 
 ### Missing Plan Points (Fix Targets)
 
-None
+- PARTIAL: Section "Голосні та приголосні — Vowels and Consonants" — Point "Preview chart organized by category (COPY EXACTLY)..."
+  The content failed to EXACTLY copy the chart formatting provided in the plan, using bolding and English names (e.g., "**Base vowels (6):** А, О, У, Е, И, І") instead of the exact string format "Голосні (Base): А, О, У, Е, И, І".
+- MEDIUM: Section "Букви і звуки — Letters and Sounds" is ~160 words, which is >10% under its target of 200 words.
+- MEDIUM: Section "Голосні та приголосні — Vowels and Consonants" is ~145 words, which is >10% under its target of 200 words.
+- MEDIUM: Section "Перші слова — First Words in Context" is ~165 words, which is >10% under its target of 200 words.
 
 ---
 
 ## Factual Verification Summary
 
-**Total claims checked:** 10
+**Total claims checked:** 5
 **Confirmed [Tier 1]:** 3
-**Discrepancies [Tier 1]:** 0
-**Unverified:** 7
-**Factual Alignment Score:** 10/10
+**Discrepancies [Tier 1]:** 1
+**Unverified:** 1
+**Factual Alignment Score:** 8/10
 
 ## Confirmed Claims
 
-1. **Alphabet Length**
-- **Module says:** "Ukrainian has 33 letters"
-- **Reference says:** "В українській абетці 33 букви."
-- **Source:** Textbook, Grade 2, Сторінка 27
+- **Module claim:** "The Ukrainian alphabet has exactly 33 letters."
+  - **Source [1-klas-bukvar-zaharijchuk-2025-1_s0042 / Grade 1, Сторінка 11]:** "В українській абетці 33 букви."
+- **Module claim:** "Букви (letters) are written symbols — what you see on paper or on a screen. Звуки (sounds) are what you hear and pronounce."
+  - **Source [Grade 1, Сторінка 11 / Grade 4, Сторінка 5]:** "Букви — це умовні знаки, які позначають звуки мови. Букви ти можеш побачити і написати... Звуки ми чуємо та..."
+- **Module claim:** "Ukrainian sounds fall into two families: голосні (vowels) and приголосні (consonants)."
+  - **Source [Grade 4, Сторінка 5]:** "Звуки є [голосні] та [приголосні]."
 
-2. **Letters vs. Sounds**
-- **Module says:** "**Букви** are written symbols — the shapes you see on the page. **Звуки** are what you hear and pronounce"
-- **Reference says:** "Букви — це умовні знаки, які позначають звуки мови. Букви ти можеш побачити і написати." and "Звуки ми чуємо та … ."
-- **Source:** Textbook, Grade 1, Сторінка 11 and Textbook, Grade 4, Сторінка 5
-
-3. **Letters representing two sounds**
-- **Module says:** "The iotated vowels (Я, Ю, Є, Ї) can represent two sounds at once."
-- **Reference says:** "Назви́ букви, які позначають два звуки."
-- **Source:** Textbook, Grade 2, Сторінка 6
+*Note on VESUM Validation:* The syllables `КІ` and `ЛО` (flagged as VESUM failures) are correctly utilized in the module as instructional phonetics fragments for blending words (e.g., "МО + ЛО + КО"). This aligns accurately with primary source `[1-klas-bukvar-zaharijchuk-2025-1_s0072]` which highlights syllables like `ма-` and `мо-`. This is a false positive in the script, not a factual discrepancy.
 
 ## Discrepancies
 
-None
+### Discrepancy 1: Russianism used as an activity distractor
+- **Module says:** `options: ["кіт", "кіно", "кот", "мак"]` (in Activities YAML)
+- **Reference says:** `❌ Not found in VESUM or textbooks (3): кот` (from VESUM Dictionary Verification)
+- **Source:** VESUM Dictionary Verification
+- **Severity:** HIGH
+- **Suggested fix:** Replace the Russianism "кот" with a valid, VESUM-verified Ukrainian word that uses the 10 practice letters, such as "кут" (angle) or "кум" (godfather).
 
 ## Unverified Claims
 
-- "Ukrainian uses the Cyrillic script — an alphabet descended from the Greek alphabet via the First Bulgarian Empire in the 9th century." (No reference coverage)
-- "Students of Saints Cyril and Methodius created this writing system to bring literacy to the Slavic world." (No reference coverage)
-- "Ukrainian has 33 letters but produces 38 distinct sounds (phonemes)." (No reference coverage for the specific phoneme count)
-- "The soft sign (Ь) has no sound of its own" (No reference coverage)
-- "Ukrainian has 10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї)." (No reference coverage for this specific numeric count/taxonomy breakdown)
-- "Ukrainian has 22 consonant letters" (No reference coverage)
-- "Every Ukrainian syllable contains exactly one vowel." (No reference coverage)
+- **Module claim:** "Cyrillic was created by students of Saints Cyril and Methodius... in the 9th century." (No corresponding primary RAG textbook chunk, though this is standard historical knowledge and directly requested by the plan's cultural hook).
 
 ## Verdict
 
-**Status:** PASS
+**Status:** FAIL
+(Failed due to HIGH severity discrepancy: inclusion of Russianism 'кот' as a distractor which failed VESUM validation).
 
 ---
 
 # Language Review (Pass 2)
 
+[watchdog] Output resumed after 203s stall
 **Reviewed-By:** gemini-2.5-pro (RAG-grounded)
 
-**Status:** PASS
-**Overall Score:** 8.7/10
+**Status:** FAIL
+**Overall Score:** 8.4/10
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | All 5 callout boxes are missing the `> ` blockquote syntax, breaking MDX parsing and rendering them as plain text. |
-| 2 | Language | 9/10 | <8 | Highly accurate and natural phonetic descriptions; solid simple sentences for decoding practice. |
-| 3 | Pedagogy | 8/10 | <7 | Missing taught words (`сало`, `кіно`, `сом`) from the formal vocabulary list creates a gap between the lesson and the study materials. |
-| 4 | Activities | 9/10 | <7 | Varied and effective reinforcement. Minor risk of negative transfer in the `СОН` anagram (`Н О С`). |
-| 5 | Beginner Safety | 8/10 | <7 | Unnecessary grammatical metalanguage ("First person singular present") used for a simple day-1 sight word (`дякую`). |
-| 6 | LLM Fingerprint | 9/10 | <7 | Friendly, encouraging tone without excessive padding or AI clichés. |
-| 7 | Linguistic Accuracy | 10/10 | <9 | Vowel/consonant classifications and phonetic descriptions are correct and well-explained. |
+| 1 | Experience Quality | 9/10 | <7 | The tone is highly encouraging and avoids overwhelming the learner. Connecting the Cyrillic heritage back to Greek is an excellent cultural hook. |
+| 2 | Language | 9/10 | <8 | The Ukrainian examples are natural and properly constructed for absolute beginners, showing good contextual framing (e.g., "Це ліс"). |
+| 3 | Pedagogy | 8/10 | <7 | The breakdown of unlearned letters in sight words is factually incomplete, failing to identify vowels that the student has not yet learned. |
+| 4 | Activities | 8/10 | <7 | Activities are well-structured but contain a high-severity deterministic VESUM failure in the distractors. |
+| 5 | Beginner Safety | 8/10 | <7 | The complete omission of stress marks (наголос) across all polysyllabic words leaves absolute beginners guessing pronunciation, which is hazardous in an A1 alphabet module. |
+| 6 | LLM Fingerprint | 9/10 | <7 | The writing feels very natural and teacher-like. Transitions between sections are organic without repetitive AI transitions. |
+| 7 | Linguistic Accuracy | 8/10 | <9 | The inclusion of "кот" as an activity distractor introduces a Russianism / non-existent Ukrainian form to the learner's visual field. |
 
-**Weighted Overall:** 8.7/10
+**Weighted Overall:** (13.5 + 9.9 + 9.6 + 10.4 + 10.4 + 9.0 + 12.0) / 8.9 = **8.4/10**
 
 ## Critical Issues Found
 
-### Issue 1: Broken MDX Callout Formatting
-**Location**: Throughout the content (e.g., `[!culture] **A script of their own**`)
-**Problem**: The callouts lack the required `> ` blockquote prefix. This prevents the MDX pipeline from rendering them as stylized engagement boxes, explaining why the pre-screen reported `Engagement boxes: 0`.
-**Fix**: Prepend `> ` to all 5 callout definitions.
+### Issue 1: VESUM-Failing Russianism in Distractors
+**Location**: `Activities` -> `fill-in` -> `К + І + Т = ___`
+**Problem**: The distractor array contains `"кот"`, which is a direct Russianism and was flagged by the VESUM pre-screen as non-existent in Ukrainian. Beginner materials must not expose learners to false forms.
+**Fix**: Replace `"кот"` with a valid, decodable Ukrainian word using only the first 10 practice letters, such as `"кут"` (corner) or `"кум"`.
 
-### Issue 2: Premature Grammatical Metalanguage
-**Location**: Vocabulary YAML, entry for `дякую`.
-**Problem**: The notes explicitly state: `"First person singular present."` A day-1 beginner learning the alphabet does not know Ukrainian verb conjugations. Introducing this jargon for a "sight word" violates Beginner Safety and creates unnecessary cognitive load.
-**Fix**: Remove the grammatical terminology and focus purely on its function as a polite greeting/response.
+### Issue 2: Complete Absence of Stress Marks on Polysyllabic Words
+**Location**: Throughout the Markdown content and Vocabulary YAML
+**Problem**: The module introduces several polysyllabic words (`молоко`, `масло`, `місто`, `Привіт`, `Дякую`, `кіно`), but fails to include stress marks (наголос) anywhere in the text or the vocabulary lemmas. According to project rules, since no Latin transliteration is allowed, stress marks are mandatory for beginners to know how to correctly pronounce words like `молоко́`.
+**Fix**: Add acute accents (´) to the stressed vowels of all polysyllabic Ukrainian words in the prose (e.g., `ма́ма`, `молоко́`, `Приві́т`) and update the `lemma` fields in the Vocabulary YAML accordingly.
 
-### Issue 3: Missing Words in Vocabulary YAML
-**Location**: Text section "Перші 10 літер" vs. Vocabulary YAML.
-**Problem**: The text explicitly teaches the decodable words `сало` (lard), `кіно` (cinema), and `сом` (catfish), complete with English translations. However, these are omitted from the formal Vocabulary YAML, meaning they will be excluded from the student's flashcard exports.
-**Fix**: Add these three words to the Vocabulary YAML to synchronize the text with the formal study materials.
-
-### Issue 4: Negative Transfer Risk in Anagram
-**Location**: Activities > anagram > item 6
-**Problem**: The scrambled letters for `СОН` are presented as `Н О С`. Because `нос` is the Russian word for "nose" (Ukrainian is `ніс`), presenting this exact sequence to English speakers (who often have vague Russian familiarity) creates a negative transfer risk.
-**Fix**: Change the scrambled state to `О С Н` to avoid spelling a valid Russian word.
+### Issue 3: Incomplete Unlearned Letter Breakdown
+**Location**: `## Перші слова — First Words in Context`
+**Problem**: The text explicitly lists the unlearned letters found in the sight words, but it is factually incomplete based on its own premise. For `Привіт!`, it states it "contains П, Р, В, which you have not studied yet", completely missing the unlearned letter `И`. For `Це`, it states it "contains Ц", completely missing the unlearned letter `Е`.
+**Fix**: Update the instructional text to accurately identify all unlearned letters: `contains П, Р, И, В` for `Привіт!` and `contains Ц, Е` for `Це`.
 
 ## Ukrainian Language Issues
 
-- No direct grammar, spelling, or Russianism errors found in the Ukrainian text. The phonetic breakdown and word stress (`ма́ма`, `кіно́`) in the prose are handled correctly for A1 level.
+- `кот`: Non-existent Ukrainian word / Russianism used as an activity distractor.
+- `молоко`: Lacks the mandatory stress mark (`молоко́`), preventing a beginner from knowing not to stress the first or second syllable.
+- `Привіт`: Lacks stress mark (`Приві́т`).
+- `Дякую`: Lacks stress mark (`Дя́кую`).
 
-## Fix Plan to Reach 10/10
+## Fix Plan to Reach PASS
 
-1. Fix the formatting of all 5 callouts by adding the `> ` prefix so the MDX pipeline recognizes them.
-2. Remove the "First person singular present" jargon from the `дякую` vocabulary notes.
-3. Add `сало`, `кіно`, and `сом` to the Vocabulary YAML block to ensure completeness.
-4. Change the anagram scramble for `СОН` from `Н О С` to `О С Н`.
-5. Add explicit acute accent marks to multi-syllable lemmas in the Vocabulary YAML (e.g., `lemma: "молоко́"`) to ensure flashcards generated from this data retain stress indicators for beginners.
+1. **Purge Russianism**: Replace `"кот"` with `"кут"` in the `fill-in` activity options.
+2. **Apply Stress Marks**: Add acute accents to all polysyllabic words throughout the Markdown prose (including dialogue and reading challenges) and within the `watch-and-repeat` activity.
+3. **Update Vocabulary Lemmas**: Ensure every polysyllabic word in the `vocabulary.yaml` has a stress mark on its `lemma` field (e.g., `lemma: "мі́сто"`).
+4. **Fix Sight Word Analysis**: Update the text in "Перші слова — First Words in Context" to correctly list `И` as an unlearned letter in `Привіт!` and `Е` as an unlearned letter in `Це`.
 
 ## Verification Summary
 
-- Checked vocabulary decodability against the exact 10 letters taught (А О У І М Н Т К С Л).
-- Cross-referenced the text's decodable word list against the YAML Vocabulary list to identify missing items.
-- Inspected all Markdown syntax for MDX compatibility, identifying the callout failures.
-- Scanned for Russianisms, Anglicisms, and semantic false friends (none found).
-- Verified pedagogical flow and tone for absolute beginners.
+- **VESUM Coverage**: Checked failed words from pre-screen. Confirmed `кот` is a Russianism; `КІ` and `ЛО` are valid syllable building blocks.
+- **Pedagogy / Flow**: Verified that all 18 vocabulary words are genuinely decodable using only the 10 target letters (А О У І М Н Т К С Л).
+- **Russianisms**: Verified standard A1 traps; no other issues found beyond the `кот` distractor.
+- **Formatting / Immersion**: Module hits the 10.3% immersion target, perfectly matching the progressive A1 bilingual scope.
 
 ## Verdict
 
-**Status:** PASS
-**Rationale:** The module is highly effective and linguistically accurate. The decodable word approach is excellent pedagogy for the Cyrillic alphabet. The issues found are formatting errors (callouts) and minor pedagogical tweaks (vocabulary synchronization and metalanguage reduction) that are easily fixed without rewriting the core content.
+**Status:** FAIL
+**Rationale:** The module successfully delivers a highly encouraging and pedagogically sound introduction to the Cyrillic alphabet, but it fails on two mandatory quality gates: the inclusion of a VESUM-failing Russianism (`кот`) in the activities, and the systemic absence of stress marks on polysyllabic words, which are critical for beginner pronunciation safety. Fixing these will immediately elevate the module to a PASS.
