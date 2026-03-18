@@ -4255,7 +4255,12 @@ def _call_phase(func: Any, phase_id: str, ctx: ModuleContext,
 
 def run_pipeline(ctx: ModuleContext, state: dict, research_only: bool = False) -> bool:
     """Execute the v5 named-phase pipeline."""
+    # Log agent configuration
+    writer = getattr(ctx, "writer", "gemini")
+    review_agent = getattr(ctx, "review_agent", "claude")
+    content_model = getattr(ctx, "claude_model_B", CLAUDE_MODEL_CONTENT) if writer == "claude" else ctx.model
     log(f"\nPipeline v5: named phases — {len(PHASES)} phases")
+    log(f"  Agents: content={writer} ({content_model}), activities=claude (claude-sonnet-4-6), review={review_agent}")
     if ctx.dry_run:
         log("  (DRY-RUN — no dispatches)")
     log("")
