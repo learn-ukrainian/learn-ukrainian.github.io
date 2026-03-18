@@ -1,7 +1,7 @@
 ---
 name: curriculum-maintainer
 description: Maintains the world's first comprehensive Ukrainian language curriculum
-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch, Skill
+tools: "*"
 model: inherit
 ---
 
