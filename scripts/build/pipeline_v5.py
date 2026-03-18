@@ -80,9 +80,9 @@ from pipeline_lib import (
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-MAX_AUDIT_FIX_ITERS_CORE = 2
-MAX_AUDIT_FIX_ITERS_SEMINAR = 3
-MAX_REVIEW_FIX_ITERS = 2
+MAX_AUDIT_FIX_ITERS_CORE = 3    # Mar 2026: raised from 2 — modules often need 3 passes
+MAX_AUDIT_FIX_ITERS_SEMINAR = 4  # Mar 2026: raised from 3
+MAX_REVIEW_FIX_ITERS = 3        # Mar 2026: raised from 2 — M05 needed 14+2 fixes in 2 iters, still had unresolved
 
 # Dispatch timeouts (seconds)
 TIMEOUT_CONTENT = 600
