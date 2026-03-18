@@ -270,10 +270,10 @@ async function selectTrack(trackId) {
     // Health cards
     let cards = '';
     cards += healthCard('Build Progress', `${h.build.pct}%`, `${h.build.done}/${h.total} modules`, h.build.pct);
-    cards += healthCard('Audit Passing', `${h.audit.pct}%`, `${h.audit.passing} pass, ${h.audit.failing} fail`, h.audit.pct);
-    cards += healthCard('V5 Pipeline', `${v5Pct}%`, `${v5Count}/${h.total} modules on v5`, v5Pct, 'var(--cyan)');
-    cards += healthCard('Enrichment', `${h.enrichment.pct}%`, `${h.enrichment.done}/${h.total} plans enriched`, h.enrichment.pct, 'var(--orange)');
-    cards += healthCard('Final Review', h.final_review.approval_rate, `${h.final_review.approved}/${h.final_review.reviewed} approved`, h.final_review.reviewed > 0 ? Math.round(h.final_review.approved/h.final_review.reviewed*100) : 0, 'var(--purple)');
+    const ship = h.shippable || {count: 0, pct: 0};
+    cards += healthCard('Shippable', `${ship.pct}%`, `${ship.count}/${h.total} ready to deploy`, ship.pct);
+    cards += healthCard('Audit Passing', `${h.audit.pct}%`, `${h.audit.passing} pass, ${h.audit.failing} fail`, h.audit.pct, 'var(--cyan)');
+    cards += healthCard('V5 Pipeline', `${v5Pct}%`, `${v5Count}/${h.total} modules on v5`, v5Pct, 'var(--gray)');
     cards += healthCard('Word Quality', h.words.avg_ratio, 'avg words vs target', null, 'var(--cyan)');
     cards += `<div class="health-card eta-card">
       <div class="label">ETA (remaining)</div>
@@ -290,8 +290,7 @@ async function selectTrack(trackId) {
           <span class="completion-num">#${c.num}</span>
           <span class="completion-slug">${c.slug}</span>
           <span class="completion-audit ${auditCls}">${c.audit}</span>
-          <span class="completion-words">${c.words}w</span>
-          <span class="completion-words">phase ${c.phase}</span>
+          <span class="completion-words">${c.words || ''}w</span>
         </div>`;
       }).join('');
     } else {
@@ -438,6 +437,24 @@ function renderInspector(mod, extraComms) {
   const wordTarget = audit.word_target || 0;
   const auditStatus = audit.status || '—';
 
+  // Review score + shippable
+  const reviewData = mod.review || {};
+  const reviewScore = reviewData.score != null ? `${reviewData.score}/10` : '—';
+  const reviewVerdict = reviewData.verdict || '—';
+  const shippable = mod.shippable ? 'YES' : 'NO';
+
+  // Friction
+  const friction = mod.friction || {active: 0, resolved: 0};
+  const frictionStr = (friction.active + friction.resolved) > 0
+    ? `${friction.active} active, ${friction.resolved} resolved`
+    : 'none';
+
+  // Stress
+  const stress = mod.stress || {};
+  const stressStr = stress.mismatches != null
+    ? `${stress.mismatches} wrong${stress.unknown ? `, ${stress.unknown} unknown` : ''}`
+    : '—';
+
   const info = [
     ['Track', mod.track || '—'],
     ['Module #', mod.num || '—'],
@@ -446,11 +463,19 @@ function renderInspector(mod, extraComms) {
     ['Words', wordCount ? `${wordCount}` : '—'],
     ['Word Target', wordTarget ? `${wordTarget}` : '—'],
     ['Audit', auditStatus],
+    ['Review', `${reviewScore} (${reviewVerdict})`],
+    ['Shippable', shippable],
+    ['Frictions', frictionStr],
+    ['Stress', stressStr],
   ];
   const infoHtml = info.map(([k, v]) => {
     let style = '';
     if (k === 'Pipeline') style = v === 'v5' ? 'color:var(--green);font-weight:600' : 'color:var(--text3)';
     if (k === 'Audit') style = v === 'pass' ? 'color:var(--green)' : v === 'fail' ? 'color:var(--red)' : '';
+    if (k === 'Review') style = reviewData.score >= 8.0 ? 'color:var(--green)' : reviewData.score != null ? 'color:var(--yellow)' : '';
+    if (k === 'Shippable') style = v === 'YES' ? 'color:var(--green);font-weight:700' : 'color:var(--red);font-weight:700';
+    if (k === 'Frictions') style = friction.active > 0 ? 'color:var(--yellow)' : 'color:var(--text3)';
+    if (k === 'Stress') style = (stress.mismatches || 0) > 0 ? 'color:var(--red)' : 'color:var(--text3)';
     if (k === 'Words' && wordTarget > 0) {
       const ratio = wordCount / wordTarget;
       style = ratio >= 1.0 ? 'color:var(--green)' : ratio >= 0.85 ? 'color:var(--yellow)' : 'color:var(--red)';
@@ -472,15 +497,22 @@ function renderInspector(mod, extraComms) {
   const researchScore = researchInfo.score ? ` (score: ${researchInfo.score})` : '';
   const enrichment = mod.enriched ? '<span style="color:var(--orange)">enriched</span>' : '<span style="color:var(--text3)">original</span>';
 
-  // Final review
-  let reviewHtml = '<span style="color:var(--text3)">Not reviewed yet</span>';
-  if (mod.final_review && mod.final_review.verdict) {
-    const fr = mod.final_review;
-    const verdictColor = fr.verdict === 'APPROVED' ? 'var(--green)' : fr.verdict === 'REJECTED' ? 'var(--red)' : 'var(--yellow)';
-    reviewHtml = `<div style="margin-bottom:6px"><span style="color:${verdictColor};font-weight:600">${fr.verdict}</span></div>`;
-    if (fr.issues && fr.issues.length) {
-      reviewHtml += fr.issues.map(i => `<div style="font-size:11px;color:var(--text2);padding:2px 0">- ${escHtml(i)}</div>`).join('');
-    }
+  // Review score + friction details
+  let reviewHtml = '';
+  if (reviewData.score != null) {
+    const scoreColor = reviewData.score >= 8.0 ? 'var(--green)' : 'var(--yellow)';
+    reviewHtml = `<div style="margin-bottom:6px"><span style="color:${scoreColor};font-weight:600">${reviewData.score}/10</span> <span style="color:var(--text2)">(${reviewData.verdict || '—'})</span></div>`;
+  } else {
+    reviewHtml = '<span style="color:var(--text3)">Not reviewed yet</span>';
+  }
+
+  // Friction items
+  let frictionHtml = '';
+  if (friction.active > 0 && mod.friction.items) {
+    frictionHtml = `<div class="insp-section-title">Active Frictions (${friction.active})</div>` +
+      mod.friction.items.map(f =>
+        `<div style="font-size:11px;color:var(--yellow);padding:2px 0">- [${f.type}] ${escHtml(f.description.substring(0, 120))}</div>`
+      ).join('');
   }
 
   // Comms trail — combine inline comms from module endpoint + extra comms endpoint
@@ -558,8 +590,11 @@ function renderInspector(mod, extraComms) {
       <div class="insp-row"><span class="k">Plan</span><span class="v">${enrichment}</span></div>
     </div>
     <div class="insp-section">
-      <div class="insp-section-title">Final Review (Phase F)</div>
+      <div class="insp-section-title">Review Score</div>
       ${reviewHtml}
+    </div>
+    <div class="insp-section">
+      ${frictionHtml}
     </div>
     <div class="insp-section">
       <div class="insp-section-title">Communication Trail (${uniqueMsgs.length} messages)</div>
