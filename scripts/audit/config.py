@@ -256,7 +256,7 @@ STAGE_ORDER = {
 # Enforced by check_activity_complexity()
 ACTIVITY_COMPLEXITY = {
     'quiz': {
-        'A1': {'min_len': 5, 'max_len': 10, 'options': [3, 4], 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
+        'A1': {'min_len': 5, 'max_len': 30, 'options': [3, 4], 'min_items': 6},  # Mar 2026: max_len 10→30 — stress/minimal pair questions need context
         'A2': {'min_len': 5, 'max_len': 15, 'options': [4], 'min_items': 8},  # Lowered min_len to 5: short quiz prompts are valid
         'B1': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len from 9→5: short quiz prompts are valid at B1
         'B1-vocab': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
