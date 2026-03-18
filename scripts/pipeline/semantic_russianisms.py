@@ -28,6 +28,13 @@ SEMANTIC_FALSE_FRIENDS: list[dict] = [
         "replacement_translation": "onion",
     },
     {
+        "word": "луна",
+        "russian_meanings": ["moon", "місяць", "lunar"],
+        "ukrainian_meaning": "echo (відлуння)",
+        "replacement": "місяць",
+        "replacement_translation": "moon",
+    },
+    {
         "word": "город",
         "russian_meanings": ["city", "місто", "town"],
         "ukrainian_meaning": "garden, vegetable patch",
