@@ -310,7 +310,9 @@ def _run_single_module(args: argparse.Namespace) -> int:
             elif getattr(ctx, "stop_before_phase", None):
                 log(f"\nVERDICT: PARTIAL — stopped early (v5) [{elapsed_str}]")
             else:
-                _final_skip_review = not getattr(ctx, "review", False)
+                # Skip review verdict in final verify if review phase already accepted (#975)
+                _review_accepted = state.get("phases", {}).get("review", {}).get("status") == "complete"
+                _final_skip_review = not getattr(ctx, "review", False) or _review_accepted
                 passed, output = run_verify(ctx.paths["md"], skip_review=_final_skip_review)
                 if passed:
                     log(f"\nVERDICT: PASS — {ctx.slug} fully complete (v5) [{elapsed_str}]")
