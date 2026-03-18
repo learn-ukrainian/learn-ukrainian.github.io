@@ -1444,7 +1444,7 @@ AI_CONTAMINATION_PATTERNS = [
     r"\bSorry,\b",
     r"\bAs an AI\b",
     r"\bMy previous\b",
-    r"\bIn the previous\b",
+    # r"\bIn the previous\b",  # Removed — legitimate in "in the previous module" (#975)
 ]
 
 

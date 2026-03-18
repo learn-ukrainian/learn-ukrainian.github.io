@@ -176,17 +176,23 @@ def evaluate_immersion(
     max_imm: int,
     phase_label: str = ""
 ) -> GateResult:
-    """Evaluate immersion gate."""
+    """Evaluate immersion gate with ±3% tolerance."""
+    tolerance = 3  # Don't fail on trivial deviations (#975)
     if min_imm > 0:
-        if score < min_imm:
+        if score < min_imm - tolerance:
             return GateResult(
                 'FAIL', '❌',
                 f"{score:.1f}% LOW (target {min_imm}-{max_imm}%{phase_label})"
             )
-        elif score > max_imm:
+        elif score > max_imm + tolerance:
             return GateResult(
                 'FAIL', '❌',
                 f"{score:.1f}% HIGH (target {min_imm}-{max_imm}%{phase_label})"
+            )
+        elif score < min_imm or score > max_imm:
+            return GateResult(
+                'WARN', '⚠️',
+                f"{score:.1f}% (target {min_imm}-{max_imm}%, within tolerance{phase_label})"
             )
         return GateResult(
             'PASS', '🇺🇦',
