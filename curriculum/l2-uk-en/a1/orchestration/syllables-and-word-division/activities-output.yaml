@@ -1,8 +1,8 @@
 - type: quiz
   title: "Count the Syllables"
-  instruction: "Remember: count the vowels to find the number of syllables."
+  instruction: "Remember: every vowel in Ukrainian creates exactly one syllable. Count the vowels to find the syllable count."
   items:
-    - question: "How many syllables does молоко have?"
+    - question: "How many syllables does the word молоко (milk) have?"
       options:
         - text: "2"
           correct: false
@@ -13,7 +13,7 @@
         - text: "1"
           correct: false
       explanation: "молоко has 3 vowels (о, о, о), so it has 3 syllables: мо-ло-ко."
-    - question: "How many syllables does Україна have?"
+    - question: "How many syllables does the word Україна (Ukraine) have?"
       options:
         - text: "3"
           correct: false
@@ -24,7 +24,7 @@
         - text: "2"
           correct: false
       explanation: "Україна has 4 vowels (у, а, ї, а), so it has 4 syllables: У-кра-ї-на."
-    - question: "How many syllables does кіт have?"
+    - question: "How many syllables does the word кіт (cat) have?"
       options:
         - text: "1"
           correct: true
@@ -34,8 +34,8 @@
           correct: false
         - text: "0"
           correct: false
-      explanation: "кіт has 1 vowel (і), so it has 1 syllable."
-    - question: "How many syllables does бібліотека have?"
+      explanation: "кіт has 1 vowel (і), so it has exactly 1 syllable."
+    - question: "How many syllables does the word бібліотека (library) have?"
       options:
         - text: "3"
           correct: false
@@ -46,29 +46,7 @@
         - text: "6"
           correct: false
       explanation: "бібліотека has 5 vowels (і, і, о, е, а), so it has 5 syllables: бі-блі-о-те-ка."
-    - question: "How many syllables does вулиця have?"
-      options:
-        - text: "2"
-          correct: false
-        - text: "4"
-          correct: false
-        - text: "1"
-          correct: false
-        - text: "3"
-          correct: true
-      explanation: "вулиця has 3 vowels (у, и, я), so it has 3 syllables: ву-ли-ця."
-    - question: "How many syllables does університет have?"
-      options:
-        - text: "5"
-          correct: true
-        - text: "4"
-          correct: false
-        - text: "6"
-          correct: false
-        - text: "3"
-          correct: false
-      explanation: "університет has 5 vowels (у, і, е, и, е), so it has 5 syllables: у-ні-вер-си-тет."
-    - question: "How many syllables does сестра have?"
+    - question: "How many syllables does the word сестра (sister) have?"
       options:
         - text: "3"
           correct: false
@@ -79,7 +57,40 @@
         - text: "4"
           correct: false
       explanation: "сестра has 2 vowels (е, а), so it has 2 syllables: се-стра."
-    - question: "How many syllables does дерево have?"
+    - question: "How many syllables does the word університет (university) have?"
+      options:
+        - text: "4"
+          correct: false
+        - text: "5"
+          correct: true
+        - text: "3"
+          correct: false
+        - text: "6"
+          correct: false
+      explanation: "університет has 5 vowels (у, і, е, и, е), so it has 5 syllables: у-ні-вер-си-тет."
+    - question: "How many syllables does the word яблуко (apple) have?"
+      options:
+        - text: "2"
+          correct: false
+        - text: "4"
+          correct: false
+        - text: "3"
+          correct: true
+        - text: "1"
+          correct: false
+      explanation: "яблуко has 3 vowels (я, у, о), so it has 3 syllables: яб-лу-ко."
+    - question: "How many syllables does the word автобус (bus) have?"
+      options:
+        - text: "3"
+          correct: true
+        - text: "2"
+          correct: false
+        - text: "4"
+          correct: false
+        - text: "1"
+          correct: false
+      explanation: "автобус has 3 vowels (а, о, у), so it has 3 syllables: ав-то-бус."
+    - question: "How many syllables does the word дерево (tree) have?"
       options:
         - text: "2"
           correct: false
@@ -90,166 +101,161 @@
         - text: "1"
           correct: false
       explanation: "дерево has 3 vowels (е, е, о), so it has 3 syllables: де-ре-во."
-    - question: "How many syllables does автобус have?"
+    - question: "The letter й is a consonant. How many syllables does the word край (edge) have?"
       options:
-        - text: "2"
-          correct: false
-        - text: "4"
-          correct: false
-        - text: "3"
-          correct: true
         - text: "1"
-          correct: false
-      explanation: "автобус has 3 vowels (а, о, у), so it has 3 syllables: ав-то-бус."
-    - question: "How many syllables does дзеркало have?"
-      options:
+          correct: true
         - text: "2"
           correct: false
         - text: "3"
-          correct: true
-        - text: "4"
           correct: false
-        - text: "1"
+        - text: "0"
           correct: false
-      explanation: "дзеркало has 3 vowels (е, а, о), so it has 3 syllables: дзер-ка-ло."
+      explanation: "край has only 1 vowel (а). The letter й is a consonant, not a vowel, so it does not create a syllable."
 
 - type: fill-in
-  title: "Word Division Practice"
-  instruction: "Choose the correct way to divide the word for writing (переніс)."
+  title: "Mark the Correct Word Division"
+  instruction: "Choose the correct way to split the word for writing (word division). Remember the rules: never leave a single letter alone, never split дж/дз, never separate ь from its consonant."
   items:
-    - sentence: "The correct division of бібліотека is ___."
-      answer: "бі-блі-о-те-ка"
-      options: ["бі-блі-о-те-ка", "біб-лі-от-ека", "б-ібліо-тека", "бібл-іо-те-ка"]
-      explanation: "бібліотека splits by syllables, with each syllable starting with a consonant where possible."
-    - sentence: "The correct division of автобус is ___."
-      answer: "ав-то-бус"
-      options: ["ав-то-бус", "а-вто-бус", "авт-об-ус", "авто-б-ус"]
-      explanation: "The в closes the first syllable (ав), then то and бус follow."
-    - sentence: "The correct division of ґудзик is ___."
+    - sentence: "The correct word division for Україна is ___."
+      answer: "Укра-їна"
+      options: ["У-країна", "Укра-їна", "Украї-на", "Ук-раїна"]
+      explanation: "У-країна is wrong because you cannot leave a single letter alone. Укра-їна and Украї-на are both correct, but Укра-їна is the expected answer here."
+    - sentence: "The correct word division for ґудзик is ___."
       answer: "ґу-дзик"
-      options: ["ґу-дзик", "ґуд-зик", "ґудз-ик", "ґ-удзик"]
-      explanation: "дз represents one sound, so it cannot be split. ґу-дзик is correct."
-    - sentence: "The correct division of сестра for pronunciation is ___."
-      answer: "се-стра"
-      options: ["се-стра", "сес-тра", "сест-ра", "с-естра"]
-      explanation: "For pronunciation, consonant clusters stay together at the start of the next syllable: се-стра."
-    - sentence: "The correct division of дзеркало is ___."
-      answer: "дзер-ка-ло"
-      options: ["дзер-ка-ло", "дз-ер-ка-ло", "д-зер-кало", "дзерк-а-ло"]
-      explanation: "дз is one sound and stays together. дзер-ка-ло is correct."
-    - sentence: "The correct division of університет is ___."
-      answer: "у-ні-вер-си-тет"
-      options: ["у-ні-вер-си-тет", "ун-ів-ер-сит-ет", "у-нів-ерси-тет", "уні-верс-ітет"]
-      explanation: "університет splits into 5 syllables following standard rules: у-ні-вер-си-тет."
-    - sentence: "The word Україна divides correctly as ___."
-      answer: "Укра-ї-на"
-      options: ["Укра-ї-на", "У-країна", "Ук-раї-на", "Украї-на"]
-      explanation: "You cannot leave a single letter alone at the start or end, so У-країна is wrong. Укра-ї-на is valid."
-    - sentence: "The correct division of вулиця is ___."
+      options: ["ґуд-зик", "ґу-дзик", "ґудз-ик", "ґудзи-к"]
+      explanation: "The digraph дз represents one sound and cannot be split. ґу-дзик keeps дз together."
+    - sentence: "The correct word division for пальці is ___."
+      answer: "паль-ці"
+      options: ["пал-ьці", "паль-ці", "па-льці", "пальц-і"]
+      explanation: "The soft sign ь must stay with its consonant л. паль-ці is correct."
+    - sentence: "The correct word division for сім'я is ___."
+      answer: "сі-м'я"
+      options: ["сім-'я", "сі-м'я", "с-ім'я", "сім'-я"]
+      explanation: "The apostrophe cannot be separated from the consonant before it. сі-м'я keeps м' together."
+    - sentence: "The correct word division for молоко is ___."
+      answer: "мо-ло-ко"
+      options: ["мо-ло-ко", "мол-око", "м-олоко", "моло-ко"]
+      explanation: "мо-ло-ко splits naturally between vowels and consonants, keeping all syllables open."
+    - sentence: "The correct word division for автобус is ___."
+      answer: "ав-то-бус"
+      options: ["а-втобус", "ав-то-бус", "авто-бу-с", "авт-обус"]
+      explanation: "а-втобус is wrong because a single letter cannot stand alone. ав-то-бус is correct."
+    - sentence: "The correct word division for бібліотека is ___."
+      answer: "бібліо-тека"
+      options: ["б-ібліотека", "бібліотек-а", "бібліо-тека", "бібліоте-ка"]
+      explanation: "b-ібліотека and бібліотек-а leave single letters alone. Both бібліо-тека and бібліоте-ка are valid, but бібліо-тека is the expected answer."
+    - sentence: "The correct word division for вулиця is ___."
       answer: "ву-ли-ця"
-      options: ["ву-ли-ця", "вул-иця", "в-ули-ця", "вулиц-я"]
-      explanation: "вулиця splits into 3 open syllables: ву-ли-ця."
+      options: ["ву-ли-ця", "в-улиця", "вулиц-я", "вул-иця"]
+      explanation: "ву-ли-ця splits naturally with all open syllables. в-улиця and вулиц-я leave single letters alone."
 
 - type: group-sort
-  title: "Open or Closed Syllables?"
-  instruction: "Sort each syllable into the correct category. Open syllables end in a vowel. Closed syllables end in a consonant."
+  title: "Open or Closed Syllable?"
+  instruction: "Sort these syllables into two groups. Open syllables end in a vowel. Closed syllables end in a consonant."
   groups:
-    - name: "Open (ends in a vowel)"
+    - name: "Open syllable (ends in a vowel)"
       items:
-        - "мо (from мо-ло-ко)"
-        - "ло (from мо-ло-ко)"
-        - "ко (from мо-ло-ко)"
-        - "ма (from ма-ма)"
-        - "ву (from ву-ли-ця)"
-        - "де (from де-ре-во)"
-    - name: "Closed (ends in a consonant)"
+        - "ма (from мама)"
+        - "мо (from молоко)"
+        - "ло (from молоко)"
+        - "ко (from молоко)"
+        - "де (from дерево)"
+        - "ре (from дерево)"
+        - "во (from дерево)"
+    - name: "Closed syllable (ends in a consonant)"
       items:
         - "кіт"
         - "там"
-        - "сон"
-        - "хліб"
-        - "бус (from ав-то-бус)"
-        - "ав (from ав-то-бус)"
+        - "бус (from автобус)"
+        - "тет (from університет)"
+        - "край"
 
 - type: match-up
   title: "Match the Word to Its Syllable Count"
-  instruction: "Match each Ukrainian word to the correct number of syllables."
+  instruction: "Match each Ukrainian word to the correct number of syllables. Count the vowels!"
   pairs:
-    - left: "кіт"
+    - left: "кіт (cat)"
       right: "1 syllable"
-    - left: "мама"
+    - left: "мама (mom)"
       right: "2 syllables"
-    - left: "сестра"
-      right: "2 syllables"
-    - left: "молоко"
+    - left: "молоко (milk)"
       right: "3 syllables"
-    - left: "дерево"
-      right: "3 syllables"
-    - left: "вулиця"
-      right: "3 syllables"
-    - left: "автобус"
-      right: "3 syllables"
-    - left: "Україна"
+    - left: "Україна (Ukraine)"
       right: "4 syllables"
-    - left: "бібліотека"
+    - left: "бібліотека (library)"
       right: "5 syllables"
-    - left: "університет"
+    - left: "сестра (sister)"
+      right: "2 syllables"
+    - left: "дерево (tree)"
+      right: "3 syllables"
+    - left: "вулиця (street)"
+      right: "3 syllables"
+    - left: "автобус (bus)"
+      right: "3 syllables"
+    - left: "університет (university)"
       right: "5 syllables"
 
 - type: true-false
-  title: "True or False? Syllables and Word Division"
-  instruction: "Decide whether each statement is true or false."
+  title: "True or False? Test Your Syllable Knowledge"
+  instruction: "Decide whether each statement about Ukrainian syllables and word division is true or false."
   items:
-    - statement: "The number of syllables in a Ukrainian word equals the number of vowels."
+    - statement: "Every vowel in Ukrainian creates exactly one syllable."
       correct: true
-      explanation: "This is the golden rule: every vowel creates exactly one syllable."
-    - statement: "The word молоко has 2 syllables."
+      explanation: "This is the core rule. Ukrainian has no silent vowels, so every vowel = one syllable."
+    - statement: "The letter й is a vowel and creates its own syllable."
       correct: false
-      explanation: "молоко has 3 vowels (о, о, о), so it has 3 syllables: мо-ло-ко."
-    - statement: "An open syllable ends in a vowel."
+      explanation: "й is a consonant, not a vowel. It does not create a syllable."
+    - statement: "The letter ї is a vowel and always forms its own syllable."
       correct: true
-      explanation: "Open syllables end in a vowel — like мо, ло, ко in мо-ло-ко."
-    - statement: "You can split the digraph дж when dividing a word for writing."
+      explanation: "ї is a true vowel and always creates a syllable."
+    - statement: "An open syllable ends in a consonant."
       correct: false
-      explanation: "When дж represents one sound, you must keep it together: дже-ре-ло, not д-жерело."
-    - statement: "The word кіт has one syllable."
+      explanation: "An open syllable ends in a vowel. A closed syllable ends in a consonant."
+    - statement: "The word молоко has 3 syllables because it has 3 vowels."
       correct: true
-      explanation: "кіт has only one vowel (і), so it is one syllable."
-    - statement: "It is correct to divide Україна as У-країна for writing."
+      explanation: "молоко has the vowels о, о, о — three vowels mean three syllables."
+    - statement: "When writing, you can leave a single letter alone on a line."
       correct: false
-      explanation: "You cannot leave a single letter alone. У-країна is not a valid division."
-    - statement: "The soft sign (ь) can be separated from the consonant before it."
+      explanation: "You can never leave a single letter alone. For example, У-країна is forbidden."
+    - statement: "The digraph дз can be split between two lines when writing."
       correct: false
-      explanation: "The soft sign always stays with the consonant it softens: паль-ці, not пал-ьці."
-    - statement: "Most syllables in Ukrainian are open syllables."
+      explanation: "When дз represents one sound, it cannot be split. ґу-дзик is correct, not ґуд-зик."
+    - statement: "The soft sign ь must stay with the consonant before it when dividing a word."
       correct: true
-      explanation: "Open syllables (ending in a vowel) are the default and most common type in Ukrainian."
+      explanation: "ь belongs to its consonant. паль-ці is correct, not пал-ьці."
+    - statement: "Ukrainian strongly prefers open syllables (ending in a vowel)."
+      correct: true
+      explanation: "Open syllables are the default and most common type in Ukrainian."
+    - statement: "The word край has two syllables."
+      correct: false
+      explanation: "край has only one vowel (а). The letter й is a consonant, so край has just 1 syllable."
 
 - type: anagram
   title: "Unscramble the Word"
-  instruction: "Rearrange the letters to form a Ukrainian word from the lesson."
+  instruction: "Rearrange the letters to form a Ukrainian word from this lesson."
   items:
-    - scrambled: "о к о л о м"
+    - scrambled: "к о л о м о"
       answer: "молоко"
       hint: "milk"
-    - scrambled: "о л е с"
-      answer: "село"
-      hint: "village"
-    - scrambled: "о б е н"
-      answer: "небо"
-      hint: "sky"
-    - scrambled: "р а с е с т"
-      answer: "сестра"
-      hint: "sister"
-    - scrambled: "і т к"
+    - scrambled: "р е д е в о"
+      answer: "дерево"
+      hint: "tree"
+    - scrambled: "л у в и ц я"
+      answer: "вулиця"
+      hint: "street"
+    - scrambled: "т і к"
       answer: "кіт"
       hint: "cat"
+    - scrambled: "м а м а"
+      answer: "мама"
+      hint: "mom"
+    - scrambled: "а р т с е с"
+      answer: "сестра"
+      hint: "sister"
     - scrambled: "о т с і м"
       answer: "місто"
       hint: "city"
-    - scrambled: "б і л х"
-      answer: "хліб"
-      hint: "bread"
-    - scrambled: "а м а м"
-      answer: "мама"
-      hint: "mom"
+    - scrambled: "о к у л б я"
+      answer: "яблуко"
+      hint: "apple"

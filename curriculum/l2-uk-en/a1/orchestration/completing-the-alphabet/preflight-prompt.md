@@ -60,11 +60,13 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 3
 **Previous module:** Consonant Sounds
 
-**Cumulative vocabulary (39 words):**
+**Cumulative vocabulary (55 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
 сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
-яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, кит
+яблуко, риба, село, Україна, їжак, юнак, край, день, син, мій
+вухо, їжа, яйце, юшка, каша, небо, сир, хліб, зуб, дім
+вовк, жук, шапка, гора, рука, бабуся, павук, ґанок, кінь, людина
+суп, вода, дим, люк, хор
 
 **Grammar already taught (14 topics):**
 - Full alphabet overview (33 letters)
@@ -238,7 +240,7 @@ Ukrainian sentences max 10 words.
 
 Write **Completing the Alphabet** for the a1 track.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 2+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -702,7 +704,7 @@ Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
 Min activities: 0
-Min engagement boxes: 3
+Min engagement boxes: 2
 Min activity types: 0
 
 ### Immersion
@@ -746,6 +748,7 @@ Only report if:
 These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
 
 - **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **луна**: Russian meaning = moon, місяць, lunar; Ukrainian meaning = echo (відлуння). Correct word for 'moon, місяць, lunar' → **місяць**
 - **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
 - **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
 - **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**

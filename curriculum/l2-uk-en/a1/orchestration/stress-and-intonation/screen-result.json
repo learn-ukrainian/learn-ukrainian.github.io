@@ -1,0 +1,159 @@
+{
+  "metrics": {
+    "COMPUTED_WORD_COUNT": "1801",
+    "COMPUTED_WORD_TARGET": "1200",
+    "COMPUTED_WORD_PERCENT": "150.1",
+    "COMPUTED_ACTIVITY_COUNT": "4",
+    "COMPUTED_VOCAB_COUNT": "25",
+    "COMPUTED_ENGAGEMENT_COUNT": "2",
+    "COMPUTED_IMMERSION_PERCENT": "10.0",
+    "COMPUTED_IMMERSION_TARGET": "5-15%",
+    "COMPUTED_RICHNESS_SCORE": "80",
+    "COMPUTED_RICHNESS_THRESHOLD": "60",
+    "COMPUTED_RICHNESS_GAPS": "video_embeds: 0/2",
+    "COMPUTED_AUDIT_STATUS": "PASS"
+  },
+  "deterministic_issues": [
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 18",
+      "text": "Verb 'пра́цює' (VESUM: verb:imperf:pres:s:3) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'пра́цює' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Verb 'звуть' (VESUM: verb:imperf:pres:p:3) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'звуть' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Verb 'пра́цює' (VESUM: verb:imperf:pres:s:3) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'пра́цює' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Verb 'лю́бить' (VESUM: verb:imperf:inf:short) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'лю́бить' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Verb 'чита́є' (VESUM: verb:imperf:pres:s:3) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'чита́є' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Verb 'п'є́мо' (VESUM: verb:imperf:pres:p:1) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'п'є́мо' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Verb 'їмо́' (VESUM: verb:imperf:pres:p:1) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'їмо́' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "MORPHOLOGICAL_VIOLATION",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Verb 'лю́блю' (VESUM: verb:imperf:pres:s:1) in pre-verb module M6. Verbs are forbidden before M15.",
+      "fix": "Replace verb 'лю́блю' with an English equivalent or a noun phrase. Students haven't learned verbs yet."
+    },
+    {
+      "type": "STRESS_UNKNOWN",
+      "severity": "INFO",
+      "location": "~line 8",
+      "text": "Stressed word not in dictionary: за́мок (замок)",
+      "fix": "Verify stress manually — word not found in ukrainian-word-stress dictionary."
+    },
+    {
+      "type": "STRESS_UNKNOWN",
+      "severity": "INFO",
+      "location": "~line 11",
+      "text": "Stressed word not in dictionary: му́ка (мука)",
+      "fix": "Verify stress manually — word not found in ukrainian-word-stress dictionary."
+    },
+    {
+      "type": "STRESS_MISMATCH",
+      "severity": "HIGH",
+      "location": "~line 18",
+      "text": "Wrong stress: 'пра́цює' → should be 'працю́є'",
+      "fix": "Replace 'пра́цює' with 'працю́є'."
+    },
+    {
+      "type": "STRESS_MISMATCH",
+      "severity": "HIGH",
+      "location": "~line 61",
+      "text": "Wrong stress: 'се́стри' → should be 'сестри́'",
+      "fix": "Replace 'се́стри' with 'сестри́'."
+    },
+    {
+      "type": "STRESS_MISMATCH",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Wrong stress: 'Олена́' → should be 'оле́на'",
+      "fix": "Replace 'Олена́' with 'оле́на'."
+    },
+    {
+      "type": "STRESS_MISMATCH",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Wrong stress: 'п'є́мо' → should be 'п'ємо́'",
+      "fix": "Replace 'п'є́мо' with 'п'ємо́'."
+    },
+    {
+      "type": "STRESS_MISMATCH",
+      "severity": "HIGH",
+      "location": "~line 134",
+      "text": "Wrong stress: 'лю́блю' → should be 'люблю́'",
+      "fix": "Replace 'лю́блю' with 'люблю́'."
+    }
+  ],
+  "audit_passed": true,
+  "audit_output": "Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/stress-and-intonation.md\nMode: content-only (activities deferred)\nSaving log to: curriculum/l2-uk-en/a1/audit/stress-and-intonation-audit.log\n\n\n========================================\n  📋 Loaded Plan from: plans/a1/stress-and-intonation.yaml\n  📋 Loaded Metadata from YAML sidecar\n\n📋 Auditing: A1 M06 — Stress and Intonation\n   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/stress-and-intonation.md | Target: 1200 words\n  📋 Required activity types from meta: match-up, quiz, true-false\n  ⏳ Content-only audit: activities/vocab gates DEFERRED\n  📋 Template: docs/l2-uk-en/templates/a1-module-template.md (pedagogy: PPP)\n\n  ⚠️ HYDRATION NOTE: Outline sums to 1300, exceeding word_target 1200\n     Additional 100 words (allowed for content depth)\n\n  📊 Section Word Analysis:\n     Наголос — Stress                           444 /  350  ✅ (+94)\n     Типові наголоси — Common Stress Patterns   300 /  250  ✅ (+50)\n     Рухомий наголос — Mobile Stress            275 /  250  ✅ (+25)\n     Інтонація — Intonation                     410 /  250  ✅ (+160)\n     Практика — Practice                        258 /  100  ✅ (+158)\n     Підсумок — Summary                         128 /  100  ✅ (+28)\n     ─────────────────────────────────────────────────────────────────\n     TOTAL                                     1815 / 1300  ✅ (+515)\n\n--- STRICT GATES (Level A1) ---\nPersona      ✅ Persona Defined\nWords        ✅ 1801/1200 (raw: 1830)\nActivities   ⏳ Deferred (content-only audit)\nDensity      ⏳ Deferred (content-only audit)\nUnique_types ⏳ Deferred (content-only audit)\nPriority     ⏳ Deferred (content-only audit)\nEngagement   ✅ 2/1\nAudio        ℹ️ No audio\nVocab        ⏳ Deferred (content-only audit)\nStructure    ✅ Valid Structure\nLint         ✅ Clean Format\nPedagogy     ✅ Level-appropriate\nContent_heavy ⏳ Deferred (content-only audit)\nGrammar      ℹ️ N/A (covered by naturalness)\nNaturalness  ✅ 10/10 (High)\nActivity_quality ⏳ Deferred (content-only audit)\nResearch     ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section\nImmersion    🇺🇦 10.0% (target 5-15% (M06))\n\nReport: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/stress-and-intonation-audit.md\nStatus: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/stress-and-intonation.json\n\n✅ AUDIT PASSED.\n\n✅ AUDIT PASSED\n\nRunning RAG word verification...\nVerifying: stress-and-intonation.md\n  VESUM misses: 2 — querying RAG...\n[embed] Loading BGE-M3 from BAAI/bge-m3...\n\nFetching 30 files:   0%|          | 0/30 [00:00<?, ?it/s]\nFetching 30 files: 100%|██████████| 30/30 [00:00<00:00, 357469.09it/s]\n[embed] BGE-M3 loaded.\nYou're using a XLMRobertaTokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.\n  Words: 71 | VESUM: 69 (97.2%) | RAG: 2 | Not found: 0\n  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/stress-and-intonation-rag-audit.md\n✅ RAG verification: all words verified\n\nVESUM: 86/88 (98%) verified\n⚠️ VESUM not found (1): дом",
+  "h2_sections": "1. Наголос — Stress\n2. Типові наголоси — Common Stress Patterns\n3. Рухомий наголос — Mobile Stress\n4. Інтонація — Intonation\n5. Практика — Practice\n6. Підсумок — Summary",
+  "vesum_stats": {
+    "total": 88,
+    "vesum_hits": 86,
+    "rag_hits": 0,
+    "not_found": 1,
+    "rag_errors": 0,
+    "proper_names": 1,
+    "by_source": {
+      "prose": {
+        "total": 71,
+        "vesum_hits": 69,
+        "not_found": 1
+      },
+      "activities": {
+        "total": 17,
+        "vesum_hits": 17,
+        "not_found": 0
+      }
+    }
+  },
+  "vesum_not_found": [
+    {
+      "original": "дом",
+      "clean": "дом",
+      "source": "prose",
+      "vesum": false,
+      "textbook": false,
+      "literary": false,
+      "vesum_info": [],
+      "status": "❌"
+    }
+  ],
+  "content_hash": "7bd2ddfa82d0c4f6"
+}

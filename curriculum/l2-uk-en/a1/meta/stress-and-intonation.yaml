@@ -81,7 +81,7 @@ activity_hints:
 - type: true-false
   focus: Recognize correct intonation patterns for sentence types
   items: 8
-- type: fill-in
+- type: quiz
   focus: Place stress marks on common words
   items: 10
 connects_to:
@@ -103,3 +103,9 @@ tags:
 - stress
 - intonation
 - pronunciation
+naturalness:
+  score: 10
+  status: PASS
+  feedback: Текст написаний професійно та природно.
+  checked_by: gemini
+  checked_at: '2026-03-18'

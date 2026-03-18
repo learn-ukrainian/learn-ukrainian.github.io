@@ -1,38 +1,49 @@
-        # Fix ALL 6 issue(s) in `completing-the-alphabet`
+        # Fix ALL 7 issue(s) in `completing-the-alphabet`
 
         **CRITICAL: You MUST fix every issue below. Partial fixes are REJECTED.**
-        **There are 6 issues. You must produce fixes for all 6.**
-        **After you finish, count your fixes. If the count is less than 6, go back and fix the ones you missed.**
+        **There are 7 issues. You must produce fixes for all 7.**
+        **After you finish, count your fixes. If the count is less than 7, go back and fix the ones you missed.**
 
         ### Fix 1: MORPHOLOGICAL_VIOLATION
 **What:** Verb 'п'є' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
 **How to fix:** Replace verb 'п'є' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 182
+**Where:** ~line 109
 
 ### Fix 2: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 192
+**What:** Verb 'луна́є' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'луна́є' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 109
 
 ### Fix 3: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
-**How to fix:** Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 193
+**What:** Verb 'лети́ть' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'лети́ть' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 109
 
 ### Fix 4: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'п'є' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'п'є' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 197
+**What:** Verb 'Дя́кую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
+**How to fix:** Replace verb 'Дя́кую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+**Where:** ~line 114
 
 ### Fix 5: MORPHOLOGICAL_VIOLATION
-**What:** Verb 'Дякую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
-**How to fix:** Replace verb 'Дякую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-**Where:** ~line 208
+**What:** Imperative 'Бу́дь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
+**How to fix:** Replace 'Бу́дь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
+**Where:** ~line 115
 
-### Fix 6: MORPHOLOGICAL_VIOLATION
-**What:** Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
-**How to fix:** Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-**Where:** ~line 211
+### Fix 6: STRESS_UNKNOWN
+**What:** Stressed word not in dictionary: Дя́кую (дякую)
+**How to fix:** Verify stress manually — word not found in ukrainian-word-stress dictionary.
+**Where:** ~line 114
+
+### Fix 7: PEDAGOGICAL_VIOLATION
+**What:** [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
+**How to fix:** Vary sentence structure.
+
+### Other Audit Failures
+
+```
+❌ [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'in module...'.
+📚 PEDAGOGICAL VIOLATIONS FOUND:
+```
 
 
 ## Constraints (do NOT violate while fixing)
@@ -114,7 +125,7 @@ You have MCP tools for Ukrainian language verification. **Use them before fixing
 
         ## Rules
 
-        1. Fix ALL 6 issues listed above — every single one, not a subset
+        1. Fix ALL 7 issues listed above — every single one, not a subset
         2. Do not rewrite working content — only touch what's broken
         3. Preserve section structure and word counts
         4. Do NOT add or remove sections

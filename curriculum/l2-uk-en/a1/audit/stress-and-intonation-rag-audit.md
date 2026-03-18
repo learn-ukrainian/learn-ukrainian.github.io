@@ -1,27 +1,34 @@
 # RAG Verification: stress-and-intonation
 
-**Date:** 2026-03-18 18:58 UTC | **Words checked:** 78 | **VESUM coverage:** 76/78 (97.4%)
+**Date:** 2026-03-18 23:27 UTC | **Words checked:** 80 | **VESUM coverage:** 71/80 (88.8%)
 
 ## Summary
-- ✅ Verified (VESUM): 76
-- ⚠️ Partial (RAG only): 1
-- ❌ Not found: 1
+- ✅ Verified (VESUM): 71
+- ⚠️ Partial (RAG only): 4
+- ❌ Not found: 5
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| да | prose | ✗ | ✗ | ✗ |
+| да | activities | ✗ | ✗ | ✗ |
+| книж | activities | ✗ | ✗ | ✗ |
+| ло | activities | ✗ | ✗ | ✗ |
+| сес | activities | ✗ | ✗ | ✗ |
+| шко | activities | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
+| ва | activities | ✗ | ✓ | ✗ |
 | ка | activities | ✗ | ✓ | ✗ |
+| Олена | prose | ✗ | ✓ | ✗ |
+| ру | activities | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 59 | 58 | 1 |
-| Activities (.yaml) | 19 | 18 | 0 |
+| Prose (.md) | 62 | 61 | 0 |
+| Activities (.yaml) | 18 | 10 | 5 |

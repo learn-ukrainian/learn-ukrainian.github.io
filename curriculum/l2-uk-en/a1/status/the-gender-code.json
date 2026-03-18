@@ -2,26 +2,26 @@
   "module": "the-gender-code",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T03:09:12.475546Z",
+  "last_audit": "2026-03-19T00:26:57.617742Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T00:43:17.838411Z",
+    "md": "2026-03-19T00:23:28.381879Z",
     "meta": "2026-03-18T00:22:08.386864Z",
-    "activities": "2026-03-18T00:43:17.840433Z",
-    "vocabulary": "2026-03-18T00:43:17.841778Z",
+    "activities": "2026-03-19T00:23:28.382265Z",
+    "vocabulary": "2026-03-19T00:23:28.382666Z",
     "research": "2026-03-12T09:45:06.115646Z",
     "plan": "2026-03-17T17:06:51.783019Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1521/1200 (raw: 1709) | pedagogy: 5 violations"
+      "message": "1726/1200 (raw: 1754) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "20/1"
+      "message": "24/1"
     },
     "naturalness": {
       "status": "info",
@@ -51,9 +51,11 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 3,
+    "fail_count": 2,
     "deferred_count": 0
   }
 }

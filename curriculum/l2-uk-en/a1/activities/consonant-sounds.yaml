@@ -75,7 +75,7 @@
       note: "жук (beetle)"
     - emoji: "🧢"
       answer: "Ш"
-      distractors: ["Ж", "С", "Щ"]
+      distractors: ["Ж", "С", "Х"]
       note: "шапка (hat)"
     - emoji: "🤚"
       answer: "Р"

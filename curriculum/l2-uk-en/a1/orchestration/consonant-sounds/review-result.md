@@ -1,8 +1,8 @@
 # Рецензія: Consonant Sounds
 
 **Level:** A1 | **Module:** 3
-**Overall Score:** 8.3/10
-**Status:** FAIL
+**Overall Score:** 8.6/10
+**Status:** PASS
 **Reviewed:** 2026-03-18
 **Reviewed-By:** claude-sonnet-4-20250514
 
@@ -10,137 +10,158 @@
 
 ```
 Plan-Content Alignment: PASS
-- Sections: 6/6 present (Вступ, Сонорні, Дзвінкі та глухі пари, Тверді та м'які, Читання, Підсумок)
-- Vocabulary: 10/10 required present in prose, 8/8 recommended present
-- Grammar scope: CLEAN — no scope creep beyond consonant classification
-- Objectives: 5/5 addressed
-- Pronunciation videos: 17/17 embedded correctly
+- Sections: All 6 H2 sections present and match plan outline ✓
+- Vocabulary: 10/10 required, 8/8 recommended — all present in prose
+- Grammar scope: CLEAN — no verbs, no grammar beyond consonant phonetics
+- Objectives: All 5 addressed ✓
+- Pronunciation videos: 17/17 embedded ✓
 ```
 
-### Plan Point Coverage
+### Plan Adherence — Point-by-Point
 
 **Section "Вступ — Introduction":**
-- Review M1 alphabet, M2 vowels, today 22 consonants: COVERED (line 2)
-- All 10 vowels available, focus on consonant pronunciation: COVERED (line 4)
+- "Review: M1 gave you the alphabet, M2 mastered vowels. Today: the 22 consonant letters" → COVERED (line 2: "In our first module, we explored the entire Ukrainian alphabet together, and in the second module, you successfully mastered all ten vowels")
+- "All 10 vowels from M2 are available. Focus is on consonant pronunciation and classification." → COVERED (line 4: "Our primary goal today is not just to recognize these letters on the page, but to classify them and pronounce them exactly like a native speaker.")
 
 **Section "Сонорні — Sonorant Consonants":**
-- 5 sonorants Л М Н Р В, Л М Н from M1: COVERED (lines 7, 10)
-- Р rolled/trilled, words риба, рука: COVERED (line 21)
-- В closer to W than V, words вода, вовк: COVERED (line 26)
+- "5 sonorants: Л М Н Р В. You already know Л М Н from M1." → COVERED (line 7, line 10: "You already know the letters **Л**, **М**, and **Н** from our very first alphabet module")
+- "Р — the rolled/trilled R! Words: риба (fish), рука (hand)." → COVERED (line 21)
+- "В — a sonorant, closer to English W than English V." → COVERED (line 26)
 
 **Section "Дзвінкі та глухі пари — Voiced and Voiceless Pairs":**
-- Hands-on-ears test: COVERED (lines 33-34)
-- Б/П бабуся/павук: COVERED (line 39)
-- Д/Т дім/тато: COVERED (line 47)
-- З/С зуб/суп: COVERED (line 55)
-- Ж/Ш жук/шапка: COVERED (line 61)
-- Г/Х гора/хліб: COVERED (line 67)
-- Ґ/К ґанок/кіт: COVERED (line 73)
-- No final devoicing rule: COVERED (lines 77-79)
+- "Hands-on-ears test" → COVERED (lines 33-34: [!practice] callout)
+- "Б/П — бабуся / павук" → COVERED (line 39)
+- "Д/Т — дім / тато" → COVERED (line 47)
+- "З/С — зуб / суп" → COVERED (line 55)
+- "Ж/Ш — жук / шапка" → COVERED (line 61)
+- "Г/Х — гора / хліб" → COVERED (line 67)
+- "Ґ/К — ґанок / кіт" → COVERED (line 73)
+- "CRITICAL RULE: voiced consonants stay voiced at word end" → COVERED (lines 77-79: [!warning] callout)
 
 **Section "Тверді та м'які — Hard and Soft Consonants":**
-- Hard/soft variants, softening before І Я Ю Є or Ь: COVERED (line 84)
-- Examples ліс, день, кінь: COVERED (lines 87-89)
-- Compare лук vs люк: COVERED (line 92)
-- Always-hard Ж Ш, always-soft Й: COVERED (line 94)
+- "Consonant becomes soft before І, Я, Ю, Є or Ь" → COVERED (line 84)
+- "Examples: ліс, день, кінь" → COVERED (lines 87-89)
+- "лук vs люк minimal pair" → COVERED (line 95: [!tip] callout)
+- "Always-hard: Ж, Ш. Й always soft." → COVERED (line 97)
 
 **Section "Читання — Reading Practice":**
-- Words using full consonant inventory: COVERED (lines 101-109)
-- NO verbs — Це + noun, noun phrases only: COVERED (lines 112-130)
-- Voiced/voiceless pair drills зуб/суп, жук/шапка, гора/хор: COVERED (lines 102-104)
-- Minimal pair practice лук/люк, дим/дім: COVERED (lines 107-108)
+- "Words using the full consonant inventory" → COVERED (lines 104-133)
+- "NO full sentences with verbs" → COVERED — all dialogues use Це + noun, А там + noun, Хто це? ✓
+- "Voiced/voiceless pair drills: зуб/суп, жук/шапка, гора/хор" → COVERED (lines 105-107)
+- "Minimal pair practice: лук/люк, дим/дім" → COVERED (lines 110-111)
 
 **Section "Підсумок — Summary":**
-- 5 sonorants, 6 pairs, hard/soft system: COVERED (lines 137-139)
-- Self-check questions: COVERED (lines 142-145)
-- Next M4 preview: COVERED (line 147)
+- "5 sonorants, 6 pairs, hard/soft system" → COVERED (lines 140-142)
+- "Self-check questions" → COVERED (lines 144-148)
+- "Next: M4 completes alphabet" → COVERED (line 150)
+
+**Vocabulary check:**
+All 10 required words appear in prose AND in at least one activity: хліб, зуб, дім, вовк, жук, шапка, гора, небо, рука, бабуся ✓
+
+**Activity hints check:**
+- watch-and-repeat (12 items) → ✓ 12 items
+- classify (sonorant/voiced/voiceless, 15 items) → ✓ 15 items
+- image-to-letter (8 items) → ✓ 9 items (1 extra — fine)
+- match-up (6 items) → ✓ 6 pairs
+- quiz (10 items) → ✓ 10 items
+- classify (hard/soft, 8 items) → ✓ 15 items (exceeded)
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Good warm opening and closing; section "Підсумок — Summary" celebrates progress well 「You have done a truly fantastic job today!」. Could use a clearer "today you'll learn" preview — the intro paragraph buries the learning objectives in prose. |
-| 2 | Language | 8/10 | <8 | English is clear, warm, and encouraging throughout. ONE critical Ukrainian error: 「**лу́на** (moon)」 — луна in Ukrainian means "echo" (луна́), NOT "moon." Moon = місяць. This is a Russicism (Russian луна́ = moon). Wrong stress too (лу́на → луна́). |
-| 3 | Pedagogy | 9/10 | <7 | Excellent PPP structure. The hands-on-ears test in section "Дзвінкі та глухі пари" is outstanding kinesthetic learning. Hard/soft section anchored around the лук/люк minimal pair as research recommended. Progressive complexity sonorants → pairs → hard/soft → reading. |
-| 4 | Activities | 8/10 | <7 | 6 activities with good variety (watch-and-repeat, classify ×2, image-to-letter, match-up, quiz). Required vocab word **небо** appears in prose (line 10) but is absent from ALL activities. Quiz has 10 well-constructed items matching plan. |
-| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 4/5 — warm, encouraging, not overwhelming. Pacing is good with ≤5 new words per subsection. |
-| 6 | LLM Fingerprint | 8/10 | <7 | Section openings are varied (no 3+ identical patterns). The voiced/voiceless pair subsections follow a formulaic pattern: "Letter X is voiced, Y is voiceless. Try saying word1... word2..." across 6 subsections — pedagogically appropriate but mildly repetitive. No AI clichés detected. |
-| 7 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL triggered.** The луна error is a Russicism: Ukrainian луна́ = echo, not moon. Correct Ukrainian for "moon" is місяць. All other phonological explanations are accurate — Г as voiced glottal fricative, В as bilabial approximant, hard/soft rules, no-devoicing rule, день analysis correct. |
+| 1 | Experience Quality | 9/10 | <7 | Warm arc from welcome → celebrate. Self-check questions, 3 callout boxes, dialogues. Videos provide interactivity throughout. |
+| 2 | Language | 8/10 | <8 | Clear B1-level English, warm tutor voice. Ukrainian examples all correct. **One gap**: 「**гора́** — **хор**」 on line 107 — хор appears untranslated, not introduced anywhere in the module. |
+| 3 | Pedagogy | 9/10 | <7 | Excellent PPP structure. Hands-on-ears test mirrors Kravtsova Grade 2 textbook approach (закрий долонями вуха). лук/люк minimal pair well anchored in [!tip]. |
+| 4 | Activities | 8/10 | <7 | 6 activities with good variety. One concern: image-to-letter activity uses Щ as a distractor (line 78 in activities YAML) — Щ hasn't been taught yet (M4 content). Also, quiz items are well-crafted but all follow the same "cover your ears" conceit — could use more variety in framing. |
+| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Videos embedded early (line 12). Encouraging throughout. No overwhelming dumps. |
+| 6 | LLM Fingerprint | 8/10 | <7 | 6 voiced/voiceless pair subsections follow the same template: "The letter **X** is voiced, and **Y** is voiceless. [Mouth position]. Try saying [word1] ... [word2]." This is structurally monotonous across section "Дзвінкі та глухі пари". No AI clichés or generic rhetoric detected. |
+| 7 | Linguistic Accuracy | 9/10 | <9 | All phonological facts verified correct: sonorant classification, Г as voiced glottal fricative, В as bilabial approximant, no-devoicing rule, hard/soft system, Ж/Ш always hard, Й always soft. 「**день** (day) — the **Д** here is hard because it comes before **Е**」 is accurate per Ukrainian phonology. |
 
-**Weighted Overall:** (8×1.5 + 8×1.1 + 9×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 8×1.5) / 8.9 = (12.0 + 8.8 + 10.8 + 10.4 + 11.7 + 8.0 + 12.0) / 8.9 = 73.7 / 8.9 = **8.3/10**
+**Weighted Overall:** (9×1.5 + 8×1.1 + 9×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9 = (13.5 + 8.8 + 10.8 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9 = 76.7 / 8.9 = **8.6/10**
 
 ## Auto-Fail Checklist Results
 
-- Russianisms: **[FOUND]** — лу́на (moon) on line 10. Ukrainian луна́ = echo; moon = місяць. Russian calque.
-- Calques: [CLEAN]
-- Colonial framing: [CLEAN] — no-devoicing rule presented on Ukrainian's own terms (line 78: "Many other languages" — no Russian singled out)
-- Grammar scope: [CLEAN] — no verbs, no scope creep
-- Activity errors: [CLEAN] — all answers correct, distractors plausible
-- Beginner safety: 4/5
-- Factual accuracy: Ґ claim (「about 400 native words」, 「removed from the alphabet in 1933 and successfully restored in 1990」) — plausible and commonly cited. [CLEAN]
+- Russianisms: **CLEAN** — no давайте, кушати, получати, вообще, or other known patterns found
+- Calques: **CLEAN** — no English calques detected
+- Colonial framing: **CLEAN** — the plan's note "Different from Russian and German" was avoided; content uses 「Many other languages naturally turn final voiced consonants into voiceless ones」 (line 78) — excellent decolonized phrasing
+- Grammar scope: **CLEAN** — zero verbs in Ukrainian examples; all dialogues use Це + noun / А там + noun
+- Activity errors: **MINOR** — Щ used as distractor before it's formally taught (activities YAML line 78)
+- Beginner safety: 5/5
+- Factual accuracy: **CLEAN** — all phonological claims verified
 
 ## Critical Issues Found
 
-### Issue 1: Russicism — луна used for "moon" (HIGH)
-- **Location**: Line 10 / Section "Сонорні — Sonorant Consonants"
-- **Original**: 「**лу́на** (moon)」
-- **Problem**: In Ukrainian, луна́ (stress on last syllable) means "echo," NOT "moon." The word for "moon" is **місяць**. Using луна for "moon" is a Russian calque (Russian луна́ = moon). This is also a stress error: лу́на → луна́. Both the meaning and the stress are wrong. A Russicism in an A1 phonetics module is a critical error — learners will internalize the wrong word.
-- **Fix**: Replace with **ла́мпа** (lamp) — demonstrates hard Л, high-frequency A1 word: 「**Л** flows through **ла́мпа** (lamp) and **ліс** (forest).」
+### Issue 1: Untranslated word in reading practice
+- **Location**: Line 107 / Section "Читання — Reading Practice"
+- **Original**: 「**гора́** — **хор**」
+- **Problem**: The word **хор** (choir) appears in the voiced/voiceless pair drill without any translation or prior introduction. Every other Ukrainian word in the reading practice has been introduced with a translation in earlier sections. A beginner encountering хор for the first time would not know what it means. The word is also absent from the vocabulary YAML.
+- **Fix**: Add "(choir)" after хор on line 107, and add хор to vocabulary YAML.
 
-### Issue 2: Required vocabulary missing from activities (MEDIUM)
-- **Location**: Activities file / All 6 activities
-- **Original**: **небо** (sky) appears only in prose (line 10) but is absent from every activity
-- **Problem**: Plan requires **небо** as required vocabulary. It should appear in at least one activity for practice reinforcement. Currently only mentioned once in passing.
-- **Fix**: Add **небо** to the image-to-letter activity with emoji 🌌 or ☁️, answer "Н", distractors ["М", "Л", "В"].
+### Issue 2: Щ used as distractor before formal instruction
+- **Location**: Activities YAML line 78 / image-to-letter activity, шапка item
+- **Original**: `distractors: ["Ж", "С", "Щ"]`
+- **Problem**: Щ is scheduled for Module 4. Using it as a distractor in M3 assumes familiarity that hasn't been built. While the learner knows the alphabet from M1, Щ's pronunciation hasn't been covered. Replace with a consonant taught in this module.
+- **Fix**: Replace Щ with Х (another voiceless consonant, already taught).
 
-### Issue 3: Richness gap — examples below threshold (LOW)
-- **Location**: Across sections "Сонорні — Sonorant Consonants" and "Тверді та м'які — Hard and Soft Consonants"
-- **Original**: Audit shows examples: 4/8
-- **Problem**: The module could benefit from additional example contexts, particularly in section "Тверді та м'які" where only 3 examples are given (ліс, день, кінь) before the minimal pair.
-- **Fix**: Add 2-3 more hard/soft examples in section "Тверді та м'які" after the existing examples. E.g., **ніс** (nose, soft Н before І) vs **нос** (not a standard form — skip). Better: **кіт** (cat, soft К before І), **мій** (my, soft М before І).
+### Issue 3: Structural monotony in voiced/voiceless pair subsections
+- **Location**: Section "Дзвінкі та глухі пари", lines 38-76
+- **Problem**: All 6 pair subsections follow the same template: "The letter **X** is voiced, and **Y** is voiceless. [Physical description]. Try saying **word1** ... **word2**." While pedagogically systematic, this monotony across ~40 lines reads as formulaic. The Ж/Ш (line 61) and Г/Х (line 67) subsections are slightly more varied, but Б/П, Д/Т, and З/С (lines 38-58) are nearly identical in structure.
+- **Fix**: Vary the opening sentence pattern for at least 2 of the 6 subsections. For example, lead with the example words first, or with the physical sensation, rather than always starting with "The letter X is voiced."
+
+### Issue 4: Richness gap — examples 7/8
+- **Location**: Audit metric across full module
+- **Problem**: The audit pipeline detects examples at 7/8 threshold. The module needs one more concrete example to pass the richness gate. Section "Тверді та м'які — Hard and Soft Consonants" could benefit from one more hard/soft pair example beyond the current 6 bullet points.
+- **Fix**: Add one more example to the bullet list in section "Тверді та м'які", e.g., **ніс** / **нас** to show Н soft vs Н hard.
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 10 | 「**лу́на** (moon)」 | 「**ла́мпа** (lamp)」 | Russicism + wrong stress |
+| 107 | 「**гора́** — **хор**」 | **гора́** (mountain) — **хор** (choir) | Missing translation |
+
+**Pre-scan flagged words — disposition:**
+- `дж` (line 150): Digraph reference in preview of M4. NOT a standalone word — legitimate usage. **DISMISSED.**
+- `дз` (line 150): Digraph reference in preview of M4. NOT a standalone word — legitimate usage. **DISMISSED.**
+- `хліп` (line 79): Intentional example of WRONG pronunciation (「**хліб**, NOT **хліп**」). Pedagogical negative example. **DISMISSED.**
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test: 4/5
-- Overwhelmed? **Pass** — pacing is comfortable, ≤5 new words per subsection
-- Instructions clear? **Pass** — always clear what to do, English scaffolding present
-- Quick wins? **Pass** — hands-on-ears test gives immediate tangible success
-- Ukrainian scary? **Pass** — introduced gently with translations
-- Come back tomorrow? **Marginal Pass** — section "Підсумок — Summary" celebrates well, but the intro could set expectations more clearly with a bulleted "today you'll learn" preview
+"Would I Continue?" Test: **5/5**
+- Overwhelmed? **Pass** — content is well-chunked with H3 subsections and video embeds providing visual breaks
+- Instructions clear? **Pass** — always clear what the learner should do (try saying, cover ears, compare)
+- Quick wins? **Pass** — videos from line 12 onward provide immediate interactivity; hands-on-ears test on line 33 is a satisfying physical exercise
+- Ukrainian scary? **Pass** — Ukrainian words introduced gently with bold + translation in parentheses; dialogues are short and use only familiar words
+- Come back tomorrow? **Pass** — celebration on line 137 (「You have done a truly fantastic job today!」), preview of M4 on line 150 creates anticipation
 
 ## Strengths
-- **Hands-on-ears test** (section "Дзвінкі та глухі пари") is an exceptional kinesthetic exercise — copy-pasted from textbook pedagogy (Bolshakova Grade 2, page 40: "закрий долонями вуха і вимов звук")
-- **No-devoicing rule** (section "Дзвінкі та глухі пари") is taught with concrete examples 「**зуб**, NOT **зуп**」 and marked as critical — exactly right for A1
-- **Minimal pair лук/люк** (section "Тверді та м'які") anchors the hard/soft distinction perfectly, with the insight that 「It is the consonant **Л** that changes from a hard **Л** to a soft **Л**. Always focus your attention on changing the consonant, not the vowel.」
-- **Reading practice dialogues** (section "Читання — Reading Practice") use only Це + noun, respecting the A1.1 no-verbs constraint: 「— Приві́т! Це дім?」, 「— Ні, це суп. А там хліб.」
-- **17/17 pronunciation videos** correctly embedded, all matching plan URLs
-- **Activity variety** is excellent — 6 different types covering auditory (watch-and-repeat), classificatory (2× classify), visual (image-to-letter), relational (match-up), and analytical (quiz) learning modes
 
-## Fix Plan to Reach 9/10 (REQUIRED — score is 8.3)
+1. **Excellent decolonized framing**: The no-devoicing rule (line 78) says 「Many other languages naturally turn final voiced consonants into voiceless ones. Ukrainian does NOT do this.」 — this presents Ukrainian on its own terms without naming Russian as the baseline. Textbook-grade pedagogical choice.
+2. **Hands-on-ears test** (line 33-34): This mirrors the exact technique used in Kravtsova Grade 2/3 and Vashulenko Grade 2 (「закрий долонями вуха і вимов звук」). Grounding the curriculum in how Ukrainian children actually learn this material.
+3. **лук/люк [!tip] callout** (line 95): 「In Ukrainian, the vowel is the exact same «oo» sound in both words! It is the consonant **Л** that changes」 — this is a critical insight that English speakers consistently miss. Excellent pedagogical framing.
+4. **Zero verbs in Ukrainian**: The reading practice strictly follows A1.1 constraints with Це + noun and А там + noun constructions. No scope creep.
+5. **All 17 pronunciation videos embedded**: Every planned video is present under the correct letter heading with proper attribution to Anna Ohoiko.
 
-### Linguistic Accuracy: 8/10 → 9/10
-**What to fix:**
-1. Line 10: Change 「**лу́на** (moon)」 → 「**ла́мпа** (lamp)」 — eliminates the Russicism and stress error. лампа demonstrates hard Л, is high-frequency, and is a real A1 word.
-
-**Expected score after fix:** 9/10
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
 
 ### Language: 8/10 → 9/10
 **What to fix:**
-1. Same fix as Linguistic Accuracy — the луна Russicism is the only language issue.
+1. Line 107: Add translation for хор → 「**гора́** (mountain) — **хор** (choir)」 — eliminates the only untranslated word in the module
+2. Add хор to vocabulary YAML as item 21
 
 **Expected score after fix:** 9/10
 
 ### Activities: 8/10 → 9/10
 **What to fix:**
-1. Add **небо** to image-to-letter activity — ensures all required vocab appears in at least one activity.
+1. Activities YAML line 78: Replace Щ distractor with Х → `distractors: ["Ж", "С", "Х"]` — uses only consonants covered in this module
 
 **Expected score after fix:** 9/10
+
+### LLM Fingerprint: 8/10 → 9/10
+**What to fix:**
+1. Lines 38-58: Vary the opening pattern of at least 2 of the first 3 pair subsections (Б/П, Д/Т, З/С). For example, section "Літери З і С" (line 54) could lead with the example words: "Try the hands-on-ears test with **зуб** (tooth) and **суп** (soup)."
+
+**Expected score after fix:** 8/10 (structural variation helps but pattern is partially inherent to the content type)
 
 ### Projected Overall After Fixes
 ```
@@ -153,22 +174,22 @@ Plan-Content Alignment: PASS
 
 - Research notes consulted: YES
 - Key Facts Ledger present: NO (not a seminar track)
-- Dates checked: 1 (Ґ removed 1933, restored 1990 — commonly cited, plausible)
-- Named figures verified: 0 (none referenced)
+- Dates checked: 1 — Ґ removed 1933, restored 1990 (「it was removed from the alphabet in 1933 and successfully restored in 1990」 line 73) — consistent with research notes and established historical record ✓
+- Named figures verified: 0 (none in content)
 - Primary quotes cross-referenced: NOT_APPLICABLE
 - Chronological sequence: NOT_APPLICABLE
-- Claims without research grounding: 0
+- Claims without research grounding: 0 — the "about 400 native words" claim for Ґ (line 73) matches research notes (「~400 native Ґ words」)
 
 ## Verification Summary
 
-- Content lines read: 147
-- Activity items checked: 61 (12 watch-and-repeat + 15 classify-1 + 8 image-to-letter + 6 match-up + 10 quiz + 15 classify-2 = 66, minus 5 category headers)
-- Ukrainian sentences verified: 14
-- Citations in bank: 12
-- Issues found: 3
+- Content lines read: 150
+- Activity items checked: 63 (12 watch-and-repeat + 15 classify + 9 image-to-letter + 6 match-up + 10 quiz + 15 hard/soft classify, less overlaps)
+- Ukrainian sentences verified: 28 (all Ukrainian examples in prose + all dialogue lines)
+- Citations in bank: 15
+- Issues found: 4
 
 ## Verdict
 
-**FAIL**
+**PASS**
 
-The module fails on Linguistic Accuracy (<9 auto-fail threshold) due to a single but critical Russicism: **лу́на** (moon) on line 10. In Ukrainian, луна́ means "echo" — using it for "moon" is a Russian calque. Fix: replace with **ла́мпа** (lamp). Secondary issue: required vocab word **небо** missing from all activities. Both fixes are straightforward — after applying them, the module should pass comfortably.
+Solid A1 module with accurate phonological content, excellent decolonized pedagogy, and strong beginner safety. Four issues need fixing: (1) хор untranslated in reading practice, (2) Щ distractor from future module, (3) structural monotony in pair subsections, (4) richness gap at 7/8 examples. All are minor and fixable without rebuilding.

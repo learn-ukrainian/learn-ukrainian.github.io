@@ -1,9 +1,9 @@
 # RAG Verification: consonant-sounds
 
-**Date:** 2026-03-18 22:12 UTC | **Words checked:** 61 | **VESUM coverage:** 58/61 (95.1%)
+**Date:** 2026-03-18 22:19 UTC | **Words checked:** 63 | **VESUM coverage:** 60/63 (95.2%)
 
 ## Summary
-- ✅ Verified (VESUM): 58
+- ✅ Verified (VESUM): 60
 - ⚠️ Partial (RAG only): 2
 - ❌ Not found: 1
 
@@ -24,4 +24,4 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 61 | 58 | 1 |
+| Prose (.md) | 63 | 60 | 1 |

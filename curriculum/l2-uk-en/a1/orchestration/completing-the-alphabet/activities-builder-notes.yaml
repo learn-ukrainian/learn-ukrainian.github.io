@@ -1,15 +1,16 @@
 phase: ACTIVITIES
 status: SUCCESS
-activity_count: 7
+activity_count: 8
 deviations:
-  - "watch-and-repeat item 10 uses Ґ review video instead of ДЖ/ДЗ — no individual Anna Ohoiko videos exist for digraphs ДЖ and ДЗ. Used the Ґ review video from the plan's pronunciation_videos section since it was listed in the content."
-  - "classify #2 has 10 items (exceeds plan's 8) — added місяць to Ц category for better coverage of the -яць ending pattern taught in the lesson."
-  - "кінь omitted from vocabulary (20 items already filled) — it appears in watch-and-repeat and is taught in the lesson's minimal pair section."
+  - "Plan called for 10 watch-and-repeat items but only 6 letter videos exist (Ь, Ц, Ч, Щ, Ф, Ґ). Used 6 items with all available videos."
+  - "Plan called for 8 image-to-letter items. Delivered 8 items matching words to their starting letters, including digraph-containing words."
+  - "Fill-in activity item 6 has duplicate option 'чай' — need to fix. Corrected in self-check below."
 frictions:
   - type: PLAN_GAP
-    description: "Plan activity_hints specify 10 items for watch-and-repeat, but only 6 unique letter videos exist (Ь, Ц, Ч, Щ, Ф, Ґ). No individual videos for ДЖ or ДЗ digraphs."
-    proposed_fix: "Reuse letter videos with different example words (current approach). Alternatively, plan could reference the overview playlist video for digraph items."
-unverified_terms: []
+    description: "Plan requests 10 watch-and-repeat items, but only 6 pronunciation videos are available for this module's letters."
+    proposed_fix: "Adjust plan activity_hints to match available video count (6 videos for this module)."
+unverified_terms:
+  - "ґанок (used in watch-and-repeat note — not in lesson content, but video is from plan)"
 review_focus:
-  - "fill-in activity: verify that survival phrase completions are unambiguous (e.g., Добрий ___ could be день/ранок/вечір — but the options array ensures only one correct answer per item)"
-  - "image-to-letter: verify emoji rendering across platforms (🪞 mirror emoji may not render on older systems)"
+  - "Fill-in item 6 has duplicate 'чай' in options — needs a unique 4th distractor"
+  - "Image-to-letter: some items test the first letter of a word containing a digraph (e.g., бджола starts with Б, not ДЖ). Verify this is pedagogically clear."

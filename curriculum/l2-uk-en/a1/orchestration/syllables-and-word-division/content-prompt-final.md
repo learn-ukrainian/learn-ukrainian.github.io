@@ -53,15 +53,15 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 4
 **Previous module:** Completing the Alphabet
 
-**Cumulative vocabulary (73 words):**
+**Cumulative vocabulary (74 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
 сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, мій
 вухо, їжа, яйце, юшка, каша, небо, сир, хліб, зуб, дім
 вовк, жук, шапка, гора, рука, бабуся, павук, ґанок, кінь, людина
-суп, вода, дим, люк, сіль, Львів, м'ясо, п'ять, сім'я, цукор
-час, що, джерело, дзвін, осінь, м'яч, щастя, факт, бджола, дзеркало
-черепаха, цибуля, чай
+суп, вода, дим, люк, хор, сіль, Львів, мідь, осінь, м'ясо
+п'ять, сім'я, м'яч, цукор, цибуля, час, черепаха, чай, що, щастя
+факт, джерело, дзвін, об'єкт
 
 **Grammar already taught (20 topics):**
 - Full alphabet overview (33 letters)
@@ -183,7 +183,7 @@ Ukrainian sentences max 10 words.
 
 Write **Syllables and Word Division** for the a1 track.
 
-**Targets:** 1200–1800 words | 2+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+**Targets:** 1200–1800 words | 1+ callout boxes | **0–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 

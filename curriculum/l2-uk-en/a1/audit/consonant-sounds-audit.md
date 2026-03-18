@@ -1,7 +1,7 @@
 # Audit Report: M03 — consonant-sounds.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-18 23:18:08
+**Generated:** 2026-03-18 23:19:18
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,19 +34,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1934/1200 (raw: 2013)
+- **Words:** ✅ 1957/1200 (raw: 2036)
 - **Activities:** ✅ 6/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/2
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 6.1% (target 5-15% (M03))
+- **Immersion:** 🇺🇦 6.2% (target 5-15% (M03))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -57,6 +57,6 @@
 | **Intro/Narrative** | ✅ | 138 | Included in Core |
 | **Сонорні — Sonorant Consonants** | ✅ | 351 | Included in Core |
 | **Дзвінкі та глухі пари — Voiced and Voiceless Pairs** | ✅ | 634 | Included in Core |
-| **Тверді та м'які — Hard and Soft Consonants** | ✅ | 390 | Included in Core |
+| **Тверді та м'які — Hard and Soft Consonants** | ✅ | 411 | Included in Core |
 | **Читання — Reading Practice** | ⚪️ | 0 | Skipped (using YAML) |
 | **Підсумок — Summary** | ✅ | 177 | Included in Core |

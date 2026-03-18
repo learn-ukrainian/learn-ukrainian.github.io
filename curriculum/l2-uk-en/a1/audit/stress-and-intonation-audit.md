@@ -1,7 +1,8 @@
 # Audit Report: M06 — stress-and-intonation.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
+**Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-18 19:58:00
+**Generated:** 2026-03-19 00:27:04
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,8 +11,8 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Required Types:** fill-in, match-up, quiz, true-false
-**Engagement:** ≥3 callouts
+**Required Types:** match-up, quiz, true-false
+**Engagement:** ≥1 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -19,42 +20,42 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | quiz | Find the Stressed Syllable | 12 | 6 | ✅ |
-| 2 | match-up | Stress Minimal Pairs | 8 | 6 | ✅ |
+| 1 | quiz | Stress Placement | 12 | 6 | ✅ |
+| 2 | match-up | Stress and Meaning | 8 | 6 | ✅ |
 | 3 | true-false | Intonation Patterns | 8 | 6 | ✅ |
-| 4 | fill-in | Choose the Correct Stress | 10 | 6 | ✅ |
+| 4 | fill-in | Mark the Stress | 10 | 6 | ✅ |
 
 **Summary:**
 - Total activities: 4 (target: 0-4) ✅
 - Unique types: 4 (minimum: 0) ✅
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
-- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
+- Required types used: 3/3 (match-up, quiz, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2093/1200 (raw: 2161)
+- **Words:** ✅ 1878/1200 (raw: 1907)
 - **Activities:** ✅ 4/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 4/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 2/1
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 7.7% (target 5-15% (M06))
+- **Immersion:** 🇺🇦 9.6% (target 5-15% (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Naturalness:** ✅ 10/10 (High)
+- **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 531 | Included in Core |
-| **Типові наголоси — Common Stress Patterns** | ✅ | 378 | Included in Core |
-| **Рухомий наголос — Mobile Stress** | ✅ | 429 | Included in Core |
-| **Інтонація — Intonation** | ✅ | 422 | Included in Core |
-| **Практика — Practice** | ✅ | 177 | Included in Core |
-| **Підсумок — Summary** | ✅ | 156 | Included in Core |
+| **Intro/Narrative** | ✅ | 493 | Included in Core |
+| **Типові наголоси — Common Stress Patterns** | ✅ | 298 | Included in Core |
+| **Рухомий наголос — Mobile Stress** | ✅ | 274 | Included in Core |
+| **Інтонація — Intonation** | ✅ | 412 | Included in Core |
+| **Практика — Practice** | ✅ | 256 | Included in Core |
+| **Підсумок — Summary** | ✅ | 145 | Included in Core |

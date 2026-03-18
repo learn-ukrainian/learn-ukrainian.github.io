@@ -90,6 +90,7 @@ Let's look closely at some examples you already know:
 - **кіт** (cat) — the vowel **І** makes the **К** soft, just like in **кінь** above.
 - **ніс** (nose) — the **І** makes the **Н** soft. Compare this to the hard **Н** in **на́ша** (our), where **Н** comes before **А**.
 - **мій** (my) — the **І** makes the **М** soft. You will use this word constantly!
+- **тут** (here) — the **Т** is hard before **У**. Compare this to **тінь** (shadow), where **І** makes the **Т** soft!
 
 > [!tip] It's the Consonant That Changes
 > Let's look at the minimal pair **лук** (bow, the weapon) and **люк** (hatch). In English, we might naturally think the vowel sound changed from an «oo» sound to a «yoo» sound. In Ukrainian, the vowel is the exact same «oo» sound in both words! It is the consonant **Л** that changes from a hard **Л** to a soft **Л**. Always focus your attention on changing the consonant, not the vowel.
@@ -104,7 +105,7 @@ Let's practice reading all these fantastic new sounds together. Remember to read
 Let's try these voiced and voiceless pair drills. Try reading them aloud, pausing to feel the difference in your throat and mouth:
 - **зуб** — **суп**
 - **жук** — **ша́пка**
-- **гора́** — **хор**
+- **гора́** (mountain) — **хор** (choir)
 
 Now, try these minimal pairs to test your mastery of hard and soft consonants, as well as the important vowel distinctions we covered in the last module:
 - **лук** — **люк** (practicing the hard **Л** versus the soft **Л**)

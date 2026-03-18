@@ -1,20 +1,22 @@
 # RAG Verification: syllables-and-word-division
 
-**Date:** 2026-03-18 21:55 UTC | **Words checked:** 137 | **VESUM coverage:** 130/137 (94.9%)
+**Date:** 2026-03-18 23:05 UTC | **Words checked:** 111 | **VESUM coverage:** 103/111 (92.8%)
 
 ## Summary
-- ✅ Verified (VESUM): 130
-- ⚠️ Partial (RAG only): 3
-- ❌ Not found: 4
+- ✅ Verified (VESUM): 103
+- ⚠️ Partial (RAG only): 2
+- ❌ Not found: 6
 
 ## ❌ Not Found (action required)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
-| ву | activities | ✗ | ✗ | ✗ |
-| ло | activities | ✗ | ✗ | ✗ |
-| м'я | prose | ✗ | ✗ | ✗ |
-| стр | prose | ✗ | ✗ | ✗ |
+| ву | prose | ✗ | ✗ | ✗ |
+| кра | prose | ✗ | ✗ | ✗ |
+| ли | prose | ✗ | ✗ | ✗ |
+| ло | prose | ✗ | ✗ | ✗ |
+| ль | prose | ✗ | ✗ | ✗ |
+| ст | prose | ✗ | ✗ | ✗ |
 
 ## ⚠️ Partial Match (human review)
 
@@ -22,11 +24,10 @@
 |------|--------|-------|----------|----------|
 | дж | prose | ✗ | ✓ | ✗ |
 | дз | prose | ✗ | ✓ | ✗ |
-| ка | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 107 | 102 | 2 |
-| Activities (.yaml) | 30 | 28 | 2 |
+| Prose (.md) | 90 | 82 | 6 |
+| Activities (.yaml) | 21 | 21 | 0 |

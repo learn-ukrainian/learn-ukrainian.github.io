@@ -24,17 +24,17 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T20:19:34Z",
+      "ts": "2026-03-18T22:26:43Z",
       "executor": {
         "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
       }
     },
     "validate": {
       "status": "complete",
-      "ts": "2026-03-18T20:21:41Z",
-      "attempts": 1,
+      "ts": "2026-03-18T22:32:18Z",
+      "attempts": 3,
       "executor": {
         "type": "llm",
         "agent": "gemini",
@@ -43,20 +43,8 @@
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-03-18T20:24:38Z",
+      "ts": "2026-03-18T22:34:48Z",
       "task_id": "v5-completing-the-alphabet-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "complete",
-      "ts": "2026-03-18T20:31:51Z",
-      "attempts": 3,
-      "note": "gemini-fix-iter2",
-      "review_grounding": "rag-textbook",
       "executor": {
         "type": "llm",
         "agent": "gemini",

@@ -2,13 +2,13 @@
   "module": "syllables-and-word-division",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T23:17:54.949926Z",
+  "last_audit": "2026-03-19T00:05:19.958054Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-18T22:54:51.829523Z",
+    "md": "2026-03-19T00:04:57.164919Z",
     "meta": "2026-03-17T16:42:30.387503Z",
-    "activities": "2026-03-18T22:53:31.886348Z",
-    "vocabulary": "2026-03-18T22:46:43.297032Z",
+    "activities": "2026-03-19T00:04:57.165822Z",
+    "vocabulary": "2026-03-19T00:00:37.470259Z",
     "research": "2026-03-17T18:14:13.115179Z",
     "plan": "2026-03-17T18:13:53.269692Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1840/1200 (raw: 1954)"
+      "message": "2021/1200 (raw: 2051)"
     },
     "activities": {
       "status": "pass",

@@ -1,23 +1,12 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1666
-deviations:
-  - section: "Практика — Practice"
-    reason: "Expanded beyond 200 minimum to ~270 to include micro-dialogues and speed reading challenge, improving engagement."
-  - section: "Підсумок — Summary"
-    reason: "Expanded beyond 100 minimum to ~188 to include proper self-check and preview of next module."
+word_count: 1520
+deviations: []
 frictions: []
-research_gaps:
-  - "Could not find Grade 1 textbook material on syllable clapping exercises — used Grade 2 Вашуленко and Кравцова instead."
 unverified_terms: []
 review_focus:
-  - "Verify that сес-тра is correctly presented as valid for writing (per friction constraint — Правопис 2019 §49) while се-стра is the phonetic split."
-  - "Check that all 12 vocabulary items from plan vocabulary_hints appear in content (6 required + 6 recommended)."
-  - "Verify micro-dialogues use only known vocabulary and Це + noun / location patterns appropriate for A1.1."
-  - "Confirm no grammar beyond A1.1 constraints (no verbs beyond imperatives, no case explanations)."
-  - "Activity distractors — all Ukrainian words verified against VESUM."
+  - "Check that the emphasis on counting vowels as syllables is clear and mathematically precise."
+  - "Verify the explanation of orthographic vs phonetic division is appropriate and understandable for A1."
+  - "Ensure no disallowed grammar constructs were used in the short dialogues."
 rag_tools_used:
-  - "search_text: 'склад поділ слів на склади голосний звук' grade=2 → Found Вашуленко p.18-19 (syllable = vowel rule), Кравцова p.14 (single vowel syllable)"
-  - "search_text: 'правила переносу слів з рядка в рядок' grade=5 → Found Заболотний p.88-89 (transfer rules table), Авраменко p.85 (doubled consonants), Голуб p.87 (rules table)"
-  - "verify_words: all 20 target+content words → 20/20 found"
-  - "verify_words: all 17 distractor/additional words → 17/17 found"
+  - "search_text: 'Syllable structure Open and closed syllables' → Guided the pedagogy toward visual vowel counting (Zabolotnyi Grade 5) and word-division rules."

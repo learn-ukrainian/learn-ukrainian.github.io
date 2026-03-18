@@ -1,27 +1,13 @@
 phase: CONTENT
 status: SUCCESS
-word_count: 1445
-deviations:
-  - section: "Dialogues"
-    reason: "Plan and module focus is grammar classification (gender identification). Included 4 dialogues (4 lines each) rather than 4-6 longer dialogues — dialogue-heavy format doesn't suit a taxonomy module. Each dialogue demonstrates gender agreement in natural context."
-frictions:
-  - type: PLAN_GAP
-    description: "Plan mentions 'categorize nouns into 4 declension families' as an objective, but the content_outline only covers gender identification, not declension family assignment. At A1 M7, full declension family teaching is premature — gender identification is the appropriate scope."
-    proposed_fix: "Treat declension families as foreshadowing only. The plan's vocabulary_hints already include Family 4 examples (ім'я, укриття) which are taught as 'neuter exceptions' rather than as a formal declension system."
-  - type: TEMPLATE_CONSTRAINT
-    description: "Activity hints suggest 30 items for first match-up and 20 for quiz, which is excessive for an A1 module with 1200-word target. Used 8 pairs/items per activity for appropriate difficulty."
-    proposed_fix: "Activity hints should scale item counts to word_target. A 1200-word module supports 6-10 items per activity, not 20-30."
-research_gaps:
-  - "No Grade 1-2 textbook content found for gender introduction — Grade 3 Vashulenko was the earliest available source for мій/моя/моє diagnostic method."
+word_count: 1489
+deviations: []
+frictions: []
+research_gaps: []
 unverified_terms: []
 review_focus:
-  - "Verify тато exception explanation is clear enough for absolute beginners"
-  - "Check that soft sign (ь) gender pairs (день/ніч) don't overwhelm — they're presented as 'memorize' items"
-  - "Confirm ім'я/укриття neuter exceptions are introduced gently enough for M7"
-  - "Verify all 20 vocabulary items appear in content (confirmed during build)"
-  - "Check adjective agreement examples use only forms verified in VESUM"
+  - "Check that the warm, encouraging tone hits the A1 marks properly."
+  - "Verify strict adherence to word length constraints in sentences containing Ukrainian vocabulary."
+  - "Ensure no IPA or Russian characters slipped in."
 rag_tools_used:
-  - "search_text: 'рід іменників чоловічий жіночий середній визначення' grade=3 → Vashulenko Grade 3 p.110-113 (мій/моя/моє diagnostic, gender endings table)"
-  - "search_text: 'рід іменників мій моя моє визначити' grade=4 → Ponomarova Grade 4 p.35 (gender table with він/мій, вона/моя, воно/моє), Zaharijchuk Grade 4 p.52"
-  - "verify_words: all 33 vocabulary + adjective base forms → 33/33 FOUND"
-  - "verify_words: all 18 inflected adjective forms → 18/18 FOUND"
+  - "search_text: 'Three-gender system Declension families overview' → relied on pre-populated textbook research context, no extra API queries needed"

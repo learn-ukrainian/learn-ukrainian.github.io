@@ -1,0 +1,231 @@
+- type: quiz
+  title: "Stress Placement"
+  instruction: "Identify which syllable carries the stress in each Ukrainian word."
+  items:
+    - question: "Which syllable is stressed in the word вода́ (water)?"
+      options:
+        - text: "First syllable (во-)"
+          correct: false
+        - text: "Second syllable (-да)"
+          correct: true
+        - text: "Both syllables equally"
+          correct: false
+        - text: "Neither — it has no stress"
+          correct: false
+      explanation: "Вода́ has last-syllable stress — the emphasis falls on -да."
+    - question: "Which syllable is stressed in the word ма́ма (mom)?"
+      options:
+        - text: "First syllable (ма-)"
+          correct: true
+        - text: "Second syllable (-ма)"
+          correct: false
+        - text: "Both syllables equally"
+          correct: false
+        - text: "It depends on the sentence"
+          correct: false
+      explanation: "Ма́ма has first-syllable stress — the emphasis falls on the first ма-."
+    - question: "Which syllable is stressed in the word молоко́ (milk)?"
+      options:
+        - text: "First syllable (мо-)"
+          correct: false
+        - text: "Second syllable (-ло-)"
+          correct: false
+        - text: "Third syllable (-ко)"
+          correct: true
+        - text: "All syllables equally"
+          correct: false
+      explanation: "Молоко́ has last-syllable stress — the emphasis falls on -ко."
+    - question: "Which syllable is stressed in the word шко́ла (school)?"
+      options:
+        - text: "First syllable (шко-)"
+          correct: true
+        - text: "Second syllable (-ла)"
+          correct: false
+        - text: "Both syllables equally"
+          correct: false
+        - text: "It changes depending on context"
+          correct: false
+      explanation: "Шко́ла has first-syllable stress — the emphasis falls on шко-."
+    - question: "The words за́мок and замо́к have the same letters but different stress. What does за́мок (first-syllable stress) mean?"
+      options:
+        - text: "lock"
+          correct: false
+        - text: "castle"
+          correct: true
+        - text: "key"
+          correct: false
+        - text: "door"
+          correct: false
+      explanation: "За́мок with first-syllable stress means 'castle'. Замо́к with last-syllable stress means 'lock'."
+    - question: "What does замо́к (last-syllable stress) mean?"
+      options:
+        - text: "castle"
+          correct: false
+        - text: "fortress"
+          correct: false
+        - text: "lock"
+          correct: true
+        - text: "gate"
+          correct: false
+      explanation: "Замо́к with last-syllable stress means 'lock'. За́мок with first-syllable stress means 'castle'."
+    - question: "Which syllable is stressed in the word сестра́ (sister)?"
+      options:
+        - text: "First syllable (сес-)"
+          correct: false
+        - text: "Second syllable (-тра)"
+          correct: true
+        - text: "Both syllables equally"
+          correct: false
+        - text: "Neither — short words have no stress"
+          correct: false
+      explanation: "Сестра́ has last-syllable stress — the emphasis falls on -тра."
+    - question: "Which syllable is stressed in the word кни́жка (book)?"
+      options:
+        - text: "First syllable (книж-)"
+          correct: true
+        - text: "Second syllable (-ка)"
+          correct: false
+        - text: "Both syllables equally"
+          correct: false
+        - text: "It depends on the sentence"
+          correct: false
+      explanation: "Кни́жка has first-syllable stress — the emphasis falls on книж-."
+    - question: "Which syllable is stressed in the word дале́ко (far)?"
+      options:
+        - text: "First syllable (да-)"
+          correct: false
+        - text: "Second syllable (-ле-)"
+          correct: true
+        - text: "Third syllable (-ко)"
+          correct: false
+        - text: "All syllables equally"
+          correct: false
+      explanation: "Дале́ко has penultimate (second-to-last) stress — the emphasis falls on -ле-."
+    - question: "Which syllable is stressed in the word голова́ (head)?"
+      options:
+        - text: "First syllable (го-)"
+          correct: false
+        - text: "Second syllable (-ло-)"
+          correct: false
+        - text: "Third syllable (-ва)"
+          correct: true
+        - text: "First and third equally"
+          correct: false
+      explanation: "Голова́ has last-syllable stress — the emphasis falls on -ва."
+    - question: "Which statement about Ukrainian stress is true?"
+      options:
+        - text: "Stress always falls on the first syllable"
+          correct: false
+        - text: "Stress always falls on the last syllable"
+          correct: false
+        - text: "Stress always falls on the second-to-last syllable"
+          correct: false
+        - text: "Stress can fall on any syllable — it is free"
+          correct: true
+      explanation: "Ukrainian has free stress — it can fall on any syllable, unlike Polish (penultimate) or French (final)."
+    - question: "What happens to the stress when рука́ (hand) becomes ру́ки (hands)?"
+      options:
+        - text: "The stress stays on the same syllable"
+          correct: false
+        - text: "The stress moves to a different syllable"
+          correct: true
+        - text: "The word loses its stress entirely"
+          correct: false
+        - text: "Both syllables become equally stressed"
+          correct: false
+      explanation: "Ukrainian has mobile stress — рука́ (stress on -ка) shifts to ру́ки (stress on ру-) in the plural."
+
+- type: match-up
+  title: "Stress and Meaning"
+  instruction: "Match each stressed word to its English meaning. Pay attention to where the stress falls!"
+  pairs:
+    - left: "за́мок (stress on ЗА-)"
+      right: "castle"
+    - left: "замо́к (stress on -МОК)"
+      right: "lock"
+    - left: "му́ка (stress on МУ-)"
+      right: "torment"
+    - left: "мука́ (stress on -КА)"
+      right: "flour"
+    - left: "вода́"
+      right: "water"
+    - left: "ма́ма"
+      right: "mom"
+    - left: "шко́ла"
+      right: "school"
+    - left: "молоко́"
+      right: "milk"
+
+- type: true-false
+  title: "Intonation Patterns"
+  instruction: "Decide whether each statement about Ukrainian intonation and stress is true or false."
+  items:
+    - statement: "In Ukrainian statements, the pitch falls at the end of the sentence."
+      correct: true
+      explanation: "Correct! Declarative sentences have a falling pitch contour at the end."
+    - statement: "Ukrainian yes/no questions use a simple rise at the very end, just like English."
+      correct: false
+      explanation: "Ukrainian yes/no questions rise sharply on the stressed syllable of the key word, then fall — not a simple terminal rise like English."
+    - statement: "In questions with a question word (like Де?), the pitch rises on the question word itself."
+      correct: true
+      explanation: "Correct! In questions like Де кафе?, the highest pitch is on the question word Де, then the voice relaxes."
+    - statement: "Ukrainian stress always falls on the first syllable of every word."
+      correct: false
+      explanation: "Ukrainian stress is free — it can fall on any syllable. Compare ма́ма (first) with вода́ (last)."
+    - statement: "The words за́мок (castle) and замо́к (lock) have the same letters but different stress."
+      correct: true
+      explanation: "Correct! These are stress minimal pairs — same letters, different stress, different meaning."
+    - statement: "Ukrainian exclamatory sentences use a sharp rise with strong emphasis on the key word."
+      correct: true
+      explanation: "Correct! Exclamations like Це кафе́! use a sharp rise with emphasis to express surprise or excitement."
+    - statement: 'In the yes/no question "Це ма́ма?", the pitch rises on the stressed syllable of ма́ма and then falls.'
+      correct: true
+      explanation: "Correct! The pitch rises sharply on МА and falls immediately — this is the Ukrainian yes/no question pattern."
+    - statement: "Ukrainian stress is fixed and predictable, like stress in Polish."
+      correct: false
+      explanation: "Ukrainian stress is free and mobile — it can fall on any syllable and can shift when a word changes form. Polish stress is nearly always on the penultimate syllable."
+
+- type: fill-in
+  title: "Mark the Stress"
+  instruction: "Choose the word form with the correct stress mark."
+  items:
+    - sentence: "The word for 'water' with correct stress is ___."
+      answer: "вода́"
+      options: ["во́да", "вода́", "во́да́", "вода"]
+      explanation: "Вода́ — stress falls on the last syllable."
+    - sentence: "The word for 'school' with correct stress is ___."
+      answer: "шко́ла"
+      options: ["шко́ла", "школа́", "шко́ла́", "школа"]
+      explanation: "Шко́ла — stress falls on the first syllable."
+    - sentence: "The word for 'milk' with correct stress is ___."
+      answer: "молоко́"
+      options: ["мо́локо", "моло́ко", "молоко́", "молоко"]
+      explanation: "Молоко́ — stress falls on the last (third) syllable."
+    - sentence: "The word for 'mom' with correct stress is ___."
+      answer: "ма́ма"
+      options: ["ма́ма", "мама́", "ма́ма́", "мама"]
+      explanation: "Ма́ма — stress falls on the first syllable."
+    - sentence: "The word for 'castle' with correct stress is ___."
+      answer: "за́мок"
+      options: ["за́мок", "замо́к", "за́мо́к", "замок"]
+      explanation: "За́мок (castle) has first-syllable stress. Замо́к (lock) has last-syllable stress."
+    - sentence: "The word for 'lock' with correct stress is ___."
+      answer: "замо́к"
+      options: ["за́мок", "замо́к", "за́мо́к", "замок"]
+      explanation: "Замо́к (lock) has last-syllable stress. За́мок (castle) has first-syllable stress."
+    - sentence: "The word for 'sister' with correct stress is ___."
+      answer: "сестра́"
+      options: ["се́стра", "сестра́", "се́стра́", "сестра"]
+      explanation: "Сестра́ — stress falls on the last syllable."
+    - sentence: "The word for 'far' with correct stress is ___."
+      answer: "дале́ко"
+      options: ["да́леко", "дале́ко", "далеко́", "далеко"]
+      explanation: "Дале́ко — stress falls on the second (penultimate) syllable."
+    - sentence: "The word for 'head' with correct stress is ___."
+      answer: "голова́"
+      options: ["го́лова", "голо́ва", "голова́", "голова"]
+      explanation: "Голова́ — stress falls on the last (third) syllable."
+    - sentence: "The word for 'road' with correct stress is ___."
+      answer: "доро́га"
+      options: ["до́рога", "доро́га", "дорога́", "дорога"]
+      explanation: "Доро́га — stress falls on the second (penultimate) syllable."

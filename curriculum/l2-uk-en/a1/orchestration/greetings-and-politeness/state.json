@@ -22,47 +22,6 @@
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
       }
-    },
-    "content": {
-      "status": "complete",
-      "ts": "2026-03-17T23:50:57Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T00:14:27Z",
-      "attempts": 2,
-      "note": "escalation-claude",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T00:18:54Z",
-      "task_id": "v5-greetings-and-politeness-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T00:29:35Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
-      "executor": {
-        "type": "llm",
-        "agent": "gemini",
-        "model": "gemini-3.1-pro-preview"
-      }
     }
   }
 }

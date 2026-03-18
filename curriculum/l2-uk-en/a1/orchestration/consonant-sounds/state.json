@@ -31,6 +31,17 @@
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
       }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-18T22:19:13Z",
+      "attempts": 1,
+      "note": "d1-inline-fixes",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
     }
   }
 }

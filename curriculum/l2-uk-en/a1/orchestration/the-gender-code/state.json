@@ -24,43 +24,42 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-17T23:18:32Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-17T23:33:45Z",
-      "attempts": 2,
-      "note": "escalation-claude",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-17T23:35:42Z",
-      "task_id": "v5-the-gender-code-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-17T23:44:31Z",
-      "attempts": 4,
-      "note": "needs-manual-review",
+      "ts": "2026-03-18T23:10:36Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-18T23:11:07Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-5-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
+      }
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-03-18T23:14:39Z",
+      "task_id": "v5-the-gender-code-pC",
+      "executor": {
+        "type": "llm",
+        "agent": "gemini",
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-03-18T23:23:28Z",
+      "attempts": 2,
+      "note": "fix-dispatch-failed",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
       }
     }
   }
