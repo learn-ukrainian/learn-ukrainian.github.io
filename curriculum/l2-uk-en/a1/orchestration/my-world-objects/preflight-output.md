@@ -1,4 +1,21 @@
-  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=32591 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+  [gemini] attempt 1/5, model=gemini-3-flash-preview, prompt=31473 chars: ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.  ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:  1. OUTPUT ONLY TEXT. Your ONLY job is to read...
+```yaml
 prompt_preflight:
-  status: PASS
-  issues: []
+  status: ISSUES_FOUND
+  issues:
+    - type: CONTRADICTION
+      location: "Rule 1 (Grammar Allowlist) vs Rule 6 (Hard Constraints)"
+      problem: "Rule 1 explicitly states that any structure including conjugated verbs is FORBIDDEN, while Rule 6 lists 'Simple present tense (я читаю, я бачу)' as ALLOWED."
+      suggested_fix: "Remove simple present tense from Rule 6 to align with the A1.1 'First Contact' restrictions in Rule 1 and the sequence of the track (verbs introduced later)."
+      severity: HIGH
+    - type: IMPOSSIBLE_TARGET
+      location: "Plan Objectives vs Rule 2 (Vocabulary Bank)"
+      problem: "The Plan sets an objective for the learner to name '40 common household and everyday objects', but Rule 2 (Vocabulary Bank) strictly limits the output to 12 specific words plus 91 cumulative words (mostly phonetic examples). It is mathematically impossible to teach 40 household objects under the current vocabulary restriction."
+      suggested_fix: "Expand the Vocabulary Bank in Rule 2 to include a broader set of household items to satisfy the plan's 40-word objective."
+      severity: MEDIUM
+    - type: PLAN_CONTRADICTION
+      location: "Rule 1 (Grammar Allowlist) vs Rule 2 (Vocab Bank)"
+      problem: "Rule 1 permits the 'Adjective + noun' structure (example: великий дім), but Rule 2 contains no adjectives in the allowed word list, and no adjectives appear in the cumulative vocabulary provided."
+      suggested_fix: "Add basic adjectives (e.g., великий, новий) to Rule 2's Vocabulary Bank so the allowed grammar structure can be illustrated."
+      severity: MEDIUM
+```

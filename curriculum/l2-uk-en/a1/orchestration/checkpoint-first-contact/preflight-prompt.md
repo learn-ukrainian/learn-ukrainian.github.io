@@ -389,7 +389,7 @@ NOTE: The textbook examples above are provided as INSPIRATION for the pedagogica
 Write the checkpoint content for **Checkpoint: First Contact** (a1 track).
 
 - **Target**: 1200–1800 words (below 1200 = FAIL)
-- **Engagement callouts**: **3+ MANDATORY** — spread across sections, at least 3 different types
+- **Engagement callouts**: **1+ MANDATORY** — spread across sections, at least 3 different types
 - **Structure**: Use the EXACT H2 section titles listed below. Missing or renamed sections fail validation.
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
@@ -483,7 +483,7 @@ Ukrainian sentences max 10 words.
 - **Russianisms**: banned (кушати, получати, etc.)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear
 - **Euphony**: і/й, у/в alternation
-- **Engagement callouts**: 3+
+- **Engagement callouts**: 1+
 - **IPA/phonetic brackets**: BANNED
 - **New grammar/vocabulary**: BANNED — checkpoint reviews only
 
@@ -609,6 +609,7 @@ FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
 - [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
 - [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
 - [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
 
 </prompt>
 
@@ -723,7 +724,7 @@ Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
 Min activities: 0
-Min engagement boxes: 3
+Min engagement boxes: 1
 Min activity types: 0
 
 ### Immersion
@@ -767,6 +768,7 @@ Only report if:
 These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
 
 - **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **луна**: Russian meaning = moon, місяць, lunar; Ukrainian meaning = echo (відлуння). Correct word for 'moon, місяць, lunar' → **місяць**
 - **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
 - **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
 - **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**

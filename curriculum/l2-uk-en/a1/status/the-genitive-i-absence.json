@@ -2,36 +2,36 @@
   "module": "the-genitive-i-absence",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-19T00:49:53.418923Z",
+  "last_audit": "2026-03-19T00:56:47.509317Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-19T00:48:16.827322Z",
+    "md": "2026-03-19T00:54:03.536356Z",
     "meta": "2026-03-19T00:48:36.884083Z",
-    "activities": null,
-    "vocabulary": null,
+    "activities": "2026-03-19T00:56:46.509236Z",
+    "vocabulary": "2026-03-19T00:56:46.567096Z",
     "research": "2026-03-12T10:11:31.001941Z",
     "plan": "2026-03-17T07:30:09.791790Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Activities' header OR activities sidecar"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "2016/1200 (raw: 2039) | immersion: 11.5% LOW (target 15-30% (M31))"
+      "message": "1836/1200 (raw: 1866) | immersion: 10.0% LOW (target 15-30% (M31))"
     },
     "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "0/0 | priority: No priority types"
+      "status": "pass",
+      "violations": 0,
+      "message": "3/0"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "0 < 1 (soft target)"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",
@@ -51,12 +51,9 @@
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Structure: Missing '## Activities' header OR activities sidecar",
-      "Missing required activity types: fill-in"
-    ],
-    "pass_count": 1,
-    "fail_count": 3,
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

@@ -72,9 +72,9 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 ## 4. Outline
 
-Write **{TOPIC_TITLE}** for the {TRACK} track.
+Write **{TOPIC_TITLE}** for the {TRACK} track. Target: {WORD_TARGET}–{WORD_CEILING} words.
 
-**Targets:** {WORD_TARGET}–{WORD_CEILING} words | {ENGAGEMENT_MIN}+ callout boxes | **{ACTIVITY_MIN}–{ACTIVITY_MAX} activities total** (required types + additional types to reach minimum) | {VOCAB_COUNT_TARGET} vocab items
+### CRITICAL: EXACT H2 HEADERS (copy-paste, do not alter)
 
 {EXACT_SECTION_TITLES}
 
@@ -84,62 +84,52 @@ Write **{TOPIC_TITLE}** for the {TRACK} track.
 
 ---
 
-## 5. Guidelines
+## 5. Rules (read ALL before writing)
 
-### Workflow
-1. **Research first**: `search_text("{TOPIC_KEYWORDS}", grade={TEXTBOOK_GRADE})` — find how textbooks teach this
-2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+### RULE 1: GRAMMAR ALLOWLIST (A1.1 modules M1-M14)
 
-### Beginner Lesson Arc
+You may ONLY write these Ukrainian sentence structures:
+- **Це** + noun: `Це кіт.`
+- **Noun** + **тут/там**: `Мама тут.`
+- **Noun** + **—** + **noun**: `Мама — вчителька.`
+- **Adjective** + **noun**: `Великий дім.`
+- **Питання**: `Це кіт? Хто це? Де мама?`
+- **Fixed phrases** (memorized, no grammar analysis): дякую, будь ласка, привіт, до побачення
 
-1. **WELCOME** — warm greeting, set context
-2. **PREVIEW** — "By the end of this module, you'll be able to..."
-3. **PRESENT** — the main content sections
-4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in the final `## {SUMMARY_HEADING}` section, tell learners what they can now do
+Any other structure (including conjugated verbs) is FORBIDDEN. If you need to express an action, rephrase as a noun: "reading practice" not "let's read."
 
-### Emotional Safety (scored — Beginner Safety dimension)
+### RULE 2: VOCABULARY BANK
 
-Use direct address ("you", "your") at least 15 times throughout the module. Include encouragement ("Great job!", "You're doing well", "Don't worry"), quick wins (learner reads their first word early), and reassurance ("This is normal", "Take your time"). The learner should feel supported, not overwhelmed.
+Use ONLY these Ukrainian words. Do NOT pull other Cyrillic words from memory:
 
-### Writing Style
+{VOCABULARY_BANK}
 
-English explains; Ukrainian is what they're learning. In each section:
-1. **Explain** the concept in English (with Ukrainian vocabulary **bolded inline**). Short Ukrainian phrases are fine inline.
-2. **Show** with **5-10 Ukrainian examples** per grammar point using bulleted lists, dialogues, and pattern boxes.
-3. **Reinforce** with a callout box (`[!tip]`, `[!warning]`, `[!note]`, `[!culture]`, `[!challenge]`, `[!practice]`)
+### RULE 3: VARIATION PATTERN
 
-Tables contribute zero to immersion. Use **dialogues** and **bulleted examples** for Ukrainian content.
+Alternate your example formatting across sections:
+- Section 1: bulleted word list + [!tip] callout
+- Section 2: mini-dialogue with location label `> **(Вдома / At home)**`
+- Section 3: comparison pattern (X vs Y)
+- Section 4: [!challenge] or [!practice] callout with exercise
+- Section 5: reading practice sentences
 
-**MANDATORY for A2+:** Reading Practice blocks after each major section (5-8 Ukrainian sentences + English translation).
+NEVER start 3+ sections with the same phrase. NEVER use "Here is" or "Let's look at" more than once.
 
-**Grammar terminology by level:**
-- A1 M1-M10: English terms in prose, bilingual section headings with em-dash: `## Голосні — Vowels`
-- A1 M11+: Introduce Ukrainian terms with gloss: **іменник** (noun)
-- A2+: Ukrainian terms freely after first gloss
+### RULE 4: STRESS MARKS
 
-### Dialogue Quality
+Do NOT add stress marks (´) to Ukrainian words. Write plain Ukrainian: `молоко` not `молоко́`. The pipeline adds stress marks deterministically after you write.
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
+### RULE 5: ENGLISH PROSE STYLE
 
-**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
-- Greeting: `— Привіт! — Привіт!`
-- Identification: `— Це кіт? — Так, це кіт.`
-- Location: `— Молоко тут? — Ні, молоко там.`
-- Combined: `— Мама тут? — Так, мама тут. А тато там.`
+You are a warm tutor. Use "you/your" often. Include encouragement. Keep it conversational.
 
-Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
-
-**Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
+Cite textbook adaptations: `<!-- adapted from: {author}, Grade {N} -->`
 
 {SHARED_CONTENT_RULES}
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `{SCHEMA_PATH}` for full field definitions.
 

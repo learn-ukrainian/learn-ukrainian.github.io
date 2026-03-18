@@ -177,12 +177,20 @@ Use these exact delimiters:
 
 ## Critical Issues Found
 
+For EACH issue, include a FULL SENTENCE or paragraph replacement — not single words. Copy the exact text from the module file, then show the corrected version. Use `<find>` and `<replace>` XML tags.
+
 ### Issue 1: [title]
 **Location**: [section or line reference]
 **Problem**: [specific description with quoted Ukrainian text]
-**Fix**: [concrete fix]
+**Fix**: [concrete fix description]
+<find>
+[exact full sentence(s) as they appear in the module — copy literally, no reformatting]
+</find>
+<replace>
+[corrected full sentence(s)]
+</replace>
 
-[... more issues ...]
+[... more issues, each with <find>/<replace> tags ...]
 
 ## Ukrainian Language Issues
 
@@ -203,19 +211,7 @@ Use these exact delimiters:
 ===REVIEW_END===
 ```
 
-If you find fixable issues, also output FIND/REPLACE pairs:
-
-```
-===SECTION_FIX_START===
-FILE: {CONTENT_PATH}
-FIND:
-[exact text from file]
-REPLACE:
-[corrected text]
----
-[... more pairs, max 15 ...]
-===SECTION_FIX_END===
-```
+**Do NOT output a separate SECTION_FIX block.** All fixes are embedded in the issues above using `<find>`/`<replace>` tags.
 
 ---
 

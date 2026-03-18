@@ -1,0 +1,102 @@
+- type: fill-in
+  title: "Change Nouns to Genitive"
+  instruction: "Select the correct genitive case form to complete each phrase. Remember that concrete objects take -а/-я and abstract/substance nouns take -у/-ю."
+  items:
+    - sentence: "без ___"
+      answer: "хліба"
+      options: ["хліба", "хлібу", "хлібом", "хліб"]
+      explanation: "Хліб (bread) is a concrete object, so it takes the -а ending in genitive: хліба."
+    - sentence: "без ___"
+      answer: "цукру"
+      options: ["цукру", "цукор", "цукром", "цукрі"]
+      explanation: "Цукор (sugar) is a substance, so it takes the -у ending in genitive: цукру."
+    - sentence: "без ___"
+      answer: "води"
+      options: ["води", "воду", "водою", "вода"]
+      explanation: "Вода (water) is a feminine noun ending in -а. In the genitive, -а changes to -и: води."
+    - sentence: "без ___"
+      answer: "молока"
+      options: ["молока", "молоку", "молоком", "молоко"]
+      explanation: "Молоко (milk) is a neuter noun. In the genitive, the final -о changes to -а: молока."
+    - sentence: "без ___"
+      answer: "квитка"
+      options: ["квитка", "квитку", "квитком", "квиток"]
+      explanation: "Квиток (ticket) is a concrete object, so it takes the -а ending in genitive: квитка."
+    - sentence: "без ___"
+      answer: "ключа"
+      options: ["ключа", "ключу", "ключем", "ключ"]
+      explanation: "Ключ (key) is a concrete object, so it takes the -а ending in genitive: ключа."
+    - sentence: "без ___"
+      answer: "газу"
+      options: ["газу", "газом", "газі", "газ"]
+      explanation: "Газ (gas) is a substance, so it takes the -у ending in genitive: газу."
+    - sentence: "без ___"
+      answer: "часу"
+      options: ["часу", "час", "часом", "часі"]
+      explanation: "Час (time) is an abstract concept, so it takes the -у ending in genitive: часу."
+
+- type: fill-in
+  title: "Complete the Absence Sentence"
+  instruction: "Choose the correct word to complete each sentence using немає + genitive."
+  items:
+    - sentence: "У мене немає ___."
+      answer: "часу"
+      options: ["часу", "час", "часом", "часі"]
+      explanation: "After немає, we need the genitive case. Час (time) is abstract, so it becomes часу."
+    - sentence: "На жаль, ___ немає."
+      answer: "хліба"
+      options: ["хліба", "хліб", "хлібом", "хлібу"]
+      explanation: "After немає, хліб (bread) takes the genitive ending -а because it is a concrete object: хліба."
+    - sentence: "У нас немає ___."
+      answer: "молока"
+      options: ["молока", "молоко", "молоку", "молоком"]
+      explanation: "Молоко (milk) is neuter. In the genitive, -о changes to -а: молока."
+    - sentence: "Немає ___!"
+      answer: "проблем"
+      options: ["проблем", "проблема", "проблеми", "проблемою"]
+      explanation: "Проблема in the genitive plural loses its ending entirely: проблем. This gives us the phrase Немає проблем!"
+    - sentence: "У мене немає ___."
+      answer: "квитка"
+      options: ["квитка", "квиток", "квитку", "квитком"]
+      explanation: "Квиток (ticket) is a concrete object, so the genitive form is квитка."
+    - sentence: "На жаль, ___ немає."
+      answer: "кави"
+      options: ["кави", "кава", "каву", "кавою"]
+      explanation: "Кава (coffee) is a feminine noun. In the genitive, -а changes to -и: кави."
+    - sentence: "У нього немає ___."
+      answer: "телефона"
+      options: ["телефона", "телефон", "телефону", "телефоном"]
+      explanation: "Телефон (phone as a physical device) is concrete, so the genitive is телефона."
+    - sentence: "На жаль, квитків ___."
+      answer: "немає"
+      options: ["немає", "не", "ні", "без"]
+      explanation: "To express that something is absent or unavailable, we use немає (there is no / there are no)."
+
+- type: fill-in
+  title: "I Don't Have It"
+  instruction: "Complete these short conversational exchanges about not having things."
+  items:
+    - sentence: "Кава ___ цукру, будь ласка."
+      answer: "без"
+      options: ["без", "не", "немає", "від"]
+      explanation: "To say 'without,' we use the preposition без + genitive: без цукру (without sugar)."
+    - sentence: "Вода ___ газу, будь ласка."
+      answer: "без"
+      options: ["без", "не", "від", "для"]
+      explanation: "Без + genitive means 'without.' Вода без газу is still water (water without gas)."
+    - sentence: "Чай без ___, будь ласка."
+      answer: "молока"
+      options: ["молока", "молоко", "молоку", "молоком"]
+      explanation: "After без, we need the genitive. Молоко (milk) is neuter, so it becomes молока."
+    - sentence: "У ___ немає часу."
+      answer: "мене"
+      options: ["мене", "я", "мені", "мною"]
+      explanation: "The pronoun я (I) in the genitive case is мене. The full phrase means 'I don't have time.'"
+    - sentence: "Без ___ немає диму."
+      answer: "вогню"
+      options: ["вогню", "вогонь", "вогнем", "вогні"]
+      explanation: "Вогонь (fire) is an abstract/substance noun. In the genitive it becomes вогню. This is from the proverb: Немає диму без вогню."
+    - sentence: "У ___ немає часу."
+      answer: "нього"
+      options: ["нього", "він", "його", "нім"]
+      explanation: "After the preposition у, the third-person pronoun він gets a protective н-: його becomes нього."

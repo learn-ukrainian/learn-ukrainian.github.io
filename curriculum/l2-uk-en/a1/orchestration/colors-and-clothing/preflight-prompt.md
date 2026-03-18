@@ -60,7 +60,7 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 **Modules completed before this one:** 11
 **Previous module:** Describing Things - Adjectives
 
-**Cumulative vocabulary (127 words):**
+**Cumulative vocabulary (91 words):**
 мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
 сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
 яблуко, риба, село, Україна, їжак, юнак, край, день, син, мій
@@ -70,10 +70,7 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 тінь, м'ясо, п'ять, сім'я, м'яч, цукор, цибуля, час, черепаха, чай
 що, щастя, факт, джерело, дзвін, об'єкт, фото, ще, бджола, дзеркало
 склад, голосний, приголосний, перенесення, сестра, дерево, вулиця, автобус, бібліотека, університет
-чайка, цей, ця, ці, той, та, те, ті, книга, телефон
-кімната, стілець, ліжко, лампа, вікно, шафа, двері, ніж, ложка, крісло
-диван, новий, старий, гарний, великий, малий, добрий, поганий, цікавий, синій
-червоний, молодий, дорогий, дешевий, смачний, зелений, рідний
+чайка
 
 **Grammar already taught (40 topics):**
 - Full alphabet overview (33 letters)

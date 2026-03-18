@@ -1,4 +1,31 @@
-status: PASS
-issue_count: 0
-high_count: 0
-issues: []
+status: ISSUES_FOUND
+issue_count: 3
+high_count: 3
+issues:
+- type: CONTRADICTION
+  location: Rule 1 vs Rule 6 (Grammar Allowlist)
+  problem: Rule 1 (A1.1 Allowlist) strictly forbids conjugated verbs and imperatives
+    ('Any other structure including conjugated verbs is FORBIDDEN'), while Rule 6
+    (Hard Constraints) explicitly allows 'Simple present tense' and 'Basic imperatives'.
+    For an A1.1 First Contact module, conjugated verbs typically trigger audit failures.
+  suggested_fix: Remove 'Simple present tense' and 'Basic imperatives' from the Rule
+    6 ALLOWED list to align with the M1-M14 Allowlist in Rule 1.
+  severity: HIGH
+- type: CONTRADICTION
+  location: Rule 4 vs Language Quality Rules (Stress Marks)
+  problem: Rule 4 explicitly states 'Do NOT add stress marks (´) to Ukrainian words'
+    because the pipeline handles it. However, the 'Language Quality Rules' section
+    states 'Use lowercase letters with a combining acute accent (´) on the stressed
+    vowel' and lists it as 'RIGHT'. This creates a direct conflict for the generator.
+  suggested_fix: Align both rules to specify that stress marks should NOT be added
+    manually if the pipeline is responsible for them.
+  severity: HIGH
+- type: CONTRADICTION
+  location: Rule 2 (Vocabulary Bank) vs Cumulative Vocabulary
+  problem: Rule 2 commands 'Use ONLY these Ukrainian words' and lists only 15 adjectives.
+    However, the 'What the Learner Already Knows' section lists 91 cumulative words,
+    and Rule 1 examples include nouns (кіт, мама, вчителька) not found in Rule 2.
+    Following Rule 2 literally would prevent the use of any nouns or previous vocabulary.
+  suggested_fix: Clarify that Rule 2 refers to the new target adjectives and that
+    the use of cumulative vocabulary (M1-M10) is encouraged/allowed.
+  severity: HIGH

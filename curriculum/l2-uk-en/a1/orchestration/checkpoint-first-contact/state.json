@@ -21,15 +21,6 @@
         "type": "script",
         "name": "discover_passthrough"
       }
-    },
-    "content": {
-      "status": "failed",
-      "ts": "2026-03-18T02:43:06Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
     }
   }
 }

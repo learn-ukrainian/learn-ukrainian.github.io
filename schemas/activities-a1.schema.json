@@ -101,6 +101,14 @@
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
+        },
+        "vesum_exempt": {
+          "type": "boolean",
+          "description": "If true, VESUM checker skips distractor validation for this activity (e.g., spelling quizzes with intentional misspellings)"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Internal notes about the activity (not shown to learners)"
         }
       }
     },

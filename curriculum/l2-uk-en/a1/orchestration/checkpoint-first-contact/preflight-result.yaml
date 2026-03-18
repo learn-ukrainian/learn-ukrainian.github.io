@@ -1,30 +1,4 @@
-status: ISSUES_FOUND
-issue_count: 3
-high_count: 1
-issues:
-- type: CONTRADICTION
-  location: 'Навичка 1: Читання та Рід (Skill 1: Reading and Gender)'
-  problem: The content outline explicitly includes IPA symbols '/ɪ/' and '/i/' for
-    the sounds И and І. However, the 'Hard Rules' and 'Language Quality Rules' strictly
-    ban IPA symbols at all levels, stating 'Never include IPA symbols (ɑ, ɛ, ʃ, etc.)'
-    and that it is a 'HARD FAIL if violated'.
-  suggested_fix: Remove the IPA symbols from the content outline or clarify that they
-    should be replaced with phonetic descriptions (e.g., 'like the i in bit') in the
-    final output.
-  severity: HIGH
-- type: MISSING_INSTRUCTION
-  location: Prompt preamble / H3 instructions
-  problem: The instruction 'Every H3 gets {H3_WORD_RANGE} words' contains an unresolved
-    placeholder variable. The model will not know the specific word range intended
-    for sub-sections.
-  suggested_fix: Replace {H3_WORD_RANGE} with a concrete number or range, such as
-    '80-120'.
-  severity: MEDIUM
-- type: PLAN_CONTRADICTION
-  location: Огляд (Overview) and Plan connections
-  problem: The content outline mentions moving toward the Accusative case '(a1-11)',
-    but the plan's 'connects_to' field specifies 'a1-26 (The Accusative I)'. Furthermore,
-    since this is Module 14, a1-11 is a previous module, not a future one.
-  suggested_fix: Update the content outline to reference the correct next-phase target
-    (a1-26) or the next module (a1-15).
-  severity: LOW
+status: PARSE_ERROR
+issue_count: 0
+high_count: 0
+issues: []

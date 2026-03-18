@@ -23,41 +23,8 @@
       }
     },
     "content": {
-      "status": "complete",
-      "ts": "2026-03-18T01:10:28Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "complete",
-      "ts": "2026-03-18T01:20:08Z",
-      "attempts": 2,
-      "note": "escalation-claude",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T01:20:34Z",
-      "task_id": "v5-describing-things-adjectives-pC-vocab",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "complete",
-      "ts": "2026-03-18T01:24:36Z",
-      "attempts": 1,
-      "note": "gemini-inline-fixes",
-      "review_grounding": "rag-textbook",
+      "status": "failed",
+      "ts": "2026-03-18T23:54:04Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",

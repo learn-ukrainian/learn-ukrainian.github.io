@@ -1,0 +1,10 @@
+phase: CONTENT
+status: SUCCESS
+word_count: 1620
+deviations: []
+frictions: []
+research_gaps: []
+unverified_terms: []
+review_focus:
+  - "Check that all distractors are safe dictionary forms to avoid VESUM failures, while still testing the grammatical concept."
+rag_tools_used: []

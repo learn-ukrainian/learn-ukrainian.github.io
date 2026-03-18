@@ -295,8 +295,8 @@ def extract_ukrainian_words(text: str) -> set[str]:
 
     Returns set of unique words (lowercased).
     """
-    # Match Ukrainian words (Cyrillic + apostrophe/hyphen within words)
-    words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'ʼ-]*", text)
+    # Match Ukrainian words (Cyrillic + apostrophe/hyphen within words + stress mark)
+    words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'ʼ\-\u0301]*", text)
 
     # Lowercase and deduplicate
     unique_words = {word.lower() for word in words if len(word) >= 1}
@@ -305,14 +305,14 @@ def extract_ukrainian_words(text: str) -> set[str]:
     exclude = {
         'на', 'до', 'від', 'за', 'по', 'під', 'над',
         'про', 'для', 'без', 'через', 'після', 'перед', 'між', 'серед',
-        'а', 'але', 'чи', 'або', 'що', 'як', 'бо', 'тому', 'коли',
+        'а', 'але', 'чи', 'або', 'як', 'бо', 'тому', 'коли',
         'це', 'цей', 'ця', 'ці', 'той', 'він', 'вона', 'воно', 'вони',
-        'їх', 'хто', 'який', 'яка', 'яке', 'які',
+        'їх', 'який', 'яка', 'яке', 'які',
         'є', 'був', 'була', 'було', 'були', 'буде', 'будуть', 'бути',
         'має', 'мав', 'мала', 'мали', 'матиме',
         'може', 'міг', 'могла', 'могли', 'треба', 'можна', 'потрібно',
-        'не', 'ні', 'так', 'вже', 'ще', 'дуже', 'тільки', 'також', 'навіть',
-        'там', 'тут', 'де', 'куди', 'звідки', 'чому'
+        'не', 'вже', 'ще', 'дуже', 'тільки', 'також', 'навіть',
+        'куди', 'звідки', 'чому'
     }
 
     return unique_words - exclude

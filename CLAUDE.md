@@ -10,6 +10,8 @@
 
 > **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `scripts/ai_agent_bridge/__main__.py` (not MCP).
 
+> **Default subagent**: Always use `subagent_type: "curriculum-maintainer"` when spawning agents for curriculum work. It knows the project's tracks, tools, API, quality framework, and workflows.
+
 ---
 
 ## How We Work (Mandatory Workflow)
