@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 /**
  * Learn Ukrainian - Premium Ukrainian Language Learning Platform
  */
@@ -68,8 +70,8 @@
   --ifm-color-primary-lighter: #0066d3;
   --ifm-color-primary-lightest: #1A73E8;
   
-  --ifm-font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ifm-font-family-base: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --ifm-font-size-base: 16px;
   --ifm-line-height-base: 1.6;
   
