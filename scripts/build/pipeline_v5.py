@@ -3765,7 +3765,9 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         return _complete_gemini_review(ctx, state, phase, 1, "gemini-review-only", grounding=review_grounding)
 
     if passed and review_says_fail and n_fixes > 0:
-        log(f"  review-gemini: PASS (inline fixes resolved review issues \u2014 {n_fixes} fix(es))")
+        # Re-run audit after fixes to get accurate post-fix status (#975 AC1)
+        _post_fix_passed, _post_fix_output = run_verify(ctx.paths["md"])
+        log(f"  review-gemini: PASS (inline fixes resolved review issues — {n_fixes} fix(es), post-fix audit: {'PASS' if _post_fix_passed else 'FAIL'})")
         return _complete_gemini_review(ctx, state, phase, 1, "gemini-inline-fixes", grounding=review_grounding)
 
     if _all_issues_diffuse(audit_out):
