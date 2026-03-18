@@ -2416,7 +2416,42 @@ def _extract_activities_output(ctx: ModuleContext, raw_output: str) -> tuple[boo
             log(f"  activities: Vocabulary extracted → {voc_path.name}")
             (ctx.orch_dir / "activities-output-vocabulary.yaml").write_text(vocab_text, "utf-8")
 
+    # Post-extraction VESUM check on activity distractors (#975 AC2)
+    if wrote_activities and act_path and act_path.exists():
+        try:
+            _verify_activity_distractors(act_path)
+        except Exception as e:
+            log(f"  activities: Distractor verification failed: {e}")
+
     return wrote_activities, wrote_vocab
+
+
+def _verify_activity_distractors(act_path: Path) -> None:
+    """Post-extraction VESUM check on all activity text fields.
+
+    Extracts all Ukrainian words from options/distractors/answers,
+    verifies against VESUM, and logs failures.
+
+    Issue: #975 AC2
+    """
+    from rag_batch_verify import extract_words_from_yaml, vesum_batch_lookup
+
+    words = extract_words_from_yaml(act_path, is_vocab=False)
+    if not words:
+        return
+
+    # Filter to words with 2+ chars (skip single letters)
+    check_words = [clean for clean in words if len(clean) > 1]
+    if not check_words:
+        return
+
+    results = vesum_batch_lookup(check_words)
+    failed = [words[w] for w in check_words if not results.get(w)]
+
+    if failed:
+        log(f"  activities: VESUM distractor check: {len(failed)} NOT FOUND: {', '.join(failed[:10])}")
+    else:
+        log(f"  activities: VESUM distractor check: {len(check_words)} words OK ✅")
 
 
 def _extract_build_diagnostics(ctx: ModuleContext, raw_output: str) -> None:
