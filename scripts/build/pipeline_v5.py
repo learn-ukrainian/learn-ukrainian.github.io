@@ -901,8 +901,8 @@ def _complete_gemini_review(
     *, grounding: str = "rag-textbook",
 ) -> bool:
     """Mark Gemini review as complete — shared across all success paths."""
-    # Append post-fix score estimate to review file (#975)
-    _append_post_fix_score(ctx)
+    # Re-score the fixed content with a lightweight LLM call (#975)
+    _rescore_post_fix(ctx)
     mark_complete(state, phase, ctx, attempts=attempts,
                   note=note, review_grounding=grounding,
                   executor=executor_llm("gemini", ctx.model))
@@ -910,56 +910,89 @@ def _complete_gemini_review(
     return True
 
 
-def _append_post_fix_score(ctx: ModuleContext) -> None:
-    """Estimate post-fix score based on which review issues were resolved.
+def _rescore_post_fix(ctx: ModuleContext) -> None:
+    """Re-score the module after fixes using a lightweight LLM call.
 
-    Reads the review file, counts issues, checks which FIND/REPLACE pairs
-    were applied, and appends an adjusted score estimate.
+    Reads the fixed content + activities, asks for a quick 7-dimension
+    score, and appends it to the review file. Uses Claude Sonnet for
+    speed (not a full review — just scoring).
     """
     review_path = ctx.paths.get("review")
+    content_path = ctx.paths.get("md")
     if not review_path or not review_path.exists():
         return
+    if not content_path or not content_path.exists():
+        return
+
     try:
+        content = content_path.read_text("utf-8")
+        act_path = ctx.paths.get("activities")
+        act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else ""
+
+        prompt = (
+            "You are scoring a Ukrainian language module (A1 beginner). "
+            "Score these 7 dimensions from 1-10 based on the content below. "
+            "Be honest — no inflation. Output ONLY a JSON object:\n"
+            '{"experience": N, "language": N, "pedagogy": N, "activities": N, '
+            '"beginner_safety": N, "llm_fingerprint": N, "linguistic_accuracy": N, '
+            '"overall": N.N, "verdict": "PASS or FAIL"}\n\n'
+            f"Content ({len(content.split())} words):\n{content[:8000]}\n\n"
+            f"Activities:\n{act_text[:3000]}\n"
+        )
+
+        import tempfile
+
+        from pipeline.dispatch import dispatch_claude_phase
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as f:
+            f.write(prompt)
+            prompt_path = Path(f.name)
+
+        ok, raw = dispatch_claude_phase(
+            prompt_path, "Post-fix scoring",
+            model="claude-sonnet-4-6", timeout=60,
+        )
+        prompt_path.unlink(missing_ok=True)
+
+        if not ok or not raw:
+            log("  review: Post-fix re-scoring failed (no response)")
+            return
+
+        # Parse JSON from response
+        import json as _json
+
+        # Find JSON in response
         import re as _re
-        text = review_path.read_text("utf-8")
-
-        # Extract original score
-        m = _re.search(r"Overall Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
-        if not m:
-            return
-        original_score = float(m.group(1))
-
-        # Count total issues and estimate fixed ones
-        issues = _re.findall(r"### Issue \d+:", text)
-        total_issues = len(issues)
-        if total_issues == 0:
+        json_match = _re.search(r'\{[^}]+\}', raw)
+        if not json_match:
+            log("  review: Post-fix re-scoring — no JSON in response")
             return
 
-        # Check orchestration for applied fix count
-        fix_files = list(ctx.orch_dir.glob("review-fix-*-raw.md"))
-        applied_total = 0
-        for ff in fix_files:
-            raw = ff.read_text("utf-8")
-            applied_total += raw.count("applied")
-
-        # Rough estimate: each fixed issue improves score by ~0.3-0.5 points
-        # Conservative: 0.3 per fixed issue, capped at 1.5 total boost
-        fixed_ratio = min(applied_total / max(total_issues, 1), 1.0)
-        boost = min(fixed_ratio * total_issues * 0.3, 1.5)
-        adjusted = min(original_score + boost, 10.0)
+        scores = _json.loads(json_match.group())
+        overall = scores.get("overall", 0)
+        verdict = scores.get("verdict", "?")
 
         # Append to review file
-        post_fix_note = (
-            f"\n\n---\n\n## Post-Fix Score Estimate\n\n"
-            f"**Original Score:** {original_score}/10\n"
-            f"**Issues Found:** {total_issues}\n"
-            f"**Fix Iterations:** {len(fix_files)}\n"
-            f"**Estimated Post-Fix Score:** {adjusted:.1f}/10\n"
+        review_text = review_path.read_text("utf-8")
+        post_fix_section = (
+            f"\n\n---\n\n## Post-Fix Re-Score (automated)\n\n"
+            f"**Scored by:** claude-sonnet-4-6 (on fixed content)\n"
+            f"**Overall Score:** {overall}/10\n"
+            f"**Verdict:** {verdict}\n\n"
+            f"| Dimension | Score |\n|-----------|-------|\n"
         )
-        review_path.write_text(text + post_fix_note, "utf-8")
-        log(f"  review: Post-fix score estimate: {original_score} → {adjusted:.1f}/10")
+        for dim in ("experience", "language", "pedagogy", "activities",
+                     "beginner_safety", "llm_fingerprint", "linguistic_accuracy"):
+            post_fix_section += f"| {dim} | {scores.get(dim, '?')}/10 |\n"
+
+        review_path.write_text(review_text + post_fix_section, "utf-8")
+        log(f"  review: Post-fix re-score: {overall}/10 ({verdict})")
+
     except Exception as e:
-        log(f"  review: Post-fix score estimation failed: {e}")
+        log(f"  review: Post-fix re-scoring failed: {e}")
+
+
+
+
 
 
 # ---------------------------------------------------------------------------
@@ -3378,7 +3411,7 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
     passed, new_audit_out = run_verify(ctx.paths["md"])
 
     if passed:
-        _append_post_fix_score(ctx)
+        _rescore_post_fix(ctx)
         log(f"  review: PASS (after fix {fix_iter + 1})")
         return True, new_audit_out
 
@@ -3413,7 +3446,7 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
     if auto_fix_count > 0:
         passed_after_autofix, audit_out = run_verify(ctx.paths["md"])
         if passed_after_autofix and not review_says_fail:
-            _append_post_fix_score(ctx)
+            _rescore_post_fix(ctx)
             mark_complete(state, phase, ctx, attempts=1, note="autofix",
                           executor=_rev_exec)
             _update_pipeline_status(ctx, "reviewed")
