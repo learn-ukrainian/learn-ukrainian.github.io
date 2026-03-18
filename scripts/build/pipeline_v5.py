@@ -43,7 +43,6 @@ from batch_gemini_config import (
     CLAUDE_MODEL_CORE_CONTENT,
     CLAUDE_MODEL_CORE_RESEARCH,
     CLAUDE_MODEL_FINAL_REVIEW,
-    FLASH_MODEL,
     PHASES_DIR,
     PRO_MODEL,
     PRO_TRACKS,
@@ -2827,12 +2826,12 @@ def _validate_fix_loop(ctx: ModuleContext, state: dict, phase: str,
         fix_prompt_file.write_text(fix_prompt, "utf-8")
 
         fix_output = _gemini_output_path(ctx.slug, f"validate-fix{attempt}")
-        # Flash for fix rounds: explicit instructions don't need Pro's reasoning,
-        # and Pro routinely times out (10min) in full-execution mode (#919)
+        # Use Pro for fixes — better quality = fewer iterations needed.
+        # Flash was exhausted during overnight builds (#972). Fallback handles rate limits.
         ok, _ = dispatch_gemini(
             _dispatch_prompt(ctx, fix_prompt_file),
             task_id=f"v5-{ctx.slug}-validate-fix{attempt}",
-            model=FLASH_MODEL, allow_write=True, output_file=fix_output,
+            model=ctx.model, allow_write=True, output_file=fix_output,
             timeout=TIMEOUT_FIX,
         )
         if not ok:
