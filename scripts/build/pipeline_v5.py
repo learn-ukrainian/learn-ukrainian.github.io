@@ -2363,19 +2363,19 @@ def _dispatch_activities(ctx: ModuleContext, prompt_file: Path) -> tuple[bool, s
 
     Returns (ok, raw_output).
     """
-    use_claude = "C" in getattr(ctx, "use_claude", set())
-    if use_claude:
-        claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
-        log(f"  activities: Dispatching activities + vocab via Claude ({claude_model})...")
-        return _dispatch_claude_phase(
-            prompt_file, "Phase C", model=claude_model, timeout=600,
-            allow_tools=[
-                "mcp__rag__verify_word", "mcp__rag__verify_words",
-                "mcp__rag__verify_lemma", "mcp__rag__search_text",
-                "WebFetch", "Bash", "Read", "Grep",
-            ],
-        )
-    else:
+    # Always use Claude Sonnet for activities — structured YAML output is
+    # Claude's strength. Gemini keeps inventing wrong field names. (#977)
+    claude_model = getattr(ctx, "claude_model_C", "claude-sonnet-4-6")
+    log(f"  activities: Dispatching activities + vocab via Claude ({claude_model})...")
+    return _dispatch_claude_phase(
+        prompt_file, "Phase C", model=claude_model, timeout=600,
+        allow_tools=[
+            "mcp__rag__verify_word", "mcp__rag__verify_words",
+            "mcp__rag__verify_lemma", "mcp__rag__search_text",
+        ],
+    )
+    # Gemini dispatch kept as dead code for reference
+    if False:
         log("  activities: Dispatching activities + vocab...")
         output_file = _gemini_output_path(ctx.slug, "pC")
         return dispatch_gemini(
