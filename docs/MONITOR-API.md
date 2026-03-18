@@ -239,6 +239,7 @@ Returns:
 - `review` — exists, **score** (numeric, e.g. 8.7), **verdict** (PASS/FAIL) *(#971)*
 - `friction` — **active** count, **resolved** count, **items** list with id/type/description *(#970/#971)*
 - `shippable` — **true/false** (audit PASS + review >= 8.0) *(#971)*
+- `stress` — **mismatches** count, **unknown** count, **details** (from D.0 screen cache) *(#971)*
 - `prompt_review` — whether `/prompt-review` has been run (bool, checks `audit/{slug}-prompt-review.md`)
 - `content_review` — whether `/content-review` has been run (bool, checks `audit/{slug}-content-review.md`)
 - `final_review` — verdict (APPROVE/NEEDS_WORK), issue count, issue summaries

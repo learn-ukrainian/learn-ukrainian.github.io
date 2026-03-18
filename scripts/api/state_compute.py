@@ -182,6 +182,27 @@ def _compute_shippable(audit_status: str, review_score: float | None) -> bool:
     return not (review_score is None or review_score < 8.0)
 
 
+def _get_stress_issues(orch_dir: Path) -> dict:
+    """Read stress verification results from screen-result.json."""
+    screen_path = orch_dir / "screen-result.json"
+    if not screen_path.exists():
+        return {"mismatches": 0, "unknown": 0, "details": []}
+    try:
+        import json
+        data = json.loads(screen_path.read_text("utf-8"))
+        issues = data.get("deterministic_issues", [])
+        stress = [i for i in issues if i.get("type", "").startswith("STRESS_")]
+        mismatches = [i for i in stress if i["type"] == "STRESS_MISMATCH"]
+        unknown = [i for i in stress if i["type"] == "STRESS_UNKNOWN"]
+        return {
+            "mismatches": len(mismatches),
+            "unknown": len(unknown),
+            "details": [i.get("text", "")[:120] for i in mismatches[:5]],
+        }
+    except Exception:
+        return {"mismatches": 0, "unknown": 0, "details": []}
+
+
 def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
     """Compute single module deep-dive data."""
     plan_slugs = get_plan_slugs(track_id)
@@ -220,6 +241,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
         "friction": _get_friction_data(orch_dir),
         "shippable": _compute_shippable(
             audit["status"], _get_review_score(track_dir, slug)["score"]),
+        "stress": _get_stress_issues(orch_dir),
         "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
         "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
         "final_review": get_final_review_info(track_dir, slug),
