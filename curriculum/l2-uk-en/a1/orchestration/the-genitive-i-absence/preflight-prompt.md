@@ -1,10 +1,12 @@
-You are about to build a module using the prompt below. This prompt has been carefully engineered to produce content that passes all audit gates. Your job is to confirm it is ready.
+You are about to build a module using the prompt below. Before you start, verify the prompt is ready.
 
-**Default answer: PASS.** This prompt is designed to work. Only report issues if something will genuinely cause an audit gate to FAIL.
+**Default answer: PASS.** Only report genuine issues that would cause audit gate failures or introduce errors.
 
 ## The Prompt
 
 <prompt>
+**Curriculum context:** This is Module 31 of the A1 track (Ukrainian for English speakers). Title: "The Genitive I: Absence" — Talking About What You Don't Have. Phase: A1.3 [Cases & Navigation]. Previous module: Around The City. Next module: Genitive Prepositions.
+
 # Module Build: Content + Activities + Vocabulary
 
 ## 1. Goal
@@ -55,52 +57,43 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 ### What the Learner Already Knows
 
-**Modules completed before this one:** 31
-**Previous module:** Pronoun Declension
+**Modules completed before this one:** 30
+**Previous module:** Around the City
 
-**Cumulative vocabulary (393 words):**
-мама, тато, кіт, молоко, масло, ліс, місто, око, так, ні
-сон, сом, ніс, мак, сік, стіл, тут, там, сало, кіно
-яблуко, риба, село, Україна, їжак, юнак, край, день, син, моя
-вухо, їжа, моє, яйце, юшка, каша, небо, сир, суп, хліб
-зуб, дім, вовк, жук, шапка, гора, рука, бабуся, павук, ґанок
-сіль, люди, вода, лук, люк, сестра, дерево, вулиця, автобус, бібліотека
-університет, склад, переніс, голосний, приголосний, острів, сім'я, ґудзик, кава, чай
-замок, писати, школа, добрий, далеко, наголос, інтонація, питання, відповідь, хата
-книжка, дорога, кафе, він, вона, воно, книга, слово, мова, вікно
-брат, ніч, час, море, сонце, земля, Добрий день, Добрий ранок, Добрий вечір, Привіт
-До побачення, Па-па, Дякую, Будь ласка, Вибачте, Перепрошую, Так, Ні, Як справи?, Добре
-Погано, Нормально, Чудово, Смачного, На здоров'я, Добраніч, це, я, ти, ми
-ви, вони, хто, що, студент, студентка, українець, українка, вчитель, вчителька
-ось, мене звати, особовий займенник, займенник, граматичний рід, рід, телефон, дуже приємно, давай на ти, удома
-на роботі, підручник, паспорт, цей, ця, ці, той, та, те, ті
-кімната, стілець, ліжко, лампа, шафа, двері, квартира, новий, старий, гарний
-великий, малий, поганий, цікавий, синій, червоний, молодий, дорогий, дешевий, смачний
-зелений, який, множина, білий, чорний, жовтий, бордо, беж, хакі, колір
-сорочка, штани, сукня, плаття, куртка, светр, джинси, окуляри, носити, одягати
-розмір, дієслово, друг, музей, машина, пісня, хлопець, зошит, ручка, словник
-читати, говорити, знати, розуміти, питати, відповідати, перевіряти, де, рахунок, смачного
-працювати, слухати, грати, чекати, думати, вивчати, відпочивати, лист, повідомлення, новини
-музика, радіо, робити, бачити, любити, їсти, пити, ходити, просити, сидіти
-стояти, платити, вчити, гість, природа, домашнє завдання, дивитися, сміятися, вмиватися, одягатися
-називатися, вчитися, займатися, повертатися, знайомитися, зустрічатися, вітатися, митися, голитися, зупинятися
-цікавитися, мити, називати, себе, часто, швидко, як, скільки, завжди, ніколи
-цукор, подобатися, хотіти, піти, нудний, хороший, фільм, борщ, квіти, мені
-тобі, хобі, інфінітив, мій, твій, твоя, твоє, його, її, наш
-наша, ваш, ваша, їхній, свій, чий, чия, чиє, річ, сумка
-будинок, озеро, такий, інший, кожний, сам, дівчина, година, хвилина, тиждень
-місяць, рік, ранок, вечір, вчасно, понеділок, вівторок, середа, четвер, п'ятниця
-субота, неділя, зараз, пізно, рано, січень, мати, чути, брати, купувати
-гречка, пакет, шукати, знаходити, відкривати, проблема, голос, подруга, лікар, пес
-колега, сусід, дитина, матуся, татусь, братик, сестричка, знайомий, в, на
-через, про, за, готель, вокзал, країна, міст, парк, екскурсія, квиток
-іти, їхати, дякувати, у, магазин, робота, банк, підлога, стіна, туалет
-нога, маяти, куди, дуже, дужий, йти, людина, метро, багато, використовувати
-аптека, простий, український, закінчення, відмінок, форма, опис, знахідний, правило, правити
-жіночий, ом, йога, баба, го, приклад, прикласти, давати, тепло, до
-чек, чека, купа
+**Cumulative vocabulary (303 words):**
+мама, тато, кіт, молоко, масло, ліс, місто, око, ніс, сон
+сік, стіл, кіно, тут, там, так, ні, привіт, дякую, це
+яблуко, риба, село, Україна, їжак, юнак, край, день, син, мій
+вухо, їжа, яйце, юшка, каша, небо, сир, хліб, зуб, дім
+вовк, жук, шапка, гора, рука, бабуся, павук, ґанок, кінь, людина
+суп, вода, дим, люк, хор, сіль, Львів, мідь, осінь, мить
+тінь, м'ясо, п'ять, сім'я, м'яч, цукор, цибуля, час, черепаха, чай
+що, щастя, факт, джерело, дзвін, об'єкт, фото, ще, бджола, дзеркало
+склад, голосний, приголосний, перенесення, сестра, дерево, вулиця, автобус, бібліотека, університет
+чайка, цей, ця, ці, той, та, те, ті, книга, телефон
+кімната, стілець, ліжко, лампа, вікно, шафа, двері, ніж, ложка, крісло
+диван, новий, старий, гарний, великий, малий, добрий, поганий, цікавий, синій
+червоний, молодий, дорогий, дешевий, смачний, зелений, рідний, студент, дитина, гроші
+очі, ножиці, окуляри, маленький, говорити, робити, бачити, любити, їсти, пити
+ходити, просити, сидіти, стояти, платити, вчити, дивитися, борщ, парк, школа
+чи, хто, де, коли, не, куди, звідки, чому, як, скільки
+завжди, ніколи, часто, іноді, але, а, бо, подобатися, хотіти, кава
+музика, читати, піти, нудний, улюблений, гуляти, співати, торт, слухати, моя
+моє, твій, його, її, наш, ваш, їхній, свій, чий, чия
+чиє, річ, сумка, ключі, паспорт, адреса, прізвище, будинок, озеро, такий
+інший, кожний, сам, кафе, година, хвилина, тиждень, місяць, рік, ранок
+вечір, вчасно, понеділок, січень, зараз, пізно, рано, неділя, субота, розклад
+поїзд, ніч, після, вівторок, середа, четвер, п'ятниця, лютий, березень, квітень
+травень, червень, липень, серпень, вересень, жовтень, листопад, грудень, писати, йти
+тому що, чути, брати, мати, купувати, гречка, пакет, шукати, знаходити, відкривати
+проблема, голос, брат, друг, подруга, лікар, вчитель, пес, колега, сусід
+матуся, татусь, братик, сестричка, знайомий, знати, чекати, в, на, через
+про, за, готель, вокзал, країна, міст, море, екскурсія, квиток, іти
+їхати, дякувати, у, магазин, робота, банк, підлога, стіна, туалет, нога
+ви, слово, ми, маяти, дуже, дужий, метро, багато, використовувати, аптека
+простий, вони, український
 
-**Grammar already taught (101 topics):**
+**Grammar already taught (98 topics):**
 - Full alphabet overview (33 letters)
 - Sound-letter correspondence (букви vs звуки)
 - Vowel vs consonant classification
@@ -181,6 +174,9 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 - Present tense conjugation (I and II)
 - Question words and Чи-questions
 - Preference constructions (Dative, Accusative, Infinitive)
+- Vocative case (кличний відмінок)
+- Nominative as base form (називний відмінок)
+- Case system introduction (7 cases overview)
 - Accusative case (inanimate)
 - Feminine: -а → -у, -я → -ю
 - Masculine/Neuter: no change
@@ -196,12 +192,6 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 - Locative case in context
 - Directional expressions
 - Prepositions of location
-- Adjective declension in Accusative
-- Adjective declension in Locative
-- Gender-case agreement patterns
-- Personal pronoun declension (Acc, Loc, Dat, Gen)
-- Prefix н- after prepositions for 3rd person
-- Pronoun case paradigm and form overlaps
 
 **Coming next (module after this):** Locative prepositions (в/у, на), Euphonic в/у alternation, Біля/навпроти + Genitive
 You may use related words as fixed phrases for foreshadowing, but do NOT explain the grammar rule.
@@ -239,40 +229,15 @@ These are your TARGET words — teach them all and use them heavily. For the res
 
 ### Immersion Target
 
-TARGET: 30-55% Ukrainian.
+TARGET: 15-30% Ukrainian.
 LANGUAGE ROLES:
-- THEORY & EXPLANATION: English prose — MAXIMUM 2 sentences per concept. You must explain grammar primarily by demonstrating it. Show, don't tell.
-- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian. This is the highest-density immersion tool. Do not explain usage nuances in English prose — instead, create dual-column tables (Ukrainian Sentence | English Context/Translation) that map out the nuances. Move the teaching logic inside the tables.
-- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss).
-- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line.
-- PATTERN BOXES: Show transformations: `читати → читай → читайте`.
+- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.
+- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.
+- TABLES: Paradigm tables, case endings, vocabulary groups — all cells Ukrainian.
+- PATTERN BOXES: Show transformations: `книга → книгу` (nominative → accusative).
 - INLINE: Ukrainian words/phrases bolded in English prose.
-- IMMERSION BLOCKS: Every major H2 section MUST conclude with a substantial Ukrainian-only dialogue or narrative blockquote (>) of at least 80-150 words demonstrating the concepts in context. If translations are needed, place them in a separate table BELOW the blockquote.
-- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, dialogues, or pattern boxes — never in flowing prose paragraphs. Vary your containers — never use the same type twice in a row.
-Ukrainian sentences max 10 words.
-NOTE: When the lexical sandbox has fewer than 20 lemmas, the immersion floor is lowered to prevent repetitive padding. Focus on quality immersion with the available vocabulary rather than forcing high percentages.
-
-BEFORE/AFTER EXAMPLE — follow the AFTER pattern:
-
-❌ BAD (too much English, ~10% immersion):
-To form the imperative mood in Ukrainian, you take the infinitive form of the verb and remove the -ти ending. Then you add the appropriate suffix depending on whether you are speaking to one person informally or to multiple people formally. For the informal singular form, you simply use the stem. For the formal or plural form, you add -те to the informal form.
-
-✅ GOOD (tables + dialogue + examples, ~45% immersion):
-Drop **-ти** from the infinitive to form commands.
-
-| Infinitive | ти-command | ви-command |
-|---|---|---|
-| читати | читай | читайте |
-| писати | пиши | пишіть |
-
-> — **Читай** текст! — Read the text!
-> — **Пишіть** відповідь. — Write the answer.
-> — **Слухайте** уважно! — Listen carefully!
-
-Add **будь ласка** to soften any command.
-
-- **Дайте, будь ласка, воду.** — Please give water.
-- **Скажіть, будь ласка, де метро?** — Please tell me, where is the metro?
+- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes.
+Ukrainian sentences max 10 words. Mix container types.
 
 ### Videos
 - **Ukrainian for beginners: Where are u from? Countries, languages | Genitive case,  Verb conjugations** (Ukrainian with Olha)
@@ -375,9 +340,9 @@ Add **будь ласка** to soften any command.
 
 ## 4. Outline
 
-Write **The Genitive I: Absence** for the a1 track.
+Write **The Genitive I: Absence** for the a1 track. Target: 1200–1800 words.
 
-**Targets:** 1200–1800 words | 3+ callout boxes | **8–15 activities total** (required types + additional types to reach minimum) | 20 vocab items
+### CRITICAL: EXACT H2 HEADERS (copy-paste, do not alter)
 
 ## REQUIRED H2 Sections and Points (MANDATORY)
 
@@ -397,6 +362,9 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 - `## Культурний контекст (Cultural Context)` (~250 words)
   - Культурний код: вживання фрази «Немає проблем!» як вияву гнучкості та ввічлива відмова через «немає» («На жаль, квитків немає») для пом'якшення прямого «Ні».
   - Лінгвокраїнознавство: розбір прислів'я «Немає диму без вогню» як ілюстрації структури заперечення та вживання прийменника з родовим відмінком.
+- `## Займенники у родовому (Pronouns in Genitive)` (~125 words)
+  - Personal pronouns in genitive: мене, тебе, його/нього, її/неї, нас, вас, їх/них. Без мене. Від тебе. У нього немає часу.
+  - Same н- rule: after prepositions 3rd person gets н- (для нього, без неї, від них). Genitive = accusative forms for pronouns (мене, тебе) — one less thing to memorize.
 - `## Підсумок` (~150 words) — recap + 3-4 self-check questions
 
 ### Section Word Budgets
@@ -407,60 +375,51 @@ Your output MUST use these EXACT H2 headings and cover EVERY bullet point listed
 | Презентація (Presentation) | 350+ |
 | Практика (Practice) | 350+ |
 | Культурний контекст (Cultural Context) | 250+ |
+| Займенники у родовому (Pronouns in Genitive) | 125+ |
 | **Total** | **1200+ (aim for ~1440)** |
 
 ---
 
-## 5. Guidelines
+## 5. Rules (read ALL before writing)
 
-### Workflow
-1. **Research first**: `search_text("Genitive case for absence Genitive endings", grade=3-5)` — find how textbooks teach this
-2. **Write content** following the outline and lesson arc below
-3. **Verify as you write**: `verify_words` on any Ukrainian word you're unsure about
-4. **Create activities** from your content
-5. **Verify activities**: batch `verify_words` on all activity items
+### RULE 1: GRAMMAR ALLOWLIST (A1.1 modules M1-M14)
 
-### Beginner Lesson Arc
+You may ONLY write these Ukrainian sentence structures:
+- **Це** + noun: `Це кіт.`
+- **Noun** + **тут/там**: `Мама тут.`
+- **Noun** + **—** + **noun**: `Мама — вчителька.`
+- **Adjective** + **noun**: `Великий дім.`
+- **Питання**: `Це кіт? Хто це? Де мама?`
+- **Fixed phrases** (memorized, no grammar analysis): дякую, будь ласка, привіт, до побачення
 
-1. **WELCOME** — warm greeting, set context
-2. **PREVIEW** — "By the end of this module, you'll be able to..."
-3. **PRESENT** — the main content sections
-4. **PRACTICE** — examples, dialogues, reading practice
-5. **CELEBRATE** — in the final `## Підсумок` section, tell learners what they can now do
+Any other structure (including conjugated verbs) is FORBIDDEN. If you need to express an action, rephrase as a noun: "reading practice" not "let's read."
 
-### Emotional Safety (scored — Beginner Safety dimension)
+### RULE 2: VOCABULARY BANK
 
-Use direct address ("you", "your") at least 15 times throughout the module. Include encouragement ("Great job!", "You're doing well", "Don't worry"), quick wins (learner reads their first word early), and reassurance ("This is normal", "Take your time"). The learner should feel supported, not overwhelmed.
+Use ONLY these Ukrainian words. Do NOT pull other Cyrillic words from memory:
 
-### Writing Style
+**Allowed Ukrainian words:** немає, без, час, гроші, молоко, цукор, вода, хліб, проблема, квиток, ключ, телефон, газ
 
-English explains; Ukrainian is what they're learning. In each section:
-1. **Explain** the concept in English (with Ukrainian vocabulary **bolded inline**). Short Ukrainian phrases are fine inline.
-2. **Show** with **5-10 Ukrainian examples** per grammar point using bulleted lists, dialogues, and pattern boxes.
-3. **Reinforce** with a callout box (`[!tip]`, `[!warning]`, `[!note]`, `[!culture]`, `[!challenge]`, `[!practice]`)
+### RULE 3: VARIATION PATTERN
 
-Tables contribute zero to immersion. Use **dialogues** and **bulleted examples** for Ukrainian content.
+Alternate your example formatting across sections:
+- Section 1: bulleted word list + [!tip] callout
+- Section 2: mini-dialogue with location label `> **(Вдома / At home)**`
+- Section 3: comparison pattern (X vs Y)
+- Section 4: [!challenge] or [!practice] callout with exercise
+- Section 5: reading practice sentences
 
-**MANDATORY for A2+:** Reading Practice blocks after each major section (5-8 Ukrainian sentences + English translation).
+NEVER start 3+ sections with the same phrase. NEVER use "Here is" or "Let's look at" more than once.
 
-**Grammar terminology by level:**
-- A1 M1-M10: English terms in prose, bilingual section headings with em-dash: `## Голосні — Vowels`
-- A1 M11+: Introduce Ukrainian terms with gloss: **іменник** (noun)
-- A2+: Ukrainian terms freely after first gloss
+### RULE 4: STRESS MARKS
 
-### Dialogue Quality
+Do NOT add stress marks (´) to Ukrainian words. Write plain Ukrainian: `молоко` not `молоко́`. The pipeline adds stress marks deterministically after you write.
 
-**No echo drills.** For M5+: every dialogue MUST start with `> **(Location / Місце)**`, have a real situation, 4-6 dialogues, 4-8 lines each.
+### RULE 5: ENGLISH PROSE STYLE
 
-**Alphabet modules (M1-M10):** Include 4-5 micro-dialogues using decodable words + sight words. Keep them short (2-4 lines each) and conversationally natural. Good patterns:
-- Greeting: `— Привіт! — Привіт!`
-- Identification: `— Це кіт? — Так, це кіт.`
-- Location: `— Молоко тут? — Ні, молоко там.`
-- Combined: `— Мама тут? — Так, мама тут. А тато там.`
+You are a warm tutor. Use "you/your" often. Include encouragement. Keep it conversational.
 
-Every line must make conversational sense. Do NOT pair unrelated speech acts (e.g., "Це мама?" → "Дякую!" makes no sense). Use `search_text` to find real dialogue patterns from Grade 1 textbooks (Заhaрійчук, Большакова) and adapt them to the available letter set.
-
-**Cite textbook adaptations:** `<!-- adapted from: {author}, Grade {N} -->`
+Cite textbook adaptations: `<!-- adapted from: {author}, Grade {N} -->`
 
 ## Language Quality Rules (Beginner Tier)
 
@@ -503,7 +462,7 @@ Every paragraph must have ONE clear point and logical flow between sentences. Do
 
 ### Activity Rules
 
-- Activity **answers** must use words from your content. **Distractors** may use other level-appropriate words.
+- Activity **answers** must use words from your content. **Distractors** must be VESUM-verified Ukrainian words — call `verify_words` before including any distractor. Never use made-up or unverified words.
 - Follow schemas exactly — `additionalProperties: false` means any unlisted field = FAIL.
 - Read `schemas/activities-a1.schema.json` for full field definitions.
 
@@ -616,18 +575,124 @@ rag_tools_used:
 ===FRICTION_END===
 ```
 
+
+FRICTION CONSTRAINTS (from past build reviews — DO NOT repeat these errors):
+- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
+- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
+- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
+- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
+
 </prompt>
 
-## Audit Gates (what your content will be checked against)
+## The Plan
+
+<plan>
+module: a1-031
+level: A1
+sequence: 31
+slug: the-genitive-i-absence
+version: '2.0'
+title: 'The Genitive I: Absence'
+subtitle: Talking About What You Don't Have
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Cases & Navigation]
+word_target: 1200
+objectives:
+- Learner can express absence using немає + genitive
+- Learner can use genitive case for negation
+- Learner can say what they don't have (немає часу)
+- Learner can use без + genitive (without)
+content_outline:
+- section: Вступ (Introduction)
+  words: 250
+  points:
+  - 'Контраст конструкцій «є» (possession from a1-13) vs «немає» (absence) — State Standard §4.0: акцент на відтворенні готових
+    моделей у ситуаціях «Покупки» (§3.8) та «Ресторан» (§3.9).'
+  - 'Подолання Learner Error: розрізнення граматичного заперечення якості/стану «не» (Я не студент) та заперечення існування/наявності
+    «немає» (У мене немає квитка).'
+- section: Презентація (Presentation)
+  words: 350
+  points:
+  - 'Граматична основа: конструкція немає + родовий відмінок — State Standard §4.2.2.2: формування навички на базі сталих
+    сполук «немає часу», «немає грошей» (Gen. pl. exception).'
+  - 'Прийменник без + родовий відмінок — ключові колокації для повсякденного вжитку: «кава без цукру», «вода без газу», «їхати
+    без квитка».'
+  - 'Систематизація закінчень чоловічого роду: конкретні предмети на -а/-я (хліба, квитка) проти абстрактних та речовинних
+    на -у/-ю (часу, цукру) — фокус на Learner Error 3.'
+- section: Практика (Practice)
+  words: 350
+  points:
+  - 'Корекція типової помилки (Case Neglect): використання називного відмінка замість родового після «немає» — дрил на мінімальних
+    парах «є квиток» vs «немає квитка».'
+  - 'Трансформаційні вправи за схемою Nom → Gen — візуалізація змін закінчень: -а/-я для чоловічого (конкретне) та -и/-і для
+    жіночого (вода → води).'
+  - 'Рольова гра «У ресторані/магазині»: замовлення напоїв «без цукру/молока» та ввічливі запити про наявність товарів.'
+- section: Культурний контекст (Cultural Context)
+  words: 250
+  points:
+  - 'Культурний код: вживання фрази «Немає проблем!» як вияву гнучкості та ввічлива відмова через «немає» («На жаль, квитків
+    немає») для пом''якшення прямого «Ні».'
+  - 'Лінгвокраїнознавство: розбір прислів''я «Немає диму без вогню» як ілюстрації структури заперечення та вживання прийменника
+    з родовим відмінком.'
+- section: "Займенники у родовому (Pronouns in Genitive)"
+  words: 125
+  points:
+  - "Personal pronouns in genitive: мене, тебе, його/нього, її/неї, нас, вас, їх/них.
+    Без мене. Від тебе. У нього немає часу."
+  - "Same н- rule: after prepositions 3rd person gets н- (для нього, без неї, від них).
+    Genitive = accusative forms for pronouns (мене, тебе) — one less thing to memorize."
+vocabulary_hints:
+  required:
+  - 'немає (there is no) — High frequency core word; used in ready-made models: «немає часу», «немає грошей»'
+  - 'без (without) — High frequency preposition + Genitive; collocations: «без цукру», «без молока», «без газу»'
+  - 'час (time) — Gen: часу; abstract noun requiring ending -у; State Standard high-frequency item'
+  - 'гроші (money) — Gen pl: грошей; irregular plural; essential for financial context (§3.8)'
+  - 'молоко (milk) — Gen: молока; neuter noun, regular neuter-to-genitive shift'
+  - 'цукор (sugar) — Gen: цукру; uncountable substance requiring ending -у; key for restaurant dialogues'
+  - 'вода (water) — Gen: води; contrast «вода з газом» vs «вода без газу»'
+  - 'хліб (bread) — Gen: хліба; concrete object requiring ending -а; context: grocery shopping'
+  recommended:
+  - 'проблема (problem) — Gen pl: проблем; used in the ubiquitous phrase «Немає проблем!»'
+  - 'квиток (ticket) — Gen: квитка; concrete object (ending -а); Learner Error: common neglect of case after «без»'
+  - 'ключ (key) — Gen: ключа; concrete object focus'
+  - 'телефон (phone) — Gen: телефона (the device) / телефону (phone number, concept); demonstrates -а/-у semantic split'
+  - 'газ (gas/sparkling) — Gen: газу; used in the essential collocation «без газу» for ordering water'
+activity_hints:
+- type: fill-in
+  focus: Change nouns to genitive
+  items: 25
+- type: fill-in
+  focus: Complete немає sentences
+  items: 20
+- type: fill-in
+  focus: I don't have... conversations
+  items: 6
+connects_to:
+- a1-32 (Genitive Prepositions)
+prerequisites:
+- a1-30 (Around the City)
+persona:
+  voice: Patient Supportive Tutor
+  role: Inventory Specialist
+grammar:
+- Genitive case for absence
+- Genitive endings
+- Немає + genitive
+register: розмовний
+
+</plan>
+
+## Audit Gates
 
 ## Audit Gates (your content will be checked against these)
 
 Level: A1
 Word target: 1200
 Word ceiling: ~1800 (exceeding = FAIL)
-Min activities: 8
-Min engagement boxes: 3
-Min activity types: 4
+Min activities: 0
+Min engagement boxes: 1
+Min activity types: 0
 
 ### Immersion
 Target range: defined in the prompt's Immersion Target section (varies by module).
@@ -656,18 +721,46 @@ Your content will be scored on these dimensions (9-10 = PASS):
 6. Emotional Safety — ≥15 direct address, encouragement, quick wins
 7. Lesson Quality — does it feel like a patient, encouraging tutor?
 
-## Instructions
+## Check 1: Prompt Feasibility
 
-Read the prompt carefully. If you can build a module that passes all audit gates using this prompt, return PASS.
-
-Only report an issue if:
+Only report if:
 - Two instructions **directly contradict** each other AND following one will FAIL a named gate
 - A target is **mathematically impossible** to reach given the constraints
-- A required gate has **zero guidance** in the prompt (not "could be clearer" — literally missing)
+- A required gate has **zero guidance** in the prompt (literally missing, not "could be clearer")
 
-Do NOT report: style preferences, wording suggestions, minor ambiguities, things that "could be improved." Focus on issues that would prevent you from building excellent content.
+**Gate names**: Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
 
-**Gate names** (only these matter): Words, Activities, Density, Unique_types, Engagement, Vocab, Structure, Pedagogy, Immersion.
+## Check 2: Semantic False Friends (Russianisms)
+
+These Ukrainian words exist in BOTH Ukrainian and Russian but have DIFFERENT meanings:
+
+- **лук**: Russian meaning = onion, цибуля, onions; Ukrainian meaning = bow (weapon). Correct word for 'onion, цибуля, onions' → **цибуля**
+- **луна**: Russian meaning = moon, місяць, lunar; Ukrainian meaning = echo (відлуння). Correct word for 'moon, місяць, lunar' → **місяць**
+- **город**: Russian meaning = city, місто, town; Ukrainian meaning = garden, vegetable patch. Correct word for 'city, місто, town' → **місто**
+- **неділя**: Russian meaning = week, тиждень; Ukrainian meaning = Sunday. Correct word for 'week, тиждень' → **тиждень**
+- **річ**: Russian meaning = speech; Ukrainian meaning = thing, item. Correct word for 'speech' → **промова**
+- **шар**: Russian meaning = ball, sphere; Ukrainian meaning = layer. Correct word for 'ball, sphere' → **куля**
+- **мешкати**: Russian meaning = to dawdle, to delay, dawdle; Ukrainian meaning = to live, to dwell. Correct word for 'to dawdle, to delay, dawdle' → **баритися**
+- **лічити**: Russian meaning = to treat, to heal, treatment; Ukrainian meaning = to count. Correct word for 'to treat, to heal, treatment' → **лікувати**
+- **наглий**: Russian meaning = arrogant, impudent, insolent; Ukrainian meaning = sudden, unexpected. Correct word for 'arrogant, impudent, insolent' → **зухвалий**
+- **лаяти**: Russian meaning = to bark, bark, barking; Ukrainian meaning = to scold, to swear at. Correct word for 'to bark, bark, barking' → **гавкати**
+- **палиця**: Russian meaning = finger; Ukrainian meaning = stick, cane. Correct word for 'finger' → **палець**
+- **сварка**: Russian meaning = welding; Ukrainian meaning = quarrel, argument. Correct word for 'welding' → **зварювання**
+
+**Only flag if the prompt USES or DEFINES a word with the Russian meaning.** Do NOT flag:
+- Warnings about the false friend (e.g., "неділя ≠ week")
+- Discussions explaining the difference
+- Correct Ukrainian usage
+
+## Check 3: Plan-Prompt Coherence
+
+Compare the plan (above) to the rendered prompt. Check:
+1. **Section coverage**: Every plan `content_outline` section has a matching section in the prompt
+2. **Word target**: Plan's `word_target` matches the prompt's word budget
+3. **Vocabulary**: All `vocabulary_hints.required` items appear in the prompt
+4. **Objectives**: The prompt's instructions would achieve all plan `objectives`
+
+Only flag if a plan section is **completely missing**, the word target **differs**, or required vocabulary is **absent**. Do NOT flag rewordings or extra scaffolding.
 
 ## Output Format (YAML)
 
@@ -675,18 +768,13 @@ Do NOT report: style preferences, wording suggestions, minor ambiguities, things
 prompt_preflight:
   status: PASS  # or ISSUES_FOUND
   issues:
-    - type: CONTRADICTION  # or MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, UNCLEAR
-      location: "Section 4, line about tables"
-      problem: "Template says tables have highest density but audit strips tables from immersion"
-      suggested_fix: "Remove 'highest density' claim, add warning that tables = zero immersion"
+    - type: CONTRADICTION  # MISSING_INSTRUCTION, IMPOSSIBLE_TARGET, RUSSICISM, MISSING_PLAN_SECTION, PLAN_CONTRADICTION, WORD_TARGET_MISMATCH
+      location: "where in the prompt"
+      problem: "what's wrong"
+      suggested_fix: "how to fix it"
       severity: HIGH  # or MEDIUM, LOW
 ```
 
-If there are no issues, return:
-```yaml
-prompt_preflight:
-  status: PASS
-  issues: []
-```
+If no issues: `prompt_preflight: {status: PASS, issues: []}`
 
-Be SPECIFIC. Cite exact text from the prompt. Focus on issues that will cause audit FAILURES, not style preferences.
+Be SPECIFIC. Cite exact text.

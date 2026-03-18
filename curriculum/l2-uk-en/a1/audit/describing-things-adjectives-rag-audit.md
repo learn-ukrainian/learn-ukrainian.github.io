@@ -1,6 +1,6 @@
 # RAG Verification: describing-things-adjectives
 
-**Date:** 2026-03-18 01:24 UTC | **Words checked:** 127 | **VESUM coverage:** 122/127 (96.1%)
+**Date:** 2026-03-18 23:45 UTC | **Words checked:** 127 | **VESUM coverage:** 122/127 (96.1%)
 
 ## Summary
 - ✅ Verified (VESUM): 122

@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M11 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-18 02:24:40
+**Generated:** 2026-03-19 00:44:58
 
 ## Configuration
 **Type:** A1-grammar
@@ -12,7 +12,7 @@
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
 **Required Types:** fill-in, match-up
-**Engagement:** ≥3 callouts
+**Engagement:** ≥1 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -36,7 +36,7 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 2/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Engagement:** ✅ 5/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure

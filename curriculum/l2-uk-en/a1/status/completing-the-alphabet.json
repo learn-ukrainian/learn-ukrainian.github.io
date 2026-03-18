@@ -2,13 +2,13 @@
   "module": "completing-the-alphabet",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-19T00:23:50.903054Z",
+  "last_audit": "2026-03-19T00:52:10.861327Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-19T00:16:18.975836Z",
+    "md": "2026-03-19T00:42:23.911040Z",
     "meta": "2026-03-16T21:57:03.204919Z",
     "activities": "2026-03-19T00:09:00.162024Z",
-    "vocabulary": "2026-03-19T00:16:24.742789Z",
+    "vocabulary": "2026-03-19T00:29:36.505599Z",
     "research": "2026-03-12T09:43:28.783566Z",
     "plan": "2026-03-16T22:57:05.772146Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1503/1200 (raw: 1566)"
+      "message": "1603/1200 (raw: 1666)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "23/1"
+      "message": "27/1"
     },
     "naturalness": {
       "status": "info",
@@ -39,23 +39,21 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+      "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 4,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

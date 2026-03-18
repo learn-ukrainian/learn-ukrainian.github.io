@@ -1,11 +1,11 @@
 # RAG Verification: completing-the-alphabet
 
-**Date:** 2026-03-18 23:24 UTC | **Words checked:** 97 | **VESUM coverage:** 79/97 (81.4%)
+**Date:** 2026-03-18 23:47 UTC | **Words checked:** 101 | **VESUM coverage:** 82/101 (81.2%)
 
 ## Summary
-- ✅ Verified (VESUM): 79
+- ✅ Verified (VESUM): 82
 - ⚠️ Partial (RAG only): 5
-- ❌ Not found: 13
+- ❌ Not found: 14
 
 ## ❌ Not Found (action required)
 
@@ -22,6 +22,7 @@
 | пять | activities | ✗ | ✗ | ✗ |
 | сімья | activities | ✗ | ✗ | ✗ |
 | сімя | activities | ✗ | ✗ | ✗ |
+| цок-цок-цок | prose | ✗ | ✗ | ✗ |
 | яч | activities | ✗ | ✗ | ✗ |
 | єкт | activities | ✗ | ✗ | ✗ |
 
@@ -39,5 +40,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 66 | 60 | 2 |
-| Activities (.yaml) | 31 | 19 | 11 |
+| Prose (.md) | 71 | 64 | 3 |
+| Activities (.yaml) | 30 | 18 | 11 |

@@ -1,186 +1,218 @@
-<!-- content-hash: a6890e3d0cc4 -->
+<!-- content-hash: c54e780fcc54 -->
 # Рецензія: Stress and Intonation
 
-**Level:** A1 | **Module:** M06
+**Level:** A1 | **Module:** 6
 **Overall Score:** 8.3/10
 **Status:** FAIL
 **Reviewed:** 2026-03-19
-**Reviewed-By:** claude-opus-4-6
+**Reviewed-By:** claude-sonnet-4-20250514
 
 ## Plan Verification
 
 ```
 Plan-Content Alignment: PARTIAL FAIL
-- Sections: ALL 6 sections present as H2 headers ✅
-- Vocabulary: 7/7 required (замок, вода, рука, писати, школа, молоко, добрий), 8/5 recommended ✅
-- Grammar scope: VIOLATION — conjugated verb forms in pre-verb module (see Issue #1)
-- Objectives: 3/4 met (missing: "Use stress marks when reading dictionary entries" is partially covered)
+- Sections: 6/6 present ✅
+- Vocabulary: 6/7 required in prose (писати MISSING), all 5 recommended present
+- Grammar scope: CLEAN
+- Objectives: 4/4 addressed ✅
+- Activity hints: 4/4 types present, all item counts match ✅
 ```
 
-**Plan point-by-point check (content_outline):**
+### Plan Point-by-Point Checklist
 
-**Section "Наголос — Stress" (350 words planned):**
-- ✅ COVERED: Free and mobile stress concept — line 5 explicitly covers Polish/French comparison and free stress
-- ✅ COVERED: Stress changes meaning — lines 7-11 cover за́мок/замо́к and му́ка/мука́ minimal pairs
-- ✅ COVERED: How stress is marked — line 16 covers acute accent in dictionaries
-- ✅ COVERED: Learner strategy — line 18 covers "always check stress placement immediately"
+**Section "Наголос — Stress" (plan: 350 words)**
+- Free and mobile stress concept: COVERED — line 5 explains Polish/French comparison, free stress
+- Stress changes meaning (замок/мука): COVERED — lines 8-11 with minimal pairs
+- How stress is marked in dictionaries: COVERED — line 16 explains acute accent
+- Learner strategy (always check stress): COVERED — line 20
 
-**Section "Типові наголоси — Common Stress Patterns" (250 words planned):**
-- ✅ COVERED: First-syllable stress — lines 25-28 (ма́ма, та́то, ха́та, ка́ва)
-- ⚠️ PARTIAL: Last-syllable stress — plan says "далекО, Україна" but content correctly reclassifies дале́ко as penultimate (line 40) and notes Украї́на with penultimate stress (line 34). Builder deviation documented and linguistically correct.
-- ✅ COVERED: Penultimate stress — lines 37-42 (шко́ла, кни́жка, доро́га)
-- ✅ COVERED: No fixed rule — line 46 covers кни́жка vs вода́ comparison
+**Section "Типові наголоси — Common Stress Patterns" (plan: 250 words)**
+- First-syllable stress (мама, тато, хата, кава): COVERED — lines 27-30
+- Last-syllable stress (молоко, далеко, Україна): PARTIAL — 「молоко́」 at line 33 covered; 「дале́ко」 correctly placed under penultimate stress at line 42 (plan error: plan says далеко has last-syllable stress, but standard is penultimate — builder correctly deviated); 「Украї́на」 noted at line 36 with a parenthetical correction
+- Penultimate stress (школа, книжка, дорога): COVERED — lines 38-44
+- No fixed rule (same ending, different stress): COVERED — line 48
 
-**Section "Рухомий наголос — Mobile Stress" (250 words planned):**
-- ✅ COVERED: Stress shifts in declension — line 52 covers рука́ → ру́ки with genitive note
-- ✅ COVERED: Stress shifts in number — line 54 covers вода́ → во́ди
-- ✅ COVERED: Preview note — line 56 frames as awareness goal
-- ✅ COVERED: Practical tip — line 64 covers listening to native speakers
+**Section "Рухомий наголос — Mobile Stress" (plan: 250 words)**
+- Stress shifts in declension (рука → руки): COVERED — line 54
+- Stress shifts in number (вода → води): COVERED — line 56
+- Preview note (awareness goal): COVERED — line 58
+- Practical tip (listen to native speakers): COVERED — line 66
 
-**Section "Інтонація — Intonation" (250 words planned):**
-- ✅ COVERED: Declarative intonation — lines 70-73
-- ✅ COVERED: Interrogative with question word — lines 75-78
-- ✅ COVERED: Yes/no questions — lines 80-86
-- ✅ COVERED: Exclamatory intonation — lines 88-89
-- ✅ COVERED: Contrast drill — lines 91-96
+**Section "Інтонація — Intonation" (plan: 250 words)**
+- Declarative intonation: COVERED — lines 72-75 with 「Це кафе́.」
+- Interrogative with question word: COVERED — lines 77-80 with 「Де́ кафе́?」
+- Yes/no questions: COVERED — lines 82-85 with 「Це ма́ма?」
+- Exclamatory intonation: COVERED — lines 90-91
+- Contrast drill: COVERED — lines 93-98
 
-**Section "Практика — Practice" (100 words planned):**
-- ✅ COVERED: Stress placement drills — embedded in dialogues and reading passage
-- ⚠️ PARTIAL: Minimal pairs practice — за́мок/замо́к appears in dialogue (line 114) but no explicit minimal-pair drill
-- ✅ COVERED: Intonation reading exercises — lines 99-101 (statement/question/exclamation triplets)
+**Section "Практика — Practice" (plan: 100 words)**
+- Stress placement drills: COVERED — dialogues at lines 109-131
+- Minimal pairs practice: PARTIAL — замок appears in dialogue (line 116-119) but мука minimal pair not drilled
+- Intonation reading exercises: COVERED — lines 100-103 and reading passage at line 137
 
-**Section "Підсумок — Summary" (100 words planned):**
-- ✅ COVERED: Recap of free/mobile stress — line 141
-- ❌ MISSING: "vowel purity under stress" — plan says recap should include this but concept is never taught or mentioned
-- ⚠️ PARTIAL: Self-check — plan requires "What happens to vowel quality when unstressed?" but this question is absent from lines 143-146
-- ✅ COVERED: Next module pointer — line 148
+**Section "Підсумок — Summary" (plan: 100 words)**
+- Recap: COVERED — line 143
+- Self-check: COVERED — lines 146-149
+- Next module reference: COVERED — line 151
+
+**Required Vocabulary in Prose:**
+- замок: ✅ lines 8-9
+- вода: ✅ line 34
+- рука: ✅ line 54
+- писати: ❌ MISSING from prose entirely (present in vocabulary YAML only)
+- школа: ✅ line 39
+- молоко: ✅ line 33
+- добрий: ✅ line 32
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Warm tone, good dialogues in "Практика — Practice", but practice concentrated in section 5 — first 4 sections are teaching-only with no interleaved exercises |
-| 2 | Language | 9/10 | <8 | Ukrainian accurate, English clear and encouraging. "Heartbeat" metaphor used twice (lines 3 and 68) — minor repetition. No Russianisms found. |
-| 3 | Pedagogy | 8/10 | <7 | Missing plan point "vowel purity under stress" entirely. Verb forms violate pre-verbal phase constraint. Otherwise solid PPP structure. |
-| 4 | Activities | 8/10 | <7 | 4 activity types as planned (quiz 12 items, match-up 8, true-false 8, fill-in 10). Well-constructed. VESUM failures are false positives (syllable fragments in English text). |
-| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 4/5 — pacing comfortable, instructions clear, Ukrainian not scary, encouraging throughout. Quick wins borderline: "Try saying these out loud" at line 24 is the first active task, contrast drill at line 91 is first real exercise. |
-| 6 | LLM Fingerprint | 8/10 | <7 | "Heartbeat" metaphor twice (lines 3, 68). Section openings are varied. Example formats varied (bullets, blockquotes, dialogues). No generic AI clichés. |
-| 7 | Linguistic Accuracy | 8/10 | <9 | Conjugated verb forms пишу́, пи́шеш in pre-verb module M6 (line 62). Pre-screen stress mismatch on се́стри DISMISSED — VESUM confirms се́стри is correct nom.pl. of сестра. |
+| 1 | Experience Quality | 9/10 | <7 | Warm opening, clear arc WELCOME→PRESENT→PRACTICE→CELEBRATE. Dialogues in section "Практика — Practice" are delightful. Minor: section "Наголос — Stress" paragraph at line 5 is dense for A1 beginners. |
+| 2 | Language | 8/10 | <8 | English prose is clear and warm. Ukrainian examples accurate. One stress error flagged (séстри — see Issue 1 dismissal). No Russianisms. Missing required word писати from prose. |
+| 3 | Pedagogy | 8/10 | <7 | Good PPP structure. Minimal pairs taught before mobile stress. The plan lists далеко under "last-syllable stress" but builder correctly placed it under penultimate — good judgment. Missing мука drill in "Практика — Practice" section. |
+| 4 | Activities | 8/10 | <7 | 4 types, 38 items total — matches plan perfectly. Well-crafted questions. VESUM failures (ва, да, ка, etc.) are FALSE POSITIVES — these are syllable fragments in English-language option labels, not Ukrainian words. |
+| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Warm tone, manageable chunks, good encouragement. Section "Наголос — Stress" line 5 is the densest paragraph — could intimidate, but all English. |
+| 6 | LLM Fingerprint | 8/10 | <7 | "heartbeat" metaphor used twice (lines 3 and 70) — minor repetition. Section openings are varied. No "In this lesson, we will explore" patterns. One callout title issue: both callouts are different types (warning + tip) — good variety. |
+| 7 | Linguistic Accuracy | 9/10 | <9 | All stress marks verified correct. 「се́стри」 on line 63 is CORRECT (nominative plural of сестра is се́стри — pre-screen was wrong, confused with genitive singular сестри́). Plan error on далеко stress is a plan issue, not content. One required vocab word (писати) missing from prose. |
 
-**Weighted Overall:** (8×1.5 + 9×1.1 + 8×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 8×1.5) / 8.9 = (12.0 + 9.9 + 9.6 + 10.4 + 11.7 + 8.0 + 12.0) / 8.9 = 73.6 / 8.9 = **8.3/10**
+**Weighted Overall:** (9×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9 = (13.5 + 8.8 + 9.6 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9 = 75.5 / 8.9 = **8.5/10**
 
 ## Auto-Fail Checklist Results
 
-- Russianisms: **CLEAN** — no Russianisms detected
-- Calques: **CLEAN** — no calques detected
-- Colonial framing: **CLEAN** — no Russian-baseline comparisons. Polish and French used as stress comparisons (line 5), which is legitimate typological comparison, not colonial framing.
-- Grammar scope: **VIOLATION** — conjugated verb forms пишу́, пи́шеш at line 62 (verbs forbidden before M15)
-- Activity errors: **CLEAN** — VESUM failures (ва, да, ка, etc.) are FALSE POSITIVES: these are syllable fragments within English option text like "First syllable (сес-)", not Ukrainian word forms
-- Beginner safety: 4/5
-- Factual accuracy: **CLEAN** — stress patterns verified correct. Builder correctly fixed plan errors on далеко/Україна stress classification.
+- Russianisms: [CLEAN] — no Russian ghost words found
+- Calques: [CLEAN]
+- Colonial framing: [CLEAN] — comparisons are to Polish, French, and English (learner's L1), never to Russian
+- Grammar scope: [CLEAN] — no conjugated verbs, no imperatives in Ukrainian examples. The reading passage at line 137 uses locative phrases (「в Украї́ні」, 「в шко́лі」) which are fixed expressions, acceptable at A1.
+- Activity errors: [CLEAN] — VESUM failures (ва, да, ка, книж, ло, ру, сес, шко) are all syllable fragments inside English-language option text like "First syllable (да-)", NOT Ukrainian word forms. FALSE POSITIVE — dismiss.
+- Beginner safety: 5/5
+- Factual accuracy: [CLEAN] — no fabricated claims in callout boxes. The [!warning] and [!tip] blocks contain accurate linguistic information.
+
+## Pre-Screen Disposition
+
+1. **[AGREEMENT_ERROR] ~line 20**: DISMISSED — 「хліб」, 「мі́сто」, and 「доро́га」 appear as separate example words in a list, not in syntactic agreement with each other. No agreement violation.
+2. **[STRESS_UNKNOWN] ~line 8 за́мок**: DISMISSED — замок is in VESUM (confirmed: 5 matches). The stress dictionary likely lacks the stressed form because stress is not encoded in VESUM. The stress за́мок (castle) is standard.
+3. **[STRESS_UNKNOWN] ~line 11 му́ка**: DISMISSED — мука is in VESUM (confirmed: 1 match). Same reason — stressed form not in stress dictionary. му́ка (torment) is standard.
+4. **[STRESS_MISMATCH] ~line 63 се́стри → сестри́**: DISMISSED — The nominative plural of сестра is се́стри (stress shifts BACK from сестра́). The pre-screen confused this with the genitive singular сестри́. VESUM confirms сестри exists as `noun:anim:p:v_naz`. The content is CORRECT — this is the exact mobile stress pattern being taught.
+5. **[ACTIVITY_VESUM_FAIL] ва, да, ка, etc.**: DISMISSED — These are syllable fragments inside English option labels (e.g., "First syllable (да-)"), not standalone Ukrainian words. False extraction by scanner.
 
 ## Critical Issues Found
 
-### Issue 1: Conjugated Verb Forms in Pre-Verb Module (MORPHOLOGICAL_VIOLATION — HIGH)
-- **Location**: Lines 56 and 62, Section "Рухомий наголос — Mobile Stress"
-- **Original**: Line 56: 「even **писа́ти** (to write) shifts its stress across different conjugated forms. We will explore these patterns together in later modules!」 / Line 62: 「**писа́ти** (to write) → **пишу́**, **пи́шеш** — we will explore verb stress patterns later」
-- **Problem**: Module M6 is pre-verbal phase — verbs are forbidden before M15. The infinitive писа́ти is listed as required vocabulary in the plan, creating a plan-level contradiction. However, the conjugated forms пишу́ and пи́шеш go beyond even the plan's requirement — the plan notes "mobile stress in conjugation" as context, not as forms to present to the learner.
-- **Fix**: Remove conjugated forms. Replace the bullet on line 62 with a noun-based mobile stress example. Keep the infinitive reference on line 56 but remove "conjugated forms" language — describe the shift in English only.
+### Issue 1: Missing Required Vocabulary — писати (HIGH)
+- **Location**: Entire content file / Section "Рухомий наголос — Mobile Stress"
+- **Problem**: The plan `vocabulary_hints.required` lists `писати (to write) — mobile stress in conjugation писАти → пишУ → пИшеш; Top 200 word`. This word does NOT appear anywhere in the prose. It IS in the vocabulary YAML but has no prose context. A required vocabulary word must appear in the lesson content so learners encounter it naturally.
+- **Fix**: Add a brief mention of писати in section "Рухомий наголос — Mobile Stress" as an additional example of mobile stress in conjugation (preview only, per plan). Example: after the practical tip on line 66, add a sentence like: "You will also discover mobile stress in verbs — for example, **писа́ти** (to write) shifts its stress across different conjugated forms. We will explore verb conjugation in later modules!"
 
-### Issue 2: Missing Plan Point — "Vowel Purity Under Stress" (MEDIUM)
-- **Location**: Section "Підсумок — Summary" (line 141) and entire module
-- **Original**: Line 141: 「You learned that Ukrainian stress is free and mobile, meaning it can land on any syllable and shift when words change form.」
-- **Problem**: The plan's summary section specifies: "Recap: stress is free and mobile, **vowel purity under stress**, rising intonation for questions, stress minimal pairs." The concept of vowel purity (Ukrainian vowels maintain clearer quality under stress vs. unstressed reduction in English/Russian) is completely absent from the module. The self-check question "What happens to vowel quality when unstressed?" (plan line 63-64) is also missing.
-- **Fix**: Add a brief note about vowel purity in Section "Наголос — Stress" (e.g., "Unlike English, where unstressed vowels often become a vague 'uh' sound, Ukrainian vowels keep their full quality even when unstressed — though the stressed vowel is still longer and louder"). Add the missing self-check question.
+### Issue 2: Richness Gap — No Video Embeds (MEDIUM)
+- **Location**: Entire content file
+- **Problem**: Audit metrics show `video_embeds: 0/2` as a richness gap. For a module about stress and intonation — inherently auditory concepts — pronunciation/intonation videos or audio embeds would be highly valuable. The plan mentions no `pronunciation_videos` field, but the richness gate expects them.
+- **Fix**: Add 1-2 video embed placeholders or pronunciation audio references. Natural insertion points: after the contrast drill in section "Інтонація — Intonation" (line 98) and/or in section "Практика — Practice" (line 107).
 
-### Issue 3: Richness Gap — Video Embeds 0/2 (MEDIUM)
-- **Location**: Entire module
-- **Problem**: Audit shows richness at 80% with gap `video_embeds: 0/2`. No pronunciation demonstration videos are embedded. For a phonetics module about stress and intonation, audio/video examples would be highly valuable.
-- **Fix**: Add 2 video embed placeholders or audio references — one for stress minimal pairs (за́мок/замо́к) and one for intonation contour demonstration.
+### Issue 3: Dense Opening Paragraph (LOW)
+- **Location**: Line 5, Section "Наголос — Stress"
+- **Problem**: The second paragraph (line 5) is 73 words of continuous explanation about free/mobile stress, including cross-linguistic comparisons to Polish and French and a note about clitics. For an A1 beginner, this paragraph packs too many concepts (free stress, mobile stress, Polish comparison, French comparison, clitics) before any Ukrainian example. The first example doesn't appear until line 8.
+- **Fix**: Split line 5 into two shorter paragraphs. Move the clitic note to later or a callout. Get to the first Ukrainian example faster.
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 62 | 「**писа́ти** (to write) → **пишу́**, **пи́шеш** — we will explore verb stress patterns later」 | Remove conjugated forms entirely; replace with noun example | Scope violation |
-
-**Pre-screen dismissals:**
-- **#5 AGREEMENT_ERROR** (доро́га + мі́сто, line 18): DISMISSED — these are separate nouns in a list ("хліб, мі́сто, or доро́га"), not an adjective-noun agreement pair.
-- **#6 STRESS_UNKNOWN** (за́мок, line 8): DISMISSED — valid word with dual stress patterns (xp1/xp2 in VESUM). Both за́мок and замо́к are correct.
-- **#7 STRESS_UNKNOWN** (му́ка, line 11): DISMISSED — valid word confirmed in VESUM (noun:inanim:f:v_naz).
-- **#8 STRESS_MISMATCH** (се́стри → сестри́, line 61): DISMISSED — VESUM confirms сестри as noun:anim:p:v_naz (nominative plural). The nominative plural stress is се́стри. The alternative сестри́ is genitive singular. Content is correct.
-- **#9 ACTIVITY_VESUM_FAIL** (ва, да, ка, etc.): DISMISSED — these are syllable fragments extracted from English option text like "First syllable (сес-)" and "Second syllable (-да)". Not Ukrainian word forms.
+| 63 | 「се́стри」 | No change needed | Pre-screen false positive — nominative plural is се́стри ✅ |
+| Plan ln 32 | далекО listed as last-syllable | дале́ко is penultimate | Plan error (builder correctly deviated) |
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test: 4/5
-- Overwhelmed? **Pass** — pacing comfortable, concepts introduced one at a time
-- Instructions clear? **Pass** — always clear what to do, English support throughout
-- Quick wins? **Partial Pass** — "Try saying these out loud" (line 24) provides early engagement, but first real interactive exercise is the contrast drill (line 91). Four full teaching sections before the Practice section.
-- Ukrainian scary? **Pass** — introduced gently with translations, stress marks explained
-- Come back tomorrow? **Pass** — encouraging tone: 「Do not stress over the stress!」 (line 64) and 「If you feel confident with these answers, you are perfectly ready for the next step.」 (line 148)
+"Would I Continue?" Test: 5/5
+- Overwhelmed? **Pass** — pacing is comfortable, English scaffolding throughout
+- Instructions clear? **Pass** — always knew what to do and why
+- Quick wins? **Pass** — simple word examples in section "Типові наголоси — Common Stress Patterns" (lines 27-30) give early wins
+- Ukrainian scary? **Pass** — introduced gently with translations, stress marks, and transliterations
+- Come back tomorrow? **Pass** — encouraging tone, dialogues in section "Практика — Practice" are fun
 
 ## Strengths
 
-- **Excellent dialogues**: The four mini-conversations in Section "Практика — Practice" (lines 107-130) are natural, contextual, and practice both stress recognition and intonation patterns simultaneously. Each dialogue has a clear setting (Вдома, На вулиці, У кафе, На кухні).
-- **Strong reading passage**: The connected passage on line 135 (「Приві́т! Це Оле́на. Оле́на — в Украї́ні...」) synthesizes all vocabulary from the module into a coherent mini-text — excellent for consolidation.
-- **Linguistically accurate builder deviation**: The builder correctly reclassified дале́ко as penultimate stress and noted Украї́на's standard penultimate stress, fixing factual errors in the plan. Well-documented in builder notes.
-- **Warm, encouraging tutor voice**: Natural, friendly tone throughout without being patronizing. Good balance of teaching and encouragement.
+- **Excellent minimal pair pedagogy**: The 「за́мок」/「замо́к」 and 「му́ка」/「мука́」 pairs are well-chosen and reinforced across prose, callout, and activities — appearing in all four activity types.
+- **Natural dialogue practice**: The four mini-dialogues in section "Практика — Practice" (lines 109-131) are realistic and provide genuine intonation practice with words already taught. The kitchen dialogue (「Молоко́ тут?」) is particularly charming.
+- **Correct handling of plan error**: The builder correctly placed 「дале́ко」 under penultimate stress (line 42) despite the plan wrongly listing it as last-syllable stress. The parenthetical note about 「Украї́на」 at line 36 is also a smart pedagogical choice.
+- **Strong reading passage**: Line 137 integrates all taught vocabulary into a connected narrative with varied stress patterns — excellent consolidation exercise.
+- **Warm tutor voice**: "You are doing fantastic" (line 107), "Do not stress over the stress!" (line 66), "Excellent work!" (line 151) — consistent encouragement throughout.
 
-## Fix Plan to Reach 9/10 (REQUIRED — score 8.3 < 9.0)
+## Fix Plan to Reach 9/10
 
-### Linguistic Accuracy: 8/10 → 9/10
+### Language: 8/10 → 9/10
 **What to fix:**
-1. Line 56: Remove reference to conjugated forms. Change to describe stress mobility in English without showing verb conjugation. E.g., "even the word for 'to write' — **писа́ти** — shifts its stress when it changes form. We will explore these patterns in later modules!"
-2. Line 62: Replace 「**писа́ти** (to write) → **пишу́**, **пи́шеш**」 with a noun-based mobile stress example. E.g., **слово́** (word) → **слова́** (words) or simply remove the line entirely since нога́/голова́/сестра́ examples on lines 59-61 already demonstrate the concept.
+1. Add писати to prose in section "Рухомий наголос — Mobile Stress" with a brief mobile-stress preview sentence after line 66.
 
 **Expected score after fix:** 9/10
 
 ### Pedagogy: 8/10 → 9/10
 **What to fix:**
-1. Add a brief paragraph about vowel purity in Section "Наголос — Stress" (after line 16, before the learner strategy paragraph). ~2-3 sentences explaining that Ukrainian vowels maintain quality regardless of stress position.
-2. Add the missing self-check question to Section "Підсумок — Summary" after line 145: "What is special about how Ukrainian vowels sound, even when unstressed?"
+1. Add a мука minimal pair drill in section "Практика — Practice" — currently only замок gets dialogue practice.
+2. Split the dense paragraph at line 5 for better pacing.
 
 **Expected score after fix:** 9/10
 
-### Experience Quality: 8/10 → 9/10
+### Activities: 8/10 → 9/10
 **What to fix:**
-1. Add 2 video embed placeholders to close the richness gap — one in Section "Наголос — Stress" for minimal pairs audio, one in Section "Інтонація — Intonation" for contour demonstration.
-2. Consider adding a mini-exercise (e.g., "Can you guess which syllable is stressed?") in Section "Типові наголоси — Common Stress Patterns" to break up the teaching block before the full Practice section.
+1. Activities are solid — the score is limited primarily by the missing писати integration, which means activities can't test it in prose context. Once писати is in the prose, an activity referencing it would boost this.
+
+**Expected score after fix:** 8.5/10 (activities themselves are well-crafted)
+
+### LLM Fingerprint: 8/10 → 9/10
+**What to fix:**
+1. Vary the "heartbeat" metaphor — used at line 3 ("Think of stress as the heartbeat of a word") and line 70 ("the heartbeat of individual words"). Replace one instance with a different metaphor.
 
 **Expected score after fix:** 9/10
 
 ### Projected Overall After Fixes
 ```
-(9×1.5 + 9×1.1 + 9×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
-= (13.5 + 9.9 + 10.8 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9
-= 77.8 / 8.9
-= 8.7/10
+(9×1.5 + 9×1.1 + 9×1.2 + 8.5×1.3 + 9×1.3 + 9×1.0 + 9×1.5) / 8.9
+= (13.5 + 9.9 + 10.8 + 11.05 + 11.7 + 9.0 + 13.5) / 8.9
+= 79.45 / 8.9 = 8.9/10
 ```
-
-To reach 9.0+, Activities and LLM Fingerprint would also need polish (richer distractors, remove "heartbeat" repetition). Realistic post-fix target: **8.7-8.9/10**.
 
 ## Factual Verification
 
 - Research notes consulted: YES
-- Key Facts Ledger present: NO (not applicable for A1 core)
+- Key Facts Ledger present: NO (not a seminar track)
 - Dates checked: N/A
 - Named figures verified: N/A
 - Primary quotes cross-referenced: N/A
 - Chronological sequence: N/A
 - Claims without research grounding: 0
-- Grammar rules verified: Stress patterns correct. Builder correctly identified plan errors on далеко/Україна stress classification.
+- Grammar rules verified: All stress placements verified via VESUM and textbook RAG. The Vashulenko Grade 3 p.69 textbook reference from research notes (stress changes meaning via "образи" poem) validates the pedagogical approach.
+- Callout box claims: [!warning] block (line 13-14) — accurate. [!tip] block (line 87-88) — accurate description of Ukrainian yes/no question intonation.
 
 ## Verification Summary
 
-- Content lines read: 148
+- Content lines read: 151
 - Activity items checked: 38 (12 quiz + 8 match-up + 8 true-false + 10 fill-in)
-- Ukrainian sentences verified: 15
-- Citations in bank: 14
-- Issues found: 3 (1 HIGH, 2 MEDIUM)
+- Ukrainian sentences verified: 25+
+- Citations in bank: 42
+- Issues found: 3 (1 HIGH, 1 MEDIUM, 1 LOW)
+- Pre-screen findings dismissed: 5/5 (all false positives)
+- VESUM verifications performed: 4 (сестри, замок, мука, писати)
 
 ## Verdict
 
 **FAIL**
 
-Blocking issue: Linguistic Accuracy scored 8/10 (auto-fail threshold: <9) due to conjugated verb forms **пишу́** and **пи́шеш** appearing in pre-verb module M6 (line 62). These must be removed. Secondary: "vowel purity under stress" is a missing plan point that should be addressed. After removing the conjugated verbs and adding the vowel purity content, the module should pass comfortably.
+The module is well-written with excellent pedagogy and accurate Ukrainian, but fails on one blocking issue: the required vocabulary word **писати** is completely absent from the prose content. This is a plan adherence violation on a required word. The richness gap (video_embeds: 0/2) contributes to the FAIL audit status. Fix priority: (1) add писати to prose in section "Рухомий наголос — Mobile Stress", (2) add video/audio embeds for this inherently auditory topic, (3) split dense opening paragraph.
+
+---
+
+## Post-Fix Re-Score (automated)
+
+**Scored by:** claude-opus-4-6 (on fixed content)
+**Overall Score:** 6.1/10
+**Verdict:** FAIL
+
+| Dimension | Score |
+|-----------|-------|
+| experience | 7/10 |
+| language | 7/10 |
+| pedagogy | 6/10 |
+| activities | 4/10 |
+| beginner_safety | 7/10 |
+| llm_fingerprint | 5/10 |
+| linguistic_accuracy | 7/10 |

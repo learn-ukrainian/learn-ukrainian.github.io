@@ -9,7 +9,7 @@
 |--------|-------|
 | Skill identity | Patient & Supportive Ukrainian Tutor |
 | Module persona | Patient Supportive Tutor, acting as Vyshyvanka Designer |
-| Activities required | 8–15 |
+| Activities required | 0–15 |
 | Required types | match-up, match-up, fill-in, fill-in |
 | Vocabulary items | 20 |
 
@@ -368,10 +368,11 @@ Key: `explanation` at QUESTION level (not inside options), exactly 4 options, ex
 
 ## Activity Quality Rules
 
-1. **Activity answers must use words from the lesson content.** Distractors (wrong options) may use other level-appropriate words. For early modules (M1-M10), also ensure words use only the allowed letter set.
+1. **Activity answers must use words from the lesson content.** Distractors MUST be verified against VESUM — call `verify_words` on every distractor before including it. Never use unverified or made-up words.
 2. **Plausible, clear items.** Every question must have one unambiguous correct answer.
 3. **No sentence-level activities** if constraints say letters/syllables only.
 4. **Prefer fewer, high-quality activities** over padding. 6 good activities > 8 activities where the last 2 are filler.
+5. **No duplicate options.** Every distractor within an item must be unique. Copy-pasting the same option multiple times is an instant fail.
 
 ## Mandatory Self-Check
 

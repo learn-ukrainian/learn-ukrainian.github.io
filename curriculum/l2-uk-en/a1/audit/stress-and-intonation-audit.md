@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-19 00:27:04
+**Generated:** 2026-03-19 00:41:47
 
 ## Configuration
 **Type:** A1-grammar
@@ -33,7 +33,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1878/1200 (raw: 1907)
+- **Words:** ✅ 2061/1200 (raw: 2098)
 - **Activities:** ✅ 4/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 4/0 types
@@ -45,7 +45,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 9.6% (target 5-15% (M06))
+- **Immersion:** 🇺🇦 9.4% (target 5-15% (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -53,9 +53,9 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 493 | Included in Core |
+| **Intro/Narrative** | ✅ | 467 | Included in Core |
 | **Типові наголоси — Common Stress Patterns** | ✅ | 298 | Included in Core |
-| **Рухомий наголос — Mobile Stress** | ✅ | 274 | Included in Core |
-| **Інтонація — Intonation** | ✅ | 412 | Included in Core |
-| **Практика — Practice** | ✅ | 256 | Included in Core |
+| **Рухомий наголос — Mobile Stress** | ✅ | 316 | Included in Core |
+| **Інтонація — Intonation** | ✅ | 484 | Included in Core |
+| **Практика — Practice** | ✅ | 351 | Included in Core |
 | **Підсумок — Summary** | ✅ | 145 | Included in Core |

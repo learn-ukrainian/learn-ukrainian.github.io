@@ -86,12 +86,12 @@ The following passages from the module were searched against our indexed primary
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Typography Artist
-Word count:       1503 / 1200 (125.2%)
+Word count:       1602 / 1200 (133.5%)
 Activities:       7
-Vocabulary items: 23
-Engagement boxes: 2
-Immersion:        7.8% (target: 5-15%)
-Richness:         96% (threshold: 60%)
+Vocabulary items: 27
+Engagement boxes: 3
+Immersion:        8.3% (target: 5-15%)
+Richness:         94% (threshold: 60%)
 Richness gaps:    none
 Audit status:     FAIL
 ```
@@ -118,18 +118,30 @@ The following issues were detected by automated regex-based scanners BEFORE your
 **You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
 
 1. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
-   Location: ~line 124
+   Location: ~line 65
+   Text: Verb 'цо́кає' (VESUM: verb:imperf:pres:s:3) in pre-verb module M4. Verbs are forbidden before M15.
+   Fix: Replace verb 'цо́кає' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+2. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
+   Location: ~line 113
+   Text: Verb 'дзвони́ти' (VESUM: verb:imperf:inf) in pre-verb module M4. Verbs are forbidden before M15.
+   Fix: Replace verb 'дзвони́ти' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
+3. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
+   Location: ~line 130
    Text: Verb 'Дя́кую' (VESUM: verb:imperf:pres:s:1) in pre-verb module M4. Verbs are forbidden before M15.
    Fix: Replace verb 'Дя́кую' with an English equivalent or a noun phrase. Students haven't learned verbs yet.
-2. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
-   Location: ~line 125
+4. **[MORPHOLOGICAL_VIOLATION]** (severity: HIGH)
+   Location: ~line 131
    Text: Imperative 'Будь' (VESUM: verb:imperf:impr:s:2) — imperatives not taught until M47.
    Fix: Replace 'Будь' with English instruction. E.g., use 'Remember that...' instead of Ukrainian imperatives.
-3. **[STRESS_UNKNOWN]** (severity: INFO)
-   Location: ~line 124
+5. **[STRESS_MISMATCH]** (severity: HIGH)
+   Location: ~line 65
+   Text: Wrong stress: 'цві́ркун' → should be 'цвірку́н'
+   Fix: Replace 'цві́ркун' with 'цвірку́н'.
+6. **[STRESS_UNKNOWN]** (severity: INFO)
+   Location: ~line 130
    Text: Stressed word not in dictionary: Дя́кую (дякую)
    Fix: Verify stress manually — word not found in ukrainian-word-stress dictionary.
-4. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
+7. **[ACTIVITY_VESUM_FAIL]** (severity: HIGH)
    Location: completing-the-alphabet.yaml
    Text: Activity answers contain VESUM-failed words: мьясо, мьяч, мясо, мяч, обьєкт, обєкт, пьять, пять, сімья, сімя
    Fix: Fix spelling or replace these words — students will practice non-existent forms.
@@ -140,7 +152,7 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
 
-**Words checked:** 97 | **VESUM coverage:** 79/97 (81.4%)
+**Words checked:** 102 | **VESUM coverage:** 84/102 (82.4%)
 
 **❌ Not found in VESUM or textbooks (17):**
 - `ДЖ` (source: prose)

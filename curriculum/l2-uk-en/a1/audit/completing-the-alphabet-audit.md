@@ -1,7 +1,7 @@
 # Audit Report: M04 — completing-the-alphabet.md
 **Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-19 00:23:50
+**Generated:** 2026-03-19 00:52:10
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,30 +35,30 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1503/1200 (raw: 1566)
+- **Words:** ✅ 1603/1200 (raw: 1666)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 3/1
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 27/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 7.8% (target 5-15% (M04))
+- **Immersion:** 🇺🇦 8.2% (target 5-15% (M04))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
+- **Research:** ✅ Content aligned with research
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 137 | Included in Core |
+| **Intro/Narrative** | ✅ | 134 | Included in Core |
 | **М'який знак — The Soft Sign** | ✅ | 300 | Included in Core |
 | **Апостроф — The Apostrophe** | ✅ | 243 | Included in Core |
-| **Африкати, Щ та Ф — Affricates, Щ, and Ф** | ✅ | 310 | Included in Core |
-| **Диграфи ДЖ, ДЗ — Digraphs** | ✅ | 180 | Included in Core |
+| **Африкати, Щ та Ф — Affricates, Щ, and Ф** | ✅ | 352 | Included in Core |
+| **Диграфи ДЖ, ДЗ — Digraphs** | ✅ | 241 | Included in Core |
 | **Весь алфавіт! — The Full Alphabet Mastered** | ✅ | 208 | Included in Core |
 | **Підсумок — Summary** | ✅ | 125 | Included in Core |

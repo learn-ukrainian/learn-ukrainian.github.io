@@ -29,7 +29,7 @@ When fixing content about the Ukrainian alphabet, vowels, or consonants, use the
 
 
 
-**NOTE: 3 inline fix(es) from the review have ALREADY been applied to the files. Do NOT re-apply those fixes. Read the CURRENT file contents carefully — they reflect the post-fix state. Only fix issues that are still present in the current files.**
+**NOTE: 2 inline fix(es) from the review have ALREADY been applied to the files. Do NOT re-apply those fixes. Read the CURRENT file contents carefully — they reflect the post-fix state. Only fix issues that are still present in the current files.**
 
 ## Review Findings (targeted fix required)
 
@@ -37,71 +37,56 @@ When fixing content about the Ukrainian alphabet, vowels, or consonants, use the
 - Fix ONLY the issues listed below
 - Do NOT rewrite surrounding text
 - Preserve word count and structure
-- Only modify these sections: Activities file, line 59-61 / Activity "Which Consonant Is Softened?", Activities file, lines 108-158 / Activity "Apostrophe Rules", Activities file, lines 33-40 / Activity "Watch and Repeat", Activities file, lines 52-61 / Activity "Which Consonant Is Softened?", Content lines 122-123, Activities lines 263-270 / Section "Весь алфавіт! — The Full Alphabet Mastered"
+- Only modify these sections: Line 113, Section "Диграфи ДЖ, ДЗ", Line 65, Section "Африкати, Щ та Ф"
 
-### Finding 1: Activity Classification Error — тінь in Wrong Category (HIGH)
-**Location**: Activities file, line 59-61 / Activity "Which Consonant Is Softened?"
-**Problem**: тінь (Т-І-Н-Ь) has the soft sign after Н, not Т. The Ь softens Н. мить (М-И-Т-Ь) correctly has soft Т, but тінь belongs in the "Soft Н" category alongside день, кінь, осінь.
-**Required Fix**: Move тінь from "Soft Т" to "Soft Н". Add a different word with soft Т to replace it (e.g., "сміть" or keep "Soft Т" with just "мить" and add another Soft Т word).
+### Finding 1: Wrong Stress — цві́ркун (STRESS_MISMATCH)
+**Location**: Line 65, Section "Африкати, Щ та Ф"
+**Problem**: Standard Ukrainian stress is цвірку́н (stress on final syllable), not цві́ркун. Confirmed by D.0 stress verification pipeline (2.7M forms).
+**Required Fix**: Replace `**цві́ркун**` with `**цвірку́н**`
 **Severity**: HIGH
 
-### Finding 2: Wrong Video URLs in Watch-and-Repeat Activity (MEDIUM)
-**Location**: Activities file, lines 33-40 / Activity "Watch and Repeat"
-**Problem**: Students clicking these videos will see lessons for completely different sounds (Ч instead of ДЖ, Ц instead of ДЗ, Ь instead of apostrophe). No dedicated videos exist in the plan for these sounds.
-**Required Fix**: Either use the overview video (ksXIXj7CXwc) for ДЖ, ДЗ, and Apostrophe items, or remove these items from the watch-and-repeat activity and add a note explaining these sounds lack dedicated videos.
+### Finding 2: Verb in Pre-Verb Module — цо́кає (MORPHOLOGICAL_VIOLATION)
+**Location**: Line 65, Section "Африкати, Щ та Ф"
+**Problem**: цо́кає is verb:imperf:pres:s:3 per VESUM. Module M4 is pre-verb (verbs forbidden before M15). While this appears inside a cultural riddle quote, it still introduces a conjugated verb form that hasn't been taught.
+**Required Fix**: Rephrase to avoid the verb form. Use: «Не годи́нник, а цо́к-цо́к-цо́к.» — onomatopoeia instead of verb, preserving the Ц focus and riddle spirit.
 **Severity**: HIGH
 
-### Finding 3: Verb Forms in Pre-Verb Module (HIGH — Morphological Scope Violation)
-**Location**: Content lines 122-123, Activities lines 263-270 / Section "Весь алфавіт! — The Full Alphabet Mastered"
-**Problem**: Дякую is a 1st person singular verb (VESUM: verb:imperf:pres:s:1). Будь is an imperative (VESUM: verb:imperf:impr:s:2). Module M4 is pre-verbal — verbs are introduced at M15. The research notes explicitly warn: "present them as read-aloud labels, not as communicative structures." The content introduces them as survival phrases but the fill-in activity (line 263-270) uses them as production targets, which contradicts this guidance.
-**Required Fix**: In the prose, add a framing sentence: "These are fixed phrases — you don't need to understand the grammar yet, just recognize and read them." In activities, restructure the fill-in items for Дякую and Будь ласка to be match-up or recognition tasks rather than production tasks.
+### Finding 3: Verb in Pre-Verb Module — дзвони́ти (MORPHOLOGICAL_VIOLATION)
+**Location**: Line 113, Section "Диграфи ДЖ, ДЗ"
+**Problem**: дзвони́ти is verb:imperf:inf per VESUM. Explicitly teaching a verb derivation (noun → verb) is grammar scope creep for M4.
+**Required Fix**: Remove the verb derivation. Replace with a cultural detail that keeps the ДЗ focus: "The word дзвін is everywhere in Ukrainian life — from church towers to phone calls."
 **Severity**: HIGH
 
-### Finding 4: Activity VESUM Failures on Distractors (LOW — Intentional but Audit-Blocking)
-**Location**: Activities file, lines 108-158 / Activity "Apostrophe Rules"
-**Problem**: These are deliberately misspelled forms used as wrong answer options in the apostrophe quiz. Pedagogically this is sound — the quiz tests apostrophe knowledge. However, the VESUM audit pipeline flags them as "non-existent forms" causing ACTIVITY_VESUM_FAIL. The audit status is FAIL partly because of this.
-**Required Fix**: This requires a pipeline/tooling fix — the VESUM checker should exempt explicitly-marked distractors in spelling quizzes. As a content-level workaround, add a `vesum_exempt: true` flag (if schema supports it) or document in activity notes that these are intentional misspellings.
-**Severity**: HIGH
-
-### Finding 5: Words мить and тінь Not in Prose or Vocabulary (LOW)
-**Location**: Activities file, lines 52-61 / Activity "Which Consonant Is Softened?"
-**Problem**: Learners encounter unfamiliar words for the first time in an activity without prior exposure. At A1, this violates the PPP "Present before Practice" principle.
-**Required Fix**: Either add мить to the prose (e.g., in the Ь section as another example: "мить (moment) — soft Т") and add it to vocabulary YAML, OR replace мить/тінь with words already in the lesson.
+### Finding 4: D.0 Pre-Screen Dismissals
 **Severity**: HIGH
 
 ---
 
 ## Critical Issues Found
 
-### Issue 1: Activity Classification Error — тінь in Wrong Category (HIGH)
-- **Location**: Activities file, line 59-61 / Activity "Which Consonant Is Softened?"
-- **Original**: 「- label: "Soft Т" ... items: ["мить", "тінь"]」
-- **Problem**: тінь (Т-І-Н-Ь) has the soft sign after Н, not Т. The Ь softens Н. мить (М-И-Т-Ь) correctly has soft Т, but тінь belongs in the "Soft Н" category alongside день, кінь, осінь.
-- **Fix**: Move тінь from "Soft Т" to "Soft Н". Add a different word with soft Т to replace it (e.g., "сміть" or keep "Soft Т" with just "мить" and add another Soft Т word).
+### Issue 1: Wrong Stress — цві́ркун (STRESS_MISMATCH)
+- **Location**: Line 65, Section "Африкати, Щ та Ф"
+- **Original**: 「The answer is **цві́ркун** (cricket)!」
+- **Problem**: Standard Ukrainian stress is цвірку́н (stress on final syllable), not цві́ркун. Confirmed by D.0 stress verification pipeline (2.7M forms).
+- **Fix**: Replace `**цві́ркун**` with `**цвірку́н**`
 
-### Issue 2: Wrong Video URLs in Watch-and-Repeat Activity (MEDIUM)
-- **Location**: Activities file, lines 33-40 / Activity "Watch and Repeat"
-- **Original**: ДЖ item uses 「video: "https://www.youtube.com/watch?v=UsJkbdsY2RA"」 (this is the Ч video). ДЗ item uses video u44eCjR2Oz8 (the Ц video). Apostrophe item uses cJlal8XKBxo (the Ь video).
-- **Problem**: Students clicking these videos will see lessons for completely different sounds (Ч instead of ДЖ, Ц instead of ДЗ, Ь instead of apostrophe). No dedicated videos exist in the plan for these sounds.
-- **Fix**: Either use the overview video (ksXIXj7CXwc) for ДЖ, ДЗ, and Apostrophe items, or remove these items from the watch-and-repeat activity and add a note explaining these sounds lack dedicated videos.
+### Issue 2: Verb in Pre-Verb Module — цо́кає (MORPHOLOGICAL_VIOLATION)
+- **Location**: Line 65, Section "Африкати, Щ та Ф"
+- **Original**: 「«Не годи́нник, а цо́кає.»」
+- **Problem**: цо́кає is verb:imperf:pres:s:3 per VESUM. Module M4 is pre-verb (verbs forbidden before M15). While this appears inside a cultural riddle quote, it still introduces a conjugated verb form that hasn't been taught.
+- **Fix**: Rephrase to avoid the verb form. Use: «Не годи́нник, а цо́к-цо́к-цо́к.» — onomatopoeia instead of verb, preserving the Ц focus and riddle spirit.
 
-### Issue 3: Verb Forms in Pre-Verb Module (HIGH — Morphological Scope Violation)
-- **Location**: Content lines 122-123, Activities lines 263-270 / Section "Весь алфавіт! — The Full Alphabet Mastered"
-- **Original**: 「**Дя́кую!** (Thank you!)」 (line 122) and 「**Будь ла́ска!** (Please!)」 (line 123)
-- **Problem**: Дякую is a 1st person singular verb (VESUM: verb:imperf:pres:s:1). Будь is an imperative (VESUM: verb:imperf:impr:s:2). Module M4 is pre-verbal — verbs are introduced at M15. The research notes explicitly warn: "present them as read-aloud labels, not as communicative structures." The content introduces them as survival phrases but the fill-in activity (line 263-270) uses them as production targets, which contradicts this guidance.
-- **Fix**: In the prose, add a framing sentence: "These are fixed phrases — you don't need to understand the grammar yet, just recognize and read them." In activities, restructure the fill-in items for Дякую and Будь ласка to be match-up or recognition tasks rather than production tasks.
+### Issue 3: Verb in Pre-Verb Module — дзвони́ти (MORPHOLOGICAL_VIOLATION)
+- **Location**: Line 113, Section "Диграфи ДЖ, ДЗ"
+- **Original**: 「The word дзвін also gives Ukrainian the verb **дзвони́ти** (to ring, to call).」
+- **Problem**: дзвони́ти is verb:imperf:inf per VESUM. Explicitly teaching a verb derivation (noun → verb) is grammar scope creep for M4.
+- **Fix**: Remove the verb derivation. Replace with a cultural detail that keeps the ДЗ focus: "The word дзвін is everywhere in Ukrainian life — from church towers to phone calls."
 
-### Issue 4: Activity VESUM Failures on Distractors (LOW — Intentional but Audit-Blocking)
-- **Location**: Activities file, lines 108-158 / Activity "Apostrophe Rules"
-- **Original**: Distractors include мясо, мьясо, пять, пьять, сімя, сімья, обєкт, обьєкт
-- **Problem**: These are deliberately misspelled forms used as wrong answer options in the apostrophe quiz. Pedagogically this is sound — the quiz tests apostrophe knowledge. However, the VESUM audit pipeline flags them as "non-existent forms" causing ACTIVITY_VESUM_FAIL. The audit status is FAIL partly because of this.
-- **Fix**: This requires a pipeline/tooling fix — the VESUM checker should exempt explicitly-marked distractors in spelling quizzes. As a content-level workaround, add a `vesum_exempt: true` flag (if schema supports it) or document in activity notes that these are intentional misspellings.
-
-### Issue 5: Words мить and тінь Not in Prose or Vocabulary (LOW)
-- **Location**: Activities file, lines 52-61 / Activity "Which Consonant Is Softened?"
-- **Original**: мить and тінь appear only in the classify activity, never in the lesson prose or vocabulary YAML.
-- **Problem**: Learners encounter unfamiliar words for the first time in an activity without prior exposure. At A1, this violates the PPP "Present before Practice" principle.
-- **Fix**: Either add мить to the prose (e.g., in the Ь section as another example: "мить (moment) — soft Т") and add it to vocabulary YAML, OR replace мить/тінь with words already in the lesson.
+### Issue 4: D.0 Pre-Screen Dismissals
+- **[MORPHOLOGICAL_VIOLATION] Дя́кую (line 130)**: DISMISSED — properly framed as fixed survival phrase (line 127): 「These are fixed phrases — you will learn how they work grammatically later.」 Standard A1 pedagogy.
+- **[MORPHOLOGICAL_VIOLATION] Будь (line 131)**: DISMISSED — same framing, same justification.
+- **[STRESS_UNKNOWN] Дя́кую (line 130)**: DISMISSED — VESUM finds lowercase дякую (lemma: дякувати, verb:imperf:pres:s:1). Capitalization caused lookup miss.
+- **[ACTIVITY_VESUM_FAIL] (activities)**: DISMISSED — activity has `vesum_exempt: true` with note: "Distractors include intentional misspellings (мясо, мьясо...) to test apostrophe knowledge." These are deliberately invalid forms in a quiz about correct spelling.
 
 ---
 
@@ -109,35 +94,35 @@ When fixing content about the Ukrainian alphabet, vowels, or consonants, use the
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| Act. 59-61 | тінь categorized as "Soft Т" | тінь → "Soft Н" category | Grammar error |
-| 122 | 「**Дя́кую!** (Thank you!)」 — verb form | Add framing: "fixed phrase — no grammar analysis needed yet" | Scope violation |
-| 123 | 「**Будь ла́ска!** (Please!)」 — imperative | Add framing: "fixed phrase — no grammar analysis needed yet" | Scope violation |
+| 65 | 「**цві́ркун**」 | 「**цвірку́н**」 | Stress |
+| 65 | 「а цо́кає」 | 「а цо́к-цо́к-цо́к」 | Scope (verb in M4) |
+| 113 | 「the verb **дзвони́ти** (to ring, to call)」 | (remove verb derivation) | Scope (verb in M4) |
 
 ---
 
 ## Fix Plan to Reach 9/10 (REQUIRED — score < 9.0)
 
-### Activities: 6/10 → 9/10
+### Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
-1. Activities line 61: Move тінь from "Soft Т" to "Soft Н" category — corrects phonological error
-2. Activities lines 33-40: Replace ДЖ, ДЗ, and Apostrophe video URLs with overview video (ksXIXj7CXwc) — prevents misleading video experience
-3. Activities lines 263-270: Reframe Дякую and Будь ласка fill-in items as recognition (match-up) rather than production — aligns with research guidance
+1. Line 65: Change `**цві́ркун**` → `**цвірку́н**` — wrong stress mark
+2. Line 65: Change `«Не годи́нник, а цо́кає.»` → `«Не годи́нник, а цо́к-цо́к-цо́к.»` — removes verb from pre-verb module while keeping Ц focus
+3. Line 113: Remove verb дзвони́ти derivation. Replace: "The word дзвін also gives Ukrainian the verb **дзвони́ти** (to ring, to call)." → "The word **дзвін** is everywhere in Ukrainian life — from church towers to phone calls."
 
 **Expected score after fix:** 9/10
 
-### Linguistic Accuracy: 7/10 → 9/10
-**What to fix:**
-1. Fix тінь classification (same as Activities fix #1 above)
-2. Content lines 119-123: Add framing sentence before survival phrases: "These are fixed phrases you'll learn as whole units — don't worry about the grammar yet, just practice reading them aloud."
-3. Resolve VESUM distractor issue (tooling fix or schema exemption)
+### Language: 8/10 → 9/10
+**What to fix:** Fixes 1-3 above also resolve the Language dimension issues (stress error, scope violations).
 
 **Expected score after fix:** 9/10
+
+### LLM Fingerprint: 8/10 → 8/10
+**Observation only (no fix required for pass):** Example formatting is consistent across sections (bold + parenthetical + dash + context note). This is functional formatting for an alphabet module, not a fingerprint concern worth fixing. No action needed.
 
 ### Projected Overall After Fixes
 ```
-(9×1.5 + 8×1.1 + 8×1.2 + 9×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
-= (13.5 + 8.8 + 9.6 + 11.7 + 11.7 + 8.0 + 13.5) / 8.9
-= 76.8 / 8.9 = 8.6/10
+(9×1.5 + 9×1.1 + 9×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (13.5 + 9.9 + 10.8 + 10.4 + 11.7 + 8.0 + 13.5) / 8.9
+= 77.8 / 8.9 = 8.7/10 → PASS (no auto-fail dimensions)
 ```
 
 ---
@@ -182,7 +167,7 @@ Welcome to your final alphabet lesson! Here is how far you have come:
 *   **Module 3** — You learned every consonant.
 *   **Module 4 (today)** — The final pieces of the puzzle!
 
-Today, we are placing those final pieces: the special modifiers (like the soft sign **Ь** and the apostrophe), the affricates (**Ц**, **Ч**, **Щ**), the unique digraphs (**ДЖ**, **ДЗ**), and the rare letter **Ф**. After completing this module, you will be able to read absolutely ANY Ukrainian word you see. Think about that for a moment — the entire Ukrainian language is about to open up to you! This is a huge milestone. Let's get started and finish what we started.
+Today, we are placing those final pieces: the special modifiers (like the soft sign **Ь** and the apostrophe), the affricates (**Ц**, **Ч**, **Щ**), the unique digraphs (**ДЖ**, **ДЗ**), and the rare letter **Ф**. After completing this module, you will be able to read absolutely ANY Ukrainian word you see. Think about that for a moment — the entire Ukrainian language is about to open up to you! This is a huge milestone. Let's finish what we started!
 
 ## М'який знак — The Soft Sign
 
@@ -199,7 +184,8 @@ Let's look at some common words where **Ь** does its magic:
 *   **Льві́в** (Lviv) — Here, **Ь** softens the **Л** right before the consonant **В**.
 *   **мі́дь** (copper) — The **Д** becomes soft.
 *   **о́сінь** (autumn) — A beautiful word for the season, ending softly.
-*   **мить** (moment) — Here, **Ь** softens the **Т** at the end. A fleeting instant!
+*   **ми́ть** (moment) — Here, **Ь** softens the **Т** at the end. A fleeting instant!
+*   **ті́нь** (shadow) — Here, **Ь** softens the **Н** at the end, just like in де́нь and кі́нь.
 
 > [!tip] The Soft Sign Changes Everything
 > The soft sign isn't just an accent; it can change the entire meaning of a word! Take a look at this minimal pair:
@@ -234,6 +220,9 @@ The letter **Ц** is a true affricate. This means it is the sounds **Т** and **
 *   **цу́кор** (sugar) — An everyday kitchen word.
 *   **цибу́ля** (onion) — Another common food item.
 The **Ц** sound is also very common in Ukrainian word endings, like -ець or -иця.
+
+> [!did-you-know] Загадка з Ц
+> Here is a classic Ukrainian riddle: «Не годи́нник, а цо́к-цо́к-цо́к.» (Not a clock, but tick-tick-tick.) Can you guess? The answer is **цвірку́н** (cricket)! Riddles like these are used in Ukrainian schools to practice the Ц sound.
 
 ### Літера Ч
 [Anna Ohoiko — Ukrainian Lessons — Ч](https://www.youtube.com/watch?v=UsJkbdsY2RA)
@@ -279,6 +268,9 @@ The first digraph is **ДЖ**. This sounds just like the English 'j' in 'jungle'
 The second digraph is **ДЗ**. This sound has no direct English equivalent! You have to buzz it together as one sound. It is the voiced partner of the letter **Ц**. This sound is distinctly Ukrainian — a hallmark of authentic Ukrainian phonology.
 *   **дзві́н** (bell) — A very important cultural word. Church bells are a big part of Ukrainian history.
 *   **дзе́ркало** (mirror) — An everyday object you will find in any home.
+
+> [!culture] Дзвін — The Sound of Ukraine
+> Church bells (**дзві́н**) have deep cultural significance in Ukraine. The word **дзвін** is everywhere in Ukrainian life — from church towers to phone calls. The **ДЗ** sound is distinctly Ukrainian — you will not find it in many other languages. When you hear that buzzing **ДЗ**, you are hearing something uniquely Ukrainian!
 
 > [!note] One Sound, Not Two
 > Remember, when you see **ДЖ** or **ДЗ**, do not split them up! Treat them as a single sound block.
@@ -663,6 +655,11 @@ items:
     pos: "noun"
     gender: "f"
     notes: "Demonstrates Ь softening Т. Used in classify activity."
+  - lemma: "тінь"
+    translation: "shadow"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates Ь softening Н. Used in classify activity."
   - lemma: "м'ясо"
     translation: "meat"
     pos: "noun"
@@ -709,8 +706,8 @@ items:
     notes: "Demonstrates Ч. High-frequency drink word."
   - lemma: "що"
     translation: "what"
-    pos: "conjunction"
-    notes: "Demonstrates Щ (Ш+Ч cluster). Top 10 word."
+    pos: "pronoun"
+    notes: "Demonstrates Щ (Ш+Ч cluster). Top 10 word. Interrogative pronoun in 'Що це?'"
   - lemma: "щастя"
     translation: "happiness"
     pos: "noun"
@@ -736,6 +733,25 @@ items:
     pos: "noun"
     gender: "m"
     notes: "Demonstrates apostrophe after Б before Є. Prefix-root separation."
+  - lemma: "фото"
+    translation: "photo"
+    pos: "noun"
+    gender: "n"
+    notes: "Demonstrates Ф. Indeclinable borrowed word."
+  - lemma: "ще"
+    translation: "still; more"
+    pos: "adverb"
+    notes: "Demonstrates Щ. High-frequency adverb."
+  - lemma: "бджола"
+    translation: "bee"
+    pos: "noun"
+    gender: "f"
+    notes: "Demonstrates ДЖ digraph. Nature vocabulary."
+  - lemma: "дзеркало"
+    translation: "mirror"
+    pos: "noun"
+    gender: "n"
+    notes: "Demonstrates ДЗ digraph. Everyday object."
 ```
 
 ---

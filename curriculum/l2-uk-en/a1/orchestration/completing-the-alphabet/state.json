@@ -50,6 +50,17 @@
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
       }
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-03-18T23:47:12Z",
+      "attempts": 5,
+      "note": "exhausted-content-passes",
+      "executor": {
+        "type": "llm",
+        "agent": "claude",
+        "model": "claude-opus-4-6"
+      }
     }
   }
 }

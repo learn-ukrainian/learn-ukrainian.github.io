@@ -1,28 +1,20 @@
 # RAG Verification: colors-and-clothing
 
-**Date:** 2026-03-18 01:55 UTC | **Words checked:** 94 | **VESUM coverage:** 91/94 (96.8%)
+**Date:** 2026-03-18 23:49 UTC | **Words checked:** 64 | **VESUM coverage:** 63/64 (98.4%)
 
 ## Summary
-- ✅ Verified (VESUM): 91
-- ⚠️ Partial (RAG only): 2
-- ❌ Not found: 1
-
-## ❌ Not Found (action required)
-
-| Word | Source | VESUM | Textbook | Literary |
-|------|--------|-------|----------|----------|
-| штан | prose | ✗ | ✗ | ✗ |
+- ✅ Verified (VESUM): 63
+- ⚠️ Partial (RAG only): 1
+- ❌ Not found: 0
 
 ## ⚠️ Partial Match (human review)
 
 | Word | Source | VESUM | Textbook | Literary |
 |------|--------|-------|----------|----------|
 | ий | prose | ✗ | ✓ | ✗ |
-| ій | prose | ✗ | ✓ | ✗ |
 
 ## ✅ Statistics by Source
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 77 | 74 | 1 |
-| Activities (.yaml) | 17 | 17 | 0 |
+| Prose (.md) | 64 | 63 | 0 |

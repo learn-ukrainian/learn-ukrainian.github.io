@@ -2,7 +2,7 @@
   "module": "this-is-i-am",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-18T03:15:43.395275Z",
+  "last_audit": "2026-03-19T00:44:10.948057Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-18T01:52:26.281128Z",
@@ -20,8 +20,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1432/1200 (raw: 1858) | pedagogy: 9 violations | immersion: 20.1% HIGH (target 10-20% (M09))"
+      "violations": 1,
+      "message": "1432/1200 (raw: 1858) | pedagogy: 9 violations"
     },
     "activities": {
       "status": "pass",

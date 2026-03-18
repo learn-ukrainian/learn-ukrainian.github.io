@@ -1,7 +1,7 @@
 # Audit Report: M09 — this-is-i-am.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-03-18 03:15:43
+**Generated:** 2026-03-19 00:44:10
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥3 callouts
+**Engagement:** ≥1 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -51,18 +51,15 @@
   - FIX: Adjust sentence length to 4-6 words to match A1 complexity.
 - **[COMPLEXITY_WORD_COUNT]** unjumble 'Put the Words in Order' item 5 has 2 words (target: 4-6)
   - FIX: Adjust sentence length to 4-6 words to match A1 complexity.
-- **[VOCAB_NOT_IN_CONTENT]** Only 13/20 (65%) vocabulary words appear in content+activities. Missing: вона, вони, воно, він, хто, це, що
-  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Unscramble the Word' has item-level hint in item 1
   - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 - **[YAML_SCHEMA_VIOLATION]** Schema error in this-is-i-am.yaml: Schema validation error at key 'words': ['студент', 'Я'] is too short
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 30/100)
 
-- Revision recommended (severity 50/100)
-- 11 violations (severe - consider revision)
+- 10 violations (significant)
 
 ## Gates
 - **Words:** ✅ 1432/1200 (raw: 1858)
@@ -70,14 +67,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Engagement:** ✅ 6/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 9 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 20.1% HIGH (target 10-20% (M09))
+- **Immersion:** ⚠️ 20.1% (target 10-20%, within tolerance (M09))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section

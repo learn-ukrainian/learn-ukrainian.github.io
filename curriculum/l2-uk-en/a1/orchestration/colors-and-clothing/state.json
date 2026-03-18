@@ -24,43 +24,21 @@
     },
     "content": {
       "status": "complete",
-      "ts": "2026-03-18T01:29:33Z",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "validate": {
-      "status": "failed",
-      "ts": "2026-03-18T01:48:58Z",
-      "attempts": 2,
-      "note": "exhausted",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "activities": {
-      "status": "complete",
-      "ts": "2026-03-18T01:50:41Z",
-      "task_id": "v5-colors-and-clothing-pC",
-      "executor": {
-        "type": "llm",
-        "agent": "claude",
-        "model": "claude-opus-4-6"
-      }
-    },
-    "review": {
-      "status": "failed",
-      "ts": "2026-03-18T01:55:01Z",
-      "attempts": 1,
-      "note": "needs-manual-review",
+      "ts": "2026-03-18T23:48:42Z",
       "executor": {
         "type": "llm",
         "agent": "gemini",
         "model": "gemini-3.1-pro-preview"
+      }
+    },
+    "validate": {
+      "status": "failed",
+      "ts": "2026-03-18T23:49:07Z",
+      "attempts": 0,
+      "note": "precheck-prompt-bug:systemic-5-failures",
+      "executor": {
+        "type": "deterministic",
+        "name": "morphological_validator"
       }
     }
   }

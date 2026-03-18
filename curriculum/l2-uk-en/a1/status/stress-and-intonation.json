@@ -2,10 +2,10 @@
   "module": "stress-and-intonation",
   "level": "A1",
   "plan_version": "3.0",
-  "last_audit": "2026-03-19T00:27:04.355221Z",
+  "last_audit": "2026-03-19T00:41:47.331039Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-19T00:25:00.686059Z",
+    "md": "2026-03-19T00:38:33.910099Z",
     "meta": "2026-03-18T23:49:04.061169Z",
     "activities": "2026-03-18T23:59:31.264213Z",
     "vocabulary": "2026-03-19T00:25:00.687802Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1878/1200 (raw: 1907)"
+      "message": "2061/1200 (raw: 2098)"
     },
     "activities": {
       "status": "pass",

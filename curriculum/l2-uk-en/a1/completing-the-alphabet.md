@@ -7,7 +7,7 @@ Welcome to your final alphabet lesson! Here is how far you have come:
 *   **Module 3** — You learned every consonant.
 *   **Module 4 (today)** — The final pieces of the puzzle!
 
-Today, we are placing those final pieces: the special modifiers (like the soft sign **Ь** and the apostrophe), the affricates (**Ц**, **Ч**, **Щ**), the unique digraphs (**ДЖ**, **ДЗ**), and the rare letter **Ф**. After completing this module, you will be able to read absolutely ANY Ukrainian word you see. Think about that for a moment — the entire Ukrainian language is about to open up to you! This is a huge milestone. Let's get started and finish what we started.
+Today, we are placing those final pieces: the special modifiers (like the soft sign **Ь** and the apostrophe), the affricates (**Ц**, **Ч**, **Щ**), the unique digraphs (**ДЖ**, **ДЗ**), and the rare letter **Ф**. After completing this module, you will be able to read absolutely ANY Ukrainian word you see. Think about that for a moment — the entire Ukrainian language is about to open up to you! This is a huge milestone. Let's finish what we started!
 
 ## М'який знак — The Soft Sign
 
@@ -61,6 +61,9 @@ The letter **Ц** is a true affricate. This means it is the sounds **Т** and **
 *   **цибу́ля** (onion) — Another common food item.
 The **Ц** sound is also very common in Ukrainian word endings, like -ець or -иця.
 
+> [!did-you-know] Загадка з Ц
+> Here is a classic Ukrainian riddle: «Не годи́нник, а цо́к-цо́к-цо́к.» (Not a clock, but tick-tick-tick.) Can you guess? The answer is **цвірку́н** (cricket)! Riddles like these are used in Ukrainian schools to practice the Ц sound.
+
 ### Літера Ч
 [Anna Ohoiko — Ukrainian Lessons — Ч](https://www.youtube.com/watch?v=UsJkbdsY2RA)
 
@@ -105,6 +108,9 @@ The first digraph is **ДЖ**. This sounds just like the English 'j' in 'jungle'
 The second digraph is **ДЗ**. This sound has no direct English equivalent! You have to buzz it together as one sound. It is the voiced partner of the letter **Ц**. This sound is distinctly Ukrainian — a hallmark of authentic Ukrainian phonology.
 *   **дзві́н** (bell) — A very important cultural word. Church bells are a big part of Ukrainian history.
 *   **дзе́ркало** (mirror) — An everyday object you will find in any home.
+
+> [!culture] Дзвін — The Sound of Ukraine
+> Church bells (**дзві́н**) have deep cultural significance in Ukraine. The word **дзвін** is everywhere in Ukrainian life — from church towers to phone calls. The **ДЗ** sound is distinctly Ukrainian — you will not find it in many other languages. When you hear that buzzing **ДЗ**, you are hearing something uniquely Ukrainian!
 
 > [!note] One Sound, Not Two
 > Remember, when you see **ДЖ** or **ДЗ**, do not split them up! Treat them as a single sound block.

@@ -1,7 +1,7 @@
 # Audit Report: M10 — my-world-objects.md
 **Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-03-18 02:15:01
+**Generated:** 2026-03-19 00:44:57
 
 ## Configuration
 **Type:** A1-grammar
@@ -11,7 +11,7 @@
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
 **Required Types:** fill-in, match-up, quiz
-**Engagement:** ≥3 callouts
+**Engagement:** ≥1 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -37,7 +37,7 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 3/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Engagement:** ✅ 5/1
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure

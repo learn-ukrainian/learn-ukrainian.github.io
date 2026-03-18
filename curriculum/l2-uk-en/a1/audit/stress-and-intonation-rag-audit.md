@@ -1,9 +1,9 @@
 # RAG Verification: stress-and-intonation
 
-**Date:** 2026-03-18 23:27 UTC | **Words checked:** 80 | **VESUM coverage:** 71/80 (88.8%)
+**Date:** 2026-03-18 23:41 UTC | **Words checked:** 83 | **VESUM coverage:** 74/83 (89.2%)
 
 ## Summary
-- ✅ Verified (VESUM): 71
+- ✅ Verified (VESUM): 74
 - ⚠️ Partial (RAG only): 4
 - ❌ Not found: 5
 
@@ -30,5 +30,5 @@
 
 | Source | Words | VESUM ✓ | Not Found |
 |--------|-------|---------|-----------|
-| Prose (.md) | 62 | 61 | 0 |
+| Prose (.md) | 65 | 64 | 0 |
 | Activities (.yaml) | 18 | 10 | 5 |
