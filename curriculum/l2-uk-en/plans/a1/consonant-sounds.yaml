@@ -2,7 +2,7 @@ module: a1-003
 level: A1
 sequence: 3
 slug: consonant-sounds
-version: '2.0'
+version: '2.1'
 title: Consonant Sounds
 subtitle: "Приголосні звуки — Voiced, Voiceless, Hard, and Soft"
 focus: grammar
@@ -35,7 +35,7 @@ content_outline:
 - section: "Дзвінкі та глухі пари — Voiced and Voiceless Pairs"
   words: 400
   points:
-  - "Hand-on-throat test: voiced (дзвінкий) = throat vibrates. Voiceless (глухий)
+  - "Hands-on-ears test (закрий долонями вуха): voiced (дзвінкий) = you hear a buzz. Voiceless (глухий)
     = only air. Each pair is identical mouth position, different voicing."
   - "Б/П — бабуся (grandma) / павук (spider). Б = voiced, П = voiceless."
   - "Д/Т — дім (house) / тато (M1 review). Д = voiced, Т = voiceless."
@@ -53,7 +53,7 @@ content_outline:
   points:
   - "Most Ukrainian consonants come in hard/soft variants. A consonant becomes soft
     (palatalized) before І, Я, Ю, Є or when followed by Ь (covered in M4)."
-  - "Examples: ліс (soft Л), день (soft Д and Н), сіль (soft С and Л)."
+  - "Examples: ліс (soft Л), день (soft Д and Н), кінь (soft Н)."
   - "Compare: лук (hard Л — bow (weapon)) vs люк (soft Л — hatch). The consonant changes,
     not the vowel!"
   - "Always-hard: Ж, Ш are always hard. Й is always soft. Details on Ь (the soft
@@ -89,11 +89,11 @@ vocabulary_hints:
   recommended:
   - "павук (spider) — demonstrates П; Bolshakova"
   - "ґанок (porch) — demonstrates rare Ґ; classic textbook word"
-  - "сіль (salt) — demonstrates soft С and Л; everyday kitchen word"
+  - "кінь (horse) — demonstrates soft Н; minimal pair with кін"
   - "люди (people) — demonstrates soft Л; high-frequency"
   - "суп (soup) — voiceless pair drill with зуб; everyday food"
   - "вода (water) — demonstrates В; high-frequency"
-  - "цибуля (onion) — hard Л; minimal pair with люк"
+  - "дим (smoke) — voiced Д; minimal pair with дім"
   - "люк (hatch) — soft Л; minimal pair with лук"
 activity_hints:
 - type: watch-and-repeat
@@ -109,7 +109,7 @@ activity_hints:
   focus: "Match voiced consonant to its voiceless partner (Б↔П, Д↔Т, З↔С, Ж↔Ш, Г↔Х)"
   items: 6
 - type: quiz
-  focus: "Hand-on-throat test — is this consonant voiced or voiceless?"
+  focus: "Hands-on-ears test — is this consonant voiced or voiceless?"
   items: 10
 - type: classify
   focus: "Hard or soft? Identify consonant quality in context (лук vs люк)"

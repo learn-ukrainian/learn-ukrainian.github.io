@@ -174,15 +174,15 @@ MODULE_TYPE_TARGETS = {
         'threshold': 85,
     },
     'beginner': {
-        'engagement': 3,
-        'examples': 12,
-        'dialogues': 0,
-        'cultural': 1,
-        'realworld': 1,
+        'engagement': 2,    # Mar 2026: lowered from 3 — phonetics modules have fewer natural engagement points
+        'examples': 8,      # Mar 2026: lowered from 12 — alphabet modules use letter lists not example sentences
+        'dialogues': 0,     # Not applicable for phonetics
+        'cultural': 0,      # Mar 2026: lowered from 1 — cultural content comes at M7+
+        'realworld': 0,     # Mar 2026: lowered from 1 — phonetics is abstract
         'questions': 2,
-        'tables': 1,
+        'tables': 0,        # Mar 2026: lowered from 1 — not all phonetics topics need tables
         'video_embeds': 2,
-        'threshold': 70,
+        'threshold': 60,    # Mar 2026: lowered from 70 — phonetics modules are inherently less rich
     },
     'skills': {
         'engagement': 5,
