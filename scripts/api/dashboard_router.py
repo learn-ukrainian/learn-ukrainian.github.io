@@ -53,7 +53,7 @@ async def overview():
     levels = manifest.get("levels", {})
 
     tracks = []
-    totals = {"pass": 0, "content_complete": 0, "fail": 0, "unaudited": 0, "missing": 0, "total": 0}
+    totals = {"pass": 0, "content_complete": 0, "fail": 0, "unaudited": 0, "missing": 0, "shippable": 0, "total": 0}
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
@@ -229,7 +229,29 @@ async def module_detail(track_id: str, slug: str):
     result["review_verdict"] = review_info["review_verdict"]
     result["plan_review_verdict"] = review_info["plan_review_verdict"]
 
-    orch_info = get_orchestration_info(track_dir / "orchestration" / slug)
+    # Shippable = audit pass + review >= 8.0 (#971)
+    audit_status = result.get("status", {})
+    overall = audit_status.get("overall", {}).get("status") if isinstance(audit_status, dict) else None
+    r_score = review_info["review_score"]
+    result["shippable"] = overall == "pass" and r_score is not None and r_score >= 8.0
+
+    # Friction from friction.yaml (#970)
+    orch_dir = track_dir / "orchestration" / slug
+    friction_path = orch_dir / "friction.yaml"
+    result["friction_active"] = 0
+    result["friction_resolved"] = 0
+    if friction_path.exists():
+        try:
+            fdata = yaml.safe_load(friction_path.read_text())
+            for f in fdata.get("frictions", []) if fdata else []:
+                if f.get("status") == "active":
+                    result["friction_active"] += 1
+                elif f.get("status") == "resolved":
+                    result["friction_resolved"] += 1
+        except Exception:
+            pass
+
+    orch_info = get_orchestration_info(orch_dir)
     result.update(orch_info)
 
     return result

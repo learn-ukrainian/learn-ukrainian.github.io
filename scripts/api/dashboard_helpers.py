@@ -171,13 +171,32 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     orch_exists = orch_dir.exists()
     pipeline_version = detect_pipeline_version(orch_dir) if orch_exists else "unbuilt"
     review_info = extract_review_info(track_dir, slug)
-    friction_count = sum(1 for _ in orch_dir.glob("*friction*")) if orch_exists else 0
+    # Friction from friction.yaml (active count only, not glob of all friction files)
+    friction_active = 0
+    friction_resolved = 0
+    friction_path = orch_dir / "friction.yaml" if orch_exists else None
+    if friction_path and friction_path.exists():
+        try:
+            import yaml
+            fdata = yaml.safe_load(friction_path.read_text("utf-8"))
+            for f in fdata.get("frictions", []) if fdata else []:
+                if f.get("status") == "active":
+                    friction_active += 1
+                elif f.get("status") == "resolved":
+                    friction_resolved += 1
+        except Exception:
+            pass
+
+    # Shippable = audit PASS + review >= 8.0
+    r_score = review_info["review_score"]
+    is_shippable = overall_status == "pass" and r_score is not None and r_score >= 8.0
 
     return {
         "slug": slug, "num": num, "pipeline_version": pipeline_version,
         "needs_rebuild": pipeline_version != "v4",
         "status": overall_status, "word_count": word_count, "word_target": word_target,
         "deferred_count": deferred_count, "gates": gates,
+        "shippable": is_shippable,
         "files": {
             "plan": has_plan, "meta": has_meta, "lesson": has_md,
             "activities": has_activities, "vocabulary": has_vocab,
@@ -190,7 +209,10 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
         "review_verdict": review_info["review_verdict"],
         "has_plan_review": review_info["has_plan_review"],
         "plan_review_verdict": review_info["plan_review_verdict"],
-        "friction_count": friction_count, "last_audit": last_audit,
+        "friction_active": friction_active,
+        "friction_resolved": friction_resolved,
+        "friction_count": friction_active,  # backward compat — now means active only
+        "last_audit": last_audit,
         "is_fresh": result.is_fresh if result else False,
         "research": research_info,
     }
@@ -204,6 +226,7 @@ def compute_track_stats(modules: list, track_id: str) -> dict:
         "fail": sum(1 for m in modules if m["status"] == "fail"),
         "unaudited": sum(1 for m in modules if m["status"] == "unaudited"),
         "missing": sum(1 for m in modules if m["status"] == "missing"),
+        "shippable": sum(1 for m in modules if m.get("shippable")),
         "reviewed": sum(1 for m in modules if m.get("has_review")),
         "final_review": sum(1 for m in modules if m.get("has_final_review")),
         "plan_reviewed": sum(1 for m in modules if m.get("has_plan_review")),

@@ -260,14 +260,15 @@ async function fetchModuleDetail(trackId, slug) {
 
 function renderStatsBar(totals) {
   const bar = document.getElementById('stats-bar');
+  // Count shippable from the loaded data
+  const shippableCount = totals.shippable || 0;
   bar.innerHTML = `
     <div class="stat-card total"><div class="value">${totals.total}</div><div class="label">Total Modules</div></div>
-    <div class="stat-card pass"><div class="value">${totals.pass}</div><div class="label">Passing</div></div>
-    <div class="stat-card prose"><div class="value">${totals.content_complete}</div><div class="label">Content Complete</div></div>
+    <div class="stat-card pass"><div class="value" style="color:var(--green);font-size:32px">${shippableCount}</div><div class="label">Shippable</div></div>
+    <div class="stat-card prose"><div class="value">${totals.pass}</div><div class="label">Audit Pass</div></div>
     <div class="stat-card fail"><div class="value">${totals.fail}</div><div class="label">Failing</div></div>
-    <div class="stat-card"><div class="value" style="color:var(--yellow)">${totals.unaudited}</div><div class="label">Unaudited</div></div>
-    <div class="stat-card"><div class="value" style="color:var(--gray)">${totals.missing}</div><div class="label">Missing</div></div>
-    <div class="stat-card"><div class="value" style="color:var(--purple)">${totals.total > 0 ? Math.round(totals.pass / totals.total * 100) : 0}%</div><div class="label">Complete</div></div>
+    <div class="stat-card"><div class="value" style="color:var(--yellow)">${totals.unaudited + totals.missing}</div><div class="label">Not Built</div></div>
+    <div class="stat-card"><div class="value" style="color:var(--purple)">${totals.total > 0 ? Math.round(shippableCount / totals.total * 100) : 0}%</div><div class="label">Ship Rate</div></div>
   `;
 }
 
@@ -325,23 +326,17 @@ async function toggleTrack(trackId) {
 
 function renderModuleGrid(container, data, trackId) {
   const cells = data.modules.map(m => {
-    const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
+    // Color by shippable status: green = shippable, blue = audit pass (not shippable), red = fail
+    const cls = m.shippable ? 'pass' : m.status === 'pass' ? 'content-complete' : m.status === 'content-complete' ? 'content-complete' : m.status;
     const isV5 = m.pipeline_version === 'v5';
     const obsolete = isV5 ? '' : ' obsolete';
-    const reviewBadge = m.has_review ? '<div class="review-badge" title="Reviewed"></div>' : '';
-    const qaBadge = m.has_final_review ? '<div class="qa-badge" title="Final QA done"></div>' : '';
-    const pipelineBadge = isV5 ? '<div class="v5-badge" style="background:var(--green)">v5</div>' : '';
-    const planCls = m.plan_review_verdict === 'PASS' ? 'plan-pass' : m.plan_review_verdict === 'NEEDS FIXES' ? 'plan-needs-fixes' : m.plan_review_verdict === 'FAIL' ? 'plan-fail' : '';
-    const planBadge = m.has_plan_review ? `<div class="plan-badge ${planCls}" title="Plan: ${m.plan_review_verdict || '?'}"></div>` : '';
-    const verLabel = m.pipeline_version ? ` [${m.pipeline_version}]` : '';
-    const reviewLabel = m.has_review ? ' ✓Rev' : '';
-    const qaLabel = m.has_final_review ? ' ✓QA' : '';
-    const planLabel = m.has_plan_review ? ` Plan:${m.plan_review_verdict || '?'}` : '';
+    const reviewScore = m.review_score != null ? `${m.review_score}/10` : '';
+    const frictionLabel = m.friction_active > 0 ? ` ${m.friction_active}f` : '';
+    const shipLabel = m.shippable ? ' ✅' : '';
     return `
       <div class="module-cell ${cls}${obsolete}" onclick="openModule('${trackId}','${m.slug}')" title="${m.slug}">
         ${m.num}
-        ${reviewBadge}${qaBadge}${planBadge}${pipelineBadge}
-        <div class="tooltip">${m.slug} (${m.status})${verLabel}${reviewLabel}${qaLabel}${planLabel}</div>
+        <div class="tooltip">${m.slug} ${m.shippable ? '✅ SHIPPABLE' : m.status} ${reviewScore}${frictionLabel}</div>
       </div>
     `;
   }).join('');
@@ -476,14 +471,17 @@ function renderModulePanel(container, m, stateData) {
   }
 
   let frictionHtml = '';
-  if (m.friction_count > 0) {
-    frictionHtml = `<div style="margin-top:4px;font-size:12px;color:var(--yellow);">Build friction: ${m.friction_count} event${m.friction_count > 1 ? 's' : ''}</div>`;
+  const fActive = m.friction_active || 0;
+  const fResolved = m.friction_resolved || 0;
+  if (fActive > 0 || fResolved > 0) {
+    frictionHtml = `<div style="margin-top:4px;font-size:12px;color:${fActive > 0 ? 'var(--yellow)' : 'var(--text3)'};">Frictions: ${fActive} active, ${fResolved} resolved</div>`;
   }
 
   container.innerHTML = `
     <h2>${m.slug}</h2>
     <div class="track-label">${m.track} &middot; Module &middot; <span style="color:${versionColor};font-weight:600">${pipelineVersion}</span></div>
-    <span class="status-badge ${statusCls}">${status}</span>${planReviewHtml}
+    <span class="status-badge ${statusCls}">${status}</span>
+    ${m.shippable ? '<span class="status-badge pass" style="margin-left:8px;">SHIPPABLE</span>' : ''}${planReviewHtml}
     ${reviewScoreHtml}
     ${frictionHtml}
 
