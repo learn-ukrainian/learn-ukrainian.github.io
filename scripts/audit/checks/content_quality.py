@@ -422,6 +422,15 @@ def validate_characters_in_content(
                 # e.g., "исконно русский Крым" (укр. «споконвічно російський Крим»)
                 if is_inside_quoted_string(line, char_pos):
                     continue
+                # Allow Russian chars in educational comparison context (#975)
+                # e.g., "Ukrainian lacks letters that Russian has (like Ъ, Ы, Э)"
+                line_lower = line.lower()
+                if any(marker in line_lower for marker in (
+                    "russian has", "russian lacks", "russian uses",
+                    "відсутні в українській", "немає в українській",
+                    "[!culture]", "[!myth-buster]", "[!decolonization]",
+                )):
+                    continue
 
                 russian_only_found.append({
                     'char': char,
@@ -439,9 +448,16 @@ def validate_characters_in_content(
                 # Allow if:
                 # 1. In a historical track AND in a blockquote
                 # 2. In an explicitly marked historical quote block
+                # 3. In an educational comparison context (#975)
                 if is_historical_track and is_quote:
                     continue
                 if is_explicit_historical:
+                    continue
+                line_lower = line.lower()
+                if any(marker in line_lower for marker in (
+                    "russian has", "russian lacks", "russian uses",
+                    "[!culture]", "[!myth-buster]", "[!decolonization]",
+                )):
                     continue
 
                 # Otherwise, flag it

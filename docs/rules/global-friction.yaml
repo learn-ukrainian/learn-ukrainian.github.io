@@ -54,6 +54,18 @@ frictions:
     source: "M02 review (vowel-sounds) — #969"
     date_added: "2026-03-17"
 
+  - id: gf-007
+    status: active
+    type: pedagogical
+    description: >
+      NEVER frame Ukrainian as "lacking" or "missing" letters that Russian
+      has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT
+      write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these
+      Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І
+      are unique to Ukrainian. Present Ukrainian on its own terms.
+    source: "M01 rebuild review — #975"
+    date_added: "2026-03-18"
+
   - id: gf-005
     status: resolved
     type: linguistic
