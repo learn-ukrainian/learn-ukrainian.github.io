@@ -398,7 +398,6 @@ def fix_image_to_letter_items(activity: dict) -> list[str]:
 
         # Fix 'image: cat.jpg' — non-emoji string in image field
         if 'image' in item and not _is_emoji(item['image']):
-            # Move the fake image to note, replace with placeholder emoji
             item['note'] = item.get('note', '') or item['image']
             item['image'] = '📝'
             fixes.append(f"Replaced non-emoji image '{item['note']}' with placeholder")
@@ -412,6 +411,11 @@ def fix_image_to_letter_items(activity: dict) -> list[str]:
                 item['emoji'] = '📝'
                 fixes.append(f"Added placeholder emoji, moved '{wrong_field}' to 'note'")
                 break
+
+        # No emoji/image at all — just answer + distractors. Add placeholder.
+        if 'emoji' not in item and 'image' not in item:
+            item['emoji'] = '📝'
+            fixes.append("Added placeholder emoji (no image source provided)")
 
         # Uppercase answer
         if 'answer' in item and len(item['answer']) == 1 and item['answer'].islower():
