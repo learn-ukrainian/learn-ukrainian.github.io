@@ -4,7 +4,10 @@ Contains research detail computation, module detail deep-dive,
 pipeline version phase resolution, and legacy research/content checks.
 """
 
+import contextlib
+import re
 from datetime import UTC, datetime
+from pathlib import Path
 
 from .config import CURRICULUM_ROOT
 from .state_helpers import (
@@ -132,6 +135,53 @@ def _assess_module_research(track_dir, track_id, num, slug, *, rp_finder, assess
     return mod_entry, info.get("quality"), info.get("score")
 
 
+def _get_friction_data(orch_dir: Path) -> dict:
+    """Read friction.yaml and return summary. Returns empty dict if no file."""
+    friction_path = orch_dir / "friction.yaml"
+    if not friction_path.exists():
+        return {"active": 0, "resolved": 0, "items": []}
+    try:
+        import yaml
+        data = yaml.safe_load(friction_path.read_text("utf-8"))
+        frictions = data.get("frictions", []) if data else []
+        active = [f for f in frictions if f.get("status") == "active"]
+        resolved = [f for f in frictions if f.get("status") == "resolved"]
+        return {
+            "active": len(active),
+            "resolved": len(resolved),
+            "items": [{"id": f.get("id", ""), "type": f.get("type", ""),
+                       "description": f.get("description", "").strip()[:200]}
+                      for f in active],
+        }
+    except Exception:
+        return {"active": 0, "resolved": 0, "items": []}
+
+
+def _get_review_score(track_dir: Path, slug: str) -> dict:
+    """Parse review file for numeric score and verdict."""
+    review_path = track_dir / "review" / f"{slug}-review.md"
+    if not review_path.exists():
+        return {"exists": False, "score": None, "verdict": None}
+    text = review_path.read_text("utf-8")
+    score = None
+    m = re.search(r"Overall Score[:\s*]*(\d+(?:\.\d+)?)/10", text)
+    if m:
+        with contextlib.suppress(ValueError):
+            score = float(m.group(1))
+    verdict = None
+    # Last Status: PASS/FAIL in the file
+    for vm in re.finditer(r"\*\*Status:\*\*\s*(PASS|FAIL)", text):
+        verdict = vm.group(1)
+    return {"exists": True, "score": score, "verdict": verdict}
+
+
+def _compute_shippable(audit_status: str, review_score: float | None) -> bool:
+    """Module is shippable if audit PASS + review >= 8.0."""
+    if audit_status != "pass":
+        return False
+    return not (review_score is None or review_score < 8.0)
+
+
 def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
     """Compute single module deep-dive data."""
     plan_slugs = get_plan_slugs(track_id)
@@ -166,7 +216,10 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
             "exists": has_research_file(track_dir, slug),
             "score": get_research_score(track_dir, slug, track_id),
         },
-        "review": {"exists": (track_dir / "review" / f"{slug}-review.md").exists()},
+        "review": _get_review_score(track_dir, slug),
+        "friction": _get_friction_data(orch_dir),
+        "shippable": _compute_shippable(
+            audit["status"], _get_review_score(track_dir, slug)["score"]),
         "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
         "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
         "final_review": get_final_review_info(track_dir, slug),

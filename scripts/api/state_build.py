@@ -7,6 +7,7 @@ aggregation. All functions are sync and designed for asyncio.to_thread().
 from datetime import UTC, datetime
 
 from .config import CURRICULUM_ROOT, LEVELS
+from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
     PLANS_ROOT,
     V5_PHASE_ORDER,
@@ -133,7 +134,7 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
     plan_dir = PLANS_ROOT / track_id
     total = len(plan_slugs)
 
-    built = audit_pass = audit_fail = enriched = final_reviewed = final_approved = 0
+    built = audit_pass = audit_fail = enriched = final_reviewed = final_approved = shippable = 0
     word_ratios = []
     attention = []
     completion_times = []
@@ -155,6 +156,11 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
         if wt > 0 and wc > 0:
             word_ratios.append(wc / wt)
 
+        # Shippable = audit PASS + review >= 8.0 (#971)
+        review_data = _get_review_score(track_dir, slug)
+        if _compute_shippable(audit["status"], review_data["score"]):
+            shippable += 1
+
         if (plan_dir / f"{slug}.yaml.bak").exists():
             enriched += 1
 
@@ -173,6 +179,7 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
         "track": track_id, "total": total,
         "build": {"done": built, "pct": round(built / total * 100) if total else 0},
         "audit": {"passing": audit_pass, "failing": audit_fail, "pct": round(audit_pass / total * 100) if total else 0},
+        "shippable": {"count": shippable, "pct": round(shippable / total * 100) if total else 0},
         "enrichment": {"done": enriched, "pct": round(enriched / total * 100) if total else 0},
         "final_review": {
             "reviewed": final_reviewed, "approved": final_approved,
