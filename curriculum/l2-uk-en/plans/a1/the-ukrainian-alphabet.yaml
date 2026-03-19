@@ -3,6 +3,9 @@ level: A1
 sequence: 1
 slug: the-ukrainian-alphabet
 version: '1.0'
+persona:
+  voice: The Ukrainian Teacher
+  role: The Ukrainian Teacher
 title: The Ukrainian Alphabet
 subtitle: 33 Letters, Your First Words
 focus: phonetics
@@ -18,12 +21,22 @@ content_outline:
 - section: Знайомі літери (Familiar Letters)
   words: 200
   points:
-  - "Six letters that look AND sound like Latin: А [a], О [o], К [k], М [m],
-    Т [t], Е [e as in 'met']. With just these, learner reads real words:
+  - "Six letters that look AND sound like Latin: А, О, К, М,
+    Т, Е (as in 'met'). With just these, learner reads real words:
     мама, тато, кома, атом, метро, Тома."
   - "Confidence builder: these letters appear in hundreds of Ukrainian words.
     Learner practices reading 10-15 words using only these six letters,
     building the habit of sounding out Cyrillic without English crutches."
+  - "EMBED VIDEO for each letter — use YouTubeVideo component:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    О: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    Е: https://www.youtube.com/watch?v=KFlsroBW0dk
+    Format: <YouTubeVideo client:only=\"react\" url=\"URL\" label=\"Letter — description\" />
+    Place each video right before or after its letter description.
+    Credit: Anna Ohoiko, Ukrainian Lessons (ukrainianlessons.com)"
 - section: Фальшиві друзі (False Friends)
   words: 250
   points:
@@ -36,6 +49,15 @@ content_outline:
   - "Reading challenge: words mixing familiar + false friend letters.
     Сорок (forty), Норма (norm), Мороз (frost), Ворон (raven).
     If learner reads these correctly, the false friend habit is breaking."
+  - "EMBED VIDEO for each false friend letter:
+    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    Х: https://www.youtube.com/watch?v=vpr58zJSJKc
+    Format: <YouTubeVideo client:only=\"react\" url=\"URL\" label=\"Letter — description\" />
+    Credit: Anna Ohoiko, Ukrainian Lessons (ukrainianlessons.com)"
 - section: Нові літери (New Letters)
   words: 250
   points:
@@ -48,6 +70,24 @@ content_outline:
     Ukrainian, as in що (what) and ще (still)."
   - "The unique Ґ: only appears in a handful of native Ukrainian words —
     ґанок (porch), ґудзик (button), ґречний (polite). Different from Г [h]."
+  - "EMBED VIDEO for each new letter:
+    Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+    Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    З: https://www.youtube.com/watch?v=BhASNxitC1A
+    И: https://www.youtube.com/watch?v=W-1rCu0indE
+    Й: https://www.youtube.com/watch?v=aq0cjB90s3w
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    П: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
+    Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    Format: <YouTubeVideo client:only=\"react\" url=\"URL\" label=\"Letter — description\" />
+    Credit: Anna Ohoiko, Ukrainian Lessons (ukrainianlessons.com)"
 - section: Голосні (Vowels)
   words: 200
   points:
@@ -60,6 +100,14 @@ content_outline:
     and бик (bull) vs бік (side) shows the contrast."
   - "Preview: Я, Ю, Є, Ї soften the consonant before them. This is key to
     Ukrainian pronunciation and will be explored in M02."
+  - "EMBED VIDEO for iotated vowels and И/І contrast:
+    Я: https://www.youtube.com/watch?v=yhSAf41LX8I
+    Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    Є: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
+    І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    Format: <YouTubeVideo client:only=\"react\" url=\"URL\" label=\"Letter — description\" />
+    Credit: Anna Ohoiko, Ukrainian Lessons (ukrainianlessons.com)"
 - section: Діалоги (Dialogues)
   words: 300
   points:
