@@ -1774,7 +1774,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             # Writer dispatch — same agent that builds content
             def _preflight_dispatch(prompt_text):
                 return dispatch_gemini(
-                    prompt_text, task_id="preflight",
+                    prompt_text, task_id=f"preflight-{ctx.slug}",
                     model=FLASH_MODEL, stdout_only=True, timeout=300,
                 )
 
