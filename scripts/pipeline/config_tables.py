@@ -194,7 +194,7 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
 # Grammar/imperative bans are genuinely per-phase (not per-module).
 # Decodability is NOT here — it's derived from the plan at runtime.
 _A1_PHASE_CONSTRAINTS_PHONETICS = (
-    "GRAMMAR CONSTRAINTS (A1.1 — Phonetics, M01-M06):\n"
+    "GRAMMAR CONSTRAINTS (A1.1 — Phonetics, M01-M03):\n"
     "NO CONJUGATED VERBS. NO IMPERATIVES. This is the phonetics phase.\n\n"
     "ALLOWED structures (Ukrainian examples only):\n"
     "- Це + noun: «Це кіт», «Це мама»\n"
@@ -209,15 +209,16 @@ _A1_PHASE_CONSTRAINTS_PHONETICS = (
 )
 
 _A1_PHASE_CONSTRAINTS_GRAMMAR = (
-    "GRAMMAR CONSTRAINTS (A1.1 — Grammar, M07-M14):\n"
-    "Keep grammar simple — first exposure to Ukrainian grammar.\n\n"
+    "GRAMMAR CONSTRAINTS (A1.1 — Communication, M04-M14):\n"
+    "Keep grammar simple — first exposure to Ukrainian sentences.\n\n"
     "ALLOWED:\n"
     "- Це + noun: «Це кіт», «Це мама»\n"
-    "- Simple present tense (я читаю, я бачу)\n"
-    "- Basic imperatives (читай, слухай, дивись)\n"
-    "- Question words: «Хто це?», «Що це?», «Де?»\n"
+    "- Fixed verbal phrases: «Мене звати», «У мене є», «Як справи?»\n"
+    "- Simple present tense (я читаю, я бачу) — from M08+\n"
+    "- Question words: «Хто це?», «Що це?», «Де?», «Як?»\n"
     "- Так/Ні answers\n"
-    "- Adj + noun: «великий дім», «нова книга»\n\n"
+    "- Adj + noun: «великий дім», «нова книга» — from M09+\n"
+    "- Possessive pronouns: мій/моя/моє — from M06+\n\n"
     "BANNED: Past/future tense, conditionals, participles, passive, gerunds,\n"
     "compound sentences (no і/а/але joining clauses)\n\n"
     "METALANGUAGE: English first, Ukrainian in parentheses. Bilingual headings."
@@ -352,9 +353,9 @@ def get_pedagogical_constraints(track: str, module_num: int, plan: dict | None =
         # Fallback: if phase not recognized, use imperative ban for safety
         phase_constraint = _IMPERATIVE_BAN
 
-    # Override for phonetics modules M01-M05: no verbs at all (#979)
-    # M06 (stress/intonation) needs verbs for intonation pattern examples
-    if phase_key == "A1.1" and module_num <= 5:
+    # Override for phonetics modules M01-M03: no verbs at all (#979, updated #981)
+    # M04+ (greetings, introductions) need fixed verbal phrases (звати, працювати)
+    if phase_key == "A1.1" and module_num <= 3:
         phase_constraint = _A1_PHASE_CONSTRAINTS_PHONETICS
 
     return phase_constraint
