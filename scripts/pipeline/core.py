@@ -795,7 +795,10 @@ def build_placeholders(ctx: ModuleContext) -> None:
     pv = ctx.plan.get("pronunciation_videos")
     if pv and isinstance(pv, dict):
         credit = pv.get('credit', 'Anna Ohoiko — Ukrainian Lessons')
+        # Merge all letter sub-dicts: plan may use flat "letters" or categorized "vowels"/"consonants"/"special"
         letters = pv.get("letters", {})
+        for category in ("vowels", "consonants", "special"):
+            letters.update(pv.get(category, {}))
         overview = pv.get("overview")
         playlist = pv.get("playlist")
 
