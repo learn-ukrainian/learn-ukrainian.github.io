@@ -185,55 +185,72 @@ def _get_constraints(track: str, module_num: int, plan: dict | None = None) -> G
     if plan:
         phase_str = plan.get("phase", "")
         phase_key = phase_str.split("[")[0].strip() if phase_str else ""
-        if phase_key == "A1.1":
-            # Pre-verbal: alphabet/phonology modules
+        if phase_key == "A1.1" and module_num <= 3:
+            # M01-M03: alphabet/phonology — no verbs at all
             return GrammarConstraint(
                 no_verbs=True,
                 no_imperatives=True,
                 check_gender=True,
             )
+        elif phase_key == "A1.1":
+            # M04-M07: communication — fixed verbal phrases OK, no conjugation
+            return GrammarConstraint(
+                no_imperatives=True,
+                check_gender=True,
+            )
         elif phase_key == "A1.2":
+            # M08-M14: gender, adjectives, numbers — no verb conjugation yet
             return GrammarConstraint(
                 no_imperatives=True,
                 present_only=True,
-                no_accusative=True,
                 nominative_only=True,
                 check_gender=True,
             )
         elif phase_key == "A1.3":
+            # M15-M21: verbs, modals, questions — present tense conjugation OK
             return GrammarConstraint(
                 no_imperatives=True,
                 check_gender=True,
             )
-        elif phase_key in ("A1.4", "A1.5"):
+        elif phase_key in ("A1.4", "A1.5", "A1.6"):
+            # M22-M43: time, places, food — cases introduced, no imperative yet
             return GrammarConstraint(
                 no_imperatives=phase_key == "A1.4",
                 check_gender=True,
             )
-        elif phase_key == "A1.6":
+        elif phase_key in ("A1.7", "A1.8"):
+            # M44-M60: imperative, dative, past/future — full A1 grammar
             return GrammarConstraint(check_gender=True)
 
-    # Fallback: module-number heuristics (when no plan available)
-    if module_num <= 14:
+    # Fallback: module-number heuristics (V2 — when no plan available)
+    if module_num <= 3:
+        # M01-M03: phonetics — no verbs
         return GrammarConstraint(
             no_verbs=True,
             no_imperatives=True,
-            nominative_only=module_num >= 5,
             check_gender=True,
         )
-    elif module_num <= 24:
+    elif module_num <= 14:
+        # M04-M14: communication + grammar basics — no conjugation, no imperatives
         return GrammarConstraint(
             no_imperatives=True,
-            present_only=True,
-            no_accusative=module_num < 25,
+            nominative_only=module_num <= 14,
             check_gender=True,
         )
-    elif module_num <= 46:
+    elif module_num <= 28:
+        # M15-M28: verbs, time, nature — present tense, no imperative
+        return GrammarConstraint(
+            no_imperatives=True,
+            check_gender=True,
+        )
+    elif module_num <= 43:
+        # M29-M43: places, food — cases introduced, no imperative yet
         return GrammarConstraint(
             no_imperatives=True,
             check_gender=True,
         )
     else:
+        # M44-M60: full A1 grammar including imperative, past, future
         return GrammarConstraint(check_gender=True)
 
 

@@ -166,8 +166,7 @@ def _check_unjumble_complexity(title: str, body: str, act_obj, items_count: int,
     """Check unjumble format and word count complexity."""
     violations = []
 
-    if not act_obj:
-        if len(re.findall(r'/', body)) < items_count:
+    if not act_obj and len(re.findall(r'/', body)) < items_count:
             violations.append({
                 'type': 'FORMAT_ERROR',
                 'issue': f"unjumble '{title}' items must use slash '/' separator",
@@ -261,7 +260,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
         return []
 
     violations = []
-    is_a1_early = (level_code == 'A1' and module_num <= 5)
+    is_a1_early = (level_code == 'A1' and module_num <= 3)  # V2: only M01-M03 are phonetics
     is_b1_bridge = (level_code == 'B1' and module_num <= 5)
 
     for act in yaml_activities:

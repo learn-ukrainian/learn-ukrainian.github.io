@@ -154,14 +154,15 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
         "- ONLY 1 clause per sentence (no compound sentences)\n"
         "- Dative case FORBIDDEN (no мені, тобі, йому, їй, вам, їм, -ові/-еві endings)\n"
         "  Exception: нам is taught as decodable vocabulary in M1 (reading drill word, not grammar)\n"
-        "  Exception (M19 likes-and-preferences): Dative forms мені/тобі/йому/їй/нам/вам/їм allowed\n"
+        "  Exception (M15 what-i-like): Dative forms мені/тобі/йому/їй/нам/вам/їм allowed\n"
         "    ONLY in the fixed construction «Мені подобається + noun/infinitive». Teach as a memorized\n"
         "    chunk — do NOT explain dative case rules or paradigms.\n"
         "- Instrumental case FORBIDDEN (no з другом, з мамою, -ом/-ою/-ем/-ею endings)\n"
+        "  Exception: M37 introduces basic Instrumental 'з' (кава з молоком)\n"
         "- NO subordinate clauses: який/яка/яке, що-clause, коли, якщо, тому що, бо, щоб, поки are ALL BANNED\n"
         "- Only imperfective aspect verbs\n"
         "- No participles\n"
-        "- Allowed cases: Nominative, Accusative, Locative (from M13), Genitive (basics), Vocative"
+        "- Allowed cases: Nominative, Accusative, Locative (from M30), Genitive (basics), Vocative"
     ),
     "a2": (
         "GRAMMAR RULES:\n"
@@ -225,44 +226,89 @@ _A1_PHASE_CONSTRAINTS_GRAMMAR = (
 )
 
 _A1_PHASE_CONSTRAINTS: dict[str, str] = {
-    "A1.1": _A1_PHASE_CONSTRAINTS_GRAMMAR,  # default for A1.1 — overridden below for M01-M05
+    "A1.1": _A1_PHASE_CONSTRAINTS_GRAMMAR,  # default for A1.1 — overridden for M01-M03
     "A1.2": (
-        "GRAMMAR CONSTRAINTS (A1.2 — Verbs & Sentences):\n"
-        "Present tense verbs are fully available. Simple sentences.\n\n"
+        "GRAMMAR CONSTRAINTS (A1.2 — My World, M08-M14):\n"
+        "Noun gender, adjective agreement, plurals, numbers, demonstratives.\n\n"
         "ALLOWED:\n"
-        "- Present tense (я читаю, він іде, вони мають)\n"
-        "- Basic imperatives (читай/читайте, слухай/слухайте, дивись/дивіться)\n"
-        "- Infinitives in simple contexts (можна читати, треба слухати)\n"
-        "- Simple questions and answers\n\n"
-        "BANNED (too complex for A1.2):\n"
-        "- Past tense, future tense, conditionals\n"
-        "- Participles, passive voice\n"
-        "- Complex subordinate clauses"
+        "- Це + noun, У мене є/немає\n"
+        "- Adjective-noun agreement (nominative only)\n"
+        "- Numbers 1-1000\n"
+        "- Demonstratives цей/ця/це/ці\n"
+        "- Question words: Який? Яка? Яке? Скільки?\n"
+        "- Fixed verbal phrases from A1.1 (Мене звати, працювати)\n\n"
+        "BANNED: Verb conjugation (taught in A1.3), past/future tense, cases beyond nominative,\n"
+        "participles, passive voice, subordinate clauses"
     ),
     "A1.3": (
-        "GRAMMAR CONSTRAINTS (A1.3 — Cases & Navigation):\n"
-        "Present tense and imperatives available. Cases being introduced.\n\n"
-        "ALLOWED: present tense, imperatives, infinitives, basic cases\n"
-        "BANNED: participles, passive voice, complex subordination"
+        "GRAMMAR CONSTRAINTS (A1.3 — Actions & Desires, M15-M21):\n"
+        "Present tense verbs, modals, questions, reflexives.\n\n"
+        "ALLOWED:\n"
+        "- Present tense conjugation (both groups: -ати and -ити)\n"
+        "- Modal verbs: хотіти, могти, мусити + infinitive\n"
+        "- Question words: Хто? Що? Де? Куди? Коли? Чому?\n"
+        "- Negation: не/ні\n"
+        "- Reflexive verbs (-ся/-сь)\n"
+        "- 'Мені подобається' as lexical chunk (NO dative grammar)\n\n"
+        "BANNED: Past/future tense, cases beyond nominative,\n"
+        "participles, passive voice, complex subordinate clauses"
     ),
     "A1.4": (
-        "GRAMMAR CONSTRAINTS (A1.4 — Tenses & Daily Life):\n"
-        "Past tense and future tense introduced. All present tense available.\n"
-        "Imperatives available.\n\n"
-        "BANNED: participles, passive voice, complex subordination"
+        "GRAMMAR CONSTRAINTS (A1.4 — Time & Nature, M22-M28):\n"
+        "Time expressions, days, months, weather, daily routines.\n\n"
+        "ALLOWED:\n"
+        "- All present tense (from A1.3)\n"
+        "- Time expressions as chunks (О першій, У понеділок)\n"
+        "- Sequence adverbs (спочатку, потім, нарешті)\n"
+        "- Impersonal weather constructions (Сьогодні холодно)\n\n"
+        "BANNED: Past/future tense, case endings (time chunks only),\n"
+        "participles, passive voice, complex subordination"
     ),
     "A1.5": (
-        "SEQUENCE CONSTRAINTS (A1.5 — Modals, Commands & Life):\n"
-        "All tenses available. Imperative mood is TAUGHT in this phase (M47).\n"
-        "Imperative forms are ALLOWED after M47 introduces them.\n\n"
-        "For M47 itself: Use imperative forms freely — читай/читайте, пиши/пишіть, "
-        "скажи/скажіть, дай/дайте, іди/ідіть.\n"
-        "Both imperfective AND perfective verbs allowed for imperatives."
+        "GRAMMAR CONSTRAINTS (A1.5 — Places & Movement, M29-M36):\n"
+        "Euphony, locative, accusative direction, genitive origin.\n\n"
+        "ALLOWED:\n"
+        "- Euphony rules (у/в, і/й, з/із/зі)\n"
+        "- Locative case with в/у/на (Де?)\n"
+        "- Accusative for direction (Куди?)\n"
+        "- Genitive for origin (Звідки? З + genitive)\n"
+        "- All present tense verbs\n\n"
+        "BANNED: Past/future tense, dative, instrumental,\n"
+        "participles, passive voice, complex subordination"
     ),
     "A1.6": (
-        "SEQUENCE CONSTRAINTS (A1.6 — Real-World Skills):\n"
-        "Full A1 grammar available including imperatives. "
-        "The standard A1 LEVEL_CONSTRAINTS apply."
+        "GRAMMAR CONSTRAINTS (A1.6 — Food & Shopping, M37-M43):\n"
+        "Instrumental з, accusative objects, genitive quantities.\n\n"
+        "ALLOWED:\n"
+        "- Instrumental case with 'з' (кава з молоком)\n"
+        "- Accusative inanimate and animate objects\n"
+        "- Genitive for quantities (кілограм цукру)\n"
+        "- All cases from previous phases\n"
+        "- All present tense verbs\n\n"
+        "BANNED: Past/future tense, dative (until A1.7),\n"
+        "participles, passive voice, complex subordination"
+    ),
+    "A1.7": (
+        "GRAMMAR CONSTRAINTS (A1.7 — People & Communication, M44-M50):\n"
+        "Vocative, imperative, dative, conjunctions, subordinate clauses.\n\n"
+        "ALLOWED:\n"
+        "- Vocative case (Олено! Тарасе!)\n"
+        "- Imperative mood (Читай! Скажіть! Дайте!)\n"
+        "- Dative case basics (мені, тобі, йому)\n"
+        "- Conjunctions (і, а, але, бо, тому що)\n"
+        "- Simple subordinate clauses (що, де, коли, якщо)\n"
+        "- All cases and tenses from previous phases\n\n"
+        "BANNED: Past/future tense, participles, passive voice"
+    ),
+    "A1.8": (
+        "GRAMMAR CONSTRAINTS (A1.8 — Past, Future & Graduation, M51-M60):\n"
+        "Full A1 grammar including past and future tense.\n\n"
+        "ALLOWED:\n"
+        "- Past tense (він читав, вона читала — gendered!)\n"
+        "- Future tense (я буду читати, ми будемо працювати)\n"
+        "- All cases, moods, and constructions from A1.1-A1.7\n"
+        "- Combining tenses in connected speech\n\n"
+        "BANNED: Participles, passive voice, complex literary constructions"
     ),
 }
 
@@ -549,7 +595,7 @@ def _get_writing_style(ctx) -> str:
     phase_str = str(phase_raw) if phase_raw else ""
     phase_key = phase_str.split("[")[0].strip() if phase_str else ""
 
-    if phase_key == "A1.1":
+    if phase_key == "A1.1" and ctx.module_num <= 3:
         return textwrap.dedent("""\
             ### Writing Style (Alphabet / Phonology Module)
 
@@ -573,7 +619,11 @@ def _get_writing_style(ctx) -> str:
             - Bulleted example lists longer than 8 items
             - Abstract phonetic descriptions (use comparisons to English sounds instead)""")
 
-    # Default: grammar modules (A1.2+)
+    elif phase_key == "A1.1":
+        # A1.1 M04-M07: grammar modules, not alphabet/phonology
+        pass
+
+    # Default: grammar modules (A1.1 M04+ and A1.2+)
     return textwrap.dedent("""\
         ### Writing Style
 
@@ -627,7 +677,7 @@ def get_structural_rules(track: str, module_num: int) -> str:
     """
     base = track.split("-")[0]
 
-    if base == "a1" and module_num <= 4:
+    if base == "a1" and module_num <= 3:
         return (
             "### Rule 1: Every Letter/Concept Gets Its Own Section\n\n"
             "Each new letter or concept MUST get its own `### H3` subsection. "
@@ -739,7 +789,7 @@ def get_structural_rules(track: str, module_num: int) -> str:
 def get_h3_word_range(track: str, module_num: int) -> str:
     """Return the H3 word range string for the content template."""
     base = track.split("-")[0]
-    if base == "a1" and module_num <= 4:
+    if base == "a1" and module_num <= 3:
         return "30-50"
     elif base == "a1" and module_num <= 14:
         return "40-60"
@@ -752,7 +802,7 @@ def get_h3_word_range(track: str, module_num: int) -> str:
 def get_expansion_method(track: str, module_num: int) -> str:
     """Return level-appropriate expansion guidance for content phase."""
     base = track.split("-")[0]
-    if base == "a1" and module_num <= 4:
+    if base == "a1" and module_num <= 3:
         return (
             "**Don't pad — add teaching value.** For EVERY letter you introduce:\n\n"
             "1. **Show it** (uppercase + lowercase, with video embed)\n"
