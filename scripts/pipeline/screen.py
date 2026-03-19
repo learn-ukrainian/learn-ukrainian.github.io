@@ -357,7 +357,19 @@ def _run_vesum_verify(content_path: Path) -> tuple[dict, list[dict], str]:
     vesum_results, vesum_stats = vesum_verify_module(
         content_path, use_rag=False, skip_activities=False,
     )
-    not_found = [r for r in vesum_results if r["status"] in ("❌", "⚠️")]
+    not_found_raw = [r for r in vesum_results if r["status"] in ("❌", "⚠️")]
+    # Separate proper nouns (capitalized, not at sentence start) — VESUM doesn't contain names.
+    # These are logged but don't enter the fix loop.
+    not_found = []
+    proper_noun_skipped = 0
+    for r in not_found_raw:
+        orig = r.get("original", "")
+        if orig and orig[0].isupper() and r.get("source") == "prose":
+            proper_noun_skipped += 1
+        else:
+            not_found.append(r)
+    if proper_noun_skipped > 0:
+        _log(f"  D.0: Skipped {proper_noun_skipped} proper noun(s) from VESUM check")
     n_not_found = vesum_stats.get("not_found", 0)
     n_partial = vesum_stats.get("rag_hits", 0)
     total_words = vesum_stats.get("total", 0)
@@ -486,7 +498,9 @@ def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False,
             logger.warning("D.0: LLM filler scan failed: %s", e)
 
     # 7. IPA / phonetic bracket scan
-    if content_text is not None:
+    # EXEMPT M01-M03 (phonetics modules) — they need [a], [v], [sh] for letter-sound teaching
+    is_phonetics = ctx.track.startswith("a1") and ctx.module_num <= 3
+    if content_text is not None and not is_phonetics:
         result.deterministic_issues.extend(_run_ipa_scan(content_text))
 
     # 8. Word verification (VESUM only)
