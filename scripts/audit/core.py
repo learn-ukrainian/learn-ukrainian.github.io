@@ -367,7 +367,10 @@ def _run_pedagogical_and_content_checks(ctx: AuditContext, state: AuditState,
     )
 
     from .gates import evaluate_pedagogy
-    blocking_pedagogy = [v for v in state.pedagogical_violations if v.get('blocking', True)]
+    # INFO and HEADING_LEVEL violations are non-blocking — content quality, not errors
+    blocking_pedagogy = [v for v in state.pedagogical_violations
+                         if v.get('blocking', True)
+                         and v.get('type') not in ('INFO', 'HEADING_LEVEL')]
     state.results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if state.results['pedagogy'].status == 'FAIL':
         state.has_critical_failure = True
@@ -390,7 +393,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     (yaml_schema_violations, mark_words_violations, hint_violations,
      error_correction_hint_violations, malformed_cloze_violations,
      cloze_syntax_violations, error_correction_violations,
-     invalid_type_violations, forbidden_type_violations) = validate_yaml_activities(ctx, state)
+     invalid_type_violations, _forbidden_type_violations) = validate_yaml_activities(ctx, state)
 
     validate_activity_answers(ctx, state)
 
