@@ -118,8 +118,9 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
                         'fix': "Participles not allowed until B1. Use relative clauses or simple sentences."
                     })
 
-    # Check for subordinate clauses at A1
-    if level_code == 'A1' and not constraints.get('subordinate_clauses'):
+    # Check for subordinate clauses at early A1 only (M1-M14)
+    # Later A1 modules (M15+) teach бо, тому що, якщо explicitly
+    if level_code == 'A1' and module_num <= 14 and not constraints.get('subordinate_clauses'):
         for pattern in CASE_PATTERNS['subordinate_markers']:
             matches = re.findall(pattern, text, re.IGNORECASE)
             if matches:
@@ -127,7 +128,7 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
                     violations.append({
                         'type': 'GRAMMAR',
                         'issue': f"Subordinate clause marker at A1: '{match}'",
-                        'fix': "Complex sentences not allowed at A1. Use simple SVO sentences."
+                        'fix': "Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences."
                     })
 
     return violations

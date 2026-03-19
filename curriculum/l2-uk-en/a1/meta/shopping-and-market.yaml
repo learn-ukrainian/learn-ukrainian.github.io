@@ -1,0 +1,101 @@
+module: a1-040
+level: A1
+sequence: 40
+slug: shopping-and-market
+version: '2.0'
+title: Shopping and Market
+subtitle: How Much Does It Cost?
+focus: vocabulary
+pedagogy: PPP
+phase: A1.4 [Tenses & Daily Life]
+word_target: 1200
+naturalness:
+  status: PASS
+  score: 10
+objectives:
+- Ask and understand prices
+- Use basic shopping phrases
+- Express quantities with correct units
+- Buy everyday items including hygiene products
+content_outline:
+- section: Скільки коштує? (How much?)
+  words: 275
+  points:
+  - 'Key question pattern: Скільки коштує...? Скільки це коштує? Forming price questions with коштувати (to cost).'
+  - 'Price expressions with гривня: одна гривня, дві гривні, п''ять гривень. Number-noun agreement review from a1-17 (Numbers
+    and Money).'
+  - 'Answering price questions: Це коштує двадцять гривень. Борщ коштує сімдесят гривень. Producing full price sentences.'
+- section: У магазині (In the Store)
+  words: 250
+  points:
+  - 'Polite request patterns: Дайте, будь ласка... (Give me, please...). Я хочу купити... (I want to buy...). Можна...? (May
+    I...?).'
+  - 'Checking availability: Є...? (Is there...?) У вас є...? (Do you have...?). Learner error: using мати instead of є for
+    store availability.'
+  - 'Basic shopping dialogue structure: greeting → asking for item → asking price → paying → thanking. Complete transaction
+    flow.'
+- section: Кількість та одиниці (Quantities and Units)
+  words: 250
+  points:
+  - 'Units of measurement: кілограм, літр, пачка, пляшка, штука. Gender and typical products for each unit.'
+  - 'Genitive with quantities: кілограм яблук, літр молока, пачка цукру, пляшка води. Reinforcing formulaic Genitive from
+    a1-18.'
+  - 'Numbers with units: два кілограми (2-4 + Gen. sg.), п''ять кілограмів (5+ + Gen. pl.). Number-noun case agreement patterns.'
+- section: Засоби гігієни (Hygiene Products)
+  words: 175
+  points:
+  - 'Essential hygiene vocabulary: мило (soap), зубна паста (toothpaste), шампунь (shampoo), рушник (towel), туалетний папір
+    (toilet paper).'
+  - 'Asking where to buy items: Де можна купити...? Де тут аптека? Де тут магазин? Combining location and shopping skills.'
+- section: Практика (Practice)
+  words: 250
+  points:
+  - 'Shopping role-play dialogues: Complete transaction from greeting to payment. At the market (ринок) and at the store (магазин).'
+  - 'Price asking and answering drills: Скільки коштує...? — Це коштує... гривень. Rapid price negotiation practice.'
+  - 'Quantity expression practice: Ordering specific amounts with correct case forms. Shopping list construction.'
+- section: Підсумок
+  words: 100
+  points:
+  - Summary and self check
+vocabulary_hints:
+  required:
+  - коштувати (to cost) — Скільки коштує?; core shopping verb
+  - купити (to buy, pf.) — Я хочу купити; perfective for single purchase
+  - гривня (hryvnia) — одна гривня, дві гривні, п'ять гривень; currency
+  - кілограм (kilogram) — кілограм яблук; weight unit + Gen
+  - літр (litre) — літр молока; volume unit + Gen
+  - пачка (packet) — пачка цукру; container unit + Gen
+  - пляшка (bottle) — пляшка води; container unit + Gen
+  - магазин (store) — у магазині; shopping location
+  - ринок (market) — на ринку; outdoor market location
+  - мило (soap) — купити мило; basic hygiene item
+  recommended:
+  - шампунь (shampoo) — masculine gender; hygiene vocabulary
+  - рушник (towel) — masculine gender; cultural embroidered towel
+  - решта (change) — Ваша решта; transaction completion
+  - картка (card) — банківська картка; modern payment
+activity_hints:
+- type: fill-in
+  focus: Complete shopping dialogue with correct phrases
+  items: 10
+- type: quiz
+  focus: Quantity expressions with correct case forms
+  items: 10
+- type: match-up
+  focus: Match product to appropriate unit of measurement
+  items: 10
+- type: unjumble
+  focus: Reorder words into correct shopping sentences
+  items: 6
+connects_to:
+- a1-41 (At the Cafe)
+prerequisites:
+- a1-39 (Food and Drink)
+persona:
+  voice: Patient Supportive Tutor
+  role: Market Vendor
+grammar:
+- Скільки коштує construction
+- Genitive with quantities
+- Shopping imperative phrases (Дайте, будь ласка)
+register: розмовний
