@@ -1,0 +1,97 @@
+module: a1-048
+level: A1
+sequence: 48
+slug: body-and-health
+version: '2.0'
+title: Body & Health
+subtitle: At the Doctor's
+focus: vocabulary
+pedagogy: PPP
+phase: A1.5 [Modals, Commands & Life]
+word_target: 1200
+objectives:
+- Learner can name body parts
+- Learner can describe symptoms (what hurts)
+- Learner can communicate at the doctor's office
+- Learner can ask for medicine at a pharmacy
+content_outline:
+- section: 'Вступ: Частини тіла та народна мудрість (Introduction: Body Parts & Folk Wisdom)'
+  words: 250
+  points:
+  - 'Introduction to high-frequency body parts: голова, рука, нога, живіт (State Standard §3.10); emphasis on visual pairs
+    for singular/plural (око/очі, вухо/вуха)'
+  - 'Cultural hook: Introduce the proverb «У здоровому тілі — здоровий дух» (In a healthy body, a healthy spirit) used in
+    school and sports contexts'
+  - 'Quick review of location: ''де?'' (на голові, на руках) — connecting to a1-30 prepositions'
+- section: 'Презентація: Як ми говоримо про біль (Presentation: Expressing Pain & Symptoms)'
+  words: 350
+  points:
+  - 'Grammar: «У мене болить + [Subject]» (State Standard §3.10); focus on noun agreement (singular ''болить'' vs plural ''болять'')'
+  - 'Learner error drill: Contrast incorrect «У мене болять голова» with correct «У мене болить голова»; explain that the
+    body part is the subject'
+  - 'State Standard §4.2.1.4: Impersonal phrases for state «Мені погано/добре» (Dative pronouns); drill to avoid the direct
+    translation error «Я погано»'
+  - 'Symptoms vocabulary: ''температура'' (collocations: висока, міряти), ''кашель'', ''нежить'', ''головний біль'''
+  - 'Home remedies: The Ukrainian tradition of ''траволікування'' (phytotherapy); drinking tea with ''малина'' (raspberry),
+    ''калина'' (viburnum), or ''мед'' (honey)'
+- section: 'Діалог: У лікаря та в аптеці (Dialogue: At the Doctor''s & Pharmacy)'
+  words: 300
+  points:
+  - Visiting the 'сімейний лікар' (family doctor); contrast the person 'лікар' with the place 'лікарня' to fix common error
+    'Я йду в лікар'
+  - 'Pharmacy navigation: Recognizing the green cross; distinction between ''Аптека'' and ''Аптечний пункт'''
+  - 'Functional language: Asking for medicine ''ліки від...'' (кашлю, головного болю) and understanding ''за рецептом'' (with
+    prescription) vs ''без рецепту'''
+  - 'Typical phrases: «Що вас турбує?» (What bothers you?) and «Дайте, будь ласка...» (Give me, please...)'
+- section: 'Практика: Пояснення причин (Practice: Explaining Causes)'
+  words: 300
+  points:
+  - 'State Standard §4.3.2: Constructing complex sentences with ''бо'' and ''тому що'' (e.g., «Я не прийшов, бо я хворий»)'
+  - Distinction between 'хворий' (adjective/state) and 'хворіти' (verb/process); common error 'Я болю' (I cause pain) vs 'Мені
+    болить' (It hurts me)
+  - 'Roleplay: Casual dialogue with a friend about feeling sick versus formal dialogue at the polyclinic'
+  - 'Summary: Recap of key symptoms and the ''У мене болить'' construction'
+vocabulary_hints:
+  required:
+  - 'голова (head) — High frequency (Top 100); collocations: «болить голова», «головний біль», «на голові»'
+  - 'рука (arm/hand) — High frequency; collocations: «права/ліва рука», «мити руки», «тримати в руках»'
+  - 'нога (leg/foot) — High frequency; collocations: «права/ліва нога», «іти пішки» (on foot)'
+  - 'живіт (stomach) — Med frequency; usage: «болить живіт», «спати на животі»'
+  - 'горло (throat) — collocations: «червоне горло», «полоскати горло»'
+  - 'болить (it hurts) — usage: 3rd person singular; agrees with body part (Subject); plural form: «болять»'
+  - 'лікар (doctor) — collocations: «сімейний лікар», «записатися до лікаря»; contrast with «лікарня» (hospital)'
+  - 'аптека (pharmacy) — context: «в аптеці»; note cultural sign: green cross'
+  recommended:
+  - 'температура (fever/temperature) — collocations: «міряти температуру», «висока температура», «у мене температура»'
+  - 'кашель (cough) — collocations: «сильний кашель», «ліки від кашлю»'
+  - 'ліки (medicine) — usage: «пити ліки», «купувати ліки від...»; plural only in this context'
+  - 'хворий (sick/ill) — usage: «він хворий» (state) vs «він часто хворіє» (process/frequency)'
+  - 'здоровий (healthy) — proverb: «У здоровому тілі — здоровий дух»'
+  - 'рецепт (prescription) — usage: «ліки за рецептом» vs «без рецепту»'
+  - 'малина (raspberry) — cultural context: «чай з малиною» as a standard home remedy for colds'
+activity_hints:
+- type: match-up
+  focus: Body parts
+  items: 25
+- type: fill-in
+  focus: Complete symptom descriptions
+  items: 20
+- type: fill-in
+  focus: Doctor visit conversation
+  items: 8
+- type: fill-in
+  focus: Pharmacy scenario
+  items: 5
+connects_to:
+- a1-49 (My Family)
+- a1-62 (Emergencies)
+prerequisites:
+- 'a1-35 (Prepositions: Direction & Origin)'
+persona:
+  voice: Patient Supportive Tutor
+  role: Polyclinic Nurse
+grammar:
+- Pain expressions (У мене болить + body part)
+- Health vocabulary
+- Impersonal necessity (треба + infinitive)
+register: розмовний
