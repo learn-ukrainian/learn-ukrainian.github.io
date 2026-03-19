@@ -46,7 +46,9 @@ content_outline:
   points:
   - "Скільки коштує? (How much does it cost?)"
   - "Introduce 'гривня' (hryvnia). Don't focus heavily on the complex genitive plural rules for hryvnia yet, treat common prices as lexical chunks (одна гривня, дві гривні, п'ять гривень) or just teach numbers + 'гривень' as the default plural for prices >4."
-  - "Age chunk: Скільки тобі років? / Мені ___ років."
+  - "Age pattern: Скільки тобі років? Answer uses рік/роки/років depending
+    on number: 1 рік, 2-4 роки, 5+ років. Teach as memorized chunks:
+    Мені двадцять один. (drop рік in casual speech) or Мені двадцять один рік."
 vocabulary_hints:
   required:
   - нуль (zero)

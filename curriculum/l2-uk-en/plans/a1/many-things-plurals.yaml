@@ -32,7 +32,8 @@ content_outline:
   words: 350
   points:
   - "Basic rules for plural nouns (Nominative):
-    Hard consonants -> add -и (стіл -> столи, комп'ютер -> комп'ютери).
+    Hard consonants -> add -и (телефон -> телефони, комп'ютер -> комп'ютери).
+    Note: стіл -> столи has a vowel change (і -> о) — mention as exception.
     -а -> -и (книга -> книги, лампа -> лампи).
     Soft consonants / -я / -ь -> -і or -ї (лікар -> лікарі, двері - already pl, лінія -> лінії).
     -о -> -а, -е -> -я (вікно -> вікна, місто -> міста - briefly mention, but focus is on -и/-і)."
@@ -50,7 +51,7 @@ content_outline:
 vocabulary_hints:
   required:
   - вони (they)
-  - ці (these)
+  - вони (they) — used with plural nouns
   - ключі (keys)
   - речі (things/stuff)
   - друзі (friends)
