@@ -193,27 +193,38 @@ LEVEL_CONSTRAINTS: dict[str, str] = {
 # Phase-level pedagogical constraints for A1 — keyed by plan `phase` field.
 # Grammar/imperative bans are genuinely per-phase (not per-module).
 # Decodability is NOT here — it's derived from the plan at runtime.
+_A1_PHASE_CONSTRAINTS_PHONETICS = (
+    "GRAMMAR CONSTRAINTS (A1.1 — Phonetics, M01-M06):\n"
+    "NO CONJUGATED VERBS. NO IMPERATIVES. This is the phonetics phase.\n\n"
+    "ALLOWED structures (Ukrainian examples only):\n"
+    "- Це + noun: «Це кіт», «Це мама»\n"
+    "- Noun + тут/там: «Мама тут», «Кіт там»\n"
+    "- Question words: «Хто це?», «Що це?», «Де мама?»\n"
+    "- Так/Ні: «Так, це кіт», «Ні, це не кіт»\n"
+    "- Fixed phrases (memorized, no grammar): дякую, будь ласка, привіт\n\n"
+    "BANNED: ALL verbs, past/future tense, cases, compound sentences\n\n"
+    "STRESS MARKS: Do NOT add stress marks (´). Write plain Ukrainian.\n"
+    "The pipeline adds stress marks deterministically after you write.\n\n"
+    "METALANGUAGE: English prose, Ukrainian examples. Bilingual headings."
+)
+
+_A1_PHASE_CONSTRAINTS_GRAMMAR = (
+    "GRAMMAR CONSTRAINTS (A1.1 — Grammar, M07-M14):\n"
+    "Keep grammar simple — first exposure to Ukrainian grammar.\n\n"
+    "ALLOWED:\n"
+    "- Це + noun: «Це кіт», «Це мама»\n"
+    "- Simple present tense (я читаю, я бачу)\n"
+    "- Basic imperatives (читай, слухай, дивись)\n"
+    "- Question words: «Хто це?», «Що це?», «Де?»\n"
+    "- Так/Ні answers\n"
+    "- Adj + noun: «великий дім», «нова книга»\n\n"
+    "BANNED: Past/future tense, conditionals, participles, passive, gerunds,\n"
+    "compound sentences (no і/а/але joining clauses)\n\n"
+    "METALANGUAGE: English first, Ukrainian in parentheses. Bilingual headings."
+)
+
 _A1_PHASE_CONSTRAINTS: dict[str, str] = {
-    "A1.1": (
-        "GRAMMAR CONSTRAINTS (A1.1 — First Contact):\n"
-        "Keep grammar simple — this is the learner's first exposure to Ukrainian.\n\n"
-        "ALLOWED:\n"
-        "- Це + noun: «Це кіт», «Це мама»\n"
-        "- Simple present tense (я читаю, я бачу)\n"
-        "- Basic imperatives (читай, слухай, дивись)\n"
-        "- Question words: «Хто це?», «Що це?», «Де?»\n"
-        "- Так/Ні answers\n"
-        "- Adj + noun: «великий дім», «нова книга»\n\n"
-        "BANNED (too complex for first contact):\n"
-        "- Past tense, future tense, conditionals\n"
-        "- Participles, passive voice, gerunds\n"
-        "- Compound/complex sentences — max 1 clause per sentence (no і/а/але joining clauses)\n"
-        "- Do not explicitly teach cases — use nouns in natural contexts\n\n"
-        "METALANGUAGE:\n"
-        "- ALL terminology in English first, Ukrainian in parentheses: 'vowels (голосні)'\n"
-        "- Section headings MUST be bilingual (e.g., '## Голосні — Vowels')\n"
-        "- Explanatory prose in English, Ukrainian for examples and dialogues"
-    ),
+    "A1.1": _A1_PHASE_CONSTRAINTS_GRAMMAR,  # default for A1.1 — overridden below for M01-M05
     "A1.2": (
         "GRAMMAR CONSTRAINTS (A1.2 — Verbs & Sentences):\n"
         "Present tense verbs are fully available. Simple sentences.\n\n"
@@ -340,6 +351,11 @@ def get_pedagogical_constraints(track: str, module_num: int, plan: dict | None =
     if not phase_constraint:
         # Fallback: if phase not recognized, use imperative ban for safety
         phase_constraint = _IMPERATIVE_BAN
+
+    # Override for phonetics modules M01-M05: no verbs at all (#979)
+    # M06 (stress/intonation) needs verbs for intonation pattern examples
+    if phase_key == "A1.1" and module_num <= 5:
+        phase_constraint = _A1_PHASE_CONSTRAINTS_PHONETICS
 
     return phase_constraint
 

@@ -86,17 +86,9 @@ Write **{TOPIC_TITLE}** for the {TRACK} track. Target: {WORD_TARGET}–{WORD_CEI
 
 ## 5. Rules (read ALL before writing)
 
-### RULE 1: GRAMMAR ALLOWLIST (A1.1 modules M1-M14)
+### RULE 1: GRAMMAR — see Section 6
 
-You may ONLY write these Ukrainian sentence structures:
-- **Це** + noun: `Це кіт.`
-- **Noun** + **тут/там**: `Мама тут.`
-- **Noun** + **—** + **noun**: `Мама — вчителька.`
-- **Adjective** + **noun**: `Великий дім.`
-- **Питання**: `Це кіт? Хто це? Де мама?`
-- **Fixed phrases** (memorized, no grammar analysis): дякую, будь ласка, привіт, до побачення
-
-Any other structure (including conjugated verbs) is FORBIDDEN. If you need to express an action, rephrase as a noun: "reading practice" not "let's read."
+Section 6 (Hard Constraints) defines exactly what grammar structures you may use for this module. Follow those constraints — they vary by module number.
 
 ### RULE 2: VOCABULARY BANK
 

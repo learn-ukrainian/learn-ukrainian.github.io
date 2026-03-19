@@ -2,7 +2,7 @@ module: a1-006
 level: A1
 sequence: 6
 slug: stress-and-intonation
-version: '3.3'
+version: '3.4'
 title: Stress and Intonation
 subtitle: The Music of Ukrainian
 focus: grammar
@@ -68,7 +68,7 @@ vocabulary_hints:
   - 'замок (castle/lock) — stress minimal pair: зАмок (castle) vs замОк (lock)'
   - 'вода (water) — last-syllable stress водА; Top 300 word; collocations: пити воду, холодна вода'
   - 'рука (hand/arm) — mobile stress рукА → рУки; Top 200 word'
-  - писати (to write) — mobile stress in conjugation писАти → пишУ → пИшеш; Top 200 word
+  - 'добрий (good) — first-syllable stress дОбрий; Top 100 word; collocation: добрий день'
   - 'школа (school) — penultimate stress шкОла; Top 200 word'
   - 'молоко (milk) — last-syllable stress молокО'
   - 'добрий (good) — first-syllable stress дОбрий; Top 100 word; collocations: добрий день'
