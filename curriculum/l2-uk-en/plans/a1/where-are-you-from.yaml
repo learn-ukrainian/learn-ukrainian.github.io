@@ -27,7 +27,7 @@ content_outline:
 - section: "Родовий відмінок для походження (Genitive for Origin)"
   words: 300
   points:
-  - "Basic Genitive endings for origin. Masculine and neuter nouns generally take '-а' or '-у' (Київ -> з Києва, Лондон -> з Лондона, Львів -> зі Львова - note vowel drop)."
+  - "Basic Genitive endings for origin. Masculine nouns generally take '-а' or '-у' (Київ -> з Києва, Лондон -> з Лондона, Львів -> зі Львова - note vowel drop). Neuter nouns take '-а' (місто -> з міста), not '-у'. The '-у' ending is only for certain masculine nouns (e.g., abstract or collective: з Лондону is also possible but '-а' is standard for cities)."
   - "Feminine nouns ending in -а change to -и (Україна -> з України, Канада -> з Канади, Америка -> з Америки)."
   - "This is the introduction to Genitive ONLY for ORIGIN, not for possession or negation yet."
 - section: "Країни та міста (Countries and Cities)"

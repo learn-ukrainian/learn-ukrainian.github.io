@@ -35,7 +35,6 @@ content_outline:
 vocabulary_hints:
   required:
   - хто (who)
-  - що (what)
   - де (where - location)
   - куди́ (where to - direction)
   - колú (when)
@@ -44,6 +43,7 @@ vocabulary_hints:
   - не (not)
   - так (yes)
   recommended:
+  - що (what - already taught in M16)
   - як (how)
   - якúй (which/what kind)
 activity_hints:

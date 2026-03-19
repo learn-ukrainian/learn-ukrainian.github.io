@@ -29,17 +29,17 @@ content_outline:
 - section: "Я бачу тебе! (I see you!)"
   words: 350
   points:
-  - "Explain consonant mutation briefly without getting bogged down in grammar rules. Just point out that 'я' forms sometimes change slightly for easier pronunciation (e.g., робити -> я роблю, бачити -> я бачу)."
+  - "Explain consonant mutation briefly without getting bogged down in grammar rules. Just point out that 'я' forms sometimes change slightly for easier pronunciation (e.g., робити -> я роблю, where б->бл). Note: бачити -> я бачу is NOT a mutation — the stem already ends in ч."
   - "Use in simple sentences: Я бачу друга. Ти добре говориш українською."
 vocabulary_hints:
   required:
   - говорúти (to speak/talk)
-  - робúти (to do/make)
   - бáчити (to see)
   - дивúтися (to watch - intro form only, reflexive covered later)
   - аллó (hello - on the phone)
   - телефóн (phone)
   recommended:
+  - робúти (to do/make - already taught in M16)
   - любúти (to love - remind it's group 2)
   - вчúти (to learn/study)
 activity_hints:
