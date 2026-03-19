@@ -90,26 +90,19 @@ Write **{TOPIC_TITLE}** for the {TRACK} track. Target: {WORD_TARGET}–{WORD_CEI
 
 Section 6 (Hard Constraints) defines exactly what grammar structures you may use for this module. Follow those constraints — they vary by module number.
 
-### RULE 2: VOCABULARY BANK
+### RULE 2: VOCABULARY
 
-Use ONLY these Ukrainian words. Do NOT pull other Cyrillic words from memory:
+Prioritize these Ukrainian words (from the plan). You may also use words from the cumulative vocabulary and common Ukrainian words, but these are your core teaching targets:
 
 {VOCABULARY_BANK}
 
-### RULE 3: VARIATION PATTERN
+### RULE 3: VARIATION
 
-Alternate your example formatting across sections:
-- Section 1: bulleted word list + [!tip] callout
-- Section 2: mini-dialogue with location label `> **(Вдома / At home)**`
-- Section 3: comparison pattern (X vs Y)
-- Section 4: [!challenge] or [!practice] callout with exercise
-- Section 5: reading practice sentences
-
-NEVER start 3+ sections with the same phrase. NEVER use "Here is" or "Let's look at" more than once.
+Vary your formatting across sections. Do NOT start 3+ sections the same way. Mix: bulleted lists, dialogues, comparison patterns, callout boxes, practice exercises.
 
 ### RULE 4: STRESS MARKS
 
-Do NOT add stress marks (´) to Ukrainian words. Write plain Ukrainian: `молоко` not `молоко́`. The pipeline adds stress marks deterministically after you write.
+Write Ukrainian without stress marks — the pipeline adds them after. Exception: if the plan uses capitalized stress (молокО, далекО) to indicate stress position, you may use that notation in teaching examples.
 
 ### RULE 5: ENGLISH PROSE STYLE
 
