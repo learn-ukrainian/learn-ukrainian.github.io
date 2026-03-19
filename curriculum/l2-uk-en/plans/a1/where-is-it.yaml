@@ -1,0 +1,71 @@
+module: a1-030
+level: A1
+sequence: 30
+slug: where-is-it
+version: '1.0'
+title: Where Is It?
+subtitle: "Finding lost keys (Locative case)"
+focus: grammar
+pedagogy: PPP
+phase: A1.5 [Places & Movement]
+word_target: 1200
+objectives:
+- Ask where something is using the question word 'Де?'
+- Learn the basic endings for the Locative case (в кімнаті, на столі, у сумці)
+- Apply euphony rules learned in M29 to location prepositions
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - "Dialogue-first: A frantic search for lost items in an apartment. 'Де мої ключі?' (Where are my keys?) 'Вони на столі.' (They are on the table)."
+  - "Contextual introduction of 'в/у' (in) and 'на' (on) with Locative endings."
+- section: "Питання: Де? (The Question: Where?)"
+  words: 250
+  points:
+  - "Introduce the Locative case as the answer to 'Де?' (Where? - location/position)."
+  - "Explain that the Locative case ALWAYS requires a preposition (usually 'в/у' or 'на')."
+- section: "Місцевий відмінок: Закінчення (Locative Case: Endings)"
+  words: 300
+  points:
+  - "This is the first case with new noun endings. Keep it simple: most hard masculine and feminine nouns take '-і' or '-ї' (стіл -> на столі, кімната -> в кімнаті)."
+  - "Feminine nouns ending in -а take -і (сумка -> у сумці). Note consonant mutations (к->ц, г->з, х->с) briefly but don't overwhelm."
+  - "Neuter nouns ending in -о also take -і (вікно -> на вікні)."
+- section: "Прийменники: В/У та На (Prepositions: In and On)"
+  words: 250
+  points:
+  - "Difference between 'в/у' (inside something: в кімнаті, у сумці) and 'на' (on top of a surface: на столі, на дивані)."
+  - "Remind students to apply the 'у/в' euphony rule learned in M29."
+vocabulary_hints:
+  required:
+  - де? (where?)
+  - в / у (in)
+  - на (on)
+  - стіл (table) -> на столі
+  - кімнáта (room) -> в кімнáті
+  - сýмка (bag) -> у сýмці
+  - дивáн (sofa) -> на дивáні
+  - ключí (keys)
+  recommended:
+  - вікнó (window) -> на вікні́
+  - підлóга (floor) -> на підлóзі
+  - ша́фа (closet/wardrobe) -> у ша́фі
+activity_hints:
+- type: match-up
+  focus: Match objects with their logical locations (keys -> on table)
+  items: 8
+- type: fill-in
+  focus: Complete sentences with the correct locative ending and preposition
+  items: 12
+connects_to:
+- a1-031 (My City)
+prerequisites:
+- a1-029 (Euphony Natural Flow)
+grammar:
+- Locative case (Місцевий відмінок) for location
+- Question word: Де?
+- Prepositions в/у, на
+register: розмовний
+references:
+- title: "Ukrainian Lessons Podcast - Where is it?"
+  url: "https://www.ukrainianlessons.com/"
+  notes: "Focus on establishing location with 'де' and the first introduction of case endings."

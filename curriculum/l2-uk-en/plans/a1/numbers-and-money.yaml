@@ -1,101 +1,86 @@
-module: a1-022
+module: a1-012
 level: A1
-sequence: 22
+sequence: 12
 slug: numbers-and-money
-version: '2.0'
+version: '1.0'
 title: Numbers & Money
-subtitle: Counting and Shopping in Ukraine
-focus: grammar
+subtitle: "Скільки коштує? — Prices and Ages"
+focus: vocabulary
 pedagogy: PPP
-phase: A1.2 [Verbs & Sentences]
+phase: A1.2 [My World]
 word_target: 1200
 objectives:
-- Learner can count from 0-100 in Ukrainian
-- Learner can ask and answer 'How much does it cost?'
-- Learner can handle basic shopping transactions
-- Learner can use numbers with genitive plural forms
+- Count from 1 to 1000 using number patterns
+- Ask for prices using "Скільки коштує?"
+- State ages and read phone numbers
 content_outline:
-- section: Вступ (Introduction)
+- section: Діалоги (Dialogues)
+  words: 500
+  points:
+  - "Dialogue 1 — At the market (Prices).
+    — Добрий день! Скільки коштує кава?
+    — Добрий день. Кава коштує сорок гривень.
+    — А чай?
+    — Чай коштує двадцять п'ять гривень.
+    Using numbers in a realistic transaction."
+  - "Dialogue 2 — Giving personal info.
+    — Скільки тобі років?
+    — Мені двадцять один рік. А тобі?
+    — Мені двадцять два. А який твій номер телефону?
+    — Нуль шістдесят сім, триста сорок п'ять...
+    Using numbers for ages and phone numbers."
+- section: "Цифри 1-19 (Numbers 1-19)"
+  words: 200
+  points:
+  - "Review 1-10: один, два, три, чотири, п'ять, шість, сім, вісім, дев'ять, десять."
+  - "Teens (base + надцять): одинадцять, дванадцять, тринадцять... двадцять."
+  - "Remind about один/одна/одне and два/дві gender agreement."
+- section: "Десятки та Сотні (Tens and Hundreds)"
   words: 250
   points:
-  - 'Державний стандарт (§3.8) та роль чисел у повсякденному житті: фокус на тематиці купівлі основних продуктів, одягу та
-    засобів гігієни.'
-  - 'Де ми використовуємо числа: приклади з реальним контекстом 2024 року (наприклад, кава за 50 грн, квиток на автобус) та
-    розкладом руху.'
-  - Мотиваційний вступ через діалог про покупки, що активує знання з модуля a1-16 (Генітив I) у контексті запиту ціни.
-- section: Презентація (Presentation)
-  words: 350
-  points:
-  - 'Числа 1-20: фокус на правильну вимову «п''ять» [pjat''] (пауза апострофа) та правильний наголос у числівниках 11-19 (одинАдцять,
-    дванАдцять).'
-  - 'Десятки (20-100) та застереження щодо помилок: відсутність м''якого знака в середині числівників 50-80 (п''ятдесят, шістдесят).'
-  - 'Правило «1-2-5»: узгодження чисел з іменниками (1 гривня - Nom Sg, 2 гривні - Nom Pl, 5 гривень - Gen Pl) з використанням
-    візуальних таблиць.'
-  - 'Запитання про ціну та базові конструкції: «Скільки коштує?», «Скільки з мене?», «Яка ціна?».'
-- section: Практика (Practice)
-  words: 350
-  points:
-  - 'Лічба та арифметика: інтерактивні вправи на додавання цін у кошику з використанням актуальних цін (хліб ~25 грн, молоко
-    ~40 грн).'
-  - 'Робота над помилкою «два» vs «дві»: акцент на жіночому роді слова «гривня» («дві гривні») на відміну від чоловічого («два
-    долари»).'
-  - 'Діалоги в магазині: моделювання ситуацій купівлі з використанням фразеології «Це дуже дорого!» та «У вас є здача?».'
-  - 'Дрилі на закріплення правила 1-2-5: перетворення форм іменника залежно від випадкового числа (3 гривні -> 10 гривень
-    -> 1 гривня).'
-- section: Культурний контекст (Cultural Context)
+  - "Tens: двадцять, тридцять, сорок (irregular), п'ятдесят, шістдесят, сімдесят, вісімдесят, дев'яносто (irregular)."
+  - "Hundreds: сто, двісті, триста, чотириста, п'ятсот... тисяча."
+  - "Focus on combining: сто двадцять п'ять, сорок три. Taught as patterns, not rote memorization of every number."
+- section: "Скільки коштує? (How much is it?)"
   words: 250
   points:
-  - 'Історія гривні: походження назви від «гриви» (шийна прикраса або злиток із золота чи срібла часів Київської Русі).'
-  - 'Символ гривні ₴: аналіз графіки (курсивна літера «г» з двома рисками) як символу стабільності за аналогією до € та ¥.'
-  - 'Народна мудрість: вивчення прислів''я «Копійка береже гривню» для ілюстрації традиційного ставлення до грошей та ощадливості.'
+  - "Скільки коштує? (How much does it cost?)"
+  - "Introduce 'гривня' (hryvnia). Don't focus heavily on the complex genitive plural rules for hryvnia yet, treat common prices as lexical chunks (одна гривня, дві гривні, п'ять гривень) or just teach numbers + 'гривень' as the default plural for prices >4."
+  - "Age chunk: Скільки тобі років? / Мені ___ років."
 vocabulary_hints:
   required:
-  - 'один (one) — High frequency (Top 100); collocations: «один раз», «одна гривня»; warning: gender agreement error (один
-    vs одна)'
-  - 'два (two) — High frequency (Top 100); collocations: «два дні», «дві гривні» (feminine!); warning: gender agreement error
-    (два vs дві)'
-  - три (three) — High frequency; usage in basic counting and price negotiation
-  - 'п''ять (five) — High frequency; pronunciation focus [pjat''] with distinct apostrophe; collocations: «п''ять хвилин»,
-    «п''ять гривень»'
-  - десять (ten) — High frequency; essential base for teen numbers and currency denominations
-  - 'гривня (hryvnia) — High frequency (contextual); historical origin from ''neck'' (hryva); collocations: «одна гривня»,
-    «скільки гривень?»'
-  - 'скільки (how much) — High frequency; key collocations: «Скільки з мене?», «Скільки коштує?»'
-  - 'коштувати (to cost) — Medium frequency; essential for shopping; collocation: «Скільки це коштує?»'
-  recommended:
-  - сто (hundred) — Usage in large numbers and round prices like «сто гривень»
-  - 'копійка (kopeck) — Cultural proverb: «Копійка береже гривню»; historical subunit of the hryvnia'
-  - 'ціна (price) — Medium frequency; collocations: «яка ціна?», «висока ціна», «низька ціна»'
-  - 'дорого (expensive) — Context: «Це дуже дорого!»; used for expressing budget constraints'
-  - 'дешево (cheap) — Context: «Це дешево»; evaluation of value for money'
-  - 'здача (change) — Essential for completing transactions; collocation: «Чи є у вас здача?»'
+  - нуль (zero)
+  - один... десять (1-10)
+  - одинадцять... двадцять (11-20)
+  - тридцять, сорок, п'ятдесят, шістдесят, сімдесят, вісімдесят, дев'яносто (30-90)
+  - сто, тисяча (100, 1000)
+  - Скільки коштує? (How much does it cost?)
+  - гривня (hryvnia)
+  - Скільки тобі років? (How old are you?)
+  - номер телефону (phone number)
 activity_hints:
+- type: matching
+  focus: Match numerals to their written words (45 -> сорок п'ять)
+  items: 12
+- type: math-equation
+  focus: Simple addition/subtraction to practice numbers (двадцять + п'ять = ___)
+  items: 8
 - type: fill-in
-  focus: Counting practice
-  items: 30
-- type: fill-in
-  focus: Complete with correct number form
-  items: 20
-- type: quiz
-  focus: Identify numbers heard
-  items: 15
-- type: fill-in
-  focus: Shopping transactions
-  items: 6
+  focus: "Fill in the correct phrase: Скільки ___ кава?"
+  items: 8
 connects_to:
-- a1-39 (Food and Drink)
-- a1-23 (What Time Is It)
-scope_note: >
-  The 1-2-5 number agreement rule (1 гривня, 2 гривні, 5 гривень) is taught as
-  lexical chunks at A1 before formal Genitive instruction in seq 32. Learners
-  memorize the patterns without full case analysis.
+- a1-013 (This and That)
 prerequisites:
-- a1-21 (Demonstratives)
-persona:
-  voice: Patient Supportive Tutor
-  role: Bazaar Accountant
+- a1-008, a1-009
 grammar:
-- Cardinals 0-100
-- Number agreement (1=nom, 2-4=nom.pl, 5+=gen.pl)
-- Genitive plural with numbers
+- "Cardinal numerals (patterns to 1000)"
+- "один/одна/одне, два/дві gender agreement review"
+- "Lexical chunks for prices and age"
 register: розмовний
+references:
+- title: "ULP 1-09: At the Market in Ukraine + Numbers 20-100"
+  url: https://www.ukrainianlessons.com/episode9/
+  notes: "Follows Anna's method of teaching numbers through market transactions and 'Скільки коштує'."
+- title: "Anna Ohoiko Pronunciation Playlist"
+  url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  notes: "Pronunciation of complex number clusters (п'ятдесят, шістдесят)."

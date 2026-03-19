@@ -1,0 +1,149 @@
+module: a1-005
+level: A1
+sequence: 5
+slug: who-am-i
+version: '1.0'
+title: Who Am I?
+subtitle: "Мене звати... — Introducing Yourself"
+focus: vocabulary
+pedagogy: PPP
+phase: A1.1 [Script & First Contact]
+word_target: 1200
+objectives:
+- Introduce yourself with name, nationality, and profession
+- Use the Це construction to identify things and people
+- Ask and answer "What is your name?" formally and informally
+- Understand the basic Ukrainian sentence pattern (Subject — Noun, no "is")
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 350
+  points:
+  - "Dialogue 1 — At a hostel (informal). Two travelers meet in a common
+    room. Full introduction sequence: Привіт! Як тебе звати? → Мене
+    звати... А тебе? → ... Звідки ти? → Я з... А ти? → Ким ти
+    працюєш? (preview phrase) → Я — студент/програміст."
+  - "Dialogue 2 — At a conference (formal). Professional introduction:
+    Добрий день! Як вас звати? → Мене звати... Дуже приємно! →
+    Мені також! Ви з України? → Так, я з Києва. А ви? →
+    Я з Канади. Я — журналіст."
+  - "Dialogue 3 — Introducing someone else. Це мій друг Андрій.
+    Він з Львова. Він — інженер. → Дуже приємно, Андрію!
+    (Preview of vocative form — Андрій → Андрію — learner just
+    memorizes this one, full vocative in M44.)"
+- section: "Менé звáти... (My name is...)"
+  words: 250
+  points:
+  - "Following Anna Ohoiko ULP Episode 3 — introducing yourself.
+    Менé звáти... literally means 'me they-call...' — Ukrainian doesn't
+    use 'My name IS' the way English does. The verb звáти (to call) is
+    used impersonally. Менé звáти Áнна. Менé звáти Тарáс."
+  - "Asking someone's name:
+    Informal: Як тебé звáти? (How do they call you?)
+    Formal: Як вас звáти? (How do they call you? — formal)
+    About him: Як йогó звáти? About her: Як її́ звáти?
+    Following Anna's ep6-7 paradigm exactly."
+  - "'Pleased to meet you': Дýже приє́мно! (Very pleasant!) or
+    Приє́мно познайóмитись! (Pleasant to get acquainted!).
+    These are said AFTER exchanging names. The formal introduction
+    sequence: Добрий день. Як вас звати? → Мене звати... → Дуже приємно!"
+- section: "Це — ... (This is...)"
+  words: 200
+  points:
+  - "The word Це is one of the most useful in Ukrainian. It means
+    'this is' / 'these are' / 'it is'. No verb 'to be' needed.
+    Це кáва. (This is coffee.) Це Áнна. (This is Anna.)
+    Це Украї́на. (This is Ukraine.)"
+  - "Questions with Це: Що це? (What is this?) Хто це? (Who is this?)
+    Note that question words (Що, Хто) go FIRST — Хто це? not *Це хто?
+    Following Anna's ULP Episode 7 pattern."
+  - "Це for introductions: Це мій друг Олéг. (This is my friend Oleg.)
+    Це моя́ сестрá Кáтя. (This is my sister Katia.)
+    Preview of possessive pronouns — they appear naturally here."
+- section: "Я — студéнт (I am a student)"
+  words: 200
+  points:
+  - "In Ukrainian present tense, there is NO verb 'to be'. The sentence
+    structure is simply: Subject — Noun/Adjective.
+    Я — студéнт. (I am a student.) Він — лíкар. (He is a doctor.)
+    Вонá — вчитéлька. (She is a teacher.)
+    The dash (—) in writing shows where 'is' would be."
+  - "Nationalities — no verb needed:
+    Я — украї́нець (I am Ukrainian, male) / украї́нка (female).
+    Він — америкáнець / Вонá — америкáнка.
+    Я — англíєць / англíйка. Я — канадíєць / канáдка.
+    Following Anna's ULP Episode 3 self-introduction pattern."
+  - "Professions in nominative — just state it:
+    Я — програмíст. Я — дизáйнер. Я — журналíст.
+    Gendered forms for some professions:
+    вчитéль / вчитéлька, студéнт / студéнтка, лíкар / лíкарка.
+    NOT all professions have feminine forms — програмíст is used for both."
+- section: "Звідки ви? (Where are you from?)"
+  words: 200
+  points:
+  - "Following Anna's ULP Episode 4 — where you live and where you're from.
+    Де ви живетé? (Where do you live?) Я живý в Кúєві / у Львóві.
+    Note: this is the learner's first encounter with locative forms
+    (Київ → Києві) but they should memorize these as fixed phrases,
+    not grammar rules. Full locative taught in M30."
+  - "Звíдки ви? / Звідкí ти? (Where are you from?)
+    Я з Украї́ни. Я з Кáнади. Я зі Штáтів. Я з Німéччини.
+    These use genitive forms (України, Канади) but again — memorize
+    as chunks, not grammar. Country names as vocabulary."
+  - "Combined self-introduction: Привíт! Менé звáти Máрко.
+    Я з Кáнади, áле зáраз живý в Кúєві. Я — програмíст.
+    A complete self-introduction in 4 sentences — learner's first
+    connected Ukrainian speech."
+vocabulary_hints:
+  required:
+  - "менé звáти... (my name is...) — self-introduction formula"
+  - "як тебé звáти? (what's your name? informal)"
+  - "як вас звáти? (what's your name? formal)"
+  - це (this is / these are) — identifier
+  - "дýже приє́мно (very pleasant / pleased to meet you)"
+  - студéнт, студéнтка (student, male/female)
+  - вчитéль, вчитéлька (teacher, male/female)
+  - лíкар, лíкарка (doctor, male/female)
+  - украї́нець, украї́нка (Ukrainian, male/female)
+  - "Украї́на (Ukraine)"
+  recommended:
+  - програмíст (programmer) — no separate feminine form
+  - журналíст, журналíстка (journalist, m/f)
+  - інженéр, інженéрка (engineer, m/f)
+  - "звíдки (where from) — question word"
+  - "зáраз (now, currently)"
+  - друг (friend, male) — used in introductions
+activity_hints:
+- type: fill-in
+  focus: Complete self-introduction sentences (Мене звати..., Я з..., Я —...)
+  items: 8
+- type: quiz
+  focus: "Choose formal or informal introduction for the situation"
+  items: 8
+- type: match-up
+  focus: Match professions with their male/female forms
+  items: 10
+- type: unjumble
+  focus: Put introduction dialogue lines in correct order
+  items: 6
+connects_to:
+- a1-006 (My Family)
+prerequisites:
+- a1-004 (Greetings and Politeness)
+grammar:
+- "Мене звати construction (impersonal)"
+- "Це + noun identification"
+- "Zero copula (Я — студент, no 'is')"
+- "Nationality and profession vocabulary (nominative)"
+register: розмовний
+references:
+- title: "ULP Season 1, Episode 3 — How to Introduce Yourself in Ukrainian"
+  url: https://www.ukrainianlessons.com/episode3/
+  notes: "Мене звати..., nationality, Дуже приємно"
+- title: "ULP Season 1, Episode 4 — Where You Live and Where You're From"
+  url: https://www.ukrainianlessons.com/episode4/
+  notes: "Де ви живете? Звідки ви? Country/city names"
+- title: "ULP Season 1, Episode 8 — Jobs and Professions in Ukrainian"
+  url: https://www.ukrainianlessons.com/episode8/
+  notes: "Profession vocabulary, працювати conjugation, gendered profession forms"
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

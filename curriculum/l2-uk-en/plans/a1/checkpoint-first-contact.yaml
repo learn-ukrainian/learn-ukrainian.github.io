@@ -1,97 +1,115 @@
-module: a1-014
+module: a1-007
 level: A1
-sequence: 14
+sequence: 7
 slug: checkpoint-first-contact
-version: '2.1'
-title: 'Checkpoint: First Contact'
-subtitle: Can You Do the A1.1 Skills?
-focus: checkpoint
-pedagogy: TTT
-phase: A1.1 [First Contact]
+version: '1.0'
+title: "Checkpoint: First Contact"
+subtitle: "Can You Read, Greet, and Introduce Yourself?"
+focus: review
+pedagogy: PPP
+phase: A1.1 [Script & First Contact]
 word_target: 1200
 objectives:
-- Demonstrate Cyrillic reading fluency
-- Identify noun gender by word ending
-- Use adjective-noun agreement with correct gender endings
-- Form basic noun phrases using Це + adjective + noun patterns
+- Demonstrate ability to read Ukrainian Cyrillic fluently
+- Hold a complete first conversation (greet → introduce → family → goodbye)
+- Self-assess knowledge of alphabet, sounds, greetings, introductions, family
+- Combine all A1.1 skills in connected speech
 content_outline:
-- section: Огляд (Overview)
-  words: 180
+- section: "Що ми знáємо? (What Do We Know?)"
+  words: 200
   points:
-  - 'Привітання від господаря хостелу (Friendly Hostel Host) — пояснення мети контрольної
-    точки: консолідація фонології (§4.1.1), морфології (§4.2.1.1, §4.2.4.1) та синтаксису
-    (§4.3.1) рівня A1.1'
-  - Практичний підхід до перевірки знань — стратегія 'Test-Teach-Test' (TTT) для виявлення
-    прогалин перед переходом до знахідного відмінка (a1-11)
-- section: 'Навичка 1: Читання та Рід (Skill 1: Reading and Gender)'
-  words: 300
+  - "Quick self-check covering M01-M06:
+    ✓ Can you read any Ukrainian word in Cyrillic? (M01)
+    ✓ Do you know what Ь and ' do to pronunciation? (M02)
+    ✓ Can you find the stressed syllable in common words? (M03)
+    ✓ Can you greet someone formally and informally? (M04)
+    ✓ Can you introduce yourself with name, origin, profession? (M05)
+    ✓ Can you talk about your family using У мене є and мій/моя? (M06)"
+  - "Review of the Ukrainian sounds that English speakers find hardest:
+    И (between 'i' and 'ee'), Г (voiced [ɦ]), Р (rolled), and the soft
+    consonants with Ь. Quick pronunciation refresher with word examples."
+- section: "Читáння (Reading Practice)"
+  words: 200
   points:
-  - 'Фонологічний виклик: розрізнення звуків И /ɪ/ (bit) та І /i/ (bee) — вправи на
-    мінімальні пари та читання слів зі стандарту (§4.1.1: Київ, київський, Україна,
-    українець, Олена, олівець)'
-  - Класифікація іменників за родом (§4.2.1.1) — фокус на 'тато' (чоловічий рід),
-    який часто помилково вважають середнім через закінчення -о, на відміну від слова
-    'місто'
-  - Швидка перевірка вміння впізнавати всі 33 літери українського алфавіту без використання
-    транслітерації
-- section: 'Навичка 2: Прикметники та Множина (Skill 2: Adjectives and Plurals)'
-  words: 300
+  - "A short Ukrainian text (8-10 sentences) using ONLY vocabulary from M01-M06.
+    The learner reads it aloud, checking their Cyrillic fluency and stress
+    placement. Something like Anna Ohoiko's ULP 1-10 'Я і моя сім'я' text."
+  - "Text content: A person introduces themselves, describes their family,
+    mentions professions, says where they're from. All vocabulary recycled
+    from previous modules — no new words, just fluent combination."
+- section: "Грамáтика (Grammar Summary)"
+  words: 200
   points:
-  - 'Узгодження прикметників з іменниками за родом (M11 review): великий стіл (M),
-    нова книга (F), гарне місто (N). Drill на правильні закінчення -ий/-а/-е.'
-  - 'Утворення множини (M13 review): стіл → столи, книга → книги, місто → міста.
-    Чергування приголосних та голосних у множині.'
-  - 'Кольори + одяг (M12 review): червона сукня, сині штани, білий светр.
-    Поєднання прикметників з іменниками одягу.'
-- section: 'Культурний контекст: Кафе (Cultural Context: Cafe)'
-  words: 240
+  - "Key patterns learned so far (not rules — patterns from real speech):
+    1. Це + noun (identification): Це мій тато.
+    2. Subject — Noun (no 'is'): Я — студент.
+    3. У мене є + noun (possession): У мене є сестра.
+    4. Як тебе/вас звати? (asking names)
+    5. Мій/моя/моє/мої + noun (possession with gender)"
+  - "Common mistakes to watch for:
+    — Using 'є' as 'is' everywhere (*Він є студент → Він — студент)
+    — Forgetting gender on possessives (*мій сестра → моя сестра)
+    — Reading В as 'b' instead of [v] — the false friend trap"
+- section: "Культýра (Cultural Corner)"
+  words: 150
   points:
-  - Львівська культура кави — історична довідка про Юрія Кульчицького та віденську
-    кав'ярню «Під синьою пляшкою» (1683), що пов'язує Україну з європейською традицією
-  - 'Етикет замовлення їжі (§3.9) — обов''язкове вживання фрази «Смачного!» (Bon appetit)
-    та ввічливих форм запиту: «Дайте, будь ласка...», «Можна рахунок?»'
-- section: Інтеграційне завдання (Integration Task)
-  words: 180
+  - "Ukrainian naming conventions: first name (ім'я), patronymic (по батькові),
+    surname (прізвище). Ukrainians use all three in formal settings:
+    Тарáс Григóрович Шевчéнко. In daily life, first name is enough among
+    friends; пáне/пáні + name for formal address."
+  - "The significance of сім'я in Ukrainian culture — family ties are
+    traditionally very strong. Multi-generational family gatherings,
+    regular visits to grandparents, the tradition of passing down names."
+- section: Діалоги (Dialogues)
+  words: 450
   points:
-  - 'Інтеграція навичок: опис кафе та меню через Це + adj + noun (Це чорна кава,
-    Це великий торт, Це нове кафе). Визначення роду іменників та правильне узгодження.'
-  - Самооцінка готовності до переходу на рівень A1.2 — підбиття підсумків засвоєння
-    модулів M1-M13
+  - "FINAL DIALOGUE — The Full Introduction. A comprehensive dialogue that
+    combines EVERYTHING from A1.1. Setting: international meetup in Kyiv.
+    Two people meet, greet formally, switch to informal, introduce
+    themselves fully, show family photos, exchange names and professions,
+    say goodbye. This is the capstone — if learner can follow and produce
+    this dialogue, A1.1 is complete."
+  - "Connected monologue template — learner's own self-introduction.
+    Following Anna ULP 1-10 exactly: Привіт! Як справи? У мене — чудово.
+    Мене звати [name]. Я [nationality]. Я — [profession].
+    Моя мама — [profession]. Її звати [name]. Мій тато — [profession].
+    Його звати [name]. У мене є [family]. [Name] живе в [city].
+    This is 'Я і моя сім'я' — the A1.1 graduation speech."
+  - "Reading Ukrainian social media profiles: Short bios that combine
+    all A1.1 vocabulary. Олена, 25. Львів. Журналістка. Люблю каву.
+    (Preview of M15 topic.) Learner reads and identifies: name, age, city,
+    profession."
 vocabulary_hints:
   required:
-  - великий (big) — великий стіл, великий дім; Review from M11
-  - новий (new) — нова книга, нове місто; Review from M11
-  - гарний (beautiful/nice) — гарна книга, гарне місто; Review from M11
-  - червоний (red) — червона сукня, червоний светр; Review from M12
-  - хто (who) — Хто це?; Interrogative focus
-  - що (what) — Що це?; Interrogative focus
-  - де (where) — Де кафе?; Interrogative focus
-  - так/ні (yes/no) — базові ствердні та заперечні відповіді
+  - "All vocabulary from M04-M06 is recycled — no new required words"
   recommended:
-  - синій (blue) — сині штани, синій светр; Review from M12
-  - білий (white) — біла сорочка, білий сніг; Review from M12
-  - 'кава (coffee) — чорна кава, кава з молоком; Cultural hook: Lviv tradition'
-  - Смачного! (Bon appetit) — Essential cultural phrase for dining
-  - маленький (small) — маленький кіт, маленька книга; Adjective practice
+  - ім'я́ (first name) — naming convention vocabulary
+  - по бáтькові (patronymic) — Ukrainian naming system
+  - прíзвище (surname) — Ukrainian naming system
+  - пáне (Mr., formal address) — formal address preview
+  - пáні (Ms., formal address) — formal address preview
 activity_hints:
 - type: quiz
-  focus: A1.1 grammar and vocabulary
-  items: 30
+  focus: "Comprehensive review: greetings, introductions, family, reading"
+  items: 15
+- type: fill-in
+  focus: "Complete the full self-introduction monologue with correct words"
+  items: 10
+- type: match-up
+  focus: "Match questions with correct answers (Як звати? → Мене звати...)"
+  items: 10
+- type: unjumble
+  focus: "Arrange a complete first-meeting dialogue in correct order"
+  items: 8
 connects_to:
-- a1-26 (The Accusative I)
+- a1-008 (My Room — Gender)
 prerequisites:
-- a1-13 (Plurals and Alternation)
-persona:
-  voice: Patient Supportive Tutor
-  role: Friendly Hostel Host
+- a1-006 (My Family)
 grammar:
-- Cyrillic alphabet (all 33 letters)
-- Noun gender (m/f/n)
-- Adjective-noun agreement
-- Plural formation
+- "Review: Це + noun, Subject — Noun, У мене є, possessives"
+- "Ukrainian naming conventions (ім'я, по батькові, прізвище)"
 register: розмовний
-pronunciation_videos:
-  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  poster: https://www.youtube.com/watch?v=grL2s5e2AGI
-  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
-  credit: "Anna Ohoiko — Ukrainian Lessons"
+references:
+- title: "ULP 1-10: Review 1-09 — Я і моя сім'я"
+  url: https://www.ukrainianlessons.com/episode10/
+  notes: "Anna's review episode — connected speech combining episodes 1-9"

@@ -1,0 +1,66 @@
+module: a1-037
+level: A1
+sequence: 37
+slug: food-and-drink
+version: '1.0'
+title: Food And Drink
+subtitle: Kitchen table and basic Instrumental
+focus: vocabulary
+pedagogy: PPP
+phase: A1.6 [Food & Shopping]
+word_target: 1200
+objectives:
+- Identify common food and drink items
+- Use basic Instrumental 'з' (with) in food contexts
+- Talk about what is on the kitchen table
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - 'Dialogue 1: Breakfast at the kitchen table. Discussing coffee with milk (кава з молоком).'
+  - 'Dialogue 2: Making a sandwich. Bread with cheese (хліб з сиром).'
+- section: Що на столі? (What is on the table?)
+  words: 400
+  points:
+  - 'Introduce basic food vocabulary: хліб, вода, кава, чай, молоко, цукор, сир, ковбаса.'
+  - Review 'У мене є' and 'Тут є' to describe food items.
+- section: З чим? (With what?)
+  words: 400
+  points:
+  - Introduce Instrumental case for 'з' (with) exclusively in the context of food/drinks.
+  - 'Chunks: з молоком, з цукром, з лимоном, з сиром.'
+  - Do NOT teach the full Instrumental table yet. Just the practical application.
+vocabulary_hints:
+  required:
+  - їжа
+  - вода
+  - кава
+  - чай
+  - молоко
+  - цукор
+  - хліб
+  - сир
+  - з (with)
+  - лимон
+  recommended:
+  - ковбаса
+  - сніданок
+  - стіл
+activity_hints:
+- type: matching
+  focus: Match food words to English equivalents
+  items: 12
+- type: fill-in
+  focus: Complete phrases using the correct 'з ...' chunk
+  items: 8
+connects_to:
+- a1-038 (Eating and Drinking)
+prerequisites:
+- a1-008 (My Room Gender)
+grammar:
+- Instrumental 'з' (with) - basic lexical chunks
+register: розмовний
+references:
+- title: 'ULP Ep18: What do you like to eat?'
+  url: https://www.ukrainianlessons.com/episode18/
+  notes: Reference for food vocabulary in context.

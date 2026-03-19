@@ -1,0 +1,92 @@
+module: a1-008
+level: A1
+sequence: 8
+slug: my-room-gender
+version: '1.0'
+title: My Room & Gender
+subtitle: "У мене є стіл — Looking Around"
+focus: vocabulary
+pedagogy: PPP
+phase: A1.2 [My World]
+word_target: 1200
+objectives:
+- Name common objects in a room (furniture, items)
+- Recognize the gender of nouns intuitively by their endings (consonant, -а/-я, -о/-е)
+- Express possession using "У мене є" and "У мене немає" with objects
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 500
+  points:
+  - "Dialogue 1 — Video call showing a new room.
+    Learner shows their friend their new room:
+    — Привіт! Це моя нова кімната.
+    — Клас! У тебе є стіл?
+    — Так, у мене є стіл і ліжко. Але у мене немає шафи.
+    Natural conversation applying 'У мене є' and 'У мене немає' to objects."
+  - "Dialogue 2 — What is in the bag? (Guessing game):
+    — Що це? — Це мій рюкзак.
+    — У тебе є книга? — Так, є.
+    — А телефон? — Так, ось мій телефон."
+- section: "Що є в кімнаті? (What's in the room?)"
+  words: 250
+  points:
+  - "Vocabulary for common room items: стіл (table), стілець (chair), ліжко (bed), вікно (window), двері (door - plural only), шафа (wardrobe), книга (book), комп'ютер (computer), лампа (lamp)."
+  - "Teaching gender through the objects themselves, categorizing them visually rather than using abstract grammar tables."
+- section: "Чоловічий, Жіночий, Середній (Noun Gender)"
+  words: 250
+  points:
+  - "Ukrainian nouns have gender. Teach through object observation (following the principle of Anna ULP Ep6 naturally grouping by gender).
+    Masculine (ends in consonant): стіл, телефон, комп'ютер, рюкзак.
+    Feminine (ends in -а/-я): книга, лампа, кімната, шафа.
+    Neuter (ends in -о/-е): вікно, ліжко."
+- section: "У мене є... (Possession Review & Expansion)"
+  words: 200
+  points:
+  - "Review 'У мене є' from M06. Apply it to new objects: У мене є стіл. У мене є книга."
+  - "Introduce the negative 'У мене немає' (I don't have) as a lexical chunk. Mention it changes the ending (немає стола, немає книги - preview only, no deep case rules)."
+vocabulary_hints:
+  required:
+  - кімната (room)
+  - стіл (table/desk)
+  - стілець (chair)
+  - ліжко (bed)
+  - вікно (window)
+  - шафа (wardrobe)
+  - комп'ютер (computer)
+  - лампа (lamp)
+  - рюкзак (backpack)
+  - книга (book)
+  - У мене є (I have)
+  - У мене немає (I don't have)
+  recommended:
+  - двері (door)
+  - телефон (phone)
+  - зошит (notebook)
+  - ручка (pen)
+activity_hints:
+- type: matching
+  focus: Match objects to their gender categories (m/f/n)
+  items: 12
+- type: fill-in
+  focus: "Fill in the correct phrase: У мене є ___ / У мене немає ___"
+  items: 10
+- type: true-false
+  focus: True/False based on the room description dialogues
+  items: 6
+connects_to:
+- a1-009 (Describing Things)
+prerequisites:
+- a1-006 (My Family - for 'У мене є')
+- a1-007 (Checkpoint)
+grammar:
+- "Noun gender identification (-consonant, -а/-я, -о/-е)"
+- "У мене є + Nominative (Review)"
+- "У мене немає + Genitive (Lexical preview)"
+register: розмовний
+references:
+- title: "ULP 1-06: Talking About Family in Ukrainian + I Have"
+  url: https://www.ukrainianlessons.com/episode6/
+  notes: "Extending the У мене є construction and natural gender introduction."
+- title: "Anna Ohoiko Pronunciation Playlist"
+  url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  notes: "Supplementary listening for consonant endings vs vowel endings."

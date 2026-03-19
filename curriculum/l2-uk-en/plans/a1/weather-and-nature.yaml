@@ -1,91 +1,79 @@
-module: a1-043
+module: a1-025
 level: A1
-sequence: 43
+sequence: 25
 slug: weather-and-nature
-version: '2.0'
-title: Weather & Nature
-subtitle: Seasons, Weather & The Natural World
+version: '1.0'
+title: Weather and Nature
+subtitle: "Walking in the Park"
 focus: vocabulary
 pedagogy: PPP
-phase: A1.4 [Tenses & Daily Life]
+phase: A1.4 [Time & Nature]
 word_target: 1200
 objectives:
-- Learner can describe the weather
-- Learner can ask about weather conditions
-- Learner can name the four seasons
-- Learner can use impersonal weather expressions
+- Describe the weather using impersonal adverbs
+- Learn basic nature vocabulary
+- Talk about outdoor conditions
 content_outline:
-- section: Вступ (Introduction)
-  words: 250
+- section: Діалоги (Dialogues)
+  words: 500
   points:
-  - 'Вступ від імені Карпатського рейнджера: погода як універсальний ключ до small talk в Україні та основа для планування
-    походів; акцент на чіткій зміні чотирьох пір року (State Standard §3.4).'
-  - 'Культурний гачок: концепція «Бабиного літа» (Indian Summer) — теплий період на межі вересня та жовтня, його значення
-    для фольклору та сільськогосподарського циклу.'
-- section: Погода та безособові форми (Weather & Impersonal Forms)
-  words: 300
+  - "Dialogue 1 — Checking the weather.
+    — Яка сьогодні погода?
+    — Сьогодні сонячно і тепло.
+    — Чудово! Гуляємо в парку?"
+  - "Dialogue 2 — Bad weather.
+    — Надворі йде дощ.
+    — Так, дуже холодно. Я сиджу вдома."
+- section: "Погода (Weather — Impersonal Adverbs)"
+  words: 350
   points:
-  - 'Безособові конструкції для стану природи: вживання прислівників (тепло, холодно, спекотно, прохолодно) без фіктивного
-    підмета — виправлення помилки *Це холодно* замість **Холодно**.'
-  - 'Опади через ідіоматичні дієслова руху: вивчення конструкцій «йде дощ» та «йде сніг» — drill для запобігання калькуванню
-    *дощ робить* (wrong verb error).'
-- section: Пори року та природа (Seasons & Nature)
-  words: 325
+  - "Teach how Ukrainians describe weather using impersonal adverbs (-о endings): холодно, тепло, спекотно, сонячно, хмарно."
+  - "Use 'Сьогодні...' (Today it is...)."
+  - "Introduce special verb phrases: іде дощ (it rains), іде сніг (it snows)."
+- section: "Природа (Nature Vocabulary)"
+  words: 350
   points:
-  - 'Часові прислівники від назв пір року (State Standard §3.4): навесні, влітку, восени, взимку — фокус на фонетиці та наголосах
-    (восени́, навесні́) та уникненні помилки *в весні*.'
-  - 'Природні об’єкти за Стандартом (§3.11): ліс, озеро, річка, гори, море — опис типової погоди в цих локаціях (наприклад,
-    «влітку на морі спекотно», «взимку в горах багато снігу»).'
-- section: Складні речення та прогноз (Complex Sentences & Forecast)
-  words: 325
-  points:
-  - 'Синтаксис складного речення за Стандартом (§4.3.2): побудова конструкцій зі сполучником «бо» для пояснення планів залежно
-    від погоди (наприклад: «Ми не гуляємо, бо холодно»).'
-  - 'Діалог «Прогноз погоди»: запитання про умови (Яка сьогодні погода? Чи буде вітер?) та використання колокацій «гарна/погана
-    погода», «сильний дощ».'
+  - "Basic nature terms encountered on a walk: дерево, річка, птах, сонце, небо, ліс, парк."
+  - "Combine nature vocabulary with adjectives or weather conditions (гарне дерево, синє небо)."
 vocabulary_hints:
   required:
-  - погода (weather) — яка сьогодні погода?, прогноз погоди; High (Top 1000)
-  - 'дощ (rain) — йде дощ (it rains), сильний дощ, після дощу; learner error: *дощ робить*'
-  - сніг (snow) — йде сніг (it snows), багато снігу; High (Top 1000)
-  - сонце (sun) — світить сонце, на сонці; High (Top 500)
-  - тепло (warm) — на вулиці тепло; adverbial use (no dummy subject 'it')
-  - 'холодно (cold) — дуже холодно; learner error: *це холодно* (literal translation)'
-  - 'весна (spring) — навесні (in spring); watch stress: navesní'
-  - зима (winter) — взимку (in winter); State Standard §3.4
+  - погода (weather)
+  - холодно (cold)
+  - тепло (warm)
+  - спекотно (hot)
+  - сонячно (sunny)
+  - хмарно (cloudy)
+  - іде дощ (it's raining)
+  - іде сніг (it's snowing)
+  - надворі (outside)
+  - дерево (tree)
+  - річка (river)
+  - птах (bird)
+  - сонце (sun)
+  - небо (sky)
   recommended:
-  - літо (summer) — влітку (in summer)
-  - 'осінь (autumn) — восени (in autumn); watch stress: vóseny'
-  - ліс (forest) — State Standard §3.11; у лісі гарно
-  - гори (mountains) — в горах сніг; Карпатський рейнджер context
-  - море (sea) — State Standard §3.11; на морі спекотно
-  - хмара (cloud) — хмарно (cloudy), сьогодні хмарно
-  - вітер (wind) — сильний вітер; бо вітер
-  - спекотно (hot) — дуже спекотно; влітку
-  - прохолодно (cool) — прохолодна погода; visual scale between warm and cold
+  - ліс (forest)
+  - парк (park)
+  - вітер (wind)
 activity_hints:
-- type: match-up
-  focus: Weather and nature words
-  items: 30
-- type: match-up
-  focus: Match weather to seasons
-  items: 20
+- type: matching
+  focus: Match weather icons/descriptions to the correct Ukrainian adverb
+  items: 8
 - type: fill-in
-  focus: Complete weather descriptions
-  items: 15
-- type: fill-in
-  focus: Weather conversations
-  items: 6
+  focus: Complete sentences with the correct nature vocabulary or weather phrase
+  items: 12
+- type: true-false
+  focus: Evaluate logical statements about weather and seasons (e.g., Взимку спекотно)
+  items: 10
 connects_to:
-- 'a1-35 (Prepositions: Direction & Origin)'
-- a1-50 (Holidays and Traditions)
+- a1-026 (My Daily Life)
 prerequisites:
-- 'a1-42 (Description: Adverbs)'
-persona:
-  voice: Patient Supportive Tutor
-  role: Carpathian Ranger
+- a1-024 (Months and Seasons)
 grammar:
-- Impersonal weather expressions
-- Seasons with prepositions
-- Temperature and weather adjectives
+- "Impersonal adverbs (-о) for weather"
+- "Іде дощ / іде сніг expressions"
 register: розмовний
+references:
+- title: "ULP Ep16: Talking about weather in Ukrainian"
+  url: "https://www.ukrainianlessons.com/episode16/"
+  notes: "Follows Anna's introduction to weather terms and impersonal structures."

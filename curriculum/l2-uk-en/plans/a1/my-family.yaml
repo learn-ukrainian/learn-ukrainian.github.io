@@ -1,102 +1,140 @@
-module: a1-049
+module: a1-006
 level: A1
-sequence: 49
+sequence: 6
 slug: my-family
-version: '2.0'
+version: '1.0'
 title: My Family
-subtitle: Родина
+subtitle: "У мене є брат — Showing Photos"
 focus: vocabulary
 pedagogy: PPP
-phase: A1.5 [Modals, Commands & Life]
+phase: A1.1 [Script & First Contact]
 word_target: 1200
 objectives:
-- Learner can name family members
-- Learner can describe family relationships
-- Learner can talk about their own family
-- Learner can use possessives with family terms
-- Learner can use basic vocative forms to address family members
+- Name all close family members in Ukrainian
+- Use "У мене є..." to express possession (I have...)
+- Use possessive pronouns (мій, моя, моє, мої) with correct gender
+- Introduce family members using Це and possessives
 content_outline:
-- section: 'Вступ: Моя сім''я (Introduction: My Family)'
+- section: Діалоги (Dialogues)
+  words: 500
+  points:
+  - "Dialogue 1 — Showing phone photos (following Anna's ULP 1-06/1-07).
+    Two friends at a café look at family photos:
+    — У тебе є брати чи сестри? — Так, у мене є два брати і одна
+    сестра. — Ого! У мене тільки один брат. — Як його звати? — Коля.
+    Natural conversation about family with 'У мене є' and numbers."
+  - "Dialogue 2 — Introducing family in a photo (ULP 1-07 pattern):
+    — Це моя сім'я на фотографії. — Класно! Хто це?
+    — Це моя мама Марина. Це мій тато Євген. Це моя сестра Катя
+    і мої брати — Іван і Денис. — А це твоя бабуся?
+    — Так, її звати Тетяна. А це — дідусь Микола.
+    Practices Це + possessives + family vocabulary."
+  - "Dialogue 3 — Anna's ULP 1-10 review pattern (Я і моя сім'я):
+    Connected speech about one's family — learner tells their family story:
+    Привіт! Мене звати... Моя мама — вчителька. Її звати...
+    Мій тато — інженер. Його звати... У мене є один брат.
+    Він живе в... Combining all A1.1 skills: greeting + name + family +
+    possessives + professions + 'У мене є'."
+- section: "Сім'я́ = Роди́на (Family)"
+  words: 200
+  points:
+  - "Following Anna Ohoiko ULP Episode 6 exactly — Anna talks to Іванка
+    about her family. Two Ukrainian words for 'family': сім'я́ and роди́на
+    (both equally used). Core family vocabulary:
+    мáма / мáти (mother/mother formal), тáто / бáтько (dad/father formal),
+    брат (brother), сестрá (sister), син (son), дочкá = дóнька (daughter)."
+  - "Extended family: бабýся = бáба (grandmother), дідýсь = дід (grandfather),
+    тíтка (aunt), дя́дько (uncle), двою́рідний брат / двою́рідна сестрá
+    (male/female cousin). Note: Ukrainian has NO single word for 'grandparents'
+    — you always say бабýся і дідýсь separately."
+- section: "У мéне є... (I have...)"
   words: 250
   points:
-  - 'Введення базової лексики: мама, тато, брат, сестра (Державний стандарт §3.1). Питання «Хто це?» для ідентифікації членів
-    родини.'
-  - 'Культурний контекст: Різниця між поняттями «сім''я» (ядерна родина, що живе разом) та «родина» (ширше коло родичів, лінія
-    предків та походження).'
-- section: 'Презентація: Близька та розширена родина (Presentation: Immediate and Extended Family)'
-  words: 350
+  - "This is THE most important A1 construction. In Ukrainian, you don't say
+    'I have' with a verb. You say 'At me there-is': У мéне є брат.
+    Literally: 'At me is brother.' The є means 'there is/exists'."
+  - "Full paradigm (following Anna's ULP 1-06 table exactly):
+    У мéне є — I have. У тéбе є — You have (informal). У ньóго є — He has.
+    У нéї є — She has. У нас є — We have. У вас є — You have (formal/plural).
+    У них є — They have."
+  - "Making questions — just add rising intonation:
+    У тéбе є сестрá? ↗ (Do you have a sister?)
+    У вас є брат? ↗ (Do you have a brother? — formal)
+    Answers: Так, у мéне є сестрá. / Ні, у мéне немáє сестрú.
+    Note: немáє (there isn't) + genitive form — just memorize as a chunk."
+  - "Numbers with family (preview from Anna ULP 1-06):
+    одúн/однá/однé changes by gender: одúн брат, однá сестрá, однé місто.
+    два/дві: два брáти (masculine), дві сéстри (feminine).
+    У мéне є два брáти і однá сестрá."
+- section: "Мій брат — Моя́ сестрá (Possessive Pronouns)"
+  words: 250
   points:
-  - Побудова речень через конструкцію «У мене є...» (Державний стандарт §4.2.1.1). Виправлення помилки-кальки з англійської
-    «Я маю...», яка є менш природною для рівня А1.
-  - 'Розширена родина (дідусь, бабуся, дядько, тітка). Культурний аспект: активна роль бабусь та дідусів у вихованні онуків
-    в Україні та традиція проживання кількома поколіннями.'
-  - 'Узгодження присвійних займенників (мій, моя) з назвами родичів (Державний стандарт §4.2.2). Drill: запобігання помилці
-    «мій сестра» через акцент на жіночому роді іменника «сестра».'
-- section: 'Презентація: Характеристики та стосунки (Presentation: Characteristics and Relationships)'
-  words: 300
-  points:
-  - 'Терміни для подружжя: чоловік (husband/man) та дружина (wife). Розрізнення значень слова «чоловік» та вибір терміна «дружина»
-    як нейтрального стандарту замість розмовного «жінка».'
-  - 'Опис зовнішності та характеру родичів з використанням прикметників (добрий, мудрий, темне волосся). Вживання форм давального
-    відмінка для віку: «моєму братові...» (Державний стандарт §4.2.1.1).'
-- section: 'Практика: Звертання та спілкування (Practice: Address and Communication)'
-  words: 300
-  points:
-  - 'Кличний відмінок як основа природного мовлення: навчання форм «мамо», «тату», «бабусю», «дідусю» для звертання до рідних
-    (Державний стандарт §4.2.1.1).'
-  - 'Підготовка до теми свят (А1-33): обговорення сімейних зборів та традицій через вираз «збиратися всією родиною».'
-  - 'Створення та опис сімейного дерева: застосування знань про родинні зв''язки (онук, онука) та присвійні форми (батько
-    Олени, мама Остапа).'
+  - "Following Anna ULP Episode 7 — showing family photos. Possessive pronouns
+    match the GENDER of the thing possessed (not the owner!):
+    мій брат (my brother — masculine), моя́ сестрá (my sister — feminine),
+    моє́ мíсто (my city — neuter), мої́ батькú (my parents — plural)."
+  - "Full possessive pronoun table:
+    my: мій / моя́ / моє́ / мої́
+    your (informal): твій / твоя́ / твоє́ / твої́
+    his: йогó (doesn't change). her: її́ (doesn't change).
+    our: наш / нáша / нáше / нáші
+    your (formal/plural): ваш / вáша / вáше / вáші
+    their: їхній / їхня / їхнє / їхні"
+  - "Using Це with possessives for introductions (Anna ULP 1-07 pattern):
+    Це — моя́ мáма Мари́на. Це — мій тáто Євгéн.
+    Це моя́ сестрá Кáтя і мої́ брáти — Івáн і Дени́с.
+    А це твоя́ бабýся? — Так, її́ звáти Тетя́на."
 vocabulary_hints:
   required:
-  - 'мама (mom) — рідна мама, молода мама; найвища частотність, клична форма: мамо!'
-  - 'тато (dad) — рідний тато, мій тато; клична форма: тату!'
-  - брат (brother) — старший брат, молодший брат, рідний брат
-  - сестра (sister) — старша сестра, молодша сестра, рідна сестра
-  - 'дідусь (grandfather) — мудрий дідусь, мій дідусь; клична форма: дідусю!'
-  - 'бабуся (grandmother) — добра бабуся; клична форма: бабусю!'
-  - син (son) — мій син, єдиний син
-  - донька (daughter) — моя донька, доросла донька
+  - сім'я́ = роди́на (family) — both equally used
+  - мáма = мáти (mother / mother formal)
+  - тáто = бáтько (dad / father formal)
+  - брат (brother)
+  - сестрá (sister)
+  - син (son)
+  - дочкá = дóнька (daughter)
+  - бабýся = бáба (grandmother)
+  - дідýсь = дід (grandfather)
+  - мій, моя́, моє́, мої́ (my — m/f/n/pl)
   recommended:
-  - сім'я (family) — велика сім'я, моя сім'я; ядерний підрозділ
-  - родина (family) — вся родина, збиратися родиною; ширший контекст роду та зв'язків
-  - чоловік (husband) — мій чоловік; важливо розрізняти зі значенням 'man'
-  - дружина (wife) — моя дружина; стандартний нейтральний термін
-  - дядько (uncle) — добрий дядько
-  - тітка (aunt) — рідна тітка
-  - онук (grandson) — мій онук
-  - онука (granddaughter) — маленька онука
+  - батькú (parents)
+  - дя́дько (uncle)
+  - тíтка (aunt)
+  - двою́рідний брат (male cousin)
+  - дружи́на = жíнка (wife)
+  - чоловíк (man / husband)
+  - хлóпець (young man / boyfriend)
+  - дíвчина (girl / girlfriend)
 activity_hints:
-- type: match-up
-  focus: Family member names
-  items: 25
-- type: match-up
-  focus: Match relationships
-  items: 20
-- type: fill-in
-  focus: Complete family descriptions
-  items: 15
-- type: fill-in
-  focus: Describe your family
-  items: 6
-- type: match-up
-  focus: Vocative forms (Nominative → Vocative)
-  items: 10
-- type: fill-in
-  focus: Calling family members (vocative practice)
+- type: quiz
+  focus: "Answer with Так, у мене є... or Ні based on family descriptions"
   items: 8
+- type: fill-in
+  focus: "Choose correct possessive pronoun form: (мій/моя/моє) __ сестра"
+  items: 10
+- type: match-up
+  focus: Match family members with their relationship (masculine-feminine pairs)
+  items: 10
+- type: unjumble
+  focus: Put family introduction dialogue in correct order
+  items: 6
 connects_to:
-- a1-50 (Holidays and Traditions)
-- a1-34 (Checkpoint Core Grammar)
+- a1-007 (Checkpoint — First Contact)
 prerequisites:
-- a1-20 (Mine and Yours)
-- a1-48 (Body and Health)
-persona:
-  voice: Patient Supportive Tutor
-  role: Family Genealogist
+- a1-005 (Who Am I?)
 grammar:
-- Family vocabulary
-- Possessives with family members
-- Genitive for relationships (батько + name)
-- Basic vocative forms (мамо, тату, бабусю, дідусю)
+- "У мене є construction (possession)"
+- "Possessive pronouns (мій/моя/моє/мої paradigm)"
+- "Gender agreement (possessive + noun)"
+- "Numbers один/одна/одне, два/дві with family (preview)"
 register: розмовний
+references:
+- title: "ULP 1-06: Talking About Family in Ukrainian + I Have"
+  url: https://www.ukrainianlessons.com/episode6/
+  notes: "Anna teaches У мене є with family in dialogue with Іванка"
+- title: "ULP 1-07: More about Family + Possessive Pronouns"
+  url: https://www.ukrainianlessons.com/episode7/
+  notes: "Possessive pronoun table and Це + family introductions on photos"
+- title: "ULP 1-10: Review 1-09 — Я і моя сім'я"
+  url: https://www.ukrainianlessons.com/episode10/
+  notes: "Connected speech review combining all topics from episodes 1-9"

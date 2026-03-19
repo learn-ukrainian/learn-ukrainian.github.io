@@ -1,0 +1,66 @@
+module: a1-018
+level: A1
+sequence: 18
+slug: i-want-i-can-i-must
+version: '1.0'
+title: I Want, I Can, I Must
+subtitle: "Хочу, можу, мушу — Modal Verbs"
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Actions & Desires]
+word_target: 1200
+objectives:
+- Express desires, abilities, and obligations
+- Use the modal verbs хотіти, могти, and мусити
+- Combine modal verbs with infinitives
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 450
+  points:
+  - "Dialogue: Making excuses. Пішли в кіно? — Вибач, я не можу. Я мушу працювати. (Let's go to the movies? — Sorry, I can't. I must work)."
+  - "Another situation: ordering in a cafe. Я хочу каву. (I want coffee)."
+  - "Introduce the three key modals in context, combining them with known infinitive verbs."
+- section: "Я хочу... (I want...)"
+  words: 250
+  points:
+  - "The verb 'хотіти' (to want). It's a bit irregular: я хочу, ти хочеш, він/вона хоче, ми хочемо, ви хочете, вони хочуть."
+  - "Used with nouns (Я хочу каву - accusative prep) or infinitives (Я хочу спати)."
+  - "Focus heavily on the 'modal + infinitive' structure."
+- section: "Я можу і Я мушу (I can and I must)"
+  words: 500
+  points:
+  - "The verb 'могти' (can/to be able to): я можу, ти можеш, він може, ми можемо, ви можете, вони можуть. Note the consonant change г -> ж."
+  - "The verb 'мусити' (must/to have to): я мушу, ти мусиш, він мусить, ми мусимо, ви мусите, вони мусять."
+  - "Practice creating complex sentences: Я хочу гуляти, але я мушу працювати. (I want to walk, but I must work)."
+  - "Explain that 'треба' (need) is also used, but 'мушу' is a strong personal obligation."
+vocabulary_hints:
+  required:
+  - хоті́ти (to want)
+  - хóчу (I want)
+  - могтú (can, to be able to)
+  - мóжу (I can)
+  - мýсити (must, to have to)
+  - мýшу (I must)
+  - алé (but)
+  recommended:
+  - тре́ба (need to / it is necessary - intro as impersonal phrase)
+  - пішлú (let's go)
+  - ви́бач (sorry)
+activity_hints:
+- type: multiple-choice
+  focus: Choose the correct modal verb for the situation
+  items: 8
+- type: fill-in
+  focus: Conjugate хотіти, могти, мусити in context
+  items: 10
+- type: translation
+  focus: Translate sentences like "I want to sleep but I must work"
+  items: 6
+connects_to:
+- a1-019 (Questions and No)
+prerequisites:
+- a1-017 (Speaking and Seeing Group 2)
+grammar:
+- Modal verbs (хотіти, могти, мусити)
+- Modal + Infinitive construction
+register: розмовний

@@ -1,0 +1,61 @@
+module: a1-052
+level: A1
+sequence: 52
+slug: yesterday
+version: '1.0'
+title: Yesterday
+subtitle: Past tense narrative
+focus: communication
+pedagogy: PPP
+phase: A1.8 [Past, Future & Graduation]
+word_target: 1200
+objectives:
+- Tell a chronological story about yesterday
+- Use past tense naturally with sequence adverbs
+- Combine time expressions with past tense verbs
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - 'Dialogue 1: Co-workers sharing what they did yesterday evening.'
+  - 'Dialogue 2: A police officer or friend asking ''What did you do at 5 PM?'''
+- section: Мій вчорашній день (My yesterday)
+  words: 400
+  points:
+  - Narrative using past tense + adverbs from A1.4 (спочатку, потім, нарешті).
+  - 'Example: Вчора я прокинувся о сьомій. Спочатку я пив каву, потім я працював.'
+- section: Питання (Questions in the past)
+  words: 400
+  points:
+  - Що ти робив/робила вчора? Де ти був/була?
+  - Practicing asking and answering fluidly.
+vocabulary_hints:
+  required:
+  - вчора
+  - позавчора
+  - спочатку
+  - потім
+  - нарешті
+  - вечір
+  - ранок
+  recommended:
+  - цілий день
+  - довго
+  - швидко
+activity_hints:
+- type: sentence-ordering
+  focus: Order sentences to form a logical story about yesterday
+  items: 6
+- type: reading-comprehension
+  focus: Read a diary entry and answer questions
+  items: 5
+connects_to:
+- a1-053 (What Will Happen Future)
+prerequisites:
+- a1-051 (What Happened Past)
+- a1-026 (My Daily Life)
+grammar:
+- Past tense practice
+- Narrative sequencing
+register: розмовний
+references: []

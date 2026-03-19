@@ -1,0 +1,56 @@
+module: a1-043
+level: A1
+sequence: 43
+slug: checkpoint-food-shopping
+version: '1.0'
+title: Checkpoint Food Shopping
+subtitle: Review M37-42
+focus: review
+pedagogy: Checkpoint
+phase: A1.6 [Food & Shopping]
+word_target: 1200
+objectives:
+- Review food, drink, and shopping vocabulary
+- Test Accusative case (animate vs inanimate)
+- Test Instrumental 'з' and Genitive quantities
+- Confirm adjective agreement in covered cases
+content_outline:
+- section: Listening Comprehension
+  words: 300
+  points:
+  - A story about someone going to the market, buying food, and meeting a friend at a cafe.
+  - Tests comprehension of prices, quantities, and direct objects.
+- section: Grammar Review
+  words: 300
+  points:
+  - 'Mixed drill: Accusative (animate/inanimate), Locative, basic Instrumental, basic Genitive.'
+  - Learner must choose the correct case based on the verb or preposition.
+- section: Communication
+  words: 300
+  points:
+  - 'Roleplay: Ordering at a restaurant.'
+  - 'Roleplay: Asking how much something costs at a market.'
+- section: Self-Assessment
+  words: 300
+  points:
+  - Can you order food and ask for the bill?
+  - Can you say what you see or who you are waiting for?
+  - Do you know when to change the ending of a word when it's the object of a sentence?
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: reading-comprehension
+  focus: Read a dialogue at a market and answer true/false
+  items: 6
+- type: fill-in
+  focus: Comprehensive case test (Acc, Loc, Instr 'з', Gen quantities)
+  items: 20
+connects_to:
+- a1-044 (Hey Friend Vocative)
+prerequisites:
+- a1-042 (Adjectives Everywhere)
+grammar:
+- Review A1.6 cases and vocabulary
+register: розмовний
+references: []

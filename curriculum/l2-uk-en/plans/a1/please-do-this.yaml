@@ -1,0 +1,64 @@
+module: a1-045
+level: A1
+sequence: 45
+slug: please-do-this
+version: '1.0'
+title: Please Do This
+subtitle: Imperative basics
+focus: grammar
+pedagogy: PPP
+phase: A1.7 [People & Communication]
+word_target: 1200
+objectives:
+- Give basic commands and requests
+- Form the imperative for 'ти' and 'ви'
+- Use 'будь ласка' to soften commands
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - 'Dialogue 1: A teacher giving instructions. ''Слухайте, читайте, пишіть.'''
+  - 'Dialogue 2: Asking a friend for a favor. ''Дай мені, будь ласка, ручку. Допоможи мені.'''
+- section: Наказовий спосіб (Imperative)
+  words: 400
+  points:
+  - 'How to form commands: dropping the ending of ''вони'' form.'
+  - 'Type 1: If stem ends in vowel, add -й (ти) / -йте (ви). Example: читати -> читають -> читай / читайте.'
+  - 'Type 2: If stem ends in consonant, add -и / -іть. Example: говорити -> говорять -> говори / говоріть.'
+- section: Корисні фрази (Useful phrases)
+  words: 400
+  points:
+  - 'High frequency irregular/common imperatives: дай/дайте (give), скажи/скажіть (say), допоможи/допоможіть
+    (help), дивись/дивіться (look).'
+  - Always use 'будь ласка'.
+vocabulary_hints:
+  required:
+  - читай
+  - пиши
+  - говори
+  - слухай
+  - дивись
+  - дай
+  - скажи
+  - допоможи
+  - будь ласка
+  recommended:
+  - чекай
+  - роби
+  - йдемо
+activity_hints:
+- type: conjugation
+  focus: Form imperative forms for ти and ви
+  items: 12
+- type: matching
+  focus: Match the command to the situation
+  items: 8
+connects_to:
+- a1-046 (Give Me I Like)
+prerequisites:
+- a1-016 (Daily Verbs Group 1)
+- a1-017 (Speaking And Seeing Group 2)
+grammar:
+- Imperative (2nd person singular and plural)
+register: розмовний
+references: []

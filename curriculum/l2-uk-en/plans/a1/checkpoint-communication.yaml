@@ -1,91 +1,57 @@
-module: a1-054
+module: a1-050
 level: A1
-sequence: 54
+sequence: 50
 slug: checkpoint-communication
-version: '2.0'
-title: 'Checkpoint: Communication'
-subtitle: Can You Handle Real Life?
-focus: checkpoint
-pedagogy: TTT
-phase: A1.5 [Modals, Commands & Life]
+version: '1.0'
+title: Checkpoint Communication
+subtitle: Review M44-49
+focus: review
+pedagogy: Checkpoint
+phase: A1.7 [People & Communication]
 word_target: 1200
 objectives:
-- Demonstrate modal verb usage in context
-- Form correct imperatives and polite requests
-- Discuss family, leisure, and travel plans
-- Integrate A1.5 skills in practical scenarios
+- Review Vocative, Imperative, and Dative basics
+- Test ability to link sentences and express conditions
+- Review holiday vocabulary and greetings
 content_outline:
-- section: Огляд (Overview)
-  words: 180
-  points:
-  - 'TTT checkpoint consolidating A1.5 skills: modals (могти/вміти/треба/хотіти),
-    imperatives (8 required verbs), family/appearance, leisure, travel.'
-  - 'Self-assessment strategy: identifying strengths and weaknesses before advancing
-    to A1.6 Real-World Skills phase.'
-- section: 'Навичка 1: Модальні дієслова (Skill 1: Modal Verbs)'
+- section: Listening Comprehension
   words: 300
   points:
-  - 'Ability modals review: Могти (circumstantial can) vs вміти (learned skill). Three-way
-    negative contrast: не можу / не вмію / не можна.'
-  - 'Obligation modals review: Треба/потрібно (impersonal necessity) vs повинен (personal
-    duty) vs хотіти (desire). Intensity scale application in varied contexts.'
-  - 'Integrated modal choice: Given a scenario, select the correct modal from the
-    full set (могти/вміти/можна/треба/повинен/хотіти). Testing discrimination skill.'
-- section: 'Навичка 2: Накази та прохання (Skill 2: Commands & Requests)'
-  words: 240
+  - A dialogue involving a phone call to a friend to plan a birthday party.
+  - Tests Vocative, Dative pronouns, imperatives, and conjunctions.
+- section: Grammar Review
+  words: 300
   points:
-  - 'Imperative formation for 8 required verbs: читай(те), пиши(те), скажи(те), дай(те),
-    іди(те), слухай(те), дивись(те), стій(те). Ти-form and Ви-form recall.'
-  - 'Polite requests: будь ласка placement, прошу вас + infinitive, Чи не могли б
-    ви...? Politeness escalation. Positive and negative command contrast.'
-- section: 'Навичка 3: Повсякдення (Skill 3: Everyday Life)'
-  words: 240
+  - Forming commands.
+  - Choosing the right Dative pronoun (мені, тобі, йому...).
+  - Linking sentences with відповідні сполучники (а, але, бо, якщо).
+- section: Communication
+  words: 300
   points:
-  - 'Family and appearance vocabulary recall: family members, physical descriptions,
-    age expressions. Combining with possessive pronouns from earlier modules.'
-  - 'Hobbies, sports, and leisure: грати в/на, invitation patterns (Ходімо! Давай
-    зустрінемось!). Travel and transport: means of transport (Instrumental), directions,
-    journey descriptions.'
-- section: Інтеграційне завдання (Integration Task)
-  words: 240
+  - 'Roleplay: Wishing someone a happy holiday and offering a gift.'
+  - Asking a favor using imperative and 'будь ласка'.
+- section: Self-Assessment
+  words: 300
   points:
-  - 'Scenario: Plan a weekend trip with a friend. Use modals (Хочеш поїхати? Треба
-    купити квитки. Я повинен повернутися до неділі.), imperatives (Подивись розклад!),
-    travel vocabulary, and invitation patterns.'
-  - 'Assessment focus: Can the learner combine A1.5 skills fluidly in a realistic
-    communicative scenario? Holistic evaluation of modal, imperative, and vocabulary
-    integration.'
+  - Can you call someone's name naturally in Ukrainian?
+  - Can you ask someone to do something politely?
+  - Can you say 'I like' and 'Give me'?
+  - Can you connect your ideas smoothly?
 vocabulary_hints:
-  required:
-  - могти (can) — можу, можеш; circumstantial ability
-  - вміти (know how to) — вмію, вмієш; learned skill
-  - треба (it is necessary) — Мені треба; impersonal necessity
-  - хотіти (to want) — хочу, хочеш; desire expression
-  - читай (read!) — Читайте текст; imperative of required verb
-  - скажи (say!) — Скажіть, будь ласка; imperative of required verb
-  - дай (give!) — Дайте, будь ласка; imperative of required verb
-  - подорож (journey) — Хочеш поїхати в подорож?; integration context
-  - автобус (bus) — їхати автобусом; transport recall
-  - хобі (hobby) — Яке у тебе хобі?; leisure recall
-  recommended:
-  - стадіон (stadium) — на стадіоні; sports venue recall
-  - запрошувати (to invite) — Я хочу запросити тебе; invitation context
-  - наліво (left) — Поверніть наліво; direction recall
-  - повинен (must) — Я повинен працювати; obligation recall
+  required: []
+  recommended: []
 activity_hints:
-- type: quiz
-  focus: A1.5 comprehensive test covering modals, imperatives, vocabulary
-  items: 30
+- type: fill-in
+  focus: Complete sentences with correct Dative pronouns and conjunctions
+  items: 15
+- type: matching
+  focus: Match Nominative names to Vocative forms
+  items: 10
 connects_to:
-- a1-55 (Prohibitions and Signs)
+- a1-051 (What Happened Past)
 prerequisites:
-- a1-53 (At the Restaurant)
-persona:
-  voice: Patient Supportive Tutor
-  role: Travel Planner
+- a1-049 (Holidays And Traditions)
 grammar:
-- Modal verbs (могти/вміти/треба/повинен/хотіти)
-- Imperative mood (8 required verbs)
-- Travel expressions (Instrumental, directions)
-- Invitation patterns
+- Review A1.7 topics
 register: розмовний
+references: []

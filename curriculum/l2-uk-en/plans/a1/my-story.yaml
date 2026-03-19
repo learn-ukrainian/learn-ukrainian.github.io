@@ -1,0 +1,62 @@
+module: a1-055
+level: A1
+sequence: 55
+slug: my-story
+version: '1.0'
+title: My Story
+subtitle: Combining past, present, and future
+focus: communication
+pedagogy: PPP
+phase: A1.8 [Past, Future & Graduation]
+word_target: 1200
+objectives:
+- Tell a short biographical story
+- Smoothly transition between past, present, and future tenses
+- Use basic biographical vocabulary (to be born, to live, to work)
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - 'Dialogue 1: An interview or getting to know someone deeply.'
+  - 'Dialogue 2: Telling about one''s life path. ''Раніше я жив у Лондоні, зараз я живу в Києві, а завтра
+    я буду...'''
+- section: Біографія (Biography)
+  words: 400
+  points:
+  - 'Vocabulary: народитися (to be born - use as chunk: я народився/народилася), жити, вчитися, працювати.'
+  - 'Time markers to contrast tenses: раніше (earlier/before), зараз (now), в майбутньому (in the future).'
+- section: Творчість (Creating your story)
+  words: 400
+  points:
+  - 'Structuring a paragraph: Past background -> Present situation -> Future goals.'
+vocabulary_hints:
+  required:
+  - народився
+  - народилася
+  - раніше
+  - зараз
+  - в майбутньому
+  - жити
+  - вчитися
+  - працювати
+  recommended:
+  - школа
+  - університет
+  - робота
+  - мрія
+activity_hints:
+- type: reading-comprehension
+  focus: Read a biography and identify past, present, and future actions
+  items: 6
+- type: fill-in
+  focus: Fill in the correct tense of the verb based on time markers
+  items: 12
+connects_to:
+- a1-056 (Body And Health)
+prerequisites:
+- a1-052 (Yesterday)
+- a1-054 (My Plans)
+grammar:
+- Tense synthesis (Past, Present, Future)
+register: розмовний
+references: []

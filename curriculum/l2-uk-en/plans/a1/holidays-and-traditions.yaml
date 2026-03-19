@@ -1,88 +1,61 @@
-module: a1-050
+module: a1-049
 level: A1
-sequence: 50
+sequence: 49
 slug: holidays-and-traditions
-version: '2.0'
-title: Holidays & Traditions
-subtitle: Свята і традиції
-focus: cultural
+version: '1.0'
+title: Holidays And Traditions
+subtitle: Culture and celebrations
+focus: vocabulary
 pedagogy: PPP
-phase: A1.5 [Modals, Commands & Life]
+phase: A1.7 [People & Communication]
 word_target: 1200
 objectives:
-- Learner can name major Ukrainian holidays
-- Learner can give holiday greetings
-- Learner can talk about birthday celebrations
-- Learner can express wishes
+- Learn the names of major Ukrainian holidays
+- Say common greetings for holidays (З Різдвом, З днем народження)
+- Talk about celebration traditions briefly
 content_outline:
-- section: Вступ та культура (Introduction & Culture)
-  words: 300
+- section: Діалоги (Dialogues)
+  words: 400
   points:
-  - 'Огляд основних свят за Державним стандартом §3.12: державні та релігійні свята (Новий рік, Різдво, Великдень)'
-  - 'Культурний аспект: Традиція 12 пісних страв на Святвечір та центральна роль Куті (Kutia)'
-  - 'Культурний аспект: Історія всесвітньо відомого «Щедрика» Миколи Леонтовича як української обрядової пісні'
-- section: 'Презентація: Вітання (Presentation: Greetings)'
-  words: 300
+  - 'Dialogue 1: Wishing someone a happy birthday. ''З днем народження!'''
+  - 'Dialogue 2: Talking about Christmas traditions. Kutia, family dinner.'
+- section: Свята (Holidays)
+  words: 400
   points:
-  - 'Конструкція «З + орудний відмінок» як фіксована формула: З Новим роком!, З Різдвом!, Зі святом!'
-  - 'Типова помилка: використання називного відмінка після «З» (напр., «З Новий рік» замість «З Новим роком»)'
-  - 'Дієслово «вітати»: вживання з прийменником «з» (вітати з днем народження, вітати зі святом)'
-  - 'Педагогічна порада: вивчення закінчень -ом/-ом як невід''ємної частини «святкового правопису» (лексикалізовані форми)'
-- section: 'Презентація: Побажання (Presentation: Wishes)'
-  words: 300
+  - 'Vocabulary: свято (holiday), Новий рік, Різдво, Великдень, День Незалежності, День народження.'
+- section: Привітання (Greetings)
+  words: 400
   points:
-  - 'Конструкція «бажати + родовий відмінок» для абстрактних понять: бажати щастя, бажати успіху, бажати здоров''я'
-  - 'Типова помилка: використання знахідного відмінка замість родового (напр., «Бажаю успіх» замість «Бажаю успіху»)'
-  - 'Лексичне розмежування: різниця між «вітати» (процес привітання) та «бажати» (висловлення конкретних побажань)'
-  - 'Фонетика: опрацювання складних звукосполучень у словах «щастя» /ˈʃtʃɑstʲɐ/ та «здоров''я» /zdɔˈrɔu̯jɐ/'
-- section: Практика та дні народження (Practice & Birthdays)
-  words: 300
-  points:
-  - 'Традиції святкування дня народження: питання про дату (на основі a1-23) та відповіді у родовому відмінку'
-  - 'Культурний аспект: Традиція «тягнути за вуха» на день народження («щоб великий ріс»)'
-  - 'Робота з лексикою: колоквіальні пари «дарувати подарунок» та «отримати подарунок»'
-  - 'Продуктивне завдання: написання короткої вітальної листівки (Practical focus: greeting card writing)'
+  - 'How to congratulate: ''Вітаю з...'' (I congratulate you with...) + Instrumental.'
+  - 'Chunks: З Новим роком! З Різдвом! З днем народження!'
 vocabulary_hints:
   required:
-  - свято (holiday) — державне свято, релігійне свято, велике свято; high frequency (top 500)
-  - Новий рік (New Year) — З Новим роком! (fixed formula)
-  - Різдво (Christmas) — на Різдво, щасливого Різдва, Різдво Христове
-  - день народження (birthday) — вітати з днем народження, Коли твій день народження?
-  - вітати (to congratulate) — вітати зі святом; act of greeting (distinguish from бажати)
-  - бажати (to wish) — бажати щастя, бажати успіху, бажати здоров'я; requires Genitive case
-  - подарунок (gift) — дарувати подарунок, отримати подарунок (high frequency)
-  - святкувати (to celebrate) — святкувати вдома, святкувати з родиною
+  - свято
+  - Новий рік
+  - Різдво
+  - Великдень
+  - День Незалежності
+  - День народження
+  - вітаю
+  - з (with - for greetings)
   recommended:
-  - Великдень (Easter) — на Великдень; high frequency seasonal term
-  - 'щастя (happiness) — бажати щастя (Gen); pronunciation: /ˈʃtʃɑstʲɐ/'
-  - 'здоров''я (health) — бажати здоров''я (Gen); pronunciation: /zdɔˈrɔu̯jɐ/'
-  - успіх (success) — бажати успіху (Gen); common learner error point
-  - торт (cake) — свічки на торті
-  - свічка (candle) — задувати свічки
-  - 'Кутя (Kutia) — cultural hook: traditional wheat berry pudding for Christmas Eve'
+  - подарунок
+  - ялинка
+  - родина
+  - святкувати
 activity_hints:
-- type: match-up
-  focus: Holiday names and greetings
-  items: 25
-- type: match-up
-  focus: Match holidays to dates
-  items: 15
-- type: fill-in
-  focus: Complete holiday wishes
-  items: 20
-- type: fill-in
-  focus: Birthday party conversation
-  items: 6
+- type: matching
+  focus: Match the greeting to the holiday
+  items: 8
+- type: reading-comprehension
+  focus: Read short text about Ukrainian Christmas
+  items: 5
 connects_to:
-- a1-34 (Checkpoint Core Grammar)
+- a1-050 (Checkpoint Communication)
 prerequisites:
-- a1-23 (What Time Is It)
-- a1-49 (My Family)
-persona:
-  voice: Patient Supportive Tutor
-  role: Folklore Keeper from Pyrohiv
+- a1-024 (Months And Seasons)
+- a1-046 (Give Me I Like)
 grammar:
-- Holiday greetings (З + Instrumental)
-- Date expressions with Genitive
-- Wish expressions (Бажаю + Genitive)
+- Instrumental in greetings (З Новим роком)
 register: розмовний
+references: []

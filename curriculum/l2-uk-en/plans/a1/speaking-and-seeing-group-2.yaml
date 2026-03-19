@@ -1,0 +1,66 @@
+module: a1-017
+level: A1
+sequence: 17
+slug: speaking-and-seeing-group-2
+version: '1.0'
+title: Speaking and Seeing (Group 2)
+subtitle: "Говоримо по телефону — Type 2 Conjugation"
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Actions & Desires]
+word_target: 1200
+objectives:
+- Understand and use Type 2 (-ити, -іти) verb conjugation in present tense
+- Talk on the phone with friends
+- Describe actions like speaking, seeing, and doing
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 450
+  points:
+  - "Dialogue: A phone call between friends. Алло! Привіт, що ти робиш? — Я дивлюся фільм, а ти? — Я говорю по телефону! (Hello! Hi, what are you doing? — I'm watching a movie, and you? — I'm talking on the phone!)."
+  - "Introduce Type 2 verbs in context. Focus on the 'и/і' sound in endings."
+- section: "Говорити, Робити, Бачити (To speak, to do, to see)"
+  words: 400
+  points:
+  - "Introduce the second group of verbs. These typically end in -ити or -іти."
+  - "Show the pattern with 'говорити' (to speak): я говорю, ти говориш, він/вона говорить, ми говоримо, ви говорите, вони говорять."
+  - "Compare with Group 1. Notice the 'и/і' instead of 'є/є'."
+  - "Practice with 'робити' (to do/make) and 'бачити' (to see)."
+- section: "Я бачу тебе! (I see you!)"
+  words: 350
+  points:
+  - "Explain consonant mutation briefly without getting bogged down in grammar rules. Just point out that 'я' forms sometimes change slightly for easier pronunciation (e.g., робити -> я роблю, бачити -> я бачу)."
+  - "Use in simple sentences: Я бачу друга. Ти добре говориш українською."
+vocabulary_hints:
+  required:
+  - говорúти (to speak/talk)
+  - робúти (to do/make)
+  - бáчити (to see)
+  - дивúтися (to watch - intro form only, reflexive covered later)
+  - аллó (hello - on the phone)
+  - телефóн (phone)
+  recommended:
+  - любúти (to love - remind it's group 2)
+  - вчúти (to learn/study)
+activity_hints:
+- type: fill-in
+  focus: Complete sentences with Group 2 verbs
+  items: 10
+- type: match-up
+  focus: Match pronouns with Group 2 endings
+  items: 6
+- type: sorting
+  focus: Sort verbs into Group 1 (-ати) and Group 2 (-ити)
+  items: 10
+connects_to:
+- a1-018 (I Want, I Can, I Must)
+prerequisites:
+- a1-016 (Daily Verbs Group 1)
+grammar:
+- Present tense Group 2 (-ити/-іти) conjugation
+- Basic consonant mutation in 1st person singular (я)
+register: розмовний
+references:
+- title: "ULP Season 1, Episode 24 — What a surprise! + Second verb conjugation"
+  url: https://www.ukrainianlessons.com/episode24/
+  notes: "Follows Anna's strategy of separating Group 1 and Group 2 to avoid confusion."

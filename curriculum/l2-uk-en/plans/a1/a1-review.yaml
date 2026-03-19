@@ -1,0 +1,49 @@
+module: a1-059
+level: A1
+sequence: 59
+slug: a1-review
+version: '1.0'
+title: A1 Review
+subtitle: Comprehensive grammar and vocabulary synthesis
+focus: review
+pedagogy: Checkpoint
+phase: A1.8 [Past, Future & Graduation]
+word_target: 1200
+objectives:
+- Review core A1 vocabulary (family, daily life, food, city, time)
+- Review present, past, and future tenses
+- Review cases introduced in A1 (Locative, Accusative, basics of others)
+content_outline:
+- section: 'Граматичний мікс: Часи (Tense Mix)'
+  words: 400
+  points:
+  - 'Comprehensive review of verbs: present, past, and future.'
+  - Switching between tenses fluidly in sentences.
+- section: 'Граматичний мікс: Відмінки (Case Mix)'
+  words: 400
+  points:
+  - Reviewing location (Де? - Locative), direction (Куди? - Accusative), objects (Що/Кого? - Accusative).
+  - Possession (У мене є) vs Absence (У мене немає + Gen preview).
+- section: Великий текст (The Big Text)
+  words: 400
+  points:
+  - A long text synthesizing all A1 grammar and vocabulary.
+  - A story of a foreigner living in Ukraine, their routine, friends, and plans.
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: fill-in
+  focus: Comprehensive tense conjugation mix
+  items: 15
+- type: fill-in
+  focus: Comprehensive case ending mix
+  items: 15
+connects_to:
+- a1-060 (A1 Final Assessment)
+prerequisites:
+- a1-058 (Phone And Writing)
+grammar:
+- Full A1 Review
+register: розмовний
+references: []

@@ -1,0 +1,66 @@
+module: a1-029
+level: A1
+sequence: 29
+slug: euphony-natural-flow
+version: '1.0'
+title: Euphony Natural Flow
+subtitle: "Why 'в Києві' but 'у Львові'"
+focus: grammar
+pedagogy: PPP
+phase: A1.5 [Places & Movement]
+word_target: 1200
+objectives:
+- Understand the concept of euphony (милозвучність) in Ukrainian
+- Learn the rules for alternating у/в, і/й, and з/із/зі
+- Apply these rules before learning the locative case
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - "Dialogue-first approach: Two short conversations highlighting the natural flow of speech. E.g., meeting in Kyiv vs meeting in Lviv."
+  - "Notice the prepositions changing to make the sentence sound melodic and easy to pronounce."
+- section: "Правило у / в (The u/v rule)"
+  words: 300
+  points:
+  - "Explain the core principle: Ukrainian avoids consonant clusters (too many consonants together) and vowel hiatus (too many vowels together)."
+  - "Use 'в' when between vowels or after a vowel and before a consonant (e.g., Вона в Києві)."
+  - "Use 'у' between consonants or at the beginning of a sentence before a consonant (e.g., Він у Львові, У мене є)."
+- section: "Правило і / й (The i/y rule)"
+  words: 250
+  points:
+  - "Similar to у/в, 'і' and 'й' mean 'and' but change for euphony."
+  - "Use 'й' after a vowel (e.g., мама й тато)."
+  - "Use 'і' after a consonant or at the start of a sentence/phrase (e.g., брат і сестра)."
+- section: "Правило з / із / зі (The z/iz/zi rule)"
+  words: 250
+  points:
+  - "Briefly introduce 'з' (with/from). It becomes 'із' between consonants, and 'зі' before difficult consonant clusters (e.g., зі мною)."
+  - "Emphasize that this is about ease of pronunciation, not strict memorization of exceptions."
+vocabulary_hints:
+  required:
+  - у / в (in, at)
+  - і / й (and)
+  - з / із / зі (from, with)
+  recommended:
+  - милозву́чність (euphony)
+  - Ки́їв (Kyiv)
+  - Львів (Lviv)
+activity_hints:
+- type: fill-in
+  focus: Choose between у and в based on surrounding words
+  items: 10
+- type: match-up
+  focus: Select the correct і/й or з/із/зі for the phrase
+  items: 8
+connects_to:
+- a1-030 (Where Is It?)
+prerequisites:
+- a1-028 (Checkpoint: Time & Nature)
+grammar:
+- Euphony rules (милозвучність)
+- Alternation of у/в, і/й, з/із/зі
+register: розмовний
+references:
+- title: "Ukrainian Lessons Podcast - Euphony"
+  url: "https://www.ukrainianlessons.com/"
+  notes: "Follow the principle of teaching euphony before introducing the locative case with prepositions."

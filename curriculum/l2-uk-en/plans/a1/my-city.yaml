@@ -1,0 +1,71 @@
+module: a1-031
+level: A1
+sequence: 31
+slug: my-city
+version: '1.0'
+title: My City
+subtitle: "Neighbourhood and city vocabulary"
+focus: vocabulary
+pedagogy: PPP
+phase: A1.5 [Places & Movement]
+word_target: 1200
+objectives:
+- Describe your neighbourhood and city
+- Learn vocabulary for common places (park, school, hospital, shop)
+- Use the Locative case to say where things are located in the city
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - "Dialogue-first: Two people talking about where they live and what is near their home. 'Я живу в центрі. Там є великий парк.' (I live in the center. There is a big park there)."
+  - "Asking about locations in the city: 'Де аптека?' (Where is the pharmacy?)."
+- section: "Моє місто (My City: Vocabulary)"
+  words: 300
+  points:
+  - "Introduce core city vocabulary: місто (city), вулиця (street), центр (center), парк (park), магазин (shop), школа (school), лікарня (hospital), аптека (pharmacy), банк (bank)."
+  - "Using 'Я живу в/на...' (I live in/on...) with these new words in the Locative case."
+- section: "Де це? (Where is it? in the city)"
+  words: 250
+  points:
+  - "Practicing Locative endings with city places: в місті, на вулиці, в центрі, у парку, в магазині, у школі."
+  - "Introduce the preposition 'на' used with some specific places conceptually considered surfaces or events, but keep it simple (e.g., на роботі - at work, на пошті - at the post office)."
+- section: "Що є поруч? (What is nearby?)"
+  words: 250
+  points:
+  - "Using 'тут є' (here is) and 'там є' (there is) with Nominative to describe what exists in the neighbourhood."
+  - "Combining: 'Я живу на вулиці Хрещатик. Тут є парк і аптека.' (I live on Khreshchatyk street. Here is a park and a pharmacy)."
+vocabulary_hints:
+  required:
+  - мі́сто (city) -> у мі́сті
+  - вýлиця (street) -> на вýлиці
+  - центр (center) -> у це́нтрі
+  - парк (park) -> у па́рку
+  - магазúн (shop) -> у магази́ні
+  - шкóла (school) -> у шко́лі
+  - лікáрня (hospital) -> у ліка́рні
+  - апте́ка (pharmacy) -> в апте́ці
+  - банк (bank) -> у ба́нку
+  recommended:
+  - живý (I live)
+  - пóруч (nearby)
+  - по́шта (post office) -> на по́шті
+  - робо́та (work) -> на робо́ті
+activity_hints:
+- type: fill-in
+  focus: Fill in the correct Locative form of city vocabulary
+  items: 10
+- type: match-up
+  focus: Match city locations with activities (buy medicine -> pharmacy)
+  items: 8
+connects_to:
+- a1-032 (Going Places)
+prerequisites:
+- a1-030 (Where Is It?)
+grammar:
+- Applying Locative case to city vocabulary
+- Prepositions в/у vs на for locations
+register: розмовний
+references:
+- title: "Ukrainian Lessons Podcast - Ep 17: Town center"
+  url: "https://www.ukrainianlessons.com/episode17/"
+  notes: "Follow Anna Ohoiko's progression for introducing city vocabulary and locative."

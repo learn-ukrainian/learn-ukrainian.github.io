@@ -1,0 +1,71 @@
+module: a1-034
+level: A1
+sequence: 34
+slug: where-are-you-from
+version: '1.0'
+title: Where Are You From?
+subtitle: "International people (Genitive origin)"
+focus: grammar
+pedagogy: PPP
+phase: A1.5 [Places & Movement]
+word_target: 1200
+objectives:
+- Ask where someone is from using 'Звідки?'
+- Use the Genitive case to express origin or starting point (з України, від друга)
+- Learn vocabulary for countries and nationalities
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - "Dialogue-first: Meeting someone at a hostel or language exchange. 'Звідки ви?' (Where are you from?) 'Я з України, а він з Канади.' (I am from Ukraine, and he is from Canada)."
+  - "Discussing cities of origin: 'Я з Києва.' (I am from Kyiv)."
+- section: "Питання: Звідки? (The Question: Where from?)"
+  words: 250
+  points:
+  - "Introduce 'Звідки?' as the third spatial question, completing the trio: Де? (Location), Куди? (Direction), Звідки? (Origin)."
+  - "Explain that expressing origin requires the Genitive case with the preposition 'з' (from/out of)."
+- section: "Родовий відмінок для походження (Genitive for Origin)"
+  words: 300
+  points:
+  - "Basic Genitive endings for origin. Masculine and neuter nouns generally take '-а' or '-у' (Київ -> з Києва, Лондон -> з Лондона, Львів -> зі Львова - note vowel drop)."
+  - "Feminine nouns ending in -а change to -и (Україна -> з України, Канада -> з Канади, Америка -> з Америки)."
+  - "This is the introduction to Genitive ONLY for ORIGIN, not for possession or negation yet."
+- section: "Країни та міста (Countries and Cities)"
+  words: 250
+  points:
+  - "Vocabulary list of common countries: Україна, США/Америка, Канада, Британія, Польща, Німеччина."
+  - "Using 'Я з...' + Genitive for these countries."
+  - "Briefly mention 'від' (from a person): Я йду від лікаря (I'm coming from the doctor)."
+vocabulary_hints:
+  required:
+  - звідки? (where from?)
+  - з / із / зі (from - origin)
+  - Украї́на (Ukraine) -> з Украї́ни
+  - Амéрика (America) -> з Амéрики
+  - Канáда (Canada) -> з Канáди
+  - Ки́їв (Kyiv) -> з Ки́єва
+  recommended:
+  - Бритáнія (Britain) -> з Бритáнії
+  - Пóльща (Poland) -> з Пóльщі
+  - Німéччина (Germany) -> з Німéччини
+  - від (from a person)
+activity_hints:
+- type: fill-in
+  focus: Supply the correct Genitive ending for countries and cities
+  items: 10
+- type: match-up
+  focus: Match the country with its 'from' form (Україна -> з України)
+  items: 8
+connects_to:
+- a1-035 (Around The City)
+prerequisites:
+- a1-033 (Transport)
+grammar:
+- Genitive case for origin (Родовий відмінок)
+- Question word: Звідки?
+- Preposition: з (from)
+register: розмовний
+references:
+- title: "Ukrainian Lessons Podcast - Where are you from?"
+  url: "https://www.ukrainianlessons.com/"
+  notes: "Crucial: Teach Genitive ONLY for origin here. Do not mix with possession yet."

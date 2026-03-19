@@ -1,17 +1,20 @@
 # A1 Curriculum V2 — 60 modules, 8 sub-levels
 
 **Date:** 2026-03-19
-**Designed by:** Claude + Gemini + User
+**Designed by:** Claude + Gemini + User (adversarial review by Gemini)
 **State Standard 2024:** Full coverage (§3 themes + §4 linguistic competence)
 
 ## Design Principles
 - Alphabet first, then communication immediately
 - Grammar through context — every module has a SITUATION
+- "У мене є" (possession) introduced early with gender — A1 survival skill
 - Modals before cases
 - Dative introduced at A1 (basics), expanded at A2
-- Numbers 1-1000 in one module
-- Euphony at locative phase (when learners build real sentences)
+- Numbers 1-1000 in one module (patterns: 1-10, 11-19, tens, hundreds)
+- Euphony BEFORE locative (learn the rule before building sentences with в/на/у)
+- Basic Instrumental "з" with food (кава з молоком) — natural context
 - Each sub-level ends with a checkpoint
+- "Мені подобається" taught as lexical chunk in A1.3, Dative mechanics in A1.7
 
 ---
 
@@ -33,7 +36,7 @@
 
 | # | Slug | Content | Grammar | SS Ref |
 |---|------|---------|---------|--------|
-| 08 | my-room-gender | Looking around a bedroom. стіл (m), книга (f), вікно (n) — gender through objects | Noun gender | §4.2.1.1, §3 (home) |
+| 08 | my-room-gender | Looking around a bedroom. У мене є стіл (m), книга (f), вікно (n) — gender through objects you have | Noun gender, У мене є/немає | §4.2.1.1, §3 (home) |
 | 09 | describing-things | What does your room look like? Великий стіл, нова книга — adjective agreement | Adj-noun agreement (Nom) | §4.2.1.2 |
 | 10 | colors-and-clothing | Getting dressed. Color adjectives + clothing vocabulary | Adjectives applied | §3 (shopping) |
 | 11 | many-things-plurals | Organizing a messy desk. Plural formation through sorting and counting | Noun/adj plurals | §4.2.1.1 |
@@ -72,8 +75,8 @@
 
 | # | Slug | Content | Grammar | SS Ref |
 |---|------|---------|---------|--------|
-| 29 | where-is-it | Finding lost keys. Locative case — в кімнаті, на столі, у сумці | Locative case | §4.2.3.3 |
-| 30 | euphony-natural-flow | Why "в Києві" but "у Львові." The у/в, і/й, з/із/зі rules | Euphony | §4.1.7 |
+| 29 | euphony-natural-flow | Why "в Києві" but "у Львові." The у/в, і/й, з/із/зі rules — before we build sentences | Euphony | §4.1.7 |
+| 30 | where-is-it | Finding lost keys. Locative case — в кімнаті, на столі, у сумці (euphony applied) | Locative case | §4.2.3.3 |
 | 31 | my-city | Describing your neighbourhood. City vocabulary + locative | Locative applied | §3 (city) |
 | 32 | going-places | Planning errands. Accusative of direction — Куди? В банк, на роботу | Acc direction | §4.2.3.2 |
 | 33 | transport | Getting around. Bus, metro, taxi, train. Buying tickets | Transport vocab | §3 (travel) |
@@ -86,7 +89,7 @@
 
 | # | Slug | Content | Grammar | SS Ref |
 |---|------|---------|---------|--------|
-| 37 | food-and-drink | At the kitchen table. Food and drink vocabulary through a meal scene | Food vocabulary | §3 (food) |
+| 37 | food-and-drink | At the kitchen table. Food/drink vocab, кава з молоком, чай з цукром — Instrumental "з" (with) | Food vocabulary, Instr "з" | §3 (food), §4.2.3.5 |
 | 38 | eating-and-drinking | Accusative inanimate — Я їм хліб, п'ю каву, читаю книгу | Acc inanimate | §4.2.3.2 |
 | 39 | at-the-cafe | Ordering. Menu reading, asking for the bill, tipping culture | Acc applied | §3 (restaurant) |
 | 40 | shopping | At the market. Скільки коштує? Quantities with genitive | Gen quantities | §3 (shopping) |
@@ -126,9 +129,21 @@
 ---
 
 ## State Standard Coverage
-- §4.1 Phonetics: ✅ M01-03 (alphabet, sounds, stress, intonation), M30 (euphony)
+- §4.1 Phonetics: ✅ M01-03 (alphabet, sounds, stress, intonation), M29 (euphony)
 - §4.2 Morphology: ✅ M08-13 (nouns, adj, numerals, pronouns), M16-20 (verbs), M42 (adj cases)
-- §4.2.3 Cases: ✅ Nom M05-14, Acc M32/38/41, Loc M29/31, Voc M44, Gen M34/40, Dat M46
+- §4.2.3 Cases: ✅ Nom M05-14, Acc M32/38/41, Loc M30/31, Voc M44, Gen M34/40, Dat M46, Instr M37
 - §4.2.4 Verbs: ✅ Present M16-17, Past M51-52, Future M53-54, Imperative M45, Reflexive M20
 - §4.3 Syntax: ✅ Simple M19, Complex M47-48
 - §3 Themes: ✅ All 12 themes covered (людина, дім, місто, побут, діяльність, дозвілля, подорожі, купівля, ресторан, здоров'я, природа, традиції)
+
+## External References
+- **Anna Ohoiko / Ukrainian Lessons** (ukrainianlessons.com) — ULP Season 1 podcast (free, 40 episodes) used as pedagogical reference for topic progression and teaching methodology. Commercial books (1000 Most Useful Ukrainian Words, 500+ Ukrainian Verbs) used as reference for stress patterns, euphony, and grammar explanations — content is NEVER copied, only methodology studied. All direct quotes must be attributed.
+- **YouTube letter pronunciation videos** — Anna Ohoiko's playlist (PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV) linked in M01-M03 plans as supplementary learner resources.
+
+## Gemini Review Decisions (2026-03-19)
+- ✅ ACCEPTED: "У мене є/немає" added to M08 (critical A1 possession construct)
+- ✅ ACCEPTED: Basic Instrumental "з" added to M37 (кава з молоком — natural food context)
+- ✅ ACCEPTED: Euphony (M29) swapped before Locative (M30) — learn rule before building sentences
+- ✅ ACCEPTED: M15 "Мені подобається" is lexical chunk only — plan must block Dative mechanics
+- ❌ REJECTED: M01 alphabet split — user explicitly chose single module; letters taught through words, not isolation
+- ❌ REJECTED: M12 numbers split — numbers are patterns (1-10, teens, tens, hundreds), not 1000 items to memorize

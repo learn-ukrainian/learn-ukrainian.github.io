@@ -1,0 +1,131 @@
+module: a1-003
+level: A1
+sequence: 3
+slug: syllables-stress-intonation
+version: '1.0'
+title: Syllables, Stress, and Intonation
+subtitle: "Reading Like a Native — Rhythm and Melody"
+focus: phonetics
+pedagogy: PPP
+phase: A1.1 [Script & First Contact]
+word_target: 1200
+objectives:
+- Break Ukrainian words into syllables correctly
+- Place stress on the correct syllable in common words
+- Use rising intonation for questions and falling for statements
+- Read multisyllable Ukrainian words with natural rhythm
+content_outline:
+- section: Склади (Syllables)
+  words: 200
+  points:
+  - "Every Ukrainian syllable has exactly one vowel. Count the vowels,
+    count the syllables: мá-ма (2), мо-ло-кó (3), у-ні-вер-си-тéт (5).
+    The rule is simple but essential for reading longer words."
+  - "Syllable division follows the 'maximum onset' principle — consonants
+    prefer to start a new syllable rather than end one: кни-га (not кніг-а),
+    лі-кар (not лік-ар). Practice breaking words: ше-ко-лáд,
+    у-крá-їн-ська, бі-блі-о-тé-ка."
+- section: "Нáголос (Stress)"
+  words: 300
+  points:
+  - "Ukrainian stress is FREE — it can fall on any syllable, and it MOVES
+    between word forms. This is completely different from languages like
+    French (always last syllable) or Czech (always first). You must learn
+    stress for each word individually."
+  - "Stress changes meaning — these are not theoretical examples, these
+    are words you will encounter: зáмок (castle) vs замóк (lock),
+    мýка (torment) vs мукá (flour), áтлас (atlas) vs атлáс (satin),
+    дóрога (dear, feminine) vs дорóга (road)."
+  - "The stressed syllable is LOUDER and LONGER than others. In writing,
+    stress marks (´) are used in textbooks and dictionaries but NOT in
+    everyday Ukrainian text. As a learner, you should write stress marks
+    in your notes — Anna Ohoiko marks stress on every word in her materials."
+  - "Common stress patterns for beginners — many two-syllable words stress
+    the first syllable: мáма, тáто, рáнок (morning), кáва (coffee),
+    кнúга (book). But many basic words stress the second: водá (water),
+    зимá (winter), рукá (hand), жінкá (woman). No shortcut — learn each word."
+- section: Інтонáція (Intonation)
+  words: 200
+  points:
+  - "Ukrainian uses intonation to distinguish statements from questions —
+    no special word order needed. Statement: Це кáва. ↘ (falling).
+    Question: Це кáва? ↗ (rising on the last stressed syllable).
+    Same words, different melody, different meaning."
+  - "Question words (хто, що, де, коли) create questions without rising
+    intonation — the question word does the work: Що це? ↘ (falling).
+    Де метрó? ↘ (falling). But yes/no questions always rise:
+    Це метрó? ↗ (rising)."
+  - "Exclamations have a strong fall: Як гáрно! ↘↘ How beautiful!
+    Які́й сóнячний день! ↘↘ What a sunny day!
+    Practice the three patterns: statement ↘, question ↗, exclamation ↘↘"
+- section: Читáємо разом (Reading Together)
+  words: 200
+  points:
+  - "Multisyllable word reading drill: у-крá-їн-ська (Ukrainian),
+    фо-то-грá-фі-я (photograph), ві-дпо-чú-нок (rest/vacation),
+    пе-ре-хрé-стя (intersection). Break → stress → read at natural speed."
+  - "Short text reading with stress marks: a simple description of a city —
+    Це Кúїв. Кúїв — столúця Украї́ни. Тут є метрó, аптéки, кафé.
+    Learner reads aloud, focusing on correct stress and natural rhythm."
+- section: Діалоги (Dialogues)
+  words: 300
+  points:
+  - "Scene: At a ticket counter. A tourist asks for directions.
+    Турист: Це метрó? ↗ (rising — yes/no question)
+    Касир: Так, це метрó. ↘ (statement)
+    Турист: Де зупúнка? ↘ (question word — falling)
+    Касир: Зупúнка тáм. ↘ (statement)
+    Турист: Дя́кую! ↘↘ (exclamation)
+    This dialogue practices all three intonation patterns in context."
+  - "Pronunciation confusion scene: a learner mixes up stress and a
+    Ukrainian friend gently corrects. 'Замóк' means 'lock' — you want
+    'зáмок' for 'castle'! Humorous moment that shows why stress matters."
+  - "Reading Ukrainian place names on a map together: Лу́цьк, Вíнниця,
+    Івáно-Франкíвськ, Ужго́род, Черкáси. Each name practices different
+    stress patterns and syllable structures."
+vocabulary_hints:
+  required:
+  - нáголос (stress/accent) — metalanguage, learner needs this word
+  - зáмок (castle) — stress pair with замóк
+  - замóк (lock) — stress pair with зáмок
+  - кáва (coffee) — common word, first-syllable stress
+  - водá (water) — common word, second-syllable stress
+  - зупúнка (bus stop) — three syllables, middle stress
+  - столúця (capital city) — Київ — столиця України
+  - Украї́на (Ukraine) — essential, third-syllable stress
+  recommended:
+  - "мукá (flour) — stress pair with мýка (torment)"
+  - рáнок (morning) — first-syllable stress pattern
+  - "мéтро (metro) — cognate, first-syllable stress"
+  - "фотогрáфія (photograph) — long word practice"
+  - дя́кую (thank you) — essential phrase, first-syllable stress
+  - касúр (cashier) — dialogue vocabulary
+activity_hints:
+- type: quiz
+  focus: "Where is the stress? Choose the correctly stressed syllable"
+  items: 10
+- type: match-up
+  focus: Match words that change meaning with stress (замок/замок pairs)
+  items: 6
+- type: quiz
+  focus: "Statement or question? Choose based on intonation description"
+  items: 8
+- type: fill-in
+  focus: Break words into syllables with hyphens (мо-ло-ко)
+  items: 8
+connects_to:
+- a1-004 (Greetings and Politeness)
+prerequisites:
+- a1-002 (Sounds and Special Signs)
+grammar:
+- Syllable division rules
+- Free stress system
+- Stress-meaning pairs
+- Statement vs question vs exclamation intonation
+register: розмовний
+references:
+- title: "ULP Season 1, Episode 5 — Numbers + Pronunciation Trainer (И)"
+  url: https://www.ukrainianlessons.com/episode5/
+  notes: "Anna's stress marks on every word, pronunciation practice"
+- title: "Anna Ohoiko — 1000 Most Useful Ukrainian Words, 2nd ed. (Ukrainian Lessons, 2023), p.7"
+  notes: "Methodology reference: stress mark pedagogy, бáтько vs батькú example. Commercial — do not copy content."

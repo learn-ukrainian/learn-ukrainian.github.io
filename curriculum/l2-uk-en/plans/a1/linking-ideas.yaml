@@ -1,0 +1,62 @@
+module: a1-047
+level: A1
+sequence: 47
+slug: linking-ideas
+version: '1.0'
+title: Linking Ideas
+subtitle: Conjunctions
+focus: communication
+pedagogy: PPP
+phase: A1.7 [People & Communication]
+word_target: 1200
+objectives:
+- Connect simple sentences using basic conjunctions
+- Express cause and effect (бо, тому що)
+- Contrast ideas (а, але)
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - 'Dialogue 1: Discussing weekend plans and reasons. ''Я не йду в кіно, бо я працюю.'''
+  - 'Dialogue 2: Contrasting preferences. ''Я люблю чай, а він любить каву.'''
+- section: І, А, Але (And, But)
+  words: 400
+  points:
+  - і (and) - joining similar things.
+  - а (and/but) - contrasting, often used in questions (А ти?).
+  - але (but) - strong contrast.
+- section: Бо, Тому що (Because)
+  words: 400
+  points:
+  - бо (because - short, spoken).
+  - тому що (because - formal/written, also common in speech).
+  - тому (therefore/that's why).
+vocabulary_hints:
+  required:
+  - і
+  - й
+  - та
+  - а
+  - але
+  - бо
+  - тому що
+  - тому
+  recommended:
+  - також
+  - чи
+  - або
+activity_hints:
+- type: multiple-choice
+  focus: Choose the right conjunction to link the sentences
+  items: 12
+- type: matching
+  focus: Match the cause with the effect
+  items: 8
+connects_to:
+- a1-048 (When Where What)
+prerequisites:
+- a1-019 (Questions And No)
+grammar:
+- Conjunctions (coordinating and subordinating)
+register: розмовний
+references: []

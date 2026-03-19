@@ -1,121 +1,131 @@
-module: a1-008
+module: a1-004
 level: A1
-sequence: 8
+sequence: 4
 slug: greetings-and-politeness
-version: '2.0'
+version: '1.0'
 title: Greetings and Politeness
-subtitle: Hello and Thank You
+subtitle: "Привіт! — Your First Conversation"
 focus: vocabulary
 pedagogy: PPP
-phase: A1.1 [First Contact]
+phase: A1.1 [Script & First Contact]
 word_target: 1200
 objectives:
-- Greet people appropriately by time of day
+- Greet someone informally and formally in Ukrainian
 - Choose correctly between Ти and Ви based on social context
-- Use basic politeness expressions (thank you, please, excuse me)
-- Introduce yourself and respond to introductions
+- Say thank you, please, excuse me, and goodbye
+- Have a basic first conversation (greeting → how are you → goodbye)
 content_outline:
-- section: Вітання (Greetings)
+- section: Діалоги (Dialogues)
+  words: 450
+  points:
+  - "Dialogue 1 — INFORMAL: Meeting a friend at Shevchenko Park (following
+    Anna's ULP 1-01 setting). Привіт! → Як справи? → Чудово! А у тебе?
+    → Добре. → Рада тебе бачити! → Я теж. Full greeting-response cycle
+    with natural Ukrainian flow."
+  - "Dialogue 2 — FORMAL: Hotel reception (following Anna's ULP 1-02 setting).
+    Доброго ранку! → Доброго ранку! У вас все добре? → Так, все чудово.
+    → Гарного дня! → Дякую, і вам! → До побачення! Full formal cycle."
+  - "Dialogue 3 — ASKING FOR SOMETHING: At a cafe counter.
+    Вибачте! → Так? → Каву, будь ласка. → Будь ласка! → Дякую!
+    Practices politeness words in a real transaction."
+  - "Dialogue 4 — THE TI/VI SWITCH: Two colleagues who've been formal
+    decide to switch. Давай на ти? → Давай! Cultural moment — this is a
+    significant social event in Ukrainian relationships."
+- section: "Привíт! (Informal Greetings)"
   words: 200
   points:
-  - 'Informal greeting: Привіт — used with friends, peers, and children; the universal casual hello'
-  - 'Formal time-based greetings: Добрий ранок (morning, until ~12:00), Добрий день (afternoon, ~12:00-18:00), Добрий вечір
-    (evening, after ~18:00) — used with strangers, elders, and in professional settings'
-  - 'Goodbyes: До побачення (formal goodbye, literally ''until seeing''), Бувай/Бувайте (informal goodbye, literally ''be
-    well''), На все добре (all the best)'
-  - 'When to use which: matching the greeting to the social context and time of day — using Добрий день as the safe default
-    when unsure'
-- section: Ти і Ви (T-V distinction)
-  words: 250
+  - "Following Anna Ohoiko's ULP Episode 1 approach — start with a REAL
+    situation. Two friends meet in a park. Привíт! is the universal
+    informal greeting — use it with friends, family, peers, anyone your age
+    where there's no superiority. Just smile and say it: /pryvit/!"
+  - "How are you? Two equivalent ways: Як спрáви? and Як ти?
+    Answers: Чудóво! (great), Дýже дóбре! (very good), Дóбре (fine),
+    Нормáльно (okay), Погáно (bad). And asking back: А у тéбе? А ти як?"
+  - "I'm glad to see you — gendered forms! Men say: Рáдий тебé бáчити!
+    Women say: Рáда тебé бáчити! This is one of the first places learners
+    encounter Ukrainian's gendered past/adjective forms."
+- section: "Дóбрий день! (Formal Greetings)"
+  words: 200
   points:
-  - 'Ти = singular informal: used with one person you know well — friends, family members, children, peers of your age'
-  - 'Ви = singular formal OR plural: used with one person you respect (stranger, teacher, elder, boss) OR with any group of
-    two or more people'
-  - 'The safety rule: always start with Ви until explicitly invited to switch — the phrase ''Давай на ти?'' (Shall we switch
-    to ти?) signals the transition'
-  - 'Cultural importance: using Ти with a stranger or elder is considered rude and disrespectful in Ukrainian culture; this
-    is more strictly observed than in many Western European cultures'
-- section: Ввічливість (Politeness)
-  words: 250
+  - "Following ULP Episode 2 — hotel reception dialogue. Formal greetings
+    change by time of day: Дóброго рáнку! (morning), Дóбрий день! (afternoon,
+    also the safe default), Дóбрий вéчір! (evening), Добрáніч! (good night)."
+  - "Ви — the formal/plural 'you'. Use with strangers, elders, teachers,
+    bosses, anyone you don't know well. The switch to Ти is an explicit
+    invitation: 'Давáй на ти?' (Shall we use ти?). When unsure, always Ви."
+  - "Formal 'how are you': Як у вас спрáви? Як ви? У вас все дóбре?
+    The formal versions mirror the informal but with Ви forms."
+- section: "Ввíчливість (Politeness)"
+  words: 200
   points:
-  - Дякую (thank you) — the universal expression of gratitude; can be intensified with Дуже дякую (thank you very much) or
-    Щиро дякую (sincerely thank you)
-  - 'Будь ласка (please/you''re welcome) — dual function: used both when requesting something and when responding to thanks'
-  - Вибачте (excuse me, formal) vs Вибач (excuse me, informal) — used to get attention, apologize for a minor inconvenience,
-    or interrupt politely
-  - Перепрошую (I apologize) — a more formal and sincere apology than Вибачте; used when you have genuinely inconvenienced
-    someone
-  - 'Usage contexts: ordering at a cafe (Будь ласка, каву), bumping into someone (Вибачте!), receiving a gift (Дуже дякую!)'
-- section: "Звертання (Addressing People)"
+  - "Дя́кую! (thank you) — one of the first words every learner needs.
+    Intensifiers: Дýже дя́кую! (thank you very much), Щúро дя́кую!
+    (sincerely thank you)."
+  - "Будь лáска — the Swiss army knife of Ukrainian politeness. It means
+    BOTH 'please' (when asking) AND 'you're welcome' (when responding to
+    thanks). Дáйте, будь лáска, кáву. → Будь лáска! Following Anna's
+    Episode 2 exactly: this dual function surprises English speakers."
+  - "Вибáчте (excuse me, formal) and Вибáч (informal). Use to get
+    attention, apologize for bumping someone, or interrupt politely.
+    Перепрóшую is a more sincere formal apology."
+- section: "До побáчення! (Goodbye)"
   words: 150
   points:
-  - "When you address someone directly, Ukrainian changes the name form. This is
-    called the vocative (кличний відмінок). For now, just memorize these forms
-    as fixed phrases — we will cover the full vocative rules later."
-  - "Common address forms: Мамо! Тату! Бабусю! Дідусю! — used when calling
-    family members. Друже! — when addressing a friend."
-  - "Formal address: пане (Mr.), пані (Ms.) — Добрий день, пане Петре!
-    Добрий день, пані Оксано! Notice how the name also changes."
-  - "Key pattern: most feminine names/titles end in -о (Мамо, Оксано, пані Іро),
-    most masculine in -е or -у (Друже, Тату, пане Петре)."
-- section: Знайомство (Introductions)
-  words: 200
-  points:
-  - 'Asking names: Як вас звати? (formal) vs Як тебе звати? (informal) — literally ''How do they call you?'''
-  - 'Responding: Мене звати... (My name is...) — the standard self-introduction formula from State Standard §4.2.3.1'
-  - 'Pleased to meet you: Дуже приємно (very pleasant) or Приємно познайомитись (pleasant to meet) — said after exchanging
-    names'
-  - 'Formal vs informal introductions: meeting a professor (Добрий день. Як вас звати? Мене звати... Дуже приємно.) vs meeting
-    a classmate (Привіт! Як тебе звати? Я... Приємно!)'
-- section: Діалоги (Dialogues)
-  words: 250
-  points:
-  - 'Dialogue 1 — Meeting someone for the first time (formal): full greeting-introduction-farewell sequence using Ви, Добрий
-    день, Як вас звати, До побачення'
-  - 'Dialogue 2 — Greeting a friend (informal): using Привіт, Як справи? (How are things?), Бувай with casual register'
-  - 'Dialogue 3 — Asking for something politely: using Вибачте to get attention, Будь ласка when requesting, Дякую when receiving'
-  - 'Dialogue 4 — Thanking and saying goodbye: combining gratitude expressions with appropriate farewell formulas for formal
-    and informal contexts'
+  - "Formal goodbye: До побáчення! (literally 'until seeing'). The most
+    common formal farewell — works everywhere."
+  - "Informal goodbyes: Бувáй! (to one person), Бувáйте! (to a group or
+    formal). Па-пá! is common in central/eastern Ukraine (western Ukraine
+    uses it less). Гáрного дня! (Have a nice day!) — and the response:
+    І вам! (formal) / І тобі! (informal)."
+  - "і means 'and' (used between parallel things): чоловíк і дружúна
+    (husband and wife), Гáрних вихíдних! — І тобí!"
 vocabulary_hints:
   required:
-  - привіт (hello, informal) — Top 200 word; the universal casual greeting among friends and peers
-  - 'добрий ранок (good morning) — formal morning greeting; collocations: Добрий ранок, пане/пані!'
-  - добрий день (good afternoon) — formal daytime greeting; the safest default greeting; Top 100 collocation
-  - добрий вечір (good evening) — formal evening greeting; used after approximately 18:00
-  - до побачення (goodbye) — formal farewell; literally 'until seeing'; Top 300 collocation
-  - 'дякую (thank you) — Top 100 word; collocations: дуже дякую, щиро дякую'
-  - будь ласка (please/you're welcome) — Top 100 collocation; dual function as request marker and response to thanks
-  - вибачте (excuse me, formal) — Top 500 word; used to get attention or apologize politely
-  - перепрошую (I apologize) — formal apology; more sincere than вибачте
-  - дуже приємно (pleased to meet you) — introduction formula; literally 'very pleasant'
-  - пане (Mr., formal address) — vocative form used before male names/titles
-  - пані (Ms., formal address) — vocative form used before female names/titles
+  - привíт (hi, informal) — universal casual greeting
+  - дóбрий день (good afternoon/hello formal) — safe default
+  - дя́кую (thank you) — essential, first-syllable stress
+  - будь лáска (please / you're welcome) — dual function
+  - до побáчення (goodbye, formal) — literally 'until seeing'
+  - як спрáви? (how are you?) — informal
+  - чудóво (great, wonderful) — positive response
+  - дóбре (fine, good) — neutral response
+  - вибáчте (excuse me, formal) — attention/apology
+  - рáда тебé бáчити (glad to see you, female) — gendered
   recommended:
-  - бувай/бувайте (bye, informal/formal plural) — casual farewell; literally 'be well'
-  - здрастуйте (hello, formal) — alternative formal greeting; slightly old-fashioned but still used
-  - 'ласкаво просимо (welcome) — used when receiving guests; collocations: Ласкаво просимо до України!'
-  - на все добре (all the best) — warm farewell formula; used in both formal and semi-formal contexts
+  - бувáй (bye, informal) — casual farewell
+  - гáрного дня! (have a nice day!) — warm farewell
+  - перепрóшую (I apologize) — formal apology
+  - нормáльно (okay, normal) — neutral response
+  - па-пá (bye-bye) — very casual, central/eastern Ukraine
+  - давáй на ти? (shall we use ти?) — social ritual
 activity_hints:
 - type: match-up
-  focus: Match formal and informal greeting equivalents
+  focus: Match formal and informal equivalents (Привіт ↔ Добрий день)
   items: 10
 - type: quiz
-  focus: Choose the appropriate greeting for a given social situation
+  focus: "Choose the right greeting for the situation (friend, stranger, boss)"
   items: 10
 - type: fill-in
-  focus: Complete greeting and introduction dialogues
+  focus: Complete dialogue lines with correct greeting/politeness word
   items: 8
 - type: unjumble
-  focus: Put greeting dialogue lines in correct order
+  focus: Put a greeting dialogue in correct order
   items: 6
 connects_to:
-- a1-09 (This Is, I Am)
+- a1-005 (Who Am I?)
 prerequisites:
-- a1-07 (The Gender Code)
-persona:
-  voice: Patient Supportive Tutor
-  role: Friendly Barista
+- a1-003 (Syllables, Stress, and Intonation)
 grammar:
-- T-V distinction
-- Imperative forms in politeness expressions
+- Ти vs Ви distinction (T-V)
+- Time-of-day greetings (Добрий + ранок/день/вечір)
+- Gendered adjectives preview (радий/рада)
 register: розмовний
+references:
+- title: "ULP Season 1, Episode 1 — Informal Greetings in Ukrainian"
+  url: https://www.ukrainianlessons.com/episode1/
+  notes: "Привіт, Як справи?, Рада тебе бачити — dialogue in Shevchenko park"
+- title: "ULP Season 1, Episode 2 — Formal Greetings and Goodbye + Pronouns"
+  url: https://www.ukrainianlessons.com/episode2/
+  notes: "Добрий день, До побачення, Дякую, Будь ласка, Гарного дня"
+pronunciation_videos:
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV

@@ -1,96 +1,71 @@
-module: a1-030
+module: a1-035
 level: A1
-sequence: 30
+sequence: 35
 slug: around-the-city
-version: '2.0'
-title: Around the City
-subtitle: Navigating Urban Spaces with Confidence
-focus: practical
+version: '1.0'
+title: Around The City
+subtitle: "Giving directions to a tourist"
+focus: vocabulary
 pedagogy: PPP
-phase: A1.3 [Cases & Navigation]
+phase: A1.5 [Places & Movement]
 word_target: 1200
 objectives:
-- Navigate using directional vocabulary (прямо, наліво, направо)
-- Use locative case for city locations in context
-- Ask and answer 'Де...?' and 'Як дістатися до...?'
-- Name common urban infrastructure and transport
+- Give and follow basic directions in a city (left, right, straight)
+- Combine the three location questions: де, куди, звідки
+- Synthesize Locative, Accusative (direction), and Genitive (origin) in practical scenarios
 content_outline:
-- section: 'Вступ: Міський простір (Introduction: Urban Space)'
-  words: 250
+- section: Діалоги (Dialogues)
+  words: 400
   points:
-  - 'Орієнтація в центрі: Розрізнення понять «Майдан» та «Площа»; Майдан як серце міста та соціальний хаб, Площа як загальна
-    назва (напр., Майдан Незалежності vs Площа Ринок).'
-  - 'Запитання про дорогу: Контраст між пошуком об''єкта «Де знаходиться...?» (Location) та маршрутом «Як дістатися до...?»
-    (Direction) згідно зі State Standard §4.2.3.2/3.'
-- section: 'Презентація: Граматика та напрямки (Presentation: Grammar and Directions)'
-  words: 350
+  - "Dialogue-first: A tourist asking a local for directions. 'Вибачте, де метро?' (Excuse me, where is the metro?). 'Ідіть прямо, потім наліво.' (Go straight, then left)."
+  - "Explaining routes: 'Цей автобус їде з центру на вокзал.' (This bus goes from the center to the train station)."
+- section: "Навігація: Прямо, Наліво, Направо (Navigation: Straight, Left, Right)"
+  words: 300
   points:
-  - 'Інфраструктура та Місцевий відмінок (§4.2.3.3): Використання прийменників «на» (зупинці, пошті, площі) та «в» (аптеці);
-    робота над типовою помилкою «в площі» та «в зупинці».'
-  - 'Словник напрямків: «Прямо», «наліво/направо» та їхні формальні відповідники «ліворуч/праворуч», які часто зустрічаються
-    на офіційних вказівниках.'
-  - 'Концепція «Де» vs «Куди»: Диференціація статичного перебування (Locative) та руху до цілі (Accusative §4.2.3.2.2); виправлення
-    помилки «Де ти йдеш?» на коректне «Куди ти йдеш?».'
-  - 'Прийменники-блоки з Родовим відмінком: «Біля» та «Навпроти» як лексичні чанки (біля аптеки, навпроти пошти); запобігання
-    помилці вживання Називного відмінка («біля аптека»).'
-- section: 'Практика: Орієнтування за мапою (Practice: Navigating by Map)'
-  words: 350
+  - "Adverbs for directions: прямо (straight), наліво / ліворуч (left), направо / праворуч (right), назад (back)."
+  - "Using the imperative 'Ідіть...' (Go...) for giving directions: Ідіть прямо (Go straight)."
+  - "Locations relative to the speaker: близько (near), далеко (far)."
+- section: "Синтез: Де? Куди? Звідки? (Synthesis: Where? Whereto? Where from?)"
+  words: 300
   points:
-  - 'Навігація за орієнтирами: Практика пояснення дороги через впізнавані будівлі (landmarks) замість сторін світу, що є домінуючим
-    стилем в українській комунікації.'
-  - 'Дріл на відмінки та питання: Вправи на заповнення пропусків «Де?» (Locative) vs «Куди?» (Accusative) у контексті діалогу
-    з перехожим на вулиці.'
-  - 'Корекція типових помилок: Спеціальні завдання на вибір правильного прийменника (в/на) для різних типів міських локацій
-    (аптека vs пошта).'
-- section: 'Культура та Продакшн: Життя в місті (Culture and Production: City Life)'
-  words: 250
+  - "The core grammar review of the phase. Contrast the three concepts."
+  - "Де? (Location/Locative): Я в банку. Банк на вулиці."
+  - "Куди? (Direction/Accusative): Я йду в банк. Я їду на вулицю."
+  - "Звідки? (Origin/Genitive): Я йду з банку. Я їду з вулиці."
+  - "Show how they flow together: Я їду з дому (Звідки?) на роботу (Куди?). Моя робота в центрі (Де?)."
+- section: "Практика: Як доїхати? (Practice: How to get there?)"
+  words: 200
   points:
-  - 'Етикет Маршрутки: Культурний аспект — фраза «На зупинці, будь ласка!» як необхідність привернути увагу водія; обговорення
-    відсутності автоматичних зупинок.'
-  - 'Рольова гра «Загублений турист»: Використання вивчених орієнтирів та напрямків для пояснення дороги до власного дому;
-    акцент на «Де знаходиться?» vs «Як дістатися?».'
+  - "Phrases for asking the way: Як доїхати до центру? (How to get to the center? - noting 'до' + Genitive as an alternative to Accusative direction, but keep it light)."
+  - "Putting it all into a coherent map-reading exercise narrative."
 vocabulary_hints:
   required:
-  - прямо (straight) — йти прямо, їхати прямо; висока частотність.
-  - 'наліво (left) — розмовний регістр; синонім: ліворуч.'
-  - 'направо (right) — розмовний регістр; синонім: праворуч.'
-  - 'вулиця (street) — на вулиці (Locative); помилка: «в вулиці»; колокація: переходити вулицю.'
-  - 'зупинка (stop) — на зупинці (Locative); культурний контекст: прохання водія зупинитися.'
-  - аптека (pharmacy) — в аптеці; висока частотність (Top 100 nouns).
-  - пошта (post office) — на пошті (Locative).
-  - 'площа (square) — на площі; типова помилка: «в площі».'
-  - Куди (where to) — питання напрямку руху (§4.2.3.2.2); контраст із «Де» (Location).
+  - пря́мо (straight)
+  - налі́во / лівóруч (left)
+  - напрáво / правóруч (right)
+  - назáд (back)
+  - бли́зько (near)
+  - далекó (far)
+  - як дої́хати...? (how to get to...?)
   recommended:
-  - біля (near) — + Родовий відмінок (біля аптеки); вчити як фіксований лексичний блок.
-  - навпроти (opposite) — + Родовий відмінок (навпроти парку).
-  - ліворуч (left) — формальний синонім до «наліво»; часто використовується на знаках.
-  - праворуч (right) — формальний синонім до «направо»; часто використовується на знаках.
-  - Майдан (square/hub) — центральна площа міста; культурний акцент на Майдан Незалежності.
-  - станція (station) — на станції (метро або вокзал).
-  - перехрестя (intersection) — на перехресті (Locative).
-  - світлофор (traffic light) — на світлофорі (Locative).
+  - ви́бачте (excuse me)
+  - іді́ть (go - imperative formal/plural)
 activity_hints:
-- type: match-up
-  focus: Follow directions on a map
-  items: 10
 - type: fill-in
-  focus: Ask for and give directions
+  focus: Choose the correct question word (де/куди/звідки) for the given answer
+  items: 12
+- type: match-up
+  focus: Match direction words with their opposites (left <-> right, near <-> far)
   items: 8
-- type: fill-in
-  focus: Complete with prepositions
-  items: 15
-- type: match-up
-  focus: Place → description
-  items: 15
 connects_to:
-- a1-31 (The Genitive I: Absence)
+- a1-036 (Checkpoint: Places)
 prerequisites:
-- a1-29 (The Locative)
-persona:
-  voice: Patient Supportive Tutor
-  role: Taxi Driver
+- a1-034 (Where Are You From?)
 grammar:
-- Locative case in context
-- Directional expressions
-- Prepositions of location
+- Synthesis of Де (Locative), Куди (Accusative), Звідки (Genitive)
+- Imperative for directions (Ідіть)
 register: розмовний
+references:
+- title: "Ukrainian Lessons Podcast - Ep 18: Directions"
+  url: "https://www.ukrainianlessons.com/episode18/"
+  notes: "Focus on combining the spatial cases into a unified mental model for the learner."

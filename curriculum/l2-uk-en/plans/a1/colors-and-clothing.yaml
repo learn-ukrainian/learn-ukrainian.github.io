@@ -1,90 +1,92 @@
-module: a1-012
+module: a1-010
 level: A1
-sequence: 12
+sequence: 10
 slug: colors-and-clothing
-version: '2.1'
+version: '1.0'
 title: Colors & Clothing
-subtitle: Describing What You Wear
+subtitle: "Getting Dressed — Applying Adjectives"
 focus: vocabulary
 pedagogy: PPP
-phase: A1.1 [First Contact]
+phase: A1.2 [My World]
 word_target: 1200
 objectives:
-- Learner can name basic colors in Ukrainian
-- Learner can use color adjectives with correct gender agreement
-- Learner can describe clothing items
-- Learner can describe what someone is wearing
+- Name primary colors in Ukrainian
+- Name basic clothing items
+- Combine colors (as adjectives) with clothing vocabulary, matching gender
 content_outline:
-- section: Вступ та культурний контекст (Introduction & Cultural Context)
+- section: Діалоги (Dialogues)
+  words: 500
+  points:
+  - "Dialogue 1 — Packing a suitcase.
+    — Де моя біла футболка?
+    — Вона там. А де мій синій светр?
+    — Твій синій светр тут.
+    Applying colors directly to clothing items."
+  - "Dialogue 2 — Getting dressed for the day.
+    — Це гарна чорна куртка.
+    — Дякую! Це моя нова куртка.
+    — А це мій червоний шарф.
+    Conversing about clothes and colors."
+- section: "Кольори (Colors)"
   words: 250
   points:
-  - 'Символізм кольорів в українській традиції: червоний як колір життя та любові, чорний як символ родючої землі та мудрості,
-    білий як знак чистоти. Пов''язання з фольклорними образами (червона калина, чорний хліб).'
-  - 'Вишиванка як оберіг (talisman): функція вишивки на комірі та манжетах як захисного кола, що охороняє власника. Концепція
-    ''закриття'' енергетичних зон через візерунок.'
-- section: Презентація кольорів та граматика узгодження (Colors & Grammar of Agreement)
-  words: 300
+  - "Teach the main colors as adjectives (Nominative case):
+    білий (white), чорний (black), червоний (red), синій (blue - dark), блакитний (blue - light), зелений (green), жовтий (yellow), сірий (grey)."
+  - "Note the soft stem for синій (синій, синя, синє) vs hard stem for others (білий, біла, біле)."
+- section: "Одяг (Clothing)"
+  words: 250
   points:
-  - 'Презентація основних кольорів згідно з Державним стандартом (§4.2.1.2): білий, чорний, червоний, синій, зелений, жовтий.'
-  - 'Узгодження прикметників з іменниками в роді: детальне відпрацювання закінчень (-ий/-а/-е). Виправлення типової помилки
-    ''червоний сорочка'' через контрастні пари: червоний светр (M) vs червона сорочка (F).'
-  - Незмінювані кольори-запозичення (бордо, беж, хакі) — пояснення відсутності закінчень незалежно від роду іменника.
-- section: Одяг — Clothing Vocabulary
-  words: 350
+  - "Basic clothing vocabulary with their genders:
+    светр (sweater - m), шарф (scarf - m)
+    футболка (t-shirt - f), куртка (jacket - f), шапка (hat - f)
+    пальто (coat - n), взуття (shoes/footwear - n)"
+- section: "Поєднання кольору і одягу (Combining Color and Clothing)"
+  words: 200
   points:
-  - 'Лексика теми ''Одяг'': сорочка, штани, сукня, куртка, светр. Стилістична різниця між синонімами: ''сукня'' (елегантний/офіційний
-    варіант) та ''плаття'' (загальна назва).'
-  - 'Опис одягу через прикметник + іменник (verb-free): червона сукня, синій светр, білі штани.
-    Gender agreement practice with clothing: чорний светр (M), чорна куртка (F), чорне плаття (N).'
-  - 'Особливості Pluralia Tantum: штани, джинси, окуляри. Узгодження прикметників у множині (''ці
-    штани'', ''нові джинси''); займенник ''одні'' замість ''один''.'
-- section: Практичне застосування — Describing Outfits
-  words: 300
-  points:
-  - 'Опис одягу інших людей через verb-free patterns: «Це червона сукня», «Ці штани — сині»,
-    «Мій светр — зелений». Practice combining colors with clothing items and gender agreement.'
-  - 'Культурний контекст одягу: кольори вишиванки за регіонами, повсякденний стиль українців.
-    Описи з використанням прикметників: «Це традиційна сорочка», «Ця вишиванка — червона й чорна».'
+  - "Practice the adjective-noun agreement learned in M09 with the new color vocabulary.
+    біла футболка, чорний светр, червона куртка, зелене пальто."
 vocabulary_hints:
   required:
-  - білий (white) — біла сорочка, білий сніг, білий світ; частотне (High Core A1); символ чистоти та божественного світу
-  - чорний (black) — чорні штани, чорна кава, чорний хліб; символ родючої землі та мудрості
-  - червоний (red) — червона сукня, червона ручка, червона калина; символ життя, любові та енергії
-  - синій (blue) — сині джинси, синій светр; частотне вживання для повсякденного одягу
-  - зелений (green) — зелена трава, зелений колір
-  - сорочка (shirt) — вишита сорочка, біла сорочка, одягати сорочку; частотне (High Core A1); основа традиційного вбрання
-  - штани (pants) — нові штани, джинсові штани; plural-only (pluralia tantum); завжди вживається в множині
-  - сукня (dress) — вечірня сукня, нова сукня; частотний та стилістично вишуканий синонім до 'плаття'
-  - куртка (jacket) — тепла куртка, осіння куртка; частотне (High Core A1)
+  - колір (color)
+  - білий (white)
+  - чорний (black)
+  - червоний (red)
+  - синій (dark blue)
+  - зелений (green)
+  - жовтий (yellow)
+  - одяг (clothing)
+  - футболка (t-shirt)
+  - светр (sweater)
+  - куртка (jacket)
+  - шапка (hat)
+  - пальто (coat)
   recommended:
-  - плаття (dress) — розмовний синонім до 'сукня'; літнє плаття
-  - жовтий (yellow) — жовте сонце, жовтий лимон
-  - светр (sweater) — вовняний светр, синій светр
-  - окуляри (glasses) — великі окуляри; plural-only
-  - джинси (jeans) — сині джинси; plural-only; відмінюється як 'штани'
+  - блакитний (light blue)
+  - сірий (grey)
+  - шарф (scarf)
+  - взуття (footwear)
 activity_hints:
-- type: match-up
-  focus: Color and clothing names
-  items: 30
-- type: match-up
-  focus: Match colors to items
-  items: 20
+- type: matching
+  focus: Match the color adjective to the correctly gendered clothing item
+  items: 12
 - type: fill-in
-  focus: Describe outfits in pictures
+  focus: Fill in the missing color ending (Це чорн__ футболка)
   items: 10
-- type: fill-in
-  focus: Shopping for clothes
-  items: 6
+- type: multiple-choice
+  focus: Choose the correct clothing item based on a short description
+  items: 8
 connects_to:
-- 'a1-42 (Description: Adverbs)'
-- 'a1-54 (Checkpoint: Communication)'
+- a1-011 (Many Things - Plurals)
 prerequisites:
-- a1-11 (Describing Things - Adjectives)
-persona:
-  voice: Patient Supportive Tutor
-  role: Vyshyvanka Designer
+- a1-009 (Describing Things - for adjective agreement)
 grammar:
-- Color adjectives with agreement
-- Clothing vocabulary
-- Adjective + noun gender agreement with clothing items
+- "Adjective agreement continued (Colors)"
+- "Soft stem adjectives (синій)"
 register: розмовний
+references:
+- title: "ULP 1-25: Colors in Ukrainian + Pronunciation Trainer"
+  url: https://www.ukrainianlessons.com/episode25/
+  notes: "Follows Anna's introduction of colors. Pay attention to the rolled R pronunciation practice."
+- title: "Anna Ohoiko Pronunciation Playlist"
+  url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  notes: "Rolled R trainer (червоний, чорний, сірий)."

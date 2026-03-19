@@ -2,159 +2,164 @@ module: a1-001
 level: A1
 sequence: 1
 slug: the-ukrainian-alphabet
-version: '2.0'
+version: '1.0'
 title: The Ukrainian Alphabet
-subtitle: "33 Letters, One System — Your Map to Reading Ukrainian"
-focus: grammar
+subtitle: 33 Letters, Your First Words
+focus: phonetics
 pedagogy: PPP
-phase: A1.1 [First Contact]
+phase: A1.1 [Script & First Contact]
 word_target: 1200
 objectives:
-- Learner sees the full 33-letter Ukrainian alphabet as a coherent system
-- "Learner understands letter ≠ sound (букви vs звуки)"
-- Learner distinguishes vowels (голосні) from consonants (приголосні) as categories
-- "Learner can read and write words using 10 practice letters: А О У І М Н Т К С Л"
-- Learner recognizes 3 sight words (привіт, дякую, це) and uses decodable так/ні
+- Read Ukrainian words written in Cyrillic without transliteration
+- Match all 33 Ukrainian letters to their sounds
+- Spot the false friends — letters that look Latin but sound different
+- Read real Ukrainian signs, names, and common words aloud
 content_outline:
-- section: Вступ — Introduction
-  words: 150
-  points:
-  - "Ukrainian uses Cyrillic script — descended from Greek via the First Bulgarian
-    Empire. 33 letters, highly phonetic: each letter usually maps to one sound
-    (unlike English where 'ough' can sound 5 different ways)."
-  - "Show the full 33-letter alphabet chart (COPY EXACTLY):
-    А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я
-    Learners don't memorize it all now — master each group in M2-M4."
-  - "Cultural hook: Cyrillic was created by students of Saints Cyril and Methodius.
-    It is NOT derived from Latin — it descends from the Greek alphabet."
-- section: "Букви і звуки — Letters and Sounds"
+- section: Знайомі літери (Familiar Letters)
   words: 200
   points:
-  - "Letters (букви) are written symbols. Sounds (звуки) are what you hear and
-    pronounce. They are not the same thing — Ukrainian has 38 phonemes but 33 letters."
-  - "Key insight: Ukrainian spelling is highly phonetic — one letter almost always
-    represents one sound. This makes Ukrainian FAR easier to read than English.
-    Once you learn the 33 letters, you can sound out any word."
-  - "Some letters do double duty: iotated vowels (Я Ю Є Ї) can represent two sounds.
-    The soft sign (Ь) modifies the consonant before it. Details in M2 and M4."
-- section: "Голосні та приголосні — Vowels and Consonants"
+  - "Six letters that look AND sound like Latin: А [a], О [o], К [k], М [m],
+    Т [t], Е [e as in 'met']. With just these, learner reads real words:
+    мама, тато, кома, атом, метро, Тома."
+  - "Confidence builder: these letters appear in hundreds of Ukrainian words.
+    Learner practices reading 10-15 words using only these six letters,
+    building the habit of sounding out Cyrillic without English crutches."
+- section: Фальшиві друзі (False Friends)
+  words: 250
+  points:
+  - "Six letters that LOOK Latin but SOUND completely different — the biggest
+    trap for English speakers: В [v] not 'b', Н [n] not 'h', Р [r] not 'p',
+    С [s] not 'c', У [u] not 'y', Х [kh] not 'x'."
+  - "Drill through common words: вода (water), ніс (nose), рука (hand),
+    сон (dream), хата (house), кухня (kitchen). Learner must break the
+    English reflex — when you see В, your mouth says [v]."
+  - "Reading challenge: words mixing familiar + false friend letters.
+    Сорок (forty), Норма (norm), Мороз (frost), Ворон (raven).
+    If learner reads these correctly, the false friend habit is breaking."
+- section: Нові літери (New Letters)
+  words: 250
+  points:
+  - "Letters with shapes not found in Latin: Б, Г, Ґ, Д, Ж, З, И, Й, Л, П,
+    Ф, Ц, Ч, Ш, Щ. Introduced through high-frequency words — not isolated
+    letter drills. Банк (bank), Гарно (nicely), Дім (house), Зима (winter),
+    Книга (book), Школа (school)."
+  - "Special Ukrainian sounds: Ж [zh] like 'pleasure', Ц [ts] like 'cats',
+    Ч [ch] like 'church', Ш [sh] like 'ship', Щ [shch] — unique to
+    Ukrainian, as in що (what) and ще (still)."
+  - "The unique Ґ: only appears in a handful of native Ukrainian words —
+    ґанок (porch), ґудзик (button), ґречний (polite). Different from Г [h]."
+- section: Голосні (Vowels)
   words: 200
   points:
-  - "10 vowel letters: 6 base (А О У Е И І) + 4 iotated (Я Ю Є Ї).
-    Vowels = voice only, no obstruction. Every Ukrainian syllable has exactly one vowel."
-  - "22 consonant letters + the soft sign Ь (modifier, no sound of its own).
-    Consonants = air is obstructed (lips, tongue, teeth)."
-  - "Preview chart organized by category (COPY EXACTLY):
-    Голосні (Base): А, О, У, Е, И, І
-    Голосні (Iotated): Я, Ю, Є, Ї
-    Приголосні: Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ
-    Modifier: Ь
-    M2 will master vowels, M3 consonants, M4 special signs."
-- section: "Перші 10 літер — First 10 Letters"
-  words: 350
+  - "Ukraine has 10 vowel letters: А, Е, И, І, Ї, О, У, Ю, Я, Є.
+    Six are 'simple' (one sound): А, Е, И, І, О, У.
+    Four are 'iotated' (carry a й-sound): Я [ja], Ю [ju], Є [je], Ї [ji]."
+  - "The И vs І distinction — both are 'i'-like sounds but different.
+    И is between English 'i' in 'bit' and 'ee' in 'feet'.
+    І is closer to English 'ee'. Minimal pair: кит (whale) vs кіт (cat) —
+    and бик (bull) vs бік (side) shows the contrast."
+  - "Preview: Я, Ю, Є, Ї soften the consonant before them. This is key to
+    Ukrainian pronunciation and will be explored in M02."
+- section: Діалоги (Dialogues)
+  words: 300
   points:
-  - "Today's practice set: А О У І (4 vowels) + М Н Т К С Л (6 consonants).
-    These 10 high-frequency letters let you read real Ukrainian words immediately."
-  - "Letter-by-letter introduction with pronunciation guidance:
-    А — open 'a' as in 'father'. М — like English M. О — rounded 'o' as in 'more'.
-    Н — like English N (looks like H but is NOT H!). У — 'oo' as in 'moon'.
-    Т — like English T. І — 'ee' as in 'see'. К — like English K.
-    С — like English S. Л — like English L (tongue position differs slightly)."
-  - "Decodable words (use ONLY these 10 letters): мама (mom), тато (dad),
-    кіт (cat), молоко (milk), масло (butter), око (eye), ніс (nose),
-    місто (city), ліс (forest), сон (dream), мак (poppy), сік (juice),
-    сало (lard), стіл (table), тут (here), там (there)."
-  - "Detailed phonetic walkthroughs: how to blend М+А→МА, then МА+МА→МАМА.
-    How to read К+І+Т→КІТ. Build from letters → syllables → words."
-- section: "Перші слова — First Words in Context"
-  words: 200
-  points:
-  - "Micro-dialogues using decodable words + sight words:
-    — Це кіт? — Так, це кіт. / — Це місто? — Ні, це ліс."
-  - "Sight words (contain untaught letters — recognize as wholes):
-    привіт (hello), дякую (thank you), це (this is).
-    так (yes) and ні (no) are fully decodable with the 10 practice letters."
-  - "Reading practice: short sentences mixing decodable words and sight words.
-    Мама тут. Кіт там. Це молоко. Це масло."
-- section: "Підсумок — Summary"
-  words: 100
-  points:
-  - "33 letters: 10 vowels, 22 consonants, 1 modifier (Ь). Highly phonetic system."
-  - "You mastered 10 letters today. You can read: мама, тато, кіт, молоко, місто, ліс."
-  - "Self-check: Can you find all 10 vowel letters on the chart? Can you read
-    мама and кіт? What is the difference between букви and звуки?"
-  - "Next: M2 deep-dives into the vowel system — all 10 vowel letters."
+  - "Reading practice scene: Two friends walking through Kyiv, reading signs.
+    Аптека (pharmacy), Банк (bank), Кафе (café), Метро (metro),
+    Пошта (post office), Школа (school), Зупинка (bus stop).
+    Each sign uses letters from all three groups — learner practices
+    the full alphabet in a real-world context."
+  - "Name reading: common Ukrainian names organized by letter groups.
+    Masculine: Олег, Тарас, Андрій, Богдан, Михайло.
+    Feminine: Олена, Марія, Софія, Катерина, Наталія.
+    Cultural note: Ukrainian names have a special vocative form for calling
+    someone — Олено! Тарасе! — preview for M44."
+  - "Reading Ukrainian city names: Київ, Львів, Одеса, Харків, Дніпро,
+    Запоріжжя, Полтава, Чернігів. Geography as reading practice —
+    every city name exercises different letter combinations."
 vocabulary_hints:
   required:
-  - "мама (mom) — decodable (М+А+М+А); universal first word; Bolshakova p.14"
-  - "тато (dad) — decodable (Т+А+Т+О); high-frequency family word"
-  - "кіт (cat) — decodable (К+І+Т); high-frequency; Bolshakova"
-  - "молоко (milk) — decodable (М+О+Л+О+К+О); Bolshakova p.14"
-  - "масло (butter) — decodable (М+А+С+Л+О); Bolshakova p.15"
-  - "ліс (forest) — decodable (Л+І+С); high-frequency"
-  - "місто (city) — decodable (М+І+С+Т+О); high-frequency"
-  - "око (eye) — decodable (О+К+О); Bolshakova p.13"
-  - "так (yes) — decodable (Т+А+К); survival word"
-  - "ні (no) — decodable (Н+І); survival word"
+  - мáма (mother) — first word, uses only familiar letters
+  - тáто (father) — familiar letters only
+  - водá (water) — false friend В [v], not 'b'
+  - рукá (hand) — false friend Р [r], not 'p'
+  - хáта (house, traditional) — introduces Х [kh]
+  - книга (book) — new letters К, Н, И, Г
+  - шкóла (school) — introduces Ш
+  - мíсто (city) — introduces І
+  - зимá (winter) — introduces З, И
+  - дім (house, modern) — introduces Д, І
   recommended:
-  - "сон (dream/sleep) — decodable (С+О+Н); Bolshakova p.22"
-  - "сом (catfish) — decodable (С+О+М); Bolshakova p.22"
-  - "ніс (nose) — decodable (Н+І+С); body vocabulary"
-  - "мак (poppy) — decodable (М+А+К); Bolshakova"
-  - "сік (juice) — decodable (С+І+К); everyday food word"
-  - "стіл (table) — decodable (С+Т+І+Л); everyday object"
-  - "тут (here) — decodable (Т+У+Т); high-frequency adverb"
-  - "там (there) — decodable (Т+А+М); high-frequency adverb"
-  - "сало (lard) — decodable (С+А+Л+О); everyday food word"
-  - "кіно (cinema) — decodable (К+І+Н+О); everyday word"
-  sight_words:
-  - "привіт (hello) — sight word; greeting; uses letters П Р И В І Т"
-  - "дякую (thank you) — sight word; politeness; uses letters Д Я К У Ю"
-  - "це (this is) — sight word; demonstrative; uses letter Ц"
+  - áптека (pharmacy) — sign reading practice
+  - банк (bank) — cognate, sign reading
+  - кафé (café) — cognate with Ukrainian spelling
+  - пóшта (post office) — introduces П, Ш together
+  - мéтро (metro) — cognate, familiar letters
+  - зупинка (bus stop) — real-world sign
 activity_hints:
-- type: watch-and-repeat
-  focus: "Letter pronunciation — hear and repeat each of the 10 practice letters"
-  items: 10
-- type: image-to-letter
-  focus: "Match picture to Ukrainian word — мама, кіт, молоко, око, ліс, місто"
-  items: 8
-- type: classify
-  focus: "Sort the 10 practice letters into vowels (А О У І) vs consonants (М Н Т К С Л)"
-  items: 10
 - type: match-up
-  focus: "Match Ukrainian letter to its sound (for false friends: Н≠H, С≠C)"
+  focus: Match Ukrainian letters to their sounds (not English letter equivalents)
+  items: 12
+- type: quiz
+  focus: "Which letter makes this sound? — audio recognition of Ukrainian sounds"
   items: 10
 - type: fill-in
-  focus: "Blend letters into syllables and words: М+А→МА, МА+МА→?"
+  focus: Complete Ukrainian words with missing letters (e.g., _ода → вода)
   items: 8
 - type: quiz
-  focus: "Read and identify — which word matches the picture?"
+  focus: Read a Ukrainian word and choose the correct pronunciation/meaning
   items: 8
 connects_to:
-- a1-02 (Vowel Sounds)
+- a1-002 (Sounds and Special Signs)
 prerequisites: []
-persona:
-  voice: Patient Supportive Tutor
-  role: Typography Artist
 grammar:
-- "Full alphabet overview (33 letters)"
-- "Sound-letter correspondence (букви vs звуки)"
-- "Vowel vs consonant classification"
-- "Basic syllable blending and word reading"
+- Cyrillic letter-sound correspondence
+- False friend letters (В, Н, Р, С, У, Х)
+- Simple vs iotated vowels (preview)
 register: розмовний
+references:
+- title: "ULP Season 1, Episode 1 — first exposure to Ukrainian words"
+  url: https://www.ukrainianlessons.com/episode1/
+  notes: "Anna dives into conversation from episode 1 — no alphabet lesson"
+- title: "Anna Ohoiko — 1000 Most Useful Ukrainian Words, 2nd ed. (Ukrainian Lessons, 2023)"
+  notes: "Methodology reference: stress marks, example sentences, euphonic pairs. Commercial — do not copy content."
+- title: "Anna Ohoiko — 500+ Ukrainian Verbs (Ukrainian Lessons, 2024)"
+  notes: "Methodology reference: conjugation tables, cases overview p.16-17. Commercial — do not copy content."
 pronunciation_videos:
   overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  poster: https://www.youtube.com/watch?v=grL2s5e2AGI
   playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
-  credit: "Anna Ohoiko — Ukrainian Lessons"
-  letters:
+  vowels:
     А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
     О: https://www.youtube.com/watch?v=gJFxRIPRZbI
     У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    Е: https://www.youtube.com/watch?v=KFlsroBW0dk
+    И: https://www.youtube.com/watch?v=W-1rCu0indE
     І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    Я: https://www.youtube.com/watch?v=yhSAf41LX8I
+    Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    Є: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  consonants:
     М: https://www.youtube.com/watch?v=Ez95H4ibuJo
     Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
-    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
-    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
-    С: https://www.youtube.com/watch?v=7UsFBgSL91E
     Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    Й: https://www.youtube.com/watch?v=aq0cjB90s3w
+    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    П: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    З: https://www.youtube.com/watch?v=BhASNxitC1A
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
+    Х: https://www.youtube.com/watch?v=vpr58zJSJKc
+  special:
+    Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
+    Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA

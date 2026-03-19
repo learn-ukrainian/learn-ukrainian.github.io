@@ -1,0 +1,64 @@
+module: a1-036
+level: A1
+sequence: 36
+slug: checkpoint-places
+version: '1.0'
+title: Checkpoint Places
+subtitle: "Review M29-35"
+focus: review
+pedagogy: Checkpoint
+phase: A1.5 [Places & Movement]
+word_target: 1200
+objectives:
+- Review euphony rules (у/в, і/й)
+- Review Locative case (Де?), Accusative direction (Куди?), and Genitive origin (Звідки?)
+- Test navigation, directions, and transport vocabulary
+- Confirm ability to combine spatial concepts in context
+content_outline:
+- section: "Listening Comprehension"
+  words: 300
+  points:
+  - "A narrative about a tourist navigating a Ukrainian city, taking transport, getting lost, and asking for directions."
+  - "Tests comprehension of direction words, transport vocabulary, and spatial cases."
+- section: "Grammar Review: Де, Куди, Звідки"
+  words: 300
+  points:
+  - "Comprehensive drill on the spatial trio."
+  - "Learner must choose the correct preposition and case ending based on the verb (іти, бути, їхати)."
+  - "Includes checking euphony (в vs у)."
+- section: "Communication: Navigation and Origin"
+  words: 300
+  points:
+  - "Roleplay scenarios: Explaining where you are from and where you live."
+  - "Giving directions from the train station to a hotel."
+- section: "Self-Assessment"
+  words: 300
+  points:
+  - "Can you describe where things are in your city?"
+  - "Can you ask for and give directions?"
+  - "Can you ask where someone is from and say where you are from?"
+  - "Do you understand the difference between Де, Куди, and Звідки?"
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: reading-comprehension
+  focus: Read a city guide and answer true/false questions about locations and directions
+  items: 5
+- type: fill-in
+  focus: Comprehensive test of spatial cases (Locative, Accusative direction, Genitive origin)
+  items: 15
+- type: match-up
+  focus: Match situations with the correct question word (де/куди/звідки)
+  items: 8
+connects_to:
+- a1-037 (Food And Drink)
+prerequisites:
+- a1-035 (Around The City)
+grammar:
+- Comprehensive review of A1.5 (Euphony, Locative, Accusative direction, Genitive origin)
+register: розмовний
+references:
+- title: "Review of A1.5"
+  url: ""
+  notes: "Ensure the learner is completely solid on Де vs Куди before introducing direct objects in A1.6."

@@ -1,92 +1,76 @@
-module: a1-023
+module: a1-022
 level: A1
-sequence: 23
+sequence: 22
 slug: what-time-is-it
-version: '2.0'
+version: '1.0'
 title: What Time Is It?
-subtitle: Telling Time, Days, and Months
-focus: grammar
+subtitle: "Scheduling and Hours"
+focus: vocabulary
 pedagogy: PPP
-phase: A1.2 [Verbs & Sentences]
+phase: A1.4 [Time & Nature]
 word_target: 1200
 objectives:
-- Learner can ask and tell the time
-- Learner can name all days of the week
-- Learner can name all months of the year
-- Learner can use time prepositions correctly
+- Ask and tell the time on the hour
+- Schedule a meeting using "О котрій?"
+- Use time expressions as chunks (О першій, О другій)
 content_outline:
-- section: Вступ (Introduction)
-  words: 250
+- section: Діалоги (Dialogues)
+  words: 500
   points:
-  - 'Cultural hook: Ukrzaliznytsia (90%+ punctuality) as the backbone of Ukrainian resilience; learning to be «вчасно» (on
-    time) as a core value.'
-  - 'Communicative competence (Standard §4.2.3.4): Using the Vocative case and polite address forms: «Пане / пані, скажіть,
-    будь ласка, котра година?».'
-- section: Презентація часу (Time Presentation)
+  - "Dialogue 1 — Meeting a friend.
+    — Привіт! Котра година?
+    — Зараз друга година.
+    — Дякую!"
+  - "Dialogue 2 — Scheduling a meeting.
+    — О котрій ми зустрічаємося?
+    — О третій годині.
+    — Добре, до зустрічі о третій!"
+- section: "Котра година? (What time is it?)"
   words: 350
   points:
-  - 'Asking for time: Distinction between «Котра година?» (current time) and «О котрій?» (scheduled time for events or train
-    arrivals).'
-  - 'Hour identification: Using ordinal numbers in feminine gender (перша, друга). Learner error correction: translate ''It
-    is two o''clock'' as «Зараз друга година», not «два годин».'
-  - 'A1 simplicity (Standard §3.4): Prioritize ''telegraphic style'' (вісім тридцять) for minutes before introducing complex
-    fractions like «пів на» or «чверть».'
-- section: Дні та місяці (Days and Months)
+  - "Learn to ask 'Котра година?' (What time is it? / What hour is it?)"
+  - "Answer with 'Зараз...' + ordinal number for the hour (перша, друга, третя, четверта, п'ята... година)."
+  - "Note: Ukrainians use ordinal numbers for hours (the first hour, the second hour)."
+- section: "О котрій? (At what time?)"
   words: 350
   points:
-  - 'Days of the week: Grammar focus (§4.2.3.2.2) on «у/в» + Accusative case. Learner error: mimicking ''in/at'' with Locative
-    (*у понеділку) instead of correct «у понеділок».'
-  - 'Months and Seasons: Locative case (§4.2.3.3) for months (у січні). Note on orthography: unlike English, months and days
-    are lowercase in Ukrainian.'
-  - Associating months with weather and seasonal cycles in Ukraine to aid memorization.
-- section: Практика та розклад (Practice and Schedule)
-  words: 250
-  points:
-  - 'Register distinction: 24-hour format for official schedules (transport, digital) vs. 12-hour format for colloquial speech
-    («друга година дня» vs. «чотирнадцята година»).'
-  - 'Prepositions for planning: Using «о» (at), «до» (until), and «після» (after) to create a simple conductor''s shift schedule
-    or a daily routine.'
+  - "Learn to ask 'О котрій (годині)?' to schedule events."
+  - "Teach the answers as chunks in the locative case without deep grammar explanation: о першій, о другій, о третій, о четвертій, о п'ятій."
+  - "Practice scheduling simple actions using verbs from previous modules (працювати, читати, гуляти)."
 vocabulary_hints:
   required:
-  - година (hour) — котра година?, о першій годині, ціла година; High frequency (Core A1)
-  - хвилина (minute) — за п'ять хвилин, одна хвилина, 30 хвилин; High frequency (Core A1)
-  - день (day) — добрий день, робочий день, вихідний день; High frequency (Core A1)
-  - тиждень (week) — на цьому тижні, наступного тижня, дні тижня; High frequency (Core A1)
-  - місяць (month) — у цьому місяці, минулого місяця, зимові місяці; High frequency (Core A1)
-  - рік (year) — новий рік, цього року, минулого року; High frequency (Core A1)
-  - ранок (morning) — доброго ранку, о восьмій ранку, завтра вранці
-  - вечір (evening) — добрий вечір, сьогодні ввечері, о сьомій вечора
-  recommended:
-  - вчасно (on time) — бути вчасно, прийти вчасно, поїзд прибув вчасно; Med frequency (A1/A2)
-  - понеділок (Monday) — у понеділок, важкий понеділок; usage with Accusative
-  - січень (January) — у січні, перше січня; usage with Locative
+  - котра година (what time is it)
   - зараз (now)
-  - пізно (late)
-  - рано (early)
+  - година (hour)
   - о котрій (at what time)
+  - о першій (at one o'clock)
+  - о другій (at two o'clock)
+  - о третій (at three o'clock)
+  - о четвертій (at four o'clock)
+  - о п'ятій (at five o'clock)
+  recommended:
+  - зустріч (meeting)
+  - зустрічатися (to meet)
 activity_hints:
-- type: match-up
-  focus: Match times to clock faces
-  items: 20
+- type: matching
+  focus: Match the clock time to the written phrase
+  items: 12
 - type: fill-in
-  focus: Complete time expressions
-  items: 20
-- type: quiz
-  focus: Order days and months
-  items: 15
-- type: fill-in
-  focus: Schedule a meeting
-  items: 6
+  focus: Choose between 'Котра' and 'О котрій' based on context
+  items: 10
+- type: multiple-choice
+  focus: Answer scheduling questions based on a short schedule
+  items: 8
 connects_to:
-- a1-46 (Can, Must, Want - Modals)
-- a1-38 (My Daily Routine)
+- a1-023 (Days and Weeks)
 prerequisites:
-- a1-22 (Numbers and Money)
-persona:
-  voice: Patient Supportive Tutor
-  role: Ukrzaliznytsia Conductor
+- a1-013 (Numbers 1-10 - for base numbers)
+- a1-020 (My Morning Routine - for verbs)
 grammar:
-- Clock time expressions (Котра година?)
-- Time prepositions (о, до, після)
-- Days and months in context
+- "Asking for time: Котра година?"
+- "Scheduling time: О котрій? (chunks: о першій, о другій)"
 register: розмовний
+references:
+- title: "ULP Ep9: At the market"
+  url: "https://www.ukrainianlessons.com/episode9/"
+  notes: "Reference for numbers used in practical contexts (prices/time)."
