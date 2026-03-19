@@ -28,6 +28,7 @@ import yaml
 from content.video_discovery_helpers import (
     _default_qdrant_check,
     _search_blog_dbs,
+    build_discovery_keywords,  # noqa: F401 — re-exported for pipeline_v5
     cap_query,
     format_blog_discovery,
     format_rag_discovery,
@@ -617,7 +618,7 @@ def run_discovery(
                 import time
                 time.sleep(1.5)
             videos = search_channel(keywords, ch["handle"], max_results=max_per_channel)
-            searches_done += 1
+            searches_done += 1  # noqa: SIM113 — counter for rate-limiting, not loop index
             for v in videos:
                 if v["url"] not in seen_urls:
                     seen_urls.add(v["url"])
