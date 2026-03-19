@@ -2280,6 +2280,18 @@ def phase_content(ctx: ModuleContext, state: dict) -> bool:
             log("  content: Fixed Summary/Підсумок heading level (## → #)")
             raw = fixed
 
+        # Deterministic stress mark annotation
+        try:
+            from pipeline.stress_annotator import annotate_file
+            n_stressed = annotate_file(content_path)
+            if n_stressed > 0:
+                log(f"  content: Added stress marks to {n_stressed} Ukrainian words")
+                raw = content_path.read_text("utf-8")  # re-read after annotation
+        except ImportError:
+            log("  content: WARNING — stress annotator not available (pip install ukrainian-word-stress)")
+        except Exception as e:
+            log(f"  content: WARNING — stress annotation failed: {e}")
+
         # Gate 1: Word count
         if ctx.word_target:
             wc = len(clean_for_stats(raw).split())
