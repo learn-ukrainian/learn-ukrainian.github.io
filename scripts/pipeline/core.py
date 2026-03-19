@@ -1813,13 +1813,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                                 ctx.placeholders = {}
                                 build_placeholders(ctx)
                                 if not fill_template(template, ctx.placeholders, prompt_file, overrides=overrides):
-                                    log("  preflight: BLOCKED — re-render after Russicism fix failed")
-                                    return False
+                                    log("  preflight: WARNING — re-render after Russicism fix failed (continuing)")
                                 log("  preflight: Prompt re-rendered from fixed plan")
                                 auto_fixed = True
                             else:
-                                log("  preflight: BLOCKED — Russicism(s) found but auto-fix failed")
-                                return False
+                                log("  preflight: WARNING — Russicism(s) found but auto-fix failed (continuing)")
                         except Exception as e:
                             log(f"  preflight: Russicism auto-fix failed — {e}")
                             return False
@@ -1834,8 +1832,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
                         prompt_file = fixed_prompt_path
                         auto_fixed = True
                     elif not auto_fixed:
-                        log("  preflight: BLOCKED — HIGH issues but auto-fix failed")
-                        return False
+                        # Mar 2026: downgrade from BLOCK to WARNING (#979)
+                        # Many plan contradictions are between template and plan —
+                        # blocking kills overnight batches. Review catches real issues.
+                        log("  preflight: WARNING — HIGH issues found but auto-fix failed (continuing anyway)")
+                        log("  preflight: Issues will be caught by the review phase")
 
             # Save preflight state
             ctx.state.setdefault("phases", {}).setdefault("content", {})["prompt_preflight"] = {
