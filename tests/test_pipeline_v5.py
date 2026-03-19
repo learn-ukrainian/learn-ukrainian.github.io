@@ -681,17 +681,11 @@ class TestDiagnoseDedup:
         assert result is None  # Should NOT be systemic
 
     def test_targeted_codes_are_systemic(self):
-        """5+ targeted (non-diffuse) failures should trigger systemic."""
-        prompt = (
-            "## Constraints\nNo dative case.\n\n"
-            "Gate `Words` FAIL\n"
-            "Gate `Vocab` FAIL\n"
-            "Gate `Pedagogy` FAIL\n"
-            "[RUSSIAN_CHARACTERS] found ы\n"
-            "[GRAMMAR] bad agreement\n"
-            "[VOCAB_NOT_IN_CONTENT] missing word\n"
-        )
-        # 3 gates + 3 targeted ped = 6 >= 5
+        """15+ targeted (non-diffuse) failures should trigger systemic."""
+        gates = "".join(f"Gate `Gate{i}` FAIL\n" for i in range(10))
+        peds = "".join(f"[RUSSIAN_CHARACTERS] found {i}\n" for i in range(6))
+        prompt = f"## Constraints\nNo dative case.\n\n{gates}{peds}"
+        # 10 gates + 6 targeted ped = 16 >= 15
         result = _diagnose_dedup_cause(prompt, self._screen())
         assert result is not None
         assert result.startswith("systemic-")

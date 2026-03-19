@@ -128,6 +128,11 @@ _DIFFUSE_FAILURE_CODES = {
     "EXCESSIVE_METAPHOR",
     "THEORY_FRONTLOADING",
     "LOW_IMMERSION",
+    "INFO",              # Non-blocking informational (#980)
+    "HEADING_LEVEL",     # Non-blocking structural preference (#980)
+    "COMPLEXITY_WORD_COUNT",  # Quiz question length — not a content issue
+    "LLM_PERSONA_LEAK",  # Minor style issue
+    "INLINE_ENGLISH_IN_PROSE",  # Immersion style, not error
 }
 
 # Phase sequence — activities run AFTER review so prose is human-approved first
@@ -3052,7 +3057,10 @@ def _diagnose_dedup_cause(fix_prompt: str, screen: DScreenResult) -> str | None:
     ped_codes = re.findall(r'\[([A-Z_]{3,})\]', fix_prompt)
     targeted_ped_count = sum(1 for c in ped_codes if c not in _DIFFUSE_FAILURE_CODES)
     total_targeted = gate_fail_count + targeted_ped_count
-    if total_targeted >= 5:
+    # Mar 2026: raised from 5 to 15. Many "failures" are now non-blocking
+    # (INFO, HEADING_LEVEL removed from blocking). The precheck was killing
+    # 25/66 modules without even trying to fix them. (#980)
+    if total_targeted >= 15:
         return f"systemic-{total_targeted}-failures"
 
     return None
