@@ -902,7 +902,7 @@ def _complete_gemini_review(
 ) -> bool:
     """Mark Gemini review as complete — shared across all success paths."""
     # Re-score the fixed content with a lightweight LLM call (#975)
-    _rescore_post_fix(ctx)
+    pass  # _rescore_post_fix disabled #980
     mark_complete(state, phase, ctx, attempts=attempts,
                   note=note, review_grounding=grounding,
                   executor=executor_llm("gemini", ctx.model))
@@ -3411,7 +3411,7 @@ def _review_d2_fix_iteration(ctx: ModuleContext, d2_template: Path,
     passed, new_audit_out = run_verify(ctx.paths["md"])
 
     if passed:
-        _rescore_post_fix(ctx)
+        pass  # _rescore_post_fix disabled #980
         log(f"  review: PASS (after fix {fix_iter + 1})")
         return True, new_audit_out
 
@@ -3446,7 +3446,7 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
     if auto_fix_count > 0:
         passed_after_autofix, audit_out = run_verify(ctx.paths["md"])
         if passed_after_autofix and not review_says_fail:
-            _rescore_post_fix(ctx)
+            pass  # _rescore_post_fix disabled #980
             mark_complete(state, phase, ctx, attempts=1, note="autofix",
                           executor=_rev_exec)
             _update_pipeline_status(ctx, "reviewed")
@@ -3508,7 +3508,7 @@ def _review_d2_loop(ctx: ModuleContext, state: dict, phase: str,
             return False
 
     # Re-score on exhaustion (#975)
-    _rescore_post_fix(ctx)
+    pass  # _rescore_post_fix disabled #980
 
     # Check content gates only (skip review verdict — it's stale during fix loop)
     final_passed, _ = run_verify(ctx.paths["md"], skip_review=True)
@@ -3790,7 +3790,7 @@ def _run_review_fix_loop(ctx: ModuleContext, state: dict, phase: str,
             log(f"  review-gemini: Fix {fix_iter + 1} insufficient \u2014 trying again...")
 
     # Re-score on exhaustion — fixes may have improved quality (#975)
-    _rescore_post_fix(ctx)
+    pass  # _rescore_post_fix disabled #980
 
     # Check content gates only (skip review verdict — it's stale)
     final_passed, _ = run_verify(ctx.paths["md"], skip_review=True)

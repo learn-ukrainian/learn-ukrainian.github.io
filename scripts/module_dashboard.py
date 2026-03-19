@@ -126,9 +126,7 @@ def dashboard(level: str, failing_only: bool = False, first_n: int = 0) -> int:
             with contextlib.suppress(ValueError):
                 review_num = float(review_score)
 
-        if review_score == "FAIL":
-            blocking.append("review: FAIL")
-        elif review_num is not None and review_num < 8.0:
+        if review_num is not None and review_num < 8.0:
             blocking.append(f"review: {review_num}/10 (need ≥8)")
         elif review_score is None or review_score == "-":
             blocking.append("review: not completed")

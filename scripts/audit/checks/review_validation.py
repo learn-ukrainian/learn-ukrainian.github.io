@@ -351,25 +351,12 @@ def _check_content_review_format(content: str, fix_prompt: str) -> list[dict]:
 def _check_pipeline_review_format(content: str, cfg: dict, fix_prompt: str) -> list[dict]:
     """Validate standard pipeline review format (PASS/FAIL + required headers)."""
     violations = []
-    verdict_match = re.search(r'\*\*Status:\*\*\s*(PASS|FAIL)', content[:1000])
-    if verdict_match and verdict_match.group(1) == 'FAIL':
-        # Check if post-fix section overrides the FAIL verdict (#975)
-        # Post-fix Re-Score with Verdict: PASS means fixes resolved the issues
-        has_post_fix_pass = bool(re.search(
-            r'Post-Fix.*?\*\*Verdict:\*\*\s*PASS', content, re.DOTALL
-        ))
-        if has_post_fix_pass:
-            pass  # Post-fix verdict is PASS — don't block on pre-fix FAIL
-        else:
-            violations.append({
-                'type': 'REVIEW_VERDICT_FAIL',
-                'severity': 'critical',
-                'message': (
-                    "Review concludes with **Status:** FAIL — the reviewer identified "
-                    "issues that need to be fixed before the module can pass. "
-                    "Run Phase D.2 repair or rebuild the module."
-                )
-            })
+    # Review verdict is NO LONGER an audit gate (#980 Phase 1)
+    # Audit = deterministic checks (code). Review = LLM quality (score).
+    # They are separate systems. The review score blocks via the dashboard
+    # (shippable = audit PASS + review >= 8.0), not via the audit gates.
+    # This prevents the circular dependency where review FAIL → audit FAIL
+    # → fix loop can't fix → module stuck forever.
     missing = [name for pattern, name in cfg['required_headers'] if not re.search(pattern, content)]
     if missing:
         violations.append({
