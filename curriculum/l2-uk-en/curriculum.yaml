@@ -4,1914 +4,1836 @@ levels:
   a1:
     type: core
     modules:
-      # Phase A1.1: Script & First Contact (1-14)
-      - the-ukrainian-alphabet       # 1  Full alphabet overview + 10 practice letters (А О У І М Н Т К С Л)
-      - vowel-sounds                 # 2  10 vowel letters (А О У Е И І Я Ю Є Ї) + Й + stress
-      - consonant-sounds             # 3  22 consonants: sonorants, voiced/voiceless, hard/soft
-      - completing-the-alphabet      # 4  Ь, apostrophe, Ц Ч Щ Ф, ДЖ ДЗ → full mastery
-      - syllables-and-word-division   # 5  Syllable structure, word division (переніс)
-      - stress-and-intonation        # 6  Наголос, intonation patterns
-      - the-gender-code              # 7  Masculine/feminine/neuter
-      - greetings-and-politeness     # 8  Добрий ранок, Дякую, Ти vs Ви
-      - this-is-i-am                 # 9  Це..., Я..., Мене звати...
-      - my-world-objects             # 10 Concrete nouns, Що це?
-      - describing-things-adjectives # 11 ЯКИЙ?/ЯКА?/ЯКЕ?
-      - colors-and-clothing          # 12 Color adjectives, clothing
-      - plurals-and-alternation      # 13 Noun/adj plurals, vowel alternation
-      - checkpoint-first-contact     # 14 Checkpoint: script, gender, greetings
-      # Phase A1.2: Verbs & Sentences (15-24)
-      - the-living-verb-i            # 15 Present tense I (-ати)
-      - the-living-verb-ii           # 16 Present tense II (-ити)
-      - reflexive-verbs              # 17 -ся/-сь verbs
-      - questions-and-negation       # 18 Хто?/Що?/Де?/Куди? + Чи + бо
-      - likes-and-preferences        # 19 Мені подобається / Я люблю
-      - mine-and-yours               # 20 Possessive pronouns: мій/моя/моє
-      - demonstratives-this-that     # 21 Цей/ця/це/ці, той/та/те/ті
-      - numbers-and-money            # 22 Numbers 1-100, гривня
-      - what-time-is-it              # 23 Time, days, months
-      - checkpoint-sentences         # 24 Checkpoint: verbs, questions, possessives
-      # Phase A1.3: Cases & Navigation (25-34)
-      - the-vocative                 # 25 Voc: address forms — Мамо! пане Петре! (easiest case)
-      - the-accusative-i-things      # 26 Acc: inanimate direct objects (intro establishes nominative)
-      - the-accusative-ii-people     # 27 Acc: animate nouns + pronouns in acc
-      - accusative-prepositions      # 28 Acc with в/на (direction), за, через, про
-      - the-locative-where-things-are # 29 Loc: в/у + Loc, на + Loc + pronouns in loc
-      - around-the-city              # 30 City vocabulary + locative + acc/loc prepositions
-      - the-genitive-i-absence       # 31 Gen: немає + Gen, у мене є + pronouns in gen
-      - genitive-prepositions        # 32 Gen: біля, без, від, для, до + Gen
-      - adjective-case-forms         # 33 Adj agreement in nom/acc/loc (3 cases known)
-      - checkpoint-cases             # 34 Checkpoint: 4 required cases (nom/acc/loc/voc) + gen
-      # Phase A1.4: Tenses & Daily Life (35-44)
-      - direction-and-origin         # 35 Куди? (Acc, до+Gen), Звідки? (з+Gen)
-      - yesterday-past-tense         # 36 Past tense: -в/-ла/-ло/-ли
-      - tomorrow-future-tense        # 37 Analytical future + perfective preview
-      - my-daily-routine             # 38 Daily routine, sequence adverbs
-      - food-vocabulary              # 39 Food/drink vocab, Паляниця
-      - shopping-and-market          # 40 Скільки коштує?, shopping dialogues
-      - at-the-cafe                  # 41 Ordering, menu, payment
-      - description-adverbs          # 42 Adverbs of manner
-      - weather-and-nature           # 43 Weather, seasons, nature
-      - checkpoint-daily-life        # 44 Checkpoint: tenses, daily life
-      # Phase A1.5: Modals, Commands & Life (45-54)
-      - can-and-know-how             # 45 Могти vs вміти, можна
-      - must-and-want                # 46 Треба/потрібно, хотіти
-      - imperative-and-requests      # 47 8 verbs: читай, скажи, дай...
-      - body-and-health              # 48 Body parts, symptoms
-      - my-family                    # 49 Family + appearance vocabulary
-      - holidays-and-traditions      # 50 Holidays, birthday, Вітаю!
-      - leisure-and-hobbies          # 51 Hobbies, sports
-      - travel-and-transport         # 52 Station, airport, transport
-      - at-the-restaurant            # 53 Restaurant ordering, Будьмо!
-      - checkpoint-communication     # 54 Checkpoint: modals, imperatives
-      # Phase A1.6: Real-World Skills (55-64)
-      - prohibitions-and-signs       # 55 Не курити! signs, notices
-      - buying-tickets               # 56 Tickets for transport/events
-      - taking-transport             # 57 Metro, bus, marshrutka
-      - phone-basics                 # 58 Phone, SMS, messaging
-      - writing-skills               # 59 Postcards, forms, self-description
-      - at-the-market                # 60 Market, produce, Gen quantities
-      - at-the-store                 # 61 Store, sizes, returns
-      - emergencies                  # 62 Emergency 112, Допоможіть!
-      - euphony-and-polish           # 63 у/в, і/й, з/із/зі rules
-      - a1-final-exam                # 64 Final A1 assessment
+    - the-ukrainian-alphabet
+    - sounds-and-special-signs
+    - syllables-stress-intonation
+    - greetings-and-politeness
+    - who-am-i
+    - my-family
+    - checkpoint-first-contact
+    - my-room-gender
+    - describing-things
+    - colors-and-clothing
+    - many-things-plurals
+    - numbers-and-money
+    - this-and-that
+    - checkpoint-my-world
+    - what-i-like
+    - daily-verbs-group-1
+    - speaking-and-seeing-group-2
+    - i-want-i-can-i-must
+    - questions-and-no
+    - my-morning-routine
+    - checkpoint-actions
+    - what-time-is-it
+    - days-and-weeks
+    - months-and-seasons
+    - weather-and-nature
+    - my-daily-life
+    - free-time-and-hobbies
+    - checkpoint-time-nature
+    - where-is-it
+    - euphony-natural-flow
+    - my-city
+    - going-places
+    - transport
+    - where-are-you-from
+    - around-the-city
+    - checkpoint-places
+    - food-and-drink
+    - eating-and-drinking
+    - at-the-cafe
+    - shopping
+    - people-around-me
+    - adjectives-everywhere
+    - checkpoint-food-shopping
+    - hey-friend-vocative
+    - please-do-this
+    - give-me-i-like
+    - linking-ideas
+    - when-where-what
+    - holidays-and-traditions
+    - checkpoint-communication
+    - what-happened-past
+    - yesterday
+    - what-will-happen-future
+    - my-plans
+    - my-story
+    - body-and-health
+    - emergencies
+    - phone-and-writing
+    - a1-review
+    - a1-final-assessment
   a2:
     type: core
     modules:
-      # Phase A2.1: Cases (1-13) — all 7 cases + plural paradigms
-      - the-dative-i-pronouns        #  1 Dative pronouns
-      - the-dative-ii-nouns          #  2 Dative nouns
-      - dative-verbs                 #  3 Verbs governing Dative
-      - the-instrumental-i-accompaniment #  4 Instrumental: з + Inst
-      - the-instrumental-ii-means-and-tools #  5 Instrumental: means
-      - being-and-becoming           #  6 бути/стати + Instrumental
-      - spatial-prepositions         #  7 Spatial prepositions + cases
-      - logical-prepositions         #  8 Logical prepositions + cases
-      - plural-noun-declension       #  9 NEW — noun plural paradigms across all cases
-      - plural-adjective-declension  # 10 NEW — adjective plural forms across all cases
-      - all-cases-practice           # 11 MOVED — now after plural declension taught
-      - at-the-post-office-and-bank  # 12 Practical case usage
-      - checkpoint-cases             # 13 Checkpoint: all cases including plurals
-      # Phase A2.2: Aspect, Pronouns & Comparison (14-28)
-      - aspect-introduction          # 14 Aspect pairs overview
-      - the-completed-past           # 15 Perfective past
-      - future-plans-and-promises    # 16 Future tense + perfective future
-      - aspect-morphology            # 17 Prefix/suffix aspect formation
-      - aspect-mastery-pairs         # 18 50 essential aspect pairs
-      - possessive-sviy              # 19 свій vs його/її/їхній
-      - reflexive-sebe               # 20 NEW — себе/собі/собою declension + usage
-      - indefinite-negative-pronouns # 21 NEW — хтось/ніхто/будь-хто/ніщо
-      - bigger-better-stronger       # 22 Comparative adjectives/adverbs
-      - the-best-the-worst           # 23 Superlative forms
-      - preferences-and-choices      # 24 Expressing preferences
-      - numerals-and-nouns           # 25 Numbers 100+, ordinals
-      - numeral-case-agreement       # 26 NEW — number + noun case agreement
-      - if-i-were                    # 27 Conditional mood
-      - complete-imperative          # 28 Full imperative system
-      # Phase A2.3: Shopping, Complex Sentences & Health (29-40)
-      - smart-shopping               # 29 Shopping scenarios
-      - checkpoint-aspect-comparison # 30 Checkpoint: aspect + comparison
-      - telling-stories              # 31 Narrative past
-      - because-and-although         # 32 Causal/concessive clauses
-      - she-said-that                # 33 Reported speech
-      - i-think-that                 # 34 Opinion clauses
-      - i-feel-like                  # 35 Expressing feelings
-      - in-order-to                  # 36 Purpose clauses
-      - which-one                    # 37 Relative clauses
-      - time-clauses                 # 38 Temporal clauses
-      - health-and-body              # 39 CONSOLIDATED — body, symptoms, doctor, folk remedies
-      - checkpoint                   # 40 Checkpoint: sentences + health
-      # Phase A2.4: Word Formation (41-49)
-      - basic-motion-prefixes        # 41 Motion verb prefixes
-      - advanced-motion-prefixes     # 42 Complex motion prefixes
-      - action-verb-prefixes         # 43 Action verb prefixes
-      - adjective-suffixes-qualities # 44 Quality adjective suffixes
-      - adjective-suffixes-types     # 45 Type adjective suffixes
-      - root-families-i              # 46 Word families I
-      - root-families-ii             # 47 Word families II
-      - wf-mastery                   # 48 Word formation mastery
-      - checkpoint-word-formation    # 49 Checkpoint: word formation
-      # Phase A2.5: Vocabulary Expansion (50-60)
-      - food-and-cooking             # 50 Food vocabulary
-      - home-and-furniture           # 51 Home vocabulary
-      - nature-and-weather           # 52 Nature vocabulary
-      - emotions-personality         # 53 Emotions vocabulary
-      - work-professions             # 54 Work vocabulary
-      - technology-media             # 55 Technology vocabulary
-      - hobbies-leisure              # 56 Hobbies vocabulary
-      - education-learning           # 57 Education vocabulary
-      - shopping-services            # 58 Shopping vocabulary
-      - sports-fitness               # 59 Sports vocabulary
-      - checkpoint-full-grammar      # 60 Checkpoint: vocabulary + grammar
-      # Phase A2.6: Practical Scenarios (61-72)
-      - practical-intro              # 61 Practical skills intro
-      - practical-warm-up            # 62 Warm-up scenarios
-      - at-the-pharmacy              # 63 Pharmacy interaction
-      - hotel-accommodation          # 64 Hotel booking
-      - rental-accommodation         # 65 Rental scenarios
-      - scheduling-appointments      # 66 Appointment scheduling
-      - scheduling-interviews        # 67 Interview scheduling
-      - giving-directions            # 68 Giving directions
-      - asking-for-directions        # 69 Asking for directions
-      - social-media-ukrainian       # 70 Social media
-      - texting-messaging            # 71 Texting/messaging
-      - online-services              # 72 Online services
-      # Phase A2.7: Participles, Gerunds & Exam (73-76)
-      - participles-passive          # 73 SPLIT — passive participles (-ний/-тий)
-      - impersonal-passive           # 74 NEW — -но/-то forms (Зроблено в Україні)
-      - gerunds-intro                # 75 NEW — gerunds (-ючи/-ачи, -вши/-ши)
-      - a2-final-exam                # 76 Final A2 exam
+    - the-dative-i-pronouns
+    - the-dative-ii-nouns
+    - dative-verbs
+    - the-instrumental-i-accompaniment
+    - the-instrumental-ii-means-and-tools
+    - being-and-becoming
+    - spatial-prepositions
+    - logical-prepositions
+    - plural-noun-declension
+    - plural-adjective-declension
+    - all-cases-practice
+    - at-the-post-office-and-bank
+    - checkpoint-cases
+    - aspect-introduction
+    - the-completed-past
+    - future-plans-and-promises
+    - aspect-morphology
+    - aspect-mastery-pairs
+    - possessive-sviy
+    - reflexive-sebe
+    - indefinite-negative-pronouns
+    - bigger-better-stronger
+    - the-best-the-worst
+    - preferences-and-choices
+    - numerals-and-nouns
+    - numeral-case-agreement
+    - if-i-were
+    - complete-imperative
+    - smart-shopping
+    - checkpoint-aspect-comparison
+    - telling-stories
+    - because-and-although
+    - she-said-that
+    - i-think-that
+    - i-feel-like
+    - in-order-to
+    - which-one
+    - time-clauses
+    - health-and-body
+    - checkpoint
+    - basic-motion-prefixes
+    - advanced-motion-prefixes
+    - action-verb-prefixes
+    - adjective-suffixes-qualities
+    - adjective-suffixes-types
+    - root-families-i
+    - root-families-ii
+    - wf-mastery
+    - checkpoint-word-formation
+    - food-and-cooking
+    - home-and-furniture
+    - nature-and-weather
+    - emotions-personality
+    - work-professions
+    - technology-media
+    - hobbies-leisure
+    - education-learning
+    - shopping-services
+    - sports-fitness
+    - checkpoint-full-grammar
+    - practical-intro
+    - practical-warm-up
+    - at-the-pharmacy
+    - hotel-accommodation
+    - rental-accommodation
+    - scheduling-appointments
+    - scheduling-interviews
+    - giving-directions
+    - asking-for-directions
+    - social-media-ukrainian
+    - texting-messaging
+    - online-services
+    - participles-passive
+    - impersonal-passive
+    - gerunds-intro
+    - a2-final-exam
   b1:
     type: core
     modules:
-      # ── Phase B1.1: Meta-Language & Phonetics (1-8) ──
-      - how-to-talk-about-grammar        #  1
-      - language-about-verbs              #  2
-      - reading-grammar-rules             #  3
-      - sentence-structure                #  4
-      - ready-for-immersion               #  5
-      - phonetics-assimilation            #  6 MOVED from M93, narrowed: voicing + softness + -ться
-      - phonetics-alternation-simplification #  7 NEW SPLIT — cluster simplification + alternations
-      - stress-mobility-euphony           #  8 NEW — §4.1.2 mobile stress + §4.1.3 advanced euphony
-      # ── Phase B1.2: Aspect Mastery (9-18) ──
-      - aspect-complete-system            #  9
-      - aspect-past-single-repeated       # 10
-      - aspect-past-result-process        # 11
-      - aspect-future                     # 12
-      - aspect-negation                   # 13
-      - aspect-in-imperatives             # 14
-      - aspect-pairs-essential-40         # 15
-      - work-week-aspect-in-action        # 16
-      - aspect-integration-practice       # 17
-      - checkpoint-aspect-mastery         # 18
-      # ── Phase B1.3: Motion Verbs (19-28) ──
-      - motion-verbs-full-system          # 19
-      - motion-coming-going               # 20
-      - motion-passing-crossing           # 21
-      - motion-starting-returning         # 22
-      - motion-approaching-departing      # 23
-      - motion-figurative-uses            # 24
-      - motion-full-prefix-integration    # 25
-      - motion-patterns-other-verbs       # 26
-      - motion-practice-integration       # 27
-      - checkpoint-motion-verbs           # 28
-      # ── Phase B1.4: Pronouns & Complex Sentences I (29-38) ──
-      - indefinite-negative-pronouns      # 29 MOVED from M92 — before relative clauses
-      - relative-clauses-yakyi            # 30
-      - relative-clauses-de-kudy-zvidky   # 31
-      - relative-clauses-koly-shcho       # 32
-      - purpose-shchob-infinitive         # 33
-      - purpose-shchob-past-form          # 34
-      - conditionals-real-yakshcho        # 35
-      - conditionals-unreal-yakby         # 36
-      - conditionals-mixed-complex        # 37
-      - checkpoint-complex-sentences-1    # 38
-      # ── Phase B1.5: Complex Sentences II (39-45) ──
-      - concessive-khocha                 # 39
-      - causal-result-clauses             # 40
-      - temporal-clauses                  # 41
-      - complex-sentence-integration      # 42
-      - reported-statements               # 43
-      - reported-questions-commands        # 44
-      - checkpoint-complex-sentences-2    # 45
-      # ── Phase B1.6: Participles & Advanced Grammar (46-56) ──
-      - active-participles-phrases        # 46 REORDERED: participles before adverbial
-      - past-passive-participles-1        # 47
-      - past-passive-participles-2        # 48
-      - passive-constructions             # 49
-      - one-member-sentences              # 50 NEW SPLIT — before adverbial participles
-      - adverbial-participles-imperfective # 51 REORDERED: adverbial after participles
-      - adverbial-participles-perfective  # 52
-      - diminutives-master-class          # 53
-      - numerals-collectives-fractions    # 54
-      - integrated-grammar-lab            # 55 narrowed: one-member sentences extracted
-      - checkpoint-advanced-grammar       # 56
-      # ── Phase B1.7: Word Formation & Lexicology (57-70) ──
-      - word-formation-nouns              # 57 NEW — §4.3.3 noun suffixes/prefixes
-      - word-formation-modifiers          # 58 NEW — §4.3.6-7 adjective/adverb formation
-      - possessive-short-adjectives       # 59 MOVED from B1.6 — possessive adj + short-form adj
-      - adjective-comparison              # 60 NEW — synthetic + analytic comparison forms
-      - synonymy-thinking-verbs           # 61
-      - synonymy-speaking-verbs           # 62
-      - antonyms-polysemy                 # 63 NEW — антоніми + багатозначність
-      - homonyms-paronyms                 # 64 NEW — омоніми + пароніми
-      - collocations-expressions          # 65
-      - abstract-concepts-ideas           # 66
-      - abstract-concepts-processes       # 67
-      - expressing-opinions               # 68
-      - agreement-disagreement            # 69
-      - discourse-markers-basic           # 70
-      # ── Phase B1.8: Communication & Society (71-81) ──
-      - discourse-markers-advanced        # 71
-      - describing-changes                # 72
-      - media-news                        # 73
-      - society-politics                  # 74
-      - professional-communication        # 75
-      - environment-ecology               # 76
-      - health-wellness                   # 77
-      - emotions-deep-dive                # 78
-      - relationships                     # 79
-      - business-basics                   # 80
-      - travel-geography                  # 81
-      # ── Phase B1.9: Culture & Regions (82-90) ──
-      - emotional-intelligence            # 82
-      - regions-west                      # 83
-      - regions-east                      # 84
-      - regions-south                     # 85
-      - regions-center                    # 86
-      - ukrainian-music-today             # 87
-      - ukrainian-cinema-and-tv           # 88
-      - technology-and-startups           # 89
-      - sports-in-ukraine                 # 90
-      # ── Phase B1.10: Lifestyle, Media & Final (91-103) ──
-      - active-lifestyle                  # 91
-      - running-in-ukraine                # 92
-      - mountains-trail                   # 93
-      - cycling-water                     # 94
-      - winter-sports                     # 95
-      - ukrainian-cuisine                 # 96
-      - ukrainski-sviata-ta-festyvali     # 97
-      - novyny-yak-chytaty                # 98
-      - interviu-ta-podkasty              # 99
-      - communication-channels            # 100
-      - presentations-visuals             # 101
-      - feedback-negotiation-complaints   # 102
-      - b1-final-exam                     # 103
+    - how-to-talk-about-grammar
+    - language-about-verbs
+    - reading-grammar-rules
+    - sentence-structure
+    - ready-for-immersion
+    - phonetics-assimilation
+    - phonetics-alternation-simplification
+    - stress-mobility-euphony
+    - aspect-complete-system
+    - aspect-past-single-repeated
+    - aspect-past-result-process
+    - aspect-future
+    - aspect-negation
+    - aspect-in-imperatives
+    - aspect-pairs-essential-40
+    - work-week-aspect-in-action
+    - aspect-integration-practice
+    - checkpoint-aspect-mastery
+    - motion-verbs-full-system
+    - motion-coming-going
+    - motion-passing-crossing
+    - motion-starting-returning
+    - motion-approaching-departing
+    - motion-figurative-uses
+    - motion-full-prefix-integration
+    - motion-patterns-other-verbs
+    - motion-practice-integration
+    - checkpoint-motion-verbs
+    - indefinite-negative-pronouns
+    - relative-clauses-yakyi
+    - relative-clauses-de-kudy-zvidky
+    - relative-clauses-koly-shcho
+    - purpose-shchob-infinitive
+    - purpose-shchob-past-form
+    - conditionals-real-yakshcho
+    - conditionals-unreal-yakby
+    - conditionals-mixed-complex
+    - checkpoint-complex-sentences-1
+    - concessive-khocha
+    - causal-result-clauses
+    - temporal-clauses
+    - complex-sentence-integration
+    - reported-statements
+    - reported-questions-commands
+    - checkpoint-complex-sentences-2
+    - active-participles-phrases
+    - past-passive-participles-1
+    - past-passive-participles-2
+    - passive-constructions
+    - one-member-sentences
+    - adverbial-participles-imperfective
+    - adverbial-participles-perfective
+    - diminutives-master-class
+    - numerals-collectives-fractions
+    - integrated-grammar-lab
+    - checkpoint-advanced-grammar
+    - word-formation-nouns
+    - word-formation-modifiers
+    - possessive-short-adjectives
+    - adjective-comparison
+    - synonymy-thinking-verbs
+    - synonymy-speaking-verbs
+    - antonyms-polysemy
+    - homonyms-paronyms
+    - collocations-expressions
+    - abstract-concepts-ideas
+    - abstract-concepts-processes
+    - expressing-opinions
+    - agreement-disagreement
+    - discourse-markers-basic
+    - discourse-markers-advanced
+    - describing-changes
+    - media-news
+    - society-politics
+    - professional-communication
+    - environment-ecology
+    - health-wellness
+    - emotions-deep-dive
+    - relationships
+    - business-basics
+    - travel-geography
+    - emotional-intelligence
+    - regions-west
+    - regions-east
+    - regions-south
+    - regions-center
+    - ukrainian-music-today
+    - ukrainian-cinema-and-tv
+    - technology-and-startups
+    - sports-in-ukraine
+    - active-lifestyle
+    - running-in-ukraine
+    - mountains-trail
+    - cycling-water
+    - winter-sports
+    - ukrainian-cuisine
+    - ukrainski-sviata-ta-festyvali
+    - novyny-yak-chytaty
+    - interviu-ta-podkasty
+    - communication-channels
+    - presentations-visuals
+    - feedback-negotiation-complaints
+    - b1-final-exam
   b2:
     type: core
     modules:
-      # ── Phase B2.1: Voice & Participles (1-10) ──
-      - passive-voice-system              #  1
-      - past-passive-participles          #  2
-      - b2-impersonal-passive             #  3 RENAMED (avoid A2 cross-level conflict)
-      - reflexive-passive                 #  4
-      - third-person-plural-passive       #  5
-      - passive-in-context                #  6
-      - active-participles-present        #  7
-      - active-participles-past           #  8
-      - participles-vs-relative-clauses   #  9
-      - checkpoint-passive-voice          # 10
-      # ── Phase B2.2: Syntax Mastery (11-24) — Grade 8 foundations ──
-      - phrases-word-combinations         # 11 NEW — словосполучення types
-      - predicate-types                   # 12 NEW — 3 predicate types
-      - secondary-sentence-members        # 13 NEW — додаток, означення, обставина, прикладка
-      - b2-one-member-sentences           # 14 RENAMED (avoid B1 cross-level conflict)
-      - homogeneous-members               # 15 NEW — однорідні + узагальнюючі слова
-      - parenthetical-expressions         # 16
-      - detached-members                  # 17 NEW — відокремлені члени (5 subtypes)
-      - multi-clause-sentences            # 18
-      - correlative-constructions         # 19 MOVED from old M43
-      - emphasis-and-inversion            # 20
-      - stylistic-connectors              # 21
-      - complex-syntax-ellipsis-parcelling # 22 MOVED from old M44
-      - direct-indirect-speech            # 23 NEW — пряма/непряма мова, цитування
-      - checkpoint-syntax                 # 24 NEW
-      # ── Phase B2.2b: Stylistic Foundations (25-27) ──
-      - phonetic-stylistic-devices        # 25 NEW — alliteration, assonance, onomatopoeia
-      - lexical-stylistic-devices         # 26 NEW — metaphor, metonymy, synecdoche, epithet, oxymoron
-      - syntactic-stylistic-devices       # 27 NEW — anaphora, epistrophe, parallelism, chiasmus
-      # ── Phase B2.3: Register System (28-38) — compressed 12→10 ──
-      - register-introduction             # 28
-      - register-formal-informal          # 29
-      - register-business-ukrainian       # 30
-      - register-academic-technical       # 31 MERGED (academic + technical)
-      - register-official-legal           # 32
-      - register-literary-ukrainian       # 33
-      - register-media-journalistic       # 34
-      - register-colloquial-style         # 35
-      - register-religious-ukrainian      # 36 EXPANDED (all faiths in Ukraine)
-      - register-practice-cross-register-rewriting # 37
-      - checkpoint-register               # 38 RENAMED from checkpoint-register-synthesis
-      # ── Phase B2.4: Domain Vocabulary (39-42) ──
-      - politics-government-vocabulary    # 39
-      - law-justice-vocabulary            # 40
-      - economics-business-vocabulary     # 41
-      - checkpoint-domain                 # 42 RENAMED from b21-checkpoint
-      # ── Phase B2.5: Advanced Morphology (43-56) ──
-      - aspect-nuances-secondary-imperfectivization # 43
-      - aspect-nuances-imperative-infinitive        # 44
-      - pluperfect-tense                  # 45 MOVED from isolated old M94
-      - conditional-mood-particles        # 46 NEW — умовний спосіб + частки + вигуки
-      - numeral-declension-time-dates     # 47
-      - numeral-declension-compound-numbers # 48
-      - word-formation-person-suffixes    # 49
-      - word-formation-abstract-nouns     # 50
-      - word-formation-place-object-names # 51
-      - word-formation-adjective-formation # 52
-      - word-formation-adverbs-integration # 53
-      - advanced-conjunctions-i           # 54 MOVED from old M67
-      - advanced-conjunctions-ii          # 55 MOVED from old M68
-      - checkpoint-morphology             # 56 RENAMED from b21c-checkpoint
-      # ── Phase B2.5b: Advanced Case Semantics (57) ──
-      - advanced-case-semantics           # 57 NEW — partitive genitive, ethical dative, instrumental comparison
-      # ── Phase B2.6: Lexicology (58-68) — synonyms 12→3, phraseology 10→6 ──
-      - synonymy-types-and-rows           # 58 NEW — absolute, contextual, stylistic
-      - synonymy-in-registers             # 59 NEW — synonym selection across styles
-      - synonymy-practice-precision       # 60 NEW — precision drills
-      - proverbs-work-wisdom-character    # 61
-      - proverbs-nature-time-caution      # 62
-      - set-expressions-combined          # 63 MERGED (i + ii)
-      - idioms-somatic                    # 64 MERGED (head-face + hands-legs + body)
-      - idioms-animals                    # 65 MERGED (animals-i + animals-ii)
-      - idioms-nature                     # 66
-      - neologisms-borrowings             # 67 NEW — неологізми, запозичення
-      - checkpoint-lexicology             # 68 RENAMED from b2-checkpoint
-      # ── Phase B2.7: Communication Skills (69-80) ──
-      - professional-email-basics         # 69
-      - professional-email-advanced       # 70
-      - professional-reports-basics       # 71
-      - professional-reports-advanced     # 72
-      - academic-writing                  # 73
-      - text-analysis                     # 74
-      - news-analysis-basics              # 75
-      - news-analysis-advanced            # 76
-      - presentation-skills-basics        # 77
-      - presentation-skills-advanced      # 78
-      - discussion-debate                 # 79
-      - checkpoint-communication          # 80 NEW
-      # ── Phase B2.8: Culture & Thematic (81-85) ──
-      - tekhnolohii-ta-shi               # 81
-      - nauka-i-doslidzhennia            # 82
-      - mystetstvo-i-literatura          # 83
-      - modern-diaspora                  # 84
-      - religion-in-ukraine              # 85
-      # ── Phase B2.9: Capstone & Final (86-89) ──
-      - capstone-research                # 86
-      - capstone-prezentatsiya           # 87
-      - b2-pidsumkovyy-ohlyad           # 88
-      - b2-final-exam                    # 89
+    - passive-voice-system
+    - past-passive-participles
+    - b2-impersonal-passive
+    - reflexive-passive
+    - third-person-plural-passive
+    - passive-in-context
+    - active-participles-present
+    - active-participles-past
+    - participles-vs-relative-clauses
+    - checkpoint-passive-voice
+    - phrases-word-combinations
+    - predicate-types
+    - secondary-sentence-members
+    - b2-one-member-sentences
+    - homogeneous-members
+    - parenthetical-expressions
+    - detached-members
+    - multi-clause-sentences
+    - correlative-constructions
+    - emphasis-and-inversion
+    - stylistic-connectors
+    - complex-syntax-ellipsis-parcelling
+    - direct-indirect-speech
+    - checkpoint-syntax
+    - phonetic-stylistic-devices
+    - lexical-stylistic-devices
+    - syntactic-stylistic-devices
+    - register-introduction
+    - register-formal-informal
+    - register-business-ukrainian
+    - register-academic-technical
+    - register-official-legal
+    - register-literary-ukrainian
+    - register-media-journalistic
+    - register-colloquial-style
+    - register-religious-ukrainian
+    - register-practice-cross-register-rewriting
+    - checkpoint-register
+    - politics-government-vocabulary
+    - law-justice-vocabulary
+    - economics-business-vocabulary
+    - checkpoint-domain
+    - aspect-nuances-secondary-imperfectivization
+    - aspect-nuances-imperative-infinitive
+    - pluperfect-tense
+    - conditional-mood-particles
+    - numeral-declension-time-dates
+    - numeral-declension-compound-numbers
+    - word-formation-person-suffixes
+    - word-formation-abstract-nouns
+    - word-formation-place-object-names
+    - word-formation-adjective-formation
+    - word-formation-adverbs-integration
+    - advanced-conjunctions-i
+    - advanced-conjunctions-ii
+    - checkpoint-morphology
+    - advanced-case-semantics
+    - synonymy-types-and-rows
+    - synonymy-in-registers
+    - synonymy-practice-precision
+    - proverbs-work-wisdom-character
+    - proverbs-nature-time-caution
+    - set-expressions-combined
+    - idioms-somatic
+    - idioms-animals
+    - idioms-nature
+    - neologisms-borrowings
+    - checkpoint-lexicology
+    - professional-email-basics
+    - professional-email-advanced
+    - professional-reports-basics
+    - professional-reports-advanced
+    - academic-writing
+    - text-analysis
+    - news-analysis-basics
+    - news-analysis-advanced
+    - presentation-skills-basics
+    - presentation-skills-advanced
+    - discussion-debate
+    - checkpoint-communication
+    - tekhnolohii-ta-shi
+    - nauka-i-doslidzhennia
+    - mystetstvo-i-literatura
+    - modern-diaspora
+    - religion-in-ukraine
+    - capstone-research
+    - capstone-prezentatsiya
+    - b2-pidsumkovyy-ohlyad
+    - b2-final-exam
   c1:
     type: core
     modules:
-      # Phase C1.1: Academic Writing & Research [20 modules]
-      - b2-review-bridge                     # 1
-      - academic-style-markers               # 2
-      - research-verbs                       # 3
-      - analysis-vocabulary                  # 4
-      - logical-connectors                   # 5
-      - hedging-modality                     # 6
-      - citation-reference                   # 7
-      - essay-structure                      # 8
-      - thesis-development                   # 9
-      - counterarguments                     # 10
-      - summary-paraphrase                   # 11
-      - research-article                     # 12
-      - abstract-writing                     # 13
-      - literature-review                    # 14
-      - oral-presentations                   # 15
-      - advanced-punctuation                 # 16
-      - irregular-verbs-complete             # 17
-      - essay-writing-practice               # 18
-      - practice-ii-article-critique         # 19
-      - c1-1-checkpoint                      # 20
-      # Phase C1.2: Professional Communication [9 modules]
-      - cv-resume-writing                    # 21
-      - job-interview                        # 22
-      - business-etiquette                   # 23
-      - digital-communication               # 24
-      - political-system                     # 25
-      - media-landscape                      # 26
-      - global-context                       # 27
-      - economics-vocabulary-c1             # 28
-      - science-technology-c1               # 29
-      # Phase C1.3: Мовознавство & Sociolinguistics [15 modules]
-      - zahalne-movoznavstvo                 # 30
-      - dialects-of-ukrainian                # 31
-      - surzhyk                              # 32
-      - history-of-language                  # 33
-      - diaspora-ukrainian                   # 34
-      - leksykolohiia-c1                     # 35
-      - morfolohichna-norma-c1               # 36
-      - imperative-mastery                   # 37
-      - numeral-mastery-c1                   # 38
-      - tekstoznavstvo                       # 39
-      - professional-scenarios               # 40
-      - case-studies                         # 41
-      - review                               # 42
-      - speaking-practice                    # 43
-      - checkpoint-movoznavstvo              # 44
-      # Phase C1.4: Complex Sentences [8 modules]
-      - skladnosuriadne-rechennia            # 45
-      - skladnopidriadne-oznachalne-zyasuvalne  # 46
-      - skladnopidriadne-obstavynne          # 47
-      - asyndetic-semantics                  # 48
-      - combined-complex-sentences           # 49
-      - complex-sentence-practice            # 50
-      - one-member-sentences-c1             # 51
-      - checkpoint-complex-sentences         # 52
-      # Phase C1.5: Stylistics & Rhetoric [20 modules]
-      - metaphor-simile                      # 53
-      - irony-sarcasm                        # 54
-      - hyperbole-litotes                    # 55
-      - euphemism-taboo                      # 56
-      - rhetorical-questions                 # 57
-      - fonetychni-stylistychni-zasoby       # 58
-      - morfolohichni-stylistychni-zasoby    # 59
-      - syntaksychni-stylistychni-zasoby     # 60
-      - frazeolohichni-stylistychni-zasoby   # 61
-      - degrees-of-certainty                 # 62
-      - politeness-strategies                # 63
-      - high-formal-register                 # 64
-      - intimate-register                    # 65
-      - slang-youth                          # 66
-      - persuasive-speech                    # 67
-      - istoriia-ukrainskoi-literatury       # 68
-      - literaturoznavcha-terminolohiia      # 69
-      - analiz-poezii                        # 70
-      - review-c1-5                          # 71
-      - checkpoint-c1-5                      # 72
-      # Phase C1.6: Folk Culture & Traditions [23 modules]
-      - kobzari-bandura                      # 73
-      - ritual-songs                         # 74
-      - kolyskovi-ta-dumy                    # 75
-      - hopak-i-kozachok                     # 76
-      - rehionalni-tantsi                    # 77
-      - pysanky                              # 78
-      - vyshyvanka                           # 79
-      - honcharstvo-ta-rizbyarstvo           # 80
-      - narodna-mifolohiia                   # 81
-      - narodna-medytsyna                    # 82
-      - kozatski-lehendy                     # 83
-      - kazky-ta-prytchi                     # 84
-      - zymovi-obriady                       # 85
-      - vesna-ta-lito                        # 86
-      - khrestyny-ta-vesillia                # 87
-      - pomynalni-obriady                    # 88
-      - halychyna                            # 89
-      - traditional-clothing                 # 90
-      - ukrainian-cuisine-traditions         # 91
-      - ukrainian-house                      # 92
-      - podillia-ta-volyn                    # 93
-      - praktyka-1-narodna-kultura           # 94
-      - checkpoint-folk-culture              # 95
-      # Phase C1.7: Fine Arts & High Culture [16 modules]
-      - ukrainian-avant-garde                # 96
-      - klasychna-muzyka-1-vytoky            # 97
-      - klasychna-muzyka-2-natsionalna-shkola  # 98
-      - klasychna-muzyka-3-modernizm-i-suchasnist  # 99
-      - operne-mystetstvo                    # 100
-      - vokalne-mystetstvo                   # 101
-      - obrazotvorche-mystetstvo-1           # 102
-      - obrazotvorche-mystetstvo-2           # 103
-      - balet-i-tanets                       # 104
-      - teatralne-mystetstvo-1               # 105
-      - teatralne-mystetstvo-2               # 106
-      - ukrainska-arkhitektura               # 107
-      - suchasna-muzyka                      # 108
-      - ukrainske-kino                       # 109
-      - praktyka-2-vysoke-mystetstvo         # 110
-      - c1-final-checkpoint                  # 111
+    - b2-review-bridge
+    - academic-style-markers
+    - research-verbs
+    - analysis-vocabulary
+    - logical-connectors
+    - hedging-modality
+    - citation-reference
+    - essay-structure
+    - thesis-development
+    - counterarguments
+    - summary-paraphrase
+    - research-article
+    - abstract-writing
+    - literature-review
+    - oral-presentations
+    - advanced-punctuation
+    - irregular-verbs-complete
+    - essay-writing-practice
+    - practice-ii-article-critique
+    - c1-1-checkpoint
+    - cv-resume-writing
+    - job-interview
+    - business-etiquette
+    - digital-communication
+    - political-system
+    - media-landscape
+    - global-context
+    - economics-vocabulary-c1
+    - science-technology-c1
+    - zahalne-movoznavstvo
+    - dialects-of-ukrainian
+    - surzhyk
+    - history-of-language
+    - diaspora-ukrainian
+    - leksykolohiia-c1
+    - morfolohichna-norma-c1
+    - imperative-mastery
+    - numeral-mastery-c1
+    - tekstoznavstvo
+    - professional-scenarios
+    - case-studies
+    - review
+    - speaking-practice
+    - checkpoint-movoznavstvo
+    - skladnosuriadne-rechennia
+    - skladnopidriadne-oznachalne-zyasuvalne
+    - skladnopidriadne-obstavynne
+    - asyndetic-semantics
+    - combined-complex-sentences
+    - complex-sentence-practice
+    - one-member-sentences-c1
+    - checkpoint-complex-sentences
+    - metaphor-simile
+    - irony-sarcasm
+    - hyperbole-litotes
+    - euphemism-taboo
+    - rhetorical-questions
+    - fonetychni-stylistychni-zasoby
+    - morfolohichni-stylistychni-zasoby
+    - syntaksychni-stylistychni-zasoby
+    - frazeolohichni-stylistychni-zasoby
+    - degrees-of-certainty
+    - politeness-strategies
+    - high-formal-register
+    - intimate-register
+    - slang-youth
+    - persuasive-speech
+    - istoriia-ukrainskoi-literatury
+    - literaturoznavcha-terminolohiia
+    - analiz-poezii
+    - review-c1-5
+    - checkpoint-c1-5
+    - kobzari-bandura
+    - ritual-songs
+    - kolyskovi-ta-dumy
+    - hopak-i-kozachok
+    - rehionalni-tantsi
+    - pysanky
+    - vyshyvanka
+    - honcharstvo-ta-rizbyarstvo
+    - narodna-mifolohiia
+    - narodna-medytsyna
+    - kozatski-lehendy
+    - kazky-ta-prytchi
+    - zymovi-obriady
+    - vesna-ta-lito
+    - khrestyny-ta-vesillia
+    - pomynalni-obriady
+    - halychyna
+    - traditional-clothing
+    - ukrainian-cuisine-traditions
+    - ukrainian-house
+    - podillia-ta-volyn
+    - praktyka-1-narodna-kultura
+    - checkpoint-folk-culture
+    - ukrainian-avant-garde
+    - klasychna-muzyka-1-vytoky
+    - klasychna-muzyka-2-natsionalna-shkola
+    - klasychna-muzyka-3-modernizm-i-suchasnist
+    - operne-mystetstvo
+    - vokalne-mystetstvo
+    - obrazotvorche-mystetstvo-1
+    - obrazotvorche-mystetstvo-2
+    - balet-i-tanets
+    - teatralne-mystetstvo-1
+    - teatralne-mystetstvo-2
+    - ukrainska-arkhitektura
+    - suchasna-muzyka
+    - ukrainske-kino
+    - praktyka-2-vysoke-mystetstvo
+    - c1-final-checkpoint
   hist:
     type: track
     modules:
-      - trypillian-civilization
-      - scythians-sarmatians
-      - greeks-crimea-olbia
-      - sloviany-origins
-      - slavic-tribes
-      - zasnuvannia-kyieva
-      - khozary-i-sloviany
-      - syntez-vytoky-1
-      - oleh-ihor
-      - olha-sviatoslav
-      - volodymyr-khreshchennia
-      - yaroslav-wise
-      - ruska-pravda
-      - sofiya-kyivska
-      - volodymyr-monomakh
-      - kultura-kyivskoi-rusi
-      - kniazivski-usobiytsi
-      - ludy-rusi
-      - rus-ta-susidy
-      - syntez-kyivska-rus
-      - mongolska-navala
-      - mykhailo-chernigivskyi
-      - danylo-halytskyi
-      - galytsko-volynska-derzhava
-      - boiare-i-shliakhta
-      - kinets-halytsko-volyni
-      - krymske-khanstvo
-      - syntez-dvokniazivstvo
-      - velyke-kniazivstvo-lytovske
-      - ukrainski-zemli-u-vkl
-      - liublinska-uniia
-      - rich-pospolyta
-      - beresteyska-uniia
-      - pravoslavna-tserkva-17
-      - petro-mohyla
-      - bratstva-i-osvita
-      - bukovyna-zakarpattia
-      - slobozhanshchyna
-      - liudy-ricchi-pospolytoi
-      - syntez-lytva-polska
-      - kozatstvo-vytoky
-      - zaporizka-sich
-      - dmytro-vyshnevetskyi
-      - kozatski-povstannia-16
-      - petro-sahaidachnyi
-      - khotynska-viyna
-      - kozatska-kultura
-      - kozatske-viisko
-      - morski-pokhody
-      - syntez-kozatstvo-vytoky
-      - khmelnychchyna-prychyny
-      - bohdan-khmelnytskyi
-      - bitva-pid-zhovtymy-vodamy
-      - zborivska-bila-tserkva
-      - kozatska-derzhava
-      - pereyaslavska-uhoda
-      - yurii-nemyrych
-      - ruina-i
-      - ruina-ii
-      - andrusivske-peremyrya
-      - ivan-sirko
-      - syntez-khmelnychchyna
-      - ivan-mazepa-derzhavnyk
-      - ivan-mazepa-kultura
-      - kost-hordiyenko-sich
-      - ivan-mazepa-poltava
-      - pylyp-orlyk-konstytutsiia
-      - hryhorii-skovoroda
-      - pavlo-polubotok
-      - danylo-apostol
-      - koliivshchyna
-      - opryshky
-      - petro-kalnyshevskyi
-      - kinets-hetmanshchyny
-      - rosiiska-imperiia-ukraina
-      - habsburzka-halichyna
-      - pivden-novorosiia
-      - nova-serbiya
-      - krypatsvo-selo
-      - kyrylo-mefodiivtsi
-      - shevchenko-awakening
-      - valuevskyi-emskyi
-      - hromady
-      - drahomanov
-      - franko-lesia-hrinchenko
-      - syntez-imperska-doba
-      - hrushevskyi
-      - persha-svitova
-      - sichovi-striltsi
-      - tsentralna-rada
-      - skoropadskyi
-      - zunr
-      - dyrektoriia
-      - symon-petliura-revolution
-      - bilshovytsko-ukrainska-viyna
-      - kholodnyi-yar
-      - syntez-revoliutsiia
-      - rozstriliane-vidrodzennia
-      - pacyfikatsiia
-      - oun
-      - holodomor-mekhanizm
-      - holodomor-pamiat
-      - mekhanizm-teroru
-      - karpatska-ukraina
-      - druha-svitova-pochatok
-      - babyn-yar
-      - upa
-      - syntez-trahedii
-      - povoienne-vidbudova
-      - deportatsii-ukraintsiv
-      - surgunlik
-      - krym-1954
-      - destalinizatsiia
-      - shistdesiatnyky
-      - ukrainska-helsinska-hrupa
-      - afhanistan
-      - chornobyl
-      - diaspora
-      - shliakh-nezalezhnosti
-      - rukh
-      - nezalezhnist-1991
-      - ukraine-90s
-      - pomarancheva-revoliutsiia
-      - yanukovych
-      - movna-polityka
-      - revoliutsiia-hidnosti
-      - aneksiia-krymu
-      - krymski-tatary-pislia-2014
-      - tomos
-      - syntez-nezalezhnist
-      - viyna-donbas
-      - povnomasshtabne-vtorhnessnia
-      - mariupol-azovstal
-      - bucha-irpin
-      - kakhovska-hes
-      - voienna-ekonomika
-      - hromadske-suspilstvo
-      - mizhnarodna-pidtrymka
-      - zlochyny-stiikist
-      - syntez-viyna
+    - trypillian-civilization
+    - scythians-sarmatians
+    - greeks-crimea-olbia
+    - sloviany-origins
+    - slavic-tribes
+    - zasnuvannia-kyieva
+    - khozary-i-sloviany
+    - syntez-vytoky-1
+    - oleh-ihor
+    - olha-sviatoslav
+    - volodymyr-khreshchennia
+    - yaroslav-wise
+    - ruska-pravda
+    - sofiya-kyivska
+    - volodymyr-monomakh
+    - kultura-kyivskoi-rusi
+    - kniazivski-usobiytsi
+    - ludy-rusi
+    - rus-ta-susidy
+    - syntez-kyivska-rus
+    - mongolska-navala
+    - mykhailo-chernigivskyi
+    - danylo-halytskyi
+    - galytsko-volynska-derzhava
+    - boiare-i-shliakhta
+    - kinets-halytsko-volyni
+    - krymske-khanstvo
+    - syntez-dvokniazivstvo
+    - velyke-kniazivstvo-lytovske
+    - ukrainski-zemli-u-vkl
+    - liublinska-uniia
+    - rich-pospolyta
+    - beresteyska-uniia
+    - pravoslavna-tserkva-17
+    - petro-mohyla
+    - bratstva-i-osvita
+    - bukovyna-zakarpattia
+    - slobozhanshchyna
+    - liudy-ricchi-pospolytoi
+    - syntez-lytva-polska
+    - kozatstvo-vytoky
+    - zaporizka-sich
+    - dmytro-vyshnevetskyi
+    - kozatski-povstannia-16
+    - petro-sahaidachnyi
+    - khotynska-viyna
+    - kozatska-kultura
+    - kozatske-viisko
+    - morski-pokhody
+    - syntez-kozatstvo-vytoky
+    - khmelnychchyna-prychyny
+    - bohdan-khmelnytskyi
+    - bitva-pid-zhovtymy-vodamy
+    - zborivska-bila-tserkva
+    - kozatska-derzhava
+    - pereyaslavska-uhoda
+    - yurii-nemyrych
+    - ruina-i
+    - ruina-ii
+    - andrusivske-peremyrya
+    - ivan-sirko
+    - syntez-khmelnychchyna
+    - ivan-mazepa-derzhavnyk
+    - ivan-mazepa-kultura
+    - kost-hordiyenko-sich
+    - ivan-mazepa-poltava
+    - pylyp-orlyk-konstytutsiia
+    - hryhorii-skovoroda
+    - pavlo-polubotok
+    - danylo-apostol
+    - koliivshchyna
+    - opryshky
+    - petro-kalnyshevskyi
+    - kinets-hetmanshchyny
+    - rosiiska-imperiia-ukraina
+    - habsburzka-halichyna
+    - pivden-novorosiia
+    - nova-serbiya
+    - krypatsvo-selo
+    - kyrylo-mefodiivtsi
+    - shevchenko-awakening
+    - valuevskyi-emskyi
+    - hromady
+    - drahomanov
+    - franko-lesia-hrinchenko
+    - syntez-imperska-doba
+    - hrushevskyi
+    - persha-svitova
+    - sichovi-striltsi
+    - tsentralna-rada
+    - skoropadskyi
+    - zunr
+    - dyrektoriia
+    - symon-petliura-revolution
+    - bilshovytsko-ukrainska-viyna
+    - kholodnyi-yar
+    - syntez-revoliutsiia
+    - rozstriliane-vidrodzennia
+    - pacyfikatsiia
+    - oun
+    - holodomor-mekhanizm
+    - holodomor-pamiat
+    - mekhanizm-teroru
+    - karpatska-ukraina
+    - druha-svitova-pochatok
+    - babyn-yar
+    - upa
+    - syntez-trahedii
+    - povoienne-vidbudova
+    - deportatsii-ukraintsiv
+    - surgunlik
+    - krym-1954
+    - destalinizatsiia
+    - shistdesiatnyky
+    - ukrainska-helsinska-hrupa
+    - afhanistan
+    - chornobyl
+    - diaspora
+    - shliakh-nezalezhnosti
+    - rukh
+    - nezalezhnist-1991
+    - ukraine-90s
+    - pomarancheva-revoliutsiia
+    - yanukovych
+    - movna-polityka
+    - revoliutsiia-hidnosti
+    - aneksiia-krymu
+    - krymski-tatary-pislia-2014
+    - tomos
+    - syntez-nezalezhnist
+    - viyna-donbas
+    - povnomasshtabne-vtorhnessnia
+    - mariupol-azovstal
+    - bucha-irpin
+    - kakhovska-hes
+    - voienna-ekonomika
+    - hromadske-suspilstvo
+    - mizhnarodna-pidtrymka
+    - zlochyny-stiikist
+    - syntez-viyna
   bio:
     type: track
     modules:
-      - knyahynia-olha
-      - kniaz-sviatoslav
-      - volodymyr-velykii
-      - kniaz-yaroslav-mudryi
-      - knyazhna-anna-yaroslavna
-      - volodymyr-monomakh
-      - nestor-litopysets
-      - roman-mstyslavych
-      - mykhailo-chernihivskyi
-      - danylo-halytskyi
-      - lev-danylovych
-      - yuriy-lvovych
-      - kostiantyn-ostrozky-elder
-      - roksolana
-      - dmytro-vyshnevetsky
-      - kostiantyn-vasyl-ostrozky
-      - iov-boretskyi
-      - severyn-nalyvaiko
-      - meletii-smotrytskyi
-      - petro-sahaidachny
-      - bohdan-khmelnytskyy
-      - petro-mohyla
-      - sylvestr-kosiv
-      - ivan-vyhovskyi
-      - ivan-sirko
-      - yuriy-nemyrych
-      - ivan-mazepa
-      - danylo-apostol
-      - kost-hordiyenko
-      - pavlo-polubotok
-      - pylyp-orlyk
-      - petro-kalnyshevskyy
-      - hryhoriy-skovoroda
-      - maksym-berezovskyy
-      - dmytro-bortnyanskyy
-      - ivan-kotliarevskyi
-      - hryhoriy-kvitka-osnovianenko
-      - semen-hulak-artemovskyy
-      - taras-shevchenko
-      - panteleimon-kulish
-      - hanna-barvinok
-      - marko-vovchok
-      - oleksander-potebnya
-      - ivan-nechuy-levytskyi
-      - marko-kropyvnytskyi
-      - mykhailo-starytsky
-      - mykhailo-drahomanov
-      - mykola-lysenko
-      - ivan-puliui
-      - olena-pchilka
-      - mariya-pavlova
-      - mariya-zankovetska
-      - nataliya-kobrynska
-      - ivan-franko
-      - yevhen-chykalenko
-      - borys-hrinchenko
-      - olha-kobylianska
-      - volodymyr-vernadskyi
-      - volodymyr-samiilenko
-      - kyrylo-trylovskyi
-      - mykhailo-kotsiubynsky
-      - andrey-sheptytsky
-      - ivan-lypa
-      - sofiya-okunevska
-      - mykhailo-hrushevskyi
-      - mykola-vasylenko
-      - liudmyla-starytska
-      - mariia-voiakovska
-      - yevhen-paton
-      - yulian-bachynskyi
-      - ahatanhel-krymskyi
-      - lesya-ukrainka
-      - vasyl-stefanyk
-      - solomiya-krushelnytska
-      - mykola-mikhnovskyi
-      - oleksandr-hrekiv
-      - mykola-leontovych
-      - hnat-khotkevych
-      - kazimir-malevich
-      - symon-petliura
-      - oleksandr-bohomazov
-      - ivan-ohienko
-      - mykhailo-boichuk
-      - viacheslav-lypynskyi
-      - dmytro-dontsov
-      - petro-bolbochan
-      - nataliia-polonska-vasylenko
-      - valentyna-radzymovska
-      - les-kurbas
-      - oleksandr-arkhypenko
-      - olha-basarab
-      - mykola-zerov
-      - oleksa-slisarenko
-      - pavlo-fylypovych
-      - yevhen-konovalets
-      - josyf-slipyj
-      - milena-rudnytska
-      - mykola-kulish
-      - olena-stepaniv
-      - mykola-khvylovyi
-      - vira-kholodna
-      - oleksandr-dovzhenko
-      - anatol-petrytskyi
-      - borys-liatoshynskyi
-      - maik-yohansen
-      - vasyl-vyshyvanyi
-      - berta-rapoport
-      - klavdiya-latysheva
-      - yuriy-kondratiuk
-      - dmytro-falkivskyi
-      - yevhen-pluzhnyk
-      - hryhorii-kosynka
-      - kateryna-bilokur
-      - yurii-lypa
-      - valerian-pidmohylnyi
-      - heo-shkurupii
-      - serge-lifar
-      - olena-teliha
-      - oleg-antonov
-      - roman-shukhevych
-      - serhiy-korolyov
-      - george-shevelov
-      - bohdan-ihor-antonych
-      - mariia-prymachenko
-      - mykhailo-yangel
-      - petro-veskliaov
-      - mykola-amosov
-      - vasyl-kuk
-      - borys-paton
-      - oles-honchar
-      - vasyl-sukhomlynskyi
-      - kateryna-yushchenko
-      - mykola-pohribnyi
-      - levko-lukyanenko
-      - yevhen-sverstiuk
-      - alla-horska
-      - dmytro-pavlychko
-      - lina-kostenko
-      - ivan-dziuba
-      - liubomyr-huzar
-      - vasyl-symonenko
-      - viacheslav-chornovil
-      - vasyl-stus
-      - ivan-mykolaichuk
-      - bohdan-stupka
-      - natalia-yakovenko
-      - nina-matviyenko
-      - myroslav-marynovych
-      - volodymyr-ivasyuk
-      - leonid-kadenyuk
-      - vasyl-shkliar
-      - yuriy-vynnychuk
-      - kvitka-tsisyk
-      - serhii-plokhy
-      - halyna-pahutyak
-      - mariya-matios
-      - oksana-zabuzhko
-      - yaroslav-hrytsak
-      - yuri-andrukhovych
-      - vitaly-portnikov
-      - taras-prokhasko
-      - kuzma-skryabin
-      - pavlo-sheremet
-      - serhiy-zhadan
-      - volodymyr-vakulenko
-      - oleg-sentsov
-      - yuriy-ruf
-      - oleksandra-matviichuk
-      - kateryna-handziuk
-      - victoria-amelina
-      - maksym-kryvtsov
-      - illia-chernilevskyi
-      - andriy-pilshchykov
-      - dmytro-kotsyubailo
-      - roman-ratushny
-      # Textbook authors → BIO (#894)
-      - andrii-chaikovskyi
-      - iryna-vilde
-      - moisei-fishbein
-      - oleh-olzhych
-      - anatolii-dimarov
+    - knyahynia-olha
+    - kniaz-sviatoslav
+    - volodymyr-velykii
+    - kniaz-yaroslav-mudryi
+    - knyazhna-anna-yaroslavna
+    - volodymyr-monomakh
+    - nestor-litopysets
+    - roman-mstyslavych
+    - mykhailo-chernihivskyi
+    - danylo-halytskyi
+    - lev-danylovych
+    - yuriy-lvovych
+    - kostiantyn-ostrozky-elder
+    - roksolana
+    - dmytro-vyshnevetsky
+    - kostiantyn-vasyl-ostrozky
+    - iov-boretskyi
+    - severyn-nalyvaiko
+    - meletii-smotrytskyi
+    - petro-sahaidachny
+    - bohdan-khmelnytskyy
+    - petro-mohyla
+    - sylvestr-kosiv
+    - ivan-vyhovskyi
+    - ivan-sirko
+    - yuriy-nemyrych
+    - ivan-mazepa
+    - danylo-apostol
+    - kost-hordiyenko
+    - pavlo-polubotok
+    - pylyp-orlyk
+    - petro-kalnyshevskyy
+    - hryhoriy-skovoroda
+    - maksym-berezovskyy
+    - dmytro-bortnyanskyy
+    - ivan-kotliarevskyi
+    - hryhoriy-kvitka-osnovianenko
+    - semen-hulak-artemovskyy
+    - taras-shevchenko
+    - panteleimon-kulish
+    - hanna-barvinok
+    - marko-vovchok
+    - oleksander-potebnya
+    - ivan-nechuy-levytskyi
+    - marko-kropyvnytskyi
+    - mykhailo-starytsky
+    - mykhailo-drahomanov
+    - mykola-lysenko
+    - ivan-puliui
+    - olena-pchilka
+    - mariya-pavlova
+    - mariya-zankovetska
+    - nataliya-kobrynska
+    - ivan-franko
+    - yevhen-chykalenko
+    - borys-hrinchenko
+    - olha-kobylianska
+    - volodymyr-vernadskyi
+    - volodymyr-samiilenko
+    - kyrylo-trylovskyi
+    - mykhailo-kotsiubynsky
+    - andrey-sheptytsky
+    - ivan-lypa
+    - sofiya-okunevska
+    - mykhailo-hrushevskyi
+    - mykola-vasylenko
+    - liudmyla-starytska
+    - mariia-voiakovska
+    - yevhen-paton
+    - yulian-bachynskyi
+    - ahatanhel-krymskyi
+    - lesya-ukrainka
+    - vasyl-stefanyk
+    - solomiya-krushelnytska
+    - mykola-mikhnovskyi
+    - oleksandr-hrekiv
+    - mykola-leontovych
+    - hnat-khotkevych
+    - kazimir-malevich
+    - symon-petliura
+    - oleksandr-bohomazov
+    - ivan-ohienko
+    - mykhailo-boichuk
+    - viacheslav-lypynskyi
+    - dmytro-dontsov
+    - petro-bolbochan
+    - nataliia-polonska-vasylenko
+    - valentyna-radzymovska
+    - les-kurbas
+    - oleksandr-arkhypenko
+    - olha-basarab
+    - mykola-zerov
+    - oleksa-slisarenko
+    - pavlo-fylypovych
+    - yevhen-konovalets
+    - josyf-slipyj
+    - milena-rudnytska
+    - mykola-kulish
+    - olena-stepaniv
+    - mykola-khvylovyi
+    - vira-kholodna
+    - oleksandr-dovzhenko
+    - anatol-petrytskyi
+    - borys-liatoshynskyi
+    - maik-yohansen
+    - vasyl-vyshyvanyi
+    - berta-rapoport
+    - klavdiya-latysheva
+    - yuriy-kondratiuk
+    - dmytro-falkivskyi
+    - yevhen-pluzhnyk
+    - hryhorii-kosynka
+    - kateryna-bilokur
+    - yurii-lypa
+    - valerian-pidmohylnyi
+    - heo-shkurupii
+    - serge-lifar
+    - olena-teliha
+    - oleg-antonov
+    - roman-shukhevych
+    - serhiy-korolyov
+    - george-shevelov
+    - bohdan-ihor-antonych
+    - mariia-prymachenko
+    - mykhailo-yangel
+    - petro-veskliaov
+    - mykola-amosov
+    - vasyl-kuk
+    - borys-paton
+    - oles-honchar
+    - vasyl-sukhomlynskyi
+    - kateryna-yushchenko
+    - mykola-pohribnyi
+    - levko-lukyanenko
+    - yevhen-sverstiuk
+    - alla-horska
+    - dmytro-pavlychko
+    - lina-kostenko
+    - ivan-dziuba
+    - liubomyr-huzar
+    - vasyl-symonenko
+    - viacheslav-chornovil
+    - vasyl-stus
+    - ivan-mykolaichuk
+    - bohdan-stupka
+    - natalia-yakovenko
+    - nina-matviyenko
+    - myroslav-marynovych
+    - volodymyr-ivasyuk
+    - leonid-kadenyuk
+    - vasyl-shkliar
+    - yuriy-vynnychuk
+    - kvitka-tsisyk
+    - serhii-plokhy
+    - halyna-pahutyak
+    - mariya-matios
+    - oksana-zabuzhko
+    - yaroslav-hrytsak
+    - yuri-andrukhovych
+    - vitaly-portnikov
+    - taras-prokhasko
+    - kuzma-skryabin
+    - pavlo-sheremet
+    - serhiy-zhadan
+    - volodymyr-vakulenko
+    - oleg-sentsov
+    - yuriy-ruf
+    - oleksandra-matviichuk
+    - kateryna-handziuk
+    - victoria-amelina
+    - maksym-kryvtsov
+    - illia-chernilevskyi
+    - andriy-pilshchykov
+    - dmytro-kotsyubailo
+    - roman-ratushny
+    - andrii-chaikovskyi
+    - iryna-vilde
+    - moisei-fishbein
+    - oleh-olzhych
+    - anatolii-dimarov
   lit:
     type: track
     modules:
-      - introduction-to-kotliarevsky
-      - eneida-part-1
-      - eneida-feast
-      - eneida-war
-      - natalka-poltavka
-      - kvitka-bio
-      - marusya
-      - konotop-witch
-      - ethnography
-      - kvitka-language
-      - young-shevchenko
-      - the-ballads
-      - haidamaky
-      - son
-      - the-testament
-      - biblical-themes
-      - the-artist
-      - women-in-kobzar
-      - shevchenkos-diary
-      - cult-of-shevchenko
-      - kulish-literary-legacy
-      - black-council-history
-      - black-council-plot
-      - language-question-linguistics
-      - cyrillo-methodian-brotherhood
-      - nechuy-levytsky
-      - kaidash-family-characters
-      - kaidash-family-conflict
-      - language-of-realism
-      - mykola-dzherya
-      - panas-myrny-intro
-      - khiba-revut-voly-1
-      - khiba-revut-voly-2
-      - khiba-revut-voly-style
-      - marko-vovchok-instytutka
-      - marko-vovchok-marusya
-      - stepan-rudansky
-      - leonid-hlibov
-      - mykhailo-starytsky
-      - borys-hrinchenko
-      - synthesis-1
-      - franko-biography
-      - franko-zakhar-berkut
-      - franko-stolen-happiness
-      - franko-moses
-      - franko-lviv-period
-      - franko-social-poetry
-      - franko-historical-prose
-      - franko-letters
-      - lesia-ukrainka-intro
-      - lesia-forest-song-1
-      - lesia-forest-song-2
-      - lesia-cassandra
-      - lesia-stone-guest
-      - lesia-blue-rose
-      - lesia-in-the-catacombs
-      - kobylianska-nature
-      - kobylianska-zemlya
-      - kobylianska-tsarivna
-      - kobylianska-persona
-      - stefanyk-stone-cross
-      - stefanyk-blue-book
-      - stefanyk-novellas
-      - khotkevych-prose
-      - kotsiubynsky-intermezzo
-      - kotsiubynsky-shadows-forgotten
-      - kotsiubynsky-apple-blossom
-      - kotsiubynsky-fata-morgana
-      - vynnychenko-black-panther
-      - vynnychenko-solar-machine
-      - vynnychenko-honesty
-      - oles-oleksandr-liryka
-      - oles-the-nightingale
-      - voronyi-symbolism
-      - voronyi-poetry
-      - lepkyi-mazepa-trilogy
-      - synthesis-2
-      - semenko-futurism-manifesto
-      - semenko-kobzar-burning
-      - yanovsky-master-of-the-ship
-      - yanovsky-four-sabres
-      - tychyna-clarinets
-      - tychyna-tragic-turn
-      - tychyna-soviet-period
-      - rylsky-neoclassicism
-      - rylsky-liryka
-      - rylsky-translations
-      - zerov-kyiv-parnassus
-      - zerov-sonnets
-      - zerov-criticism
-      - dray-khmara-poetry
-      - fylypovych-poetry
-      - klen-poetry
-      - khvylovy-intro
-      - khvylovy-i-am-romance
-      - khvylovy-woodsnipes
-      - khvylovy-pamphlets
-      - pidmohylny-city-1
-      - pidmohylny-city-2
-      - pidmohylny-small-prose
-      - yohansen-doctor-leonardo
-      - yohansen-experimental
-      - domontovych-girl-bear
-      - domontovych-dr-seraphicus
-      - domontovych-intellectuals
-      - antonych-green-gospel
-      - antonych-urbanism
-      - antonych-mythology
-      - sosiura-love-ukraine
-      - sosiura-red-winter
-      - sosiura-internal-conflict
-      - pluzhnyk-galileo
-      - pluzhnyk-poetry
-      - bazhan-idols
-      - bazhan-quiet-step
-      - antonenko-davydovych-smert
-      - antonenko-davydovych-prose
-      - sandarmokh-tragedy-erasure
-      - rozstriliane-vidrodzennia-phenomenon
-      - kosynka-short-fiction
-      - synthesis-3
-      - lukash-translation-as-resistance
-      - translation-as-cultural-weapon
-      - bahrianyi-tiger-trappers
-      - bahrianyi-garden-gethsemane
-      - bahrianyi-man-runs
-      - dovzhenko-enchanted-desna
-      - dovzhenko-ukraine-flames
-      - dovzhenko-cinema-as-literature
-      - samchuk-maria
-      - barka-yellow-prince
-      - osmachka-prose
-      - symonenko-knights
-      - symonenko-truth
-      - stus-palimpsests
-      - stus-moral-imperative
-      - stus-letters-to-son
-      - stus-vertical-of-spirit
-      - kostenko-marusia-churai-1
-      - kostenko-marusia-churai-2
-      - kostenko-garden-of-unthawed-sculptures
-      - kostenko-poetry
-      - tiutiunnyk-three-cuckoos
-      - tiutiunnyk-novella-mastery
-      - honchar-cathedral
-      - honchar-banners
-      - malyshko-poetry
-      - malyshko-songs
-      - malaniuk-poetry
-      - teliha-poetry
-      - olzhych-poetry
-      - vinhranovskyi-poetry
-      - vinhranovskyi-prose
-      - drach-knife-sun
-      - drach-ballads
-      - sverstiuk-prodigal-sons-lit
-      - sverstiuk-moral-resistance
-      - dziuba-internationalism
-      - dziuba-literature
-      - holoborodko-flying-window
-      - holodomor-in-literature
-      - samvydav-underground-publishing
-      - women-writers-resistance
-      - shestydesiatnyky-as-phenomenon
-      - valeriy-shevchuk-dim-na-hori
-      - valeriy-shevchuk-prose
-      - iryna-vilde-sestry-richynski
-      - emma-andiyevska-new-york-group
-      - yuriy-tarnavsky-new-york-group
-      - synthesis-4
-      - bu-ba-bu-carnival
-      - bu-ba-bu-the-end-of-soviet
-      - andrukhovych-recreations
-      - andrukhovych-moscoviad
-      - andrukhovych-perverzion
-      - andrukhovych-essays
-      - zabuzhko-fieldwork
-      - zabuzhko-museum
-      - zabuzhko-notre-dame-lit
-      - zabuzhko-longest-journey
-      - zhadan-depeche-mode
-      - zhadan-voroshilovgrad
-      - zhadan-orphanage
-      - zhadan-poetry
-      - zhadan-kharkiv-landscape
-      - decolonization-theory-literature
-      - hundorova-post-chornobyl-library
-      - izdryk-votsatsek
-      - izdryk-poetry
-      - andijewska-magic-realism
-      - koval-storinky
-      - koval-prose-renaissance
-      - prokhasko-unsimple
-      - prokhasko-magical-carpathians
-      - matios-sweet-darusia
-      - matios-bukovina-trauma
-      - tanja-maljartschuk-biography
-      - tanja-maljartschuk-prose
-      - artem-chekh-absolute-zero
-      - artem-chekh-district-d
-      - artem-chekh-who-are-you
-      - deresh-cult
-      - deresh-intention
-      - kateryna-kalytko-poetry
-      - kateryna-kalytko-prose
-      - sofia-andrukhovych-amados
-      - sofia-andrukhovych-felix-austria
-      - war-poetry-2014-2022
-      - war-poetry-full-scale
-      - war-literature-as-movement
-      - new-prose-displacement
-      - new-prose-resistance
-      - pachlovska-diaspora-theory
-      - diaspora-modern-lit
-      - diaspora-connections
-      - diaspora-consciousness-mur
-      - new-york-group-poets
-      - moisei-fishbein-poetry
-      - aliev-musayeva-crimean-tatar-ukrainian
-      - nariman-dzhelyal-publicistics
-      # Textbook authors addition (#894)
-      - yevhen-hutsalo-shistdesiatnyky
-      - mykhailo-petrenko-romantyka
-      - mykhailo-stelmakh-shchedryi-vechir
-      - amelina-renaissance
-      - synthesis-5
-      - skovoroda-baroque-philosophy
-      - kalynets-dissident-poetry
-      - baroque-poetry-velychkovsky
-      - ruthenian-triad-rusalka-dnistrova
-      - kobrynska-pershyi-vinok
-      - vaplite-literary-avant-garde
-      - kyiv-school-of-poetry
+    - introduction-to-kotliarevsky
+    - eneida-part-1
+    - eneida-feast
+    - eneida-war
+    - natalka-poltavka
+    - kvitka-bio
+    - marusya
+    - konotop-witch
+    - ethnography
+    - kvitka-language
+    - young-shevchenko
+    - the-ballads
+    - haidamaky
+    - son
+    - the-testament
+    - biblical-themes
+    - the-artist
+    - women-in-kobzar
+    - shevchenkos-diary
+    - cult-of-shevchenko
+    - kulish-literary-legacy
+    - black-council-history
+    - black-council-plot
+    - language-question-linguistics
+    - cyrillo-methodian-brotherhood
+    - nechuy-levytsky
+    - kaidash-family-characters
+    - kaidash-family-conflict
+    - language-of-realism
+    - mykola-dzherya
+    - panas-myrny-intro
+    - khiba-revut-voly-1
+    - khiba-revut-voly-2
+    - khiba-revut-voly-style
+    - marko-vovchok-instytutka
+    - marko-vovchok-marusya
+    - stepan-rudansky
+    - leonid-hlibov
+    - mykhailo-starytsky
+    - borys-hrinchenko
+    - synthesis-1
+    - franko-biography
+    - franko-zakhar-berkut
+    - franko-stolen-happiness
+    - franko-moses
+    - franko-lviv-period
+    - franko-social-poetry
+    - franko-historical-prose
+    - franko-letters
+    - lesia-ukrainka-intro
+    - lesia-forest-song-1
+    - lesia-forest-song-2
+    - lesia-cassandra
+    - lesia-stone-guest
+    - lesia-blue-rose
+    - lesia-in-the-catacombs
+    - kobylianska-nature
+    - kobylianska-zemlya
+    - kobylianska-tsarivna
+    - kobylianska-persona
+    - stefanyk-stone-cross
+    - stefanyk-blue-book
+    - stefanyk-novellas
+    - khotkevych-prose
+    - kotsiubynsky-intermezzo
+    - kotsiubynsky-shadows-forgotten
+    - kotsiubynsky-apple-blossom
+    - kotsiubynsky-fata-morgana
+    - vynnychenko-black-panther
+    - vynnychenko-solar-machine
+    - vynnychenko-honesty
+    - oles-oleksandr-liryka
+    - oles-the-nightingale
+    - voronyi-symbolism
+    - voronyi-poetry
+    - lepkyi-mazepa-trilogy
+    - synthesis-2
+    - semenko-futurism-manifesto
+    - semenko-kobzar-burning
+    - yanovsky-master-of-the-ship
+    - yanovsky-four-sabres
+    - tychyna-clarinets
+    - tychyna-tragic-turn
+    - tychyna-soviet-period
+    - rylsky-neoclassicism
+    - rylsky-liryka
+    - rylsky-translations
+    - zerov-kyiv-parnassus
+    - zerov-sonnets
+    - zerov-criticism
+    - dray-khmara-poetry
+    - fylypovych-poetry
+    - klen-poetry
+    - khvylovy-intro
+    - khvylovy-i-am-romance
+    - khvylovy-woodsnipes
+    - khvylovy-pamphlets
+    - pidmohylny-city-1
+    - pidmohylny-city-2
+    - pidmohylny-small-prose
+    - yohansen-doctor-leonardo
+    - yohansen-experimental
+    - domontovych-girl-bear
+    - domontovych-dr-seraphicus
+    - domontovych-intellectuals
+    - antonych-green-gospel
+    - antonych-urbanism
+    - antonych-mythology
+    - sosiura-love-ukraine
+    - sosiura-red-winter
+    - sosiura-internal-conflict
+    - pluzhnyk-galileo
+    - pluzhnyk-poetry
+    - bazhan-idols
+    - bazhan-quiet-step
+    - antonenko-davydovych-smert
+    - antonenko-davydovych-prose
+    - sandarmokh-tragedy-erasure
+    - rozstriliane-vidrodzennia-phenomenon
+    - kosynka-short-fiction
+    - synthesis-3
+    - lukash-translation-as-resistance
+    - translation-as-cultural-weapon
+    - bahrianyi-tiger-trappers
+    - bahrianyi-garden-gethsemane
+    - bahrianyi-man-runs
+    - dovzhenko-enchanted-desna
+    - dovzhenko-ukraine-flames
+    - dovzhenko-cinema-as-literature
+    - samchuk-maria
+    - barka-yellow-prince
+    - osmachka-prose
+    - symonenko-knights
+    - symonenko-truth
+    - stus-palimpsests
+    - stus-moral-imperative
+    - stus-letters-to-son
+    - stus-vertical-of-spirit
+    - kostenko-marusia-churai-1
+    - kostenko-marusia-churai-2
+    - kostenko-garden-of-unthawed-sculptures
+    - kostenko-poetry
+    - tiutiunnyk-three-cuckoos
+    - tiutiunnyk-novella-mastery
+    - honchar-cathedral
+    - honchar-banners
+    - malyshko-poetry
+    - malyshko-songs
+    - malaniuk-poetry
+    - teliha-poetry
+    - olzhych-poetry
+    - vinhranovskyi-poetry
+    - vinhranovskyi-prose
+    - drach-knife-sun
+    - drach-ballads
+    - sverstiuk-prodigal-sons-lit
+    - sverstiuk-moral-resistance
+    - dziuba-internationalism
+    - dziuba-literature
+    - holoborodko-flying-window
+    - holodomor-in-literature
+    - samvydav-underground-publishing
+    - women-writers-resistance
+    - shestydesiatnyky-as-phenomenon
+    - valeriy-shevchuk-dim-na-hori
+    - valeriy-shevchuk-prose
+    - iryna-vilde-sestry-richynski
+    - emma-andiyevska-new-york-group
+    - yuriy-tarnavsky-new-york-group
+    - synthesis-4
+    - bu-ba-bu-carnival
+    - bu-ba-bu-the-end-of-soviet
+    - andrukhovych-recreations
+    - andrukhovych-moscoviad
+    - andrukhovych-perverzion
+    - andrukhovych-essays
+    - zabuzhko-fieldwork
+    - zabuzhko-museum
+    - zabuzhko-notre-dame-lit
+    - zabuzhko-longest-journey
+    - zhadan-depeche-mode
+    - zhadan-voroshilovgrad
+    - zhadan-orphanage
+    - zhadan-poetry
+    - zhadan-kharkiv-landscape
+    - decolonization-theory-literature
+    - hundorova-post-chornobyl-library
+    - izdryk-votsatsek
+    - izdryk-poetry
+    - andijewska-magic-realism
+    - koval-storinky
+    - koval-prose-renaissance
+    - prokhasko-unsimple
+    - prokhasko-magical-carpathians
+    - matios-sweet-darusia
+    - matios-bukovina-trauma
+    - tanja-maljartschuk-biography
+    - tanja-maljartschuk-prose
+    - artem-chekh-absolute-zero
+    - artem-chekh-district-d
+    - artem-chekh-who-are-you
+    - deresh-cult
+    - deresh-intention
+    - kateryna-kalytko-poetry
+    - kateryna-kalytko-prose
+    - sofia-andrukhovych-amados
+    - sofia-andrukhovych-felix-austria
+    - war-poetry-2014-2022
+    - war-poetry-full-scale
+    - war-literature-as-movement
+    - new-prose-displacement
+    - new-prose-resistance
+    - pachlovska-diaspora-theory
+    - diaspora-modern-lit
+    - diaspora-connections
+    - diaspora-consciousness-mur
+    - new-york-group-poets
+    - moisei-fishbein-poetry
+    - aliev-musayeva-crimean-tatar-ukrainian
+    - nariman-dzhelyal-publicistics
+    - yevhen-hutsalo-shistdesiatnyky
+    - mykhailo-petrenko-romantyka
+    - mykhailo-stelmakh-shchedryi-vechir
+    - amelina-renaissance
+    - synthesis-5
+    - skovoroda-baroque-philosophy
+    - kalynets-dissident-poetry
+    - baroque-poetry-velychkovsky
+    - ruthenian-triad-rusalka-dnistrova
+    - kobrynska-pershyi-vinok
+    - vaplite-literary-avant-garde
+    - kyiv-school-of-poetry
   istorio:
     type: track
     modules:
-      - shcho-take-istorio
-      - ukrainska-istoriohrafichna-tradytsiia
-      - rosiiska-imperialna-istorio
-      - radyanska-istorio
-      - polskyi-pohliad
-      - diaspora-ta-zakhidni-istoriky
-      - nova-ukrainska-istorio
-      - metodolohiia-dekolonizatsii
-      - krytyka-dzherel
-      - istorychna-pamiat-i-polityka
-      - povist-mynulykh-lit-i
-      - povist-mynulykh-lit-ii
-      - kyievo-pecherskyi-pateryk
-      - slovo-o-polku-ihorevim
-      - halytsko-volynskyi-litopys-i
-      - halytsko-volynskyi-litopys-ii
-      - hramoty-ta-akty
-      - syntez-serednovichni-dzherela
-      - kozatski-litopysy-ohliad
-      - litopys-samovidtsia
-      - litopys-hrabianky
-      - litopys-velychka
-      - universaly-khmelnytkoho
-      - pereyaslavski-statti
-      - konstytutsiia-orlyka
-      - lysty-mazepy
-      - sich-dokumenty
-      - syntez-kozatski-dzherela
-      - knyhy-butiia-shevchenko
-      - zapovit-ta-lysty-shevchenka
-      - valuevskyi-tsyrkuliar-tekst
-      - emskyi-ukaz-tekst
-      - franko-politychni-ese
-      - universaly-unr
-      - akt-zluki
-      - svidchennia-holodomoru-i
-      - svidchennia-holodomoru-ii
-      - syntez-moderni-dzherela
-      - samvydav-shcho-tse
-      - lysty-stusa
-      - ukrayinskyi-visnyk
-      - memorandum-uhh
-      - akt-nezalezhnosti-1991
-      - syntez-dysydentski-dzherela
-      - holodomor-istorio
-      - holodomor-mekhanizmy-i
-      - holodomor-mekhanizmy-ii
-      - holodomor-heohrafiia
-      - holodomor-svidky
-      - holodomor-vyznannia
-      - syntez-holodomor-studiyi
-      - rozstriliane-kontekst
-      - literaturna-dyskusiia
-      - khvylovyi-kulish-debaty
-      - teatr-kurbasa
-      - mekhanizm-znyshchennia
-      - syntez-rozstriliane
-      - khreshchennia-spadshchyna
-      - beresteyska-uniia-analiz
-      - pravoslavna-identychnist
-      - hreko-katolytska-tserkva
-      - radianska-antyrelihiyna-polityka
-      - syntez-relihiina-identychnist
-      - persha-khvylia-emihratsiyi
-      - druha-khvylia-politychna
-      - tretia-khvylia-dipivtsi
-      - diaspora-orhanizatsiyi
-      - diaspora-naukovtsi
-      - syntez-diaspora
-      - halychyna-pid-avstriieyu
-      - halychyna-natsionalnyi-rukh
-      - bukovyna-mizh-imperiiamy
-      - zakarpattia-tysiacholittia
-      - volyn-pamiat-i-travma
-      - syntez-zakhidni-rehiony
-      - slobozhanshchyna-identychnist
-      - donbas-industrializatsiia
-      - krym-bahatosharovyi
-      - pivden-kolonizatsiia-mify
-      - syntez-rehionalna-riznomanitnist
-      - mekhanizm-kooptatsii
-      - pereiaslav-tsykl
-      - mazepa-tsykl
-      - rozumovskyi-tsykl
-      - radianska-ukrainizatsiia
-      - khrushchov-shelest-tsykl
-      - yanukovych-tsykl
-      - syntez-tsykl-zrady
-      - pereiaslav-alternatyvy
-      - poltava-naslidky
-      - unr-vybory
-      - 1991-referendum
-      - 2004-vs-2014
-      - syntez-rozdorizhzhia
-      - zakhid-1918
-      - zakhid-1945
-      - chicken-kyiv
-      - zakhid-1994
-      - chornomorskyi-flot
-      - zakhid-2008
-      - zakhid-2014
-      - syntez-zakhid-2022
-      - ekonomika-imperii
-      - radianska-industrializatsiia
-      - holodomor-ekonomika
-      - hazova-zbroia
-      - syntez-ekonomichna-kolonizatsiia
-      - malorosiia-konstrukt
-      - radianska-propaganda
-      - suchasna-dezinformatsiia
-      - zakhidni-media
-      - ukrainski-kontrnararyvy
-      - syntez-informatsiina-viina
-      - polska-i-ukraina-symbioz
-      - 1918-1920-viina-i-soiuz
-      - volyn-i-pamiat
-      - syntez-polska-ukraina-2022
-      - yevrei-v-ukraini-do-1917
-      - holokost-v-ukraini
-      - radianski-antysemityzm
-      - syntez-yevrei-ukraina
-      - tsykl-kulturnykh-vidrodzhen
-      - pislya-emsa-halychyna
-      - pislya-stalina-shistdesiatnyky
-      - syntez-pislya-2014
-      - kulturna-rezystentsiia
-      - hromadianske-suspilstvo
-      - hranitna-revoliutsiia
-      - 2004-krymska-kryza
-      - zhinky-v-revoiuutsiiakh
-      - chomu-2022-spratsiuvalo
-      - ukrainska-m-iaka-syla
-      - syntez-ahentsnist
-      - ukrainske-pytannia-xxi
-      - continuity-of-cultural-genocide
-      - finalnyi-syntez
+    - shcho-take-istorio
+    - ukrainska-istoriohrafichna-tradytsiia
+    - rosiiska-imperialna-istorio
+    - radyanska-istorio
+    - polskyi-pohliad
+    - diaspora-ta-zakhidni-istoriky
+    - nova-ukrainska-istorio
+    - metodolohiia-dekolonizatsii
+    - krytyka-dzherel
+    - istorychna-pamiat-i-polityka
+    - povist-mynulykh-lit-i
+    - povist-mynulykh-lit-ii
+    - kyievo-pecherskyi-pateryk
+    - slovo-o-polku-ihorevim
+    - halytsko-volynskyi-litopys-i
+    - halytsko-volynskyi-litopys-ii
+    - hramoty-ta-akty
+    - syntez-serednovichni-dzherela
+    - kozatski-litopysy-ohliad
+    - litopys-samovidtsia
+    - litopys-hrabianky
+    - litopys-velychka
+    - universaly-khmelnytkoho
+    - pereyaslavski-statti
+    - konstytutsiia-orlyka
+    - lysty-mazepy
+    - sich-dokumenty
+    - syntez-kozatski-dzherela
+    - knyhy-butiia-shevchenko
+    - zapovit-ta-lysty-shevchenka
+    - valuevskyi-tsyrkuliar-tekst
+    - emskyi-ukaz-tekst
+    - franko-politychni-ese
+    - universaly-unr
+    - akt-zluki
+    - svidchennia-holodomoru-i
+    - svidchennia-holodomoru-ii
+    - syntez-moderni-dzherela
+    - samvydav-shcho-tse
+    - lysty-stusa
+    - ukrayinskyi-visnyk
+    - memorandum-uhh
+    - akt-nezalezhnosti-1991
+    - syntez-dysydentski-dzherela
+    - holodomor-istorio
+    - holodomor-mekhanizmy-i
+    - holodomor-mekhanizmy-ii
+    - holodomor-heohrafiia
+    - holodomor-svidky
+    - holodomor-vyznannia
+    - syntez-holodomor-studiyi
+    - rozstriliane-kontekst
+    - literaturna-dyskusiia
+    - khvylovyi-kulish-debaty
+    - teatr-kurbasa
+    - mekhanizm-znyshchennia
+    - syntez-rozstriliane
+    - khreshchennia-spadshchyna
+    - beresteyska-uniia-analiz
+    - pravoslavna-identychnist
+    - hreko-katolytska-tserkva
+    - radianska-antyrelihiyna-polityka
+    - syntez-relihiina-identychnist
+    - persha-khvylia-emihratsiyi
+    - druha-khvylia-politychna
+    - tretia-khvylia-dipivtsi
+    - diaspora-orhanizatsiyi
+    - diaspora-naukovtsi
+    - syntez-diaspora
+    - halychyna-pid-avstriieyu
+    - halychyna-natsionalnyi-rukh
+    - bukovyna-mizh-imperiiamy
+    - zakarpattia-tysiacholittia
+    - volyn-pamiat-i-travma
+    - syntez-zakhidni-rehiony
+    - slobozhanshchyna-identychnist
+    - donbas-industrializatsiia
+    - krym-bahatosharovyi
+    - pivden-kolonizatsiia-mify
+    - syntez-rehionalna-riznomanitnist
+    - mekhanizm-kooptatsii
+    - pereiaslav-tsykl
+    - mazepa-tsykl
+    - rozumovskyi-tsykl
+    - radianska-ukrainizatsiia
+    - khrushchov-shelest-tsykl
+    - yanukovych-tsykl
+    - syntez-tsykl-zrady
+    - pereiaslav-alternatyvy
+    - poltava-naslidky
+    - unr-vybory
+    - 1991-referendum
+    - 2004-vs-2014
+    - syntez-rozdorizhzhia
+    - zakhid-1918
+    - zakhid-1945
+    - chicken-kyiv
+    - zakhid-1994
+    - chornomorskyi-flot
+    - zakhid-2008
+    - zakhid-2014
+    - syntez-zakhid-2022
+    - ekonomika-imperii
+    - radianska-industrializatsiia
+    - holodomor-ekonomika
+    - hazova-zbroia
+    - syntez-ekonomichna-kolonizatsiia
+    - malorosiia-konstrukt
+    - radianska-propaganda
+    - suchasna-dezinformatsiia
+    - zakhidni-media
+    - ukrainski-kontrnararyvy
+    - syntez-informatsiina-viina
+    - polska-i-ukraina-symbioz
+    - 1918-1920-viina-i-soiuz
+    - volyn-i-pamiat
+    - syntez-polska-ukraina-2022
+    - yevrei-v-ukraini-do-1917
+    - holokost-v-ukraini
+    - radianski-antysemityzm
+    - syntez-yevrei-ukraina
+    - tsykl-kulturnykh-vidrodzhen
+    - pislya-emsa-halychyna
+    - pislya-stalina-shistdesiatnyky
+    - syntez-pislya-2014
+    - kulturna-rezystentsiia
+    - hromadianske-suspilstvo
+    - hranitna-revoliutsiia
+    - 2004-krymska-kryza
+    - zhinky-v-revoiuutsiiakh
+    - chomu-2022-spratsiuvalo
+    - ukrainska-m-iaka-syla
+    - syntez-ahentsnist
+    - ukrainske-pytannia-xxi
+    - continuity-of-cultural-genocide
+    - finalnyi-syntez
   b2-pro:
     type: track
     modules:
-      - business-email-foundations
-      - email-requests-proposals
-      - email-followups-threads
-      - reports-writing
-      - reports-analysis
-      - meeting-participation
-      - meeting-minutes
-      - presentations-structure
-      - presentations-delivery
-      - negotiations-basics
-      - negotiations-tactics
-      - small-talk-networking
-      - business-checkpoint
-      - business-writing-integration
-      - business-communication-capstone
-      - it-vocabulary-1
-      - it-vocabulary-2
-      - technical-documentation
-      - finance-vocabulary
-      - financial-reports
-      - legal-vocabulary
-      - contract-reading
-      - medical-vocabulary
-      - medical-consultation
-      - hr-vocabulary
-      - job-applications
-      - scientific-writing-basics
-      - technical-checkpoint
-      - cross-domain-practice
-      - technical-integration
-      - news-analysis-1
-      - news-analysis-2
-      - journalism-writing
-      - public-speaking-1
-      - public-speaking-2
-      - debate-skills-advanced
-      - interview-skills
-      - media-checkpoint
-      - b2-pro-integration
-      - b2-pro-capstone
+    - business-email-foundations
+    - email-requests-proposals
+    - email-followups-threads
+    - reports-writing
+    - reports-analysis
+    - meeting-participation
+    - meeting-minutes
+    - presentations-structure
+    - presentations-delivery
+    - negotiations-basics
+    - negotiations-tactics
+    - small-talk-networking
+    - business-checkpoint
+    - business-writing-integration
+    - business-communication-capstone
+    - it-vocabulary-1
+    - it-vocabulary-2
+    - technical-documentation
+    - finance-vocabulary
+    - financial-reports
+    - legal-vocabulary
+    - contract-reading
+    - medical-vocabulary
+    - medical-consultation
+    - hr-vocabulary
+    - job-applications
+    - scientific-writing-basics
+    - technical-checkpoint
+    - cross-domain-practice
+    - technical-integration
+    - news-analysis-1
+    - news-analysis-2
+    - journalism-writing
+    - public-speaking-1
+    - public-speaking-2
+    - debate-skills-advanced
+    - interview-skills
+    - media-checkpoint
+    - b2-pro-integration
+    - b2-pro-capstone
   c1-pro:
     type: track
     modules:
-      - executive-email
-      - stakeholder-communication
-      - board-presentations
-      - strategic-reports
-      - crisis-communication
-      - change-management
-      - leadership-rhetoric
-      - negotiation-advanced
-      - conflict-resolution
-      - mentoring-coaching
-      - executive-networking
-      - media-relations
-      - executive-checkpoint
-      - executive-integration
-      - executive-capstone
-      - academic-writing-structure
-      - literature-review-academic
-      - methodology-writing
-      - results-presentation
-      - discussion-writing
-      - peer-review-process
-      - conference-abstracts
-      - conference-presentations
-      - grant-writing
-      - academic-correspondence
-      - citation-referencing
-      - thesis-dissertation
-      - academic-checkpoint
-      - academic-integration
-      - academic-capstone
-      - it-management
-      - it-architecture
-      - fintech-banking
-      - investment-analysis
-      - corporate-law
-      - international-law
-      - healthcare-management
-      - pharmaceutical
-      - energy-sector
-      - agriculture-agribusiness
-      - translation-basics
-      - interpretation-basics
-      - cross-cultural-communication
-      - industry-checkpoint
-      - industry-integration
-      - professional-portfolio
-      - personal-branding
-      - career-development
-      - c1-pro-integration
-      - c1-pro-capstone
+    - executive-email
+    - stakeholder-communication
+    - board-presentations
+    - strategic-reports
+    - crisis-communication
+    - change-management
+    - leadership-rhetoric
+    - negotiation-advanced
+    - conflict-resolution
+    - mentoring-coaching
+    - executive-networking
+    - media-relations
+    - executive-checkpoint
+    - executive-integration
+    - executive-capstone
+    - academic-writing-structure
+    - literature-review-academic
+    - methodology-writing
+    - results-presentation
+    - discussion-writing
+    - peer-review-process
+    - conference-abstracts
+    - conference-presentations
+    - grant-writing
+    - academic-correspondence
+    - citation-referencing
+    - thesis-dissertation
+    - academic-checkpoint
+    - academic-integration
+    - academic-capstone
+    - it-management
+    - it-architecture
+    - fintech-banking
+    - investment-analysis
+    - corporate-law
+    - international-law
+    - healthcare-management
+    - pharmaceutical
+    - energy-sector
+    - agriculture-agribusiness
+    - translation-basics
+    - interpretation-basics
+    - cross-cultural-communication
+    - industry-checkpoint
+    - industry-integration
+    - professional-portfolio
+    - personal-branding
+    - career-development
+    - c1-pro-integration
+    - c1-pro-capstone
   c2:
     type: core
     modules:
-      # ── C2.1 Stylistics & Rhetoric (26 modules) ──────────────────────
-      - c1-bridge-assessment          # 1  — Entry diagnostic
-      - milozvuchnist-complete        # 2  — Euphony mastery
-      - naukovyi-styl-mastery         # 3  — Scientific style
-      - ofitsiynyi-styl-mastery       # 4  — Official style
-      - publitsystychnyi-styl         # 5  — Journalistic style
-      - khudozhniy-styl               # 6  — Artistic style
-      - rozmovnyi-styl                # 7  — Conversational style
-      - relihiynyi-styl               # 8  — Religious style (C2-only)
-      - epistolyarnyi-styl            # 9  — Epistolary style (C2-only)
-      - style-transformation-i        # 10 — Style transformation: theory
-      - style-transformation-ii       # 11 — Style transformation: practice
-      - lexical-stylistics            # 12 — Lexical stylistic devices
-      - syntactic-stylistics          # 13 — Syntactic stylistic devices (production mastery)
-      - individual-voice-i            # 14 — Building individual voice: theory
-      - individual-voice-ii           # 15 — Building individual voice: practice
-      - text-coherence                # 16 — Text coherence & cohesion
-      - stylistic-devices-mastery     # 17 — Comprehensive stylistic devices
-      - rhythm-prosody                # 18 — Rhythm & prosody in text
-      - intertextuality               # 19 — Intertextuality fundamentals
-      - style-blending                # 20 — Style blending & hybridization
-      - advanced-rhetoric             # 21 — Rhetoric: figures & composition (MOVED from 101)
-      - practical-rhetoric            # 22 — Rhetoric: persuasion & debate (NEW)
-      - c2-1-practice-i              # 23 — Phase practice I
-      - c2-1-practice-ii             # 24 — Phase practice II
-      - c2-1-review                  # 25 — Phase review
-      - c2-1-checkpoint              # 26 — Phase checkpoint (merged)
-      # ── C2.2 Literature & Creative Writing (17 modules) ──────────────
-      # Removed → LIT: poetyka-verse-analysis, poetyka-prose-analysis,
-      #   intertextuality-ii, literary-criticism-methods
-      - literary-theory               # 27 — Literary theory schools
-      - narratology                   # 28 — Narratology & narrative analysis
-      - writing-literary-essays       # 29 — Literary essay writing
-      - translation-theory            # 30 — Translation theory
-      - literary-translation-i        # 31 — Literary translation: poetry
-      - literary-translation-ii       # 32 — Literary translation: prose
-      - creative-writing-poetry       # 33 — Creative writing: poetry
-      - creative-writing-prose        # 34 — Creative writing: prose
-      - creative-writing-nonfiction   # 35 — Creative writing: nonfiction (NEW)
-      - contemporary-literature       # 36 — Contemporary Ukrainian literature
-      - digital-literature            # 37 — Digital literature & new media
-      - literary-prizes-canon         # 38 — Literary prizes & canon formation
-      - literary-community            # 39 — Literary community & publishing
-      - c2-2-practice-i              # 40 — Phase practice I
-      - c2-2-practice-ii             # 41 — Phase practice II
-      - c2-2-review                  # 42 — Phase review
-      - c2-2-checkpoint              # 43 — Phase checkpoint
-      # ── C2.3 Professional Language (22 modules) ──────────────────────
-      # Removed → STEM: legal-ukrainian-i..v, medical-ukrainian-i..v
-      - professional-language-overview # 44 — Professional communication overview
-      - terminology-acquisition-i     # 45 — Terminology systems I
-      - terminology-acquisition-ii    # 46 — Terminology systems II
-      - reading-professional-texts-i  # 47 — Reading professional texts I
-      - reading-professional-texts-ii # 48 — Reading professional texts II
-      - professional-document-types   # 49 — Professional document types
-      - writing-professional-documents-i  # 50 — Professional writing I
-      - writing-professional-documents-ii # 51 — Professional writing II
-      - professional-oral-communication   # 52 — Professional oral communication
-      - c2-3-midpoint-checkpoint     # 53 — Midpoint checkpoint
-      - professional-correspondence   # 54 — Professional correspondence
-      - professional-discussions      # 55 — Professional discussions
-      - cross-domain-communication    # 56 — Cross-domain communication
-      - professional-research-skills  # 57 — Professional research skills
-      - building-domain-expertise     # 58 — Building domain expertise
-      - academic-publishing           # 59 — Academic publishing in Ukrainian (NEW)
-      - conference-thesis-notes      # 60 — Conference thesis notes: format, structure, shorthand (NEW #936)
-      - professional-portfolio-i      # 61 — Professional portfolio I
-      - professional-portfolio-ii     # 62 — Professional portfolio II
-      - professional-identity         # 63 — Professional identity
-      - c2-3-review                  # 64 — Phase review
-      - c2-3-checkpoint              # 65 — Phase checkpoint
-      # ── C2.4 Thematic Discourse (14 modules) ─────────────────────
-      # State Standard 2024 Каталог Б: all 21 themes covered (#834)
-      - suspilstvo-i-hromadyanstvo    # 66 — Society & Citizenship (themes 3.7, 3.8)
-      - zovnishnia-polityka-i-diaspora # 67 — Foreign Policy & Diaspora (theme 3.9)
-      - ekonomika-i-dobrobut          # 68 — Economy & Welfare (themes 3.10, 3.13)
-      - zdorovya-i-medytsyna          # 69 — Health & Medicine (theme 3.11)
-      - osvita-nauka-innovatsiyi      # 70 — Education, Science & Innovation (themes 3.12, 3.19)
-      - ekolohiya-i-klimat            # 71 — Ecology & Climate (theme 3.18)
-      - media-i-dezinformatsiya       # 72 — Media & Disinformation (theme 3.20)
-      - sport-i-liudskyi-potentsial   # 73 — Sport & Human Potential (theme 3.5)
-      - spozhyvannya-i-posluhy        # 74 — Consumer Culture & Services (themes 3.14, 3.15, 3.16)
-      - misto-selo-prostir            # 75 — Urban & Rural Space (themes 3.2, 3.17)
-      - podoroz-dozvillya-kultura     # 76 — Travel, Leisure & Culture (themes 3.4, 3.6)
-      - identychnist-tradytsiyi-simya # 77 — Identity, Traditions & Family (themes 3.1, 3.3, 3.21)
-      - c2-4-practice                 # 78 — Thematic Discourse Practice
-      - c2-4-checkpoint               # 79 — Thematic Discourse Assessment
-      # ── C2.5 Meta-Skills & Capstone (27 modules) ────────────────────
-      - complete-grammar-review       # 80  — Complete grammar review
-      - rare-archaic-forms            # 81  — Rare & archaic forms
-      - regional-varieties            # 82  — Regional varieties
-      - sociolinguistic-mastery       # 83  — Sociolinguistic mastery
-      - language-policy-decolonization # 84  — Language policy & decolonization
-      - corpus-linguistics            # 85  — Corpus linguistics & digital tools
-      - error-analysis                # 86  — Error analysis & self-correction
-      - native-like-fluency           # 87  — Native-like fluency strategies
-      - teaching-ukrainian-i          # 88  — Teaching Ukrainian I
-      - teaching-ukrainian-ii         # 89  — Teaching Ukrainian II
-      - teaching-ukrainian-iii        # 90  — Teaching Ukrainian III
-      - translation-theory-ii         # 91  — Translation theory: advanced
-      - translation-practice-i        # 92  — Translation practice I
-      - translation-practice-ii       # 93  — Translation practice II
-      - interpretation-advanced       # 94  — Advanced interpretation
-      - capstone-topic-selection      # 95  — Capstone: topic selection
-      - capstone-research-project     # 96  — Capstone: research
-      - capstone-drafting             # 97  — Capstone: drafting
-      - capstone-revision             # 98  — Capstone: revision
-      - capstone-polish               # 99  — Capstone: polish
-      - capstone-defense              # 100 — Capstone: defense
-      - final-review-i               # 101 — Final review I
-      - final-review-ii              # 102 — Final review II
-      - final-review-iii             # 103 — Final review III
-      - final-exam-integrated-skills  # 104 — Final exam
-      - c2-certification-preparation  # 105 — Certification preparation
-      - c2-riven-zaversheno          # 106 — Level completion
+    - c1-bridge-assessment
+    - milozvuchnist-complete
+    - naukovyi-styl-mastery
+    - ofitsiynyi-styl-mastery
+    - publitsystychnyi-styl
+    - khudozhniy-styl
+    - rozmovnyi-styl
+    - relihiynyi-styl
+    - epistolyarnyi-styl
+    - style-transformation-i
+    - style-transformation-ii
+    - lexical-stylistics
+    - syntactic-stylistics
+    - individual-voice-i
+    - individual-voice-ii
+    - text-coherence
+    - stylistic-devices-mastery
+    - rhythm-prosody
+    - intertextuality
+    - style-blending
+    - advanced-rhetoric
+    - practical-rhetoric
+    - c2-1-practice-i
+    - c2-1-practice-ii
+    - c2-1-review
+    - c2-1-checkpoint
+    - literary-theory
+    - narratology
+    - writing-literary-essays
+    - translation-theory
+    - literary-translation-i
+    - literary-translation-ii
+    - creative-writing-poetry
+    - creative-writing-prose
+    - creative-writing-nonfiction
+    - contemporary-literature
+    - digital-literature
+    - literary-prizes-canon
+    - literary-community
+    - c2-2-practice-i
+    - c2-2-practice-ii
+    - c2-2-review
+    - c2-2-checkpoint
+    - professional-language-overview
+    - terminology-acquisition-i
+    - terminology-acquisition-ii
+    - reading-professional-texts-i
+    - reading-professional-texts-ii
+    - professional-document-types
+    - writing-professional-documents-i
+    - writing-professional-documents-ii
+    - professional-oral-communication
+    - c2-3-midpoint-checkpoint
+    - professional-correspondence
+    - professional-discussions
+    - cross-domain-communication
+    - professional-research-skills
+    - building-domain-expertise
+    - academic-publishing
+    - conference-thesis-notes
+    - professional-portfolio-i
+    - professional-portfolio-ii
+    - professional-identity
+    - c2-3-review
+    - c2-3-checkpoint
+    - suspilstvo-i-hromadyanstvo
+    - zovnishnia-polityka-i-diaspora
+    - ekonomika-i-dobrobut
+    - zdorovya-i-medytsyna
+    - osvita-nauka-innovatsiyi
+    - ekolohiya-i-klimat
+    - media-i-dezinformatsiya
+    - sport-i-liudskyi-potentsial
+    - spozhyvannya-i-posluhy
+    - misto-selo-prostir
+    - podoroz-dozvillya-kultura
+    - identychnist-tradytsiyi-simya
+    - c2-4-practice
+    - c2-4-checkpoint
+    - complete-grammar-review
+    - rare-archaic-forms
+    - regional-varieties
+    - sociolinguistic-mastery
+    - language-policy-decolonization
+    - corpus-linguistics
+    - error-analysis
+    - native-like-fluency
+    - teaching-ukrainian-i
+    - teaching-ukrainian-ii
+    - teaching-ukrainian-iii
+    - translation-theory-ii
+    - translation-practice-i
+    - translation-practice-ii
+    - interpretation-advanced
+    - capstone-topic-selection
+    - capstone-research-project
+    - capstone-drafting
+    - capstone-revision
+    - capstone-polish
+    - capstone-defense
+    - final-review-i
+    - final-review-ii
+    - final-review-iii
+    - final-exam-integrated-skills
+    - c2-certification-preparation
+    - c2-riven-zaversheno
   oes:
     type: track
     modules:
-      - walls-speak-intro
-      - alphabet-glagolitic-cyrillic
-      - orthography-yers
-      - pleophony-sound-of-rus
-      - yat-mystery
-      - greetings-invocations
-      - nouns-o-a-stems
-      - vocative-case
-      - pronouns-self-other
-      - verbs-present-tense
-      - verbs-aorist
-      - verbs-perfect
-      - lab-thief-kuzma
-      - numbers-currency
-      - prepositions-space
-      - legal-language-debt
-      - lab-zvenyhorod-1
-      - names-identity
-      - syntax-simple-sentences
-      - adjectives-agreement
-      - dual-number-intro
-      - family-kinship
-      - lab-death-of-tsar
-      - daily-life-vocabulary
-      - pvl-intro-geography
-      - pvl-varangians
-      - pvl-oleg-campaign
-      - pvl-death-of-igor
-      - pvl-olga-revenge
-      - pvl-sviatoslav
-      - pvl-volodymyr-choice
-      - pvl-baptism-of-rus
-      - pvl-yaroslav-wise
-      - pvl-three-brothers
-      - pvl-polovtsian-wars
-      - pvl-lyubech-congress
-      - pvl-blinding-vasylko
-      - monomakh-instruction
-      - death-of-monomakh
-      - olgovychi-monomakhovychi
-      - izyaslav-mstyslavych
-      - sack-of-kyiv
-      - ihor-campaign-chronicle
-      - sviatoslav-vsevolodovych
-      - roman-mstyslavych
-      - battle-of-kalka
-      - fall-of-kyiv
-      - review-princely-cycle
-      - law-intro
-      - murder-blood-revenge
-      - assault-battery
-      - weaponry-laws
-      - body-injury-dual
-      - theft-property
-      - cheliadin-slaves
-      - restitution
-      - witnesses-oaths
-      - bridge-builders
-      - princely-administration
-      - smerd-peasants
-      - zakup-indentured
-      - property-boundaries
-      - inheritance-law
-      - women-in-law
-      - guardianship
-      - monomakh-statute-usury
-      - bankrupt-merchants
-      - review-social-pyramid
-      - treaty-911-oleg
-      - trade-rights
-      - crimes-abroad
-      - treaty-944-igor
-      - slovo-bard-intro
-      - slovo-solar-eclipse
-      - slovo-mustering
-      - slovo-first-battle
-      - slovo-defeat
-      - slovo-svyatoslav-dream
-      - slovo-golden-word
-      - slovo-yaroslavna-lament
-      - slovo-escape
-      - slovo-return
-      - slovo-poetic-syntax-lab
-      - slovo-hapax-legomena
-      - slovo-mythology
-      - slovo-authenticity-debate
-      - slovo-review
-      - hagiography-intro
-      - building-of-lavra
-      - saint-anthony
-      - saint-theodosius
-      - demonology
-      - ilarion-sermon-intro
-      - rus-panegyric
-      - daniel-the-exile
-      - phonology-lab-yers
-      # Post-Phase-4 additions
-      - galytsko-volynskyi-literary-art
-      - pateryk-literary-form
-      - davni-teksty-zbirka
-      # Кирило Туровський addition (#882)
-      - kyrylo-turovskyi-propovidi
-      - kyrylo-turovskyi-prytchi-molytvy
-      - oes-capstone
+    - walls-speak-intro
+    - alphabet-glagolitic-cyrillic
+    - orthography-yers
+    - pleophony-sound-of-rus
+    - yat-mystery
+    - greetings-invocations
+    - nouns-o-a-stems
+    - vocative-case
+    - pronouns-self-other
+    - verbs-present-tense
+    - verbs-aorist
+    - verbs-perfect
+    - lab-thief-kuzma
+    - numbers-currency
+    - prepositions-space
+    - legal-language-debt
+    - lab-zvenyhorod-1
+    - names-identity
+    - syntax-simple-sentences
+    - adjectives-agreement
+    - dual-number-intro
+    - family-kinship
+    - lab-death-of-tsar
+    - daily-life-vocabulary
+    - pvl-intro-geography
+    - pvl-varangians
+    - pvl-oleg-campaign
+    - pvl-death-of-igor
+    - pvl-olga-revenge
+    - pvl-sviatoslav
+    - pvl-volodymyr-choice
+    - pvl-baptism-of-rus
+    - pvl-yaroslav-wise
+    - pvl-three-brothers
+    - pvl-polovtsian-wars
+    - pvl-lyubech-congress
+    - pvl-blinding-vasylko
+    - monomakh-instruction
+    - death-of-monomakh
+    - olgovychi-monomakhovychi
+    - izyaslav-mstyslavych
+    - sack-of-kyiv
+    - ihor-campaign-chronicle
+    - sviatoslav-vsevolodovych
+    - roman-mstyslavych
+    - battle-of-kalka
+    - fall-of-kyiv
+    - review-princely-cycle
+    - law-intro
+    - murder-blood-revenge
+    - assault-battery
+    - weaponry-laws
+    - body-injury-dual
+    - theft-property
+    - cheliadin-slaves
+    - restitution
+    - witnesses-oaths
+    - bridge-builders
+    - princely-administration
+    - smerd-peasants
+    - zakup-indentured
+    - property-boundaries
+    - inheritance-law
+    - women-in-law
+    - guardianship
+    - monomakh-statute-usury
+    - bankrupt-merchants
+    - review-social-pyramid
+    - treaty-911-oleg
+    - trade-rights
+    - crimes-abroad
+    - treaty-944-igor
+    - slovo-bard-intro
+    - slovo-solar-eclipse
+    - slovo-mustering
+    - slovo-first-battle
+    - slovo-defeat
+    - slovo-svyatoslav-dream
+    - slovo-golden-word
+    - slovo-yaroslavna-lament
+    - slovo-escape
+    - slovo-return
+    - slovo-poetic-syntax-lab
+    - slovo-hapax-legomena
+    - slovo-mythology
+    - slovo-authenticity-debate
+    - slovo-review
+    - hagiography-intro
+    - building-of-lavra
+    - saint-anthony
+    - saint-theodosius
+    - demonology
+    - ilarion-sermon-intro
+    - rus-panegyric
+    - daniel-the-exile
+    - phonology-lab-yers
+    - galytsko-volynskyi-literary-art
+    - pateryk-literary-form
+    - davni-teksty-zbirka
+    - kyrylo-turovskyi-propovidi
+    - kyrylo-turovskyi-prytchi-molytvy
+    - oes-capstone
   ruth:
     type: track
     modules:
-      - intro-to-ruth
-      - sovereign-state
-      - szlachta-nobility
-      - legal-personhood
-      - land-law-basics
-      - criminal-law-murder
-      - courts-basic
-      - stylistic-contrast-gospel
-      - administrative-reform
-      - the-seim
-      - judicial-procedure
-      - womens-rights
-      - wills-testaments
-      - guardianship-ruth
-      - polonisms-in-law
-      - chancery-formulae-dating
-      - sovereignty-1588
-      - treason
-      - civil-liberties
-      - advanced-property
-      - latinisms
-      - legal-profession
-      - document-types
-      - paleography-lab-skoropys
-      - translators-dedication
-      - vernacular-glosses
-      - nativity-luke
-      - beatitudes-matthew
-      - lords-prayer
-      - parable-sower
-      - parable-prodigal-son
-      - the-passion
-      - the-resurrection
-      - art-orthography
-      - prince-ostrozky
-      - genesis-creation
-      - psalms-liturgical
-      - prophets-isaiah
-      - nt-contrast-logos
-      - epistles-romans
-      - revelations
-      - herasym-smotrytsky-poems
-      - printing-vocabulary
-      - ostrih-legacy
-      - smotrytsky-grammar-intro
-      - vyshensky-epistles
-      - meletiy-smotrytsky-apologia
-      - comparative-lab-parallel
-      - need-for-norms
-      - orthography-letters
-      - parts-of-speech
-      - the-verb-conjugation
-      - syntax-agreement
-      - syntax-complex
-      - prosody-meter
-      - stylistic-levels
-      - pedagogy-brotherhood
-      - grammar-lab-parsing
-      - holy-mountain-athos
-      - attack-on-bishops
-      - baroque-lists
-      - dialogue-with-latins
-      - social-critique
-      - simple-tongue-vyshensky
-      - epistle-to-ostrozky
-      - vyshensky-legacy
-      - mother-church-weeps
-      - apostasy
-      - baroque-syntax
-      - kyiv-mohyla-rhetoric
-      - panegyric-style
-      - baroque-poetry
-      - eyewitness-samovydets
-      - the-ruin
-      - glorifying-host
-      - poetic-history
-      - monumental-style
-      - baroque-letters
-      - cossack-hierarchy
-      - black-council
-      - battle-descriptions
-      - chronicle-lab
-      - hrabianka-heroic-chronicle
-      - velychko-ruin-baroque-1
-      - velychko-ruin-baroque-2
-      - constitution-preamble
-      - separation-of-powers
-      - social-contract
-      - diplomatic-language
-      - orlyk-latin-comparison
-      - wandering-philosopher
-      - fables-kharkiv
-      - affinity-srodna-pratsia
-      - the-heart
-      - divine-songs
-      - two-natures
-      - skovoroda-language
-      - transition-to-modern
-      - philosophical-lab
-      # Phase 5: Мовна ідентичність — Linguistic Identity
-      - fedorovych-bukvar
-      - zyzaniy-leksys
-      - berynda-leksykon
-      - uzhevych-hramatyka
-      - synonima-slaveno-roska
-      - hramoty-xiv
-      - hramoty-xvi-volyn
-      - intermedii-xvii-xviii
-      - poeziia-baroko
-      - bajky-xvii-xviii
-      - pysovnyk-lystuvannia
-      - likarski-poradnyky
-      # Шкільна драма / Вертеп addition (#882)
-      - kyievo-mohylianska-shkilna-drama
-      - vertep-ukrainskyi-teatr
-      - misterii-ta-moralite
-      - ruth-capstone
+    - intro-to-ruth
+    - sovereign-state
+    - szlachta-nobility
+    - legal-personhood
+    - land-law-basics
+    - criminal-law-murder
+    - courts-basic
+    - stylistic-contrast-gospel
+    - administrative-reform
+    - the-seim
+    - judicial-procedure
+    - womens-rights
+    - wills-testaments
+    - guardianship-ruth
+    - polonisms-in-law
+    - chancery-formulae-dating
+    - sovereignty-1588
+    - treason
+    - civil-liberties
+    - advanced-property
+    - latinisms
+    - legal-profession
+    - document-types
+    - paleography-lab-skoropys
+    - translators-dedication
+    - vernacular-glosses
+    - nativity-luke
+    - beatitudes-matthew
+    - lords-prayer
+    - parable-sower
+    - parable-prodigal-son
+    - the-passion
+    - the-resurrection
+    - art-orthography
+    - prince-ostrozky
+    - genesis-creation
+    - psalms-liturgical
+    - prophets-isaiah
+    - nt-contrast-logos
+    - epistles-romans
+    - revelations
+    - herasym-smotrytsky-poems
+    - printing-vocabulary
+    - ostrih-legacy
+    - smotrytsky-grammar-intro
+    - vyshensky-epistles
+    - meletiy-smotrytsky-apologia
+    - comparative-lab-parallel
+    - need-for-norms
+    - orthography-letters
+    - parts-of-speech
+    - the-verb-conjugation
+    - syntax-agreement
+    - syntax-complex
+    - prosody-meter
+    - stylistic-levels
+    - pedagogy-brotherhood
+    - grammar-lab-parsing
+    - holy-mountain-athos
+    - attack-on-bishops
+    - baroque-lists
+    - dialogue-with-latins
+    - social-critique
+    - simple-tongue-vyshensky
+    - epistle-to-ostrozky
+    - vyshensky-legacy
+    - mother-church-weeps
+    - apostasy
+    - baroque-syntax
+    - kyiv-mohyla-rhetoric
+    - panegyric-style
+    - baroque-poetry
+    - eyewitness-samovydets
+    - the-ruin
+    - glorifying-host
+    - poetic-history
+    - monumental-style
+    - baroque-letters
+    - cossack-hierarchy
+    - black-council
+    - battle-descriptions
+    - chronicle-lab
+    - hrabianka-heroic-chronicle
+    - velychko-ruin-baroque-1
+    - velychko-ruin-baroque-2
+    - constitution-preamble
+    - separation-of-powers
+    - social-contract
+    - diplomatic-language
+    - orlyk-latin-comparison
+    - wandering-philosopher
+    - fables-kharkiv
+    - affinity-srodna-pratsia
+    - the-heart
+    - divine-songs
+    - two-natures
+    - skovoroda-language
+    - transition-to-modern
+    - philosophical-lab
+    - fedorovych-bukvar
+    - zyzaniy-leksys
+    - berynda-leksykon
+    - uzhevych-hramatyka
+    - synonima-slaveno-roska
+    - hramoty-xiv
+    - hramoty-xvi-volyn
+    - intermedii-xvii-xviii
+    - poeziia-baroko
+    - bajky-xvii-xviii
+    - pysovnyk-lystuvannia
+    - likarski-poradnyky
+    - kyievo-mohylianska-shkilna-drama
+    - vertep-ukrainskyi-teatr
+    - misterii-ta-moralite
+    - ruth-capstone
   lit-essay:
     type: track
     modules:
-      - essay-origins-polemics
-      - prokopovych-baroque-oratory
-      - istoriia-rusiv-forgery-and-genius
-      - istoriia-rusiv-romantics-reception
-      - kulish-panteleimon-essayist
-      - kostomarov-two-rus-nationalities
-      - drahomanov-chudatski-dumky
-      - drahomanov-shevchenko
-      - franko-what-is-progress
-      - franko-some-words
-      - lesia-ukrainka-voice
-      - hrushevsky-essayist
-      - mikhnovsky-independent-ukraine
-      - lypynsky-letters-brothers
-      - lypynsky-ham-japheth
-      - dontsov-nationalism
-      - dontsov-chaos
-      - khvylovy-ukraine-or-little-russia
-      - khvylovy-thoughts-current
-      - zerov-ad-fontes
-      - yefremov-literary-criticism
-      - malaniuk-little-russianism
-      - sherekh-fifth-kharkiv
-      - shevelov-moscow-maros
-      - shevelov-history-language
-      - dziuba-internationalism
-      - stus-phenomenon
-      - sverstiuk-cathedral
-      - lysiah-rudnytsky-history
-      - grabowicz-poet-prophet
-      - zabuzhko-fortinbras
-      - zabuzhko-notre-dame
-      - zabuzhko-longest-journey
-      - riabchuk-two-ukraines
-      - hrytsak-history-ukraine
-      - hrytsak-overcoming-past
-      - yakovenko-mirror-of-history
-      - prokhasko-fm-halychyna
-      - portnikov-bells
-      - portnikov-conclusion
-      - yermolenko-fluid-ideologies
-      - plokhy-gates-of-europe
-      - plokhy-frontline
-      - snyder-dialogues
-      - mariia-berlinska-dignity
-      - chmut-institutions
-      - kotsyubailo-legacy
-      - kipiani-case-of-stus
-      - kis-survival-as-victory
-      - mokryk-rebellion-against-empire
-      - essay-synthesis-1
-      - marynovych-universe-barbed-wire
-      - chyzhevsky-baroque-history
-      - lutsky-diaspora-bridge
-      - grabowicz-myth-shevchenko
-      - essay-synthesis-2
-      - solomea-pavlychko-modernism
-      - oxana-hundorova-postcolonialism
-      - vira-ageyeva-canon
-      # ESSAY.6 — Testimony Prose (merged from LIT-DOC, #879)
-      - samchuk-mariya-holodomor
-      - barka-zhovtyi-kniaz
-      - svitlychny-prison-lyrics
-      - shumuk-memoirs
+    - essay-origins-polemics
+    - prokopovych-baroque-oratory
+    - istoriia-rusiv-forgery-and-genius
+    - istoriia-rusiv-romantics-reception
+    - kulish-panteleimon-essayist
+    - kostomarov-two-rus-nationalities
+    - drahomanov-chudatski-dumky
+    - drahomanov-shevchenko
+    - franko-what-is-progress
+    - franko-some-words
+    - lesia-ukrainka-voice
+    - hrushevsky-essayist
+    - mikhnovsky-independent-ukraine
+    - lypynsky-letters-brothers
+    - lypynsky-ham-japheth
+    - dontsov-nationalism
+    - dontsov-chaos
+    - khvylovy-ukraine-or-little-russia
+    - khvylovy-thoughts-current
+    - zerov-ad-fontes
+    - yefremov-literary-criticism
+    - malaniuk-little-russianism
+    - sherekh-fifth-kharkiv
+    - shevelov-moscow-maros
+    - shevelov-history-language
+    - dziuba-internationalism
+    - stus-phenomenon
+    - sverstiuk-cathedral
+    - lysiah-rudnytsky-history
+    - grabowicz-poet-prophet
+    - zabuzhko-fortinbras
+    - zabuzhko-notre-dame
+    - zabuzhko-longest-journey
+    - riabchuk-two-ukraines
+    - hrytsak-history-ukraine
+    - hrytsak-overcoming-past
+    - yakovenko-mirror-of-history
+    - prokhasko-fm-halychyna
+    - portnikov-bells
+    - portnikov-conclusion
+    - yermolenko-fluid-ideologies
+    - plokhy-gates-of-europe
+    - plokhy-frontline
+    - snyder-dialogues
+    - mariia-berlinska-dignity
+    - chmut-institutions
+    - kotsyubailo-legacy
+    - kipiani-case-of-stus
+    - kis-survival-as-victory
+    - mokryk-rebellion-against-empire
+    - essay-synthesis-1
+    - marynovych-universe-barbed-wire
+    - chyzhevsky-baroque-history
+    - lutsky-diaspora-bridge
+    - grabowicz-myth-shevchenko
+    - essay-synthesis-2
+    - solomea-pavlychko-modernism
+    - oxana-hundorova-postcolonialism
+    - vira-ageyeva-canon
+    - samchuk-mariya-holodomor
+    - barka-zhovtyi-kniaz
+    - svitlychny-prison-lyrics
+    - shumuk-memoirs
   lit-hist-fic:
     type: track
     modules:
-      - kulish-black-council-revisit
-      - starytsky-bohdan
-      - lepkyi-mazepa
-      - zahrebelny-roksolana-1
-      - zahrebelny-roksolana-2
-      - zahrebelny-dyvo
-      - zahrebelny-death-in-kyiv
-      - ivanychuk-malvy
-      - ivanychuk-water
-      - ivanychuk-scar
-      - bilyk-sword-ares
-      - shklyar-black-raven-1
-      - shklyar-black-raven-2
-      - shklyar-marusia
-      - lys-century-jacob
-      - kokotyukha-red
-      - kokotyukha-chervonyi
-      - rafeyenko-long-times
-      # Textbook authors addition (#894)
-      - andrii-chaikovskyi-za-sestroiu
-      - andrian-kashchenko-cossack-myth
-      - natalena-koroleva-lehendy
-      - hist-fic-synthesis
-      - shevchuk-three-leaves
+    - kulish-black-council-revisit
+    - starytsky-bohdan
+    - lepkyi-mazepa
+    - zahrebelny-roksolana-1
+    - zahrebelny-roksolana-2
+    - zahrebelny-dyvo
+    - zahrebelny-death-in-kyiv
+    - ivanychuk-malvy
+    - ivanychuk-water
+    - ivanychuk-scar
+    - bilyk-sword-ares
+    - shklyar-black-raven-1
+    - shklyar-black-raven-2
+    - shklyar-marusia
+    - lys-century-jacob
+    - kokotyukha-red
+    - kokotyukha-chervonyi
+    - rafeyenko-long-times
+    - andrii-chaikovskyi-za-sestroiu
+    - andrian-kashchenko-cossack-myth
+    - natalena-koroleva-lehendy
+    - hist-fic-synthesis
+    - shevchuk-three-leaves
   lit-fantastika:
     type: track
     modules:
-      - kvitka-dead-mans-easter
-      - storozhenko-devil
-      - kotsiubynsky-shadows-revisit
-      - vynnychenko-solar-machine-revisit
-      - smolych-beautiful-catastrophes
-      - berdnyk-star-corsair-1
-      - berdnyk-star-corsair-2
-      - berdnyk-prometheus
-      - rosokhovatsky-cyborgs
-      - vynnychuk-tango-death
-      - vynnychuk-night-maiden
-      - pavliuk-flesh
-      - arenev-powder
-      - arenev-soul-traps
-      - korniy-chimaeras
-      - korniy-forest
-      - kidruk-bots
-      - kidruk-colony
-      - babenko-witch
-      - fantastika-anthology
-      - kidruk-bot-thriller
-      - kidruk-colony-hard-scifi
-      - deresh-cult-psychotropic
-      - deresh-arche
-      - fantastika-synthesis
+    - kvitka-dead-mans-easter
+    - storozhenko-devil
+    - kotsiubynsky-shadows-revisit
+    - vynnychenko-solar-machine-revisit
+    - smolych-beautiful-catastrophes
+    - berdnyk-star-corsair-1
+    - berdnyk-star-corsair-2
+    - berdnyk-prometheus
+    - rosokhovatsky-cyborgs
+    - vynnychuk-tango-death
+    - vynnychuk-night-maiden
+    - pavliuk-flesh
+    - arenev-powder
+    - arenev-soul-traps
+    - korniy-chimaeras
+    - korniy-forest
+    - kidruk-bots
+    - kidruk-colony
+    - babenko-witch
+    - fantastika-anthology
+    - kidruk-bot-thriller
+    - kidruk-colony-hard-scifi
+    - deresh-cult-psychotropic
+    - deresh-arche
+    - fantastika-synthesis
   lit-war:
     type: track
     modules:
-      - sich-riflemen-poetry
-      - unr-war-literature
-      - wwii-bahrianyi-samchuk-war
-      - wwii-malaniuk-war-poetry
-      - war-lit-origins-2014
-      - lozko-poetry-of-maidan
-      - chekh-absolute-zero
-      - chekh-point-zero
-      - zhadan-internat-war
-      - zhadan-life-maria
-      - markus-traces-on-road
-      - markus-infantry
-      - zernya-dotsya
-      - polozhiy-ilovaisk
-      - bilozerska-diary
-      - babich-poetry
-      - kotsyubailo-legacy-lit
-      - kalytko-borders-lit
-      - yakimchuk-apricots-war
-      - amelina-new-renaissance
-      - war-lit-synthesis
-      - maksym-kryvtsov-poetry
-      - yaryna-chornohuz-war
-      - yuriy-ruf-steel
-      - illia-chernilevskyi-poetry
-      - gorlis-gorsky-kholodnyi-yar
-      - upa-underground-literature
-      # Textbook authors addition (#894)
-      - pavlo-vyshebaba-soldier-poetry
-      - bohdan-zholdak-ukry
+    - sich-riflemen-poetry
+    - unr-war-literature
+    - wwii-bahrianyi-samchuk-war
+    - wwii-malaniuk-war-poetry
+    - war-lit-origins-2014
+    - lozko-poetry-of-maidan
+    - chekh-absolute-zero
+    - chekh-point-zero
+    - zhadan-internat-war
+    - zhadan-life-maria
+    - markus-traces-on-road
+    - markus-infantry
+    - zernya-dotsya
+    - polozhiy-ilovaisk
+    - bilozerska-diary
+    - babich-poetry
+    - kotsyubailo-legacy-lit
+    - kalytko-borders-lit
+    - yakimchuk-apricots-war
+    - amelina-new-renaissance
+    - war-lit-synthesis
+    - maksym-kryvtsov-poetry
+    - yaryna-chornohuz-war
+    - yuriy-ruf-steel
+    - illia-chernilevskyi-poetry
+    - gorlis-gorsky-kholodnyi-yar
+    - upa-underground-literature
+    - pavlo-vyshebaba-soldier-poetry
+    - bohdan-zholdak-ukry
   lit-humor:
     type: track
     modules:
-      - kotliarevsky-laughter
-      - rudansky-spivomovky
-      - nechuy-levytsky-kaidash-humor
-      - ostap-vyshnia-smiles-1
-      - ostap-vyshnia-smiles-2
-      - ostap-vyshnia-prison
-      - hlazovyi-satire
-      - ilchenko-cossack-mamai
-      - andrukhovych-postmodern-irony
-      - poderviansky-hamlet-critique
-      - lyubka-carbide-satire
-      - vynnychuk-hoaxes
-      - modern-memes-as-folklore
-      - humor-synthesis
+    - kotliarevsky-laughter
+    - rudansky-spivomovky
+    - nechuy-levytsky-kaidash-humor
+    - ostap-vyshnia-smiles-1
+    - ostap-vyshnia-smiles-2
+    - ostap-vyshnia-prison
+    - hlazovyi-satire
+    - ilchenko-cossack-mamai
+    - andrukhovych-postmodern-irony
+    - poderviansky-hamlet-critique
+    - lyubka-carbide-satire
+    - vynnychuk-hoaxes
+    - modern-memes-as-folklore
+    - humor-synthesis
   lit-youth:
     type: track
     modules:
-      - franko-fox-mykyta
-      - pchilka-fables
-      - zavadovych-adventures
-      - nestayko-toreadors-1
-      - nestayko-toreadors-2
-      - nestayko-toreadors-3
-      - nestayko-forest-school
-      - nestayko-fantasy
-      - blyznets-zemlyanyk
-      - malyk-alice
-      - rutkivsky-dzhury
-      - rutkivsky-dzhury-2
-      - malkovych-poems
-      - dermansky-monsters
-      - dermansky-chu-drove
-      - vynnychuk-lviv-tales
-      - starovyt-my-kyiv
-      - oksenyk-forest-valley
-      - bachynsky-140-decibels
-      - pavliuk-rytm
-      - andrusyak-rabbits
-      - lutsyshyna-whale
-      - kids-poetry-anthology
-      - kids-folklore
-      - zabila-poems
-      - rutkivsky-dzhury-1
-      - rutkivsky-dzhury-3
-      - voronyna-agent-000
-      - andrusyak-adventures
-      # Textbook authors addition (#894)
-      - sashko-dermanskyi-chudove-chudovysko
-      - anatolii-dimarov-filosofski-kazky
-      - juvenile-synthesis
-  # lit-doc: MERGED INTO lit-essay (ESSAY.6) — see #879
-  # Unique modules (Самчук, Барка, Світличний, Шумук) added to lit-essay.
-  # Duplicate modules (Асєєв, Кіпіані, Вакуленко, Амеліна, Мариновіч) already in lit-essay/lit-war.
-  # Kuznetsov dropped (wrote in Russian).
+    - franko-fox-mykyta
+    - pchilka-fables
+    - zavadovych-adventures
+    - nestayko-toreadors-1
+    - nestayko-toreadors-2
+    - nestayko-toreadors-3
+    - nestayko-forest-school
+    - nestayko-fantasy
+    - blyznets-zemlyanyk
+    - malyk-alice
+    - rutkivsky-dzhury
+    - rutkivsky-dzhury-2
+    - malkovych-poems
+    - dermansky-monsters
+    - dermansky-chu-drove
+    - vynnychuk-lviv-tales
+    - starovyt-my-kyiv
+    - oksenyk-forest-valley
+    - bachynsky-140-decibels
+    - pavliuk-rytm
+    - andrusyak-rabbits
+    - lutsyshyna-whale
+    - kids-poetry-anthology
+    - kids-folklore
+    - zabila-poems
+    - rutkivsky-dzhury-1
+    - rutkivsky-dzhury-3
+    - voronyna-agent-000
+    - andrusyak-adventures
+    - sashko-dermanskyi-chudove-chudovysko
+    - anatolii-dimarov-filosofski-kazky
+    - juvenile-synthesis
   lit-drama:
     type: track
     modules:
-      - kotliarevsky-drama-tradition
-      - lesia-ukrainka-dramatic-legacy
-      - kurbas-philosophy
-      - kurbas-legacy
-      - kulish-pathetique
-      - kulish-narodnyi-malahii
-      - kulish-dramaturgy
-      - kurbas-berezil-theater
-      - kulish-myna-mazailo
-      - vorozhbyt-bad-roads
-      - arie-chornobyl
-      - tsilyk-cinematic-script
-      - karpenko-karyi-theatre
-      - ukrainian-drama-origins
-      - skovoroda-dialogues-theatre
-      - nezdana-contemporary-women-drama
-      - vynnychenko-european-stage
-  # lit-crimea: REMOVED — see #879
-  # Ukrainian-writing authors (Алієв, Мусаєва, Джеляль) moved to LIT main track (Phase 5).
-  # Non-Ukrainian-language authors (Гаспралі, Челебіджіхан, Чобан-заде, Сенцов) dropped per language rule.
-  # ── FOLK — Ukrainian Oral Literary Tradition (24 modules) ── #882
+    - kotliarevsky-drama-tradition
+    - lesia-ukrainka-dramatic-legacy
+    - kurbas-philosophy
+    - kurbas-legacy
+    - kulish-pathetique
+    - kulish-narodnyi-malahii
+    - kulish-dramaturgy
+    - kurbas-berezil-theater
+    - kulish-myna-mazailo
+    - vorozhbyt-bad-roads
+    - arie-chornobyl
+    - tsilyk-cinematic-script
+    - karpenko-karyi-theatre
+    - ukrainian-drama-origins
+    - skovoroda-dialogues-theatre
+    - nezdana-contemporary-women-drama
+    - vynnychenko-european-stage
   folk:
     type: track
     modules:
-      # FOLK.1 Обрядова поезія (Ritual & Calendar Songs)
-      - koliadky-shchedrivky
-      - vesnianky-hayivky
-      - rusalni-pisni
-      - kupalski-pisni
-      - obzhynkovi-pisni
-      - vesilni-pisni
-      - holosinnya
-      # FOLK.2 Казки та легенди (Fairy Tales & Legends)
-      - charivni-kazky
-      - kazky-pro-tvaryn
-      - sotsialno-pobutovi-kazky
-      - narodni-lehendy
-      - istorychni-perekazy
-      # FOLK.3 Епос (Heroic Tradition)
-      - bylyny-kyivskoho-tsyklu
-      - bohatyri-illiya-dobrynia
-      - zastavy-bohatyrski
-      - bylyny-sotsialni
-      # FOLK.4 Думи та кобзарство
-      - pokhodzhennia-dum
-      - dumy-nevilnytski
-      - dumy-lytsarski
-      - dumy-sotsialno-pobutovi
-      - kobzarstvo-fenomen
-      # FOLK.2+ Балади та лірика (Gemini review additions)
-      - narodni-balady
-      - chumatski-burlatski-pisni
-      # FOLK.5 Малі жанри (Folk Humor & Micro-Genres)
-      - prykazky-ta-pryslivia
-      - zahadky
-      - narodni-anekdoty
-      - rodynna-liryka-kolomyiky
+    - koliadky-shchedrivky
+    - vesnianky-hayivky
+    - rusalni-pisni
+    - kupalski-pisni
+    - obzhynkovi-pisni
+    - vesilni-pisni
+    - holosinnya
+    - charivni-kazky
+    - kazky-pro-tvaryn
+    - sotsialno-pobutovi-kazky
+    - narodni-lehendy
+    - istorychni-perekazy
+    - bylyny-kyivskoho-tsyklu
+    - bohatyri-illiya-dobrynia
+    - zastavy-bohatyrski
+    - bylyny-sotsialni
+    - pokhodzhennia-dum
+    - dumy-nevilnytski
+    - dumy-lytsarski
+    - dumy-sotsialno-pobutovi
+    - kobzarstvo-fenomen
+    - narodni-balady
+    - chumatski-burlatski-pisni
+    - prykazky-ta-pryslivia
+    - zahadky
+    - narodni-anekdoty
+    - rodynna-liryka-kolomyiky
