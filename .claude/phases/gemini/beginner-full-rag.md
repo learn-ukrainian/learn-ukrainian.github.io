@@ -102,7 +102,7 @@ Vary your formatting across sections. Do NOT start 3+ sections the same way. Mix
 
 ### RULE 4: STRESS MARKS
 
-Write Ukrainian without stress marks — the pipeline adds them after. Exception: if the plan uses capitalized stress (молокО, далекО) to indicate stress position, you may use that notation in teaching examples.
+Do NOT add acute accent stress marks (´) to Ukrainian words — the pipeline adds them automatically after content generation. Write мама not ма́ма, молоко not молоко́. The ONLY exception: when teaching stress as a concept (M03), you may use capitalized-vowel notation (молокО, далекО) to show WHERE stress falls.
 
 ### RULE 5: ENGLISH PROSE STYLE
 
@@ -145,7 +145,7 @@ Object with `items:` wrapper. Each entry: `lemma` (dictionary form), `translatio
 - **No Russianisms**: кушати→їсти, получати→отримувати, самий→найкращий
 - **No Russian characters**: ы, э, ё, ъ — never
 - **No colonial framing**: never define Ukrainian by comparing it to Russian. Don't say "unlike Russian..." or "not found in Russian." Present Ukrainian on its own terms
-- **No IPA or Latin transliteration** — stress marks (´) only
+- **No IPA or Latin transliteration** — stress marks (´) only. **EXCEPTION for phonetics modules (M01-M03)**: simple Latin sound hints in brackets like `[a]`, `[v]`, `[sh]` ARE allowed to explain letter-sound correspondence. This is NOT transliteration — it's teaching what sound each letter makes. Do NOT use IPA symbols (ɑ, ɛ, ʃ). Do NOT transliterate full words.
 - **Ukrainian quotes** in content: «...» | **YAML values**: plain text or single quotes (never «»)
 - **Euphony** (у/в, і/й alternation): follow rules in the shared content rules section below — audit flags violations
 - **YAML colon values**: quote with single quotes: `'text: with colon'`
