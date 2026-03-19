@@ -1697,9 +1697,18 @@ def _check_research_skip(ctx: ModuleContext, state: dict) -> bool | None:
         except Exception:
             pass
 
-    if content_sufficient:
+    # Even if content is sufficient, if research file was deleted, re-run
+    research_path = ctx.paths.get("research")
+    research_file_exists = research_path and research_path.exists()
+
+    if content_sufficient and research_file_exists:
         log(f"  research: SKIP (meta locked — content exists at {wc}w, target {ctx.word_target}w)")
         return True
+    elif content_sufficient and not research_file_exists:
+        log("  research: Research file deleted — re-running despite existing content")
+        state.get("phases", {}).pop("research", None)
+        save_state(ctx, state)
+        return None  # re-run
 
     if _has_oversized_sections(ctx) and not _research_file_is_usable(ctx):
         log("  research: Oversized section detected + no usable research, re-running")

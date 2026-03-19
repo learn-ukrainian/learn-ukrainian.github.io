@@ -153,7 +153,7 @@ vocabulary_hints:
   - водá (water) — false friend В [в], not 'b'
   - рукá (hand) — false friend Р [р], not 'p'
   - хáта (house, traditional) — introduces Х [х]
-  - кни́га (book) — multiple letter types: К, Н, И, Г
+  - книга (book) — multiple letter types (К, Н, И, Г)
   - шкóла (school) — introduces Ш [ш]
   - мíсто (city) — introduces І
   - зимá (winter) — introduces З [з], И
@@ -164,7 +164,7 @@ vocabulary_hints:
   - кафé (café) — cognate with Ukrainian spelling
   - пóшта (post office) — П [п] and Ш [ш] together
   - мéтро (metro) — cognate, familiar letters
-  - зупи́нка (bus stop) — real-world sign, multiple letter types
+  - зупинка (bus stop) — real-world sign, multiple letter types
 activity_hints:
 - type: match-up
   focus: "Match letters to sounds — NOT to English letter names"
