@@ -48,9 +48,9 @@ vocabulary_hints:
   recommended:
   - читáти (to read - already taught in M15)
   - відпочивáти (to rest)
-  - сні́дати (to have breakfast)
-  - обі́дати (to have lunch)
-  - вечеря́ти (to have dinner)
+  - снідати (to have breakfast)
+  - обідати (to have lunch)
+  - вечеряти (to have dinner)
 activity_hints:
 - type: fill-in
   focus: Complete sentences with the correct verb form (e.g., Я ___ (працювати) в офісі)

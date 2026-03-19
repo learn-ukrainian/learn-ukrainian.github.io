@@ -40,10 +40,10 @@ vocabulary_hints:
   required:
   - звідки? (where from?)
   - з / із / зі (from - origin)
-  - Украї́на (Ukraine) -> з Украї́ни
+  - Україна (Ukraine) -> з України
   - Амéрика (America) -> з Амéрики
   - Канáда (Canada) -> з Канáди
-  - Ки́їв (Kyiv) -> з Ки́єва
+  - Київ (Kyiv) -> з Києва
   recommended:
   - Бритáнія (Britain) -> з Бритáнії
   - Пóльща (Poland) -> з Пóльщі

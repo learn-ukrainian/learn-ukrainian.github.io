@@ -29,6 +29,7 @@ from content.video_discovery_helpers import (
     _default_qdrant_check,
     _search_blog_dbs,
     build_discovery_keywords,  # noqa: F401 — re-exported for pipeline_v5
+    build_search_keywords,  # noqa: F401 — re-exported for pipeline_v5
     cap_query,
     format_blog_discovery,
     format_rag_discovery,

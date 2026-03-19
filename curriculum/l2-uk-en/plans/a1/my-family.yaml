@@ -35,16 +35,16 @@ content_outline:
     Мій тато — інженер. Його звати... У мене є один брат.
     Він живе в... Combining all A1.1 skills: greeting + name + family +
     possessives + professions + 'У мене є'."
-- section: "Сім'я́ = Роди́на (Family)"
+- section: "Сім'я = Родина (Family)"
   words: 200
   points:
   - "Following Anna Ohoiko ULP Episode 6 exactly — Anna talks to Іванка
-    about her family. Two Ukrainian words for 'family': сім'я́ and роди́на
+    about her family. Two Ukrainian words for 'family': сім'я and родина
     (both equally used). Core family vocabulary:
     мáма / мáти (mother/mother formal), тáто / бáтько (dad/father formal),
     брат (brother), сестрá (sister), син (son), дочкá = дóнька (daughter)."
   - "Extended family: бабýся = бáба (grandmother), дідýсь = дід (grandfather),
-    тíтка (aunt), дя́дько (uncle), двою́рідний брат / двою́рідна сестрá
+    тíтка (aunt), дядько (uncle), двоюрідний брат / двоюрідна сестрá
     (male/female cousin). Note: Ukrainian has NO single word for 'grandparents'
     — you always say бабýся і дідýсь separately."
 - section: "У мéне є... (I have...)"
@@ -64,29 +64,29 @@ content_outline:
     Note: немáє (there isn't) + genitive form — just memorize as a chunk."
   - "Numbers with family (preview from Anna ULP 1-06):
     одúн/однá/однé changes by gender: одúн брат, однá сестрá, однé місто.
-    два/дві: два брати́ (masculine), дві сéстри (feminine).
-    У мéне є два брати́ і однá сестрá."
-- section: "Мій брат — Моя́ сестрá (Possessive Pronouns)"
+    два/дві: два брати (masculine), дві сéстри (feminine).
+    У мéне є два брати і однá сестрá."
+- section: "Мій брат — Моя сестрá (Possessive Pronouns)"
   words: 250
   points:
   - "Following Anna ULP Episode 7 — showing family photos. Possessive pronouns
     match the GENDER of the thing possessed (not the owner!):
-    мій брат (my brother — masculine), моя́ сестрá (my sister — feminine),
-    моє́ мíсто (my city — neuter), мої́ батькú (my parents — plural)."
+    мій брат (my brother — masculine), моя сестрá (my sister — feminine),
+    моє мíсто (my city — neuter), мої батькú (my parents — plural)."
   - "Full possessive pronoun table:
-    my: мій / моя́ / моє́ / мої́
-    your (informal): твій / твоя́ / твоє́ / твої́
-    his: йогó (doesn't change). her: її́ (doesn't change).
+    my: мій / моя / моє / мої
+    your (informal): твій / твоя / твоє / твої
+    his: йогó (doesn't change). her: її (doesn't change).
     our: наш / нáша / нáше / нáші
     your (formal/plural): ваш / вáша / вáше / вáші
     their: їхній / їхня / їхнє / їхні"
   - "Using Це with possessives for introductions (Anna ULP 1-07 pattern):
-    Це — моя́ мáма Мари́на. Це — мій тáто Євгéн.
-    Це моя́ сестрá Кáтя і мої́ брати́ — Івáн і Дени́с.
-    А це твоя́ бабýся? — Так, її́ звáти Тетя́на."
+    Це — моя мáма Марина. Це — мій тáто Євгéн.
+    Це моя сестрá Кáтя і мої брати — Івáн і Денис.
+    А це твоя бабýся? — Так, її звáти Тетяна."
 vocabulary_hints:
   required:
-  - сім'я́ = роди́на (family) — both equally used
+  - сім'я = родина (family) — both equally used
   - мáма = мáти (mother / mother formal)
   - тáто = бáтько (dad / father formal)
   - брат (brother)
@@ -95,13 +95,13 @@ vocabulary_hints:
   - дочкá = дóнька (daughter)
   - бабýся = бáба (grandmother)
   - дідýсь = дід (grandfather)
-  - мій, моя́, моє́, мої́ (my — m/f/n/pl)
+  - мій, моя, моє, мої (my — m/f/n/pl)
   recommended:
   - батькú (parents)
-  - дя́дько (uncle)
+  - дядько (uncle)
   - тíтка (aunt)
-  - двою́рідний брат (male cousin)
-  - дружи́на = жíнка (wife)
+  - двоюрідний брат (male cousin)
+  - дружина = жíнка (wife)
   - чоловíк (man / husband)
   - хлóпець (young man / boyfriend)
   - дíвчина (girl / girlfriend)

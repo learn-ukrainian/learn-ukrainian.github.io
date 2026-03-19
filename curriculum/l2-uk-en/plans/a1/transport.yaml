@@ -37,19 +37,19 @@ content_outline:
   - "Asking 'Яка це зупинка?' (What stop is this?) or saying 'Моя зупинка' (My stop)."
 vocabulary_hints:
   required:
-  - ї́хати (to go by vehicle) -> я ї́ду, ти ї́деш
+  - їхати (to go by vehicle) -> я їду, ти їдеш
   - автóбус (bus)
   - метрó (metro)
-  - таксі́ (taxi)
+  - таксі (taxi)
   - машúна (car)
-  - по́їзд (train)
+  - поїзд (train)
   - зупúнка (stop)
   - квитóк (ticket)
   recommended:
   - вокзáл (train station)
   - аеропóрт (airport)
   - трамвáй (tram)
-  - троле́йбус (trolleybus)
+  - тролейбус (trolleybus)
 activity_hints:
 - type: fill-in
   focus: Choose between 'іти' and 'їхати' depending on the distance/context

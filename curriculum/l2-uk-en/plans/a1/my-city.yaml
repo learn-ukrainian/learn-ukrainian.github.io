@@ -36,20 +36,20 @@ content_outline:
   - "Combining: 'Я живу на вулиці Хрещатик. Тут є парк і аптека.' (I live on Khreshchatyk street. Here is a park and a pharmacy)."
 vocabulary_hints:
   required:
-  - мі́сто (city) -> у мі́сті
+  - місто (city) -> у місті
   - вýлиця (street) -> на вýлиці
-  - центр (center) -> у це́нтрі
-  - парк (park) -> у па́рку
-  - магазúн (shop) -> у магази́ні
-  - шкóла (school) -> у шко́лі
-  - лікáрня (hospital) -> у ліка́рні
-  - апте́ка (pharmacy) -> в апте́ці
-  - банк (bank) -> у ба́нку
+  - центр (center) -> у центрі
+  - парк (park) -> у парку
+  - магазúн (shop) -> у магазині
+  - шкóла (school) -> у школі
+  - лікáрня (hospital) -> у лікарні
+  - аптека (pharmacy) -> в аптеці
+  - банк (bank) -> у банку
   recommended:
   - живý (I live)
   - пóруч (nearby)
-  - по́шта (post office) -> на по́шті
-  - робо́та (work) -> на робо́ті
+  - пошта (post office) -> на пошті
+  - робота (work) -> на роботі
 activity_hints:
 - type: fill-in
   focus: Fill in the correct Locative form of city vocabulary

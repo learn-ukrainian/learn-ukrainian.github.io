@@ -46,9 +46,9 @@ vocabulary_hints:
   - дивáн (sofa) -> на дивáні
   - ключí (keys)
   recommended:
-  - вікнó (window) -> на вікні́
+  - вікнó (window) -> на вікні
   - підлóга (floor) -> на підлóзі
-  - ша́фа (closet/wardrobe) -> у ша́фі
+  - шафа (closet/wardrobe) -> у шафі
 activity_hints:
 - type: match-up
   focus: Match objects with their logical locations (keys -> on table)

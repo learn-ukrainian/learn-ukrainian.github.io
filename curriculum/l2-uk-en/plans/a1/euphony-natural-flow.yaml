@@ -42,8 +42,8 @@ vocabulary_hints:
   - і / й (and)
   - з / із / зі (from, with)
   recommended:
-  - милозву́чність (euphony)
-  - Ки́їв (Kyiv)
+  - милозвучність (euphony)
+  - Київ (Kyiv)
   - Львів (Lviv)
 activity_hints:
 - type: fill-in

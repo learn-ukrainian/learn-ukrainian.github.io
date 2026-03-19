@@ -36,7 +36,7 @@ vocabulary_hints:
   required:
   - хто (who)
   - де (where - location)
-  - куди́ (where to - direction)
+  - куди (where to - direction)
   - колú (when)
   - чомý (why)
   - ні (no)
